@@ -5,6 +5,8 @@ const cookieParser = require('cookie-parser');
 const compress = require('compression');
 const methodOverride = require('method-override');
 const cors = require('cors');
+const passport = require('passport');
+
 const httpStatus = require('http-status');
 const expressWinston = require('express-winston');
 const expressValidation = require('express-validation');
@@ -47,6 +49,7 @@ if (config.env === 'development') {
 }
 
 // mount all routes on /api path
+app.use(passport.initialize());
 app.use('/api', routes);
 
 // if error is not an instanceOf APIError, convert it.
