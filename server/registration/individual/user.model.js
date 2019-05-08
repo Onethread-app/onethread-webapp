@@ -1,7 +1,8 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const crypto = require('crypto');
+const bcrypt = require('bcrypt'),
+  SALT_WORK_FACTOR = 10;
 const jwt = require('jsonwebtoken');
 
 
@@ -12,40 +13,64 @@ const individualUserSchema = new mongoose.Schema({
     required: true
   },
   gender: {
-    type: String, 
+    type: String,
+    description: "can be only M or F",
     required: true
   },
   skillArea: {
     type: String,
     required: true
   },
-  email:{
+  email: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    pattern: "^.+\@.+$"
   },
-  mobileNumber:{
+  mobileNumber: {
     type: String,
     unique: true,
-    required: true
+    required: true,
+    validate: {
+      validator: function(v) {
+          return /^[0-9]{10}$/.test(v);
+      },
+    }
   },
   hash: String,
   salt: String
 });
-// save the reference of password
-individualUserSchema.methods.setPassword = (password)=>{
-  this.salt = crypto.randomBytes(16).toString('hex');
-  this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
-};
 
-// password matching against hash
-individualUserSchema.methods.validPassword = (password)=>{
-  this.salt = crypto.randomBytes(16).toString('hex');
-  this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
+individualUserSchema.pre('save', function (next) {
+  let user = this;
+
+  // only hash the password if it has been modified (or is new)
+  if (!user.isModified('password')) return next();
+
+  // generate a salt
+  bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+    if (err) return next(err);
+
+    // hash the password using our new salt
+    bcrypt.hash(user.password, salt, function (err, hash) {
+      if (err) return next(err);
+
+      // override the cleartext password with the hashed one
+      user.password = hash;
+      next();
+    });
+  });
+});
+
+individualUserSchema.methods.comparePassword = function (candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+    if (err) return cb(err);
+    cb(null, isMatch);
+  });
 };
 
 // generating jwt token
-individualUserSchema.methods.generateJwt = function() {
+individualUserSchema.methods.generateJwt = function () {
   let expire = new Date();
   expire.setDate(expire.getDate() + 7);
 
@@ -58,7 +83,7 @@ individualUserSchema.methods.generateJwt = function() {
     mobileNumber: this.mobileNumber,
     exp: parseInt(expire.getTime() / 1000),
   }, "0a6b944d-d2fb-46fc-a85e-0295c986cd9f"); // this token here used for testing purpose
-                                              // it should be config with .env and comes from there
+  // it should be config with .env and comes from there
 };
 
 module.exports = mongoose.model('IndividualUser', individualUserSchema);
