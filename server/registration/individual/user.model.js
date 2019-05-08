@@ -39,7 +39,7 @@ individualUserSchema.methods.setPassword = (password)=>{
 };
 
 // password matching against hash
-individualUserSchema.methods.setPassword = (password)=>{
+individualUserSchema.methods.validPassword = (password)=>{
   this.salt = crypto.randomBytes(16).toString('hex');
   this.hash = crypto.pbkdf2Sync(password, this.salt, 1000, 64, 'sha512').toString('hex');
 };
@@ -47,7 +47,7 @@ individualUserSchema.methods.setPassword = (password)=>{
 // generating jwt token
 individualUserSchema.methods.generateJwt = function() {
   let expire = new Date();
-  expire.setDate(expiry.getDate() + 7);
+  expire.setDate(expire.getDate() + 7);
 
   return jwt.sign({
     _id: this._id,
