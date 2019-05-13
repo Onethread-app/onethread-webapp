@@ -60,6 +60,7 @@
     "mongoose": "^4.13.17",
     "morgan": "1.9.1",
     "nodeman": "^1.1.2",
+    "nyc": "^14.1.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "winston": "2.4.1"
@@ -76,11 +77,11 @@
     "eslint-watch": "2.1.14",
     "husky": "0.14.3",
     "istanbul": "1.1.0-alpha.1",
-    "mocha": "3.5.0",
+    "mocha": "^3.5.3",
     "snyk": "^1.161.1",
     "supertest": "3.0.0",
     "supertest-as-promised": "4.0.2",
     "validate-commit-msg": "^2.14.0"
   },
-  "license": "MIT"
+  "license": "ISC"
 }
