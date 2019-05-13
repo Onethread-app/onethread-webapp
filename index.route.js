@@ -12,8 +12,8 @@ router.get('/health-check', (req, res) =>
   res.send('OK')
 );
 
-// mount register user routes at /register
-router.use('/register', registerRoutes);
+
+
 // mount user routes at /users
 router.use('/users', userRoutes);
 
