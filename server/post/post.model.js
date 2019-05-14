@@ -1,5 +1,8 @@
 
 const mongoose = require('mongoose');
+const Promise = require('bluebird');
+const httpStatus = require('http-status');
+const APIError = require('../helpers/APIError');
 
 
 const PostSchema = new mongoose.Schema({
@@ -21,6 +24,22 @@ const PostSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+PostSchema.statics = {
+ 
+  get(id) {
+    return this.findById(id)
+      .exec()
+      .then((post) => {
+        if (post) {
+          return post;
+        }
+        const err = new APIError('No such psot exists!', httpStatus.NOT_FOUND);
+        return Promise.reject(err);
+      });
+  }
+ 
+};
 
 
 module.exports = mongoose.model('Post', PostSchema);

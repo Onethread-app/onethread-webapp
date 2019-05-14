@@ -1,30 +1,30 @@
 const Post = require('./post.model');
 
 /**
- * Load user and append to req.
+ * Load post and append to req.
  */
 function load(req, res, next, id) {
-  User.get(id)
-    .then((user) => {
-      req.user = user; // eslint-disable-line no-param-reassign
+  Post.get(id)
+    .then((post) => {
+      req.post = post; // eslint-disable-line no-param-reassign
       return next();
     })
     .catch(e => next(e));
 }
 
 /**
- * Get user
- * @returns {User}
+ * Get post
+ * @returns {post}
  */
 function get(req, res) {
-  return res.json(req.user);
+  return res.json(req.post);
 }
 
 /**
- * Create new user
- * @property {string} req.body.username - The username of user.
- * @property {string} req.body.mobileNumber - The mobileNumber of user.
- * @returns {User}
+ * Create new post
+ * @property {string} req.body.postname - The postname of post.
+ * @property {string} req.body.mobileNumber - The mobileNumber of post.
+ * @returns {post}
  */
 function create(req, res, next) {
   
@@ -39,42 +39,52 @@ function create(req, res, next) {
 }
 
 /**
- * Update existing user
- * @property {string} req.body.username - The username of user.
- * @property {string} req.body.mobileNumber - The mobileNumber of user.
- * @returns {User}
+ * Update existing post
+ * @property {string} req.body.postname - The postname of post.
+ * @property {string} req.body.mobileNumber - The mobileNumber of post.
+ * @returns {post}
  */
 function update(req, res, next) {
-  const user = req.user;
-  user.username = req.body.username;
-  user.mobileNumber = req.body.mobileNumber;
+  const post = req.post;
+  post.text = req.body.text;
+  post.location = req.body.location;
 
-  user.save()
-    .then(savedUser => res.json(savedUser))
+  post.save()
+    .then(savedpost => res.json(savedpost))
     .catch(e => next(e));
 }
 
 /**
- * Get user list.
- * @property {number} req.query.skip - Number of users to be skipped.
- * @property {number} req.query.limit - Limit number of users to be returned.
- * @returns {User[]}
+ * Get post list.
+ * @property {number} req.query.skip - Number of posts to be skipped.
+ * @property {number} req.query.limit - Limit number of posts to be returned.
+ * @returns {post[]}
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  User.list({ limit, skip })
-    .then(users => res.json(users))
-    .catch(e => next(e));
+  Post.find()
+  .sort({ createdAt: -1 })
+  .skip(+skip)
+  .limit(+limit)
+  .exec(function (err, posts) {
+    if (err) {
+      return res.status(422).send({
+        message: err
+      });
+    } else {
+      res.json(posts);
+    }
+  });
 }
 
 /**
- * Delete user.
- * @returns {User}
+ * Delete post.
+ * @returns {post}
  */
 function remove(req, res, next) {
-  const user = req.user;
-  user.remove()
-    .then(deletedUser => res.json(deletedUser))
+  const post = req.post;
+  post.remove()
+    .then(deletedpost => res.json(deletedpost))
     .catch(e => next(e));
 }
 
