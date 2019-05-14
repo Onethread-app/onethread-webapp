@@ -19,7 +19,7 @@ after((done) => {
 
 describe('## User APIs', () => {
   let user = {
-    name: 'KK123',
+    name: 'orrr',
     gender: 'male',
     skillArea: 'nodeJs',
     email: 'a@a.com',
@@ -30,7 +30,7 @@ describe('## User APIs', () => {
   describe('# POST /api/v1/register/user', () => {
     it('should create a new user', (done) => {
       request(app)
-        .post('/api/v1/register/user')
+        .post('/api/v1/register/user/')
         .send(user)
         .expect(httpStatus.OK)
         .then((res) => {

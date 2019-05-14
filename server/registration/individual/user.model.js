@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'),
   SALT_WORK_FACTOR = 10;
 const jwt = require('jsonwebtoken');
+const config = require('../../../config/config');
 
 
 // defining all the fields of individual account
@@ -24,22 +25,27 @@ const individualUserSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
-    required: true,
-    pattern: "^.+\@.+$"
+    required: true
   },
   mobileNumber: {
     type: String,
     unique: true,
-    required: true,
-    validate: {
-      validator: function(v) {
-          return /^[0-9]{10}$/.test(v);
-      },
-    }
+    required: true
   },
   hash: String,
-  salt: String
+  salt: String,
+  password: {
+    type: String,
+    required: true
+  },
+  bio: {
+    type: String,
+  },
+  about: {
+    type: String
+  }
 });
+
 
 individualUserSchema.pre('save', function (next) {
   let user = this;
@@ -81,9 +87,18 @@ individualUserSchema.methods.generateJwt = function () {
     skillArea: this.skillArea,
     email: this.email,
     mobileNumber: this.mobileNumber,
+    password: this.password,
+    bio: this.bio,
     exp: parseInt(expire.getTime() / 1000),
-  }, "0a6b944d-d2fb-46fc-a85e-0295c986cd9f"); // this token here used for testing purpose
-  // it should be config with .env and comes from there
+  }, config.jwtSecret); 
+};
+
+individualUserSchema.methods.toAuthJSON = function() {
+  return {
+    _id: this._id,
+    email: this.email,
+    token: this.generateJWT(),
+  };
 };
 
 module.exports = mongoose.model('IndividualUser', individualUserSchema);
