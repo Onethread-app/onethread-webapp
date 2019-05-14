@@ -27,7 +27,7 @@ describe('## User APIs', () => {
   describe('# POST /api/users', () => {
     it('should create a new user', (done) => {
       request(app)
-        .post('/api/users')
+        .post('/api/v1/users')
         .send(user)
         .expect(httpStatus.OK)
         .then((res) => {

@@ -27,7 +27,7 @@ function get(req, res) {
  * @returns {User}
  */
 function create(req, res, next) {
-  console.log(1);
+  
   const post = new Post({
     text: req.body.text,
     location: req.body.location

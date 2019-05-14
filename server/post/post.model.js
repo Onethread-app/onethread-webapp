@@ -10,6 +10,7 @@ const PostSchema = new mongoose.Schema({
   },
   location: {
     type: String,
+    trim: true,
     required: true
   },
   updated: {

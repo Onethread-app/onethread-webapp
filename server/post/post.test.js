@@ -20,14 +20,14 @@ after((done) => {
 
 describe('## User APIs', () => {
   let post = {
-    text: 'KK123 gsdfg',
+    text: '11',
     location: 'dhaka bang'
   };
 
   describe('# POST /api/psts', () => {
     it('should create a new post', (done) => {
       request(app)
-        .post('/api/posts')
+        .post('/api/v1/posts')
         .send(post)
         .expect(httpStatus.OK)
         .then((res) => {

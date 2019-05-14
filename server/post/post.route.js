@@ -1,6 +1,6 @@
 const express = require('express');
 const validate = require('express-validation');
-const paramValidation = require('../../config/param-validation');
+const paramValidation = require('./post.validation');
 const psotCtrl = require('./post.controller');
 
 const router = express.Router(); // eslint-disable-line new-cap
@@ -10,7 +10,7 @@ router.route('/')
  // .get(userCtrl.list)
 
   /** POST /api/users - Create new user */
-  .post( psotCtrl.create); //validate(paramValidation.createUser),
+  .post(validate(paramValidation.createPost), psotCtrl.create); //validate(paramValidation.createUser),
 
 // router.route('/:userId')
 //   /** GET /api/users/:userId - Get user */
