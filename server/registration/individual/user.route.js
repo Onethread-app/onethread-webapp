@@ -10,6 +10,7 @@ const userCtrl = require('./user.controller');
 // authentication
 router.route('/user')
     .post(userCtrl.register);
-router.post('/login', userCtrl.login);
+router.route('/login') 
+    .post(userCtrl.login);
 
 module.exports = router;

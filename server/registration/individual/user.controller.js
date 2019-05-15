@@ -61,7 +61,7 @@ const login = (req, res, next) => {
       user.comparePassword(req.body.password, function (err, isMatch) {
         if (isMatch && !err) {
           // if user is found and password is right create a token
-          let token = jwt.sign(user, config.jwtSecret);
+          let token = jwt.sign({username: user.username}, config.jwtSecret);
           // return the information including token as JSON
           res.json({success: true, token: 'JWT ' + token});
         } else {
