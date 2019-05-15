@@ -1,11 +1,35 @@
-const Joi = require('joi');
+const Joi = require("joi");
 
 module.exports = {
+  // POST /register
+  register: {
+    body: {
+      body: {
+        name: Joi.string()
+          .regex(/^[A-Z]+ [A-Z]+$/i)
+          .required(),
+        email: Joi.string()
+          .email()
+          .lowercase()
+          .required(),
+        gender: Joi.string()
+          .valid(["m", "f"])
+          .lowercase()
+          .required(),
+        skillArea: Joi.string().required(),
+        phone: Joi.string()
+          .regex(/^\+?(88)?(0|01)[3456789][0-9]{8}$/)
+          .required()
+      }
+    }
+  },
   // POST /api/users
   createUser: {
     body: {
       username: Joi.string().required(),
-      mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required()
+      mobileNumber: Joi.string()
+        .regex(/^[1-9][0-9]{9}$/)
+        .required()
     }
   },
 
@@ -13,10 +37,14 @@ module.exports = {
   updateUser: {
     body: {
       username: Joi.string().required(),
-      mobileNumber: Joi.string().regex(/^[1-9][0-9]{9}$/).required()
+      mobileNumber: Joi.string()
+        .regex(/^[1-9][0-9]{9}$/)
+        .required()
     },
     params: {
-      userId: Joi.string().hex().required()
+      userId: Joi.string()
+        .hex()
+        .required()
     }
   },
 
