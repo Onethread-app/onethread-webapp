@@ -1,4 +1,5 @@
 const express = require('express');
+const postRoutes = require('./server/post/post.route');
 const userRoutes = require('./server/user/user.route');
 const authRoutes = require('./server/auth/auth.route');
 
@@ -11,6 +12,7 @@ router.get('/health-check', (req, res) =>
   res.send('OK')
 );
 
+router.use('/posts', postRoutes);
 // mount user routes at /users
 router.use('/users', userRoutes);
 

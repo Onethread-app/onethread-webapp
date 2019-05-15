@@ -10,7 +10,7 @@ router.route('/')
   .get(userCtrl.list)
 
   /** POST /api/users - Create new user */
-  .post( userCtrl.create); //validate(paramValidation.createUser),
+  .post(validate(paramValidation.createUser), userCtrl.create);
 
 router.route('/:userId')
   /** GET /api/users/:userId - Get user */
