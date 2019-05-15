@@ -3,41 +3,41 @@ const Post = require('./post.model');
 /**
  * Load post and append to req.
  */
-// function load(req, res, next, id) {
-//   Post.get(id)
-//     .then((post) => {
-//       req.post = post; // eslint-disable-line no-param-reassign
-//       return next();
-//     })
-//     .catch(e => next(e));
-// }
-
 function load(req, res, next, id) {
-
-  Post.findById(id)
-   .select("_id name email sex")
-   .exec()
-   .then(result => {
-     // console.log("From database", result);
-     if (result) {
-       res.status(200).json({
-         user: result,
-         request: {
-           type: "GET",
-           url: `${req.originalUrl}`
-         }
-       });
-      }//   else {
-    //    res
-    //      .status(404)
-    //      .json({ message: "No valid entry found for provided ID" });
-    //  }
-   })
-   .catch(err => {
-     // console.log(err);
-     next(err);
-   });
+  Post.get(id)
+    .then((post) => {
+      req.post = post; // eslint-disable-line no-param-reassign
+      return next();
+    })
+    .catch(e => next(e));
 }
+
+// function load(req, res, next, id) {
+
+//   Post.findById(id)
+//    .select("_id name email sex")
+//    .exec()
+//    .then(result => {
+//      // console.log("From database", result);
+//      if (result) {
+//        res.status(200).json({
+//          user: result,
+//          request: {
+//            type: "GET",
+//            url: `${req.originalUrl}`
+//          }
+//        });
+//       }//   else {
+//     //    res
+//     //      .status(404)
+//     //      .json({ message: "No valid entry found for provided ID" });
+//     //  }
+//    })
+//    .catch(err => {
+//      // console.log(err);
+//      next(err);
+//    });
+// }
 
 /**
  * Get post
