@@ -24,6 +24,8 @@ describe('## post APIs', () => {
     location: 'dhaka bang'
   };
 
+  
+
   describe('# POST /api/psts', () => {
     it('should create a new post', (done) => {
       request(app)
@@ -108,6 +110,33 @@ describe('## post APIs', () => {
     });
   });
 
+  describe('# Like /api/posts/', () => {
+    it('should like post', (done) => {
+      request(app)
+        .get(`/api/v1/posts/likes/${post._id}`)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.like).to.be.an('array').that.includes('5cdb98cdab24ca4b10407752');
+          
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe('# Respects /api/posts/', () => {
+    it('should respect post', (done) => {
+      request(app)
+        .get(`/api/v1/posts/respectes/${post._id}`)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.like).to.be.an('array').that.includes('5cdb98cdab24ca4b10407752');
+          done();
+        })
+        .catch(done);
+    });
+  });
+
   describe('# DELETE /api/posts/', () => {
     it('should delete post', (done) => {
       request(app)
@@ -121,5 +150,7 @@ describe('## post APIs', () => {
         .catch(done);
     });
   });
+
+  
 
 });
