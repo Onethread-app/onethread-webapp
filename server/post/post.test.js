@@ -44,7 +44,7 @@ describe('## post APIs', () => {
 
   describe('# GET /api/posts/:postId', () => {
     it('should get post details', (done, ) => {
-      console.log(1,post);
+     
       request(app)
         .get(`/api/v1/posts/${post._id}`)
         .expect(httpStatus.OK)
