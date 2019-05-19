@@ -27,7 +27,6 @@ function create(req, res, next) {
   const comment = new Comment({
     text: req.body.text,
     postRef: req.body.postRef
-
   });
 
   comment

@@ -43,7 +43,7 @@ describe('## post APIs', () => {
   });
 
   describe('# GET /api/posts/:postId', () => {
-    it('should get post details', (done, ) => {
+    it('should get post details', (done) => {
      
       request(app)
         .get(`/api/v1/posts/${post._id}`)
