@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const SaveSchema = new mongoose.Schema({
+const CommentSchema = new mongoose.Schema({
   text: {
     type: String,
     trim: true,
@@ -36,4 +36,4 @@ const SaveSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Save", SaveSchema);
+module.exports = mongoose.model("Comment", CommentSchema);
