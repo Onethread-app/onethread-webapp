@@ -4,12 +4,13 @@ const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
 const httpStatus = require("http-status");
 const APIError = require("../../helpers/APIError");
-const User = require("./user.model");
+
 const config = require("../../../config/config");
-require("../../../config/passport")(passport);
+require("../services/passport")(passport);
+const User = require("../model/user.model");
 const auth = require("../auth");
 
-const sendJSONresponse = function(res, status, content) {
+const sendJSONresponse = function (res, status, content) {
   res.status(status);
   res.json(content);
 };
@@ -81,7 +82,7 @@ const login = (req, res, next) => {
     {
       username: req.body.email
     },
-    function(err, user) {
+    function (err, user) {
       if (err) throw err;
 
       if (!user) {
@@ -91,7 +92,7 @@ const login = (req, res, next) => {
         });
       } else {
         // check if password matches
-        user.comparePassword(req.body.password, function(err, isMatch) {
+        user.comparePassword(req.body.password, function (err, isMatch) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
             let token = jwt.sign({ username: user.username }, config.jwtSecret);
@@ -109,4 +110,84 @@ const login = (req, res, next) => {
   );
 };
 
-module.exports = { sendJSONresponse, register, login };
+// const logout = (req, res, next) => {
+//   User.remove({ _id: req.params.id })
+//     .exec()
+//     .then(res => {
+//       res.status(201).json({
+//         success: true,
+//         message: "user deleted"
+//       })
+//     })
+//     .catch(err => {
+//       res.status(500).json({
+//         error: err
+//       })
+//     });
+
+// }
+
+const profileList = (req, res, next) => {
+  const { limit = 50, skip = 0 } = req.query;
+  User.find()
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
+    .exec(function (err, user) {
+      if (err) {
+        return res.status(422).send({
+          message: err
+        });
+      } else {
+        res.json(user);
+      }
+    });
+}
+const profile = (req, res, next) => {
+  const currentUser = req.user;
+  const id = parseInt(req.params.id);
+  User.findById(req.params.id, function (err, user) {
+    if (err) {
+      return res.status().send({
+        message: err
+      });
+    } else {
+      res.json(user);
+    }
+
+  });
+}
+
+const profileUpdate = (req, res) => {
+  const currentUser = req.user;
+  User.findByIdAndUpdate(req.params.id, {$set: req.body}, function (err, user) {
+    if (err){
+      return res.status().send({
+        message: err
+      });
+    } else{
+      res.status(201).send({
+        success: true,
+        msg: "Profile update successful",
+        user: user
+      });
+    }
+});
+}
+
+const profileDelete = (req, res) => {
+  User.findByIdAndRemove(req.params.id, function(err){
+    if (err){
+      return res.status().send({
+        message: err
+      });
+    }else{
+      res.status(201).send({
+        success: true,
+        msg: "Profile Delete successful"
+      });
+    }
+  })
+
+}
+module.exports = { sendJSONresponse, register, login, profileList, profile, profileUpdate, profileDelete };

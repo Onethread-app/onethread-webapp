@@ -8,7 +8,7 @@ const config = require('../../../config/config');
 
 
 // defining all the fields of individual account
-const individualUserSchema = new mongoose.Schema({
+const accountsSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true
@@ -47,7 +47,7 @@ const individualUserSchema = new mongoose.Schema({
 });
 
 
-individualUserSchema.pre('save', function (next) {
+accountsSchema.pre('save', function (next) {
   let user = this;
 
   // only hash the password if it has been modified (or is new)
@@ -68,7 +68,7 @@ individualUserSchema.pre('save', function (next) {
   });
 });
 
-individualUserSchema.methods.comparePassword = function (candidatePassword, cb) {
+accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
   console.log(this.password, candidatePassword);
   bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
     if (err) return cb(err);
@@ -77,7 +77,7 @@ individualUserSchema.methods.comparePassword = function (candidatePassword, cb) 
 };
 
 // generating jwt token
-individualUserSchema.methods.generateJwt = function () {
+accountsSchema.methods.generateJwt = function () {
   let expire = new Date();
   expire.setDate(expire.getDate() + 7);
 
@@ -94,7 +94,7 @@ individualUserSchema.methods.generateJwt = function () {
   }, config.jwtSecret); 
 };
 
-individualUserSchema.methods.toAuthJSON = function() {
+accountsSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
     email: this.email,
@@ -102,4 +102,26 @@ individualUserSchema.methods.toAuthJSON = function() {
   };
 };
 
-module.exports = mongoose.model('IndividualUser', individualUserSchema);
+/**
+ * Statics
+ */
+accountsSchema.statics = {
+  /**
+   * Get user
+   * @param {ObjectId} id - The objectId of user.
+   * @returns {Promise<User, APIError>}
+   */
+  get(id) {
+    return this.findById(id)
+      .exec()
+      .then((user) => {
+        if (user) {
+          return user;
+        }
+        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        return Promise.reject(err);
+      });
+  },
+};
+
+module.exports = mongoose.model('Account', accountsSchema);
