@@ -24,9 +24,10 @@ function get(req, res) {
 }
 
 function create(req, res, next) {
+    
     const { refType = 'postRef' } = req.query;
   const report = new Report({
-    [refType]: req.body.postRef,
+    [refType]: req.body.refrence,
     text: req.body.text
   });
 

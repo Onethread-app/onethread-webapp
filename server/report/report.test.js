@@ -20,16 +20,59 @@ after(done => {
 
 describe("## post APIs", () => {
   let report = {
-    userRef: "5cdb99532325ce4cab3879cb",
+    userRef: '5cdb99532325ce4cab3879cb',
+    postRef: '5cdb989faf732f49f137b820',
+    commentRef: '5ce0f1fee97dae22b9d82c86',
     text: 'hola'
   };
 
+  
+
   describe("# SAVE /api/reports", () => {
-    it("should create a new save of post", done => {
+    let reportuser = Object.create({refrence : report.userRef , text : report.text});
+    console.log(reportuser);
+    it("should create a new report of post user refrence", done => {
       request(app)
         .post("/api/v1/reports")
         .query({ refType: 'userRef' })  // need to change userRef id also
-        .send(report)
+        .send(reportuser)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.userRef).to.equal(report.userRef);
+          //report = res.body;
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe("# SAVE /api/reports", () => {
+    let reportuser = Object.create({refrence : report.commentRef , text : report.text});
+    it("should create a new report of post comment refrence", done => {
+      request(app)
+        .post("/api/v1/reports")
+        .query({ refType: 'commentRef' })  // need to change userRef id also
+        .send(reportuser)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.commentRef).to.equal(report.commentRef);
+          //report = res.body;
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe("# SAVE /api/reports", () => {
+    //let reportuser = {refrence : postRef , text : text} = report;
+    //let { userRef,commentRef, ...reportuser } = report; //rest not working
+    let reportuser = Object.create({refrence : report.postRef , text : report.text});
+   
+    it("should create a new report of post with post reference", done => {
+      request(app)
+        .post("/api/v1/reports")
+        .query({ refType: 'postRef' })  // need to change userRef id also
+        .send(reportuser)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.postRef).to.equal(report.postRef);
@@ -41,7 +84,7 @@ describe("## post APIs", () => {
   });
 
   describe("# GET /api/reports/:reportId", () => {
-    it("should get save details", done => {
+    it("should get report details", done => {
       request(app)
         .get(`/api/v1/reports/${report._id}`)
         .expect(httpStatus.OK)
