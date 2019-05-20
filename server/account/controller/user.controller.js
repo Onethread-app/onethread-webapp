@@ -20,43 +20,24 @@ const register = (req, res) => {
     res.json({ success: false, msg: "Please pass username and password." });
   } else {
     const user = new User({
-      name: req.body.name,
-      gender: req.body.gender,
-      skillArea: req.body.skillArea,
       email: req.body.email,
-      mobileNumber: req.body.mobileNumber,
       password: req.body.password,
-      bio: req.body.bio
+      role: req.body.role
+ 
     });
-    // we should write .then() function here during refactoring
-    // user.save(function(err) {
-    //   let token;
-    //   token = user.generateJwt();
-    //   res.status(200);
-    //   res.json({
-    //     token: token
-    //   });
-    // });
+
     user
       .save()
       .then(result => {
         // console.log(result);
         let token;
         token = user.generateJwt();
-        // res.status(200);
-        // res.json({
-        //   token: token
-        // });
-
         res.status(201).json({
           message: "Handling POST requests to apis/users",
           createdUser: {
             _id: result._id,
-            name: result.name,
             email: result.email,
-            gender: result.gender,
-            skillArea: result.skillArea,
-            mobileNumber: user.mobileNumber,
+            role: result.role,
             token: token
           }
         });
@@ -70,6 +51,31 @@ const register = (req, res) => {
   }
 };
 
+const roleAuthorization = (roles)=>{
+
+    return function(req, res, next){
+        User.findOne()
+        console.log(user);
+
+        User.findById(user._id, function(err, foundUser){
+
+            if(err){
+                res.status(422).json({error: 'No user found.'});
+                return next(err);
+            }
+
+            if(roles.indexOf(foundUser.role) > -1){
+                return next();
+            }
+
+            res.status(401).json({error: 'You are not authorized to view this content'});
+            return next('Unauthorized');
+
+        });
+
+    }
+
+}
 /**
  * Returns jwt token if valid username and password is provided
  * @param req
@@ -190,4 +196,4 @@ const profileDelete = (req, res) => {
   })
 
 }
-module.exports = { sendJSONresponse, register, login, profileList, profile, profileUpdate, profileDelete };
+module.exports = { sendJSONresponse, register, login, profileList, profile, profileUpdate, profileDelete , roleAuthorization};

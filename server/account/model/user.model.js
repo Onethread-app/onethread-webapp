@@ -9,25 +9,8 @@ const config = require('../../../config/config');
 
 // defining all the fields of individual account
 const accountsSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  gender: {
-    type: String,
-    description: "can be only M or F",
-    required: true
-  },
-  skillArea: {
-    type: String,
-    required: true
-  },
+ 
   email: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  mobileNumber: {
     type: String,
     unique: true,
     required: true
@@ -38,11 +21,10 @@ const accountsSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  bio: {
+  role: {
     type: String,
-  },
-  about: {
-    type: String
+    enum: ['guest', 'admin', 'company', 'user'],
+    default: 'guest'
   }
 });
 
@@ -83,13 +65,9 @@ accountsSchema.methods.generateJwt = function () {
 
   return jwt.sign({
     _id: this._id,
-    name: this.name,
-    gender: this.gender,
-    skillArea: this.skillArea,
     email: this.email,
-    mobileNumber: this.mobileNumber,
     password: this.password,
-    bio: this.bio,
+
     exp: parseInt(expire.getTime() / 1000),
   }, config.jwtSecret); 
 };
@@ -98,6 +76,7 @@ accountsSchema.methods.toAuthJSON = function() {
   return {
     _id: this._id,
     email: this.email,
+    role: this.role,
     token: this.generateJWT(),
   };
 };
@@ -105,23 +84,5 @@ accountsSchema.methods.toAuthJSON = function() {
 /**
  * Statics
  */
-accountsSchema.statics = {
-  /**
-   * Get user
-   * @param {ObjectId} id - The objectId of user.
-   * @returns {Promise<User, APIError>}
-   */
-  get(id) {
-    return this.findById(id)
-      .exec()
-      .then((user) => {
-        if (user) {
-          return user;
-        }
-        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
-        return Promise.reject(err);
-      });
-  },
-};
 
 module.exports = mongoose.model('Account', accountsSchema);
