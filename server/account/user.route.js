@@ -5,12 +5,14 @@ const validate = require("express-validation");
 const paramValidation = require("../../config/param-validation");
 const router = express.Router();
 const jwt = require("express-jwt");
-const passportService = require('./services/passport'),
-passport = require('passport');
+const passportService = require('./services/passport');
+const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', {session: false});
 const requireLogin = passport.authenticate('local', {session: false});
-const accountCtrl = require("./controller/user.controller");
+const accountCtrl = require("./controller/account.controller");
+const userCtrl = require("./controller/user.controller");
 const auth = require('./auth');
+const permit = require('./permission');
 // authentication
 router  
   .route('/signup')
@@ -23,8 +25,8 @@ router
   .post(accountCtrl.login);
 
   // setup a profile
-router.route("/profile")
-router.route("/public").get(requireAuth, accountCtrl.roleAuthorization(['user', 'guest'], accountCtrl.profileList));
+
+
 // user delete
 //  router
 //    .route("/logout")
@@ -35,14 +37,36 @@ router.route("/public").get(requireAuth, accountCtrl.roleAuthorization(['user', 
 //    .route("/profile", auth)
 //    .get(accountCtrl.profileList);
 // setup a user profile
-router
-  .route("/profile") // get the list of all profile
-  .get(accountCtrl.profileList);
+// router
+//   .route("/profile") // get the list of all profile
+//   .get(accountCtrl.profileList);
 // get particular profile by using their id 
+
+// for admin
+router
+  .route("/profile")
+  .get(accountCtrl.profileList);
+
+// for individual users
+router
+  .route("/profile")
+  .post(requireAuth, permit('user'), userCtrl.createProfile);
+
 router
   .route("/profile/:id")
-  .get(accountCtrl.profile)
-  .put(accountCtrl.profileUpdate)
-  .delete(accountCtrl.profileDelete);
+  .get(requireAuth, permit('user'), accountCtrl.profile)
+  .put(requireAuth, permit('user'), accountCtrl.profileUpdate)
+  .delete(requireAuth, permit('user'), accountCtrl.profileDelete);
 
+// for company users
+router
+  .route("/profile/:id")
+  .get(requireAuth, permit('company'), accountCtrl.profile)
+  .put(requireAuth, permit('company'), accountCtrl.profileUpdate)
+  .delete(requireAuth, permit('company'), accountCtrl.profileDelete)
+
+// for all registered account
+
+  
+  
 module.exports = router;

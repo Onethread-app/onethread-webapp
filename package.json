@@ -11,7 +11,7 @@
     "yarn": ">=1.5.1"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon node index.js",
     "start:debug": "cross-env DEBUG=express-mongoose-es6-rest-api:* yarn start",
     "lint": "esw *.js server config --color",
     "lint:watch": "yarn lint -- --watch",

@@ -25,6 +25,10 @@ const accountsSchema = new mongoose.Schema({
     type: String,
     enum: ['guest', 'admin', 'company', 'user'],
     default: 'guest'
+  },
+  account_type: {
+    type: String,
+    enum: ['premium', 'normal']
   }
 });
 
@@ -60,29 +64,17 @@ accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
 
 // generating jwt token
 accountsSchema.methods.generateJwt = function () {
+  // token will expire within 7 days
   let expire = new Date();
   expire.setDate(expire.getDate() + 7);
 
   return jwt.sign({
     _id: this._id,
-    email: this.email,
-    password: this.password,
-
-    exp: parseInt(expire.getTime() / 1000),
-  }, config.jwtSecret); 
+    role: this.role
+  }, config.jwtSecret,{
+    expiresIn: expire
+  }); 
 };
 
-accountsSchema.methods.toAuthJSON = function() {
-  return {
-    _id: this._id,
-    email: this.email,
-    role: this.role,
-    token: this.generateJWT(),
-  };
-};
-
-/**
- * Statics
- */
 
 module.exports = mongoose.model('Account', accountsSchema);
