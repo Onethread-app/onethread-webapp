@@ -2,13 +2,17 @@ const express = require("express");
 const validate = require("express-validation");
 const paramValidation = require("./save.validation");
 const saveCtrl = require("./save.controller");
+const passport = require('passport');
+const passportService = require('../account/services/passport');
+const requireAuth = passport.authenticate('jwt', {session: false});
+//const accCtrl = require("../../account/save.controller");
 
 const router = express.Router(); // eslint-disable-line new-cap
 
 router
   .route("/")
   .get(saveCtrl.list)
-  .post(validate(paramValidation.createSave), saveCtrl.create);
+  .post(validate(paramValidation.createSave), requireAuth, saveCtrl.create);
 
 router
   .route("/:saveId")

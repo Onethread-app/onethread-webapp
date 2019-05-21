@@ -1,26 +1,68 @@
 const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy,
-ExtractJwt = require('passport-jwt').ExtractJwt;
-var LocalStrategy = require('passport-local').Strategy;
-var mongoose = require('mongoose');
-var User = mongoose.model('IndividualUser');
+const User = require('../server/account/model/user.model');
+const config = require('../server/account/auth');
+const JwtStrategy = require('passport-jwt').Strategy;
+const ExtractJwt = require('passport-jwt').ExtractJwt;
+const LocalStrategy = require('passport-local').Strategy;
 
-var config = require('./config'); // get db config file
-
-module.exports = function(passport) {
-  var opts = {};
-  opts.jwtFromRequest = ExtractJwt.fromAuthHeaderWithScheme("jwt");
-  opts.secretOrKey = config.jwtSecret;
-  passport.use(new JwtStrategy(opts, function(jwt_payload, done) {
-    User.findOne({id: jwt_payload.id}, function(err, user) {
-          if (err) {
-              return done(err, false);
-          }
-          if (user) {
-              done(null, user);
-          } else {
-              done(null, false);
-          }
-      });
-  }));
+const localOptions = {
+    usernameField: 'email'
 };
+
+const localLogin = new LocalStrategy(localOptions, function(email, password, done){
+
+    User.findOne({
+        email: email
+    }, function(err, user){
+
+        if(err){
+            return done(err);
+        }
+
+        if(!user){
+            return done(null, false, {error: 'Login failed. Please try again.'});
+        }
+
+        user.comparePassword(password, function(err, isMatch){
+
+            if(err){
+                return done(err);
+            }
+
+            if(!isMatch){
+                return done(null, false, {error: 'Login failed. Please try again.'});
+            }
+
+            return done(null, user);
+
+        });
+
+    });
+
+});
+
+const jwtOptions = {
+    jwtFromRequest: ExtractJwt.fromAuthHeader(),
+    secretOrKey: config.secret
+};
+
+const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done){
+
+    User.findById(payload._id, function(err, user){
+
+        if(err){
+            return done(err, false);
+        }
+
+        if(user){
+            done(null, user);
+        } else {
+            done(null, false);
+        }
+
+    });
+
+});
+
+passport.use(jwtLogin);
+passport.use(localLogin);

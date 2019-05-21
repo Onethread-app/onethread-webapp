@@ -11,7 +11,7 @@
     "yarn": ">=1.5.1"
   },
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon node index.js",
     "start:debug": "cross-env DEBUG=express-mongoose-es6-rest-api:* yarn start",
     "lint": "esw *.js server config --color",
     "lint:watch": "yarn lint -- --watch",
@@ -56,8 +56,10 @@
     "morgan": "1.9.1",
     "nodeman": "^1.1.2",
     "passport": "^0.4.0",
+    "passport-facebook": "^3.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
+    "set-immediate-shim": "^2.0.0",
     "winston": "2.4.1"
   },
   "devDependencies": {

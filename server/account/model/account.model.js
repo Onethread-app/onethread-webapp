@@ -8,26 +8,9 @@ const config = require('../../../config/config');
 
 
 // defining all the fields of individual account
-const individualUserSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true
-  },
-  gender: {
-    type: String,
-    description: "can be only M or F",
-    required: true
-  },
-  skillArea: {
-    type: String,
-    required: true
-  },
+const accountsSchema = new mongoose.Schema({
+ 
   email: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  mobileNumber: {
     type: String,
     unique: true,
     required: true
@@ -38,16 +21,19 @@ const individualUserSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  bio: {
+  role: {
     type: String,
+    enum: ['guest', 'admin', 'company', 'user'],
+    default: 'guest'
   },
-  about: {
-    type: String
+  account_type: {
+    type: String,
+    enum: ['premium', 'normal']
   }
 });
 
 
-individualUserSchema.pre('save', function (next) {
+accountsSchema.pre('save', function (next) {
   let user = this;
 
   // only hash the password if it has been modified (or is new)
@@ -68,7 +54,7 @@ individualUserSchema.pre('save', function (next) {
   });
 });
 
-individualUserSchema.methods.comparePassword = function (candidatePassword, cb) {
+accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
   console.log(this.password, candidatePassword);
   bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
     if (err) return cb(err);
@@ -77,29 +63,18 @@ individualUserSchema.methods.comparePassword = function (candidatePassword, cb) 
 };
 
 // generating jwt token
-individualUserSchema.methods.generateJwt = function () {
-  let expire = new Date();
-  expire.setDate(expire.getDate() + 7);
+accountsSchema.methods.generateJwt = function () {
+  // token will expire within 7 days
+  //let expire = new Date();
+  //expire.setDate(expire.getDate() + 7);
 
   return jwt.sign({
     _id: this._id,
-    name: this.name,
-    gender: this.gender,
-    skillArea: this.skillArea,
-    email: this.email,
-    mobileNumber: this.mobileNumber,
-    password: this.password,
-    bio: this.bio,
-    exp: parseInt(expire.getTime() / 1000),
-  }, config.jwtSecret); 
+    role: this.role
+  }, config.jwtSecret,{
+    expiresIn: 60*60
+  }); 
 };
 
-individualUserSchema.methods.toAuthJSON = function() {
-  return {
-    _id: this._id,
-    email: this.email,
-    token: this.generateJWT(),
-  };
-};
 
-module.exports = mongoose.model('IndividualUser', individualUserSchema);
+module.exports = mongoose.model('Account', accountsSchema);

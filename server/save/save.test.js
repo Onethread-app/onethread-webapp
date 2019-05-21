@@ -10,6 +10,17 @@ chai.config.includeStack = true;
 /**
  * root level hooks
  */
+
+// before(done =>{
+
+//   credentials = {
+//     email: 'username',
+//     password: 'M3@n.jsI$Aw3$0m3'
+//   };
+
+//   done();
+// });
+
 after(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   mongoose.models = {};
@@ -18,15 +29,37 @@ after(done => {
   done();
 });
 
-describe("## post APIs", () => {
+describe("## SAVE APIs", done => {
   let save = {
     postRef: "5cdb989faf732f49f137b820"
   };
+
+  let credentials = {
+    email: "username",
+    password: "M3@n.jsI$Aw3$0m3"
+  };
+
+  let token = "";
+
+  request(app)
+    .post("/api/v1/account/login")
+    .send(credentials)
+    .expect(200)
+    .then(res => {
+      expect(res.body.success).to.equal(true);
+      token = res.body.token;
+      done();
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .catch(done);
 
   describe("# SAVE /api/saves", () => {
     it("should create a new save of post", done => {
       request(app)
         .post("/api/v1/saves")
+        .set("Authorization", token)
         .send(save)
         .expect(httpStatus.OK)
         .then(res => {
@@ -42,6 +75,7 @@ describe("## post APIs", () => {
     it("should get save details", done => {
       request(app)
         .get(`/api/v1/saves/${save._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.postRef).to.equal(save.postRef);
@@ -55,6 +89,7 @@ describe("## post APIs", () => {
     it("should get all saves post item", done => {
       request(app)
         .get("/api/v1/saves")
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body).to.be.an("array");
@@ -66,6 +101,7 @@ describe("## post APIs", () => {
     it("should get all saves (with limit and skip)", done => {
       request(app)
         .get("/api/v1/saves")
+        .set("Authorization", token)
         .query({ limit: 10, skip: 1 })
         .expect(httpStatus.OK)
         .then(res => {
@@ -80,6 +116,7 @@ describe("## post APIs", () => {
     it("should delete save", done => {
       request(app)
         .delete(`/api/v1/saves/${save._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.postRef).to.equal(save.postRef);
