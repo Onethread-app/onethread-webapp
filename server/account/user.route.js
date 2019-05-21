@@ -22,7 +22,7 @@ router
 //   .get(accountCtrl.accountCtrlList);
 router
   .route("/login")
-  .post(accountCtrl.login);
+  .post(requireLogin,accountCtrl.login);
 
   // setup a profile
 
