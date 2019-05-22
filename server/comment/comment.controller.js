@@ -26,7 +26,8 @@ function get(req, res) {
 function create(req, res, next) {
   const comment = new Comment({
     text: req.body.text,
-    postRef: req.body.postRef
+    postRef: req.body.postRef,
+    account: req.user
   });
 
   comment

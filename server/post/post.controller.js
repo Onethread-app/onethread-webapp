@@ -95,7 +95,8 @@ function create(req, res, next) {
   
   const post = new Post({
     text: req.body.text,
-    location: req.body.location
+    location: req.body.location,
+    account: req.user
   });
 
   post.save()
@@ -113,6 +114,7 @@ function update(req, res, next) {
   const post = req.post;
   post.text = req.body.text;
   post.location = req.body.location;
+  
 
   post.save()
     .then(savedpost => res.json(savedpost))
