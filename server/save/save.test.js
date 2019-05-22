@@ -11,15 +11,8 @@ chai.config.includeStack = true;
  * root level hooks
  */
 
-// before(done =>{
 
-//   credentials = {
-//     email: 'username',
-//     password: 'M3@n.jsI$Aw3$0m3'
-//   };
 
-//   done();
-// });
 
 after(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
@@ -71,58 +64,69 @@ describe("## SAVE APIs", done => {
     });
   });
 
-  // describe("# GET /api/saves/:saveId", () => {
-  //   it("should get save details", done => {
-  //     request(app)
-  //       .get(`/api/v1/saves/${save._id}`)
-  //       .set("Authorization", token)
-  //       .expect(httpStatus.OK)
-  //       .then(res => {
-  //         expect(res.body.postRef).to.equal(save.postRef);
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
-  // });
+  describe("# GET /api/saves/:saveId", () => {
+    it("should get save details", done => {
+      request(app)
+        .get(`/api/v1/saves/${save._id}`)
+        .set("Authorization", token)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.postRef).to.equal(save.postRef);
+          done();
+        })
+        .catch(done);
+    });
+    
+    it("should not get save details without login", done => {
+      request(app)
+        .get(`/api/v1/saves/${save._id}`)
+        .expect(httpStatus.UNAUTHORIZED)
+        .then(res => {
+          
+          done();
+        })
+        .catch(done);
+    });
+  });
 
-  // describe("# GET /api/saves/", () => {
-  //   it("should get all saves post item", done => {
-  //     request(app)
-  //       .get("/api/v1/saves")
-  //       .set("Authorization", token)
-  //       .expect(httpStatus.OK)
-  //       .then(res => {
-  //         expect(res.body).to.be.an("array");
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
+  describe("# GET /api/saves/", () => {
+    it("should get all saves post item", done => {
+      request(app)
+        .get("/api/v1/saves")
+        .set("Authorization", token)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body).to.be.an("array");
+          done();
+        })
+        .catch(done);
+    });
 
-  //   it("should get all saves (with limit and skip)", done => {
-  //     request(app)
-  //       .get("/api/v1/saves")
-  //       .set("Authorization", token)
-  //       .query({ limit: 10, skip: 1 })
-  //       .expect(httpStatus.OK)
-  //       .then(res => {
-  //         expect(res.body).to.be.an("array");
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
-  // });
+    it("should get all saves (with limit and skip)", done => {
+      request(app)
+        .get("/api/v1/saves")
+        .set("Authorization", token)
+        .query({ limit: 10, skip: 1 })
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body).to.be.an("array");
+          done();
+        })
+        .catch(done);
+    });
+  });
 
-  // describe("# DELETE /api/saves/", () => {
-  //   it("should delete save", done => {
-  //     request(app)
-  //       .delete(`/api/v1/saves/${save._id}`)
-  //       .set("Authorization", token)
-  //       .expect(httpStatus.OK)
-  //       .then(res => {
-  //         expect(res.body.postRef).to.equal(save.postRef);
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
-  // });
+  describe("# DELETE /api/saves/", () => {
+    it("should delete save", done => {
+      request(app)
+        .delete(`/api/v1/saves/${save._id}`)
+        .set("Authorization", token)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.postRef).to.equal(save.postRef);
+          done();
+        })
+        .catch(done);
+    });
+  });
 });

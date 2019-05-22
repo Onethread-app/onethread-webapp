@@ -12,12 +12,12 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router
   .route("/")
-  .get(saveCtrl.list)
+  .get(requireAuth, permit('user'), saveCtrl.list)
   .post(requireAuth, permit('user'), validate(paramValidation.createSave), saveCtrl.create);
 
 router
   .route("/:saveId")
-  .get(saveCtrl.get)
+  .get(requireAuth, permit('user'), saveCtrl.get)
   .delete(saveCtrl.remove);
 
 router.param("saveId", saveCtrl.load);
