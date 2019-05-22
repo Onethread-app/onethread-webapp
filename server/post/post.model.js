@@ -24,13 +24,25 @@ const PostSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
-  respect: [
+  respect: [  //will use count
     {
       type: Schema.ObjectId,
       ref: "User"
     }
   ],
-  like: [
+  like: [  //will use count
+    {
+      type: Schema.ObjectId,
+      ref: "User"
+    }
+  ],
+  hashtag: [ //will define no of limit 
+    {
+      type: Schema.ObjectId,
+      ref: "Hashtag"
+    }
+  ],
+  tag: [  //will define no of limit 
     {
       type: Schema.ObjectId,
       ref: "User"

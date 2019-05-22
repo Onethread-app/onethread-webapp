@@ -36,7 +36,7 @@ describe('## Misc', () => {
   // describe('# Error Handling', () => {
   //   it('should handle mongoose CastError - Cast to ObjectId failed', (done) => {
   //     request(app)
-  //       .get('/api/v1/users/56z787zzz67fc')
+  //       .get('/api/v1/account/profile/56z787zzz67fc')
   //       .expect(httpStatus.INTERNAL_SERVER_ERROR)
   //       .then((res) => {
   //         expect(res.body.message).to.equal('Internal Server Error');
@@ -47,7 +47,7 @@ describe('## Misc', () => {
 
   //   it('should handle express validation error - username is required', (done) => {
   //     request(app)
-  //       .post('/api/v1/users')
+  //       .post('/api/v1/account/signup')
   //       .send({
   //         mobileNumber: '1234567890'
   //       })
