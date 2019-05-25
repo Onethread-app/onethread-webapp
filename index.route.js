@@ -15,7 +15,7 @@ router.get('/health-check', (req, res) =>
 // mount account user routes at /account
 router.use('/account', accountRoutes);
 
-router.use('/posts', postRoutes);
+//router.use('/posts', postRoutes);
 // mount user routes at /users
 router.use('/users', userRoutes);
 
