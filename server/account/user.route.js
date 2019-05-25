@@ -41,16 +41,16 @@ router
 // for admin
 router
   .route("/profile")
-  .get(accountCtrl.profileList);
+  .get(requireAuth, permit('admin'), accountCtrl.profileList);
 
 // for individual users
 router
   .route("/profile/:id")
-  .post(requireAuth, permit('user'), userCtrl.createProfile);
-
+  .post(requireAuth, permit('user'), userCtrl.createProfile)
+  .get(requireAuth, permit('user'), userCtrl.profile);
 router
   .route("/profile/:id")
-  .get(requireAuth, permit('user'), accountCtrl.profile)
+
   .put(requireAuth, permit('user'), accountCtrl.profileUpdate)
   .delete(requireAuth, permit('user'), accountCtrl.profileDelete);
 

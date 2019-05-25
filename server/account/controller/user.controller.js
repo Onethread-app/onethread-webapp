@@ -1,4 +1,5 @@
 "use strict";
+const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
@@ -9,24 +10,35 @@ const config = require("../../../config/config");
 const Account = require("../model/account.model");
 const RegisteredUser = require("../model/user.model");
 const auth = require("../auth");
-const register= require("./account.controller");  
+
 // create a user profile
 const createProfile = (req, res, next) => {
-  const id = req.params.id;
-  const registeredUser = new RegisteredUser({
-    name: req.body.name,
-    gender: req.body.gender,
-    skillArea: req.body.skillArea,
-    mobileNumber: req.body.mobileNumber,
-    about: req.body.about,
-    bio: req.body.bio,
-    account: register
+  const id = mongoose.Types.ObjectId(req.params.id);
+
+  
+  Account.findById(id, function(err, user){
+    if(err){console.log(err);}
+    else{
+      const registeredUser = new RegisteredUser({
+        name: req.body.name,
+        gender: req.body.gender,
+        skillArea: req.body.skillArea,
+        mobileNumber: req.body.mobileNumber,
+        about: req.body.about,
+        bio: req.body.bio,
+        account: id,
+      })
+      registeredUser
+      .save()
+      .then(result => {
+        res.redirect(`http://127.0.0.1:4040/api/v1/account/profile/${result._id}`);
+      })
+      .catch(err => res.json(err))
+    }
   })
 
-  registeredUser
-    .save()
-    .then(result => res.send(result))
-    .catch(e => console.log(e));
+
+  
   // Account.findById(id, function (err, user) {
   //   if (err) {
   //     return res.status(500).send({
@@ -59,24 +71,32 @@ const profileList = (req, res, next) => {
     });
 }
 const profile = (req, res, next) => {
-  const currentAccount = req.user;
-  const id = (req.params.id);
-  console.log(id);
-  Account.findById(id, function (err, user) {
-    if (err) {
-      return res.status(500).send({
-        message: err
+  let id = req.params.id;
+  RegisteredUser.findById(id)
+    .populate('account')
+    .exec()
+    .then(profile => {
+      if (!profile) {
+        return res.status(404).json({
+          message: "Profile not found"
+        });
+      }
+      res.status(200).json({
+        profile: profile,
+        success: true,
+        msg: "profile create successful"
       });
-    } else {
-      res.json(user);
-    }
-
-  });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
 }
 
 const profileUpdate = (req, res) => {
   const currentAccount = req.user;
-  Account.findByIdAndUpdate(req.params.id, {
+  RegisteredUser.findByIdAndUpdate(req.params.id, {
     $set: req.body
   }, function (err, user) {
     if (err) {
@@ -94,7 +114,7 @@ const profileUpdate = (req, res) => {
 }
 
 const profileDelete = (req, res) => {
-  Account.findByIdAndRemove(req.params.id, function (err) {
+  registeredUser.findByIdAndRemove(req.params.id, function (err) {
     if (err) {
       return res.status().send({
         message: err
