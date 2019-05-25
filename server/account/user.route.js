@@ -17,30 +17,26 @@ const permit = require('./permission');
 router  
   .route('/signup')
   .post(accountCtrl.register);
-// router 
-//   .route('/')
-//   .get(accountCtrl.accountCtrlList);
+
+router
+  .route('/change_password')
+  .post( accountCtrl.changePassword);
+
+router
+  .route('/send')
+  .get(accountCtrl.confirmationMail);
+
+router
+  .route('/verify')
+  .get(accountCtrl.verifyAccount);
+
+//router
+//  .route('/forget_password')
+//  .post( accountCtrl.forgetPassword);
+
 router
   .route("/login")
   .post(accountCtrl.login);
-
-  // setup a profile
-
-
-// user delete
-//  router
-//    .route("/logout")
-//    .post(accountCtrl.logout);
-
-//setup a profile
-//  router
-//    .route("/profile", auth)
-//    .get(accountCtrl.profileList);
-// setup a user profile
-// router
-//   .route("/profile") // get the list of all profile
-//   .get(accountCtrl.profileList);
-// get particular profile by using their id 
 
 // for admin
 router
@@ -49,7 +45,7 @@ router
 
 // for individual users
 router
-  .route("/profile")
+  .route("/profile/:id")
   .post(requireAuth, permit('user'), userCtrl.createProfile);
 
 router

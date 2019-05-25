@@ -72,7 +72,7 @@ accountsSchema.methods.generateJwt = function () {
     _id: this._id,
     role: this.role
   }, config.jwtSecret,{
-    expiresIn: expire
+    expiresIn: 60*60
   }); 
 };
 

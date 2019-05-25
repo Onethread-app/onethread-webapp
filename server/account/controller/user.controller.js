@@ -6,18 +6,46 @@ const httpStatus = require("http-status");
 const APIError = require("../../helpers/APIError");
 
 const config = require("../../../config/config");
-const User = require("../model/account.model");
+const Account = require("../model/account.model");
+const RegisteredUser = require("../model/user.model");
 const auth = require("../auth");
-
+const register= require("./account.controller");  
 // create a user profile
 const createProfile = (req, res, next) => {
- res.json('I am triggered');
+  const id = req.params.id;
+  const registeredUser = new RegisteredUser({
+    name: req.body.name,
+    gender: req.body.gender,
+    skillArea: req.body.skillArea,
+    mobileNumber: req.body.mobileNumber,
+    about: req.body.about,
+    bio: req.body.bio,
+    account: register
+  })
+
+  registeredUser
+    .save()
+    .then(result => res.send(result))
+    .catch(e => console.log(e));
+  // Account.findById(id, function (err, user) {
+  //   if (err) {
+  //     return res.status(500).send({
+  //       message: err
+  //     });
+  //   } else {
+      
+  //   }
+  // })
 }
 
 const profileList = (req, res, next) => {
-  const { limit = 50, skip = 0 } = req.query;
-  User.find()
-    .sort({ createdAt: -1 })
+  const {
+    limit = 50, skip = 0
+  } = req.query;
+  Account.find()
+    .sort({
+      createdAt: -1
+    })
     .skip(+skip)
     .limit(+limit)
     .exec(function (err, user) {
@@ -31,10 +59,10 @@ const profileList = (req, res, next) => {
     });
 }
 const profile = (req, res, next) => {
-  const currentUser = req.user;
+  const currentAccount = req.user;
   const id = (req.params.id);
   console.log(id);
-  User.findById(id, function (err, user) {
+  Account.findById(id, function (err, user) {
     if (err) {
       return res.status(500).send({
         message: err
@@ -47,29 +75,31 @@ const profile = (req, res, next) => {
 }
 
 const profileUpdate = (req, res) => {
-  const currentUser = req.user;
-  User.findByIdAndUpdate(req.params.id, {$set: req.body}, function (err, user) {
-    if (err){
+  const currentAccount = req.user;
+  Account.findByIdAndUpdate(req.params.id, {
+    $set: req.body
+  }, function (err, user) {
+    if (err) {
       return res.status().send({
         message: err
       });
-    } else{
+    } else {
       res.status(201).send({
         success: true,
         msg: "Profile update successful",
         user: user
       });
     }
-});
+  });
 }
 
 const profileDelete = (req, res) => {
-  User.findByIdAndRemove(req.params.id, function(err){
-    if (err){
+  Account.findByIdAndRemove(req.params.id, function (err) {
+    if (err) {
       return res.status().send({
         message: err
       });
-    }else{
+    } else {
       res.status(201).send({
         success: true,
         msg: "Profile Delete successful"
@@ -78,4 +108,10 @@ const profileDelete = (req, res) => {
   })
 
 }
-module.exports = { profileList, profile, profileUpdate, profileDelete , createProfile};
+module.exports = {
+  profileList,
+  profile,
+  profileUpdate,
+  profileDelete,
+  createProfile
+};
