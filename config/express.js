@@ -106,26 +106,18 @@ if (config.env !== 'test') {
 }
 
 // error handler, send stacktrace only during development
-// app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
-//   res.status(err.status).json({
-//     message: err.isPublic ? err.message : httpStatus[err.status],
-//     stack: config.env === 'development' ? err.stack : {}
-//   })
-// );
+app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
+  res.status(err.status).json({
+    message: err.isPublic ? err.message : httpStatus[err.status],
+    stack: config.env === 'development' ? err.stack : {}
+  })
+);
 
-app.get('/auth/facebook',
-  passport.authenticate('facebook'),
-  function(req, res){});
-app.get('/auth/facebook/callback',
-  passport.authenticate('facebook', { failureRedirect: '/' }),
-  function(req, res) {
-    res.redirect('/account');
-  });
+
 
 // test authentication
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/');
 }
 
 module.exports = app;
