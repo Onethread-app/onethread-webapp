@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const HashtagSchema = new mongoose.Schema({
   text: {
-    unique: true,
+    //unique: true,
     type: String,
     trim: true,
     required: true

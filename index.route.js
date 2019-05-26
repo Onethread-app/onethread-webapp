@@ -3,7 +3,7 @@ const postRoutes = require('./server/post/post.route');
 const saveRoutes = require('./server/save/save.route');
 const commentRoutes = require('./server/comment/comment.route');
 const reportRoutes = require('./server/report/report.route');
-//const userRoutes = require('./server/user/user.route');
+const hashRoutes = require('./server/hashtag/hashtag.route');
 const authRoutes = require('./server/auth/auth.route');
 const accountRoutes = require('./server/account/user.route');
 const router = express.Router(); // eslint-disable-line new-cap
@@ -22,6 +22,7 @@ router.use('/posts', postRoutes);
 router.use('/saves', saveRoutes);
 router.use('/comments', commentRoutes);
 router.use('/reports', reportRoutes);
+router.use('/hashtags', hashRoutes);
 // mount user routes at /users
 //router.use('/users', userRoutes);
 

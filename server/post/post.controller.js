@@ -77,6 +77,30 @@ function respect(req, res, next) {
    });
 }
 
+function tag(req, res, next) {
+
+  const id = req.params.postId;
+  
+ 
+  Post.findByIdAndUpdate(id,  {$push: {tag : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
+
+
+
 /**
  * Get post
  * @returns {post}
@@ -155,4 +179,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { load, get, create, update, list, remove, like, respect };
+module.exports = { load, get, create, update, list, remove, like, respect, tag };

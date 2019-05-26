@@ -1,10 +1,10 @@
 const Hashtag = require("./hashtag.model");
 
 
-function create(tag) {  
+function create(req, res, next) {  
 
   const hashtag = new Hashtag({
-    text: tag,
+    text: req.body.text
   });
 
   hashtag 
@@ -13,16 +13,19 @@ function create(tag) {
     .catch(e => next(e));
 }
 
-// function suggest(tag) {   //search suggest
-
-//     const hashtag = new Hashtag({
-//       text: tag,
-//     });
-  
-//     hashtag 
-//       .save()
-//       .then(result => res.send(result))
-//       .catch(e => next(e));
-//   }
+ function suggest(req, res) {   //search suggest
+  const { text = ''} = req.query;
+ 
+  Hashtag.find({text: { '$regex' : '^'+texta, '$options' : 'i' } }) //minimum text 2
+    .exec(function(err, result) {
+      if (err) {
+        return res.status(422).send({
+          message: err
+        });
+      } else {
+        res.json(result);
+      }
+    });
+}
 
 module.exports = { create, suggest };
