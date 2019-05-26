@@ -6,7 +6,7 @@ const httpStatus = require("http-status");
 const APIError = require("../../helpers/APIError");
 
 const config = require("../../../config/config");
-const User = require("../model/account.model");
+const Account = require("../model/account.model");
 const auth = require("../auth");
 const smtpTransport = require("../services/sendmail")
 
@@ -22,14 +22,14 @@ const register = (req, res) => {
       msg: "Please pass username and password."
     });
   } else {
-    const user = new User({
+    const account = new Account({
       email: req.body.email,
       password: req.body.password,
       role: req.body.role
 
     });
 
-    user
+    account
       .save()
       .then(result => {
         // console.log(result);
@@ -91,24 +91,26 @@ const roleAuthorization = (roles) => {
  * @returns {*}
  */
 const login = (req, res, next) => {
-  User.findOne({
-      username: req.body.email
+  console.log("email", req.body.username);
+  Account.findOne({
+      email: req.body.username
     },
-    function (err, user) {
+    
+    function (err, account) {
       if (err) throw err;
 
-      if (!user) {
+      if (!account) {
         res.status(401).send({
           success: false,
           msg: "Authentication failed. User not found."
         });
       } else {
         // check if password matches
-        user.comparePassword(req.body.password, function (err, isMatch) {
+        account.comparePassword(req.body.password, function (err, isMatch) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
 
-            let token = user.generateJwt();
+            let token = account.generateJwt();
             // return the information including token as JSON
             res.json({
               success: true,
@@ -226,76 +228,6 @@ const forgetPassword = async (req, res) => {
 
 // }
 
-const profileList = (req, res, next) => {
-  const {
-    limit = 50, skip = 0
-  } = req.query;
-  User.find()
-    .sort({
-      createdAt: -1
-    })
-    .skip(+skip)
-    .limit(+limit)
-    .exec(function (err, user) {
-      if (err) {
-        return res.status(422).send({
-          message: err
-        });
-      } else {
-        res.json(user);
-      }
-    });
-}
-const profile = (req, res, next) => {
-  const currentUser = req.user;
-  const id = (req.params.id);
-  console.log(id);
-  User.findById(id, function (err, user) {
-    if (err) {
-      return res.status(500).send({
-        message: err
-      });
-    } else {
-      res.json(user);
-    }
-
-  });
-}
-
-const profileUpdate = (req, res) => {
-  const currentUser = req.user;
-  User.findByIdAndUpdate(req.params.id, {
-    $set: req.body
-  }, function (err, user) {
-    if (err) {
-      return res.status().send({
-        message: err
-      });
-    } else {
-      res.status(201).send({
-        success: true,
-        msg: "Profile update successful",
-        user: user
-      });
-    }
-  });
-}
-
-const profileDelete = (req, res) => {
-  User.findByIdAndRemove(req.params.id, function (err) {
-    if (err) {
-      return res.status().send({
-        message: err
-      });
-    } else {
-      res.status(201).send({
-        success: true,
-        msg: "Profile Delete successful"
-      });
-    }
-  })
-
-}
 
 // send confirmation mail to the account hodler
 
@@ -341,10 +273,6 @@ module.exports = {
   sendJSONresponse,
   register,
   login,
-  profileList,
-  profile,
-  profileUpdate,
-  profileDelete,
   roleAuthorization,
   changePassword,
   forgetPassword,
