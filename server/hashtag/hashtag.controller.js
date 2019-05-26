@@ -16,7 +16,7 @@ function create(req, res, next) {
  function suggest(req, res) {   //search suggest
   const { text = ''} = req.query;
  
-  Hashtag.find({text: { '$regex' : '^'+texta, '$options' : 'i' } }) //minimum text 2
+  Hashtag.find({text: { '$regex' : '^'+text, '$options' : 'i' } }) //minimum text 2
     .exec(function(err, result) {
       if (err) {
         return res.status(422).send({

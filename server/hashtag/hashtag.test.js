@@ -48,21 +48,21 @@ describe("## Hashtag APIs", done => {
     })
     .catch(done);
 
-  describe("# Hashtag /api/hashtags", () => {
-    it("should create a new hashtag of post", done => {
-      request(app)
-        .post("/api/v1/hashtags")
-        .set("Authorization", token)
-        .send(hashtag)
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.text).to.equal(hashtag.text);
-          save = res.body;
-          done();
-        })
-        .catch(done);
-    });
-  });
+  // describe("# Hashtag /api/hashtags", () => {
+  //   it("should create a new hashtag of post", done => {
+  //     request(app)
+  //       .post("/api/v1/hashtags")
+  //       .set("Authorization", token)
+  //       .send(hashtag)
+  //       .expect(httpStatus.OK)
+  //       .then(res => {
+  //         expect(res.body.text).to.equal(hashtag.text);
+  //         save = res.body;
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
+  // });
 
 
 
