@@ -13,12 +13,11 @@ module.exports = {
         .lowercase()
         .required(),
       gender: Joi.string()
-        .valid(["m", "f"])
+        .valid(["m", "f", "other"])
         .required(),
       password: Joi.string()
         .min(8)
         .required(),
-      skillArea: Joi.string().required(),
       mobileNumber: Joi.string()
         .regex(/^\+?(880)?1[3456789][0-9]{8}$/)
         .required()

@@ -6188,6 +6188,18 @@ swagger-tools@^0.9.0:
     traverse "^0.6.6"
     z-schema "^3.15.4"
 
+swagger-ui-dist@^3.18.1:
+  version "3.22.2"
+  resolved "https://registry.yarnpkg.com/swagger-ui-dist/-/swagger-ui-dist-3.22.2.tgz#450e9627ddfc634b3ef8dac98da7c92b952afdca"
+  integrity sha512-37RuIYRKjFfoLPctzA2dWvBMJjWa1GLc0NgmubuRbr16b3pSuf9S0rY+82l6F86VV4xlgdPiLMcOZhqcIg/OOg==
+
+swagger-ui-express@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/swagger-ui-express/-/swagger-ui-express-4.0.4.tgz#dd2fcbc841718a9eed07c6d8990fefa25e7a4a3d"
+  integrity sha512-3wRDxbk2wvJi9c4jfBeLz4+JHMYlS4JaDDwZmGqDQmiVq4hgHLpEATgeuyFvX1L5+G9k0lwOLuMOJiC8Rg4Edw==
+  dependencies:
+    swagger-ui-dist "^3.18.1"
+
 swagger@^0.7.5:
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/swagger/-/swagger-0.7.5.tgz#3be6ee3d392c3b006fc7a9b5b2d60c7e834860fd"

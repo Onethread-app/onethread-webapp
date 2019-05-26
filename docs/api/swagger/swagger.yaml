@@ -18,19 +18,20 @@ consumes:
 produces:
   - application/json
 paths:
-  /hello:
+  /api/v1/account/signup:
     # binds a127 app logic to a route
     x-swagger-router-controller: hello_world
-    get:
-      description: Returns 'Hello' to the caller
+    post:
+      description: Account creation for admin, user, company, guest
       # used as the method name of the controller
-      operationId: hello
+      # operationId: hello
       parameters:
         - name: name
           in: query
           description: The name of the person to whom to say hello
           required: false
           type: string
+  
       responses:
         "200":
           description: Success
