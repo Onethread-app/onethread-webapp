@@ -76,7 +76,7 @@ app.use(cors());
 
 // mount all routes on /api path
 
-app.use('/api/v1', routes);
+app.use('/api/v1', routes); //v1.0
 
 // if error is not an instanceOf APIError, convert it.
 // app.use((err, req, res, next) => {
