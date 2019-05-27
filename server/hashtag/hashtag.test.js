@@ -11,7 +11,31 @@ chai.config.includeStack = true;
  * root level hooks
  */
 
+let token ='';
+before(done => {
+  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  let credentials = {
+    email: "username",
+    password: "M3@n.jsI$Aw3$0m3"
+  };
 
+  
+
+  request(app)
+    .post("/api/v1/account/login")
+    .send(credentials)
+    .expect(200)
+    .then(res => {
+      
+      //expect(res.body.success).to.equal(true);
+      token = res.body.token;
+      done();
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .catch(done);
+});
 
 
 after(done => {
@@ -27,26 +51,7 @@ describe("## Hashtag APIs", done => {
     text: "pasi"
   };
 
-  let credentials = {
-    email: "username",
-    password: "M3@n.jsI$Aw3$0m3"
-  };
-
-  let token = "";
-
-  request(app)
-    .post("/api/v1/account/login")
-    .send(credentials)
-    .expect(200)
-    .then(res => {
-      expect(res.body.success).to.equal(true);
-      token = res.body.token;
-      done();
-    })
-    .catch(err => {
-      console.log(err);
-    })
-    .catch(done);
+  
 
   // describe("# Hashtag /api/hashtags", () => {
   //   it("should create a new hashtag of post", done => {
