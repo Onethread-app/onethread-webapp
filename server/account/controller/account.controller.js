@@ -8,9 +8,9 @@ const APIError = require("../../helpers/APIError");
 const config = require("../../../config/config");
 const Account = require("../model/account.model");
 const auth = require("../auth");
-const smtpTransport = require("../services/sendmail")
+const smtpTransport = require("../services/sendmail");
 
-const sendJSONresponse = function (res, status, content) {
+const sendJSONresponse = function(res, status, content) {
   res.status(status);
   res.json(content);
 };
@@ -26,7 +26,6 @@ const register = (req, res) => {
       email: req.body.email,
       password: req.body.password,
       role: req.body.role
-
     });
 
     account
@@ -34,7 +33,7 @@ const register = (req, res) => {
       .then(result => {
         // console.log(result);
         let token;
-        token = user.generateJwt();
+        token = account.generateJwt();
         res.status(201).json({
           message: "Handling POST requests to apis/users",
           createdUser: {
@@ -54,17 +53,16 @@ const register = (req, res) => {
   }
 };
 
-const roleAuthorization = (roles) => {
-
-  return function (req, res, next) {
+const roleAuthorization = roles => {
+  return function(req, res, next) {
     console.log(user._id);
 
-    User.findById(user._id, function (err, foundUser) {
+    Account.findById(user._id, function(err, foundUser) {
       let role = foundUser.role;
       console.log(role);
       if (err) {
         res.status(422).json({
-          error: 'No user found.'
+          error: "No user found."
         });
         return next(err);
       }
@@ -74,15 +72,12 @@ const roleAuthorization = (roles) => {
       }
 
       res.status(401).json({
-        error: 'You are not authorized to view this content'
+        error: "You are not authorized to view this content"
       });
-      return next('Unauthorized');
-
+      return next("Unauthorized");
     });
-
-  }
-
-}
+  };
+};
 /**
  * Returns jwt token if valid username and password is provided
  * @param req
@@ -91,12 +86,13 @@ const roleAuthorization = (roles) => {
  * @returns {*}
  */
 const login = (req, res, next) => {
-  console.log("email", req.body.username);
-  Account.findOne({
-      email: req.body.username
+  console.log("email", req.body.email);
+  Account.findOne(
+    {
+      email: req.body.email
     },
-    
-    function (err, account) {
+
+    function(err, account) {
       if (err) throw err;
 
       if (!account) {
@@ -106,7 +102,7 @@ const login = (req, res, next) => {
         });
       } else {
         // check if password matches
-        account.comparePassword(req.body.password, function (err, isMatch) {
+        account.comparePassword(req.body.password, function(err, isMatch) {
           if (isMatch && !err) {
             // if user is found and password is right create a token
 
@@ -135,80 +131,86 @@ const login = (req, res, next) => {
  */
 const changePassword = async (req, res) => {
   try {
-    const id = await utils.isIDGood(req.user._id)
-    const user = await findUser(id)
-    req = matchedData(req)
-    const isPasswordMatch = await auth.checkPassword(req.oldPassword, user)
+    const id = await utils.isIDGood(req.user._id);
+    const user = await findUser(id);
+    req = matchedData(req);
+    const isPasswordMatch = await auth.checkPassword(req.oldPassword, user);
     if (!isPasswordMatch) {
-      utils.handleError(res, await passwordsDoNotMatch())
+      utils.handleError(res, await passwordsDoNotMatch());
     } else {
       // all ok, proceed to change password
-      res.status(200).json(await changePasswordInDB(id, req))
+      res.status(200).json(await changePasswordInDB(id, req));
     }
   } catch (error) {
-    utils.handleError(res, error)
+    utils.handleError(res, error);
   }
-}
+};
 
 const forgetPassword = async (req, res) => {
-  async.waterfall([
-    function (done) {
-      User.findOne({
-        email: req.body.email
-      }).exec(function (err, user) {
-        if (user) {
-          done(err, user);
-        } else {
-          done('User not found.');
-        }
-      });
-    },
-    function (user, done) {
-      // create the random token
-      let token = user.generateJwt();
-      done(err, user, token);
+  async.waterfall(
+    [
+      function(done) {
+        User.findOne({
+          email: req.body.email
+        }).exec(function(err, user) {
+          if (user) {
+            done(err, user);
+          } else {
+            done("User not found.");
+          }
+        });
+      },
+      function(user, done) {
+        // create the random token
+        let token = user.generateJwt();
+        done(err, user, token);
+      },
+      function(user, token, done) {
+        User.findByIdAndUpdate(
+          {
+            _id: user._id
+          },
+          {
+            reset_password_token: token,
+            reset_password_expires: Date.now() + 86400000
+          },
+          {
+            upsert: true,
+            new: true
+          }
+        ).exec(function(err, new_user) {
+          done(err, token, new_user);
+        });
+      },
+      function(token, user, done) {
+        var data = {
+          to: user.email,
+          from: email,
+          template: "forgot-password-email",
+          subject: "Password help has arrived!",
+          context: {
+            url: "http://localhost:3000/auth/reset_password?token=" + token,
+            name: user.fullName.split(" ")[0]
+          }
+        };
 
-    },
-    function (user, token, done) {
-      User.findByIdAndUpdate({
-        _id: user._id
-      }, {
-        reset_password_token: token,
-        reset_password_expires: Date.now() + 86400000
-      }, {
-        upsert: true,
-        new: true
-      }).exec(function (err, new_user) {
-        done(err, token, new_user);
-      });
-    },
-    function (token, user, done) {
-      var data = {
-        to: user.email,
-        from: email,
-        template: 'forgot-password-email',
-        subject: 'Password help has arrived!',
-        context: {
-          url: 'http://localhost:3000/auth/reset_password?token=' + token,
-          name: user.fullName.split(' ')[0]
-        }
-      };
-
-      smtpTransport.sendMail(data, function (err) {
-        if (!err) {
-          return res.json({
-            message: 'Kindly check your email for further instructions'
-          });
-        } else {
-          return done(err);
-        }
+        smtpTransport.sendMail(data, function(err) {
+          if (!err) {
+            return res.json({
+              message: "Kindly check your email for further instructions"
+            });
+          } else {
+            return done(err);
+          }
+        });
+      }
+    ],
+    function(err) {
+      return res.status(422).json({
+        message: err
       });
     }
-  ], function (err) {
-    return res.status(422).json({
-      message: err
-    });
-  });
+  );
 };
 
 // const logout = (req, res, next) => {
@@ -228,21 +230,23 @@ const forgetPassword = async (req, res) => {
 
 // }
 
-
 // send confirmation mail to the account hodler
 
 const confirmationMail = (req, res) => {
-  let rand = Math.floor((Math.random() * 100) + 54);
-  let host = req.get('host');
-  let link = "http://" + req.get('host') + "/verify?id=" + rand;
+  let rand = Math.floor(Math.random() * 100 + 54);
+  let host = req.get("host");
+  let link = "http://" + req.get("host") + "/verify?id=" + rand;
 
   const mailOptions = {
     to: req.query.to,
     subject: "Please confirm your Email account",
-    html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" + link + ">Click here to verify</a>"
-  }
+    html:
+      "Hello,<br> Please Click on the link to verify your email.<br><a href=" +
+      link +
+      ">Click here to verify</a>"
+  };
   console.log(mailOptions);
-  smtpTransport.sendMail(mailOptions, function (error, response) {
+  smtpTransport.sendMail(mailOptions, function(error, response) {
     if (error) {
       console.log(error);
       res.end("error");
@@ -251,11 +255,11 @@ const confirmationMail = (req, res) => {
       res.end("sent");
     }
   });
-}
+};
 
-const verifyAccount = (req, res)=> {
-  console.log(req.protocol + ":/" + req.get('host'));
-  if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
+const verifyAccount = (req, res) => {
+  console.log(req.protocol + ":/" + req.get("host"));
+  if (req.protocol + "://" + req.get("host") == "http://" + host) {
     console.log("Domain is matched. Information is from Authentic email");
     if (req.query.id == rand) {
       console.log("email is verified");
@@ -267,7 +271,7 @@ const verifyAccount = (req, res)=> {
   } else {
     res.end("<h1>Request is from unknown source");
   }
-}
+};
 
 module.exports = {
   sendJSONresponse,

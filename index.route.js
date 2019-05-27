@@ -1,25 +1,25 @@
-const express = require('express');
-const postRoutes = require('./server/post/post.route');
-const userRoutes = require('./server/user/user.route');
-const authRoutes = require('./server/auth/auth.route');
-const accountRoutes = require('./server/account/user.route');
+const express = require("express");
+const postRoutes = require("./server/post/post.route");
+const userRoutes = require("./server/user/user.route");
+const authRoutes = require("./server/auth/auth.route");
+const accountRoutes = require("./server/account/user.route");
+const categoryRoutes = require("./server/category/category.route");
 const router = express.Router(); // eslint-disable-line new-cap
 
 // TODO: use glob to match *.route files
 
 /** GET /health-check - Check service health */
-router.get('/health-check', (req, res) =>
-  res.send('OK')
-);
+router.get("/health-check", (req, res) => res.send("OK"));
 
 // mount account user routes at /account
-router.use('/account', accountRoutes);
-
+router.use("/account", accountRoutes);
+// category routes
+router.use("/category", categoryRoutes);
 //router.use('/posts', postRoutes);
 // mount user routes at /users
-router.use('/users', userRoutes);
+router.use("/users", userRoutes);
 
 // mount auth routes at /auth
-router.use('/auth', authRoutes);
+router.use("/auth", authRoutes);
 
 module.exports = router;
