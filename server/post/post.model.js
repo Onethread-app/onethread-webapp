@@ -23,6 +23,15 @@ const PostSchema = new mongoose.Schema({
     ],
     default: ["private"]
   },
+  postType: {
+    type: [
+      {
+        type: String,
+        enum: ["status", "photo"]
+      }
+    ],
+    default: ["status"]
+  },
   text: {
     type: String,
     trim: true,
