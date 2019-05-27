@@ -30,9 +30,9 @@ const CommentSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  user: {
+  account: {
     type: Schema.ObjectId,
-    ref: "User"
+    ref: "Account"
   }
 });
 
