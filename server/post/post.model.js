@@ -4,6 +4,15 @@ const Schema = mongoose.Schema;
 const httpStatus = require("http-status");
 const APIError = require("../helpers/APIError");
 
+let tagLimit = function (tagList) {
+  console.log(tagList);
+  return tagList.length <= 10;
+};
+
+let hashtagLimit = function (hashtagList) {
+  return hashtagList.length <= 5;
+};
+
 const PostSchema = new mongoose.Schema({
   privacy: {
     type: [
@@ -17,6 +26,7 @@ const PostSchema = new mongoose.Schema({
   text: {
     type: String,
     trim: true,
+    maxlength: 200, 
     required: true
   },
   location: {
@@ -36,18 +46,20 @@ const PostSchema = new mongoose.Schema({
       ref: "User"
     }
   ],
-  hashtag: [ //will define no of limit 
-    {
+  hashtag:  {
+    type: [{
       type: Schema.ObjectId,
-      ref: "Hashtag"
-    }
-  ],
-  tag: [  //will define no of limit 
-    {
+      ref: 'Hashtag'
+    }],
+    validate: [hashtagLimit, '{PATH} user exceeds the limit of 5']
+  },
+  tag: {
+    type: [{
       type: Schema.ObjectId,
-      ref: "User"
-    }
-  ],
+      ref: 'User'
+    }],
+    validate: [tagLimit, '{PATH} user exceeds the limit of 10']
+  },
   updated: {
     type: Date
   },

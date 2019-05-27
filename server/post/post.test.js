@@ -37,7 +37,10 @@ describe('## post APIs', () => {
           expect(res.body.location).to.equal(post.location);
           post = res.body;
           done();
-        })
+        }).catch(function(err) {
+          console.error(err);
+          done(err);
+      })
         .catch(done);
     });
   });
