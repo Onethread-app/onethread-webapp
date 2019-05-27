@@ -2,18 +2,21 @@ const express = require("express");
 const validate = require("express-validation");
 const paramValidation = require("./report.validation");
 const reportCtrl = require("./report.controller");
+const passport = require('passport');
+const requireAuth = passport.authenticate('jwt', {session: false});
+const permit = require('../account/permission');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
 router
   .route("/")
-  .get(reportCtrl.list)
-  .post(validate(paramValidation.createSave), reportCtrl.create);
+  .get(requireAuth, reportCtrl.list)
+  .post(requireAuth, validate(paramValidation.createSave), reportCtrl.create);
 
 router
   .route("/:reportId")
-  .get(reportCtrl.get)
-  .delete(reportCtrl.remove);
+  .get(requireAuth, reportCtrl.get)
+  .delete(requireAuth, reportCtrl.remove);
 
 router.param("reportId", reportCtrl.load);
 

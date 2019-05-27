@@ -11,8 +11,31 @@ chai.config.includeStack = true;
  * root level hooks
  */
 
+let token ='';
+before(done => {
+  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  let credentials = {
+    email: "username",
+    password: "M3@n.jsI$Aw3$0m3"
+  };
 
+  
 
+  request(app)
+    .post("/api/v1/account/login")
+    .send(credentials)
+    .expect(200)
+    .then(res => {
+      
+      //expect(res.body.success).to.equal(true);
+      token = res.body.token;
+      done();
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .catch(done);
+});
 
 after(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
@@ -22,31 +45,14 @@ after(done => {
   done();
 });
 
-describe("## SAVE APIs", done => {
+
+
+describe("## Save APIs", () => {
   let save = {
     postRef: "5cdb989faf732f49f137b820"
   };
 
-  let credentials = {
-    email: "username",
-    password: "M3@n.jsI$Aw3$0m3"
-  };
-
-  let token = "";
-
-  request(app)
-    .post("/api/v1/account/login")
-    .send(credentials)
-    .expect(200)
-    .then(res => {
-      expect(res.body.success).to.equal(true);
-      token = res.body.token;
-      done();
-    })
-    .catch(err => {
-      console.log(err);
-    })
-    .catch(done);
+  
 
   describe("# SAVE /api/saves", () => {
     it("should create a new save of post", done => {

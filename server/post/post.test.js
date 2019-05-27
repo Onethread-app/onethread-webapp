@@ -10,6 +10,32 @@ chai.config.includeStack = true;
 /**
  * root level hooks
  */
+
+let token ='';
+before(done => {
+  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  let credentials = {
+    email: "username",
+    password: "M3@n.jsI$Aw3$0m3"
+  };
+
+  
+
+  request(app)
+    .post("/api/v1/account/login")
+    .send(credentials)
+    .expect(200)
+    .then(res => {
+      
+      //expect(res.body.success).to.equal(true);
+      token = res.body.token;
+      done();
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .catch(done);
+});
 after((done) => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   mongoose.models = {};
@@ -23,13 +49,13 @@ describe('## post APIs', () => {
     text: 'KK',
     location: 'dhaka bang'
   };
-
   
 
   describe('# POST /api/psts', () => {
     it('should create a new post', (done) => {
       request(app)
         .post('/api/v1/posts')
+        .set("Authorization", token)
         .send(post)
         .expect(httpStatus.OK)
         .then((res) => {
@@ -50,6 +76,7 @@ describe('## post APIs', () => {
      
       request(app)
         .get(`/api/v1/posts/${post._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.text).to.equal(post.text);
@@ -77,6 +104,7 @@ describe('## post APIs', () => {
       post.postname = 'KK';
       request(app)
         .put(`/api/v1/posts/${post._id}`)
+        .set("Authorization", token)
         .send(post)
         .expect(httpStatus.OK)
         .then((res) => {
@@ -92,6 +120,7 @@ describe('## post APIs', () => {
     it('should get all posts', (done) => {
       request(app)
         .get('/api/v1/posts')
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body).to.be.an('array');
@@ -103,6 +132,7 @@ describe('## post APIs', () => {
     it('should get all posts (with limit and skip)', (done) => {
       request(app)
         .get('/api/v1/posts')
+        .set("Authorization", token)
         .query({ limit: 10, skip: 1 })
         .expect(httpStatus.OK)
         .then((res) => {
@@ -117,6 +147,7 @@ describe('## post APIs', () => {
     it('should like post', (done) => {
       request(app)
         .get(`/api/v1/posts/likes/${post._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.like).to.be.an('array').that.includes('5cdb98cdab24ca4b10407752');
@@ -131,6 +162,7 @@ describe('## post APIs', () => {
     it('should respect post', (done) => {
       request(app)
         .get(`/api/v1/posts/respectes/${post._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then((res) => {
           expect(res.body.like).to.be.an('array').that.includes('5cdb98cdab24ca4b10407752');

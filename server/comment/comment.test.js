@@ -10,6 +10,31 @@ chai.config.includeStack = true;
 /**
  * root level hooks
  */
+let token ='';
+before(done => {
+  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  let credentials = {
+    email: "username",
+    password: "M3@n.jsI$Aw3$0m3"
+  };
+
+  
+
+  request(app)
+    .post("/api/v1/account/login")
+    .send(credentials)
+    .expect(200)
+    .then(res => {
+      
+      //expect(res.body.success).to.equal(true);
+      token = res.body.token;
+      done();
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .catch(done);
+});
 after(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   mongoose.models = {};
@@ -18,16 +43,19 @@ after(done => {
   done();
 });
 
-describe("## post APIs", () => {
+describe("## comment APIs", () => {
   let comment = {
     text: "ck",
     postRef: "5cdb989faf732f49f137b820"
   };
 
+  
+
   describe("# SAVE /api/comments", () => {
     it("should create a new save of comment", done => {
       request(app)
         .post("/api/v1/comments")
+        .set("Authorization", token)
         .send(comment)
         .expect(httpStatus.OK)
         .then(res => {
@@ -35,6 +63,9 @@ describe("## post APIs", () => {
           expect(res.body.text).to.equal(comment.text);
           comment = res.body;
           done();
+        }).catch(err => {
+           console.log(err);
+          //next(err);
         })
         .catch(done);
     });
@@ -44,6 +75,7 @@ describe("## post APIs", () => {
     it("should get save details", done => {
       request(app)
         .get(`/api/v1/comments/${comment._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.postRef).to.equal(comment.postRef);
@@ -58,6 +90,7 @@ describe("## post APIs", () => {
     it("should get all saves comments item", done => {
       request(app)
         .get("/api/v1/comments")
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body).to.be.an("array");
@@ -69,6 +102,7 @@ describe("## post APIs", () => {
     it("should get all comments (with limit and skip)", done => {
       request(app)
         .get("/api/v1/comments")
+        .set("Authorization", token)
         .query({ limit: 10, skip: 1 })
         .expect(httpStatus.OK)
         .then(res => {
@@ -83,6 +117,7 @@ describe("## post APIs", () => {
     it("should delete comment", done => {
       request(app)
         .delete(`/api/v1/comments/${comment._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.postRef).to.equal(comment.postRef);

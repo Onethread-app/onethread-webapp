@@ -10,6 +10,31 @@ chai.config.includeStack = true;
 /**
  * root level hooks
  */
+let token ='';
+before(done => {
+  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  let credentials = {
+    email: "username",
+    password: "M3@n.jsI$Aw3$0m3"
+  };
+
+  
+
+  request(app)
+    .post("/api/v1/account/login")
+    .send(credentials)
+    .expect(200)
+    .then(res => {
+      
+      //expect(res.body.success).to.equal(true);
+      token = res.body.token;
+      done();
+    })
+    .catch(err => {
+      console.log(err);
+    })
+    .catch(done);
+});
 after(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   mongoose.models = {};
@@ -18,22 +43,22 @@ after(done => {
   done();
 });
 
-describe("## post APIs", () => {
+describe("## report APIs", () => {
   let report = {
     userRef: '5cdb99532325ce4cab3879cb',
     postRef: '5cdb989faf732f49f137b820',
     commentRef: '5ce0f1fee97dae22b9d82c86',
     text: 'hola'
   };
-
   
 
   describe("# SAVE /api/reports", () => {
     let reportuser = Object.create({refrence : report.userRef , text : report.text});
-    console.log(reportuser);
+    
     it("should create a new report of post user refrence", done => {
       request(app)
         .post("/api/v1/reports")
+        .set("Authorization", token)
         .query({ refType: 'userRef' })  // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
@@ -51,6 +76,7 @@ describe("## post APIs", () => {
     it("should create a new report of post comment refrence", done => {
       request(app)
         .post("/api/v1/reports")
+        .set("Authorization", token)
         .query({ refType: 'commentRef' })  // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
@@ -71,6 +97,7 @@ describe("## post APIs", () => {
     it("should create a new report of post with post reference", done => {
       request(app)
         .post("/api/v1/reports")
+        .set("Authorization", token)
         .query({ refType: 'postRef' })  // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
@@ -87,6 +114,7 @@ describe("## post APIs", () => {
     it("should get report details", done => {
       request(app)
         .get(`/api/v1/reports/${report._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.postRef).to.equal(report.postRef);
@@ -100,6 +128,7 @@ describe("## post APIs", () => {
     it("should get all report post item", done => {
       request(app)
         .get("/api/v1/reports")
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body).to.be.an("array");
@@ -111,6 +140,7 @@ describe("## post APIs", () => {
     it("should get all reports (with limit and skip)", done => {
       request(app)
         .get("/api/v1/reports")
+        .set("Authorization", token)
         .query({ limit: 10, skip: 1 })
         .expect(httpStatus.OK)
         .then(res => {
@@ -125,6 +155,7 @@ describe("## post APIs", () => {
     it("should delete save", done => {
       request(app)
         .delete(`/api/v1/reports/${report._id}`)
+        .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body.postRef).to.equal(report.postRef);
