@@ -86,42 +86,7 @@ const roleAuthorization = roles => {
  * @returns {*}
  */
 const login = (req, res, next) => {
-  console.log("email", req.body.email);
-  Account.findOne(
-    {
-      email: req.body.email
-    },
-
-    function(err, account) {
-      if (err) throw err;
-
-      if (!account) {
-        res.status(401).send({
-          success: false,
-          msg: "Authentication failed. User not found."
-        });
-      } else {
-        // check if password matches
-        account.comparePassword(req.body.password, function(err, isMatch) {
-          if (isMatch && !err) {
-            // if user is found and password is right create a token
-
-            let token = account.generateJwt();
-            // return the information including token as JSON
-            res.json({
-              success: true,
-              token: token
-            });
-          } else {
-            res.status(401).send({
-              success: false,
-              msg: "Authentication failed. Wrong password."
-            });
-          }
-        });
-      }
-    }
-  );
+  res.json({ success: true, token: req.user.generateJwt() });
 };
 
 /**
