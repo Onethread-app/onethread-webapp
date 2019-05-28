@@ -78,6 +78,7 @@ const newSubSubCategory = async (req, res) => {
   const subcategory = await SubCategory.findById(req.params.sid);
   // create sub-sub-category
   const subsubcategory = new SubSubCategory(req.body);
+  subsubcategory.cid = subcategory.cid;
   subsubcategory.sid = subcategory;
   subsubcategory
     .save()
@@ -116,6 +117,7 @@ const getCategory = (req, res, next) => {
     .exec()
     .then(categories => {
       const response = {
+        type: req.query.type,
         categories: categories
       };
       res.status(200).json(response);
@@ -161,26 +163,71 @@ const getSubSubCategory = (req, res, next) => {
     });
 };
 // Delete
-const deleteCategory = (req, res, next) => {
-  Category.findByIdAndRemove({ _id: req.params.cid })
-    .exec()
-    .then(result => {
-      if (result) {
-        res.status(200).json({
-          message: "Category deleted",
-          details: result
-        });
-      } else {
+const deleteCategory = async (req, res, next) => {
+  //category
+  try {
+    let category = await Category.findOneAndRemove({ _id: req.params.cid });
+
+    if (!category) {
+      res.status(500).json({
+        message: `No category found with this ID ${req.params.cid}`
+      });
+    } else {
+      //sub-category
+      try {
+        let subcategory = await SubCategory.deleteMany({ _id: req.params.cid });
+
+        if (subcategory) {
+          //sub-category
+          try {
+            let subsubcategory = await SubSubCategory.deleteMany({
+              _id: req.params.cid
+            });
+
+            if (subsubcategory) {
+              //sub-category
+              res.status(200).json({
+                message:
+                  "Category deleted with all subcategories and subsubcategories."
+              });
+            }
+          } catch (err) {
+            res.status(500).json({
+              error: err
+            });
+          }
+        }
+      } catch (err) {
         res.status(500).json({
-          message: `No category found to delete`
+          error: err
         });
       }
-    })
-    .catch(err => {
-      res.status(500).json({
-        error: err
-      });
+    }
+  } catch (err) {
+    res.status(500).json({
+      error: err
     });
+  }
+
+  // Category.findByIdAndRemove({ _id: req.params.cid })
+  //   .exec()
+  //   .then(async category_results => {
+  //     if (category_results) {
+  //       res.status(200).json({
+  //         message:
+  //           "Category deleted with all subcategories and subsubcategories."
+  //       });
+  //     } else {
+  //       res.status(500).json({
+  //         message: `No category found with this ID ${req.params.cid}`
+  //       });
+  //     }
+  //   })
+  //   .catch(err => {
+  //     res.status(500).json({
+  //       error: err
+  //     });
+  //   });
 };
 module.exports = {
   newCategory,

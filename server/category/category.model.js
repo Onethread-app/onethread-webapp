@@ -49,6 +49,11 @@ var subCategorySchema = mongoose.Schema({
 
 // defining all the fields of sub-sub-category
 var subSubCategorySchema = mongoose.Schema({
+  cid: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true
+  },
   sid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "SubCategory",
