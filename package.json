@@ -54,12 +54,16 @@
     "method-override": "^2.3.10",
     "mongoose": "^4.13.17",
     "morgan": "1.9.1",
+    "nodemailer": "^6.2.1",
+    "nodemailer-smtp-transport": "^2.7.4",
     "nodeman": "^1.1.2",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "set-immediate-shim": "^2.0.0",
+    "swagger": "^0.7.5",
+    "swagger-ui-express": "^4.0.4",
     "winston": "2.4.1"
   },
   "devDependencies": {

@@ -53,6 +53,72 @@ function list(req, res) {
     });
 }
 
+function tag(req, res, next) {
+
+  const id = req.params.commentId;
+  
+ 
+  Comment.findByIdAndUpdate(id,  {$push: {tag : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
+
+function like(req, res, next) {
+
+  const id = req.params.commentId;
+  
+ 
+  Comment.findByIdAndUpdate(id,  {$push: {like : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
+
+function respect(req, res, next) {
+
+  const id = req.params.commentId;
+  
+ 
+  Comment.findByIdAndUpdate(id,  {$push: {respect : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
+
 function remove(req, res, next) {
   const comment = req.comment;
   comment
@@ -61,4 +127,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { load, create, get, load, remove, list };
+module.exports = { load, create, get, load, remove, list, tag, like, respect };

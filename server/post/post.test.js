@@ -87,17 +87,17 @@ describe('## post APIs', () => {
     });
   });
 
-  //   it('should report error with message - Not found, when post does not exists', (done) => {
-  //     request(app)
-  //       .get('/api/v1/posts/56c787ccc67fc16ccc1a5e92')
-  //       .expect(httpStatus.NOT_FOUND)
-  //       .then((res) => {
-  //         expect(res.body.message).to.equal('Not Found');
-  //         done();
-  //       })
-  //       .catch(done);
-  //   });
-  // });
+//   //   it('should report error with message - Not found, when post does not exists', (done) => {
+//   //     request(app)
+//   //       .get('/api/v1/posts/56c787ccc67fc16ccc1a5e92')
+//   //       .expect(httpStatus.NOT_FOUND)
+//   //       .then((res) => {
+//   //         expect(res.body.message).to.equal('Not Found');
+//   //         done();
+//   //       })
+//   //       .catch(done);
+//   //   });
+//   // });
 
   describe('# PUT /api/v1/posts:postId', () => {
     it('should update post details', (done) => {

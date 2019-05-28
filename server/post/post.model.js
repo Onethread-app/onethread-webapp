@@ -5,7 +5,6 @@ const httpStatus = require("http-status");
 const APIError = require("../helpers/APIError");
 
 let tagLimit = function (tagList) {
-  console.log(tagList);
   return tagList.length <= 10;
 };
 

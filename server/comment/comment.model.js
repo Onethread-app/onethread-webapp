@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+let tagLimit = function (tagList) {
+  return tagList.length <= 5;
+};
+
 const CommentSchema = new mongoose.Schema({
   text: {
     type: String,
@@ -23,6 +27,13 @@ const CommentSchema = new mongoose.Schema({
       ref: "User"
     }
   ],
+  tag: {
+    type: [{
+      type: Schema.ObjectId,
+      ref: 'User'
+    }],
+    validate: [tagLimit, '{PATH} user exceeds the limit of 10']
+  },
   updated: {
     type: Date
   },

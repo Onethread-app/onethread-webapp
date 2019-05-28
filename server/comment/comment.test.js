@@ -113,6 +113,35 @@ describe("## comment APIs", () => {
     });
   });
 
+  describe('# Like /api/comments/', () => {
+    it('should like comment', (done) => {
+      request(app)
+        .get(`/api/v1/comments/likes/${comment._id}`)
+        .set("Authorization", token)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.like).to.be.an('array').that.includes('5cdb98cdab24ca4b10407752');
+          
+          done();
+        })
+        .catch(done);
+    });
+  });
+
+  describe('# Respects /api/comments/', () => {
+    it('should respect post', (done) => {
+      request(app)
+        .get(`/api/v1/comments/respectes/${comment._id}`)
+        .set("Authorization", token)
+        .expect(httpStatus.OK)
+        .then((res) => {
+          expect(res.body.like).to.be.an('array').that.includes('5cdb98cdab24ca4b10407752');
+          done();
+        })
+        .catch(done);
+    });
+  });
+
   describe("# DELETE /api/comments/", () => {
     it("should delete comment", done => {
       request(app)
