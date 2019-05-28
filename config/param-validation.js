@@ -6,15 +6,9 @@ module.exports = {
   
   register: {
     body: {
-      name: Joi.string()
-        .regex(/^[A-Z]+ [A-Z]+$/i)
-        .required(),
       email: Joi.string()
         .email()
         .lowercase()
-        .required(),
-      gender: Joi.string()
-        .valid(["m", "f", "other"])
         .required(),
       password: Joi.string()
         .min(8)

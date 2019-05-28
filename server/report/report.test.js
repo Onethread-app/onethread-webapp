@@ -10,22 +10,19 @@ chai.config.includeStack = true;
 /**
  * root level hooks
  */
-let token ='';
+let token = "";
 before(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   let credentials = {
-    email: "username",
-    password: "M3@n.jsI$Aw3$0m3"
+    email: "jest@gmail.com",
+    password: "jest1234"
   };
-
-  
 
   request(app)
     .post("/api/v1/account/login")
     .send(credentials)
     .expect(200)
     .then(res => {
-      
       //expect(res.body.success).to.equal(true);
       token = res.body.token;
       done();
@@ -45,22 +42,25 @@ after(done => {
 
 describe("## report APIs", () => {
   let report = {
-    reportType: 'false',
-    userRef: '5cdb99532325ce4cab3879cb',
-    postRef: '5cdb989faf732f49f137b820',
-    commentRef: '5ce0f1fee97dae22b9d82c86',
-    text: 'hola'
+    reportType: "false",
+    userRef: "5cdb99532325ce4cab3879cb",
+    postRef: "5cdb989faf732f49f137b820",
+    commentRef: "5ce0f1fee97dae22b9d82c86",
+    text: "hola"
   };
-  
 
   describe("# SAVE /api/reports", () => {
-    let reportuser = Object.create({refrence : report.userRef , text : report.text, reportType: 'false'});
-    
+    let reportuser = Object.create({
+      refrence: report.userRef,
+      text: report.text,
+      reportType: "false"
+    });
+
     it("should create a new report of post user refrence", done => {
       request(app)
         .post("/api/v1/reports")
         .set("Authorization", token)
-        .query({ refType: 'userRef' })  // need to change userRef id also
+        .query({ refType: "userRef" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
         .then(res => {
@@ -77,12 +77,16 @@ describe("## report APIs", () => {
   });
 
   describe("# SAVE /api/reports", () => {
-    let reportuser = Object.create({reportType: 'false',  refrence : report.commentRef , text : report.text});
+    let reportuser = Object.create({
+      reportType: "false",
+      refrence: report.commentRef,
+      text: report.text
+    });
     it("should create a new report of post comment refrence", done => {
       request(app)
         .post("/api/v1/reports")
         .set("Authorization", token)
-        .query({ refType: 'commentRef' })  // need to change userRef id also
+        .query({ refType: "commentRef" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
         .then(res => {
@@ -98,13 +102,17 @@ describe("## report APIs", () => {
   describe("# SAVE /api/reports", () => {
     //let reportuser = {refrence : postRef , text : text} = report;
     //let { userRef,commentRef, ...reportuser } = report; //rest not working
-    let reportuser = Object.create({reportType: 'false', refrence : report.postRef , text : report.text});
-   
+    let reportuser = Object.create({
+      reportType: "false",
+      refrence: report.postRef,
+      text: report.text
+    });
+
     it("should create a new report of post with post reference", done => {
       request(app)
         .post("/api/v1/reports")
         .set("Authorization", token)
-        .query({ refType: 'postRef' })  // need to change userRef id also
+        .query({ refType: "postRef" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
         .then(res => {

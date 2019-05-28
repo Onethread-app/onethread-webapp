@@ -131,9 +131,6 @@ const profileDelete = (req, res) => {
   })
 }
 
-const get = (req, res) => {
-  return res.json(req.registereduser)
-}
 module.exports = {
   profileList,
   profile,

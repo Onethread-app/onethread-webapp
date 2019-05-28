@@ -47,11 +47,11 @@
 // }
 {
   "parserOptions": {
-      "ecmaVersion": 8
+    "ecmaVersion": 8
   },
   "env": {
-      "es6": true
+    "es6": true,
+    "node": true,
+    "mocha": true
   }
-  
 }
-

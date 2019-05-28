@@ -10,22 +10,19 @@ chai.config.includeStack = true;
 /**
  * root level hooks
  */
-let token ='';
+let token = "";
 before(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   let credentials = {
-    email: "username",
-    password: "M3@n.jsI$Aw3$0m3"
+    email: "jest@gmail.com",
+    password: "jest1234"
   };
-
-  
 
   request(app)
     .post("/api/v1/account/login")
     .send(credentials)
     .expect(200)
     .then(res => {
-      
       //expect(res.body.success).to.equal(true);
       token = res.body.token;
       done();
@@ -49,8 +46,6 @@ describe("## comment APIs", () => {
     postRef: "5cdb989faf732f49f137b820"
   };
 
-  
-
   describe("# SAVE /api/comments", () => {
     it("should create a new save of comment", done => {
       request(app)
@@ -63,8 +58,9 @@ describe("## comment APIs", () => {
           expect(res.body.text).to.equal(comment.text);
           comment = res.body;
           done();
-        }).catch(err => {
-           console.log(err);
+        })
+        .catch(err => {
+          console.log(err);
           //next(err);
         })
         .catch(done);
@@ -113,29 +109,33 @@ describe("## comment APIs", () => {
     });
   });
 
-  describe('# Like /api/comments/', () => {
-    it('should like comment', (done) => {
+  describe("# Like /api/comments/", () => {
+    it("should like comment", done => {
       request(app)
         .get(`/api/v1/comments/likes/${comment._id}`)
         .set("Authorization", token)
         .expect(httpStatus.OK)
-        .then((res) => {
-          expect(res.body.like).to.be.an('array').that.includes('5cdb98cdab24ca4b10407752');
-          
+        .then(res => {
+          expect(res.body.like)
+            .to.be.an("array")
+            .that.includes("5cdb98cdab24ca4b10407752");
+
           done();
         })
         .catch(done);
     });
   });
 
-  describe('# Respects /api/comments/', () => {
-    it('should respect post', (done) => {
+  describe("# Respects /api/comments/", () => {
+    it("should respect post", done => {
       request(app)
         .get(`/api/v1/comments/respectes/${comment._id}`)
         .set("Authorization", token)
         .expect(httpStatus.OK)
-        .then((res) => {
-          expect(res.body.like).to.be.an('array').that.includes('5cdb98cdab24ca4b10407752');
+        .then(res => {
+          expect(res.body.like)
+            .to.be.an("array")
+            .that.includes("5cdb98cdab24ca4b10407752");
           done();
         })
         .catch(done);
