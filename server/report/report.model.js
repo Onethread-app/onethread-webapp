@@ -7,6 +7,30 @@ const ReportSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
+  reportType: {
+    type: [
+      {
+        type: String,
+        enum: [
+          "harmful",
+          "violence",
+          "threat",
+          "annoying",
+          "gross",
+          "false",
+          "abusive",
+          "pornography",
+          "spam",
+          "compromise",
+          "offensive",
+          "disrespectful",
+          "privateExposed",
+          "others"
+        ]
+      }
+    ],
+    default: ["others"]
+  },
   postRef: {
     type: Schema.ObjectId,
     ref: "Post"

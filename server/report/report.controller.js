@@ -27,6 +27,7 @@ function create(req, res, next) {
     
     const { refType = 'postRef' } = req.query;
   const report = new Report({
+    reportType: req.body.reportType,
     [refType]: req.body.refrence,
     text: req.body.text,
     account: req.user
