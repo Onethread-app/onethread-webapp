@@ -1,7 +1,7 @@
 "use strict";
 
 const { Category, SubCategory, SubSubCategory } = require("./category.model");
-
+// Create
 const newCategory = async (req, res) => {
   // Check for JSON
   if (!req.is("application/json")) {
@@ -9,7 +9,8 @@ const newCategory = async (req, res) => {
   }
   // fetch the request data
   const category = new Category({
-    name: req.body.name
+    name: req.body.name,
+    type: req.body.type
   });
 
   category
@@ -68,7 +69,6 @@ const newSubCategory = async (req, res) => {
       });
     });
 };
-
 const newSubSubCategory = async (req, res) => {
   // Check for JSON
   if (!req.is("application/json")) {
@@ -108,9 +108,10 @@ const newSubSubCategory = async (req, res) => {
       });
     });
 };
-
+// Read
 const getCategory = (req, res, next) => {
-  Category.find()
+  // create category
+  Category.find({ type: req.query.type })
     .select("_id name")
     .exec()
     .then(categories => {
@@ -159,12 +160,34 @@ const getSubSubCategory = (req, res, next) => {
       });
     });
 };
-
+// Delete
+const deleteCategory = (req, res, next) => {
+  Category.findByIdAndRemove({ _id: req.params.cid })
+    .exec()
+    .then(result => {
+      if (result) {
+        res.status(200).json({
+          message: "Category deleted",
+          details: result
+        });
+      } else {
+        res.status(500).json({
+          message: `No category found to delete`
+        });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
+};
 module.exports = {
   newCategory,
   newSubCategory,
   newSubSubCategory,
   getCategory,
   getSubCategory,
-  getSubSubCategory
+  getSubSubCategory,
+  deleteCategory
 };

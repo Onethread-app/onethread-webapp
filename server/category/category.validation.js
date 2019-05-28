@@ -26,5 +26,38 @@ module.exports = {
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
     }
+  },
+  getCategory: {
+    query: {
+      type: Joi.string()
+        .valid(["company", "user"])
+        .required()
+        .error(errors => {
+          return {
+            message: "Expects 'type' in query string"
+          };
+        })
+    }
+  },
+  deleteCategory: {
+    params: {
+      cid: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+    }
+  },
+  deleteSubCategory: {
+    params: {
+      sid: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+    }
+  },
+  deleteSubSubCategory: {
+    params: {
+      ssid: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+    }
   }
 };

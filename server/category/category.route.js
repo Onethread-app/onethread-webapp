@@ -5,15 +5,15 @@ const paramValidation = require("./category.validation");
 const router = express.Router();
 const categoryCtrl = require("./category.controller");
 const passport = require("passport");
-const passportConfig = require("./../account/services/passport");
-const passportSignIn = passport.authenticate("local", { session: false });
 const passportJWT = passport.authenticate("jwt", { session: false });
+const permit = require("./../helpers/permission");
 // authentication
 router
   .route("/")
-  .get(categoryCtrl.getCategory)
+  .get(validate(paramValidation.getCategory), categoryCtrl.getCategory)
   .post(
     passportJWT,
+    permit("admin"),
     validate(paramValidation.newCategory),
     categoryCtrl.newCategory
   );
@@ -22,18 +22,24 @@ router
   .get(categoryCtrl.getSubCategory)
   .post(
     passportJWT,
+    permit("admin"),
     validate(paramValidation.newSubCategory),
     categoryCtrl.newSubCategory
+  )
+  .delete(
+    passportJWT,
+    permit("admin"),
+    validate(paramValidation.deleteCategory),
+    categoryCtrl.deleteCategory
   );
 router
   .route("/sub-category/:sid")
   .get(categoryCtrl.getSubSubCategory)
   .post(
     passportJWT,
+    permit("admin"),
     validate(paramValidation.newSubSubCategory),
     categoryCtrl.newSubSubCategory
   );
-// router.route("/all").get(passportJWT, userCtrl.getUsers);
-// router.route("/:userId").delete(passportJWT, userCtrl.deleteUser);
 
 module.exports = router;

@@ -5,7 +5,7 @@ const validate = require("express-validation");
 const paramValidation = require("../../config/param-validation");
 const router = express.Router();
 const jwt = require("express-jwt");
-const passportService = require("./services/passport");
+const passportService = require("./../../config/passport");
 const passport = require("passport");
 const requireAuth = passport.authenticate("jwt", { session: false });
 const requireLogin = passport.authenticate("local", { session: false });
@@ -13,7 +13,7 @@ const accountCtrl = require("./controller/account.controller");
 const userCtrl = require("./controller/user.controller");
 const companyCtrl = require("./controller/company.controller");
 const auth = require("./auth");
-const permit = require("./permission");
+const permit = require("./../helpers/permission");
 // authentication
 router.route("/signup").post(accountCtrl.register);
 
