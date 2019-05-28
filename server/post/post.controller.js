@@ -3,41 +3,79 @@ const Post = require('./post.model');
 /**
  * Load post and append to req.
  */
-function load(req, res, next, id) {
-  Post.get(id)
-    .then((post) => {
-      req.post = post; // eslint-disable-line no-param-reassign
+// function load(req, res, next, id) {
+//   Post.get(id)
+//     .then((post) => {
+//       req.post = post; // eslint-disable-line no-param-reassign
+//       return next();
+//     })
+//     .catch(e => next(e));
+// }
+
+ function load(req, res, next, id) {
+
+  Post.findById(id)
+   .exec()
+   .then(result => {
+     
+     if (result) {
+      req.post = result;
       return next();
-    })
-    .catch(e => next(e));
+    }  else {
+       
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
 }
 
-// function load(req, res, next, id) {
+function like(req, res, next) {
 
-//   Post.findById(id)
-//    .select("_id name email sex")
-//    .exec()
-//    .then(result => {
-//      // console.log("From database", result);
-//      if (result) {
-//        res.status(200).json({
-//          user: result,
-//          request: {
-//            type: "GET",
-//            url: `${req.originalUrl}`
-//          }
-//        });
-//       }//   else {
-//     //    res
-//     //      .status(404)
-//     //      .json({ message: "No valid entry found for provided ID" });
-//     //  }
-//    })
-//    .catch(err => {
-//      // console.log(err);
-//      next(err);
-//    });
-// }
+  const id = req.params.postId;
+  
+ 
+  Post.findByIdAndUpdate(id,  {$push: {like : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
+
+function respect(req, res, next) {
+
+  const id = req.params.postId;
+  
+ 
+  Post.findByIdAndUpdate(id,  {$push: {respect : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
 
 /**
  * Get post
@@ -115,4 +153,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { load, get, create, update, list, remove };
+module.exports = { load, get, create, update, list, remove, like, respect };

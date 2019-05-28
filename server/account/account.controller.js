@@ -66,52 +66,52 @@ const login = (req, res, next) => {
  * @param {Object} req - request object
  * @param {Object} res - response object
  */
-const changePassword = async (req, res) => {
-  try {
-    const id = await utils.isIDGood(req.user._id)
-    const user = await findUser(id)
-    req = matchedData(req)
-    const isPasswordMatch = await auth.checkPassword(req.oldPassword, user)
-    if (!isPasswordMatch) {
-      utils.handleError(res, await passwordsDoNotMatch())
-    } else {
-      // all ok, proceed to change password
-      res.status(200).json(await changePasswordInDB(id, req))
-    }
-  } catch (error) {
-    utils.handleError(res, error)
-  }
-}
+// const changePassword = async (req, res) => {
+//   try {
+//     const id = await utils.isIDGood(req.user._id)
+//     const user = await findUser(id)
+//     req = matchedData(req)
+//     const isPasswordMatch = await auth.checkPassword(req.oldPassword, user)
+//     if (!isPasswordMatch) {
+//       utils.handleError(res, await passwordsDoNotMatch())
+//     } else {
+//       // all ok, proceed to change password
+//       res.status(200).json(await changePasswordInDB(id, req))
+//     }
+//   } catch (error) {
+//     utils.handleError(res, error)
+//   }
+// }
 
 // find account for account verification
-const findAccount = async email => {
-  return new Promise((resolve, reject) => {
-    Account.findOne(
-      {
-        email
-      },
-      'password loginAttempts blockExpires name email role verified verification',
-      (err, item) => {
-        utils.itemNotFound(err, item, reject, 'USER_DOES_NOT_EXIST')
-        resolve(item)
-      }
-    )
-  })
-}
+// const findAccount = async email => {
+//   return new Promise((resolve, reject) => {
+//     Account.findOne(
+//       {
+//         email
+//       },
+//       'password loginAttempts blockExpires name email role verified verification',
+//       (err, item) => {
+//         utils.itemNotFound(err, item, reject, 'USER_DOES_NOT_EXIST')
+//         resolve(item)
+//       }
+//     )
+//   })
+// }
 
-const forgetPassword = async (req, res) => {
-  try{
-    const locale = req.getLocale();
-    const data = matchedData(req)
-    await findAccount(data.email)
-    const item = await saveForgotPassword(req)
-    emailer.sendResetPasswordEmailMessage(locale, item)
-    res.status(200).json(forgotPasswordResponse(item))
-  }catch (error) {
-    res.json(error);
-  }
+// const forgetPassword = async (req, res) => {
+//   try{
+//     const locale = req.getLocale();
+//     const data = matchedData(req)
+//     await findAccount(data.email)
+//     const item = await saveForgotPassword(req)
+//     emailer.sendResetPasswordEmailMessage(locale, item)
+//     res.status(200).json(forgotPasswordResponse(item))
+//   }catch (error) {
+//     res.json(error);
+//   }
   
-};
+// };
 
 // const logout = (req, res, next) => {
 //   User.remove({ _id: req.params.id })
@@ -175,8 +175,6 @@ module.exports = {
   sendJSONresponse,
   register,
   login,
-  changePassword,
-  forgetPassword,
   confirmationMail,
   verifyAccount
 };

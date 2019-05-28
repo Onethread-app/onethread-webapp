@@ -27,6 +27,10 @@ if (config.mongooseDebug) {
   });
 }
 
+app.on('listening',function(){
+  console.log('ok, server is running');
+});
+
 // module.parent check is required to support mocha watch
 // src: https://github.com/mochajs/mocha/issues/1912
 if (!module.parent) {

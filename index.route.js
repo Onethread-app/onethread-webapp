@@ -1,9 +1,12 @@
 const express = require('express');
-const authRoutes = require('./server/auth/auth.route');
+const postRoutes = require('./server/post/post.route');
+const saveRoutes = require('./server/save/save.route');
+const commentRoutes = require('./server/comment/comment.route');
+const reportRoutes = require('./server/report/report.route');
+//const authRoutes = require('./server/auth/auth.route');
 const accountRoutes = require('./server/account/account.route');
 const userRoutes = require('./server/registereduser/user.route');
 const companyRoutes = require('./server/company/company.route');
-const postRoutes = require('./server/post/post.route');
 const router = express.Router(); // eslint-disable-line new-cap
 
 // TODO: use glob to match *.route files
@@ -17,6 +20,10 @@ router.get('/health-check', (req, res) =>
 router.use('/account', accountRoutes);
 
 //router.use('/posts', postRoutes);
+router.use('/posts', postRoutes);
+router.use('/saves', saveRoutes);
+router.use('/comments', commentRoutes);
+router.use('/reports', reportRoutes);
 // mount user routes at /users
 router.use('/users', userRoutes);
 
@@ -24,6 +31,6 @@ router.use('/users', userRoutes);
 router.use('/company', companyRoutes);
 
 // mount auth routes at /auth
-router.use('/auth', authRoutes);
+//router.use('/auth', authRoutes);
 
 module.exports = router;
