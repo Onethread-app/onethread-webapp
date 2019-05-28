@@ -7,7 +7,6 @@ const APIError = require("../../helpers/APIError");
 
 const config = require("../../../config/config");
 const User = require("../account.model");
-const auth = require("../auth");
 
 const sendJSONresponse = function (res, status, content) {
   res.status(status);
