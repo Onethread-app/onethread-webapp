@@ -4,51 +4,54 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
 const httpStatus = require("http-status");
-const APIError = require("../../helpers/APIError");
+const APIError = require("../helpers/APIError");
 
-const config = require("../../../config/config");
-const Account = require("../model/account.model");
-const RegisteredUser = require("../model/user.model");
-const auth = require("../auth");
+const config = require("../../config/config");
+const Account = require("../account/account.model");
+const RegisteredUser = require("./user.model");
+
+
 
 // create a user profile
 const createProfile = (req, res, next) => {
-  const id = mongoose.Types.ObjectId(req.params.id);
 
-  
-  Account.findById(id, function(err, user){
-    if(err){console.log(err);}
-    else{
-      const registeredUser = new RegisteredUser({
-        name: req.body.name,
-        gender: req.body.gender,
-        skillArea: req.body.skillArea,
-        mobileNumber: req.body.mobileNumber,
-        about: req.body.about,
-        bio: req.body.bio,
-        account: id,
-      })
-      registeredUser
-      .save()
-      .then(result => {
-        res.redirect(`http://127.0.0.1:4040/api/v1/account/profile/${result._id}`);
-      })
-      .catch(err => res.json(err))
-    }
+  const registeredUser = new RegisteredUser({
+    name: req.body.name,
+    gender: req.body.gender,
+    skillArea: req.body.skillArea,
+    mobileNumber: req.body.mobileNumber,
+    about: req.body.about,
+    bio: req.body.bio,
+    secondaryEmail: req.body.secondaryEmail,
+    birthday: req.body.birthday,
+    account: req.user.id,
   })
+  registeredUser
+    .save()
+    .then(result => {
+      req.profile = result;
+      res.status(201).send({
+        success: true,
+        result: result
+      })
 
-
-  
-  // Account.findById(id, function (err, user) {
-  //   if (err) {
-  //     return res.status(500).send({
-  //       message: err
-  //     });
-  //   } else {
-      
-  //   }
-  // })
+    }).catch(err => res.json(err))
 }
+
+
+
+
+
+// Account.findById(id, function (err, user) {
+//   if (err) {
+//     return res.status(500).send({
+//       message: err
+//     });
+//   } else {
+
+//   }
+// })
+
 
 const profileList = (req, res, next) => {
   const {
@@ -71,8 +74,8 @@ const profileList = (req, res, next) => {
     });
 }
 const profile = (req, res, next) => {
-  let id = req.params.id;
-  RegisteredUser.findById(id)
+  let id = req.user.id;
+  RegisteredUser.find({account: id})
     .populate('account')
     .exec()
     .then(profile => {
@@ -126,8 +129,8 @@ const profileDelete = (req, res) => {
       });
     }
   })
-
 }
+
 module.exports = {
   profileList,
   profile,

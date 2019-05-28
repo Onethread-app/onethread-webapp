@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt'),
   SALT_WORK_FACTOR = 10;
 const jwt = require('jsonwebtoken');
-const config = require('../../../config/config');
+const config = require('../../config/config');
 
 
 // defining all the fields of individual account
@@ -55,7 +55,6 @@ accountsSchema.pre('save', function (next) {
 });
 
 accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
-  console.log(this.password, candidatePassword);
   bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
     if (err) return cb(err);
     cb(null, isMatch);
@@ -75,6 +74,10 @@ accountsSchema.methods.generateJwt = function () {
     expiresIn: 60*60
   }); 
 };
+
+accountsSchema.methods.abc = function() {
+  return "abc";
+}
 
 
 module.exports = mongoose.model('Account', accountsSchema);

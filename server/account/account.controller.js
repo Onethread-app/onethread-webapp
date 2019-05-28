@@ -3,12 +3,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
 const httpStatus = require("http-status");
-const APIError = require("../../helpers/APIError");
-
-const config = require("../../../config/config");
-const Account = require("../model/account.model");
-const auth = require("../auth");
-const smtpTransport = require("../services/sendmail");
+const APIError = require("../helpers/APIError");
+const Account = require("./account.model");
+const smtpTransport = require("../helpers/sendmail");
 
 const sendJSONresponse = function(res, status, content) {
   res.status(status);
@@ -33,7 +30,7 @@ const register = (req, res) => {
       .then(result => {
         // console.log(result);
         let token;
-        token = account.generateJwt();
+        token = Account.generateJwt();
         res.status(201).json({
           message: "Handling POST requests to apis/users",
           createdUser: {
@@ -53,31 +50,6 @@ const register = (req, res) => {
   }
 };
 
-const roleAuthorization = roles => {
-  return function(req, res, next) {
-    console.log(user._id);
-
-    Account.findById(user._id, function(err, foundUser) {
-      let role = foundUser.role;
-      console.log(role);
-      if (err) {
-        res.status(422).json({
-          error: "No user found."
-        });
-        return next(err);
-      }
-
-      if (roles.indexOf(foundUser.role) > -1) {
-        return next();
-      }
-
-      res.status(401).json({
-        error: "You are not authorized to view this content"
-      });
-      return next("Unauthorized");
-    });
-  };
-};
 /**
  * Returns jwt token if valid username and password is provided
  * @param req
@@ -111,71 +83,33 @@ const changePassword = async (req, res) => {
   }
 };
 
-const forgetPassword = async (req, res) => {
-  async.waterfall(
-    [
-      function(done) {
-        User.findOne({
-          email: req.body.email
-        }).exec(function(err, user) {
-          if (user) {
-            done(err, user);
-          } else {
-            done("User not found.");
-          }
-        });
+// find account for account verification
+const findAccount = async email => {
+  return new Promise((resolve, reject) => {
+    Account.findOne(
+      {
+        email
       },
-      function(user, done) {
-        // create the random token
-        let token = user.generateJwt();
-        done(err, user, token);
-      },
-      function(user, token, done) {
-        User.findByIdAndUpdate(
-          {
-            _id: user._id
-          },
-          {
-            reset_password_token: token,
-            reset_password_expires: Date.now() + 86400000
-          },
-          {
-            upsert: true,
-            new: true
-          }
-        ).exec(function(err, new_user) {
-          done(err, token, new_user);
-        });
-      },
-      function(token, user, done) {
-        var data = {
-          to: user.email,
-          from: email,
-          template: "forgot-password-email",
-          subject: "Password help has arrived!",
-          context: {
-            url: "http://localhost:3000/auth/reset_password?token=" + token,
-            name: user.fullName.split(" ")[0]
-          }
-        };
-
-        smtpTransport.sendMail(data, function(err) {
-          if (!err) {
-            return res.json({
-              message: "Kindly check your email for further instructions"
-            });
-          } else {
-            return done(err);
-          }
-        });
+      "password loginAttempts blockExpires name email role verified verification",
+      (err, item) => {
+        utils.itemNotFound(err, item, reject, "USER_DOES_NOT_EXIST");
+        resolve(item);
       }
-    ],
-    function(err) {
-      return res.status(422).json({
-        message: err
-      });
-    }
-  );
+    );
+  });
+};
+
+const forgetPassword = async (req, res) => {
+  try {
+    const locale = req.getLocale();
+    const data = matchedData(req);
+    await findAccount(data.email);
+    const item = await saveForgotPassword(req);
+    emailer.sendResetPasswordEmailMessage(locale, item);
+    res.status(200).json(forgotPasswordResponse(item));
+  } catch (error) {
+    res.json(error);
+  }
 };
 
 // const logout = (req, res, next) => {
@@ -242,7 +176,6 @@ module.exports = {
   sendJSONresponse,
   register,
   login,
-  roleAuthorization,
   changePassword,
   forgetPassword,
   confirmationMail,

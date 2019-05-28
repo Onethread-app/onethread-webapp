@@ -1,7 +1,6 @@
 // individual user inSormation
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema
-const Account = require('./account.model');
+const Schema = mongoose.Schema;
 const registeredUserSchema = new Schema({
   name: {
     type: String,
@@ -21,6 +20,12 @@ const registeredUserSchema = new Schema({
     unique: true,
     required: true
   },
+  secondaryEmail: {
+    type: String
+  },
+  birthday: {
+    type: String
+  },
 
   about: {
     type: String
@@ -28,6 +33,10 @@ const registeredUserSchema = new Schema({
   bio: {
     type: String,
   },
-  account : {type: mongoose.Schema.Types.ObjectId, ref: 'Account'}
+  account: {
+    type: Schema.ObjectId,
+    ref: "Account"
+  },
+  joinedOn: { type: Date, default: new Date() }
   }) 
 module.exports = mongoose.model('RegisteredUser', registeredUserSchema);

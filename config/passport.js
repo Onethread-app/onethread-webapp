@@ -1,5 +1,5 @@
 const passport = require("passport");
-const Account = require("../server/account/model/account.model");
+const Account = require("../server/account/account.model");
 const config = require("./config");
 const JwtStrategy = require("passport-jwt").Strategy;
 const ExtractJwt = require("passport-jwt").ExtractJwt;

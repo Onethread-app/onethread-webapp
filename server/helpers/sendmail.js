@@ -1,8 +1,7 @@
 "use strict";
 const express = require("express");
 const nodemailer = require("nodemailer");
-//const transport = require('nodemailer-smtp-transport');
-//const app = express()
+const config = require("../../config/config");
 /*
     Here we are configuring our SMTP Server details.
     STMP is mail server which is responsible for sending and recieving email.
@@ -10,8 +9,8 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: "robatdas2018@gmail.com",
-    pass: "123robat321"
+    user: config.mail_address,
+    pass: config.password
   }
 });
 

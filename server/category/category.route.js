@@ -6,7 +6,7 @@ const router = express.Router();
 const categoryCtrl = require("./category.controller");
 const passport = require("passport");
 const passportJWT = passport.authenticate("jwt", { session: false });
-const permit = require("./../helpers/permission");
+const { permit, authSelf } = require("./../helpers/permission");
 // authentication
 router
   .route("/")
