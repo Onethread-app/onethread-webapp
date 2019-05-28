@@ -4,13 +4,12 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
 const httpStatus = require("http-status");
-const APIError = require("../../helpers/APIError");
+const APIError = require("../helpers/APIError");
 
-const config = require("../../../config/config");
-const Account = require("../model/account.model");
+const config = require("../../config/config");
+const Account = require("../account/account.model");
 //const RegisteredUser = require("../model/user.model");
-const CompanyUser = require("../model/company.model");
-const auth = require("../auth");
+const CompanyUser = require("../company/company.model");
 
 // create a user profile
 const createProfile = (req, res, next) => {
@@ -23,6 +22,7 @@ const createProfile = (req, res, next) => {
         companyName: req.body.companyName,
         phoneNumber: req.body.phoneNumber,
         companyAddress: req.body.companyAddress,
+        establishDate: req.body.establishDate,  
         selectDistrict: req.body.selectDistrict,
         selectThana: req.body.selectThana,
         businessDescription: req.body.businessDescription,

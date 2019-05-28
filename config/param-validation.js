@@ -3,6 +3,7 @@ const Joi = require("joi");
 module.exports = {
   // POST /register
   // console.log('here');
+  
   register: {
     body: {
       name: Joi.string()

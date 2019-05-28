@@ -3,12 +3,9 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const jwt = require("jsonwebtoken");
 const httpStatus = require("http-status");
-const APIError = require("../../helpers/APIError");
-
-const config = require("../../../config/config");
-const Account = require("../model/account.model");
-const auth = require("../auth");
-const smtpTransport = require("../services/sendmail")
+const APIError = require("../helpers/APIError");
+const Account = require("./account.model");
+const smtpTransport = require("../helpers/sendmail")
 
 const sendJSONresponse = function (res, status, content) {
   res.status(status);
@@ -26,7 +23,6 @@ const register = (req, res) => {
       email: req.body.email,
       password: req.body.password,
       role: req.body.role
-
     });
 
     account
@@ -34,7 +30,7 @@ const register = (req, res) => {
       .then(result => {
         // console.log(result);
         let token;
-        token = user.generateJwt();
+        token = Account.generateJwt();
         res.status(201).json({
           message: "Handling POST requests to apis/users",
           createdUser: {
@@ -91,41 +87,7 @@ const roleAuthorization = (roles) => {
  * @returns {*}
  */
 const login = (req, res, next) => {
-  console.log("email", req.body.username);
-  Account.findOne({
-      email: req.body.username
-    },
-    
-    function (err, account) {
-      if (err) throw err;
-
-      if (!account) {
-        res.status(401).send({
-          success: false,
-          msg: "Authentication failed. User not found."
-        });
-      } else {
-        // check if password matches
-        account.comparePassword(req.body.password, function (err, isMatch) {
-          if (isMatch && !err) {
-            // if user is found and password is right create a token
-
-            let token = account.generateJwt();
-            // return the information including token as JSON
-            res.json({
-              success: true,
-              token: token
-            });
-          } else {
-            res.status(401).send({
-              success: false,
-              msg: "Authentication failed. Wrong password."
-            });
-          }
-        });
-      }
-    }
-  );
+  res.json({ success: true, token: req.user.generateJwt() });
 };
 
 /**
@@ -253,7 +215,7 @@ const confirmationMail = (req, res) => {
   });
 }
 
-const verifyAccount = (req, res)=> {
+const verifyAccount = (req, res) => {
   console.log(req.protocol + ":/" + req.get('host'));
   if ((req.protocol + "://" + req.get('host')) == ("http://" + host)) {
     console.log("Domain is matched. Information is from Authentic email");
