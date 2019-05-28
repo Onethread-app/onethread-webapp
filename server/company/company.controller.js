@@ -13,48 +13,31 @@ const CompanyUser = require("../company/company.model");
 
 // create a user profile
 const createProfile = (req, res, next) => {
- let id = req.params.id;
- console.log(typeof(id));
-  Account.findById(id, function(err, user){
-    if(err){res.json(err);}
-    else{
-      const companyUser = new CompanyUser({
-        companyName: req.body.companyName,
-        phoneNumber: req.body.phoneNumber,
-        companyAddress: req.body.companyAddress,
-        establishDate: req.body.establishDate,  
-        selectDistrict: req.body.selectDistrict,
-        selectThana: req.body.selectThana,
-        businessDescription: req.body.businessDescription,
-        tradeLicense: req.body.tradeLicense,
-        contactPersonName: req.body.contactPersonName,
-        contactPersonDesignation: req.body.contactPersonDesignation,
-        contactPersonEmail: req.body.contactPersonEmail,
-        contactPersonMobile: req.body.contactPersonMobile,
-        //category: id,
-        account: id
-      })
-      companyUser
-      .save()
-      .then(result => {
-        res.redirect(`http://127.0.0.1:4040/api/v1/account/profile/${result._id}`);
-      })
-      .catch(err => res.json(err))
-    }
+  const companyUser = new CompanyUser({
+    companyName: req.body.companyName,
+    phoneNumber: req.body.phoneNumber,
+    companyAddress: req.body.companyAddress,
+    establishDate: req.body.establishDate,
+    selectDistrict: req.body.selectDistrict,
+    selectThana: req.body.selectThana,
+    businessDescription: req.body.businessDescription,
+    tradeLicense: req.body.tradeLicense,
+    contactPersonName: req.body.contactPersonName,
+    contactPersonDesignation: req.body.contactPersonDesignation,
+    contactPersonEmail: req.body.contactPersonEmail,
+    contactPersonMobile: req.body.contactPersonMobile,
+    //category: id,
+    account: id
   })
-
-
-  
-  // Account.findById(id, function (err, user) {
-  //   if (err) {
-  //     return res.status(500).send({
-  //       message: err
-  //     });
-  //   } else {
-      
-  //   }
-  // })
+  companyUser
+    .save()
+    .then(result => {
+      res.redirect(`http://127.0.0.1:4040/api/v1/account/profile/${result._id}`);
+    })
+    .catch(err => res.json(err))
 }
+
+
 
 const profileList = (req, res, next) => {
   const {
