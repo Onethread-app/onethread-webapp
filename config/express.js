@@ -1,18 +1,41 @@
+//import authenticate from "./authentication";
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const compress = require('compression');
+const passport = require('passport');
 const methodOverride = require('method-override');
 const cors = require('cors');
 const httpStatus = require('http-status');
 const expressWinston = require('express-winston');
 const expressValidation = require('express-validation');
 const helmet = require('helmet');
+const FacebookStrategy = require('passport-facebook').Strategy;
 const winstonInstance = require('./winston');
 const routes = require('../index.route');
 const config = require('./config');
 const APIError = require('../server/helpers/APIError');
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
+
+// config
+passport.use(new FacebookStrategy({
+  clientID: '1269492783226242', //config.facebook.clientID,
+  clientSecret: 'bf010511846b117496c67c63d0d82543',//config.facebook.clientSecret,
+  callbackURL: '/auth/facebook/callback'//config.facebook.callbackURL
+  },
+  function(accessToken, refreshToken, profile, done) {
+    process.nextTick(function () {
+      return done(null, profile);
+    });
+  }
+));
 
 const app = express();
 
@@ -24,6 +47,9 @@ if (config.env === 'development') {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(cookieParser());
 app.use(compress());
 app.use(methodOverride());
@@ -34,21 +60,22 @@ app.use(helmet());
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 
-// enable detailed API logging in dev env
-// if (config.env === 'development') {
-//   expressWinston.requestWhitelist.push('body');
-//   expressWinston.responseWhitelist.push('body');
-//   app.use(expressWinston.logger({
-//     winstonInstance,
-//     meta: true, // optional: log meta data about request (defaults to true)
-//     msg: 'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
-//     colorStatus: true // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
-//   }));
-// }
+//enable detailed API logging in dev env
+ if (config.env === 'development') {
+  expressWinston.requestWhitelist.push('body');
+  expressWinston.responseWhitelist.push('body');
+   app.use(expressWinston.logger({
+     winstonInstance,
+     meta: true, // optional: log meta data about request (defaults to true)
+     msg: 'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
+     colorStatus: true // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
+   }));
+ }
 
 
 
 // mount all routes on /api path
+
 app.use('/api/v1', routes);
 
 // if error is not an instanceOf APIError, convert it.
@@ -85,5 +112,20 @@ app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
     stack: config.env === 'development' ? err.stack : {}
   })
 );
+
+app.get('/auth/facebook',
+  passport.authenticate('facebook'),
+  function(req, res){});
+app.get('/auth/facebook/callback',
+  passport.authenticate('facebook', { failureRedirect: '/' }),
+  function(req, res) {
+    res.redirect('/account');
+  });
+
+// test authentication
+function ensureAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) { return next(); }
+  res.redirect('/');
+}
 
 module.exports = app;

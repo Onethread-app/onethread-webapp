@@ -2,25 +2,26 @@ const Joi = require("joi");
 
 module.exports = {
   // POST /register
+  // console.log('here');
+  
   register: {
     body: {
-      body: {
-        name: Joi.string()
-          .regex(/^[A-Z]+ [A-Z]+$/i)
-          .required(),
-        email: Joi.string()
-          .email()
-          .lowercase()
-          .required(),
-        gender: Joi.string()
-          .valid(["m", "f"])
-          .lowercase()
-          .required(),
-        skillArea: Joi.string().required(),
-        phone: Joi.string()
-          .regex(/^\+?(88)?(0|01)[3456789][0-9]{8}$/)
-          .required()
-      }
+      name: Joi.string()
+        .regex(/^[A-Z]+ [A-Z]+$/i)
+        .required(),
+      email: Joi.string()
+        .email()
+        .lowercase()
+        .required(),
+      gender: Joi.string()
+        .valid(["m", "f", "other"])
+        .required(),
+      password: Joi.string()
+        .min(8)
+        .required(),
+      mobileNumber: Joi.string()
+        .regex(/^\+?(880)?1[3456789][0-9]{8}$/)
+        .required()
     }
   },
   // POST /api/users
