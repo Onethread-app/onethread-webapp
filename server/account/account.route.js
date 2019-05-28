@@ -14,23 +14,24 @@ const {permit, authSelf} = require('../helpers/permission');
 // authentication
 router  
   .route('/signup')
-  .post(accountCtrl.register);
+  .post(validate(paramValidation.register),accountCtrl.register);
 
 router
   .route('/change_password')
   .post( accountCtrl.changePassword);
 
+// send confirmation mail after sign up
 router
   .route('/send')
   .get(accountCtrl.confirmationMail);
-
+// verfiy user if he check his email
 router
   .route('/verify')
   .get(accountCtrl.verifyAccount);
 
-//router
-//  .route('/forget_password')
-//  .post( accountCtrl.forgetPassword);
+router
+  .route('/forget_password')
+  .post( accountCtrl.forgetPassword);
 
 router
   .route("/login").post(requireLogin, accountCtrl.login);
