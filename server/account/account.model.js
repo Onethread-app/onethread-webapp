@@ -60,10 +60,6 @@ accountsSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 // generating jwt token
 accountsSchema.methods.generateJwt = function() {
-  // token will expire within 7 days
-  //let expire = new Date();
-  //expire.setDate(expire.getDate() + 7);
-
   return jwt.sign(
     {
       _id: this._id,
@@ -74,10 +70,6 @@ accountsSchema.methods.generateJwt = function() {
       expiresIn: 60 * 60
     }
   );
-};
-
-accountsSchema.methods.abc = function() {
-  return "abc";
 };
 
 module.exports = mongoose.model("Account", accountsSchema);
