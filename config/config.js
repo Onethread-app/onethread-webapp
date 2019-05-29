@@ -22,10 +22,14 @@ const envVarsSchema = Joi.object({
     .description('Mongo DB host url'),
   MONGO_PORT: Joi.number()
     .default(27017),
-  email_address: Joi.string().required()
+  EMAIL_ADDRESS: Joi.string().required()
     .description("email address required"),
-  password : Joi.string().required()
-    .description("password required")
+  PASSWORD: Joi.string().required()
+    .description("password required"),
+  FACEBOOK_ID : Joi.string().required()
+    .description("facebook id required"),
+  FACEBOOK_SECRET: Joi.string().required()
+    .description("facebook secret key required")
 }).unknown()
   .required()
   

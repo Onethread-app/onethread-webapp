@@ -1,9 +1,5 @@
 "use strict";
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const jwt = require("jsonwebtoken");
-const httpStatus = require("http-status");
-const APIError = require("../helpers/APIError");
+
 const Account = require("./account.model");
 const smtpTransport = require("../helpers/sendmail");
 
@@ -22,16 +18,15 @@ const register = (req, res) => {
     const account = new Account({
       email: req.body.email,
       password: req.body.password,
-      role: req.body.role
+      role: req.body.role,
     });
 
     account
       .save()
       .then(result => {
-        // console.log(result);
         let token;
-        token = Account.generateJwt();
-        res.status(201).json({
+        token = account.generateJwt();
+        res.status(200).json({
           message: "Handling POST requests to apis/users",
           createdUser: {
             _id: result._id,
@@ -60,6 +55,16 @@ const register = (req, res) => {
 const login = (req, res, next) => {
   res.json({ success: true, token: req.user.generateJwt() });
 };
+
+// let's logout
+const logout = (req, res) => {
+  req.logout();
+  res.json({
+    success: true,
+    msg:'You are successfully logout'
+  });
+  res.end();
+}
 
 /**
  * Change password function called by route
@@ -176,6 +181,7 @@ module.exports = {
   sendJSONresponse,
   register,
   login,
+  logout,
   changePassword,
   forgetPassword,
   confirmationMail,
