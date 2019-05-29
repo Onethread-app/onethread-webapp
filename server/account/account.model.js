@@ -1,15 +1,13 @@
-'use strict';
+"use strict";
 
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt'),
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt"),
   SALT_WORK_FACTOR = 10;
-const jwt = require('jsonwebtoken');
-const config = require('../../config/config');
-
+const jwt = require("jsonwebtoken");
+const config = require("../../config/config");
 
 // defining all the fields of individual account
 const accountsSchema = new mongoose.Schema({
- 
   email: {
     type: String,
     unique: true,
@@ -23,28 +21,27 @@ const accountsSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['guest', 'admin', 'company', 'user'],
-    default: 'guest'
+    enum: ["guest", "admin", "company", "user"],
+    default: "guest"
   },
   account_type: {
     type: String,
-    enum: ['premium', 'normal']
+    enum: ["premium", "normal"]
   }
 });
 
-
-accountsSchema.pre('save', function (next) {
+accountsSchema.pre("save", function(next) {
   let user = this;
 
   // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) return next();
+  if (!user.isModified("password")) return next();
 
   // generate a salt
-  bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
+  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
     if (err) return next(err);
 
     // hash the password using our new salt
-    bcrypt.hash(user.password, salt, function (err, hash) {
+    bcrypt.hash(user.password, salt, function(err, hash) {
       if (err) return next(err);
 
       // override the cleartext password with the hashed one
@@ -54,30 +51,33 @@ accountsSchema.pre('save', function (next) {
   });
 });
 
-accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+accountsSchema.methods.comparePassword = function(candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
     if (err) return cb(err);
     cb(null, isMatch);
   });
 };
 
 // generating jwt token
-accountsSchema.methods.generateJwt = function () {
+accountsSchema.methods.generateJwt = function() {
   // token will expire within 7 days
   //let expire = new Date();
   //expire.setDate(expire.getDate() + 7);
 
-  return jwt.sign({
-    _id: this._id,
-    role: this.role
-  }, config.jwtSecret,{
-    expiresIn: 60*60
-  }); 
+  return jwt.sign(
+    {
+      _id: this._id,
+      role: this.role
+    },
+    config.jwtSecret,
+    {
+      expiresIn: 60 * 60
+    }
+  );
 };
 
 accountsSchema.methods.abc = function() {
   return "abc";
-}
+};
 
-
-module.exports = mongoose.model('Account', accountsSchema);
+module.exports = mongoose.model("Account", accountsSchema);
