@@ -35,7 +35,6 @@ const companyUserSchema = new Schema({
         type: String,
         required: true
     },
-
     contactPersonName: {
         type: String,
         required: true

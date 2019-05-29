@@ -6,5 +6,11 @@ module.exports = {
       text: Joi.string().required(),
       postRef: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
     }
+  },
+  updateSave: {
+    body: {
+      text: Joi.string().required(),
+      postRef: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
+    }
   }
 };

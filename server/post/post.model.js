@@ -68,6 +68,9 @@ const PostSchema = new mongoose.Schema({
     }],
     validate: [tagLimit, '{PATH} user exceeds the limit of 10']
   },
+  removed: {
+    type: Boolean
+  },
   updated: {
     type: Date
   },

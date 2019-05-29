@@ -57,6 +57,7 @@ function list(req, res) {
 
 function remove(req, res, next) {
   const report = req.report;
+  report.removed = true;
   report
     .remove()
     .then(result => res.json(result))

@@ -149,7 +149,7 @@ describe("## comment APIs", () => {
         .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.postRef).to.equal(comment.postRef);
+          expect(res.body.removed).to.equal(true);
           done();
         })
         .catch(done);
