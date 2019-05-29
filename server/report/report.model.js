@@ -43,6 +43,9 @@ const ReportSchema = new mongoose.Schema({
     type: Schema.ObjectId,
     ref: "Comment"
   },
+  removed: {
+    type: Boolean
+  },
   updated: {
     type: Date
   },

@@ -172,10 +172,19 @@ function list(req, res, next) {
  * Delete post.
  * @returns {post}
  */
+// function remove(req, res, next) {
+//   const post = req.post;
+//   post.remove()
+//     .then(deletedpost => res.json(deletedpost))
+//     .catch(e => next(e));
+// }
+
 function remove(req, res, next) {
   const post = req.post;
-  post.remove()
-    .then(deletedpost => res.json(deletedpost))
+  post.removed = true;
+
+  post.save()
+    .then(result => res.json(result))
     .catch(e => next(e));
 }
 

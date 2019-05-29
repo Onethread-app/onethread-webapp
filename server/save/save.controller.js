@@ -54,6 +54,8 @@ function list(req, res) {
 
 function remove(req, res, next) {
   const save = req.save;
+  save.removed = true;
+
   save
     .remove()
     .then(result => res.json(result))

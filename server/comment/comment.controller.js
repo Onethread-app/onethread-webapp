@@ -54,77 +54,108 @@ function list(req, res) {
 }
 
 function tag(req, res, next) {
-
   const id = req.params.commentId;
-  
- 
-  Comment.findByIdAndUpdate(id,  {$push: {tag : '5cdb98cdab24ca4b10407752'}}, {
-    new: true } )
-   .then(result => {
-     
-     if (result) {
-      res.json(result);
-    }  else {
-      return res.status(400)
-        .json({ message: "No valid entry found for provided ID" });
-     }
-   })
-   .catch(err => {
-     // console.log(err);
-     next(err);
-   });
+
+  Comment.findByIdAndUpdate(
+    id,
+    { $push: { tag: "5cdb98cdab24ca4b10407752" } },
+    {
+      new: true
+    }
+  )
+    .then(result => {
+      if (result) {
+        res.json(result);
+      } else {
+        return res
+          .status(400)
+          .json({ message: "No valid entry found for provided ID" });
+      }
+    })
+    .catch(err => {
+      // console.log(err);
+      next(err);
+    });
 }
 
 function like(req, res, next) {
-
   const id = req.params.commentId;
-  
- 
-  Comment.findByIdAndUpdate(id,  {$push: {like : '5cdb98cdab24ca4b10407752'}}, {
-    new: true } )
-   .then(result => {
-     
-     if (result) {
-      res.json(result);
-    }  else {
-      return res.status(400)
-        .json({ message: "No valid entry found for provided ID" });
-     }
-   })
-   .catch(err => {
-     // console.log(err);
-     next(err);
-   });
+
+  Comment.findByIdAndUpdate(
+    id,
+    { $push: { like: "5cdb98cdab24ca4b10407752" } },
+    {
+      new: true
+    }
+  )
+    .then(result => {
+      if (result) {
+        res.json(result);
+      } else {
+        return res
+          .status(400)
+          .json({ message: "No valid entry found for provided ID" });
+      }
+    })
+    .catch(err => {
+      // console.log(err);
+      next(err);
+    });
+}
+
+function update(req, res, next) {
+  const comment = req.comment;
+  comment.text = req.body.text;
+
+  comment
+    .save()
+    .then(result => res.json(result))
+    .catch(e => next(e));
 }
 
 function respect(req, res, next) {
-
   const id = req.params.commentId;
-  
- 
-  Comment.findByIdAndUpdate(id,  {$push: {respect : '5cdb98cdab24ca4b10407752'}}, {
-    new: true } )
-   .then(result => {
-     
-     if (result) {
-      res.json(result);
-    }  else {
-      return res.status(400)
-        .json({ message: "No valid entry found for provided ID" });
-     }
-   })
-   .catch(err => {
-     // console.log(err);
-     next(err);
-   });
+
+  Comment.findByIdAndUpdate(
+    id,
+    { $push: { respect: "5cdb98cdab24ca4b10407752" } },
+    {
+      new: true
+    }
+  )
+    .then(result => {
+      if (result) {
+        res.json(result);
+      } else {
+        return res
+          .status(400)
+          .json({ message: "No valid entry found for provided ID" });
+      }
+    })
+    .catch(err => {
+      // console.log(err);
+      next(err);
+    });
 }
 
 function remove(req, res, next) {
   const comment = req.comment;
+  comment.removed = true;
   comment
     .remove()
     .then(result => res.json(result))
     .catch(e => next(e));
 }
 
-module.exports = { load, create, get, load, remove, list, tag, like, respect };
+module.exports = {
+  load,
+  create,
+  get,
+  load,
+  remove,
+  list,
+  tag,
+  like,
+  respect,
+  update
+};

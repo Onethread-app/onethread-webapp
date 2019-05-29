@@ -10,19 +10,20 @@ const router = express.Router();
 
 router
   .route("/")
-  .get( requireAuth, commentCtrl.list)
-  .post(requireAuth, validate(paramValidation.createSave), commentCtrl.create);
+  .get( requireAuth, permit('user', 'admin'), commentCtrl.list)
+  .post(requireAuth, permit('user', 'admin'), validate(paramValidation.createSave), commentCtrl.create);
 
 router
   .route("/:commentId")
-  .get(requireAuth, commentCtrl.get)
-  .delete(requireAuth, commentCtrl.remove);
+  .get(requireAuth, permit('user', 'admin'), commentCtrl.get)
+  .put(requireAuth, authSelf('comment'), validate(paramValidation.updateSave), commentCtrl.update)
+  .delete(requireAuth, authSelf('comment'), commentCtrl.remove);
 
 router.route('/likes/:commentId')
-  .get(requireAuth, commentCtrl.like);
+  .get(requireAuth, permit('user', 'admin'), commentCtrl.like);
 
 router.route('/respectes/:commentId')
-  .get(requireAuth, commentCtrl.respect);
+  .get(requireAuth, permit('user', 'admin'), commentCtrl.respect);
 
 
 router.param("commentId", commentCtrl.load);

@@ -9,6 +9,9 @@ const SaveSchema = new mongoose.Schema({
   updated: {
     type: Date
   },
+  removed: {
+    type: Boolean
+  },
   created: {
     type: Date,
     default: Date.now

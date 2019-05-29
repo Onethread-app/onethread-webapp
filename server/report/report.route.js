@@ -10,13 +10,13 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router
   .route("/")
-  .get(requireAuth, reportCtrl.list)
-  .post(requireAuth, validate(paramValidation.createSave), reportCtrl.create);
+  .get(requireAuth, permit('user', 'admin'), reportCtrl.list) //this may not needed
+  .post(requireAuth, permit('user', 'admin'), validate(paramValidation.createSave), reportCtrl.create);
 
 router
   .route("/:reportId")
-  .get(requireAuth, reportCtrl.get)
-  .delete(requireAuth, reportCtrl.remove);
+  .get(requireAuth, permit('user', 'admin'), reportCtrl.get)
+  .delete(requireAuth, authSelf('report'), reportCtrl.remove);
 
 router.param("reportId", reportCtrl.load);
 

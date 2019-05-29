@@ -18,7 +18,7 @@ router
 router
   .route("/:saveId")
   .get(requireAuth, permit('user','admin'), saveCtrl.get)
-  .delete(requireAuth,  saveCtrl.remove); // 
+  .delete(requireAuth, authSelf('save'),  saveCtrl.remove); // 
 
 router.param("saveId", saveCtrl.load);
 

@@ -121,7 +121,7 @@ describe("## Save APIs", () => {
         .set("Authorization", token)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.postRef).to.equal(save.postRef);
+          expect(res.body.removed).to.equal(true);
           done();
         })
         .catch(done);
