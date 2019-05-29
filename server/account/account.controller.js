@@ -30,7 +30,7 @@ const register = (req, res) => {
       .then(result => {
         // console.log(result);
         let token;
-        token = Account.generateJwt();
+        token = account.generateJwt();
         res.status(201).json({
           message: "Handling POST requests to apis/users",
           createdUser: {
@@ -42,7 +42,6 @@ const register = (req, res) => {
         });
       })
       .catch(err => {
-        // console.log(err);
         res.status(500).json({
           error: err
         });
