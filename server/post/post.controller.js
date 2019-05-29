@@ -153,7 +153,7 @@ function update(req, res, next) {
  */
 function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  Post.find()
+  Post.find({removed: false})
   .sort({ createdAt: -1 })
   .skip(+skip)
   .limit(+limit)

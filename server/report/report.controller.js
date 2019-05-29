@@ -40,7 +40,7 @@ function create(req, res, next) {
 
 function list(req, res) {
   const { limit = 50, skip = 0 } = req.query;
-  Report.find()
+  Report.find({removed: false})
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -58,6 +58,7 @@ function list(req, res) {
 function remove(req, res, next) {
   const report = req.report;
   report.removed = true;
+
   report
     .remove()
     .then(result => res.json(result))

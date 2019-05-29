@@ -143,7 +143,7 @@ describe("## comment APIs", () => {
   });
 
   describe("# DELETE /api/comments/", () => {
-    it("should delete comment", done => {
+    it("should delete comment with auth and self premmission", done => {
       request(app)
         .delete(`/api/v1/comments/${comment._id}`)
         .set("Authorization", token)

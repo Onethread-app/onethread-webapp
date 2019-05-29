@@ -37,7 +37,7 @@ function create(req, res, next) {
 
 function list(req, res) {
   const { limit = 50, skip = 0 } = req.query;
-  Save.find()
+  Save.find({removed: false})
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
