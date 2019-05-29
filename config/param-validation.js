@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = {
   // POST /register
   // console.log('here');
-  
+
   register: {
     body: {
       email: Joi.string()
@@ -12,9 +12,6 @@ module.exports = {
         .required(),
       password: Joi.string()
         .min(8)
-        .required(),
-      mobileNumber: Joi.string()
-        .regex(/^\+?(880)?1[3456789][0-9]{8}$/)
         .required()
     }
   },
