@@ -14,12 +14,15 @@ module.exports = {
 					/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/
 				)
 				.required()
+<<<<<<< HEAD
 				.error(errors => {
 					return {
 						message:
 							"Password should contain Uppercase, Lowercase, Special character, Number"
 					};
 				})
+=======
+>>>>>>> c48479f5... nothing speacial
 		}
 	}
 };
