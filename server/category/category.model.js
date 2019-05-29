@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 mongoose.plugin(schema => {
   schema.options.usePushEach = true;
 });
-var timestamp = require("mongoose-timestamp");
+//var timestamp = require("mongoose-timestamp");
 
 // defining all the fields of main category
 var categorySchema = mongoose.Schema({
