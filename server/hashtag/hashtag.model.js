@@ -9,7 +9,8 @@ const HashtagSchema = new mongoose.Schema({
     required: true
   },
   removed: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   updated: {
     type: Date

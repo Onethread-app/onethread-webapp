@@ -10,7 +10,8 @@ const SaveSchema = new mongoose.Schema({
     type: Date
   },
   removed: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   created: {
     type: Date,
