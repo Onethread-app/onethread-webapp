@@ -7,6 +7,14 @@ const ReportSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
+  reportContent: {
+    type: [
+      {
+        type: String,
+        enum: ["post", "comment", "user"]
+      }
+    ]
+  },
   reportType: {
     type: [
       {
@@ -31,15 +39,28 @@ const ReportSchema = new mongoose.Schema({
     ],
     default: ["others"]
   },
-  postRef: {
+  reviewStatus: {
+    type: [
+      {
+        type: String,
+        enum: ["block", "noofense", "others", "notresoolved"]
+      }
+    ],
+    default: ["notresoolved"]
+  },
+  reviewText: {
+    type: String,
+    trim: true,
+  },
+  post: {
     type: Schema.ObjectId,
     ref: "Post"
   },
-  userRef: {
+  user: {
     type: Schema.ObjectId,
     ref: "User"
   },
-  commentRef: {
+  comment: {
     type: Schema.ObjectId,
     ref: "Comment"
   },

@@ -72,6 +72,10 @@ const PostSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  blocked: {  //after report admin
+    type: Boolean,
+    default: false
+  },
   updated: {
     type: Date
   },

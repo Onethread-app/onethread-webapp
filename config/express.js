@@ -60,18 +60,18 @@ if (config.env === 'development') {
 app.use('/api/v1', routes); //v1.0
 
 // if error is not an instanceOf APIError, convert it.
-app.use((err, req, res, next) => {
-  if (err instanceof expressValidation.ValidationError) {
-    //     // validation error contains errors which is an array of error each containing message[]
-    const unifiedErrorMessage = err.errors.map(error => error.messages.join('. ')).join(' and ');
-    const error = new APIError(unifiedErrorMessage, err.status, true);
-    return next(error);
-  } else if (!(err instanceof APIError)) {
-    const apiError = new APIError(err.message, err.status, err.isPublic);
-    return next(apiError);
-  }
-  return next(err);
-});
+// app.use((err, req, res, next) => {
+//   if (err instanceof expressValidation.ValidationError) {
+//     //     // validation error contains errors which is an array of error each containing message[]
+//     const unifiedErrorMessage = err.errors.map(error => error.messages.join('. ')).join(' and ');
+//     const error = new APIError(unifiedErrorMessage, err.status, true);
+//     return next(error);
+//   } else if (!(err instanceof APIError)) {
+//     const apiError = new APIError(err.message, err.status, err.isPublic);
+//     return next(apiError);
+//   }
+//   return next(err);
+// });
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

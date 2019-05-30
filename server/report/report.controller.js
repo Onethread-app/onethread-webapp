@@ -1,4 +1,6 @@
 const Report = require("./report.model");
+const Post = require("../post/post.model");
+const Promise = require('bluebird');
 
 function load(req, res, next, id) {
   Report.findById(id)
@@ -24,8 +26,9 @@ function get(req, res) {
 }
 
 function create(req, res, next) {
-  const { refType = "postRef" } = req.query;
+  const { refType = "post" } = req.query;
   const report = new Report({
+    reportContent: refType,
     reportType: req.body.reportType,
     [refType]: req.body.refrence,
     text: req.body.text,
@@ -40,7 +43,7 @@ function create(req, res, next) {
 
 function list(req, res) {
   const { limit = 50, skip = 0 } = req.query;
-  Report.find({removed: false})
+  Report.find({ removed: false })
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -55,6 +58,26 @@ function list(req, res) {
     });
 }
 
+function review(req, res, next) {
+  const report = req.report;
+  report.reviewStatus = req.body.reviewStatus;
+  report.reviewText = req.body.reviewText;
+  let block = [];
+
+  if (true) {
+    block.push(Post.findByIdAndUpdate(
+      report.post,
+      { $set: { blocked: true } },
+      { new: true }
+    ));
+  }
+  //   console.log(block);
+   block.push(report.save());
+  Promise.all(block)
+    .then((result) => res.json(result ))
+    .catch(e => next(e));
+}
+
 function remove(req, res, next) {
   const report = req.report;
   report.removed = true;
@@ -65,4 +88,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { load, create, get, load, remove, list };
+module.exports = { load, create, get, load, remove, list, review };
