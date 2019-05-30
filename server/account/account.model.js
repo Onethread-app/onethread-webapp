@@ -67,12 +67,7 @@ accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
 
 // generating jwt token
 accountsSchema.methods.generateJwt = function () {
-<<<<<<< HEAD
-  
-
-=======
   console.log("lets token create");
->>>>>>> dac19cf37a5a9b8bc198b86a76fee203905ccb59
   return jwt.sign({
     _id: this._id,
     role: this.role,
