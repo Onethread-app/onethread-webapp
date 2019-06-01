@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ReportSchema = new mongoose.Schema({
-  text: {
+  text: { //reason repor deatils
     type: String,
     trim: true,
     required: true

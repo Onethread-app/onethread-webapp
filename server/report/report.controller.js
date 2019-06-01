@@ -1,6 +1,7 @@
 const Report = require("./report.model");
 const Post = require("../post/post.model");
-const Promise = require('bluebird');
+const serviceReport = require("./report.service");
+//const Promise = require('bluebird');
 
 function load(req, res, next, id) {
   Report.findById(id)
@@ -8,7 +9,7 @@ function load(req, res, next, id) {
     .then(result => {
       if (result) {
         req.report = result;
-        return next();
+        return;
       } else {
         return res
           .status(400)
@@ -18,7 +19,8 @@ function load(req, res, next, id) {
     .catch(err => {
       // console.log(err);
       next(err);
-    });
+    })
+    .asCallback(next);
 }
 
 function get(req, res) {
@@ -64,17 +66,15 @@ function review(req, res, next) {
   report.reviewText = req.body.reviewText;
   let block = [];
 
-  if (true) {
-    block.push(Post.findByIdAndUpdate(
-      report.post,
-      { $set: { blocked: true } },
-      { new: true }
-    ));
+  if (req.body.reviewStatus == "block") {
+    block.push(
+      serviceReport.reviewAction(req.body.refrence, report.reportContent[0])
+    );
   }
-  //   console.log(block);
-   block.push(report.save());
+
+  block.push(report.save());
   Promise.all(block)
-    .then((result) => res.json(result ))
+    .then(result => res.json(result))
     .catch(e => next(e));
 }
 

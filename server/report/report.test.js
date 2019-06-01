@@ -43,13 +43,13 @@ after(done => {
 describe("## report APIs", () => {
   let report = {
     reportType: "false",
-    user: "5cdb99532325ce4cab3879cb",
+    user: "5cee5cd6b6a83c52f5e5496b",
     post: "5ceb6a94b3b70224662e4779",
     comment: "5ce0f1fee97dae22b9d82c86",
     text: "hola"
   };
 
-  describe("# SAVE /api/reports", () => {
+  describe("# userSAVE /api/reports", () => {
     let reportuser = Object.create({
       refrence: report.user,
       text: report.text,
@@ -76,7 +76,7 @@ describe("## report APIs", () => {
     });
   });
 
-  describe("# SAVE /api/reports", () => {
+  describe("# commmentSAVE /api/reports", () => {
     let reportuser = Object.create({
       reportType: "false",
       refrence: report.comment,
@@ -99,7 +99,7 @@ describe("## report APIs", () => {
     });
   });
 
-  describe("# SAVE /api/reports", () => {
+  describe("# postSAVE /api/reports", () => {
     //let reportuser = {refrence : postRef , text : text} = report;
     //let { userRef,commentRef, ...reportuser } = report; //rest not working
     let reportuser = Object.create({
