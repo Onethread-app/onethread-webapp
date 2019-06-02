@@ -2,7 +2,7 @@
 
 const express = require("express");
 const validate = require("express-validation");
-const paramValidation = require("../../config/param-validation");
+const paramValidation = require("./user.validation");
 const router = express.Router();
 const jwt = require("express-jwt");
 const passportService = require('../../config/passport');
@@ -16,10 +16,10 @@ const {permit, authSelf} = require('../helpers/permission');
 router
   .route("/profile/:id")
   .get(requireAuth, permit('user'), userCtrl.profile)
-  .post(requireAuth, permit('user'), userCtrl.createProfile);
+  .post(requireAuth, validate(paramValidation.profile), permit('user'), userCtrl.createProfile);
 router
   .route("/profile/:id")
-  .put(requireAuth, permit('user'), userCtrl.profileUpdate)
+  .put(requireAuth, validate(paramValidation.profile), permit('user'), userCtrl.profileUpdate)
   .delete(requireAuth, permit('user'), userCtrl.profileDelete);
 
 

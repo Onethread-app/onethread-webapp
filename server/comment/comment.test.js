@@ -12,7 +12,6 @@ chai.config.includeStack = true;
  */
 let token = "";
 before(done => {
-  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   let credentials = {
     email: "jest@gmail.com",
     password: "jest1234"

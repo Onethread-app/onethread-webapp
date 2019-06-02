@@ -8,13 +8,7 @@ const sendJSONresponse = function(res, status, content) {
   res.json(content);
 };
 
-const register = (req, res) => {
-  if (!req.body.email || !req.body.password) {
-    res.json({
-      success: false,
-      msg: "Please pass username and password."
-    });
-  } else {
+const register = async(req, res) => {
     const account = new Account({
       email: req.body.email,
       password: req.body.password,
@@ -27,6 +21,7 @@ const register = (req, res) => {
         let token;
         token = account.generateJwt();
         res.status(200).json({
+          success: true,
           message: "Handling POST requests to apis/users",
           createdUser: {
             _id: result._id,
@@ -42,7 +37,7 @@ const register = (req, res) => {
           error: err
         });
       });
-  }
+  
 };
 
 /**
@@ -116,23 +111,6 @@ const forgetPassword = async (req, res) => {
     res.json(error);
   }
 };
-
-// const logout = (req, res, next) => {
-//   User.remove({ _id: req.params.id })
-//     .exec()
-//     .then(res => {
-//       res.status(201).json({
-//         success: true,
-//         message: "user deleted"
-//       })
-//     })
-//     .catch(err => {
-//       res.status(500).json({
-//         error: err
-//       })
-//     });
-
-// }
 
 // send confirmation mail to the account hodler
 

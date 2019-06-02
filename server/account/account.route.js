@@ -42,6 +42,8 @@ router
 router
   .route("/admin")
   .post(requireAuth, permit('admin'),accountCtrl.login);
+
+
   
 
   
