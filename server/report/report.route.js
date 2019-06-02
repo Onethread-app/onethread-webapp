@@ -19,7 +19,7 @@ router
   );
 router
   .route("/block/:reportId")
-  .post(reportCtrl.review);
+  .post(requireAuth, permit("admin"), reportCtrl.review);
 router
   .route("/:reportId")
   .get(requireAuth, permit("user", "admin"), reportCtrl.get)
