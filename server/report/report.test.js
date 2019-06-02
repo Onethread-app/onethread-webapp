@@ -5,6 +5,7 @@ const chai = require("chai"); // eslint-disable-line import/newline-after-import
 const expect = chai.expect;
 const app = require("../../index");
 
+
 chai.config.includeStack = true;
 
 /**
@@ -53,6 +54,7 @@ describe("## report APIs", () => {
     let reportuser = Object.create({
       refrence: report.user,
       text: report.text,
+      reportContent: 'user',
       reportType: "false"
     });
 
@@ -91,6 +93,7 @@ describe("## report APIs", () => {
     let reportuser = Object.create({
       reportType: "false",
       refrence: report.comment,
+      reportContent: 'comment',
       text: report.text
     });
 
@@ -129,6 +132,7 @@ describe("## report APIs", () => {
     let reportuser = Object.create({
       reportType: "false",
       refrence: report.post,
+      reportContent: 'post',
       text: report.text
     });
 

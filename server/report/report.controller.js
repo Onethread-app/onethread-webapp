@@ -30,7 +30,7 @@ function get(req, res) {
 function create(req, res, next) {
   const { refType = "post" } = req.query;
   const report = new Report({
-    reportContent: refType,
+    reportContent: req.body.reportContent,
     reportType: req.body.reportType,
     [refType]: req.body.refrence,
     text: req.body.text,
