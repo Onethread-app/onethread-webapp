@@ -44,6 +44,8 @@ after(done => {
 describe("## post APIs", () => {
   let post = {
     text: "KK",
+    privacy: "private",
+    postType: "status",
     location: "dhaka bang"
   };
 
