@@ -22,7 +22,7 @@ router
   .post(requireAuth, permit("admin"), reportCtrl.review);
 router
   .route("/:reportId")
-  .get(requireAuth, permit("user", "admin"), reportCtrl.get)
+  .get(requireAuth, permit("admin"), reportCtrl.get)
   .delete(requireAuth, authSelf("report"), reportCtrl.remove);
 
 router.param("reportId", reportCtrl.load);

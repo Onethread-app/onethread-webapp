@@ -56,6 +56,17 @@ describe("## report APIs", () => {
       reportType: "false"
     });
 
+    it("should not create a new report of post user refrence without login", done => {
+      request(app)
+        .post("/api/v1/reports")
+        .query({ refType: "user" }) // need to change userRef id also
+        .send(reportuser)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should create a new report of post user refrence", done => {
       request(app)
         .post("/api/v1/reports")
@@ -82,6 +93,19 @@ describe("## report APIs", () => {
       refrence: report.comment,
       text: report.text
     });
+
+    it("should not create a new report of post comment refrence withou login", done => {
+      request(app)
+        .post("/api/v1/reports")
+
+        .query({ refType: "comment" }) // need to change userRef id also
+        .send(reportuser)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should create a new report of post comment refrence", done => {
       request(app)
         .post("/api/v1/reports")
@@ -108,6 +132,18 @@ describe("## report APIs", () => {
       text: report.text
     });
 
+    it("should not create a new report of post with post reference without login", done => {
+      request(app)
+        .post("/api/v1/reports")
+
+        .query({ refType: "post" }) // need to change userRef id also
+        .send(reportuser)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should create a new report of post with post reference", done => {
       request(app)
         .post("/api/v1/reports")
@@ -126,6 +162,16 @@ describe("## report APIs", () => {
   });
 
   describe("# GET /api/reports/:reportId", () => {
+    it("should not get report details without login or admin", done => {
+      request(app)
+        .get(`/api/v1/reports/${report._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should get report details", done => {
       request(app)
         .get(`/api/v1/reports/${report._id}`)
@@ -143,10 +189,21 @@ describe("## report APIs", () => {
     let reportuser = Object.create({
       reportType: "false",
       refrence: report.post,
-      reviewStatus: 'block',
+      reviewStatus: "block",
       text: report.text
     });
-    it("should block reported content", done => {
+    it("should not block reported content action without login", done => {
+      request(app)
+        .post(`/api/v1/reports/block/${report._id}`)
+
+        .send(reportuser)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
+    it("should block reported content action", done => {
       request(app)
         .post(`/api/v1/reports/block/${report._id}`)
         .set("Authorization", token)
@@ -155,7 +212,8 @@ describe("## report APIs", () => {
         .then(res => {
           expect(res.body.postRef).to.equal(report.postRef);
           done();
-        }).catch(err => {
+        })
+        .catch(err => {
           console.log(err);
         })
         .catch(done);
@@ -190,6 +248,15 @@ describe("## report APIs", () => {
   });
 
   describe("# DELETE /api/reports/", () => {
+    it("should not delete save without login", done => {
+      request(app)
+        .delete(`/api/v1/reports/${report._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
     it("should delete save", done => {
       request(app)
         .delete(`/api/v1/reports/${report._id}`)

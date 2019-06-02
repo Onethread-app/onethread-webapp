@@ -48,6 +48,16 @@ describe("## post APIs", () => {
   };
 
   describe("# POST /api/psts", () => {
+    it("should not create a new post without login", done => {
+      request(app)
+        .post("/api/v1/posts")
+        .send(post)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should create a new post", done => {
       request(app)
         .post("/api/v1/posts")
@@ -69,6 +79,16 @@ describe("## post APIs", () => {
   });
 
   describe("# GET /api/posts/:postId", () => {
+    it("should not get post details without login", done => {
+      request(app)
+        .get(`/api/v1/posts/${post._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should get post details", done => {
       request(app)
         .get(`/api/v1/posts/${post._id}`)
@@ -96,6 +116,18 @@ describe("## post APIs", () => {
   //   // });
 
   describe("# PUT /api/v1/posts:postId", () => {
+    it("should not update post details without login and self", done => {
+      post.postname = "KK";
+      request(app)
+        .put(`/api/v1/posts/${post._id}`)
+
+        .send(post)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should update post details", done => {
       post.postname = "KK";
       request(app)
@@ -140,6 +172,16 @@ describe("## post APIs", () => {
   });
 
   describe("# Like /api/posts/", () => {
+    it("should not like post without login", done => {
+      request(app)
+        .get(`/api/v1/posts/likes/${post._id}`)
+        .send(post)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should like post", done => {
       request(app)
         .get(`/api/v1/posts/likes/${post._id}`)
@@ -157,6 +199,15 @@ describe("## post APIs", () => {
   });
 
   describe("# Respects /api/posts/", () => {
+    it("should not respect post without login", done => {
+      request(app)
+        .get(`/api/v1/posts/respectes/${post._id}`)
+        .send(post)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
     it("should respect post", done => {
       request(app)
         .get(`/api/v1/posts/respectes/${post._id}`)
@@ -173,6 +224,16 @@ describe("## post APIs", () => {
   });
 
   describe("# DELETE /api/posts/", () => {
+    it("should not delete post without self and login", done => {
+      request(app)
+        .delete(`/api/v1/posts/${post._id}`)
+        .send(post)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should delete post", done => {
       request(app)
         .delete(`/api/v1/posts/${post._id}`)

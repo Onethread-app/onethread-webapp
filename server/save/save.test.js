@@ -48,6 +48,16 @@ describe("## Save APIs", () => {
   };
 
   describe("# SAVE /api/saves", () => {
+    it("should not create a new save of post without auth", done => {
+      request(app)
+        .post("/api/v1/saves")
+        .send(save)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should create a new save of post", done => {
       request(app)
         .post("/api/v1/saves")
@@ -80,10 +90,9 @@ describe("## Save APIs", () => {
       request(app)
         .get(`/api/v1/saves/${save._id}`)
         .expect(httpStatus.UNAUTHORIZED)
-        .then(res => {
-          done();
-        })
-        .catch(done);
+        .end((err, res) => {
+          done(err);
+        });
     });
   });
 
@@ -115,6 +124,15 @@ describe("## Save APIs", () => {
   });
 
   describe("# DELETE /api/saves/", () => {
+    it("should not delete save without login", done => {
+      request(app)
+        .delete(`/api/v1/saves/${save._id}`)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should delete save", done => {
       request(app)
         .delete(`/api/v1/saves/${save._id}`)

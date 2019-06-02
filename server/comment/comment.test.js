@@ -47,6 +47,16 @@ describe("## comment APIs", () => {
   };
 
   describe("# SAVE /api/comments", () => {
+    it("should not create a new save of comment without login", done => {
+      request(app)
+        .post("/api/v1/comments")
+        .send(comment)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should create a new save of comment", done => {
       request(app)
         .post("/api/v1/comments")
@@ -68,7 +78,16 @@ describe("## comment APIs", () => {
   });
 
   describe("# GET /api/comments/:commentId", () => {
-    it("should get save details", done => {
+    it("should nto get comment details witout login", done => {
+      request(app)
+        .get(`/api/v1/comments/${comment._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+    it("should get coemment details", done => {
       request(app)
         .get(`/api/v1/comments/${comment._id}`)
         .set("Authorization", token)
@@ -83,6 +102,7 @@ describe("## comment APIs", () => {
   });
 
   describe("# GET /api/comments/", () => {
+    //may be change to connection by post
     it("should get all saves comments item", done => {
       request(app)
         .get("/api/v1/comments")
@@ -110,6 +130,15 @@ describe("## comment APIs", () => {
   });
 
   describe("# Like /api/comments/", () => {
+    it("should not like comment without login", done => {
+      request(app)
+        .get(`/api/v1/comments/likes/${comment._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
     it("should like comment", done => {
       request(app)
         .get(`/api/v1/comments/likes/${comment._id}`)
@@ -127,6 +156,15 @@ describe("## comment APIs", () => {
   });
 
   describe("# Respects /api/comments/", () => {
+    it("should not respect comment without lgoin", done => {
+      request(app)
+        .get(`/api/v1/comments/respectes/${comment._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
     it("should respect post", done => {
       request(app)
         .get(`/api/v1/comments/respectes/${comment._id}`)
@@ -143,6 +181,15 @@ describe("## comment APIs", () => {
   });
 
   describe("# DELETE /api/comments/", () => {
+    it("should not delete comment with auth and self premmission", done => {
+      request(app)
+        .delete(`/api/v1/comments/${comment._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
     it("should delete comment with auth and self premmission", done => {
       request(app)
         .delete(`/api/v1/comments/${comment._id}`)
