@@ -1,7 +1,9 @@
-image: node:10.15.0
+image: node:10.15.3
+
 pipelines:
   default:
     - step:
-        script:
+        caches:
+          - node
+        script: # Modify the commands below to build your repository.
           - npm install
-         
