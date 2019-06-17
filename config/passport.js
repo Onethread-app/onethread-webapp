@@ -43,7 +43,7 @@ const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader("authorization"),
   secretOrKey: config.jwtSecret
 };
-
+console.log(jwtOptions.jwtFromRequest);
 const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {
   Account.findById(payload._id, function(err, user) {
     if (err) {
