@@ -15,8 +15,8 @@ let token = "";
 before(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   let credentials = {
-    email: "jest@gmail.com",
-    password: "jest1234"
+    email: "orvi12@gmail.com",
+    password: "orvi123456"
   };
 
   request(app)
@@ -32,17 +32,9 @@ before(done => {
       console.log(err);
     })
     .catch(done);
-});
-after(done => {
-  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
-  mongoose.models = {};
-  mongoose.modelSchemas = {};
-  mongoose.connection.close();
-  done();
-});
-
+  
 describe("## USER APIs", () => {
-  let post = {
+  let userInfo = {
     name: "orvi das",
     gender: "m",
     skillArea: "node.js",
@@ -54,12 +46,12 @@ describe("## USER APIs", () => {
 
   };
 
-  describe("# POST /api/v1/profile/:id", () => {
+  describe("# POST UserInfo", () => {
     it("should create a new user", done => {
       request(app)
-        .post("/api/v1/profile/:id")
+        .post("/api/v1/users/profile/:id")
         .set("Authorization", token)
-        .send(post)
+        .send(userInfo)
         .expect(httpStatus.OK)
         .then(res => {
           post = res.body;
@@ -72,4 +64,45 @@ describe("## USER APIs", () => {
         .catch(done);
     });
   });
+
+  let userUpdateInfo = {
+    name: "orvi tigrow",
+    gender: "m",
+    skillArea: "node.js",
+    mobileNumber: "8801683754716",
+    secondaryEmail: "o@c.com",
+    birthday: "12/06/1994",
+    about: "eiiii seiii seii",
+    bio: "ami good"
+  }
+  describe("POST userInfo", () => {
+    it("Should update userInfo", done => {
+      request(app)
+        .put("/api/v1/users/profile/:id")
+        .set("Authorization", token)
+        .send(userUpdateInfo)
+        .expect(httpStatus.OK)
+        .then(res => {
+          post = res.body;
+          done();
+        })
+        .catch(function(err) {
+          console.error(err);
+          done(err);
+        })
+        .catch(done);
+    })
+
+  })
 })
+});
+
+
+
+after(done => {
+  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  mongoose.models = {};
+  mongoose.modelSchemas = {};
+  mongoose.connection.close();
+  done();
+});

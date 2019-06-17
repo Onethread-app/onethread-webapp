@@ -19,9 +19,6 @@ router
   .get(requireAuth, permit('company'), companyCtrl.profile)
   .put(requireAuth, permit('company'), companyCtrl.profileUpdate)
   .delete(requireAuth, permit('company'), companyCtrl.profileDelete);
-
-// for all registered account
-
   
   
 module.exports = router;

@@ -42,10 +42,6 @@ router
 router
   .route("/admin")
   .post(requireAuth, permit('admin'),accountCtrl.login);
-
-
-  
-
   
   
 module.exports = router;

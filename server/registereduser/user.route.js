@@ -16,6 +16,8 @@ const {permit, authSelf} = require('../helpers/permission');
 router
   .route("/profile/:id")
   .get(requireAuth, permit('user'), userCtrl.profile)
+router
+  .route("/profile")  
   .post(requireAuth, validate(paramValidation.profile), permit('user'), userCtrl.createProfile);
 router
   .route("/profile/:id")

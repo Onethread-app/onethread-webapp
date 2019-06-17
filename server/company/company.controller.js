@@ -67,13 +67,13 @@ const profile = (req, res, next) => {
     .then(profile => {
       if (!profile) {
         return res.status(404).json({
-          message: "Profile not found"
+          message: "Company profile not found"
         });
       }
       res.status(200).json({
         profile: profile,
         success: true,
-        msg: "profile create successful"
+        msg: "Company profile create successful"
       });
     })
     .catch(err => {

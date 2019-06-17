@@ -1,8 +1,6 @@
 "use strict";
 const mongoose = require("mongoose");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const jwt = require("jsonwebtoken");
 const httpStatus = require("http-status");
 const APIError = require("../helpers/APIError");
 
@@ -13,8 +11,7 @@ const RegisteredUser = require("./user.model");
 
 
 // create a user profile
-const createProfile = (req, res, next) => {
-
+const createProfile = async (req, res, next) => {
   const registeredUser = new RegisteredUser({
     name: req.body.name,
     gender: req.body.gender,
@@ -38,26 +35,11 @@ const createProfile = (req, res, next) => {
     }).catch(err => res.json(err))
 }
 
-
-
-
-
-// Account.findById(id, function (err, user) {
-//   if (err) {
-//     return res.status(500).send({
-//       message: err
-//     });
-//   } else {
-
-//   }
-// })
-
-
-const profileList = (req, res, next) => {
+const profileList = async (req, res, next) => {
   const {
     limit = 50, skip = 0
   } = req.query;
-  Account.find()
+  RegisteredUser.find()
     .sort({
       createdAt: -1
     })
@@ -75,7 +57,9 @@ const profileList = (req, res, next) => {
 }
 const profile = (req, res, next) => {
   let id = req.user.id;
-  RegisteredUser.find({account: id})
+  RegisteredUser.find({
+      account: id
+    })
     .populate('account')
     .exec()
     .then(profile => {
@@ -97,27 +81,53 @@ const profile = (req, res, next) => {
     });
 }
 
-const profileUpdate = (req, res) => {
-  const currentAccount = req.user;
-  RegisteredUser.findByIdAndUpdate(req.params.id, {
-    $set: req.body
-  }, function (err, user) {
-    if (err) {
-      return res.status().send({
-        message: err
-      });
-    } else {
-      res.status(201).send({
-        success: true,
-        msg: "Profile update successful",
-        user: user
-      });
+const profileUpdate = async (req, res) => {
+  RegisteredUser.findById(req.params.id, function(err, user) {
+    user.name = req.body.name;
+    user.gender = req.body.gender;
+    user.mobileNumber = req.body.mobileNumber;
+    user.skillArea = req.body.skillArea;
+    user.secondaryEmail = req.body.secondaryEmail;
+    user.birthday = req.body.birthday;
+    user.about = req.body.about;
+    user.bio = req.body.bio;
+    user.save(function(err, data) {
+      if (err) {
+        next(err);
+      } else {
+        if (data === null) {
+          res.send(404, 'Not found');
+        } else {
+          res.send(data);
+        }
     }
-  });
+    });
+});
+  RegisteredUser.findByIdAndUpdate(req.params.id, {
+      $set: req.body
+    })
+    .exec()
+    .then(profile => {
+      if (!profile) {
+        return res.status(404).json({
+          message: "Profile not found"
+        });
+      }
+      res.status(200).json({
+        profile: profile,
+        success: true,
+        msg: "profile update successful"
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err
+      });
+    });
 }
 
 const profileDelete = (req, res) => {
-  registeredUser.findByIdAndRemove(req.params.id, function (err) {
+  RegisteredUser.findByIdAndRemove(req.params.id, function (err) {
     if (err) {
       return res.status().send({
         message: err
