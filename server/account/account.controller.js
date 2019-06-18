@@ -47,7 +47,7 @@ const register = async(req, res) => {
  * @param next
  * @returns {*}
  */
-const login = (req, res, next) => {
+const login = (req, res) => {
   res.json({ success: true, token: req.user.generateJwt() });
 };
 
@@ -59,28 +59,14 @@ const logout = (req, res) => {
     msg:'You are successfully logout'
   });
   res.end();
-}
+};
 
 /**
  * Change password function called by route
  * @param {Object} req - request object
  * @param {Object} res - response object
  */
-const changePassword = async (req, res) => {
-  try {
-    const id = await utils.isIDGood(req.user._id);
-    const user = await findUser(id);
-    req = matchedData(req);
-    const isPasswordMatch = await auth.checkPassword(req.oldPassword, user);
-    if (!isPasswordMatch) {
-      utils.handleError(res, await passwordsDoNotMatch());
-    } else {
-      // all ok, proceed to change password
-      res.status(200).json(await changePasswordInDB(id, req));
-    }
-  } catch (error) {
-    utils.handleError(res, error);
-  }
+const changePassword = async () => {
 };
 
 // find account for account verification

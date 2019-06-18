@@ -1,17 +1,17 @@
 "use strict";
-const mongoose = require("mongoose");
-const passport = require("passport");
-const httpStatus = require("http-status");
-const APIError = require("../helpers/APIError");
+// const mongoose = require("mongoose");
+// const passport = require("passport");
+// const httpStatus = require("http-status");
+// const APIError = require("../helpers/APIError");
 
-const config = require("../../config/config");
-const Account = require("../account/account.model");
+// const config = require("../../config/config");
+// const Account = require("../account/account.model");
 const RegisteredUser = require("./user.model");
 
 
 
 // create a user profile
-const createProfile = async (req, res, next) => {
+const createProfile = async (req, res) => {
   const registeredUser = new RegisteredUser({
     name: req.body.name,
     gender: req.body.gender,
@@ -22,7 +22,7 @@ const createProfile = async (req, res, next) => {
     secondaryEmail: req.body.secondaryEmail,
     birthday: req.body.birthday,
     account: req.user.id,
-  })
+  });
   registeredUser
     .save()
     .then(result => {
@@ -30,12 +30,12 @@ const createProfile = async (req, res, next) => {
       res.status(201).send({
         success: true,
         result: result
-      })
+      });
 
-    }).catch(err => res.json(err))
-}
+    }).catch(err => res.json(err));
+};
 
-const profileList = async (req, res, next) => {
+const profileList = async (req, res) => {
   const {
     limit = 50, skip = 0
   } = req.query;
@@ -54,8 +54,8 @@ const profileList = async (req, res, next) => {
         res.json(user);
       }
     });
-}
-const profile = (req, res, next) => {
+};
+const profile = (req, res) => {
   let id = req.user.id;
   RegisteredUser.find({
       account: id
@@ -79,9 +79,9 @@ const profile = (req, res, next) => {
         error: err
       });
     });
-}
+};
 
-const profileUpdate = async (req, res) => {
+const profileUpdate = async (req, res, next) => {
   RegisteredUser.findById(req.params.id, function(err, user) {
     user.name = req.body.name;
     user.gender = req.body.gender;
@@ -124,7 +124,7 @@ const profileUpdate = async (req, res) => {
         error: err
       });
     });
-}
+};
 
 const profileDelete = (req, res) => {
   RegisteredUser.findByIdAndRemove(req.params.id, function (err) {
@@ -138,8 +138,8 @@ const profileDelete = (req, res) => {
         msg: "Profile Delete successful"
       });
     }
-  })
-}
+  });
+};
 
 module.exports = {
   profileList,

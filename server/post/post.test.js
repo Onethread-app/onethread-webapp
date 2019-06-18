@@ -1,3 +1,4 @@
+'use strict';
 const mongoose = require("mongoose");
 const request = require("supertest-as-promised");
 const httpStatus = require("http-status");
@@ -60,7 +61,7 @@ describe("## post APIs", () => {
           post = res.body;
           done();
         })
-        .catch(function(err) {
+        .catch(function (err) {
           console.error(err);
           done(err);
         })
@@ -129,7 +130,10 @@ describe("## post APIs", () => {
       request(app)
         .get("/api/v1/posts")
         .set("Authorization", token)
-        .query({ limit: 10, skip: 1 })
+        .query({
+          limit: 10,
+          skip: 1
+        })
         .expect(httpStatus.OK)
         .then(res => {
           expect(res.body).to.be.an("array");

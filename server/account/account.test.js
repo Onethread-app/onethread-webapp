@@ -1,8 +1,8 @@
- const mongoose = require("mongoose");
+'use strict';
+
+const mongoose = require("mongoose");
 const request = require("supertest-as-promised");
-const httpStatus = require("http-status");
 const chai = require("chai"); // eslint-disable-line import/newline-after-import
-const expect = chai.expect;
 const app = require("../../index");
 
 chai.config.includeStack = true;
@@ -18,8 +18,8 @@ after(done => {
     mongoose.connection.close();
     done();
 });
-describe("## Registration APIs", () =>{
-    let account = {
+describe("## Registration APIs for User", () =>{
+    let userAccount = {
         email: "orias@gmil.com",
         password: "Orvi@1234",
         role: "user"
@@ -28,14 +28,32 @@ describe("## Registration APIs", () =>{
         it("should create an account", done => {
           request(app)
             .post(`/api/v1/account/signup`)
-            .send(account)
+            .send(userAccount)
             .end((err, res) => {
-                account = res.body.createdUser;
+                userAccount = res.body.createdUser;
                 done();
           });
             
         });
       });
+
+    let companyAccount ={
+      email: "fb@fb.com",
+      password: "Orvi@1234",
+      role: "company"
+    };
+    describe("# POST /api/v1/account/signup", () => {
+      it("should create an account", done => {
+        request(app)
+          .post(`/api/v1/account/signup`)
+          .send(companyAccount)
+          .end((err, res) => {
+              companyAccount = res.body.createdUser;
+              done();
+        });
+          
+      });
+    });
       
 });
 

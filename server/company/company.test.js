@@ -1,8 +1,10 @@
+'use strict';
 const mongoose = require("mongoose");
 const request = require("supertest-as-promised");
 const httpStatus = require("http-status");
-const chai = require("chai"); // eslint-disable-line import/newline-after-import
-const expect = chai.expect;
+const chai = require("chai");
+const expect = chai.expect; // eslint-disable-line import/newline-after-import
+
 const app = require("../../index");
 
 chai.config.includeStack = true;
@@ -15,8 +17,8 @@ let token = "";
 before(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   let credentials = {
-    email: "orvi12@gmail.com",
-    password: "orvi123456"
+    email: "face@fb.com",
+    password: "Orvi@123456"
   };
 
   request(app)
@@ -33,28 +35,33 @@ before(done => {
     })
     .catch(done);
   
-describe("## USER APIs", () => {
-  let userInfo = {
-    name: "orvi das",
-    gender: "m",
-    skillArea: "node.js",
-    mobileNumber: "8801683754716",
-    secondaryEmail: "o@c.com",
-    birthday: "12/06/1994",
-    about: "eiiii seiii seii",
-    bio: "ami good"
+describe("## Company USER APIs", () => {
+  let companyInfo = {
+   companyName : "tigrow",
+   phoneNumber : "8801673754716",
+   companyAddress: "mohakhali dohs",
+   establishDate : "2019",
+   selectDistrict : "Dhaka",
+   selectThana : "banani",
+   businessDescription: "Social networking site",
+   tradeLicense : "100000000",
+   contactPersonName : "orvi",
+   contactPersonDesignation : "software developer",
+   contactPersonEmail : "das.orvi@yahoo.com",
+   contactPersonMobile : "8801683754716",
+   accountRef : "12345678"
 
   };
 
-  describe("# POST UserInfo", () => {
+  describe("# POST CompanyUserInfo /api/v1/company/profile/", () => {
     it("should create a new user", done => {
       request(app)
-        .post("/api/v1/users/profile/:id")
+        .post("/api/v1/company/profile/")
         .set("Authorization", token)
-        .send(userInfo)
+        .send(companyInfo)
         .expect(httpStatus.OK)
         .then(res => {
-          post = res.body;
+          companyInfo = res.body;
           done();
         })
         .catch(function(err) {
@@ -65,36 +72,20 @@ describe("## USER APIs", () => {
     });
   });
 
-  let userUpdateInfo = {
-    name: "orvi tigrow",
-    gender: "m",
-    skillArea: "node.js",
-    mobileNumber: "8801683754716",
-    secondaryEmail: "o@c.com",
-    birthday: "12/06/1994",
-    about: "eiiii seiii seii",
-    bio: "ami good"
-  }
-  describe("POST userInfo", () => {
-    it("Should update userInfo", done => {
+  describe("# GET /api/v1/company/profile/:id", () => {
+    it("should get company details", done => {
       request(app)
-        .put("/api/v1/users/profile/:id")
+        .get('/api/v1/company/profile/5d0886c2c3c17d265a7de20e')
         .set("Authorization", token)
-        .send(userUpdateInfo)
         .expect(httpStatus.OK)
         .then(res => {
-          post = res.body;
+          expect(res.body.companyName).to.equal(companyInfo.companyName);
           done();
         })
-        .catch(function(err) {
-          console.error(err);
-          done(err);
-        })
         .catch(done);
-    })
-
-  })
-})
+    });
+  });
+});
 });
 
 

@@ -1,3 +1,4 @@
+'use strict';
 const Post = require('./post.model');
 
 /**
@@ -151,7 +152,7 @@ function update(req, res, next) {
  * @property {number} req.query.limit - Limit number of posts to be returned.
  * @returns {post[]}
  */
-function list(req, res, next) {
+function list(req, res) {
   const { limit = 50, skip = 0 } = req.query;
   Post.find()
   .sort({ createdAt: -1 })
