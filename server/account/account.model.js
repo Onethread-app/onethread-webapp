@@ -24,31 +24,35 @@ const accountsSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['guest', 'admin', 'company', 'user'],
-    default: 'guest'
+    default: 'user'
   },
-  account_type: {
+  accountType: {
     type: String,
     enum: ['premium', 'normal']
+  },
+  accountVerified:{
+    type: Boolean, 
+    default: false
   }
 });
 
 
 accountsSchema.pre('save', function (next) {
-  let user = this;
+  let account = this;
 
   // only hash the password if it has been modified (or is new)
-  if (!user.isModified('password')) return next();
+  if (!account.isModified('password')) return next();
 
   // generate a salt
   bcrypt.genSalt(SALT_WORK_FACTOR, function (err, salt) {
     if (err) return next(err);
 
     // hash the password using our new salt
-    bcrypt.hash(user.password, salt, function (err, hash) {
+    bcrypt.hash(account.password, salt, function (err, hash) {
       if (err) return next(err);
 
       // override the cleartext password with the hashed one
-      user.password = hash;
+      account.password = hash;
       next();
     });
   });
@@ -63,21 +67,20 @@ accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
 
 // generating jwt token
 accountsSchema.methods.generateJwt = function () {
+<<<<<<< HEAD
   // token will expire within 7 days
   //let expire = new Date();
   //expire.setDate(expire.getDate() + 7);
 
+=======
+  console.log("lets token create");
+>>>>>>> master
   return jwt.sign({
     _id: this._id,
-    role: this.role
+    role: this.role,
   }, config.jwtSecret,{
     expiresIn: 60*60
   }); 
 };
-
-accountsSchema.methods.abc = function() {
-  return "abc";
-}
-
 
 module.exports = mongoose.model('Account', accountsSchema);

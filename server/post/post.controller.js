@@ -1,3 +1,4 @@
+'use strict';
 const Post = require('./post.model');
 
 /**
@@ -31,6 +32,53 @@ const Post = require('./post.model');
      // console.log(err);
      next(err);
    });
+<<<<<<< HEAD
+}
+
+function like(req, res, next) {
+
+  const id = req.params.postId;
+  
+ 
+  Post.findByIdAndUpdate(id,  {$push: {like : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
+
+function respect(req, res, next) {
+
+  const id = req.params.postId;
+  
+ 
+  Post.findByIdAndUpdate(id,  {$push: {respect : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
+=======
 }
 
 function like(req, res, next) {
@@ -77,6 +125,31 @@ function respect(req, res, next) {
    });
 }
 
+function tag(req, res, next) {
+
+  const id = req.params.postId;
+  
+ 
+  Post.findByIdAndUpdate(id,  {$push: {tag : '5cdb98cdab24ca4b10407752'}}, {
+    new: true } )
+   .then(result => {
+     
+     if (result) {
+      res.json(result);
+    }  else {
+      return res.status(400)
+        .json({ message: "No valid entry found for provided ID" });
+     }
+   })
+   .catch(err => {
+     // console.log(err);
+     next(err);
+   });
+}
+
+
+>>>>>>> master
+
 /**
  * Get post
  * @returns {post}
@@ -95,7 +168,8 @@ function create(req, res, next) {
   
   const post = new Post({
     text: req.body.text,
-    location: req.body.location
+    location: req.body.location,
+    account: req.user
   });
 
   post.save()
@@ -113,6 +187,7 @@ function update(req, res, next) {
   const post = req.post;
   post.text = req.body.text;
   post.location = req.body.location;
+  
 
   post.save()
     .then(savedpost => res.json(savedpost))
@@ -125,7 +200,7 @@ function update(req, res, next) {
  * @property {number} req.query.limit - Limit number of posts to be returned.
  * @returns {post[]}
  */
-function list(req, res, next) {
+function list(req, res) {
   const { limit = 50, skip = 0 } = req.query;
   Post.find()
   .sort({ createdAt: -1 })
@@ -153,4 +228,8 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
+<<<<<<< HEAD
 module.exports = { load, get, create, update, list, remove, like, respect };
+=======
+module.exports = { load, get, create, update, list, remove, like, respect, tag };
+>>>>>>> master

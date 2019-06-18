@@ -1,3 +1,4 @@
+'use strict';
 const Joi = require('joi');
 
 // require and configure dotenv, will load vars in .env in PROCESS.ENV
@@ -22,12 +23,21 @@ const envVarsSchema = Joi.object({
     .description('Mongo DB host url'),
   MONGO_PORT: Joi.number()
     .default(27017),
-  email_address: Joi.string().required()
+  EMAIL_ADDRESS: Joi.string().required()
     .description("email address required"),
-  password : Joi.string().required()
-    .description("password required")
+  EMAIL_PASSWORD: Joi.string().required()
+    .description("password required"),
+  FACEBOOK_ID : Joi.string().required()
+    .description("facebook id required"),
+  FACEBOOK_SECRET: Joi.string().required()
+    .description("facebook secret key required"),
+  GOOGLE_CLIENT_ID : Joi.string().required()
+    .description("Google client id required"),
+  GOOGLE_CLIENT_SECRET : Joi.string().required()
+    .description("Google client secret required")
+
 }).unknown()
-  .required()
+  .required();
   
 
 const { error, value: envVars } = Joi.validate(process.env, envVarsSchema);
@@ -44,8 +54,12 @@ const config = {
     host: envVars.MONGO_HOST,
     port: envVars.MONGO_PORT
   },
-  email_address: envVars.email_address,
-  password: envVars.password
+  emailAddress: envVars.EMAIL_ADDRESS,
+  emailPassword: envVars.EMAIL_PASSWORD,
+  facebookID : envVars.FACEBOOK_ID,
+  facebookSecret : envVars.FACEBOOK_SECRET,
+  googleClientID : envVars.GOOGLE_CLIENT_ID,
+  googleClientSecret : envVars.GOOGLE_CLIENT_SECRET
 };
 
 module.exports = config;

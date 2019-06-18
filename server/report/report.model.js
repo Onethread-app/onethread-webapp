@@ -7,6 +7,33 @@ const ReportSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
+<<<<<<< HEAD
+=======
+  reportType: {
+    type: [
+      {
+        type: String,
+        enum: [
+          "harmful",
+          "violence",
+          "threat",
+          "annoying",
+          "gross",
+          "false",
+          "abusive",
+          "pornography",
+          "spam",
+          "compromise",
+          "offensive",
+          "disrespectful",
+          "privateExposed",
+          "others"
+        ]
+      }
+    ],
+    default: ["others"]
+  },
+>>>>>>> master
   postRef: {
     type: Schema.ObjectId,
     ref: "Post"
@@ -26,9 +53,15 @@ const ReportSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+<<<<<<< HEAD
   user: {
     type: Schema.ObjectId,
     ref: "User"
+=======
+  account: {
+    type: Schema.ObjectId,
+    ref: "Account"
+>>>>>>> master
   }
 });
 

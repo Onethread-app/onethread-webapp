@@ -25,7 +25,12 @@ function get(req, res) {
 
 function create(req, res, next) {
   const save = new Save({
+<<<<<<< HEAD
     postRef: req.body.postRef
+=======
+    postRef: req.body.postRef,
+    account: req.user
+>>>>>>> master
   });
 
   save

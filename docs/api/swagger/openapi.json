@@ -68,11 +68,27 @@
     },
     
       "/users/profile": {
+<<<<<<< HEAD
+=======
+        "get": {
+          "description":"",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description":"Success"
+            }
+          }
+        },
+>>>>>>> master
         "post": {
           "description":"Information about particular user",
           "security": [
             {
+<<<<<<< HEAD
               "bearerAuth": []
+=======
+              "JWT": []
+>>>>>>> master
             }
           ],
           "requestBody": {
@@ -96,6 +112,38 @@
           }
         }
       },
+<<<<<<< HEAD
+=======
+      "/company/profile": {
+        "post": {
+          "description":"Send company info to the account",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "requestBody": {
+            "description": "value that would be pass",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description":"Success"
+            },
+            "401": {
+              "description":"You don't have permissions for the resource"
+            }
+          }
+        }
+      },
+>>>>>>> master
     
     
     
@@ -147,11 +195,14 @@
           "type": "apiKey",
           "name": "Authorization",
           "in": "header"
+<<<<<<< HEAD
       },
       "bearerAuth": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
+=======
+>>>>>>> master
       }
   },
     "schemas": {
@@ -206,6 +257,62 @@
           }
         }
       },
+<<<<<<< HEAD
+=======
+      "Company":{
+        "type": "object",
+        "properties":{
+          "companyName" :{
+            "type" : "string",
+            "example": "face@fb.com"
+          },
+          "phoneNumber" : {
+            "type" : "string",
+            "example" : "8801673754716"
+          },
+          "companyAddress" : {
+            "type": "string",
+            "example" : "mohkhali dohs"
+          },
+          "establishDate" : {
+            "type" : "string",
+            "example": "2019"
+          },
+          "selectDistrict":{
+            "type" : "string",
+            "example" : "Dhaka"
+          },
+          "selectThana" : {
+            "type" : "string",
+            "example" : "banani"
+          },
+          "businessDescription" : {
+            "type" : "string",
+            "example" : "Social network site"
+          },
+          "tradelicense":{
+            "type": "string",
+            "example" : "10000000"
+          },
+          "contactPersonName" : {
+            "type" : "string",
+            "example" : "orvi"
+          },
+          "contactPersonDesignation" : {
+            "type" : "string",
+            "example" : "software engineer"
+          },
+          "contactPersonemail": {
+            "type": "string",
+            "example" : "das.orvi@yahoo.com"
+          },
+          "contactPersonMobile": {
+            "type": "string",
+            "example" : "8801683754716"
+          }
+        }
+      },
+>>>>>>> master
       "Category": {
         "type": "object",
         "required": ["name", "type"],

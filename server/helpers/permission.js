@@ -1,26 +1,30 @@
+'use strict';
 const permit = (...allowed) => {
-    const isAllowed = role => allowed.indexOf(role) > -1;
-    
-    // return a middleware
-    return (request, response, next) => {
-      if (request.user && isAllowed(request.user.role))
-        next(); // role is allowed, so continue on the next middleware
-      else {
-        response.status(403).json({message: "Forbidden"}); // user is forbidden
-      }
-    }
-}
+  const isAllowed = role => allowed.indexOf(role) > -1;
 
-const authSelf= (content, model ="user") => { 
   // return a middleware
   return (request, response, next) => {
-    if (request.user._id == request[content].user)
-      next(); // role is allowed, so continue on the next middleware
+    if (request.user && isAllowed(request.user.role)){
+      next();
+    } 
+    // role is allowed, so continue on the next middleware
     else {
-      response.status(403).json({message: "Forbidden"}); // user is forbidden
+      response.status(403).json({ message: "Forbidden" }); // user is forbidden
     }
-  }
-}
+  };
+};
 
+const authSelf = content => {
+  // return a middleware
+  return (request, response, next) => {
+    if (request.user._id === request[content].account){
+      next();
+    }
+    // role is allowed, so continue on the next middleware
+    else {
+      response.status(403).json({ message: request[content].account }); // user is forbidden
+    }
+  };
+};
 
-module.exports= {permit, authSelf};
+module.exports = { permit, authSelf };
