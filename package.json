@@ -16,11 +16,7 @@
     "lint": "esw *.js server config --color",
     "lint:watch": "yarn lint -- --watch",
     "precommit": "yarn lint && yarn test",
-<<<<<<< HEAD
-    "test": "cross-env NODE_ENV=test mocha ./server/**/*.test.js --ui bdd --reporter spec --colors server --recursive --timeout 40000",
-=======
     "test": "cross-env NODE_ENV=test mocha ./server/**/*.test.js --ui bdd --reporter spec --colors server --recursive --timeout 20000",
->>>>>>> master
     "test:watch": "yarn test -- --watch",
     "test:coverage": "cross-env NODE_ENV=test ./node_modules/.bin/istanbul cover _mocha -- --ui bdd --reporter spec --colors server --recursive",
     "test:check-coverage": "yarn test:coverage && istanbul check-coverage",
@@ -71,6 +67,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "passport-oauth": "^1.0.0",
+    "semver": "^6.1.1",
     "set-immediate-shim": "^2.0.0",
     "swagger": "^0.7.5",
     "swagger-ui-express": "^4.0.4",

@@ -67,14 +67,7 @@ accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
 
 // generating jwt token
 accountsSchema.methods.generateJwt = function () {
-<<<<<<< HEAD
-  // token will expire within 7 days
-  //let expire = new Date();
-  //expire.setDate(expire.getDate() + 7);
-
-=======
   console.log("lets token create");
->>>>>>> master
   return jwt.sign({
     _id: this._id,
     role: this.role,

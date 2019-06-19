@@ -14,12 +14,6 @@ const {permit, authSelf} = require('../helpers/permission');
 router  
   .route('/signup')
   .post(validate(paramValidation.register),accountCtrl.register);
-<<<<<<< HEAD
-
-// router
-//   .route('/change_password')
-//   .post( accountCtrl.changePassword);
-=======
 router
   .route("/login")
   .post(requireLogin, accountCtrl.login);
@@ -29,7 +23,6 @@ router
 router
   .route('/change_password')
   .post( accountCtrl.changePassword);
->>>>>>> master
 
 // send confirmation mail after sign up
 router

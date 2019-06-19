@@ -1,11 +1,7 @@
 const Report = require("./report.model");
 
 function load(req, res, next, id) {
-<<<<<<< HEAD
-    Report.findById(id)
-=======
   Report.findById(id)
->>>>>>> master
     .exec()
     .then(result => {
       if (result) {
@@ -28,20 +24,12 @@ function get(req, res) {
 }
 
 function create(req, res, next) {
-<<<<<<< HEAD
-    
-    const { refType = 'postRef' } = req.query;
-  const report = new Report({
-    [refType]: req.body.refrence,
-    text: req.body.text
-=======
   const { refType = "postRef" } = req.query;
   const report = new Report({
     reportType: req.body.reportType,
     [refType]: req.body.refrence,
     text: req.body.text,
     account: req.user
->>>>>>> master
   });
 
   report

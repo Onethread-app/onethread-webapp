@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-=======
 'use strict';
->>>>>>> master
 const Joi = require("joi");
 
 module.exports = {

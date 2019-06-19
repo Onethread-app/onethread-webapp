@@ -13,15 +13,9 @@ const SaveSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-<<<<<<< HEAD
-  user: {
-    type: Schema.ObjectId,
-    ref: "User"
-=======
   account: {
     type: Schema.ObjectId,
     ref: "Account"
->>>>>>> master
   }
 });
 
