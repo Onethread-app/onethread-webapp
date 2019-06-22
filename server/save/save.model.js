@@ -1,10 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+
 const Schema = mongoose.Schema;
 
 const SaveSchema = new mongoose.Schema({
   postRef: {
     type: Schema.ObjectId,
-    ref: "Post"
+    ref: 'Post'
   },
   updated: {
     type: Date
@@ -19,8 +20,8 @@ const SaveSchema = new mongoose.Schema({
   },
   account: {
     type: Schema.ObjectId,
-    ref: "Account"
+    ref: 'Account'
   }
 });
 
-module.exports = mongoose.model("Save", SaveSchema);
+module.exports = mongoose.model('Save', SaveSchema);

@@ -23,16 +23,15 @@ const envVarsSchema = Joi.object({
   MONGO_PORT: Joi.number()
     .default(27017),
   EMAIL_ADDRESS: Joi.string().required()
-    .description("email address required"),
+    .description('email address required'),
   PASSWORD: Joi.string().required()
-    .description("password required"),
-  FACEBOOK_ID : Joi.string().required()
-    .description("facebook id required"),
+    .description('password required'),
+  FACEBOOK_ID: Joi.string().required()
+    .description('facebook id required'),
   FACEBOOK_SECRET: Joi.string().required()
-    .description("facebook secret key required")
+    .description('facebook secret key required')
 }).unknown()
-  .required()
-  
+  .required();
 
 const { error, value: envVars } = Joi.validate(process.env, envVarsSchema);
 if (error) {

@@ -27,9 +27,7 @@ before(done => {
       token = res.body.token;
       done();
     })
-    .catch(err => {
-      console.log(err);
-    })
+    
     .catch(done);
 });
 after(done => {
@@ -69,10 +67,7 @@ describe("## comment APIs", () => {
           comment = res.body;
           done();
         })
-        .catch(err => {
-          console.log(err);
-          //next(err);
-        })
+        
         .catch(done);
     });
   });
@@ -83,7 +78,7 @@ describe("## comment APIs", () => {
         .get(`/api/v1/comments/${comment._id}`)
 
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -135,7 +130,7 @@ describe("## comment APIs", () => {
         .get(`/api/v1/comments/likes/${comment._id}`)
 
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -161,7 +156,7 @@ describe("## comment APIs", () => {
         .get(`/api/v1/comments/respectes/${comment._id}`)
 
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -186,7 +181,7 @@ describe("## comment APIs", () => {
         .delete(`/api/v1/comments/${comment._id}`)
 
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });

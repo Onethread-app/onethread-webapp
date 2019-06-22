@@ -28,9 +28,7 @@ before(done => {
       token = res.body.token;
       done();
     })
-    .catch(err => {
-      console.log(err);
-    })
+    
     .catch(done);
 });
 after(done => {
@@ -64,7 +62,7 @@ describe("## report APIs", () => {
         .query({ refType: "user" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -81,9 +79,6 @@ describe("## report APIs", () => {
           expect(res.body.reportType[0]).to.equal(report.reportType);
           //report = res.body;
           done();
-        })
-        .catch(err => {
-          console.log(err);
         })
         .catch(done);
     });
@@ -104,7 +99,7 @@ describe("## report APIs", () => {
         .query({ refType: "comment" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -143,7 +138,7 @@ describe("## report APIs", () => {
         .query({ refType: "post" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -171,7 +166,7 @@ describe("## report APIs", () => {
         .get(`/api/v1/reports/${report._id}`)
 
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -202,7 +197,7 @@ describe("## report APIs", () => {
 
         .send(reportuser)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -217,9 +212,9 @@ describe("## report APIs", () => {
           expect(res.body.postRef).to.equal(report.postRef);
           done();
         })
-        .catch(err => {
-          console.log(err);
-        })
+        // .catch(err => {
+        //   console.log(err);
+        // })
         .catch(done);
     });
   });
@@ -257,7 +252,7 @@ describe("## report APIs", () => {
         .delete(`/api/v1/reports/${report._id}`)
 
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });

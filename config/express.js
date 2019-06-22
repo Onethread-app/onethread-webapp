@@ -1,4 +1,4 @@
-//import authenticate from "./authentication";
+// import authenticate from "./authentication";
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -9,7 +9,7 @@ const methodOverride = require('method-override');
 const cors = require('cors');
 const httpStatus = require('http-status');
 const expressWinston = require('express-winston');
-const expressValidation = require('express-validation');
+// const expressValidation = require('express-validation');
 const helmet = require('helmet');
 const winstonInstance = require('./winston');
 const routes = require('../index.route');
@@ -41,7 +41,7 @@ app.use(helmet());
 // enable CORS - Cross Origin Resource Sharing
 app.use(cors());
 
-//enable detailed API logging in dev env
+// enable detailed API logging in dev env
 if (config.env === 'development') {
   expressWinston.requestWhitelist.push('body');
   expressWinston.responseWhitelist.push('body');
@@ -54,15 +54,14 @@ if (config.env === 'development') {
 }
 
 
-
 // mount all routes on /api path
 
-app.use('/api/v1', routes); //v1.0
+app.use('/api/v1', routes); // v1.0
 
 // if error is not an instanceOf APIError, convert it.
 // app.use((err, req, res, next) => {
 //   if (err instanceof expressValidation.ValidationError) {
-//     //     // validation error contains errors which is an array of error each containing message[]
+//     //  validation error contains errors which is an array of error each containing message[]
 //     const unifiedErrorMessage = err.errors.map(error => error.messages.join('. ')).join(' and ');
 //     const error = new APIError(unifiedErrorMessage, err.status, true);
 //     return next(error);
@@ -95,12 +94,11 @@ app.use((err, req, res, next) => // eslint-disable-line no-unused-vars
 );
 
 
-
 // test authentication
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-}
+// function ensureAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   }
+// }
 
 module.exports = app;

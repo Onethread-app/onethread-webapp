@@ -1,5 +1,5 @@
 const Report = require("./report.model");
-const Post = require("../post/post.model");
+
 const serviceReport = require("./report.service");
 //const Promise = require('bluebird');
 
@@ -88,4 +88,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { load, create, get, load, remove, list, review };
+module.exports = { load, create, get, remove, list, review };

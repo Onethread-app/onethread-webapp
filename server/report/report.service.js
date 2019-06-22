@@ -1,5 +1,4 @@
-const Report = require("./report.model");
-const post = require("../post/post.model");
+
 const mongoose = require("mongoose");
 
 function reviewAction(refrence, type) {

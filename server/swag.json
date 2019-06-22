@@ -25,7 +25,7 @@
   "paths": {
     "/hashtags": {
       "post": {
-        "security": ["bearerAuth:[]"],
+        "security": [{"JWT":[]}],
 
         "tags": ["hashtag in post"],
         "summary": "hash tag like fb max 6",
@@ -51,11 +51,9 @@
                   "items": {
                     "$ref": "#/components/schemas/Hashtag"
                   }
+                }
               }
             }
-          },
-          "401": {
-            "description": "unauthorises 'type' in auth"
           },
           "400": {
             "description": "Expects 'type' in query string"
@@ -113,7 +111,12 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
-      }
+      },
+      "JWT": {
+        +          "type": "apiKey",
+        +          "name": "Authorization",
+        +          "in": "header"
+        +      }
     },
     "schemas": {
       "Hashtag": {

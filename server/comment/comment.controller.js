@@ -33,7 +33,7 @@ function create(req, res, next) {
   comment
     .save()
     .then(result => res.send(result))
-    .catch(e => console.log(e));
+    .catch(e => next(e));
 }
 
 function list(req, res) {
@@ -151,7 +151,6 @@ module.exports = {
   load,
   create,
   get,
-  load,
   remove,
   list,
   tag,

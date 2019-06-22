@@ -28,9 +28,6 @@ before(done => {
       token = res.body.token;
       done();
     })
-    .catch(err => {
-      console.log(err);
-    })
     .catch(done);
 });
 after(done => {
@@ -55,7 +52,7 @@ describe("## post APIs", () => {
         .post("/api/v1/posts")
         .send(post)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -72,10 +69,7 @@ describe("## post APIs", () => {
           post = res.body;
           done();
         })
-        .catch(function(err) {
-          console.error(err);
-          done(err);
-        })
+        
         .catch(done);
     });
   });
@@ -86,7 +80,7 @@ describe("## post APIs", () => {
         .get(`/api/v1/posts/${post._id}`)
 
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -125,7 +119,7 @@ describe("## post APIs", () => {
 
         .send(post)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -179,7 +173,7 @@ describe("## post APIs", () => {
         .get(`/api/v1/posts/likes/${post._id}`)
         .send(post)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -206,7 +200,7 @@ describe("## post APIs", () => {
         .get(`/api/v1/posts/respectes/${post._id}`)
         .send(post)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });
@@ -231,7 +225,7 @@ describe("## post APIs", () => {
         .delete(`/api/v1/posts/${post._id}`)
         .send(post)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err, res) => {
+        .end((err) => {
           done(err);
         });
     });

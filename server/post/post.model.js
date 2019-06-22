@@ -1,8 +1,6 @@
 const mongoose = require("mongoose");
-const Promise = require("bluebird");
+
 const Schema = mongoose.Schema;
-const httpStatus = require("http-status");
-const APIError = require("../helpers/APIError");
 
 let tagLimit = function (tagList) {
   return tagList.length <= 10;
