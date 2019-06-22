@@ -40,6 +40,16 @@ const PostSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
+  respectCount: {
+    type: Number,
+    trim: true,
+    required: true
+  },
+  likeCount: {
+    type: Number,
+    trim: true,
+    required: true
+  },
   respect: [  //will use count
     {
       type: Schema.ObjectId,

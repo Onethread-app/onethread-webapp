@@ -1,6 +1,6 @@
-const Report = require("./report.model");
+const Report = require('./report.model');
 
-const serviceReport = require("./report.service");
+const serviceReport = require('./report.service');
 //const Promise = require('bluebird');
 
 function load(req, res, next, id) {
@@ -13,7 +13,7 @@ function load(req, res, next, id) {
       } else {
         return res
           .status(400)
-          .json({ message: "No valid entry found for provided ID" });
+          .json({ message: 'No valid entry found for provided ID' });
       }
     })
     .catch(err => {
@@ -28,7 +28,7 @@ function get(req, res) {
 }
 
 function create(req, res, next) {
-  const { refType = "post" } = req.query;
+  const { refType = 'post' } = req.query;
   const report = new Report({
     reportContent: req.body.reportContent,
     reportType: req.body.reportType,
@@ -66,7 +66,7 @@ function review(req, res, next) {
   report.reviewText = req.body.reviewText;
   let block = [];
 
-  if (req.body.reviewStatus == "block") {
+  if (req.body.reviewStatus === 'block') {
     block.push(
       serviceReport.reviewAction(req.body.refrence, report.reportContent[0])
     );
