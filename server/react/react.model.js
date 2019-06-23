@@ -7,7 +7,7 @@ const ReactSchema = new mongoose.Schema({
     type: Schema.ObjectId,
     ref: 'Post'
   },
-  ptype: {
+  reactType: {
     type: [
       {
         type: String,
@@ -15,6 +15,15 @@ const ReactSchema = new mongoose.Schema({
       }
     ],
     default: ['like']
+  },
+  refType: {
+    type: [
+      {
+        type: String,
+        enum: ['post', 'comment']
+      }
+    ],
+    default: ['post']
   },
   updated: {
     type: Date

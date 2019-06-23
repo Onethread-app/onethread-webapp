@@ -41,7 +41,10 @@ after(done => {
 
 describe('## Save APIs', () => {
   let react = {
-    postRef: '5cef91bcd9448f34ee094a79'
+    postRef: '5cef91bcd9448f34ee094a79',
+    refType: 'post',
+    reactType: 'respect'
+
   };
 
   describe('# SAVE /api/saves', () => {
