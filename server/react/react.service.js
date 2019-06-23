@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 function reactCount(refrence, type, typeCount) {
    type = String(type).replace(/\b\w/g, l => l.toUpperCase());
   return mongoose
-    .model('Post')
+    .model(type)
     .findByIdAndUpdate(refrence, { $inc: { [typeCount]: 1 } }, { new: true });
 }
 
