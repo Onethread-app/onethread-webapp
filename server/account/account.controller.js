@@ -3,41 +3,41 @@
 const Account = require("./account.model");
 const smtpTransport = require("../helpers/sendmail");
 
-const sendJSONresponse = function(res, status, content) {
+const sendJSONresponse = function (res, status, content) {
   res.status(status);
   res.json(content);
 };
 
-const register = async(req, res) => {
-    const account = new Account({
-      email: req.body.email,
-      password: req.body.password,
-      role: req.body.role,
+const register = async (req, res) => {
+  const account = new Account({
+    email: req.body.email,
+    password: req.body.password,
+    role: req.body.role,
+  });
+
+  account
+    .save()
+    .then(result => {
+      let token;
+      token = account.generateJwt();
+      res.status(200).json({
+        success: true,
+        message: "Handling POST requests to apis/users",
+        createdUser: {
+          _id: result._id,
+          email: result.email,
+          role: result.role,
+          token: token
+        }
+      });
+    })
+    .catch(err => {
+      // console.log(err);
+      res.status(500).json({
+        error: err
+      });
     });
 
-    account
-      .save()
-      .then(result => {
-        let token;
-        token = account.generateJwt();
-        res.status(200).json({
-          success: true,
-          message: "Handling POST requests to apis/users",
-          createdUser: {
-            _id: result._id,
-            email: result.email,
-            role: result.role,
-            token: token
-          }
-        });
-      })
-      .catch(err => {
-        // console.log(err);
-        res.status(500).json({
-          error: err
-        });
-      });
-  
 };
 
 /**
@@ -47,16 +47,19 @@ const register = async(req, res) => {
  * @param next
  * @returns {*}
  */
-const login = (req, res) => {
-  res.json({ success: true, token: req.user.generateJwt() });
+const login = async(req, res) => {
+  res.json({
+    success: true,
+    token: req.user.generateJwt()
+  });
 };
 
 // let's logout
-const logout = (req, res) => {
+const logout = async (req, res) => {
   req.logout();
   res.json({
     success: true,
-    msg:'You are successfully logout'
+    msg: 'You are successfully logout'
   });
   res.end();
 };
@@ -66,14 +69,12 @@ const logout = (req, res) => {
  * @param {Object} req - request object
  * @param {Object} res - response object
  */
-const changePassword = async () => {
-};
+const changePassword = async () => {};
 
 // find account for account verification
-const findAccount = async email => {
+const findAccount = async (email) => {
   return new Promise((resolve, reject) => {
-    Account.findOne(
-      {
+    Account.findOne({
         email
       },
       "password loginAttempts blockExpires name email role verified verification",
@@ -100,7 +101,7 @@ const forgetPassword = async (req, res) => {
 
 // send confirmation mail to the account hodler
 
-const confirmationMail = (req, res) => {
+const confirmationMail = async (req, res) => {
   let rand = Math.floor(Math.random() * 100 + 54);
   let host = req.get("host");
   let link = "http://" + req.get("host") + "/verify?id=" + rand;
@@ -108,13 +109,12 @@ const confirmationMail = (req, res) => {
   const mailOptions = {
     to: req.query.to,
     subject: "Please confirm your Email account",
-    html:
-      "Hello,<br> Please Click on the link to verify your email.<br><a href=" +
+    html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" +
       link +
       ">Click here to verify</a>"
   };
   console.log(mailOptions);
-  smtpTransport.sendMail(mailOptions, function(error, response) {
+  smtpTransport.sendMail(mailOptions, function (error, response) {
     if (error) {
       console.log(error);
       res.end("error");
@@ -125,7 +125,7 @@ const confirmationMail = (req, res) => {
   });
 };
 
-const verifyAccount = (req, res) => {
+const verifyAccount = async(req, res) => {
   console.log(req.protocol + ":/" + req.get("host"));
   if (req.protocol + "://" + req.get("host") == "http://" + host) {
     console.log("Domain is matched. Information is from Authentic email");
@@ -141,6 +141,41 @@ const verifyAccount = (req, res) => {
   }
 };
 
+const followAccount = (req, res) => {
+  let reqUserID = req.user.id;
+  let reqQueryID = req.query.id;
+  // check if you follow yourself
+  if (reqUserID === reqQueryID) {
+    return res.status(400).json({
+      success: false,
+      msg: "You cannot follow yourself"
+    });
+  }
+  Account.findById(reqQueryID)
+    .then(account => {
+      console.log(account);
+      // check if the requested user is already in follower list
+      if (account.followers.filter(follower =>
+          follower.user.toString() === reqUserID).length > 0) {
+        return res.status(400).json({
+          success: false,
+          msg: "You already followed the user"
+        });
+      }
+      account.followers.unshift({user: reqUserID});
+      account.save();
+      console.log(req.user.email);
+      Account.findOne({ email : req.user.email })
+        .then(account => {
+          account.following.unshift({user:reqQueryID});
+          account.save().then(user => res.json(user));
+        })
+        .catch(err => res.status(404).json({
+            success: false,
+            msg : "you already follow the user" }));
+      });
+    };
+
 module.exports = {
   sendJSONresponse,
   register,
@@ -149,5 +184,6 @@ module.exports = {
   changePassword,
   forgetPassword,
   confirmationMail,
-  verifyAccount
+  verifyAccount,
+  followAccount
 };
