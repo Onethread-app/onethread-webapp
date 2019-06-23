@@ -69,7 +69,10 @@ describe("## post APIs", () => {
           post = res.body;
           done();
         })
-        
+        .catch(err => {
+           console.log(err);
+          
+        })
         .catch(done);
     });
   });
