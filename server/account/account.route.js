@@ -4,6 +4,7 @@ const express = require("express");
 const validate = require("express-validation");
 const paramValidation = require("./account.validation");
 const router = express.Router();
+const passportService = require('../../config/passport');
 const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', {session: false});
 const requireLogin = passport.authenticate('local', {session: false});
@@ -35,9 +36,16 @@ router
 // router
 //   .route('/forget_password')
 //   .post( accountCtrl.forgetPassword);
+
+// follow an account
 router
   .route('/:id/follow')
   .post(requireAuth, permit('user'), accountCtrl.followAccount);
+
+// unfollow an account
+router
+  .route('/:id/unfollow')
+  .post(requireAuth, permit('user'), accountCtrl.unfollowAccount);
 
 // for admin
 router

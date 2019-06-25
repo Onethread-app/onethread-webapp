@@ -1,7 +1,7 @@
 "use strict";
 
 const Account = require("./account.model");
-const smtpTransport = require("../helpers/sendmail");
+//const smtpTransport = require("../helpers/sendmail");
 
 const sendJSONresponse = function (res, status, content) {
   res.status(status);
@@ -47,7 +47,7 @@ const register = async (req, res) => {
  * @param next
  * @returns {*}
  */
-const login = async(req, res) => {
+const login = async (req, res) => {
   res.json({
     success: true,
     token: req.user.generateJwt()
@@ -73,72 +73,72 @@ const changePassword = async () => {};
 
 // find account for account verification
 const findAccount = async (email) => {
-  return new Promise((resolve, reject) => {
-    Account.findOne({
-        email
-      },
-      "password loginAttempts blockExpires name email role verified verification",
-      (err, item) => {
-        utils.itemNotFound(err, item, reject, "USER_DOES_NOT_EXIST");
-        resolve(item);
-      }
-    );
-  });
+  // return new Promise((resolve, reject) => {
+  //   Account.findOne({
+  //       email
+  //     },
+  //     "password loginAttempts blockExpires name email role verified verification",
+  //     (err, item) => {
+  //       utils.itemNotFound(err, item, reject, "USER_DOES_NOT_EXIST");
+  //       resolve(item);
+  //     }
+  //   );
+  // });
 };
 
 const forgetPassword = async (req, res) => {
-  try {
-    const locale = req.getLocale();
-    const data = matchedData(req);
-    await findAccount(data.email);
-    const item = await saveForgotPassword(req);
-    emailer.sendResetPasswordEmailMessage(locale, item);
-    res.status(200).json(forgotPasswordResponse(item));
-  } catch (error) {
-    res.json(error);
-  }
+  // try {
+  //   const locale = req.getLocale();
+  //   const data = matchedData(req);
+  //   await findAccount(data.email);
+  //   const item = await saveForgotPassword(req);
+  //   emailer.sendResetPasswordEmailMessage(locale, item);
+  //   res.status(200).json(forgotPasswordResponse(item));
+  // } catch (error) {
+  //   res.json(error);
+  // }
 };
 
 // send confirmation mail to the account hodler
 
 const confirmationMail = async (req, res) => {
-  let rand = Math.floor(Math.random() * 100 + 54);
-  let host = req.get("host");
-  let link = "http://" + req.get("host") + "/verify?id=" + rand;
+  // let rand = Math.floor(Math.random() * 100 + 54);
+  // let host = req.get("host");
+  // let link = "http://" + req.get("host") + "/verify?id=" + rand;
 
-  const mailOptions = {
-    to: req.query.to,
-    subject: "Please confirm your Email account",
-    html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" +
-      link +
-      ">Click here to verify</a>"
-  };
-  console.log(mailOptions);
-  smtpTransport.sendMail(mailOptions, function (error, response) {
-    if (error) {
-      console.log(error);
-      res.end("error");
-    } else {
-      console.log("Message sent: " + response.message);
-      res.end("sent");
-    }
-  });
+  // const mailOptions = {
+  //   to: req.query.to,
+  //   subject: "Please confirm your Email account",
+  //   html: "Hello,<br> Please Click on the link to verify your email.<br><a href=" +
+  //     link +
+  //     ">Click here to verify</a>"
+  // };
+  // console.log(mailOptions);
+  // smtpTransport.sendMail(mailOptions, function (error, response) {
+  //   if (error) {
+  //     console.log(error);
+  //     res.end("error");
+  //   } else {
+  //     console.log("Message sent: " + response.message);
+  //     res.end("sent");
+  //   }
+  // });
 };
 
-const verifyAccount = async(req, res) => {
-  console.log(req.protocol + ":/" + req.get("host"));
-  if (req.protocol + "://" + req.get("host") == "http://" + host) {
-    console.log("Domain is matched. Information is from Authentic email");
-    if (req.query.id == rand) {
-      console.log("email is verified");
-      res.end("<h1>Email " + mailOptions.to + " is been Successfully verified");
-    } else {
-      console.log("email is not verified");
-      res.end("<h1>Bad Request</h1>");
-    }
-  } else {
-    res.end("<h1>Request is from unknown source");
-  }
+const verifyAccount = async (req, res) => {
+  // console.log(req.protocol + ":/" + req.get("host"));
+  // if (req.protocol + "://" + req.get("host") == "http://" + host) {
+  //   console.log("Domain is matched. Information is from Authentic email");
+  //   if (req.query.id == rand) {
+  //     console.log("email is verified");
+  //     res.end("<h1>Email " + mailOptions.to + " is been Successfully verified");
+  //   } else {
+  //     console.log("email is not verified");
+  //     res.end("<h1>Bad Request</h1>");
+  //   }
+  // } else {
+  //   res.end("<h1>Request is from unknown source");
+  // }
 };
 
 const followAccount = (req, res) => {
@@ -153,7 +153,7 @@ const followAccount = (req, res) => {
   }
   Account.findById(reqQueryID)
     .then(account => {
-      console.log(account);
+      //console.log(account);
       // check if the requested user is already in follower list
       if (account.followers.filter(follower =>
           follower.user.toString() === reqUserID).length > 0) {
@@ -162,19 +162,52 @@ const followAccount = (req, res) => {
           msg: "You already followed the user"
         });
       }
-      account.followers.unshift({user: reqUserID});
+      account.followers.unshift({
+        user: reqUserID
+      });
       account.save();
-      console.log(req.user.email);
-      Account.findOne({ email : req.user.email })
+      Account.findOne({
+          email: req.user.email
+        })
         .then(account => {
-          account.following.unshift({user:reqQueryID});
+          account.following.unshift({
+            user: reqQueryID
+          });
           account.save().then(user => res.json(user));
         })
         .catch(err => res.status(404).json({
-            success: false,
-            msg : "you already follow the user" }));
+          success: false,
+          msg: "you already follow the user"
+        }));
+    });
+};
+
+const unfollowAccount = (req, res) => {
+  let reqUserID = req.user.id;
+  let reqQueryID = req.query.id;
+  Account.findById(reqQueryID)
+    .then(account => {
+      account.followers.remove({
+        user: reqUserID
       });
-    };
+      account.save();
+      return Account.findOne({
+          email: req.user.email
+        })
+        .then(account => {
+          account.following.remove({
+            user: reqQueryID
+          });
+          account.save().then(user => res.json(user));
+        })
+        .catch(err => res.status(404).json({
+          success: false,
+          msg: "you already follow the user"
+        }));
+    });
+};
+
+
 
 module.exports = {
   sendJSONresponse,
@@ -185,5 +218,6 @@ module.exports = {
   forgetPassword,
   confirmationMail,
   verifyAccount,
-  followAccount
+  followAccount,
+  unfollowAccount
 };

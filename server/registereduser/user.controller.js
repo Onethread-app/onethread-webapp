@@ -141,10 +141,16 @@ const profileDelete = (req, res) => {
   });
 };
 
+const addFriend = ( req, res) => {
+  console.log(req.user);
+
+};
+
 module.exports = {
   profileList,
   profile,
   profileUpdate,
   profileDelete,
-  createProfile
+  createProfile,
+  addFriend
 };

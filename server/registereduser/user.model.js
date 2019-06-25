@@ -1,3 +1,4 @@
+"use strict";
 // individual user inSormation
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -37,6 +38,15 @@ const registeredUserSchema = new Schema({
     type: Schema.ObjectId,
     ref: "Account"
   },
+  friends:[
+    {
+        user:{ 
+            type: Schema.ObjectId, 
+            ref: 'RegisteredUser' 
+        },
+    }
+
+],
   joinedOn: { type: Date, default: new Date() }
-  }) 
+  }); 
 module.exports = mongoose.model('RegisteredUser', registeredUserSchema);
