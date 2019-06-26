@@ -29,29 +29,44 @@ const accountsSchema = new mongoose.Schema({
   },
   accountType: {
     type: String,
-    enum: ['premium', 'normal']
+    enum: ['premium', 'normal'],
+    default: 'normal'
   },
   accountVerified: {
     type: Boolean,
     default: false
   },
-  following: [
-    {
-        user:{ 
-            type: Schema.ObjectId, 
-            ref: 'Account' 
-        },
+  following: [{
+      user: {
+        type: Schema.ObjectId,
+        ref: 'Account'
+      },
     }
 
-],
-followers: [
-    {
-        user:{ 
-            type: Schema.ObjectId, 
-            ref: 'Account' 
-        },
+  ],
+  followers: [{
+    user: {
+      type: Schema.ObjectId,
+      ref: 'Account'
+    },
+  }],
+
+  friends: [{
+      user: {
+        type: Schema.ObjectId,
+        ref: 'Account'
+      },
+    }],
+  pendingFriends: [{
+    user: {
+      type: Schema.ObjectId,
+      ref: 'Account'
+    },
+    status: {
+      type: String,
+      enum : ["accepted", "rejected", "pending"]
     }
-]
+  }]
 });
 
 
@@ -98,7 +113,7 @@ accountsSchema.methods.generateJwt = function () {
     _id: this._id,
     role: this.role,
   }, config.jwtSecret, {
-    expiresIn: 60 * 60
+    expiresIn: 60 * 60 *60 *24
   });
 };
 

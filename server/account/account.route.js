@@ -37,15 +37,33 @@ router
 //   .route('/forget_password')
 //   .post( accountCtrl.forgetPassword);
 
+// Search for an account
+router
+  .route('/search')
+  .get(requireAuth, permit('user','company'), accountCtrl.getAllAccounts)
+  .post(requireAuth, permit('user', 'company'), accountCtrl.searchAccount);
+
 // follow an account
 router
-  .route('/:id/follow')
+  .route('/follow')
   .post(requireAuth, permit('user'), accountCtrl.followAccount);
 
 // unfollow an account
 router
-  .route('/:id/unfollow')
-  .post(requireAuth, permit('user'), accountCtrl.unfollowAccount);
+  .route('/unfollow')
+  .post(requireAuth, permit('user'), accountCtrl.removeFollowing, accountCtrl.removeFollower);
+
+// friend request
+router
+  .route('/send_request')
+  .post(requireAuth, permit('user'), accountCtrl.sendFriendRequest);
+router
+  .route("/:id/add_friend")
+  .post(requireAuth, permit('user'), accountCtrl.addFriendRequest);
+router
+  .route("/pending_friend")
+  .get(requireAuth, permit('user'), accountCtrl.pendingFriendRequestList);
+
 
 // for admin
 router

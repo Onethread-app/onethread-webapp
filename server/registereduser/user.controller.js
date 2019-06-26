@@ -12,6 +12,7 @@ const RegisteredUser = require("./user.model");
 
 // create a user profile
 const createProfile = async (req, res) => {
+  console.log(req.user._id);
   const registeredUser = new RegisteredUser({
     name: req.body.name,
     gender: req.body.gender,
@@ -21,6 +22,8 @@ const createProfile = async (req, res) => {
     bio: req.body.bio,
     secondaryEmail: req.body.secondaryEmail,
     birthday: req.body.birthday,
+    bloodGroup: req.body.bloodGroup,
+    location:req.body.location,
     account: req.user.id,
   });
   registeredUser
@@ -141,16 +144,12 @@ const profileDelete = (req, res) => {
   });
 };
 
-const addFriend = ( req, res) => {
-  console.log(req.user);
 
-};
 
 module.exports = {
   profileList,
   profile,
   profileUpdate,
   profileDelete,
-  createProfile,
-  addFriend
+  createProfile
 };

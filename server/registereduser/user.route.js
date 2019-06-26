@@ -25,10 +25,7 @@ router
   .put(requireAuth, validate(paramValidation.profile), permit('user'), userCtrl.profileUpdate)
   .delete(requireAuth, permit('user'), userCtrl.profileDelete);
 
-// friend request
-router
-  .route("/profile/:id/add_friend")
-  .post(requireAuth, permit('user'), userCtrl.addFriend);
+
 
 // router.route("/profile/:id/pending_friend").get(requireAuth, permit('user'), userCtrl.pendingFriendsList);
 // router.route("/profile/:id/pending_friend/:id").post(requireAuth, permit('user'), userCtrl.pendingFriendStage);

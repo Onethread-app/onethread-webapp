@@ -182,42 +182,160 @@ const followAccount = (req, res) => {
     });
 };
 
-const unfollowAccount = (req, res) => {
+const removeFollowing = (req, res, next) => {
   let reqUserID = req.user.id;
-  let reqQueryID = req.query.id;
-  Account.findById(reqQueryID)
-    .then(account => {
-      account.followers.remove({
-        user: reqUserID
+  let unfollowId = req.query.id;
+  console.log(reqUserID, unfollowId);
+  Account.findByIdAndUpdate(reqUserID, {$pull: {"followers":{"user":reqUserID}}}, (err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: (err)
       });
-      account.save();
-      return Account.findOne({
-          email: req.user.email
-        })
-        .then(account => {
-          account.following.remove({
-            user: reqQueryID
-          });
-          account.save().then(user => res.json(user));
-        })
-        .catch(err => res.status(404).json({
-          success: false,
-          msg: "you already follow the user"
-        }));
-    });
+    }
+    next();
+  });
 };
 
-
-
-module.exports = {
-  sendJSONresponse,
-  register,
-  login,
-  logout,
-  changePassword,
-  forgetPassword,
-  confirmationMail,
-  verifyAccount,
-  followAccount,
-  unfollowAccount
+const removeFollower = (req, res) => {
+  let reqUserID = req.user.id;
+  let unfollowId = req.query.id;
+  console.log(reqUserID, unfollowId);
+  Account.findByIdAndUpdate(unfollowId, {$pull: {"followers":{"user":reqUserID}}}, {new: true})
+  .populate('following', '_id user')
+  .populate('followers', '_id user')
+  .exec((err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: (err)
+      });
+    }
+    res.json(result);
+  });
 };
+
+        const addFriendRequest = async (req, res) => {
+          let reqUserID = req.user.id;
+          let reqQueryID = req.query.userID;
+          console.log(reqUserID, reqQueryID);
+          // check if you follow yourself
+          if (reqUserID === reqQueryID) {
+            return res.status(400).json({
+              success: false,
+              msg: "You cannot add yourself"
+            });
+          }
+          Account.findById(reqQueryID)
+            .then(account => {
+              console.log(account);
+
+              if (account.friends.filter(friend =>
+                  friend.user.toString() === reqUserID).length > 0) {
+                return res.status(400).json({
+                  success: false,
+                  msg: "You already add the user"
+                });
+              }
+              account.friends.unshift({
+                user: reqUserID
+              });
+              account.save();
+              Account.findOne({
+                  email: req.user.email
+                })
+                .then(account => {
+                  account.friends.unshift({
+                    user: reqQueryID
+                  });
+                  account.save().then(user => res.json({
+                    sucess: true,
+                    msg: "you and he/she connects with each other."
+                  }));
+                })
+                .catch(err => res.status(404).json({
+                  success: false,
+                  msg: "you already in his friendlist"
+                }));
+            });
+        };
+
+        // send friend request to an account
+        const sendFriendRequest = async (req, res) => {
+          let fromFriend = req.user.id;
+          let toFriend = req.query.id;
+          Account.findById(toFriend)
+            .then(account => {
+              if (account.pendingFriends.filter(friend =>
+                  friend.user.toString() === fromFriend).length > 0) {
+                return res.status(400).json({
+                  success: false,
+                  msg: "this id is already in your pending list"
+                });
+              }
+              account.pendingFriends.unshift({
+                user: fromFriend,
+                status: "pending"
+              });
+              account.save();
+              Account.findOne({
+                email: req.user.email
+              }).then(account => {
+                account.friends.unshift({
+                  user: toFriend,
+                  status: "pending"
+                });
+                account.save().then(user => res.json({
+                  sucess: true,
+                  msg: "request is sent to the user",
+                  friendinfo: user
+                }));
+
+              }).catch(err => res.status(404).json({
+                success: false,
+                msg: "you already in his pendinglist",
+                error: err
+              }));
+            });
+
+        };
+
+        // check in pending request the id exist or not
+        const pendingFriendRequestList = async (req, res) => {
+          let reqUserID = req.user.id;
+          Account.findById(reqUserID)
+            .then(account => {
+              let pendingList = account.pendingFriends;
+              //let pending = Object.keys()
+            });
+        };
+
+        const getAllAccounts = async (req, res) => {
+          console.log(req.user);
+
+        };
+
+
+        const searchAccount = async (req, res) => {
+          let querySearch = {
+            username: new RegExp(username, 'i')
+          };
+          let currentUser = req.session.user;
+          console.log(currentUser, querySearch);
+        }; module.exports = {
+          sendJSONresponse,
+          register,
+          login,
+          logout,
+          changePassword,
+          forgetPassword,
+          confirmationMail,
+          verifyAccount,
+          followAccount,
+          addFriendRequest,
+          pendingFriendRequestList,
+          searchAccount,
+          getAllAccounts,
+          sendFriendRequest,
+          removeFollowing,
+          removeFollower
+
+        };
