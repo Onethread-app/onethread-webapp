@@ -209,7 +209,11 @@ const removeFollower = (req, res) => {
         error: (err)
       });
     }
-    res.json(result);
+    res.status(200).json({
+      success: true,
+      msg: "unfollow successfully done",
+      result: result
+    });
   });
 };
 
