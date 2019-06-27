@@ -25,8 +25,8 @@ function get(req, res) {
 function create(req, res, next) {
   const review = new Review({
     accountRef: req.body.accountRef,
-    text: req.text,
-    rating: req.rating,
+    text: req.body.reqtext,
+    rating: req.body.rating,
     account: req.user
   });
 
