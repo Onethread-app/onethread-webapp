@@ -23,6 +23,7 @@ function get(req, res) {
   return res.json(req.save);
 }
 
+//later will change to task manager
 function create(req, res, next) {
   let typeCount = 'likeCount';
   let listPromise = [];
@@ -37,7 +38,9 @@ function create(req, res, next) {
   if (req.query.type === 'respect') {
     typeCount = 'respectCount';
   }
-  listPromise.push(serviceReact.reactCount(react.postRef, react.refType, typeCount));
+  listPromise.push(
+    serviceReact.reactCount(react.postRef, react.refType, typeCount)
+  );
   Promise.all(listPromise)
     .then(result => res.json(result[0]))
     .catch(e => next(e));
