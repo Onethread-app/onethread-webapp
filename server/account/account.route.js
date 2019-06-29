@@ -58,11 +58,17 @@ router
   .route('/send_request')
   .post(requireAuth, permit('user'), accountCtrl.sendFriendRequest);
 router
-  .route("/:id/add_friend")
-  .post(requireAuth, permit('user'), accountCtrl.addFriendRequest);
-router
   .route("/pending_friend")
   .get(requireAuth, permit('user'), accountCtrl.pendingFriendRequestList);
+router
+  .route("/accept_friend")
+  .post(requireAuth, permit('user'), accountCtrl.acceptFriendRequest);
+router
+    .route("/reject_friend")
+    .post(requireAuth, permit('user'), accountCtrl.rejectFriendRequest);
+router
+  .route("/unfriend_request")
+  .post(requireAuth, permit('user'), accountCtrl.removeFriend);
 
 
 // for admin

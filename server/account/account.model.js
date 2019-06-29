@@ -61,10 +61,6 @@ const accountsSchema = new mongoose.Schema({
     user: {
       type: Schema.ObjectId,
       ref: 'Account'
-    },
-    status: {
-      type: String,
-      enum : ["accepted", "rejected", "pending"]
     }
   }]
 });

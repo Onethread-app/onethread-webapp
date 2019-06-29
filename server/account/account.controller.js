@@ -186,7 +186,13 @@ const removeFollowing = (req, res, next) => {
   let reqUserID = req.user.id;
   let unfollowId = req.query.id;
   console.log(reqUserID, unfollowId);
-  Account.findByIdAndUpdate(reqUserID, {$pull: {"followers":{"user":reqUserID}}}, (err, result) => {
+  Account.findByIdAndUpdate(reqUserID, {
+    $pull: {
+      "followers": {
+        "user": reqUserID
+      }
+    }
+  }, (err, result) => {
     if (err) {
       return res.status(400).json({
         error: (err)
@@ -200,146 +206,235 @@ const removeFollower = (req, res) => {
   let reqUserID = req.user.id;
   let unfollowId = req.query.id;
   console.log(reqUserID, unfollowId);
-  Account.findByIdAndUpdate(unfollowId, {$pull: {"followers":{"user":reqUserID}}}, {new: true})
-  .populate('following', '_id user')
-  .populate('followers', '_id user')
-  .exec((err, result) => {
-    if (err) {
-      return res.status(400).json({
-        error: (err)
+  Account.findByIdAndUpdate(unfollowId, {
+      $pull: {
+        "followers": {
+          "user": reqUserID
+        }
+      }
+    }, {
+      new: true
+    })
+    .populate('following', '_id')
+    .populate('followers', '_id')
+    .exec((err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: (err)
+        });
+      }
+      res.status(200).json({
+        success: true,
+        msg: "unfollow successfully done",
+        result: result
       });
-    }
-    res.status(200).json({
-      success: true,
-      msg: "unfollow successfully done",
-      result: result
     });
-  });
 };
 
-        const addFriendRequest = async (req, res) => {
-          let reqUserID = req.user.id;
-          let reqQueryID = req.query.userID;
-          console.log(reqUserID, reqQueryID);
-          // check if you follow yourself
-          if (reqUserID === reqQueryID) {
+// send friend request to an account
+const sendFriendRequest = async (req, res) => {
+  let fromFriend = req.user.id;
+  let toFriend = req.query.userID;
+  Account.findById(toFriend)
+    .then(account => {
+      console.log(account);
+      if (account.pendingFriends.filter(friend =>
+          friend.user.toString() === fromFriend).length > 0) {
+        return res.status(400).json({
+          success: false,
+          msg: "this id is already in your pending list"
+        });
+      }
+      account.pendingFriends.unshift({
+        user: fromFriend,
+        status: "pending"
+      });
+      account.save();
+      Account.findOne({
+        email: req.user.email
+      }).then(account => {
+        account.friends.unshift({
+          user: toFriend
+        });
+        account.save().then(user => res.json({
+          sucess: true,
+          msg: "request is sent to the user",
+          friendinfo: user
+        }));
+
+      }).catch(err => res.status(404).json({
+        success: false,
+        msg: "you already in his pendinglist",
+        error: err
+      }));
+    });
+
+};
+
+// check in pending request the id exist or not
+const pendingFriendRequestList = async (req, res) => {
+  let reqUserID = req.user.id;
+  Account.findById(reqUserID)
+    .then(account => {
+      let pendingList = account.pendingFriends;
+      let listPendingReq = [];
+      pendingList.forEach((value, key) => {
+
+        listPendingReq.push(value.user);
+
+      });
+      return res.status(200).json({
+        success: true,
+        msg: "pending friend request list",
+        list: listPendingReq
+      });
+
+    });
+};
+
+// Accept Friend request
+const acceptFriendRequest = async (req, res) => {
+  let reqUserID = req.user.id;
+  let reqQueryID = req.query.userID;
+  console.log(reqUserID, reqQueryID);
+
+  Account.findById(reqUserID)
+    .then(account => {
+      account.friends.unshift({
+        user: reqQueryID
+      });
+      account.save();
+      Account.findByIdAndUpdate(reqUserID, {
+          $pull: {
+            "pendingFriends": {
+              "user": reqQueryID
+            }
+          }
+        }, (err, result) => {
+          if (err) {
             return res.status(400).json({
-              success: false,
-              msg: "You cannot add yourself"
+              error: err
             });
           }
-          Account.findById(reqQueryID)
-            .then(account => {
-              console.log(account);
+          res.status(200).json({
+            success: true,
+            msg: "you both conenct with each other"
+          });
+        }
 
-              if (account.friends.filter(friend =>
-                  friend.user.toString() === reqUserID).length > 0) {
-                return res.status(400).json({
-                  success: false,
-                  msg: "You already add the user"
-                });
-              }
-              account.friends.unshift({
-                user: reqUserID
-              });
-              account.save();
-              Account.findOne({
-                  email: req.user.email
-                })
-                .then(account => {
-                  account.friends.unshift({
-                    user: reqQueryID
-                  });
-                  account.save().then(user => res.json({
-                    sucess: true,
-                    msg: "you and he/she connects with each other."
-                  }));
-                })
-                .catch(err => res.status(404).json({
-                  success: false,
-                  msg: "you already in his friendlist"
-                }));
+      );
+    });
+  Account.findById(reqQueryID)
+    .then(account => {
+      account.friends.unshift({
+        user: reqUserID
+      });
+      account.save();
+    });
+
+};
+
+// reject friend request
+const rejectFriendRequest = async (req, res) => {
+  let reqUserID = req.user.id;
+  let reqQueryID = req.query.userID;
+  console.log(reqUserID, reqQueryID);
+
+  Account.findById(reqUserID)
+    .then(account => {
+      Account.findByIdAndUpdate(reqUserID, {
+          $pull: {
+            "pendingFriends": {
+              "user": reqQueryID
+            }
+          }
+        }, (err, result) => {
+          if (err) {
+            return res.status(400).json({
+              error: err
             });
-        };
+          }
+          res.status(200).json({
+            success: true,
+            msg: "successfully reject the user",
+            result: result
+          });
+        }
 
-        // send friend request to an account
-        const sendFriendRequest = async (req, res) => {
-          let fromFriend = req.user.id;
-          let toFriend = req.query.id;
-          Account.findById(toFriend)
-            .then(account => {
-              if (account.pendingFriends.filter(friend =>
-                  friend.user.toString() === fromFriend).length > 0) {
-                return res.status(400).json({
-                  success: false,
-                  msg: "this id is already in your pending list"
-                });
-              }
-              account.pendingFriends.unshift({
-                user: fromFriend,
-                status: "pending"
-              });
-              account.save();
-              Account.findOne({
-                email: req.user.email
-              }).then(account => {
-                account.friends.unshift({
-                  user: toFriend,
-                  status: "pending"
-                });
-                account.save().then(user => res.json({
-                  sucess: true,
-                  msg: "request is sent to the user",
-                  friendinfo: user
-                }));
+      );
+    });
+};
 
-              }).catch(err => res.status(404).json({
-                success: false,
-                msg: "you already in his pendinglist",
-                error: err
-              }));
-            });
-
-        };
-
-        // check in pending request the id exist or not
-        const pendingFriendRequestList = async (req, res) => {
-          let reqUserID = req.user.id;
-          Account.findById(reqUserID)
-            .then(account => {
-              let pendingList = account.pendingFriends;
-              //let pending = Object.keys()
-            });
-        };
-
-        const getAllAccounts = async (req, res) => {
-          console.log(req.user);
-
-        };
+// remove friend from friend list
+const removeFriend = async (req, res) => {
+  let reqUserID = req.user.id;
+  let reqQueryID = req.query.userID;
+  Account.findByIdAndUpdate(reqUserID, {
+    $pull: {
+      "friends": {
+        "user": reqQueryID
+      }
+    }
+  }, (err, result) => {
+    if (err) {
+      return res.status(400).json({
+        error: err
+      });
+    }
+    Account.findByIdAndUpdate(reqQueryID, {
+      $pull: {
+        "friends": {
+          "user": reqUserID
+        }
+      }
+    }, (err, result) => {
+      if (err) {
+        return res.status(400).json({
+          error: err
+        });
+      }
+      res.status(200).json({
+        success: true,
+        msg: "unfriend successful",
+        result: result
+      });
+    });
+  });
+  
+};
 
 
-        const searchAccount = async (req, res) => {
-          let querySearch = {
-            username: new RegExp(username, 'i')
-          };
-          let currentUser = req.session.user;
-          console.log(currentUser, querySearch);
-        }; module.exports = {
-          sendJSONresponse,
-          register,
-          login,
-          logout,
-          changePassword,
-          forgetPassword,
-          confirmationMail,
-          verifyAccount,
-          followAccount,
-          addFriendRequest,
-          pendingFriendRequestList,
-          searchAccount,
-          getAllAccounts,
-          sendFriendRequest,
-          removeFollowing,
-          removeFollower
+const getAllAccounts = async (req, res) => {
+  console.log(req.user);
 
-        };
+};
+
+
+const searchAccount = async (req, res) => {
+  let querySearch = {
+    username: new RegExp(username, 'i')
+  };
+  let currentUser = req.session.user;
+  console.log(currentUser, querySearch);
+};
+module.exports = {
+  sendJSONresponse,
+  register,
+  login,
+  logout,
+  changePassword,
+  forgetPassword,
+  confirmationMail,
+  verifyAccount,
+  followAccount,
+  pendingFriendRequestList,
+  searchAccount,
+  getAllAccounts,
+  sendFriendRequest,
+  removeFollowing,
+  removeFollower,
+  acceptFriendRequest,
+  rejectFriendRequest,
+  removeFriend
+
+};
