@@ -12,7 +12,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router
   .route('/')
-  .get(requireAuth, permit('user', 'admin'), reactCtrl.list)
+  .get(requireAuth, permit('user', 'admin'), reactCtrl.listReference)
   .post(
     requireAuth,
     permit('user', 'admin'),
@@ -20,11 +20,13 @@ router
     reactCtrl.create
   );
 
-router
-  .route('/:saveId')
-  .get(requireAuth, permit('user', 'admin'), reactCtrl.get)
-  .delete(requireAuth, authSelf('save'), reactCtrl.remove); //
+  
 
-router.param('saveId', reactCtrl.load);
+router
+  .route('/:reactId')
+  .get(requireAuth, permit('user', 'admin'), reactCtrl.get)
+  .delete(requireAuth, authSelf('react'), reactCtrl.remove); //
+
+router.param('reactId', reactCtrl.load);
 
 module.exports = router;

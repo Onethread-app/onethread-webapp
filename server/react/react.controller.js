@@ -6,7 +6,7 @@ function load(req, res, next, id) {
     .exec()
     .then(result => {
       if (result) {
-        req.save = result;
+        req.react = result;
         return next();
       }
       return res
@@ -57,6 +57,18 @@ function list(req, res, next) {
     .catch(e => next(e));
 }
 
+function listReference(req, res, next) {
+  const { limit = 50, skip = 0 } = req.query;
+  React.find({ removed: false, postRef: req.params.id })
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
+    .exec()
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
+
 function remove(req, res, next) {
   const react = req.react;
   react.removed = true;
@@ -67,4 +79,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { load, create, get, remove, list };
+module.exports = { load, create, get, remove, listReference, list };

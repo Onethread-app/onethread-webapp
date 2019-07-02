@@ -44,7 +44,6 @@ describe('## Save APIs', () => {
     postRef: '5cef91bcd9448f34ee094a79',
     refType: 'post',
     reactType: 'respect'
-
   };
 
   describe('# SAVE /api/saves', () => {
@@ -53,7 +52,7 @@ describe('## Save APIs', () => {
         .post('/api/v1/reacts')
         .send(react)
         .expect(httpStatus.UNAUTHORIZED)
-        .end((err) => {
+        .end(err => {
           done(err);
         });
     });
@@ -73,76 +72,26 @@ describe('## Save APIs', () => {
     });
   });
 
-//   describe('# GET /api/saves/:saveId', () => {
-//     it('should get save details', done => {
-//       request(app)
-//         .get(`/api/v1/saves/${save._id}`)
-//         .set('Authorization', token)
-//         .expect(httpStatus.OK)
-//         .then(res => {
-//           expect(res.body.postRef).to.equal(save.postRef);
-//           done();
-//         })
-//         .catch(done);
-//     });
+  describe('# DELETE /api/reacts/', () => {
+    it('should not delete save without login', done => {
+      request(app)
+        .delete(`/api/v1/reacts/${react._id}`)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end(err => {
+          done(err);
+        });
+    });
 
-//     it('should not get save details without login', done => {
-//       request(app)
-//         .get(`/api/v1/saves/${save._id}`)
-//         .expect(httpStatus.UNAUTHORIZED)
-//         .end((err) => {
-//           done(err);
-//         });
-//     });
-//   });
-
-//   describe('# GET /api/saves/', () => {
-//     it('should get all saves post item', done => {
-//       request(app)
-//         .get('/api/v1/saves')
-//         .set('Authorization', token)
-//         .expect(httpStatus.OK)
-//         .then(res => {
-//           expect(res.body).to.be.an('array');
-//           done();
-//         })
-//         .catch(done);
-//     });
-
-//     it('should get all saves (with limit and skip)', done => {
-//       request(app)
-//         .get('/api/v1/saves')
-//         .set('Authorization', token)
-//         .query({ limit: 10, skip: 1 })
-//         .expect(httpStatus.OK)
-//         .then(res => {
-//           expect(res.body).to.be.an('array');
-//           done();
-//         })
-//         .catch(done);
-//     });
-//   });
-
-//   describe('# DELETE /api/saves/', () => {
-//     it('should not delete save without login', done => {
-//       request(app)
-//         .delete(`/api/v1/saves/${save._id}`)
-//         .expect(httpStatus.UNAUTHORIZED)
-//         .end((err) => {
-//           done(err);
-//         });
-//     });
-
-//     it('should delete save', done => {
-//       request(app)
-//         .delete(`/api/v1/saves/${save._id}`)
-//         .set('Authorization', token)
-//         .expect(httpStatus.OK)
-//         .then(res => {
-//           expect(res.body.removed).to.equal(true);
-//           done();
-//         })
-//         .catch(done);
-//     });
-//   });
+    it('should delete reacts', done => {
+      request(app)
+        .delete(`/api/v1/reacts/${react._id}`)
+        .set('Authorization', token)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.removed).to.equal(true);
+          done();
+        })
+        .catch(done);
+    });
+  });
 });
