@@ -4,7 +4,7 @@
   "description": "A comunity for business people",
   "author": "rubyat farhan <tigrowtecheven@gmail.com>",
   "main": "index.js",
-  "private": false,
+  "private": true,
   "engines": {
     "node": ">=8.10.0",
     "npm": ">=5.6.0",
@@ -67,6 +67,10 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "passport-oauth": "^1.0.0",
+<<<<<<< HEAD
+=======
+    "semver": "^6.1.1",
+>>>>>>> remotes/origin/finalOrvi
     "set-immediate-shim": "^2.0.0",
     "swagger": "^0.7.5",
     "swagger-ui-express": "^4.0.4",

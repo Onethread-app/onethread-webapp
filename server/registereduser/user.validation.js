@@ -1,3 +1,5 @@
+"use strict";
+
 const Joi = require('joi');
 
 module.exports = {
@@ -11,6 +13,7 @@ module.exports = {
             secondaryEmail: Joi.string(),
             birthday: Joi.string()
                          .regex(/^([0-9]{2})\/([0-9]{2})\/([0-9]{4})$/),
+                         
             about: Joi.string(),
             bio: Joi.string()
         }

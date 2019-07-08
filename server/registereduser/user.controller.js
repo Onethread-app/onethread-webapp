@@ -12,6 +12,10 @@ const RegisteredUser = require("./user.model");
 
 // create a user profile
 const createProfile = async (req, res) => {
+<<<<<<< HEAD
+=======
+  console.log(req.user._id);
+>>>>>>> remotes/origin/finalOrvi
   const registeredUser = new RegisteredUser({
     name: req.body.name,
     gender: req.body.gender,
@@ -21,6 +25,8 @@ const createProfile = async (req, res) => {
     bio: req.body.bio,
     secondaryEmail: req.body.secondaryEmail,
     birthday: req.body.birthday,
+    bloodGroup: req.body.bloodGroup,
+    location:req.body.location,
     account: req.user.id,
   });
   registeredUser
@@ -140,6 +146,11 @@ const profileDelete = (req, res) => {
     }
   });
 };
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> remotes/origin/finalOrvi
 
 module.exports = {
   profileList,

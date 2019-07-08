@@ -27,4 +27,15 @@ const authSelf = content => {
   };
 };
 
-module.exports = { permit, authSelf };
+const hasAuthorization = (req, res, next) => {
+  const authorized = req.profile && req.auth && req.profile._id === req.auth._id;
+  if (!(authorized)) {
+    return res.status('403').json({
+      success: false,
+      msg: "User is not authorized"
+    });
+  }
+  next();
+};
+
+module.exports = { permit, authSelf, hasAuthorization };
