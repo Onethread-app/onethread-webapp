@@ -79,69 +79,6 @@
 //     });
 //   });
 
-<<<<<<< HEAD
-    it("should get all comments (with limit and skip)", done => {
-      request(app)
-        .get("/api/v1/comments")
-        .set("Authorization", token)
-        .query({ limit: 10, skip: 1 })
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body).to.be.an("array");
-          done();
-        })
-        .catch(done);
-    });
-  });
-
-  describe("# Like /api/comments/", () => {
-    it("should like comment", done => {
-      request(app)
-        .get(`/api/v1/comments/likes/${comment._id}`)
-        .set("Authorization", token)
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.like)
-            .to.be.an("array")
-            .that.includes("5cdb98cdab24ca4b10407752");
-
-          done();
-        })
-        .catch(done);
-    });
-  });
-
-  describe("# Respects /api/comments/", () => {
-    it("should respect post", done => {
-      request(app)
-        .get(`/api/v1/comments/respectes/${comment._id}`)
-        .set("Authorization", token)
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.like)
-            .to.be.an("array")
-            .that.includes("5cdb98cdab24ca4b10407752");
-          done();
-        })
-        .catch(done);
-    });
-  });
-
-  describe("# DELETE /api/comments/", () => {
-    it("should delete comment", done => {
-      request(app)
-        .delete(`/api/v1/comments/${comment._id}`)
-        .set("Authorization", token)
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.removed).to.equal(true);
-          done();
-        })
-        .catch(done);
-    });
-  });
-});
-=======
 //   describe("# DELETE /api/comments/", () => {
 //     it("should delete comment", done => {
 //       request(app)
@@ -155,4 +92,3 @@
 //     });
 //   });
 // });
->>>>>>> 7da9b12151907919ecd25125bd4170c4742780c2
