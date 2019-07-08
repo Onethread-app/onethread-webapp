@@ -149,19 +149,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-<<<<<<< HEAD
-module.exports = {
-  load,
-  create,
-  get,
-  load,
-  remove,
-  list,
-  tag,
-  like,
-  respect,
-  update
-};
-=======
 module.exports = { create, get, load, remove, list, tag, like, respect };
->>>>>>> 7da9b12151907919ecd25125bd4170c4742780c2

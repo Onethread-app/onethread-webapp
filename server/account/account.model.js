@@ -93,38 +93,16 @@ accountsSchema.pre('save', function (next) {
   });
 });
 
-<<<<<<< HEAD
-accountsSchema.methods.comparePassword = function(candidatePassword, cb) {
-  bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-    if (err) return cb(err);
-=======
 accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
     if (err) {
       return cb(err);
     }
->>>>>>> 7da9b12151907919ecd25125bd4170c4742780c2
     cb(null, isMatch);
   });
 };
 
 // generating jwt token
-<<<<<<< HEAD
-accountsSchema.methods.generateJwt = function() {
-  return jwt.sign(
-    {
-      _id: this._id,
-      role: this.role
-    },
-    config.jwtSecret,
-    {
-      expiresIn: 60 * 60
-    }
-  );
-};
-
-module.exports = mongoose.model("Account", accountsSchema);
-=======
 accountsSchema.methods.generateJwt = function () {
   console.log("lets token create");
   return jwt.sign({
@@ -136,4 +114,3 @@ accountsSchema.methods.generateJwt = function () {
 };
 
 module.exports = mongoose.model('Account', accountsSchema);
->>>>>>> 7da9b12151907919ecd25125bd4170c4742780c2
