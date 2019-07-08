@@ -53,7 +53,7 @@
     "jsonwebtoken": "7.1.9",
     "lodash": "^4.17.11",
     "method-override": "^2.3.10",
-    "mongoose": "^4.13.17",
+    "mongoose": "^4.13.18",
     "morgan": "1.9.1",
     "nodemailer": "^6.2.1",
     "nodemailer-smtp-transport": "^2.7.4",
