@@ -1,20 +1,9 @@
-<<<<<<< HEAD
-
-'use strict';
-const mongoose = require("mongoose");
-const request = require("supertest-as-promised");
-const httpStatus = require("http-status");
-const chai = require("chai"); // eslint-disable-line import/newline-after-import
-const expect = chai.expect;
-const app = require("../../index.js");
-=======
 // const mongoose = require("mongoose");
 // const request = require("supertest-as-promised");
 // const httpStatus = require("http-status");
 // const chai = require("chai"); // eslint-disable-line import/newline-after-import
 // const expect = chai.expect;
 // const app = require("../../index.js");
->>>>>>> 41b54dbc... nothing speacial
 
 // chai.config.includeStack = true;
 
@@ -421,7 +410,3 @@ const app = require("../../index.js");
 //   // test ends
 // });
 
-=======
-// 	//////// test ends /////////
-// });
->>>>>>> 41b54dbc... nothing speacial

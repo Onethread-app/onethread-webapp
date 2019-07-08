@@ -33,7 +33,6 @@ const accountsSchema = new mongoose.Schema({
 	accountVerified: {
 		type: Boolean,
 		default: false
-<<<<<<< HEAD
 	},
 	following: [
 		{
@@ -68,9 +67,6 @@ const accountsSchema = new mongoose.Schema({
 			}
 		}
 	]
-=======
-	}
->>>>>>> c48479f5... nothing speacial
 });
 
 accountsSchema.pre("save", function(next) {
@@ -81,13 +77,9 @@ accountsSchema.pre("save", function(next) {
 
 	// generate a salt
 	bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
-<<<<<<< HEAD
 		if (err) {
 			return next(err);
 		}
-=======
-		if (err) return next(err);
->>>>>>> c48479f5... nothing speacial
 
 		// hash the password using our new salt
 		bcrypt.hash(account.password, salt, function(err, hash) {
@@ -102,24 +94,17 @@ accountsSchema.pre("save", function(next) {
 
 accountsSchema.methods.comparePassword = function(candidatePassword, cb) {
 	bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
-<<<<<<< HEAD
 		if (err) {
 			return cb(err);
 		}
-=======
-		if (err) return cb(err);
->>>>>>> c48479f5... nothing speacial
 		cb(null, isMatch);
 	});
 };
 
 // generating jwt token
 accountsSchema.methods.generateJwt = function() {
-<<<<<<< HEAD
-<<<<<<< HEAD
 	console.log("lets token create");
-=======
->>>>>>> c48479f5... nothing speacial
+
 	return jwt.sign(
 		{
 			_id: this._id,
@@ -127,29 +112,11 @@ accountsSchema.methods.generateJwt = function() {
 		},
 		config.jwtSecret,
 		{
-<<<<<<< HEAD
 			expiresIn: 60 * 60 * 60 * 24
 		}
 	);
-=======
-  return jwt.sign(
-    {
-      _id: this._id,
-      role: this.role
-    },
-    config.jwtSecret,
-    {
-      expiresIn: "30d" // 30days
-      //60 , "2 days", "10h", "7d"
-    }
-  );
->>>>>>> b1c1a02e... some issue in account.test.js
-=======
-			expiresIn: "30d" // 30days
-			//60 , "2 days", "10h", "7d"
-		}
-	);
->>>>>>> c48479f5... nothing speacial
+	// 30days
+	//60 , "2 days", "10h", "7d"
 };
 
 module.exports = mongoose.model("Account", accountsSchema);

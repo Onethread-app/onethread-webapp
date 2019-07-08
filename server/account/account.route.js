@@ -17,12 +17,6 @@ router
 	.post(validate(paramValidation.register), accountCtrl.register);
 router.route("/login").post(requireLogin, accountCtrl.login);
 router.route("/logout").get(requireAuth, accountCtrl.logout);
-<<<<<<< HEAD
-router
-	.route("/signup")
-	.post(validate(paramValidation.register), accountCtrl.register);
-=======
->>>>>>> c48479f5... nothing speacial
 
 router.route("/change_password").post(accountCtrl.changePassword);
 
