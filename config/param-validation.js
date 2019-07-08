@@ -1,6 +1,7 @@
 const Joi = require("joi");
 
 module.exports = {
+<<<<<<< HEAD
   // POST /register
   // console.log('here');
 
@@ -24,6 +25,9 @@ module.exports = {
         .required()
     }
   },
+=======
+
+>>>>>>> 7da9b12151907919ecd25125bd4170c4742780c2
 
   // UPDATE /api/users/:userId
   updateUser: {

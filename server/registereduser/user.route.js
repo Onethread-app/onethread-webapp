@@ -2,30 +2,32 @@
 
 const express = require("express");
 const validate = require("express-validation");
-const paramValidation = require("../../config/param-validation");
+const paramValidation = require("./user.validation");
 const router = express.Router();
-const jwt = require("express-jwt");
-const passportService = require('../../config/passport');
 const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', {session: false});
-const requireLogin = passport.authenticate('local', {session: false});
+const requireAuth = passport.authenticate('jwt', {
+  session: false
+});
 const userCtrl = require('./user.controller');
-const {permit, authSelf} = require('../helpers/permission');
+const {
+  permit
+} = require('../helpers/permission');
 
 // for individual users
 router
   .route("/profile/:id")
-  .get(requireAuth, permit('user'), userCtrl.profile)
-  .post(requireAuth, permit('user'), userCtrl.createProfile);
+  .get(requireAuth, permit('user'), userCtrl.profile);
+router
+  .route("/profile")
+  .post(requireAuth, validate(paramValidation.profile), permit('user'), userCtrl.createProfile);
 router
   .route("/profile/:id")
-  .put(requireAuth, permit('user'), userCtrl.profileUpdate)
+  .put(requireAuth, validate(paramValidation.profile), permit('user'), userCtrl.profileUpdate)
   .delete(requireAuth, permit('user'), userCtrl.profileDelete);
 
 
-  
-  
+
+// router.route("/profile/:id/pending_friend").get(requireAuth, permit('user'), userCtrl.pendingFriendsList);
+// router.route("/profile/:id/pending_friend/:id").post(requireAuth, permit('user'), userCtrl.pendingFriendStage);
+
 module.exports = router;
-
-
-

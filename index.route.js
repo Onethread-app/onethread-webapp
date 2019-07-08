@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require("express");
 const postRoutes = require("./server/post/post.route");
 const saveRoutes = require("./server/save/save.route");

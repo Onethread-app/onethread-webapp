@@ -1,3 +1,4 @@
+"use strict";
 // individual user inSormation
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
@@ -30,6 +31,17 @@ const registeredUserSchema = new Schema({
   about: {
     type: String
   },
+  location:{
+    type: String
+  },
+  // education:{
+  //   type: Schema.ObjectId,
+  //   ref: "Education"
+  // },
+  bloodGroup:{
+    type: String,
+    enum: ['A+', 'A-', 'O+','O-', 'AB+', 'AB-', 'B+', 'B-']
+  },  
   bio: {
     type: String,
   },
@@ -37,6 +49,7 @@ const registeredUserSchema = new Schema({
     type: Schema.ObjectId,
     ref: "Account"
   },
+
   joinedOn: { type: Date, default: new Date() }
-  }) 
+  }); 
 module.exports = mongoose.model('RegisteredUser', registeredUserSchema);
