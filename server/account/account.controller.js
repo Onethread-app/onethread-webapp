@@ -157,7 +157,7 @@ const followAccount = (req, res) => {
       // check if the requested user is already in follower list
       if (account.followers.filter(follower =>
           follower.user.toString() === reqUserID).length > 0) {
-        return res.status(400).json({
+          return res.status(400).json({
           success: false,
           msg: "You already followed the user"
         });
@@ -411,11 +411,7 @@ const getAllAccounts = async (req, res) => {
 
 
 const searchAccount = async (req, res) => {
-  let querySearch = {
-    username: new RegExp(username, 'i')
-  };
-  let currentUser = req.session.user;
-  console.log(currentUser, querySearch);
+  
 };
 module.exports = {
   sendJSONresponse,
