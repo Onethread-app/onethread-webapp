@@ -13,6 +13,10 @@ const RegisteredUser = require("./user.model");
 // create a user profile
 const createProfile = async (req, res) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+  console.log(req.user._id);
+>>>>>>> remotes/origin/finalOrvi
 =======
   console.log(req.user._id);
 >>>>>>> remotes/origin/finalOrvi
@@ -147,6 +151,11 @@ const profileDelete = (req, res) => {
   });
 };
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> remotes/origin/finalOrvi
 =======
 
 

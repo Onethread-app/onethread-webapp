@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 const mongoose = require("mongoose");
 const request = require("supertest-as-promised");
 const httpStatus = require("http-status");
@@ -95,6 +96,8 @@ describe("## Hashtag APIs", done => {
   //   });
 });
 =======
+=======
+>>>>>>> remotes/origin/finalOrvi
 // "use strict";
 // const mongoose = require("mongoose");
 // const request = require("supertest-as-promised");
@@ -191,4 +194,7 @@ describe("## Hashtag APIs", done => {
 //   //     });
 //   //   });
 // });
+<<<<<<< HEAD
+>>>>>>> remotes/origin/finalOrvi
+=======
 >>>>>>> remotes/origin/finalOrvi

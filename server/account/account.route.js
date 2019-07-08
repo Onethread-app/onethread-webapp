@@ -9,11 +9,8 @@ const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', {session: false});
 const requireLogin = passport.authenticate('local', {session: false});
 const accountCtrl = require('./account.controller');
-<<<<<<< HEAD
-const {permit, authSelf} = require('../helpers/permission');
-=======
 const {permit} = require('../helpers/permission');
->>>>>>> remotes/origin/finalOrvi
+
 // authentication
 router  
   .route('/signup')
@@ -57,8 +54,6 @@ router
   .route('/unfollow')
   .post(requireAuth, permit('user'), accountCtrl.removeFollowing, accountCtrl.removeFollower);
 
-<<<<<<< HEAD
-=======
 // friend request
 router
   .route('/send_request')
@@ -76,7 +71,6 @@ router
   .route("/unfriend_request")
   .post(requireAuth, permit('user'), accountCtrl.removeFriend);
 
->>>>>>> remotes/origin/finalOrvi
 
 // for admin
 router

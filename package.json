@@ -68,6 +68,10 @@
     "passport-local": "^1.0.0",
     "passport-oauth": "^1.0.0",
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+    "semver": "^6.1.1",
+>>>>>>> remotes/origin/finalOrvi
 =======
     "semver": "^6.1.1",
 >>>>>>> remotes/origin/finalOrvi

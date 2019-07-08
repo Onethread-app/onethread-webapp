@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 'use strict';
 const mongoose = require("mongoose");
 const request = require("supertest-as-promised");
@@ -140,6 +141,8 @@ describe("## Category APIs", () => {
   // test ends
 });
 =======
+=======
+>>>>>>> remotes/origin/finalOrvi
 // 'use strict';
 // const mongoose = require("mongoose");
 // const request = require("supertest-as-promised");
@@ -280,4 +283,7 @@ describe("## Category APIs", () => {
 //   // });
 //   // test ends
 // });
+<<<<<<< HEAD
+>>>>>>> remotes/origin/finalOrvi
+=======
 >>>>>>> remotes/origin/finalOrvi

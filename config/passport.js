@@ -139,9 +139,4 @@ const jwtLogin = new JwtStrategy(jwtOptions, function(payload, done) {
 
 
 passport.use(jwtLogin);
-<<<<<<< HEAD
-// passport.use(localLogin);
-
-=======
 //passport.use(localLogin);
->>>>>>> remotes/origin/finalOrvi

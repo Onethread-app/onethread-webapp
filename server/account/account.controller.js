@@ -66,6 +66,7 @@ const logout = async (req, res) => {
 
 
 
+
 /**
  * Change password function called by route
  * @param {Object} req - request object

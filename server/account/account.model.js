@@ -113,4 +113,8 @@ accountsSchema.methods.generateJwt = function () {
   });
 };
 
+<<<<<<< HEAD
 module.exports = mongoose.model('Account', accountsSchema);
+=======
+module.exports = mongoose.model('Account', accountsSchema);
+>>>>>>> remotes/origin/finalOrvi
