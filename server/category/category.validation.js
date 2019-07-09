@@ -4,21 +4,7 @@ module.exports = {
   // category validation
   newCategory: {
     body: {
-      name: Joi.string()
-        .required()
-        .error(errors => {
-          return {
-            message: "Expects 'name & type' in body"
-          };
-        }),
-      type: Joi.string()
-        .valid(["business-category", "business", "emp", "job-seeker"])
-        .required()
-        .error(errors => {
-          return {
-            message: "Expects 'name & type' in body"
-          };
-        })
+      name: Joi.string().required()
     }
   },
   newSubCategory: {
@@ -44,7 +30,7 @@ module.exports = {
   getCategory: {
     query: {
       type: Joi.string()
-        .valid(["business-category", "business", "emp", "job-seeker"])
+        .valid(["company", "user"])
         .required()
         .error(errors => {
           return {
@@ -58,11 +44,20 @@ module.exports = {
       cid: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error(errors => {
-          return {
-            message: "Invalid ID"
-          };
-        })
+    }
+  },
+  deleteSubCategory: {
+    params: {
+      sid: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+    }
+  },
+  deleteSubSubCategory: {
+    params: {
+      ssid: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
     }
   }
 };

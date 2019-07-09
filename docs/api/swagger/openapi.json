@@ -1,15 +1,10 @@
 {
   "openapi": "3.0.0",
   "info": {
-<<<<<<< HEAD
     "description": "This is an API documentation for TiGrow LTD",
-=======
-    "description": "This is a simple API for TiGrow LTD",
->>>>>>> 834582bd... openapi.json added
     "version": "1.0.0-oas3",
     "title": "TiGrow LTD API",
     "contact": {
-      "name": "API Support",
       "email": "alamariful1727@gmail.com"
     },
     "license": {
@@ -17,69 +12,34 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-<<<<<<< HEAD
   
   "tags": [{
-=======
-  "tags": [
-    {
-<<<<<<< HEAD
->>>>>>> 834582bd... openapi.json added
       "name": "admins",
-=======
-      "name": "Admins",
->>>>>>> f52d2ce6... Documentation done for Category
       "description": "Secured Admin-only calls"
     },
     {
-      "name": "Category : type",
-      "description": "['job-seeker', 'emp', 'business', 'business-category']"
+      "name": "front-end-developers",
+      "description": "Operations available to Front-End developers"
     }
   ],
-<<<<<<< HEAD
 
   "paths": {
-<<<<<<< HEAD
-<<<<<<< HEAD
     "/account/signup": {
       "post": {
         "summary": "Create a new acount",
         "requestBody": {
           "description": "Optional description in *Markdown*",
-=======
-    "/category/{cid}": {
-=======
-    "/category": {
->>>>>>> f52d2ce6... Documentation done for Category
-      "post": {
-        "tags": ["Admins"],
-        "summary": "Add a new category",
-        "description": "",
-        "operationId": "newCategory",
-        "security": [{ "JWT": [] }],
-        "requestBody": {
-<<<<<<< HEAD
-          "description": "name should be required and unique",
->>>>>>> 0cfa920d... Swagger added
-=======
-          "description": "name & type are required and name should be unique",
->>>>>>> f52d2ce6... Documentation done for Category
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-<<<<<<< HEAD
                 "$ref": "#/components/schemas/Account"
-=======
-                "$ref": "#/components/schemas/NewCategory"
->>>>>>> 0cfa920d... Swagger added
               }
             }
           }
         },
         "responses": {
           "201": {
-<<<<<<< HEAD
             "description": "Created"
           }
         }
@@ -131,36 +91,10 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/RegisteredUser"
-=======
-            "description": "`Created`",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    },
-                    "newCategory": {
-                      "type": "object"
-                    }
-                  },
-                  "example": {
-                    "message": "Handling POST requests to /api/v1/category/new-category",
-                    "newCategory": {
-                      "__v": 0,
-                      "name": "a",
-                      "type": "job-seeker",
-                      "_id": "5d076d2af1eae44eb46dbade",
-                      "subcategories": []
-                    }
-                  }
->>>>>>> 0cfa920d... Swagger added
                 }
               }
             }
           },
-<<<<<<< HEAD
           "responses": {
             "200": {
               "description":"Success"
@@ -203,155 +137,12 @@
     
     
     
-=======
-  "paths": {
->>>>>>> 834582bd... openapi.json added
-=======
-          "400": {
-            "description": "Expects `name & type` in body"
-          },
-          "401": {
-            "description": "`Unauthorized`"
-          },
-          "500": { "description": "`Internal Server Error`" }
-        }
-      },
-      "get": {
-        "tags": ["Category : type"],
-        "summary": "Get category",
-        "description": "By passing in the appropriate options, you can search for available category in the system.<br />  <h1>** `type: business && name: Category of one’s business`**<br /> Search: `/category?type=business-category` ",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "type",
-            "description": "pass category option",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": ["job-seeker", "emp", "business", "business-category"]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string"
-                    },
-                    "categories": {
-                      "type": "array"
-                    }
-                  },
-                  "example": {
-                    "type": "job-seeker",
-                    "categories": [
-                      {
-                        "_id": "5cf367d2c8ec086b7c98a52f",
-                        "name": "a"
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Expects 'type' in query string"
-          }
-        }
-      }
-    },
-<<<<<<< HEAD
->>>>>>> 0cfa920d... Swagger added
     "/category": {
-=======
-    "/category/{cid}": {
->>>>>>> f52d2ce6... Documentation done for Category
-      "post": {
-        "tags": ["Admins"],
-        "summary": "Add a new sub-category",
-        "description": "",
-        "operationId": "newSubCategory",
-        "security": [{ "JWT": [] }],
-        "parameters": [
-          {
-            "name": "cid",
-            "in": "path",
-            "required": true,
-            "description": "the category identifier, as cid",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "name should be required and unique",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewSubCategory"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "`Created`",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    },
-                    "newCategory": {
-                      "type": "object"
-                    }
-                  },
-                  "example": {
-                    "message": "New sub-category created under Category: a",
-                    "newSubCategory": {
-                      "__v": 0,
-                      "cid": {
-                        "_id": "5d076d2af1eae44eb46dbade",
-                        "name": "a",
-                        "type": "job-seeker",
-                        "__v": 1,
-                        "subcategories": ["5d076d37f1eae44eb46dbadf"]
-                      },
-                      "name": "b",
-                      "_id": "5d076d37f1eae44eb46dbadf",
-                      "subsubcategories": []
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Expects `name` in body"
-          },
-          "401": {
-            "description": "`Unauthorized`"
-          },
-          "500": { "description": "`Internal Server Error`" }
-        }
-      },
       "get": {
-<<<<<<< HEAD
-<<<<<<< HEAD
         "tags": ["front-end-developers"],
         "summary": "searches category",
         "operationId": "searchInventory",
         "description": "By passing in the appropriate options, you can search for\navailable category in the system\n",
-<<<<<<< HEAD
         "parameters": [{
           "in": "query",
           "name": "type",
@@ -362,192 +153,27 @@
             "enum": ["job-seeker", "emp", "business", "company"]
           }
         }],
-=======
-=======
-        "tags": ["Category : Job-Seeker"],
-        "summary": "Get category",
-=======
-        "tags": ["Category : type"],
-        "summary": "Get sub-category",
->>>>>>> f52d2ce6... Documentation done for Category
-        "description": "By passing in the appropriate options, you can search for available category in the system\n",
->>>>>>> 0cfa920d... Swagger added
-        "parameters": [
-          {
-            "name": "cid",
-            "in": "path",
-            "required": true,
-            "description": "the category identifier, as cid",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
->>>>>>> 834582bd... openapi.json added
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "search results matching 'type'",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string",
-                      "pattern": "^[0-9a-fA-F]{24}$"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "subcategories": {
-                      "type": "array"
-                    }
-                  },
-                  "example": {
-                    "_id": "5d076d2af1eae44eb46dbade",
-                    "name": "a",
-                    "subcategories": [
-                      {
-                        "_id": "5d076d37f1eae44eb46dbadf",
-                        "name": "b"
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "500": { "description": "`Internal Server Error`" }
-        }
-      }
-    },
-    "/category/sub-category/{sid}": {
-      "post": {
-        "tags": ["Admins"],
-        "summary": "Add a new sub-sub-category",
-        "description": "",
-        "operationId": "newSubSubCategory",
-        "security": [{ "JWT": [] }],
-        "parameters": [
-          {
-            "name": "sid",
-            "in": "path",
-            "required": true,
-            "description": "the sub-category identifier, as sid",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "description": "name should be required and unique",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewSubSubCategory"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "`Created`",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    },
-                    "newCategory": {
-                      "type": "object"
-                    }
-                  },
-                  "example": {
-                    "message": "New sub-sub-category created under Sub-Category: b",
-                    "newSubSubCategory": {
-                      "__v": 0,
-                      "sid": {
-                        "_id": "5d076d37f1eae44eb46dbadf",
-                        "cid": "5d076d2af1eae44eb46dbade",
-                        "name": "b",
-                        "__v": 1,
-                        "subsubcategories": ["5d076d5af1eae44eb46dbae0"]
-                      },
-                      "cid": "5d076d2af1eae44eb46dbade",
-                      "name": "c",
-                      "_id": "5d076d5af1eae44eb46dbae0"
-                    }
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
                   }
                 }
               }
             }
           },
           "400": {
-            "description": "Expects `name` in body"
-          },
-          "401": {
-            "description": "`Unauthorized`"
-          },
-          "500": { "description": "`Internal Server Error`" }
-        }
-      },
-      "get": {
-        "tags": ["Category : type"],
-        "summary": "Get sub-sub-category",
-        "description": "",
-        "parameters": [
-          {
-            "name": "sid",
-            "in": "path",
-            "required": true,
-            "description": "the sub-category identifier, as sid",
-            "schema": {
-              "type": "string"
-            }
+            "description": "Expects 'type' in query string"
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string",
-                      "pattern": "^[0-9a-fA-F]{24}$"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "subsubcategories": {
-                      "type": "array"
-                    }
-                  },
-                  "example": {
-                    "_id": "5d076d37f1eae44eb46dbadf",
-                    "name": "b",
-                    "subsubcategories": [
-                      {
-                        "_id": "5d076d5af1eae44eb46dbae0",
-                        "name": "c"
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          },
-          "500": { "description": "`Internal Server Error`" }
         }
       }
     }
   },
-<<<<<<< HEAD
   "servers": [{
     "url": "http://127.0.0.1:4040/api/v1",
     "description": "development server"
@@ -666,65 +292,6 @@
           }
         }
       },
-=======
-  "servers": [
-    {
-      "url": "http://127.0.0.1:4040/api/v1"
-    }
-  ],
-  "components": {
-    "securitySchemes": {
-      "JWT": {
-        "type": "apiKey",
-        "in": "header",
-        "name": "Authorization"
-      }
-    },
-    "schemas": {
-<<<<<<< HEAD
->>>>>>> 834582bd... openapi.json added
-=======
-      "NewCategory": {
-        "type": "object",
-        "required": ["name", "type"],
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "a",
-            "uniqueItems": true
-          },
-          "type": {
-            "type": "string",
-            "example": "job-seeker"
-          }
-        }
-      },
-<<<<<<< HEAD
->>>>>>> 0cfa920d... Swagger added
-=======
-      "NewSubCategory": {
-        "type": "object",
-        "required": ["name"],
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "b",
-            "uniqueItems": true
-          }
-        }
-      },
-      "NewSubSubCategory": {
-        "type": "object",
-        "required": ["name"],
-        "properties": {
-          "name": {
-            "type": "string",
-            "example": "c",
-            "uniqueItems": true
-          }
-        }
-      },
->>>>>>> f52d2ce6... Documentation done for Category
       "Category": {
         "type": "object",
         "required": ["name", "type"],
@@ -736,11 +303,12 @@
           },
           "name": {
             "type": "string",
-            "example": "Field of Expertise"
+            "example": "Field of Expertise",
+            "default": "sad"
           },
           "type": {
             "type": "string",
-            "enum": ["job-seeker", "emp", "business", "business-category"],
+            "enum": ["job-seeker", "emp", "business", "company"],
             "example": "job-seeker"
           },
           "subcategories": {
@@ -769,7 +337,7 @@
         }
       },
       "SubSubCategory": {
-        "required": ["cid", "sid", "name"],
+        "required": ["cid", "name"],
         "properties": {
           "id": {
             "type": "string",
@@ -779,19 +347,15 @@
           "cid": {
             "$ref": "#/components/schemas/Category"
           },
-          "sid": {
-            "$ref": "#/components/schemas/SubCategory"
-          },
           "name": {
             "type": "string",
             "example": "Engineering & Computer Science"
+          },
+          "subcategories": {
+            "$ref": "#/components/schemas/SubSubCategory"
           }
         }
       }
     }
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 834582bd... openapi.json added

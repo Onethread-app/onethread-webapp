@@ -4,10 +4,10 @@ const mongoose = require("mongoose");
 mongoose.plugin(schema => {
   schema.options.usePushEach = true;
 });
-//let timestamp = require("mongoose-timestamp");
+//var timestamp = require("mongoose-timestamp");
 
 // defining all the fields of main category
-let categorySchema = mongoose.Schema({
+var categorySchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
@@ -22,12 +22,13 @@ let categorySchema = mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ["company", "business", "emp", "job-seeker"]
+    enum: ["company", "user"],
+    default: "company"
   }
 });
 
 // defining all the fields of sub-category
-let subCategorySchema = mongoose.Schema({
+var subCategorySchema = mongoose.Schema({
   cid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
@@ -35,7 +36,8 @@ let subCategorySchema = mongoose.Schema({
   },
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   },
   subsubcategories: [
     {
@@ -46,7 +48,7 @@ let subCategorySchema = mongoose.Schema({
 });
 
 // defining all the fields of sub-sub-category
-let subSubCategorySchema = mongoose.Schema({
+var subSubCategorySchema = mongoose.Schema({
   cid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Category",
@@ -59,7 +61,8 @@ let subSubCategorySchema = mongoose.Schema({
   },
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   }
 });
 
@@ -67,12 +70,12 @@ let subSubCategorySchema = mongoose.Schema({
 // subCategorySchema.plugin(timestamp);
 // subSubCategorySchema.plugin(timestamp);
 
-let Category = (module.exports = mongoose.model("Category", categorySchema));
-let SubCategory = (module.exports = mongoose.model(
+var Category = (module.exports = mongoose.model("Category", categorySchema));
+var SubCategory = (module.exports = mongoose.model(
   "SubCategory",
   subCategorySchema
 ));
-let SubSubCategory = (module.exports = mongoose.model(
+var SubSubCategory = (module.exports = mongoose.model(
   "SubSubCategory",
   subSubCategorySchema
 ));
