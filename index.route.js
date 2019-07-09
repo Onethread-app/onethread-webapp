@@ -11,6 +11,7 @@ const accountRoutes = require('./server/account/account.route');
 const userRoutes = require('./server/registereduser/user.route');
 const companyRoutes = require('./server/company/company.route');
 const categoryRoutes = require('./server/category/category.route');
+
 const router = express.Router(); // eslint-disable-line new-cap
 
 // TODO: use glob to match *.route files

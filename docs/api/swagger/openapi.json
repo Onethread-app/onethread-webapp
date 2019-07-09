@@ -1,0 +1,361 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "This is an API documentation for TiGrow LTD",
+    "version": "1.0.0-oas3",
+    "title": "TiGrow LTD API",
+    "contact": {
+      "email": "alamariful1727@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  
+  "tags": [{
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "front-end-developers",
+      "description": "Operations available to Front-End developers"
+    }
+  ],
+
+  "paths": {
+    "/account/signup": {
+      "post": {
+        "summary": "Create a new acount",
+        "requestBody": {
+          "description": "Optional description in *Markdown*",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Account"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/account/login": {
+      "post": {
+        "summary": "Login information about account",
+        "requestBody": {
+          "description": "Optional description in *Markdown*",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Account"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "loggedin"
+          }
+        }
+      }
+    },
+    
+      "/users/profile": {
+        "get": {
+          "description":"",
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description":"Success"
+            }
+          }
+        },
+        "post": {
+          "description":"Information about particular user",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "requestBody": {
+            "description": "Optional description in *Markdown*",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegisteredUser"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description":"Success"
+            },
+            "401": {
+              "description":"You don't have permissions for the resource"
+            }
+          }
+        }
+      },
+      "/company/profile": {
+        "post": {
+          "description":"Send company info to the account",
+          "security": [
+            {
+              "JWT": []
+            }
+          ],
+          "requestBody": {
+            "description": "value that would be pass",
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description":"Success"
+            },
+            "401": {
+              "description":"You don't have permissions for the resource"
+            }
+          }
+        }
+      },
+    
+    
+    
+    "/category": {
+      "get": {
+        "tags": ["front-end-developers"],
+        "summary": "searches category",
+        "operationId": "searchInventory",
+        "description": "By passing in the appropriate options, you can search for\navailable category in the system\n",
+        "parameters": [{
+          "in": "query",
+          "name": "type",
+          "description": "pass category option",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": ["job-seeker", "emp", "business", "company"]
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "search results matching 'type'",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Expects 'type' in query string"
+          }
+        }
+      }
+    }
+  },
+  "servers": [{
+    "url": "http://127.0.0.1:4040/api/v1",
+    "description": "development server"
+  }],
+  "components": {
+  
+  "securitySchemes": {
+      "JWT": {
+          "type": "apiKey",
+          "name": "Authorization",
+          "in": "header"
+      }
+  },
+    "schemas": {
+      "Account":{
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "o@o.com"
+          },
+          "password":{
+            "type": "string",
+            "example": "Rob@t124309"
+          }
+        }
+      },
+      "RegisteredUser":{
+        "type": "object",
+        "properties":{
+          "name":{
+            "type": "string",
+            "example": "orvi das"
+          },
+          "gender":{
+            "type":"string",
+            "example":"m"
+          },
+          "skillArea": {
+            "type": "string",
+            "example": "node, react"
+          },
+          "mobileNumber":{
+            "type": "string",
+            "example": "8801683754716"
+          },
+          "secondaryEmail":{
+            "type": "string",
+            "example": "orvi1@gmail.com"
+          },
+          "birthday": {
+            "type":"string",
+            "example": "12/12/2018"
+          },
+          "about":{
+            "type":"string",
+            "example": "I love what I am doing."
+          },
+          "bio": {
+            "type":"string",
+            "example": "GOOD GOOD GOOD"
+          }
+        }
+      },
+      "Company":{
+        "type": "object",
+        "properties":{
+          "companyName" :{
+            "type" : "string",
+            "example": "face@fb.com"
+          },
+          "phoneNumber" : {
+            "type" : "string",
+            "example" : "8801673754716"
+          },
+          "companyAddress" : {
+            "type": "string",
+            "example" : "mohkhali dohs"
+          },
+          "establishDate" : {
+            "type" : "string",
+            "example": "2019"
+          },
+          "selectDistrict":{
+            "type" : "string",
+            "example" : "Dhaka"
+          },
+          "selectThana" : {
+            "type" : "string",
+            "example" : "banani"
+          },
+          "businessDescription" : {
+            "type" : "string",
+            "example" : "Social network site"
+          },
+          "tradelicense":{
+            "type": "string",
+            "example" : "10000000"
+          },
+          "contactPersonName" : {
+            "type" : "string",
+            "example" : "orvi"
+          },
+          "contactPersonDesignation" : {
+            "type" : "string",
+            "example" : "software engineer"
+          },
+          "contactPersonemail": {
+            "type": "string",
+            "example" : "das.orvi@yahoo.com"
+          },
+          "contactPersonMobile": {
+            "type": "string",
+            "example" : "8801683754716"
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "name": {
+            "type": "string",
+            "example": "Field of Expertise",
+            "default": "sad"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["job-seeker", "emp", "business", "company"],
+            "example": "job-seeker"
+          },
+          "subcategories": {
+            "$ref": "#/components/schemas/SubCategory"
+          }
+        }
+      },
+      "SubCategory": {
+        "required": ["cid", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "cid": {
+            "$ref": "#/components/schemas/Category"
+          },
+          "name": {
+            "type": "string",
+            "example": "Engineering & Computer Science"
+          },
+          "subcategories": {
+            "$ref": "#/components/schemas/SubSubCategory"
+          }
+        }
+      },
+      "SubSubCategory": {
+        "required": ["cid", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "cid": {
+            "$ref": "#/components/schemas/Category"
+          },
+          "name": {
+            "type": "string",
+            "example": "Engineering & Computer Science"
+          },
+          "subcategories": {
+            "$ref": "#/components/schemas/SubSubCategory"
+          }
+        }
+      }
+    }
+  }
+}

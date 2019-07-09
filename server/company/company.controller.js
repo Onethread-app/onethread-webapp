@@ -1,18 +1,10 @@
 "use strict";
-const mongoose = require("mongoose");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const jwt = require("jsonwebtoken");
-const httpStatus = require("http-status");
-const APIError = require("../helpers/APIError");
-
-const config = require("../../config/config");
 const Account = require("../account/account.model");
 //const RegisteredUser = require("../model/user.model");
 const CompanyUser = require("../company/company.model");
 
 // create a user profile
-const createProfile = (req, res, next) => {
+const createProfile = async(req, res) => {
   const companyUser = new CompanyUser({
     companyName: req.body.companyName,
     phoneNumber: req.body.phoneNumber,
@@ -26,20 +18,23 @@ const createProfile = (req, res, next) => {
     contactPersonDesignation: req.body.contactPersonDesignation,
     contactPersonEmail: req.body.contactPersonEmail,
     contactPersonMobile: req.body.contactPersonMobile,
-    //category: id,
-    account: id
-  })
+    account: req.user.id
+  });
   companyUser
     .save()
     .then(result => {
-      res.redirect(`http://127.0.0.1:4040/api/v1/account/profile/${result._id}`);
+      req.profile = result;
+      res.status(201).send({
+        success: true,
+        result: result
+      });
     })
-    .catch(err => res.json(err))
-}
+    .catch(err => res.json(err));
+};
 
 
 
-const profileList = (req, res, next) => {
+const profileList = (req, res) => {
   const {
     limit = 50, skip = 0
   } = req.query;
@@ -58,8 +53,8 @@ const profileList = (req, res, next) => {
         res.json(user);
       }
     });
-}
-const profile = (req, res, next) => {
+};
+const profile = (req, res) => {
   let id = req.params.id;
   CompanyUser.findById(id)
     .populate('account')
@@ -67,13 +62,13 @@ const profile = (req, res, next) => {
     .then(profile => {
       if (!profile) {
         return res.status(404).json({
-          message: "Profile not found"
+          message: "Company profile not found"
         });
       }
       res.status(200).json({
         profile: profile,
         success: true,
-        msg: "profile create successful"
+        msg: "Company profile found"
       });
     })
     .catch(err => {
@@ -81,10 +76,10 @@ const profile = (req, res, next) => {
         error: err
       });
     });
-}
+};
 
 const profileUpdate = (req, res) => {
-  const currentAccount = req.user;
+  //const currentAccount = req.user;
   CompanyUser.findByIdAndUpdate(req.params.id, {
     $set: req.body
   }, function (err, user) {
@@ -100,7 +95,7 @@ const profileUpdate = (req, res) => {
       });
     }
   });
-}
+};
 
 const profileDelete = (req, res) => {
   CompanyUser.findByIdAndRemove(req.params.id, function (err) {
@@ -114,9 +109,9 @@ const profileDelete = (req, res) => {
         msg: "Profile Delete successful"
       });
     }
-  })
+  });
 
-}
+};
 module.exports = {
   profileList,
   profile,

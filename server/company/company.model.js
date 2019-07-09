@@ -1,7 +1,7 @@
-// individual user inSormation
+'use strict';
+// individual company inSormation
 const mongoose = require('mongoose');
-const Schema = mongoose.Schema
-const Account = require('../account/account.model');
+const Schema = mongoose.Schema;
 const companyUserSchema = new Schema({
     companyName: {
         type: String,
@@ -56,10 +56,10 @@ const companyUserSchema = new Schema({
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Category'
     // },
-    account: {
+    accountRef: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Account'
     },
     joinedOn: { type: Date, default: new Date() }
-})
+});
 module.exports = mongoose.model('CompanyUser', companyUserSchema);
