@@ -1,0 +1,26 @@
+image: node:10.15.3
+
+pipelines:
+  default:
+    - step:
+        caches:
+          - node
+        script: # Modify the commands below to build your repository.
+          - yarn
+          - yarn test:ci
+  branches:
+    profile: # test and deploy
+      - step: 
+          name: Runnning Automated Tests
+          caches:
+            - node
+          script: 
+          - yarn
+          - yarn test
+    '**': # matching type/name (i.e. feature/sso-login)
+      - step:
+          caches:
+            - node
+          script: 
+          - yarn
+          - yarn test

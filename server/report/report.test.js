@@ -6,6 +6,7 @@ const chai = require("chai"); // eslint-disable-line import/newline-after-import
 const expect = chai.expect;
 const app = require("../../index");
 
+
 chai.config.includeStack = true;
 
 /**
@@ -28,9 +29,7 @@ before(done => {
       token = res.body.token;
       done();
     })
-    .catch(err => {
-      console.log(err);
-    })
+    
     .catch(done);
 });
 after(done => {
@@ -44,54 +43,77 @@ after(done => {
 describe("## report APIs", () => {
   let report = {
     reportType: "false",
-    userRef: "5cdb99532325ce4cab3879cb",
-    postRef: "5cdb989faf732f49f137b820",
-    commentRef: "5ce0f1fee97dae22b9d82c86",
+    user: "5cee5cd6b6a83c52f5e5496b",
+    post: "5ceb6a94b3b70224662e4779",
+    comment: "5ce0f1fee97dae22b9d82c86",
     text: "hola"
   };
 
-  describe("# SAVE /api/reports", () => {
+  describe("# userSAVE /api/reports", () => {
     let reportuser = Object.create({
-      refrence: report.userRef,
+      refrence: report.user,
       text: report.text,
+      reportContent: 'user',
       reportType: "false"
+    });
+
+    it("should not create a new report of post user refrence without login", done => {
+      request(app)
+        .post("/api/v1/reports")
+        .query({ refType: "user" }) // need to change userRef id also
+        .send(reportuser)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
     });
 
     it("should create a new report of post user refrence", done => {
       request(app)
         .post("/api/v1/reports")
         .set("Authorization", token)
-        .query({ refType: "userRef" }) // need to change userRef id also
+        .query({ refType: "user" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.userRef).to.equal(report.userRef);
+          expect(res.body.user).to.equal(report.user);
           expect(res.body.reportType[0]).to.equal(report.reportType);
           //report = res.body;
           done();
-        })
-        .catch(err => {
-          console.log(err);
         })
         .catch(done);
     });
   });
 
-  describe("# SAVE /api/reports", () => {
+  describe("# commmentSAVE /api/reports", () => {
     let reportuser = Object.create({
       reportType: "false",
-      refrence: report.commentRef,
+      refrence: report.comment,
+      reportContent: 'comment',
       text: report.text
     });
+
+    it("should not create a new report of post comment refrence withou login", done => {
+      request(app)
+        .post("/api/v1/reports")
+
+        .query({ refType: "comment" }) // need to change userRef id also
+        .send(reportuser)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
+
     it("should create a new report of post comment refrence", done => {
       request(app)
         .post("/api/v1/reports")
         .set("Authorization", token)
-        .query({ refType: "commentRef" }) // need to change userRef id also
+        .query({ refType: "comment" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.commentRef).to.equal(report.commentRef);
+          expect(res.body.comment).to.equal(report.comment);
           expect(res.body.reportType[0]).to.equal(report.reportType);
           //report = res.body;
           done();
@@ -100,24 +122,37 @@ describe("## report APIs", () => {
     });
   });
 
-  describe("# SAVE /api/reports", () => {
+  describe("# postSAVE /api/reports", () => {
     //let reportuser = {refrence : postRef , text : text} = report;
     //let { userRef,commentRef, ...reportuser } = report; //rest not working
     let reportuser = Object.create({
       reportType: "false",
-      refrence: report.postRef,
+      refrence: report.post,
+      reportContent: 'post',
       text: report.text
+    });
+
+    it("should not create a new report of post with post reference without login", done => {
+      request(app)
+        .post("/api/v1/reports")
+
+        .query({ refType: "post" }) // need to change userRef id also
+        .send(reportuser)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
     });
 
     it("should create a new report of post with post reference", done => {
       request(app)
         .post("/api/v1/reports")
         .set("Authorization", token)
-        .query({ refType: "postRef" }) // need to change userRef id also
+        .query({ refType: "post" }) // need to change userRef id also
         .send(reportuser)
         .expect(httpStatus.OK)
         .then(res => {
-          expect(res.body.postRef).to.equal(report.postRef);
+          expect(res.body.post).to.equal(report.post);
           expect(res.body.reportType[0]).to.equal(report.reportType);
           report = res.body;
           done();
@@ -127,6 +162,16 @@ describe("## report APIs", () => {
   });
 
   describe("# GET /api/reports/:reportId", () => {
+    it("should not get report details without login or admin", done => {
+      request(app)
+        .get(`/api/v1/reports/${report._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
+
     it("should get report details", done => {
       request(app)
         .get(`/api/v1/reports/${report._id}`)
@@ -136,6 +181,41 @@ describe("## report APIs", () => {
           expect(res.body.postRef).to.equal(report.postRef);
           done();
         })
+        .catch(done);
+    });
+  });
+
+  describe("# post /api/reports/block/:reportId", () => {
+    let reportuser = Object.create({
+      reportType: "false",
+      refrence: report.post,
+      reviewStatus: "block",
+      text: report.text
+    });
+    it("should not block reported content action without login", done => {
+      request(app)
+        .post(`/api/v1/reports/block/${report._id}`)
+
+        .send(reportuser)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
+
+    it("should block reported content action", done => {
+      request(app)
+        .post(`/api/v1/reports/block/${report._id}`)
+        .set("Authorization", token)
+        .send(reportuser)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.postRef).to.equal(report.postRef);
+          done();
+        })
+        // .catch(err => {
+        //   console.log(err);
+        // })
         .catch(done);
     });
   });
@@ -168,6 +248,15 @@ describe("## report APIs", () => {
   });
 
   describe("# DELETE /api/reports/", () => {
+    it("should not delete save without login", done => {
+      request(app)
+        .delete(`/api/v1/reports/${report._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
     it("should delete save", done => {
       request(app)
         .delete(`/api/v1/reports/${report._id}`)

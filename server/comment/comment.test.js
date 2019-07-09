@@ -10,6 +10,29 @@ chai.config.includeStack = true;
 /**
  * root level hooks
  */
+<<<<<<< HEAD
+=======
+let token = "";
+before(done => {
+  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  let credentials = {
+    email: "jest@gmail.com",
+    password: "jest1234"
+  };
+
+  request(app)
+    .post("/api/v1/account/login")
+    .send(credentials)
+    .expect(200)
+    .then(res => {
+      //expect(res.body.success).to.equal(true);
+      token = res.body.token;
+      done();
+    })
+    
+    .catch(done);
+});
+>>>>>>> remotes/origin/3330877
 after(done => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   mongoose.models = {};
@@ -25,6 +48,16 @@ describe("## post APIs", () => {
   };
 
   describe("# SAVE /api/comments", () => {
+    it("should not create a new save of comment without login", done => {
+      request(app)
+        .post("/api/v1/comments")
+        .send(comment)
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err, res) => {
+          done(err);
+        });
+    });
+
     it("should create a new save of comment", done => {
       request(app)
         .post("/api/v1/comments")
@@ -36,12 +69,25 @@ describe("## post APIs", () => {
           comment = res.body;
           done();
         })
+<<<<<<< HEAD
+=======
+        
+>>>>>>> remotes/origin/3330877
         .catch(done);
     });
   });
 
   describe("# GET /api/comments/:commentId", () => {
-    it("should get save details", done => {
+    it("should nto get comment details witout login", done => {
+      request(app)
+        .get(`/api/v1/comments/${comment._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
+    it("should get coemment details", done => {
       request(app)
         .get(`/api/v1/comments/${comment._id}`)
         .expect(httpStatus.OK)
@@ -55,6 +101,7 @@ describe("## post APIs", () => {
   });
 
   describe("# GET /api/comments/", () => {
+    //may be change to connection by post
     it("should get all saves comments item", done => {
       request(app)
         .get("/api/v1/comments")
@@ -94,6 +141,15 @@ describe("## post APIs", () => {
   });
 
   describe("# Like /api/comments/", () => {
+    it("should not like comment without login", done => {
+      request(app)
+        .get(`/api/v1/comments/likes/${comment._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
     it("should like comment", done => {
       request(app)
         .get(`/api/v1/comments/likes/${comment._id}`)
@@ -111,6 +167,15 @@ describe("## post APIs", () => {
   });
 
   describe("# Respects /api/comments/", () => {
+    it("should not respect comment without lgoin", done => {
+      request(app)
+        .get(`/api/v1/comments/respectes/${comment._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
     it("should respect post", done => {
       request(app)
         .get(`/api/v1/comments/respectes/${comment._id}`)
@@ -127,7 +192,16 @@ describe("## post APIs", () => {
   });
 
   describe("# DELETE /api/comments/", () => {
-    it("should delete comment", done => {
+    it("should not delete comment with auth and self premmission", done => {
+      request(app)
+        .delete(`/api/v1/comments/${comment._id}`)
+
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
+    it("should delete comment with auth and self premmission", done => {
       request(app)
         .delete(`/api/v1/comments/${comment._id}`)
         .set("Authorization", token)

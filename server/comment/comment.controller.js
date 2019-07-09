@@ -35,12 +35,12 @@ function create(req, res) {
   comment
     .save()
     .then(result => res.send(result))
-    .catch(e => console.log(e));
+    .catch(e => next(e));
 }
 
 function list(req, res) {
   const { limit = 50, skip = 0 } = req.query;
-  Comment.find()
+  Comment.find({removed: false})
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -149,4 +149,18 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
+<<<<<<< HEAD
 module.exports = { create, get, load, remove, list, tag, like, respect };
+=======
+module.exports = {
+  load,
+  create,
+  get,
+  remove,
+  list,
+  tag,
+  like,
+  respect,
+  update
+};
+>>>>>>> remotes/origin/3330877

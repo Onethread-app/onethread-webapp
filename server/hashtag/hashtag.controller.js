@@ -2,7 +2,7 @@ const Hashtag = require("./hashtag.model");
 
 
 function create(req, res, next) {  
-
+  
   const hashtag = new Hashtag({
     text: req.body.text
   });

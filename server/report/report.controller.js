@@ -1,4 +1,7 @@
-const Report = require("./report.model");
+const Report = require('./report.model');
+
+const serviceReport = require('./report.service');
+//const Promise = require('bluebird');
 
 function load(req, res, next, id) {
   Report.findById(id)
@@ -6,17 +9,18 @@ function load(req, res, next, id) {
     .then(result => {
       if (result) {
         req.report = result;
-        return next();
+        return;
       } else {
         return res
           .status(400)
-          .json({ message: "No valid entry found for provided ID" });
+          .json({ message: 'No valid entry found for provided ID' });
       }
     })
     .catch(err => {
       // console.log(err);
       next(err);
-    });
+    })
+    .asCallback(next);
 }
 
 function get(req, res) {
@@ -24,8 +28,9 @@ function get(req, res) {
 }
 
 function create(req, res, next) {
-  const { refType = "postRef" } = req.query;
+  const { refType = 'post' } = req.query;
   const report = new Report({
+    reportContent: req.body.reportContent,
     reportType: req.body.reportType,
     [refType]: req.body.refrence,
     text: req.body.text,
@@ -40,7 +45,7 @@ function create(req, res, next) {
 
 function list(req, res) {
   const { limit = 50, skip = 0 } = req.query;
-  Report.find()
+  Report.find({ removed: false })
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -55,13 +60,32 @@ function list(req, res) {
     });
 }
 
+function review(req, res, next) {
+  const report = req.report;
+  report.reviewStatus = req.body.reviewStatus;
+  report.reviewText = req.body.reviewText;
+  let block = [];
+
+  if (req.body.reviewStatus === 'block') {
+    block.push(
+      serviceReport.reviewAction(req.body.refrence, report.reportContent[0])
+    );
+  }
+
+  block.push(report.save());
+  Promise.all(block)
+    .then(result => res.json(result))
+    .catch(e => next(e));
+}
+
 function remove(req, res, next) {
   const report = req.report;
   report.removed = true;
+
   report
     .remove()
     .then(result => res.json(result))
     .catch(e => next(e));
 }
 
-module.exports = { load, create, get, load, remove, list };
+module.exports = { load, create, get, remove, list, review };

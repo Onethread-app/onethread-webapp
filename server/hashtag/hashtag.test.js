@@ -30,9 +30,7 @@ before(done => {
       token = res.body.token;
       done();
     })
-    .catch(err => {
-      console.log(err);
-    })
+    
     .catch(done);
 });
 
@@ -44,10 +42,10 @@ after(done => {
   done();
 });
 
-describe("## Hashtag APIs", done => {
-  let hashtag = {
-    text: "pasi"
-  };
+describe("## Hashtag APIs", () => {
+  // let hashtag = {
+  //   text: "pasi"
+  // };
 
   // describe("# Hashtag /api/hashtags", () => {
   //   it("should create a new hashtag of post", done => {

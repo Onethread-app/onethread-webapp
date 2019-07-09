@@ -1,13 +1,18 @@
+<<<<<<< HEAD
 'use strict';
 
 const mongoose = require("mongoose");
+=======
+const mongoose = require('mongoose');
+
+>>>>>>> remotes/origin/3330877
 const Schema = mongoose.Schema;
 
-let tagLimit = function (tagList) {
+let tagLimit = function(tagList) {
   return tagList.length <= 10;
 };
 
-let hashtagLimit = function (hashtagList) {
+let hashtagLimit = function(hashtagList) {
   return hashtagList.length <= 5;
 };
 
@@ -16,24 +21,24 @@ const PostSchema = new mongoose.Schema({
     type: [
       {
         type: String,
-        enum: ["public", "private"]
+        enum: ['public', 'private']
       }
     ],
-    default: ["private"]
+    default: ['private']
   },
   postType: {
     type: [
       {
         type: String,
-        enum: ["status", "photo"]
+        enum: ['status', 'photo']
       }
     ],
-    default: ["status"]
+    default: ['status']
   },
   text: {
     type: String,
     trim: true,
-    maxlength: 200, 
+    maxlength: 200,
     required: true
   },
   location: {
@@ -41,34 +46,56 @@ const PostSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
-  respect: [  //will use count
+  respectCount: {
+    type: Number,
+    trim: true,
+    
+  },
+  likeCount: {
+    type: Number,
+    trim: true,
+   
+  },
+  respect: [
+    //will use count
     {
       type: Schema.ObjectId,
-      ref: "User"
+      ref: 'User'
     }
   ],
-  like: [  //will use count
+  like: [
+    //will use count
     {
       type: Schema.ObjectId,
-      ref: "User"
+      ref: 'User'
     }
   ],
-  hashtag:  {
-    type: [{
-      type: Schema.ObjectId,
-      ref: 'Hashtag'
-    }],
+  hashtag: {
+    type: [
+      {
+        type: Schema.ObjectId,
+        ref: 'Hashtag'
+      }
+    ],
     validate: [hashtagLimit, '{PATH} user exceeds the limit of 5']
   },
   tag: {
-    type: [{
-      type: Schema.ObjectId,
-      ref: 'User'
-    }],
+    type: [
+      {
+        type: Schema.ObjectId,
+        ref: 'User'
+      }
+    ],
     validate: [tagLimit, '{PATH} user exceeds the limit of 10']
   },
   removed: {
-    type: Boolean
+    type: Boolean,
+    default: false
+  },
+  blocked: {
+    //after report admin
+    type: Boolean,
+    default: false
   },
   updated: {
     type: Date
@@ -79,8 +106,8 @@ const PostSchema = new mongoose.Schema({
   },
   account: {
     type: Schema.ObjectId,
-    ref: "Account"
+    ref: 'Account'
   }
 });
 
-module.exports = mongoose.model("Post", PostSchema);
+module.exports = mongoose.model('Post', PostSchema);

@@ -1,10 +1,41 @@
 {
-  "parserOptions": {
-    "ecmaVersion": 8
+  "rules": {
+    
+    
+   
+    "no-use-before-define": [
+      2,
+      "nofunc"
+    ],
+    // TODO: turn on later
+    "comma-dangle": [
+      0
+    ],
+    "no-underscore-dangle": [
+      0
+    ]
   },
   "env": {
-    "es6": true,
     "node": true,
     "mocha": true
-  }
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module"
+  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base"
+    
+  ]
 }
+// {
+//   "parserOptions": {
+//       "ecmaVersion": 6
+//   },
+//   "env": {
+//       "es6": true
+//   }
+  
+// }
+
