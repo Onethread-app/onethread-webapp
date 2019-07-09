@@ -19,8 +19,19 @@ module.exports = {
           "disrespectful",
           "privateExposed",
           "others"
-        ).required(),
+        )
+        .required(),
       text: Joi.string().required(),
+      reviewText: Joi.string(),
+      reportContent: Joi.string()
+        .valid("post", "comment", "user")
+        .required(),
+      reviewStatus: Joi.string().valid(
+        "block",
+        "noofense",
+        "notresoolved",
+        "others"
+      ),
       refrence: Joi.string().regex(/^[0-9a-fA-F]{24}$/) //user comment or post query define that
     }
   }

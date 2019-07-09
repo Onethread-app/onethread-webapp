@@ -1,4 +1,3 @@
-'use strict';
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -36,7 +35,8 @@ const CommentSchema = new mongoose.Schema({
     validate: [tagLimit, '{PATH} user exceeds the limit of 10']
   },
   removed: {
-    type: Boolean
+    type: Boolean,
+    default: false
   },
   updated: {
     type: Date

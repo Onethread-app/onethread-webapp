@@ -1,0 +1,204 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "description": "This is a simple API for TiGrow LTD",
+    "version": "1.0.0-oas3",
+    "title": "TiGrow LTD API",
+    "contact": {
+      "email": "alamariful1727@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "tags": [
+    {
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "front-end-developers",
+      "description": "Operations available to Front-End developers"
+    }
+  ],
+  "paths": {
+    "/hashtags": {
+      "post": {
+        "security": [{"JWT":[]}],
+
+        "tags": ["hashtag in post"],
+        "summary": "hash tag like fb max 6",
+        "operationId": "create",
+        "description": "hash tag \nlimit 6\n",
+        "requestBody": {
+          "description": "user to add to the system",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Hashtag"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "creted object 'type'",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "items": {
+                    "$ref": "#/components/schemas/Hashtag"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Expects 'type' in query string"
+          }
+        }
+      }
+    },
+    "/category": {
+      "get": {
+        "tags": ["front-end-developers"],
+        "summary": "searches category",
+        "operationId": "searchInventory",
+        "description": "By passing in the appropriate options, you can search for\navailable category in the system\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "description": "pass category option",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["job-seeker", "emp", "business", "company"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "search results matching 'type'",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Expects 'type' in query string"
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:4040/api/v1"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      },
+      "JWT": {
+        +          "type": "apiKey",
+        +          "name": "Authorization",
+        +          "in": "header"
+        +      }
+    },
+    "schemas": {
+      "Hashtag": {
+        "type": "object",
+        "required": ["text"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "text": {
+            "type": "string",
+            "example": "Field of Expertise",
+            "default": "sad"
+          }
+        }
+      },
+      "Category": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "name": {
+            "type": "string",
+            "example": "Field of Expertise",
+            "default": "sad"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["job-seeker", "emp", "business", "company"],
+            "example": "job-seeker"
+          },
+          "subcategories": {
+            "$ref": "#/components/schemas/SubCategory"
+          }
+        }
+      },
+      "SubCategory": {
+        "required": ["cid", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "cid": {
+            "$ref": "#/components/schemas/Category"
+          },
+          "name": {
+            "type": "string",
+            "example": "Engineering & Computer Science"
+          },
+          "subcategories": {
+            "$ref": "#/components/schemas/SubSubCategory"
+          }
+        }
+      },
+      "SubSubCategory": {
+        "required": ["cid", "name"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{24}$",
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "cid": {
+            "$ref": "#/components/schemas/Category"
+          },
+          "name": {
+            "type": "string",
+            "example": "Engineering & Computer Science"
+          },
+          "subcategories": {
+            "$ref": "#/components/schemas/SubSubCategory"
+          }
+        }
+      }
+    }
+  }
+}

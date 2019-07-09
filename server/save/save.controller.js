@@ -1,4 +1,4 @@
-const Save = require("./save.model");
+const Save = require('./save.model');
 
 function load(req, res, next, id) {
   Save.findById(id)
@@ -7,11 +7,10 @@ function load(req, res, next, id) {
       if (result) {
         req.save = result;
         return next();
-      } else {
-        return res
-          .status(400)
-          .json({ message: "No valid entry found for provided ID" });
       }
+      return res
+        .status(400)
+        .json({ message: 'No valid entry found for provided ID' });
     })
     .catch(err => {
       // console.log(err);
@@ -35,21 +34,15 @@ function create(req, res, next) {
     .catch(e => next(e));
 }
 
-function list(req, res) {
+function list(req, res, next) {
   const { limit = 50, skip = 0 } = req.query;
-  Save.find()
+  Save.find({ removed: false })
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
-    .exec(function(err, resultes) {
-      if (err) {
-        return res.status(422).send({
-          message: err
-        });
-      } else {
-        res.json(resultes);
-      }
-    });
+    .exec()
+     .then(result => res.json(result))
+    .catch(e => next(e));
 }
 
 function remove(req, res, next) {
@@ -62,4 +55,4 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-module.exports = { load, create, get, load, remove, list };
+module.exports = { load, create, get, remove, list };
