@@ -65,7 +65,7 @@ app.use('/api/v1', routes); // v1.0
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {
-    //  validation error contains errors which is an array of error each containing message[]
+    //validation error contains errors which is an array of error each containing message[]
     const unifiedErrorMessage = err.errors
       .map(error => error.messages.join('. '))
       .join(' and ');
@@ -107,10 +107,10 @@ app.use((
 );
 
 // test authentication
-function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-}
+// function ensureAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     return next();
+//   }
+// }
 
 module.exports = app;
