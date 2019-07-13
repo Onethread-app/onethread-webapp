@@ -1,18 +1,8 @@
 "use strict";
-<<<<<<< HEAD
 // const mongoose = require("mongoose");
 // const passport = require("passport");
 // const httpStatus = require("http-status");
 // const APIError = require("../helpers/APIError");
-=======
-
-const mongoose = require("mongoose");
-const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const jwt = require("jsonwebtoken");
-const httpStatus = require("http-status");
-const APIError = require("../helpers/APIError");
->>>>>>> remotes/origin/3330877
 
 // const config = require("../../config/config");
 // const Account = require("../account/account.model");

@@ -15,11 +15,7 @@
     "start:debug": "cross-env DEBUG=express-mongoose-es6-rest-api:* yarn start",
     "lint": "esw *.js server config --color",
     "lint:watch": "yarn lint -- --watch",
-<<<<<<< HEAD
-    "precommit": " yarn test",
-=======
     "precommit": "yarn test",
->>>>>>> remotes/origin/3330877
     "test": "cross-env NODE_ENV=test mocha ./server/**/*.test.js --ui bdd --reporter spec --colors server --recursive --timeout 20000",
     "test:watch": "yarn test -- --watch",
     "test:coverage": "cross-env NODE_ENV=test ./node_modules/.bin/istanbul cover _mocha -- --ui bdd --reporter spec --colors server --recursive",
@@ -58,7 +54,7 @@
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.11",
     "method-override": "^2.3.10",
-    "mongoose": "^4.13.17",
+    "mongoose": "^4.13.18",
     "morgan": "1.9.1",
     "ms": "^2.1.2",
     "nodemailer": "^6.2.1",

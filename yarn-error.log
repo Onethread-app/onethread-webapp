@@ -1,26 +1,25 @@
 Arguments: 
-  /usr/bin/node /usr/bin/yarn start
+  /home/tigrow/.nvm/versions/node/v10.15.3/bin/node /usr/share/yarn/bin/yarn.js test
 
 PATH: 
-  /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+  /home/tigrow/.nvm/versions/node/v10.15.3/bin:/home/tigrow/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/home/tigrow/go/bin:/home/tigrow/go/bin:/usr/local/go/bin
 
 Yarn version: 
-  1.15.2
+  1.16.0
 
 Node version: 
-  8.16.0
+  10.15.3
 
 Platform: 
   linux x64
 
 Trace: 
-  SyntaxError: /home/orvi/office/tigrowback/package.json: Unexpected token < in JSON at position 2136
+  SyntaxError: /home/tigrow/tigro/package.json: Unexpected token < in JSON at position 502
       at JSON.parse (<anonymous>)
-      at /usr/lib/node_modules/yarn/lib/cli.js:1625:59
+      at /usr/share/yarn/lib/cli.js:1625:59
       at Generator.next (<anonymous>)
-      at step (/usr/lib/node_modules/yarn/lib/cli.js:304:30)
-      at /usr/lib/node_modules/yarn/lib/cli.js:315:13
-      at <anonymous>
+      at step (/usr/share/yarn/lib/cli.js:304:30)
+      at /usr/share/yarn/lib/cli.js:315:13
 
 npm manifest: 
   {
@@ -40,7 +39,11 @@ npm manifest:
       "start:debug": "cross-env DEBUG=express-mongoose-es6-rest-api:* yarn start",
       "lint": "esw *.js server config --color",
       "lint:watch": "yarn lint -- --watch",
-      "precommit": "yarn lint && yarn test",
+  <<<<<<< HEAD
+      "precommit": " yarn test",
+  =======
+      "precommit": "yarn test",
+  >>>>>>> remotes/origin/3330877
       "test": "cross-env NODE_ENV=test mocha ./server/**/*.test.js --ui bdd --reporter spec --colors server --recursive --timeout 20000",
       "test:watch": "yarn test -- --watch",
       "test:coverage": "cross-env NODE_ENV=test ./node_modules/.bin/istanbul cover _mocha -- --ui bdd --reporter spec --colors server --recursive",
@@ -79,7 +82,7 @@ npm manifest:
       "jsonwebtoken": "^8.5.1",
       "lodash": "^4.17.11",
       "method-override": "^2.3.10",
-      "mongoose": "^4.13.17",
+      "mongoose": "^4.13.18",
       "morgan": "1.9.1",
       "ms": "^2.1.2",
       "nodemailer": "^6.2.1",
@@ -91,14 +94,7 @@ npm manifest:
       "passport-jwt": "^4.0.0",
       "passport-local": "^1.0.0",
       "passport-oauth": "^1.0.0",
-  <<<<<<< HEAD
-  <<<<<<< HEAD
-  =======
       "semver": "^6.1.1",
-  >>>>>>> remotes/origin/finalOrvi
-  =======
-      "semver": "^6.1.1",
-  >>>>>>> remotes/origin/finalOrvi
       "set-immediate-shim": "^2.0.0",
       "swagger": "^0.7.5",
       "swagger-ui-express": "^4.0.4",
@@ -110,7 +106,7 @@ npm manifest:
       "coveralls": "^3.0.4",
       "cross-env": "5.1.4",
       "cz-conventional-changelog": "1.2.0",
-      "eslint": "3.16.1",
+      "eslint": "^3.16.1",
       "eslint-config-airbnb-base": "7.1.0",
       "eslint-plugin-import": "1.16.0",
       "eslint-watch": "^5.1.2",

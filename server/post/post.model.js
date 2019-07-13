@@ -1,11 +1,5 @@
-<<<<<<< HEAD
-'use strict';
-
-const mongoose = require("mongoose");
-=======
 const mongoose = require('mongoose');
 
->>>>>>> remotes/origin/3330877
 const Schema = mongoose.Schema;
 
 let tagLimit = function(tagList) {

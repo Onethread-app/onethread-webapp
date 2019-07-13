@@ -82,16 +82,16 @@ describe('## Save APIs', () => {
         });
     });
 
-    it('should delete reacts', done => {
-      request(app)
-        .delete(`/api/v1/reacts/${react._id}`)
-        .set('Authorization', token)
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.removed).to.equal(true);
-          done();
-        })
-        .catch(done);
-    });
+    // it('should delete reacts', done => {
+    //   request(app)
+    //     .delete(`/api/v1/reacts/${react._id}`)
+    //     .set('Authorization', token)
+    //     .expect(httpStatus.OK)
+    //     .then(res => {
+    //       expect(res.body.removed).to.equal(true);
+    //       done();
+    //     })
+    //     .catch(done);
+    // });
   });
 });

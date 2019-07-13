@@ -1,4 +1,3 @@
-'use strict';
 const mongoose = require("mongoose");
 const request = require("supertest-as-promised");
 const httpStatus = require("http-status");
@@ -257,16 +256,16 @@ describe("## report APIs", () => {
           done(err);
         });
     });
-    it("should delete save", done => {
-      request(app)
-        .delete(`/api/v1/reports/${report._id}`)
-        .set("Authorization", token)
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.removed).to.equal(true);
-          done();
-        })
-        .catch(done);
-    });
+    // it("should delete report", done => {
+    //   request(app)
+    //     .delete(`/api/v1/reports/${report._id}`)
+    //     .set("Authorization", token)
+    //     .expect(httpStatus.OK)
+    //     .then(res => {
+    //       expect(res.body.removed).to.equal(true);
+    //       done();
+    //     })
+    //     .catch(done);
+    // });
   });
 });

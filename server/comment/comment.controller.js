@@ -1,9 +1,7 @@
-'use strict';
-
-const comment = require("./comment.model");
+const Comment = require("./comment.model");
 
 function load(req, res, next, id) {
-  comment.findById(id)
+  Comment.findById(id)
     .exec()
     .then(result => {
       if (result) {
@@ -25,7 +23,7 @@ function get(req, res) {
   return res.json(req.comment);
 }
 
-function create(req, res) {
+function create(req, res, next) {
   const comment = new Comment({
     text: req.body.text,
     postRef: req.body.postRef,
@@ -149,9 +147,6 @@ function remove(req, res, next) {
     .catch(e => next(e));
 }
 
-<<<<<<< HEAD
-module.exports = { create, get, load, remove, list, tag, like, respect };
-=======
 module.exports = {
   load,
   create,
@@ -163,4 +158,3 @@ module.exports = {
   respect,
   update
 };
->>>>>>> remotes/origin/3330877

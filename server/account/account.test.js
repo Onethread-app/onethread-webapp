@@ -1,18 +1,17 @@
-<<<<<<< HEAD
+
 'use strict';
 
 const mongoose = require("mongoose");
 const request = require("supertest-as-promised");
 const chai = require("chai"); // eslint-disable-line import/newline-after-import
 const app = require("../../index");
-=======
 // const mongoose = require("mongoose");
 // const request = require("supertest-as-promised");
 // const httpStatus = require("http-status");
 // const chai = require("chai"); // eslint-disable-line import/newline-after-import
 // const expect = chai.expect;
 // const app = require("../../index.js");
->>>>>>> remotes/origin/3330877
+
 
 // chai.config.includeStack = true;
 
@@ -20,7 +19,7 @@ const app = require("../../index");
 //  * root level hooks
 //  */
 
-<<<<<<< HEAD
+
 after(done => {
     // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
     mongoose.models = {};
@@ -67,7 +66,6 @@ describe("## Registration APIs for User", () =>{
       
 });
 
-=======
 // before(done =>{
 //     let account ={
 //         email: "orvi@orvi.com",
@@ -79,4 +77,4 @@ describe("## Registration APIs for User", () =>{
 //         .send(account)
 //         .expect(httpStatus.OK)
 // })
->>>>>>> remotes/origin/3330877
+
