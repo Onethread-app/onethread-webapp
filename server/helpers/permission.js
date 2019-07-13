@@ -17,6 +17,7 @@ const permit = (...allowed) => {
 const authSelf = content => {
   // return a middleware
   return (request, response, next) => {
+    console.log(request.user._id, request[content].account);
     if (request.user._id === request[content].account){
       next();
     }
