@@ -130,16 +130,16 @@ describe('## Save APIs', () => {
         });
     });
 
-    // it('should delete save', done => {
-    //   request(app)
-    //     .delete(`/api/v1/saves/${save._id}`)
-    //     .set('Authorization', token)
-    //     .expect(httpStatus.OK)
-    //     .then(res => {
-    //       expect(res.body.removed).to.equal(true);
-    //       done();
-    //     })
-    //     .catch(done);
-    // });
+    it('should delete save', done => {
+      request(app)
+        .delete(`/api/v1/saves/${save._id}`)
+        .set('Authorization', token)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.removed).to.equal(true);
+          done();
+        })
+        .catch(done);
+    });
   });
 });

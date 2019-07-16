@@ -30,7 +30,10 @@ const basic = new Schema({
   },
   mainProducts: {
     type: [String],
-    validate: [mainProductsLimit, '{PATH} exceeds the limit of 5'],
+    validate: [
+      mainProductsLimit,
+      '{PATH} is required and should not greater than 5'
+    ],
     required: true
   },
   otherProductsYouSell: {
@@ -89,7 +92,11 @@ const basic = new Schema({
 
 // validation
 function mainProductsLimit(val) {
-  return val.length <= 5;
+  if (val.length > 0 && val.length <= 5) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
 function otherProductsYouSellLimit(val) {

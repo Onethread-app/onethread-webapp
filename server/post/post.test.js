@@ -233,16 +233,16 @@ describe("## post APIs", () => {
         });
     });
 
-    // it("should delete post", done => {
-    //   request(app)
-    //     .delete(`/api/v1/posts/${post._id}`)
-    //     .set("Authorization", token)
-    //     .expect(httpStatus.OK)
-    //     .then(res => {
-    //       expect(res.body.removed).to.equal(true);
-    //       done();
-    //     })
-    //     .catch(done);
-    // });
+    it("should delete post", done => {
+      request(app)
+        .delete(`/api/v1/posts/${post._id}`)
+        .set("Authorization", token)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.removed).to.equal(true);
+          done();
+        })
+        .catch(done);
+    });
   });
 });
