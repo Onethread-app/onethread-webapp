@@ -1,8 +1,11 @@
 'use strict';
 const express = require('express');
 const router = express.Router();
-
+const basicCtrl = require('./basic/basic.controller');
 const basicRoutes = require('./basic/basic.route');
+
+// get all basic-info
+router.route('/basic-info').get(basicCtrl.getAllBasicInfo);
 
 // getting requested company's id
 router.use('/:cid', (req, res, next) => {

@@ -1,5 +1,18 @@
 const Joi = require('joi');
 
+function id() {
+  return {
+    id: Joi.string()
+      .regex(/^[0-9a-fA-F]{24}$/)
+      .required()
+      .error(errors => {
+        return {
+          message: 'Invalid ID'
+        };
+      })
+  };
+}
+
 module.exports = {
   newCompany: {
     body: {
@@ -23,17 +36,8 @@ module.exports = {
         })
     }
   },
-  getCompany: {
-    params: {
-      id: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required()
-        .error(errors => {
-          return {
-            message: 'Invalid ID'
-          };
-        })
-    }
+  getBasicInfo: {
+    params: id()
   },
   updateCompany: {
     body: {
@@ -56,27 +60,9 @@ module.exports = {
           };
         })
     },
-    params: {
-      id: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required()
-        .error(errors => {
-          return {
-            message: 'Invalid ID'
-          };
-        })
-    }
+    params: id()
   },
-  deleteCompany: {
-    params: {
-      id: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required()
-        .error(errors => {
-          return {
-            message: 'Invalid ID'
-          };
-        })
-    }
+  deleteBasicInfo: {
+    params: id()
   }
 };

@@ -85,7 +85,6 @@ const basic = new Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
-    unique: true,
     required: true
   }
 });
