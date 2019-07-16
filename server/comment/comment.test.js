@@ -176,25 +176,25 @@ describe("## comment APIs", () => {
   });
 
   describe("# DELETE /api/comments/", () => {
-    // it("should not delete comment with auth and self premmission", done => {
-    //   request(app)
-    //     .delete(`/api/v1/comments/${comment._id}`)
+    it("should not delete comment with auth and self premmission", done => {
+      request(app)
+        .delete(`/api/v1/comments/${comment._id}`)
 
-    //     .expect(httpStatus.UNAUTHORIZED)
-    //     .end((err) => {
-    //       done(err);
-    //     });
-    // });
-    // it("should delete comment with auth and self premmission", done => {
-    //   request(app)
-    //     .delete(`/api/v1/comments/${comment._id}`)
-    //     .set("Authorization", token)
-    //     .expect(httpStatus.OK)
-    //     .then(res => {
-    //       expect(res.body.removed).to.equal(true);
-    //       done();
-    //     })
-    //     .catch(done);
-    // });
+        .expect(httpStatus.UNAUTHORIZED)
+        .end((err) => {
+          done(err);
+        });
+    });
+    it("should delete comment with auth and self premmission", done => {
+      request(app)
+        .delete(`/api/v1/comments/${comment._id}`)
+        .set("Authorization", token)
+        .expect(httpStatus.OK)
+        .then(res => {
+          expect(res.body.removed).to.equal(true);
+          done();
+        })
+        .catch(done);
+    });
   });
 });
