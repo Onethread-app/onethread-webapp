@@ -1,65 +1,37 @@
 'use strict';
-// individual company inSormation
 const mongoose = require('mongoose');
+const timestamp = require('mongoose-timestamp');
 const Schema = mongoose.Schema;
-const companyUserSchema = new Schema({
-    companyName: {
-        type: String,
-        required: true
-    },
-    phoneNumber: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    companyAddress: {
-        type: String,
-        required: true
-    },
-    establishDate:{
-        type: String,
-        required: true
-    },
-    selectDistrict: {
-        type: String,
-        required: true
-    },
-    selectThana: {
-        type: String,
-        required: true
-    },
-    businessDescription: {
-        type: String,
-    },
-    tradeLicense: {
-        type: String,
-        required: true
-    },
-    contactPersonName: {
-        type: String,
-        required: true
-    },
-    contactPersonDesignation: {
-        type: String,
-        required: true
-    },
-    contactPersonEmail: {
-        type: String,
-    },
-    contactPersonMobile: {
-        type: String,
-        unique: true,
-        required: true
-    },
 
-    // category: {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Category'
-    // },
-    accountRef: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account'
-    },
-    joinedOn: { type: Date, default: new Date() }
+// company schema
+const company = new Schema({
+  type: {
+    type: String,
+    required: true,
+    enum: [
+      'Manufacturer',
+      'Trading Company',
+      'Buying Office',
+      'Agent',
+      'Distributor/Wholesaler',
+      'Government ministry/Bureau/Commission',
+      'Association',
+      'Business Service (Transportation, finance, travel, Ads, etc)',
+      'Other'
+    ]
+  },
+  account: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account',
+    required: true
+  }
 });
-module.exports = mongoose.model('CompanyUser', companyUserSchema);
+
+// add timestamps
+company.plugin(timestamp);
+
+let Company = mongoose.model('Company', company);
+
+module.exports = {
+  Company
+};

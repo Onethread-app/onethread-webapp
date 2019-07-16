@@ -34,6 +34,12 @@ const accountsSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  companies: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company'
+    }
+  ],
   following: [
     {
       user: {

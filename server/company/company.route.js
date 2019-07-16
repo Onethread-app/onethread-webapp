@@ -1,26 +1,49 @@
-"use strict";
-
-const express = require("express");
-//const validate = require("express-validation");
-//const paramValidation = require("../../config/param-validation");
+'use strict';
+const express = require('express');
+const validate = require('express-validation');
 const router = express.Router();
-//const jwt = require("express-jwt");
-//const passportService = require('../../config/passport');
+
 const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', {session: false});
-const companyCtrl = require("./company.controller");
-const {permit} = require('../helpers/permission');
+const requireAuth = passport.authenticate('jwt', { session: false });
 
+const { permit, authSelf } = require('./../helpers/permission');
 
-// for company users
+const paramValidation = require('./company.validation');
+const companyProfileCtrl = require('./company.controller');
+
+const typeInfo = require('./typeInfo/typeInfo.route');
+
+// company type's info
+router.use('/typeInfo', typeInfo);
+
+// for company profile
 router
-  .route("/profile")
-  .post(requireAuth, permit('company'), companyCtrl.createProfile);
+  .route('/profile')
+  .post(
+    requireAuth,
+    permit('company'),
+    validate(paramValidation.newCompany),
+    companyProfileCtrl.createCompanyProfile
+  );
 router
-  .route("/profile/:id")   
-  .get(requireAuth, permit('company'), companyCtrl.profile)
-  .put(requireAuth, permit('company'), companyCtrl.profileUpdate)
-  .delete(requireAuth, permit('company'), companyCtrl.profileDelete);
-  
-  
+  .route('/profile/:id')
+  .get(
+    requireAuth,
+    permit('company'),
+    validate(paramValidation.getCompany),
+    companyProfileCtrl.getCompanyProfile
+  )
+  .put(
+    requireAuth,
+    permit('company'),
+    validate(paramValidation.updateCompany),
+    companyProfileCtrl.updateCompanyProfile
+  )
+  .delete(
+    requireAuth,
+    permit('company'),
+    validate(paramValidation.deleteCompany),
+    companyProfileCtrl.deleteCompanyProfile
+  );
+
 module.exports = router;
