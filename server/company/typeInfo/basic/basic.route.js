@@ -11,7 +11,12 @@ const { permit } = require('./../../../helpers/permission');
 // for basic information
 router
   .route('/')
-  .post(requireAuth, permit('company'), basicCtrl.createBasicInfo);
+  .post(
+    requireAuth,
+    permit('company'),
+    validate(paramValidation.createBasicInfo),
+    basicCtrl.createBasicInfo
+  );
 router
   .route('/:id')
   .get(

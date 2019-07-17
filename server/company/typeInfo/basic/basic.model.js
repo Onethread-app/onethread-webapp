@@ -85,7 +85,8 @@ const basic = new Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
-    required: true
+    required: true,
+    unique: true
   }
 });
 
@@ -118,7 +119,7 @@ function checkUrl(val) {
 // add timestamps
 basic.plugin(timestamp);
 
-let Basic = mongoose.model('CompaniesBasic-Info', basic);
+let Basic = mongoose.model('Companies_Basic_info', basic);
 
 module.exports = {
   Basic

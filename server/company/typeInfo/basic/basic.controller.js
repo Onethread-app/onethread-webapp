@@ -1,8 +1,30 @@
 'use strict';
 const { Basic } = require('./basic.model');
 
+// request formatter
+function basicInfoFormatterRequest(bc) {
+  return {
+    company: bc.company,
+    companyName: bc.companyName,
+    locationOfReg: bc.locationOfReg,
+    companyOperationalAddress: {
+      street: bc.companyOperationalAddress.street,
+      city: bc.companyOperationalAddress.city,
+      country: bc.companyOperationalAddress.country,
+      zipCode: bc.companyOperationalAddress.zipCode
+    },
+    mainProducts: bc.mainProducts,
+    otherProductsYouSell: bc.otherProductsYouSell,
+    yearCompanyReg: bc.yearCompanyReg,
+    totalEmp: bc.totalEmp,
+    companyUrl: bc.companyUrl,
+    legalOwner: bc.legalOwner,
+    officeSize: bc.officeSize,
+    companyAdvantages: bc.companyAdvantages
+  };
+}
 // response formatter
-function basicInfoFormatter(bc) {
+function basicInfoFormatterResponse(bc) {
   return {
     id: bc.id,
     company: bc.company,
@@ -43,7 +65,7 @@ const createBasicInfo = async (req, res) => {
     .then(result => {
       res.status(201).json({
         message: 'New Basic-info created',
-        newBasic: basicInfoFormatter(result)
+        newBasic: basicInfoFormatterResponse(result)
       });
     })
     .catch(err => {
@@ -60,7 +82,7 @@ const getBasicInfo = async (req, res) => {
     .then(result => {
       if (result) {
         res.status(200).json({
-          basicInfo: basicInfoFormatter(result)
+          basicInfo: basicInfoFormatterResponse(result)
         });
       } else {
         res.status(404).json({ message: 'No Basic-info found' });
@@ -80,7 +102,7 @@ const getAllBasicInfo = async (req, res) => {
         res.status(200).json({
           count: results.length,
           basicInfo: results.map(bc => {
-            return basicInfoFormatter(bc);
+            return basicInfoFormatterResponse(bc);
           })
         });
       } else {
