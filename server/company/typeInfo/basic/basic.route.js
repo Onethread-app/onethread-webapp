@@ -1,12 +1,13 @@
 'use strict';
 const express = require('express');
 const validate = require('express-validation');
-const paramValidation = require('./basic.validation');
+const joiSchema = require('./basic.validation');
 const router = express.Router();
 const basicCtrl = require('./basic.controller');
 const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', { session: false });
 const { permit } = require('./../../../helpers/permission');
+const SchemaValidator = require('./../../../helpers/joiSchemaValidator');
 
 // for basic information
 router
@@ -14,7 +15,7 @@ router
   .post(
     requireAuth,
     permit('company'),
-    validate(paramValidation.createBasicInfo),
+    SchemaValidator(true, joiSchema.createBasicInfo),
     basicCtrl.createBasicInfo
   );
 router
@@ -22,14 +23,19 @@ router
   .get(
     requireAuth,
     permit('company'),
-    validate(paramValidation.getBasicInfo),
+    SchemaValidator(true, joiSchema.getBasicInfo),
     basicCtrl.getBasicInfo
   )
-  .put(requireAuth, permit('company'), basicCtrl.updateBasicInfo)
+  .put(
+    requireAuth,
+    permit('company'),
+    SchemaValidator(true, joiSchema.updateBasicInfo),
+    basicCtrl.updateBasicInfo
+  )
   .delete(
     requireAuth,
     permit('company'),
-    validate(paramValidation.deleteBasicInfo),
+    SchemaValidator(true, joiSchema.deleteBasicInfo),
     basicCtrl.deleteBasicInfo
   );
 

@@ -1,10 +1,31 @@
 'use strict';
 const { Basic } = require('./basic.model');
 
-// request formatter
-function basicInfoFormatterRequest(bc) {
+// Create request formatter
+function basicInfoFormatterCreateRequest(bc) {
   return {
     company: bc.company,
+    companyName: bc.companyName,
+    locationOfReg: bc.locationOfReg,
+    companyOperationalAddress: {
+      street: bc.companyOperationalAddress.street,
+      city: bc.companyOperationalAddress.city,
+      country: bc.companyOperationalAddress.country,
+      zipCode: bc.companyOperationalAddress.zipCode
+    },
+    mainProducts: bc.mainProducts,
+    otherProductsYouSell: bc.otherProductsYouSell,
+    yearCompanyReg: bc.yearCompanyReg,
+    totalEmp: bc.totalEmp,
+    companyUrl: bc.companyUrl,
+    legalOwner: bc.legalOwner,
+    officeSize: bc.officeSize,
+    companyAdvantages: bc.companyAdvantages
+  };
+}
+// Update request formatter
+function basicInfoFormatterUpdateRequest(bc) {
+  return {
     companyName: bc.companyName,
     locationOfReg: bc.locationOfReg,
     companyOperationalAddress: {
@@ -58,7 +79,7 @@ const createBasicInfo = async (req, res) => {
 
   // storing requested company's id
   req.body.company = req.currentCompany;
-  const newBasic = new Basic(req.body);
+  const newBasic = new Basic(basicInfoFormatterCreateRequest(req.body));
 
   newBasic
     .save()
@@ -120,7 +141,19 @@ const updateBasicInfo = async (req, res) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-  Basic.findOneAndUpdate({ _id: req.params.id }, req.body)
+
+  // Unauthorized values
+  if (req.body.hasOwnProperty('company')) {
+    return res.status(401).json({ message: 'Unauthorized value [company]' });
+  } else if (req.body.hasOwnProperty('_id')) {
+    return res.status(401).json({ message: 'Unauthorized value [_id]' });
+  }
+
+  // update
+  Basic.findOneAndUpdate(
+    { _id: req.params.id },
+    basicInfoFormatterUpdateRequest(req.body)
+  )
     .exec()
     .then(result => {
       if (result) {
