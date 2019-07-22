@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-module.exports = (useJoiError = false, _schema) => {
+module.exports = (_schema, useJoiError = true) => {
   const _useJoiError = _.isBoolean(useJoiError) && useJoiError;
 
   // Joi validation options
