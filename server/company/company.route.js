@@ -1,9 +1,10 @@
-'use strict';
 const express = require('express');
 const validate = require('express-validation');
+
 const router = express.Router();
 
 const passport = require('passport');
+
 const requireAuth = passport.authenticate('jwt', { session: false });
 
 const { permit, authSelf } = require('./../helpers/permission');
