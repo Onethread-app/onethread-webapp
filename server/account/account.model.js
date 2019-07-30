@@ -9,6 +9,18 @@ const Schema = mongoose.Schema;
 
 // defining all the fields of individual account
 const accountsSchema = new mongoose.Schema({
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
+  contactNo: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     unique: true,

@@ -17,6 +17,7 @@ module.exports = (_schema, useJoiError = true) => {
       .then(validatedChanges => {
         req.body = validatedChanges.body;
         next();
+        return null;
       })
       .catch(validationError => {
         // Joi Error
