@@ -6,7 +6,6 @@ let tagLimit = function(tagList) {
   return tagList.length <= 10;
 };
 
-
 const DiscussionSchema = new mongoose.Schema({
   text: {
     type: String,
@@ -21,13 +20,11 @@ const DiscussionSchema = new mongoose.Schema({
   },
   respectCount: {
     type: Number,
-    trim: true,
-    
+    trim: true
   },
   likeCount: {
     type: Number,
-    trim: true,
-   
+    trim: true
   },
   respect: [
     //will use count
@@ -43,7 +40,7 @@ const DiscussionSchema = new mongoose.Schema({
       ref: 'User'
     }
   ],
-  
+
   tag: {
     type: [
       {
