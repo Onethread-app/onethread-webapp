@@ -9,7 +9,7 @@ const ShareSchema = new mongoose.Schema({
     postRef: {
         type: Schema.ObjectId,
         ref: 'Post'
-      }
+      },
  
   respectCount: {
     type: Number,
