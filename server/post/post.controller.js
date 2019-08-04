@@ -11,8 +11,8 @@ const Post = require('./post.model');
 //     })
 //     .catch(e => next(e));
 // }
+const load =  (req, res, next, id) => {
 
- function load(req, res, next, id) {
 
   Post.findById(id)
    .exec()
@@ -33,7 +33,8 @@ const Post = require('./post.model');
    });
 }
 
-function like(req, res, next) {
+const like =  (req, res, next) => {
+
 
   const id = req.params.postId;
   
@@ -55,7 +56,7 @@ function like(req, res, next) {
    });
 }
 
-function respect(req, res, next) {
+const respect = (req, res, next) => {
 
   const id = req.params.postId;
   
@@ -77,7 +78,7 @@ function respect(req, res, next) {
    });
 }
 
-function tag(req, res, next) {
+const tag = (req, res, next) => {
 
   const id = req.params.postId;
   
@@ -105,7 +106,7 @@ function tag(req, res, next) {
  * Get post
  * @returns {post}
  */
-function get(req, res) {
+const  get =  (req, res) => {
   return res.json(req.post);
 }
 
@@ -115,7 +116,7 @@ function get(req, res) {
  * @property {string} req.body.mobileNumber - The mobileNumber of post.
  * @returns {post}
  */
-function create(req, res, next) {
+const create = (req, res, next) => {
   
   const post = new Post({
     text: req.body.text,
@@ -134,7 +135,7 @@ function create(req, res, next) {
  * @property {string} req.body.mobileNumber - The mobileNumber of post.
  * @returns {post}
  */
-function update(req, res, next) {
+const  update = (req, res, next) => {
   const post = req.post;
   post.text = req.body.text;
   post.location = req.body.location;
@@ -151,7 +152,7 @@ function update(req, res, next) {
  * @property {number} req.query.limit - Limit number of posts to be returned.
  * @returns {post[]}
  */
-function list(req, res) {
+const list = (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
   Post.find({removed: false})
   .sort({ createdAt: -1 })
@@ -179,7 +180,7 @@ function list(req, res) {
 //     .catch(e => next(e));
 // }
 
-function remove(req, res, next) {
+const  remove = (req, res, next) => {
   const post = req.post;
   post.removed = true;
 
