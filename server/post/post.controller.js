@@ -158,7 +158,7 @@ const list = (req, res) => {
   .sort({ createdAt: -1 })
   .skip(+skip)
   .limit(+limit)
-  .exec(function (err, posts) {
+  .exec( (err, posts) => {
     if (err) {
       return res.status(422).send({
         message: err
