@@ -2,24 +2,18 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-
-
-
 const ShareSchema = new mongoose.Schema({
-    postRef: {
-        type: Schema.ObjectId,
-        ref: 'Post'
-      },
- 
+  postRef: {
+    type: Schema.ObjectId,
+    ref: 'Post'
+  },
   respectCount: {
     type: Number,
-    trim: true,
-    
+    trim: true
   },
   likeCount: {
     type: Number,
-    trim: true,
-   
+    trim: true
   },
   respect: [
     //will use count
@@ -35,12 +29,10 @@ const ShareSchema = new mongoose.Schema({
       ref: 'User'
     }
   ],
-  
   removed: {
     type: Boolean,
     default: false
   },
-  
   updated: {
     type: Date
   },

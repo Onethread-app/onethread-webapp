@@ -2,10 +2,6 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-let tagLimit = function(tagList) {
-  return tagList.length <= 10;
-};
-
 
 const PollSchema = new mongoose.Schema({
   text: {
@@ -15,36 +11,31 @@ const PollSchema = new mongoose.Schema({
     required: true
   },
   opinion: {
-    
-        type: Schema.ObjectId,
-        ref: 'Opinion'
-      
+    type: Schema.ObjectId,
+    ref: 'Opinion'
   },
   respectCount: {
     type: Number,
-    trim: true,
-    
+    trim: true
   },
   likeCount: {
     type: Number,
-    trim: true,
-   
+    trim: true
   },
   respect: [
-    //will use count
+    
     {
       type: Schema.ObjectId,
       ref: 'User'
     }
   ],
   like: [
-    //will use count
+    
     {
       type: Schema.ObjectId,
       ref: 'User'
     }
   ],
-  
   removed: {
     type: Boolean,
     default: false
