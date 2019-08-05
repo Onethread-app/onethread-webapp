@@ -3,7 +3,7 @@ const Report = require('./report.model');
 const serviceReport = require('./report.service');
 //const Promise = require('bluebird');
 
-function load(req, res, next, id) {
+const load = (req, res, next, id) => {
   Report.findById(id)
     .exec()
     .then(result => {
@@ -23,11 +23,11 @@ function load(req, res, next, id) {
     .asCallback(next);
 }
 
-function get(req, res) {
+const get = (req, res) => {
   return res.json(req.report);
 }
 
-function create(req, res, next) {
+const create = (req, res, next) => {
   const { refType = 'post' } = req.query;
   const report = new Report({
     reportContent: req.body.reportContent,
@@ -43,7 +43,7 @@ function create(req, res, next) {
     .catch(e => next(e));
 }
 
-function list(req, res) {
+const list = (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
   Report.find({ removed: false })
     .sort({ createdAt: -1 })
@@ -60,7 +60,7 @@ function list(req, res) {
     });
 }
 
-function review(req, res, next) {
+const review = (req, res, next) => {
   const report = req.report;
   report.reviewStatus = req.body.reviewStatus;
   report.reviewText = req.body.reviewText;
@@ -78,7 +78,7 @@ function review(req, res, next) {
     .catch(e => next(e));
 }
 
-function remove(req, res, next) {
+const remove = (req, res, next) => {
   const report = req.report;
   report.removed = true;
 

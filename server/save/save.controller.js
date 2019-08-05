@@ -1,6 +1,6 @@
 const Save = require('./save.model');
 
-function load(req, res, next, id) {
+const load = (req, res, next, id) => {
   Save.findById(id)
     .exec()
     .then(result => {
@@ -18,11 +18,11 @@ function load(req, res, next, id) {
     });
 }
 
-function get(req, res) {
+const get = (req, res) => {
   return res.json(req.save);
 }
 
-function create(req, res, next) {
+const create = (req, res, next) => {
   const save = new Save({
     postRef: req.body.postRef,
     account: req.user
@@ -34,7 +34,7 @@ function create(req, res, next) {
     .catch(e => next(e));
 }
 
-function list(req, res, next) {
+cosnt list = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   Save.find({ removed: false })
     .sort({ createdAt: -1 })
@@ -45,7 +45,7 @@ function list(req, res, next) {
     .catch(e => next(e));
 }
 
-function remove(req, res, next) {
+const remove = (req, res, next) => {
   const save = req.save;
   save.removed = true;
 
