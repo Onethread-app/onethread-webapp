@@ -170,57 +170,57 @@ describe("## post APIs", () => {
     });
   });
 
-  describe("# Like /api/posts/", () => {
-    it("should not like post without login", done => {
-      request(app)
-        .get(`/api/v1/posts/likes/${post._id}`)
-        .send(post)
-        .expect(httpStatus.UNAUTHORIZED)
-        .end((err) => {
-          done(err);
-        });
-    });
+  // describe("# Like /api/posts/", () => {
+  //   it("should not like post without login", done => {
+  //     request(app)
+  //       .get(`/api/v1/posts/likes/${post._id}`)
+  //       .send(post)
+  //       .expect(httpStatus.UNAUTHORIZED)
+  //       .end((err) => {
+  //         done(err);
+  //       });
+  //   });
 
-    it("should like post", done => {
-      request(app)
-        .get(`/api/v1/posts/likes/${post._id}`)
-        .set("Authorization", token)
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.like)
-            .to.be.an("array")
-            .that.includes("5cdb98cdab24ca4b10407752");
+  //   it("should like post", done => {
+  //     request(app)
+  //       .get(`/api/v1/posts/likes/${post._id}`)
+  //       .set("Authorization", token)
+  //       .expect(httpStatus.OK)
+  //       .then(res => {
+  //         expect(res.body.like)
+  //           .to.be.an("array")
+  //           .that.includes("5cdb98cdab24ca4b10407752");
 
-          done();
-        })
-        .catch(done);
-    });
-  });
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
+  // });
 
-  describe("# Respects /api/posts/", () => {
-    it("should not respect post without login", done => {
-      request(app)
-        .get(`/api/v1/posts/respectes/${post._id}`)
-        .send(post)
-        .expect(httpStatus.UNAUTHORIZED)
-        .end((err) => {
-          done(err);
-        });
-    });
-    it("should respect post", done => {
-      request(app)
-        .get(`/api/v1/posts/respectes/${post._id}`)
-        .set("Authorization", token)
-        .expect(httpStatus.OK)
-        .then(res => {
-          expect(res.body.like)
-            .to.be.an("array")
-            .that.includes("5cdb98cdab24ca4b10407752");
-          done();
-        })
-        .catch(done);
-    });
-  });
+  // describe("# Respects /api/posts/", () => {
+  //   it("should not respect post without login", done => {
+  //     request(app)
+  //       .get(`/api/v1/posts/respectes/${post._id}`)
+  //       .send(post)
+  //       .expect(httpStatus.UNAUTHORIZED)
+  //       .end((err) => {
+  //         done(err);
+  //       });
+  //   });
+  //   it("should respect post", done => {
+  //     request(app)
+  //       .get(`/api/v1/posts/respectes/${post._id}`)
+  //       .set("Authorization", token)
+  //       .expect(httpStatus.OK)
+  //       .then(res => {
+  //         expect(res.body.like)
+  //           .to.be.an("array")
+  //           .that.includes("5cdb98cdab24ca4b10407752");
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
+  // });
 
   describe("# DELETE /api/posts/", () => {
     it("should not delete post without self and login", done => {

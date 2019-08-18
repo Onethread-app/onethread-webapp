@@ -34,7 +34,7 @@ const create = (req, res, next) => {
     .catch(e => next(e));
 }
 
-cosnt list = (req, res, next) => {
+const list = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   Save.find({ removed: false })
     .sort({ createdAt: -1 })
