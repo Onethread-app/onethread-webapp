@@ -70,10 +70,10 @@ const basic = new Schema({
   },
   legalOwner: {
     type: String
-	},
-	// legalMailAddress: {
-	// 	 type: String
-	// },
+  },
+  legalMailAddress: {
+    type: String
+  },
   officeSize: {
     type: String,
     enum: [

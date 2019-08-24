@@ -18,7 +18,8 @@ function basicInfoFormatterCreateRequest(bc) {
     yearCompanyReg: bc.yearCompanyReg,
     totalEmp: bc.totalEmp,
     companyUrl: bc.companyUrl,
-    legalOwner: bc.legalOwner,
+		legalOwner: bc.legalOwner,
+		legalMailAddress: bc.legalMailAddress,
     officeSize: bc.officeSize,
     companyAdvantages: bc.companyAdvantages
   };
@@ -39,7 +40,8 @@ function basicInfoFormatterUpdateRequest(bc) {
     yearCompanyReg: bc.yearCompanyReg,
     totalEmp: bc.totalEmp,
     companyUrl: bc.companyUrl,
-    legalOwner: bc.legalOwner,
+		legalOwner: bc.legalOwner,
+		legalMailAddress: bc.legalMailAddress,
     officeSize: bc.officeSize,
     companyAdvantages: bc.companyAdvantages
   };
@@ -62,7 +64,8 @@ function basicInfoFormatterResponse(bc) {
     yearCompanyReg: bc.yearCompanyReg,
     totalEmp: bc.totalEmp,
     companyUrl: bc.companyUrl,
-    legalOwner: bc.legalOwner,
+		legalOwner: bc.legalOwner,
+		legalMailAddress: bc.legalMailAddress,
     officeSize: bc.officeSize,
     companyAdvantages: bc.companyAdvantages,
     createdAt: bc.createdAt,
@@ -95,8 +98,7 @@ const createBasicInfo = async (req, res) => {
       });
     });
 };
-
-// // get a Basic Info
+// get a Basic Info
 const getBasicInfo = async (req, res) => {
   Basic.findOne({ _id: req.params.id })
     .exec()

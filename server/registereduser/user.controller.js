@@ -13,7 +13,8 @@ const RegisteredUser = require("./user.model");
 // create a user profile
 const createProfile = async (req, res) => {
   const registeredUser = new RegisteredUser({
-    name: req.body.name,
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
     gender: req.body.gender,
     skillArea: req.body.skillArea,
     mobileNumber: req.body.mobileNumber,
@@ -85,7 +86,8 @@ const profile = (req, res) => {
 
 const profileUpdate = async (req, res, next) => {
   RegisteredUser.findById(req.params.id, function(err, user) {
-    user.name = req.body.name;
+		user.firstName = req.body.firstName;
+		user.lastName = req.body.lastName;
     user.gender = req.body.gender;
     user.mobileNumber = req.body.mobileNumber;
     user.skillArea = req.body.skillArea;
