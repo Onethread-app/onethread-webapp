@@ -6,7 +6,7 @@ const expect = chai.expect;
 const app = require('../../index.js');
 
 chai.config.includeStack = true;
-
+// TODO category test
 /**
  * root level hooks
  */

@@ -17,11 +17,11 @@ router.route('/:postId')
   .put(requireAuth, authSelf('post'), validate(paramValidation.updatePost), psotCtrl.update)
   .delete(requireAuth, authSelf('post'), psotCtrl.remove);
 
-router.route('/likes/:postId')
-  .get(requireAuth, permit('user', 'admin'), psotCtrl.like);
+// router.route('/likes/:postId')
+//   .get(requireAuth, permit('user', 'admin'), psotCtrl.like);
 
-router.route('/respectes/:postId')
-  .get(requireAuth, permit('user', 'admin'), psotCtrl.respect);
+// router.route('/respectes/:postId')
+//   .get(requireAuth, permit('user', 'admin'), psotCtrl.respect);
 
 
 

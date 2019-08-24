@@ -1,8 +1,11 @@
+'use strict';
+
+
 const mongoose = require('mongoose');
 const request = require('supertest-as-promised');
 const httpStatus = require('http-status');
 const chai = require('chai'); // eslint-disable-line import/newline-after-import
-const expect = chai.expect;
+const { expect } = chai;
 const app = require('../../index');
 
 chai.config.includeStack = true;
@@ -12,7 +15,7 @@ chai.config.includeStack = true;
  */
 
 let token = '';
-before(done => {
+before((done) => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   const credentials = {
     email: 'jest@gmail.com',
@@ -23,15 +26,16 @@ before(done => {
     .post('/api/v1/account/login')
     .send(credentials)
     .expect(200)
-    .then(res => {
+    .then((res) => {
       // expect(res.body.success).to.equal(true);
+      // eslint-disable-next-line prefer-destructuring
       token = res.body.token;
       done();
     })
     .catch(done);
 });
 
-after(done => {
+after((done) => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   mongoose.models = {};
   mongoose.modelSchemas = {};
@@ -45,7 +49,7 @@ describe('## Save APIs', () => {
   };
 
   describe('# SAVE /api/saves', () => {
-    it('should not create a new save of post without auth', done => {
+    it('should not create a new save of post without auth', (done) => {
       request(app)
         .post('/api/v1/saves')
         .send(save)
@@ -55,13 +59,13 @@ describe('## Save APIs', () => {
         });
     });
 
-    it('should create a new save of post', done => {
+    it('should create a new save of post', (done) => {
       request(app)
         .post('/api/v1/saves')
         .set('Authorization', token)
         .send(save)
         .expect(httpStatus.OK)
-        .then(res => {
+        .then((res) => {
           expect(res.body.postRef).to.equal(save.postRef);
           save = res.body;
           done();
@@ -71,19 +75,19 @@ describe('## Save APIs', () => {
   });
 
   describe('# GET /api/saves/:saveId', () => {
-    it('should get save details', done => {
+    it('should get save details', (done) => {
       request(app)
         .get(`/api/v1/saves/${save._id}`)
         .set('Authorization', token)
         .expect(httpStatus.OK)
-        .then(res => {
+        .then((res) => {
           expect(res.body.postRef).to.equal(save.postRef);
           done();
         })
         .catch(done);
     });
 
-    it('should not get save details without login', done => {
+    it('should not get save details without login', (done) => {
       request(app)
         .get(`/api/v1/saves/${save._id}`)
         .expect(httpStatus.UNAUTHORIZED)
@@ -94,25 +98,25 @@ describe('## Save APIs', () => {
   });
 
   describe('# GET /api/saves/', () => {
-    it('should get all saves post item', done => {
+    it('should get all saves post item', (done) => {
       request(app)
         .get('/api/v1/saves')
         .set('Authorization', token)
         .expect(httpStatus.OK)
-        .then(res => {
+        .then((res) => {
           expect(res.body).to.be.an('array');
           done();
         })
         .catch(done);
     });
 
-    it('should get all saves (with limit and skip)', done => {
+    it('should get all saves (with limit and skip)', (done) => {
       request(app)
         .get('/api/v1/saves')
         .set('Authorization', token)
         .query({ limit: 10, skip: 1 })
         .expect(httpStatus.OK)
-        .then(res => {
+        .then((res) => {
           expect(res.body).to.be.an('array');
           done();
         })
@@ -121,7 +125,7 @@ describe('## Save APIs', () => {
   });
 
   describe('# DELETE /api/saves/', () => {
-    it('should not delete save without login', done => {
+    it('should not delete save without login', (done) => {
       request(app)
         .delete(`/api/v1/saves/${save._id}`)
         .expect(httpStatus.UNAUTHORIZED)
@@ -130,12 +134,12 @@ describe('## Save APIs', () => {
         });
     });
 
-    it('should delete save', done => {
+    it('should delete save', (done) => {
       request(app)
         .delete(`/api/v1/saves/${save._id}`)
         .set('Authorization', token)
         .expect(httpStatus.OK)
-        .then(res => {
+        .then((res) => {
           expect(res.body.removed).to.equal(true);
           done();
         })

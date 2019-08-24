@@ -22,6 +22,13 @@ const accountsSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+<<<<<<< HEAD
+=======
+  contactNo: {
+    type: String,
+    required: true
+  },
+>>>>>>> 0a20eca7dd2eff30d007b24dfdc69cba4d065f36
   email: {
     type: String,
     unique: true,

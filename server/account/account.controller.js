@@ -461,7 +461,6 @@ const removeFriend = async (req, res) => {
 
 };
 
-
 const getAllAccounts = async (req, res) => {
 	console.log(req.user);
 
