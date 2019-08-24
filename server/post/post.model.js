@@ -50,20 +50,20 @@ const PostSchema = new mongoose.Schema({
     trim: true,
    
   },
-  respect: [
-    //will use count
-    {
-      type: Schema.ObjectId,
-      ref: 'User'
-    }
-  ],
-  like: [
-    //will use count
-    {
-      type: Schema.ObjectId,
-      ref: 'User'
-    }
-  ],
+  // respect: [
+  //   //will use count
+  //   {
+  //     type: Schema.ObjectId,
+  //     ref: 'User'
+  //   }
+  // ],
+  // like: [
+  //   //will use count
+  //   {
+  //     type: Schema.ObjectId,
+  //     ref: 'User'
+  //   }
+  // ],
   hashtag: {
     type: [
       {

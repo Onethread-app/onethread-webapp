@@ -1,3 +1,6 @@
+'use strict';
+
+
 const express = require('express');
 const postRoutes = require('./server/post/post.route');
 const reactRoutes = require('./server/react/react.route');
@@ -37,6 +40,6 @@ router.use('/users', userRoutes);
 router.use('/company', companyRoutes);
 
 // mount auth routes at /auth
-//router.use('/auth', authRoutes);
+// router.use('/auth', authRoutes);
 
 module.exports = router;
