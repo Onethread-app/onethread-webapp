@@ -1,9 +1,11 @@
+'use strict';
+
 const Save = require('./save.model');
 
 const load = (req, res, next, id) => {
   Save.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.save = result;
         return next();
@@ -12,7 +14,7 @@ const load = (req, res, next, id) => {
         .status(400)
         .json({ message: 'No valid entry found for provided ID' });
     })
-    .catch(err => {
+    .catch((err) => {
       // console.log(err);
       next(err);
     });

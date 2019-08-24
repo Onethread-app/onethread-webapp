@@ -3,25 +3,22 @@ const Comment = require('./comment.model');
 const load = (req, res, next, id) => {
   Comment.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.comment = result;
         return next();
-      } else {
-        return res
-          .status(400)
-          .json({ message: 'No valid entry found for provided ID' });
       }
+      return res
+        .status(400)
+        .json({ message: 'No valid entry found for provided ID' });
     })
     .catch(err => {
       // console.log(err);
       next(err);
     });
-};
-
-const get = (req, res) => {
-  return res.json(req.comment);
 }
+
+const get = (req, res) => res.json(req.comment)
 
 const create = (req, res, next) => {
   const comment = new Comment({

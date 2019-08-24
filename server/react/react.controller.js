@@ -69,7 +69,7 @@ const listReference = (req, res, next) => {
 }
 
 
-function remove(req, res, next) {
+const remove = (req, res, next) => {
   const react = req.react;
   react.removed = true;
 
