@@ -1,6 +1,3 @@
-'use strict';
-
-
 const mongoose = require('mongoose');
 const request = require('supertest-as-promised');
 const httpStatus = require('http-status');
@@ -18,8 +15,8 @@ let token = '';
 before((done) => {
   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
   const credentials = {
-    email: 'jest@gmail.com',
-    password: 'jest1234'
+   email: 'mithhu666@gmail.com',
+   password: 'Orvi@123456'
   };
 
   request(app)
