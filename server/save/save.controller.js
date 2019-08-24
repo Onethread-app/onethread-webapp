@@ -1,9 +1,11 @@
+'use strict';
+
 const Save = require('./save.model');
 
-function load(req, res, next, id) {
+const load = (req, res, next, id) => {
   Save.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.save = result;
         return next();
@@ -12,17 +14,17 @@ function load(req, res, next, id) {
         .status(400)
         .json({ message: 'No valid entry found for provided ID' });
     })
-    .catch(err => {
+    .catch((err) => {
       // console.log(err);
       next(err);
     });
 }
 
-function get(req, res) {
+const get = (req, res) => {
   return res.json(req.save);
 }
 
-function create(req, res, next) {
+const create = (req, res, next) => {
   const save = new Save({
     postRef: req.body.postRef,
     account: req.user
@@ -34,7 +36,7 @@ function create(req, res, next) {
     .catch(e => next(e));
 }
 
-function list(req, res, next) {
+const list = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   Save.find({ removed: false })
     .sort({ createdAt: -1 })
@@ -45,7 +47,7 @@ function list(req, res, next) {
     .catch(e => next(e));
 }
 
-function remove(req, res, next) {
+const remove = (req, res, next) => {
   const save = req.save;
   save.removed = true;
 

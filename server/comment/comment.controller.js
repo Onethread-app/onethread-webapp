@@ -1,17 +1,16 @@
-const Comment = require("./comment.model");
+const Comment = require('./comment.model');
 
-function load(req, res, next, id) {
+const load = (req, res, next, id) => {
   Comment.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.comment = result;
         return next();
-      } else {
-        return res
-          .status(400)
-          .json({ message: "No valid entry found for provided ID" });
       }
+      return res
+        .status(400)
+        .json({ message: 'No valid entry found for provided ID' });
     })
     .catch(err => {
       // console.log(err);
@@ -19,11 +18,9 @@ function load(req, res, next, id) {
     });
 }
 
-function get(req, res) {
-  return res.json(req.comment);
-}
+const get = (req, res) => res.json(req.comment)
 
-function create(req, res, next) {
+const create = (req, res, next) => {
   const comment = new Comment({
     text: req.body.text,
     postRef: req.body.postRef,
@@ -36,9 +33,9 @@ function create(req, res, next) {
     .catch(e => next(e));
 }
 
-function list(req, res) {
+const list = (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
-  Comment.find({removed: false})
+  Comment.find({ removed: false })
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -53,12 +50,12 @@ function list(req, res) {
     });
 }
 
-function tag(req, res, next) {
+const tag = (req, res, next) => {
   const id = req.params.commentId;
 
   Comment.findByIdAndUpdate(
     id,
-    { $push: { tag: "5cdb98cdab24ca4b10407752" } },
+    { $push: { tag: '5cdb98cdab24ca4b10407752' } },
     {
       new: true
     }
@@ -69,7 +66,7 @@ function tag(req, res, next) {
       } else {
         return res
           .status(400)
-          .json({ message: "No valid entry found for provided ID" });
+          .json({ message: 'No valid entry found for provided ID' });
       }
     })
     .catch(err => {
@@ -78,12 +75,12 @@ function tag(req, res, next) {
     });
 }
 
-function like(req, res, next) {
+const like = (req, res, next) => {
   const id = req.params.commentId;
 
   Comment.findByIdAndUpdate(
     id,
-    { $push: { like: "5cdb98cdab24ca4b10407752" } },
+    { $push: { like: '5cdb98cdab24ca4b10407752' } },
     {
       new: true
     }
@@ -94,7 +91,7 @@ function like(req, res, next) {
       } else {
         return res
           .status(400)
-          .json({ message: "No valid entry found for provided ID" });
+          .json({ message: 'No valid entry found for provided ID' });
       }
     })
     .catch(err => {
@@ -103,7 +100,7 @@ function like(req, res, next) {
     });
 }
 
-function update(req, res, next) {
+const update = (req, res, next) => {
   const comment = req.comment;
   comment.text = req.body.text;
 
@@ -113,12 +110,12 @@ function update(req, res, next) {
     .catch(e => next(e));
 }
 
-function respect(req, res, next) {
+const respect = (req, res, next) => {
   const id = req.params.commentId;
 
   Comment.findByIdAndUpdate(
     id,
-    { $push: { respect: "5cdb98cdab24ca4b10407752" } },
+    { $push: { respect: '5cdb98cdab24ca4b10407752' } },
     {
       new: true
     }
@@ -129,7 +126,7 @@ function respect(req, res, next) {
       } else {
         return res
           .status(400)
-          .json({ message: "No valid entry found for provided ID" });
+          .json({ message: 'No valid entry found for provided ID' });
       }
     })
     .catch(err => {
@@ -138,7 +135,7 @@ function respect(req, res, next) {
     });
 }
 
-function remove(req, res, next) {
+const remove = (req, res, next) => {
   const comment = req.comment;
   comment.removed = true;
   comment

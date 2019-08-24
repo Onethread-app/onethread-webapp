@@ -1,7 +1,7 @@
 const React = require('./react.model');
 const serviceReact = require('./react.service');
 
-function load(req, res, next, id) {
+const load = (req, res, next, id) => {
   React.findById(id)
     .exec()
     .then(result => {
@@ -19,12 +19,12 @@ function load(req, res, next, id) {
     });
 }
 
-function get(req, res) {
+const get = (req, res) => {
   return res.json(req.save);
 }
 
 //later will change to task manager
-function create(req, res, next) {
+const create = (req, res, next) => {
   let typeCount = 'likeCount';
   let listPromise = [];
   const react = new React({
@@ -46,7 +46,7 @@ function create(req, res, next) {
     .catch(e => next(e));
 }
 
-function list(req, res, next) {
+const list = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   React.find({ removed: false })
     .sort({ createdAt: -1 })
@@ -57,7 +57,7 @@ function list(req, res, next) {
     .catch(e => next(e));
 }
 
-function listReference(req, res, next) {
+const listReference = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   React.find({ removed: false, postRef: req.params.id })
     .sort({ createdAt: -1 })
@@ -69,7 +69,7 @@ function listReference(req, res, next) {
 }
 
 
-function remove(req, res, next) {
+const remove = (req, res, next) => {
   const react = req.react;
   react.removed = true;
 
