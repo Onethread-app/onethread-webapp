@@ -1,26 +1,42 @@
-"use strict";
-
-const express = require("express");
-//const validate = require("express-validation");
-//const paramValidation = require("../../config/param-validation");
+'use strict';
+const express = require('express');
 const router = express.Router();
-//const jwt = require("express-jwt");
-//const passportService = require('../../config/passport');
 const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', {session: false});
-const companyCtrl = require("./company.controller");
-const {permit} = require('../helpers/permission');
+const requireAuth = passport.authenticate('jwt', { session: false });
+const joiSchema = require('./company.validation');
+const companyCtrl = require('./company.controller');
+const { permit } = require('./../helpers/permission');
+const typeInfo = require('./typeInfo/typeInfo.route');
+const SchemaValidator = require('./../helpers/joiSchemaValidator');
+// company type's info
+router.use('/typeInfo', typeInfo);
 
+// for company profile
+router
+  .route('/profile')
+  .post(
+    SchemaValidator(joiSchema.newCompany),
+    companyCtrl.createCompanyProfile
+  );
+router
+  .route('/profile/:id')
+  .get(
+    requireAuth,
+    permit('company'),
+    SchemaValidator(joiSchema.getCompany),
+    companyCtrl.getCompanyProfile
+  )
+  .put(
+    requireAuth,
+    permit('company'),
+    SchemaValidator(joiSchema.updateCompany),
+    companyCtrl.updateCompanyProfile
+  )
+  .delete(
+    requireAuth,
+    permit('user'),
+    SchemaValidator(joiSchema.deleteCompany),
+    companyCtrl.deleteCompanyProfile
+  );
 
-// for company users
-router
-  .route("/profile")
-  .post(requireAuth, permit('company'), companyCtrl.createProfile);
-router
-  .route("/profile/:id")   
-  .get(requireAuth, permit('company'), companyCtrl.profile)
-  .put(requireAuth, permit('company'), companyCtrl.profileUpdate)
-  .delete(requireAuth, permit('company'), companyCtrl.profileDelete);
-  
-  
 module.exports = router;

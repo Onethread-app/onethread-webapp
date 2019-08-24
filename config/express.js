@@ -93,7 +93,7 @@ if (config.env !== 'test') {
   );
 }
 
-// error handler, send stacktrace only during development
+// // error handler, send stacktrace only during development
 app.use((
   err,
   req,
@@ -102,7 +102,7 @@ app.use((
 ) =>
   res.status(err.status).json({
     message: err.isPublic ? err.message : httpStatus[err.status]
-    //stack: config.env === 'development' ? err.stack : {}
+    // stack: config.env === 'development' ? err.stack : {}
   })
 );
 
