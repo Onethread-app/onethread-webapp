@@ -41,7 +41,20 @@ app.use(methodOverride());
 app.use(helmet());
 
 // enable CORS - Cross Origin Resource Sharing
-app.use(cors());
+const allowedOrigins = ['http://localhost:4040', ''];
+app.use(cors({
+  credentials: true,
+  origin(origin, callback) { // allow requests with no origin
+    // (like mobile apps or curl requests)
+    if (!origin) {
+      return callback(null, true);
+    }
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not. Allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    } return callback(null, true);
+  }
+}));
 
 // enable detailed API logging in dev env
 if (config.env === 'development') {
@@ -65,13 +78,13 @@ app.use('/api/v1', routes); // v1.0
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {
-    //validation error contains errors which is an array of error each containing message[]
+    // validation error contains errors which is an array of error each containing message[]
     const unifiedErrorMessage = err.errors
       .map(error => error.messages.join('. '))
       .join(' and ');
     const error = new APIError(unifiedErrorMessage, err.status, true);
     return next(error);
-  } else if (!(err instanceof APIError)) {
+  } if (!(err instanceof APIError)) {
     const apiError = new APIError(err.message, err.status, err.isPublic);
     return next(apiError);
   }
@@ -99,12 +112,10 @@ app.use((
   req,
   res,
   next // eslint-disable-line no-unused-vars
-) =>
-  res.status(err.status).json({
-    message: err.isPublic ? err.message : httpStatus[err.status]
-    // stack: config.env === 'development' ? err.stack : {}
-  })
-);
+) => res.status(err.status).json({
+  message: err.isPublic ? err.message : httpStatus[err.status]
+  // stack: config.env === 'development' ? err.stack : {}
+}));
 
 // test authentication
 // function ensureAuthenticated(req, res, next) {

@@ -1,7 +1,12 @@
-'use strict';
 const express = require('express');
+<<<<<<< HEAD
+const validate = require('express-validation');
+
+=======
+>>>>>>> 0a20eca7dd2eff30d007b24dfdc69cba4d065f36
 const router = express.Router();
 const passport = require('passport');
+
 const requireAuth = passport.authenticate('jwt', { session: false });
 const joiSchema = require('./company.validation');
 const companyCtrl = require('./company.controller');

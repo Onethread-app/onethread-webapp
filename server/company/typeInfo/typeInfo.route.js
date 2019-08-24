@@ -1,5 +1,5 @@
-'use strict';
 const express = require('express');
+
 const router = express.Router();
 const basicCtrl = require('./basic/basic.controller');
 const basicRoutes = require('./basic/basic.route');
