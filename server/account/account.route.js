@@ -18,10 +18,10 @@ const schemaValidator = require('../helpers/joiSchemaValidator');
 // authentication
 router
   .route('/signup')
-  .post(validate(paramValidation.register), accountCtrl.register);
+  .post(schemaValidator(paramValidation.register), accountCtrl.register);
 router
   .route('/login')
-  .post(requireLogin, accountCtrl.login);
+  .post(schemaValidator(paramValidation.login), requireLogin, accountCtrl.login);
 
 // router
 //   .route('/token')

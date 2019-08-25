@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-'use strict';
->>>>>>> 0a20eca7dd2eff30d007b24dfdc69cba4d065f36
 const Joi = require('joi');
 const accountInfo = Joi.object().keys({
   firstName: Joi.string().required(),
@@ -34,7 +30,6 @@ const accountInfo = Joi.object().keys({
     .required()
 });
 module.exports = {
-<<<<<<< HEAD
 
   register: Joi.object().keys({
     body: Joi.object().keys({
@@ -56,11 +51,22 @@ module.exports = {
         .regex(/\+?(88)?0?1[356789][0-9]{8}/)
         .required()
     })
-  }),
+		}),
+		
+		login: Joi.object().keys({
+			body: Joi.object().keys({
+				email: Joi.string()
+						.regex( 	
+							/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+						.email()
+						.lowercase()
+						.required(),
+				password: Joi.string()
+						.regex(
+								/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/
+						)
+						.required()
+		})
+		})
 
-=======
-  register: Joi.object().keys({
-    body: accountInfo
-  })
->>>>>>> 0a20eca7dd2eff30d007b24dfdc69cba4d065f36
 };
