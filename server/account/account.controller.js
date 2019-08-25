@@ -67,6 +67,8 @@ const register = async (req, res) => {
 					.save()
 					.then(() => {
 						sendJSONresponse(res, 201, {
+							success: true,
+							token: token,
 							message: "User created"
 						})
 					}).then(() => {
@@ -108,6 +110,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
 	console.log(req.user._id);
 	res.send({
+		sucess: true, 
 		token: tokenForUser(req.user)
 	});
 };
