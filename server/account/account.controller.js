@@ -66,7 +66,7 @@ const register = async (req, res) => {
 				account
 					.save()
 					.then(() => {
-						sendJSONresponse(res, 201, {
+						 return sendJSONresponse(res, 201, {
 							success: true,
 							token: token,
 							message: "User created"
@@ -110,7 +110,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
 	console.log(req.user._id);
 	res.send({
-		sucess: true, 
+		success: true, 
 		token: tokenForUser(req.user)
 	});
 };
