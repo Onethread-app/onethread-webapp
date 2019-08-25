@@ -12,10 +12,10 @@ let rand = '';
 let link = '';
 let host = '';
 
-const rediscl = redis.createClient();
-rediscl.on("connect", function () {
-    console.log("Redis plugged in.");
-});
+// const rediscl = redis.createClient();
+// rediscl.on("connect", function () {
+//     console.log("Redis plugged in.");
+// });
 
 const sendJSONresponse = function (res, status, content) {
 	res.status(status);

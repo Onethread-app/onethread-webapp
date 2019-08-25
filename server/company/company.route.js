@@ -1,9 +1,4 @@
 const express = require('express');
-<<<<<<< HEAD
-const validate = require('express-validation');
-
-=======
->>>>>>> 0a20eca7dd2eff30d007b24dfdc69cba4d065f36
 const router = express.Router();
 const passport = require('passport');
 
