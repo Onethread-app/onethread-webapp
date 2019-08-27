@@ -13,13 +13,13 @@ router.use('/typeInfo', typeInfo);
 
 // for company profile
 router
-  .route('/profile')
+  .route('/')
   .post(
     SchemaValidator(joiSchema.newCompany),
     companyCtrl.createCompanyProfile
   );
 router
-  .route('/profile/:id')
+  .route('/:id')
   .get(
     requireAuth,
     permit('company'),

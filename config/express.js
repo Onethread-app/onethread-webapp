@@ -39,22 +39,23 @@ app.use(methodOverride());
 
 // secure apps by setting various HTTP headers
 app.use(helmet());
-
+app.use(cors());
+// TODO: cors customize
 // enable CORS - Cross Origin Resource Sharing
-const allowedOrigins = ['http://localhost:4040', ''];
-app.use(cors({
-  credentials: true,
-  origin(origin, callback) { // allow requests with no origin
-    // (like mobile apps or curl requests)
-    if (!origin) {
-      return callback(null, true);
-    }
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not. Allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    } return callback(null, true);
-  }
-}));
+// const allowedOrigins = ['http://localhost:4040', ''];
+// app.use(cors({
+//   credentials: true,
+//   origin(origin, callback) { // allow requests with no origin
+//     // (like mobile apps or curl requests)
+//     if (!origin) {
+//       return callback(null, true);
+//     }
+//     if (allowedOrigins.indexOf(origin) === -1) {
+//       const msg = 'The CORS policy for this site does not. Allow access from the specified Origin.';
+//       return callback(new Error(msg), false);
+//     } return callback(null, true);
+//   }
+// }));
 
 // enable detailed API logging in dev env
 if (config.env === 'development') {
@@ -84,7 +85,8 @@ app.use((err, req, res, next) => {
       .join(' and ');
     const error = new APIError(unifiedErrorMessage, err.status, true);
     return next(error);
-  } if (!(err instanceof APIError)) {
+  }
+  if (!(err instanceof APIError)) {
     const apiError = new APIError(err.message, err.status, err.isPublic);
     return next(apiError);
   }
@@ -112,10 +114,12 @@ app.use((
   req,
   res,
   next // eslint-disable-line no-unused-vars
-) => res.status(err.status).json({
-  message: err.isPublic ? err.message : httpStatus[err.status]
-  // stack: config.env === 'development' ? err.stack : {}
-}));
+) =>
+  res.status(err.status).json({
+    message: err.isPublic ? err.message : httpStatus[err.status]
+    // stack: config.env === 'development' ? err.stack : {}
+  })
+);
 
 // test authentication
 // function ensureAuthenticated(req, res, next) {
