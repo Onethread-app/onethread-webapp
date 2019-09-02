@@ -7,40 +7,41 @@ const paramValidation = require('./account.validation');
 
 const router = express.Router();
 
-
 const requireAuth = passport.authenticate('jwt', { session: false });
-const requireLogin = passport.authenticate('local', { session: false });
+const requireLogin = passport.authenticate('local', {
+  session: false,
+});
 const accountCtrl = require('./account.controller');
-const { permit } = require('../helpers/permission');
+const { permit, authSelf } = require('../helpers/permission');
 const tokenChecker = require('../helpers/tokenChecker');
 const schemaValidator = require('../helpers/joiSchemaValidator');
 
 // authentication
 router
   .route('/signup')
-  .post(schemaValidator(paramValidation.register), accountCtrl.register);
+  .post(
+    schemaValidator(paramValidation.register),
+    accountCtrl.register,
+  );
 router
   .route('/login')
-  .post(schemaValidator(paramValidation.login), requireLogin, accountCtrl.login);
+  .post(
+    schemaValidator(paramValidation.login),
+    requireLogin,
+    accountCtrl.login,
+  );
 
-// router
-//   .route('/token')
-//   .post(accountCtrl.tokenVerification);
+router.route('/update/:accountId').put(accountCtrl.accountUpdate);
 
+//router.route('/token').post(accountCtrl.tokenVerification);
 
-router.route('/:accountId').get(tokenChecker, accountCtrl.getAccount);
-router
-  .route('/logout')
-  .get(accountCtrl.logout);
-router
-  .route('/verify/id/')
-  .get(accountCtrl.verifyAccount);
+router.route('/:accountId').get(requireAuth, accountCtrl.getAccount);
+router.route('/logout').get(accountCtrl.logout);
+router.route('/verify/id/').get(accountCtrl.verifyAccount);
 
 router.route('/change_password').post(accountCtrl.changePassword);
 
-router
-  .route('/forget_password')
-  .post(accountCtrl.forgetPassword);
+router.route('/forget_password').post(accountCtrl.forgetPassword);
 
 // Search for an account
 // router
@@ -75,13 +76,12 @@ router
 //   .route('/unfriend_request')
 //   .post(requireAuth, permit('user'), accountCtrl.removeFriend);
 
-
 // for admin
 router
   .route('/admin')
   .post(requireLogin, permit('admin'), accountCtrl.login);
 
 router.param('accountId', accountCtrl.accountLoad);
-
+router.use(tokenChecker);
 
 module.exports = router;
