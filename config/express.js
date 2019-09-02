@@ -30,6 +30,12 @@ app.use(
   })
 );
 
+app.use(function(req, res, next) {
+	res.header("Access-Control-Allow-Origin", "*");
+	res.header("Access-Control-Allow-Headers", "X-Requested-With");
+	next();
+});
+
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -41,19 +47,10 @@ app.use(methodOverride());
 app.use(helmet());
 
 // enable CORS - Cross Origin Resource Sharing
-const allowedOrigins = ['http://localhost:4040', ''];
 app.use(cors({
-  credentials: true,
-  origin(origin, callback) { // allow requests with no origin
-    // (like mobile apps or curl requests)
-    if (!origin) {
-      return callback(null, true);
-    }
-    if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not. Allow access from the specified Origin.';
-      return callback(new Error(msg), false);
-    } return callback(null, true);
-  }
+	origin: ["http://localhost:4040"],
+	methods: ["GET", "POST"],
+	allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 // enable detailed API logging in dev env

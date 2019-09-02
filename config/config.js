@@ -1,4 +1,3 @@
-'use strict';
 const Joi = require('joi');
 
 // require and configure dotenv, will load vars in .env in PROCESS.ENV
