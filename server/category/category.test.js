@@ -6,7 +6,7 @@ const expect = chai.expect;
 const app = require('../../index.js');
 
 chai.config.includeStack = true;
-
+// TODO category test
 /**
  * root level hooks
  */
@@ -54,80 +54,80 @@ describe('### Category APIs', () => {
   });
 
   // adding categories
-  describe('## POST categories', () => {
-    it('should return status 401 (without token)', done => {
-      request(app)
-        .post('/api/v1/category')
-        .send(c1)
-        .expect(httpStatus.UNAUTHORIZED)
-        .then(res => {
-          expect(res.text).to.equal('Unauthorized');
-          done();
-        })
-        .catch(done);
-    });
+  // describe('## POST categories', () => {
+  //   it('should return status 401 (without token)', done => {
+  //     request(app)
+  //       .post('/api/v1/category')
+  //       .send(c1)
+  //       .expect(httpStatus.UNAUTHORIZED)
+  //       .then(res => {
+  //         expect(res.text).to.equal('Unauthorized');
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
 
-    describe('# POST /api/v1/category', () => {
-      it('should return message and newCategory (With token[Admin])', done => {
-        request(app)
-          .post('/api/v1/category')
-          .set('Authorization', user.token)
-          .send(c1)
-          .expect(httpStatus.CREATED)
-          .then(res => {
-            const body = res.body;
-            expect(body).to.contain.property('message');
-            expect(body).to.contain.property('newCategory');
-            expect(body.message).to.equal('New category created');
-            c1._id = body.newCategory._id;
-            done();
-          })
-          .catch(done);
-      });
-    });
+  //   describe('# POST /api/v1/category', () => {
+  //     it('should return message and newCategory (With token[Admin])', done => {
+  //       request(app)
+  //         .post('/api/v1/category')
+  //         .set('Authorization', user.token)
+  //         .send(c1)
+  //         .expect(httpStatus.CREATED)
+  //         .then(res => {
+  //           const body = res.body;
+  //           expect(body).to.contain.property('message');
+  //           expect(body).to.contain.property('newCategory');
+  //           expect(body.message).to.equal('New category created');
+  //           c1._id = body.newCategory._id;
+  //           done();
+  //         })
+  //         .catch(done);
+  //     });
+  //   });
 
-    describe('# POST /api/v1/category/:cid', () => {
-      it('should return message and newSubCategory (With token[Admin])', done => {
-        request(app)
-          .post(`/api/v1/category/${c1._id}`)
-          .set('Authorization', user.token)
-          .send(c2)
-          .expect(httpStatus.CREATED)
-          .then(res => {
-            const body = res.body;
-            expect(body).to.contain.property('message');
-            expect(body).to.contain.property('newSubCategory');
-            expect(body.message).to.equal(
-              `New sub-category created under Category: ${c1.name}`
-            );
-            c2._id = body.newSubCategory._id;
-            done();
-          })
-          .catch(done);
-      });
-    });
+  //   describe('# POST /api/v1/category/:cid', () => {
+  //     it('should return message and newSubCategory (With token[Admin])', done => {
+  //       request(app)
+  //         .post(`/api/v1/category/${c1._id}`)
+  //         .set('Authorization', user.token)
+  //         .send(c2)
+  //         .expect(httpStatus.CREATED)
+  //         .then(res => {
+  //           const body = res.body;
+  //           expect(body).to.contain.property('message');
+  //           expect(body).to.contain.property('newSubCategory');
+  //           expect(body.message).to.equal(
+  //             `New sub-category created under Category: ${c1.name}`
+  //           );
+  //           c2._id = body.newSubCategory._id;
+  //           done();
+  //         })
+  //         .catch(done);
+  //     });
+  //   });
 
-    describe('# POST /api/v1/category/sub-category/:sid', () => {
-      it('should return message and newSubSubCategory (With token[Admin])', done => {
-        request(app)
-          .post(`/api/v1/category/sub-category/${c2._id}`)
-          .set('Authorization', user.token)
-          .send(c3)
-          .expect(httpStatus.CREATED)
-          .then(res => {
-            const body = res.body;
-            expect(body).to.contain.property('message');
-            expect(body).to.contain.property('newSubSubCategory');
-            expect(body.message).to.equal(
-              `New sub-sub-category created under Sub-Category: ${c2.name}`
-            );
-            c2._id = body.newSubSubCategory._id;
-            done();
-          })
-          .catch(done);
-      });
-    });
-  });
+  //   describe('# POST /api/v1/category/sub-category/:sid', () => {
+  //     it('should return message and newSubSubCategory (With token[Admin])', done => {
+  //       request(app)
+  //         .post(`/api/v1/category/sub-category/${c2._id}`)
+  //         .set('Authorization', user.token)
+  //         .send(c3)
+  //         .expect(httpStatus.CREATED)
+  //         .then(res => {
+  //           const body = res.body;
+  //           expect(body).to.contain.property('message');
+  //           expect(body).to.contain.property('newSubSubCategory');
+  //           expect(body.message).to.equal(
+  //             `New sub-sub-category created under Sub-Category: ${c2.name}`
+  //           );
+  //           c2._id = body.newSubSubCategory._id;
+  //           done();
+  //         })
+  //         .catch(done);
+  //     });
+  //   });
+  // });
 
   // get categories
   describe('## GET /api/v1/category?type=', () => {
@@ -209,60 +209,60 @@ describe('### Category APIs', () => {
   });
 
   // delete categories
-  describe('## DELETE /api/v1/category/:cid', () => {
-    it('should return status 401 (without token)', done => {
-      request(app)
-        .delete(`/api/v1/category/${c1._id}`)
-        .expect(httpStatus.UNAUTHORIZED)
-        .then(res => {
-          expect(res.text).to.equal('Unauthorized');
-          done();
-        })
-        .catch(done);
-    });
+  // describe('## DELETE /api/v1/category/:cid', () => {
+  //   it('should return status 401 (without token)', done => {
+  //     request(app)
+  //       .delete(`/api/v1/category/${c1._id}`)
+  //       .expect(httpStatus.UNAUTHORIZED)
+  //       .then(res => {
+  //         expect(res.text).to.equal('Unauthorized');
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
 
-    it('should return status 400 (With valid token and invalid ID )', done => {
-      request(app)
-        .delete(`/api/v1/category/5d08b05a29efcd5340f3f081d`)
-        .set('Authorization', user.token)
-        .expect(httpStatus.BAD_REQUEST)
-        .then(res => {
-          const body = res.body;
-          expect(body).to.contain.property('message');
-          expect(body.message).to.equal('Invalid ID');
-          done();
-        })
-        .catch(done);
-    });
+  //   it('should return status 400 (With valid token and invalid ID )', done => {
+  //     request(app)
+  //       .delete(`/api/v1/category/5d08b05a29efcd5340f3f081d`)
+  //       .set('Authorization', user.token)
+  //       .expect(httpStatus.BAD_REQUEST)
+  //       .then(res => {
+  //         const body = res.body;
+  //         expect(body).to.contain.property('message');
+  //         expect(body.message).to.equal('Invalid ID');
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
 
-    it('should return status 500 (With valid token and Wrong ID )', done => {
-      request(app)
-        .delete(`/api/v1/category/5d08b05a29efcd5340f3f081`)
-        .set('Authorization', user.token)
-        .expect(httpStatus.INTERNAL_SERVER_ERROR)
-        .then(res => {
-          const body = res.body;
-          expect(body).to.contain.property('message');
-          expect(body.message).to.equal('No category found with this ID');
-          done();
-        })
-        .catch(done);
-    });
+  //   it('should return status 500 (With valid token and Wrong ID )', done => {
+  //     request(app)
+  //       .delete(`/api/v1/category/5d08b05a29efcd5340f3f081`)
+  //       .set('Authorization', user.token)
+  //       .expect(httpStatus.INTERNAL_SERVER_ERROR)
+  //       .then(res => {
+  //         const body = res.body;
+  //         expect(body).to.contain.property('message');
+  //         expect(body.message).to.equal('No category found with this ID');
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
 
-    it('should delete a user (With valid ID & token)', done => {
-      request(app)
-        .delete(`/api/v1/category/${c1._id}`)
-        .set('Authorization', user.token)
-        .expect(httpStatus.OK)
-        .then(res => {
-          const body = res.body;
-          expect(body).to.contain.property('message');
-          expect(body.message).to.equal(
-            'Category deleted with all subcategories and subsubcategories.'
-          );
-          done();
-        })
-        .catch(done);
-    });
-  });
+  //   it('should delete a user (With valid ID & token)', done => {
+  //     request(app)
+  //       .delete(`/api/v1/category/${c1._id}`)
+  //       .set('Authorization', user.token)
+  //       .expect(httpStatus.OK)
+  //       .then(res => {
+  //         const body = res.body;
+  //         expect(body).to.contain.property('message');
+  //         expect(body.message).to.equal(
+  //           'Category deleted with all subcategories and subsubcategories.'
+  //         );
+  //         done();
+  //       })
+  //       .catch(done);
+  //   });
+  // });
 });

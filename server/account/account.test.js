@@ -1,11 +1,8 @@
+const mongoose = require('mongoose');
+const request = require('supertest-as-promised');
+const chai = require('chai'); // eslint-disable-line import/newline-after-import
+const app = require('../../index');
 
-'use strict';
-
-const mongoose = require("mongoose");
-const request = require("supertest-as-promised");
-const chai = require("chai"); // eslint-disable-line import/newline-after-import
-const app = require("../../index");
-// const mongoose = require("mongoose");
 // const request = require("supertest-as-promised");
 // const httpStatus = require("http-status");
 // const chai = require("chai"); // eslint-disable-line import/newline-after-import
@@ -20,51 +17,91 @@ const app = require("../../index");
 //  */
 
 
-after(done => {
-    // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
-    mongoose.models = {};
-    mongoose.modelSchemas = {};
-    mongoose.connection.close();
-    done();
+after((done) => {
+  // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
+  mongoose.models = {};
+  mongoose.modelSchemas = {};
+  mongoose.connection.close();
+  done();
 });
-describe("## Registration APIs for User", () =>{
-    let userAccount = {
-        email: "orias@gmil.com",
-        password: "Orvi@1234",
-        role: "user"
-    };
-    describe("# POST /api/v1/account/signup", () => {
-        it("should create an account", done => {
-          request(app)
-            .post(`/api/v1/account/signup`)
-            .send(userAccount)
-            .end((err, res) => {
-                userAccount = res.body.createdUser;
-                done();
-          });
-            
+describe('## Registration APIs for User', () => {
+  let userAccount = {
+			"firstName": "orvi",
+			"lastName": "das",
+			"email": "robatda2018@gmail.com",
+			"password": "Orvi@123456",
+			"confirmPassword": "Orvi@123456",
+			"contactNo": "+8801683754716"
+			};
+  describe('# POST /api/v1/account/signup', () => {
+    it('should create an account', (done) => {
+      request(app)
+        .post('/api/v1/account/signup')
+        .send(userAccount)
+        .end((err, res) => {
+          userAccount = res.body.createdUser;
+          done();
         });
-      });
-
-    let companyAccount ={
-      email: "fb@fb.com",
-      password: "Orvi@1234",
-      role: "company"
-    };
-    describe("# POST /api/v1/account/signup", () => {
-      it("should create an account", done => {
-        request(app)
-          .post(`/api/v1/account/signup`)
-          .send(companyAccount)
-          .end((err, res) => {
-              companyAccount = res.body.createdUser;
-              done();
-        });
-          
-      });
     });
-      
+  });
+
+  let companyAccount = {
+			"firstName": "orvi",
+			"lastName": "das",
+			"email": "hr@tigrow.com",
+			"password": "Orvi@123456",
+			"confirmPassword": "Orvi@123456",
+			"contactNo": "+8801683754716"
+			}
+  describe('# POST /api/v1/account/signup', () => {
+    it('should create an account', (done) => {
+      request(app)
+        .post('/api/v1/account/signup')
+        .send(companyAccount)
+        .end((err, res) => {
+          companyAccount = res.body.createdUser;
+          done();
+        });
+    });
+  });
 });
+
+describe('## Login APIs for Account Holders', () => {
+ let userAccount = {
+		"email": "robatdas2018@gmail.com",
+		"password": "Orvi@123456"
+	};
+	describe('# POST /api/v1/account/login', () => {
+		it('should login in their account', (done) => {
+			request(app)
+				.post('/api/v1/account/login')
+				.send(userAccount)
+				.end((err, res)=> {
+					userAccount.token = res.body.token;
+					done();
+				})
+
+		})
+	});
+	let companyAccount = {
+		"email": "hr@tigrow.com",
+		"password": "Orvi@123456"
+	};
+	describe('# POST /api/v1/account/login', () => {
+		it('should login in their account', (done) => {
+			request(app)
+				.post('/api/v1/account/login')
+				.send(companyAccount)
+				.end((err, res)=> {
+					userAccount.token = res.body.token;
+					done();
+				})
+
+		})
+	});
+});
+
+
 
 // before(done =>{
 //     let account ={
@@ -77,4 +114,3 @@ describe("## Registration APIs for User", () =>{
 //         .send(account)
 //         .expect(httpStatus.OK)
 // })
-

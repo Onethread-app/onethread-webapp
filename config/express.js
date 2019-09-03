@@ -26,9 +26,15 @@ if (config.env === 'development') {
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
-    extended: true
-  })
+    extended: true,
+  }),
 );
+
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -39,9 +45,23 @@ app.use(methodOverride());
 
 // secure apps by setting various HTTP headers
 app.use(helmet());
-
-// enable CORS - Cross Origin Resource Sharing
 app.use(cors());
+// TODO: cors customize
+// enable CORS - Cross Origin Resource Sharing
+// const allowedOrigins = ['http://localhost:4040', ''];
+// app.use(cors({
+//   credentials: true,
+//   origin(origin, callback) { // allow requests with no origin
+//     // (like mobile apps or curl requests)
+//     if (!origin) {
+//       return callback(null, true);
+//     }
+//     if (allowedOrigins.indexOf(origin) === -1) {
+//       const msg = 'The CORS policy for this site does not. Allow access from the specified Origin.';
+//       return callback(new Error(msg), false);
+//     } return callback(null, true);
+//   }
+// }));
 
 // enable detailed API logging in dev env
 if (config.env === 'development') {
@@ -53,8 +73,8 @@ if (config.env === 'development') {
       meta: true, // optional: log meta data about request (defaults to true)
       msg:
         'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
-      colorStatus: true // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
-    })
+      colorStatus: true, // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
+    }),
   );
 }
 
@@ -65,14 +85,19 @@ app.use('/api/v1', routes); // v1.0
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
   if (err instanceof expressValidation.ValidationError) {
-    //validation error contains errors which is an array of error each containing message[]
+    // validation error contains errors which is an array of error each containing message[]
     const unifiedErrorMessage = err.errors
       .map(error => error.messages.join('. '))
       .join(' and ');
     const error = new APIError(unifiedErrorMessage, err.status, true);
     return next(error);
-  } else if (!(err instanceof APIError)) {
-    const apiError = new APIError(err.message, err.status, err.isPublic);
+  }
+  if (!(err instanceof APIError)) {
+    const apiError = new APIError(
+      err.message,
+      err.status,
+      err.isPublic,
+    );
     return next(apiError);
   }
   return next(err);
@@ -88,22 +113,22 @@ app.use((req, res, next) => {
 if (config.env !== 'test') {
   app.use(
     expressWinston.errorLogger({
-      winstonInstance
-    })
+      winstonInstance,
+    }),
   );
 }
 
-// error handler, send stacktrace only during development
+// // error handler, send stacktrace only during development
 app.use((
   err,
   req,
   res,
-  next // eslint-disable-line no-unused-vars
+  next, // eslint-disable-line no-unused-vars
 ) =>
   res.status(err.status).json({
-    message: err.isPublic ? err.message : httpStatus[err.status]
-    //stack: config.env === 'development' ? err.stack : {}
-  })
+    message: err.isPublic ? err.message : httpStatus[err.status],
+    // stack: config.env === 'development' ? err.stack : {}
+  }),
 );
 
 // test authentication

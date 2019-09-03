@@ -1,4 +1,5 @@
 const express = require("express");
+const passportService = require('../services/passport.services');
 const validate = require("express-validation");
 //const paramValidation = require("./comment.validation");
 const chatCtrl = require("./chat.controller");
@@ -11,10 +12,10 @@ const router = express.Router();
 router
   .route("/")
   .get(  chatCtrl.index)
-  .post(requireAuth, permit('user', 'admin'), chatCtrl.create);
+  .post(requireAuth, chatCtrl.create);
 
   router.route("/init")
-  .post(requireAuth, permit('user', 'admin'), chatCtrl.init);
+  .post(requireAuth, chatCtrl.init);
 
 
 module.exports = router;

@@ -1,6 +1,8 @@
+'use strict';
+
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
+const { Schema } = mongoose;
 
 const SaveSchema = new mongoose.Schema({
   postRef: {
