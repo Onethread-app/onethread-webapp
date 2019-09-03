@@ -26,7 +26,7 @@ const tokenForUser = function(user) {
   const timestamp = new Date().getTime();
   return jwt.encode(
     {
-      sub: user.id,
+      _id: user.id,
       iat: timestamp,
     },
     config.jwtSecret,
@@ -73,11 +73,13 @@ const register = async (req, res) => {
         account.token = token;
         account
           .save()
-          .then(() => {
+          .then(user => {
+            delete user.password;
             return sendJSONresponse(res, 201, {
               success: true,
               token: token,
               message: 'User created',
+              user: user,
             });
           })
           .then(() => {
@@ -129,6 +131,7 @@ const login = async (req, res) => {
   res.send({
     success: true,
     token: tokenForUser(req.user),
+    user: req.user,
   });
 };
 
