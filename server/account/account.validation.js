@@ -6,67 +6,92 @@ const accountInfo = Joi.object().keys({
     .email()
     .lowercase()
     .required(),
-  password: Joi.string()
-    .regex(
-      /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/
-    )
-    .required()
-    .error(errors => {
-      return {
-        message:
-          'Password should contain Uppercase, Lowercase, Special character, Number'
-      };
-    }),
+
   confirmPassword: Joi.string()
     .valid(Joi.ref('password'))
     .required()
     .error(errors => {
       return {
-        message: 'Confirm Password should match with Password'
+        message: 'Confirm Password should match with Password',
       };
     }),
   contactNo: Joi.string()
     .regex(/\+?(88)?0?1[356789][0-9]{8}/)
-    .required()
+    .required(),
 });
 module.exports = {
-
   register: Joi.object().keys({
     body: Joi.object().keys({
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      email: Joi.string()
-        .email()
-        .lowercase()
+      firstName: Joi.string()
+        // allow space between characters
+        // bug is here
+        // need to remove space within 2nd bracket
+        // check the lastname regex
+        .regex(/^[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/)
         .required(),
+      lastName: Joi.string()
+        .regex(/^[a-zA-Z][a-zA-Z]+[a-zA-Z]$/)
+        .required(),
+      email: Joi.string()
+        .regex(
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        )
+        .lowercase()
+        .required()
+        .error(errors => {
+          return {
+            success: false,
+            message: 'mail id is not valid format',
+          };
+        }),
       password: Joi.string()
         .regex(
-          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/
+          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
         )
-        .required(),
+        .required()
+        .error(error => {
+          return {
+            success: false,
+            message:
+              'Password should contain Uppercase, Lowercase, Special character, Number',
+          };
+        }),
       confirmPassword: Joi.string()
         .valid(Joi.ref('password'))
         .required(),
       contactNo: Joi.string()
         .regex(/\+?(88)?0?1[356789][0-9]{8}/)
-        .required()
-    })
-		}),
-		
-		login: Joi.object().keys({
-			body: Joi.object().keys({
-				email: Joi.string()
-						.regex( 	
-							/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
-						.email()
-						.lowercase()
-						.required(),
-				password: Joi.string()
-						.regex(
-								/^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/
-						)
-						.required()
-		})
-		})
+        .required(),
+    }),
+  }),
 
+  login: Joi.object().keys({
+    body: Joi.object().keys({
+      email: Joi.string()
+        .regex(
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        )
+        .email()
+        .lowercase()
+        .required(),
+      password: Joi.string().required(),
+    }),
+  }),
+
+  update: Joi.object().keys({
+    body: Joi.object().keys({
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
+      email: Joi.string()
+        .regex(
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        )
+        .email()
+        .lowercase()
+        .required(),
+      contactNo: Joi.string()
+        .regex(/\+?(88)?0?1[356789][0-9]{8}/)
+        .required(),
+    }),
+  }),
 };

@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 // const mongoose = require("mongoose");
 // const passport = require("passport");
 // const httpStatus = require("http-status");
@@ -6,15 +6,13 @@
 
 // const config = require("../../config/config");
 // const Account = require("../account/account.model");
-const RegisteredUser = require("./user.model");
-
-
+const RegisteredUser = require('./user.model');
 
 // create a user profile
 const createProfile = async (req, res) => {
   const registeredUser = new RegisteredUser({
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
     gender: req.body.gender,
     skillArea: req.body.skillArea,
     mobileNumber: req.body.mobileNumber,
@@ -23,7 +21,7 @@ const createProfile = async (req, res) => {
     secondaryEmail: req.body.secondaryEmail,
     birthday: req.body.birthday,
     bloodGroup: req.body.bloodGroup,
-    location:req.body.location,
+    location: req.body.location,
     account: req.user.id,
   });
   registeredUser
@@ -32,26 +30,24 @@ const createProfile = async (req, res) => {
       req.profile = result;
       res.status(201).send({
         success: true,
-        result: result
+        result: result,
       });
-
-    }).catch(err => res.json(err));
+    })
+    .catch(err => res.json(err));
 };
 
 const profileList = async (req, res) => {
-  const {
-    limit = 50, skip = 0
-  } = req.query;
+  const { limit = 50, skip = 0 } = req.query;
   RegisteredUser.find()
     .sort({
-      createdAt: -1
+      createdAt: -1,
     })
     .skip(+skip)
     .limit(+limit)
-    .exec(function (err, user) {
+    .exec(function(err, user) {
       if (err) {
         return res.status(422).send({
-          message: err
+          message: err,
         });
       } else {
         res.json(user);
@@ -61,33 +57,33 @@ const profileList = async (req, res) => {
 const profile = (req, res) => {
   let id = req.user.id;
   RegisteredUser.find({
-      account: id
-    })
+    account: id,
+  })
     .populate('account')
     .exec()
     .then(profile => {
       if (!profile) {
         return res.status(404).json({
-          message: "Profile not found"
+          message: 'Profile not found',
         });
       }
       res.status(200).json({
         profile: profile,
         success: true,
-        msg: "profile create successful"
+        msg: 'profile create successful',
       });
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
 
 const profileUpdate = async (req, res, next) => {
   RegisteredUser.findById(req.params.id, function(err, user) {
-		user.firstName = req.body.firstName;
-		user.lastName = req.body.lastName;
+    user.firstName = req.body.firstName;
+    user.lastName = req.body.lastName;
     user.gender = req.body.gender;
     user.mobileNumber = req.body.mobileNumber;
     user.skillArea = req.body.skillArea;
@@ -104,42 +100,42 @@ const profileUpdate = async (req, res, next) => {
         } else {
           res.send(data);
         }
-    }
+      }
     });
-});
+  });
   RegisteredUser.findByIdAndUpdate(req.params.id, {
-      $set: req.body
-    })
+    $set: req.body,
+  })
     .exec()
     .then(profile => {
       if (!profile) {
         return res.status(404).json({
-          message: "Profile not found"
+          message: 'Profile not found',
         });
       }
       res.status(200).json({
         profile: profile,
         success: true,
-        msg: "profile update successful"
+        msg: 'profile update successful',
       });
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
 
 const profileDelete = (req, res) => {
-  RegisteredUser.findByIdAndRemove(req.params.id, function (err) {
+  RegisteredUser.findByIdAndRemove(req.params.id, function(err) {
     if (err) {
       return res.status().send({
-        message: err
+        message: err,
       });
     } else {
       res.status(201).send({
         success: true,
-        msg: "Profile Delete successful"
+        msg: 'Profile Delete successful',
       });
     }
   });
@@ -150,5 +146,5 @@ module.exports = {
   profile,
   profileUpdate,
   profileDelete,
-  createProfile
+  createProfile,
 };

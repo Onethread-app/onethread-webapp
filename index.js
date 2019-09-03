@@ -1,6 +1,5 @@
-'use strict';
-
 const mongoose = require('mongoose');
+const redis = require('redis');
 const util = require('util');
 const debug = require('debug')('express-mongoose-es6-rest-api:index');
 // config should be imported before importing any other file
@@ -26,9 +25,19 @@ mongoose.connection.on('error', () => {
 // print mongoose logs in dev env
 if (config.mongooseDebug) {
   mongoose.set('debug', (collectionName, method, query, doc) => {
-    debug(`${collectionName}.${method}`, util.inspect(query, false, 20), doc);
+    debug(
+      `${collectionName}.${method}`,
+      util.inspect(query, false, 20),
+      doc,
+    );
   });
 }
+
+// redis connection
+// const rediscl = redis.createClient();
+// rediscl.on('connect', () => {
+//   console.log('redis pluggin');
+// });
 
 app.on('listening', () => {
   console.log('ok, server is running');
@@ -39,7 +48,9 @@ app.on('listening', () => {
 if (!module.parent) {
   // listen on port config.port
   app.listen(config.port, () => {
-    console.info(`server started on port ${config.port} (${config.env})`); // eslint-disable-line no-console
+    console.info(
+      `server started on port ${config.port} (${config.env})`,
+    ); // eslint-disable-line no-console
   });
 }
 
