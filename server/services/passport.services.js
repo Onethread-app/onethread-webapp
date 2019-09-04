@@ -17,16 +17,16 @@ const localLogin = new LocalStrategy(
     // Verify this email and password
     // Call done with the user if correct email:password
     // Otherwise call done with false
-    Account.findOne({ email }, (err, account) => {
+    Account.findOne({ email }, (err, user) => {
       if (err) {
         return done(err);
       }
-      if (!account) {
+      if (!user) {
         return done(null, false);
       }
 
       // compare passwords - is 'password' equal to user.password?
-      account.comparePassword(password, (err, isMatch) => {
+      user.comparePassword(password, (err, isMatch) => {
         if (err) {
           return done(err);
         }
@@ -34,7 +34,7 @@ const localLogin = new LocalStrategy(
           return done(null, false);
         }
 
-        return done(null, account);
+        return done(null, user);
       });
     });
   },
@@ -49,13 +49,13 @@ const jwtOptions = {
 // Create jwt strategy
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   // See if the user ID in the payload exists in our database
-  Account.findById(payload.id, (err, account) => {
+  Account.findById(payload.id, (err, user) => {
     if (err) {
       return done(err, false);
     }
     // If it does, call 'done' with that user
-    if (account) {
-      done(null, account);
+    if (user) {
+      done(null, user);
     } else {
       // otherwise, call 'done' without a user object
       done(null, false);
