@@ -67,9 +67,6 @@ const register = async (req, res) => {
           .save()
           .then(user => {
             req.login(user, function(err) {
-              let userObjectCopy = Object.assign({}, user);
-              delete userObjectCopy.password;
-              console.log(userObjectCopy);
               if (err) {
                 return sendJSONresponse(res, 400, {
                   success: false,
@@ -80,7 +77,7 @@ const register = async (req, res) => {
                 success: true,
                 token: token,
                 message: 'User created',
-                userObjectCopy,
+                user,
               });
             });
           })
@@ -427,7 +424,6 @@ const sendFriendRequest = async (req, res) => {
   let fromFriend = req.user.id;
   let toFriend = req.query.userID;
   Account.findById(toFriend).then(account => {
-    console.log(account);
     if (
       account.pendingFriends.filter(
         friend => friend.user.toString() === fromFriend,
@@ -520,7 +516,7 @@ const acceptFriendRequest = async (req, res) => {
   });
   Account.findById(reqQueryID).then(account => {
     account.friends.unshift({
-      user: reqUserID,
+      user: reqQueryID,
     });
     account.save();
   });
