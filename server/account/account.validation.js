@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const accountInfo = Joi.object().keys({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),

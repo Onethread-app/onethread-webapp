@@ -1,7 +1,6 @@
 /* eslint-disable func-names */
 /* eslint-disable consistent-return */
 
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const randtoken = require('rand-token');
@@ -16,53 +15,53 @@ const { Schema } = mongoose;
 const accountsSchema = new mongoose.Schema({
   firstName: {
     type: String,
-    required: true
+    required: true,
   },
   lastName: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   hash: String,
   salt: String,
   password: {
     type: String,
-    required: true
+    required: true,
   },
   role: {
     type: String,
     enum: ['guest', 'admin', 'company', 'user'],
-    default: 'user'
+    default: 'user',
   },
   accountType: {
     type: String,
     enum: ['premium', 'normal'],
-    default: 'normal'
+    default: 'normal',
   },
   accountVerified: {
     type: Boolean,
-    default: false
+    default: false,
   },
   contactNo: {
     type: String,
-    required: false
+    required: false,
   },
   companies: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company'
-    }
+      ref: 'Company',
+    },
   ],
   token: {
     // type: Schema.Types.ObjectId,
     // ref: 'Token',
     // default: null
-    type: String
-  }
+    type: String,
+  },
   // TODO: Later add conenction with friends
   // following: [
   //   {
@@ -81,25 +80,25 @@ const accountsSchema = new mongoose.Schema({
   //   }
   // ],
 
-  // friends: [
-  //   {
-  //     user: {
-  //       type: Schema.ObjectId,
-  //       ref: 'Account'
-  //     }
-  //   }
-  // ],
-  // pendingFriends: [
-  //   {
-  //     user: {
-  //       type: Schema.ObjectId,
-  //       ref: 'Account'
-  //     }
-  //   }
-  // ]
+  friends: [
+    {
+      user: {
+        type: Schema.ObjectId,
+        ref: 'Account',
+      },
+    },
+  ],
+  pendingFriends: [
+    {
+      user: {
+        type: Schema.ObjectId,
+        ref: 'Account',
+      },
+    },
+  ],
 });
 
-accountsSchema.pre('save', function (next) {
+accountsSchema.pre('save', function(next) {
   const account = this;
 
   // only hash the password if it has been modified (or is new)
@@ -112,18 +111,22 @@ accountsSchema.pre('save', function (next) {
   return new Promise((resolve, reject) =>
     // Generate hash's random salt
     bcrypt.genSalt(10, (err, salt) => {
-      if (err) { return reject(err); }
+      if (err) {
+        return reject(err);
+      }
 
       // Now, with the given salt, generate the hash
       bcrypt.hash(account.password, salt, (err, hash) => {
-        if (err) { return reject(err); }
+        if (err) {
+          return reject(err);
+        }
 
         // Hash generated successfully!
         account.password = hash;
         return resolve(hash);
       });
-    }));
-
+    }),
+  );
 
   // ES5 callback
   // bcrypt.genSalt(SALT_WORK_FACTOR, (err, salt) => {
@@ -145,7 +148,10 @@ accountsSchema.pre('save', function (next) {
 });
 
 // TODOS: Convert into promise based function
-accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
+accountsSchema.methods.comparePassword = function(
+  candidatePassword,
+  cb,
+) {
   // promise based
   // return new Promise((resolve, reject) =>
   //   bcrypt.compare(candidatePassword, cb, (err, result) => {
@@ -163,20 +169,19 @@ accountsSchema.methods.comparePassword = function (candidatePassword, cb) {
 };
 
 // generating jwt token
-accountsSchema.methods.generateJwt = function () {
+accountsSchema.methods.generateJwt = function() {
   // const token = new token();
   return jwt.sign(
     {
       _id: this._id,
-      role: this.role
+      role: this.role,
     },
     config.jwtSecret,
     {
-      expiresIn: 60 * 60 * 60 * 24
-    }
+      expiresIn: 60 * 60 * 60 * 24,
+    },
   );
 };
-
 
 // accountsSchema.methods.generateJwt = function () {
 //   const token = new token();

@@ -34,10 +34,10 @@ if (config.mongooseDebug) {
 }
 
 // redis connection
-const rediscl = redis.createClient();
-rediscl.on('connect', () => {
-  console.log('redis pluggin');
-});
+// const rediscl = redis.createClient();
+// rediscl.on('connect', () => {
+//   console.log('redis pluggin');
+// });
 
 app.on('listening', () => {
   console.log('ok, server is running');
