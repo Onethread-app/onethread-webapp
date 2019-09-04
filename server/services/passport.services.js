@@ -7,39 +7,52 @@ const Account = require('../account/account.model');
 
 // Setup options of local strategy
 const localOptions = {
-  usernameField: 'email'
+  usernameField: 'email',
 };
 
 // Create local strategy
-const localLogin = new LocalStrategy(localOptions, ((email, password, done) => {
-  // Verify this email and password
-  // Call done with the user if correct email:password
-  // Otherwise call done with false
-  Account.findOne({ email }, (err, account) => {
-    if (err) { return done(err); }
-    if (!account) { return done(null, false); }
+const localLogin = new LocalStrategy(
+  localOptions,
+  (email, password, done) => {
+    // Verify this email and password
+    // Call done with the user if correct email:password
+    // Otherwise call done with false
+    Account.findOne({ email }, (err, account) => {
+      if (err) {
+        return done(err);
+      }
+      if (!account) {
+        return done(null, false);
+      }
 
-    // compare passwords - is 'password' equal to user.password?
-    account.comparePassword(password, (err, isMatch) => {
-      if (err) { return done(err); }
-      if (!isMatch) { return done(null, false); }
+      // compare passwords - is 'password' equal to user.password?
+      account.comparePassword(password, (err, isMatch) => {
+        if (err) {
+          return done(err);
+        }
+        if (!isMatch) {
+          return done(null, false);
+        }
 
-      return done(null, account);
+        return done(null, account);
+      });
     });
-  });
-}));
+  },
+);
 
 // Setup options for jwt strategy
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: config.jwtSecret
+  secretOrKey: config.jwtSecret,
 };
 
 // Create jwt strategy
-const jwtLogin = new JwtStrategy(jwtOptions, ((payload, done) => {
+const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   // See if the user ID in the payload exists in our database
-  Account.findById(payload.sub, (err, account) => {
-    if (err) { return done(err, false); }
+  Account.findById(payload.id, (err, account) => {
+    if (err) {
+      return done(err, false);
+    }
     // If it does, call 'done' with that user
     if (account) {
       done(null, account);
@@ -48,8 +61,15 @@ const jwtLogin = new JwtStrategy(jwtOptions, ((payload, done) => {
       done(null, false);
     }
   });
-}));
+});
 
 // Tell passport to use this strategy
 passport.use(jwtLogin);
 passport.use(localLogin);
+
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
