@@ -12,7 +12,7 @@ export const LoginPage = () => (
         >
           <div className="v-mid dtc">
             <div className="w-40 center">
-              <img src={require("./../images/individual.png")} />
+              <img src={require("./../resources/images/individual.png")} />
               <h2>Sign Up As Company</h2>
             </div>
           </div>
@@ -24,7 +24,7 @@ export const LoginPage = () => (
         >
           <div className="v-mid dtc">
             <div className="w-40 center">
-              <img src={require("./../images/company.png")} />
+              <img src={require("./../resources/images/company.png")} />
               <h2 style={{ color: "#0fa3a3" }}>Sign Up As Individual</h2>
             </div>
           </div>

@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from 'react';
 import { isEqual, isEmpty } from 'lodash';
 import { InputGroupField } from 'components/common/InputGroup';
-import Artboard9 from "../images/Artboard9.png";
+import Artboard9 from "../resources/images/Artboard9.png";
 
 export const SignUpPage = () => {
   const [values, setValues] = useState({
