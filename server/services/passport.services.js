@@ -49,7 +49,7 @@ const jwtOptions = {
 // Create jwt strategy
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   // See if the user ID in the payload exists in our database
-  Account.findById(payload.id, (err, user) => {
+  Account.findById(payload._id, (err, user) => {
     if (err) {
       return done(err, false);
     }

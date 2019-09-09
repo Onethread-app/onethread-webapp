@@ -15,10 +15,12 @@ const { Schema } = mongoose;
 const accountsSchema = new mongoose.Schema({
   firstName: {
     type: String,
+    trim: true,
     required: true,
   },
   lastName: {
     type: String,
+    trim: true,
     required: true,
   },
   email: {
@@ -62,7 +64,6 @@ const accountsSchema = new mongoose.Schema({
     // default: null
     type: String,
   },
-  // TODO: Later add conenction with friends
   // following: [
   //   {
   //     user: {
@@ -82,18 +83,20 @@ const accountsSchema = new mongoose.Schema({
 
   friends: [
     {
-      user: {
-        type: Schema.ObjectId,
-        ref: 'Account',
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
     },
   ],
   pendingFriends: [
     {
-      user: {
-        type: Schema.ObjectId,
-        ref: 'Account',
-      },
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+    },
+  ],
+  sendingFriendList: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
     },
   ],
 });

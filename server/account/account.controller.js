@@ -20,14 +20,12 @@ const tokenForUser = function(user) {
   const timestamp = new Date().getTime();
   return jwt.encode(
     {
-      id: user.id,
+      _id: user._id,
       iat: timestamp,
     },
     config.jwtSecret,
   );
 };
-
-// TODO: need to solve tomorrow
 
 // create a new account for individual users
 const register = async (req, res) => {
@@ -144,7 +142,7 @@ const login = async (req, res) => {
   res.json({
     success: true,
     token: tokenForUser(req.user),
-    accountInfo: accountInfo,
+    user: req.user,
   });
 };
 
@@ -212,28 +210,6 @@ const logout = async (req, res) => {
   res.end();
 };
 
-/**
- * Change password function called by route
- * @param {Object} req - request object
- * @param {Object} res - response object
- */
-const changePassword = async () => {};
-
-// find account for account verification
-const findAccount = async email => {
-  // return new Promise((resolve, reject) => {
-  //   Account.findOne({
-  //       email
-  //     },
-  //     "password loginAttempts blockExpires name email role verified verification",
-  //     (err, item) => {
-  //       utils.itemNotFound(err, item, reject, "USER_DOES_NOT_EXIST");
-  //       resolve(item);
-  //     }
-  //   );
-  // });
-};
-
 const forgetPassword = async (req, res) => {
   // try {
   //   const locale = req.getLocale();
@@ -251,10 +227,16 @@ const forgetPassword = async (req, res) => {
   })
     .exec()
     .then(user => {
+      let info = {};
+      info.user = user._id;
+      info.expires = new Date(
+        // expire within 1 month
+        new Date().getTime() + 2630000,
+      );
       let token = jwt.encode(info, config.jwtSecret);
       host = req.get('host');
       link =
-        'https://5bd8d95c.ngrok.io/api/v1/account/verifyAccount/' +
+        'https://5bd8d95c.ngrok.io/api/v1/account/changePassword/' +
         token;
       let mailOptions = {
         to: user.email,
@@ -285,6 +267,62 @@ const forgetPassword = async (req, res) => {
     });
 };
 
+/**
+ * Change password function called by route
+ * @param {Object} req - request object
+ * @param {Object} res - response object
+ */
+const verifyChangePassword = async (req, res) => {
+  let token = req.params.token;
+  let data = jwt.decode(token, config.jwtSecret);
+  if (new Date(data.expires) > new Date()) {
+    await Account.findOne({ _id: data.user._id })
+      .exec()
+      .then(user => {
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: 'you have permission to change the password',
+          user,
+        });
+      })
+      .catch(err => {
+        return sendJSONresponse(res, 400, {
+          success: false,
+          message: 'account not found',
+        });
+      });
+  } else {
+    return sendJSONresponse(res, 400, {
+      success: false,
+      message: 'token time expired',
+    });
+  }
+};
+// TODOS: need to test in postman tomorrow
+const changePassword = async (req, res) => {
+  let newPassword = req.body.password;
+  let confirmPassword = req.body.confirmPassword;
+  const userID = req.user.id;
+  if (newPassword !== confirmPassword)
+    return res.status(400).json({ message: 'Password Not Matching' });
+  let user = await Account.findOne({ _id: userID })
+    .exec()
+    .then(user => {
+      user.password = newPassword;
+      user.save();
+      return res.status(200).json({
+        message: 'Password Changed',
+        user,
+      });
+    })
+    .catch(err => {
+      return res.status(500).json({
+        message: 'server error',
+      });
+    });
+  user.password = newPassword;
+  await user.save();
+};
 // verifying mail address
 const verifyAccount = async (req, res) => {
   let token = req.params.token;
@@ -420,47 +458,51 @@ const verifyAccount = async (req, res) => {
 
 // send friend request to an account
 const sendFriendRequest = async (req, res) => {
-  console.log(req.user);
   let fromFriend = req.user.id;
   let toFriend = req.query.userID;
-  Account.findById(toFriend).then(account => {
+
+  // you can not add yourself
+  if (fromFriend === toFriend) {
+    return sendJSONresponse(res, 400, {
+      success: false,
+      message: 'You can not add yourself',
+    });
+  }
+  Account.findById(fromFriend).then(account => {
     if (
-      account.pendingFriends.filter(
-        friend => friend.user.toString() === fromFriend,
+      account.sendingFriendList.filter(
+        friend => friend.toString() === toFriend,
       ).length > 0
     ) {
-      return res.status(400).json({
-        success: false,
-        msg: 'this id is already in your pending list',
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: `you already send request to this ${toFriend}`,
+      });
+    } else {
+      account.sendFriendList.push(toFriend);
+      account.save();
+      // sending friend request to toFriend
+      Account.findById(toFriend).then(account => {
+        if (
+          account.pendingFriends.filter(
+            friend => friend.toString() === fromFriend,
+          ).length > 0
+        ) {
+          return res.status(400).json({
+            success: false,
+            msg: 'this id is already in your pending list',
+          });
+        }
+        account.pendingFriends.push(fromFriend);
+        account.save();
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: `Friend request send to ${toFriend}`,
+        });
+
+        //
       });
     }
-    account.pendingFriends.unshift({
-      user: fromFriend,
-      status: 'pending',
-    });
-    account.save();
-    Account.findOne({
-      email: req.user.email,
-    })
-      .then(account => {
-        account.friends.unshift({
-          user: toFriend,
-        });
-        account.save().then(user =>
-          res.json({
-            sucess: true,
-            msg: 'request is sent to the user',
-            friendinfo: user,
-          }),
-        );
-      })
-      .catch(err =>
-        res.status(404).json({
-          success: false,
-          msg: 'you already in his pendinglist',
-          error: err,
-        }),
-      );
   });
 };
 
@@ -471,7 +513,7 @@ const pendingFriendRequestList = async (req, res) => {
     let pendingList = account.pendingFriends;
     let listPendingReq = [];
     pendingList.forEach((value, key) => {
-      listPendingReq.push(value.user);
+      listPendingReq.push(value);
     });
     return res.status(200).json({
       success: true,
@@ -484,41 +526,70 @@ const pendingFriendRequestList = async (req, res) => {
 // Accept Friend request
 const acceptFriendRequest = async (req, res) => {
   let reqUserID = req.user.id;
-  let reqQueryID = req.query.userID;
-  console.log(reqUserID, reqQueryID);
+  let acceptedID = req.query.userID;
 
+  // accept friend request
   Account.findById(reqUserID).then(account => {
-    account.friends.unshift({
-      user: reqQueryID,
-    });
+    account.friends.push(acceptedID);
+    account.pendingFriends.remove(acceptedID);
     account.save();
-    Account.findByIdAndUpdate(
-      reqUserID,
-      {
-        $pull: {
-          pendingFriends: {
-            user: reqQueryID,
-          },
-        },
-      },
-      (err, result) => {
-        if (err) {
-          return res.status(400).json({
-            error: err,
-          });
-        }
-        res.status(200).json({
-          success: true,
-          msg: 'you both conenct with each other',
-        });
-      },
-    );
+
+    //
+    Account.findById(acceptedID).then(account => {
+      account.friends.push(reqUserID);
+      account.sendFriendRequestList.remove(reqUserID);
+      account.save();
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: 'you both connect with each other',
+      });
+    });
   });
-  Account.findById(reqQueryID).then(account => {
-    account.friends.unshift({
-      user: reqQueryID,
+};
+
+// friend List information
+const friendList = async (req, res) => {
+  let reqUserID = req.user._id;
+  Account.findById(reqUserID).then(account => {
+    let friends = account.friends;
+    let friendInfo = {};
+    friends.forEach(function(item, index) {
+      let friendID = item.user;
+
+      Account.findById(friendID)
+        .exec()
+        .then(account => {
+          friendInfo.push(account);
+        })
+        .catch(err => {
+          return sendJSONresponse(res, 500, {
+            success: false,
+            message: 'did not match with any id',
+          });
+        });
     });
-    account.save();
+    return sendJSONresponse(res, 200, {
+      success: true,
+      message: 'Find friendlist',
+      friendInfo: friendInfo,
+    });
+  });
+};
+
+// sending Friend request List
+const sendFriendRequestList = async (req, res) => {
+  let reqUserID = req.account.id;
+  Account.findById(reqUserID).then(account => {
+    let sendFriendRequestList = account.sendingFriendList;
+    let listPendingReq = [];
+    pendingList.forEach((value, key) => {
+      listPendingReq.push(value);
+    });
+    return res.status(200).json({
+      success: true,
+      msg: 'pending friend request list',
+      list: listPendingReq,
+    });
   });
 };
 
@@ -627,6 +698,7 @@ module.exports = {
   register,
   login,
   logout,
+  verifyChangePassword,
   changePassword,
   forgetPassword,
   verifyAccount,
@@ -638,9 +710,11 @@ module.exports = {
   accountLoad,
   accountUpdate,
   sendFriendRequest,
+  friendList,
   // removeFollowing,
   // removeFollower,
   acceptFriendRequest,
+  sendFriendRequestList,
   // rejectFriendRequest,
   // removeFriend
 };

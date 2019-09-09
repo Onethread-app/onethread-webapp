@@ -37,9 +37,11 @@ router.route('/:accountId').get(requireAuth, accountCtrl.getAccount);
 router.route('/logout').get(accountCtrl.logout);
 router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);
 
-router.route('/changePassword').post(accountCtrl.changePassword);
-
 router.route('/forgetPassword').post(accountCtrl.forgetPassword);
+router
+  .route('/forgetPassword/:token')
+  .get(accountCtrl.verifyChangePassword);
+router.route('/changePassword').post(accountCtrl.changePassword);
 
 // Search for an account
 // router
@@ -67,6 +69,14 @@ router
 router
   .route('/accept_friend')
   .post(requireAuth, permit('user'), accountCtrl.acceptFriendRequest);
+
+router
+  .route('/:accountId/friendList')
+  .get(requireAuth, accountCtrl.friendList);
+
+router
+  .route('/:accountId/sendingFriendRequestList')
+  .get(requireAuth, accountCtrl.sendFriendRequestList);
 // router
 //   .route('/reject_friend')
 //   .post(requireAuth, permit('user'), accountCtrl.rejectFriendRequest);
