@@ -1,4 +1,5 @@
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
+const redis = require('redis');
 const Account = require('./account.model');
 const smtpTransport = require('../helpers/sendmail');
 const authService = require('../services/auth.services');
@@ -11,6 +12,11 @@ let rand = '';
 let link = '';
 let host = '';
 
+const rediscl = redis.createClient('6379', '127.0.0.1');
+rediscl.on('connect', () => {
+  console.log('redis pluggin');
+});
+
 const sendJSONresponse = function(res, status, content) {
   res.status(status);
   res.json(content);
@@ -22,6 +28,7 @@ const tokenForUser = function(user) {
     {
       _id: user._id,
       iat: timestamp,
+      exp: config.jwtExpire,
     },
     config.jwtSecret,
   );
@@ -86,11 +93,11 @@ const register = async (req, res) => {
               // expire within 1 month
               new Date().getTime() + 2630000,
             );
-            let token = jwt.encode(info, config.jwtSecret);
+            let access_token = jwt.encode(info, config.jwtSecret);
             host = req.get('host');
             link =
               'https://5bd8d95c.ngrok.io/api/v1/account/verifyAccount/' +
-              token;
+              access_token;
             let mailOptions = {
               to: email,
               subject: 'Please confirm your Email account',
@@ -131,6 +138,25 @@ const register = async (req, res) => {
 
 // account holder can login their account
 const login = async (req, res) => {
+  let user_id = req.user._id;
+  // Generate new refresh token and it's expiration
+  let refresh_token = jwt.sign({ uid: user_id }, config.jwtSecret, {
+    expiresIn: 60 * 60 * 24 * 30,
+  });
+  // Generate new access token
+  let access_token = jwt.sign({ uid: user_id }, config.jwtSecret, {
+    expiresIn: '1d',
+  });
+  res.cookie('access_token', access_token, {
+    // secure: true,
+    httpOnly: true,
+  });
+  res.cookie('refresh_token', refresh_token, {
+    // secure: true,
+    httpOnly: true,
+  });
+  //client.set('string key', 'string val', redis.print);
+  rediscl.set(user_id, refresh_token, rediscl.print);
   let accountInfo = {};
   accountInfo.userId = req.user._id;
   accountInfo.firstName = req.user.firstName;
@@ -141,7 +167,7 @@ const login = async (req, res) => {
   accountInfo.companies = req.user.companies;
   res.json({
     success: true,
-    token: tokenForUser(req.user),
+    token: access_token,
     user: req.user,
   });
 };
@@ -479,7 +505,7 @@ const sendFriendRequest = async (req, res) => {
         message: `you already send request to this ${toFriend}`,
       });
     } else {
-      account.sendFriendList.push(toFriend);
+      account.sendingFriendList.push(toFriend);
       account.save();
       // sending friend request to toFriend
       Account.findById(toFriend).then(account => {
@@ -537,7 +563,7 @@ const acceptFriendRequest = async (req, res) => {
     //
     Account.findById(acceptedID).then(account => {
       account.friends.push(reqUserID);
-      account.sendFriendRequestList.remove(reqUserID);
+      account.sendingFriendList.remove(reqUserID);
       account.save();
       return sendJSONresponse(res, 200, {
         success: true,
