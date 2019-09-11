@@ -31,7 +31,7 @@ router
 
 router.route('/update/:accountId').put(accountCtrl.accountUpdate);
 
-//router.route('/token').post(accountCtrl.tokenVerification);
+router.route('/token').post(accountCtrl.tokenVerification);
 
 router.route('/:accountId').get(requireAuth, accountCtrl.getAccount);
 router.route('/logout').get(accountCtrl.logout);

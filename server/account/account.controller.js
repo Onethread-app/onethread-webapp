@@ -11,7 +11,7 @@ let token = '';
 let rand = '';
 let link = '';
 let host = '';
-
+const refreshTokens = {};
 const rediscl = redis.createClient('6379', '127.0.0.1');
 rediscl.on('connect', () => {
   console.log('redis pluggin');
@@ -93,7 +93,9 @@ const register = async (req, res) => {
               // expire within 1 month
               new Date().getTime() + 2630000,
             );
-            let access_token = jwt.encode(info, config.jwtSecret);
+            let access_token = jwt.sign(info, config.jwtSecret, {
+              expiresIn: '1d',
+            });
             host = req.get('host');
             link =
               'https://5bd8d95c.ngrok.io/api/v1/account/verifyAccount/' +
@@ -143,6 +145,7 @@ const login = async (req, res) => {
   let refresh_token = jwt.sign({ uid: user_id }, config.jwtSecret, {
     expiresIn: 60 * 60 * 24 * 30,
   });
+  refreshTokens[refresh_token] = user_id;
   // Generate new access token
   let access_token = jwt.sign({ uid: user_id }, config.jwtSecret, {
     expiresIn: '1d',
@@ -169,6 +172,7 @@ const login = async (req, res) => {
     success: true,
     token: access_token,
     user: req.user,
+    refreshToken: refresh_token,
   });
 };
 
@@ -719,6 +723,26 @@ const accountLoad = async (req, res, next, id) => {
 };
 
 const searchAccount = async (req, res) => {};
+
+// verify token
+const tokenVerification = async (req, res) => {
+  const email = req.body.email;
+  const refreshToken = req.body.refreshToken;
+  if (
+    refreshToken in refreshTokens &&
+    refreshTokens[refreshToken] == email
+  ) {
+    const user = {
+      email: email,
+    };
+    const token = jwt.sign(user, config.jwtSecret, {
+      expiresIn: '1d',
+    });
+    res.json({ token: token });
+  } else {
+    res.send(401);
+  }
+};
 module.exports = {
   sendJSONresponse,
   register,
@@ -743,4 +767,5 @@ module.exports = {
   sendFriendRequestList,
   // rejectFriendRequest,
   // removeFriend
+  tokenVerification,
 };
