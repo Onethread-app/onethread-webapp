@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
-import { AuthReducer } from './AuthReducer';
+import { AuthReducer, LoginErrorReducer } from './AuthReducer';
 
 export const RootReducer = combineReducers({
-  posts: AuthReducer
+  auth: AuthReducer,
+  loginError: LoginErrorReducer
 });

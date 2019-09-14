@@ -68,7 +68,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
   }
 
   const emptyValueCheck = () => {
-    if (isEmpty(values.firstName) || isEmpty(values.lastName || isEmpty(values.contactNo) || isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword))) {
+    if (isEmpty(values.firstName) || isEmpty(values.lastName) || isEmpty(values.contactNo) || isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword)) {
       let e = errors;
       if (isEmpty(values.firstName)) {
         e = { ...e, firstName: "Required" };
@@ -314,7 +314,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         }}
                         validationOnBlur={() => {
                           if (isEmpty(confirmPassword)) {
-                            const confirmPasswordError = { ...errors, confirmPassword: "Please reenter your password" };
+                            const confirmPasswordError = { ...errors, confirmPassword: "Please re-enter your password" };
                             setErrors(confirmPasswordError);
                           }
                           else if (!checkPassword()) {

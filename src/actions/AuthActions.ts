@@ -1,28 +1,10 @@
-import { NEW_USER, LOGIN } from './Types'
+import { NEW_USER, LOGIN, LOGIN_ERROR } from './Types'
 import tigrowApi from 'tigrowApi';
 import { AxiosRequestConfig } from 'axios';
 import { History } from 'history';
+import { UserModel } from 'reducers/AuthReducer';
 
-// export const newUserAction = (newUser: any) => (dispatch: any) => {
-//   fetch('http://192.168.8.252:4040/api/v1/account/signup', {
-//     method: 'POST',
-//     headers: {
-//       'content-type': 'application/json'
-//     },
-//     body: JSON.stringify(newUser)
-//   }).then(res => res.json())
-//     .then(user => {
-//       console.log(`Success user`);
-//       console.log(user);
-//       return dispatch({
-//         type: NEW_USER,
-//         payload: user
-//       })
-//     }
-//     )
-// } 
-
-export const newUserAction = (newUser: any, routeHistory: History) => async (dispatch: any) => {
+export const newUserAction = (newUser: UserModel, routeHistory: History) => async (dispatch: any) => {
   try {
     const response = await tigrowApi.post(
       "account/signup",
@@ -49,7 +31,7 @@ export const isAuthenticate = () => {
     return false;
   }
 }
-export const loginAction = (loginUser: any, routeHistory: History) => async (dispatch: any) => {
+export const loginAction = (loginUser: UserModel, routeHistory: History) => async (dispatch: any) => {
   try {
     const response = await tigrowApi.post(
       "account/login",
@@ -63,7 +45,12 @@ export const loginAction = (loginUser: any, routeHistory: History) => async (dis
     routeHistory.push('/landing');
     dispatch({ type: LOGIN, payload: response.data });
   } catch (error) {
-    console.log(error.response);
+    if (error.response.status === 401) {
+      console.log('mithhu', error.response.status);
+      dispatch({ type: LOGIN_ERROR, payload: true });
+    } else {
+      console.log(error.response);
+    }
   }
 }
 
