@@ -2,7 +2,6 @@ import * as React from "react";
 import { useState } from 'react';
 import { isEqual, isEmpty, isNumber } from 'lodash';
 import { InputGroupField } from 'components/common/InputGroup';
-import Artboard9 from "../images/Artboard9.png";
 import { NumericInput, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { newUserAction } from 'actions/AuthActions';
@@ -101,7 +100,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
       <div className="fl w-100 w-50-ns dt vh-100">
         <div className="v-mid dtc">
           <div className="w-50 center">
-            <img className="w-75" src={Artboard9} />
+            <img className="w-75" src={require('./../resources/images/Artboard9.png')} />
             <h2 className="mt0" style={{ color: "#0fa3a3" }}>
               Individual
             </h2>

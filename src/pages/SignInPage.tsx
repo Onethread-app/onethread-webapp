@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Asset__1 from '../images/Asset__1.png';
 import { useState } from 'react';
 import { isEmpty } from 'lodash';
 import { InputGroupField } from 'components/common/InputGroup';
@@ -40,7 +39,7 @@ const SignInPageComponent = (props: any) => {
       <div className="fl w-100 w-50-ns dt vh-100">
         <div className="v-mid dtc">
           <div className="w-50 center">
-            <img className="w-30" src={Asset__1} />
+            <img className="w-30" src={require('./../resources/images/Asset__1.png')} />
 
             <h3 style={{ color: "#707070" }}>
               Lorem Ipsum is simply dummy text of the printing and typesetting

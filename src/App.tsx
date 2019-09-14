@@ -30,9 +30,9 @@ const App: React.FC = () => {
     <Provider store={store}>
       <BrowserRouter>
         <Switch>
+          <Route exact path="/" component={SignInPage} />
           <Route exact path="/signuppage" component={SignUpPage} />
           {/* <Route exact path="/landing" component={LandingPage} /> */}
-          <Route exact path="/" component={SignInPage} />
           <PrivateRoute path='/landing' exact={true} component={LandingPage} />
         </Switch>
       </BrowserRouter>
