@@ -1,29 +1,49 @@
 import * as React from "react";
 import { useState } from 'react';
-import { isEqual, isEmpty } from 'lodash';
+import { isEqual, isEmpty, isNumber } from 'lodash';
 import { InputGroupField } from 'components/common/InputGroup';
-import Artboard9 from "../resources/images/Artboard9.png";
+import Artboard9 from "../images/Artboard9.png";
+import { NumericInput, Icon } from '@blueprintjs/core';
+import { connect } from 'react-redux';
+import { newUserAction } from 'actions/AuthActions';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { History } from 'history';
 
-export const SignUpPage = () => {
+interface UserModel {
+  firstName: string,
+  lastName: string,
+  contactNo: string,
+  email: string,
+  password: string,
+  confirmPassword: string,
+}
+
+interface SignUpPageInternalProps {
+  newUserAction: (user: UserModel, history: History) => void;
+}
+
+const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProps) => {
   const [values, setValues] = useState({
     firstName: "",
     lastName: "",
-    phone: "",
+    contactNo: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
 
-  const { firstName, lastName, phone, email, password, confirmPassword } = values;
+  const { firstName, lastName, contactNo, email, password, confirmPassword } = values;
 
   const [errors, setErrors] = useState({
     firstName: "",
     lastName: "",
-    phone: "",
+    contactNo: "",
     email: "",
     password: "",
     confirmPassword: ""
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   const emailValidation = (email: string) => {
     const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -35,8 +55,8 @@ export const SignUpPage = () => {
   }
 
 
-  const handleChange = (name: string) => (event: any) => {
-    const value = event.target.value; //avc
+  const handleChange = (name: string | number) => (event: any) => {
+    const value = isNumber(event) ? event.toString() : event.target.value;
     setValues({ ...values, [name]: value });
   };
 
@@ -45,6 +65,34 @@ export const SignUpPage = () => {
       return true
     } else {
       return false
+    }
+  }
+
+  const emptyValueCheck = () => {
+    if (isEmpty(values.firstName) || isEmpty(values.lastName || isEmpty(values.contactNo) || isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword))) {
+      let e = errors;
+      if (isEmpty(values.firstName)) {
+        e = { ...e, firstName: "Required" };
+      }
+      if (isEmpty(values.lastName)) {
+        e = { ...e, lastName: "Required" };
+      }
+      if (isEmpty(values.contactNo)) {
+        e = { ...e, contactNo: "Required" };
+      }
+      if (isEmpty(values.email)) {
+        e = { ...e, email: "Required" };
+      }
+      if (isEmpty(values.password)) {
+        e = { ...e, password: "Required" };
+      }
+      if (isEmpty(values.confirmPassword)) {
+        e = { ...e, confirmPassword: "Required" };
+      }
+      setErrors(e);
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -77,7 +125,7 @@ export const SignUpPage = () => {
                           onChange={handleChange("firstName")}
                           leftIcon="person"
                           leftIconColor="#0fa3a3"
-                          placeHolder="First Name"
+                          placeHolder="John"
                           style={{
                             borderBottom: "1px solid #0fa3a3",
                             boxShadow: 'none',
@@ -85,7 +133,7 @@ export const SignUpPage = () => {
                           }}
                           validationOnBlur={() => {
                             if (firstName === "") {
-                              const firstNameError = { ...errors, firstName: "Please enter your first name" };
+                              const firstNameError = { ...errors, firstName: "Required" };
                               setErrors(firstNameError);
                             } else {
                               const firstNameError = { ...errors, firstName: "" };
@@ -94,14 +142,14 @@ export const SignUpPage = () => {
                           }}
                         />
                       </div>
-                      {errors.firstName ? <small>enter your first name</small> : ""}
+                      {errors.firstName ? <small className="red">{errors.firstName}</small> : ""}
                     </div>
                     <div className="ml3">
                       <div className=" w-100">
                         <InputGroupField
                           value={lastName}
                           onChange={handleChange("lastName")}
-                          placeHolder="Last Name"
+                          placeHolder="Doe"
                           style={{
                             borderBottom: "1px solid #0fa3a3",
                             boxShadow: 'none',
@@ -109,7 +157,7 @@ export const SignUpPage = () => {
                           }}
                           validationOnBlur={() => {
                             if (isEmpty(lastName)) {
-                              const lastNameError = { ...errors, lastName: "Please enter your last name" };
+                              const lastNameError = { ...errors, lastName: "Required" };
                               setErrors(lastNameError);
                             } else {
                               const lastNameError = { ...errors, lastName: "" };
@@ -118,41 +166,67 @@ export const SignUpPage = () => {
                           }}
                         />
                       </div>
-                      {errors.lastName ? <small>enter your last name</small> : ""}
+                      {errors.lastName ? <small className="red">{errors.lastName}</small> : ""}
                     </div>
                   </div>
-                  <div className={` ${errors.phone ? "mb3" : "mb4"}`}>
-                    <div className="flex">
-                      <InputGroupField
-                        value={phone}
-                        onChange={handleChange("phone")}
-                        placeHolder="Contact Number"
-                        leftIcon="phone"
-                        leftIconColor="#0fa3a3"
-                        style={{
-                          borderBottom: "1px solid #0fa3a3",
-                          boxShadow: 'none',
-                          borderRadius: '0px'
-                        }}
-                        validationOnBlur={() => {
-                          if (isEmpty(phone)) {
-                            const numberError = { ...errors, phone: "Please enter your number" };
-                            setErrors(numberError);
-                          } else {
-                            const numberError = { ...errors, phone: "" }
-                            setErrors(numberError);
-                          }
-                        }}
-                      />
+                  <div className="mw9 center mb4">
+                    <div className="cf">
+                      <div className="fl w-20-l w-30-m pr2">
+                        <InputGroupField
+                          value="+880"
+                          leftIcon="phone"
+                          leftIconColor="#0fa3a3"
+                          style={{
+                            borderBottom: "1px solid #0fa3a3",
+                            boxShadow: 'none',
+                            borderRadius: '0px'
+                          }}
+                          readOnly={true}
+                        />
+                      </div>
+                      <div className="fl w-80-l w-70-m">
+                        <div>
+                          <div className="flex w-100 ">
+                            <NumericInput
+                              className="w-100"
+                              style={{
+                                borderBottom: "1px solid #0fa3a3",
+                                boxShadow: 'none',
+                                borderRadius: '0px',
+
+                              }}
+                              fill={true}
+                              placeholder="e.g. 1789442325"
+                              value={contactNo}
+                              onValueChange={handleChange("contactNo")}
+                              buttonPosition="none"
+                              onBlur={() => {
+                                if (isEmpty(contactNo)) {
+                                  const contactNoError = { ...errors, contactNo: "Required" };
+                                  setErrors(contactNoError);
+                                } else if (contactNo.length !== 10) {
+                                  const contactNoError = { ...errors, contactNo: "Not more or less than 10 character" };
+                                  setErrors(contactNoError);
+                                }
+                                else {
+                                  const contactNoError = { ...errors, contactNo: "" };
+                                  setErrors(contactNoError);
+                                }
+                              }}
+                            />
+                          </div>
+                          {errors.contactNo ? <small className="red">{errors.contactNo}</small> : ""}
+                        </div>
+                      </div>
+
                     </div>
-                    {errors.phone ? <small>Please enter your phone number</small> : ""}
                   </div>
                   <div className={` ${errors.email ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
                         value={email}
                         onChange={handleChange("email")}
-                        placeHolder="Email"
+                        placeHolder="john@gmail.com"
                         leftIcon="envelope"
                         leftIconColor="#0fa3a3"
                         style={{
@@ -162,10 +236,10 @@ export const SignUpPage = () => {
                         }}
                         validationOnBlur={() => {
                           if (isEmpty(email)) {
-                            const emailError = { ...errors, email: "Please enter your email" };
+                            const emailError = { ...errors, email: "Required" };
                             setErrors(emailError);
                           } else if (!emailValidation(email)) {
-                            const emailError = { ...errors, email: "Invalid email address" };
+                            const emailError = { ...errors, email: "Email should contain @ and . sign" };
                             setErrors(emailError);
                           } else {
                             const emailError = { ...errors, email: "" };
@@ -174,17 +248,25 @@ export const SignUpPage = () => {
                         }}
                       />
                     </div>
-                    {errors.email ? <small>{errors.email}</small> : ""}
+                    {errors.email ? <small className="red">{errors.email}</small> : ""}
 
                   </div>
                   <div className={` ${errors.password ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
+                        type={`${showPassword ? 'text' : 'password'}`}
                         value={password}
                         onChange={handleChange("password")}
-                        placeHolder="Password"
+                        placeHolder="password"
                         leftIcon="lock"
                         leftIconColor="#0fa3a3"
+                        rightElement={
+                          <Icon 
+                            icon={showPassword ? 'unlock' : 'lock'}
+                            color="#0fa3a3" 
+                            onClick={e => setShowPassword(!showPassword)}
+                          />
+                        }
                         style={{
                           borderBottom: "1px solid #0fa3a3",
                           boxShadow: 'none',
@@ -192,26 +274,40 @@ export const SignUpPage = () => {
                         }}
                         validationOnBlur={() => {
                           if (isEmpty(password)) {
-                            const passwordError = { ...errors, password: "Please enter your password" };
+                            const passwordError = { ...errors, password: "Required" };
                             setErrors(passwordError);
                           } else {
-                            const passwordError = { ...errors, password: "" };
-                            setErrors(passwordError);
+                            const regex = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
+                            if (!(password.match(regex))) {
+                              const passwordError = { ...errors, password: "Should contain uppercase, lowercase, special character and min 8 chanracter long" };
+                              setErrors(passwordError);
+                            } else {
+                              const passwordError = { ...errors, password: "" };
+                              setErrors(passwordError);
+                            }
                           }
                         }}
                       />
                     </div>
-                    {errors.password ? <small>{errors.password}</small> : ""}
+                    {errors.password ? <small className="red">{errors.password}</small> : ""}
 
                   </div>
                   <div className={`${errors.confirmPassword ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
+                        type={`${showPassword ? 'text' : 'password'}`}
                         value={confirmPassword}
                         onChange={handleChange("confirmPassword")}
-                        placeHolder="Confirm Password"
+                        placeHolder="confirm password"
                         leftIcon="lock"
                         leftIconColor="#0fa3a3"
+                        rightElement={
+                          <Icon 
+                            icon={showPassword ? 'unlock' : 'lock'}
+                            color="#0fa3a3" 
+                            onClick={e => setShowPassword(!showPassword)}
+                          />
+                        }
                         style={{
                           borderBottom: "1px solid #0fa3a3",
                           boxShadow: 'none',
@@ -233,13 +329,15 @@ export const SignUpPage = () => {
                         }}
                       />
                     </div>
-                    {errors.confirmPassword ? <small>{errors.confirmPassword}</small> : ""}
+                    {errors.confirmPassword ? <small className="red">{errors.confirmPassword}</small> : ""}
                   </div>
-                  <button className="b--none br3 fr grow h2 mr6-m ph5 pointer pv2 white"
+                  <button className="b--none w-100 br3 fr grow h2 mr6-m ph5 pointer pv2 white"
                     style={{ background: "#0fa3a3", outline: "none" }}
                     onClick={e => {
                       e.preventDefault();
-                      console.log(JSON.stringify(values, null, 2))
+                      if (!emptyValueCheck()) {
+                        props.newUserAction(values, props.history);
+                      }
                     }}
                   >
                     Sign Up
@@ -253,3 +351,5 @@ export const SignUpPage = () => {
     </div>
   );
 };
+
+export const SignUpPage = connect(null, { newUserAction })(withRouter(SignUpPageComponent));
