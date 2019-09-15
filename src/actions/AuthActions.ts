@@ -3,6 +3,7 @@ import tigrowApi from 'tigrowApi';
 import { AxiosRequestConfig } from 'axios';
 import { History } from 'history';
 import { UserModel } from 'reducers/AuthReducer';
+import { isEqual } from 'lodash';
 
 export const newUserAction = (newUser: UserModel, routeHistory: History) => async (dispatch: any) => {
   try {
@@ -45,9 +46,10 @@ export const loginAction = (loginUser: UserModel, routeHistory: History) => asyn
     routeHistory.push('/landing');
     dispatch({ type: LOGIN, payload: response.data });
   } catch (error) {
-    if (error.response.status === 401) {
-      console.log('mithhu', error.response.status);
-      dispatch({ type: LOGIN_ERROR, payload: true });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: LOGIN_ERROR, payload: 'Network error' });
+    } else if (error.response.status === 401) {
+      dispatch({ type: LOGIN_ERROR, payload: 'Unauthorized user. Please enter valid email and password.' });
     } else {
       console.log(error.response);
     }
