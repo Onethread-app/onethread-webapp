@@ -29,7 +29,9 @@ router
     accountCtrl.login,
   );
 
-router.route('/update/:accountId').put(accountCtrl.accountUpdate);
+router
+  .route('/update/:accountId')
+  .put(accountCtrl.tokenVerification, accountCtrl.accountUpdate);
 
 router.route('/token').post(accountCtrl.tokenVerification);
 

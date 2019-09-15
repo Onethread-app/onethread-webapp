@@ -19,6 +19,7 @@ rediscl.on('connect', () => {
 
 const validateJwt = function(req, res) {
   return new Promise((resolve, reject) => {
+    let uid = req.account._id;
     let accesstoken = req.cookies.access_token || null;
     let refreshtoken = req.cookies.refresh_token || null;
 
@@ -249,7 +250,7 @@ const register = async (req, res) => {
 
 // account holder can login their account
 const login = async (req, res) => {
-  let user_id = req.user._id.toString;
+  let user_id = req.user._id.toString();
   // Generate new refresh token and it's expiration
   let refresh_token = jwt.sign({ uid: user_id }, config.jwtSecret, {
     expiresIn: 60 * 60 * 24 * 30,
@@ -280,7 +281,7 @@ const login = async (req, res) => {
   res.json({
     success: true,
     token: access_token,
-    user: req.user,
+    user: req.accountInfo,
     refreshToken: refresh_token,
   });
 };
@@ -825,7 +826,7 @@ const accountLoad = async (req, res, next, id) => {
     .then(result => {
       if (result) {
         req.account = result;
-        next();
+        return next();
       } else {
         return res.status(400).json({
           message: 'No valid entry found for provided ID',
@@ -843,6 +844,7 @@ const searchAccount = async (req, res) => {};
 const tokenVerification = async (req, res) => {
   const email = req.body.email;
   const refreshToken = req.body.refreshToken;
+  console.log(email, refreshToken);
   if (
     refreshToken in refreshTokens &&
     refreshTokens[refreshToken] == email
@@ -855,7 +857,7 @@ const tokenVerification = async (req, res) => {
     });
     res.json({ token: token });
   } else {
-    res.send(401);
+    res.json(401);
   }
 };
 module.exports = {
@@ -883,4 +885,5 @@ module.exports = {
   // rejectFriendRequest,
   // removeFriend
   tokenVerification,
+  validateJwt,
 };
