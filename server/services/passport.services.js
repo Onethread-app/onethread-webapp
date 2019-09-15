@@ -48,8 +48,13 @@ const jwtOptions = {
 
 // Create jwt strategy
 const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
+  const expirationDate = new Date(payload.exp * 1000);
+  if (expirationDate < new Date()) {
+    return done(null, false);
+  }
+  const user = payload;
   // See if the user ID in the payload exists in our database
-  Account.findById(payload._id, (err, user) => {
+  Account.findById(user._id, (err, user) => {
     if (err) {
       return done(err, false);
     }
