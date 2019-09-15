@@ -41,7 +41,6 @@ export const loginAction = (loginUser: UserModel, routeHistory: History) => asyn
         "Content-Type": "application/json",
       } as AxiosRequestConfig
     );
-    console.log(response.data.token);
     localStorage.setItem("token", JSON.stringify(response.data.token));
     routeHistory.push('/landing');
     dispatch({ type: LOGIN, payload: response.data });

@@ -153,7 +153,6 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                     onClick={e => {
                       e.preventDefault();
                       if (!emptyValueCheck()) {
-                        console.log(JSON.stringify(values, null, 2));
                         props.loginAction(values, props.history);
                       }
                     }}
