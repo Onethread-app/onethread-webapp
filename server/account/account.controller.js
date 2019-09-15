@@ -270,6 +270,7 @@ const login = async (req, res) => {
   rediscl.set(user_id, refreshToken, rediscl.print);
   const {
     _id,
+    email,
     firstName,
     lastName,
     accountVerified,
@@ -282,6 +283,7 @@ const login = async (req, res) => {
   } = req.user;
   let user = {
     _id,
+    email,
     firstName,
     lastName,
     accountVerified,
@@ -827,10 +829,35 @@ const getAllAccounts = async (req, res) => {
 };
 
 const getAccount = async (req, res) => {
-  let accountInfo = req.account;
-  return sendJSONresponse(res, 200, {
-    sucess: true,
-    msg: accountInfo,
+  const {
+    _id,
+    email,
+    firstName,
+    lastName,
+    accountVerified,
+    role,
+    contactNo,
+    companies,
+    friends,
+    pendingFriends,
+    sendingFriendList,
+  } = req.user;
+  let user = {
+    _id,
+    email,
+    firstName,
+    lastName,
+    accountVerified,
+    role,
+    contactNo,
+    companies,
+    friends,
+    pendingFriends,
+    sendingFriendList,
+  };
+  res.json({
+    success: true,
+    user,
   });
 };
 

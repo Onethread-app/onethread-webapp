@@ -35,7 +35,7 @@ router
 
 router.route('/token').post(accountCtrl.tokenVerification);
 
-router.route('/:accountId').get(requireAuth, accountCtrl.getAccount);
+router.route('/').get(requireAuth, accountCtrl.getAccount);
 router.route('/logout').get(accountCtrl.logout);
 router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);
 
