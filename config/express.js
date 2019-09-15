@@ -26,9 +26,15 @@ if (config.env === 'development') {
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
-    extended: true
-  })
+    extended: true,
+  }),
 );
+
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
+  next();
+});
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -67,8 +73,8 @@ if (config.env === 'development') {
       meta: true, // optional: log meta data about request (defaults to true)
       msg:
         'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
-      colorStatus: true // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
-    })
+      colorStatus: true, // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
+    }),
   );
 }
 
@@ -87,7 +93,11 @@ app.use((err, req, res, next) => {
     return next(error);
   }
   if (!(err instanceof APIError)) {
-    const apiError = new APIError(err.message, err.status, err.isPublic);
+    const apiError = new APIError(
+      err.message,
+      err.status,
+      err.isPublic,
+    );
     return next(apiError);
   }
   return next(err);
@@ -103,8 +113,8 @@ app.use((req, res, next) => {
 if (config.env !== 'test') {
   app.use(
     expressWinston.errorLogger({
-      winstonInstance
-    })
+      winstonInstance,
+    }),
   );
 }
 
@@ -113,12 +123,12 @@ app.use((
   err,
   req,
   res,
-  next // eslint-disable-line no-unused-vars
+  next, // eslint-disable-line no-unused-vars
 ) =>
   res.status(err.status).json({
-    message: err.isPublic ? err.message : httpStatus[err.status]
+    message: err.isPublic ? err.message : httpStatus[err.status],
     // stack: config.env === 'development' ? err.stack : {}
-  })
+  }),
 );
 
 // test authentication

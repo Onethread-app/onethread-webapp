@@ -1,46 +1,49 @@
 const express = require('express');
 const passportService = require('../services/passport.services');
 const passport = require('passport');
-const validate = require('express-validation');
-
 const paramValidation = require('./account.validation');
 
 const router = express.Router();
 
-
 const requireAuth = passport.authenticate('jwt', { session: false });
-const requireLogin = passport.authenticate('local', { session: false });
+const requireLogin = passport.authenticate('local', {
+  session: false,
+});
 const accountCtrl = require('./account.controller');
-const { permit } = require('../helpers/permission');
-const tokenChecker = require('../helpers/tokenChecker');
+const { permit, authSelf } = require('../helpers/permission');
+//const tokenChecker = require('../helpers/tokenChecker');
 const schemaValidator = require('../helpers/joiSchemaValidator');
 
 // authentication
 router
   .route('/signup')
-  .post(schemaValidator(paramValidation.register), accountCtrl.register);
+  .post(
+    schemaValidator(paramValidation.register),
+    accountCtrl.register,
+  );
 router
   .route('/login')
-  .post(schemaValidator(paramValidation.login), requireLogin, accountCtrl.login);
-
-// router
-//   .route('/token')
-//   .post(accountCtrl.tokenVerification);
-
-
-router.route('/:accountId').get(tokenChecker, accountCtrl.getAccount);
-router
-  .route('/logout')
-  .get(accountCtrl.logout);
-router
-  .route('/verify/id/')
-  .get(accountCtrl.verifyAccount);
-
-router.route('/change_password').post(accountCtrl.changePassword);
+  .post(
+    schemaValidator(paramValidation.login),
+    requireLogin,
+    accountCtrl.login,
+  );
 
 router
-  .route('/forget_password')
-  .post(accountCtrl.forgetPassword);
+  .route('/update/:accountId')
+  .put(accountCtrl.tokenVerification, accountCtrl.accountUpdate);
+
+router.route('/token').post(accountCtrl.tokenVerification);
+
+router.route('/:accountId').get(requireAuth, accountCtrl.getAccount);
+router.route('/logout').get(accountCtrl.logout);
+router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);
+
+router.route('/forgetPassword').post(accountCtrl.forgetPassword);
+router
+  .route('/forgetPassword/:token')
+  .get(accountCtrl.verifyChangePassword);
+router.route('/changePassword').post(accountCtrl.changePassword);
 
 // Search for an account
 // router
@@ -59,15 +62,23 @@ router
 //   .post(requireAuth, permit('user'), accountCtrl.removeFollowing, accountCtrl.removeFollower);
 
 // friend request
-// router
-//   .route('/send_request')
-//   .post(requireAuth, permit('user'), accountCtrl.sendFriendRequest);
-// router
-//   .route('/pending_friend')
-//   .get(requireAuth, permit('user'), accountCtrl.pendingFriendRequestList);
-// router
-//   .route('/accept_friend')
-//   .post(requireAuth, permit('user'), accountCtrl.acceptFriendRequest);
+router
+  .route('/sendfriendRequest')
+  .post(requireAuth, accountCtrl.sendFriendRequest);
+router
+  .route('/:accountId/pendingFriend')
+  .get(accountCtrl.pendingFriendRequestList);
+router
+  .route('/accept_friend')
+  .post(requireAuth, permit('user'), accountCtrl.acceptFriendRequest);
+
+router
+  .route('/:accountId/friendList')
+  .get(requireAuth, accountCtrl.friendList);
+
+router
+  .route('/:accountId/sendingFriendRequestList')
+  .get(requireAuth, accountCtrl.sendFriendRequestList);
 // router
 //   .route('/reject_friend')
 //   .post(requireAuth, permit('user'), accountCtrl.rejectFriendRequest);
@@ -75,13 +86,11 @@ router
 //   .route('/unfriend_request')
 //   .post(requireAuth, permit('user'), accountCtrl.removeFriend);
 
-
 // for admin
 router
   .route('/admin')
   .post(requireLogin, permit('admin'), accountCtrl.login);
 
 router.param('accountId', accountCtrl.accountLoad);
-
 
 module.exports = router;

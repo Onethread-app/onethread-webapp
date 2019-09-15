@@ -9,8 +9,8 @@ const config = require("../../config/config");
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   auth: {
-    user: config.mail_address,
-    pass: config.password
+    user: config.emailAddress,
+    pass: config.emailPassword
   }
 });
 
