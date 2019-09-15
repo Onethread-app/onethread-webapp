@@ -711,31 +711,31 @@ const acceptFriendRequest = async (req, res) => {
 
 // friend List information
 const friendList = async (req, res) => {
-  let reqUserID = req.user._id;
-  Account.findById(reqUserID).then(account => {
-    let friends = account.friends;
-    let friendInfo = {};
-    friends.forEach(function(item, index) {
-      let friendID = item.user;
-
-      Account.findById(friendID)
-        .exec()
-        .then(account => {
-          friendInfo.push(account);
-        })
-        .catch(err => {
-          return sendJSONresponse(res, 500, {
-            success: false,
-            message: 'did not match with any id',
-          });
+  Account.findById(req.user._id)
+    .populate(
+      'friends',
+      '_id email firstName lastName accountVerified role contactNo companies friends pendingFriends sendingFriendList',
+    )
+    .exec()
+    .then(account => {
+      if (!account) {
+        return sendJSONresponse(res, 500, {
+          success: false,
+          message: 'No account found',
         });
+      }
+      const { friends } = account;
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: 'List of friends',
+        friends,
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err,
+      });
     });
-    return sendJSONresponse(res, 200, {
-      success: true,
-      message: 'Find friendlist',
-      friendInfo: friendInfo,
-    });
-  });
 };
 
 // sending Friend request List
