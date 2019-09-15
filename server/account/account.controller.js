@@ -252,37 +252,51 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   let user_id = req.user._id.toString();
   // Generate new refresh token and it's expiration
-  let refresh_token = jwt.sign({ uid: user_id }, config.jwtSecret, {
+  let refreshToken = jwt.sign({ uid: user_id }, config.jwtSecret, {
     expiresIn: 60 * 60 * 24 * 30,
   });
-  refreshTokens[refresh_token] = user_id;
+  refreshTokens[refreshToken] = user_id;
   // Generate new access token
-  let access_token = jwt.sign({ uid: user_id }, config.jwtSecret, {
-    expiresIn: '1d',
-  });
-  res.cookie('access_token', access_token, {
+  let token = req.user.token;
+  res.cookie('access_token', token, {
     // secure: true,
     httpOnly: true,
   });
-  res.cookie('refresh_token', refresh_token, {
+  res.cookie('refresh_token', refreshToken, {
     // secure: true,
     httpOnly: true,
   });
   //client.set('string key', 'string val', redis.print);
-  rediscl.set(user_id, refresh_token, rediscl.print);
-  let accountInfo = {};
-  accountInfo.userId = req.user._id;
-  accountInfo.firstName = req.user.firstName;
-  accountInfo.lastName = req.user.lastName;
-  accountInfo.accountVerified = req.user.accountVerified;
-  accountInfo.role = req.user.role;
-  accountInfo.contactNo = req.user.contactNo;
-  accountInfo.companies = req.user.companies;
+  rediscl.set(user_id, refreshToken, rediscl.print);
+  const {
+    _id,
+    firstName,
+    lastName,
+    accountVerified,
+    role,
+    contactNo,
+    companies,
+    friends,
+    pendingFriends,
+    sendingFriendList,
+  } = req.user;
+  let user = {
+    _id,
+    firstName,
+    lastName,
+    accountVerified,
+    role,
+    contactNo,
+    companies,
+    friends,
+    pendingFriends,
+    sendingFriendList,
+  };
   res.json({
     success: true,
-    token: access_token,
-    user: req.accountInfo,
-    refreshToken: refresh_token,
+    token,
+    user,
+    refreshToken,
   });
 };
 
