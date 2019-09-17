@@ -18,6 +18,7 @@ interface UserModel {
 }
 
 interface SignUpPageInternalProps {
+  errorUnauthorized: { email: boolean; message: string; network: boolean }
   userSignupAction: (user: UserModel, history: History) => void;
 }
 
@@ -116,20 +117,22 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
             <div className="mt3">
               <form className="dt fl cf">
                 <div className="mw9 center ph3-ns v-mid dtc">
-                  <div className={`flex justify-content ${errors.firstName ? "mb3" : "mb4"}`}>
+                  {props.errorUnauthorized.email || props.errorUnauthorized.network ?
+                    <small className="red">{props.errorUnauthorized.message}</small>
+                    : ""}
+                  <div className={`flex pt3 justify-content ${errors.firstName ? "mb3" : "mb4"}`}>
                     <div>
-                      <div className="flex w-100 ">
+                      <div className=" w-100 ">
                         <InputGroupField
                           value={firstName}
                           onChange={handleChange("firstName")}
                           leftIcon="person"
-                          leftIconColor="#0fa3a3"
-                          placeHolder="John"
+                          className={`br0 ${errors.firstName ? 'bb b--red' : 'bb b--lightBlue'}`}
+                          leftIconColor={`${errors.firstName ? 'red' : "#0fa3a3"}`}
                           style={{
-                            borderBottom: "1px solid #0fa3a3",
                             boxShadow: 'none',
-                            borderRadius: '0px'
                           }}
+                          placeHolder="John"
                           validationOnBlur={() => {
                             if (firstName === "") {
                               const firstNameError = { ...errors, firstName: "Required" };
@@ -149,10 +152,10 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                           value={lastName}
                           onChange={handleChange("lastName")}
                           placeHolder="Doe"
+                          className={`br0 ${errors.lastName ? 'bb b--red' : 'bb b--lightBlue'}`}
+
                           style={{
-                            borderBottom: "1px solid #0fa3a3",
                             boxShadow: 'none',
-                            borderRadius: '0px'
                           }}
                           validationOnBlur={() => {
                             if (isEmpty(lastName)) {
@@ -168,55 +171,54 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                       {errors.lastName ? <small className="red">{errors.lastName}</small> : ""}
                     </div>
                   </div>
-                  <div className="mw9 center mb4">
-                    <div className="cf">
-                      <div className="fl w-20-l w-30-m pr2">
+                  <div className="flex justify-content mb4">
+
+                    <div className="w-25-ns w-20-l">
+
+                      <div className=" w-100">
                         <InputGroupField
                           value="+880"
                           leftIcon="phone"
-                          leftIconColor="#0fa3a3"
+                          className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'}`}
+                          leftIconColor={`${errors.contactNo ? 'red' : "#0fa3a3"}`}
                           style={{
-                            borderBottom: "1px solid #0fa3a3",
                             boxShadow: 'none',
-                            borderRadius: '0px'
                           }}
                           readOnly={true}
                         />
                       </div>
-                      <div className="fl w-80-l w-70-m">
-                        <div>
-                          <div className="flex w-100 ">
-                            <NumericInput
-                              className="w-100"
-                              style={{
-                                borderBottom: "1px solid #0fa3a3",
-                                boxShadow: 'none',
-                                borderRadius: '0px',
+                    </div>
+                    <div className="w-75-ns w-80-l ml3">
 
-                              }}
-                              fill={true}
-                              placeholder="e.g. 1789442325"
-                              value={contactNo}
-                              onValueChange={handleChange("contactNo")}
-                              buttonPosition="none"
-                              onBlur={() => {
-                                if (isEmpty(contactNo)) {
-                                  const contactNoError = { ...errors, contactNo: "Required" };
-                                  setErrors(contactNoError);
-                                } else if (contactNo.length !== 10) {
-                                  const contactNoError = { ...errors, contactNo: "Not more or less than 10 character" };
-                                  setErrors(contactNoError);
-                                }
-                                else {
-                                  const contactNoError = { ...errors, contactNo: "" };
-                                  setErrors(contactNoError);
-                                }
-                              }}
-                            />
-                          </div>
-                          {errors.contactNo ? <small className="red">{errors.contactNo}</small> : ""}
-                        </div>
+
+                      <div className="w-100 ">
+                        <NumericInput
+                          className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'} w-100`}
+
+                          style={{
+                            boxShadow: 'none',
+                          }}
+                          fill={true}
+                          placeholder="e.g. 1789442325"
+                          value={contactNo}
+                          onValueChange={handleChange("contactNo")}
+                          buttonPosition="none"
+                          onBlur={() => {
+                            if (isEmpty(contactNo)) {
+                              const contactNoError = { ...errors, contactNo: "Required" };
+                              setErrors(contactNoError);
+                            } else if (contactNo.length !== 10) {
+                              const contactNoError = { ...errors, contactNo: "Not more or less than 10 character" };
+                              setErrors(contactNoError);
+                            }
+                            else {
+                              const contactNoError = { ...errors, contactNo: "" };
+                              setErrors(contactNoError);
+                            }
+                          }}
+                        />
                       </div>
+                      {errors.contactNo ? <small className="red">{errors.contactNo}</small> : ""}
 
                     </div>
                   </div>
@@ -227,11 +229,10 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         onChange={handleChange("email")}
                         placeHolder="john@gmail.com"
                         leftIcon="envelope"
-                        leftIconColor="#0fa3a3"
+                        className={`br0 ${props.errorUnauthorized.email || errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
+                        leftIconColor={`${props.errorUnauthorized.email || errors.email ? 'red' : "#0fa3a3"}`}
                         style={{
-                          borderBottom: "1px solid #0fa3a3",
                           boxShadow: 'none',
-                          borderRadius: '0px'
                         }}
                         validationOnBlur={() => {
                           if (isEmpty(email)) {
@@ -258,18 +259,19 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         onChange={handleChange("password")}
                         placeHolder="password"
                         leftIcon="lock"
-                        leftIconColor="#0fa3a3"
+
                         rightElement={
-                          <Icon 
+                          <Icon
                             icon={showPassword ? 'unlock' : 'lock'}
-                            color="#0fa3a3" 
+                            color="#0fa3a3"
                             onClick={e => setShowPassword(!showPassword)}
+                            className="pt2 pr2"
                           />
                         }
+                        className={`br0 ${errors.password ? 'bb b--red' : 'bb b--lightBlue'}`}
+                        leftIconColor={`${errors.password ? 'red' : "#0fa3a3"}`}
                         style={{
-                          borderBottom: "1px solid #0fa3a3",
                           boxShadow: 'none',
-                          borderRadius: '0px'
                         }}
                         validationOnBlur={() => {
                           if (isEmpty(password)) {
@@ -299,18 +301,19 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         onChange={handleChange("confirmPassword")}
                         placeHolder="confirm password"
                         leftIcon="lock"
-                        leftIconColor="#0fa3a3"
+
                         rightElement={
-                          <Icon 
+                          <Icon
                             icon={showPassword ? 'unlock' : 'lock'}
-                            color="#0fa3a3" 
+                            color="#0fa3a3"
                             onClick={e => setShowPassword(!showPassword)}
+                            className="pt2 pr2"
                           />
                         }
+                        className={`br0 ${errors.confirmPassword ? 'bb b--red' : 'bb b--lightBlue'}`}
+                        leftIconColor={`${errors.confirmPassword ? 'red' : "#0fa3a3"}`}
                         style={{
-                          borderBottom: "1px solid #0fa3a3",
                           boxShadow: 'none',
-                          borderRadius: '0px'
                         }}
                         validationOnBlur={() => {
                           if (isEmpty(confirmPassword)) {
@@ -351,4 +354,8 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
   );
 };
 
-export const SignUpPage = connect(null, { newUserAction: userSignupAction })(withRouter(SignUpPageComponent));
+const mapStateToProps = (state: any) => {
+  return { errorUnauthorized: state.auth.loginError };
+};
+
+export const SignUpPage = connect(mapStateToProps, { userSignupAction })(withRouter(SignUpPageComponent));

@@ -20,7 +20,25 @@ export const userSignupAction = (newUser: UserModel, routeHistory: History) => a
     routeHistory.push('/landing');
     dispatch({ type: USER_SIGNUP, payload: response.data });
   } catch (error) {
-    console.log(error.response);
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({
+        type: USER_LOGIN_ERROR, payload: {
+          message: 'Network error',
+          email: false,
+          network: true
+        }
+      });
+    } else if (error.response.status === 409) {
+      dispatch({
+        type: USER_LOGIN_ERROR, payload: {
+          message: 'Email has been already registered',
+          email: true,
+          network: false
+        }
+      });
+    } else {
+      console.log(error.response);
+    }
   }
 }
 
@@ -39,9 +57,21 @@ export const loginAction = (loginUser: UserModel, routeHistory: History) => asyn
     dispatch({ type: USER_LOGIN, payload: response.data });
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: USER_LOGIN_ERROR, payload: 'Network error' });
+      dispatch({
+        type: USER_LOGIN_ERROR, payload: {
+          message: 'Network Error',
+          email: false,
+          password: false,
+          network: true
+        }
+      });
     } else if (error.response.status === 401) {
-      dispatch({ type: USER_LOGIN_ERROR, payload: 'Unauthorized user. Please enter valid email and password.' });
+      dispatch({ type: USER_LOGIN_ERROR, payload: {
+        message: 'Unauthorized user. please enter valid email and password.',
+        email: true,
+        password: true,
+        network: false
+      }  });
     } else {
       console.log(error.response);
     }
@@ -50,9 +80,9 @@ export const loginAction = (loginUser: UserModel, routeHistory: History) => asyn
 
 export const fetchUserAction = () => async (dispatch: any, getState: any) => {
   try {
-    dispatch({ type: USER_SIGNUP_LOADING });
     const headers = tokenConfig(getState);
     if ((headers as any).headers.Authorization) {
+      dispatch({ type: USER_SIGNUP_LOADING });
       const response = await tigrowApi.get(`/account`, headers);
       dispatch({ type: FETCH_USER, payload: response.data });
     } else {

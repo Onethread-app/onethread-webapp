@@ -9,7 +9,7 @@ import { Icon, Intent } from '@blueprintjs/core';
 import { History } from 'history';
 
 interface SignInPageComponentProps {
-  errorUnauthorized: string;
+  errorUnauthorized: { email: boolean; password: boolean; message: string; network: boolean }
   loading: boolean;
   loginAction: (val: any, history: History) => void;
 }
@@ -82,8 +82,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
             <div className="mt3">
               <form className="dt fl cf w-100">
                 <div className="mw9 center ph3-ns v-mid dtc">
-                  {isEmpty(props.errorUnauthorized) === false ? 
-                    <small className="red">{props.errorUnauthorized}</small> 
+                  {props.errorUnauthorized.email || props.errorUnauthorized.network ? 
+                    <small className="red">{props.errorUnauthorized.message}</small> 
                     : ""}
                   <div className={`pt3 ${errors.email ? "mb3" : "mb4"}`}>
                     <div className="flex">
@@ -92,8 +92,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                         onChange={handleChange("email")}
                         placeHolder="Email"
                         leftIcon="envelope"
-                        className={`br0 ${isEmpty(props.errorUnauthorized) === false ? 'ba b--red' : 'bb b--lightBlue'}`}
-                        leftIconColor= {`${isEmpty(props.errorUnauthorized) === false ? 'red' : "#0fa3a3"}`}
+                        className={`br0 ${props.errorUnauthorized.email || errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
+                        leftIconColor= {`${props.errorUnauthorized.email || errors.email ? 'red' : "#0fa3a3"}`}
                         style={{
                           boxShadow: 'none',
                         }}
@@ -123,7 +123,9 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                         onChange={handleChange("password")}
                         placeHolder="Password"
                         leftIcon="lock"
-                        leftIconColor= {`${isEmpty(props.errorUnauthorized) === false ? 'red' : "#0fa3a3"}`}
+                        className={`br0 ${props.errorUnauthorized.password || errors.password ? 'bb b--red' : 'bb b--lightBlue'}`}
+                        leftIconColor= {`${props.errorUnauthorized.password || errors.password ? 'red' : "#0fa3a3"}`}
+                       
                         rightElement={
                           <Icon
                             className="pt2 pr2"
@@ -132,7 +134,6 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                             onClick={e => setShowPassword(!showPassword)}
                           />
                         }
-                        className={`br0 ${isEmpty(props.errorUnauthorized) === false ? 'ba b--red' : 'bb b--lightBlue'}`}
                         style={{
                           boxShadow: 'none',
                         }}
@@ -158,7 +159,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                       }
                     }}
                   >
-                    {props.loading ? <Icon icon="repeat" /> : 'Sign In'}
+                    {/* {props.loading ? <Icon icon="repeat" /> : 'Sign In'} */}
+                    Sign In
                   </button>
                   <div className="mb3 tc">
                     <a href="" style={{ color: "#0fa3a3" }}>
