@@ -4,7 +4,7 @@ import { isEqual, isEmpty, isNumber } from 'lodash';
 import { InputGroupField } from 'components/common/InputGroup';
 import { NumericInput, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { newUserAction } from 'actions/AuthActions';
+import { userSignupAction } from 'actions/AuthActions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 
@@ -18,7 +18,7 @@ interface UserModel {
 }
 
 interface SignUpPageInternalProps {
-  newUserAction: (user: UserModel, history: History) => void;
+  userSignupAction: (user: UserModel, history: History) => void;
 }
 
 const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProps) => {
@@ -335,7 +335,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                     onClick={e => {
                       e.preventDefault();
                       if (!emptyValueCheck()) {
-                        props.newUserAction(values, props.history);
+                        props.userSignupAction(values, props.history);
                       }
                     }}
                   >
@@ -351,4 +351,4 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
   );
 };
 
-export const SignUpPage = connect(null, { newUserAction })(withRouter(SignUpPageComponent));
+export const SignUpPage = connect(null, { newUserAction: userSignupAction })(withRouter(SignUpPageComponent));

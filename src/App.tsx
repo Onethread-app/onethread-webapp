@@ -4,9 +4,10 @@ import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { SignUpPage } from "./pages/SignupPage";
 import { LandingPage } from 'pages/LandingPage';
 import { SignInPage } from 'pages/SignInPage';
-import { Provider } from 'react-redux';
-import { store } from 'Store';
-import { isAuthenticate } from 'actions/AuthActions';
+import { connect } from 'react-redux';
+import { fetchUserAction } from 'actions/AuthActions';
+import { useEffect } from 'react';
+import { isAuthenticate } from 'actions/UtilsActions';
 
 const PrivateRoute = (props: {
   component: any;
@@ -25,19 +26,26 @@ const PrivateRoute = (props: {
     />);
 };
 
-const App: React.FC = () => {
+interface AppProps {
+  fetchUserAction: () => void;
+}
+
+const AppComponent = (props: AppProps) => {
+
+  useEffect(() => {
+    props.fetchUserAction();
+  })
+
   return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Switch>
-          <Route exact path="/" component={SignInPage} />
-          <Route exact path="/signuppage" component={SignUpPage} />
-          {/* <Route exact path="/landing" component={LandingPage} /> */}
-          <PrivateRoute path='/landing' exact={true} component={LandingPage} />
-        </Switch>
-      </BrowserRouter>
-    </Provider>
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/" component={SignInPage} />
+        <Route exact path="/signuppage" component={SignUpPage} />
+        {/* <Route exact path="/landing" component={LandingPage} /> */}
+        <PrivateRoute path='/landing' exact={true} component={LandingPage} />
+      </Switch>
+    </BrowserRouter>
   );
 };
 
-export default App;
+export const App = connect(null, { fetchUserAction })(AppComponent)

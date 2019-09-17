@@ -1,4 +1,4 @@
-import { NEW_USER, LOGIN_ERROR } from 'actions/Types';
+import { USER_SIGNUP, USER_LOGIN_ERROR, USER_LOGIN, FETCH_USER, USER_SIGNUP_LOADING } from 'actions/Types';
 
 export interface UserModel {
   firstName: string,
@@ -9,37 +9,44 @@ export interface UserModel {
   confirmPassword: string,
 }
 
-// interface ResponseUserProps {
-//   loading: boolean;
-//   userResponse: {
-//     token: string
-//     firstName: string;
-//     lastName: string;
-//   }
-// }
-
 const InitialState = {
-  user: {}
+  user: {},
+  loginError: {},
+  loading: false,
+  token: localStorage.hasOwnProperty("token")
+    ? JSON.parse(localStorage.getItem("token")!) : "",
 }
 
 export const AuthReducer = (state = InitialState, action: any) => {
   switch (action.type) {
-    case NEW_USER:
+    case USER_SIGNUP_LOADING:
       return {
         ...state,
-        user: action.payload
+        loading: true
       }
-    default:
-      return state;
-  }
-}
-
-export const LoginErrorReducer = (state = InitialState, action: any) => {
-  switch (action.type) {
-    case LOGIN_ERROR:
+    case USER_SIGNUP:
       return {
         ...state,
-        loginErrorMessage: action.payload
+        user: action.payload,
+        loading: false
+      }
+    case USER_LOGIN:
+      return {
+        ...state,
+        user: action.payload.user,
+        loading: false
+      }
+    case FETCH_USER:
+      return {
+        ...state,
+        user: action.payload,
+        loading: false
+      }
+    case USER_LOGIN_ERROR:
+      return {
+        ...state,
+        loginError: action.payload,
+        loading: false
       }
     default:
       return state;

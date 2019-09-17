@@ -5,6 +5,7 @@ import { CompanySignupForm } from './company/SignupForm';
 export const NavbarTop = () => {
   // const [showCollapse, setShowCollapse] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+
   return (
     <>
       <Navbar>

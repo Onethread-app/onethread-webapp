@@ -10,6 +10,7 @@ import { History } from 'history';
 
 interface SignInPageComponentProps {
   errorUnauthorized: string;
+  loading: boolean;
   loginAction: (val: any, history: History) => void;
 }
 
@@ -157,7 +158,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                       }
                     }}
                   >
-                    Sign In
+                    {props.loading ? <Icon icon="repeat" /> : 'Sign In'}
                   </button>
                   <div className="mb3 tc">
                     <a href="" style={{ color: "#0fa3a3" }}>
@@ -187,7 +188,10 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
 }
 
 const mapStateToProps = (state: any) => {
-  return { errorUnauthorized: state.loginError.loginErrorMessage };
+  return { 
+    loading: state.auth.loading,
+    errorUnauthorized: state.auth.loginError 
+  };
 };
 
 export const SignInPage = connect(mapStateToProps, { loginAction })(withRouter(SignInPageComponent));

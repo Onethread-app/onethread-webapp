@@ -2,7 +2,7 @@ import React from 'react';
 import { NavbarTop } from 'components/Navbar';
 import { Sidebar } from 'components/Sidebar';
 
-export const LandingPage = () => {
+export const LandingPageComponent = () => {
   return (
     <div className="bg-near-white vh-100">
       <NavbarTop />
@@ -17,3 +17,5 @@ export const LandingPage = () => {
     </div >
   )
 }
+
+export const LandingPage = LandingPageComponent

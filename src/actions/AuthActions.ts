@@ -1,12 +1,14 @@
-import { NEW_USER, LOGIN, LOGIN_ERROR } from './Types'
+import { USER_SIGNUP, USER_LOGIN, USER_LOGIN_ERROR, FETCH_USER, USER_SIGNUP_LOADING } from './Types'
 import tigrowApi from 'tigrowApi';
 import { AxiosRequestConfig } from 'axios';
 import { History } from 'history';
 import { UserModel } from 'reducers/AuthReducer';
 import { isEqual } from 'lodash';
+import { tokenConfig } from './UtilsActions';
 
-export const newUserAction = (newUser: UserModel, routeHistory: History) => async (dispatch: any) => {
+export const userSignupAction = (newUser: UserModel, routeHistory: History) => async (dispatch: any) => {
   try {
+    dispatch({ type: USER_SIGNUP_LOADING });
     const response = await tigrowApi.post(
       "account/signup",
       newUser,
@@ -16,24 +18,15 @@ export const newUserAction = (newUser: UserModel, routeHistory: History) => asyn
     );
     localStorage.setItem("token", JSON.stringify(response.data.token));
     routeHistory.push('/landing');
-    dispatch({ type: NEW_USER, payload: response.data });
+    dispatch({ type: USER_SIGNUP, payload: response.data });
   } catch (error) {
     console.log(error.response);
   }
 }
 
-export const isAuthenticate = () => {
-  if (typeof window == undefined) {
-    return false;
-  }
-  if (localStorage.getItem('token')) {
-    return JSON.parse(localStorage.getItem('token')!);
-  } else {
-    return false;
-  }
-}
 export const loginAction = (loginUser: UserModel, routeHistory: History) => async (dispatch: any) => {
   try {
+    dispatch({ type: USER_SIGNUP_LOADING });
     const response = await tigrowApi.post(
       "account/login",
       loginUser,
@@ -43,46 +36,30 @@ export const loginAction = (loginUser: UserModel, routeHistory: History) => asyn
     );
     localStorage.setItem("token", JSON.stringify(response.data.token));
     routeHistory.push('/landing');
-    dispatch({ type: LOGIN, payload: response.data });
+    dispatch({ type: USER_LOGIN, payload: response.data });
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: LOGIN_ERROR, payload: 'Network error' });
+      dispatch({ type: USER_LOGIN_ERROR, payload: 'Network error' });
     } else if (error.response.status === 401) {
-      dispatch({ type: LOGIN_ERROR, payload: 'Unauthorized user. Please enter valid email and password.' });
+      dispatch({ type: USER_LOGIN_ERROR, payload: 'Unauthorized user. Please enter valid email and password.' });
     } else {
       console.log(error.response);
     }
   }
 }
 
+export const fetchUserAction = () => async (dispatch: any, getState: any) => {
+  try {
+    dispatch({ type: USER_SIGNUP_LOADING });
+    const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.get(`/account`, headers);
+      dispatch({ type: FETCH_USER, payload: response.data });
+    } else {
+      dispatch({ type: USER_LOGIN_ERROR, payload: 'error in fetching' });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-// register
-// export const newUserAction = (user: any) => async (dispatch: any) => {
-//   try {
-//     let headers = {
-//       Accept: "application/json",
-//       "Content-Type": "application/json"
-//     };
-//     // const response = await nizamBhai.post("account/signup", user, headers);
-//     const response = await tigrowApi.post(
-//       "account/signup",
-//       user,
-//       headers as AxiosRequestConfig);
-//     // const token = response.data.token;
-//     user = response.data.user;
-//     // set the token on localStorage
-//     // localStorage.setItem("token", token);
-//     // dispatch({
-//     //   type: NEW_USER,
-//     //   payload: { token, user }
-//     // });
-//     console.log(`response.data: ${JSON.stringify(response.data, null, 2)}`);
-//   } catch (err) {
-//     // dispatch(returnErrors(err.response.data, err.response.status));
-//     console.log(err);
-//     console.log(err.response);
-//     // dispatch({
-//     //   type: REGISTER_FAIL
-//     // });
-//   }
-// };
