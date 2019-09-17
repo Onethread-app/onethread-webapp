@@ -173,7 +173,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                       Don't have an Account?
                   </p>
                   </div>
-                  <Link to="/signuppage">
+                  <Link to="/signup">
                     <button className="w-100 br3 fr grow h2 mr6-m ph5 pointer pv2"
                       style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
                     >
