@@ -78,6 +78,7 @@ export const loginAction = (loginUser: UserModel, routeHistory: History) => asyn
   }
 }
 
+
 export const fetchUserAction = () => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig(getState);

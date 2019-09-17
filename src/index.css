@@ -1,5 +1,26 @@
+body{
+font-family: 'Lato', sans-serif;
+}
+
+.shadow-0{
+  box-shadow: none;
+}
+
+.bg-0{
+  background-color: none;
+}
+
 .b--lightBlue {
   border-color: #0fa3a3;
+}
+.tigrow-lightBlue{
+  color: #0fa3a3;
+}
+.tigrow-lightGray-1{
+  color:#1b1b1b;
+}
+.outline-0 { 
+  outline: none; 
 }
 a:hover {
   text-decoration: none;
@@ -35,4 +56,26 @@ a:hover {
   .w-85-l{
     width: 85%;
   }
+}
+.vh-93{
+  height: 93vh;
+}
+
+@media only screen and (min-width: 30em) {
+  .vh-93-ns{
+    height: 93vh;
+  }
+
+}
+@media only screen and (min-width: 30em) and (max-width: 60em) {
+  .vh-93-m{
+    height: 93vh;
+  }
+
+}
+@media only screen and (min-width: 60em) {
+  .vh-93-l{
+    height: 93vh;
+  }
+
 }

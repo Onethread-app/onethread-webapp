@@ -15,7 +15,7 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
 
   return (
     <>
-      <Navbar>
+      <Navbar style={{position:'fixed'}} >
         <Navbar.Group align={Alignment.LEFT}>
           <Navbar.Heading>TiGrow</Navbar.Heading>
         </Navbar.Group>
