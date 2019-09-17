@@ -1,18 +1,22 @@
 import React, { useState } from 'react'
 import { Alignment, Button, Popover, PopoverInteractionKind, Position, Navbar, Dialog } from '@blueprintjs/core';
 import { CompanySignupForm } from './company/SignupForm';
+import { connect } from 'react-redux';
+import { logoutAction } from 'actions/AuthActions';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { History } from 'history';
 
-export const NavbarTop = () => {
-  // const [showCollapse, setShowCollapse] = useState(false);
+interface NavbarTopProps {
+  logoutAction: (history: History) => void;
+}
+
+const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
     <>
       <Navbar>
         <Navbar.Group align={Alignment.LEFT}>
-          {/* <div className="dn-ns">
-            <Button onClick={() => setShowCollapse(!showCollapse)}><div className="bp3-icon-menu" /></Button>
-          </div> */}
           <Navbar.Heading>TiGrow</Navbar.Heading>
         </Navbar.Group>
 
@@ -30,6 +34,12 @@ export const NavbarTop = () => {
               <Button className="bp3-popover-dismiss">Dismiss</Button>
             </div>
           </Popover>
+          <Button 
+            className="bp3-minimal"
+            onClick={(e: any) => props.logoutAction(props.history)}
+          >
+            Logout
+          </Button>
         </Navbar.Group>
       </Navbar>
       {showDialog && (
@@ -48,3 +58,5 @@ export const NavbarTop = () => {
     </>
   );
 }
+
+export const NavbarTop = connect(null, { logoutAction })(withRouter(NavbarTopComponent));

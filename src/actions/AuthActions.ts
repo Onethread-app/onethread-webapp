@@ -1,4 +1,4 @@
-import { USER_SIGNUP, USER_LOGIN, USER_LOGIN_ERROR, FETCH_USER, USER_SIGNUP_LOADING } from './Types'
+import { USER_SIGNUP, USER_LOGIN, USER_LOGIN_ERROR, FETCH_USER, USER_SIGNUP_LOADING, USER_LOGOUT } from './Types'
 import tigrowApi from 'tigrowApi';
 import { AxiosRequestConfig } from 'axios';
 import { History } from 'history';
@@ -65,7 +65,7 @@ export const loginAction = (loginUser: UserModel, routeHistory: History) => asyn
           network: true
         }
       });
-    } else if (error.response.status === 401) {
+    } else if (error.response && error.response.status === 401) {
       dispatch({ type: USER_LOGIN_ERROR, payload: {
         message: 'Unauthorized user. please enter valid email and password.',
         email: true,
@@ -90,6 +90,22 @@ export const fetchUserAction = () => async (dispatch: any, getState: any) => {
     }
   } catch (error) {
     console.log(error);
+  }
+}
+
+export const logoutAction = (routeHistory: History) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      localStorage.removeItem("token");
+      await tigrowApi.get(`/account/logout`);
+      routeHistory.push('/');
+      dispatch({ type: USER_LOGOUT });
+    } else {
+      console.log('No token found in logout action');
+    }
+  } catch (error) {
+    console.log('error in logout', error);
   }
 }
 

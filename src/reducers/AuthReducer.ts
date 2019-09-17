@@ -1,4 +1,4 @@
-import { USER_SIGNUP, USER_LOGIN_ERROR, USER_LOGIN, FETCH_USER, USER_SIGNUP_LOADING } from 'actions/Types';
+import { USER_SIGNUP, USER_LOGIN_ERROR, USER_LOGIN, FETCH_USER, USER_SIGNUP_LOADING, USER_LOGOUT } from 'actions/Types';
 
 export interface UserModel {
   firstName: string,
@@ -17,14 +17,9 @@ const InitialState = {
     password: false,
     network: false
   },
-  signUpErrorList: {
-    message: "",
-    email: false,
-    network: false
-  },
   loading: false,
   token: localStorage.hasOwnProperty("token")
-    ? JSON.parse(localStorage.getItem("token")!) : "",
+    ? JSON.parse(localStorage.getItem("token")!) : null,
 }
 
 export const AuthReducer = (state = InitialState, action: any) => {
@@ -40,21 +35,30 @@ export const AuthReducer = (state = InitialState, action: any) => {
         loginError: action.payload,
         loading: false
       }
-    // case SIGNUP_ERROR:
-    //   return {
-    //     ...state,
-    //     signUpErrorList: action.payload
-    //   }
     case USER_SIGNUP:
       return {
         ...state,
-        user: action.payload,
+        user: action.payload.user,
+        token: action.payload.token,
+        loginError: {
+          message: "",
+          email: false,
+          password: false,
+          network: false
+        },
         loading: false
       }
     case USER_LOGIN:
       return {
         ...state,
         user: action.payload.user,
+        token: action.payload.token,
+        loginError: {
+          message: "",
+          email: false,
+          password: false,
+          network: false
+        },
         loading: false
       }
     case FETCH_USER:
@@ -63,62 +67,20 @@ export const AuthReducer = (state = InitialState, action: any) => {
         user: action.payload,
         loading: false
       }
-    // case USER_LOGIN_ERROR:
-    //   return {
-    //     ...state,
-    //     loginError: action.payload,
-    //     loading: false
-    //   }
+    case USER_LOGOUT:
+      return {
+        ...state,
+        user: {},
+        token: "",
+        loginError: {
+          message: "",
+          email: false,
+          password: false,
+          network: false
+        },
+        loading: false
+      }
     default:
       return state;
   }
 }
-
-// export const LoginErrorReducer = (state = InitialState.loginErrorList, action: any) => {
-//   switch (action.type) {
-//     case LOGIN_ERROR:
-//       return {
-//         ...state,
-//         loginErrorList: action.payload
-//       }
-//     default:
-//       return state;
-//   }
-// }
-
-// export const SignUpErrorReducer = (state = InitialState.signUpErrorList, action: any) => {
-//   switch (action.type) {
-//     case SIGNUP_ERROR:
-//       return {
-//         ...state,
-//         signUpErrorList: action.payload
-// =======
-//     case USER_SIGNUP:
-//       return {
-//         ...state,
-//         user: action.payload,
-//         loading: false
-//       }
-//     case USER_LOGIN:
-//       return {
-//         ...state,
-//         user: action.payload.user,
-//         loading: false
-//       }
-//     case FETCH_USER:
-//       return {
-//         ...state,
-//         user: action.payload,
-//         loading: false
-//       }
-//     case USER_LOGIN_ERROR:
-//       return {
-//         ...state,
-//         loginError: action.payload,
-//         loading: false
-// >>>>>>> master
-//       }
-//     default:
-//       return state;
-//   }
-// }

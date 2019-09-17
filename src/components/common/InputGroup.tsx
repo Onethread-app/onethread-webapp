@@ -2,6 +2,7 @@ import * as React from 'react';
 import { InputGroup, Icon, IconName, Intent } from '@blueprintjs/core';
 
 interface InputGroupFieldProps {
+  id: string;
   className?: string | '';
   value: string;
   onChange?: (value: any) => void;
@@ -19,7 +20,7 @@ interface InputGroupFieldProps {
 export const InputGroupField = (props: InputGroupFieldProps) => (
   <InputGroup
     className={props.className}
-    id={props.value}
+    id={props.id}
     fill={true}
     type={props.type ? props.type : 'text'}
     readOnly={props.readOnly}

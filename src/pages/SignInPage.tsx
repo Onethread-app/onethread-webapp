@@ -88,6 +88,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   <div className={`pt3 ${errors.email ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
+                        id="email"
                         value={email}
                         onChange={handleChange("email")}
                         placeHolder="Email"
@@ -118,6 +119,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   <div className={` ${errors.password ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
+                        id="password"
                         type={`${showPassword ? 'text' : 'password'}`}
                         value={password}
                         onChange={handleChange("password")}
@@ -159,8 +161,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                       }
                     }}
                   >
-                    {/* {props.loading ? <Icon icon="repeat" /> : 'Sign In'} */}
-                    Sign In
+                    {props.loading ? <Icon icon="repeat" /> : 'Sign In'}
                   </button>
                   <div className="mb3 tc">
                     <a href="" style={{ color: "#0fa3a3" }}>

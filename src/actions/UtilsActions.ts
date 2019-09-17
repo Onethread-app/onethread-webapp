@@ -4,7 +4,7 @@ export const tokenConfig = (getState:any) => {
   return {
     headers: {
       "Content-type": "application/json",
-      "Authorization": `${token ? token : null}`
+      "Authorization": token ? token : null
     }
   };
 };

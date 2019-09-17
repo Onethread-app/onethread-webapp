@@ -124,6 +124,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                     <div>
                       <div className=" w-100 ">
                         <InputGroupField
+                          id="firstName"
                           value={firstName}
                           onChange={handleChange("firstName")}
                           leftIcon="person"
@@ -149,6 +150,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                     <div className="ml3">
                       <div className=" w-100">
                         <InputGroupField
+                          id="lastName"
                           value={lastName}
                           onChange={handleChange("lastName")}
                           placeHolder="Doe"
@@ -177,6 +179,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
 
                       <div className=" w-100">
                         <InputGroupField
+                          id="contactNo"
                           value="+880"
                           leftIcon="phone"
                           className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'}`}
@@ -225,6 +228,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                   <div className={` ${errors.email ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
+                        id="email"
                         value={email}
                         onChange={handleChange("email")}
                         placeHolder="john@gmail.com"
@@ -254,6 +258,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                   <div className={` ${errors.password ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
+                        id="password"
                         type={`${showPassword ? 'text' : 'password'}`}
                         value={password}
                         onChange={handleChange("password")}
@@ -296,6 +301,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                   <div className={`${errors.confirmPassword ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
+                        id="confirmPassword"
                         type={`${showPassword ? 'text' : 'password'}`}
                         value={confirmPassword}
                         onChange={handleChange("confirmPassword")}

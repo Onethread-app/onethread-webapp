@@ -44,6 +44,7 @@ export const CompanySignupForm = () => {
       <div className={` ${errors.companyName ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
+            id="companyName"
             value={values.companyName}
             onChange={handleChange("companyName")}
             placeHolder="Company Name"
@@ -124,6 +125,7 @@ export const CompanySignupForm = () => {
       <div className={` ${errors.companyEmailAddress ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
+            id="companyEmailAddress"
             value={values.companyEmailAddress}
             onChange={handleChange("companyEmailAddress")}
             placeHolder="Company Email Address"
@@ -154,6 +156,7 @@ export const CompanySignupForm = () => {
       <div className={` ${errors.legalOwnersName ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
+            id="legalOwnersName"
             value={values.legalOwnersName}
             onChange={handleChange("legalOwnersName")}
             placeHolder="Legal Owner's Name"
@@ -181,6 +184,7 @@ export const CompanySignupForm = () => {
       <div className={` ${errors.legalOwnersEmailAddress ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
+            id="legalOwnersEmailAddress"
             value={values.legalOwnersEmailAddress}
             onChange={handleChange("legalOwnersEmailAddress")}
             placeHolder="Legal Owner's Email Address"
