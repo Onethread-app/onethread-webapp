@@ -1,18 +1,17 @@
-import React, { useState } from 'react'
-import { Button, Popover, Position, Dialog } from '@blueprintjs/core';
-import { CompanySignupForm } from './company/SignupForm';
+import * as React from 'react'
+import { Button, Popover, Position } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { logoutAction } from 'actions/AuthActions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import user from '../resources/images/user.png';
 import logo from '../resources/images/tigrowLogo.png';
+import { CompanyList } from './company/CompanyList';
 interface NavbarTopProps {
   logoutAction: (history: History) => void;
 }
 
 const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
-  const [showDialog, setShowDialog] = useState(false);
   return (
     <>
       <nav
@@ -27,40 +26,7 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
             position={Position.BOTTOM}
           >
             <Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>
-            <div>
-              <main className="mw6 center">
-                <article className="dt w-100 pb2 mt2" >
-                  <div className="dtc w1 w2-ns v-mid">
-                    <img src="http://mrmrs.github.io/photos/p/2.jpg" className="ba b--black-10 db w1 w2-ns h1 h2-ns br3" />
-                  </div>
-                  <div className="dtc v-mid pl3">
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0">Young Gatchell </h1>
-                    <h2 className="f6 fw3 mt0 mb0 black-60">@yg</h2>
-                  </div>
-                </article>
-                <article className="dt w-100 pb2 mt2" >
-                  <div className="dtc w1 w2-ns v-mid">
-                    <img src="http://mrmrs.github.io/photos/p/3.jpg" className="ba b--black-10 db w1 w2-ns h1 h2-ns br3" />
-                  </div>
-                  <div className="dtc v-mid pl3">
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0">Arnoldo Degraff</h1>
-                    <h2 className="f6 fw3 mt0 mb0 black-60">@99xx88randomhandle</h2>
-                  </div>
-                </article>
-                <article className=" dt w-100  pb2 mt2"  >
-                  <div className="dtc w1 w2-ns v-mid">
-                    <img src="http://mrmrs.github.io/photos/p/4.jpg" className="ba b--black-10 db w1 w2-ns h1 h2-ns br3" />
-                  </div>
-                  <div className="dtc v-mid pl3">
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0">Deirdre Lachance</h1>
-                    <h2 className="f6 fw3 mt0 mb0 black-60">@favfavfav</h2>
-                  </div>
-                </article>
-              </main>
-              <button onClick={() => setShowDialog(!showDialog)}
-                className="b--none w-100 br3 grow h2 ph5 pointer pv2 white outline-0 bg-tigrowLightBlue ma2"
-              >Create Company</button>
-            </div>
+            <CompanyList />
           </Popover>
           <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-chat f6 f5-l dib mr3 mr4-l" ></button>
           <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-notifications f6 f5-l dib mr3 mr4-l" ></button>
@@ -80,19 +46,6 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
           </Popover>
         </div>
       </nav>
-      {showDialog && (
-        <Dialog
-          icon="briefcase"
-          onClose={() => setShowDialog(!showDialog)}
-          title="Company Sign Up"
-          isOpen
-          style={{ background: '#fff' }}
-        >
-          <div>
-            <CompanySignupForm />
-          </div>
-        </Dialog>
-      )}
     </>
   );
 }
