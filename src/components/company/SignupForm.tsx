@@ -101,7 +101,7 @@ const CompanySignupFormComponent = (props: {
         <div className=" f5 pa1 bb b--lightBlue">
           <Icon
             icon={"map-marker"}
-            className="lightBlue"
+            className="tigrow-lightBlue"
           />
         </div>
         <HTMLSelect
@@ -131,7 +131,7 @@ const CompanySignupFormComponent = (props: {
         <div className=" f5 pa1 bb b--lightBlue">
           <Icon
             icon={"briefcase"}
-            className="lightBlue"
+            className="tigrow-lightBlue"
           />
         </div>
         <HTMLSelect

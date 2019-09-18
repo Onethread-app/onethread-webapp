@@ -9,10 +9,18 @@ font-family: 'Lato', sans-serif;
 .bg-0{
   background-color: none;
 }
+.bg-tigrowLightBlue{
+  background-color: #0fa3a3;
+}
 
 .b--lightBlue {
   border-color: #0fa3a3;
 }
+
+.b--tigrowLightGray-1 {
+  border-color: #d8d8d8;
+}
+
 .tigrow-lightBlue{
   color: #0fa3a3;
 }

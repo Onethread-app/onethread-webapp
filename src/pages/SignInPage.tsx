@@ -63,7 +63,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
       <div className="fl w-100 w-50-ns dt vh-100">
         <div className="v-mid dtc">
           <div className="w-50 center">
-            <img className="w-30" src={require('./../resources/images/Asset__1.png')} />
+            <img className="w-30" src={require('./../resources/images/tigrowLogo.png')} />
 
             <h3 style={{ color: "#707070" }}>
               Lorem Ipsum is simply dummy text of the printing and typesetting

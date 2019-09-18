@@ -10,7 +10,7 @@ export const Sidebar = () => {
 			<div className=" bg-white">
 				<ButtonGroup
 					alignText={Alignment.LEFT}
-					className="bp3-minimal bp3-vertical bp3-fill"
+					className="bp3-minimal bp3-vertical bp3-fill pl3"
 				>
 					<Link to="/workplace">
 						<Button className="mv2" icon="control">

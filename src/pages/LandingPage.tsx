@@ -3,19 +3,19 @@ import { NavbarTop } from 'components/Navbar';
 import { Sidebar } from 'components/Sidebar';
 import { Icon, Divider } from '@blueprintjs/core';
 import skill from '../resources/images/skills.png';
-import user from '../resources/images/istockphoto-655015648-612x612.png';
+import user from '../resources/images/user.png';
 
 export const LandingPage = () => {
   return (
     <div className="bg-near-white ">
-      <NavbarTop />
+      <NavbarTop/> 
       <div className="w-100 cf ">
-        <div className="fl bg-white w-25-ns w-15-l pv6 vh-100 fixed">
+        <div className="fl bg-white w-10 pv6 vh-100 fixed">
           <Sidebar />
         </div>
-        <div className="fl w-75-ns w-85-l ml7-l ml6-ns">
+        <div className="fl w-80 mt6 ml7">
           <div className="cf">
-            <h1 className="f5 lh-copy tigrow-lightGray-1 ml3">Profile</h1>
+            <h1 className="f4 lh-copy tigrow-lightGray-1 ml3">Profile</h1>
             <div className="fl w-25-ns pa2 ">
               <div className="h-auto br3 ma2 pa3 bg-white cf tc">
                 <img src={user}></img>
@@ -30,18 +30,20 @@ export const LandingPage = () => {
               </div>
               <div className="h-auto br3 ma2 pa3 bg-white cf">
                 <h1 className="f6 lh-copy">Skills</h1>
+                <div className="tc">
                 <img src={skill}></img>
                 <p>No skill has selected</p>
                 <button className="br3 grow ph4 pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0">
                   Add Skills
                 </button>
+                </div>
               </div>
             </div>
             <div className="fl w-75-ns  ">
               <div className="br3 bg-white h-auto pa4 mt3">
                 <div className="cf ">
                   <h1 className="f5 lh-copy dib">Basic Information</h1>
-                  <Icon className="fr mv3 " icon="edit" />
+                  <Icon className="fr mv3 tigrow-lightBlue" icon="edit" />
                 </div>
                 <Divider />
                 <div className="br3 bg-white h-auto">
@@ -79,7 +81,7 @@ export const LandingPage = () => {
               <div className="br3 bg-white h-auto pa4 mt3">
                 <div className="cf ">
                   <h1 className="f5 lh-copy dib">Educational Information</h1>
-                  <Icon className="fr mv3 " icon="edit" />
+                  <Icon className="fr mv3 tigrow-lightBlue" icon="edit" />
                 </div>
                 <Divider />
                 <div className="br3 bg-white h-auto">
@@ -98,7 +100,7 @@ export const LandingPage = () => {
               <div className="br3 bg-white h-auto pa4 mt3">
                 <div className="cf ">
                   <h1 className="f5 lh-copy dib">Experience</h1>
-                  <Icon className="fr mv3 " icon="add" />
+                  <Icon className="fr mv3 tigrow-lightBlue" icon="add" />
                 </div>
                 <Divider />
                 <div className="br3 bg-white h-auto">
@@ -106,11 +108,8 @@ export const LandingPage = () => {
                   <p>No experience has added</p>
                 </div>
               </div>
-
             </div>
-
           </div>
-
         </div>
       </div>
     </div >
