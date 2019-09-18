@@ -5,7 +5,7 @@ import { InputGroupField } from 'components/common/InputGroup';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { loginAction } from 'actions/AuthActions';
-import { Icon, Intent } from '@blueprintjs/core';
+import { Icon, Intent, Spinner, Button } from '@blueprintjs/core';
 import { History } from 'history';
 
 interface SignInPageComponentProps {
@@ -152,17 +152,19 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                     </div>
                     {errors.password ? <small className="red">{errors.password}</small> : ""}
                   </div>
-                  <button className="b--none w-100 br3 fr grow h2 mr6-m ph5 pointer pv2 white mb3"
-                    style={{ background: "#0fa3a3", outline: "none" }}
-                    onClick={e => {
+                  <Button 
+                    className="b--none w-100 br3 fr grow h2 mr6-m ph5 pointer pv2 mb3"
+                    style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+                    onClick={(e: any) => {
                       e.preventDefault();
                       if (!emptyValueCheck()) {
                         props.loginAction(values, props.history);
                       }
                     }}
+                    disabled={props.loading}
                   >
-                    {props.loading ? <Icon icon="repeat" /> : 'Sign In'}
-                  </button>
+                    {props.loading ? <Spinner size={15} /> : 'Sign in'}
+                  </Button>
                   <div className="mb3 tc">
                     <a href="" style={{ color: "#0fa3a3" }}>
                       Forgot Password?
