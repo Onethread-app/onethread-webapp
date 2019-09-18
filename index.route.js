@@ -1,12 +1,11 @@
 'use strict';
 
-
 const express = require('express');
 const postRoutes = require('./server/post/post.route');
 const reactRoutes = require('./server/react/react.route');
 const saveRoutes = require('./server/save/save.route');
 const commentRoutes = require('./server/comment/comment.route');
-const chatRoutes = require('./server/chaat/chat.route');
+//const chatRoutes = require('./server/chaat/chat.route');
 const reportRoutes = require('./server/report/report.route');
 const reviewRoutes = require('./server/review/review.route');
 const hashRoutes = require('./server/hashtag/hashtag.route');
@@ -15,6 +14,7 @@ const accountRoutes = require('./server/account/account.route');
 const userRoutes = require('./server/registereduser/user.route');
 const companyRoutes = require('./server/company/company.route');
 const categoryRoutes = require('./server/category/category.route');
+const messageRoutes = require('./server/message/message.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -29,7 +29,7 @@ router.use('/account', accountRoutes);
 router.use('/posts', postRoutes);
 router.use('/reacts', reactRoutes);
 router.use('/saves', saveRoutes);
-router.use('/chats', chatRoutes);
+//router.use('/chats', chatRoutes);
 router.use('/comments', commentRoutes);
 router.use('/reports', reportRoutes);
 router.use('/reviews', reviewRoutes);
@@ -39,9 +39,8 @@ router.use('/category', categoryRoutes);
 router.use('/users', userRoutes);
 
 // mount company routes at /company
+router.use('/category', categoryRoutes);
 router.use('/company', companyRoutes);
-
-// mount auth routes at /auth
-// router.use('/auth', authRoutes);
+router.use('/message', messageRoutes);
 
 module.exports = router;

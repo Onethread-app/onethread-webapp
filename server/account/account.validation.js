@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 const accountInfo = Joi.object().keys({
   firstName: Joi.string().required(),
   lastName: Joi.string().required(),
@@ -22,16 +22,8 @@ const accountInfo = Joi.object().keys({
 module.exports = {
   register: Joi.object().keys({
     body: Joi.object().keys({
-      firstName: Joi.string()
-        // allow space between characters
-        // bug is here
-        // need to remove space within 2nd bracket
-        // check the lastname regex
-        .regex(/^[a-zA-Z][a-zA-Z ]+[a-zA-Z]$/)
-        .required(),
-      lastName: Joi.string()
-        .regex(/^[a-zA-Z][a-zA-Z]+[a-zA-Z]$/)
-        .required(),
+      firstName: Joi.string().required(),
+      lastName: Joi.string().required(),
       email: Joi.string()
         .regex(
           /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -45,9 +37,7 @@ module.exports = {
           };
         }),
       password: Joi.string()
-        .regex(
-          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
-        )
+        .regex(/^(?=(.*[a-z]){1,})(?=(.*[\d]){1,}).{8,}$/)
         .required()
         .error(error => {
           return {
@@ -60,7 +50,7 @@ module.exports = {
         .valid(Joi.ref('password'))
         .required(),
       contactNo: Joi.string()
-        .regex(/\+?(88)?0?1[356789][0-9]{8}/)
+        // .regex(/\+?(88)?0?1[356789][0-9]{8}/)
         .required(),
     }),
   }),
