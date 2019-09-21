@@ -62,7 +62,7 @@ const AppComponent = (props: AppProps) => {
 					component={WorkplacePage}
 				/>
 				<PrivateRoute
-					path="/workplace-feed"
+					path="/feed"
 					exact={true}
 					component={FeedPage}
 				/>
