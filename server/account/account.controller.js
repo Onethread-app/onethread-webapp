@@ -1,5 +1,7 @@
+
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
+const chatkitService = require('../services/pusher.services');
 const Account = require('./account.model');
 const smtpTransport = require('../helpers/sendmail');
 const authService = require('../services/auth.services');
@@ -219,12 +221,29 @@ const register = async (req, res) => {
                   message: err,
                 });
               }
-              return sendJSONresponse(res, 201, {
-                success: true,
-                token: token,
-                message: 'User created',
-                user,
-              });
+
+              chatkitService.chatkit
+                .createUser({
+                  id: user._id,
+                  name: user.username,
+                })
+                .then(u => {
+                  console.log('User created successfully');
+                  console.log(u);
+                  return sendJSONresponse(res, 201, {
+                    success: true,
+                    token: token,
+                    message: 'User created',
+                    user,
+                  });
+                })
+                .catch(err => {
+                  console.log(err);
+                  // return err;
+                  return res.status(500).json({
+                    error: err,
+                  });
+                });
             });
           })
           .then(() => {
@@ -896,7 +915,6 @@ const accountLoad = async (req, res, next, id) => {
     .then(result => {
       if (result) {
         req.account = result;
-
         next();
       } else {
         return res.status(400).json({

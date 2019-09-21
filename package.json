@@ -15,9 +15,10 @@
 		"startboth": "concurrently \"nodemon node index.js\" \"npm run client\"",
 		"start": "nodemon node index.js",
 		"start:debug": "cross-env DEBUG=express-mongoose-es6-rest-api:* yarn start",
+		"start:prod": "export NODE_ENV=production && pm2 start index.js",
 		"lint": "esw *.js server config --color",
 		"lint:watch": "yarn lint -- --watch",
-		"precommit": "yarn test",
+		
 		"test": "cross-env NODE_ENV=test mocha ./server/**/*.test.js --ui bdd --reporter spec --colors server --recursive --timeout 20000",
 		"test:watch": "yarn test -- --watch",
 		"test:coverage": "cross-env NODE_ENV=test ./node_modules/.bin/istanbul cover _mocha -- --ui bdd --reporter spec --colors server --recursive",
@@ -36,6 +37,7 @@
 	],
 	"dependencies": {
 		"@hapi/joi": "^15.1.1",
+		"@pusher/chatkit-server": "^2.1.1",
 		"axios": "^0.19.0",
 		"bcrypt": "^3.0.6",
 		"bluebird": "3.5.5",
@@ -85,7 +87,7 @@
 	},
 	"devDependencies": {
 		"chai": "4.2.0",
-		"commitizen": "^3.1.1",
+		"commitizen": "^4.0.3",
 		"coveralls": "^3.0.5",
 		"cross-env": "5.2.0",
 		"cz-conventional-changelog": "2.1.0",

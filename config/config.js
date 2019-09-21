@@ -45,6 +45,12 @@ const envVarsSchema = Joi.object({
   GOOGLE_CLIENT_SECRET: Joi.string()
     .required()
     .description('Google client secret required'),
+  INSTANCE_LOCATOR: Joi.string()
+    .required()
+    .description('INSTANCE_LOCATOR required'),
+  PUSHER_KEY: Joi.string()
+    .required()
+    .description('PUSHER_KEY required'),
 })
   .unknown()
   .required();
@@ -74,6 +80,8 @@ const config = {
   facebookSecret: envVars.FACEBOOK_SECRET,
   googleClientID: envVars.GOOGLE_CLIENT_ID,
   googleClientSecret: envVars.GOOGLE_CLIENT_SECRET,
+  instanceLocator: envVars.INSTANCE_LOCATOR,
+  pusherKey: envVars.PUSHER_KEY,
 };
 
 module.exports = config;

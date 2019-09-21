@@ -1,9 +1,9 @@
-// const mongoose = require('mongoose');
-// const request = require('supertest-as-promised');
-// const httpStatus = require('http-status');
-// const chai = require('chai'); // eslint-disable-line import/newline-after-import
+// const mongoose = require("mongoose");
+// const request = require("supertest-as-promised");
+// const httpStatus = require("http-status");
+// const chai = require("chai"); // eslint-disable-line import/newline-after-import
 // const expect = chai.expect;
-// const app = require('../../index');
+// const app = require("../../index");
 
 // chai.config.includeStack = true;
 
@@ -11,16 +11,16 @@
 //  * root level hooks
 //  */
 
-// let token = '';
+// let token = "";
 // before(done => {
 //   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
 //   let credentials = {
-//     email: 'jest@gmail.com',
-//     password: 'jest1234',
+//     email: "jest@gmail.com",
+//     password: "jest1234"
 //   };
 
 //   request(app)
-//     .post('/api/v1/account/login')
+//     .post("/api/v1/account/login")
 //     .send(credentials)
 //     .expect(200)
 //     .then(res => {
@@ -28,7 +28,7 @@
 //       token = res.body.token;
 //       done();
 //     })
-
+    
 //     .catch(done);
 // });
 
@@ -40,7 +40,7 @@
 //   done();
 // });
 
-// describe('## Hashtag APIs', () => {
+// describe("## Hashtag APIs", () => {
 //   // let hashtag = {
 //   //   text: "pasi"
 //   // };
@@ -61,15 +61,15 @@
 //   //   });
 //   // });
 
-//   describe('# GET /api/hashtags/', () => {
-//     it('should get all hashtags (with limit and skip)', done => {
+//   describe("# GET /api/hashtags/", () => {
+//     it("should get all hashtags (with limit and skip)", done => {
 //       request(app)
-//         .get('/api/v1/hashtags')
-//         .set('Authorization', token)
-//         .query({ text: 'ha' })
+//         .get("/api/v1/hashtags")
+//         .set("Authorization", token)
+//         .query({ text: "ha" })
 //         .expect(httpStatus.OK)
 //         .then(res => {
-//           expect(res.body).to.be.an('array');
+//           expect(res.body).to.be.an("array");
 //           //expect(res.body).to.have.deep.property('[0].text', 'hasi');
 //           done();
 //         })
