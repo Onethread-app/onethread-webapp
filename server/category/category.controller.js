@@ -1,5 +1,9 @@
 'use strict';
-const { Category, SubCategory, SubSubCategory } = require('./category.model');
+const {
+  Category,
+  SubCategory,
+  SubSubCategory,
+} = require('./category.model');
 // Create
 const newCategory = async (req, res) => {
   // Check for JSON
@@ -9,7 +13,7 @@ const newCategory = async (req, res) => {
   // fetch the request data
   const category = new Category({
     name: req.body.name,
-    type: req.body.type
+    type: req.body.type,
   });
 
   category
@@ -17,12 +21,12 @@ const newCategory = async (req, res) => {
     .then(result => {
       res.status(201).json({
         message: 'New category created',
-        newCategory: result
+        newCategory: result,
       });
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
@@ -47,22 +51,20 @@ const newSubCategory = async (req, res) => {
         .save()
         .then(result => {
           res.status(201).json({
-            message: `New sub-category created under Category: ${
-              category.name
-            }`,
-            newSubCategory: subcategory
+            message: `New sub-category created under Category: ${category.name}`,
+            newSubCategory: subcategory,
           });
         })
         .catch(err => {
           res.status(500).json({
             message: '====Level-two ERROR====',
-            error: err
+            error: err,
           });
         });
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
@@ -86,21 +88,19 @@ const newSubSubCategory = async (req, res) => {
         .save()
         .then(result => {
           res.status(201).json({
-            message: `New sub-sub-category created under Sub-Category: ${
-              subcategory.name
-            }`,
-            newSubSubCategory: subsubcategory
+            message: `New sub-sub-category created under Sub-Category: ${subcategory.name}`,
+            newSubSubCategory: subsubcategory,
           });
         })
         .catch(err => {
           res.status(500).json({
-            error: err
+            error: err,
           });
         });
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
@@ -117,23 +117,23 @@ const getCategory = (req, res, next) => {
         categories: categories.map(doc => {
           let result = {
             _id: doc._id,
-            name: doc.name
+            name: doc.name,
           };
           // check for business-category
           if (doc.name == 'Category of one’s business') {
             result.request = {
               type: 'GET',
-              url: '/api/v1/category?type=business-category'
+              url: '/api/v1/category?type=business-category',
             };
           }
           return result;
-        })
+        }),
       };
       res.status(200).json(response);
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
@@ -150,7 +150,7 @@ const getSubCategory = (req, res, next) => {
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
@@ -167,7 +167,7 @@ const getSubSubCategory = (req, res, next) => {
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
@@ -175,48 +175,52 @@ const getSubSubCategory = (req, res, next) => {
 const deleteCategory = async (req, res, next) => {
   //category
   try {
-    let category = await Category.findOneAndRemove({ _id: req.params.cid });
+    let category = await Category.findOneAndRemove({
+      _id: req.params.cid,
+    });
 
     if (!category) {
       res.status(500).json({
-        message: `No category found with this ID`
+        message: `No category found with this ID`,
       });
     } else {
       //sub-category
       try {
         let subcategory = await SubCategory.findOneAndRemove({
-          cid: req.params.cid
+          cid: req.params.cid,
         });
 
         if (subcategory) {
           //sub-category
           try {
-            let subsubcategory = await SubSubCategory.findOneAndRemove({
-              cid: req.params.cid
-            });
+            let subsubcategory = await SubSubCategory.findOneAndRemove(
+              {
+                cid: req.params.cid,
+              },
+            );
 
             if (subsubcategory) {
               //sub-category
               res.status(200).json({
                 message:
-                  'Category deleted with all subcategories and subsubcategories.'
+                  'Category deleted with all subcategories and subsubcategories.',
               });
             }
           } catch (err) {
             res.status(500).json({
-              error: err
+              error: err,
             });
           }
         }
       } catch (err) {
         res.status(500).json({
-          error: err
+          error: err,
         });
       }
     }
   } catch (err) {
     res.status(500).json({
-      error: err
+      error: err,
     });
   }
 };
@@ -228,5 +232,5 @@ module.exports = {
   getCategory,
   getSubCategory,
   getSubSubCategory,
-  deleteCategory
+  deleteCategory,
 };

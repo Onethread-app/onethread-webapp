@@ -22,7 +22,10 @@ function companyUrlLimit(val) {
 
 function checkUrl(val) {
   for (const e of val) {
-    if (e.substring(0, 7) != 'http://' && e.substring(0, 8) != 'https://') {
+    if (
+      e.substring(0, 7) != 'http://' &&
+      e.substring(0, 8) != 'https://'
+    ) {
       return false;
     }
   }
@@ -30,22 +33,25 @@ function checkUrl(val) {
 }
 
 const validateUrl = [
-  { validator: companyUrlLimit, msg: '{PATH} exceeds the limit of 3' },
+  {
+    validator: companyUrlLimit,
+    msg: '{PATH} exceeds the limit of 3',
+  },
   {
     validator: checkUrl,
-    msg: '{PATH} should starts with [http://] or [https://]'
-  }
+    msg: '{PATH} should starts with [http://] or [https://]',
+  },
 ];
 // company schema
 const company = new Schema({
-  // stage 1 : company
+  // required fields
   companyName: {
     type: String,
     unique: true,
     trim: true,
-    required: true
+    required: true,
   },
-  type: {
+  companyType: {
     type: String,
     enum: [
       'Manufacturer',
@@ -56,61 +62,59 @@ const company = new Schema({
       'Government ministry/Bureau/Commission',
       'Association',
       'Business Service (Transportation, finance, travel, Ads, etc)',
-      'Other'
+      'Other',
     ],
-    required: true
+    required: true,
   },
-  logo: {
+  companyAddress: {
     type: String,
-    required: true
+    required: true,
   },
-  location: {
+  companyMail: {
     type: String,
-    required: true
   },
-  // stage 2 : owner
+  legalOwnerName: {
+    type: String,
+  },
+  legalOwnerMail: {
+    type: String,
+  },
   account: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
-    required: true
+    required: true,
   },
-  // stage 3: product details
+  employees: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+    },
+  ],
+  // others
   products: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'SubSubCategory',
-      required: true
-    }
+    },
   ],
-  // stage 4: Additional Information (Skip & Finish)
+  logo: {
+    type: String,
+  },
+  location: {
+    type: String,
+  },
   companyUrl: {
     type: [String],
-    validate: validateUrl
+    validate: validateUrl,
   },
-  companyMail: {
-    type: String
-  },
-  companyOperationalAddress: {
-    street: { type: String, required: true },
-    city: { type: String },
-    country: { type: String },
-    zipCode: { type: String }
-  },
-  legalOwnerName: {
-    type: String
-  },
-  legalOwnerMail: {
-    type: String
-  },
-  // others
-  yearCompanyReg: {
+  yearCompanyRegistration: {
     type: Number,
     get: v => Number(v),
     set: v => Number(v),
     min: 1800,
-    max: new Date().getFullYear()
+    max: new Date().getFullYear(),
   },
-  totalEmp: {
+  totalEmployees: {
     type: String,
     enum: [
       'Fewer than 5 People',
@@ -121,8 +125,8 @@ const company = new Schema({
       '201 - 300 People',
       '301 - 500 People',
       '501 - 1000 People',
-      'Above 1000 People'
-    ]
+      'Above 1000 People',
+    ],
   },
   officeSize: {
     type: String,
@@ -131,13 +135,13 @@ const company = new Schema({
       '101 - 500 square meters',
       '501 - 1000 square meters',
       '1001 -2000 square meters',
-      'above 2000 square meters'
-    ]
+      'above 2000 square meters',
+    ],
   },
   companyIntroduction: {
     type: String,
-    maxlength: 256
-  }
+    maxlength: 256,
+  },
 });
 
 // add timestamps
@@ -146,5 +150,5 @@ company.plugin(timestamp);
 let Company = mongoose.model('Company', company);
 
 module.exports = {
-  Company
+  Company,
 };

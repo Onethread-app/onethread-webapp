@@ -12,31 +12,27 @@ const SchemaValidator = require('./../helpers/joiSchemaValidator');
 router.use('/typeInfo', typeInfo);
 
 // for company profile
-router
-  .route('/')
-  .post(
-    SchemaValidator(joiSchema.newCompany),
-    companyCtrl.createCompanyProfile
-  );
+router.route('/').post(
+  requireAuth,
+  // SchemaValidator(joiSchema.newCompany),
+  companyCtrl.createCompany,
+);
 router
   .route('/:id')
   .get(
     requireAuth,
-    permit('company'),
-    SchemaValidator(joiSchema.getCompany),
-    companyCtrl.getCompanyProfile
+    // SchemaValidator(joiSchema.getCompany),
+    companyCtrl.getCompany,
   )
   .put(
     requireAuth,
-    permit('company'),
     SchemaValidator(joiSchema.updateCompany),
-    companyCtrl.updateCompanyProfile
+    companyCtrl.updateCompany,
   )
   .delete(
     requireAuth,
-    permit('user'),
     SchemaValidator(joiSchema.deleteCompany),
-    companyCtrl.deleteCompanyProfile
+    companyCtrl.deleteCompany,
   );
 
 module.exports = router;
