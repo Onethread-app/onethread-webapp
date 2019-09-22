@@ -6,6 +6,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import user from '../resources/images/user.png';
 import logo from '../resources/images/tigrowLogo.png';
+import { Link } from "react-router-dom";
 import { CompanyList } from './company/CompanyList';
 interface NavbarTopProps {
   logoutAction: (history: History) => void;
@@ -18,7 +19,7 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
         className="db w-100 border-box pa2 ph5-l bg-white fixed ba b--tigrowLightGray-1 z-max"
       >
         <div className="db dtc-l v-mid  w-100 w-25-l tc tl-l mb2 mb0-l" title="Home">
-          <img src={logo} className="dib w-20" alt="Site Name" />
+          <Link to="/"><img src={logo} className="dib w-20" alt="Site Name" /></Link>
         </div>
         <div className="db dtc-l v-mid w-100 w-75-l tc tr-l">
           <Popover
