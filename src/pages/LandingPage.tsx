@@ -4,11 +4,13 @@ import { Sidebar } from 'components/Sidebar';
 import { Icon, Divider } from '@blueprintjs/core';
 import skill from '../resources/images/skills.png';
 import user from '../resources/images/user.png';
+import { BasicInfoList } from 'components/company/BasicInfoList';
+import { EduInfoList } from 'components/company/EduInfoList';
 
 export const LandingPage = () => {
   return (
     <div className="bg-near-white ">
-      <NavbarTop/> 
+      <NavbarTop />
       <div className="w-100 cf ">
         <div className="fl bg-white w-10 pv6 vh-100 fixed">
           <Sidebar />
@@ -31,72 +33,17 @@ export const LandingPage = () => {
               <div className="h-auto br3 ma2 pa3 bg-white cf">
                 <h1 className="f6 lh-copy">Skills</h1>
                 <div className="tc">
-                <img src={skill}></img>
-                <p>No skill has selected</p>
-                <button className="br3 grow ph4 pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0">
-                  Add Skills
+                  <img src={skill}></img>
+                  <p>No skill has selected</p>
+                  <button className="br3 grow ph4 pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0">
+                    Add Skills
                 </button>
                 </div>
               </div>
             </div>
             <div className="fl w-75-ns  ">
-              <div className="br3 bg-white h-auto pa4 mt3">
-                <div className="cf ">
-                  <h1 className="f5 lh-copy dib">Basic Information</h1>
-                  <Icon className="fr mv3 tigrow-lightBlue" icon="edit" />
-                </div>
-                <Divider />
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">Email</h1>
-                  <p>Julian Martha</p>
-                </div>
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">Secondary Email</h1>
-                  <p>No secondary email has set</p>
-                </div>
-                <div className="br3 bg-white h-auto">
-                  <div className="cf dib">
-                    <h1 className="f6 lh-copy">Contact Number</h1>
-                    <p>+880-18421421</p>
-                  </div>
-                  <Icon className="fr mv4 " icon="lock" />
-                </div>
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">Address</h1>
-                  <p>Mohakhali DOHS</p>
-                </div>
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">Gender</h1>
-                  <p>Male</p>
-                </div>
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">Birthdate</h1>
-                  <p>13th September, 2019</p>
-                </div>
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">Blood Group</h1>
-                  <p>A+</p>
-                </div>
-              </div>
-              <div className="br3 bg-white h-auto pa4 mt3">
-                <div className="cf ">
-                  <h1 className="f5 lh-copy dib">Educational Information</h1>
-                  <Icon className="fr mv3 tigrow-lightBlue" icon="edit" />
-                </div>
-                <Divider />
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">School</h1>
-                  <p>Julian Martha</p>
-                </div>
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">College</h1>
-                  <p>No secondary email has set</p>
-                </div>
-                <div className="br3 bg-white h-auto">
-                  <h1 className="f6 lh-copy">University</h1>
-                  <p>A+</p>
-                </div>
-              </div>
+              <BasicInfoList />
+              <EduInfoList />
               <div className="br3 bg-white h-auto pa4 mt3">
                 <div className="cf ">
                   <h1 className="f5 lh-copy dib">Experience</h1>
