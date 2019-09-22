@@ -1,21 +1,27 @@
 import React from 'react'
 import { RoomListItem } from "./RoomListItem";
-export const RoomList = () => {
+
+type rooms = {
+  id: string,
+  roomImg: string,
+  roomTitle: string
+}
+interface RoomComponentProps {
+  rooms: Array<rooms>;
+}
+
+export const RoomList = (props: RoomComponentProps) => {
   return (
     <>
       <main className="mw6 center">
-        <RoomListItem
-          roomImg="http://mrmrs.github.io/photos/p/2.jpg"
-          roomTitle="Young Gatchell"
-        />
-        <RoomListItem
-          roomImg="http://mrmrs.github.io/photos/p/3.jpg"
-          roomTitle="Arnoldo Degraff"
-        />
-        <RoomListItem
-          roomImg="http://mrmrs.github.io/photos/p/4.jpg"
-          roomTitle="Deirdre Lachance"
-        />
+        {props.rooms.map(room => {
+          return (
+            <RoomListItem key={room.id}
+              roomImg={room.roomImg}
+              roomTitle={room.roomTitle}
+            />
+          );
+        })}
       </main>
     </>
   )
