@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from 'react';
 import { isEqual, isEmpty, isNumber } from 'lodash';
 import { InputGroupField } from 'components/common/InputGroup';
-import { NumericInput, Icon } from '@blueprintjs/core';
+import { NumericInput, Icon, Spinner, Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { userSignupAction } from 'actions/AuthActions';
 import { withRouter, RouteComponentProps } from 'react-router';
@@ -19,6 +19,7 @@ interface UserModel {
 
 interface SignUpPageInternalProps {
   errorUnauthorized: { email: boolean; message: string; network: boolean }
+  loading: boolean;
   userSignupAction: (user: UserModel, history: History) => void;
 }
 
@@ -339,17 +340,19 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                     </div>
                     {errors.confirmPassword ? <small className="red">{errors.confirmPassword}</small> : ""}
                   </div>
-                  <button className="b--none w-100 br3 fr grow h2 mr6-m ph5 pointer pv2 white"
-                    style={{ background: "#0fa3a3", outline: "none" }}
-                    onClick={e => {
+                  <Button className=" b--none w-100 br3 fr grow h2 mr6-m ph5 pointer pv2 white"
+                    type="submit"
+                    style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+                    onClick={(e:any) => {
                       e.preventDefault();
                       if (!emptyValueCheck()) {
                         props.userSignupAction(values, props.history);
                       }
                     }}
+                    disabled={props.loading}
                   >
-                    Sign Up
-                  </button>
+                    {props.loading ? <Spinner size={15} /> : 'Sign up'}
+                  </Button>
                 </div>
               </form>
             </div>
@@ -361,7 +364,9 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
 };
 
 const mapStateToProps = (state: any) => {
-  return { errorUnauthorized: state.auth.loginError };
+  return { 
+    loading: state.auth.loading,
+    errorUnauthorized: state.auth.loginError };
 };
 
 export const SignUpPage = connect(mapStateToProps, { userSignupAction })(withRouter(SignUpPageComponent));

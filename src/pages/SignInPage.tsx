@@ -153,6 +153,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                     {errors.password ? <small className="red">{errors.password}</small> : ""}
                   </div>
                   <Button 
+                  type="submit"
                     className="b--none w-100 br3 fr grow h2 mr6-m ph5 pointer pv2 mb3"
                     style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
                     onClick={(e: any) => {
