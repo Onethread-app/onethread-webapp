@@ -18,12 +18,12 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
   return (
     <>
       <nav
-        className="db w-100 border-box pa2 ph5-l bg-white fixed ba b--tigrowLightGray-1 z-max"
+        className="db w-100 border-box pa2 ph5 bg-white fixed ba b--tigrowLightGray-1 z-max flex justify-between"
       >
-        <div className="db dtc-l v-mid  w-100 w-25-l tc tl-l mb2 mb0-l" title="Home">
-          <img src={logo} className="dib w-20" alt="Site Name" />
+        <div className="db  v-mid tc tl-l mb2 mb0-l " title="Home">
+          <img src={logo} className="dib w4" alt="Site Name" />
         </div>
-        <div className="db dtc-l v-mid w-100 w-75-l tc tr-l">
+        <div className="db pa2 v-mid tc ">
           <Popover
             popoverClassName="bp3-popover-content-sizing"
             position={Position.BOTTOM}
