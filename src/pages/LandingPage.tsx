@@ -7,8 +7,8 @@ import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useState } from 'react';
-import { EducationInfoDetails } from 'components/company/profile/view/EducationInfoDetails';
-import { BasicInfoDetails } from 'components/company/profile/view/BasicInfoDetails';
+import { EducationInfoDetailsView as EducationInfoDetailsView } from 'components/company/profile/view/EducationInfoDetails';
+import { BasicInfoDetailsView as BasicInfoDetailsView } from 'components/company/profile/view/BasicInfoDetails';
 
 const skills = [
   { id: '1', name: 'Programing C' },
@@ -63,8 +63,8 @@ export const LandingPageComponent = () => {
                   </div>
                 </div>
                 <div className="fl w-75-ns">
-                  <BasicInfoDetails />
-                  <EducationInfoDetails />
+                  <BasicInfoDetailsView />
+                  <EducationInfoDetailsView />
                   <div className="br3 bg-white h-auto pa4 mt3">
                     <div className="cf ">
                       <h1 className="f5 lh-copy dib">Experience</h1>

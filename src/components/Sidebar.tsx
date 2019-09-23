@@ -3,9 +3,7 @@ import { Collapse, ButtonGroup, Alignment, Button } from "@blueprintjs/core";
 import { Link } from "react-router-dom";
 
 export const Sidebar = () => {
-	// const [showCollapse, setShowCollapse] = useState(false);
 	return (
-		// {showCollapse &&
 		<Collapse isOpen keepChildrenMounted>
 			<div className=" bg-white">
 				<ButtonGroup
@@ -45,6 +43,5 @@ export const Sidebar = () => {
 				</ButtonGroup>
 			</div>
 		</Collapse>
-		// }
 	);
 };

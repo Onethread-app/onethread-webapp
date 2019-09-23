@@ -2,7 +2,7 @@ import * as React from 'react';
 import { ListTitleView } from './ListTitleView';
 import { SectionViewWithTitleAndDesciption } from './ListItemView';
 
-export const EducationInfoDetails = () => {
+export const EducationInfoDetailsView = () => {
   return (
     <div className="br3 bg-white h-auto pa4 mt3">
       <ListTitleView

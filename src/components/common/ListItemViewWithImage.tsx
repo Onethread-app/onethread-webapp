@@ -6,7 +6,7 @@ interface CompanyListItemProps{
   listDescription: string;
 }
 
-export const ListViewWithImage = (props: CompanyListItemProps) => (
+export const ListItemViewWithImage = (props: CompanyListItemProps) => (
   <article className="dt w-100 pb2 mt2" >
   <div className="dtc w1 w2-ns v-mid">
     <img src={props.imageSrc} className="ba b--black-10 db w1 w2-ns h1 h2-ns br3" />

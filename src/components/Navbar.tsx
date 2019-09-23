@@ -7,7 +7,7 @@ import { History } from 'history';
 import user from '../resources/images/user.png';
 import logo from '../resources/images/tigrowLogo.png';
 import { useState } from 'react';
-import { ListViewWithImage } from './common/ListViewWithImage';
+import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListItemViewWithImage';
 import { CompanySignupForm } from './company/SignupForm';
 interface NavbarTopProps {
   logoutAction: (history: History) => void;
@@ -30,17 +30,17 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
           >
             <Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>
             <div className="mw6 center">
-              <ListViewWithImage
+              <ListItemViewWithImage
                 imageSrc="http://mrmrs.github.io/photos/p/2.jpg"
                 listTitle="Young Gatchell"
                 listDescription="@yg"
               />
-              <ListViewWithImage
+              <ListItemViewWithImage
                 imageSrc="http://mrmrs.github.io/photos/p/3.jpg"
                 listTitle="Arnoldo Degraff"
                 listDescription="@99xx88randomhandle"
               />
-              <ListViewWithImage
+              <ListItemViewWithImage
                 imageSrc="http://mrmrs.github.io/photos/p/4.jpg"
                 listTitle="Deirdre Lachance"
                 listDescription="@favfavfav"
