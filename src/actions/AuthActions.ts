@@ -98,7 +98,7 @@ export const fetchUserAction = () => async (dispatch: any, getState: any) => {
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: USER_SIGNUP_LOADING });
 			const response = await tigrowApi.get(`/account`, headers);
-			dispatch({ type: FETCH_USER, payload: response.data });
+			dispatch({ type: FETCH_USER, payload: response.data.user });
 		} else {
 			dispatch({ type: USER_LOGIN_ERROR, payload: "error in fetching" });
 		}

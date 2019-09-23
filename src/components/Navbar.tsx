@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Button, Popover, Position, Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
+import { Link } from "react-router-dom";
 import { logoutAction } from 'actions/AuthActions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
@@ -20,8 +21,8 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
       <nav
         className="db w-100 border-box pa2 ph5 bg-white fixed ba b--tigrowLightGray-1 z-max flex justify-between"
       >
-        <div className="db  v-mid tc tl-l mb2 mb0-l " title="Home">
-          <img src={logo} className="dib w4" alt="Site Name" />
+        <div className="db dtc-l v-mid  w-100 w-25-l tc tl-l mb2 mb0-l" title="Home">
+          <Link to="/"><img src={logo} className="dib w-20" alt="Site Name" /></Link>
         </div>
         <div className="db pa2 v-mid tc ">
           <Popover

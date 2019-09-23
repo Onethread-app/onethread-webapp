@@ -1130,6 +1130,11 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
+"@pusher/chatkit-client@^1.13.0":
+  version "1.13.0"
+  resolved "https://registry.yarnpkg.com/@pusher/chatkit-client/-/chatkit-client-1.13.0.tgz#22aef4550cd05949efe62b004a12e41c6e8eb19f"
+  integrity sha512-2Kxl9KaiHfluLn0lV9DJR1tYRj5BzbZCTnxvIV0oXkhMD17DVXDu+KccBTK6CAxiUAFXDrz0mRXofrH1AgbPpw==
+
 "@svgr/babel-plugin-add-jsx-attribute@^4.2.0":
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@svgr/babel-plugin-add-jsx-attribute/-/babel-plugin-add-jsx-attribute-4.2.0.tgz#dadcb6218503532d6884b210e7f3c502caaa44b1"

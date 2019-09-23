@@ -4,13 +4,13 @@ import { WorkplaceSidebar } from "components/WorkplaceSidebar";
 
 export const WorkplacePage = () => {
 	return (
-		<div className="bg-near-white vh-100">
+		<div className="bg-near-white">
 			<NavbarTop />
 			<div className="w-100 cf ">
-				<div className="fl bg-white w-25-ns w-15-l pv6 vh-100 fixed">
+				<div className="fl bg-white w-10 pv6 vh-100 fixed">
 					<WorkplaceSidebar />
 				</div>
-				<div className="fl w-75-ns w-85-l ml7-l ml6-ns">
+				<div className="fl w-80 mt6 ml7">
 					<p>Workplace Page</p>
 				</div>
 			</div>

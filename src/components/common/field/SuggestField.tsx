@@ -30,7 +30,7 @@ export const SuggestField = (props: SuggestFieldProps) => {
                 props.setSelectedItems([
                   ...props.selectedItems,
                   item
-                ])  
+                ])
               } else {
                 const index = findIndex(props.selectedItems, { 'id': item.id, 'name': item.name });
                 props.selectedItems.splice(index, 1);

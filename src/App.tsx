@@ -6,11 +6,20 @@ import { LandingPage } from "pages/LandingPage";
 import { SignInPage } from "pages/SignInPage";
 import { connect } from "react-redux";
 import { fetchUserAction } from "actions/AuthActions";
+import { initializeChatkitAction } from "actions/ChatkitActions";
 import { useEffect } from "react";
 import { isAuthenticate } from "actions/UtilsActions";
 import { RoomPage } from "pages/workplace/RoomPage";
 import { FeedPage } from "pages/workplace/FeedPage";
 import { WorkplacePage } from "pages/workplace/WorkplacePage";
+
+const load = async (
+	fetchUserAction: () => void,
+	initializeChatkitAction: () => void
+) => {
+	await fetchUserAction();
+	await initializeChatkitAction();
+}
 
 const PrivateRoute = (props: {
 	component: any;
@@ -31,11 +40,12 @@ const PrivateRoute = (props: {
 
 interface AppProps {
 	fetchUserAction: () => void;
+	initializeChatkitAction: () => void;
 }
 
 const AppComponent = (props: AppProps) => {
 	useEffect(() => {
-		props.fetchUserAction();
+		load(props.fetchUserAction, props.initializeChatkitAction);
 	});
 
 	return (
@@ -62,7 +72,7 @@ const AppComponent = (props: AppProps) => {
 					component={WorkplacePage}
 				/>
 				<PrivateRoute
-					path="/workplace-feed"
+					path="/feed"
 					exact={true}
 					component={FeedPage}
 				/>
@@ -74,5 +84,5 @@ const AppComponent = (props: AppProps) => {
 
 export const App = connect(
 	null,
-	{ fetchUserAction }
+	{ fetchUserAction, initializeChatkitAction }
 )(AppComponent);
