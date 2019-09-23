@@ -8,6 +8,10 @@ const RoomSchema = new mongoose.Schema({
     trim: true,
     required: true
   },
+  members: [{
+    type: Schema.ObjectId,
+    ref: 'Account'
+  }],
   removed: {
     type: Boolean,
     default: false

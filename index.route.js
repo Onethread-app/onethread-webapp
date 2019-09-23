@@ -6,6 +6,7 @@ const userRoutes = require('./server/registereduser/user.route');
 const companyRoutes = require('./server/company/company.route');
 const categoryRoutes = require('./server/category/category.route');
 const messageRoutes = require('./server/message/message.route');
+const roomRoutes = require('./server/room/room.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -16,7 +17,7 @@ router.use('/account', accountRoutes);
 
 // mount user routes at /users
 router.use('/users', userRoutes);
-
+router.use('/room', roomRoutes);
 // mount company routes at /company
 router.use('/category', categoryRoutes);
 router.use('/company', companyRoutes);
