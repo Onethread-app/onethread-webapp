@@ -10,11 +10,7 @@ const requireLogin = passport.authenticate('local', {
   session: false,
 });
 const accountCtrl = require('./account.controller');
-const {
-  permit,
-  authSelf,
-  hasAuthorization,
-} = require('../helpers/permission');
+const { permit, authSelf } = require('../helpers/permission');
 //const tokenChecker = require('../helpers/tokenChecker');
 const schemaValidator = require('../helpers/joiSchemaValidator');
 
@@ -35,11 +31,9 @@ router
 
 router
   .route('/update/:accountId')
-  .put(requireAuth, accountCtrl.accountUpdate);
+  .put(accountCtrl.tokenVerification, accountCtrl.accountUpdate);
 
-// router
-//   .route('/token')
-//   .post(requireAuth, accountCtrl.tokenVerification);
+router.route('/token').post(accountCtrl.tokenVerification);
 
 router.route('/').get(requireAuth, accountCtrl.getAccount);
 router.route('/logout').get(accountCtrl.logout);

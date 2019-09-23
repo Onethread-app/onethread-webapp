@@ -20,7 +20,6 @@ const create = (req, res, next, id) => {
         .then(() => {
           return result;
         });
-        
     })
     .then(result => res.send(result))
     .catch(e => next(e));
@@ -32,14 +31,14 @@ function edit(req, res) {}
 
 const list = (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
-  Room.find({ memebers: req,user._id })
+  Room.find({ members: req.user._id })
     .sort({ updated: -1 })
     .skip(+skip)
     .limit(+limit)
     .exec()
-     .then(result => res.json(result))
+    .then(result => res.json(result))
     .catch(e => next(e));
-}
+};
 
 function read(req, res) {}
 

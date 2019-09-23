@@ -1,4 +1,3 @@
-
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
 const chatkitService = require('../services/pusher.services');
@@ -13,11 +12,11 @@ let token = '';
 let rand = '';
 let link = '';
 let host = '';
-
-// const rediscl = redis.createClient('6379', '127.0.0.1');
-// rediscl.on('connect', () => {
-//   console.log('redis pluggin');
-// });
+const refreshTokens = {};
+const rediscl = redis.createClient('6379', '127.0.0.1');
+rediscl.on('connect', () => {
+  console.log('redis pluggin');
+});
 
 const validateJwt = function(req, res) {
   return new Promise((resolve, reject) => {
@@ -221,29 +220,12 @@ const register = async (req, res) => {
                   message: err,
                 });
               }
-
-              chatkitService.chatkit
-                .createUser({
-                  id: user._id,
-                  name: user.username,
-                })
-                .then(u => {
-                  console.log('User created successfully');
-                  console.log(u);
-                  return sendJSONresponse(res, 201, {
-                    success: true,
-                    token: token,
-                    message: 'User created',
-                    user,
-                  });
-                })
-                .catch(err => {
-                  console.log(err);
-                  // return err;
-                  return res.status(500).json({
-                    error: err,
-                  });
-                });
+              return sendJSONresponse(res, 201, {
+                success: true,
+                token: token,
+                message: 'User created',
+                user,
+              });
             });
           })
           .then(() => {
@@ -305,7 +287,7 @@ const login = async (req, res) => {
   let refreshToken = jwt.sign({ uid: user_id }, config.jwtSecret, {
     expiresIn: 60 * 60 * 24 * 30,
   });
-  //refreshTokens[refreshToken] = user_id;
+  refreshTokens[refreshToken] = user_id;
   // Generate new access token
   let token = req.user.token;
   res.cookie('access_token', token, {
@@ -317,9 +299,10 @@ const login = async (req, res) => {
     httpOnly: true,
   });
   //client.set('string key', 'string val', redis.print);
-  //rediscl.set(user_id, refreshToken);
+  rediscl.set(user_id, refreshToken, rediscl.print);
   const {
     _id,
+    email,
     firstName,
     lastName,
     accountVerified,
@@ -332,6 +315,7 @@ const login = async (req, res) => {
   } = req.user;
   let user = {
     _id,
+    email,
     firstName,
     lastName,
     accountVerified,
@@ -344,8 +328,8 @@ const login = async (req, res) => {
   };
   res.json({
     success: true,
-    token,
     user,
+    token,
     refreshToken,
   });
 };
@@ -406,12 +390,12 @@ const accountUpdate = async (req, res, next) => {
 
 // let's logout
 const logout = async (req, res) => {
-  //let uid = req.account._id;
+  let uid = req.account._id;
   // Delete user refresh token from Redis
-  //redis.del(uid);
+  redis.del(uid);
   // ... and then remove httpOnly cookies from browser
-  //res.clearCookie('access_token');
-  //res.clearCookie('refresh_token');
+  res.clearCookie('access_token');
+  res.clearCookie('refresh_token');
   req.logout();
   res.json({
     success: true,
@@ -759,31 +743,31 @@ const acceptFriendRequest = async (req, res) => {
 
 // friend List information
 const friendList = async (req, res) => {
-  let reqUserID = req.user._id;
-  Account.findById(reqUserID).then(account => {
-    let friends = account.friends;
-    let friendInfo = {};
-    friends.forEach(function(item, index) {
-      let friendID = item.user;
-
-      Account.findById(friendID)
-        .exec()
-        .then(account => {
-          friendInfo.push(account);
-        })
-        .catch(err => {
-          return sendJSONresponse(res, 500, {
-            success: false,
-            message: 'did not match with any id',
-          });
+  Account.findById(req.user._id)
+    .populate(
+      'friends',
+      '_id email firstName lastName accountVerified role contactNo companies friends pendingFriends sendingFriendList',
+    )
+    .exec()
+    .then(account => {
+      if (!account) {
+        return sendJSONresponse(res, 500, {
+          success: false,
+          message: 'No account found',
         });
+      }
+      const { friends } = account;
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: 'List of friends',
+        friends,
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        error: err,
+      });
     });
-    return sendJSONresponse(res, 200, {
-      success: true,
-      message: 'Find friendlist',
-      friendInfo: friendInfo,
-    });
-  });
 };
 
 // sending Friend request List
@@ -879,6 +863,7 @@ const getAllAccounts = async (req, res) => {
 const getAccount = async (req, res) => {
   const {
     _id,
+    email,
     firstName,
     lastName,
     accountVerified,
@@ -891,6 +876,7 @@ const getAccount = async (req, res) => {
   } = req.user;
   let user = {
     _id,
+    email,
     firstName,
     lastName,
     accountVerified,
@@ -903,9 +889,7 @@ const getAccount = async (req, res) => {
   };
   res.json({
     success: true,
-    token,
     user,
-    refreshToken,
   });
 };
 
@@ -930,24 +914,25 @@ const accountLoad = async (req, res, next, id) => {
 const searchAccount = async (req, res) => {};
 
 // verify token
-// const tokenVerification = async (req, res) => {
-//   //const email = req.body.email;
-//   const refreshToken = req.body.refreshToken;
-//   const token = req.user.token;
-//   if (token) {
-//     jwt.verify(token, config.jwtSecret, (err, decoded) => {
-//       if (err) {
-//         // console.log(err);
-//         return res
-//           .status(401)
-//           .json({ error: true, message: 'Unauthorized access' });
-//       }
-//       req.decoded = decoded;
-
-//       next();
-//     });
-//   }
-// };
+const tokenVerification = async (req, res) => {
+  const email = req.body.email;
+  const refreshToken = req.body.refreshToken;
+  console.log(email, refreshToken);
+  if (
+    refreshToken in refreshTokens &&
+    refreshTokens[refreshToken] == email
+  ) {
+    const user = {
+      email: email,
+    };
+    const token = jwt.sign(user, config.jwtSecret, {
+      expiresIn: '1d',
+    });
+    res.json({ token: token });
+  } else {
+    res.json(401);
+  }
+};
 module.exports = {
   sendJSONresponse,
   register,
@@ -972,6 +957,6 @@ module.exports = {
   sendFriendRequestList,
   // rejectFriendRequest,
   // removeFriend
-  //tokenVerification,
+  tokenVerification,
   validateJwt,
 };
