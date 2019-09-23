@@ -1,16 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { RoomListItem } from "./RoomListItem";
+import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-type rooms = {
+interface RoomEntity {
   id: string,
   roomImg: string,
   roomTitle: string
 }
-interface RoomComponentProps {
-  rooms: Array<rooms>;
+interface RoomListComponentProps {
+  rooms: RoomEntity[],
+  chatkit?: any,
 }
 
-export const RoomList = (props: RoomComponentProps) => {
+export const RoomListComponent = (props: RoomListComponentProps & RouteComponentProps) => {
+  useEffect(() => {
+  }, []);
   return (
     <>
       <main className="mw6 center">
@@ -26,3 +31,11 @@ export const RoomList = (props: RoomComponentProps) => {
     </>
   )
 }
+
+const mapStateToProps = (state: any) => {
+  return {
+    chatkit: state.chatkit,
+  };
+};
+
+export const RoomList = connect(mapStateToProps, null)(withRouter(RoomListComponent));
