@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
+const chatkitService = require('../services/pusher.services');
 const Account = require('./account.model');
 const smtpTransport = require('../helpers/sendmail');
 const authService = require('../services/auth.services');
@@ -127,6 +128,32 @@ const validateJwt = function(req, res) {
   });
 };
 
+const generateUsername = function(uname) {
+  const username =
+    uname +
+    Math.random()
+      .toString(36)
+      .slice(2);
+  Account.findOne({ username: username })
+    .exec()
+    .then(user => {
+      if (user.length >= 1) {
+        return sendJSONresponse(res, 409, {
+          sucess: false,
+          message: 'username alraedy exists',
+        });
+      } else {
+        return username;
+      }
+    })
+    .catch(err => {
+      return sendJSONresponse(res, 500, {
+        sucess: false,
+        message: err,
+      });
+    });
+};
+
 const sendJSONresponse = function(res, status, content) {
   res.status(status);
   res.json(content);
@@ -152,7 +179,11 @@ const register = async (req, res) => {
   const lastName = req.body.lastName;
   const contactNo = req.body.contactNo;
   const role = req.body.role;
-
+  const username =
+    firstName +
+    Math.random()
+      .toString(36)
+      .slice(2);
   if (!email || !password) {
     return sendJSONresponse(res, 422, {
       error: 'You must provide email and password.',
@@ -166,13 +197,14 @@ const register = async (req, res) => {
     .then(user => {
       if (user.length >= 1) {
         return res.status(409).json({
-          message: 'email is already exits',
+          message: 'email is already exist',
         });
       } else {
         let account = new Account();
         account.email = email;
         account.firstName = firstName;
         account.lastName = lastName;
+        account.username = username;
         account.contactNo = contactNo;
         account.role = role;
         account.password = password;
@@ -867,7 +899,7 @@ const accountLoad = async (req, res, next, id) => {
     .then(result => {
       if (result) {
         req.account = result;
-        return next();
+        next();
       } else {
         return res.status(400).json({
           message: 'No valid entry found for provided ID',

@@ -46,11 +46,10 @@ const createCompany = async (req, res) => {
   }
   const newCompany = new Company(requestFormatter(req));
 
-  account.companies.push(newCompany._id);
-  await account.save();
-
   try {
     const company = await newCompany.save();
+    account.companies.push(newCompany._id);
+    await account.save();
     return res.status(201).json({
       status: true,
       message: 'New company created',

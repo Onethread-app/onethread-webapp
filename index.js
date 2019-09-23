@@ -18,6 +18,7 @@ const mongoUri = config.mongo.host;
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
+mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUri);
 mongoose.connection.on('error', () => {

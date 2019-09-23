@@ -13,6 +13,12 @@ const { Schema } = mongoose;
 
 // defining all the fields of individual account
 const accountsSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    trim: true,
+    unique: true,
+    required: true,
+  },
   firstName: {
     type: String,
     trim: true,

@@ -11,9 +11,6 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 // TODO: use glob to match *.route files
 
-/** GET /health-check - Check serviomce health */
-router.get('/health-check', (req, res) => res.send('OK'));
-
 // mount account user routes at /account
 router.use('/account', accountRoutes);
 
