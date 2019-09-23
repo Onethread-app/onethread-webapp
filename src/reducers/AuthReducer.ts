@@ -10,7 +10,6 @@ export interface UserModel {
 }
 
 const InitialState = {
-  user: {},
   loginError: {
     message: "",
     email: false,
@@ -27,7 +26,8 @@ export const AuthReducer = (state = InitialState, action: any) => {
     case USER_SIGNUP_LOADING:
       return {
         ...state,
-        loading: true
+        loading: true,
+        // user: action.payload.user,
       }
     case USER_LOGIN_ERROR:
       return {
@@ -38,7 +38,7 @@ export const AuthReducer = (state = InitialState, action: any) => {
     case USER_SIGNUP:
       return {
         ...state,
-        user: action.payload.user,
+        // user: action.payload.user,
         token: action.payload.token,
         loginError: {
           message: "",

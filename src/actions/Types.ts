@@ -18,3 +18,7 @@ export const SEND_ROOM_MESSAGE = "SEND_ROOM_MESSAGE";
 
 export const CREATE_COMPANY = "CREATE_COMPANY";
 export const CREATE_COMPANY_ERROR = "CREATE_COMPANY_ERROR";
+
+// Info reducer type
+export const BASIC_INFO ="BASIC_INFO"
+export const EDIT_BASIC_INFO ="EDIT_BASIC_INFO"

@@ -4,7 +4,8 @@ import {
 	USER_LOGIN_ERROR,
 	FETCH_USER,
 	USER_SIGNUP_LOADING,
-	USER_LOGOUT
+	USER_LOGOUT,
+	BASIC_INFO
 } from "./Types";
 import tigrowApi from "tigrowApi";
 import { AxiosRequestConfig } from "axios";
@@ -25,6 +26,7 @@ export const userSignupAction = (
 		localStorage.setItem("token", JSON.stringify(response.data.token));
 		routeHistory.push("/");
 		dispatch({ type: USER_SIGNUP, payload: response.data });
+		dispatch({ type: BASIC_INFO, payload: response.data });
 	} catch (error) {
 		if (isEqual(error.message, "Network Error")) {
 			dispatch({

@@ -8,6 +8,7 @@ export const EduInfoList = () => {
       <InfoListTitle
         listTitle="Educational Information"
         iconType="edit"
+        onClick={()=> {return true}}
       />
       <InfoListItem
         listTitle="School"

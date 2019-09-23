@@ -4,6 +4,7 @@ import { Sidebar } from 'components/Sidebar';
 import { Icon, Divider, Dialog, Button, Intent, Tag } from '@blueprintjs/core';
 import skill from '../resources/images/skills.png';
 import user from '../resources/images/user.png';
+import { connect } from 'react-redux';
 import { SuggestField, ItemEntityProps } from 'components/common/SuggestField';
 import { BasicInfoList } from 'components/company/BasicInfoList';
 import { EduInfoList } from 'components/company/EduInfoList';
@@ -17,7 +18,7 @@ const skills = [
   { id: '5', name: 'React' },
 ]
 
-export const LandingPage = () => {
+export const LandingPageComponent = () => {
 
   const [showDialog, setShowDialog] = useState(false);
   // Should comes from redux store
@@ -130,3 +131,11 @@ export const LandingPage = () => {
     </>
   )
 }
+
+const mapStateToProps = (state: any) => {
+  return {
+    users: state.info.user
+  }
+}
+
+export const LandingPage = connect(mapStateToProps)(LandingPageComponent)
