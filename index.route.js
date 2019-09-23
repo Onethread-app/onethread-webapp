@@ -6,6 +6,8 @@ const reactRoutes = require('./server/react/react.route');
 const saveRoutes = require('./server/save/save.route');
 const commentRoutes = require('./server/comment/comment.route');
 //const chatRoutes = require('./server/chaat/chat.route');
+const roomRoutes = require('./server/room/room.route');
+
 const reportRoutes = require('./server/report/report.route');
 const reviewRoutes = require('./server/review/review.route');
 const hashRoutes = require('./server/hashtag/hashtag.route');
@@ -33,7 +35,7 @@ router.use('/hashtags', hashRoutes);
 router.use('/category', categoryRoutes);
 // mount user routes at /users
 router.use('/users', userRoutes);
-
+router.use('/room', roomRoutes);
 // mount company routes at /company
 router.use('/category', categoryRoutes);
 router.use('/company', companyRoutes);
