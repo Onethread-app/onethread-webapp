@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { InputGroupField } from 'components/common/InputGroup';
+import { InputGroupField } from 'components/common/field/InputGroup';
 import { isEmpty } from 'lodash';
 import { HTMLSelect, Icon } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';

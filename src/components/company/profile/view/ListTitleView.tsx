@@ -7,7 +7,7 @@ interface InfoListTitleProps {
   iconType: any;
 }
 
-export const InfoListTitle = (props: InfoListTitleProps) => {
+export const ListTitleView = (props: InfoListTitleProps) => {
   return (
     <>
       <div className="cf ">

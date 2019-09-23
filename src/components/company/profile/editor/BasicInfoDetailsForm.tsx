@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { InputGroupField } from 'components/common/InputGroup';
 import { isEmpty, isNumber } from 'lodash';
 import { connect } from 'react-redux';
 import { editInfoAction } from 'actions/InfoActions';
 import { NumericInput } from '@blueprintjs/core';
+import { InputGroupField } from 'components/common/field/InputGroup';
 
 
 const BasicInfoFormComponent = (props: {
@@ -162,11 +162,11 @@ const BasicInfoFormComponent = (props: {
   )
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    users: state.info.user
-  }
-}
+// const mapStateToProps = (state: any) => {
+//   return {
+//     users: state.info.user
+//   }
+// }
 
 
-export const BasicInfoForm = connect(mapStateToProps, { editInfoAction })(BasicInfoFormComponent);
+export const BasicInfoForm = connect(null, { editInfoAction })(BasicInfoFormComponent);

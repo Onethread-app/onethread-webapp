@@ -1,24 +1,24 @@
 import * as React from 'react';
-import { InfoListItem } from './InfoListItem';
-import { InfoListTitle } from './InfoListTitle';
+import { ListTitleView } from './ListTitleView';
+import { SectionViewWithTitleAndDesciption } from './ListItemView';
 
-export const EduInfoList = () => {
+export const EducationInfoDetails = () => {
   return (
     <div className="br3 bg-white h-auto pa4 mt3">
-      <InfoListTitle
+      <ListTitleView
         listTitle="Educational Information"
         iconType="edit"
         onClick={()=> {return true}}
       />
-      <InfoListItem
+      <SectionViewWithTitleAndDesciption
         listTitle="School"
         listDescription="Julian Martha"
       />
-      <InfoListItem
+      <SectionViewWithTitleAndDesciption
         listTitle="College"
         listDescription="No secondary email has set"
       />
-      <InfoListItem
+      <SectionViewWithTitleAndDesciption
         listTitle="University"
         listDescription="A+"
       />

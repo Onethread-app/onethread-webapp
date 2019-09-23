@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from 'react';
 import { isEqual, isEmpty, isNumber } from 'lodash';
-import { InputGroupField } from 'components/common/InputGroup';
+import { InputGroupField } from 'components/common/field/InputGroup';
 import { NumericInput, Icon, Spinner, Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { userSignupAction } from 'actions/AuthActions';
