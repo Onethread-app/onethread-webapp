@@ -1,41 +1,33 @@
-import React, { useEffect } from 'react'
+import React from "react";
 import { RoomListItem } from "./RoomListItem";
-import { connect } from 'react-redux';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 interface RoomEntity {
-  id: string,
-  roomImg: string,
-  roomTitle: string
+	id: string;
+	roomImg: string;
+	roomTitle: string;
 }
 interface RoomListComponentProps {
-  rooms: RoomEntity[],
-  chatkit?: any,
+	rooms: RoomEntity[];
+	chatkit?: any;
 }
 
-export const RoomListComponent = (props: RoomListComponentProps & RouteComponentProps) => {
-  useEffect(() => {
-  }, []);
-  return (
-    <>
-      <main className="mw6 center">
-        {props.rooms.map(room => {
-          return (
-            <RoomListItem key={room.id}
-              roomImg={room.roomImg}
-              roomTitle={room.roomTitle}
-            />
-          );
-        })}
-      </main>
-    </>
-  )
-}
+export const RoomList = (
+	props: RoomListComponentProps
+) => {
 
-const mapStateToProps = (state: any) => {
-  return {
-    chatkit: state.chatkit,
-  };
+	return (
+		<>
+			<main className="mw6 center">
+				{props.rooms.map(room => {
+					return (
+						<RoomListItem
+							key={room.id}
+							roomImg={room.roomImg}
+							roomTitle={room.roomTitle}
+						/>
+					);
+				})}
+			</main>
+		</>
+	);
 };
-
-export const RoomList = connect(mapStateToProps, null)(withRouter(RoomListComponent));
