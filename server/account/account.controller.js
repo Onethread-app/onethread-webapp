@@ -305,6 +305,7 @@ const login = async (req, res) => {
   });
   //client.set('string key', 'string val', redis.print);
   rediscl.set(user_id, refreshToken, rediscl.print);
+
   const {
     _id,
     email,
