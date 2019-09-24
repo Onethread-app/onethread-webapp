@@ -1,19 +1,9 @@
 import React from "react";
-import { NavbarTop } from "components/Navbar";
-import { WorkplaceSidebar } from "components/WorkplaceSidebar";
 
 export const WorkplacePage = () => {
 	return (
-		<div className="bg-near-white">
-			<NavbarTop />
-			<div className="w-100 cf ">
-				<div className="fl bg-white w-10 pv6 vh-100 fixed">
-					<WorkplaceSidebar />
-				</div>
-				<div className="fl w-80 mt6 ml7">
-					<p>Workplace Page</p>
-				</div>
-			</div>
+		<div className="cf">
+			<p>Workplace Page</p>
 		</div>
 	);
 };

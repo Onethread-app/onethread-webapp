@@ -18,13 +18,20 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
-      <nav
-        className="db w-100 border-box pa2 ph5 bg-white fixed ba b--tigrowLightGray-1 z-max flex justify-between"
-      >
-        <div className="db dtc-l v-mid  w-100 w-25-l tc tl-l mb2 mb0-l" title="Home">
-          <Link to="/"><img src={logo} className="dib w-20" alt="Site Name" /></Link>
+      <nav className="bp3-navbar bp3-fixed-top">
+        <div className="bp3-navbar-group bp3-align-left">
+          <div className="bp3-navbar-heading">
+            <Link to="/">
+              <img
+                src={logo}
+                className="dib"
+                alt="Site Name"
+                style={{ width: '5rem' }}
+              />
+            </Link>
+          </div>
         </div>
-        <div className="db pa2 v-mid tc ">
+        <div className="bp3-navbar-group bp3-align-right">
           <Popover
             popoverClassName="bp3-popover-content-sizing"
             position={Position.BOTTOM}
@@ -68,7 +75,7 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
               onClick={(e: any) => props.logoutAction(props.history)}
             >
               Logout
-          </Button>
+            </Button>
           </Popover>
         </div>
       </nav>

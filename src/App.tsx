@@ -12,6 +12,7 @@ import { isAuthenticate } from "actions/UtilsActions";
 import { RoomPage } from "pages/workplace/RoomPage";
 import { FeedPage } from "pages/workplace/FeedPage";
 import { WorkplacePage } from "pages/workplace/WorkplacePage";
+import { Layout } from 'components/common/Layout';
 
 const load = async (
 	fetchUserAction: () => void,
@@ -26,13 +27,14 @@ const PrivateRoute = (props: {
 	path: string;
 	exact: boolean;
 }) => {
-	const Component: any = props.component;
 	return (
 		<Route
 			path={props.path}
 			exact={props.exact}
 			render={r =>
-				isAuthenticate() ? <Component /> : <Redirect to="/signin" />
+				isAuthenticate() ? 
+					<Layout Component={props.component} /> 
+					: <Redirect to="/signin" />
 			}
 		/>
 	);
@@ -65,7 +67,11 @@ const AppComponent = (props: AppProps) => {
 						isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
 					}
 				/>
-				<PrivateRoute path="/" exact={true} component={LandingPage} />
+				<PrivateRoute 
+					path="/" 
+					exact={true} 
+					component={LandingPage} 
+				/>
 				<PrivateRoute
 					path="/workplace"
 					exact={true}
@@ -76,7 +82,11 @@ const AppComponent = (props: AppProps) => {
 					exact={true}
 					component={FeedPage}
 				/>
-				<PrivateRoute path="/room" exact={true} component={RoomPage} />
+				<PrivateRoute 
+					path="/room" 
+					exact={true} 
+					component={RoomPage} 
+				/>
 			</Switch>
 		</BrowserRouter>
 	);
