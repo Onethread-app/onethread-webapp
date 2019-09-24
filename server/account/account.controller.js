@@ -390,9 +390,9 @@ const accountUpdate = async (req, res, next) => {
 
 // let's logout
 const logout = async (req, res) => {
-  let uid = req.account._id;
+  let uid = req.user._id;
   // Delete user refresh token from Redis
-  redis.del(uid);
+  rediscl.del(uid);
   // ... and then remove httpOnly cookies from browser
   res.clearCookie('access_token');
   res.clearCookie('refresh_token');
