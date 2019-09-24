@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
-const chatkitService = require('../services/pusher.services');
+const { chatkit } = require('../services/pusher.services');
 const Account = require('./account.model');
 const smtpTransport = require('../helpers/sendmail');
 const authService = require('../services/auth.services');
@@ -213,13 +213,18 @@ const register = async (req, res) => {
         account
           .save()
           .then(user => {
-            req.login(user, function(err) {
+            req.login(user, async function(err) {
               if (err) {
                 return sendJSONresponse(res, 400, {
                   success: false,
                   message: err,
                 });
               }
+              // user created in chatkit
+              await chatkit.createUser({
+                id: req.user._id,
+                name: req.user.firstName,
+              });
               return sendJSONresponse(res, 201, {
                 success: true,
                 token: token,
