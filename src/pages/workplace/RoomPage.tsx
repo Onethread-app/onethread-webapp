@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { isEmpty } from 'lodash';
-import { NavbarTop } from "components/Navbar";
-import { WorkplaceSidebar } from "components/WorkplaceSidebar";
 import { RoomList } from "components/company/workplace/rooms/RoomList";
 
 export const RoomPageComponent = (props: any) => {
@@ -24,19 +22,11 @@ export const RoomPageComponent = (props: any) => {
 	}, [props.chatkit.user]);
 
 	return (
-		<div className="bg-near-white">
-			<NavbarTop />
-			<div className="w-100 cf ">
-				<div className="fl bg-white w-10 pv6 vh-100 fixed">
-					<WorkplaceSidebar />
-				</div>
-				<div className="fl w-80 mt5" style={{ marginLeft: "10rem" }}>
-					<div className="fl w-20 ba pa2">
-						<RoomList rooms={rooms} />
-					</div>
-					<div className="fl w-80 ba pa2">chat</div>
-				</div>
+		<div className="cf">
+			<div className="fl w-20 ba pa2">
+				<RoomList rooms={rooms} />
 			</div>
+			<div className="fl w-80 ba pa2">chat</div>
 		</div>
 	);
 };
