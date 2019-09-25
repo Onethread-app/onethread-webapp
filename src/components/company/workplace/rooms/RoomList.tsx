@@ -18,7 +18,7 @@ export const RoomList = (
 	return (
 		<>
 			<main className="mw6 center">
-				{props.rooms.map(room => {
+				{props.rooms.length ? props.rooms.map(room => {
 					return (
 						<RoomListItem
 							key={room.id}
@@ -26,7 +26,7 @@ export const RoomList = (
 							roomTitle={room.roomTitle}
 						/>
 					);
-				})}
+				}) : <p>You're not assigned into any room.</p>}
 			</main>
 		</>
 	);
