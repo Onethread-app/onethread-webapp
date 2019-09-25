@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { isAuthenticate } from "actions/UtilsActions";
 import { RoomPage } from "pages/workplace/RoomPage";
 import { FeedPage } from "pages/workplace/FeedPage";
-import { WorkplacePage } from "pages/workplace/WorkplacePage";
+// import { WorkplacePage } from "pages/workplace/WorkplacePage";
 import { Layout } from 'components/common/Layout';
 
 const load = async (
@@ -32,8 +32,8 @@ const PrivateRoute = (props: {
 			path={props.path}
 			exact={props.exact}
 			render={r =>
-				isAuthenticate() ? 
-					<Layout Component={props.component} /> 
+				isAuthenticate() ?
+					<Layout Component={props.component} />
 					: <Redirect to="/signin" />
 			}
 		/>
@@ -67,25 +67,21 @@ const AppComponent = (props: AppProps) => {
 						isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
 					}
 				/>
-				<PrivateRoute 
-					path="/" 
-					exact={true} 
-					component={LandingPage} 
+				<PrivateRoute
+					path="/"
+					exact={true}
+					component={LandingPage}
 				/>
+
 				<PrivateRoute
 					path="/workplace"
 					exact={true}
-					component={WorkplacePage}
-				/>
-				<PrivateRoute
-					path="/feed"
-					exact={true}
 					component={FeedPage}
 				/>
-				<PrivateRoute 
-					path="/room" 
-					exact={true} 
-					component={RoomPage} 
+				<PrivateRoute
+					path="/workplace/room"
+					exact={true}
+					component={RoomPage}
 				/>
 			</Switch>
 		</BrowserRouter>
