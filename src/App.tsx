@@ -9,9 +9,9 @@ import { fetchUserAction } from "actions/AuthActions";
 import { initializeChatkitAction } from "actions/ChatkitActions";
 import { useEffect } from "react";
 import { isAuthenticate } from "actions/UtilsActions";
-import { RoomPage } from "pages/workplace/RoomPage";
-import { FeedPage } from "pages/workplace/FeedPage";
-// import { WorkplacePage } from "pages/workplace/WorkplacePage";
+import { RoomPage } from "pages/company/workplace/RoomPage";
+import { FeedPage } from "pages/company/workplace/FeedPage";
+import { CompanyProfilePage } from 'pages/company/CompanyProfilePage';
 import { Layout } from 'components/common/Layout';
 
 const load = async (
@@ -72,7 +72,11 @@ const AppComponent = (props: AppProps) => {
 					exact={true}
 					component={LandingPage}
 				/>
-
+				<PrivateRoute
+					exact={true}
+					path="/company/profile"
+					component={CompanyProfilePage}
+				/>
 				<PrivateRoute
 					path="/workplace"
 					exact={true}
@@ -84,6 +88,7 @@ const AppComponent = (props: AppProps) => {
 					component={RoomPage}
 				/>
 			</Switch>
+
 		</BrowserRouter>
 	);
 };

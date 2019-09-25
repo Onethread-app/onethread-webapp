@@ -9,11 +9,6 @@ interface WorkPlaceSidebarLinksProps {
 
 const DefaultSidebarLinks = () => (
 	<>
-		<Link to={`/workplace`} >
-			<Button className="mv2" icon="control">
-				Workplace
-						</Button>
-		</Link>
 		<Link to="/">
 			<Button className="mv2" icon="user">
 				Profile
@@ -24,17 +19,17 @@ const DefaultSidebarLinks = () => (
 
 const CompanySidebarLinks = (props: WorkPlaceSidebarLinksProps) => (
 	<>
-		<Link to={`/${props.parentUrl}/feed`} >
+		<Link to={`/workplace`} >
 			<Button className="mv2" icon="control">
-				Workplace1
+				Workplace
 						</Button>
 		</Link>
-		<Link to={`/${props.parentUrl}/room`} >
+		<Link to={`/${props.parentUrl}/profile`} >
 			<Button className="mv2" icon="layout-auto">
 				Profile
 						</Button>
 		</Link>
-		<Link to={`/${props.parentUrl}/task`} >
+		<Link to={`/${props.parentUrl}/profile`} >
 			<Button className="mv2" intent={Intent.PRIMARY} icon="briefcase">
 				Create Workplace
 						</Button>
@@ -64,11 +59,6 @@ const WorkPlaceSidebarLinks = (props: WorkPlaceSidebarLinksProps) => (
 				Team
 						</Button>
 		</Link>
-		{/* <Link to={`/${props.parentUrl}/create`} >
-			<Button className="mv2" icon="add">
-				Create
-						</Button>
-		</Link> */}
 	</>
 )
 

@@ -10,11 +10,21 @@ import logo from '../resources/images/tigrowLogo.png';
 import { useState } from 'react';
 import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListItemViewWithImage';
 import { CompanySignupForm } from './company/SignupForm';
+// import { CopmpanyModel } from 'reducers/CompanyReducer';
 interface NavbarTopProps {
   logoutAction: (history: History) => void;
 }
-
-const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
+interface CopmpanyModel {
+  company: {
+    companyName: string,
+    companyType: string,
+    companyMail: string,
+    companyAddress: string
+    legalOwnerName: string,
+    legalOwnerMail: string,
+  }
+}
+const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps & CopmpanyModel) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
@@ -38,20 +48,11 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
           >
             <Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>
             <div className="mw6 center">
+
               <ListItemViewWithImage
                 imageSrc="http://mrmrs.github.io/photos/p/2.jpg"
-                listTitle="Young Gatchell"
-                listDescription="@yg"
-              />
-              <ListItemViewWithImage
-                imageSrc="http://mrmrs.github.io/photos/p/3.jpg"
-                listTitle="Arnoldo Degraff"
-                listDescription="@99xx88randomhandle"
-              />
-              <ListItemViewWithImage
-                imageSrc="http://mrmrs.github.io/photos/p/4.jpg"
-                listTitle="Deirdre Lachance"
-                listDescription="@favfavfav"
+                listTitle={props.company.companyName}
+                listDescription={props.company.companyAddress}
               />
               <button
                 onClick={() => setShowDialog(!showDialog)}
@@ -96,5 +97,11 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
   );
 }
 
-export const NavbarTop = connect(null, { logoutAction })(withRouter(NavbarTopComponent));
+const mapStateToProps = (state: any) => {
+  return {
+    company: state.company.createCompany
+  }
+}
+
+export const NavbarTop = connect(mapStateToProps, { logoutAction })(withRouter(NavbarTopComponent));
 
