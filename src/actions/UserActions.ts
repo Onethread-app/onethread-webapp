@@ -6,7 +6,7 @@ import { EDIT_BASIC_INFO } from './Types';
 // import { CREATE_COMPANY, CREATE_COMPANY_ERROR } from './Types';
 // import { History } from 'history';
 
-export const editInfoAction = (basicInfo: any) => async (dispatch: any) => {
+export const editUserInfoAction = (basicInfo: any) => async (dispatch: any) => {
   try {
     // const response = await tigrowApi.post(
     //   "account/login",

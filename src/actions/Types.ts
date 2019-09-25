@@ -4,7 +4,6 @@
 export const USER_SIGNUP_LOADING = "USER_SIGNUP_LOADING";
 export const USER_SIGNUP = "USER_SIGNUP";
 export const USER_LOGIN = "USER_LOGIN";
-export const FETCH_USER = "FETCH_USER";
 export const USER_LOGIN_ERROR = "USER_LOGIN_ERROR";
 export const USER_LOGOUT = "USER_LOGOUT";
 
@@ -27,6 +26,9 @@ export const GET_ROOMS_ERROR = "GET_ROOMS_ERROR";
 export const CREATE_COMPANY = "CREATE_COMPANY";
 export const CREATE_COMPANY_ERROR = "CREATE_COMPANY_ERROR";
 
-// Info reducer type
+// User reducer type
 export const BASIC_INFO ="BASIC_INFO"
 export const EDIT_BASIC_INFO ="EDIT_BASIC_INFO"
+export const FETCH_USER = "FETCH_USER";
+export const USER_FETCH_LOADING = "USER_FETCH_LOADING";
+export const USER_FETCH_ERROR = "USER_FETCH_ERROR";

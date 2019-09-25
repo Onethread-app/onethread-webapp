@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { isEmpty, isNumber } from 'lodash';
 import { connect } from 'react-redux';
-import { editInfoAction } from 'actions/InfoActions';
+import { editUserInfoAction } from 'actions/UserActions';
 import { NumericInput } from '@blueprintjs/core';
 import { InputGroupField } from 'components/common/field/InputGroup';
 
@@ -169,4 +169,4 @@ const BasicInfoFormComponent = (props: {
 // }
 
 
-export const BasicInfoForm = connect(null, { editInfoAction })(BasicInfoFormComponent);
+export const BasicInfoForm = connect(null, { editInfoAction: editUserInfoAction })(BasicInfoFormComponent);

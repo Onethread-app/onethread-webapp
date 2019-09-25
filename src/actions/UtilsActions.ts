@@ -1,6 +1,6 @@
 // Setup config/headers and token
 export const tokenConfig = (getState:any) => {
-  const token = getState().auth.token;
+  const token = getState().authReducer.token;
   return {
     headers: {
       "Content-type": "application/json",

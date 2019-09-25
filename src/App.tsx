@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import { isAuthenticate } from "actions/UtilsActions";
 import { RoomPage } from "pages/company/workplace/RoomPage";
 import { FeedPage } from "pages/company/workplace/FeedPage";
-import { CompanyProfilePage } from 'pages/company/CompanyProfilePage';
+import { CompanyProfilePage } from 'pages/company/ProfilePage';
 import { Layout } from 'components/common/Layout';
 
 const load = async (

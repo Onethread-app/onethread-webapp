@@ -10,7 +10,7 @@ export interface CopmpanyModel {
 }
 
 const InitialState = {
-  createCompany: {}
+  company: {}
 }
 
 export const CompanyReducer = (state = InitialState, action: any) => {
@@ -18,7 +18,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CREATE_COMPANY:
       return {
         ...state,
-        createCompany: action.payload.newCompany
+        company: action.payload.newCompany
       }
 
     default:

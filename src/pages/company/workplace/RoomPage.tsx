@@ -33,7 +33,7 @@ export const RoomPageComponent = (props: any) => {
 
 const mapStateToProps = (state: any) => {
 	return {
-		chatkit: state.chatkit
+		chatkit: state.chatkitReducer
 	};
 };
 
