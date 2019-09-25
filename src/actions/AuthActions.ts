@@ -115,7 +115,7 @@ export const logoutAction = (routeHistory: History) => async (
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
 			localStorage.removeItem("token");
-			await tigrowApi.get(`/account/logout`);
+			await tigrowApi.get(`/account/logout`, headers);
 			routeHistory.push("/signin");
 			dispatch({ type: USER_LOGOUT });
 		} else {
