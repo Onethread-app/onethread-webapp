@@ -5,8 +5,8 @@ import { Dialog } from '@blueprintjs/core';
 import { SectionViewWithTitleAndDesciption } from './ListItemView';
 import { connect } from 'react-redux';
 
-const CompanyProductDetailsViewComponent = (props:any) => {
-  const [showDialog,setShowDialog]= useState(false)
+const CompanyProductDetailsViewComponent = (props: any) => {
+  const [showDialog, setShowDialog] = useState(false)
   return (
     <>
       <div className="br3 bg-white h-auto pa4 mt3">
@@ -47,7 +47,6 @@ const CompanyProductDetailsViewComponent = (props:any) => {
 }
 
 const mapStateToProps = (state: any) => {
-  console.log('mithhu', state.company.createCompany);
   return {
     company: state.company.createCompany
   }

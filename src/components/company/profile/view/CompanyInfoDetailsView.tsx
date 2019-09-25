@@ -28,7 +28,7 @@ const CompanyInfoDetailsViewComponent = (props: any) => {
             </div>
           </Dialog>
         )}
-         <SectionViewWithTitleAndDesciption
+        <SectionViewWithTitleAndDesciption
           listTitle="Company Address"
           listDescription={props.company.companyAddress}
         />
@@ -36,8 +36,8 @@ const CompanyInfoDetailsViewComponent = (props: any) => {
           listTitle="Company Email Address"
           listDescription={props.company.companyMail}
         />
-       
-         <SectionViewWithTitleAndDesciption
+
+        <SectionViewWithTitleAndDesciption
           listTitle="Legal Owner"
           listDescription={props.company.legalOwnerName}
         />
@@ -52,7 +52,6 @@ const CompanyInfoDetailsViewComponent = (props: any) => {
 }
 
 const mapStateToProps = (state: any) => {
-  console.log('mithhu', state.company.createCompany);
   return {
     company: state.company.createCompany
   }

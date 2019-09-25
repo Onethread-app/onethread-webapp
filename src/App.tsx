@@ -9,10 +9,9 @@ import { fetchUserAction } from "actions/AuthActions";
 import { initializeChatkitAction } from "actions/ChatkitActions";
 import { useEffect } from "react";
 import { isAuthenticate } from "actions/UtilsActions";
-import { RoomPage } from "pages/workplace/RoomPage";
-import { FeedPage } from "pages/workplace/FeedPage";
-import { WorkplacePage } from "pages/workplace/WorkplacePage";
-import { CompanyProfilePage } from 'pages/workplace/CompanyProfilePage';
+import { RoomPage } from "pages/company/workplace/RoomPage";
+import { FeedPage } from "pages/company/workplace/FeedPage";
+import { CompanyProfilePage } from 'pages/company/CompanyProfilePage';
 import { Layout } from 'components/common/Layout';
 
 const load = async (
@@ -74,22 +73,17 @@ const AppComponent = (props: AppProps) => {
 					component={LandingPage}
 				/>
 				<PrivateRoute
-					path="/workplace"
 					exact={true}
-					component={WorkplacePage}
+					path="/company/profile"
+					component={CompanyProfilePage}
 				/>
 				<PrivateRoute
-					path="/feed"
+					path="/workplace"
 					exact={true}
 					component={FeedPage}
 				/>
 				<PrivateRoute
-					exact={true}
-					path="/profile"
-					component={CompanyProfilePage}
-				/>
-				<PrivateRoute
-					path="/room"
+					path="/workplace/room"
 					exact={true}
 					component={RoomPage}
 				/>
