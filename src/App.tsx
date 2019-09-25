@@ -12,6 +12,7 @@ import { isAuthenticate } from "actions/UtilsActions";
 import { RoomPage } from "pages/workplace/RoomPage";
 import { FeedPage } from "pages/workplace/FeedPage";
 import { WorkplacePage } from "pages/workplace/WorkplacePage";
+import { CompanyProfilePage } from 'pages/workplace/CompanyProfilePage';
 import { Layout } from 'components/common/Layout';
 
 const load = async (
@@ -32,8 +33,8 @@ const PrivateRoute = (props: {
 			path={props.path}
 			exact={props.exact}
 			render={r =>
-				isAuthenticate() ? 
-					<Layout Component={props.component} /> 
+				isAuthenticate() ?
+					<Layout Component={props.component} />
 					: <Redirect to="/signin" />
 			}
 		/>
@@ -67,10 +68,10 @@ const AppComponent = (props: AppProps) => {
 						isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
 					}
 				/>
-				<PrivateRoute 
-					path="/" 
-					exact={true} 
-					component={LandingPage} 
+				<PrivateRoute
+					path="/"
+					exact={true}
+					component={LandingPage}
 				/>
 				<PrivateRoute
 					path="/workplace"
@@ -82,12 +83,18 @@ const AppComponent = (props: AppProps) => {
 					exact={true}
 					component={FeedPage}
 				/>
-				<PrivateRoute 
-					path="/room" 
-					exact={true} 
-					component={RoomPage} 
+				<PrivateRoute
+					exact={true}
+					path="/profile"
+					component={CompanyProfilePage}
+				/>
+				<PrivateRoute
+					path="/room"
+					exact={true}
+					component={RoomPage}
 				/>
 			</Switch>
+
 		</BrowserRouter>
 	);
 };
