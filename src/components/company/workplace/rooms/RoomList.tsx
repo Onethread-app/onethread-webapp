@@ -17,7 +17,7 @@ export const RoomList = (
 
 	return (
 		<>
-			<main className="mw6 center">
+			<main className="mw6 center ">
 				{props.rooms.length ? props.rooms.map(room => {
 					return (
 						<RoomListItem
