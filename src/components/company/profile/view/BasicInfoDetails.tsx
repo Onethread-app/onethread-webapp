@@ -64,7 +64,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    users: state.info.user
+    users: state.userReducer.user
   }
 }
 

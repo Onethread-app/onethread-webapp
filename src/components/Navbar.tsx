@@ -99,7 +99,7 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps & Copmpa
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.company.createCompany
+    company: state.companyReducer.company
   }
 }
 

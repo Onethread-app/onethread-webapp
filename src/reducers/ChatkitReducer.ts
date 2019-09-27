@@ -17,6 +17,7 @@ export const ChatkitReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         user: action.payload,
+        error:null,
         loading: false
       }
     case GET_CHATKIT_USER_ERROR:

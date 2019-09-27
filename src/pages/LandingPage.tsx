@@ -4,9 +4,11 @@ import skill from '../resources/images/skills.png';
 import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { EducationInfoDetailsView as EducationInfoDetailsView } from 'components/company/profile/view/EducationInfoDetails';
 import { BasicInfoDetailsView as BasicInfoDetailsView } from 'components/company/profile/view/BasicInfoDetails';
+import { initializeChatkitAction } from 'actions/ChatkitActions';
+import { isEmpty } from 'lodash';
 
 const skills = [
   { id: '1', name: 'Programing C' },
@@ -16,60 +18,77 @@ const skills = [
   { id: '5', name: 'React' },
 ]
 
-export const LandingPageComponent = () => {
+const load = async (
+  initializeChatkitAction: () => void
+) => {
+  await initializeChatkitAction();
+}
+
+interface LandingPageProps {
+  chatkitUser: any;
+  initializeChatkitAction: () => void;
+}
+
+export const LandingPageComponent = (props: LandingPageProps) => {
 
   const [showDialog, setShowDialog] = useState(false);
   // Should comes from redux store
   const [selectedItems, setSelectedItems] = useState([] as ItemEntityProps[]);
 
+  useEffect(() => {
+    if (isEmpty(props.chatkitUser)) {
+      load(props.initializeChatkitAction);
+    }
+  },[props.chatkitUser]);
+
   return (
     <>
-        <div className="cf w-100">
-          <h1 className="f5 lh-title tigrow-lightGray-1 ml3 tigrow-lightGray-1 mb0">Profile</h1>
-          <div>
-            <div className="fl w-25-ns pa2 ">
-              <div className="h-auto br3 ma2 pa3 bg-white cf tc">
-                <img src={user}></img>
-                <h1 className="f6 lh-copy tigrow-lightGray-1">Julian Martha</h1>
-                <p className="tigrow-lightGray-1">Software Developer</p>
-              </div>
-              <div className="h-auto br3 ma2 pa3 bg-white cf">
-                <h1 className="f6 lh-copy tigrow-lightGray-1">About</h1>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-                   Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+      <div className="cf w-100">
+        <h1 className="f5 lh-title tigrow-lightGray-1 ml3 tigrow-lightGray-1 mb0">Profile</h1>
+        <div>
+          <div className="fl w-25-ns pa2 ">
+            <div className="h-auto br3 ma2 pa3 bg-white cf tc">
+              <img src={user}></img>
+              <h1 className="f6 lh-copy tigrow-lightGray-1">Julian Martha</h1>
+              <p className="tigrow-lightGray-1">Software Developer</p>
+            </div>
+            <div className="h-auto br3 ma2 pa3 bg-white cf">
+              <h1 className="f6 lh-copy tigrow-lightGray-1">About</h1>
+              <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                 Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
                  when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-              </div>
-              <div className="h-auto br3 ma2 pa3 bg-white cf">
-                <h1 className="f6 lh-copy">Skills</h1>
-                <div className="tc">
-                  <img src={skill}></img>
-                  <p>No skill has selected</p>
-                  <button
-                    className="br3 grow ph4 pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0"
-                    onClick={() => setShowDialog(!showDialog)}
-                  >
-                    Add Skills
+            </div>
+            <div className="h-auto br3 ma2 pa3 bg-white cf">
+              <h1 className="f6 lh-copy">Skills</h1>
+              <div className="tc">
+                <img src={skill}></img>
+                <p>No skill has selected</p>
+                <button
+                  className="br3 grow ph4 pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0"
+                  onClick={() => setShowDialog(!showDialog)}
+                >
+                  Add Skills
                   </button>
-                </div>
               </div>
             </div>
-            <div className="fl w-75-ns">
-              <BasicInfoDetailsView />
-              <EducationInfoDetailsView />
-              <div className="br3 bg-white h-auto pa4 mt3">
-                <div className="cf ">
-                  <h1 className="f5 lh-copy dib">Experience</h1>
-                  <Icon className="fr mv3 tigrow-lightBlue" icon="add" />
-                </div>
-                <Divider />
-                <div className="br3 bg-white h-auto">
-                  <img src={skill}></img>
-                  <p>No experience has added</p>
-                </div>
+          </div>
+          <div className="fl w-75-ns">
+            <BasicInfoDetailsView />
+            <EducationInfoDetailsView />
+            <div className="br3 bg-white h-auto pa4 mt3">
+              <div className="cf ">
+                <h1 className="f5 lh-copy dib">Experience</h1>
+                <Icon className="fr mv3 tigrow-lightBlue" icon="add" />
+              </div>
+              <Divider />
+              <div className="br3 bg-white h-auto">
+                <img src={skill}></img>
+                <p>No experience has added</p>
               </div>
             </div>
           </div>
         </div>
+      </div>
       {showDialog && (
         <Dialog
           onClose={() => setShowDialog(!showDialog)}
@@ -122,8 +141,9 @@ export const LandingPageComponent = () => {
 
 const mapStateToProps = (state: any) => {
   return {
-    users: state.info.user
+    users: state.userReducer.user,
+    chatkitUser: state.chatkitReducer.user
   }
 }
 
-export const LandingPage = connect(mapStateToProps)(LandingPageComponent)
+export const LandingPage = connect(mapStateToProps, { initializeChatkitAction })(LandingPageComponent)

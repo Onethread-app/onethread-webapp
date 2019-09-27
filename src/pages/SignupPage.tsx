@@ -365,8 +365,8 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
 
 const mapStateToProps = (state: any) => {
   return { 
-    loading: state.auth.loading,
-    errorUnauthorized: state.auth.loginError };
+    loading: state.authReducer.loading,
+    errorUnauthorized: state.authReducer.loginError };
 };
 
 export const SignUpPage = connect(mapStateToProps, { userSignupAction })(withRouter(SignUpPageComponent));

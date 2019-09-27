@@ -3,7 +3,7 @@ import { ButtonGroup, Alignment, Button, Intent } from "@blueprintjs/core";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from 'react-redux';
 
-interface WorkPlaceSidebarLinksProps {
+interface SidebarLinksProps {
 	parentUrl: string;
 }
 
@@ -17,7 +17,7 @@ const DefaultSidebarLinks = () => (
 	</>
 )
 
-const CompanySidebarLinks = (props: WorkPlaceSidebarLinksProps) => (
+const CompanySidebarLinks = (props: SidebarLinksProps) => (
 	<>
 		<Link to={`/workplace`} >
 			<Button className="mv2" icon="control">
@@ -37,7 +37,7 @@ const CompanySidebarLinks = (props: WorkPlaceSidebarLinksProps) => (
 	</>
 )
 
-const WorkPlaceSidebarLinks = (props: WorkPlaceSidebarLinksProps) => (
+const WorkPlaceSidebarLinks = (props: SidebarLinksProps) => (
 	<>
 		<Link to={`/${props.parentUrl}`} >
 			<Button className="mv2" icon="control">
@@ -65,7 +65,6 @@ const WorkPlaceSidebarLinks = (props: WorkPlaceSidebarLinksProps) => (
 const SidebarComponent = (props: any) => {
 	const dynamicSidebar = () => {
 		let url = props.match.url.split('/');
-		console.log(url[1]);
 
 		switch (url[1]) {
 			case 'company':

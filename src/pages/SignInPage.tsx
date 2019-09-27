@@ -195,8 +195,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
 
 const mapStateToProps = (state: any) => {
   return { 
-    loading: state.auth.loading,
-    errorUnauthorized: state.auth.loginError 
+    loading: state.authReducer.loading,
+    errorUnauthorized: state.authReducer.loginError 
   };
 };
 
