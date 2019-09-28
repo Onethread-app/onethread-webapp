@@ -27,6 +27,7 @@ export const RoomPageComponent = (props: any) => {
 	const [isOpen, setIsOpen] = useState(true);
 
 	useEffect(() => {
+		// TODO: actual room will be fetch later
 		// if (!isEmpty(props.chatkit.user)) {
 		// 	let r = props.chatkit.user.rooms.map((r: any) => {
 		// 		return {
