@@ -46,13 +46,13 @@ const validateUrl = [
 const company = new Schema(
   {
     // required fields
-    companyName: {
+    name: {
       type: String,
       unique: true,
       trim: true,
       required: true,
     },
-    companyType: {
+    type: {
       type: String,
       enum: [
         'Manufacturer',
@@ -67,11 +67,11 @@ const company = new Schema(
       ],
       required: true,
     },
-    companyAddress: {
+    address: {
       type: String,
       required: true,
     },
-    companyMail: {
+    email: {
       type: String,
     },
     legalOwnerName: {
@@ -80,6 +80,12 @@ const company = new Schema(
     legalOwnerMail: {
       type: String,
     },
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubSubCategory',
+      },
+    ],
     account: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
@@ -98,23 +104,17 @@ const company = new Schema(
       },
     ],
     // others
-    products: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'SubSubCategory',
-      },
-    ],
     logo: {
       type: String,
     },
     location: {
       type: String,
     },
-    companyUrl: {
+    websites: {
       type: [String],
       validate: validateUrl,
     },
-    yearCompanyRegistration: {
+    registrationYear: {
       type: Number,
       get: v => Number(v),
       set: v => Number(v),
@@ -145,7 +145,7 @@ const company = new Schema(
         'above 2000 square meters',
       ],
     },
-    companyIntroduction: {
+    about: {
       type: String,
       maxlength: 256,
     },
