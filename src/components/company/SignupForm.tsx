@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { isEmpty } from 'lodash';
-import { HTMLSelect, Icon } from '@blueprintjs/core';
+import { HTMLSelect, Icon, Button } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { createCompanyAction } from 'actions/CompanyActions';
@@ -20,6 +20,7 @@ const companyType = [
 ]
 
 const CompanySignupFormComponent = (props: {
+  setShowDialog: (val: boolean) => void;
   createCompanyAction: (val: any, history: History) => void
 } & RouteComponentProps) => {
   const [values, setValues] = useState({
@@ -39,6 +40,8 @@ const CompanySignupFormComponent = (props: {
     companyAddress: "",
     companyType: ""
   });
+
+
 
   const emailValidation = (email: string) => {
     const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -90,7 +93,7 @@ const CompanySignupFormComponent = (props: {
   }
 
   return (
-    <form className="fl w-100 pa2">
+    <form className="fl w-100 pa2" >
       <div className={` ${errors.companyName ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
@@ -261,17 +264,18 @@ const CompanySignupFormComponent = (props: {
         {errors.legalOwnerMail ? <small style={{ color: 'red' }}>{errors.legalOwnerMail}</small> : ""}
       </div>
       <div className="tc">
-        <button className="b--none w4 br3 grow h2  pointer pv2 white tc "
+        <Button className="b--none w4 br3 grow h2  pointer pv2 white tc"
           style={{ background: "#0fa3a3", outline: "none" }}
-          onClick={e => {
+          onClick={(e:any) => {
             e.preventDefault();
             if (!emptyValueCheck()) {
               props.createCompanyAction(values, props.history);
+              props.setShowDialog(false);
             }
           }}
         >
           Submit
-        </button>
+        </Button>
       </div>
 
     </form>

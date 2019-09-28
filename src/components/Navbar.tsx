@@ -10,21 +10,17 @@ import logo from '../resources/images/tigrowLogo.png';
 import { useState } from 'react';
 import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListItemViewWithImage';
 import { CompanySignupForm } from './company/SignupForm';
-// import { CopmpanyModel } from 'reducers/CompanyReducer';
-interface NavbarTopProps {
+import { selectCompanyAction } from 'actions/CompanyActions';
+import { CompanyModel } from 'reducers/CompanyReducer';
+
+interface NavbarTopInternalProps {
   logoutAction: (history: History) => void;
+  selectCompanyAction: (companyId: string, history: History) => void;
+  companies: CompanyModel[],
+  newCompany: CompanyModel
 }
-interface CopmpanyModel {
-  company: {
-    companyName: string,
-    companyType: string,
-    companyMail: string,
-    companyAddress: string
-    legalOwnerName: string,
-    legalOwnerMail: string,
-  }
-}
-const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps & CopmpanyModel) => {
+
+const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
@@ -43,17 +39,20 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps & Copmpa
         </div>
         <div className="bp3-navbar-group bp3-align-right">
           <Popover
-            popoverClassName="bp3-popover-content-sizing"
+            popoverClassName="bp3-popover-content-sizing h5 overflow-y-auto"
             position={Position.BOTTOM}
           >
             <Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>
             <div className="mw6 center">
+              {props.companies.map((company: CompanyModel) => (
+                <ListItemViewWithImage
+                  imageSrc={`https://robohash.org/${company.companyName}`}
+                  listTitle={company.companyName}
+                  listDescription="C"
+                  onClick={() => props.selectCompanyAction(company._id, props.history)}
+                />
+              ))}
 
-              <ListItemViewWithImage
-                imageSrc="http://mrmrs.github.io/photos/p/2.jpg"
-                listTitle={props.company.companyName}
-                listDescription={props.company.companyAddress}
-              />
               <button
                 onClick={() => setShowDialog(!showDialog)}
                 className="b--none w-100 br3 grow h2 ph5 pointer pv2 white outline-0 bg-tigrowLightBlue ma2"
@@ -89,7 +88,7 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps & Copmpa
           style={{ background: '#fff' }}
         >
           <div>
-            <CompanySignupForm />
+            <CompanySignupForm setShowDialog={setShowDialog} />
           </div>
         </Dialog>
       )}
@@ -99,9 +98,10 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps & Copmpa
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.company
+    companies: state.userReducer.user.companies,
+    newCompany: state.companyReducer.company
   }
 }
 
-export const NavbarTop = connect(mapStateToProps, { logoutAction })(withRouter(NavbarTopComponent));
+export const NavbarTop = connect(mapStateToProps, { logoutAction, selectCompanyAction })(withRouter(NavbarTopComponent));
 

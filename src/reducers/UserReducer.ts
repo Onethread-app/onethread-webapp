@@ -1,9 +1,22 @@
 import {
-	EDIT_BASIC_INFO, BASIC_INFO, FETCH_USER, USER_FETCH_LOADING, USER_FETCH_ERROR
+	EDIT_BASIC_INFO, BASIC_INFO, FETCH_USER, USER_FETCH_LOADING, USER_FETCH_ERROR, USER_COMPANIES_UPDATE
 } from "actions/Types";
+import { string } from 'prop-types';
 
 const InitialState = {
-	user: {},
+	user: {
+		_id: "",
+		email: "",
+		firstName: "",
+		lastName: "",
+		accountVerified: false,
+		role: string,
+		contactNo: string,
+		companies: [],
+		friends: [],
+		pendingFriends: [],
+		sendingFriendList: []
+	},
 	loading: false,
 	fetchError: ''
 }
@@ -11,20 +24,31 @@ const InitialState = {
 export const UserReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
 		case USER_FETCH_LOADING:
-      return {
-        ...state,
-        loading: true,
+			return {
+				...state,
+				loading: true,
 			}
-			case USER_FETCH_ERROR:
-      return {
-        ...state,
+		case USER_FETCH_ERROR:
+			return {
+				...state,
 				fetchError: action.payload,
 				loading: false
-      }
+			}
 		case BASIC_INFO:
 			return {
 				...state,
 				user: action.payload.user
+			}
+		case USER_COMPANIES_UPDATE:
+			return {
+				...state,
+				user: {
+					...state.user,
+					companies: [
+						...state.user.companies,
+						action.payload
+					]
+				}
 			}
 		case FETCH_USER:
 			return {

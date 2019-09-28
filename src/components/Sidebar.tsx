@@ -24,7 +24,7 @@ const CompanySidebarLinks = (props: SidebarLinksProps) => (
 				Workplace
 						</Button>
 		</Link>
-		<Link to={`/${props.parentUrl}/profile`} >
+		<Link to={`/${props.parentUrl}`} >
 			<Button className="mv2" icon="layout-auto">
 				Profile
 						</Button>

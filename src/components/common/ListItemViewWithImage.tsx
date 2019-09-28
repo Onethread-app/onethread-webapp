@@ -4,10 +4,14 @@ interface CompanyListItemProps {
   imageSrc: string;
   listTitle: string;
   listDescription: string;
+  onClick?: () => void;
 }
 
 export const ListItemViewWithImage = (props: CompanyListItemProps) => (
-  <article className="dt w-100 pb2 mt2" >
+  <article
+    className="dt w-100 pb2 mt2 pointer"
+    onClick={props.onClick ? props.onClick : () => null}
+  >
     <div className="dtc w1 w2-ns v-mid">
       <img src={props.imageSrc} className="ba b--black-10 db w1 w2-ns h1 h2-ns br3" />
     </div>
@@ -17,3 +21,4 @@ export const ListItemViewWithImage = (props: CompanyListItemProps) => (
     </div>
   </article>
 )
+

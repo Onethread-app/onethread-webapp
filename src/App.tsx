@@ -74,7 +74,7 @@ const AppComponent = (props: AppProps) => {
 				/>
 				<PrivateRoute
 					exact={true}
-					path="/company/profile"
+					path="/company"
 					component={CompanyProfilePage}
 				/>
 				<PrivateRoute
