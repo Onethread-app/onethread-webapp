@@ -9,8 +9,14 @@ font-family: 'Lato', sans-serif;
 .bg-0{
   background-color: none;
 }
+.c-tigrowWhite{
+  color: #ffffff;
+}
 .bg-tigrowLightBlue{
   background-color: #0fa3a3;
+}
+.bg-tigrowDarkBlue{
+  background-color: #10496e;
 }
 .bg-tigrow{
   background-color: #F5F6FA;
@@ -36,7 +42,9 @@ font-family: 'Lato', sans-serif;
 a:hover {
   text-decoration: none;
 }
-
+.w-2{
+  width: 2%;
+}
 .w-15{
   width: 15%;
 }
@@ -52,6 +60,12 @@ a:hover {
   border: none;
 }
 
+.left--8{
+  left: -8px;
+}
+.right--8{
+  right: -8px;
+}
 
 @media only screen and (min-width: 30em) {
   .w-15-ns{

@@ -10,34 +10,7 @@ export const ChatLayout = () => {
   const [vertical] = useState(false);
 
   return (
-    <div>
-
-      {/* 1st */}
-      {/* <Navbar>
-        <Navbar.Group>
-          <Navbar.Heading>
-            Current page: <strong>{navbarTabId}</strong>
-          </Navbar.Heading>
-        </Navbar.Group>
-        <Navbar.Group align={Alignment.RIGHT}>
-          <Tabs
-            animate={animate}
-            id="navbar"
-            large={true}
-            onChange={(e) => {
-              console.log(e);
-              setNavbarTabId(e.toString());
-            }}
-            selectedTabId={navbarTabId}
-          >
-            <Tab id="Home" title="Home" />
-            <Tab id="Files" title="Files" />
-            <Tab id="Builds" title="Builds" />
-          </Tabs>
-        </Navbar.Group>
-      </Navbar> */}
-
-      {/* 2nd */}
+    <div className="z-2">
       <Tabs
         animate={animate}
         id="TabsExample"
@@ -45,7 +18,6 @@ export const ChatLayout = () => {
         renderActiveTabPanelOnly={activePanelOnly}
         vertical={vertical}
       >
-        <Tab id="tm" title="Timeline" panel={<Timeline />} />
         <Tab id="ch" title="Chat" panel={<Chat />} />
         <Tab id="ta" title="Task" panel={<Task />} panelClassName="task-panel" />
         <Tabs.Expander />
@@ -54,16 +26,6 @@ export const ChatLayout = () => {
   );
 
 }
-
-const Timeline: React.SFC<{}> = () => (
-  <div>
-    <H3>Example panel: Timeline</H3>
-    <p className={Classes.RUNNING_TEXT}>
-      Lots of people use React as the V in MVC. Since React makes no assumptions about the rest of your technology
-      stack, it's easy to try it out on a small feature in an existing project.
-        </p>
-  </div>
-);
 
 const Chat: React.SFC<{}> = () => (
   <div>
