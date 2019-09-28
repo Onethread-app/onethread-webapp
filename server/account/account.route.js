@@ -36,7 +36,7 @@ router
 router.route('/token').post(accountCtrl.tokenVerification);
 
 router.route('/').get(requireAuth, accountCtrl.getAccount);
-router.route('/logout').get(accountCtrl.logout);
+router.route('/logout').get(requireAuth, accountCtrl.logout);
 router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);
 
 router.route('/forgetPassword').post(accountCtrl.forgetPassword);

@@ -1,10 +1,8 @@
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
-const chatkitService = require('../services/pusher.services');
+const { chatkit } = require('../services/pusher.services');
 const Account = require('./account.model');
 const smtpTransport = require('../helpers/sendmail');
-const authService = require('../services/auth.services');
-const bcryptService = require('../services/bcrypt.services');
 const config = require('../../config/config');
 
 // Declaring all variables
@@ -213,13 +211,18 @@ const register = async (req, res) => {
         account
           .save()
           .then(user => {
-            req.login(user, function(err) {
+            req.login(user, async function(err) {
               if (err) {
                 return sendJSONresponse(res, 400, {
                   success: false,
                   message: err,
                 });
               }
+              // user created in chatkit
+              await chatkit.createUser({
+                id: req.user._id,
+                name: req.user.firstName,
+              });
               return sendJSONresponse(res, 201, {
                 success: true,
                 token: token,
@@ -300,6 +303,7 @@ const login = async (req, res) => {
   });
   //client.set('string key', 'string val', redis.print);
   rediscl.set(user_id, refreshToken, rediscl.print);
+
   const {
     _id,
     email,
@@ -390,9 +394,9 @@ const accountUpdate = async (req, res, next) => {
 
 // let's logout
 const logout = async (req, res) => {
-  let uid = req.account._id;
+  let uid = req.user._id;
   // Delete user refresh token from Redis
-  redis.del(uid);
+  rediscl.del(uid);
   // ... and then remove httpOnly cookies from browser
   res.clearCookie('access_token');
   res.clearCookie('refresh_token');
@@ -461,11 +465,6 @@ const forgetPassword = async (req, res) => {
     });
 };
 
-/**
- * Change password function called by route
- * @param {Object} req - request object
- * @param {Object} res - response object
- */
 const verifyChangePassword = async (req, res) => {
   let token = req.params.token;
   let data = jwt.decode(token, config.jwtSecret);
@@ -559,96 +558,6 @@ const verifyAccount = async (req, res) => {
       });
   }
 };
-
-// const followAccount = (req, res) => {
-// 	let reqUserID = req.user.id;
-// 	let reqQueryID = req.query.id;
-// 	// check if you follow yourself
-// 	if (reqUserID === reqQueryID) {
-// 		return res.status(400).json({
-// 			success: false,
-// 			msg: "You cannot follow yourself"
-// 		});
-// 	}
-// 	Account.findById(reqQueryID)
-// 		.then(account => {
-// 			//console.log(account);
-// 			// check if the requested user is already in follower list
-// 			if (account.followers.filter(follower =>
-// 					follower.user.toString() === reqUserID).length > 0) {
-// 				return res.status(400).json({
-// 					success: false,
-// 					msg: "You already followed the user"
-// 				});
-// 			}
-// 			account.followers.unshift({
-// 				user: reqUserID
-// 			});
-// 			account.save();
-// 			Account.findOne({
-// 					email: req.user.email
-// 				})
-// 				.then(account => {
-// 					account.following.unshift({
-// 						user: reqQueryID
-// 					});
-// 					account.save().then(user => res.json(user));
-// 				})
-// 				.catch(err => res.status(404).json({
-// 					success: false,
-// 					msg: "you already follow the user"
-// 				}));
-// 		});
-// };
-
-// const removeFollowing = (req, res, next) => {
-// 	let reqUserID = req.user.id;
-// 	let unfollowId = req.query.id;
-// 	console.log(reqUserID, unfollowId);
-// 	Account.findByIdAndUpdate(reqUserID, {
-// 		$pull: {
-// 			"followers": {
-// 				"user": reqUserID
-// 			}
-// 		}
-// 	}, (err, result) => {
-// 		if (err) {
-// 			return res.status(400).json({
-// 				error: (err)
-// 			});
-// 		}
-// 		next();
-// 	});
-// };
-
-// const removeFollower = (req, res) => {
-// 	let reqUserID = req.user.id;
-// 	let unfollowId = req.query.id;
-// 	console.log(reqUserID, unfollowId);
-// 	Account.findByIdAndUpdate(unfollowId, {
-// 			$pull: {
-// 				"followers": {
-// 					"user": reqUserID
-// 				}
-// 			}
-// 		}, {
-// 			new: true
-// 		})
-// 		.populate('following', '_id')
-// 		.populate('followers', '_id')
-// 		.exec((err, result) => {
-// 			if (err) {
-// 				return res.status(400).json({
-// 					error: (err)
-// 				});
-// 			}
-// 			res.status(200).json({
-// 				success: true,
-// 				msg: "unfollow successfully done",
-// 				result: result
-// 			});
-// 		});
-// };
 
 // send friend request to an account
 const sendFriendRequest = async (req, res) => {
@@ -786,75 +695,6 @@ const sendFriendRequestList = async (req, res) => {
     });
   });
 };
-
-// reject friend request
-// const rejectFriendRequest = async (req, res) => {
-// 	let reqUserID = req.user.id;
-// 	let reqQueryID = req.query.userID;
-// 	console.log(reqUserID, reqQueryID);
-
-// 	Account.findById(reqUserID)
-// 		.then(account => {
-// 			Account.findByIdAndUpdate(reqUserID, {
-// 					$pull: {
-// 						"pendingFriends": {
-// 							"user": reqQueryID
-// 						}
-// 					}
-// 				}, (err, result) => {
-// 					if (err) {
-// 						return res.status(400).json({
-// 							error: err
-// 						});
-// 					}
-// 					res.status(200).json({
-// 						success: true,
-// 						msg: "successfully reject the user",
-// 						result: result
-// 					});
-// 				}
-
-// 			);
-// 		});
-// };
-
-// remove friend from friend list
-// const removeFriend = async (req, res) => {
-// 	let reqUserID = req.user.id;
-// 	let reqQueryID = req.query.userID;
-// 	Account.findByIdAndUpdate(reqUserID, {
-// 		$pull: {
-// 			"friends": {
-// 				"user": reqQueryID
-// 			}
-// 		}
-// 	}, (err, result) => {
-// 		if (err) {
-// 			return res.status(400).json({
-// 				error: err
-// 			});
-// 		}
-// 		Account.findByIdAndUpdate(reqQueryID, {
-// 			$pull: {
-// 				"friends": {
-// 					"user": reqUserID
-// 				}
-// 			}
-// 		}, (err, result) => {
-// 			if (err) {
-// 				return res.status(400).json({
-// 					error: err
-// 				});
-// 			}
-// 			res.status(200).json({
-// 				success: true,
-// 				msg: "unfriend successful",
-// 				result: result
-// 			});
-// 		});
-// 	});
-
-// };
 
 const getAllAccounts = async (req, res) => {
   console.log(req.user);
