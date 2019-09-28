@@ -17,26 +17,28 @@ const localLogin = new LocalStrategy(
     // Verify this email and password
     // Call done with the user if correct email:password
     // Otherwise call done with false
-    Account.findOne({ email }, (err, user) => {
-      if (err) {
-        return done(err);
-      }
-      if (!user) {
-        return done(null, false);
-      }
-
-      // compare passwords - is 'password' equal to user.password?
-      user.comparePassword(password, (err, isMatch) => {
+    Account.findOne({ email })
+      .populate('companies', '_id companyName')
+      .exec((err, user) => {
         if (err) {
           return done(err);
         }
-        if (!isMatch) {
+        if (!user) {
           return done(null, false);
         }
 
-        return done(null, user);
+        // compare passwords - is 'password' equal to user.password?
+        user.comparePassword(password, (err, isMatch) => {
+          if (err) {
+            return done(err);
+          }
+          if (!isMatch) {
+            return done(null, false);
+          }
+
+          return done(null, user);
+        });
       });
-    });
   },
 );
 
@@ -54,18 +56,20 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
   }
   const user = payload;
   // See if the user ID in the payload exists in our database
-  Account.findById(user._id, (err, user) => {
-    if (err) {
-      return done(err, false);
-    }
-    // If it does, call 'done' with that user
-    if (user) {
-      done(null, user);
-    } else {
-      // otherwise, call 'done' without a user object
-      done(null, false);
-    }
-  });
+  Account.findById(user._id)
+    .populate('companies', '_id companyName')
+    .exec((err, user) => {
+      if (err) {
+        return done(err, false);
+      }
+      // If it does, call 'done' with that user
+      if (user) {
+        done(null, user);
+      } else {
+        // otherwise, call 'done' without a user object
+        done(null, false);
+      }
+    });
 });
 
 // Tell passport to use this strategy

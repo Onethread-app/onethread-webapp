@@ -13,6 +13,7 @@ const roomRoutes = require('./server/room/room.route');
 const reportRoutes = require('./server/report/report.route');
 const reviewRoutes = require('./server/review/review.route');
 const hashRoutes = require('./server/hashtag/hashtag.route');
+const chatkitRoutes = require('./server/chatkit/chatkit.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -33,6 +34,7 @@ router.use('/users', userRoutes);
 router.use('/room', roomRoutes);
 router.use('/category', categoryRoutes);
 router.use('/company', companyRoutes);
+router.use('/chatkit', chatkitRoutes);
 
 // router.use('/message', messageRoutes);
 module.exports = router;

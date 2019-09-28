@@ -43,115 +43,117 @@ const validateUrl = [
   },
 ];
 // company schema
-const company = new Schema({
-  // required fields
-  companyName: {
-    type: String,
-    unique: true,
-    trim: true,
-    required: true,
-  },
-  companyType: {
-    type: String,
-    enum: [
-      'Manufacturer',
-      'Trading Company',
-      'Buying Office',
-      'Agent',
-      'Distributor/Wholesaler',
-      'Government ministry/Bureau/Commission',
-      'Association',
-      'Business Service (Transportation, finance, travel, Ads, etc)',
-      'Other',
-    ],
-    required: true,
-  },
-  companyAddress: {
-    type: String,
-    required: true,
-  },
-  companyMail: {
-    type: String,
-  },
-  legalOwnerName: {
-    type: String,
-  },
-  legalOwnerMail: {
-    type: String,
-  },
-  account: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Account',
-    required: true,
-  },
-  employees: [
-    {
+const company = new Schema(
+  {
+    // required fields
+    companyName: {
+      type: String,
+      unique: true,
+      trim: true,
+      required: true,
+    },
+    companyType: {
+      type: String,
+      enum: [
+        'Manufacturer',
+        'Trading Company',
+        'Buying Office',
+        'Agent',
+        'Distributor/Wholesaler',
+        'Government ministry/Bureau/Commission',
+        'Association',
+        'Business Service (Transportation, finance, travel, Ads, etc)',
+        'Other',
+      ],
+      required: true,
+    },
+    companyAddress: {
+      type: String,
+      required: true,
+    },
+    companyMail: {
+      type: String,
+    },
+    legalOwnerName: {
+      type: String,
+    },
+    legalOwnerMail: {
+      type: String,
+    },
+    account: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
+      required: true,
     },
-  ],
-  workplaces: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Workplace',
-    },
-  ],
-  // others
-  products: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'SubSubCategory',
-    },
-  ],
-  logo: {
-    type: String,
-  },
-  location: {
-    type: String,
-  },
-  companyUrl: {
-    type: [String],
-    validate: validateUrl,
-  },
-  yearCompanyRegistration: {
-    type: Number,
-    get: v => Number(v),
-    set: v => Number(v),
-    min: 1800,
-    max: new Date().getFullYear(),
-  },
-  totalEmployees: {
-    type: String,
-    enum: [
-      'Fewer than 5 People',
-      '5 - 10 People',
-      '11 - 50 People',
-      '51 - 100 People',
-      '101 - 200 People',
-      '201 - 300 People',
-      '301 - 500 People',
-      '501 - 1000 People',
-      'Above 1000 People',
+    employees: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Account',
+      },
     ],
-  },
-  officeSize: {
-    type: String,
-    enum: [
-      'below 100 square meters',
-      '101 - 500 square meters',
-      '501 - 1000 square meters',
-      '1001 -2000 square meters',
-      'above 2000 square meters',
+    workplaces: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Workplace',
+      },
     ],
+    // others
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubSubCategory',
+      },
+    ],
+    logo: {
+      type: String,
+    },
+    location: {
+      type: String,
+    },
+    companyUrl: {
+      type: [String],
+      validate: validateUrl,
+    },
+    yearCompanyRegistration: {
+      type: Number,
+      get: v => Number(v),
+      set: v => Number(v),
+      min: 1800,
+      max: new Date().getFullYear(),
+    },
+    totalEmployees: {
+      type: String,
+      enum: [
+        'Fewer than 5 People',
+        '5 - 10 People',
+        '11 - 50 People',
+        '51 - 100 People',
+        '101 - 200 People',
+        '201 - 300 People',
+        '301 - 500 People',
+        '501 - 1000 People',
+        'Above 1000 People',
+      ],
+    },
+    officeSize: {
+      type: String,
+      enum: [
+        'below 100 square meters',
+        '101 - 500 square meters',
+        '501 - 1000 square meters',
+        '1001 -2000 square meters',
+        'above 2000 square meters',
+      ],
+    },
+    companyIntroduction: {
+      type: String,
+      maxlength: 256,
+    },
   },
-  companyIntroduction: {
-    type: String,
-    maxlength: 256,
+  {
+    timestamps: true,
   },
-});
-
-// add timestamps
-company.plugin(timestamp);
+);
 
 let Company = mongoose.model('Company', company);
 
