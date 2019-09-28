@@ -12,6 +12,9 @@ font-family: 'Lato', sans-serif;
 .bg-tigrowLightBlue{
   background-color: #0fa3a3;
 }
+.bg-tigrow{
+  background-color: #F5F6FA;
+}
 
 .b--lightBlue {
   border-color: #0fa3a3;
@@ -40,6 +43,15 @@ a:hover {
 .w-85{
   width: 85%;
 }
+
+.lh-2{
+  line-height: 2rem;
+}
+
+#roomList:last-child{
+  border: none;
+}
+
 
 @media only screen and (min-width: 30em) {
   .w-15-ns{

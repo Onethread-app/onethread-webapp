@@ -77,7 +77,7 @@ const SidebarComponent = (props: any) => {
 	}
 
 	return (
-		<div className="fixed bg-white w5 pv6 vh-100">
+		<div className="fixed bg-white w5 pv6 vh-100 br b--tigrowLightGray-1">
 			<ButtonGroup
 				alignText={Alignment.LEFT}
 				className="bp3-minimal bp3-vertical bp3-fill pl1"
