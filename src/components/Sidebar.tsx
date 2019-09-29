@@ -1,7 +1,6 @@
 import React from "react";
 import { ButtonGroup, Alignment, Button, Intent } from "@blueprintjs/core";
 import { Link, withRouter } from "react-router-dom";
-import { connect } from 'react-redux';
 
 interface SidebarLinksProps {
 	parentUrl: string;
@@ -88,7 +87,4 @@ const SidebarComponent = (props: any) => {
 	);
 };
 
-export const Sidebar = connect(
-	null,
-	null
-)(withRouter(SidebarComponent));
+export const Sidebar = withRouter(SidebarComponent);

@@ -1,7 +1,20 @@
 import {
 	EDIT_BASIC_INFO, BASIC_INFO, FETCH_USER, USER_FETCH_LOADING, USER_FETCH_ERROR, USER_COMPANIES_UPDATE
 } from "actions/Types";
-import { string } from 'prop-types';
+
+export interface User {
+	_id: string,
+	email: string
+	firstName: string
+	lastName: string
+	accountVerified: boolean,
+	role: string,
+	contactNo: string,
+	companies: Object[],
+	friends: string[],
+	pendingFriends: string[],
+	sendingFriendList: string[]
+}
 
 const InitialState = {
 	user: {
@@ -10,8 +23,8 @@ const InitialState = {
 		firstName: "",
 		lastName: "",
 		accountVerified: false,
-		role: string,
-		contactNo: string,
+		role: "",
+		contactNo: "",
 		companies: [],
 		friends: [],
 		pendingFriends: [],

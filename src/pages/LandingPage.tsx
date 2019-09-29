@@ -5,10 +5,12 @@ import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useState, useEffect } from 'react';
-import { EducationInfoDetailsView as EducationInfoDetailsView } from 'components/company/profile/view/EducationInfoDetails';
-import { BasicInfoDetailsView as BasicInfoDetailsView } from 'components/company/profile/view/BasicInfoDetails';
 import { initializeChatkitAction } from 'actions/ChatkitActions';
 import { isEmpty } from 'lodash';
+import { ListTitleView } from 'components/ListTitleView';
+import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
+import { BasicInfoForm } from 'components/company/profile/editor/BasicInfoDetailsForm';
+import { User } from 'reducers/UserReducer';
 
 const skills = [
   { id: '1', name: 'Programing C' },
@@ -18,6 +20,89 @@ const skills = [
   { id: '5', name: 'React' },
 ]
 
+const EducationInfoDetailsView = () => {
+  return (
+    <div className="br3 bg-white h-auto pa4 mt3">
+      <ListTitleView
+        listTitle="Educational Information"
+        iconType="edit"
+        onClick={()=> {return true}}
+      />
+      <SectionViewWithTitleAndDesciption
+        listTitle="School"
+        listDescription="Julian Martha"
+      />
+      <SectionViewWithTitleAndDesciption
+        listTitle="College"
+        listDescription="No secondary email has set"
+      />
+      <SectionViewWithTitleAndDesciption
+        listTitle="University"
+        listDescription="A+"
+      />
+    </div>
+  )
+}
+
+const BasicInfoDetailsView = (props: {
+  user: User
+}) => {
+  const [showDialog, setShowDialog] = useState(false)
+  return (
+    <>
+      <div className="br3 bg-white h-auto pa4 mt3">
+        <ListTitleView
+          listTitle="Basic Information"
+          iconType="edit"
+          onClick={() => setShowDialog(true)}
+        />
+        {showDialog && (
+          <Dialog
+            icon="briefcase"
+            onClose={() => setShowDialog(!showDialog)}
+            title="Company Sign Up"
+            isOpen
+            style={{ background: '#fff' }}
+          >
+            <div>
+              <BasicInfoForm />
+            </div>
+          </Dialog>
+        )}
+        <SectionViewWithTitleAndDesciption
+          listTitle="Email"
+          listDescription={props.user.email}
+        />
+        {/* <SectionViewWithTitleAndDesciption
+          listTitle="Secondary Email"
+          listDescription={props.user.secondaryEmail}
+        /> */}
+        <SectionViewWithTitleAndDesciption
+          listTitle="Contact Number"
+          listDescription={props.user.contactNo}
+        />
+        {/* <SectionViewWithTitleAndDesciption
+          listTitle="Address"
+          listDescription={props.user.address}
+        /> */}
+        <SectionViewWithTitleAndDesciption
+          listTitle="Gender"
+          listDescription="Male"
+        />
+        <SectionViewWithTitleAndDesciption
+          listTitle="Birthdate"
+          listDescription="13th September, 2019"
+        />
+        {/* <SectionViewWithTitleAndDesciption
+          listTitle="Blood Group"
+          listDescription={props.user.bloodGroup}
+        /> */}
+      </div>
+    </>
+
+  )
+}
+
 const load = async (
   initializeChatkitAction: () => void
 ) => {
@@ -25,6 +110,7 @@ const load = async (
 }
 
 interface LandingPageProps {
+  user: User,
   chatkitUser: any;
   initializeChatkitAction: () => void;
 }
@@ -39,7 +125,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
     if (isEmpty(props.chatkitUser)) {
       load(props.initializeChatkitAction);
     }
-  },[props.chatkitUser]);
+  }, [props.chatkitUser]);
 
   return (
     <>
@@ -68,12 +154,12 @@ export const LandingPageComponent = (props: LandingPageProps) => {
                   onClick={() => setShowDialog(!showDialog)}
                 >
                   Add Skills
-                  </button>
+                </button>
               </div>
             </div>
           </div>
           <div className="fl w-75-ns">
-            <BasicInfoDetailsView />
+            <BasicInfoDetailsView user={props.user} />
             <EducationInfoDetailsView />
             <div className="br3 bg-white h-auto pa4 mt3">
               <div className="cf ">
@@ -141,7 +227,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    users: state.userReducer.user,
+    user: state.userReducer.user,
     chatkitUser: state.chatkitReducer.user
   }
 }

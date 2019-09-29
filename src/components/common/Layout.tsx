@@ -10,7 +10,7 @@ export const Layout = (props: LayoutProps) => (
   <div className="cf">
     <div className="fl w-100">
       <NavbarTop />
-      <div className="fl w-100" style={{ marginTop: '50px' }}>
+      <div className="fl w-100 bg-tigrowLightGray-1" style={{ marginTop: '50px' }}>
         <div className="flex w-100">
           <div className="db">
             <Sidebar />

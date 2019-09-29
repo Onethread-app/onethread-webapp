@@ -38,7 +38,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
         </div>
         <div className="bp3-navbar-group bp3-align-right">
           <Popover
-            popoverClassName="bp3-popover-content-sizing h5 overflow-y-auto"
+            popoverClassName="bp3-popover-content-sizing h5 overflow-y-auto bg-white "
             position={Position.BOTTOM}
           >
             <Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>

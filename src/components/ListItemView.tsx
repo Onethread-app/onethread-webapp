@@ -8,8 +8,8 @@ interface InfoListItemProps {
 
 export const SectionViewWithTitleAndDesciption = (props: InfoListItemProps) => (
   <div className="br3 bg-white h-auto">
-    <h1 className="f6 lh-copy">{props.listTitle}</h1>
-    <p>{props.listDescription}</p>
+    <h1 className="f7 lh-copy">{props.listTitle}</h1>
+    <p className="f6">{props.listDescription}</p>
   </div>
 )
 

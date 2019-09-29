@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { ListTitleView } from './ListTitleView';
+import { ListTitleView } from '../../../ListTitleView';
 import { BasicInfoForm } from '../editor/BasicInfoDetailsForm';
-import { Dialog } from '@blueprintjs/core';
-import { SectionViewWithTitleAndDesciption } from './ListItemView';
+import { Dialog} from '@blueprintjs/core';
+import { SectionViewWithTitleAndDesciption } from '../../../ListItemView';
 import { connect } from 'react-redux';
 
-const CompanyProductDetailsViewComponent = (props: any) => {
+const ProductDetailsViewComponent = (props: any) => {
   const [showDialog, setShowDialog] = useState(false)
   return (
     <>
-      <div className="br3 bg-white h-auto pa4 mt3">
+      <div className="br3 bg-white h-auto pa4 mt3 cf">
         <ListTitleView
           listTitle="Product Details"
           iconType="edit"
@@ -52,4 +52,4 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export const CompanyProductDetailsView = connect(mapStateToProps)(CompanyProductDetailsViewComponent)
+export const ProductDetailsView = connect(mapStateToProps)(ProductDetailsViewComponent)
