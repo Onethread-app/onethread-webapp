@@ -12,10 +12,10 @@ export const Layout = (props: LayoutProps) => (
       <NavbarTop />
       <div className="fl w-100" style={{ marginTop: '50px' }}>
         <div className="flex w-100">
-          <div className="dn db-ns">
+          <div className="db">
             <Sidebar />
           </div>
-          <div className="fl w-100 pl0 pl7-ns pr2 bg-tigrow">
+          <div className="fl w-100 pl5 pl11-l pl6-m pr2 bg-tigrow">
             <props.Component />
           </div>
         </div>

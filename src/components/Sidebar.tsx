@@ -39,7 +39,7 @@ const CompanySidebarLinks = (props: SidebarLinksProps) => (
 
 const WorkPlaceSidebarLinks = (props: SidebarLinksProps) => (
 	<>
-		<Link to={`/${props.parentUrl}`} >
+		<Link to={`/${props.parentUrl}`}>
 			<Button className="mv2" icon="control">
 				Feed
 						</Button>
@@ -77,7 +77,7 @@ const SidebarComponent = (props: any) => {
 	}
 
 	return (
-		<div className="fixed bg-white w5 pv6 vh-100 br b--tigrowLightGray-1">
+		<div className="fixed bg-white w3 w6-m w11-l pt6 vh-100 br b--tigrowLightGray-1">
 			<ButtonGroup
 				alignText={Alignment.LEFT}
 				className="bp3-minimal bp3-vertical bp3-fill pl1"

@@ -9,7 +9,8 @@ export const RoomPage = () => {
 
 	return (
 		<div className="flex" style={{ height: 'calc(100vh - 50px)' }}>
-			<div className={`relative bg-white br b--tigrowLightGray-1 ${isOpen ? 'w-20' : 'w-2'}`}>
+			<div
+				className={`t-25-a relative bg-white br b--tigrowLightGray-1 ${isOpen ? 'w-20' : 'w-2'}`}>
 				<Icon
 					className={`absolute top-0 mv2 z-3 br-100 bg-tigrowDarkBlue c-tigrowWhite ${isOpen ? 'right--8' : 'left--8'}`}
 					icon={isOpen ? 'double-chevron-left' : 'double-chevron-right'}
