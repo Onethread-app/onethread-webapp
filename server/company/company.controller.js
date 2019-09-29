@@ -17,18 +17,6 @@ function requestFormatter(req) {
     account: req.user._id,
   };
 }
-function responseFormatter(c) {
-  return {
-    _id: c._id,
-    account: c.account,
-    name: c.name,
-    type: c.type,
-    address: c.address,
-    email: c.email,
-    legalOwnerName: c.legalOwnerName,
-    legalOwnerMail: c.legalOwnerMail,
-  };
-}
 
 // create a company profile
 const createCompany = async (req, res) => {
@@ -53,7 +41,7 @@ const createCompany = async (req, res) => {
     return res.status(201).json({
       status: true,
       message: 'New company created',
-      newCompany: responseFormatter(company),
+      company,
     });
   } catch (error) {
     return res.status(500).json({
@@ -67,11 +55,11 @@ const getCompany = async (req, res) => {
   Company.findById(req.params.id)
     .populate('account', '_id firstName lastName email contactNo')
     .exec()
-    .then(result => {
-      if (result) {
+    .then(company => {
+      if (company) {
         res.status(200).json({
           status: true,
-          company: result,
+          company,
         });
       } else {
         res
