@@ -8,25 +8,13 @@ const errorHandler = require('../helpers/mongooseErrorFormat');
 // Create request formatter
 function requestFormatter(req) {
   return {
-    companyName: req.body.companyName,
-    companyType: req.body.companyType,
-    companyAddress: req.body.companyAddress,
-    companyMail: req.body.companyMail,
+    name: req.body.name,
+    type: req.body.type,
+    address: req.body.address,
+    email: req.body.email,
     legalOwnerName: req.body.legalOwnerName,
     legalOwnerMail: req.body.legalOwnerMail,
     account: req.user._id,
-  };
-}
-function responseFormatter(c) {
-  return {
-    _id: c._id,
-    account: c.account,
-    companyName: c.companyName,
-    companyType: c.type,
-    companyAddress: c.companyAddress,
-    companyMail: c.companyMail,
-    legalOwnerName: c.legalOwnerName,
-    legalOwnerMail: c.legalOwnerMail,
   };
 }
 
@@ -53,7 +41,7 @@ const createCompany = async (req, res) => {
     return res.status(201).json({
       status: true,
       message: 'New company created',
-      newCompany: responseFormatter(company),
+      company,
     });
   } catch (error) {
     return res.status(500).json({
@@ -67,10 +55,11 @@ const getCompany = async (req, res) => {
   Company.findById(req.params.id)
     .populate('account', '_id firstName lastName email contactNo')
     .exec()
-    .then(result => {
-      if (result) {
+    .then(company => {
+      if (company) {
         res.status(200).json({
-          company: responseFormatter(result),
+          status: true,
+          company,
         });
       } else {
         res
@@ -94,10 +83,13 @@ const updateCompany = async (req, res) => {
     .then(result => {
       if (result) {
         res.status(200).json({
+          status: true,
           message: 'Company updated',
         });
       } else {
-        res.status(404).json({ message: 'No company found' });
+        res
+          .status(404)
+          .json({ status: false, message: 'No company found' });
       }
     })
     .catch(err => {
@@ -123,6 +115,7 @@ const deleteCompany = async (req, res) => {
           .exec()
           .then(data => {
             res.status(200).json({
+              status: true,
               message: 'Company deleted',
             });
           })
@@ -132,7 +125,9 @@ const deleteCompany = async (req, res) => {
             });
           });
       } else {
-        res.status(404).json({ message: 'No company found' });
+        res
+          .status(404)
+          .json({ status: false, message: 'No company found' });
       }
     })
     .catch(err => {

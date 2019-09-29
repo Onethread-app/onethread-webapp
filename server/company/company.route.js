@@ -26,12 +26,12 @@ router
   )
   .put(
     requireAuth,
-    SchemaValidator(joiSchema.updateCompany),
+    // SchemaValidator(joiSchema.updateCompany),
     companyCtrl.updateCompany,
   )
   .delete(
     requireAuth,
-    SchemaValidator(joiSchema.deleteCompany),
+    // SchemaValidator(joiSchema.deleteCompany),
     companyCtrl.deleteCompany,
   );
 
