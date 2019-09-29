@@ -30,11 +30,11 @@ const CompanyInfoDetailsViewComponent = (props: any) => {
         )}
         <SectionViewWithTitleAndDesciption
           listTitle="Company Address"
-          listDescription={props.company.companyAddress}
+          listDescription={props.company.address}
         />
         <SectionViewWithTitleAndDesciption
           listTitle="Company Email Address"
-          listDescription={props.company.companyMail}
+          listDescription={props.company.email}
         />
 
         <SectionViewWithTitleAndDesciption

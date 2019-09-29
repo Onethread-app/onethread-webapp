@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { createCompanyAction } from 'actions/CompanyActions';
 import { History } from 'history';
 
-const companyType = [
+const Type = [
   'Manufacturer',
   'Trading Company',
   'Buying Office',
@@ -24,21 +24,21 @@ const CompanySignupFormComponent = (props: {
   createCompanyAction: (val: any, history: History) => void
 } & RouteComponentProps) => {
   const [values, setValues] = useState({
-    companyName: "",
-    companyMail: "",
+    name: "",
+    email: "",
     legalOwnerName: "",
     legalOwnerMail: "",
-    companyAddress: "",
-    companyType: ""
+    address: "",
+    type: ""
   });
 
   const [errors, setErrors] = useState({
-    companyName: "",
-    companyMail: "",
+    name: "",
+    email: "",
     legalOwnerName: "",
     legalOwnerMail: "",
-    companyAddress: "",
-    companyType: ""
+    address: "",
+    type: ""
   });
 
 
@@ -53,13 +53,13 @@ const CompanySignupFormComponent = (props: {
   }
 
   const emptyValueCheck = () => {
-    if (isEmpty(values.companyName) || isEmpty(values.companyMail) || isEmpty(values.legalOwnerName) || isEmpty(values.legalOwnerMail) || isEmpty(values.companyAddress)) {
+    if (isEmpty(values.name) || isEmpty(values.email) || isEmpty(values.legalOwnerName) || isEmpty(values.legalOwnerMail) || isEmpty(values.address)) {
       let e = errors;
-      if (isEmpty(values.companyName)) {
-        e = { ...e, companyName: "Required" };
+      if (isEmpty(values.name)) {
+        e = { ...e, name: "Required" };
       }
-      if (isEmpty(values.companyMail)) {
-        e = { ...e, companyMail: "Required" };
+      if (isEmpty(values.email)) {
+        e = { ...e, email: "Required" };
       }
       if (isEmpty(values.legalOwnerName)) {
         e = { ...e, legalOwnerName: "Required" };
@@ -67,11 +67,11 @@ const CompanySignupFormComponent = (props: {
       if (isEmpty(values.legalOwnerMail)) {
         e = { ...e, legalOwnerMail: "Required" };
       }
-      if (isEmpty(values.companyAddress)) {
-        e = { ...e, companyAddress: "Required" };
+      if (isEmpty(values.address)) {
+        e = { ...e, address: "Required" };
       }
-      if (isEmpty(values.companyType)) {
-        e = { ...e, companyType: "Required" };
+      if (isEmpty(values.type)) {
+        e = { ...e, type: "Required" };
       }
 
       setErrors(e);
@@ -94,60 +94,60 @@ const CompanySignupFormComponent = (props: {
 
   return (
     <form className="fl w-100 pa2" >
-      <div className={` ${errors.companyName ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.name ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
             id="companyName"
-            value={values.companyName}
-            onChange={handleChange("companyName")}
+            value={values.name}
+            onChange={handleChange("name")}
             placeHolder="Company Name"
             leftIcon="briefcase"
             style={{
               boxShadow: 'none'
             }}
-            className={`br0 ${errors.companyName ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.companyName ? 'red' : "#0fa3a3"}`}
+            className={`br0 ${errors.name ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.name ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.companyName)) {
-                const companyNameError = { ...errors, companyName: "Please enter company name" };
+              if (isEmpty(values.name)) {
+                const companyNameError = { ...errors, name: "Please enter company name" };
                 setErrors(companyNameError);
               } else {
-                const companyNameError = { ...errors, companyName: "" }
+                const companyNameError = { ...errors, name: "" }
                 setErrors(companyNameError);
               }
             }}
           />
         </div>
-        {errors.companyName ? <small style={{ color: 'red' }}>{errors.companyName}</small> : ""}
+        {errors.name ? <small style={{ color: 'red' }}>{errors.name}</small> : ""}
       </div>
-      <div className={` ${errors.companyAddress ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.address ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
             id="companyAddress"
-            value={values.companyAddress}
-            onChange={handleChange("companyAddress")}
+            value={values.address}
+            onChange={handleChange("address")}
             placeHolder="Company Address"
             leftIcon="map-marker"
             style={{
               boxShadow: 'none'
             }}
-            className={`br0 ${errors.companyAddress ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.companyAddress ? 'red' : "#0fa3a3"}`}
+            className={`br0 ${errors.address ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.address ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.companyAddress)) {
-                const companyAddressError = { ...errors, companyAddress: "Please enter company name" };
+              if (isEmpty(values.address)) {
+                const companyAddressError = { ...errors, address: "Please enter company name" };
                 setErrors(companyAddressError);
               } else {
-                const companyAddressError = { ...errors, companyAddress: "" }
+                const companyAddressError = { ...errors, address: "" }
                 setErrors(companyAddressError);
               }
             }}
           />
         </div>
-        {errors.companyAddress ? <small style={{ color: 'red' }}>{errors.companyAddress}</small> : ""}
+        {errors.address ? <small style={{ color: 'red' }}>{errors.address}</small> : ""}
       </div>
 
-      <div className={` ${errors.companyType ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.type ? "mb3" : "mb4"}`}>
         <div className="flex">
           <div className=" f5 pa1 bb b--lightBlue">
             <Icon
@@ -158,7 +158,7 @@ const CompanySignupFormComponent = (props: {
           <HTMLSelect
             fill={true}
             minimal={true}
-            onChange={onChangeSelectField('companyType')}
+            onChange={onChangeSelectField('type')}
             className=" bb b--lightBlue"
             style={{
               boxShadow: 'none',
@@ -169,42 +169,42 @@ const CompanySignupFormComponent = (props: {
             }}
           >
             <option selected value=''>Please select a company type</option>
-            {companyType.map(t => (
+            {Type.map(t => (
               <option value={t}>{t}</option>
             ))}
           </HTMLSelect>
         </div>
-        {errors.companyType ? <small style={{ color: 'red' }}>{errors.companyType}</small> : ""}
+        {errors.type ? <small style={{ color: 'red' }}>{errors.type}</small> : ""}
       </div>
 
-      <div className={` ${errors.companyMail ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.email ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
             id="companyMail"
-            value={values.companyMail}
-            onChange={handleChange("companyMail")}
+            value={values.email}
+            onChange={handleChange("email")}
             placeHolder="Company Email Address"
             leftIcon="envelope"
             style={{
               boxShadow: 'none'
             }}
-            className={`br0 ${errors.companyMail ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.companyMail ? 'red' : "#0fa3a3"}`}
+            className={`br0 ${errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.email ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.companyMail)) {
-                const companyEmailError = { ...errors, companyMail: "Please enter company email" };
+              if (isEmpty(values.email)) {
+                const companyEmailError = { ...errors, email: "Please enter company email" };
                 setErrors(companyEmailError);
-              } else if (!emailValidation(values.companyMail)) {
-                const companyEmailError = { ...errors, companyMail: "Invalid email address!" };
+              } else if (!emailValidation(values.email)) {
+                const companyEmailError = { ...errors, email: "Invalid email address!" };
                 setErrors(companyEmailError);
               } else {
-                const companyEmailError = { ...errors, companyMail: "" };
+                const companyEmailError = { ...errors, email: "" };
                 setErrors(companyEmailError);
               }
             }}
           />
         </div>
-        {errors.companyMail ? <small style={{ color: 'red' }}>{errors.companyMail}</small> : ""}
+        {errors.email ? <small style={{ color: 'red' }}>{errors.email}</small> : ""}
       </div>
 
       <div className={` ${errors.legalOwnerName ? "mb3" : "mb4"}`}>

@@ -2,7 +2,7 @@ import { combineReducers } from "redux";
 import { AuthReducer } from "./AuthReducer";
 import { WorkplaceReducer } from "./company/workplace";
 import { UserReducer } from './UserReducer';
-import { CompanyReducer } from './CompanyReducer';
+import { CompanyReducer } from './company/CompanyReducer';
 import { ChatkitReducer } from "./ChatkitReducer";
 
 export const RootReducer = combineReducers({

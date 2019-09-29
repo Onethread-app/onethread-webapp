@@ -2,10 +2,10 @@ import { CREATE_COMPANY, SELECT_COMPANY } from 'actions/Types';
 
 export interface CompanyModel {
   _id: string,
-  companyName: string,
-  companyType: string,
-  companyMail: string,
-  companyAddress: string
+  name: string,
+  type: string,
+  email: string,
+  address: string
   legalOwnerName: string,
   legalOwnerMail: string
 }
@@ -19,7 +19,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CREATE_COMPANY:
       return {
         ...state,
-        company: action.payload.newCompany
+        company: action.payload.company
       }
     case SELECT_COMPANY:
       return {

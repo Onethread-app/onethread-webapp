@@ -103,7 +103,7 @@ export const fetchUserAction = () => async (dispatch: any, getState: any) => {
 			const response = await tigrowApi.get(`/account`, headers);
 			dispatch({ type: FETCH_USER, payload: response.data.user });
 		} else {
-			dispatch({ type: USER_FETCH_ERROR, payload: "error in fetching" });
+			dispatch({ type: USER_FETCH_ERROR, payload: "error in user fetching" });
 		}
 	} catch (error) {
 		console.log(error);

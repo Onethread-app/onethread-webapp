@@ -11,13 +11,12 @@ import { useState } from 'react';
 import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListItemViewWithImage';
 import { CompanySignupForm } from './company/SignupForm';
 import { selectCompanyAction } from 'actions/CompanyActions';
-import { CompanyModel } from 'reducers/CompanyReducer';
+import { CompanyModel } from 'reducers/company/CompanyReducer';
 
 interface NavbarTopInternalProps {
   logoutAction: (history: History) => void;
   selectCompanyAction: (companyId: string, history: History) => void;
   companies: CompanyModel[],
-  newCompany: CompanyModel
 }
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
@@ -46,8 +45,8 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             <div className="mw6 center">
               {props.companies.map((company: CompanyModel) => (
                 <ListItemViewWithImage
-                  imageSrc={`https://robohash.org/${company.companyName}`}
-                  listTitle={company.companyName}
+                  imageSrc={`https://robohash.org/${company.name}`}
+                  listTitle={company.name}
                   listDescription="C"
                   onClick={() => props.selectCompanyAction(company._id, props.history)}
                 />
@@ -98,8 +97,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
 
 const mapStateToProps = (state: any) => {
   return {
-    companies: state.userReducer.user.companies,
-    newCompany: state.companyReducer.company
+    companies: state.userReducer.user.companies
   }
 }
 
