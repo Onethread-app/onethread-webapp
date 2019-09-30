@@ -25,7 +25,6 @@ interface NavbarTopInternalProps {
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = useState(false);
-  console.log(props);
   return (
     <>
       <nav className="bp3-navbar bp3-fixed-top">
