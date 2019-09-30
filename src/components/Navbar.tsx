@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Popover, Position, Dialog } from '@blueprintjs/core';
+import { Button, Popover, Position, Dialog, ButtonGroup } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { logoutAction } from 'actions/AuthActions';
@@ -17,10 +17,15 @@ interface NavbarTopInternalProps {
   logoutAction: (history: History) => void;
   selectCompanyAction: (companyId: string, history: History) => void;
   companies: CompanyModel[],
+  user: {
+    firstName: string,
+    lastName: string
+  }
 }
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = useState(false);
+  console.log(props);
   return (
     <>
       <nav className="bp3-navbar bp3-fixed-top">
@@ -69,12 +74,27 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             <a className="dim mid-gray f6 f5-l  v-mid " href="#" title="User">
               <img src={user} className="dib w2 h2 br-100" alt="user" />
             </a>
-            <Button
-              className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
-              onClick={(e: any) => props.logoutAction(props.history)}
-            >
-              Logout
+            <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
+              <Button>
+                <article
+                  className="dt w-100 pb2 mt2 pointer"
+                >
+                  <div className="dtc w1 w2-ns v-mid">
+                    <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
+                  </div>
+                  <div className="dtc v-mid pl3">
+                    <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
+                  </div>
+                </article>
+              </Button>
+              <Button
+                className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
+                onClick={(e: any) => props.logoutAction(props.history)}
+                icon="log-in"
+              >
+                Logout
             </Button>
+            </ButtonGroup>
           </Popover>
         </div>
       </nav>
@@ -97,7 +117,8 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
 
 const mapStateToProps = (state: any) => {
   return {
-    companies: state.userReducer.user.companies
+    companies: state.userReducer.user.companies,
+    user: state.userReducer.user
   }
 }
 

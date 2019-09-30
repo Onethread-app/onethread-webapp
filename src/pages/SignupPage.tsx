@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { isEqual, isEmpty, isNumber } from 'lodash';
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { NumericInput, Icon, Spinner, Button } from '@blueprintjs/core';
@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { userSignupAction } from 'actions/AuthActions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
+import { Link } from 'react-router-dom';
 
 interface UserModel {
   firstName: string,
@@ -31,6 +32,12 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
     email: "",
     password: "",
     confirmPassword: "",
+  });
+
+  useEffect(() => {
+    props.errorUnauthorized.email=false;
+    props.errorUnauthorized.message="";
+    props.errorUnauthorized.network=false;
   });
 
   const { firstName, lastName, contactNo, email, password, confirmPassword } = values;
@@ -340,7 +347,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                     </div>
                     {errors.confirmPassword ? <small className="red">{errors.confirmPassword}</small> : ""}
                   </div>
-                  <Button className=" b--none w-100 br3 fr grow h2 mr6-m ph5 pointer pv2 white"
+                  <Button className=" b--none w-100 br3 fr grow h2 ph5 pointer pv2 white mb3"
                     type="submit"
                     style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
                     onClick={(e:any) => {
@@ -353,6 +360,9 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                   >
                     {props.loading ? <Spinner size={15} /> : 'Sign up'}
                   </Button>
+                  <Link to="/signin">
+                    <p className="fw9 dt center tigrow-lightBlue">Already have an account?</p>
+                  </Link>
                 </div>
               </form>
             </div>
