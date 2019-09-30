@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Classes, H3, Tab, Tabs } from "@blueprintjs/core";
+import { GeneralChatComponent } from './GeneralChat';
 
 export const ChatLayout = () => {
 
@@ -29,12 +30,7 @@ export const ChatLayout = () => {
 
 const Chat: React.SFC<{}> = () => (
   <div>
-    <H3>Example panel: Chat</H3>
-    <p className={Classes.RUNNING_TEXT}>
-      HTML is great for declaring static documents, but it falters when we try to use it for declaring dynamic
-      views in web-applications. AngularJS lets you extend HTML vocabulary for your application. The resulting
-      environment is extraordinarily expressive, readable, and quick to develop.
-        </p>
+    <GeneralChatComponent/>
   </div>
 );
 
