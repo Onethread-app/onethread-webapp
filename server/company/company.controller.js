@@ -52,14 +52,14 @@ const createCompany = async (req, res) => {
 
 // get a company profile
 const getCompany = async (req, res) => {
-  Company.findById(req.params.id)
+  Company.find({ name: req.params.cname })
     .populate('account', '_id firstName lastName email contactNo')
     .exec()
     .then(company => {
       if (company) {
         res.status(200).json({
           status: true,
-          company,
+          company: company[0],
         });
       } else {
         res

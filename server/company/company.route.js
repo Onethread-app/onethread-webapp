@@ -18,7 +18,7 @@ router.route('/').post(
   companyCtrl.createCompany,
 );
 router
-  .route('/:id')
+  .route('/:cname')
   .get(
     requireAuth,
     // SchemaValidator(joiSchema.getCompany),
