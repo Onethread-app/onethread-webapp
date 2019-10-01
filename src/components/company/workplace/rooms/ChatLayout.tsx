@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-
-import { Classes, H3, Tab, Tabs } from "@blueprintjs/core";
+import { Classes, H3, Tab, Tabs, InputGroup, Button, Icon } from "@blueprintjs/core";
 import { GeneralChatComponent } from './GeneralChat';
+import { ChatHeaderComponent } from './ChatHeader';
 
 export const ChatLayout = () => {
 
@@ -11,7 +11,8 @@ export const ChatLayout = () => {
   const [vertical] = useState(false);
 
   return (
-    <div className="z-2">
+    <div className="z-2 ">
+      <ChatHeaderComponent/>
       <Tabs
         animate={animate}
         id="TabsExample"
@@ -30,7 +31,7 @@ export const ChatLayout = () => {
 
 const Chat: React.SFC<{}> = () => (
   <div>
-    <GeneralChatComponent/>
+    <GeneralChatComponent />
   </div>
 );
 
