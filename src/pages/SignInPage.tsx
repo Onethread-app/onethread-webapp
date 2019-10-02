@@ -19,6 +19,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
     email: "",
     password: "",
   });
+  //need to fix this
 
   useEffect(() => {
     props.errorUnauthorized.email=false;
@@ -66,7 +67,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
   };
 
   return (
-    <div className="cf ph2-ns background">
+    <div className="cf ph2-ns signinPageBackground">
       <div className="fl w-100 w-50-ns dt vh-100">
         <div className="v-mid dtc">
           <div className="w-50 center">

@@ -2,7 +2,7 @@ body{
 font-family: 'Lato', sans-serif;
 box-sizing: border-box;
 }
-.background{
+.signinPageBackground{
   background-image: url(./resources/images/Bg-png.png);
   background-size: cover;
 }

@@ -12,15 +12,13 @@ import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListIte
 import { CompanySignupForm } from './company/SignupForm';
 import { selectCompanyAction } from 'actions/CompanyActions';
 import { CompanyModel } from 'reducers/company/CompanyReducer';
+import { User } from 'reducers/UserReducer';
 
 interface NavbarTopInternalProps {
   logoutAction: (history: History) => void;
   selectCompanyAction: (companyId: string, history: History) => void;
   companies: CompanyModel[],
-  user: {
-    firstName: string,
-    lastName: string
-  }
+  user: User
 }
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {

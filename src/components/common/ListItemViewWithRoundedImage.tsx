@@ -10,7 +10,7 @@ export const ListItemViewWithRoundedImage = (props: CompanyListItemProps) => (
   <article
     className="flex w-80 mt2 items-center"
   >
-    <div className="" style={{minWidth:"35px"}}>
+    <div className="" style={{minWidth:"35px", maxWidth:"35px"}}>
       <img src={props.imageSrc} className=" br3" />
     </div>
     <div className="pa3 ml2 bg-white br3 " style={{width:"auto"}}>
