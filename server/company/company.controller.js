@@ -50,16 +50,50 @@ const createCompany = async (req, res) => {
   }
 };
 
+// add employees
+const addEmployees = async (req, res) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+
+  // TODO: some minor checking
+  Company.update(
+    { name: req.params.cname },
+    {
+      $addToSet: {
+        employees: { $each: req.body.employees },
+      },
+    },
+  )
+    .exec()
+    .then(result => {
+      if (result) {
+        res.status(200).json({
+          status: true,
+          message: 'New employees added',
+        });
+      } else {
+        res
+          .status(404)
+          .json({ status: false, message: 'No company found' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
+};
+
 // get a company profile
 const getCompany = async (req, res) => {
-  Company.findById(req.params.id)
+  Company.find({ name: req.params.cname })
     .populate('account', '_id firstName lastName email contactNo')
     .exec()
     .then(company => {
       if (company) {
         res.status(200).json({
           status: true,
-          company,
+          company: company[0],
         });
       } else {
         res
@@ -140,4 +174,5 @@ module.exports = {
   getCompany,
   updateCompany,
   deleteCompany,
+  addEmployees,
 };

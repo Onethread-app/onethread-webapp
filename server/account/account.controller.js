@@ -91,6 +91,11 @@ const register = async (req, res, next) => {
                 message: err,
               });
             } else {
+              // user created in chatkit
+              await chatkit.createUser({
+                id: req.user._id,
+                name: req.user.firstName,
+              });
               return sendJSONresponse(res, 201, {
                 success: true,
                 token: token,
@@ -690,8 +695,6 @@ module.exports = {
   verifyAccount,
   // followAccount,
   pendingFriendRequestList,
-  searchAccount,
-  //
   //getAllAccounts,
   getAccount,
   accountLoad,
