@@ -15,26 +15,18 @@ const Chat: React.SFC<{}> = () => (
           listDescription="asdasd asd asd asd ads "
         />
       </div>
-      <div className="fixed bottom-1 w-60 br3 shadow-3">
-        <nav className="bp3-navbar br3 ">
-          <div className="bp3-navbar-group bp3-align-left">
-            <div className="bp3-navbar-heading">
-              <a className="dim" href="#" title="User">
+      <div className="fixed bottom-1 w-60 br3 shadow-3 dt pa1">
+          <div className="dtc w3 v-mid">
+              <a className="dim ml2" href="#" title="User">
                 <img
                   src={user}
                   className="v-mid w2 br-100"
                   alt="user"
                 />
               </a>
-            </div>
           </div>
-          <input
-            className="bp3-input bp3-minimal w-60 mv2"
-            type="text"
-            placeholder="Write your message"
-            dir="auto"
-          />
-          <div className="bp3-navbar-group bp3-align-right">
+          <textarea className="bp3-input dtc w-100 ma1" ></textarea>
+          <div className="w-15 dtc v-mid pl2">
             <Button className="bp3-button bp3-minimal bp3-large" >
               <Icon icon="media" style={{ color: "#0fa3a3" }} />
             </Button>
@@ -45,7 +37,6 @@ const Chat: React.SFC<{}> = () => (
               <Icon icon="insert" style={{ color: "#0fa3a3" }} />
             </Button>
           </div>
-        </nav>
       </div>
     </div>
   </div>
