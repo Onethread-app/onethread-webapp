@@ -1,7 +1,7 @@
-'use strict';
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+
 const requireAuth = passport.authenticate('jwt', { session: false });
 const joiSchema = require('./company.validation');
 const companyCtrl = require('./company.controller');
@@ -12,31 +12,27 @@ const SchemaValidator = require('./../helpers/joiSchemaValidator');
 router.use('/typeInfo', typeInfo);
 
 // for company profile
+router.route('/').post(
+  requireAuth,
+  // SchemaValidator(joiSchema.newCompany),
+  companyCtrl.createCompany,
+);
 router
-  .route('/profile')
-  .post(
-    SchemaValidator(joiSchema.newCompany),
-    companyCtrl.createCompanyProfile
-  );
-router
-  .route('/profile/:id')
+  .route('/:id')
   .get(
     requireAuth,
-    permit('company'),
-    SchemaValidator(joiSchema.getCompany),
-    companyCtrl.getCompanyProfile
+    // SchemaValidator(joiSchema.getCompany),
+    companyCtrl.getCompany,
   )
   .put(
     requireAuth,
-    permit('company'),
-    SchemaValidator(joiSchema.updateCompany),
-    companyCtrl.updateCompanyProfile
+    // SchemaValidator(joiSchema.updateCompany),
+    companyCtrl.updateCompany,
   )
   .delete(
     requireAuth,
-    permit('user'),
-    SchemaValidator(joiSchema.deleteCompany),
-    companyCtrl.deleteCompanyProfile
+    // SchemaValidator(joiSchema.deleteCompany),
+    companyCtrl.deleteCompany,
   );
 
 module.exports = router;

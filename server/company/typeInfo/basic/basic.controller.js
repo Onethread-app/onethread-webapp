@@ -1,4 +1,3 @@
-'use strict';
 const { Basic } = require('./basic.model');
 
 // Create request formatter
@@ -11,7 +10,7 @@ function basicInfoFormatterCreateRequest(bc) {
       street: bc.companyOperationalAddress.street,
       city: bc.companyOperationalAddress.city,
       country: bc.companyOperationalAddress.country,
-      zipCode: bc.companyOperationalAddress.zipCode
+      zipCode: bc.companyOperationalAddress.zipCode,
     },
     mainProducts: bc.mainProducts,
     otherProductsYouSell: bc.otherProductsYouSell,
@@ -19,8 +18,9 @@ function basicInfoFormatterCreateRequest(bc) {
     totalEmp: bc.totalEmp,
     companyUrl: bc.companyUrl,
     legalOwner: bc.legalOwner,
+    legalMailAddress: bc.legalMailAddress,
     officeSize: bc.officeSize,
-    companyAdvantages: bc.companyAdvantages
+    companyAdvantages: bc.companyAdvantages,
   };
 }
 // Update request formatter
@@ -32,7 +32,7 @@ function basicInfoFormatterUpdateRequest(bc) {
       street: bc.companyOperationalAddress.street,
       city: bc.companyOperationalAddress.city,
       country: bc.companyOperationalAddress.country,
-      zipCode: bc.companyOperationalAddress.zipCode
+      zipCode: bc.companyOperationalAddress.zipCode,
     },
     mainProducts: bc.mainProducts,
     otherProductsYouSell: bc.otherProductsYouSell,
@@ -40,8 +40,9 @@ function basicInfoFormatterUpdateRequest(bc) {
     totalEmp: bc.totalEmp,
     companyUrl: bc.companyUrl,
     legalOwner: bc.legalOwner,
+    legalMailAddress: bc.legalMailAddress,
     officeSize: bc.officeSize,
-    companyAdvantages: bc.companyAdvantages
+    companyAdvantages: bc.companyAdvantages,
   };
 }
 // response formatter
@@ -55,7 +56,7 @@ function basicInfoFormatterResponse(bc) {
       street: bc.companyOperationalAddress.street,
       city: bc.companyOperationalAddress.city,
       country: bc.companyOperationalAddress.country,
-      zipCode: bc.companyOperationalAddress.zipCode
+      zipCode: bc.companyOperationalAddress.zipCode,
     },
     mainProducts: bc.mainProducts,
     otherProductsYouSell: bc.otherProductsYouSell,
@@ -63,10 +64,11 @@ function basicInfoFormatterResponse(bc) {
     totalEmp: bc.totalEmp,
     companyUrl: bc.companyUrl,
     legalOwner: bc.legalOwner,
+    legalMailAddress: bc.legalMailAddress,
     officeSize: bc.officeSize,
     companyAdvantages: bc.companyAdvantages,
     createdAt: bc.createdAt,
-    updatedAt: bc.updatedAt
+    updatedAt: bc.updatedAt,
   };
 }
 
@@ -79,31 +81,32 @@ const createBasicInfo = async (req, res) => {
 
   // storing requested company's id
   req.body.company = req.currentCompany;
-  const newBasic = new Basic(basicInfoFormatterCreateRequest(req.body));
+  const newBasic = new Basic(
+    basicInfoFormatterCreateRequest(req.body),
+  );
 
   newBasic
     .save()
     .then(result => {
       res.status(201).json({
         message: 'New Basic-info created',
-        newBasic: basicInfoFormatterResponse(result)
+        newBasic: basicInfoFormatterResponse(result),
       });
     })
     .catch(err => {
       res.status(500).json({
-        error: err
+        error: err,
       });
     });
 };
-
-// // get a Basic Info
+// get a Basic Info
 const getBasicInfo = async (req, res) => {
   Basic.findOne({ _id: req.params.id })
     .exec()
     .then(result => {
       if (result) {
         res.status(200).json({
-          basicInfo: basicInfoFormatterResponse(result)
+          basicInfo: basicInfoFormatterResponse(result),
         });
       } else {
         res.status(404).json({ message: 'No Basic-info found' });
@@ -114,7 +117,6 @@ const getBasicInfo = async (req, res) => {
     });
 };
 
-// // get a Basic Info
 const getAllBasicInfo = async (req, res) => {
   Basic.find({})
     .exec()
@@ -124,7 +126,7 @@ const getAllBasicInfo = async (req, res) => {
           count: results.length,
           basicInfo: results.map(bc => {
             return basicInfoFormatterResponse(bc);
-          })
+          }),
         });
       } else {
         res.status(404).json({ message: 'No Basic-info found' });
@@ -144,21 +146,25 @@ const updateBasicInfo = async (req, res) => {
 
   // Unauthorized values
   if (req.body.hasOwnProperty('company')) {
-    return res.status(401).json({ message: 'Unauthorized value [company]' });
+    return res
+      .status(401)
+      .json({ message: 'Unauthorized value [company]' });
   } else if (req.body.hasOwnProperty('_id')) {
-    return res.status(401).json({ message: 'Unauthorized value [_id]' });
+    return res
+      .status(401)
+      .json({ message: 'Unauthorized value [_id]' });
   }
 
   // update
   Basic.findOneAndUpdate(
     { _id: req.params.id },
-    basicInfoFormatterUpdateRequest(req.body)
+    basicInfoFormatterUpdateRequest(req.body),
   )
     .exec()
     .then(result => {
       if (result) {
         res.status(200).json({
-          message: 'Basic-info updated'
+          message: 'Basic-info updated',
         });
       } else {
         res.status(404).json({ message: 'No Basic-info found' });
@@ -175,7 +181,7 @@ const deleteBasicInfo = async (req, res) => {
     .then(result => {
       if (result) {
         res.status(200).json({
-          message: 'Basic-info deleted'
+          message: 'Basic-info deleted',
         });
       } else {
         res.status(404).json({ message: 'No Basic-info found' });
@@ -191,5 +197,5 @@ module.exports = {
   getBasicInfo,
   getAllBasicInfo,
   updateBasicInfo,
-  deleteBasicInfo
+  deleteBasicInfo,
 };

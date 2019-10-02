@@ -1,9 +1,12 @@
-'use strict';
+/* eslint-disable eqeqeq */
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable import/no-unresolved */
 const mongoose = require('mongoose');
 const timestamp = require('mongoose-timestamp');
-const Schema = mongoose.Schema;
+
+const { Schema } = mongoose;
 //
-let validateUrl = [
+const validateUrl = [
   { validator: companyUrlLimit, msg: '{PATH} exceeds the limit of 3' },
   {
     validator: checkUrl,
@@ -68,6 +71,9 @@ const basic = new Schema({
   legalOwner: {
     type: String
   },
+  legalMailAddress: {
+    type: String
+  },
   officeSize: {
     type: String,
     enum: [
@@ -94,9 +100,8 @@ const basic = new Schema({
 function mainProductsLimit(val) {
   if (val.length > 0 && val.length <= 5) {
     return true;
-  } else {
-    return false;
   }
+  return false;
 }
 
 function otherProductsYouSellLimit(val) {
@@ -109,7 +114,7 @@ function companyUrlLimit(val) {
 
 function checkUrl(val) {
   for (const e of val) {
-    if (e.substring(0, 7) != 'http://' && e.substring(0, 8) != 'https://') {
+    if (e.substring(0, 7) !== 'http://' && e.substring(0, 8) !== 'https://') {
       return false;
     }
   }
@@ -119,7 +124,7 @@ function checkUrl(val) {
 // add timestamps
 basic.plugin(timestamp);
 
-let Basic = mongoose.model('Companies_Basic_info', basic);
+const Basic = mongoose.model('Companies_Basic_info', basic);
 
 module.exports = {
   Basic

@@ -1,20 +1,53 @@
-"use strict";
-const express = require("express");
-const nodemailer = require("nodemailer");
-const config = require("../../config/config");
-/*
-    Here we are configuring our SMTP Server details.
-    STMP is mail server which is responsible for sending and recieving email.
-*/
+const nodemailer = require('nodemailer');
+const config = require('../../config/config');
+
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  service: 'gmail',
   auth: {
-    user: config.mail_address,
-    pass: config.password
-  }
+    user: config.emailAddress,
+    pass: config.emailPassword,
+  },
 });
 
-module.exports = transporter;
-/*------------------SMTP Over-----------------------------*/
+const { port } = config;
+const host = `http://localhost:${port}`;
 
-/*------------------Routing Started ------------------------*/
+module.exports.sendEmailForResetPassword = async (
+  username,
+  emailID,
+  token,
+) => {
+  const link = `${host}/auth/forgetPassword/${token}`;
+  const mailOptions = {
+    from: config.emailID,
+    to: emailID,
+    subject: 'Generated Token For Reset Password',
+    html: `
+      <h1> Hi ${username}, </h1>
+      <h2> Copy This Link and paste it into POSTMAN </h2>
+      <a href="${link}"> ${link} </a>
+    `,
+  };
+
+  return transporter.sendMail(mailOptions);
+};
+
+module.exports.sendEmailForVerifyAccount = async (
+  username,
+  emailID,
+  token,
+) => {
+  const link = `${host}/auth/verifyAccount/${token}`;
+  const mailOptions = {
+    from: config.emailID,
+    to: emailID,
+    subject: 'Generated Token For Account Verification',
+    html: `
+      <h1> Hi ${username}, </h1>
+      <h2> Copy This Link and paste it into POSTMAN </h2>
+      <a href="${link}"> ${link} </a>
+    `,
+  };
+
+  return transporter.sendMail(mailOptions);
+};

@@ -6,9 +6,9 @@ const id = Joi.object().keys({
     .required()
     .error(errors => {
       return {
-        message: 'Invalid ID'
+        message: 'Invalid ID',
       };
-    })
+    }),
 });
 // opt
 const accountInfo = {
@@ -21,7 +21,7 @@ const accountInfo = {
     .required(),
   password: Joi.string()
     .regex(
-      /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/
+      /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
     )
     .required(),
   confirmPassword: Joi.string()
@@ -29,13 +29,13 @@ const accountInfo = {
     .required(),
   contactNo: Joi.string()
     .regex(/\+?(88)?0?1[356789][0-9]{8}/)
-    .required()
+    .required(),
 };
 
 // mainBody
 const mainBody = Joi.object().keys({
   // stage 1 : company
-  companyName: Joi.string().required(),
+  name: Joi.string().required(),
   type: Joi.string()
     .valid([
       'Manufacturer',
@@ -46,83 +46,43 @@ const mainBody = Joi.object().keys({
       'Government ministry/Bureau/Commission',
       'Association',
       'Business Service (Transportation, finance, travel, Ads, etc)',
-      'Other'
+      'Other',
     ])
     .required(),
-  logo: Joi.string().required(),
-  location: Joi.string().required(),
-  // stage 2 : owner
-  stage2: Joi.boolean().required(),
-  // if yes
-  token: Joi.when('stage2', {
-    is: true,
-    then: accountInfo.token
-  }),
-  // if no
-  email: Joi.when('stage2', {
-    is: false,
-    then: accountInfo.email
-  }),
-  firstName: Joi.when('stage2', {
-    is: false,
-    then: accountInfo.firstName
-  }),
-  lastName: Joi.when('stage2', {
-    is: false,
-    then: accountInfo.lastName
-  }),
-  password: Joi.when('stage2', {
-    is: false,
-    then: accountInfo.password
-  }),
-  confirmPassword: Joi.when('stage2', {
-    is: false,
-    then: accountInfo.confirmPassword
-  }),
-  contactNo: Joi.when('stage2', {
-    is: false,
-    then: accountInfo.contactNo
-  }),
-  // stage 3: product details
-  products: Joi.array()
-    .min(1)
-    .max(5)
-    .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/))
-    .required(),
-  // stage 4: Additional Information (Skip & Finish)
-  companyUrl: Joi.array()
-    .max(3)
-    .items(
-      Joi.string()
-        .regex(
-          /^(?:http(s)?:\/\/)+[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
-        )
-        .required()
-    )
-    .error(errors => {
-      return {
-        message: 'URL should starts with [http://] or [https://]'
-      };
-    }),
-  companyMail: Joi.string()
+  address: Joi.string().required(),
+  email: Joi.string()
     .email()
     .lowercase(),
-  companyOperationalAddress: Joi.object({
-    street: Joi.string().required(),
-    city: Joi.string().required(),
-    country: Joi.string().required(),
-    zipCode: Joi.string().required()
-  }),
   legalOwnerName: Joi.string(),
   legalOwnerMail: Joi.string()
     .email()
     .lowercase(),
-  // others
-  yearCompanyReg: Joi.number()
+  products: Joi.array()
+    .min(1)
+    .max(5)
+    .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  // stage 4: Additional Information (Skip & Finish)
+  logo: Joi.string(),
+  location: Joi.string().required(),
+  websites: Joi.array()
+    .max(3)
+    .items(
+      Joi.string()
+        .regex(
+          /^(?:http(s)?:\/\/)+[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/,
+        )
+        .required(),
+    )
+    .error(errors => {
+      return {
+        message: 'URL should starts with [http://] or [https://]',
+      };
+    }),
+  registrationYear: Joi.number()
     .integer()
     .min(1800)
     .max(new Date().getFullYear()),
-  totalEmp: Joi.string().valid([
+  totalEmployees: Joi.string().valid([
     'Fewer than 5 People',
     '5 - 10 People',
     '11 - 50 People',
@@ -131,30 +91,30 @@ const mainBody = Joi.object().keys({
     '201 - 300 People',
     '301 - 500 People',
     '501 - 1000 People',
-    'Above 1000 People'
+    'Above 1000 People',
   ]),
   officeSize: Joi.string().valid([
     'below 100 square meters',
     '101 - 500 square meters',
     '501 - 1000 square meters',
     '1001 -2000 square meters',
-    'above 2000 square meters'
+    'above 2000 square meters',
   ]),
-  companyIntroduction: Joi.string().max(256)
+  about: Joi.string().max(256),
 });
 
 module.exports = {
   newCompany: Joi.object().keys({
-    body: mainBody
+    body: mainBody,
   }),
   getCompany: Joi.object().keys({
-    params: id
+    params: id,
   }),
   updateCompany: Joi.object().keys({
     body: mainBody,
-    params: id
+    params: id,
   }),
   deleteCompany: Joi.object().keys({
-    params: id
-  })
+    params: id,
+  }),
 };
