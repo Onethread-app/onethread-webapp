@@ -11,13 +11,13 @@ export const ChatHeaderComponent = () => {
           placeholder="search in conversations"
           className="ma1"
         />
-        <Button className="bp3-minimal ma1" style={{ background: "#0fa3a3"}} >
+        <Button className="bp3-minimal ma1 outline-0 grow" style={{ background: "#0fa3a3"}} >
           <Icon icon="cog"  style={{ background: "#0fa3a3", color: "white" }} />
         </Button>
-        <Button className="bp3-minimal ma1" style={{ background: "#B7B7B7"}} >
+        <Button className="bp3-minimal ma1 outline-0 grow" style={{ background: "#B7B7B7"}} >
           <Icon icon="notifications" style={{ background: "#B7B7B7", color: "white" }} />
         </Button>
-        <Button className="bp3-minimal ma1" style={{ background: "#F55B7F"}} >
+        <Button className="bp3-minimal ma1 outline-0 grow" style={{ background: "#F55B7F"}} >
           <Icon icon="new-person"  style={{ background: "#F55B7F", color: "white" }} />
         </Button>
         </div>

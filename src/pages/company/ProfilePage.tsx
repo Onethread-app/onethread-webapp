@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Tab, Tabs } from "@blueprintjs/core";
 import { InfoDetailsView } from 'components/company/profile/view/InfoDetailsView';
 import { ProductDetailsView } from 'components/company/profile/view/ProductDetailsView';
 import { CompanyTeamMembersView } from 'components/company/profile/view/TeamMembersView';
+
 export const CompanyProfilePage = () => {
   const handleChange = (id: any) => {
     setsSelctedTab(id);

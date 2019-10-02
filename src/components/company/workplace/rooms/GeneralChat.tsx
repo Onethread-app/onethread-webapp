@@ -3,7 +3,6 @@ import user from '../../../../resources/images/user.png';
 import { ListItemViewWithRoundedImage } from 'components/common/ListItemViewWithRoundedImage';
 import { ChatFooterComponent } from './ChatFooter';
 
-
 export const GeneralChatComponent = () => {
   return(
     <>
@@ -83,7 +82,6 @@ export const GeneralChatComponent = () => {
       />
     </div>
     <ChatFooterComponent/>
-
     </div>
     </>
 
