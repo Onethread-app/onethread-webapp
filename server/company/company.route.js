@@ -34,5 +34,9 @@ router
     // SchemaValidator(joiSchema.deleteCompany),
     companyCtrl.deleteCompany,
   );
-
+router.route('/:cname/employees').put(
+  requireAuth,
+  // SchemaValidator(joiSchema.getCompany),
+  companyCtrl.addEmployees,
+);
 module.exports = router;
