@@ -20,18 +20,18 @@
 // describe('### Category APIs', () => {
 //   let user = {
 //     email: 'jest@gmail.com',
-//     password: 'Jest@1234'
+//     password: 'Jest@1234',
 //   };
 
 //   let c1 = {
 //     name: 'a',
-//     type: 'job-seeker'
+//     type: 'job-seeker',
 //   };
 //   let c2 = {
-//     name: 'b'
+//     name: 'b',
 //   };
 //   let c3 = {
-//     name: 'c'
+//     name: 'c',
 //   };
 
 //   // login
@@ -149,7 +149,9 @@
 //         .then(res => {
 //           const body = res.body;
 //           expect(body).to.contain.property('message');
-//           expect(body.message).to.equal("Expects 'type' in query string");
+//           expect(body.message).to.equal(
+//             "Expects 'type' in query string",
+//           );
 //           done();
 //         })
 //         .catch(done);

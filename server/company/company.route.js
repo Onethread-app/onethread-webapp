@@ -6,10 +6,7 @@ const requireAuth = passport.authenticate('jwt', { session: false });
 const joiSchema = require('./company.validation');
 const companyCtrl = require('./company.controller');
 const { permit } = require('./../helpers/permission');
-const typeInfo = require('./typeInfo/typeInfo.route');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
-// company type's info
-router.use('/typeInfo', typeInfo);
 
 // for company profile
 router.route('/').post(

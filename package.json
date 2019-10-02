@@ -18,7 +18,8 @@
     "start:prod": "export NODE_ENV=production && pm2 start index.js",
     "lint": "esw *.js server config --color",
     "lint:watch": "yarn lint -- --watch",
-    "test": "cross-env NODE_ENV=test mocha ./server/**/*.test.js --ui bdd --reporter spec --colors server --recursive --timeout 20000",
+    "precommit": "yarn test",
+    "test": "cross-env NODE_ENV=test mocha ./server/**/*.test.js  --ui bdd --reporter spec --colors server --recursive --timeout 20000 --exit",
     "test:watch": "yarn test -- --watch",
     "test:coverage": "cross-env NODE_ENV=test ./node_modules/.bin/istanbul cover _mocha -- --ui bdd --reporter spec --colors server --recursive",
     "test:check-coverage": "yarn test:coverage && istanbul check-coverage",
@@ -37,6 +38,7 @@
   "dependencies": {
     "@hapi/joi": "^15.1.1",
     "@pusher/chatkit-server": "^2.1.1",
+    "aws-sdk": "^2.538.0",
     "axios": "^0.19.0",
     "bcrypt": "^3.0.6",
     "bluebird": "3.5.5",
@@ -68,6 +70,7 @@
     "mongoose-timestamp": "^0.6.0",
     "morgan": "1.9.1",
     "ms": "^2.1.2",
+    "multer": "^1.4.2",
     "nodemailer": "^6.3.0",
     "nodemailer-smtp-transport": "^2.7.4",
     "nodemon": "^1.19.1",
@@ -80,6 +83,7 @@
     "rand-token": "^0.4.0",
     "react-router-dom": "^4.3.1",
     "redis": "^2.8.0",
+    "rotating-file-stream": "^1.4.3",
     "semver": "^6.2.0",
     "set-immediate-shim": "^2.0.0",
     "winston": "3.2.1"

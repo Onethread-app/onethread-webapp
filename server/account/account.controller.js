@@ -1,187 +1,46 @@
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
-const { chatkit } = require('../services/pusher.services');
+const httpStatus = require('http-status');
 const Account = require('./account.model');
+const {
+  sendEmailForVerifyAccount,
+  sendEmailForResetPassword,
+} = require('../services/email.services');
+const authService = require('../services/auth.services');
+const bcryptService = require('../services/bcrypt.services');
+const { chatkit } = require('../services/pusher.services');
 const smtpTransport = require('../helpers/sendmail');
 const config = require('../../config/config');
+const isEmailExist = require('../services/emailchecker.services');
+const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  APIError,
+  EmailIdExistError,
+  BadRequestError,
+  SearchNotMatchError,
+} = require('../helpers/APIError');
 
+const logger = require('../../config/winston');
 // Declaring all variables
 let token = '';
-let rand = '';
-let link = '';
-let host = '';
-const refreshTokens = {};
-const rediscl = redis.createClient('6379', '127.0.0.1');
-rediscl.on('connect', () => {
-  console.log('redis pluggin');
-});
+let id = 0;
 
-const validateJwt = function(req, res) {
-  return new Promise((resolve, reject) => {
-    let uid = req.account._id;
-    let accesstoken = req.cookies.access_token || null;
-    let refreshtoken = req.cookies.refresh_token || null;
-
-    // Check if tokens found in cookies
-    if (accesstoken && refreshtoken) {
-      // They are, so let's verify the access token
-      jwt.verify(accesstoken, config.jwtSecret, async function(
-        err,
-        decoded,
-      ) {
-        if (err) {
-          // There are three types of errors, but we actually only care
-          // about this one, because it says that the access token
-          // expired and we need to issue a new one using refresh token
-          if (err.name === 'TokenExpiredError') {
-            // Let's see if we can find token in Redis. We should, because
-            // token expired, which means that we already inserted it into
-            // redis at least once.
-            let redis_token = rediscl.get(decoded.uid, function(
-              err,
-              val,
-            ) {
-              return err ? null : val ? val : null;
-            });
-
-            // If the token wasn't found, or the browser has sent us a refresh
-            // token that was different than the one in DB last time, then ...
-            if (
-              !redis_token ||
-              redis_token.refresh_token === refreshtoken
-            ) {
-              // ... we are probably dealing with hack attempt, because either
-              // there is no refresh token with that value, or the refresh token
-              // from request and storage do not equal for that specific user
-              reject('Nice try ;-)');
-            } else {
-              // It can also happen that the refresh token expires; in that case
-              // we need to issue both tokens at the same time
-              if (redis_token.expires > new Date()) {
-                // refresh token expired, we issue refresh token as well
-                let refresh_token = generate_refresh_token(64);
-
-                // Then we assign this token into httpOnly cookie using response
-                // object. I disabled the secure option - if you're running on
-                // localhost, keep it disabled, otherwise uncomment it if your
-                // web app uses HTTPS protocol
-                res.cookie('__refresh_token', refresh_token, {
-                  // secure: true,
-                  httpOnly: true,
-                });
-
-                // Then we refresh the expiration for refresh token. 1 month from now
-                let refresh_token_maxage =
-                  new Date() + jwt_refresh_expiration;
-
-                // And then we save it in Redis
-                rediscl.set(
-                  decoded.uid,
-                  JSON.stringify({
-                    refresh_token: refresh_token,
-                    expires: refresh_token_maxage,
-                  }),
-                  rediscl.print,
-                );
-              }
-
-              // Then we issue access token. Notice that we save user ID
-              // inside the JWT payload
-              let token = jwt.sign({ uid: decoded.uid }, jwt_secret, {
-                expiresIn: jwt_expiration,
-              });
-
-              // Again, let's assign this token into httpOnly cookie.
-              res.cookie('__access_token', token, {
-                // secure: true,
-                httpOnly: true,
-              });
-
-              // And then return the modified request and response objects,
-              // so we can work with them later
-              resolve({
-                res: res,
-                req: req,
-              });
-            }
-          } else {
-            // If any error other than "TokenExpiredError" occurs, it means
-            // that either token is invalid, or in wrong format, or ...
-            reject(err);
-          }
-        } else {
-          // There was no error with validation, access token is valid
-          // and none of the tokens expired
-          resolve({
-            res: res,
-            req: req,
-          });
-        }
-      });
-    } else {
-      // Well, no tokens. Someone is trying to access
-      // your web app without being logged in.
-      reject('Token missing.');
-    }
-  });
-};
-
-const generateUsername = function(uname) {
-  const username =
-    uname +
-    Math.random()
-      .toString(36)
-      .slice(2);
-  Account.findOne({ username: username })
-    .exec()
-    .then(user => {
-      if (user.length >= 1) {
-        return sendJSONresponse(res, 409, {
-          sucess: false,
-          message: 'username alraedy exists',
-        });
-      } else {
-        return username;
-      }
-    })
-    .catch(err => {
-      return sendJSONresponse(res, 500, {
-        sucess: false,
-        message: err,
-      });
-    });
-};
-
-const sendJSONresponse = function(res, status, content) {
-  res.status(status);
-  res.json(content);
-};
-
-const tokenForUser = function(user) {
-  const timestamp = new Date().getTime();
-  return jwt.encode(
-    {
-      _id: user._id,
-      iat: timestamp,
-      exp: config.jwtExpire,
-    },
-    config.jwtSecret,
-  );
-};
+const client = redis.createClient(
+  config.redis.port,
+  config.redis.host,
+);
 
 // create a new account for individual users
-const register = async (req, res) => {
+const register = async (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;
   const firstName = req.body.firstName;
   const lastName = req.body.lastName;
   const contactNo = req.body.contactNo;
   const role = req.body.role;
-  const username =
-    firstName +
-    Math.random()
-      .toString(36)
-      .slice(2);
+  // TODOS: UID will be in change future
+  id = id + 1;
+  const username = firstName + id;
   if (!email || !password) {
     return sendJSONresponse(res, 422, {
       error: 'You must provide email and password.',
@@ -194,9 +53,11 @@ const register = async (req, res) => {
     .exec()
     .then(user => {
       if (user.length >= 1) {
-        return res.status(409).json({
-          message: 'email is already exist',
-        });
+        const error = new EmailIdExistError(
+          'Email id exist',
+          httpStatus.CONFLICT,
+        );
+        return next(error);
       } else {
         let account = new Account();
         account.email = email;
@@ -208,16 +69,28 @@ const register = async (req, res) => {
         account.password = password;
         token = account.generateJwt();
         account.token = token;
-        account
-          .save()
-          .then(user => {
-            req.login(user, async function(err) {
-              if (err) {
-                return sendJSONresponse(res, 400, {
-                  success: false,
-                  message: err,
-                });
-              }
+        account.save().then(user => {
+          const info = {};
+          info.account = account;
+          info.expires = new Date(
+            // expire within 1 month
+            new Date().getTime() + 2630000,
+          );
+          let access_token = jwt.sign(info, config.jwtSecret, {
+            expiresIn: '1d',
+          });
+          const emailResponse = sendEmailForVerifyAccount(
+            account.username,
+            account.email,
+            access_token,
+          );
+          req.login(user, async function(err) {
+            if (err) {
+              return sendJSONresponse(res, 400, {
+                success: false,
+                message: err,
+              });
+            } else {
               // user created in chatkit
               await chatkit.createUser({
                 id: req.user._id,
@@ -228,50 +101,20 @@ const register = async (req, res) => {
                 token: token,
                 message: 'User created',
                 user,
+                emailResponse,
               });
-            });
-          })
-          .then(() => {
-            const info = {};
-            info.account = account;
-            info.expires = new Date(
-              // expire within 1 month
-              new Date().getTime() + 2630000,
-            );
-            let access_token = jwt.sign(info, config.jwtSecret, {
-              expiresIn: '1d',
-            });
-            host = req.get('host');
-            link =
-              'https://5bd8d95c.ngrok.io/api/v1/account/verifyAccount/' +
-              access_token;
-            let mailOptions = {
-              to: email,
-              subject: 'Please confirm your Email account',
-              html:
-                'Hello,<br> Please Click on the link to verify your email.<br><a href=' +
-                link +
-                '>Click here to verify</a>',
-            };
-            console.log(mailOptions);
-            smtpTransport.sendMail(mailOptions, function(err, res) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log('Message sent: ' + res);
-                res.end({
-                  success: true,
-                  msg: 'sent',
-                });
-              }
-            });
+            }
           });
+        });
       }
     })
     .catch(err => {
-      res.status(500).json({
-        error: err,
-      });
+      logger.error(`Registration Error: ${err}`);
+      const error = new BadRequestError(
+        'Bad REquest Error',
+        httpStatus.BAD_REQUEST,
+      );
+      return next(error);
     });
 };
 
@@ -290,19 +133,11 @@ const login = async (req, res) => {
   let refreshToken = jwt.sign({ uid: user_id }, config.jwtSecret, {
     expiresIn: 60 * 60 * 24 * 30,
   });
-  refreshTokens[refreshToken] = user_id;
+  //refreshTokens[refreshToken] = user_id;
   // Generate new access token
   let token = req.user.token;
-  res.cookie('access_token', token, {
-    // secure: true,
-    httpOnly: true,
-  });
-  res.cookie('refresh_token', refreshToken, {
-    // secure: true,
-    httpOnly: true,
-  });
   //client.set('string key', 'string val', redis.print);
-  rediscl.set(user_id, refreshToken, rediscl.print);
+  client.set(user_id, refreshToken);
 
   const {
     _id,
@@ -396,12 +231,12 @@ const accountUpdate = async (req, res, next) => {
 
 // let's logout
 const logout = async (req, res) => {
-  let uid = req.user._id;
+  //let uid = req.account._id;
   // Delete user refresh token from Redis
-  rediscl.del(uid);
+  //redis.del(uid);
   // ... and then remove httpOnly cookies from browser
-  res.clearCookie('access_token');
-  res.clearCookie('refresh_token');
+  //res.clearCookie('access_token');
+  //res.clearCookie('refresh_token');
   req.logout();
   res.json({
     success: true,
@@ -434,28 +269,16 @@ const forgetPassword = async (req, res) => {
         new Date().getTime() + 2630000,
       );
       let token = jwt.encode(info, config.jwtSecret);
-      host = req.get('host');
-      link =
-        'https://5bd8d95c.ngrok.io/api/v1/account/changePassword/' +
-        token;
-      let mailOptions = {
-        to: user.email,
-        subject: 'Reset your password',
-        html:
-          'Hello,<br> Please Click on the link to reset your password.<br><a href=' +
-          link +
-          '>Click here to verify</a>',
-      };
-      smtpTransport.sendMail(mailOptions, function(err, res) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log('Message sent: ' + res);
-          res.end({
-            success: true,
-            msg: 'sent',
-          });
-        }
+      const emailResponse = sendEmailForResetPassword(
+        account.username,
+        account.email,
+        token,
+      );
+      return sendJSONresponse(res, 201, {
+        success: true,
+        token: token,
+        message: 'Send Successfully to user',
+        info,
       });
     })
 
@@ -534,7 +357,6 @@ const verifyAccount = async (req, res) => {
         console.log('Account not found');
         res.json({ error: 'Account not found' });
       } else {
-        console.log('Account found');
         account.accountVerified = true;
         account.save(function(update_err, update_data) {
           if (update_err) {
@@ -698,43 +520,93 @@ const sendFriendRequestList = async (req, res) => {
   });
 };
 
-const getAllAccounts = async (req, res) => {
-  console.log(req.user);
-};
+// reject friend request
+// const rejectFriendRequest = async (req, res) => {
+// 	let reqUserID = req.user.id;
+// 	let reqQueryID = req.query.userID;
+// 	console.log(reqUserID, reqQueryID);
 
-const getAccount = async (req, res) => {
-  const {
-    _id,
-    email,
-    firstName,
-    lastName,
-    username,
-    accountVerified,
-    role,
-    contactNo,
-    companies,
-    friends,
-    pendingFriends,
-    sendingFriendList,
-  } = req.user;
-  let user = {
-    _id,
-    email,
-    firstName,
-    lastName,
-    username,
-    accountVerified,
-    role,
-    contactNo,
-    companies,
-    friends,
-    pendingFriends,
-    sendingFriendList,
+// 	Account.findById(reqUserID)
+// 		.then(account => {
+// 			Account.findByIdAndUpdate(reqUserID, {
+// 					$pull: {
+// 						"pendingFriends": {
+// 							"user": reqQueryID
+// 						}
+// 					}
+// 				}, (err, result) => {
+// 					if (err) {
+// 						return res.status(400).json({
+// 							error: err
+// 						});
+// 					}
+// 					res.status(200).json({
+// 						success: true,
+// 						msg: "successfully reject the user",
+// 						result: result
+// 					});
+// 				}
+
+// 			);
+// 		});
+// };
+
+// remove friend from friend list
+// const removeFriend = async (req, res) => {
+// 	let reqUserID = req.user.id;
+// 	let reqQueryID = req.query.userID;
+// 	Account.findByIdAndUpdate(reqUserID, {
+// 		$pull: {
+// 			"friends": {
+// 				"user": reqQueryID
+// 			}
+// 		}
+// 	}, (err, result) => {
+// 		if (err) {
+// 			return res.status(400).json({
+// 				error: err
+// 			});
+// 		}
+// 		Account.findByIdAndUpdate(reqQueryID, {
+// 			$pull: {
+// 				"friends": {
+// 					"user": reqUserID
+// 				}
+// 			}
+// 		}, (err, result) => {
+// 			if (err) {
+// 				return res.status(400).json({
+// 					error: err
+// 				});
+// 			}
+// 			res.status(200).json({
+// 				success: true,
+// 				msg: "unfriend successful",
+// 				result: result
+// 			});
+// 		});
+// 	});
+
+// };
+
+// const getAllAccounts = async (req, res) => {
+//   console.log(req.user);
+// };
+
+const getAccount = async (req, res, next) => {
+  const user = req.user;
+  const userInfo = {
+    email: user.email,
+    username: user.username,
   };
-  res.json({
-    success: true,
-    user,
-  });
+  console.log(user);
+  client.hset(
+    'User Info',
+    user.token,
+    JSON.stringify(userInfo),
+    redis.print,
+  );
+  return sendJSONresponse(res, 200, { success: true, userInfo });
 };
 
 const accountLoad = async (req, res, next, id) => {
@@ -755,28 +627,63 @@ const accountLoad = async (req, res, next, id) => {
     });
 };
 
-const searchAccount = async (req, res) => {};
+const searchAccount = async (req, res, next) => {
+  const username = req.query.username;
+  if (username === '') {
+    const err = new BadRequestError(
+      'Nothing Submitted',
+      httpStatus.BAD_REQUEST,
+      true,
+    );
+    logger.error(`Query Error: ${err}`);
+    return next(err);
+  }
+  Account.find({ username: { $regex: new RegExp(username) } })
+    .select('email username _id')
+    .then(data => {
+      if (data.length < 1) {
+        const err = new SearchNotMatchError(
+          'Query does not found',
+          httpStatus.BAD_REQUEST,
+          true,
+        );
+        logger.error(`Query Error: ${err}`);
+        return next(err);
+      } else {
+        logger.info(`Search complete ${username}`);
+        return sendJSONresponse(res, 200, {
+          employees: {
+            success: true,
+            message: `Search complete ${username}`,
+            data,
+          },
+        });
+      }
+    })
+    .catch(() => {
+      return next(err);
+    });
+};
 
 // verify token
-const tokenVerification = async (req, res) => {
-  const email = req.body.email;
-  const refreshToken = req.body.refreshToken;
-  console.log(email, refreshToken);
-  if (
-    refreshToken in refreshTokens &&
-    refreshTokens[refreshToken] == email
-  ) {
-    const user = {
-      email: email,
-    };
-    const token = jwt.sign(user, config.jwtSecret, {
-      expiresIn: '1d',
-    });
-    res.json({ token: token });
-  } else {
-    res.json(401);
-  }
-};
+// const tokenVerification = async (req, res) => {
+//   //const email = req.body.email;
+//   const refreshToken = req.body.refreshToken;
+//   const token = req.user.token;
+//   if (token) {
+//     jwt.verify(token, config.jwtSecret, (err, decoded) => {
+//       if (err) {
+//         // console.log(err);
+//         return res
+//           .status(401)
+//           .json({ error: true, message: 'Unauthorized access' });
+//       }
+//       req.decoded = decoded;
+
+//       next();
+//     });
+//   }
+// };
 module.exports = {
   sendJSONresponse,
   register,
@@ -788,8 +695,7 @@ module.exports = {
   verifyAccount,
   // followAccount,
   pendingFriendRequestList,
-  searchAccount,
-  getAllAccounts,
+  //getAllAccounts,
   getAccount,
   accountLoad,
   accountUpdate,
@@ -801,6 +707,6 @@ module.exports = {
   sendFriendRequestList,
   // rejectFriendRequest,
   // removeFriend
-  tokenVerification,
-  validateJwt,
+  //tokenVerification,
+  searchAccount,
 };
