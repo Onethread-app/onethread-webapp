@@ -594,19 +594,42 @@ const sendFriendRequestList = async (req, res) => {
 // };
 
 const getAccount = async (req, res, next) => {
-  const user = req.user;
-  const userInfo = {
-    email: user.email,
-    username: user.username,
+  const {
+    _id,
+    email,
+    firstName,
+    lastName,
+    username,
+    accountVerified,
+    role,
+    contactNo,
+    companies,
+    friends,
+    pendingFriends,
+    sendingFriendList,
+  } = req.user;
+  let user = {
+    _id,
+    email,
+    firstName,
+    lastName,
+    username,
+    accountVerified,
+    role,
+    contactNo,
+    companies,
+    friends,
+    pendingFriends,
+    sendingFriendList,
   };
   console.log(user);
   client.hset(
     'User Info',
-    user.token,
-    JSON.stringify(userInfo),
+    req.user.token,
+    JSON.stringify(user),
     redis.print,
   );
-  return sendJSONresponse(res, 200, { success: true, userInfo });
+  return sendJSONresponse(res, 200, { success: true, user });
 };
 
 const accountLoad = async (req, res, next, id) => {
