@@ -27,6 +27,10 @@ const envVarsSchema = Joi.object({
 		.required()
 		.description("Mongo DB host url"),
 	MONGO_PORT: Joi.number().default(27017),
+	REDIS_HOST: Joi.string()
+		.required()
+		.description("Redis DB host url"),
+	REDIS_PORT: Joi.number().default(6379),
 	EMAIL_ADDRESS: Joi.string()
 		.required()
 		.description("email address required"),
@@ -50,7 +54,16 @@ const envVarsSchema = Joi.object({
 		.description("INSTANCE_LOCATOR required"),
 	PUSHER_KEY: Joi.string()
 		.required()
-		.description("PUSHER_KEY required")
+		.description("PUSHER_KEY required"),
+	AWS_ACCESS_KEY: Joi.string()
+		.required()
+		.description("AWS credential required"),
+	AWS_SECRET_ACCESS_KEY: Joi.string()
+		.required()
+		.description("AWS secret key required"),
+	S3_REGION: Joi.string()
+		.required()
+		.description("S3 region required")
 })
 	.unknown()
 	.required();
@@ -71,6 +84,10 @@ const config = {
 		host: envVars.MONGO_HOST,
 		port: envVars.MONGO_PORT
 	},
+	redis: {
+		host: envVars.REDIS_HOST,
+		port: envVars.REDIS_PORT
+	},
 	emailAddress: envVars.EMAIL_ADDRESS,
 	emailPassword: envVars.EMAIL_PASSWORD,
 	facebookID: envVars.FACEBOOK_ID,
@@ -78,7 +95,10 @@ const config = {
 	googleClientID: envVars.GOOGLE_CLIENT_ID,
 	googleClientSecret: envVars.GOOGLE_CLIENT_SECRET,
 	instanceLocator: envVars.INSTANCE_LOCATOR,
-	pusherKey: envVars.PUSHER_KEY
+	pusherKey: envVars.PUSHER_KEY,
+	awsAccessKey: envVars.AWS_ACCESS_KEY,
+	awsSecretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
+	s3Region: envVars.S3_REGION
 };
 
 module.exports = config;
