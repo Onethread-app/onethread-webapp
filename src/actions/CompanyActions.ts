@@ -1,7 +1,7 @@
 
 import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
-import { CREATE_COMPANY, CREATE_COMPANY_ERROR, USER_COMPANIES_UPDATE, SELECT_COMPANY } from './Types';
+import { CREATE_COMPANY, CREATE_COMPANY_ERROR, USER_COMPANIES_UPDATE, GET_COMPANY_DETAILS } from './Types';
 import { History } from 'history';
 import { tokenConfig } from './UtilsActions';
 import { CompanyModel } from 'reducers/company/CompanyReducer';
@@ -16,7 +16,7 @@ export const createCompanyAction = (companyData: CompanyModel, routeHistory: His
         _id: response.data.company._id, 
         name: response.data.company.name 
       }});
-      routeHistory.push("/company");
+      routeHistory.push(`/company/${response.data.company.name}`);
     } else {
       console.log("error in creation of company")
     }
@@ -32,13 +32,13 @@ export const createCompanyAction = (companyData: CompanyModel, routeHistory: His
 }
 
 
-export const selectCompanyAction = (id: string, routeHistory: History) => async (dispatch: any, getState: any) => {
+export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig(getState);
     if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(`/company/${id}`, headers);
-      dispatch({ type: SELECT_COMPANY, payload: response.data });
-      routeHistory.push("/company");
+      const response = await tigrowApi.get(`/company/${name}`, headers);
+      dispatch({ type: GET_COMPANY_DETAILS, payload: response.data });
+      return response.data;
     } else {
       console.log("error in slection of company fetching")
     }

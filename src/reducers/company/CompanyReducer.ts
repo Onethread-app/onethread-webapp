@@ -1,4 +1,4 @@
-import { CREATE_COMPANY, SELECT_COMPANY } from 'actions/Types';
+import { CREATE_COMPANY, GET_COMPANY_DETAILS } from 'actions/Types';
 
 export interface CompanyModel {
   _id: string,
@@ -11,20 +11,20 @@ export interface CompanyModel {
 }
 
 const InitialState = {
-  company: {}
+  currentCompany: {}
 }
 
 export const CompanyReducer = (state = InitialState, action: any) => {
   switch (action.type) {
+    case GET_COMPANY_DETAILS:
+      return {
+        ...state,
+        currentCompany:action.payload.company
+      }
     case CREATE_COMPANY:
       return {
         ...state,
-        company: action.payload.company
-      }
-    case SELECT_COMPANY:
-      return {
-        ...state,
-        company:action.payload.company
+        currentCompany: action.payload.company
       }
     default:
       return state;

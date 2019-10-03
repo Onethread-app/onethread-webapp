@@ -15,10 +15,8 @@ import { CompanyProfilePage } from 'pages/company/ProfilePage';
 import { Layout } from 'components/common/Layout';
 
 const load = async (
-	fetchUserAction: () => void,
 	initializeChatkitAction: () => void
 ) => {
-	await fetchUserAction();
 	await initializeChatkitAction();
 }
 
@@ -40,6 +38,10 @@ const PrivateRoute = (props: {
 	);
 };
 
+const Demo = () => (<div></div>)
+
+const NoMatch = () => (<div>This page is not available</div>)
+
 interface AppProps {
 	fetchUserAction: () => void;
 	initializeChatkitAction: () => void;
@@ -47,7 +49,7 @@ interface AppProps {
 
 const AppComponent = (props: AppProps) => {
 	useEffect(() => {
-		load(props.fetchUserAction, props.initializeChatkitAction);
+		load(props.initializeChatkitAction);
 	});
 
 	return (
@@ -68,25 +70,31 @@ const AppComponent = (props: AppProps) => {
 					}
 				/>
 				<PrivateRoute
+					exact
 					path="/"
+					component={Demo}
+				/>
+				<PrivateRoute
+					path="/:username"
 					exact={true}
 					component={LandingPage}
 				/>
 				<PrivateRoute
 					exact={true}
-					path="/company"
+					path="/company/:cname"
 					component={CompanyProfilePage}
 				/>
 				<PrivateRoute
-					path="/workplace"
+					path="/company/:cname/feed"
 					exact={true}
 					component={FeedPage}
 				/>
 				<PrivateRoute
-					path="/workplace/room"
+					path="/company/:cname/room"
 					exact={true}
 					component={RoomPage}
 				/>
+				<Route component={NoMatch} />
 			</Switch>
 
 		</BrowserRouter>

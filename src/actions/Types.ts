@@ -25,7 +25,7 @@ export const GET_ROOMS_ERROR = "GET_ROOMS_ERROR";
 
 export const CREATE_COMPANY = "CREATE_COMPANY";
 export const CREATE_COMPANY_ERROR = "CREATE_COMPANY_ERROR";
-export const SELECT_COMPANY = "SELECT_COMPANY";
+export const GET_COMPANY_DETAILS = "GET_COMPANY_DETAILS";
 
 // User reducer type
 export const BASIC_INFO = "BASIC_INFO"

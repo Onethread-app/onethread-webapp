@@ -6,7 +6,8 @@ export interface User {
 	_id: string,
 	email: string
 	firstName: string
-	lastName: string
+	lastName: string;
+	username: string;
 	accountVerified: boolean,
 	role: string,
 	contactNo: string,
@@ -22,6 +23,7 @@ const InitialState = {
 		email: "",
 		firstName: "",
 		lastName: "",
+		username: "",
 		accountVerified: false,
 		role: "",
 		contactNo: "",

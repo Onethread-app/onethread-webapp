@@ -10,13 +10,13 @@ import logo from '../resources/images/tigrowLogo.png';
 import { useState } from 'react';
 import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListItemViewWithImage';
 import { CompanySignupForm } from './company/SignupForm';
-import { selectCompanyAction } from 'actions/CompanyActions';
+import { getCompanyDetails } from 'actions/CompanyActions';
 import { CompanyModel } from 'reducers/company/CompanyReducer';
 import { User } from 'reducers/UserReducer';
 
 interface NavbarTopInternalProps {
   logoutAction: (history: History) => void;
-  selectCompanyAction: (companyId: string, history: History) => void;
+  getCompanyDetails: (companyId: string, history: History) => void;
   companies: CompanyModel[],
   user: User
 }
@@ -28,7 +28,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
       <nav className="bp3-navbar bp3-fixed-top">
         <div className="bp3-navbar-group bp3-align-left">
           <div className="bp3-navbar-heading">
-            <Link to="/">
+            <Link to={`/${props.user.username}`}>
               <img
                 src={logo}
                 className="dib"
@@ -50,7 +50,12 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                   imageSrc={`https://robohash.org/${company.name}`}
                   listTitle={company.name}
                   listDescription="C"
-                  onClick={() => props.selectCompanyAction(company._id, props.history)}
+                  onClick={async () => {
+                    const response = await props.getCompanyDetails(company.name, props.history) as any;
+                    if (response) {
+                      props.history.push(`/company/${(response as any).company.name}`)
+                    }
+                  }}
                 />
               ))}
 
@@ -119,5 +124,5 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export const NavbarTop = connect(mapStateToProps, { logoutAction, selectCompanyAction })(withRouter(NavbarTopComponent));
+export const NavbarTop = connect(mapStateToProps, { logoutAction, getCompanyDetails })(withRouter(NavbarTopComponent));
 

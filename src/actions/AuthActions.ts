@@ -28,7 +28,7 @@ export const userSignupAction = (
 		localStorage.setItem("token", JSON.stringify(response.data.token));
 		await dispatch({ type: USER_SIGNUP, payload: response.data });
 		await dispatch({ type: BASIC_INFO, payload: response.data });
-		routeHistory.push("/");
+		routeHistory.push(`/${response.data.user.username}`);
 	} catch (error) {
 		if (isEqual(error.message, "Network Error")) {
 			dispatch({
@@ -66,7 +66,7 @@ export const loginAction = (
 		localStorage.setItem("token", JSON.stringify(response.data.token));
 		dispatch({ type: USER_LOGIN, payload: response.data });
 		dispatch({ type: BASIC_INFO, payload: response.data });
-		routeHistory.push("/");
+		routeHistory.push(`/${response.data.user.username}`);
 	} catch (error) {
 		if (isEqual(error.message, "Network Error")) {
 			dispatch({

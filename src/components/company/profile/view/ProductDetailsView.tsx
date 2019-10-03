@@ -48,7 +48,7 @@ const ProductDetailsViewComponent = (props: any) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.company
+    company: state.companyReducer.currentCompany
   }
 }
 
