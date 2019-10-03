@@ -1,19 +1,22 @@
+
+
 const mongoose = require("mongoose");
 const request = require("supertest-as-promised");
 const chai = require("chai"); // eslint-disable-line import/newline-after-import
 const app = require("../../index");
 
-// const request = require("supertest-as-promised");
-// const httpStatus = require("http-status");
-// const chai = require("chai"); // eslint-disable-line import/newline-after-import
-// const expect = chai.expect;
-// const app = require("../../index.js");
+// // const request = require("supertest-as-promised");
+// // const httpStatus = require("http-status");
+// // const chai = require("chai"); // eslint-disable-line import/newline-after-import
+// // const expect = chai.expect;
+// // const app = require("../../index.js");
 
-// chai.config.includeStack = true;
 
-// /**
-//  * root level hooks
-//  */
+// // chai.config.includeStack = true;
+
+// // /**
+// //  * root level hooks
+// //  */
 
 after(done => {
 	// required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092
@@ -131,14 +134,14 @@ describe("## Login APIs for Account Holders", () => {
 	});
 });
 
-// before(done =>{
-//     let account ={
-//         email: "orvi@orvi.com",
-//         password: "Orvi@1234",
-//         role: "user",
-//     };
-//     request(app)
-//         .post("/api/v1/account/signup")
-//         .send(account)
-//         .expect(httpStatus.OK)
-// })
+// // before(done =>{
+// //     let account ={
+// //         email: "orvi@orvi.com",
+// //         password: "Orvi@1234",
+// //         role: "user",
+// //     };
+// //     request(app)
+// //         .post("/api/v1/account/signup")
+// //         .send(account)
+// //         .expect(httpStatus.OK)
+// // })

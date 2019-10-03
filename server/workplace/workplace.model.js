@@ -2,7 +2,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const WrokplaceSchema = new mongoose.Schema({
+const WorkplaceSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
@@ -19,10 +19,19 @@ const WrokplaceSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
+  members: [ {
+    type: Schema.ObjectId,
+    ref: 'Account'
+  }],
+  company: {
+    type: Schema.ObjectId,
+    ref: 'Company',
+    reqired: true
+  },
   account: {
     type: Schema.ObjectId,
     ref: 'Account'
   }
 });
 
-module.exports = mongoose.model('Wrokplace', WrokplaceSchema);
+module.exports = mongoose.model('Workplace', WorkplaceSchema);

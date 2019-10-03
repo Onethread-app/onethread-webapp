@@ -1,5 +1,5 @@
 'use strict';
-const jwt = require('jsonwebtoken');
+//const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
 const Account = require('../account/account.model');
 const { Company } = require('./company.model');
