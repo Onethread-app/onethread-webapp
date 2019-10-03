@@ -1,12 +1,14 @@
 import { combineReducers } from "redux";
 import { AuthReducer } from "./AuthReducer";
-import { WorkplaceReducer } from "./workplace";
-import { InfoReducer } from './InfoReducer';
+import { WorkplaceReducer } from "./company/workplace";
+import { UserReducer } from './UserReducer';
+import { CompanyReducer } from './company/CompanyReducer';
 import { ChatkitReducer } from "./ChatkitReducer";
 
 export const RootReducer = combineReducers({
-	auth: AuthReducer,
-	workplace: WorkplaceReducer,
-	info: InfoReducer,
-	chatkit: ChatkitReducer
+	authReducer: AuthReducer,
+	workplaceReducer: WorkplaceReducer,
+	userReducer: UserReducer,
+	companyReducer: CompanyReducer,
+	chatkitReducer: ChatkitReducer
 });

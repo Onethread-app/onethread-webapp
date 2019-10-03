@@ -1,33 +1,34 @@
 import React from "react";
+import { isEqual } from "lodash";
 import { RoomListItem } from "./RoomListItem";
+const { withChatkit } = require("@pusher/chatkit-client-react");
 
-interface RoomEntity {
-	id: string;
-	roomImg: string;
-	roomTitle: string;
-}
 interface RoomListComponentProps {
-	rooms: RoomEntity[];
 	chatkit?: any;
 }
 
-export const RoomList = (
+export const RoomList = withChatkit((
 	props: RoomListComponentProps
 ) => {
+	let rooms = [];
+	if (!props.chatkit.isLoading) {
+		rooms = props.chatkit.currentUser.rooms;
+	}
 
 	return (
 		<>
-			<main className="mw6 center ">
-				{props.rooms.length ? props.rooms.map(room => {
+			<main className="mw6 center" id="roomList">
+				{!props.chatkit.isLoading ? rooms.length ? rooms.map((room: { id: string; name: string; }, i: number, arr: { id: any; }[]) => {
 					return (
 						<RoomListItem
 							key={room.id}
-							roomImg={room.roomImg}
-							roomTitle={room.roomTitle}
+							img={room.name[0]}
+							name={room.name}
+							lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
 						/>
 					);
-				}) : <p>You're not assigned into any room.</p>}
+				}) : <p>You're not assigned into any room.</p> : ""}
 			</main>
 		</>
 	);
-};
+})

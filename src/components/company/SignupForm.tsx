@@ -1,32 +1,47 @@
 import React, { useState } from 'react'
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { isEmpty } from 'lodash';
-import { HTMLSelect, Icon } from '@blueprintjs/core';
+import { HTMLSelect, Icon, Button } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { createCompanyAction } from 'actions/CompanyActions';
 import { History } from 'history';
 
+const Type = [
+  'Manufacturer',
+  'Trading Company',
+  'Buying Office',
+  'Agent',
+  'Distributor/Wholesaler',
+  'Government ministry/Bureau/Commission',
+  'Association',
+  'Business Service (Transportation, finance, travel, Ads, etc)',
+  'Other',
+]
 
 const CompanySignupFormComponent = (props: {
+  setShowDialog: (val: boolean) => void;
   createCompanyAction: (val: any, history: History) => void
 } & RouteComponentProps) => {
   const [values, setValues] = useState({
-    companyName: "",
-    companyEmailAddress: "",
-    legalOwnersName: "",
-    legalOwnersEmailAddress: "",
-    location: "Dhaka",
-    companyType: "Industrial"
+    name: "",
+    email: "",
+    legalOwnerName: "",
+    legalOwnerMail: "",
+    address: "",
+    type: ""
   });
 
   const [errors, setErrors] = useState({
-    companyName: "",
-    companyEmailAddress: "",
-    legalOwnersName: "",
-    legalOwnersEmailAddress: "",
-
+    name: "",
+    email: "",
+    legalOwnerName: "",
+    legalOwnerMail: "",
+    address: "",
+    type: ""
   });
+
+
 
   const emailValidation = (email: string) => {
     const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -38,20 +53,27 @@ const CompanySignupFormComponent = (props: {
   }
 
   const emptyValueCheck = () => {
-    if (isEmpty(values.companyName) || isEmpty(values.companyEmailAddress) || isEmpty(values.legalOwnersName) || isEmpty(values.legalOwnersEmailAddress)) {
+    if (isEmpty(values.name) || isEmpty(values.email) || isEmpty(values.legalOwnerName) || isEmpty(values.legalOwnerMail) || isEmpty(values.address)) {
       let e = errors;
-      if (isEmpty(values.companyName)) {
-        e = { ...e, companyName: "Required" };
+      if (isEmpty(values.name)) {
+        e = { ...e, name: "Required" };
       }
-      if (isEmpty(values.companyEmailAddress)) {
-        e = { ...e, companyEmailAddress: "Required" };
+      if (isEmpty(values.email)) {
+        e = { ...e, email: "Required" };
       }
-      if (isEmpty(values.legalOwnersName)) {
-        e = { ...e, legalOwnersName: "Required" };
+      if (isEmpty(values.legalOwnerName)) {
+        e = { ...e, legalOwnerName: "Required" };
       }
-      if (isEmpty(values.legalOwnersEmailAddress)) {
-        e = { ...e, legalOwnersEmailAddress: "Required" };
+      if (isEmpty(values.legalOwnerMail)) {
+        e = { ...e, legalOwnerMail: "Required" };
       }
+      if (isEmpty(values.address)) {
+        e = { ...e, address: "Required" };
+      }
+      if (isEmpty(values.type)) {
+        e = { ...e, type: "Required" };
+      }
+
       setErrors(e);
       return true;
     } else {
@@ -67,189 +89,193 @@ const CompanySignupFormComponent = (props: {
   const onChangeSelectField = (name: string) => (event: any) => {
     const value = event.currentTarget.value;
     setValues({ ...values, [name]: value });
+    setErrors({...errors, [name]: ""})
   }
 
   return (
-    <form className="fl w-100 pa2">
-      <div className={` ${errors.companyName ? "mb3" : "mb4"}`}>
+    <form className="fl w-100 pa2" >
+      <div className={` ${errors.name ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
             id="companyName"
-            value={values.companyName}
-            onChange={handleChange("companyName")}
+            value={values.name}
+            onChange={handleChange("name")}
             placeHolder="Company Name"
             leftIcon="briefcase"
             style={{
               boxShadow: 'none'
             }}
-            className={`br0 ${errors.companyName ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.companyName ? 'red' : "#0fa3a3"}`}
+            className={`br0 ${errors.name ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.name ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.companyName)) {
-                const companyNameError = { ...errors, companyName: "Please enter company name" };
+              if (isEmpty(values.name)) {
+                const companyNameError = { ...errors, name: "Please enter company name" };
                 setErrors(companyNameError);
               } else {
-                const companyNameError = { ...errors, companyName: "" }
+                const companyNameError = { ...errors, name: "" }
                 setErrors(companyNameError);
               }
             }}
           />
         </div>
-        {errors.companyName ? <small style={{ color: 'red' }}>{errors.companyName}</small> : ""}
+        {errors.name ? <small style={{ color: 'red' }}>{errors.name}</small> : ""}
       </div>
-      <div className="flex mb4">
-        <div className=" f5 pa1 bb b--lightBlue">
-          <Icon
-            icon={"map-marker"}
-            className="tigrow-lightBlue"
-          />
-        </div>
-        <HTMLSelect
-          fill={true}
-          minimal={true}
-          onChange={onChangeSelectField('location')}
-          className=" bb b--lightBlue"
-          style={{
-            boxShadow: 'none',
-            flex: '1',
-            outline: 'none',
-            borderRadius: "0px",
-            background: "white"
-          }}
-        >
-          <option selected value="Dhaka">Dhaka</option>
-          <option value="Chittagong">Chittagong</option>
-          <option value="Khulna">Khulna</option>
-          <option value="Rajshahi">Rajshahi</option>
-          <option value="Barishal">Barishal</option>
-          <option value="Sylhet">Sylhet</option>
-        </HTMLSelect>
-
-      </div>
-
-      <div className="flex mb4">
-        <div className=" f5 pa1 bb b--lightBlue">
-          <Icon
-            icon={"briefcase"}
-            className="tigrow-lightBlue"
-          />
-        </div>
-        <HTMLSelect
-          fill={true}
-          minimal={true}
-          onChange={onChangeSelectField('companyType')}
-          className=" bb b--lightBlue"
-          style={{
-            boxShadow: 'none',
-            borderRadius: '0px',
-            backgroundColor: 'white',
-            flex: '1',
-            outline: 'none'
-          }}
-        >
-          <option selected value="Industrial">Industrial</option>
-          <option value="Agricultural">Agricultural</option>
-        </HTMLSelect>
-      </div>
-
-      <div className={` ${errors.companyEmailAddress ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.address ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
-            id="companyEmailAddress"
-            value={values.companyEmailAddress}
-            onChange={handleChange("companyEmailAddress")}
+            id="companyAddress"
+            value={values.address}
+            onChange={handleChange("address")}
+            placeHolder="Company Address"
+            leftIcon="map-marker"
+            style={{
+              boxShadow: 'none'
+            }}
+            className={`br0 ${errors.address ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.address ? 'red' : "#0fa3a3"}`}
+            validationOnBlur={() => {
+              if (isEmpty(values.address)) {
+                const companyAddressError = { ...errors, address: "Please enter company name" };
+                setErrors(companyAddressError);
+              } else {
+                const companyAddressError = { ...errors, address: "" }
+                setErrors(companyAddressError);
+              }
+            }}
+          />
+        </div>
+        {errors.address ? <small style={{ color: 'red' }}>{errors.address}</small> : ""}
+      </div>
+
+      <div className={` ${errors.type ? "mb3" : "mb4"}`}>
+        <div className="flex">
+          <div className=" f5 pa1 bb b--lightBlue">
+            <Icon
+              icon={"briefcase"}
+              className="tigrow-lightBlue"
+            />
+          </div>
+          <HTMLSelect
+            fill={true}
+            minimal={true}
+            onChange={onChangeSelectField('type')}
+            className=" bb b--lightBlue"
+            style={{
+              boxShadow: 'none',
+              borderRadius: '0px',
+              backgroundColor: 'white',
+              flex: '1',
+              outline: 'none'
+            }}
+          >
+            <option selected value=''>Please select a company type</option>
+            {Type.map(t => (
+              <option value={t}>{t}</option>
+            ))}
+          </HTMLSelect>
+        </div>
+        {errors.type ? <small style={{ color: 'red' }}>{errors.type}</small> : ""}
+      </div>
+
+      <div className={` ${errors.email ? "mb3" : "mb4"}`}>
+        <div className="flex">
+          <InputGroupField
+            id="companyMail"
+            value={values.email}
+            onChange={handleChange("email")}
             placeHolder="Company Email Address"
             leftIcon="envelope"
             style={{
               boxShadow: 'none'
             }}
-            className={`br0 ${errors.companyEmailAddress ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.companyEmailAddress ? 'red' : "#0fa3a3"}`}
+            className={`br0 ${errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.email ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.companyEmailAddress)) {
-                const companyEmailError = { ...errors, companyEmailAddress: "Please enter company email" };
+              if (isEmpty(values.email)) {
+                const companyEmailError = { ...errors, email: "Please enter company email" };
                 setErrors(companyEmailError);
-              } else if (!emailValidation(values.companyEmailAddress)) {
-                const companyEmailError = { ...errors, companyEmailAddress: "Invalid email address!" };
+              } else if (!emailValidation(values.email)) {
+                const companyEmailError = { ...errors, email: "Invalid email address!" };
                 setErrors(companyEmailError);
               } else {
-                const companyEmailError = { ...errors, companyEmailAddress: "" };
+                const companyEmailError = { ...errors, email: "" };
                 setErrors(companyEmailError);
               }
             }}
           />
         </div>
-        {errors.companyEmailAddress ? <small style={{ color: 'red' }}>{errors.companyEmailAddress}</small> : ""}
+        {errors.email ? <small style={{ color: 'red' }}>{errors.email}</small> : ""}
       </div>
 
-      <div className={` ${errors.legalOwnersName ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.legalOwnerName ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
-            id="legalOwnersName"
-            value={values.legalOwnersName}
-            onChange={handleChange("legalOwnersName")}
+            id="legalOwnerName"
+            value={values.legalOwnerName}
+            onChange={handleChange("legalOwnerName")}
             placeHolder="Legal Owner's Name"
             leftIcon="mugshot"
             style={{
               boxShadow: 'none'
             }}
-            className={`br0 ${errors.legalOwnersName ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.legalOwnersName ? 'red' : "#0fa3a3"}`}
+            className={`br0 ${errors.legalOwnerName ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.legalOwnerName ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.legalOwnersName)) {
-                const ownerNameError = { ...errors, legalOwnersName: "Please enter legal owner's name" };
+              if (isEmpty(values.legalOwnerName)) {
+                const ownerNameError = { ...errors, legalOwnerName: "Please enter legal owner's name" };
                 setErrors(ownerNameError);
               } else {
-                const ownerNameError = { ...errors, legalOwnersName: "" }
+                const ownerNameError = { ...errors, legalOwnerName: "" }
                 setErrors(ownerNameError);
               }
             }}
           />
         </div>
-        {errors.legalOwnersName ? <small style={{ color: 'red' }}>{errors.legalOwnersName}</small> : ""}
+        {errors.legalOwnerName ? <small style={{ color: 'red' }}>{errors.legalOwnerName}</small> : ""}
       </div>
 
-      <div className={` ${errors.legalOwnersEmailAddress ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.legalOwnerMail ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
-            id="legalOwnersEmailAddress"
-            value={values.legalOwnersEmailAddress}
-            onChange={handleChange("legalOwnersEmailAddress")}
+            id="legalOwnerMail"
+            value={values.legalOwnerMail}
+            onChange={handleChange("legalOwnerMail")}
             placeHolder="Legal Owner's Email Address"
             leftIcon="envelope"
             style={{
               boxShadow: 'none'
             }}
-            className={`br0 ${errors.legalOwnersEmailAddress ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.legalOwnersEmailAddress ? 'red' : "#0fa3a3"}`}
+            className={`br0 ${errors.legalOwnerMail ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.legalOwnerMail ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.legalOwnersEmailAddress)) {
-                const ownerEmailError = { ...errors, legalOwnersEmailAddress: "Please enter legal owner's email address" };
+              if (isEmpty(values.legalOwnerMail)) {
+                const ownerEmailError = { ...errors, legalOwnerMail: "Please enter legal owner's email address" };
                 setErrors(ownerEmailError);
-              } else if (!emailValidation(values.legalOwnersEmailAddress)) {
-                const ownerEmailError = { ...errors, legalOwnersEmailAddress: "Invalid email address!" };
+              } else if (!emailValidation(values.legalOwnerMail)) {
+                const ownerEmailError = { ...errors, legalOwnerMail: "Invalid email address!" };
                 setErrors(ownerEmailError);
               } else {
-                const ownerEmailError = { ...errors, legalOwnersEmailAddress: "" }
+                const ownerEmailError = { ...errors, legalOwnerMail: "" }
                 setErrors(ownerEmailError);
               }
             }}
           />
         </div>
-        {errors.legalOwnersEmailAddress ? <small style={{ color: 'red' }}>{errors.legalOwnersEmailAddress}</small> : ""}
+        {errors.legalOwnerMail ? <small style={{ color: 'red' }}>{errors.legalOwnerMail}</small> : ""}
       </div>
       <div className="tc">
-        <button className="b--none w4 br3 grow h2  pointer pv2 white tc "
+        <Button className="b--none w4 br3 grow h2  pointer pv2 white tc"
           style={{ background: "#0fa3a3", outline: "none" }}
-          onClick={e => {
+          onClick={(e:any) => {
             e.preventDefault();
             if (!emptyValueCheck()) {
               props.createCompanyAction(values, props.history);
+              props.setShowDialog(false);
             }
           }}
         >
           Submit
-        </button>
+        </Button>
       </div>
 
     </form>

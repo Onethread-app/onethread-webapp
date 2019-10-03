@@ -11,7 +11,7 @@ export const ListTitleView = (props: InfoListTitleProps) => {
   return (
     <>
       <div className="cf ">
-        <h1 className="f5 lh-copy dib">{props.listTitle}</h1>
+        <h1 className="f5 lh-copy dib tigrow-lightGray-1">{props.listTitle}</h1>
         <Icon className="fr mv3 tigrow-lightBlue" icon={props.iconType} onClick={props.onClick} />
       </div>
       <Divider />

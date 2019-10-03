@@ -1,7 +1,11 @@
 body{
 font-family: 'Lato', sans-serif;
+box-sizing: border-box;
 }
-
+.signinPageBackground{
+  background-image: url(./resources/images/Bg-png.png);
+  background-size: cover;
+}
 .shadow-0{
   box-shadow: none;
 }
@@ -9,8 +13,20 @@ font-family: 'Lato', sans-serif;
 .bg-0{
   background-color: none;
 }
+.c-tigrowWhite{
+  color: #ffffff;
+}
 .bg-tigrowLightBlue{
   background-color: #0fa3a3;
+}
+.bg-tigrowLightGray-1{
+  background-color: #F5F6FA;
+}
+.bg-tigrowDarkBlue{
+  background-color: #10496e;
+}
+.bg-tigrow{
+  background-color: #F5F6FA;
 }
 
 .b--lightBlue {
@@ -27,6 +43,13 @@ font-family: 'Lato', sans-serif;
 .tigrow-lightGray-1{
   color:#1b1b1b;
 }
+
+.tigrow-lightGray-2{
+  color:#484848;
+}
+.tigrow-lightGray-3{
+  color:#333334;
+}
 .outline-0 { 
   outline: none; 
 }
@@ -34,11 +57,55 @@ a:hover {
   text-decoration: none;
 }
 
+.w-2{
+  width: 2%;
+}
 .w-15{
   width: 15%;
 }
 .w-85{
   width: 85%;
+}
+
+.lh-2{
+  line-height: 2rem;
+}
+
+#roomList:last-child{
+  border: none;
+}
+.t-100-a{
+  transition: all 1s;
+  -webkit-transition: all 1s;
+}
+.t-50-a{
+  transition: all 0.5s;
+  -webkit-transition: all 0.5s;
+}
+.t-25-a{
+  transition: all 0.25s;
+  -webkit-transition: all 0.25s;
+}
+.left--8{
+  left: -8px;
+}
+.right--8{
+  right: -8px;
+}
+.w6{
+  width: 6rem;
+}
+.w11{
+  width: 11rem;
+}
+.pl6{
+  padding-left: 6rem;
+}
+.pl11{
+  padding-left: 11rem;
+}
+.w2tigrow{
+  width: 3rem;
 }
 
 @media only screen and (min-width: 30em) {
@@ -48,6 +115,21 @@ a:hover {
   .w-85-ns{
     width: 85%;
   }
+  .w6-ns{
+    width: 6rem;
+  }
+  .w11-ns{
+    width: 11rem;
+  }
+  .pl6-ns{
+    padding-left: 6rem;
+  }
+  .pl11-ns{
+    padding-left: 11rem;
+  }
+  .w2tigrow-ns{
+    width: 3rem;
+  }
 }
 @media only screen and (min-width: 30em) and (max-width: 60em) {
   .w-15-m{
@@ -55,6 +137,21 @@ a:hover {
   }
   .w-85-m{
     width: 85%;
+  }
+  .w6-m{
+    width: 6rem;
+  }
+  .w11-m{
+    width: 11rem;
+  }
+  .pl6-m{
+    padding-left: 6rem;
+  }
+  .pl11-m{
+    padding-left: 11rem;
+  }
+  .w2tigrow-m{
+    width: 3rem;
   }
 }
 @media only screen and (min-width: 60em) {
@@ -64,26 +161,19 @@ a:hover {
   .w-85-l{
     width: 85%;
   }
-}
-.vh-93{
-  height: 93vh;
-}
-
-@media only screen and (min-width: 30em) {
-  .vh-93-ns{
-    height: 93vh;
+  .w6-l{
+    width: 6rem;
   }
-
-}
-@media only screen and (min-width: 30em) and (max-width: 60em) {
-  .vh-93-m{
-    height: 93vh;
+  .w11-l{
+    width: 11rem;
   }
-
-}
-@media only screen and (min-width: 60em) {
-  .vh-93-l{
-    height: 93vh;
+  .pl6-l{
+    padding-left: 6rem;
   }
-
+  .pl11-l{
+    padding-left: 11rem;
+  }
+  .w2tigrow-l{
+    width: 3rem;
+  }
 }

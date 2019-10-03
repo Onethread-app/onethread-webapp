@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { isEmpty } from 'lodash';
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
@@ -18,6 +18,14 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
   const [values, setValues] = useState({
     email: "",
     password: "",
+  });
+  //need to fix this
+
+  useEffect(() => {
+    props.errorUnauthorized.email=false;
+    props.errorUnauthorized.password=false;
+    props.errorUnauthorized.message="";
+    props.errorUnauthorized.network=false;
   });
 
   const { email, password } = values;
@@ -59,7 +67,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
   };
 
   return (
-    <div className="cf ph2-ns">
+    <div className="cf ph2-ns signinPageBackground">
       <div className="fl w-100 w-50-ns dt vh-100">
         <div className="v-mid dtc">
           <div className="w-50 center">
@@ -154,7 +162,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   </div>
                   <Button 
                   type="submit"
-                    className="b--none w-100 br3 fr grow h2 mr6-m ph5 pointer pv2 mb3"
+                    className="b--none w-100 br3 fr grow h2 ph5 pointer pv2 mb3"
                     style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
                     onClick={(e: any) => {
                       e.preventDefault();
@@ -177,11 +185,11 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   </p>
                   </div>
                   <Link to="/signup">
-                    <button className="w-100 br3 fr grow h2 mr6-m ph5 pointer pv2"
+                    <Button className="w-100 br3 fr grow h2 ph5 pointer pv2"
                       style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
                     >
                       Sign Up here
-                  </button>
+                  </Button>
                   </Link>
                 </div>
               </form>
@@ -195,8 +203,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
 
 const mapStateToProps = (state: any) => {
   return { 
-    loading: state.auth.loading,
-    errorUnauthorized: state.auth.loginError 
+    loading: state.authReducer.loading,
+    errorUnauthorized: state.authReducer.loginError 
   };
 };
 

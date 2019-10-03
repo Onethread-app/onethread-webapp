@@ -1,4 +1,4 @@
-import { USER_SIGNUP, USER_LOGIN_ERROR, USER_LOGIN, FETCH_USER, USER_SIGNUP_LOADING, USER_LOGOUT } from 'actions/Types';
+import { USER_SIGNUP, USER_LOGIN_ERROR, USER_LOGIN, USER_SIGNUP_LOADING, USER_LOGOUT } from 'actions/Types';
 
 export interface UserModel {
   firstName: string,
@@ -27,7 +27,6 @@ export const AuthReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         loading: true,
-        // user: action.payload.user,
       }
     case USER_LOGIN_ERROR:
       return {
@@ -38,7 +37,6 @@ export const AuthReducer = (state = InitialState, action: any) => {
     case USER_SIGNUP:
       return {
         ...state,
-        // user: action.payload.user,
         token: action.payload.token,
         loginError: {
           message: "",
@@ -51,7 +49,6 @@ export const AuthReducer = (state = InitialState, action: any) => {
     case USER_LOGIN:
       return {
         ...state,
-        user: action.payload.user,
         token: action.payload.token,
         loginError: {
           message: "",
@@ -61,16 +58,10 @@ export const AuthReducer = (state = InitialState, action: any) => {
         },
         loading: false
       }
-    case FETCH_USER:
-      return {
-        ...state,
-        user: action.payload,
-        loading: false
-      }
+    
     case USER_LOGOUT:
       return {
         ...state,
-        user: {},
         token: "",
         loginError: {
           message: "",

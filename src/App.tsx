@@ -7,20 +7,12 @@ import { SignInPage } from "pages/SignInPage";
 import { connect } from "react-redux";
 import { fetchUserAction } from "actions/AuthActions";
 import { initializeChatkitAction } from "actions/ChatkitActions";
-import { useEffect } from "react";
 import { isAuthenticate } from "actions/UtilsActions";
-import { RoomPage } from "pages/workplace/RoomPage";
-import { FeedPage } from "pages/workplace/FeedPage";
-import { WorkplacePage } from "pages/workplace/WorkplacePage";
+import { RoomPage } from "pages/company/workplace/RoomPage";
+import { FeedPage } from "pages/company/workplace/FeedPage";
+import { CompanyProfilePage } from 'pages/company/ProfilePage';
 import { Layout } from 'components/common/Layout';
-
-const load = async (
-	fetchUserAction: () => void,
-	initializeChatkitAction: () => void
-) => {
-	await fetchUserAction();
-	await initializeChatkitAction();
-}
+import { ChatkitTest } from 'pages/ChatkitTest';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -32,23 +24,19 @@ const PrivateRoute = (props: {
 			path={props.path}
 			exact={props.exact}
 			render={r =>
-				isAuthenticate() ? 
-					<Layout Component={props.component} /> 
+				isAuthenticate() ?
+					<Layout Component={props.component} />
 					: <Redirect to="/signin" />
 			}
 		/>
 	);
 };
 
-interface AppProps {
-	fetchUserAction: () => void;
-	initializeChatkitAction: () => void;
-}
+const Demo = () => (<div></div>)
 
-const AppComponent = (props: AppProps) => {
-	useEffect(() => {
-		load(props.fetchUserAction, props.initializeChatkitAction);
-	});
+const NoMatch = () => (<div>This page is not available</div>)
+
+const AppComponent = () => {
 
 	return (
 		<BrowserRouter>
@@ -67,27 +55,39 @@ const AppComponent = (props: AppProps) => {
 						isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
 					}
 				/>
-				<PrivateRoute 
-					path="/" 
-					exact={true} 
-					component={LandingPage} 
-				/>
 				<PrivateRoute
-					path="/workplace"
+					path="/chatkit"
 					exact={true}
-					component={WorkplacePage}
+					component={ChatkitTest}
 				/>
 				<PrivateRoute
-					path="/feed"
+					exact
+					path="/"
+					component={Demo}
+				/>
+				<PrivateRoute
+					path="/:username"
+					exact={true}
+					component={LandingPage}
+				/>
+				<PrivateRoute
+					exact={true}
+					path="/company/:cname"
+					component={CompanyProfilePage}
+				/>
+				<PrivateRoute
+					path="/company/:cname/feed"
 					exact={true}
 					component={FeedPage}
 				/>
-				<PrivateRoute 
-					path="/room" 
-					exact={true} 
-					component={RoomPage} 
+				<PrivateRoute
+					path="/company/:cname/room"
+					exact={true}
+					component={RoomPage}
 				/>
+				<Route component={NoMatch} />
 			</Switch>
+
 		</BrowserRouter>
 	);
 };

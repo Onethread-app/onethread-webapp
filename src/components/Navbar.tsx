@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Popover, Position, Dialog } from '@blueprintjs/core';
+import { Button, Popover, Position, Dialog, ButtonGroup } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { logoutAction } from 'actions/AuthActions';
@@ -10,18 +10,25 @@ import logo from '../resources/images/tigrowLogo.png';
 import { useState } from 'react';
 import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListItemViewWithImage';
 import { CompanySignupForm } from './company/SignupForm';
-interface NavbarTopProps {
+import { getCompanyDetails } from 'actions/CompanyActions';
+import { CompanyModel } from 'reducers/company/CompanyReducer';
+import { User } from 'reducers/UserReducer';
+
+interface NavbarTopInternalProps {
   logoutAction: (history: History) => void;
+  getCompanyDetails: (companyId: string, history: History) => void;
+  companies: CompanyModel[],
+  user: User
 }
 
-const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
+const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
       <nav className="bp3-navbar bp3-fixed-top">
         <div className="bp3-navbar-group bp3-align-left">
           <div className="bp3-navbar-heading">
-            <Link to="/">
+            <Link to={`/${props.user.username}`}>
               <img
                 src={logo}
                 className="dib"
@@ -33,26 +40,25 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
         </div>
         <div className="bp3-navbar-group bp3-align-right">
           <Popover
-            popoverClassName="bp3-popover-content-sizing"
+            popoverClassName="bp3-popover-content-sizing h5 overflow-y-auto bg-white "
             position={Position.BOTTOM}
           >
             <Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>
             <div className="mw6 center">
-              <ListItemViewWithImage
-                imageSrc="http://mrmrs.github.io/photos/p/2.jpg"
-                listTitle="Young Gatchell"
-                listDescription="@yg"
-              />
-              <ListItemViewWithImage
-                imageSrc="http://mrmrs.github.io/photos/p/3.jpg"
-                listTitle="Arnoldo Degraff"
-                listDescription="@99xx88randomhandle"
-              />
-              <ListItemViewWithImage
-                imageSrc="http://mrmrs.github.io/photos/p/4.jpg"
-                listTitle="Deirdre Lachance"
-                listDescription="@favfavfav"
-              />
+              {props.companies.map((company: CompanyModel) => (
+                <ListItemViewWithImage
+                  imageSrc={`https://robohash.org/${company.name}`}
+                  listTitle={company.name}
+                  listDescription="C"
+                  onClick={async () => {
+                    const response = await props.getCompanyDetails(company.name, props.history) as any;
+                    if (response) {
+                      props.history.push(`/company/${(response as any).company.name}`)
+                    }
+                  }}
+                />
+              ))}
+
               <button
                 onClick={() => setShowDialog(!showDialog)}
                 className="b--none w-100 br3 grow h2 ph5 pointer pv2 white outline-0 bg-tigrowLightBlue ma2"
@@ -70,12 +76,27 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
             <a className="dim mid-gray f6 f5-l  v-mid " href="#" title="User">
               <img src={user} className="dib w2 h2 br-100" alt="user" />
             </a>
-            <Button
-              className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
-              onClick={(e: any) => props.logoutAction(props.history)}
-            >
-              Logout
+            <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
+              <Button>
+                <article
+                  className="dt w-100 pb2 mt2 pointer"
+                >
+                  <div className="dtc w1 w2-ns v-mid">
+                    <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
+                  </div>
+                  <div className="dtc v-mid pl3">
+                    <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
+                  </div>
+                </article>
+              </Button>
+              <Button
+                className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
+                onClick={(e: any) => props.logoutAction(props.history)}
+                icon="log-in"
+              >
+                Logout
             </Button>
+            </ButtonGroup>
           </Popover>
         </div>
       </nav>
@@ -88,7 +109,7 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
           style={{ background: '#fff' }}
         >
           <div>
-            <CompanySignupForm />
+            <CompanySignupForm setShowDialog={setShowDialog} />
           </div>
         </Dialog>
       )}
@@ -96,5 +117,12 @@ const NavbarTopComponent = (props: NavbarTopProps & RouteComponentProps) => {
   );
 }
 
-export const NavbarTop = connect(null, { logoutAction })(withRouter(NavbarTopComponent));
+const mapStateToProps = (state: any) => {
+  return {
+    companies: state.userReducer.user.companies,
+    user: state.userReducer.user
+  }
+}
+
+export const NavbarTop = connect(mapStateToProps, { logoutAction, getCompanyDetails })(withRouter(NavbarTopComponent));
 
