@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Icon } from '@blueprintjs/core';
-import { SideBarLeft } from 'components/company/workplace/rooms/SideBarLeft';
+import { RoomSideBar } from 'components/company/workplace/rooms/RoomSideBar';
 import { ChatLayout } from 'components/company/workplace/rooms/ChatLayout';
 
 export const RoomPage = () => {
@@ -15,9 +15,9 @@ export const RoomPage = () => {
 					className={`absolute top-0 mv2 z-3 br-100 bg-tigrowDarkBlue c-tigrowWhite ${isOpen ? 'right--8' : 'left--8'}`}
 					icon={isOpen ? 'double-chevron-left' : 'double-chevron-right'}
 					onClick={() => setIsOpen(!isOpen)} />
-				<SideBarLeft isOpen={isOpen} />
+				<RoomSideBar isOpen={isOpen} />
 			</div>
-			<div className={`${isOpen ? 'w-80' : 'w-100'} pa3`}>
+			<div className={`${isOpen ? 'w-80' : 'w-100'} pl3 pt3`}>
 				<ChatLayout />
 			</div>
 		</div >

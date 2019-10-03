@@ -4,9 +4,8 @@ import skill from '../resources/images/skills.png';
 import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { initializeChatkitAction } from 'actions/ChatkitActions';
-import { isEmpty } from 'lodash';
 import { ListTitleView } from 'components/ListTitleView';
 import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
 import { BasicInfoForm } from 'components/company/profile/editor/BasicInfoDetailsForm';
@@ -26,7 +25,7 @@ const EducationInfoDetailsView = () => {
       <ListTitleView
         listTitle="Educational Information"
         iconType="edit"
-        onClick={()=> {return true}}
+        onClick={() => { return true }}
       />
       <SectionViewWithTitleAndDesciption
         listTitle="School"
@@ -103,16 +102,9 @@ const BasicInfoDetailsView = (props: {
   )
 }
 
-const load = async (
-  initializeChatkitAction: () => void
-) => {
-  await initializeChatkitAction();
-}
-
 interface LandingPageProps {
   user: User,
   chatkitUser: any;
-  initializeChatkitAction: () => void;
 }
 
 export const LandingPageComponent = (props: LandingPageProps) => {
@@ -120,12 +112,6 @@ export const LandingPageComponent = (props: LandingPageProps) => {
   const [showDialog, setShowDialog] = useState(false);
   // Should comes from redux store
   const [selectedItems, setSelectedItems] = useState([] as ItemEntityProps[]);
-
-  useEffect(() => {
-    if (isEmpty(props.chatkitUser)) {
-      load(props.initializeChatkitAction);
-    }
-  }, [props.chatkitUser]);
 
   return (
     <>

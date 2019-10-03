@@ -104,6 +104,10 @@ a:hover {
 .pl11{
   padding-left: 11rem;
 }
+.w2tigrow{
+  width: 3rem;
+}
+
 @media only screen and (min-width: 30em) {
   .w-15-ns{
     width: 15%;
@@ -122,6 +126,9 @@ a:hover {
   }
   .pl11-ns{
     padding-left: 11rem;
+  }
+  .w2tigrow-ns{
+    width: 3rem;
   }
 }
 @media only screen and (min-width: 30em) and (max-width: 60em) {
@@ -143,6 +150,9 @@ a:hover {
   .pl11-m{
     padding-left: 11rem;
   }
+  .w2tigrow-m{
+    width: 3rem;
+  }
 }
 @media only screen and (min-width: 60em) {
   .w-15-l{
@@ -162,5 +172,8 @@ a:hover {
   }
   .pl11-l{
     padding-left: 11rem;
+  }
+  .w2tigrow-l{
+    width: 3rem;
   }
 }

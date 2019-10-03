@@ -7,18 +7,12 @@ import { SignInPage } from "pages/SignInPage";
 import { connect } from "react-redux";
 import { fetchUserAction } from "actions/AuthActions";
 import { initializeChatkitAction } from "actions/ChatkitActions";
-import { useEffect } from "react";
 import { isAuthenticate } from "actions/UtilsActions";
 import { RoomPage } from "pages/company/workplace/RoomPage";
 import { FeedPage } from "pages/company/workplace/FeedPage";
 import { CompanyProfilePage } from 'pages/company/ProfilePage';
 import { Layout } from 'components/common/Layout';
-
-const load = async (
-	initializeChatkitAction: () => void
-) => {
-	await initializeChatkitAction();
-}
+import { ChatkitTest } from 'pages/ChatkitTest';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -42,15 +36,7 @@ const Demo = () => (<div></div>)
 
 const NoMatch = () => (<div>This page is not available</div>)
 
-interface AppProps {
-	fetchUserAction: () => void;
-	initializeChatkitAction: () => void;
-}
-
-const AppComponent = (props: AppProps) => {
-	useEffect(() => {
-		load(props.initializeChatkitAction);
-	});
+const AppComponent = () => {
 
 	return (
 		<BrowserRouter>
@@ -68,6 +54,11 @@ const AppComponent = (props: AppProps) => {
 					render={r =>
 						isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
 					}
+				/>
+				<PrivateRoute
+					path="/chatkit"
+					exact={true}
+					component={ChatkitTest}
 				/>
 				<PrivateRoute
 					exact

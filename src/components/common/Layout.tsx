@@ -28,14 +28,14 @@ interface LayoutProps {
   Component: React.ComponentClass | React.StatelessComponent;
 }
 
-interface LayoutnternalProps extends LayoutProps {
+interface LayoutInternalProps extends LayoutProps {
   user: User;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => void;
   company: CompanyModel
 }
 
-const LayoutComponent = (props: LayoutnternalProps & RouteComponentProps) => {
+const LayoutComponent = (props: LayoutInternalProps & RouteComponentProps) => {
 
   const [loading, setLoading] = useState(true);
 
@@ -43,7 +43,7 @@ const LayoutComponent = (props: LayoutnternalProps & RouteComponentProps) => {
     if (props.match.url === '/' && props.user) {
       props.history.push(`/${props.user.username}`);
     }
-    if ((props.match.params as any).username && props.user && props.user.username 
+    if ((props.match.params as any).username && props.user && props.user.username
       && isEqual((props.match.params as any).username, props.user.username) === false) {
       props.history.push(`/unavailable/profile`);
     }
@@ -58,7 +58,7 @@ const LayoutComponent = (props: LayoutnternalProps & RouteComponentProps) => {
           {loading ? <Loading />
             : <div className="flex w-100">
               <div className="db">
-                <Sidebar 
+                <Sidebar
                   user={props.user}
                   company={props.company}
                   type={(props.match.params as any).cname ? 'company' : 'default'}

@@ -17,6 +17,7 @@ export interface User {
 	sendingFriendList: string[]
 }
 
+
 const InitialState = {
 	user: {
 		_id: "",
