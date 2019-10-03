@@ -1,6 +1,7 @@
 import React from "react";
 import { isEqual } from "lodash";
 import { RoomListItem } from "./RoomListItem";
+import { Loading } from 'components/common/field/Loading';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface RoomListComponentProps {
@@ -18,7 +19,7 @@ export const RoomList = withChatkit((
 	return (
 		<>
 			<main className="mw6 center" id="roomList">
-				{!props.chatkit.isLoading ? rooms.length ? rooms.map((room: { id: string; name: string; }, i: number, arr: { id: any; }[]) => {
+				{props.chatkit.isLoading ? <Loading /> : rooms.length ? rooms.map((room: { id: string; name: string; }, i: number, arr: { id: any; }[]) => {
 					return (
 						<RoomListItem
 							key={room.id}
@@ -27,7 +28,7 @@ export const RoomList = withChatkit((
 							lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
 						/>
 					);
-				}) : <p>You're not assigned into any room.</p> : ""}
+				}) : <p>You're not assigned into any room.</p>}
 			</main>
 		</>
 	);

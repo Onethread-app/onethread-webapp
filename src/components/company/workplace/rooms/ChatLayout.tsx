@@ -20,11 +20,12 @@ export const ChatLayout: React.SFC<{}> = () => (
 			</div>
 			<div className="fixed bottom-1 w-60 br3 shadow-3 dt pa1">
 				<div className="dtc w2tigrow v-mid">
-					<a className="dim ml2" href="#" title="User">
-						<img src={user} className="v-mid w2 br-100" alt="user" />
-					</a>
+					<img src={user} className="ml2 v-mid w2 br-100" alt="user" />
 				</div>
-				<textarea className="bp3-input dtc w-100 ma1"></textarea>
+				<textarea
+					className="bp3-input dtc w-100 ma1"
+					style={{ resize: "none" }}
+				></textarea>
 				<div className="w-15 dtc v-mid">
 					<Button className="bp3-button bp3-minimal bp3-large">
 						<Icon icon="media" style={{ color: "#0fa3a3" }} />
