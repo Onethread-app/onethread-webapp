@@ -71,9 +71,6 @@ a:hover {
   line-height: 2rem;
 }
 
-#roomList:last-child{
-  border: none;
-}
 .t-100-a{
   transition: all 1s;
   -webkit-transition: all 1s;
