@@ -6,6 +6,7 @@ interface RoomListItemProps {
   img: string;
   lastChild: boolean;
   subscribeToRoom: (roomId: any) => void;
+  setRoomId: (roomId: any) => void;
   active: string;
 }
 
@@ -13,7 +14,10 @@ export const RoomListItem = (props: RoomListItemProps) => {
 
   return (
     <article
-      onClick={() => props.subscribeToRoom(props.roomId)}
+      onClick={() => {
+        props.setRoomId(props.roomId);
+        props.subscribeToRoom(props.roomId);
+      }}
       id="roomListItem"
       className={`dt w-100 ph3 pv1 bb b--tigrowLightGray-1 pointer ${props.active} ${props.lastChild ? "bn" : ""}`} >
       <div className="dtc w1 w2-ns v-mid">

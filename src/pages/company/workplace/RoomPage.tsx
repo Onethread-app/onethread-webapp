@@ -6,6 +6,7 @@ import { ChatLayout } from 'components/company/workplace/rooms/ChatLayout';
 export const RoomPage = () => {
 
 	const [isOpen, setIsOpen] = useState(true);
+	const [messages, setMessages] = useState([{}]);
 
 	return (
 		<div className="flex" style={{ height: 'calc(100vh - 50px)' }}>
@@ -15,10 +16,16 @@ export const RoomPage = () => {
 					className={`absolute top-0 mv2 z-3 br-100 bg-tigrowDarkBlue c-tigrowWhite ${isOpen ? 'right--8' : 'left--8'}`}
 					icon={isOpen ? 'double-chevron-left' : 'double-chevron-right'}
 					onClick={() => setIsOpen(!isOpen)} />
-				<RoomSideBar isOpen={isOpen} />
+				<RoomSideBar
+					isOpen={isOpen}
+					messages={messages}
+					setMessages={setMessages}
+				/>
 			</div>
 			<div className={`${isOpen ? 'w-80' : 'w-100'} pl3 pt3`}>
-				<ChatLayout />
+				<ChatLayout
+					messages={messages}
+				/>
 			</div>
 		</div >
 	);

@@ -6,6 +6,8 @@ const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface RoomListComponentProps {
 	chatkit?: any;
+	setMessages: (messages: any) => void;
+	messages: [{}]
 }
 
 export const RoomList = withChatkit((
@@ -13,7 +15,6 @@ export const RoomList = withChatkit((
 ) => {
 	const [roomId, setRoomId] = useState(null);
 	const [rooms, setRooms] = useState([]);
-	const [messages, setMessages] = useState([{}]);
 
 	const fetchMessages = (roomId: any, limit = 10) => {
 		props.chatkit.currentUser.fetchMessages(
@@ -22,28 +23,27 @@ export const RoomList = withChatkit((
 				limit,
 			})
 			.then((messages: any) => {
-				// let fetchedMessage = messages.find(message => message.id == newMessage.id);
-				// setMessages()
-				console.log("recieved message :", messages);
+				console.log("received message :", messages);
+				props.setMessages(messages)
 			});
 	}
 
 	const subscribeToRoom = (roomId: any) => {
 		if (!props.chatkit.isLoading) {
-			// setMessages([]);
+			props.setMessages([]);
 			props.chatkit.currentUser.subscribeToRoom({
 				roomId: roomId,
 				hooks: {
 					onNewMessage: (message: {}) => {
 						console.log("message", message);
-						setMessages([...messages, message])
+						props.setMessages([...props.messages, message])
 					}
 				}, messageLimit: 10
 			})
 				.then((room: any) => {
-					setRoomId(room.id);
-					setRooms(props.chatkit.currentUser.rooms);
+
 					console.log(room);
+					setRooms(props.chatkit.currentUser.rooms);
 
 					// TODO: will start from here!!
 					fetchMessages(room.id);
@@ -55,17 +55,12 @@ export const RoomList = withChatkit((
 	useEffect(() => {
 		if (!props.chatkit.isLoading) {
 			setRooms(props.chatkit.currentUser.rooms);
-			console.log("rooms", rooms);
-			console.log("room", roomId);
-			console.log("messages", messages);
 		}
 	}, [props.chatkit])
 
 	useEffect(() => {
 		if (!props.chatkit.isLoading && rooms.length > 0) {
-
 			console.log("room", roomId);
-			console.log("messages", messages);
 		}
 	}, [roomId])
 
@@ -82,6 +77,7 @@ export const RoomList = withChatkit((
 							lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
 							active={room.id === roomId ? 'bg-lightest-blue' : ''}
 							subscribeToRoom={subscribeToRoom}
+							setRoomId={setRoomId}
 						/>
 					);
 				}) : <p>You're not assigned into any room.</p>}

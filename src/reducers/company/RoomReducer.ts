@@ -8,8 +8,8 @@ import {
 
 const InitialState = {
 	roomId: null,
-	messages: [],
-	joinedRooms: [],
+	messages: [{}],
+	rooms: [],
 	loading: false
 };
 

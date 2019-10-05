@@ -4,6 +4,12 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import { Button } from '@blueprintjs/core';
 
+interface RoomSideBarComponentProps {
+  chatkit?: any;
+  setMessages: (messages: any) => void;
+  messages: [{}]
+}
+
 const RoomSideBarComponent = (props: any) => {
   return (
     <div className={`mt5 z-1 t-25-a o-100 ${props.isOpen ? '' : 'o-0'}`}>
@@ -15,7 +21,10 @@ const RoomSideBarComponent = (props: any) => {
           </Button>
         </div>
       </div>
-      <RoomList />
+      <RoomList
+        messages={props.messages}
+        setMessages={props.setMessages}
+      />
     </div>
   )
 }
