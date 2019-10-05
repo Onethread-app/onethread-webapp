@@ -30,6 +30,7 @@ export const RoomList = withChatkit((
 
 	const subscribeToRoom = (roomId: any) => {
 		if (!props.chatkit.isLoading) {
+			setRoomId(roomId);
 			props.setMessages([]);
 			props.chatkit.currentUser.subscribeToRoom({
 				roomId: roomId,
@@ -55,6 +56,7 @@ export const RoomList = withChatkit((
 	useEffect(() => {
 		if (!props.chatkit.isLoading) {
 			setRooms(props.chatkit.currentUser.rooms);
+			subscribeToRoom(props.chatkit.currentUser.rooms[0].id)
 		}
 	}, [props.chatkit])
 
@@ -77,7 +79,6 @@ export const RoomList = withChatkit((
 							lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
 							active={room.id === roomId ? 'bg-lightest-blue' : ''}
 							subscribeToRoom={subscribeToRoom}
-							setRoomId={setRoomId}
 						/>
 					);
 				}) : <p>You're not assigned into any room.</p>}

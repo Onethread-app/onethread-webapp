@@ -6,7 +6,7 @@ import { ChatLayout } from 'components/company/workplace/rooms/ChatLayout';
 export const RoomPage = () => {
 
 	const [isOpen, setIsOpen] = useState(true);
-	const [messages, setMessages] = useState([{}]);
+	const [messages, setMessages] = useState([]);
 
 	return (
 		<div className="flex" style={{ height: 'calc(100vh - 50px)' }}>

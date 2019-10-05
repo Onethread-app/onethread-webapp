@@ -12,10 +12,7 @@ interface ChatLayoutProps {
 }
 
 export const ChatLayout = (props: ChatLayoutProps) => {
-	useEffect(() => {
-		console.log("chat-message", props.messages)
 
-	}, [])
 	return (
 		<div>
 			<div className="relative">
