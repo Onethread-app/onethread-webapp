@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Icon } from '@blueprintjs/core';
 import { RoomSideBar } from 'components/company/workplace/rooms/RoomSideBar';
 import { ChatLayout } from 'components/company/workplace/rooms/ChatLayout';
+import { RightLayout } from 'components/company/workplace/rooms/RightLayout';
 
 export const RoomPage = () => {
 
@@ -23,9 +24,7 @@ export const RoomPage = () => {
 				/>
 			</div>
 			<div className={`${isOpen ? 'w-80' : 'w-100'} pl3 pt3`}>
-				<ChatLayout
-					messages={messages}
-				/>
+				<RightLayout messages={messages} />
 			</div>
 		</div >
 	);

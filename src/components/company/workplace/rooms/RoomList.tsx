@@ -34,12 +34,13 @@ export const RoomList = withChatkit((
 			props.setMessages([]);
 			props.chatkit.currentUser.subscribeToRoom({
 				roomId: roomId,
+				messageLimit: 100,
 				hooks: {
 					onNewMessage: (message: {}) => {
-						console.log("message", message);
+						console.log("new-message", message);
 						props.setMessages([...props.messages, message])
 					}
-				}, messageLimit: 10
+				}
 			})
 				.then((room: any) => {
 
@@ -56,7 +57,9 @@ export const RoomList = withChatkit((
 	useEffect(() => {
 		if (!props.chatkit.isLoading) {
 			setRooms(props.chatkit.currentUser.rooms);
-			subscribeToRoom(props.chatkit.currentUser.rooms[0].id)
+			if (props.chatkit.currentUser.rooms.length > 0) {
+				subscribeToRoom(props.chatkit.currentUser.rooms[0].id)
+			}
 		}
 	}, [props.chatkit])
 
@@ -81,7 +84,7 @@ export const RoomList = withChatkit((
 							subscribeToRoom={subscribeToRoom}
 						/>
 					);
-				}) : <p>You're not assigned into any room.</p>}
+				}) : <p>No rooms available for you.</p>}
 			</main>
 		</>
 	);

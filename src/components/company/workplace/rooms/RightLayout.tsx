@@ -8,8 +8,10 @@ import {
 } from "@blueprintjs/core";
 import { ChatLayout } from './ChatLayout';
 import { TaskLayout } from './TaskLayout';
-
-export const RightLayout = () => {
+interface RightLayoutProps {
+	messages: any
+}
+export const RightLayout = (props: RightLayoutProps) => {
 	const [activePanelOnly] = useState(false);
 	const [animate] = useState(true);
 	const [vertical] = useState(false);
@@ -60,7 +62,7 @@ export const RightLayout = () => {
 				renderActiveTabPanelOnly={activePanelOnly}
 				vertical={vertical}
 			>
-				<Tab id="ch" title="Chat" panel={<ChatLayout />} />
+				<Tab id="ch" title="Chat" panel={<ChatLayout messages={props.messages} />} />
 				<Tab
 					id="ta"
 					title="Task"
