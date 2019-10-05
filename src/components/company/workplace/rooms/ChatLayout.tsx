@@ -6,6 +6,7 @@ import {
 import { MessageItem } from "components/common/MessageItem";
 import user from "../../../../resources/images/user.png";
 import { Loading } from 'components/common/field/Loading';
+import { isEqual } from 'lodash';
 
 interface ChatLayoutProps {
 	messages?: any
@@ -20,7 +21,7 @@ export const ChatLayout = (props: ChatLayoutProps) => {
 					className="overflow-y-auto"
 					style={{ height: "calc(100vh - 70px)" }}
 				>
-					{props.messages.length ? props.messages.map((message: any) => {
+					{props.messages.length ? props.messages.map((message: any, i: number, arr: any) => {
 						return (
 							<MessageItem
 								key={message.id}
@@ -28,11 +29,12 @@ export const ChatLayout = (props: ChatLayoutProps) => {
 								text={message.text}
 								createdAt={message.createdAt}
 								sender={message.userStore.users[message.senderId]}
+								lastChild={isEqual(message.id, arr[props.messages.length - 1].id)}
 							/>
 						);
 					}) : <Loading />}
 				</div>
-				<div className="absolute bottom-0 br3 shadow-3 flex pa1 w-100">
+				<div className="absolute bottom-0 br3 shadow-3 flex pa1 w-100 bg-tigrow">
 					<div className="flex items-center mh1">
 						<img src={user} className="dib" alt="user" />
 					</div>
