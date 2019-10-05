@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
 	Button,
 	Icon
 } from "@blueprintjs/core";
-import { ListItemViewWithRoundedImage } from "components/common/ListItemViewWithRoundedImage";
+import { MessageItem } from "components/common/MessageItem";
 import user from "../../../../resources/images/user.png";
 import { Loading } from 'components/common/field/Loading';
 
@@ -18,27 +18,30 @@ export const ChatLayout = (props: ChatLayoutProps) => {
 			<div className="relative">
 				<div
 					className="overflow-y-auto"
-					style={{ height: "calc(100vh - 170px)" }}
+					style={{ height: "calc(100vh - 70px)" }}
 				>
 					{props.messages.length ? props.messages.map((message: any) => {
 						return (
-							<ListItemViewWithRoundedImage
+							<MessageItem
 								key={message.id}
-								imageSrc={user}
-								listDescription={message.text}
+								img={user}
+								text={message.text}
+								createdAt={message.createdAt}
+								sender={message.userStore.users[message.senderId]}
 							/>
 						);
 					}) : <Loading />}
 				</div>
-				<div className="fixed bottom-1 w-60 br3 shadow-3 dt pa1">
-					<div className="dtc w2tigrow v-mid">
-						<img src={user} className="ml2 v-mid w2 br-100" alt="user" />
+				<div className="absolute bottom-0 br3 shadow-3 flex pa1 w-100">
+					<div className="flex items-center mh1">
+						<img src={user} className="dib" alt="user" />
 					</div>
 					<textarea
-						className="bp3-input dtc w-100 ma1"
+						className="bp3-input ma1 w-100 outline-0 shadow-0"
 						style={{ resize: "none" }}
+						placeholder="Write your message"
 					></textarea>
-					<div className="w-15 dtc v-mid">
+					<div className="flex">
 						<Button className="bp3-button bp3-minimal bp3-large">
 							<Icon icon="media" style={{ color: "#0fa3a3" }} />
 						</Button>

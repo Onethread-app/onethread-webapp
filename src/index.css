@@ -7,7 +7,7 @@ box-sizing: border-box;
   background-size: cover;
 }
 .shadow-0{
-  box-shadow: none;
+  box-shadow: none !important;
 }
 
 .bg-0{
