@@ -32,19 +32,38 @@ export const RoomList = withChatkit((
 		if (!props.chatkit.isLoading) {
 			setRoomId(roomId);
 			props.setMessages([]);
-			props.chatkit.currentUser.subscribeToRoom({
+			props.chatkit.currentUser.subscribeToRoomMultipart({
 				roomId: roomId,
-				messageLimit: 100,
 				hooks: {
-					onNewMessage: (message: {}) => {
+					onMessage: (message: any) => {
 						console.log("new-message", message);
-						props.setMessages([...props.messages, message])
+						const {
+							id,
+							createdAt,
+							senderId,
+						} = message;
+						let msg = {
+							id,
+							text: message.parts[0].payload.content,
+							createdAt,
+							sender: message.userStore.users[message.senderId],
+							senderId,
+							userStore: {
+								users: { senderId: message.userStore.users[message.senderId] }
+							}
+						};
+						msg.userStore.users[senderId] = message.userStore.users[message.senderId];
+						console.log("format-message", msg);
+						console.log("props.messages", props.messages);
+
+						props.setMessages([...props.messages, msg]);
 					}
-				}
+				},
+				messageLimit: 1
 			})
 				.then((room: any) => {
 
-					console.log(room);
+					console.log("current-room", room);
 					setRooms(props.chatkit.currentUser.rooms);
 
 					// TODO: will start from here!!
