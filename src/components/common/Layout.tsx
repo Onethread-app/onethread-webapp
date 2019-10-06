@@ -64,7 +64,7 @@ const LayoutComponent = (props: LayoutInternalProps & RouteComponentProps) => {
                   type={(props.match.params as any).cname ? 'company' : 'default'}
                 />
               </div>
-              <div className="fl w-100 pl5 pl11-l pl6-m pr2 bg-tigrow">
+              <div className="fl w-100 pl5 pl11-l pl6-m bg-tigrow">
                 <props.Component />
               </div>
             </div>

@@ -19,6 +19,9 @@ box-sizing: border-box;
 .bg-tigrowLightBlue{
   background-color: #0fa3a3;
 }
+.bg-tigrowLightestBlue{
+  background-color: #6ed8d844;
+}
 .bg-tigrowLightGray-1{
   background-color: #F5F6FA;
 }
@@ -83,11 +86,11 @@ a:hover {
   transition: all 0.25s;
   -webkit-transition: all 0.25s;
 }
-.left--8{
-  left: -8px;
+.left--12{
+  left: -12px;
 }
-.right--8{
-  right: -8px;
+.right--12{
+  right: -12px;
 }
 .w6{
   width: 6rem;

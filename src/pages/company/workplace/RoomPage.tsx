@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Icon } from '@blueprintjs/core';
 import { RoomSideBar } from 'components/company/workplace/rooms/RoomSideBar';
-import { ChatLayout } from 'components/company/workplace/rooms/ChatLayout';
 import { RightLayout } from 'components/company/workplace/rooms/RightLayout';
 
 export const RoomPage = () => {
@@ -12,10 +11,11 @@ export const RoomPage = () => {
 	return (
 		<div className="flex" style={{ height: 'calc(100vh - 50px)' }}>
 			<div
-				className={`t-25-a relative bg-white br b--tigrowLightGray-1 ${isOpen ? 'w-20' : 'w-2'}`}>
+				className={`t-25-a relative bg-white br b--tigrowLightGray-1 ${isOpen ? 'w5' : 'w1'}`}>
 				<Icon
-					className={`absolute top-0 mv2 z-3 br-100 bg-tigrowDarkBlue c-tigrowWhite ${isOpen ? 'right--8' : 'left--8'}`}
-					icon={isOpen ? 'double-chevron-left' : 'double-chevron-right'}
+					className={`absolute top-0 mv2 z-3 br-100 bg-tigrowLightBlue c-tigrowWhite right--12`}
+					icon={isOpen ? 'circle-arrow-left' : 'circle-arrow-right'}
+					iconSize={24}
 					onClick={() => setIsOpen(!isOpen)} />
 				<RoomSideBar
 					isOpen={isOpen}
@@ -23,7 +23,7 @@ export const RoomPage = () => {
 					setMessages={setMessages}
 				/>
 			</div>
-			<div className={`${isOpen ? 'w-80' : 'w-100'} pl3 pt3`}>
+			<div className="w-100 ph3">
 				<RightLayout messages={messages} />
 			</div>
 		</div >

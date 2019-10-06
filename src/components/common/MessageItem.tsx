@@ -7,7 +7,6 @@ interface MessageItemProps {
   text: string;
   createdAt: string;
   sender: any;
-  lastChild: boolean;
 }
 
 export const MessageItem = (props: MessageItemProps) => {
@@ -15,7 +14,7 @@ export const MessageItem = (props: MessageItemProps) => {
   const currentUser = user._id == props.sender.id;
   return (
     <article
-      className={`flex mt2 items-center flex ${currentUser ? " flex-row-reverse" : ""} ${props.lastChild ? " mb83px" : ""}`}
+      className={`flex mb2 items-center flex ${currentUser ? " flex-row-reverse" : ""}`}
     >
       <div className="" style={{ minWidth: "35px", maxWidth: "35px" }}>
         <img src={props.img} className=" br3" />
