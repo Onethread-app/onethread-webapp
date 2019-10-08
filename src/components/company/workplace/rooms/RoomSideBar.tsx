@@ -7,8 +7,6 @@ import { Button } from '@blueprintjs/core';
 interface RoomSideBarComponentProps {
   isOpen: boolean;
   chatkit?: any;
-  setMessages: (messages: any) => void;
-  messages: any
 }
 
 const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentProps) => {
@@ -22,10 +20,7 @@ const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentP
           </Button>
         </div>
       </div>
-      <RoomList
-        messages={props.messages}
-        setMessages={props.setMessages}
-      />
+      <RoomList />
     </div>
   )
 }

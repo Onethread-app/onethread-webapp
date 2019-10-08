@@ -1,47 +1,56 @@
 import {
-	ROOM_LOADING,
-	GET_ROOMS,
-	CREATE_ROOMS,
+	LOADING_ROOM,
 	GET_ROOM_MESSAGES,
-	SEND_ROOM_MESSAGE
+	GET_ROOMS,
+	CLEAR_ROOM_MESSAGES,
+	CURRENT_ROOM,
+	NEW_MESSAGE
 } from "actions/Types";
 
 const InitialState = {
 	roomId: null,
-	messages: [{}],
+	messages: [{ id: null }],
 	rooms: [],
 	loading: false
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
+
 	switch (action.type) {
-		case ROOM_LOADING:
+		case LOADING_ROOM:
 			return {
 				...state,
 				loading: true
 			};
-		case GET_ROOMS:
+		case CURRENT_ROOM:
 			return {
 				...state,
-				user: action.payload,
+				roomId: action.payload,
 				loading: false
 			};
-		case CREATE_ROOMS:
+		case NEW_MESSAGE:
 			return {
 				...state,
-				user: action.payload,
+				messages: state.messages.length > 0 && state.messages[state.messages.length - 1].id != action.payload.id ? [...state.messages, action.payload] : [...state.messages],
+				// messages: [...state.messages],
 				loading: false
 			};
 		case GET_ROOM_MESSAGES:
 			return {
 				...state,
-				user: action.payload.user,
+				messages: action.payload,
 				loading: false
 			};
-		case SEND_ROOM_MESSAGE:
+		case CLEAR_ROOM_MESSAGES:
 			return {
 				...state,
-				user: action.payload.user,
+				messages: [],
+				loading: false
+			};
+		case GET_ROOMS:
+			return {
+				...state,
+				rooms: action.payload,
 				loading: false
 			};
 		default:

@@ -12,15 +12,13 @@ export const RoomPage = () => {
 		<div className="flex" style={{ height: 'calc(100vh - 50px)' }}>
 			<div
 				className={`t-25-a bg-white br b--tigrowLightGray-1 ${isOpen ? 'w5' : 'w1'}`}
-				// TODO: mouse active
-				onMouseEnter={() => !isOpen && setIsOpen(true)}
-				onMouseLeave={() => isOpen && setIsOpen(false)}
+			// TODO: mouse active
+			// onMouseEnter={() => !isOpen && setIsOpen(true)}
+			// onMouseLeave={() => isOpen && setIsOpen(false)}
 			>
 
 				<RoomSideBar
 					isOpen={isOpen}
-					messages={messages}
-					setMessages={setMessages}
 				/>
 			</div>
 			<div className="w-100 ph3 relative">
@@ -29,7 +27,7 @@ export const RoomPage = () => {
 					icon={isOpen ? 'circle-arrow-left' : 'circle-arrow-right'}
 					iconSize={24}
 					onClick={() => setIsOpen(!isOpen)} />
-				<RightLayout messages={messages} />
+				<RightLayout />
 			</div>
 		</div >
 	);

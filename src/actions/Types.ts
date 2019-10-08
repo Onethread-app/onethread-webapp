@@ -8,12 +8,14 @@ export const USER_LOGIN_ERROR = "USER_LOGIN_ERROR";
 export const USER_LOGOUT = "USER_LOGOUT";
 
 // Room Reducer type
-export const ROOM_LOADING = "ROOM_LOADING";
+export const LOADING_ROOM = "LOADING_ROOM";
+export const CURRENT_ROOM = "CURRENT_ROOM";
 export const GET_ROOMS = "GET_ROOMS";
-export const CREATE_ROOMS = "CREATE_ROOMS";
 export const GET_ROOM_MESSAGES = "GET_ROOM_MESSAGES";
-export const SEND_ROOM_MESSAGE = "SEND_ROOM_MESSAGE";
-export const GET_ROOMS_ERROR = "GET_ROOMS_ERROR";
+export const CLEAR_ROOM_MESSAGES = "CLEAR_ROOM_MESSAGES";
+export const SEND_MESSAGE = "SEND_MESSAGE";
+export const NEW_MESSAGE = "NEW_MESSAGE";
+export const CREATE_ROOM = "CREATE_ROOM";
 
 
 //  Company reducer type

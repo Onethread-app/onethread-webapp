@@ -6,16 +6,13 @@ interface RoomListItemProps {
   img: string;
   lastChild: boolean;
   active: string;
-  setMessages: (messages: any) => void;
   subscribeToRoom: (roomId: any) => void;
 }
 
 export const RoomListItem = (props: RoomListItemProps) => {
-
   return (
     <article
       onClick={() => {
-        props.setMessages([]);
         props.subscribeToRoom(props.roomId);
       }}
       id="roomListItem"

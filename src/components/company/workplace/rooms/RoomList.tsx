@@ -1,37 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { isEqual } from "lodash";
 import { RoomListItem } from "./RoomListItem";
 import { Loading } from 'components/common/field/Loading';
+import { useDispatch, useSelector } from 'react-redux';
+import { GET_ROOM_MESSAGES, CLEAR_ROOM_MESSAGES, GET_ROOMS, CURRENT_ROOM, NEW_MESSAGE } from 'actions/Types';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface RoomListComponentProps {
 	chatkit?: any;
-	setMessages: (messages: any) => void;
-	messages: [{}]
 }
 
 export const RoomList = withChatkit((
 	props: RoomListComponentProps
 ) => {
-	const [roomId, setRoomId] = useState(null);
-	const [rooms, setRooms] = useState([]);
 
-	const fetchMessages = (roomId: any, limit = 10) => {
-		props.chatkit.currentUser.fetchMessages(
-			{
-				roomId,
-				limit,
-			})
-			.then((messages: any) => {
-				console.log("received message :", messages);
-				props.setMessages(messages)
-			});
-	}
+	const dispatch = useDispatch();
+	const messages = useSelector((state: any) => state.roomReducer.messages);
+	const rooms = useSelector((state: any) => state.roomReducer.rooms);
+	const roomId = useSelector((state: any) => state.roomReducer.roomId);
 
 	const subscribeToRoom = (roomId: any) => {
 		if (!props.chatkit.isLoading) {
-			setRoomId(roomId);
-			// props.setMessages([]);
+			dispatch({ type: CURRENT_ROOM, payload: roomId });
 			props.chatkit.currentUser.subscribeToRoomMultipart({
 				roomId: roomId,
 				hooks: {
@@ -42,29 +32,27 @@ export const RoomList = withChatkit((
 							createdAt,
 							senderId,
 						} = newMessage;
-						let msg = {
+						let message = {
 							id,
 							text: newMessage.parts[0].payload.content,
 							createdAt,
-							sender: newMessage.userStore.users[newMessage.senderId],
 							senderId,
 							userStore: {
 								users: { senderId: newMessage.userStore.users[newMessage.senderId] }
 							}
 						};
-						msg.userStore.users[senderId] = newMessage.userStore.users[newMessage.senderId];
-						console.log("format-message", msg);
-						console.log("props.messages", props.messages);
-
-						// props.setMessages([...props.messages, msg]);
+						message.userStore.users[senderId] = newMessage.userStore.users[newMessage.senderId];
+						console.log("format-message", message);
+						console.log("messages", messages);
+						if (!messages[0].id) {
+							console.log("NEW_MESSAGE ---", message);
+							dispatch({ type: NEW_MESSAGE, payload: message });
+						}
 					}
 				},
 				messageLimit: 1
 			})
 				.then((room: any) => {
-
-					console.log("current-room", room);
-
 					// TODO: will start from here!!
 					fetchMessages(room.id);
 				})
@@ -72,21 +60,26 @@ export const RoomList = withChatkit((
 		}
 	}
 
+	const fetchMessages = (roomId: any, limit = 100) => {
+		props.chatkit.currentUser.fetchMessages(
+			{
+				roomId,
+				limit,
+			})
+			.then((messages: any) => {
+				dispatch({ type: GET_ROOM_MESSAGES, payload: messages });
+			});
+	}
+
 	useEffect(() => {
 		if (!props.chatkit.isLoading) {
-			setRooms(props.chatkit.currentUser.rooms);
+			dispatch({ type: GET_ROOMS, payload: props.chatkit.currentUser.rooms });
 			if (props.chatkit.currentUser.rooms.length > 0) {
-				props.setMessages([]);
+				dispatch({ type: CLEAR_ROOM_MESSAGES });
 				subscribeToRoom(props.chatkit.currentUser.rooms[0].id)
 			}
 		}
 	}, [props.chatkit])
-
-	useEffect(() => {
-		if (!props.chatkit.isLoading && rooms.length > 0) {
-			console.log("room", roomId);
-		}
-	}, [roomId])
 
 	return (
 		<>
@@ -101,11 +94,10 @@ export const RoomList = withChatkit((
 							lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
 							active={room.id === roomId ? 'bg-lightest-blue' : ''}
 							subscribeToRoom={subscribeToRoom}
-							setMessages={props.setMessages}
 						/>
 					);
 				}) : <p>No rooms available for you.</p>}
 			</main>
 		</>
 	);
-})
+});

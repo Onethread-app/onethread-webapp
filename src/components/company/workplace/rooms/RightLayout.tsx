@@ -9,7 +9,6 @@ import {
 import { ChatLayout } from './chats/ChatLayout';
 import { TaskLayout } from './tasks/TaskLayout';
 interface RightLayoutProps {
-	messages: any
 }
 export const RightLayout = (props: RightLayoutProps) => {
 	const [activePanelOnly] = useState(false);
@@ -65,7 +64,7 @@ export const RightLayout = (props: RightLayoutProps) => {
 				<Tab
 					id="ch"
 					title="Chat"
-					panel={<ChatLayout messages={props.messages} />}
+					panel={<ChatLayout />}
 					panelClassName="task-panel"
 				/>
 				<Tab
