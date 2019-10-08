@@ -5,7 +5,6 @@ import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useState } from 'react';
-import { initializeChatkitAction } from 'actions/ChatkitActions';
 import { ListTitleView } from 'components/ListTitleView';
 import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
 import { BasicInfoForm } from 'components/company/profile/editor/BasicInfoDetailsForm';
@@ -104,7 +103,6 @@ const BasicInfoDetailsView = (props: {
 
 interface LandingPageProps {
   user: User,
-  chatkitUser: any;
 }
 
 export const LandingPageComponent = (props: LandingPageProps) => {
@@ -214,8 +212,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
-    chatkitUser: state.chatkitReducer.user
   }
 }
 
-export const LandingPage = connect(mapStateToProps, { initializeChatkitAction })(LandingPageComponent)
+export const LandingPage = connect(mapStateToProps, null)(LandingPageComponent)

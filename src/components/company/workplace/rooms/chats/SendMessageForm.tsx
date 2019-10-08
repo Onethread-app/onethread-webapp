@@ -3,7 +3,7 @@ import {
   Button,
   Icon
 } from "@blueprintjs/core";
-import user from "../../../../resources/images/user.png";
+import user from "../../../../../resources/images/user.png";
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface SendMessageFormProps {

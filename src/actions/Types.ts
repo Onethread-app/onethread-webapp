@@ -7,11 +7,6 @@ export const USER_LOGIN = "USER_LOGIN";
 export const USER_LOGIN_ERROR = "USER_LOGIN_ERROR";
 export const USER_LOGOUT = "USER_LOGOUT";
 
-// chatkit Reducer type
-export const CHATKIT_USER_LOADING = "CHATKIT_USER_LOADING";
-export const GET_CHATKIT_USER = "GET_CHATKIT_USER";
-export const GET_CHATKIT_USER_ERROR = "GET_CHATKIT_USER_ERROR";
-
 // Room Reducer type
 export const ROOM_LOADING = "ROOM_LOADING";
 export const GET_ROOMS = "GET_ROOMS";

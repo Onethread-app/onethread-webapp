@@ -1,6 +1,6 @@
 import React from "react";
 import { MessageItem } from "components/common/MessageItem";
-import user from "../../../../resources/images/user.png";
+import user from "../../../../../resources/images/user.png";
 import { Loading } from 'components/common/field/Loading';
 import { SendMessageForm } from './SendMessageForm';
 const { withChatkit } = require("@pusher/chatkit-client-react");

@@ -6,8 +6,8 @@ import {
 	Button,
 	Icon
 } from "@blueprintjs/core";
-import { ChatLayout } from './ChatLayout';
-import { TaskLayout } from './TaskLayout';
+import { ChatLayout } from './chats/ChatLayout';
+import { TaskLayout } from './tasks/TaskLayout';
 interface RightLayoutProps {
 	messages: any
 }

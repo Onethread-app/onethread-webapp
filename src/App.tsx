@@ -5,8 +5,6 @@ import { SignUpPage } from "./pages/SignupPage";
 import { LandingPage } from "pages/LandingPage";
 import { SignInPage } from "pages/SignInPage";
 import { connect } from "react-redux";
-import { fetchUserAction } from "actions/AuthActions";
-import { initializeChatkitAction } from "actions/ChatkitActions";
 import { isAuthenticate } from "actions/UtilsActions";
 import { RoomPage } from "pages/company/workplace/RoomPage";
 import { FeedPage } from "pages/company/workplace/FeedPage";
@@ -94,5 +92,5 @@ const AppComponent = () => {
 
 export const App = connect(
 	null,
-	{ fetchUserAction, initializeChatkitAction }
+	null,
 )(AppComponent);
