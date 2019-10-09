@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { loginAction } from 'actions/AuthActions';
+import { loginAction } from 'stores/auth/Actions';
 import { Icon, Intent, Spinner, Button } from '@blueprintjs/core';
 import { History } from 'history';
 

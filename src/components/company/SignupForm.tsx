@@ -4,7 +4,7 @@ import { isEmpty } from 'lodash';
 import { HTMLSelect, Icon, Button } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
-import { createCompanyAction } from 'actions/CompanyActions';
+import { createCompanyAction } from 'stores/company/Actions';
 import { History } from 'history';
 
 const Type = [

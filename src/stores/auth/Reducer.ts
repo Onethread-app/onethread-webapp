@@ -1,4 +1,4 @@
-import { USER_SIGNUP, USER_LOGIN_ERROR, USER_LOGIN, USER_SIGNUP_LOADING, USER_LOGOUT } from 'actions/Types';
+import { USER_SIGNUP_LOADING, USER_LOGIN_ERROR, USER_SIGNUP, USER_LOGIN, USER_LOGOUT } from './Types'
 
 export interface UserModel {
   firstName: string,

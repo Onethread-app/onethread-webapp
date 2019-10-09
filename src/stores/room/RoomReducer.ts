@@ -1,10 +1,4 @@
-import {
-	ROOM_LOADING,
-	GET_ROOMS,
-	CREATE_ROOMS,
-	GET_ROOM_MESSAGES,
-	SEND_ROOM_MESSAGE
-} from "actions/Types";
+import { ROOM_LOADING, GET_ROOMS, CREATE_ROOMS, GET_ROOM_MESSAGES, SEND_ROOM_MESSAGE } from './Types';
 
 const InitialState = {
 	roomId: null,

@@ -1,0 +1,6 @@
+export const ROOM_LOADING = "ROOM_LOADING";
+export const GET_ROOMS = "GET_ROOMS";
+export const CREATE_ROOMS = "CREATE_ROOMS";
+export const GET_ROOM_MESSAGES = "GET_ROOM_MESSAGES";
+export const SEND_ROOM_MESSAGE = "SEND_ROOM_MESSAGE";
+export const GET_ROOMS_ERROR = "GET_ROOMS_ERROR";

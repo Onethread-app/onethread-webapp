@@ -1,8 +1,8 @@
 import React from "react";
 import { ButtonGroup, Alignment, Button } from "@blueprintjs/core";
 import { Link } from "react-router-dom";
-import { User } from 'reducers/UserReducer';
-import { CompanyModel } from 'reducers/company/CompanyReducer';
+import { User } from 'stores/user/Reducer';
+import { CompanyModel } from 'stores/company/Reducer';
 
 const SidebarComponent = (props: {
 	user: User;

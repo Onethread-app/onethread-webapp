@@ -2,19 +2,16 @@ import {
 	USER_SIGNUP,
 	USER_LOGIN,
 	USER_LOGIN_ERROR,
-	FETCH_USER,
 	USER_SIGNUP_LOADING,
-	USER_LOGOUT,
-	BASIC_INFO,
-	USER_FETCH_LOADING,
-	USER_FETCH_ERROR
+	USER_LOGOUT
 } from "./Types";
 import tigrowApi from "tigrowApi";
 import { AxiosRequestConfig } from "axios";
 import { History } from "history";
-import { UserModel } from "reducers/AuthReducer";
+import { UserModel } from "stores/auth/Reducer";
 import { isEqual } from "lodash";
-import { tokenConfig } from "./UtilsActions";
+import { tokenConfig } from "../UtilsActions";
+import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR } from 'stores/user/Types';
 
 export const userSignupAction = (
 	newUser: UserModel,

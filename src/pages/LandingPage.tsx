@@ -5,11 +5,10 @@ import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useState } from 'react';
-import { initializeChatkitAction } from 'actions/ChatkitActions';
 import { ListTitleView } from 'components/ListTitleView';
 import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
 import { BasicInfoForm } from 'components/company/profile/editor/BasicInfoDetailsForm';
-import { User } from 'reducers/UserReducer';
+import { User } from 'stores/user/Reducer';
 
 const skills = [
   { id: '1', name: 'Programing C' },
@@ -104,13 +103,12 @@ const BasicInfoDetailsView = (props: {
 
 interface LandingPageProps {
   user: User,
-  chatkitUser: any;
 }
 
 export const LandingPageComponent = (props: LandingPageProps) => {
 
   const [showDialog, setShowDialog] = useState(false);
-  // Should comes from redux store
+  // TODO Should comes from redux store
   const [selectedItems, setSelectedItems] = useState([] as ItemEntityProps[]);
 
   return (
@@ -214,8 +212,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
-    chatkitUser: state.chatkitReducer.user
   }
 }
 
-export const LandingPage = connect(mapStateToProps, { initializeChatkitAction })(LandingPageComponent)
+export const LandingPage = connect(mapStateToProps, null)(LandingPageComponent)

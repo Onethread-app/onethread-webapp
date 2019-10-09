@@ -4,12 +4,12 @@ import { Sidebar } from 'components/Sidebar';
 import { useState, useEffect } from 'react';
 import { Loading } from './field/Loading';
 import { connect } from 'react-redux';
-import { User } from 'reducers/UserReducer';
+import { User } from 'stores/user/Reducer';
 import { isEmpty, isEqual } from 'lodash';
 import { withRouter, RouteComponentProps, match } from 'react-router-dom';
-import { fetchUserAction } from 'actions/AuthActions';
-import { CompanyModel } from 'reducers/company/CompanyReducer';
-import { getCompanyDetails } from 'actions/CompanyActions';
+import { fetchUserAction } from 'stores/auth/Actions';
+import { CompanyModel } from 'stores/company/Reducer';
+import { getCompanyDetails } from 'stores/company/Actions';
 
 const load = async (
   match: match,
@@ -28,14 +28,14 @@ interface LayoutProps {
   Component: React.ComponentClass | React.StatelessComponent;
 }
 
-interface LayoutInternalProps extends LayoutProps {
+interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   user: User;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => void;
   company: CompanyModel
 }
 
-const LayoutComponent = (props: LayoutInternalProps & RouteComponentProps) => {
+const LayoutComponent = (props: LayoutInternalProps) => {
 
   const [loading, setLoading] = useState(true);
 
