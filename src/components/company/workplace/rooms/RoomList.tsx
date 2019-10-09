@@ -26,7 +26,6 @@ export const RoomList = withChatkit((
 				roomId: roomId,
 				hooks: {
 					onMessage: (newMessage: any) => {
-						console.log("newMessage", newMessage);
 						const {
 							id,
 							createdAt,
@@ -42,10 +41,8 @@ export const RoomList = withChatkit((
 							}
 						};
 						message.userStore.users[senderId] = newMessage.userStore.users[newMessage.senderId];
-						console.log("format-message", message);
-						console.log("messages", messages);
+
 						if (!messages[0].id) {
-							console.log("NEW_MESSAGE ---", message);
 							dispatch({ type: NEW_MESSAGE, payload: message });
 						}
 					}
@@ -53,7 +50,6 @@ export const RoomList = withChatkit((
 				messageLimit: 1
 			})
 				.then((room: any) => {
-					// TODO: will start from here!!
 					fetchMessages(room.id);
 				})
 				.catch((err: any) => console.log('error on subscribing to room: ', err))

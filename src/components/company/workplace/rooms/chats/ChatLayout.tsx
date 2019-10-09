@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { MessageItem } from "components/common/MessageItem";
 import user from "../../../../../resources/images/user.png";
 import { Loading } from 'components/common/field/Loading';
@@ -19,8 +19,8 @@ export const ChatLayout = withChatkit((props: ChatLayoutProps) => {
 				className="mh3-">
 				{/* Message-List */}
 				<div
-					className="overflow-y-auto ph1 bg-tigrowLightestBlue"
-					style={{ height: "calc(100vh - 202px)" }}
+					className="overflow-y-auto ph1 bg-tigrowLightestBlue pt2"
+					style={{ height: "calc(100vh - 176px)" }}
 				>
 					{!props.chatkit.isLoading && props.chatkit.currentUser.rooms.length > 0 ? messages.length && messages[0].id !== null ? messages.map((message: any, i: number, arr: any) => {
 						return (

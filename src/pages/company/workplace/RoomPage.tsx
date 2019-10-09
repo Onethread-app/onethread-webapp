@@ -6,15 +6,14 @@ import { RightLayout } from 'components/company/workplace/rooms/RightLayout';
 export const RoomPage = () => {
 
 	const [isOpen, setIsOpen] = useState(true);
-	const [messages, setMessages] = useState([]);
 
 	return (
 		<div className="flex" style={{ height: 'calc(100vh - 50px)' }}>
 			<div
 				className={`t-25-a bg-white br b--tigrowLightGray-1 ${isOpen ? 'w5' : 'w1'}`}
-			// TODO: mouse active
-			// onMouseEnter={() => !isOpen && setIsOpen(true)}
-			// onMouseLeave={() => isOpen && setIsOpen(false)}
+				// TODO: mouse active
+				onMouseEnter={() => !isOpen && setIsOpen(true)}
+				onMouseLeave={() => isOpen && setIsOpen(false)}
 			>
 
 				<RoomSideBar

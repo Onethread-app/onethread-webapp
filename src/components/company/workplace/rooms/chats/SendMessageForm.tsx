@@ -4,13 +4,14 @@ import {
   Icon
 } from "@blueprintjs/core";
 import user from "../../../../../resources/images/user.png";
+import { useSelector } from 'react-redux';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface SendMessageFormProps {
   chatkit?: any;
 }
 export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
-  const [roomId, setRoomId] = useState("56c2c264-1b5c-45f6-bc3b-c4b77cca2959");
+  const roomId = useSelector((state: any) => state.roomReducer.roomId);
   const [text, setText] = useState("");
 
   const sendMessage = (text: string) => {
