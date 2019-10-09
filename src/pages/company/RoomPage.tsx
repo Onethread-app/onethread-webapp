@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Icon } from '@blueprintjs/core';
-import { RoomSideBar } from 'components/company/workplace/rooms/RoomSideBar';
-import { RightLayout } from 'components/company/workplace/rooms/RightLayout';
+import { RoomSideBar } from 'components/company/rooms/RoomSideBar';
+import { RightLayout } from 'components/company/rooms/RightLayout';
 
 export const RoomPage = () => {
 
