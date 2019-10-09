@@ -3,7 +3,7 @@ import { isEqual } from "lodash";
 import { RoomListItem } from "./RoomListItem";
 import { Loading } from 'components/common/field/Loading';
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_ROOM_MESSAGES, CLEAR_ROOM_MESSAGES, GET_ROOMS, CURRENT_ROOM, NEW_MESSAGE } from 'actions/Types';
+import { CURRENT_ROOM, NEW_MESSAGE, GET_ROOM_MESSAGES, GET_ROOMS, CLEAR_ROOM_MESSAGES } from 'stores/room/Types';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface RoomListComponentProps {

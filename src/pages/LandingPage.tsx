@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { ListTitleView } from 'components/ListTitleView';
 import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
 import { BasicInfoForm } from 'components/company/profile/editor/BasicInfoDetailsForm';
-import { User } from 'reducers/UserReducer';
+import { User } from 'stores/user/Reducer';
 
 const skills = [
   { id: '1', name: 'Programing C' },
@@ -108,7 +108,7 @@ interface LandingPageProps {
 export const LandingPageComponent = (props: LandingPageProps) => {
 
   const [showDialog, setShowDialog] = useState(false);
-  // Should comes from redux store
+  // TODO Should comes from redux store
   const [selectedItems, setSelectedItems] = useState([] as ItemEntityProps[]);
 
   return (

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Button, Popover, Position, Dialog, ButtonGroup } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
-import { logoutAction } from 'actions/AuthActions';
+import { logoutAction } from 'stores/auth/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import user from '../resources/images/user.png';
@@ -10,9 +10,9 @@ import logo from '../resources/images/tigrowLogo.png';
 import { useState } from 'react';
 import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListItemViewWithImage';
 import { CompanySignupForm } from './company/SignupForm';
-import { getCompanyDetails } from 'actions/CompanyActions';
-import { CompanyModel } from 'reducers/company/CompanyReducer';
-import { User } from 'reducers/UserReducer';
+import { getCompanyDetails } from 'stores/company/Actions';
+import { CompanyModel } from 'stores/company/Reducer';
+import { User } from 'stores/user/Reducer';
 
 interface NavbarTopInternalProps {
   logoutAction: (history: History) => void;

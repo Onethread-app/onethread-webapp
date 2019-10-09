@@ -1,4 +1,4 @@
-import { CREATE_COMPANY, GET_COMPANY_DETAILS } from 'actions/Types';
+import { GET_COMPANY_DETAILS, CREATE_COMPANY } from './Types';
 
 export interface CompanyModel {
   _id: string,

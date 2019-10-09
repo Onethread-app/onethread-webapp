@@ -5,7 +5,7 @@ import {
 	CLEAR_ROOM_MESSAGES,
 	CURRENT_ROOM,
 	NEW_MESSAGE
-} from "actions/Types";
+} from "./Types";
 
 const InitialState = {
 	roomId: null,
@@ -32,7 +32,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				messages: state.messages.length > 0 && state.messages[state.messages.length - 1].id != action.payload.id ? [...state.messages, action.payload] : [...state.messages],
-				// messages: [...state.messages],
 				loading: false
 			};
 		case GET_ROOM_MESSAGES:

@@ -9,22 +9,22 @@ import { App } from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { store } from 'Store';
-import { instanceLocator, tokenUrl, userId } from "config";
+import { TokenUrl, UserId, InstanceLocator } from 'config';
 const {
   ChatkitProvider,
   TokenProvider,
 } = require("@pusher/chatkit-client-react");
 
 const tokenProvider = new TokenProvider({
-  url: tokenUrl,
+  url: TokenUrl,
 });
 
 ReactDOM.render(
   <Provider store={store}>
-    {userId ? <ChatkitProvider
-      instanceLocator={instanceLocator}
+    {UserId ? <ChatkitProvider
+      instanceLocator={InstanceLocator}
       tokenProvider={tokenProvider}
-      userId={userId}
+      userId={UserId}
     >
       <App />
     </ChatkitProvider> : <App />}

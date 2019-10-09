@@ -1,10 +1,11 @@
 
 import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
-import { CREATE_COMPANY, CREATE_COMPANY_ERROR, USER_COMPANIES_UPDATE, GET_COMPANY_DETAILS } from './Types';
 import { History } from 'history';
-import { tokenConfig } from './UtilsActions';
-import { CompanyModel } from 'reducers/company/CompanyReducer';
+import { tokenConfig } from '../UtilsActions';
+import { CompanyModel } from 'stores/company/Reducer';
+import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS } from './Types';
+import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
 
 export const createCompanyAction = (companyData: CompanyModel, routeHistory: History) => async (dispatch: any, getState: any) => {
   try {

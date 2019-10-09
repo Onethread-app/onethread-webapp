@@ -1,16 +1,14 @@
 import * as React from "react";
-import "./App.css";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import { SignUpPage } from "./pages/SignupPage";
 import { LandingPage } from "pages/LandingPage";
 import { SignInPage } from "pages/SignInPage";
-import { connect } from "react-redux";
-import { isAuthenticate } from "actions/UtilsActions";
-import { RoomPage } from "pages/company/workplace/RoomPage";
-import { FeedPage } from "pages/company/workplace/FeedPage";
+import { isAuthenticate } from "stores/UtilsActions";
+import { RoomPage } from "pages/company/RoomPage";
+import { FeedPage } from "pages/company/FeedPage";
 import { CompanyProfilePage } from 'pages/company/ProfilePage';
 import { Layout } from 'components/common/Layout';
-import { ChatkitTest } from 'pages/ChatkitTest';
+import { TaskPage } from 'pages/company/TaskPage';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -34,63 +32,55 @@ const Demo = () => (<div></div>)
 
 const NoMatch = () => (<div>This page is not available</div>)
 
-const AppComponent = () => {
+export const App = () => (
+	<BrowserRouter>
+		<Switch>
+			<Route
+				exact
+				path="/signin"
+				render={r =>
+					isAuthenticate() ? <Redirect to="/" /> : <SignInPage />
+				}
+			/>
+			<Route
+				exact
+				path="/signup"
+				render={r =>
+					isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
+				}
+			/>
+			<PrivateRoute
+				exact
+				path="/"
+				component={Demo}
+			/>
+			<PrivateRoute
+				path="/:username"
+				exact={true}
+				component={LandingPage}
+			/>
+			<PrivateRoute
+				exact={true}
+				path="/company/:cname"
+				component={CompanyProfilePage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/feed"
+				exact={true}
+				component={FeedPage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/room"
+				exact={true}
+				component={RoomPage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/task"
+				exact={true}
+				component={TaskPage}
+			/>
+			<Route component={NoMatch} />
+		</Switch>
 
-	return (
-		<BrowserRouter>
-			<Switch>
-				<Route
-					exact
-					path="/signin"
-					render={r =>
-						isAuthenticate() ? <Redirect to="/" /> : <SignInPage />
-					}
-				/>
-				<Route
-					exact
-					path="/signup"
-					render={r =>
-						isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
-					}
-				/>
-				<PrivateRoute
-					path="/chatkit"
-					exact={true}
-					component={ChatkitTest}
-				/>
-				<PrivateRoute
-					exact
-					path="/"
-					component={Demo}
-				/>
-				<PrivateRoute
-					path="/:username"
-					exact={true}
-					component={LandingPage}
-				/>
-				<PrivateRoute
-					exact={true}
-					path="/company/:cname"
-					component={CompanyProfilePage}
-				/>
-				<PrivateRoute
-					path="/company/:cname/feed"
-					exact={true}
-					component={FeedPage}
-				/>
-				<PrivateRoute
-					path="/company/:cname/room"
-					exact={true}
-					component={RoomPage}
-				/>
-				<Route component={NoMatch} />
-			</Switch>
-
-		</BrowserRouter>
-	);
-};
-
-export const App = connect(
-	null,
-	null,
-)(AppComponent);
+	</BrowserRouter>
+);

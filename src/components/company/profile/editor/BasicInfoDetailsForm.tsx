@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { isEmpty, isNumber } from 'lodash';
 import { connect } from 'react-redux';
-import { editUserInfoAction } from 'actions/UserActions';
+import { editUserInfoAction } from 'stores/user/Actions';
 import { NumericInput } from '@blueprintjs/core';
 import { InputGroupField } from 'components/common/field/InputGroup';
 

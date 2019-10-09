@@ -1,7 +1,8 @@
+import { EDIT_BASIC_INFO } from './Types';
+
 // import { CompanyModel } from 'reducers/CompanyReducer';
 // import tigrowApi from 'tigrowApi';
 // import { AxiosRequestConfig } from 'axios';
-import { EDIT_BASIC_INFO } from './Types';
 // import { isEqual } from 'lodash';
 // import { CREATE_COMPANY, CREATE_COMPANY_ERROR } from './Types';
 // import { History } from 'history';
