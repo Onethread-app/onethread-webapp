@@ -1,0 +1,37 @@
+#roomListItem:hover{
+  background-color: skyblue;
+}
+/**  custom **/
+::-webkit-scrollbar {
+	width: 10px;
+  border-radius: 10px;
+  background-color: #0FA3A3;
+}
+
+::-webkit-scrollbar-track {
+  border-radius: 10px;
+  background: rgb(196, 240, 240);
+  border: 1px solid #ccc;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: rgb(13, 189, 189);
+  border: 1px solid #ccc;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #0FA3A3;
+}
+
+.mb83px{
+  margin-bottom: 83px;
+}
+
+.mh3- {
+  margin-left: -16px;
+  margin-right: -16px;
+}
+.bp3-tab-panel{
+  margin-top: 0px;
+}

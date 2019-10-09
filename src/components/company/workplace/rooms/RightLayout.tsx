@@ -6,19 +6,20 @@ import {
 	Button,
 	Icon
 } from "@blueprintjs/core";
-import { ChatLayout } from './ChatLayout';
-import { TaskLayout } from './TaskLayout';
-
-export const RightLayout = () => {
+import { ChatLayout } from './chats/ChatLayout';
+import { TaskLayout } from './tasks/TaskLayout';
+interface RightLayoutProps {
+}
+export const RightLayout = (props: RightLayoutProps) => {
 	const [activePanelOnly] = useState(false);
 	const [animate] = useState(true);
 	const [vertical] = useState(false);
 
 	return (
-		<div className="z-2 ">
-			<div className="flex mv2">
+		<div className="flex flex-column">
+			<div className="flex mt2">
 				<p className="f4 fw7 mv1">General</p>
-				<div className="flex ml-auto">
+				<div className="flex">
 					<InputGroup
 						leftIcon="search"
 						placeholder="search in conversations"
@@ -60,7 +61,12 @@ export const RightLayout = () => {
 				renderActiveTabPanelOnly={activePanelOnly}
 				vertical={vertical}
 			>
-				<Tab id="ch" title="Chat" panel={<ChatLayout />} />
+				<Tab
+					id="ch"
+					title="Chat"
+					panel={<ChatLayout />}
+					panelClassName="task-panel"
+				/>
 				<Tab
 					id="ta"
 					title="Task"

@@ -73,9 +73,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             popoverClassName="bp3-popover-content-sizing"
             position={Position.BOTTOM}
           >
-            <a className="dim mid-gray f6 f5-l  v-mid " href="#" title="User">
-              <img src={user} className="dib w2 h2 br-100" alt="user" />
-            </a>
+            <img src={user} className="dim mid-gray f6 f5-l v-mid dib w2 h2 br-100" alt="user" />
             <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
               <Button>
                 <article
@@ -85,7 +83,9 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                     <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
                   </div>
                   <div className="dtc v-mid pl3">
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
+                    <Link to={`/${props.user.username}`}>
+                      <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
+                    </Link>
                   </div>
                 </article>
               </Button>
