@@ -8,7 +8,7 @@ export const RoomPage = () => {
 	const [isOpen, setIsOpen] = useState(true);
 
 	return (
-		<div className="flex" style={{ height: 'calc(100vh - 50px)' }}>
+		<div className="flex h-100">
 			<div
 				className={`t-25-a relative bg-white br b--tigrowLightGray-1 ${isOpen ? 'w-20' : 'w-2'}`}>
 				<Icon

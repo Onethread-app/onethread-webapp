@@ -65,7 +65,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 />
               </div>
               <div className="fl w-100 pl5 pl11-l pl6-m pr2 bg-tigrow">
-                <props.Component />
+                <div className="cf" style={{ height: 'calc(100vh - 50px)' }}>
+                  <props.Component />
+                </div>
               </div>
             </div>
           }

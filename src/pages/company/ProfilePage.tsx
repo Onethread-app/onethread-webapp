@@ -5,7 +5,7 @@ import { ProductDetailsView } from 'components/company/profile/view/ProductDetai
 import { CompanyTeamMembersView } from 'components/company/profile/view/TeamMembersView';
 
 export const CompanyProfilePage = () => (
-  <div className="cf w-100" style={{ height: "calc(100vh - 52px)" }} >
+  <div className="w-100">
     <h1 className="f4 lh-title tigrow-lightGray-1 ml4-ns ml2 mb0">Company Profile</h1>
     <Tabs
       id="TabsExample"

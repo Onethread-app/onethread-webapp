@@ -8,6 +8,7 @@ import { RoomPage } from "pages/company/RoomPage";
 import { FeedPage } from "pages/company/FeedPage";
 import { CompanyProfilePage } from 'pages/company/ProfilePage';
 import { Layout } from 'components/common/Layout';
+import { TaskPage } from 'pages/company/TaskPage';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -72,6 +73,11 @@ export const App = () => (
 				path="/company/:cname/room"
 				exact={true}
 				component={RoomPage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/task"
+				exact={true}
+				component={TaskPage}
 			/>
 			<Route component={NoMatch} />
 		</Switch>
