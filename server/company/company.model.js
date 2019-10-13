@@ -97,12 +97,6 @@ const company = new Schema(
         ref: 'Account',
       },
     ],
-    workplaces: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Workplace',
-      },
-    ],
     // others
     logo: {
       type: String,

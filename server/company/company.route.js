@@ -14,6 +14,7 @@ router.route('/').post(
   // SchemaValidator(joiSchema.newCompany),
   companyCtrl.createCompany,
 );
+
 router
   .route('/:cname')
   .get(
@@ -31,9 +32,13 @@ router
     // SchemaValidator(joiSchema.deleteCompany),
     companyCtrl.deleteCompany,
   );
+
 router.route('/:cname/employees').put(
   requireAuth,
   // SchemaValidator(joiSchema.getCompany),
   companyCtrl.addEmployees,
 );
+
+router.param('cname', companyCtrl.getCompanyLoad);
+
 module.exports = router;
