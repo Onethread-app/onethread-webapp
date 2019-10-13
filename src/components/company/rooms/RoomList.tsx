@@ -15,41 +15,39 @@ export const RoomList = withChatkit((
 ) => {
 
 	const dispatch = useDispatch();
-	const messages = useSelector((state: any) => state.roomReducer.messages);
 	const rooms = useSelector((state: any) => state.roomReducer.rooms);
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
 
-	const subscribeToRoom = (roomId: any) => {
+	const subscribeToRoom = (roomId: any, name: string) => {
 		if (!props.chatkit.isLoading) {
-			dispatch({ type: CURRENT_ROOM, payload: roomId });
+			dispatch({ type: CLEAR_ROOM_MESSAGES });
+			dispatch({ type: CURRENT_ROOM, payload: { roomId, name } });
 			props.chatkit.currentUser.subscribeToRoomMultipart({
 				roomId: roomId,
 				hooks: {
 					onMessage: (newMessage: any) => {
-						const {
-							id,
-							createdAt,
-							senderId,
-						} = newMessage;
+
 						let message = {
-							id,
+							id: newMessage.id,
+							roomId: newMessage.roomId,
+							senderId: newMessage.senderId,
 							text: newMessage.parts[0].payload.content,
-							createdAt,
-							senderId,
 							userStore: {
 								users: { senderId: newMessage.userStore.users[newMessage.senderId] }
-							}
+							},
+							roomStore: newMessage.roomStore,
+							createdAt: newMessage.createdAt,
+							updatedAt: newMessage.updatedAt,
 						};
-						message.userStore.users[senderId] = newMessage.userStore.users[newMessage.senderId];
+						message.userStore.users[newMessage.senderId] = newMessage.userStore.users[newMessage.senderId];
 
-						if (!messages[0].id) {
-							dispatch({ type: NEW_MESSAGE, payload: message });
-						}
+						dispatch({ type: NEW_MESSAGE, payload: message });
 					}
 				},
 				messageLimit: 1
 			})
 				.then((room: any) => {
+					// TODO: get from backend
 					fetchMessages(room.id);
 				})
 				.catch((err: any) => console.log('error on subscribing to room: ', err))
@@ -72,7 +70,7 @@ export const RoomList = withChatkit((
 			dispatch({ type: GET_ROOMS, payload: props.chatkit.currentUser.rooms });
 			if (props.chatkit.currentUser.rooms.length > 0) {
 				dispatch({ type: CLEAR_ROOM_MESSAGES });
-				subscribeToRoom(props.chatkit.currentUser.rooms[0].id)
+				subscribeToRoom(props.chatkit.currentUser.rooms[0].id, props.chatkit.currentUser.rooms[0].name)
 			}
 		}
 	}, [props.chatkit])

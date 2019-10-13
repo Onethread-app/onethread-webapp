@@ -10,12 +10,20 @@ import { withRouter, RouteComponentProps, match } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
+import { InstanceLocator, TokenUrl } from 'config';
+const {
+  ChatkitProvider,
+  TokenProvider,
+} = require("@pusher/chatkit-client-react");
+
+const tokenProvider = new TokenProvider({
+  url: TokenUrl,
+});
 
 const load = async (
   match: match,
   fetchUserAction: () => void,
-  getCompanyDetails: (companyName: string) => void,
-  setLoading: (val: boolean) => void
+  getCompanyDetails: (companyName: string) => void
 ) => {
   await fetchUserAction();
   if (isEmpty((match.params as any).cname) === false) {
@@ -47,7 +55,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       && isEqual((props.match.params as any).username, props.user.username) === false) {
       props.history.push(`/unavailable/profile`);
     }
-    load(props.match, props.fetchUserAction, props.getCompanyDetails, setLoading).then(r => setLoading(false));
+    load(props.match, props.fetchUserAction, props.getCompanyDetails).then(r => setLoading(false));
   }, [loading]);
 
   return (
@@ -56,20 +64,27 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         <NavbarTop />
         <div className="fl w-100 bg-tigrowLightGray-1" style={{ marginTop: '50px' }}>
           {loading ? <Loading />
-            : <div className="flex w-100">
-              <div className="db">
-                <Sidebar
-                  user={props.user}
-                  company={props.company}
-                  type={(props.match.params as any).cname ? 'company' : 'default'}
-                />
-              </div>
-              <div className="fl w-100 pl5 pl11-l pl6-m bg-tigrow">
-                <div className="cf" style={{ height: 'calc(100vh - 50px)' }}>
-                  <props.Component />
+            :
+            <ChatkitProvider
+              instanceLocator={InstanceLocator}
+              tokenProvider={tokenProvider}
+              userId={props.user._id}
+            >
+              <div className="flex w-100">
+                <div className="db">
+                  <Sidebar
+                    user={props.user}
+                    company={props.company}
+                    type={(props.match.params as any).cname ? 'company' : 'default'}
+                  />
+                </div>
+                <div className="fl w-100 pl5 pl11-l pl6-m bg-tigrow">
+                  <div className="cf" style={{ height: 'calc(100vh - 50px)' }}>
+                    <props.Component />
+                  </div>
                 </div>
               </div>
-            </div>
+            </ChatkitProvider>
           }
         </div>
       </div>

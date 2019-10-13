@@ -12,6 +12,7 @@ import { UserModel } from "stores/auth/Reducer";
 import { isEqual } from "lodash";
 import { tokenConfig } from "../UtilsActions";
 import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR } from 'stores/user/Types';
+import { CLEAR_ROOMS } from 'stores/room/Types';
 
 export const userSignupAction = (
 	newUser: UserModel,
@@ -118,6 +119,7 @@ export const logoutAction = (routeHistory: History) => async (
 			await tigrowApi.get(`/account/logout`, headers);
 			routeHistory.push("/signin");
 			dispatch({ type: USER_LOGOUT });
+			dispatch({ type: CLEAR_ROOMS });
 		} else {
 			console.log("No token found in logout action");
 		}

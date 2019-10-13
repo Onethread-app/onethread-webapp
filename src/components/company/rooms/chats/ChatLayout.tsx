@@ -1,43 +1,32 @@
 import React from "react";
-import { MessageItem } from "components/common/MessageItem";
-import user from "../../../../resources/images/user.png";
-import { Loading } from 'components/common/field/Loading';
 import { SendMessageForm } from './SendMessageForm';
+import { MessageList } from './MessageList';
 import { useSelector } from 'react-redux';
-const { withChatkit } = require("@pusher/chatkit-client-react");
+import { Button, Icon } from '@blueprintjs/core';
 
 interface ChatLayoutProps {
-	chatkit?: any;
 }
 
-export const ChatLayout = withChatkit((props: ChatLayoutProps) => {
-	const messages = useSelector((state: any) => state.roomReducer.messages);
-
+export const ChatLayout = (props: ChatLayoutProps) => {
+	const roomName = useSelector((state: any) => state.roomReducer.roomName);
 	return (
 		<div>
-			<div
-				className="mh3-">
-				{/* Message-List */}
-				<div
-					className="overflow-y-auto ph1 bg-tigrowLightestBlue pt2"
-					style={{ height: "calc(100vh - 176px)" }}
+			<div className="flex justify-between ph3 bb b--tigrowLightGray-1">
+				<p className="f4 fw7 mv1">{roomName}</p>
+				<Button
+					className="bp3-minimal ma1 outline-0 grow"
+					style={{ background: "#F55B7F" }}
 				>
-					{!props.chatkit.isLoading && props.chatkit.currentUser.rooms.length > 0 ? messages.length && messages[0].id !== null ? messages.map((message: any, i: number, arr: any) => {
-						return (
-							<MessageItem
-								key={message.id}
-								img={user}
-								text={message.text}
-								createdAt={message.createdAt}
-								sender={message.userStore.users[message.senderId]}
-							/>
-						);
-					}) : <Loading /> : <p className="bg-tigrow">Nothing to show!!</p>}
-				</div>
-
-				{/* SendMessage */}
+					<Icon
+						icon="new-person"
+						style={{ background: "#F55B7F", color: "white" }}
+					/>
+				</Button>
+			</div>
+			<div>
+				<MessageList />
 				<SendMessageForm />
 			</div>
 		</div>
 	)
-})
+}

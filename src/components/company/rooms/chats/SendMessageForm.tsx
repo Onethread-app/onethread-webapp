@@ -15,6 +15,7 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
   const [text, setText] = useState("");
 
   const sendMessage = (text: string) => {
+    // TODO: send to backend
     props.chatkit.currentUser.sendMessage({
       text,
       roomId
@@ -28,7 +29,7 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
     }
   }
   return (
-    <div className="br3 shadow-3 flex pa1 w-100 bg-tigrow">
+    <div className="shadow-3 flex pa1 w-100 bg-tigrow">
       <div className="flex items-center mh1">
         <img src={user} className="dib" alt="user" />
       </div>
@@ -40,17 +41,9 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
         onKeyPress={handleKeyPress}
         value={text}
       />
-      <div className="flex">
-        <Button className="bp3-button bp3-minimal bp3-large">
-          <Icon icon="media" className="tigrow-lightBlue" />
-        </Button>
-        <Button className="bp3-button bp3-minimal bp3-large">
-          <Icon icon="link" className="tigrow-lightBlue" />
-        </Button>
-        <Button className="bp3-button bp3-minimal bp3-large">
-          <Icon icon="insert" className="tigrow-lightBlue" />
-        </Button>
-      </div>
+      <Button className="bp3-button bp3-minimal bp3-large">
+        <Icon icon="link" className="tigrow-lightBlue" />
+      </Button>
     </div>
   )
 })

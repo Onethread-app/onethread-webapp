@@ -9,26 +9,11 @@ import { App } from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { store } from 'Store';
-import { TokenUrl, UserId, InstanceLocator } from 'config';
-const {
-  ChatkitProvider,
-  TokenProvider,
-} = require("@pusher/chatkit-client-react");
 
-const tokenProvider = new TokenProvider({
-  url: TokenUrl,
-});
 
 ReactDOM.render(
   <Provider store={store}>
-    {UserId ? <ChatkitProvider
-      instanceLocator={InstanceLocator}
-      tokenProvider={tokenProvider}
-      userId={UserId}
-    >
-      <App />
-    </ChatkitProvider> : <App />}
-
+    <App />
   </Provider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
