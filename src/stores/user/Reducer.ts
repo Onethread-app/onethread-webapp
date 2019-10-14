@@ -5,7 +5,7 @@ export interface User {
 	email: string
 	firstName: string
 	lastName: string;
-	username: string;
+	name: string;
 	accountVerified: boolean,
 	role: string,
 	contactNo: string,
@@ -22,7 +22,7 @@ const InitialState = {
 		email: "",
 		firstName: "",
 		lastName: "",
-		username: "",
+		name: "",
 		accountVerified: false,
 		role: "",
 		contactNo: "",

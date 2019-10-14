@@ -28,7 +28,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
       <nav className="bp3-navbar bp3-fixed-top">
         <div className="bp3-navbar-group bp3-align-left">
           <div className="bp3-navbar-heading">
-            <Link to={`/${props.user.username}`}>
+            <Link to={`/${props.user.name}`}>
               <img
                 src={logo}
                 className="dib"
@@ -83,7 +83,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                     <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
                   </div>
                   <div className="dtc v-mid pl3">
-                    <Link className="bp3-popover-dismiss" to={`/${props.user.username}`}>
+                    <Link className="bp3-popover-dismiss" to={`/${props.user.name}`}>
                       <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
                     </Link>
                   </div>

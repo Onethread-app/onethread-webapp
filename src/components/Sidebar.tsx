@@ -16,7 +16,7 @@ const SidebarComponent = (props: {
 				className="bp3-minimal bp3-vertical bp3-fill"
 			>
 				{props.type === 'default' ?
-					<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/${props.user.username}`}>
+					<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/${props.user.name}`}>
 						<Button name="userProfile"  className="mv2 outline-0" icon="user">
 							Profile
 								</Button>

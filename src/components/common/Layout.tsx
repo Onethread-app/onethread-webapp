@@ -49,10 +49,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 
   useEffect(() => {
     if (props.match.url === '/' && props.user) {
-      props.history.push(`/${props.user.username}`);
+      props.history.push(`/${props.user.name}`);
     }
-    if ((props.match.params as any).username && props.user && props.user.username
-      && isEqual((props.match.params as any).username, props.user.username) === false) {
+    if ((props.match.params as any).username && props.user && props.user.name
+      && isEqual((props.match.params as any).username, props.user.name) === false) {
       props.history.push(`/unavailable/profile`);
     }
     load(props.match, props.fetchUserAction, props.getCompanyDetails).then(r => setLoading(false));
