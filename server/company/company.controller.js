@@ -1,9 +1,5 @@
-'use strict';
-const jwt = require('jsonwebtoken');
-const config = require('../../config/config');
 const Account = require('../account/account.model');
 const { Company } = require('./company.model');
-const errorHandler = require('../helpers/mongooseErrorFormat');
 
 // Create request formatter
 function requestFormatter(req) {
@@ -161,10 +157,6 @@ const getCompanyLoad = (req, res, next) => {
     .exec()
     .then(company => {
       if (company) {
-        // return res.status(200).json({
-        //   status: true,
-        //   company: company[0],
-        // });
         req.company = company[0];
         return next();
       } else {
