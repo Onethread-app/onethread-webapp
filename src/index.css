@@ -60,6 +60,17 @@ a:hover {
   text-decoration: none;
 }
 
+.experiencedatePicker .bp3-input-group .bp3-input{
+  box-shadow: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #0fa3a3 ;
+  width: 100%;
+}
+
+.experiencedatePicker span.bp3-popover-target{
+  width: 100%;
+} 
+
 .w-2{
   width: 2%;
 }
@@ -126,7 +137,7 @@ a:hover {
   }
   .w2tigrow-ns{
     width: 3rem;
-  }
+ }
 }
 @media only screen and (min-width: 30em) and (max-width: 60em) {
   .w-15-m{
@@ -149,7 +160,7 @@ a:hover {
   }
   .w2tigrow-m{
     width: 3rem;
-  }
+ }
 }
 @media only screen and (min-width: 60em) {
   .w-15-l{
@@ -172,5 +183,5 @@ a:hover {
   }
   .w2tigrow-l{
     width: 3rem;
-  }
+ }
 }

@@ -3,7 +3,6 @@ import { Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ListTitleView } from '../../../ListTitleView';
 import { SectionViewWithTitleAndDesciption } from '../../../ListItemView';
-import { BasicInfoForm } from '../editor/BasicInfoDetailsForm';
 import user from '../../../../resources/images/user.png';
 
 const InfoDetailsViewComponent = (props: any) => {
@@ -39,9 +38,6 @@ const InfoDetailsViewComponent = (props: any) => {
                 isOpen
                 style={{ background: '#fff' }}
               >
-                <div>
-                  <BasicInfoForm />
-                </div>
               </Dialog>
             )}
             <SectionViewWithTitleAndDesciption

@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import { isEmpty, isNumber } from 'lodash';
 import { connect } from 'react-redux';
 import { editUserInfoAction } from 'stores/user/Actions';
-import { NumericInput } from '@blueprintjs/core';
+import { NumericInput, Button, Icon } from '@blueprintjs/core';
 import { InputGroupField } from 'components/common/field/InputGroup';
-
 
 const BasicInfoFormComponent = (props: {
   editInfoAction: (val: any) => void
+  setShowDialog: (val: boolean) => void
 }) => {
   const [values, setValues] = useState({
     email: "",
@@ -55,9 +55,13 @@ const BasicInfoFormComponent = (props: {
     const value = isNumber(event) ? event.toString() : event.target.value;
     setValues({ ...values, [name]: value });
   };
-
   return (
-    <form className="fl w-100 pa2">
+    <form className="fl w-100 pa4">
+      <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Basic Information</h1>
+      <div className="ml2 mb3">
+        <h1 className="f6 lh-title mb0">Email</h1>
+        <p className="f5 lh-copy">labiba.ssp@gmail.com</p>
+      </div>
       <div className={` ${errors.secondaryEmail ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
@@ -91,6 +95,7 @@ const BasicInfoFormComponent = (props: {
           style={{
             boxShadow: 'none',
           }}
+          leftIcon={<Icon icon="phone" style={{ color: "#0fa3a3" }}></Icon>}
           fill={true}
           placeholder="e.g. 1789442325"
           value={values.contactNo}
@@ -144,20 +149,32 @@ const BasicInfoFormComponent = (props: {
           />
         </div>
       </div>
-      <div className="tc">
-        <button className="b--none w4 br3 grow h2  pointer pv2 white tc "
-          style={{ background: "#0fa3a3", outline: "none" }}
-          onClick={e => {
+      <div className="flex justify-end">
+        <Button className="w4 grow h2 pointer mr3"
+          style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            props.setShowDialog(false);
+          }}
+        >
+          cancel
+        </Button>
+        <Button
+          type="submit"
+          className="w4 grow h2 pointer"
+          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+          onClick={(e: any) => {
             e.preventDefault();
             if (!emptyValueCheck()) {
               props.editInfoAction(values);
+              e.preventDefault();
+              props.setShowDialog(false);
             }
           }}
         >
-          Submit
-        </button>
+          Save
+        </Button>
       </div>
-
     </form>
   )
 }
@@ -167,6 +184,5 @@ const BasicInfoFormComponent = (props: {
 //     users: state.info.user
 //   }
 // }
-
 
 export const BasicInfoForm = connect(null, { editInfoAction: editUserInfoAction })(BasicInfoFormComponent);

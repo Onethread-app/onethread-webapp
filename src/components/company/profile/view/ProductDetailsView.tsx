@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ListTitleView } from '../../../ListTitleView';
-import { BasicInfoForm } from '../editor/BasicInfoDetailsForm';
 import { Dialog} from '@blueprintjs/core';
 import { SectionViewWithTitleAndDesciption } from '../../../ListItemView';
 import { connect } from 'react-redux';
@@ -23,9 +22,6 @@ const ProductDetailsViewComponent = (props: any) => {
             isOpen
             style={{ background: '#fff' }}
           >
-            <div>
-              <BasicInfoForm />
-            </div>
           </Dialog>
         )}
         <SectionViewWithTitleAndDesciption
