@@ -1,9 +1,5 @@
-'use strict';
-const jwt = require('jsonwebtoken');
-const config = require('../../config/config');
 const Account = require('../account/account.model');
 const { Company } = require('./company.model');
-const errorHandler = require('../helpers/mongooseErrorFormat');
 
 // Create request formatter
 function requestFormatter(req) {
@@ -86,24 +82,10 @@ const addEmployees = async (req, res) => {
 
 // get a company profile
 const getCompany = async (req, res) => {
-  Company.find({ name: req.params.cname })
-    .populate('account', '_id firstName lastName email contactNo')
-    .exec()
-    .then(company => {
-      if (company) {
-        res.status(200).json({
-          status: true,
-          company: company[0],
-        });
-      } else {
-        res
-          .status(404)
-          .json({ status: false, message: 'No company found' });
-      }
-    })
-    .catch(err => {
-      res.status(500).json({ error: err });
-    });
+  return res.status(200).json({
+    status: true,
+    company: req.company,
+  });
 };
 
 // update a company profile
@@ -169,10 +151,31 @@ const deleteCompany = async (req, res) => {
     });
 };
 
+const getCompanyLoad = (req, res, next) => {
+  Company.find({ name: req.params.cname })
+    .populate('account', '_id firstName lastName email contactNo')
+    .exec()
+    .then(company => {
+      if (company) {
+        req.company = company[0];
+        return next();
+      } else {
+        return res.status(404).json({
+          status: false,
+          message: 'No valid entry found for provided Company ID',
+        });
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
+};
+
 module.exports = {
   createCompany,
   getCompany,
   updateCompany,
   deleteCompany,
   addEmployees,
+  getCompanyLoad,
 };
