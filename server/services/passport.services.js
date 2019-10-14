@@ -55,6 +55,7 @@ const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
 	// See if the user ID in the payload exists in our database
 	Account.findById(user._id)
 		.populate("companies", "_id name")
+		//.populate('SkillAreas', 'skill accountid')
 		.exec((err, user) => {
 			if (err) {
 				return done(err, false);

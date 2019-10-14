@@ -1,9 +1,9 @@
-
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
 const httpStatus = require('http-status');
+const redisClient = '../../index.redis.js';
 const Account = require('./account.model');
-//const { JobExperience } = require('../job/job.model');
+const { JobExperience } = require('../job/job.model');
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
@@ -43,7 +43,7 @@ const register = async (req, res, next) => {
   const role = req.body.role;
   // TODOS: UID will be in change future
   id = id + 1;
-  const username = firstName + id;
+  const name = firstName + id;
   if (!email || !password) {
     return sendJSONresponse(res, 422, {
       error: 'You must provide email and password.',
@@ -66,13 +66,13 @@ const register = async (req, res, next) => {
         account.email = email;
         account.firstName = firstName;
         account.lastName = lastName;
-        account.username = username;
+        account.name = name;
         account.contactNo = contactNo;
         account.role = role;
         account.password = password;
         token = account.generateJwt();
         account.token = token;
-        account.save().then(user => {
+        account.save().then(async user => {
           const info = {};
           info.account = account;
           info.expires = new Date(
@@ -82,8 +82,8 @@ const register = async (req, res, next) => {
           let access_token = jwt.sign(info, config.jwtSecret, {
             expiresIn: '1d',
           });
-          const emailResponse = sendEmailForVerifyAccount(
-            account.username,
+          const emailResponse = await sendEmailForVerifyAccount(
+            account.name,
             account.email,
             access_token,
           );
@@ -97,7 +97,7 @@ const register = async (req, res, next) => {
               // user created in chatkit
               await chatkit.createUser({
                 id: req.user._id,
-                name: req.user.firstName,
+                name: req.user.name,
               });
               return sendJSONresponse(res, 201, {
                 success: true,
@@ -122,7 +122,7 @@ const register = async (req, res, next) => {
 };
 
 /**
- * Returns jwt token if valid username and password is provided
+ * Returns jwt token if valid uname and password is provided
  * @param req
  * @param res
  * @param next
@@ -144,10 +144,11 @@ const login = async (req, res) => {
 
   const {
     _id,
+    avatar,
     email,
     firstName,
     lastName,
-    username,
+    name,
     accountVerified,
     role,
     contactNo,
@@ -155,13 +156,15 @@ const login = async (req, res) => {
     friends,
     pendingFriends,
     sendingFriendList,
+    JobExperience,
   } = req.user;
   let user = {
     _id,
+    avatar,
     email,
     firstName,
     lastName,
-    username,
+    name,
     accountVerified,
     role,
     contactNo,
@@ -169,6 +172,7 @@ const login = async (req, res) => {
     friends,
     pendingFriends,
     sendingFriendList,
+    JobExperience,
   };
   res.json({
     success: true,
@@ -179,7 +183,7 @@ const login = async (req, res) => {
 };
 
 /**
- * Returns jwt token if valid username and password is provided
+ * Returns jwt token if valid uname and password is provided
  * @param req
  * @param res
  * @param next
@@ -191,26 +195,30 @@ const accountUpdate = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-  Account.findOneAndUpdate({ _id: req.user.id }, req.body)
-    .populate(
-      'JobExperience, _id  companyName positionName startingYear',
-    )
+  Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
     .exec()
-    .then(result => {
-      console.log(result);
-      if (result) {
-        res.status(200).json({
-          status: true,
-          message: 'Account Updated',
+    .then(async user => {
+      if (user) {
+        if (req.body.name !== user.name) {
+          await chatkit.updateUser({
+            id: req.user.id,
+            name: req.body.name,
+          });
+        }
+        return sendJSONresponse(res, 200, {
+          sucess: true,
+          msg: 'profile updated',
         });
       } else {
-        res
-          .status(404)
-          .json({ status: false, message: 'No account found' });
+        const err = new APIError(
+          'Method not found',
+          httpStatus.NOT_FOUND,
+        );
+        return next(err);
       }
     })
     .catch(err => {
-      res.status(500).json({ error: err });
+      return next(err);
     });
 };
 
@@ -255,7 +263,7 @@ const forgetPassword = async (req, res) => {
       );
       let token = jwt.encode(info, config.jwtSecret);
       const emailResponse = sendEmailForResetPassword(
-        account.username,
+        account.name,
         account.email,
         token,
       );
@@ -578,13 +586,14 @@ const sendFriendRequestList = async (req, res) => {
 //   console.log(req.user);
 // };
 
-const getAccount = async (req, res, next) => {
+const getAccount = async (req, res) => {
   const {
     _id,
+    avatar,
     email,
     firstName,
     lastName,
-    username,
+    name,
     accountVerified,
     role,
     contactNo,
@@ -592,13 +601,15 @@ const getAccount = async (req, res, next) => {
     friends,
     pendingFriends,
     sendingFriendList,
+    jobExperience,
   } = req.user;
   let user = {
     _id,
+    avatar,
     email,
     firstName,
     lastName,
-    username,
+    name,
     accountVerified,
     role,
     contactNo,
@@ -606,14 +617,14 @@ const getAccount = async (req, res, next) => {
     friends,
     pendingFriends,
     sendingFriendList,
+    jobExperience,
   };
-  console.log(user);
-  client.hset(
-    'User Info',
-    req.user.token,
-    JSON.stringify(user),
-    redis.print,
-  );
+  // client.hset(
+  //   'User Info',
+  //   req.user.token,
+  //   JSON.stringify(user),
+  //   redis.print,
+  // );
   return sendJSONresponse(res, 200, { success: true, user });
 };
 
@@ -636,8 +647,8 @@ const accountLoad = async (req, res, next, id) => {
 };
 
 const searchAccount = async (req, res, next) => {
-  const username = req.query.username;
-  if (username === '') {
+  const name = req.query.name;
+  if (name === '') {
     const err = new BadRequestError(
       'Nothing Submitted',
       httpStatus.BAD_REQUEST,
@@ -646,8 +657,8 @@ const searchAccount = async (req, res, next) => {
     logger.error(`Query Error: ${err}`);
     return next(err);
   }
-  Account.find({ username: { $regex: new RegExp(username) } })
-    .select('email username _id')
+  Account.find({ name: { $regex: new RegExp(name) } })
+    .select('email name _id')
     .then(data => {
       if (data.length < 1) {
         const err = new SearchNotMatchError(
@@ -658,11 +669,11 @@ const searchAccount = async (req, res, next) => {
         logger.error(`Query Error: ${err}`);
         return next(err);
       } else {
-        logger.info(`Search complete ${username}`);
+        logger.info(`Search complete ${name}`);
         return sendJSONresponse(res, 200, {
           employees: {
             success: true,
-            message: `Search complete ${username}`,
+            message: `Search complete ${name}`,
             data,
           },
         });
@@ -718,4 +729,3 @@ module.exports = {
   //tokenVerification,
   searchAccount,
 };
-
