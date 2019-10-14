@@ -23,6 +23,10 @@ router
     roomCtrl.create
   );
 
+  router
+  .route('/workplace')
+  .get(requireAuth, permit('user', 'admin'), roomCtrl.listByWorkplace);
+
 // router
 //   .route('/:roomId')
 //   .get(requireAuth, permit('user', 'admin'), roomCtrl.get)

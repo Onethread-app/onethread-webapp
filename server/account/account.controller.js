@@ -1,7 +1,9 @@
+
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
 const httpStatus = require('http-status');
 const Account = require('./account.model');
+//const { JobExperience } = require('../job/job.model');
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
@@ -13,6 +15,7 @@ const smtpTransport = require('../helpers/sendmail');
 const config = require('../../config/config');
 const isEmailExist = require('../services/emailchecker.services');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
+
 const {
   APIError,
   EmailIdExistError,
@@ -185,47 +188,29 @@ const login = async (req, res) => {
 
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
-  const email = req.body.email;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const contactNo = req.body.contactNo;
-
-  Account.findById(req.account._id)
-    .then(account => {
-      Account.find({
-        email: email,
-      })
-        .exec()
-        .then(user => {
-          if (user.length >= 1) {
-            return res.status(409).json({
-              message: 'email is already exits',
-            });
-          } else {
-            let account = new Account();
-            account.email = email;
-            account.firstName = firstName;
-            account.lastName = lastName;
-            account.contactNo = contactNo;
-            account.password = req.account.password;
-            account.save().then(() => {
-              return sendJSONresponse(res, 201, {
-                success: true,
-                message: 'Account Information updated',
-              });
-            });
-          }
-        })
-        .catch(err => {
-          res.status(500).json({
-            error: err,
-          });
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+  Account.findOneAndUpdate({ _id: req.user.id }, req.body)
+    .populate(
+      'JobExperience, _id  companyName positionName startingYear',
+    )
+    .exec()
+    .then(result => {
+      console.log(result);
+      if (result) {
+        res.status(200).json({
+          status: true,
+          message: 'Account Updated',
         });
+      } else {
+        res
+          .status(404)
+          .json({ status: false, message: 'No account found' });
+      }
     })
     .catch(err => {
-      res.status(500).json({
-        error: err,
-      });
+      res.status(500).json({ error: err });
     });
 };
 
@@ -733,3 +718,4 @@ module.exports = {
   //tokenVerification,
   searchAccount,
 };
+

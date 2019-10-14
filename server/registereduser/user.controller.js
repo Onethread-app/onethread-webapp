@@ -59,7 +59,7 @@ const profile = (req, res) => {
   RegisteredUser.find({
     account: id,
   })
-    .populate('account')
+    //.populate('account')
     .exec()
     .then(profile => {
       if (!profile) {

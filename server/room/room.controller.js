@@ -32,7 +32,7 @@ function edit(req, res) {}
 const list = (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
   Room.find({ members: req.user._id })
-    .sort({ updated: -1 })
+    .sort({ crerted: -1 })
     .skip(+skip)
     .limit(+limit)
     .exec()
@@ -40,8 +40,20 @@ const list = (req, res) => {
     .catch(e => next(e));
 };
 
+const listByWorkplace = (req, res, ) => {
+  const { limit = 5, skip = 0, workplace = '' } = req.query;
+  Workplace.find({ workplace: workplace, removed: false })
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit)
+      .exec()
+      .then(result => res.json(result))
+      .catch(e => next(e));
+
+};
+
 function read(req, res) {}
 
 function invite(req, res) {}
 
-module.exports = { create, list };
+module.exports = { create, list, listByWorkplace };
