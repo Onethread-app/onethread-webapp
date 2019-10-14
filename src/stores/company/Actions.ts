@@ -4,7 +4,7 @@ import { isEqual } from 'lodash';
 import { History } from 'history';
 import { tokenConfig } from '../UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
-import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS } from './Types';
+import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR } from './Types';
 import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
 
 export const createCompanyAction = (companyData: CompanyModel, routeHistory: History) => async (dispatch: any, getState: any) => {
@@ -13,10 +13,12 @@ export const createCompanyAction = (companyData: CompanyModel, routeHistory: His
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.post(`/company`, companyData, headers);
       dispatch({ type: CREATE_COMPANY, payload: response.data });
-      dispatch({ type: USER_COMPANIES_UPDATE, payload: { 
-        _id: response.data.company._id, 
-        name: response.data.company.name 
-      }});
+      dispatch({
+        type: USER_COMPANIES_UPDATE, payload: {
+          _id: response.data.company._id,
+          name: response.data.company.name
+        }
+      });
       routeHistory.push(`/company/${response.data.company.name}`);
     } else {
       console.log("error in creation of company")
@@ -46,8 +48,28 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       dispatch({ type: CREATE_COMPANY_ERROR, payload: 'Network error' });
-    } else if (error.response.status === 401) {
-      dispatch({ type: CREATE_COMPANY_ERROR, payload: 'Unauthorized user. Please enter valid email and password.' });
+    } else {
+      console.log(error.response);
+    }
+  }
+}
+
+export const addTeamMembers = (user: (string | undefined)[], name: string) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig(getState);
+    let body = {
+      "employees": user
+    }
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.put(`company/${name}/employees`, body, headers);
+      return response.data;
+      // dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
+    } else {
+      console.log("error in slection of company fetching")
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: 'Network error' });
     } else {
       console.log(error.response);
     }

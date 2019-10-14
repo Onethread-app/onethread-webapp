@@ -61,7 +61,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
 
               <button
                 onClick={() => setShowDialog(!showDialog)}
-                className="b--none w-100 br3 grow h2 ph5 pointer pv2 white outline-0 bg-tigrowLightBlue ma2"
+                className="b--none w-100 br3 grow h2 ph5 pointer pv2 white outline-0 bg-tigrowLightBlue ma2 bp3-popover-dismiss"
               >
                 Create Company
             </button>
@@ -83,7 +83,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                     <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
                   </div>
                   <div className="dtc v-mid pl3">
-                    <Link to={`/${props.user.username}`}>
+                    <Link className="bp3-popover-dismiss" to={`/${props.user.username}`}>
                       <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
                     </Link>
                   </div>

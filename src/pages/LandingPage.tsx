@@ -8,7 +8,9 @@ import { useState } from 'react';
 import { ListTitleView } from 'components/ListTitleView';
 import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
 import { BasicInfoForm } from 'components/company/profile/editor/BasicInfoDetailsForm';
+import 'react-vertical-timeline-component/style.min.css';
 import { User } from 'stores/user/Reducer';
+import { ExperienceView } from 'components/company/profile/view/ExperienceView';
 import { JobFormComponent } from 'components/company/profile/editor/JobForm';
 import { EducationFormComponent } from 'components/company/profile/editor/EducationForm';
 interface LandingPageProps {
@@ -16,11 +18,11 @@ interface LandingPageProps {
 }
 
 const skills = [
-  { id: '1', name: 'Programing C' },
-  { id: '2', name: 'Java' },
-  { id: '3', name: 'Dotnet' },
-  { id: '4', name: 'Javascript' },
-  { id: '5', name: 'React' },
+  { _id: '1', name: 'Programing C' },
+  { _id: '2', name: 'Java' },
+  { _id: '3', name: 'Dotnet' },
+  { _id: '4', name: 'Javascript' },
+  { _id: '5', name: 'React' },
 ]
 
 const ExperienceEdit = (props: {
@@ -88,7 +90,7 @@ const SkillEdit = (props: {
         <div className="fl w-100 mb2">
           {selectedItems.map(item => (
             <Tag
-              key={item.id}
+              key={item._id}
               className="ma1 pa2"
               interactive={true}
               intent="primary"
@@ -264,18 +266,10 @@ const BasicInfoDetailsView = (props: {
           listTitle="Email"
           listDescription={props.user.email}
         />
-        {/* <SectionViewWithTitleAndDesciption
-          listTitle="Secondary Email"
-          listDescription={props.user.secondaryEmail}
-        /> */}
         <SectionViewWithTitleAndDesciption
           listTitle="Contact Number"
           listDescription={props.user.contactNo}
         />
-        {/* <SectionViewWithTitleAndDesciption
-          listTitle="Address"
-          listDescription={props.user.address}
-        /> */}
         <SectionViewWithTitleAndDesciption
           listTitle="Gender"
           listDescription="Male"
@@ -284,13 +278,8 @@ const BasicInfoDetailsView = (props: {
           listTitle="Birthdate"
           listDescription="13th September, 2019"
         />
-        {/* <SectionViewWithTitleAndDesciption
-          listTitle="Blood Group"
-          listDescription={props.user.bloodGroup}
-        /> */}
       </div>
     </>
-
   )
 }
 
@@ -304,14 +293,15 @@ export const LandingPageComponent = (props: LandingPageProps) => {
           <div className="fl w-25-ns pa2 ">
             <div className="h-auto br3 ma2 pa3 bg-white cf tc">
               <img src={user}></img>
-              <h1 className="f6 lh-copy tigrow-lightGray-1">Julian Martha</h1>
-              <p className="tigrow-lightGray-1">Software Developer</p>
+              <h1 className="f6 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
+              <p className="tigrow-lightGray-1">Software Dev</p>
             </div>
             <AboutView />
             <SkillView />
           </div>
           <div className="fl w-75-ns">
             <BasicInfoDetailsView user={props.user} />
+            
             <div className="br3 bg-white h-auto pa4 mt3">
               <ListTitleView
                 listTitle="Experience"
@@ -322,6 +312,8 @@ export const LandingPageComponent = (props: LandingPageProps) => {
                 <img src={skill}></img>
                 <p>No experience has added</p>
               </div>
+              <Divider />
+              <ExperienceView /> 
             </div>
           </div>
         </div>

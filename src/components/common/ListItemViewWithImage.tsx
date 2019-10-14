@@ -9,7 +9,7 @@ interface CompanyListItemProps {
 
 export const ListItemViewWithImage = (props: CompanyListItemProps) => (
   <article
-    className="dt w-100 pb2 mt2 pointer"
+    className="dt w-100 pb2 mt2 pointer bp3-popover-dismiss"
     onClick={props.onClick ? props.onClick : () => null}
   >
     <div className="dtc w1 w2-ns v-mid">

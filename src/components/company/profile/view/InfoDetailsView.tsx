@@ -13,7 +13,7 @@ const InfoDetailsViewComponent = (props: any) => {
         <div className="fl w-25-ns pa2 ">
           <div className="h-auto br3 ma2 pa3 bg-white cf tc">
             <img src={user}></img>
-            <h1 className="f5 lh-copy tigrow-lightGray-1">Julian Martha</h1>
+            <h1 className="f5 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
             <p className=" light-silver" >Software Developer</p>
           </div>
           <div className="h-auto br3 ma2 pa3 bg-white cf">
@@ -67,7 +67,8 @@ const InfoDetailsViewComponent = (props: any) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
+    user: state.userReducer.user
   }
 }
 

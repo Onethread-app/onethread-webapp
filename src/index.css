@@ -58,6 +58,7 @@ box-sizing: border-box;
 }
 a:hover {
   text-decoration: none;
+  outline: none;
 }
 
 .experiencedatePicker .bp3-input-group .bp3-input{
@@ -185,3 +186,49 @@ a:hover {
     width: 3rem;
  }
 }
+
+
+/*************************************/
+.vertical-timeline::before {
+  background: #0fa3a3 !important;
+  z-index: 1;
+}
+.vertical-timeline-element-date {
+  font-weight: bold !important;
+}
+.vertical-timeline--two-columns .vertical-timeline-element-icon {
+    width: 20px !important;
+    height: 20px !important;
+    margin-left: -10px !important;
+    background-color: #0fa3a3 !important;
+}
+.vertical-timeline--two-columns .vertical-timeline-element-content .vertical-timeline-element-date {
+  top: 0px !important;
+}
+.vertical-timeline-element-content {
+  box-shadow: none  !important;
+  border: 1px solid #ddd;
+  border-left: 3px solid #0fa3a3;
+  margin-top: 40px;
+}
+.vertical-timeline-element-content-arrow {
+  display: none
+}
+
+@media only screen and (max-width: 1169px) {
+  .vertical-timeline--two-columns .vertical-timeline-element-icon {
+    margin-left: 10px !important;
+}
+} 
+.vertical-timeline-element-content p {
+  font-size: 14px !important;
+  line-height: initial !important;
+}
+
+
+
+/*******************sidebar************/
+.bp3-button > * {
+  margin-left: 20px;
+}
+/**************************************/

@@ -1,6 +1,6 @@
 import React from "react";
 import { ButtonGroup, Alignment, Button } from "@blueprintjs/core";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { User } from 'stores/user/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
 
@@ -9,46 +9,45 @@ const SidebarComponent = (props: {
 	company: CompanyModel;
 	type: string;
 }) => {
-
 	return (
 		<div className="fixed bg-white w3 w6-m w11-l pt6 vh-100 br b--tigrowLightGray-1">
 			<ButtonGroup
 				alignText={Alignment.LEFT}
-				className="bp3-minimal bp3-vertical bp3-fill pl1"
+				className="bp3-minimal bp3-vertical bp3-fill"
 			>
 				{props.type === 'default' ?
-					<Link to={`/${props.user.username}`}>
-						<Button className="mv2" icon="user">
+					<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/${props.user.username}`}>
+						<Button name="userProfile"  className="mv2 outline-0" icon="user">
 							Profile
 								</Button>
-					</Link>
+					</NavLink>
 					:
 					<>
-						<Link to={`/company/${props.company.name}/feed`}>
-							<Button className="mv2" icon="control">
+						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}/feed`}>
+							<Button className="mv2 outline-0" icon="control">
 								Feed
 						</Button>
-						</Link>
-						<Link to={`/company/${props.company.name}/room`} >
-							<Button className="mv2" icon="layout-auto">
+						</NavLink>
+						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}/room`} >
+							<Button className="mv2 outline-0" icon="layout-auto">
 								Room
 						</Button>
-						</Link>
-						<Link to={`/company/${props.company.name}/task`} >
-							<Button className="mv2" icon="briefcase">
+						</NavLink>
+						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}/task`} >
+							<Button className="mv2 outline-0" icon="briefcase">
 								Task
 						</Button>
-						</Link>
-						<Link to={`/company/${props.company.name}/team`} >
-							<Button className="mv2" icon="people">
+						</NavLink>
+						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}/team`} >
+							<Button className="mv2 outline-0" icon="people">
 								Team
 						</Button>
-						</Link>
-						<Link to={`/company/${props.company.name}`} >
-							<Button className="mv2" icon="layout-auto">
+						</NavLink>
+						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}`} >
+							<Button className="mv2 outline-0" icon="layout-auto">
 								Profile
 						</Button>
-						</Link>
+						</NavLink>
 					</>
 				}
 			</ButtonGroup>

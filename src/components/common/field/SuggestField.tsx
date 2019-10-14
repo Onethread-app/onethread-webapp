@@ -3,7 +3,7 @@ import { Suggest } from "@blueprintjs/select";
 import { MenuItem, Intent } from '@blueprintjs/core';
 import { includes, lowerCase, isEqual, findIndex } from 'lodash';
 export interface ItemEntityProps {
-  id?: string;
+  _id?: string;
   name: string;
 }
 
@@ -11,6 +11,7 @@ interface SuggestFieldProps {
   items: ItemEntityProps[];
   selectedItems: ItemEntityProps[];
   setSelectedItems: ((item: ItemEntityProps[]) => void)
+  onChange?: any
 }
 
 const SuggestInput = Suggest.ofType<ItemEntityProps>();
@@ -19,11 +20,13 @@ export const SuggestField = (props: SuggestFieldProps) => {
   return (
     <>
       <SuggestInput
+        initialContent={null}
+        onQueryChange ={props.onChange}
         items={props.items}
         itemListPredicate={item => props.items.filter(s => includes(lowerCase(s.name), lowerCase(item)))}
         itemRenderer={item =>
           <MenuItem
-            key={item.id}
+            key={item._id}
             // label={item.name}
             onClick={(e: any) => {
               if (props.selectedItems.filter(si => isEqual(item.name, si.name)).length === 0) {
@@ -32,7 +35,7 @@ export const SuggestField = (props: SuggestFieldProps) => {
                   item
                 ])
               } else {
-                const index = findIndex(props.selectedItems, { 'id': item.id, 'name': item.name });
+                const index = findIndex(props.selectedItems, { '_id': item._id, 'name': item.name });
                 props.selectedItems.splice(index, 1);
                 props.setSelectedItems([
                   ...props.selectedItems
