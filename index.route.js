@@ -36,7 +36,7 @@ router.use('/hashtags', hashRoutes);
 router.use('/category', categoryRoutes);
 // mount user routes at /users
 router.use('/users', userRoutes);
-router.use('/room', roomRoutes);
+router.use('/rooms', roomRoutes);
 router.use('/category', categoryRoutes);
 router.use('/company', companyRoutes);
 router.use('/upload', imageRoutes);

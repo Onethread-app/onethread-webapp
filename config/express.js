@@ -110,14 +110,7 @@ app.use((err, req, res, next) => {
 		);
 		return next(emailApiError);
 	}
-	if (err instanceof BadRequestError) {
-		const badRequestApiError = new BadRequestError(
-			err.message,
-			err.status,
-			err.isPublic
-		);
-		return next(badRequestApiError);
-	}
+	
 	if (err instanceof SearchNotMatchError) {
 		const searchNotMatchError = new SearchNotMatchError(
 			err.message,

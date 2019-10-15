@@ -15,7 +15,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 router
   .route('/')
-  //.get(requireAuth, permit('user', 'admin'), roomCtrl.list)
+  .get(requireAuth, permit('user', 'admin'), roomCtrl.list)
   .post(
     requireAuth,
     permit('user', 'admin'),
@@ -23,15 +23,13 @@ router
     roomCtrl.create
   );
 
-  router
-  .route('/workplace')
-  .get(requireAuth, permit('user', 'admin'), roomCtrl.listByWorkplace);
+  
 
-// router
-//   .route('/:roomId')
-//   .get(requireAuth, permit('user', 'admin'), roomCtrl.get)
+ router
+   .route('/:company')
+   .get(requireAuth, permit('user', 'admin'), roomCtrl.list);
 //   .delete(requireAuth, authSelf('save'), roomCtrl.remove); 
 
-// router.param('roomId', roomCtrl.load);
+
 
 module.exports = router;

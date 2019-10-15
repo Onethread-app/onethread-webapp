@@ -23,9 +23,9 @@ const RoomSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  workplace: {
+  company: {
     type: Schema.ObjectId,
-    ref: 'Workplace'
+    ref: 'Company'
   },
   account: {
     type: Schema.ObjectId,

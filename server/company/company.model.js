@@ -97,6 +97,12 @@ const company = new Schema(
         ref: 'Account',
       },
     ],
+    rooms: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Room',
+      },
+    ],
     // others
     logo: {
       type: String,
