@@ -64,7 +64,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				...state,
 				roomId: null,
 				roomName: null,
-				messages: [{ id: null }],
+				messages: [],
 				rooms: [],
 				loading: false
 			};
