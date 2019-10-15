@@ -4,13 +4,17 @@ import { isEmpty } from 'lodash';
 import { Button } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
-// import { createroomAction } from 'stores/room/Actions';
-// import { History } from 'history';
+import { createRoomAction } from 'stores/room/Actions';
 
-const CreateFormComponent = (props: {
+interface CreateFormProps {
   setShowDialog: (val: boolean) => void;
-  // createroomAction: (val: any, history: History) => void
-} & RouteComponentProps) => {
+}
+
+interface CreateFormInternalProps extends CreateFormProps, RouteComponentProps {
+  createRoomAction: (val: any) => void
+}
+
+const CreateFormComponent = (props: CreateFormInternalProps) => {
 
   const [values, setValues] = useState({
     name: ""
@@ -21,15 +25,13 @@ const CreateFormComponent = (props: {
   });
 
   const emptyValueCheck = () => {
+    let e = errors;
     if (isEmpty(values.name)) {
-      let e = errors;
-      if (isEmpty(values.name)) {
-        e = { ...e, name: "Required" };
-      }
-
+      e = { ...e, name: "Required" };
       setErrors(e);
       return true;
-    } else {
+    }
+    else {
       return false;
     }
   }
@@ -61,12 +63,12 @@ const CreateFormComponent = (props: {
 
       <div className="tc">
         <Button className="b--none w4 br3 grow h2  pointer pv2 white tc"
+          type="submit"
           style={{ background: "#0fa3a3", outline: "none" }}
           onClick={(e: any) => {
             e.preventDefault();
             if (!emptyValueCheck()) {
-              // props.createroomAction(values, props.history);
-              // console.log(values);
+              props.createRoomAction(values);
               props.setShowDialog(false);
             }
           }}
@@ -80,4 +82,4 @@ const CreateFormComponent = (props: {
 }
 
 
-export const CreateForm = connect(null, null)(withRouter(CreateFormComponent));
+export const CreateForm = connect(null, { createRoomAction })(withRouter(CreateFormComponent));

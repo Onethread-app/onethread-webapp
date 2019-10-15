@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { MessageItem } from 'components/common/MessageItem';
 import user from "../../../../resources/images/user.png";
-// import { Loading } from 'components/common/field/Loading';
 import { useSelector } from 'react-redux';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
@@ -14,6 +13,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messages = useSelector((state: any) => state.roomReducer.messages);
   const roomId = useSelector((state: any) => state.roomReducer.roomId);
+  const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
 
   const scrollToBottom = () => {
     // On new message, scroll to bottom
@@ -35,8 +35,8 @@ export const MessageList = withChatkit((props: MessageListProps) => {
     <div
       className="overflow-y-auto ph1 pt2"
       ref={messagesEndRef}
-      style={{ height: "calc(100vh - 153px)" }}>
-      {!props.chatkit.isLoading && props.chatkit.currentUser.rooms.length > 0 ? messages.length > 1 && messages[0].id !== null ? messages.map((message: any, i: number, arr: any) => {
+      style={{ height: "calc(100vh - 144px)" }}>
+      {!props.chatkit.isLoading && companyRooms.length ? messages.length ? messages.map((message: any, i: number, arr: any) => {
         return (
           <MessageItem
             key={message.id}

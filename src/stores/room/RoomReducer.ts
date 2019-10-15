@@ -5,15 +5,19 @@ import {
 	CLEAR_ROOM_MESSAGES,
 	CURRENT_ROOM,
 	NEW_MESSAGE,
-	CLEAR_ROOMS
+	CLEAR_ROOMS,
+	CREATE_ROOM_FROM_SERVER,
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER
 } from "./Types";
 
 const InitialState = {
 	roomId: null,
 	roomName: null,
-	messages: [{ id: null }],
+	messages: [],
 	rooms: [],
-	loading: false
+	companyRooms: [],
+	loading: true,
+	roomError: null
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
@@ -34,7 +38,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case NEW_MESSAGE:
 			return {
 				...state,
-				messages: state.messages.length > 0 && state.messages[state.messages.length - 1].id !== action.payload.id && action.payload.roomId === state.roomId ? [...state.messages, action.payload] : [...state.messages],
+				messages: action.payload.roomId === state.roomId && state.messages.length === 0 ? [...state.messages, action.payload] : (state.messages[state.messages.length - 1] as any).id !== action.payload.id ? [...state.messages, action.payload] : [...state.messages],
 				loading: false
 			};
 		case GET_ROOM_MESSAGES:
@@ -62,6 +66,24 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				roomName: null,
 				messages: [{ id: null }],
 				rooms: [],
+				loading: false
+			};
+		case CREATE_ROOM_FROM_SERVER:
+			return {
+				...state,
+				companyRooms: [...state.companyRooms, action.payload],
+				loading: false
+			};
+		case GET_ROOMS_FROM_SERVER:
+			return {
+				...state,
+				companyRooms: action.payload,
+				loading: false
+			};
+		case CREATE_ROOM_ERROR:
+			return {
+				...state,
+				roomError: action.payload,
 				loading: false
 			}
 		default:

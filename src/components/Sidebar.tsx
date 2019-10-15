@@ -16,34 +16,34 @@ const SidebarComponent = (props: {
 				className="bp3-minimal bp3-vertical bp3-fill sidebar-margin"
 			>
 				{props.type === 'default' ?
-					<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/${props.user.name}`}>
-						<Button name="userProfile"  className="mv2 outline-0" icon="user">
+					<NavLink exact activeStyle={{ background: "#0fa3a3" }} to={`/${props.user.name}`}>
+						<Button name="userProfile" className="mv2 outline-0" icon="user">
 							Profile
 								</Button>
 					</NavLink>
 					:
 					<>
-						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}/feed`}>
+						<NavLink exact activeStyle={{ background: "#0fa3a3" }} to={`/company/${props.company.name}/feed`}>
 							<Button className="mv2 outline-0" icon="control">
 								Feed
 						</Button>
 						</NavLink>
-						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}/room`} >
+						<NavLink exact activeStyle={{ background: "#0fa3a3" }} to={`/company/${props.company.name}/room`} >
 							<Button className="mv2 outline-0" icon="layout-auto">
 								Room
 						</Button>
 						</NavLink>
-						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}/task`} >
+						<NavLink exact activeStyle={{ background: "#0fa3a3" }} to={`/company/${props.company.name}/task`} >
 							<Button className="mv2 outline-0" icon="briefcase">
 								Task
 						</Button>
 						</NavLink>
-						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}/team`} >
+						<NavLink exact activeStyle={{ background: "#0fa3a3" }} to={`/company/${props.company.name}/team`} >
 							<Button className="mv2 outline-0" icon="people">
 								Team
 						</Button>
 						</NavLink>
-						<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/company/${props.company.name}`} >
+						<NavLink exact activeStyle={{ background: "#0fa3a3" }} to={`/company/${props.company.name}`} >
 							<Button className="mv2 outline-0" icon="layout-auto">
 								Profile
 						</Button>

@@ -29,12 +29,12 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
     }
   }
   return (
-    <div className="shadow-3 flex pa1 w-100 bg-tigrow">
+    <div className="sendMessage shadow-3 flex pa1 w-100 bg-tigrow">
       <div className="flex items-center mh1">
         <img src={user} className="dib" alt="user" />
       </div>
       <input
-        className="bp3-input ma1 w-100 outline-0 shadow-0"
+        className="h-auto w-100 bp3-input ma1 outline-0 shadow-0"
         style={{ resize: "none" }}
         placeholder="Write your message"
         onChange={onChange}
