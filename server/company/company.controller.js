@@ -156,13 +156,13 @@ const getCompanyLoad = (req, res, next) => {
     .populate('account', '_id firstName lastName email contactNo')
     .exec()
     .then(company => {
-      if (company) {
+      if (company.length) {
         req.company = company[0];
         return next();
       } else {
         return res.status(404).json({
           status: false,
-          message: 'No valid entry found for provided Company ID',
+          message: 'No valid entry found for provided Company Name',
         });
       }
     })
