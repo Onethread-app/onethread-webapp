@@ -13,7 +13,7 @@ const SidebarComponent = (props: {
 		<div className="fixed bg-white w3 w6-m w11-l pt6 vh-100 br b--tigrowLightGray-1">
 			<ButtonGroup
 				alignText={Alignment.LEFT}
-				className="bp3-minimal bp3-vertical bp3-fill"
+				className="bp3-minimal bp3-vertical bp3-fill sidebar-margin"
 			>
 				{props.type === 'default' ?
 					<NavLink exact activeStyle={{background: "#0fa3a3"}} to={`/${props.user.name}`}>
