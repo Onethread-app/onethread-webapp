@@ -15,8 +15,10 @@ router
 // router
 //   .route('/:jobexperienceid')
 //   .get(requireAuth, jobCtrl.getJobExperience);
-// router
-//   .route('/job-experience-update')
-//   .put(requireAuth, jobCtrl.updateJobExperience);
+router
+  .route('/job-experience-update')
+  .put(requireAuth, jobCtrl.updateJobExperience);
+
+router.route('/').get(requireAuth, jobCtrl.getAllJobExperience);
 // router.param('jobexperienceid', jobCtrl.jobExperienceLoad);
 module.exports = router;

@@ -5,38 +5,38 @@ const { Schema } = mongoose;
 const registeredUserSchema = new Schema({
   firstName: {
     type: String,
-    required: true
+    required: true,
   },
   lastName: {
     type: String,
-    required: true
+    required: true,
   },
   gender: {
     type: String,
     description: 'can be only M or F',
-    required: true
+    required: true,
   },
   skillArea: {
     type: String,
-    required: true
+    required: true,
   },
   mobileNumber: {
     type: String,
     unique: true,
-    required: true
+    required: true,
   },
   secondaryEmail: {
-    type: String
+    type: String,
   },
   birthday: {
-    type: String
+    type: Date,
   },
 
   about: {
-    type: String
+    type: String,
   },
   location: {
-    type: String
+    type: String,
   },
   // education:{
   //   type: Schema.ObjectId,
@@ -44,16 +44,19 @@ const registeredUserSchema = new Schema({
   // },
   bloodGroup: {
     type: String,
-    enum: ['A+', 'A-', 'O+', 'O-', 'AB+', 'AB-', 'B+', 'B-']
+    enum: ['A+', 'A-', 'O+', 'O-', 'AB+', 'AB-', 'B+', 'B-'],
   },
   bio: {
     type: String,
   },
   account: {
     type: Schema.ObjectId,
-    ref: 'Account'
+    ref: 'Account',
   },
 
-  joinedOn: { type: Date, default: new Date() }
+  joinedOn: { type: Date, default: new Date() },
 });
-module.exports = mongoose.model('RegisteredUser', registeredUserSchema);
+module.exports = mongoose.model(
+  'RegisteredUser',
+  registeredUserSchema,
+);

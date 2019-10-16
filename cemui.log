@@ -1,0 +1,232 @@
+2019-10-15T06:42:14.284Z | info: REDIS ready
+2019-10-15T06:43:13.473Z | info: REDIS ready
+2019-10-15T06:44:37.045Z | info: REDIS ready
+2019-10-15T06:45:10.371Z | info: REDIS ready
+2019-10-15T06:45:15.281Z | info: HTTP GET /api/v1/job/ 200 221ms
+2019-10-15T06:45:26.087Z | info: job experience created
+2019-10-15T06:45:26.091Z | info: HTTP POST /api/v1/job/create-job-experience 201 271ms
+2019-10-15T06:46:06.651Z | info: job experience created
+2019-10-15T06:46:06.656Z | info: HTTP POST /api/v1/job/create-job-experience 201 270ms
+2019-10-15T06:47:39.702Z | info: REDIS ready
+2019-10-15T06:47:45.532Z | error: Error: ValidationError: companyName: Path `companyName` is required., positionName: Path `positionName` is required.
+2019-10-15T06:47:45.538Z | error: middlewareError
+2019-10-15T06:47:45.549Z | info: HTTP POST /api/v1/job/create-job-experience 500 292ms
+[31m2019-10-15T06:54:39.154Z[39m | info: REDIS ready
+[32m2019-10-15T06:54:48.099Z[39m | info: REDIS ready
+[34m2019-10-15T06:55:03.099Z[39m | info: REDIS ready
+[36m2019-10-15T06:55:38.322Z[39m | info: REDIS ready
+[36m2019-10-15T06:55:44.755Z[39m | error: Error: ValidationError: companyName: Path `companyName` is required., positionName: Path `positionName` is required.
+[36m2019-10-15T06:55:44.762Z[39m | error: middlewareError
+[36m2019-10-15T06:55:44.773Z[39m | info: HTTP POST /api/v1/job/create-job-experience 500 204ms
+[36m2019-10-15T07:03:30.183Z[39m | info: REDIS ready
+[36m2019-10-15T07:12:11.496Z[39m | info: REDIS ready
+[36m2019-10-15T07:12:21.001Z[39m | info: job experience created
+[36m2019-10-15T07:12:21.013Z[39m | info: HTTP POST /api/v1/job/create-job-experience 201 317ms
+[36m2019-10-15T07:13:06.471Z[39m | info: REDIS ready
+[36m2019-10-15T07:14:42.811Z[39m | info: REDIS ready
+[36m2019-10-15T07:14:44.593Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 1527ms
+[36m2019-10-15T07:14:55.319Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 150ms
+[36m2019-10-15T07:15:04.142Z[39m | info: REDIS ready
+[36m2019-10-15T07:15:31.705Z[39m | info: REDIS ready
+[36m2019-10-15T07:17:22.255Z[39m | info: REDIS ready
+[36m2019-10-15T07:17:29.083Z[39m | info: About update successful
+[36m2019-10-15T07:17:29.097Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 199ms
+[36m2019-10-15T07:17:38.584Z[39m | info: About update successful
+[36m2019-10-15T07:17:38.587Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 197ms
+[36m2019-10-15T07:18:19.607Z[39m | info: REDIS ready
+[36m2019-10-15T07:18:23.442Z[39m | info: About update successful
+[36m2019-10-15T07:18:23.456Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 947ms
+[36m2019-10-15T07:19:23.215Z[39m | info: REDIS ready
+[36m2019-10-15T07:19:34.804Z[39m | info: REDIS ready
+[36m2019-10-15T07:19:39.022Z[39m | info: About update successful
+[36m2019-10-15T07:19:39.035Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 243ms
+[36m2019-10-15T07:19:59.476Z[39m | info: HTTP PUT /api/v1/account/about/?= 401 1ms
+[36m2019-10-15T07:20:13.755Z[39m | info: About update successful
+[36m2019-10-15T07:20:13.760Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 175ms
+[36m2019-10-15T08:49:33.835Z[39m | info: REDIS ready
+[36m2019-10-15T08:49:39.685Z[39m | info: About update successful
+[36m2019-10-15T08:49:39.698Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 196ms
+[36m2019-10-15T08:49:48.341Z[39m | info: REDIS ready
+[36m2019-10-15T08:49:50.722Z[39m | info: About update successful
+[36m2019-10-15T08:49:50.735Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 2208ms
+[36m2019-10-15T08:49:59.819Z[39m | info: HTTP PUT /api/v1/account/about/?= 401 1ms
+[36m2019-10-15T08:50:04.671Z[39m | info: About update successful
+[36m2019-10-15T08:50:04.675Z[39m | info: HTTP PUT /api/v1/account/about/?= 200 176ms
+[36m2019-10-15T08:50:21.789Z[39m | info: REDIS ready
+[36m2019-10-15T08:51:30.171Z[39m | info: REDIS ready
+[36m2019-10-15T08:52:13.664Z[39m | info: REDIS ready
+[36m2019-10-15T08:54:29.818Z[39m | info: REDIS ready
+[36m2019-10-15T08:54:46.940Z[39m | info: REDIS ready
+[36m2019-10-15T08:55:42.291Z[39m | info: REDIS ready
+[36m2019-10-15T08:56:52.710Z[39m | info: REDIS ready
+[36m2019-10-15T08:57:15.142Z[39m | info: REDIS ready
+[36m2019-10-15T08:57:39.901Z[39m | info: REDIS ready
+[36m2019-10-15T08:59:08.461Z[39m | info: REDIS ready
+[36m2019-10-15T09:21:26.959Z[39m | info: REDIS ready
+[34m2019-10-15T09:21:51.692Z[39m | info: REDIS ready
+[33m2019-10-15T09:22:08.067Z[39m | info: REDIS ready
+info:  REDIS ready : [33m2019-10-15T09:22:56.442Z[39m
+info:REDIS ready => [33m2019-10-15T09:23:13.573Z[39m
+info:REDIS ready => [33m2019-10-15T10:25:11.740Z[39m
+info:REDIS ready => [33m2019-10-15T10:28:44.719Z[39m
+info:REDIS ready => [33m2019-10-15T10:29:15.816Z[39m
+info:REDIS ready => [33m2019-10-15T10:29:24.095Z[39m
+info:REDIS ready => [33m2019-10-15T10:31:08.218Z[39m
+info:REDIS ready => [33m2019-10-15T10:31:24.895Z[39m
+info:REDIS ready => [33m2019-10-15T10:40:46.555Z[39m
+info:REDIS ready => [33m2019-10-15T10:41:06.088Z[39m
+info:REDIS ready => [33m2019-10-15T10:47:11.137Z[39m
+info:REDIS ready => [33m2019-10-15T10:48:06.496Z[39m
+info:REDIS ready => [33m2019-10-15T10:51:27.935Z[39m
+info:REDIS ready => [33m2019-10-15T10:56:13.933Z[39m
+error:Error: ValidationError: degree: Path `degree` is required. => [33m2019-10-15T10:58:19.211Z[39m
+error:middlewareError => [33m2019-10-15T10:58:19.220Z[39m
+info:HTTP POST /api/v1/education/add-education 500 216ms => [33m2019-10-15T10:58:19.232Z[39m
+info:REDIS ready => [33m2019-10-15T10:58:40.294Z[39m
+info:REDIS ready => [33m2019-10-15T11:01:37.240Z[39m
+info:REDIS ready => [33m2019-10-15T11:02:26.470Z[39m
+info:REDIS ready => [33m2019-10-15T11:03:32.450Z[39m
+info:REDIS ready => [33m2019-10-15T11:04:05.087Z[39m
+info:REDIS ready => [33m2019-10-15T11:04:43.393Z[39m
+error:Error: TypeError: Cannot read property 'push' of undefined => [33m2019-10-15T11:05:13.225Z[39m
+error:middlewareError => [33m2019-10-15T11:05:13.234Z[39m
+info:HTTP POST /api/v1/education/add-education 500 340ms => [33m2019-10-15T11:05:13.245Z[39m
+info:HTTP GET /api/v1/account/logout 200 94ms => [33m2019-10-15T11:05:49.718Z[39m
+info:HTTP GET /api/v1/account 200 81ms => [33m2019-10-15T11:05:49.737Z[39m
+info:HTTP POST /api/v1/account/login 200 163ms => [33m2019-10-15T11:05:51.495Z[39m
+info:HTTP GET /api/v1/account 304 60ms => [33m2019-10-15T11:05:51.634Z[39m
+info:HTTP GET /api/v1/account 304 57ms => [33m2019-10-15T11:05:51.752Z[39m
+info:HTTP PUT /api/v1/account/update 200 1939ms => [33m2019-10-15T11:06:15.091Z[39m
+info:REDIS ready => [33m2019-10-15T11:08:42.269Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:08:44.681Z[39m
+error:middlewareError => [33m2019-10-15T11:08:44.690Z[39m
+info:HTTP POST /api/v1/education/add-education 500 278ms => [33m2019-10-15T11:08:44.702Z[39m
+error:Error: TypeError: Cannot read property 'push' of undefined => [33m2019-10-15T11:09:52.091Z[39m
+error:middlewareError => [33m2019-10-15T11:09:52.093Z[39m
+info:HTTP POST /api/v1/education/add-education 500 232ms => [33m2019-10-15T11:09:52.096Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:09:55.916Z[39m
+error:middlewareError => [33m2019-10-15T11:09:55.924Z[39m
+info:HTTP POST /api/v1/education/add-education 500 214ms => [33m2019-10-15T11:09:55.926Z[39m
+info:REDIS ready => [33m2019-10-15T11:12:10.138Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:12:12.318Z[39m
+error:middlewareError => [33m2019-10-15T11:12:12.327Z[39m
+info:HTTP POST /api/v1/education/add-education 500 292ms => [33m2019-10-15T11:12:12.338Z[39m
+info:REDIS ready => [33m2019-10-15T11:14:58.750Z[39m
+info:REDIS ready => [33m2019-10-15T11:15:37.293Z[39m
+info:REDIS ready => [33m2019-10-15T11:15:44.694Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:15:46.493Z[39m
+error:middlewareError => [33m2019-10-15T11:15:46.509Z[39m
+info:HTTP POST /api/v1/education/add-education 500 350ms => [33m2019-10-15T11:15:46.531Z[39m
+info:REDIS ready => [33m2019-10-15T11:15:53.804Z[39m
+info:REDIS ready => [33m2019-10-15T11:16:02.224Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:16:03.983Z[39m
+error:middlewareError => [33m2019-10-15T11:16:03.997Z[39m
+info:HTTP POST /api/v1/education/add-education 500 302ms => [33m2019-10-15T11:16:04.008Z[39m
+info:REDIS ready => [33m2019-10-15T11:16:12.380Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:16:15.322Z[39m
+error:middlewareError => [33m2019-10-15T11:16:15.328Z[39m
+info:HTTP POST /api/v1/education/add-education 500 307ms => [33m2019-10-15T11:16:15.340Z[39m
+error:Error: TypeError: Cannot read property 'push' of undefined => [33m2019-10-15T11:19:20.161Z[39m
+error:middlewareError => [33m2019-10-15T11:19:20.165Z[39m
+info:HTTP POST /api/v1/education/add-education 500 277ms => [33m2019-10-15T11:19:20.168Z[39m
+error:middlewareError => [33m2019-10-15T11:23:18.359Z[39m
+info:HTTP POST /api/v1/account/signup/ 409 82ms => [33m2019-10-15T11:23:18.376Z[39m
+info:HTTP POST /api/v1/account/signup/ 201 2009ms => [33m2019-10-15T11:25:28.865Z[39m
+info:Message send to user successfully => [33m2019-10-15T11:25:33.886Z[39m
+info:HTTP POST /api/v1/education/add-education 401 1ms => [33m2019-10-15T11:26:07.803Z[39m
+info:HTTP POST /api/v1/education/add-education 401 1ms => [33m2019-10-15T11:26:11.710Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:26:44.902Z[39m
+error:middlewareError => [33m2019-10-15T11:26:44.908Z[39m
+info:HTTP POST /api/v1/education/add-education 500 174ms => [33m2019-10-15T11:26:44.910Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:28:56.399Z[39m
+error:middlewareError => [33m2019-10-15T11:28:56.404Z[39m
+info:HTTP POST /api/v1/education/add-education 500 180ms => [33m2019-10-15T11:28:56.408Z[39m
+error:Error: TypeError: Cannot read property 'push' of undefined => [33m2019-10-15T11:29:32.730Z[39m
+error:middlewareError => [33m2019-10-15T11:29:32.732Z[39m
+info:HTTP POST /api/v1/education/add-education 500 175ms => [33m2019-10-15T11:29:32.735Z[39m
+info:REDIS ready => [33m2019-10-15T11:30:07.761Z[39m
+info:REDIS ready => [33m2019-10-15T11:30:12.315Z[39m
+error:Error: MongoError: E11000 duplicate key error collection: test.educations index: mobileNumber_1 dup key: { : null } => [33m2019-10-15T11:30:15.735Z[39m
+error:middlewareError => [33m2019-10-15T11:30:15.741Z[39m
+info:HTTP POST /api/v1/education/add-education 500 218ms => [33m2019-10-15T11:30:15.752Z[39m
+info:new education for user created => [33m2019-10-15T11:30:27.142Z[39m
+info:HTTP POST /api/v1/education/add-education 201 248ms => [33m2019-10-15T11:30:27.148Z[39m
+info:REDIS ready => [33m2019-10-15T11:45:24.413Z[39m
+info:REDIS ready => [33m2019-10-15T11:50:04.738Z[39m
+info:REDIS ready => [33m2019-10-15T12:15:22.465Z[39m
+info:REDIS ready => [33m2019-10-15T12:15:55.433Z[39m
+info:HTTP GET /api/v1/account 200 77ms => [33m2019-10-15T12:16:05.118Z[39m
+info:HTTP GET /api/v1/account 200 52ms => [33m2019-10-15T12:16:05.588Z[39m
+info:HTTP GET /api/v1/account/logout 200 51ms => [33m2019-10-15T12:16:08.364Z[39m
+info:HTTP POST /api/v1/account/login 200 499ms => [33m2019-10-15T12:16:10.349Z[39m
+info:HTTP GET /api/v1/account 200 47ms => [33m2019-10-15T12:16:10.480Z[39m
+info:HTTP GET /api/v1/account 200 50ms => [33m2019-10-15T12:16:10.651Z[39m
+info:HTTP PUT /api/v1/account/update 200 48ms => [33m2019-10-15T12:16:18.567Z[39m
+info:HTTP GET /api/v1/account 200 54ms => [33m2019-10-15T12:17:00.965Z[39m
+info:HTTP GET /api/v1/account 200 52ms => [33m2019-10-15T12:17:01.307Z[39m
+info:HTTP PUT /api/v1/account/update 200 49ms => [33m2019-10-15T12:17:09.174Z[39m
+info:HTTP GET /api/v1/account/logout 200 48ms => [33m2019-10-15T12:18:22.080Z[39m
+info:HTTP POST /api/v1/account/signup 201 1833ms => [33m2019-10-15T12:18:51.824Z[39m
+info:HTTP GET /api/v1/account 200 49ms => [33m2019-10-15T12:18:51.984Z[39m
+info:HTTP GET /api/v1/account 200 49ms => [33m2019-10-15T12:18:52.103Z[39m
+info:Message send to user successfully => [33m2019-10-15T12:18:53.705Z[39m
+info:HTTP PUT /api/v1/account/update 200 47ms => [33m2019-10-15T12:19:32.637Z[39m
+info:HTTP PUT /api/v1/account/update/ 401 46ms => [33m2019-10-15T12:20:00.932Z[39m
+info:HTTP PUT /api/v1/account/update/ 200 1934ms => [33m2019-10-15T12:20:28.892Z[39m
+info:HTTP PUT /api/v1/account/update/ 200 459ms => [33m2019-10-15T12:20:39.953Z[39m
+info:HTTP GET /api/v1/account 200 51ms => [33m2019-10-15T12:20:57.367Z[39m
+info:HTTP GET /api/v1/account 200 46ms => [33m2019-10-15T12:20:57.737Z[39m
+info:HTTP GET /api/v1/account 200 51ms => [33m2019-10-15T12:22:40.222Z[39m
+info:HTTP GET /api/v1/account 200 52ms => [33m2019-10-15T12:22:40.550Z[39m
+info:HTTP GET /api/v1/account 200 51ms => [33m2019-10-15T12:36:05.614Z[39m
+info:HTTP GET /api/v1/account 200 56ms => [33m2019-10-15T12:36:06.139Z[39m
+info:HTTP GET /api/v1/account 200 53ms => [33m2019-10-15T12:39:49.019Z[39m
+info:HTTP GET /api/v1/account 200 52ms => [33m2019-10-15T12:39:49.402Z[39m
+info:HTTP GET /api/v1/account 200 47ms => [33m2019-10-15T12:40:28.373Z[39m
+info:HTTP GET /api/v1/account 200 47ms => [33m2019-10-15T12:40:28.810Z[39m
+info:HTTP PUT /api/v1/account/update 200 102ms => [33m2019-10-15T12:40:36.710Z[39m
+info:HTTP GET /api/v1/account 200 52ms => [33m2019-10-15T12:41:10.673Z[39m
+info:HTTP GET /api/v1/account 200 49ms => [33m2019-10-15T12:41:11.142Z[39m
+info:HTTP GET /api/v1/account 200 53ms => [33m2019-10-15T12:41:41.512Z[39m
+info:HTTP GET /api/v1/account 200 79ms => [33m2019-10-15T12:41:42.000Z[39m
+info:HTTP GET /api/v1/account 200 50ms => [33m2019-10-15T12:43:33.667Z[39m
+info:HTTP GET /api/v1/account 200 52ms => [33m2019-10-15T12:43:34.074Z[39m
+info:HTTP PUT /api/v1/account/update 200 104ms => [33m2019-10-15T12:43:38.109Z[39m
+info:REDIS ready => [33m2019-10-16T04:35:26.167Z[39m
+info:REDIS ready => [33m2019-10-16T04:37:15.638Z[39m
+info:REDIS ready => [33m2019-10-16T04:37:43.549Z[39m
+info:REDIS ready => [33m2019-10-16T04:49:56.295Z[39m
+info:REDIS ready => [33m2019-10-16T04:50:02.713Z[39m
+error:middlewareError => [33m2019-10-16T04:50:12.843Z[39m
+info:HTTP POST /api/v1/account/signup/ 409 102ms => [33m2019-10-16T04:50:12.860Z[39m
+info:HTTP POST /api/v1/account/signup/ 201 2007ms => [33m2019-10-16T04:50:20.405Z[39m
+info:Message send to user successfully => [33m2019-10-16T04:50:25.727Z[39m
+info:REDIS ready => [33m2019-10-16T04:53:49.573Z[39m
+info:REDIS ready => [33m2019-10-16T04:55:01.114Z[39m
+error:middlewareError => [33m2019-10-16T04:55:09.895Z[39m
+info:HTTP POST /api/v1/account/signup/ 409 105ms => [33m2019-10-16T04:55:09.908Z[39m
+info:REDIS ready => [33m2019-10-16T05:05:18.673Z[39m
+info:REDIS ready => [33m2019-10-16T05:08:35.533Z[39m
+info:REDIS ready => [33m2019-10-16T05:08:58.216Z[39m
+info:REDIS ready => [33m2019-10-16T05:10:02.910Z[39m
+info:REDIS ready => [33m2019-10-16T05:11:09.119Z[39m
+info:REDIS ready => [33m2019-10-16T05:13:07.650Z[39m
+info:HTTP POST /api/v1/account/login 401 263ms => [33m2019-10-16T05:13:14.262Z[39m
+info:REDIS ready => [33m2019-10-16T05:17:28.654Z[39m
+info:REDIS ready => [33m2019-10-16T05:17:42.751Z[39m
+info:HTTP POST /api/v1/account/login 401 279ms => [33m2019-10-16T05:17:46.163Z[39m
+info:REDIS ready => [33m2019-10-16T05:18:30.955Z[39m
+info:HTTP POST /api/v1/account/login 401 241ms => [33m2019-10-16T05:18:35.604Z[39m
+info:HTTP POST /api/v1/account/login 401 66ms => [33m2019-10-16T05:19:00.159Z[39m
+info:HTTP POST /api/v1/account/login 200 159ms => [33m2019-10-16T05:19:27.393Z[39m
+info:REDIS ready => [33m2019-10-16T05:19:44.860Z[39m
+info:REDIS ready => [33m2019-10-16T05:19:59.957Z[39m
+info:REDIS ready => [33m2019-10-16T05:21:16.891Z[39m
+info:REDIS ready => [33m2019-10-16T05:21:25.443Z[39m
+info:REDIS ready => [33m2019-10-16T05:22:48.891Z[39m
+info:REDIS ready => [33m2019-10-16T05:22:53.900Z[39m
+info:REDIS ready => [33m2019-10-16T05:23:37.712Z[39m
+info:REDIS ready => [33m2019-10-16T05:23:41.140Z[39m
+info:Message send to user successfully => [33m2019-10-16T05:23:47.004Z[39m
+info:REDIS ready => [33m2019-10-16T05:24:27.477Z[39m
+info:REDIS ready => [33m2019-10-16T05:24:38.578Z[39m

@@ -8,3 +8,6 @@
 .env
 
 yarn-error.log*
+cemui.log
+cemui.info.log
+cemui.error.log

@@ -35,6 +35,9 @@ const accountsSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
+  birthday: {
+    type: Date,
+  },
   hash: String,
   salt: String,
   password: {
@@ -61,7 +64,8 @@ const accountsSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    description: 'can be only M or F',
+    description: 'can be only M,F,Others ',
+    enum: ['M', 'F', 'OTHERS'],
   },
   secondaryEmail: {
     type: String,
@@ -90,9 +94,6 @@ const accountsSchema = new mongoose.Schema({
     },
   ],
   token: {
-    // type: Schema.Types.ObjectId,
-    // ref: 'Token',
-    // default: null
     type: String,
   },
   // following: [
@@ -136,6 +137,12 @@ const accountsSchema = new mongoose.Schema({
       ref: 'Jobexperience',
     },
   ],
+  education: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Education',
+    },
+  ],
 });
 
 accountsSchema.pre('save', function(next) {
@@ -176,10 +183,16 @@ accountsSchema.methods.comparePassword = function(
 ) {
   // promise based
   // return new Promise((resolve, reject) =>
-  //   bcrypt.compare(candidatePassword, cb, (err, result) => {
-  //     if (err) { return reject(err); }
-  //     return result ? resolve(cb) : reject();
-  //   })
+  //   bcrypt.compare(
+  //     candidatePassword,
+  //     this.password,
+  //     (err, isMatch) => {
+  //       if (err) {
+  //         return reject(err);
+  //       }
+  //       return isMatch ? resolve(isMatch) : reject();
+  //     },
+  //   ),
   // );
   // es5 style
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {

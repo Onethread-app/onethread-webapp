@@ -1,4 +1,3 @@
-// Education Information
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const jobExperienceSchema = new Schema({

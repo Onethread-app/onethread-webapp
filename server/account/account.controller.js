@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const redis = require('redis');
 const httpStatus = require('http-status');
+const bcrypt = require('bcrypt');
 const redisClient = '../../index.redis.js';
 const Account = require('./account.model');
-const { JobExperience } = require('../job/job.model');
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
@@ -11,7 +11,6 @@ const {
 const authService = require('../services/auth.services');
 const bcryptService = require('../services/bcrypt.services');
 const { chatkit } = require('../services/pusher.services');
-const smtpTransport = require('../helpers/sendmail');
 const config = require('../../config/config');
 const isEmailExist = require('../services/emailchecker.services');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
@@ -26,7 +25,6 @@ const {
 const logger = require('../../config/winston');
 // Declaring all variables
 let token = '';
-let id = 0;
 
 const client = redis.createClient(
   config.redis.port,
@@ -41,9 +39,8 @@ const register = async (req, res, next) => {
   const lastName = req.body.lastName;
   const contactNo = req.body.contactNo;
   const role = req.body.role;
-  // TODOS: UID will be in change future
-  id = id + 1;
-  const name = firstName + id;
+  const uniqueHash = bcrypt.hashSync(email, 1);
+  const name = firstName + uniqueHash;
   if (!email || !password) {
     return sendJSONresponse(res, 422, {
       error: 'You must provide email and password.',
@@ -114,7 +111,7 @@ const register = async (req, res, next) => {
     .catch(err => {
       logger.error(`Registration Error: ${err}`);
       const error = new BadRequestError(
-        'Bad REquest Error',
+        'Bad Request Error',
         httpStatus.BAD_REQUEST,
       );
       return next(error);
@@ -594,6 +591,7 @@ const getAccount = async (req, res) => {
     firstName,
     lastName,
     name,
+    birthday,
     accountVerified,
     role,
     contactNo,
@@ -602,6 +600,7 @@ const getAccount = async (req, res) => {
     pendingFriends,
     sendingFriendList,
     jobExperience,
+    education,
   } = req.user;
   let user = {
     _id,
@@ -610,6 +609,7 @@ const getAccount = async (req, res) => {
     firstName,
     lastName,
     name,
+    birthday,
     accountVerified,
     role,
     contactNo,
@@ -618,6 +618,7 @@ const getAccount = async (req, res) => {
     pendingFriends,
     sendingFriendList,
     jobExperience,
+    education,
   };
   // client.hset(
   //   'User Info',
@@ -684,6 +685,30 @@ const searchAccount = async (req, res, next) => {
     });
 };
 
+const editAbout = async (req, res) => {
+  Account.findByIdAndUpdate(
+    { _id: req.user.id },
+    { about: req.body.about },
+  )
+    .exec()
+    .then(() => {
+      logger.info('About update successful');
+      return sendJSONresponse(res, 200, {
+        sucess: true,
+        msg: 'about update successful',
+      });
+    })
+    .catch(() => {
+      const err = new BadRequestError(
+        'Nothing Submitted',
+        httpStatus.BAD_REQUEST,
+        true,
+      );
+      logger.error(`Error:${err} `);
+      return next(err);
+    });
+};
+
 // verify token
 // const tokenVerification = async (req, res) => {
 //   //const email = req.body.email;
@@ -728,4 +753,5 @@ module.exports = {
   // removeFriend
   //tokenVerification,
   searchAccount,
+  editAbout,
 };

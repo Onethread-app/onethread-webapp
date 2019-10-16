@@ -16,6 +16,7 @@ const skillRoutes = require('./server/skillArea/skillArea.route');
 const imageRoutes = require('./server/image/image.route');
 const chatkitRoutes = require('./server/chatkit/chatkit.route');
 const jobRoutes = require('./server/job/job.route');
+const educationRoutes = require('./server/education/education.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -42,6 +43,6 @@ router.use('/company', companyRoutes);
 router.use('/upload', imageRoutes);
 router.use('/chatkit', chatkitRoutes);
 router.use('/job', jobRoutes);
-
+router.use('/education', educationRoutes);
 // router.use('/message', messageRoutes);
 module.exports = router;

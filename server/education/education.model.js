@@ -2,47 +2,28 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const educationSchema = new Schema({
-  highSchool: {
+  degree: {
     type: String,
     required: true,
   },
-  gender: {
-    type: String,
-    description: 'can be only M or F',
-    required: true,
-  },
-  skillArea: {
+  institutionName: {
     type: String,
     required: true,
   },
-  mobileNumber: {
-    type: String,
-    unique: true,
+  startYear: {
+    type: Date,
     required: true,
   },
-  secondaryEmail: {
-    type: String,
+  endingYear: {
+    type: Date,
   },
-  birthday: {
-    type: String,
+  currentlyStudy: {
+    type: Boolean,
   },
-
-  about: {
-    type: String,
-  },
-  location: {
-    type: String,
-  },
-  // education:{
-  //    type: Schema.ObjectId,
-  //    ref: "Education"
-  //  },
-  bloodGroup: {
-    type: String,
-    enum: ['A+', 'A-', 'O+', 'O-', 'AB+', 'AB-', 'B+', 'B-'],
-  },
-  bio: {
-    type: String,
+  account: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account',
+    required: true,
   },
 });
 module.exports = mongoose.model('Education', educationSchema);
