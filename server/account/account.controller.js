@@ -138,42 +138,9 @@ const login = async (req, res) => {
   let token = req.user.token;
   //client.set('string key', 'string val', redis.print);
   client.set(user_id, refreshToken);
-
-  const {
-    _id,
-    avatar,
-    email,
-    firstName,
-    lastName,
-    name,
-    accountVerified,
-    role,
-    contactNo,
-    companies,
-    friends,
-    pendingFriends,
-    sendingFriendList,
-    JobExperience,
-  } = req.user;
-  let user = {
-    _id,
-    avatar,
-    email,
-    firstName,
-    lastName,
-    name,
-    accountVerified,
-    role,
-    contactNo,
-    companies,
-    friends,
-    pendingFriends,
-    sendingFriendList,
-    JobExperience,
-  };
   res.json({
     success: true,
-    user,
+    user: req.user,
     token,
     refreshToken,
   });
@@ -203,7 +170,7 @@ const accountUpdate = async (req, res, next) => {
           });
         }
         return sendJSONresponse(res, 200, {
-          sucess: true,
+          success: true,
           msg: 'profile updated',
         });
       } else {
@@ -353,7 +320,7 @@ const verifyAccount = async (req, res) => {
             res.json({ success: false, error: update_err });
           } else {
             res.status(200).json({
-              sucess: true,
+              success: true,
               message: 'Account is verified',
             });
           }
@@ -368,7 +335,7 @@ const verifyAccount = async (req, res) => {
       .catch(err => {
         return res
           .status(200)
-          .json({ sucess: false, error: 'Link is expired' });
+          .json({ success: false, error: 'Link is expired' });
       });
   }
 };
@@ -584,49 +551,10 @@ const sendFriendRequestList = async (req, res) => {
 // };
 
 const getAccount = async (req, res) => {
-  const {
-    _id,
-    avatar,
-    email,
-    firstName,
-    lastName,
-    name,
-    birthday,
-    accountVerified,
-    role,
-    contactNo,
-    companies,
-    friends,
-    pendingFriends,
-    sendingFriendList,
-    jobExperience,
-    education,
-  } = req.user;
-  let user = {
-    _id,
-    avatar,
-    email,
-    firstName,
-    lastName,
-    name,
-    birthday,
-    accountVerified,
-    role,
-    contactNo,
-    companies,
-    friends,
-    pendingFriends,
-    sendingFriendList,
-    jobExperience,
-    education,
-  };
-  // client.hset(
-  //   'User Info',
-  //   req.user.token,
-  //   JSON.stringify(user),
-  //   redis.print,
-  // );
-  return sendJSONresponse(res, 200, { success: true, user });
+  return sendJSONresponse(res, 200, {
+    success: true,
+    user: req.user,
+  });
 };
 
 const accountLoad = async (req, res, next, id) => {
@@ -694,7 +622,7 @@ const editAbout = async (req, res) => {
     .then(() => {
       logger.info('About update successful');
       return sendJSONresponse(res, 200, {
-        sucess: true,
+        success: true,
         msg: 'about update successful',
       });
     })
