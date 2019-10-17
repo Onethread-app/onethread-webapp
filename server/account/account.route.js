@@ -38,7 +38,13 @@ router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
 router.route('/').get(requireAuth, accountCtrl.getAccount);
-router.route('/update').put(requireAuth, accountCtrl.accountUpdate);
+router
+  .route('/update')
+  .put(
+    requireAuth,
+    schemaValidator(paramValidation.update),
+    accountCtrl.accountUpdate,
+  );
 
 router.route('/logout').get(requireAuth, accountCtrl.logout);
 router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);

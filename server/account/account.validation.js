@@ -50,18 +50,17 @@ module.exports = {
 
   update: Joi.object().keys({
     body: Joi.object().keys({
-      firstName: Joi.string().required(),
-      lastName: Joi.string().required(),
-      email: Joi.string()
-        .regex(
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        )
+      firstName: Joi.string(),
+      lastName: Joi.string(),
+      contactNo: Joi.string().regex(/\+?(88)?0?1[356789][0-9]{8}/),
+      birthday: Joi.date(),
+      bloodGroup: Joi.string(),
+      location: Joi.string(),
+      about: Joi.string(),
+      gender: Joi.string(),
+      secondaryEmail: Joi.string()
         .email()
-        .lowercase()
-        .required(),
-      contactNo: Joi.string()
-        .regex(/\+?(88)?0?1[356789][0-9]{8}/)
-        .required(),
+        .lowercase(),
     }),
   }),
   search: Joi.string().min(1),

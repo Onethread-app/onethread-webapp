@@ -172,6 +172,7 @@ const accountUpdate = async (req, res, next) => {
         return sendJSONresponse(res, 200, {
           success: true,
           msg: 'profile updated',
+          body: req.body,
         });
       } else {
         const err = new APIError(
