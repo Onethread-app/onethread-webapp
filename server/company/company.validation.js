@@ -1,5 +1,6 @@
 const Joi = require('joi');
-// Id
+
+// id
 const id = Joi.object().keys({
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
@@ -10,46 +11,27 @@ const id = Joi.object().keys({
       };
     }),
 });
-// opt
-const accountInfo = {
-  token: Joi.string().required(),
-  firstName: Joi.string().required(),
-  lastName: Joi.string().required(),
-  email: Joi.string()
-    .email()
-    .lowercase()
-    .required(),
-  password: Joi.string()
-    .regex(
-      /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
-    )
-    .required(),
-  confirmPassword: Joi.string()
-    .valid(Joi.ref('password'))
-    .required(),
-  contactNo: Joi.string()
-    .regex(/\+?(88)?0?1[356789][0-9]{8}/)
-    .required(),
-};
 
-// mainBody
-const mainBody = Joi.object().keys({
-  // stage 1 : company
-  name: Joi.string().required(),
-  type: Joi.string()
-    .valid([
-      'Manufacturer',
-      'Trading Company',
-      'Buying Office',
-      'Agent',
-      'Distributor/Wholesaler',
-      'Government ministry/Bureau/Commission',
-      'Association',
-      'Business Service (Transportation, finance, travel, Ads, etc)',
-      'Other',
-    ])
-    .required(),
-  address: Joi.string().required(),
+// company-name
+const cname = Joi.object().keys({
+  cname: Joi.string().required(),
+});
+
+// joi schema
+const schema = {
+  name: Joi.string(),
+  type: Joi.string().valid([
+    'Manufacturer',
+    'Trading Company',
+    'Buying Office',
+    'Agent',
+    'Distributor/Wholesaler',
+    'Government ministry/Bureau/Commission',
+    'Association',
+    'Business Service (Transportation, finance, travel, Ads, etc)',
+    'Other',
+  ]),
+  address: Joi.string(),
   email: Joi.string()
     .email()
     .lowercase(),
@@ -61,9 +43,7 @@ const mainBody = Joi.object().keys({
     .min(1)
     .max(5)
     .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
-  // stage 4: Additional Information (Skip & Finish)
-  logo: Joi.string(),
-  location: Joi.string().required(),
+  location: Joi.string(),
   websites: Joi.array()
     .max(3)
     .items(
@@ -101,20 +81,33 @@ const mainBody = Joi.object().keys({
     'above 2000 square meters',
   ]),
   about: Joi.string().max(256),
-});
+};
 
 module.exports = {
   newCompany: Joi.object().keys({
-    body: mainBody,
+    body: Joi.object().keys({
+      name: schema.name.required(),
+      type: schema.type.required(),
+      address: schema.address.required(),
+      email: schema.email,
+      legalOwnerName: schema.legalOwnerName,
+      legalOwnerMail: schema.legalOwnerMail,
+    }),
   }),
   getCompany: Joi.object().keys({
-    params: id,
+    params: cname,
   }),
   updateCompany: Joi.object().keys({
-    body: mainBody,
-    params: id,
+    body: Joi.object().keys({
+      address: schema.address.required(),
+      email: schema.email,
+      legalOwnerName: schema.legalOwnerName,
+      legalOwnerMail: schema.legalOwnerMail,
+      about: schema.about,
+    }),
+    params: cname,
   }),
   deleteCompany: Joi.object().keys({
-    params: id,
+    params: cname,
   }),
 };

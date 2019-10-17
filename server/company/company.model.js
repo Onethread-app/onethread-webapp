@@ -1,6 +1,4 @@
-'use strict';
 const mongoose = require('mongoose');
-const timestamp = require('mongoose-timestamp');
 const Schema = mongoose.Schema;
 
 // validation
@@ -42,6 +40,7 @@ const validateUrl = [
     msg: '{PATH} should starts with [http://] or [https://]',
   },
 ];
+
 // company schema
 const company = new Schema(
   {
@@ -71,6 +70,7 @@ const company = new Schema(
       type: String,
       required: true,
     },
+    // others
     email: {
       type: String,
     },

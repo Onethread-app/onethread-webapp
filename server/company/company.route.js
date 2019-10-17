@@ -11,22 +11,24 @@ const SchemaValidator = require('./../helpers/joiSchemaValidator');
 const memberRoutes = require('./member/member.route');
 
 // for company profile
-router.route('/').post(
-  requireAuth,
-  // SchemaValidator(joiSchema.newCompany),
-  companyCtrl.createCompany,
-);
+router
+  .route('/')
+  .post(
+    requireAuth,
+    SchemaValidator(joiSchema.newCompany),
+    companyCtrl.createCompany,
+  );
 
 router
   .route('/:cname')
   .get(
     requireAuth,
-    // SchemaValidator(joiSchema.getCompany),
+    SchemaValidator(joiSchema.getCompany),
     companyCtrl.getCompany,
   )
   .put(
     requireAuth,
-    // SchemaValidator(joiSchema.updateCompany),
+    SchemaValidator(joiSchema.updateCompany),
     companyCtrl.updateCompany,
   )
   .delete(
