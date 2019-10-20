@@ -50,29 +50,29 @@ const jwtOptions = {
 };
 
 // Create jwt strategy
-const jwtLogin = new JwtStrategy(jwtOptions, (payload, done) => {
-  const expirationDate = new Date(payload.exp * 1000);
-  if (expirationDate < new Date()) {
-    return done(null, false);
-  }
-  const user = payload;
-  // See if the user ID in the payload exists in our database
-  Account.findById(user._id)
-    .populate('companies', '_id name')
-    //.populate('SkillAreas', 'skill accountid')
-    .exec((err, user) => {
-      if (err) {
-        return done(err, false);
-      }
-      // If it does, call 'done' with that user
+const jwtLogin = new JwtStrategy(
+  jwtOptions,
+  async (payload, done) => {
+    const expirationDate = new Date(payload.exp * 1000);
+    if (expirationDate < new Date()) {
+      return done(null, false);
+    }
+    // See if the user ID in the payload exists in our database
+    try {
+      const user = await Account.findById(payload._id).populate(
+        'companies',
+        '_id name',
+      );
       if (user) {
         done(null, user);
       } else {
-        // otherwise, call 'done' without a user object
         done(null, false);
       }
-    });
-});
+    } catch (error) {
+      return done(err, false);
+    }
+  },
+);
 
 // Tell passport to use this strategy
 passport.use(jwtLogin);

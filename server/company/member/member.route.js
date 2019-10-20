@@ -1,26 +1,26 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-
 const requireAuth = passport.authenticate('jwt', { session: false });
 const joiSchema = require('./member.validation');
-const teamCtrl = require('./member.controller');
-const { permit } = require('../../helpers/permission');
+const memberCtrl = require('./member.controller');
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
-router.route('/').post(
-  requireAuth,
-  // SchemaValidator(joiSchema.newCompany),
-  teamCtrl.addMember,
-);
+router
+  .route('/')
+  .post(
+    requireAuth,
+    SchemaValidator(joiSchema.newMember),
+    memberCtrl.addMember,
+  );
 
-// router
-//   .route('/:cname')
-//   .get(
-//     requireAuth,
-//     // SchemaValidator(joiSchema.getCompany),
-//     companyCtrl.getCompany,
-//   )
+router
+  .route('/:memberId')
+  .get(
+    requireAuth,
+    SchemaValidator(joiSchema.getMember),
+    memberCtrl.getMember,
+  );
 //   .put(
 //     requireAuth,
 //     // SchemaValidator(joiSchema.updateCompany),
@@ -38,6 +38,6 @@ router.route('/').post(
 //   companyCtrl.addEmployees,
 // );
 
-// router.param('cname', companyCtrl.getCompanyLoad);
+router.param('memberId', memberCtrl.getMemberLoad);
 
 module.exports = router;

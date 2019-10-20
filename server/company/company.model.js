@@ -91,6 +91,12 @@ const company = new Schema(
       ref: 'Account',
       required: true,
     },
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Member',
+      },
+    ],
     employees: [
       {
         type: mongoose.Schema.Types.ObjectId,

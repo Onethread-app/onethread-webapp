@@ -8,16 +8,15 @@ const createCompany = async (req, res) => {
     return res.send("Expects 'application/json'");
   }
 
-  const account = await Account.findById(req.user._id);
-
-  // company creation
-  req.body.account = req.user._id;
-  const newCompany = new Company(req.body);
-
   try {
+    // company creation
+    req.body.account = req.user._id;
+    const newCompany = new Company(req.body);
+
     const company = await newCompany.save();
-    account.companies.push(newCompany._id);
-    await account.save();
+    req.user.companies.push(newCompany._id);
+    await req.user.save();
+
     return res.status(201).json({
       status: true,
       message: 'New company created',
@@ -32,9 +31,22 @@ const createCompany = async (req, res) => {
 
 // get a company profile
 const getCompany = async (req, res) => {
+  // populate options
+  let options = {
+    path: 'members',
+    select: '_id account company role',
+    populate: [
+      { path: 'company', select: '_id name' },
+      { path: 'account', select: '_id name' },
+    ],
+    options: { limit: 5 },
+  };
+
+  let company = await Company.populate(req.company, options);
+
   return res.status(200).json({
     status: true,
-    company: req.company,
+    company,
   });
 };
 
@@ -45,44 +57,49 @@ const updateCompany = async (req, res) => {
     return res.send("Expects 'application/json'");
   }
 
-  Company.findOneAndUpdate({ name: req.params.cname }, req.body)
-    .exec()
-    .then(result => {
-      if (result) {
-        res.status(200).json({
-          status: true,
-          message: 'Company updated',
-        });
-      } else {
-        res
-          .status(404)
-          .json({ status: false, message: 'No company found' });
+  try {
+    // updating new values
+    for (const key in req.body) {
+      if (req.body.hasOwnProperty(key)) {
+        req.company[key] = req.body[key];
       }
-    })
-    .catch(err => {
-      res.status(500).json({ error: err });
+    }
+
+    let company = await req.company.save();
+
+    return res.status(200).json({
+      status: true,
+      message: 'Company updated',
+      company,
     });
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
+    });
+  }
 };
 
 // company will be found on req.company
-const getCompanyLoad = (req, res, next) => {
-  Company.find({ name: req.params.cname })
-    .populate('account', '_id firstName lastName email contactNo')
-    .exec()
-    .then(company => {
-      if (company.length) {
-        req.company = company[0];
-        return next();
-      } else {
-        return res.status(404).json({
-          status: false,
-          message: 'No valid entry found for provided Company Name',
-        });
-      }
-    })
-    .catch(err => {
-      next(err);
+const getCompanyLoad = async (req, res, next) => {
+  try {
+    const company = await Company.findOne({
+      name: req.params.cname,
+    }).populate('account', '_id firstName lastName email contactNo');
+
+    if (company) {
+      req.company = company;
+      return next();
+    } else {
+      return res.status(404).json({
+        status: false,
+        message: 'No valid entry found for provided Company Name',
+      });
+    }
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
     });
+  }
 };
 
 // TODO: will be soft delete before production
