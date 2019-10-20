@@ -18,7 +18,6 @@ const accountsSchema = new mongoose.Schema({
     type: String,
     trim: true,
     unique: true,
-    required: true,
   },
   firstName: {
     type: String,
@@ -35,7 +34,7 @@ const accountsSchema = new mongoose.Schema({
     unique: true,
     required: true,
   },
-  birthday: {
+  birthDate: {
     type: Date,
   },
   hash: String,
@@ -143,6 +142,16 @@ const accountsSchema = new mongoose.Schema({
       ref: 'Education',
     },
   ],
+  // timeline: [
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: 'JobExperience',
+  //   },
+  //   {
+  //     type: mongoose.Schema.Types.ObjectId,
+  //     ref: 'Education',
+  //   },
+  // ],
 });
 
 accountsSchema.pre('save', function(next) {

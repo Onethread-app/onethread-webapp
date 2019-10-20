@@ -1,5 +1,3 @@
-'use strict';
-
 /**
  * Get unique error field name
  */
@@ -9,9 +7,10 @@ var getUniqueErrorMessage = function(err, msg = ' already exists') {
   try {
     var fieldName = err.errmsg.substring(
       err.errmsg.lastIndexOf('.$') + 2,
-      err.errmsg.lastIndexOf('_1')
+      err.errmsg.lastIndexOf('_1'),
     );
-    output = fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + msg;
+    output =
+      fieldName.charAt(0).toUpperCase() + fieldName.slice(1) + msg;
   } catch (ex) {
     output = 'Unique field already exists';
   }
@@ -36,7 +35,8 @@ exports.getErrorMessage = function(err, msg = ' already exists') {
     }
   } else {
     for (var errName in err.errors) {
-      if (err.errors[errName].message) message = err.errors[errName].message;
+      if (err.errors[errName].message)
+        message = err.errors[errName].message;
     }
   }
 

@@ -9,7 +9,7 @@ const createJobExperience = async (req, res, next) => {
     companyName: req.body.companyName,
     positionName: req.body.positionName,
     startYear: req.body.startYear,
-    endingYear: req.body.endingYear,
+    endYear: req.body.endingYear,
     currentlyWork: req.body.currentlyWork,
     account: req.user._id,
   });

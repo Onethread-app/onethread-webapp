@@ -1,4 +1,3 @@
-// import authenticate from "./authentication";
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -12,6 +11,7 @@ const expressWinston = require('express-winston');
 const expressValidation = require('express-validation');
 const helmet = require('helmet');
 const winstonInstance = require('./winston');
+
 const routes = require('../index.route');
 const config = require('./config');
 const {
@@ -19,6 +19,10 @@ const {
   EmailIdExistError,
   SearchNotMatchError,
 } = require('../server/helpers/APIError');
+
+const {
+  getErrorMessage,
+} = require('../server/helpers/mongooseErrorFormat');
 
 const app = express();
 
@@ -120,6 +124,12 @@ app.use((err, req, res, next) => {
       err.isPublic,
     );
     return next(searchNotMatchError);
+  }
+  if (err instanceof getErrorMessage) {
+    //logger.info(`${err.code}`);
+    console.log(err);
+    const mongoDBError = new getErrorMessage(err);
+    return next(mongoDBError);
   }
   return next(err);
 });

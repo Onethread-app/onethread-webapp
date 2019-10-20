@@ -1,13 +1,13 @@
 const winston = require('winston');
 const winstonTimestampColorize = require('winston-timestamp-colorize');
-const path = require('path');
-const fs = require('fs');
-const rfs = require('rotating-file-stream');
+// const path = require('path');
+// const fs = require('fs');
+// const rfs = require('rotating-file-stream');
 
-const LOG_LEVEL = process.env.LOG_LEVEL;
-const LOG_TO_FILE = process.env.LOG_TO_FILE;
-const isTest = process.env.isTest;
-const levels = ['error', 'warn', 'info', 'verbose', 'debug', 'silly'];
+// const LOG_LEVEL = process.env.LOG_LEVEL;
+// const LOG_TO_FILE = process.env.LOG_TO_FILE;
+// const isTest = process.env.isTest;
+// const levels = ['error', 'warn', 'info', 'verbose', 'debug', 'silly'];
 
 const logger = new winston.createLogger({
   level: 'verbose',

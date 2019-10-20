@@ -2,7 +2,7 @@ const Account = require('../account/account.model');
 const { Company } = require('./company.model');
 
 // create a company profile
-const createCompany = async (req, res) => {
+const createCompany = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
@@ -23,9 +23,7 @@ const createCompany = async (req, res) => {
       company,
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error,
-    });
+    return next(error);
   }
 };
 

@@ -27,6 +27,8 @@ const addEducation = async (req, res, next) => {
     });
 };
 
+// const getEducation = async(req);
+
 module.exports = {
   addEducation,
 };

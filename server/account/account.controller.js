@@ -1,19 +1,22 @@
 const jwt = require('jsonwebtoken');
-const redis = require('redis');
 const httpStatus = require('http-status');
-const bcrypt = require('bcrypt');
-const redisClient = '../../index.redis.js';
+const shortid = require('shortid');
+
 const Account = require('./account.model');
+const config = require('../../config/config');
+
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
 } = require('../services/email.services');
-const authService = require('../services/auth.services');
-const bcryptService = require('../services/bcrypt.services');
 const { chatkit } = require('../services/pusher.services');
-const config = require('../../config/config');
-const isEmailExist = require('../services/emailchecker.services');
+const {
+  addRefreshTokenToList,
+  updateRefreshTokenfromList,
+  removeRefreshTokenfromList,
+} = require('../services/redis.services');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
+const { webhook } = require('../services/slack.services.js');
 
 const {
   APIError,
@@ -23,13 +26,8 @@ const {
 } = require('../helpers/APIError');
 
 const logger = require('../../config/winston');
-// Declaring all variables
-let token = '';
 
-const client = redis.createClient(
-  config.redis.port,
-  config.redis.host,
-);
+const client = require('../../index.redis');
 
 // create a new account for individual users
 const register = async (req, res, next) => {
@@ -39,7 +37,7 @@ const register = async (req, res, next) => {
   const lastName = req.body.lastName;
   const contactNo = req.body.contactNo;
   const role = req.body.role;
-  const uniqueHash = bcrypt.hashSync(email, 1);
+  const uniqueHash = shortid.generate();
   const name = firstName + uniqueHash;
   if (!email || !password) {
     return sendJSONresponse(res, 422, {
@@ -57,6 +55,7 @@ const register = async (req, res, next) => {
           'Email id exist',
           httpStatus.CONFLICT,
         );
+        webhook(error.message);
         return next(error);
       } else {
         let account = new Account();
@@ -101,7 +100,6 @@ const register = async (req, res, next) => {
                 token: token,
                 message: 'User created',
                 user,
-                emailResponse,
               });
             }
           });
@@ -127,33 +125,36 @@ const register = async (req, res, next) => {
  */
 
 // account holder can login their account
-const login = async (req, res) => {
-  let user_id = req.user._id.toString();
-  // Generate new refresh token and it's expiration
-  let refreshToken = jwt.sign({ uid: user_id }, config.jwtSecret, {
-    expiresIn: 60 * 60 * 24 * 30,
-  });
-  //refreshTokens[refreshToken] = user_id;
-  // Generate new access token
-  let token = req.user.token;
-  //client.set('string key', 'string val', redis.print);
-  client.set(user_id, refreshToken);
-  res.json({
-    success: true,
-    user: req.user,
-    token,
-    refreshToken,
-  });
+const login = async (req, res, next) => {
+  try {
+    const payLoad = {
+      email: req.user,
+    };
+    const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
+      expiresIn: '1d',
+    });
+    const refreshToken = jwt.sign(
+      payLoad,
+      config.refreshTokenSecret,
+      {
+        expiresIn: '48h',
+      },
+    );
+
+    let token = req.user.token;
+    addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
+    return sendJSONresponse(res, 200, {
+      success: true,
+      user: req.user,
+      token: token,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+  } catch (error) {
+    logger.error(`ReferenceError:${error} is not defined`);
+  }
+  next();
 };
-
-/**
- * Returns jwt token if valid uname and password is provided
- * @param req
- * @param res
- * @param next
- * @returns {* token}
- */
-
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -188,12 +189,6 @@ const accountUpdate = async (req, res, next) => {
 
 // let's logout
 const logout = async (req, res) => {
-  //let uid = req.account._id;
-  // Delete user refresh token from Redis
-  //redis.del(uid);
-  // ... and then remove httpOnly cookies from browser
-  //res.clearCookie('access_token');
-  //res.clearCookie('refresh_token');
   req.logout();
   res.json({
     success: true,
@@ -551,10 +546,24 @@ const sendFriendRequestList = async (req, res) => {
 // };
 
 const getAccount = async (req, res) => {
-  return sendJSONresponse(res, 200, {
-    success: true,
-    user: req.user,
-  });
+  try {
+    const timeline = [
+      ...req.user.jobExperience,
+      ...req.user.education,
+    ];
+    const timelineHistory = timeline.sort((a, b) =>
+      a.startYear < b.startYear ? 1 : -1,
+    );
+    const userInfo = { ...req.user._doc };
+    userInfo.timeline = timelineHistory;
+    return sendJSONresponse(res, 200, {
+      success: true,
+      user: userInfo,
+    });
+  } catch (error) {
+    logger.error(`ReferenceError:${error} is not defined`);
+    return next(error);
+  }
 };
 
 const accountLoad = async (req, res, next, id) => {
@@ -562,9 +571,11 @@ const accountLoad = async (req, res, next, id) => {
     .exec()
     .then(result => {
       if (result) {
+        logger.info(`${result} account successfully load`);
         req.account = result;
         next();
       } else {
+        logger.warn(`No valid entry for provided id`);
         return res.status(400).json({
           message: 'No valid entry found for provided ID',
         });
@@ -613,51 +624,85 @@ const searchAccount = async (req, res, next) => {
     });
 };
 
-const editAbout = async (req, res) => {
-  Account.findByIdAndUpdate(
-    { _id: req.user.id },
-    { about: req.body.about },
-  )
-    .exec()
-    .then(() => {
-      logger.info('About update successful');
-      return sendJSONresponse(res, 200, {
-        success: true,
-        msg: 'about update successful',
-      });
-    })
-    .catch(() => {
-      const err = new BadRequestError(
-        'Nothing Submitted',
-        httpStatus.BAD_REQUEST,
-        true,
-      );
-      logger.error(`Error:${err} `);
-      return next(err);
+const tokenRefresh = async (req, res) => {
+  const refreshToken = req.body.refresh_token;
+  if (refreshToken) {
+    client.exists(refreshToken, function(err, exists) {
+      if (exists) {
+        let refreshTokenPayload;
+        jwt.verify(refreshToken, config.refreshTokenSecret, function(
+          err,
+          user,
+        ) {
+          if (err) {
+            console.log(err);
+            return res.status(401).json({
+              statusCode: 401,
+              error: 'Unauthorized',
+              message: err.message,
+            });
+          }
+          refreshTokenPayload = user;
+        });
+        const payload = {
+          email: refreshTokenPayload.email,
+        };
+        const accessToken = jwt.sign(
+          payload,
+          config.accessTokenSecret,
+          { expiresIn: '1d' },
+        );
+        const response = {
+          access_token: accessToken,
+          expires_in: '1d',
+          token_type: 'Bearer',
+        };
+        updateRefreshTokenfromList(refreshToken, accessToken);
+        return sendJSONresponse(res, 200, response);
+      } else {
+        logger.error('The refresh token does not exist');
+        return sendJSONresponse(res, 401, {
+          error: 'Unauthorized',
+          message: 'The refresh token does not exist',
+        });
+      }
     });
+  } else {
+    logger.error(
+      `The required parameters were not sent in the request`,
+    );
+    return sendJSONresponse(res, 401, {
+      error: 'Bad Request',
+      message: 'The required parameters were not sent in the request',
+    });
+  }
 };
 
-// verify token
-// const tokenVerification = async (req, res) => {
-//   //const email = req.body.email;
-//   const refreshToken = req.body.refreshToken;
-//   const token = req.user.token;
-//   if (token) {
-//     jwt.verify(token, config.jwtSecret, (err, decoded) => {
-//       if (err) {
-//         // console.log(err);
-//         return res
-//           .status(401)
-//           .json({ error: true, message: 'Unauthorized access' });
-//       }
-//       req.decoded = decoded;
+const tokenRevoke = async (req, res) => {
+  const refreshToken = req.body.refresh_token;
+  if (refreshToken) {
+    client.exists(refreshToken, function(err, exists) {
+      if (exists) {
+        removeRefreshTokenfromList(refreshToken);
+        res.sendStatus(204);
+      } else {
+        res.status(401).send({
+          statusCode: 401,
+          error: 'Unauthorized',
+          message: 'The refresh token does not exist',
+        });
+      }
+    });
+  } else {
+    res.status(401).send({
+      statusCode: 400,
+      error: 'Bad Request',
+      message: 'The required parameters were not sent in the request',
+    });
+  }
+};
 
-//       next();
-//     });
-//   }
-// };
 module.exports = {
-  sendJSONresponse,
   register,
   login,
   logout,
@@ -679,7 +724,7 @@ module.exports = {
   sendFriendRequestList,
   // rejectFriendRequest,
   // removeFriend
-  //tokenVerification,
   searchAccount,
-  editAbout,
+  tokenRefresh,
+  tokenRevoke,
 };

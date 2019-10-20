@@ -17,7 +17,7 @@ const {
 } = require('../helpers/permission');
 //const tokenChecker = require('../helpers/tokenChecker');
 const schemaValidator = require('../helpers/joiSchemaValidator');
-const { cacheMiddleware } = require('../middlewares/redisMiddleware');
+const tokenChecker = require('../helpers/tokenChecker');
 //const skillInfo = require('../skillArea/skillArea.route');
 // authentication
 router
@@ -38,14 +38,13 @@ router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
 router.route('/').get(requireAuth, accountCtrl.getAccount);
-router
-  .route('/update')
-  .put(
-    requireAuth,
-    schemaValidator(paramValidation.update),
-    accountCtrl.accountUpdate,
-  );
-
+router.route('/update').put(
+  requireAuth,
+  // schemaValidator(paramValidation.update),
+  accountCtrl.accountUpdate,
+);
+router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
+router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
 router.route('/logout').get(requireAuth, accountCtrl.logout);
 router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);
 
@@ -104,5 +103,6 @@ router
   .post(requireLogin, permit('admin'), accountCtrl.login);
 
 router.param('account-id', accountCtrl.accountLoad);
+// router.use(tokenChecker);
 
 module.exports = router;
