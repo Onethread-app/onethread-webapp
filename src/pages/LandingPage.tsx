@@ -1,10 +1,9 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { Icon, Divider, Dialog, Button, Tag, EditableText, Tabs, Tab } from '@blueprintjs/core';
 import skill from '../resources/images/skills.png';
 import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
-import { useState } from 'react';
 import { ListTitleView } from 'components/ListTitleView';
 import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
 import { BasicInfoForm } from 'components/company/profile/editor/BasicInfoDetailsForm';
@@ -12,9 +11,15 @@ import 'react-vertical-timeline-component/style.min.css';
 import { User } from 'stores/user/Reducer';
 import { ExperienceView } from 'components/company/profile/view/ExperienceView';
 import { JobFormComponent } from 'components/company/profile/editor/JobForm';
+// import { EducationFormComponent } from 'components/company/profile/editor/EducationForm';
+import { isNumber } from 'lodash';
 import { EducationFormComponent } from 'components/company/profile/editor/EducationForm';
+import { addJobExperienceAction, addEducationExperienceAction } from 'stores/user/Actions';
+
 interface LandingPageProps {
   user: User,
+  addJobExperienceAction: (val: any) => void
+  addEducationExperienceAction: (val: any) => void
 }
 
 const skills = [
@@ -25,24 +30,81 @@ const skills = [
   { _id: '5', name: 'React' },
 ]
 
-const ExperienceEdit = (props: {
-  setShowDialog: (val: boolean) => void;
-}) => (
+const ExperienceEdit = (props:
+  {
+    setShowDialog: (val: boolean) => void
+    addJobExperienceAction: (val: {}) => void
+    addEducationExperienceAction: (val: {}) => void
+  }
+
+) => {
+  const [jobInfo, setJobInfo] = useState({
+    companyName: "",
+    positionName: "",
+    startYear: "",
+    endingYear: ""
+  });
+  const [educationInfo, setEducationInfo] = useState({
+    degree: "",
+    institutionName: "",
+    startYear: "",
+    endingYear: ""
+  });
+  const handleSelectedTab = (id: any) => {
+    setsSelectedTab(id);
+    console.log(id);
+  }
+
+  const [selectedTab, setsSelectedTab] = useState("Job");
+
+  const handleJobChange = (name: string | number) => (event: any) => {
+    const value = isNumber(event) ? event.toString() : event.target.value;
+    setJobInfo({
+      ...jobInfo, [name]: value
+    });
+  }
+
+  const handleEducationChange = (name: string | number) => (event: any) => {
+    const value = isNumber(event) ? event.toString() : event.target.value;
+    setEducationInfo({
+      ...educationInfo, [name]: value
+    });
+  }
+
+  const handleJobDateChange = (name: string, date: Date) => {
+    setJobInfo({
+      ...jobInfo, [name]: date.toLocaleDateString()
+    });
+    console.log('job', jobInfo)
+  }
+
+  const handleEducationDateChange = (name: string, date: Date) => {
+    setEducationInfo({
+      ...educationInfo, [name]: date.toLocaleDateString()
+    });
+    console.log('edu', jobInfo)
+
+  }
+
+
+  return (
     <div>
       <Tabs
         id="TabsExample"
         className="ml4-ns ml3 mt4 mr2"
+        onChange={(id) => handleSelectedTab(id)}
+        selectedTabId={selectedTab}
       >
         <Tab
           id="Job"
           title="Job"
-          panel={<JobFormComponent />}
+          panel={<JobFormComponent handleChange={handleJobChange} values={jobInfo} handleDateChange={handleJobDateChange} />}
           className="outline-0"
         />
         <Tab
           id="Educations"
           title="Educations"
-          panel={<EducationFormComponent />}
+          panel={<EducationFormComponent handleChange={handleEducationChange} values={educationInfo} handleDateChange={handleEducationDateChange} />}
           className="outline-0"
         />
       </Tabs>
@@ -62,7 +124,14 @@ const ExperienceEdit = (props: {
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={(e: any) => {
             e.preventDefault();
-            props.setShowDialog(false);
+            if (selectedTab === "Job") {
+              props.addJobExperienceAction(jobInfo);
+              props.setShowDialog(false);
+            } else if (selectedTab === "Educations") {
+              console.log(selectedTab)
+              props.addEducationExperienceAction(educationInfo);
+              props.setShowDialog(false);
+            }
           }}
         >
           Save
@@ -70,6 +139,7 @@ const ExperienceEdit = (props: {
       </div>
     </div>
   )
+}
 
 const SkillEdit = (props: {
   setShowDialog: (val: boolean) => void;
@@ -301,7 +371,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
           </div>
           <div className="fl w-75-ns">
             <BasicInfoDetailsView user={props.user} />
-            
+
             <div className="br3 bg-white h-auto pa4 mt3">
               <ListTitleView
                 listTitle="Experience"
@@ -313,7 +383,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
                 <p>No experience has added</p>
               </div>
               <Divider />
-              <ExperienceView /> 
+              <ExperienceView />
             </div>
           </div>
         </div>
@@ -326,7 +396,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
           style={{ background: '#fff' }}
         >
           <div>
-            <ExperienceEdit setShowDialog={setShowDialog} />
+            <ExperienceEdit addJobExperienceAction={props.addJobExperienceAction} addEducationExperienceAction={props.addEducationExperienceAction} setShowDialog={setShowDialog} />
           </div>
         </Dialog>
       )}
@@ -341,4 +411,4 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export const LandingPage = connect(mapStateToProps, null)(LandingPageComponent)
+export const LandingPage = connect(mapStateToProps, { addJobExperienceAction, addEducationExperienceAction })(LandingPageComponent)

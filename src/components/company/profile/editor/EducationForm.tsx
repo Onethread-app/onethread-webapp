@@ -1,23 +1,10 @@
-import React, { useState } from 'react';
-import { isNumber } from 'lodash';
+import React from 'react';
 import { DateInput } from "@blueprintjs/datetime";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { Icon } from '@blueprintjs/core';
 
-export const EducationFormComponent = () => {
-
-  const [values, setValues] = useState({
-    degree: "",
-    institutionName: "",
-    startYear: "",
-    endYear: ""
-  });
-
-  const handleChange = (name: string | number) => (event: any) => {
-    const value = isNumber(event) ? event.toString() : event.target.value;
-    setValues({ ...values, [name]: value });
-  };
+export const EducationFormComponent = (props: any) => {
 
   return (
     <form className="fl w-100 pr4 mt2">
@@ -25,8 +12,8 @@ export const EducationFormComponent = () => {
         <div className="flex">
           <InputGroupField
             id="degree"
-            value={values.degree}
-            onChange={handleChange("degree")}
+            value={props.values.degree}
+            onChange={props.handleChange("degree")}
             placeHolder="Degree"
             leftIcon="crown"
             style={{
@@ -41,8 +28,8 @@ export const EducationFormComponent = () => {
         <div className="flex">
           <InputGroupField
             id="institutionName"
-            value={values.institutionName}
-            onChange={handleChange("institutionName")}
+            value={props.values.institutionName}
+            onChange={props.handleChange("institutionName")}
             placeHolder="Institution Name"
             leftIcon="office"
             style={{
@@ -60,6 +47,7 @@ export const EducationFormComponent = () => {
             formatDate={(date: Date) => date.toLocaleDateString()}
             parseDate={(str: string) => new Date(str)}
             placeholder={"Start Year"}
+            onChange={(date: Date) => props.handleDateChange("startYear", date)}
           />
         </div>
         <div className="experiencedatePicker w-100">
@@ -67,6 +55,7 @@ export const EducationFormComponent = () => {
             formatDate={(date: Date) => date.toLocaleDateString()}
             parseDate={(str: string) => new Date(str)}
             placeholder={"End Year"}
+            onChange={(date: Date) => props.handleDateChange("endingYear", date)}
           />
         </div>
       </div>

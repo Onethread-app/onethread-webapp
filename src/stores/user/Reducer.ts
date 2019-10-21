@@ -1,4 +1,4 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO } from './Types';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE,} from './Types';
 
 export interface User {
 	_id: string,
@@ -12,7 +12,8 @@ export interface User {
 	companies: Object[],
 	friends: string[],
 	pendingFriends: string[],
-	sendingFriendList: string[]
+	sendingFriendList: string[],
+	timeline: string[]
 }
 
 
@@ -29,7 +30,8 @@ const InitialState = {
 		companies: [],
 		friends: [],
 		pendingFriends: [],
-		sendingFriendList: []
+		sendingFriendList: [],
+		timeline: []
 	},
 	loading: false,
 	fetchError: ''
@@ -75,6 +77,18 @@ export const UserReducer = (state = InitialState, action: any) => {
 				...state,
 				user: action.payload
 			}
+		case ADD_EXPERIENCE: {
+			return {
+			...state,
+				user: {
+					...state.user,
+					timeline: [
+						...state.user.timeline,
+						action.payload
+					]
+				}
+		}
+	}
 		default:
 			return state;
 	}
