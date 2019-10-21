@@ -33,11 +33,11 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
     password: "",
     confirmPassword: "",
   });
-//need to fix this
+  //need to fix this
   useEffect(() => {
-    props.errorUnauthorized.email=false;
-    props.errorUnauthorized.message="";
-    props.errorUnauthorized.network=false;
+    props.errorUnauthorized.email = false;
+    props.errorUnauthorized.message = "";
+    props.errorUnauthorized.network = false;
   });
 
   const { firstName, lastName, contactNo, email, password, confirmPassword } = values;
@@ -182,9 +182,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                     </div>
                   </div>
                   <div className="flex justify-content mb4">
-
                     <div className="w-25-ns w-20-l">
-
                       <div className=" w-100">
                         <InputGroupField
                           id="contactNo"
@@ -200,12 +198,9 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                       </div>
                     </div>
                     <div className="w-75-ns w-80-l ml3">
-
-
                       <div className="w-100 ">
                         <NumericInput
                           className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'} w-100`}
-
                           style={{
                             boxShadow: 'none',
                           }}
@@ -230,7 +225,6 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         />
                       </div>
                       {errors.contactNo ? <small className="red">{errors.contactNo}</small> : ""}
-
                     </div>
                   </div>
                   <div className={` ${errors.email ? "mb3" : "mb4"}`}>
@@ -261,7 +255,6 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                       />
                     </div>
                     {errors.email ? <small className="red">{errors.email}</small> : ""}
-
                   </div>
                   <div className={` ${errors.password ? "mb3" : "mb4"}`}>
                     <div className="flex">
@@ -272,7 +265,6 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         onChange={handleChange("password")}
                         placeHolder="password"
                         leftIcon="lock"
-
                         rightElement={
                           <Icon
                             icon={showPassword ? 'unlock' : 'lock'}
@@ -304,7 +296,6 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                       />
                     </div>
                     {errors.password ? <small className="red">{errors.password}</small> : ""}
-
                   </div>
                   <div className={`${errors.confirmPassword ? "mb3" : "mb4"}`}>
                     <div className="flex">
@@ -315,7 +306,6 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         onChange={handleChange("confirmPassword")}
                         placeHolder="confirm password"
                         leftIcon="lock"
-
                         rightElement={
                           <Icon
                             icon={showPassword ? 'unlock' : 'lock'}
@@ -350,7 +340,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                   <Button className=" b--none w-100 br3 fr grow h2 ph5 pointer pv2 white mb3"
                     type="submit"
                     style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-                    onClick={(e:any) => {
+                    onClick={(e: any) => {
                       e.preventDefault();
                       if (!emptyValueCheck()) {
                         props.userSignupAction(values, props.history);
@@ -374,9 +364,10 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
 };
 
 const mapStateToProps = (state: any) => {
-  return { 
+  return {
     loading: state.authReducer.loading,
-    errorUnauthorized: state.authReducer.loginError };
+    errorUnauthorized: state.authReducer.loginError
+  };
 };
 
 export const SignUpPage = connect(mapStateToProps, { userSignupAction })(withRouter(SignUpPageComponent));

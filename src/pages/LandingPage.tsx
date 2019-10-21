@@ -11,9 +11,10 @@ import 'react-vertical-timeline-component/style.min.css';
 import { User } from 'stores/user/Reducer';
 import { ExperienceView } from 'components/company/profile/view/ExperienceView';
 import { JobFormComponent } from 'components/company/profile/editor/JobForm';
-// import { EducationFormComponent } from 'components/company/profile/editor/EducationForm';
 import { isNumber } from 'lodash';
 import { EducationFormComponent } from 'components/company/profile/editor/EducationForm';
+import { editUserInfoAction } from 'stores/user/Actions';
+import moment from 'moment';
 import { addJobExperienceAction, addEducationExperienceAction } from 'stores/user/Actions';
 
 interface LandingPageProps {
@@ -240,14 +241,33 @@ const SkillView = () => {
     </>
   )
 }
-
-const AboutEdit = (props: {
+interface AboutEditComponentProps {
   setShowDialog: (val: boolean) => void;
-}) => {
+  user:User;
+}
+interface AboutEditInternalProps extends AboutEditComponentProps{
+  editInfoAction: (val: any) => void
+}
+
+const AboutEditComponent = (props: AboutEditInternalProps) => {
+  const [values, setValues] = useState({
+    about: props.user.about
+  });
+  const handleChange = (name: string) => (event: any) => {
+    const value = event;
+    setValues({ ...values, [name]: value });
+  };
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
-      <EditableText className="mb4" multiline={true} minLines={3} maxLines={20} />>
+      <EditableText
+        className="mb4"
+        multiline={true}
+        minLines={3}
+        maxLines={20}
+        value={values.about}
+        onChange={handleChange("about")}
+      />
       <Divider />
       <div className="flex justify-end mt3">
         <Button className="w4 grow h2 pointer mr3"
@@ -265,6 +285,7 @@ const AboutEdit = (props: {
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={(e: any) => {
             e.preventDefault();
+            props.editInfoAction(values);
             props.setShowDialog(false);
           }}
         >
@@ -275,8 +296,12 @@ const AboutEdit = (props: {
 
   )
 }
+export const AboutEdit = connect(null, { editInfoAction: editUserInfoAction })(AboutEditComponent)
 
-const AboutView = () => {
+
+const AboutView = (props: {
+  user: User
+}) => {
   const [showDialogAbout, setShowDialogAbout] = useState(false);
   return (
     <>
@@ -288,9 +313,7 @@ const AboutView = () => {
             onClick={() => setShowDialogAbout(true)}
           />
         </div>
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-           Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-       when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+        <p>{props.user.about} </p>
       </div>
       {showDialogAbout && (
         <Dialog
@@ -300,7 +323,7 @@ const AboutView = () => {
           style={{ background: '#fff' }}
         >
           <div>
-            <AboutEdit setShowDialog={setShowDialogAbout} />
+            <AboutEdit user={props.user} setShowDialog={setShowDialogAbout} />
           </div>
         </Dialog>
       )}
@@ -337,17 +360,30 @@ const BasicInfoDetailsView = (props: {
           listDescription={props.user.email}
         />
         <SectionViewWithTitleAndDesciption
+          listTitle="Secondary Email"
+          listDescription={props.user.secondaryEmail}
+        />
+        <SectionViewWithTitleAndDesciption
           listTitle="Contact Number"
           listDescription={props.user.contactNo}
         />
         <SectionViewWithTitleAndDesciption
-          listTitle="Gender"
-          listDescription="Male"
+          listTitle="Address"
+          listDescription={ props.user.location}
         />
         <SectionViewWithTitleAndDesciption
-          listTitle="Birthdate"
-          listDescription="13th September, 2019"
+          listTitle="Blood Group"
+          listDescription={ props.user.bloodGroup}
         />
+         <SectionViewWithTitleAndDesciption
+          listTitle="Birthdate"
+          listDescription={moment(props.user.birthDate).format("MM/DD/YYYY")}
+        />   
+        <SectionViewWithTitleAndDesciption
+          listTitle="Gender"
+          listDescription={props.user.gender}
+        />
+
       </div>
     </>
   )
@@ -366,7 +402,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
               <h1 className="f6 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
               <p className="tigrow-lightGray-1">Software Dev</p>
             </div>
-            <AboutView />
+            <AboutView user={props.user} />
             <SkillView />
           </div>
           <div className="fl w-75-ns">
@@ -407,7 +443,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user,
+    user: state.userReducer.user
   }
 }
 

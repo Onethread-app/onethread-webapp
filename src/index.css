@@ -65,13 +65,22 @@ a:hover {
   box-shadow: none;
   border-radius: 0px;
   border-bottom: 1px solid #0fa3a3 ;
-  width: 100%;
 }
 
 .experiencedatePicker span.bp3-popover-target{
   width: 100%;
-} 
+}  
 
+.birthdatePicker .bp3-input-group .bp3-input{
+  box-shadow: none;
+}
+
+.birthdatePicker .bp3-popover-wrapper{
+  box-shadow: none;
+  border-radius: 0px;
+  border-bottom: 1px solid #0fa3a3 ;
+  width: 100%;
+}
 .w-2{
   width: 2%;
 }

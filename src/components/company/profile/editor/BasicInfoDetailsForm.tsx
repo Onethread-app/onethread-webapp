@@ -2,31 +2,46 @@ import React, { useState } from 'react'
 import { isEmpty, isNumber } from 'lodash';
 import { connect } from 'react-redux';
 import { editUserInfoAction } from 'stores/user/Actions';
-import { NumericInput, Button, Icon } from '@blueprintjs/core';
+import { NumericInput, Button, RadioGroup, Radio, HTMLSelect, Icon } from '@blueprintjs/core';
 import { InputGroupField } from 'components/common/field/InputGroup';
+import { User } from 'stores/user/Reducer';
+import { DateInput } from '@blueprintjs/datetime';
+import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
+import { isEqual } from 'lodash';
+
+interface BasicInfoProps {
+  userInfo: User
+}
+
+const Blood = [
+  'A+',
+  'A-',
+  'O+',
+  'O-',
+  'AB+',
+  'AB-',
+  'B+',
+  'B-'
+]
 
 const BasicInfoFormComponent = (props: {
   editInfoAction: (val: any) => void
   setShowDialog: (val: boolean) => void
-}) => {
+} & BasicInfoProps) => {
+
   const [values, setValues] = useState({
-    email: "",
-    secondaryEmail: "",
-    contactNo: "",
-    address: "",
-    gender: "",
-    birthDate: "",
-    bloodGroup: ""
+    email: props.userInfo.email,
+    secondaryEmail: props.userInfo.secondaryEmail,
+    contactNo: props.userInfo.contactNo,
+    location: props.userInfo.location,
+    gender: props.userInfo.gender,
+    birthDate: props.userInfo.birthDate,
+    bloodGroup: props.userInfo.bloodGroup
   });
 
   const [errors, setErrors] = useState({
-    email: "",
     secondaryEmail: "",
-    contactNo: "",
-    address: "",
-    gender: "",
-    birthDate: "",
-    bloodGroup: ""
+    contactNo: ""
   });
 
   const emailValidation = (email: string) => {
@@ -55,99 +70,176 @@ const BasicInfoFormComponent = (props: {
     const value = isNumber(event) ? event.toString() : event.target.value;
     setValues({ ...values, [name]: value });
   };
+
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Basic Information</h1>
-      <div className="ml2 mb3">
-        <h1 className="f6 lh-title mb0">Email</h1>
-        <p className="f5 lh-copy">labiba.ssp@gmail.com</p>
+      <div className="mb4">
+        <InputGroupField
+          id="email"
+          value={values.email}
+          leftIcon="envelope"
+          style={{
+            boxShadow: 'none'
+          }}
+          className="bb b--lightBlue"
+          leftIconColor="#0fa3a3"
+          readOnly={true}
+        />
       </div>
       <div className={` ${errors.secondaryEmail ? "mb3" : "mb4"}`}>
-        <div className="flex">
-          <InputGroupField
-            id="secondaryEmail"
-            value={values.secondaryEmail}
-            onChange={handleChange("secondaryEmail")}
-            placeHolder="Secondary Email Address"
-            leftIcon="envelope"
-            style={{
-              boxShadow: 'none'
-            }}
-            className={`br0 ${errors.secondaryEmail ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.secondaryEmail ? 'red' : "#0fa3a3"}`}
-            validationOnBlur={() => {
-              if (!emailValidation(values.secondaryEmail)) {
-                const secondaryEmailError = { ...errors, secondaryEmail: "Invalid email address!" };
-                setErrors(secondaryEmailError);
-              } else {
-                const secondaryEmailError = { ...errors, secondaryEmail: "" };
-                setErrors(secondaryEmailError);
-              }
-            }}
-          />
-        </div>
-        {errors.secondaryEmail ? <small style={{ color: 'red' }}>{errors.secondaryEmail}</small> : ""}
-      </div>
-
-      <div className="mb4">
-        <NumericInput
-          className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'} w-100`}
+        <InputGroupField
+          id="secondaryEmail"
+          value={values.secondaryEmail}
+          onChange={handleChange("secondaryEmail")}
+          placeHolder="Secondary Email Address"
+          leftIcon="envelope"
           style={{
-            boxShadow: 'none',
+            boxShadow: 'none'
           }}
-          leftIcon={<Icon icon="phone" style={{ color: "#0fa3a3" }}></Icon>}
-          fill={true}
-          placeholder="e.g. 1789442325"
-          value={values.contactNo}
-          onValueChange={handleChange("contactNo")}
-          buttonPosition="none"
-          onBlur={() => {
-            if (isEmpty(values.contactNo)) {
-              const contactNoError = { ...errors, contactNo: "Required" };
-              setErrors(contactNoError);
-            } else if (values.contactNo.length !== 10) {
-              const contactNoError = { ...errors, contactNo: "Not more or less than 10 character" };
-              setErrors(contactNoError);
-            }
-            else {
-              const contactNoError = { ...errors, contactNo: "" };
-              setErrors(contactNoError);
+          className={`br0 ${errors.secondaryEmail ? 'bb b--red' : 'bb b--lightBlue'}`}
+          leftIconColor={`${errors.secondaryEmail ? 'red' : "#0fa3a3"}`}
+          validationOnBlur={() => {
+            if (!emailValidation(values.secondaryEmail)) {
+              const secondaryEmailError = { ...errors, secondaryEmail: "Invalid email address!" };
+              setErrors(secondaryEmailError);
+            } else {
+              const secondaryEmailError = { ...errors, secondaryEmail: "" };
+              setErrors(secondaryEmailError);
             }
           }}
         />
-        {errors.contactNo ? <small className="red">{errors.contactNo}</small> : ""}
+        {errors.secondaryEmail ? <small style={{ color: 'red' }}>{errors.secondaryEmail}</small> : ""}
       </div>
-      <div className="mb4">
-        <div className="flex">
+      <div className={`flex justify-content ${errors.contactNo ? "mb3" : "mb4"}`}>
+        <div className=" w-20 ">
           <InputGroupField
-            id="address"
-            value={values.address}
-            onChange={handleChange("address")}
-            placeHolder="Address"
-            leftIcon="briefcase"
+            id="contactNo"
+            value="+880"
+            leftIcon="phone"
+            className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'}`}
+            leftIconColor={`${errors.contactNo ? 'red' : "#0fa3a3"}`}
             style={{
-              boxShadow: 'none'
+              boxShadow: 'none',
             }}
-            className="bb b--lightBlue"
-            leftIconColor="#0fa3a3"
+            readOnly={true}
           />
+        </div>
+        <div className="ml3 flex-auto">
+          <div className=" w-100">
+            <NumericInput
+              className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'} w-100`}
+              style={{
+                boxShadow: 'none',
+              }}
+              fill={true}
+              placeholder="e.g. 1789442325"
+              value={values.contactNo}
+              onValueChange={handleChange("contactNo")}
+              buttonPosition="none"
+              onBlur={() => {
+                if (isEmpty(values.contactNo)) {
+                  const contactNoError = { ...errors, contactNo: "Required" };
+                  setErrors(contactNoError);
+                }else if (values.contactNo.length !== 10) {
+                  const contactNoError = { ...errors, contactNo: "Not more or less than 10 character" };
+                  setErrors(contactNoError);
+                }
+                else {
+                  const contactNoError = { ...errors, contactNo: "" };
+                  setErrors(contactNoError);
+                }
+              }}
+            />
+          </div>
+          {errors.contactNo ? <small style={{ color: 'red' }}>{errors.contactNo}</small> : ""}
         </div>
       </div>
       <div className="mb4">
+        <InputGroupField
+          id="address"
+          value={values.location}
+          onChange={handleChange("location")}
+          placeHolder="Address"
+          leftIcon="map-marker"
+          style={{
+            boxShadow: 'none'
+          }}
+          className="bb b--lightBlue"
+          leftIconColor="#0fa3a3"
+        />
+      </div>
+      <div className="mb4">
         <div className="flex">
-          <InputGroupField
-            id="birthDate"
-            value={values.bloodGroup}
-            onChange={handleChange("bloodGroup")}
-            placeHolder="Blood Group"
-            leftIcon="briefcase"
-            style={{
-              boxShadow: 'none'
+          <div className=" f5 pa1 bb b--lightBlue">
+            <Icon
+              icon="tint"
+              className="tigrow-lightBlue"
+            />
+          </div>
+          <HTMLSelect
+            fill={true}
+            minimal={true}
+            onChange={(event: any) => {
+              const value = event.currentTarget.value;
+              setValues({ ...values, bloodGroup: value });
             }}
-            className="bb b--lightBlue"
-            leftIconColor="#0fa3a3"
-          />
+            className=" bb b--lightBlue"
+            style={{
+              boxShadow: 'none',
+              borderRadius: '0px',
+              backgroundColor: 'white',
+              flex: '1',
+              outline: 'none'
+            }}
+          >
+            <option selected value=''>{`${values.bloodGroup ? values.bloodGroup : "Please select your blood group"}`}</option>
+            {Blood.map(blood => (
+              <option value={blood}>{blood}</option>
+            ))}
+          </HTMLSelect>
         </div>
+      </div>
+      <div className="birthdatePicker flex w-100 mb4">
+        <Icon className='bb b--lightBlue pa1 tigrow-lightBlue' icon="calendar" />
+        <DateInput
+          formatDate={(date: Date) => date.toLocaleDateString()}
+          parseDate={(str: string) => new Date(str)}
+          onChange={(date: Date) => {
+            setValues({
+              ...values, birthDate: date
+            });
+          }}
+          value={new Date(values.birthDate)}
+          popoverProps={{
+            targetClassName: 'w-100'
+          }}
+        />
+      </div>
+      <div className="mb4">
+        <RadioGroup
+          label="Gender"
+          onChange={(event: any) => {
+            const value = event.currentTarget.value;
+            setValues({ ...values, gender: value });
+          }}
+          inline={true}
+          className="tigrow-lightBlue outline-0"
+          selectedValue={values.gender}
+        >
+          <Radio label="Female"
+            value="female"
+            className={`${isEqual(values.gender, "female") ? ':checked' : ''}`}
+          />
+          <Radio label="Male"
+            value="male"
+            className={`${isEqual(values.gender, "male") ? ':checked' : ''}`}
+          />
+          <Radio label="Others"
+            value="others"
+            className={`${isEqual(values.gender, "others") ? ':checked' : ''}`}
+          />
+        </RadioGroup>
       </div>
       <div className="flex justify-end">
         <Button className="w4 grow h2 pointer mr3"
@@ -167,7 +259,6 @@ const BasicInfoFormComponent = (props: {
             e.preventDefault();
             if (!emptyValueCheck()) {
               props.editInfoAction(values);
-              e.preventDefault();
               props.setShowDialog(false);
             }
           }}
@@ -179,10 +270,10 @@ const BasicInfoFormComponent = (props: {
   )
 }
 
-// const mapStateToProps = (state: any) => {
-//   return {
-//     users: state.info.user
-//   }
-// }
+const mapStateToProps = (state: any) => {
+  return {
+    userInfo: state.userReducer.user
+  }
+}
 
-export const BasicInfoForm = connect(null, { editInfoAction: editUserInfoAction })(BasicInfoFormComponent);
+export const BasicInfoForm = connect(mapStateToProps, { editInfoAction: editUserInfoAction })(BasicInfoFormComponent);
