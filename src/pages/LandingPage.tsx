@@ -243,9 +243,9 @@ const SkillView = () => {
 }
 interface AboutEditComponentProps {
   setShowDialog: (val: boolean) => void;
-  user:User;
+  user: User;
 }
-interface AboutEditInternalProps extends AboutEditComponentProps{
+interface AboutEditInternalProps extends AboutEditComponentProps {
   editInfoAction: (val: any) => void
 }
 
@@ -369,16 +369,16 @@ const BasicInfoDetailsView = (props: {
         />
         <SectionViewWithTitleAndDesciption
           listTitle="Address"
-          listDescription={ props.user.location}
+          listDescription={props.user.location}
         />
         <SectionViewWithTitleAndDesciption
           listTitle="Blood Group"
-          listDescription={ props.user.bloodGroup}
+          listDescription={props.user.bloodGroup}
         />
-         <SectionViewWithTitleAndDesciption
+        <SectionViewWithTitleAndDesciption
           listTitle="Birthdate"
-          listDescription={moment(props.user.birthDate).format("MM/DD/YYYY")}
-        />   
+          listDescription={` ${props.user.birthDate ? moment(props.user.birthDate).format("MM/DD/YYYY") : ''}`}
+        />
         <SectionViewWithTitleAndDesciption
           listTitle="Gender"
           listDescription={props.user.gender}

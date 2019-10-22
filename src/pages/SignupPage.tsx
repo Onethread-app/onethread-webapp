@@ -75,7 +75,13 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
       return false
     }
   }
-
+  const emptyErrorCheck = () => {
+    if (isEmpty(errors.firstName) && isEmpty(errors.lastName) && isEmpty(errors.contactNo) && isEmpty(errors.email) && isEmpty(errors.password) && isEmpty(errors.confirmPassword)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
   const emptyValueCheck = () => {
     if (isEmpty(values.firstName) || isEmpty(values.lastName) || isEmpty(values.contactNo) || isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword)) {
       let e = errors;
@@ -342,7 +348,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                     style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
                     onClick={(e: any) => {
                       e.preventDefault();
-                      if (!emptyValueCheck()) {
+                      if (!emptyValueCheck() && emptyErrorCheck()) {
                         props.userSignupAction(values, props.history);
                       }
                     }}

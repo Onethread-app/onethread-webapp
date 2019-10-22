@@ -20,7 +20,11 @@ export const userSignupAction = (
 ) => async (dispatch: any) => {
 	try {
 		dispatch({ type: USER_SIGNUP_LOADING });
-		const response = await tigrowApi.post("account/signup", newUser, {
+		const user = {
+			...newUser,
+			contactNo: `880${newUser.contactNo}`
+		};
+		const response = await tigrowApi.post("account/signup", user, {
 			"Content-Type": "application/json"
 		} as AxiosRequestConfig);
 		localStorage.setItem("token", JSON.stringify(response.data.token));

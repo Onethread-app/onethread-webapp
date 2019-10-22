@@ -2,15 +2,19 @@ import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, 
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from "lodash";
 import tigrowApi from 'tigrowApi';
+import { User } from './Reducer';
 
-export const editUserInfoAction = (basicInfo: any) => async (dispatch: any, getState: any) => {
+export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, getState: any) => {
 	try {
-		console.log(basicInfo)
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: USER_FETCH_LOADING });
-			await tigrowApi.put(`/account/update`, basicInfo, headers);
-			dispatch({ type: EDIT_BASIC_INFO, payload: basicInfo });
+			const user = {
+				...basicInfo,
+				contactNo: `880${basicInfo.contactNo}`
+			};
+			await tigrowApi.put(`/account/update`, user, headers);
+			dispatch({ type: EDIT_BASIC_INFO, payload: user });
 		} else {
 			dispatch({ type: USER_FETCH_ERROR, payload: "error in user fetching" });
 		}

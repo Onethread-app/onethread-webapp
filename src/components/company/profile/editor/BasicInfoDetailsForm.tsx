@@ -32,7 +32,7 @@ const BasicInfoFormComponent = (props: {
   const [values, setValues] = useState({
     email: props.userInfo.email,
     secondaryEmail: props.userInfo.secondaryEmail,
-    contactNo: props.userInfo.contactNo,
+    contactNo: props.userInfo.contactNo.substring(3),
     location: props.userInfo.location,
     gender: props.userInfo.gender,
     birthDate: props.userInfo.birthDate,
@@ -47,6 +47,14 @@ const BasicInfoFormComponent = (props: {
   const emailValidation = (email: string) => {
     const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (email.match(regexForEmailValidation)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const emptyErrorCheck = () => {
+    if (isEmpty(errors.contactNo) && isEmpty(errors.secondaryEmail)) {
       return true;
     } else {
       return false;
@@ -257,7 +265,7 @@ const BasicInfoFormComponent = (props: {
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={(e: any) => {
             e.preventDefault();
-            if (!emptyValueCheck()) {
+            if (!emptyValueCheck() && emptyErrorCheck() ) {
               props.editInfoAction(values);
               props.setShowDialog(false);
             }
