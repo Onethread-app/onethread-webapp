@@ -9,10 +9,10 @@ const { Schema } = mongoose;
 
 // defining all the fields of individual account
 const accountsSchema = new mongoose.Schema({
-  // avatar: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: 'Image',
-  // },
+  avatar: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Image',
+  },
 
   name: {
     type: String,
@@ -142,16 +142,6 @@ const accountsSchema = new mongoose.Schema({
       ref: 'Education',
     },
   ],
-  // timeline: [
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: 'JobExperience',
-  //   },
-  //   {
-  //     type: mongoose.Schema.Types.ObjectId,
-  //     ref: 'Education',
-  //   },
-  // ],
 });
 
 accountsSchema.pre('save', function(next) {

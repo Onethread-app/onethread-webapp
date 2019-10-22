@@ -23,7 +23,6 @@ const {
 const {
   getErrorMessage,
 } = require('../server/helpers/mongooseErrorFormat');
-
 const app = express();
 
 if (config.env === 'development' || config.env === 'production') {
@@ -150,11 +149,13 @@ if (config.env !== 'test') {
 }
 
 // // error handler, send stacktrace only during development
-app.use((err, req, res, next) =>
+app.use((err, req, res, next) => {
+  const stack =
+    config.env === 'development' ? err.stack.split('\n') : {};
   res.status(err.status).json({
     message: err.isPublic ? err.message : httpStatus[err.status],
-    stack: config.env === 'development' ? err.stack : {},
-  }),
-);
+    stack,
+  });
+});
 
 module.exports = app;

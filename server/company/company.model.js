@@ -120,6 +120,18 @@ const company = new Schema(
       type: [String],
       validate: validateUrl,
     },
+    departments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department',
+      },
+    ],
+    divisions: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Division',
+      },
+    ],
     registrationYear: {
       type: Number,
       get: v => Number(v),

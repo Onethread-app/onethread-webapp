@@ -5,11 +5,11 @@ const debug = require('debug')('express-mongoose-es6-rest-api:index');
 Promise = require('bluebird');
 const loggerDispatcher = 'Index';
 // config should be imported before importing any other file
-const client = require('./index.redis');
 const config = require('./config/config');
+const client = require('./index.redis');
 const app = require('./config/express');
 const logger = require('./config/winston');
-const { WebClient } = require('@slack/web-api');
+
 const { webhook } = require('./server/services/slack.services.js');
 
 // plugin bluebird promise in mongoose
@@ -64,7 +64,16 @@ if (!module.parent) {
 }
 
 process.on('unhandledRejection', async (err, promise) => {
-  // if (err.operational === true)
+  webhook(err);
+  logger.warn(err, {
+    dispatcher: loggerDispatcher,
+    from: 'unhandledRejection event',
+    promise,
+  });
+});
+
+process.on('unhandledRejection', async (err, promise) => {
+  webhook(err);
   logger.warn(err, {
     dispatcher: loggerDispatcher,
     from: 'unhandledRejection event',

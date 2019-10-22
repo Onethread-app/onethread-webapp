@@ -1,6 +1,9 @@
 const express = require('express');
 const passportService = require('../services/passport.services');
 const passport = require('passport');
+const multer = require('multer');
+const storage = multer.memoryStorage();
+const uploadx = multer({ storage: storage });
 const paramValidation = require('./account.validation');
 
 const router = express.Router();
@@ -41,6 +44,7 @@ router.route('/').get(requireAuth, accountCtrl.getAccount);
 router.route('/update').put(
   requireAuth,
   // schemaValidator(paramValidation.update),
+  uploadx.single('image'),
   accountCtrl.accountUpdate,
 );
 router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);

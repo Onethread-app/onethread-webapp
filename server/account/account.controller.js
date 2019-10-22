@@ -26,8 +26,8 @@ const {
 } = require('../helpers/APIError');
 
 const logger = require('../../config/winston');
-
 const client = require('../../index.redis');
+const { imageUpload } = require('../image/image.controller');
 
 // create a new account for individual users
 const register = async (req, res, next) => {
@@ -112,6 +112,7 @@ const register = async (req, res, next) => {
         'Bad Request Error',
         httpStatus.BAD_REQUEST,
       );
+      console.log(error.message);
       return next(error);
     });
 };
@@ -157,34 +158,48 @@ const login = async (req, res, next) => {
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
-  if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
-  }
-  Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
-    .exec()
-    .then(async user => {
-      if (user) {
-        if (req.body.name !== user.name) {
-          await chatkit.updateUser({
-            id: req.user.id,
-            name: req.body.name,
-          });
-        }
-        return sendJSONresponse(res, 200, {
-          success: true,
-          msg: 'profile updated',
-        });
-      } else {
-        const err = new APIError(
-          'Method not found',
-          httpStatus.NOT_FOUND,
-        );
-        return next(err);
-      }
-    })
-    .catch(err => {
-      return next(err);
+  // if (!req.is('application/json')) {
+  //   return res.send("Expects 'application/json'");
+  // }
+  const reqFile = req.file;
+  if (reqFile) {
+    const imageName = new Date().getTime() + reqFile.originalname;
+    const bucketName = req.user.email;
+    const avatarLink = imageUpload(reqFile, bucketName, imageName);
+    console.log(avatarLink);
+    req.user.avatar = avatarLink;
+    await req.user.save();
+    return sendJSONresponse(res, 201, {
+      success: true,
+      propic: avatarLink,
     });
+  } else {
+    Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
+      .exec()
+      .then(async user => {
+        if (user) {
+          if (req.body.name !== user.name) {
+            await chatkit.updateUser({
+              id: req.user.id,
+              name: req.body.name,
+            });
+          }
+          return sendJSONresponse(res, 200, {
+            success: true,
+            msg: 'profile updated',
+          });
+        } else {
+          const err = new APIError(
+            'Method not found',
+            httpStatus.NOT_FOUND,
+          );
+          return next(err);
+        }
+      })
+      .catch(err => {
+        return next(err);
+      });
+  }
 };
 
 // let's logout

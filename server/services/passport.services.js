@@ -19,7 +19,7 @@ const localLogin = new LocalStrategy(
     // Otherwise call done with false
     Account.findOne({ email })
       .populate('companies', '_id name')
-      .populate('jobExperience education')
+      .populate('jobExperience education skillArea')
       .exec((err, user) => {
         if (err) {
           return done(err);
@@ -60,7 +60,7 @@ const jwtLogin = new JwtStrategy(
     // See if the user ID in the payload exists in our database
     try {
       const user = await Account.findById(payload._id).populate(
-        'companies',
+        'companies skillArea',
         '_id name',
       );
       if (user) {

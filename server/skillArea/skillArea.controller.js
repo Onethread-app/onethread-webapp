@@ -13,8 +13,7 @@ const createSkill = async (req, res) => {
   newSkill
     .save()
     .then(skill => {
-      logger.info('new skill created');
-      console.log(skill.tag);
+      logger.info(` process:${process.pid} new skill created`);
       return sendJSONresponse(res, 201, {
         success: true,
         message: 'new skill created',
@@ -22,9 +21,9 @@ const createSkill = async (req, res) => {
       });
     })
     .catch(err => {
-      logger.error(`Bad request : ${err}`);
+      logger.error(` process:${process.pid} Bad request : ${err}`);
       return sendJSONresponse(res, 400, {
-        sucess: false,
+        success: false,
         message: 'could not create',
         reason: err,
       });
@@ -36,12 +35,14 @@ const getSkillInfo = async (req, res) => {
   const skill = req.params.id;
   console.log(skill);
   SkillArea.findOne({ _id: skill })
-    .populate('accountid')
+    .populate('accountId')
     .exec()
     .then(result => {
       if (result) {
+        console.log(result);
+
         return sendJSONresponse(res, 200, {
-          sucess: true,
+          success: true,
           msg: 'Skillset get',
           skillArea: result,
         });
@@ -150,6 +151,41 @@ const skillLoad = async (req, res, next, id) => {
       return next(err);
     });
 };
+const searchSkillSet = async (req, res, next) => {
+  const name = req.query.name;
+  if (name === '') {
+    const err = new BadRequestError(
+      'Nothing Submitted',
+      httpStatus.BAD_REQUEST,
+      true,
+    );
+    logger.error(`Query Error: ${err}`);
+    return next(err);
+  }
+  SkillArea.find({ skill: { $regex: new RegExp(name) } })
+    .then(data => {
+      if (data.length < 1) {
+        const err = new SearchNotMatchError(
+          'Query does not found',
+          httpStatus.BAD_REQUEST,
+          true,
+        );
+        logger.error(`Query Error: ${err}`);
+        return next(err);
+      } else {
+        logger.info(`Search complete ${name}`);
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: `Search complete for ${name}`,
+          data,
+        });
+      }
+    })
+    .catch(err => {
+      logger.error(`${err}`);
+      return next(err);
+    });
+};
 module.exports = {
   createSkill,
   getSkillInfo,
@@ -157,4 +193,5 @@ module.exports = {
   updateSkillInfo,
   deleteSkillInfo,
   skillLoad,
+  searchSkillSet,
 };
