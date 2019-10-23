@@ -10,6 +10,7 @@ import { CompanyProfilePage } from 'pages/company/ProfilePage';
 import { Layout } from 'components/common/Layout';
 import { TaskPage } from 'pages/company/TaskPage';
 import { CompanyTeamMembersPage } from 'pages/company/CompanyTeamMembersPage';
+import { SettingsPage } from 'pages/company/SettingsPage';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -84,6 +85,11 @@ export const App = () => (
 				path="/company/:cname/team"
 				exact={true}
 				component={CompanyTeamMembersPage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/settings"
+				exact={true}
+				component={SettingsPage}
 			/>
 			<Route component={NoMatch} />
 		</Switch>

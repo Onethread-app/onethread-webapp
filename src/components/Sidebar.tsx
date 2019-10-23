@@ -48,6 +48,11 @@ const SidebarComponent = (props: {
 								Profile
 						</Button>
 						</NavLink>
+						<NavLink exact activeStyle={{ background: "#0fa3a3" }} to={`/company/${props.company.name}/settings`} >
+							<Button className="mv2 outline-0" icon="cog">
+								Settings
+						</Button>
+						</NavLink>
 					</>
 				}
 			</ButtonGroup>

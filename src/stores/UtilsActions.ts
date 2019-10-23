@@ -1,3 +1,8 @@
+
+export interface Entity {
+  _id?: string,
+  name: string,
+}
 // Setup config/headers and token
 export const tokenConfig = (getState:any) => {
   const token = getState().authReducer.token;
