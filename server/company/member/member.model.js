@@ -13,6 +13,14 @@ const member = new Schema(
       ref: 'Company',
       required: true,
     },
+    department: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Department',
+    },
+    division: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Division',
+    },
     role: {
       type: String,
       enum: [

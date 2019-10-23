@@ -30,15 +30,25 @@ const createCompany = async (req, res, next) => {
 // get a company profile
 const getCompany = async (req, res) => {
   // populate options
-  let options = {
-    path: 'members',
-    select: '_id account company role',
-    populate: [
-      { path: 'company', select: '_id name' },
-      { path: 'account', select: '_id name' },
-    ],
-    options: { limit: 5 },
-  };
+  let options = [
+    {
+      path: 'members',
+      select: '_id account company role',
+      populate: [
+        { path: 'company', select: '_id name' },
+        { path: 'account', select: '_id name' },
+      ],
+      options: { limit: 5 },
+    },
+    {
+      path: 'departments',
+      select: '_id name',
+    },
+    {
+      path: 'divisions',
+      select: '_id name',
+    },
+  ];
 
   let company = await Company.populate(req.company, options);
 

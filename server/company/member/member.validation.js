@@ -15,6 +15,8 @@ const idSchema = {
 const schema = {
   account: idSchema.id,
   company: idSchema.id,
+  department: idSchema.id,
+  division: idSchema.id,
   role: Joi.string().valid([
     'Super Admin',
     'Admin',
@@ -34,6 +36,8 @@ module.exports = {
     body: Joi.object().keys({
       account: schema.account.required(),
       role: schema.role.required(),
+      department: schema.department.required(),
+      division: schema.division.required(),
     }),
   }),
   getMember: Joi.object().keys({

@@ -9,12 +9,12 @@ const addMember = async (req, res) => {
   }
 
   try {
+    // check user already exists with same company
     const duplicate = await Member.findOne({
       account: req.body.account,
       company: req.company._id,
     });
 
-    // check user already exists with same company
     if (duplicate) {
       return res.status(409).json({
         status: false,
@@ -22,9 +22,8 @@ const addMember = async (req, res) => {
       });
     }
 
-    const account = await Account.findOne({ _id: req.body.account });
-
     // check user exists or not
+    const account = await Account.findOne({ _id: req.body.account });
     if (!account) {
       return res.status(404).json({
         status: false,

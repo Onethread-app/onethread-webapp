@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
 
 const divisionSchema = mongoose.Schema({
   name: {

@@ -2,17 +2,17 @@ const Division = require('./division.model');
 const logger = require('../../../config/winston.js');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 
-const newDivision = async (req, res) => {
+const create = async (req, res) => {
   if (!req.is('application/json')) {
     logger.error("'Expects 'application/json'");
     return res.send("Expects 'application/json'");
   }
   try {
+    // check division already exists with same company
     const duplicate = await Division.findOne({
       name: req.body.name,
       company: req.company._id,
     });
-    // check user already exists with same company
     if (duplicate) {
       logger.info(`Division already exist`);
       return res.status(409).json({
@@ -20,16 +20,21 @@ const newDivision = async (req, res) => {
         message: `Division already exists`,
       });
     }
-    const division = new Division();
 
-    division.name = req.body.name;
-    division.company = req.company._id;
-    const divisions = await division.save();
+    req.body.company = req.company._id;
+    const newDivision = new Division(req.body);
+    const division = await newDivision.save();
 
     // save ref in company
-    req.company.divisions.push(divisions._id);
+    req.company.divisions.push(division._id);
     await req.company.save();
-    return sendJSONresponse(res, 201, { success: true });
+
+    const { _id, name } = division;
+
+    return sendJSONresponse(res, 201, {
+      success: true,
+      division: { _id, name },
+    });
   } catch (err) {
     logger.error(` process:${process.pid} Bad request : ${err}`);
     return sendJSONresponse(res, 400, {
@@ -40,28 +45,31 @@ const newDivision = async (req, res) => {
   }
 };
 
-const divisionList = async (req, res) => {
-  const { limit = 50, skip = 0 } = req.query;
-  Division.find({})
+const list = async (req, res) => {
+  try {
+    const divisions = await Division.find({
+      company: req.company._id,
+    }).select('_id name');
 
-    .skip(+skip)
-    .limit(+limit)
-    .then(results => {
-      if (results) {
-        return sendJSONresponse(res, 200, {
-          success: true,
-          DivisionList: results,
-        });
-      } else {
-        res.status(404).json({ message: 'No Basic-info found' });
-      }
-    })
-    .catch(err => {
-      return next(err);
+    if (divisions) {
+      return sendJSONresponse(res, 200, {
+        success: true,
+        divisions,
+      });
+    }
+
+    return res.status(404).json({
+      status: false,
+      message: 'No divisions found.',
     });
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
+    });
+  }
 };
 
 module.exports = {
-  newDivision,
-  divisionList,
+  create,
+  list,
 };

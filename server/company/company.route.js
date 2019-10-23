@@ -47,8 +47,10 @@ router.route('/:cname/employees').put(
 
 // redirect to member
 router.use('/:cname/members', memberRoutes);
-router.use('/:cname/department', deptRoutes);
-router.use('/:cname/division', divisionRoutes);
+// redirect to department
+router.use('/:cname/departments', deptRoutes);
+// redirect to division
+router.use('/:cname/divisions', divisionRoutes);
 
 router.param('cname', companyCtrl.getCompanyLoad);
 

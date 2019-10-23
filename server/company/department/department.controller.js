@@ -2,17 +2,17 @@ const Department = require('./department.model');
 const logger = require('../../../config/winston.js');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 
-const newDept = async (req, res) => {
+const create = async (req, res) => {
   if (!req.is('application/json')) {
     logger.error("'Expects 'application/json'");
     return res.send("Expects 'application/json'");
   }
   try {
+    // check Department already exists with same company
     const duplicate = await Department.findOne({
       name: req.body.name,
       company: req.company._id,
     });
-    // check user already exists with same company
     if (duplicate) {
       logger.info(`Department already exist`);
       return res.status(409).json({
@@ -20,18 +20,20 @@ const newDept = async (req, res) => {
         message: `Department already exists`,
       });
     }
-    const dept = new Department();
 
-    dept.name = req.body.name;
-    dept.company = req.company._id;
-    const department = await dept.save();
+    req.body.company = req.company._id;
+    const newDepartment = new Department(req.body);
+    const department = await newDepartment.save();
 
     // save ref in company
     req.company.departments.push(department._id);
     await req.company.save();
+
+    const { _id, name } = department;
+
     return sendJSONresponse(res, 201, {
       success: true,
-      department: req.company.departments,
+      department: { _id, name },
     });
   } catch (err) {
     logger.error(` process:${process.pid} Bad request : ${err}`);
@@ -43,28 +45,31 @@ const newDept = async (req, res) => {
   }
 };
 
-const deptList = async (req, res) => {
-  const { limit = 50, skip = 0 } = req.query;
-  Department.find({})
+const list = async (req, res) => {
+  try {
+    const departments = await Department.find({
+      company: req.company._id,
+    }).select('_id name');
 
-    .skip(+skip)
-    .limit(+limit)
-    .then(results => {
-      if (results) {
-        return sendJSONresponse(res, 200, {
-          success: true,
-          DepartmentList: results,
-        });
-      } else {
-        res.status(404).json({ message: 'No Basic-info found' });
-      }
-    })
-    .catch(err => {
-      return next(err);
+    if (departments) {
+      return sendJSONresponse(res, 200, {
+        success: true,
+        departments,
+      });
+    }
+
+    return res.status(404).json({
+      status: false,
+      message: 'No departments found.',
     });
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
+    });
+  }
 };
 
 module.exports = {
-  newDept,
-  deptList,
+  create,
+  list,
 };
