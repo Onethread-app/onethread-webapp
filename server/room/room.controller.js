@@ -3,23 +3,7 @@ const serviceRoom = require('./room.service');
 const { chatkit } = require('../services/pusher.services');
 const mongoose = require('mongoose');
 
-// const create = (req, res, next) => {
-//   let listPromise = [];
 
-//   const room = new Room({chatkit
-//     name: req.body.name,
-//     company: req.body.company,
-//     members: [req.user.id],
-//     account: req.user,
-//   });
-
-//   listPromise.push(room.save());
-
-//   listPromise.push(serviceRoom.addRoom(room.id, room.name, req.user));
-//   Promise.all(listPromise)
-//     .then(result => res.json(result[0]))
-//     .catch(e => next(e));
-// };
 
 const create = async (req, res, next) => {
   const room = new Room({
@@ -28,7 +12,7 @@ const create = async (req, res, next) => {
     members: [req.user.id],
     account: req.user.id,
   });
-  let cat;
+ 
 
   try {
     await room.save();

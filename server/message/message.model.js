@@ -1,9 +1,9 @@
 
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const chatSingle = new Schema(
+const MessageSchema = new Schema(
     {
-      text: { //token
+      text: { 
         type: String,
         trim: true,
         required: true
@@ -13,9 +13,9 @@ const chatSingle = new Schema(
         ref: 'Account',
         required: true
       },
-      reciver: {
+      room: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
+        ref: 'Room',
         required: true
       }
     },
@@ -26,8 +26,8 @@ const chatSingle = new Schema(
 
   
   
-  let ChatSingle = mongoose.model('ChatSingle', chatSingle);
+  let Message = mongoose.model('Message', MessageSchema);
   
   module.exports = {
-    ChatSingle
+    Message
   };

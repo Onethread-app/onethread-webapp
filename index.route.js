@@ -12,7 +12,7 @@ const hashRoutes = require('./server/hashtag/hashtag.route');
 const roomRoutes = require('./server/room/room.route');
 const skillRoutes = require('./server/skillArea/skillArea.route');
 const imageRoutes = require('./server/image/image.route');
-const chatkitRoutes = require('./server/chatkit/chatkit.route');
+const messageRoutes = require('./server/message/message.route');
 const jobRoutes = require('./server/job/job.route');
 const educationRoutes = require('./server/education/education.route');
 
@@ -23,7 +23,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 // mount account user routes at /account
 router.use('/account', accountRoutes);
 router.use('/category', categoryRoutes);
-router.use('/chatkit', chatkitRoutes);
+
 router.use('/comments', commentRoutes);
 router.use('/company', companyRoutes);
 router.use('/education', educationRoutes);
@@ -37,4 +37,8 @@ router.use('/rooms', roomRoutes);
 router.use('/saves', saveRoutes);
 router.use('/skill', skillRoutes);
 router.use('/upload', imageRoutes);
+router.use('/message', messageRoutes);
+router.use('/job', jobRoutes);
+router.use('/education', educationRoutes);
+// router.use('/message', messageRoutes);
 module.exports = router;
