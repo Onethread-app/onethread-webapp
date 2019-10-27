@@ -1,5 +1,7 @@
 const { Member } = require('./member.model');
 const Account = require('../../account/account.model');
+const Division = require('../division/division.model');
+const Department = require('../department/department.model');
 
 // add team member
 const addMember = async (req, res) => {
@@ -31,6 +33,29 @@ const addMember = async (req, res) => {
       });
     }
 
+    // check division exists or not
+    const division = await Division.findOne({
+      _id: req.body.division,
+    });
+    if (!division) {
+      return res.status(404).json({
+        status: false,
+        message: 'No valid division found for provided DIVISION-ID',
+      });
+    }
+
+    // check department exists or not
+    const department = await Department.findOne({
+      _id: req.body.department,
+    });
+    if (!department) {
+      return res.status(404).json({
+        status: false,
+        message:
+          'No valid department found for provided DEPARTMENT-ID',
+      });
+    }
+
     // member creation
     req.body.company = req.company._id;
     const newMember = new Member(req.body);
@@ -48,6 +73,35 @@ const addMember = async (req, res) => {
   } catch (error) {
     return res.status(500).json({
       error,
+    });
+  }
+};
+
+// get all members for a company
+const list = async (req, res) => {
+  try {
+    const members = await Member.find({
+      company: req.company._id,
+    })
+      .select('-__v -company')
+      .populate([
+        { path: 'department', select: '_id name' },
+        { path: 'division', select: '_id name' },
+        { path: 'account', select: '_id name' },
+      ]);
+    if (members.length) {
+      return res.status(200).json({
+        status: true,
+        members,
+      });
+    }
+    return res.status(404).json({
+      status: false,
+      message: 'No members found.',
+    });
+  } catch (error) {
+    return res.status(500).json({
+      error: error,
     });
   }
 };
@@ -85,6 +139,7 @@ const getMemberLoad = async (req, res, next) => {
 
 module.exports = {
   addMember,
+  list,
   getMember,
   getMemberLoad,
 };

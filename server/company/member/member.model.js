@@ -33,6 +33,17 @@ const member = new Schema(
       default: 'employee',
       required: true,
     },
+    department: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Department',
+    },
+    division: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Division',
+    },
+    position: {
+      type: String,
+    },
   },
   {
     timestamps: true,

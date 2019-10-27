@@ -13,6 +13,8 @@ const createCompany = async (req, res, next) => {
     req.body.account = req.user._id;
     const newCompany = new Company(req.body);
 
+    // TODO: create a default member
+
     const company = await newCompany.save();
     req.user.companies.push(newCompany._id);
     await req.user.save();

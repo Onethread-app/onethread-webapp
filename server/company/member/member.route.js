@@ -4,6 +4,7 @@ const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', { session: false });
 const joiSchema = require('./member.validation');
 const memberCtrl = require('./member.controller');
+
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
 router
@@ -12,7 +13,8 @@ router
     requireAuth,
     SchemaValidator(joiSchema.newMember),
     memberCtrl.addMember,
-  );
+  )
+  .get(requireAuth, memberCtrl.list);
 
 router
   .route('/:memberId')
