@@ -95,6 +95,19 @@ const accountsSchema = new mongoose.Schema({
   token: {
     type: String,
   },
+  resetPasswordToken: {
+    type: String,
+  },
+  resetPasswordTokenExpiration: {
+    type: String,
+  },
+  verifyAccountToken: {
+    type: String,
+  },
+  isAccountVerified: {
+    type: Boolean,
+    default: false,
+  },
   // following: [
   //   {
   //     user: {

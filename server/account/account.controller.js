@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
 const httpStatus = require('http-status');
 const shortid = require('shortid');
 
@@ -158,51 +159,50 @@ const login = async (req, res, next) => {
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
+  Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
+    .exec()
+    .then(async user => {
+      if (user) {
+        if (req.body.name !== user.name) {
+          await chatkit.updateUser({
+            id: req.user.id,
+            name: req.body.name,
+          });
+        }
+        return sendJSONresponse(res, 200, {
+          success: true,
+          msg: 'profile updated',
+        });
+      } else {
+        const err = new APIError(
+          'Method not found',
+          httpStatus.NOT_FOUND,
+        );
+        return next(err);
+      }
+    })
+    .catch(err => {
+      return next(err);
+    });
   // if (!req.is('application/json')) {
   //   return res.send("Expects 'application/json'");
   // }
-  const reqFile = req.file;
-  if (reqFile) {
-    const imageName = new Date().getTime() + reqFile.originalname;
-    const bucketName = req.user.email;
-    const avatarLink = imageUpload(reqFile, bucketName, imageName);
-    console.log(avatarLink);
-    req.user.avatar = avatarLink;
-    await req.user.save();
-    return sendJSONresponse(res, 201, {
-      success: true,
-      propic: avatarLink,
-    });
-  } else {
-    Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
-      .exec()
-      .then(async user => {
-        if (user) {
-          if (req.body.name !== user.name) {
-            await chatkit.updateUser({
-              id: req.user.id,
-              name: req.body.name,
-            });
-          }
-          return sendJSONresponse(res, 200, {
-            success: true,
-            msg: 'profile updated',
-          });
-        } else {
-          const err = new APIError(
-            'Method not found',
-            httpStatus.NOT_FOUND,
-          );
-          return next(err);
-        }
-      })
-      .catch(err => {
-        return next(err);
-      });
-  }
-};
+  // const reqFile = req.file;
+  // if (reqFile) {
+  //   // const imageName = new Date().getTime() + reqFile.originalname;
+  //   // const bucketName = req.user.email;
+  //   // const avatarLink = imageUpload(reqFile, bucketName, imageName);
+  //   // console.log(avatarLink);
+  //   // req.user.avatar = avatarLink;
+  //   // await req.user.save();
+  //   // return sendJSONresponse(res, 201, {
+  //   //   success: true,
+  //   //   propic: avatarLink,
+  //   // });
+  // } else {
 
-// let's logout
+  // }
+};
 const logout = async (req, res) => {
   req.logout();
   res.json({
@@ -212,102 +212,64 @@ const logout = async (req, res) => {
   res.end();
 };
 
-const forgetPassword = async (req, res) => {
-  // try {
-  //   const locale = req.getLocale();
-  //   const data = matchedData(req);
-  //   await findAccount(data.email);
-  //   const item = await saveForgotPassword(req);
-  //   emailer.sendResetPasswordEmailMessage(locale, item);
-  //   res.status(200).json(forgotPasswordResponse(item));
-  // } catch (error) {
-  //   res.json(error);
-  // }
-  const email = req.body.email;
-  Account.findOne({
-    email: email,
-  })
-    .exec()
-    .then(user => {
-      let info = {};
-      info.user = user._id;
-      info.expires = new Date(
-        // expire within 1 month
-        new Date().getTime() + 2630000,
-      );
-      let token = jwt.encode(info, config.jwtSecret);
-      const emailResponse = sendEmailForResetPassword(
-        account.name,
-        account.email,
+const sendEmailForForgetPassword = async (req, res) => {
+  try {
+    crypto.randomBytes(32, async (err, buffer) => {
+      if (err) return res.status(400).json(err);
+      const token = buffer.toString('hex');
+      const user = await Account.findOne({ email: req.body.email });
+      if (!user)
+        return res.status(400).json({ message: 'No User Found' });
+      user.resetPasswordToken = token;
+      user.resetPasswordTokenExpiration = Date.now() + 3600000;
+      const dbSavedUser = await user.save();
+      const emailResponse = await sendEmailForResetPassword(
+        user.name,
+        user.email,
         token,
       );
-      return sendJSONresponse(res, 201, {
-        success: true,
-        token: token,
-        message: 'Send Successfully to user',
-        info,
-      });
-    })
-
-    .catch(err => {
-      return res.status(400).json({
-        success: false,
-        message: 'Email id does not exist',
-      });
+      return res.status(200).json({ dbSavedUser, emailResponse });
     });
-};
-
-const verifyChangePassword = async (req, res) => {
-  let token = req.params.token;
-  let data = jwt.decode(token, config.jwtSecret);
-  if (new Date(data.expires) > new Date()) {
-    await Account.findOne({ _id: data.user._id })
-      .exec()
-      .then(user => {
-        return sendJSONresponse(res, 200, {
-          success: true,
-          message: 'you have permission to change the password',
-          user,
-        });
-      })
-      .catch(err => {
-        return sendJSONresponse(res, 400, {
-          success: false,
-          message: 'account not found',
-        });
-      });
-  } else {
-    return sendJSONresponse(res, 400, {
-      success: false,
-      message: 'token time expired',
-    });
+  } catch (error) {
+    next(error);
   }
 };
-// TODOS: need to test in postman tomorrow
-const changePassword = async (req, res) => {
-  let newPassword = req.body.password;
-  let confirmPassword = req.body.confirmPassword;
-  const userID = req.user.id;
-  if (newPassword !== confirmPassword)
-    return res.status(400).json({ message: 'Password Not Matching' });
-  let user = await Account.findOne({ _id: userID })
-    .exec()
-    .then(user => {
-      user.password = newPassword;
-      user.save();
-      return res.status(200).json({
-        message: 'Password Changed',
-        user,
-      });
-    })
-    .catch(err => {
-      return res.status(500).json({
-        message: 'server error',
-      });
+
+const getAccessTokenForForgetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const user = await Account.findOne({
+      resetPasswordToken: token,
+      resetPasswordTokenExpiration: { $gt: Date.now() },
     });
-  user.password = newPassword;
-  await user.save();
+    if (!user)
+      return res.status(400).json({ message: 'token time expired' });
+    return res.status(200).json({
+      message: 'Now I get the permission to change the password',
+      user,
+    });
+  } catch (err) {
+    next(err);
+  }
 };
+const resetPassword = async (req, res) => {
+  try {
+    const { password, userID } = req.body;
+    const user = await Account.findOne({ _id: userID });
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTokenExpiration = undefined;
+    user.accountVerified = true;
+    user.password = password;
+    const dbSavedUser = await user.save();
+    return res.status(200).json({
+      message: 'Password Changed',
+      user: dbSavedUser,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // verifying mail address
 const verifyAccount = async (req, res) => {
   let token = req.params.token;
@@ -464,9 +426,7 @@ const friendList = async (req, res) => {
       });
     })
     .catch(err => {
-      res.status(500).json({
-        error: err,
-      });
+      next(err);
     });
 };
 
@@ -721,9 +681,9 @@ module.exports = {
   register,
   login,
   logout,
-  verifyChangePassword,
-  changePassword,
-  forgetPassword,
+  //  verifyChangePassword,
+  // changePassword,
+  //  forgetPassword,
   verifyAccount,
   // followAccount,
   pendingFriendRequestList,
@@ -742,4 +702,7 @@ module.exports = {
   searchAccount,
   tokenRefresh,
   tokenRevoke,
+  sendEmailForForgetPassword,
+  getAccessTokenForForgetPassword,
+  resetPassword,
 };

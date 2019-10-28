@@ -79,7 +79,7 @@ const getAllSkill = async (req, res) => {
       }
     })
     .catch(err => {
-      res.status(500).json({ error: err });
+      next(err);
     });
 };
 
@@ -106,7 +106,7 @@ const updateSkillInfo = async (req, res) => {
       }
     })
     .catch(err => {
-      res.status(500).json({ error: err });
+      next(err);
     });
 };
 
@@ -129,7 +129,7 @@ const deleteSkillInfo = async (req, res) => {
       }
     })
     .catch(err => {
-      res.status(500).json({ error: err });
+      next(err);
     });
 };
 

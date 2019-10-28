@@ -52,12 +52,20 @@ router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
 router.route('/logout').get(requireAuth, accountCtrl.logout);
 router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);
 
-router.route('/forgetPassword').post(accountCtrl.forgetPassword);
-router
-  .route('/forgetPassword/:token')
-  .get(accountCtrl.verifyChangePassword);
+// router.route('/forgetPassword').post(accountCtrl.forgetPassword);
+// router
+//   .route('/forgetPassword/:token')
+//   .get(accountCtrl.verifyChangePassword);
 
-router.route('/changePassword').post(accountCtrl.changePassword);
+router
+  .route('/forget-password')
+  .post(accountCtrl.sendEmailForForgetPassword);
+router
+  .route('/forget-password/:token')
+  .get(accountCtrl.getAccessTokenForForgetPassword);
+router.route('/reset-password').post(accountCtrl.resetPassword);
+
+// router.route('/changePassword').post(accountCtrl.changePassword);
 
 // Search for an account
 router.route('/search').get(

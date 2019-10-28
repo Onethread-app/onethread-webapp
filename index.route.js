@@ -23,7 +23,6 @@ const router = express.Router(); // eslint-disable-line new-cap
 // mount account user routes at /account
 router.use('/account', accountRoutes);
 router.use('/category', categoryRoutes);
-
 router.use('/comments', commentRoutes);
 router.use('/company', companyRoutes);
 router.use('/education', educationRoutes);
@@ -40,5 +39,4 @@ router.use('/upload', imageRoutes);
 router.use('/message', messageRoutes);
 router.use('/job', jobRoutes);
 router.use('/education', educationRoutes);
-// router.use('/message', messageRoutes);
 module.exports = router;
