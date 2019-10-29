@@ -15,8 +15,10 @@ const localLogin = new LocalStrategy(
   localOptions,
   (email, password, done) => {
     Account.findOne({ email })
-      .populate('companies', '_id name')
-      .populate('jobExperience education skillArea')
+      .populate(
+        'companies jobExperience education skillArea',
+        '_id name',
+      )
       .exec((err, user) => {
         if (err) {
           return done(err);
@@ -58,7 +60,10 @@ const jwtLogin = new JwtStrategy(
     try {
       const user = await Account.findById(payload._id)
         .select('-password')
-        .populate('companies skillArea', '_id name');
+        .populate(
+          'companies skillArea jobExperience education',
+          '_id name',
+        );
       if (user) {
         done(null, user);
       } else {

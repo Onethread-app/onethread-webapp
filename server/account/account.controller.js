@@ -143,6 +143,14 @@ const login = async (req, res, next) => {
 
     let token = req.user.token;
     const userObj = req.user.toObject();
+    const timeline = [
+      ...req.user.jobExperience,
+      ...req.user.education,
+    ];
+    const timelineHistory = timeline.sort((a, b) =>
+      a.startYear < b.startYear ? 1 : -1,
+    );
+    userObj.timeline = timelineHistory;
     delete userObj.password;
     addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
     return sendJSONresponse(res, 200, {
@@ -611,7 +619,7 @@ const searchAccount = async (req, res, next) => {
         });
       }
     })
-    .catch(() => {
+    .catch(err => {
       return next(err);
     });
 };

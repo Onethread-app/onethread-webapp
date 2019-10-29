@@ -104,6 +104,9 @@ const searchMember = async (req, res, next) => {
   const memberList = [
     '5db81f45f2bfce027c6eb8f4',
     '5db7e3282660d43b5af93cd8',
+    '5db82a2a7a4e3c08e900d815',
+    '5db6dab7da8a02466eca1e0b',
+    '5db6dab7da8a02466eca1e0b',
   ];
   if (name === '') {
     const err = new BadRequestError(
@@ -114,7 +117,9 @@ const searchMember = async (req, res, next) => {
     logger.error(`Query Error: ${err}`);
     return next(err);
   }
-  Account.find({ name: { $nin: memberList } })
+  Account.find({
+    $and: [{ name: { $nin: memberList } }],
+  })
     .select('email name _id')
     .then(data => {
       if (data.length < 1) {
@@ -136,7 +141,7 @@ const searchMember = async (req, res, next) => {
         });
       }
     })
-    .catch(() => {
+    .catch(err => {
       return next(err);
     });
 };
