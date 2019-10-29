@@ -11,7 +11,8 @@ router
   .route('/')
   .post(
     requireAuth,
-    SchemaValidator(joiSchema.newMember),
+    // TODO: member validations
+    // SchemaValidator(joiSchema.newMember),
     memberCtrl.addMember,
   )
   .get(requireAuth, memberCtrl.list);
@@ -40,6 +41,6 @@ router
 //   companyCtrl.addEmployees,
 // );
 
-router.param('memberId', memberCtrl.getMemberLoad);
+router.param('memberId', requireAuth, memberCtrl.getMemberLoad);
 
 module.exports = router;

@@ -44,7 +44,6 @@ const validateUrl = [
 // company schema
 const company = new Schema(
   {
-    // required fields
     name: {
       type: String,
       unique: true,
@@ -70,7 +69,6 @@ const company = new Schema(
       type: String,
       required: true,
     },
-    // others
     email: {
       type: String,
     },
@@ -97,19 +95,12 @@ const company = new Schema(
         ref: 'Member',
       },
     ],
-    employees: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
-      },
-    ],
     rooms: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Room',
       },
     ],
-    // others
     logo: {
       type: String,
     },

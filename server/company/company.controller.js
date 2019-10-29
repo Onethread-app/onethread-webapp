@@ -1,5 +1,6 @@
 const Account = require('../account/account.model');
 const { Company } = require('./company.model');
+const { Member } = require('./member/member.model');
 
 // create a company profile
 const createCompany = async (req, res, next) => {
@@ -9,13 +10,35 @@ const createCompany = async (req, res, next) => {
   }
 
   try {
-    // company creation
+    // check duplicate company name
+    const duplicate = await Company.findOne({
+      name: req.body.name,
+    });
+    if (duplicate) {
+      return res.status(409).json({
+        status: false,
+        message: `Duplicate company name`,
+      });
+    }
+
     req.body.account = req.user._id;
     const newCompany = new Company(req.body);
 
-    // TODO: create a default member
+    // create a default member
+    const newMember = new Member({
+      account: req.user._id,
+      company: newCompany._id,
+      role: 'superAdmin',
+    });
+    const member = await newMember.save();
 
+    // add member ref in company
+    newCompany.members.push(member._id);
+
+    // company creation
     const company = await newCompany.save();
+
+    // add company ref in user
     req.user.companies.push(newCompany._id);
     await req.user.save();
 
@@ -30,38 +53,36 @@ const createCompany = async (req, res, next) => {
 };
 
 // get a company profile
-const getCompany = async (req, res) => {
-  // populate options
-  let options = [
-    {
-      path: 'members',
-      select: '_id account company role',
-      populate: [
-        { path: 'company', select: '_id name' },
-        { path: 'account', select: '_id name' },
-      ],
-      options: { limit: 5 },
-    },
-    {
-      path: 'departments',
-      select: '_id name',
-    },
-    {
-      path: 'divisions',
-      select: '_id name',
-    },
-  ];
+const getCompany = async (req, res, next) => {
+  try {
+    // populate options
+    let options = [
+      // {
+      //   path: 'members',
+      //   select: '_id account role designations',
+      //   populate: [{ path: 'account', select: '_id name' }],
+      // },
+    ];
 
-  let company = await Company.populate(req.company, options);
+    let company = await Company.findOne({
+      name: req.params.cname,
+    })
+      .select(
+        '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
+      )
+      .populate(options);
 
-  return res.status(200).json({
-    status: true,
-    company,
-  });
+    return res.status(200).json({
+      status: true,
+      company,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 // update a company profile
-const updateCompany = async (req, res) => {
+const updateCompany = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
@@ -83,9 +104,7 @@ const updateCompany = async (req, res) => {
       company,
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error,
-    });
+    next(error);
   }
 };
 
@@ -106,14 +125,12 @@ const getCompanyLoad = async (req, res, next) => {
       });
     }
   } catch (error) {
-    return res.status(500).json({
-      error: error,
-    });
+    next(error);
   }
 };
 
 // TODO: will be soft delete before production
-const deleteCompany = async (req, res) => {
+const deleteCompany = async (req, res, next) => {
   Company.findByIdAndRemove({ _id: req.params.id })
     .exec()
     .then(result => {

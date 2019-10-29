@@ -13,37 +13,25 @@ const member = new Schema(
       ref: 'Company',
       required: true,
     },
-    department: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Department',
-    },
-    division: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Division',
-    },
     role: {
       type: String,
       enum: [
-        'Super Admin',
-        'Admin',
-        'Manager',
-        'Moderator',
+        'superAdmin',
+        'admin',
+        'manager',
+        'moderator',
         'employee',
       ],
       default: 'employee',
       required: true,
     },
-    department: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Department',
-    },
-    division: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Division',
-    },
-    position: {
-      type: String,
-    },
+    designations: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Designation',
+      },
+    ],
+    // TODO: currently working: boolean
   },
   {
     timestamps: true,

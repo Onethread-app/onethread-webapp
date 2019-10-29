@@ -1,8 +1,8 @@
-const Division = require('./division.model');
+const Division = require('./designation.model');
 const logger = require('../../../config/winston.js');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 
-const create = async (req, res) => {
+const create = async (req, res, next) => {
   if (!req.is('application/json')) {
     logger.error("'Expects 'application/json'");
     return res.send("Expects 'application/json'");
@@ -36,12 +36,7 @@ const create = async (req, res) => {
       division: { _id, name },
     });
   } catch (err) {
-    logger.error(` process:${process.pid} Bad request : ${err}`);
-    return sendJSONresponse(res, 400, {
-      success: false,
-      message: 'could not create',
-      reason: err,
-    });
+    next(err);
   }
 };
 

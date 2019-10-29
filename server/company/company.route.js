@@ -5,12 +5,11 @@ const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', { session: false });
 const joiSchema = require('./company.validation');
 const companyCtrl = require('./company.controller');
-const { permit } = require('./../helpers/permission');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
 const memberRoutes = require('./member/member.route');
 const deptRoutes = require('./department/department.route');
-const divisionRoutes = require('./division/division.route');
+const designationRoutes = require('./designation/designation.route');
 
 // for company profile
 router
@@ -32,25 +31,19 @@ router
     requireAuth,
     SchemaValidator(joiSchema.updateCompany),
     companyCtrl.updateCompany,
-  )
-  .delete(
-    requireAuth,
-    // SchemaValidator(joiSchema.deleteCompany),
-    companyCtrl.deleteCompany,
   );
-
-router.route('/:cname/employees').put(
-  requireAuth,
-  // SchemaValidator(joiSchema.getCompany),
-  companyCtrl.addEmployees,
-);
+// .delete(
+//   requireAuth,
+//   // SchemaValidator(joiSchema.deleteCompany),
+//   companyCtrl.deleteCompany,
+// );
 
 // redirect to member
 router.use('/:cname/members', memberRoutes);
 // redirect to department
 router.use('/:cname/departments', deptRoutes);
-// redirect to division
-router.use('/:cname/divisions', divisionRoutes);
+// redirect to designation
+router.use('/:cname/designations', designationRoutes);
 
 router.param('cname', companyCtrl.getCompanyLoad);
 
