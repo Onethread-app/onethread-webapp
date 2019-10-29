@@ -49,6 +49,7 @@ const register = async (req, res, next) => {
   Account.find({
     email: email,
   })
+    .select('-password')
     .exec()
     .then(user => {
       if (user.length >= 1) {
@@ -56,7 +57,6 @@ const register = async (req, res, next) => {
           'Email id exist',
           httpStatus.CONFLICT,
         );
-        webhook(error.message);
         return next(error);
       } else {
         let account = new Account();
@@ -67,8 +67,6 @@ const register = async (req, res, next) => {
         account.contactNo = contactNo;
         account.role = role;
         account.password = password;
-        token = account.generateJwt();
-        account.token = token;
         account.save().then(async user => {
           const info = {};
           info.account = account;
@@ -76,7 +74,10 @@ const register = async (req, res, next) => {
             // expire within 1 month
             new Date().getTime() + 2630000,
           );
-          let access_token = jwt.sign(info, config.jwtSecret, {
+          const infoObj = info.account.toObject();
+          delete infoObj.password;
+          console.log(infoObj);
+          let access_token = jwt.sign(infoObj, config.jwtSecret, {
             expiresIn: '1d',
           });
           const emailResponse = await sendEmailForVerifyAccount(
@@ -98,9 +99,7 @@ const register = async (req, res, next) => {
               });
               return sendJSONresponse(res, 201, {
                 success: true,
-                token: token,
                 message: 'User created',
-                user,
               });
             }
           });
@@ -113,7 +112,6 @@ const register = async (req, res, next) => {
         'Bad Request Error',
         httpStatus.BAD_REQUEST,
       );
-      console.log(error.message);
       return next(error);
     });
 };
@@ -144,10 +142,12 @@ const login = async (req, res, next) => {
     );
 
     let token = req.user.token;
+    const userObj = req.user.toObject();
+    delete userObj.password;
     addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
     return sendJSONresponse(res, 200, {
       success: true,
-      user: req.user,
+      user: userObj,
       token: token,
       access_token: accessToken,
       refresh_token: refreshToken,
@@ -160,6 +160,7 @@ const login = async (req, res, next) => {
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
   Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
+    .select('-password')
     .exec()
     .then(async user => {
       if (user) {
@@ -217,9 +218,14 @@ const sendEmailForForgetPassword = async (req, res) => {
     crypto.randomBytes(32, async (err, buffer) => {
       if (err) return res.status(400).json(err);
       const token = buffer.toString('hex');
-      const user = await Account.findOne({ email: req.body.email });
+      const user = await Account.findOne({
+        email: req.body.email,
+      });
       if (!user)
-        return res.status(400).json({ message: 'No User Found' });
+        return sendJSONresponse(res, 400, {
+          success: false,
+          message: 'no user found',
+        });
       user.resetPasswordToken = token;
       user.resetPasswordTokenExpiration = Date.now() + 3600000;
       const dbSavedUser = await user.save();
@@ -241,10 +247,12 @@ const getAccessTokenForForgetPassword = async (req, res) => {
     const user = await Account.findOne({
       resetPasswordToken: token,
       resetPasswordTokenExpiration: { $gt: Date.now() },
-    });
+    }).select('-password');
     if (!user)
-      return res.status(400).json({ message: 'token time expired' });
-    return res.status(200).json({
+      return sendJSONresponse(res, 400, {
+        message: 'token time expired',
+      });
+    return sendJSONresponse(res, 200, {
       message: 'Now I get the permission to change the password',
       user,
     });
@@ -255,12 +263,15 @@ const getAccessTokenForForgetPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   try {
     const { password, userID } = req.body;
-    const user = await Account.findOne({ _id: userID });
+    const user = await Account.findOne({ _id: userID }).select(
+      '-password',
+    );
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiration = undefined;
     user.accountVerified = true;
     user.password = password;
     const dbSavedUser = await user.save();
+    delete dbSavedUser.password;
     return res.status(200).json({
       message: 'Password Changed',
       user: dbSavedUser,
@@ -271,46 +282,48 @@ const resetPassword = async (req, res) => {
 };
 
 // verifying mail address
-const verifyAccount = async (req, res) => {
-  let token = req.params.token;
-  let data = jwt.decode(token, config.jwtSecret);
-  if (new Date(data.expires) > new Date()) {
-    Account.findOne({
-      _id: data.account._id,
-      email: data.account.email,
-    }).exec(function(err, account) {
-      if (err) {
-        console.log(err);
-        res.json(err);
-      } else if (!account) {
-        console.log('Account not found');
-        res.json({ error: 'Account not found' });
-      } else {
-        account.accountVerified = true;
-        account.save(function(update_err, update_data) {
-          if (update_err) {
-            res.json({ success: false, error: update_err });
-          } else {
-            res.status(200).json({
-              success: true,
-              message: 'Account is verified',
-            });
-          }
-        });
-      }
-    });
-  } else {
-    Account.deleteOne({ _id: data.account._id })
-      .then(account => {
-        account.save();
-      })
-      .catch(err => {
-        return res
-          .status(200)
-          .json({ success: false, error: 'Link is expired' });
-      });
-  }
-};
+// const verifyAccount = async (req, res) => {
+//   let token = req.params.token;
+//   let data = jwt.decode(token, config.jwtSecret);
+//   if (new Date(data.expires) > new Date()) {
+//     Account.findOne({
+//       _id: data.account._id,
+//       email: data.account.email,
+//     })
+//       .select('-password')
+//       .exec(function(err, account) {
+//         if (err) {
+//           console.log(err);
+//           res.json(err);
+//         } else if (!account) {
+//           console.log('Account not found');
+//           res.json({ error: 'Account not found' });
+//         } else {
+//           account.accountVerified = true;
+//           account.save(function(update_err, update_data) {
+//             if (update_err) {
+//               res.json({ success: false, error: update_err });
+//             } else {
+//               res.status(200).json({
+//                 success: true,
+//                 message: 'Account is verified',
+//               });
+//             }
+//           });
+//         }
+//       });
+//   } else {
+//     Account.deleteOne({ _id: data.account._id })
+//       .then(account => {
+//         return;
+//       })
+//       .catch(err => {
+//         return res
+//           .status(200)
+//           .json({ success: false, error: 'Link is expired' });
+//       });
+//   }
+// };
 
 // send friend request to an account
 const sendFriendRequest = async (req, res) => {
@@ -324,42 +337,44 @@ const sendFriendRequest = async (req, res) => {
       message: 'You can not add yourself',
     });
   }
-  Account.findById(fromFriend).then(account => {
-    if (
-      account.sendingFriendList.filter(
-        friend => friend.toString() === toFriend,
-      ).length > 0
-    ) {
-      return sendJSONresponse(res, 200, {
-        success: true,
-        message: `you already send request to this ${toFriend}`,
-      });
-    } else {
-      account.sendingFriendList.push(toFriend);
-      account.save();
-      // sending friend request to toFriend
-      Account.findById(toFriend).then(account => {
-        if (
-          account.pendingFriends.filter(
-            friend => friend.toString() === fromFriend,
-          ).length > 0
-        ) {
-          return res.status(400).json({
-            success: false,
-            msg: 'this id is already in your pending list',
-          });
-        }
-        account.pendingFriends.push(fromFriend);
-        account.save();
+  Account.findById(fromFriend)
+    .select('-password')
+    .then(account => {
+      if (
+        account.sendingFriendList.filter(
+          friend => friend.toString() === toFriend,
+        ).length > 0
+      ) {
         return sendJSONresponse(res, 200, {
           success: true,
-          message: `Friend request send to ${toFriend}`,
+          message: `you already send request to this ${toFriend}`,
         });
+      } else {
+        account.sendingFriendList.push(toFriend);
+        account.save();
+        // sending friend request to toFriend
+        Account.findById(toFriend).then(account => {
+          if (
+            account.pendingFriends.filter(
+              friend => friend.toString() === fromFriend,
+            ).length > 0
+          ) {
+            return res.status(400).json({
+              success: false,
+              msg: 'this id is already in your pending list',
+            });
+          }
+          account.pendingFriends.push(fromFriend);
+          account.save();
+          return sendJSONresponse(res, 200, {
+            success: true,
+            message: `Friend request send to ${toFriend}`,
+          });
 
-        //
-      });
-    }
-  });
+          //
+        });
+      }
+    });
 };
 
 // check in pending request the id exist or not
@@ -531,6 +546,7 @@ const getAccount = async (req, res) => {
     );
     const userInfo = { ...req.user._doc };
     userInfo.timeline = timelineHistory;
+    delete userInfo.password;
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,
@@ -543,6 +559,7 @@ const getAccount = async (req, res) => {
 
 const accountLoad = async (req, res, next, id) => {
   Account.findById(id)
+    .select('-password')
     .exec()
     .then(result => {
       if (result) {
@@ -681,10 +698,7 @@ module.exports = {
   register,
   login,
   logout,
-  //  verifyChangePassword,
-  // changePassword,
-  //  forgetPassword,
-  verifyAccount,
+  //  verifyAccount,
   // followAccount,
   pendingFriendRequestList,
   //getAllAccounts,

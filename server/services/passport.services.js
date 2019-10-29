@@ -14,9 +14,6 @@ const localOptions = {
 const localLogin = new LocalStrategy(
   localOptions,
   (email, password, done) => {
-    // Verify this email and password
-    // Call done with the user if correct email:password
-    // Otherwise call done with false
     Account.findOne({ email })
       .populate('companies', '_id name')
       .populate('jobExperience education skillArea')
@@ -59,10 +56,9 @@ const jwtLogin = new JwtStrategy(
     }
     // See if the user ID in the payload exists in our database
     try {
-      const user = await Account.findById(payload._id).populate(
-        'companies skillArea',
-        '_id name',
-      );
+      const user = await Account.findById(payload._id)
+        .select('-password')
+        .populate('companies skillArea', '_id name');
       if (user) {
         done(null, user);
       } else {
@@ -82,5 +78,6 @@ passport.serializeUser(function(user, done) {
   done(null, user);
 });
 passport.deserializeUser(function(user, done) {
+  delete user.password;
   done(null, user);
 });

@@ -1,5 +1,13 @@
 const { Member } = require('./member.model');
-
+const Account = require('../../account/account.model');
+const logger = require('../../../config/winston');
+const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const {
+  APIError,
+  EmailIdExistError,
+  BadRequestError,
+  SearchNotMatchError,
+} = require('../../helpers/APIError.js');
 // add team member
 const addMember = async (req, res, next) => {
   // Check for JSON
@@ -91,9 +99,52 @@ const getMemberLoad = async (req, res, next) => {
   }
 };
 
+const searchMember = async (req, res, next) => {
+  const name = req.query.name;
+  const memberList = [
+    '5db81f45f2bfce027c6eb8f4',
+    '5db7e3282660d43b5af93cd8',
+  ];
+  if (name === '') {
+    const err = new BadRequestError(
+      'Nothing Submitted',
+      httpStatus.BAD_REQUEST,
+      true,
+    );
+    logger.error(`Query Error: ${err}`);
+    return next(err);
+  }
+  Account.find({ name: { $nin: memberList } })
+    .select('email name _id')
+    .then(data => {
+      if (data.length < 1) {
+        const err = new SearchNotMatchError(
+          'Query does not found',
+          httpStatus.BAD_REQUEST,
+          true,
+        );
+        logger.error(`Query Error: ${err}`);
+        return next(err);
+      } else {
+        logger.info(`Search complete ${name}`);
+        return sendJSONresponse(res, 200, {
+          employees: {
+            success: true,
+            message: `Search complete ${name}`,
+            data,
+          },
+        });
+      }
+    })
+    .catch(() => {
+      return next(err);
+    });
+};
+
 module.exports = {
   addMember,
   list,
   getMember,
   getMemberLoad,
+  searchMember,
 };

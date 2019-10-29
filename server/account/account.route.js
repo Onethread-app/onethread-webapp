@@ -50,7 +50,7 @@ router.route('/update').put(
 router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
 router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
 router.route('/logout').get(requireAuth, accountCtrl.logout);
-router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);
+//router.route('/verifyAccount/:token').get(accountCtrl.verifyAccount);
 
 // router.route('/forgetPassword').post(accountCtrl.forgetPassword);
 // router
@@ -63,16 +63,16 @@ router
 router
   .route('/forget-password/:token')
   .get(accountCtrl.getAccessTokenForForgetPassword);
-router.route('/reset-password').post(accountCtrl.resetPassword);
+router.route('/reset-password').put(accountCtrl.resetPassword);
 
 // router.route('/changePassword').post(accountCtrl.changePassword);
 
 // Search for an account
-router.route('/search').get(
-  //schemaValidator(paramValidation.search),
-  requireAuth,
-  accountCtrl.searchAccount,
-);
+// router.route('/search').get(
+//   //schemaValidator(paramValidation.search),
+//   requireAuth,
+//   accountCtrl.searchAccount,
+// );
 
 // follow an account
 // router

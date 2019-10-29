@@ -11,21 +11,21 @@ const transporter = nodemailer.createTransport({
 });
 
 const { port } = config;
-const host = `http://192.168.8.103:4040`;
+const host = `http://localhost:3000`;
 
 module.exports.sendEmailForResetPassword = async (
   name,
   emailID,
   token,
 ) => {
-  const link = `${host}/api/v1/account/forgetPassword/${token}`;
+  const link = `${host}/reset-password/${token}`;
   const mailOptions = {
     to: emailID,
     subject: 'Generated Token For Reset Password',
     html: `
       <h1> Hi ${name}, </h1>
-      <h2> Copy This Link and paste it into POSTMAN </h2>
-      <a href="${link}"> Click this link </a>
+      <h2> Please Reset Your password from following <a href="${link}"> Link </a> </h2>
+  
     `,
   };
 
