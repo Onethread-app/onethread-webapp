@@ -6,11 +6,13 @@ const member = new Schema(
     account: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
+      unique: false,
       required: true,
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
+      unique: false,
       required: true,
     },
     role: {
@@ -37,6 +39,8 @@ const member = new Schema(
     timestamps: true,
   },
 );
+
+member.index({ account: 1, company: 1 }, { unique: true });
 
 let Member = mongoose.model('Member', member);
 

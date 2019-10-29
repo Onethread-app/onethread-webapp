@@ -43,7 +43,7 @@ const addMember = async (req, res, next) => {
 // get all members for a company
 const list = async (req, res, next) => {
   try {
-    const { limit = 2, skip = 0 } = req.query;
+    const { limit = 50, skip = 0 } = req.query;
 
     const members = await Member.find({
       company: req.company._id,

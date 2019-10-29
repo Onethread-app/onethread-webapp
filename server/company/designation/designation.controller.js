@@ -40,7 +40,7 @@ const create = async (req, res, next) => {
   }
 };
 
-const list = async (req, res) => {
+const list = async (req, res, next) => {
   try {
     const divisions = await Division.find({
       company: req.company._id,
@@ -58,9 +58,7 @@ const list = async (req, res) => {
       message: 'No divisions found.',
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error,
-    });
+    next(error);
   }
 };
 
