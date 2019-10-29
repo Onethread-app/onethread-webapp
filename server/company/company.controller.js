@@ -52,6 +52,32 @@ const createCompany = async (req, res, next) => {
   }
 };
 
+// get companies list for individual user
+const getCompanyIndividual = async (req, res, next) => {
+  try {
+    // populate options
+    let options = [
+      {
+        path: 'company',
+        select: '_id name',
+      },
+    ];
+
+    let companies = await Member.find({
+      account: req.params.account,
+    })
+      .select('-_id company role')
+      .populate(options);
+
+    return res.status(200).json({
+      status: true,
+      companies,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // get a company profile
 const getCompany = async (req, res, next) => {
   try {
@@ -64,6 +90,7 @@ const getCompany = async (req, res, next) => {
       // },
     ];
 
+    // company details
     let company = await Company.findOne({
       name: req.params.cname,
     })
@@ -72,9 +99,15 @@ const getCompany = async (req, res, next) => {
       )
       .populate(options);
 
+    // role info
+    let member = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    }).select('-_id role');
+
     return res.status(200).json({
       status: true,
-      company,
+      company: { ...company._doc, role: member.role },
     });
   } catch (error) {
     next(error);
@@ -205,6 +238,7 @@ module.exports = {
   createCompany,
   getCompany,
   updateCompany,
+  getCompanyIndividual,
   deleteCompany,
   addEmployees,
   getCompanyLoad,

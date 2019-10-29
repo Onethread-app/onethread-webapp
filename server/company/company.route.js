@@ -38,6 +38,11 @@ router
 //   companyCtrl.deleteCompany,
 // );
 
+// companies list for individual user
+router
+  .route('/individual/:account')
+  .get(requireAuth, companyCtrl.getCompanyIndividual);
+
 // redirect to member
 router.use('/:cname/members', memberRoutes);
 // redirect to department
