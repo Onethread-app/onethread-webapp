@@ -4,7 +4,7 @@ import { isEqual } from 'lodash';
 import { History } from 'history';
 import { tokenConfig, Entity } from '../UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
-import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DIVISION, ADD_DIVISION_ERROR, ADD_DEPARTMENT, ADD_DIVISION_LOADING, ADD_DEPARTMENT_ERROR, ADD_DEPARTMENT_LOADING } from './Types';
+import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT } from './Types';
 import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
 
 export const createCompanyAction = (companyData: CompanyModel, routeHistory: History) => async (dispatch: any, getState: any) => {
@@ -54,15 +54,33 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
   }
 }
 
-export const addTeamMembers = (user: (string | undefined)[], name: string) => async (dispatch: any, getState: any) => {
+export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig(getState);
-    let body = {
-      "employees": user
-    }
     if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.put(`company/${name}/employees`, body, headers);
-      return response.data;
+      let companyName = getState().companyReducer.currentCompany.name;
+      dispatch({ type: COMPANY_REDUCER_LOADING });
+      const response = await tigrowApi.get(`company/${companyName}/members`, headers);
+      dispatch({ type: GET_ALL_COMPANY_MEMBERS, payload: response.data });
+    } else {
+      console.log("error in slection of company fetching")
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: 'Network error' });
+    } else {
+      console.log(error.response);
+    }
+  }
+}
+
+export const addTeamMembers = (members: any, companyName: string) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      dispatch({ type: COMPANY_REDUCER_LOADING });
+      await tigrowApi.post(`company/${companyName}/members`, {members}, headers);
+      dispatch({ type: COMPANY_REDUCER_LOADING_FALSE });
       // dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
     } else {
       console.log("error in slection of company fetching")
@@ -76,39 +94,38 @@ export const addTeamMembers = (user: (string | undefined)[], name: string) => as
   }
 }
 
-export const addDivisionAction = (name: Entity) => async (dispatch: any, getState: any) => {
-
-  try {
-    const headers = tokenConfig(getState);
-    if ((headers as any).headers.Authorization) {
-      dispatch({ type: ADD_DIVISION_LOADING });
-      let company = getState().companyReducer.currentCompany.name;
-      const response = await tigrowApi.post(`/company/${company}/divisions`, name, headers);
-      dispatch({ type: ADD_DIVISION, payload: response.data });
-    } else {
-      console.log("error in adding division")
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: ADD_DIVISION_ERROR, payload: 'Network error' });
-    } else if (error.response.status === 401) {
-      dispatch({ type: ADD_DIVISION_ERROR, payload: 'Unauthorized user.' });
-    } else {
-      console.log(error.response);
-    }
-  }
-}
-
 export const addDepartmentAction = (name: Entity) => async (dispatch: any, getState: any) => {
 
   try {
     console.log(name)
     const headers = tokenConfig(getState);
     if ((headers as any).headers.Authorization) {
-      dispatch({ type: ADD_DEPARTMENT_LOADING });
+      dispatch({ type: COMPANY_DEPARTMENT_LOADING });
       let company = getState().companyReducer.currentCompany.name;
       const response = await tigrowApi.post(`/company/${company}/departments`, name, headers);
       dispatch({ type: ADD_DEPARTMENT, payload: response.data });
+    } else {
+      console.log("error in adding department")
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Network error' });
+    } else if (error.response.status === 401) {
+      dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Unauthorized user.' });
+    } else {
+      console.log(error.response);
+    }
+  }
+}
+
+export const getAllDepartments = () => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      dispatch({ type: COMPANY_DEPARTMENT_LOADING });
+      let company = getState().companyReducer.currentCompany.name;
+      const response = await tigrowApi.get(`/company/${company}/departments`, headers);
+      dispatch({ type: GET_ALL_DEPARTMENT, payload: response.data });
     } else {
       console.log("error in adding department")
     }

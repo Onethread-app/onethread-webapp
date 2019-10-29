@@ -1,6 +1,16 @@
-import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_TEAM_MEMBERS, ADD_DIVISION, ADD_DEPARTMENT, ADD_DIVISION_ERROR, ADD_DIVISION_LOADING, ADD_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR } from './Types';
+import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
+
+export interface ICompanyMembers {
+  _id: string,
+  account: {
+    _id: string;
+    name: string;
+  },
+  role: string;
+  designations: []
+}
 export interface CompanyModel {
   _id: string,
   name: string,
@@ -11,7 +21,8 @@ export interface CompanyModel {
   legalOwnerMail: string,
   employees: User[],
   divisions: Entity[],
-  departments: Entity[]
+  departments: Entity[],
+  members: [ICompanyMembers]
 }
 
 const InitialState = {
@@ -23,7 +34,7 @@ const InitialState = {
     address: "",
     legalOwnerName: "",
     legalOwnerMail: "",
-    employees: [{}],
+    members: [{}],
     divisions: [{}],
     departments: [{}]
   },
@@ -33,6 +44,16 @@ const InitialState = {
 
 export const CompanyReducer = (state = InitialState, action: any) => {
   switch (action.type) {
+    case COMPANY_REDUCER_LOADING:
+      return {
+        ...state,
+        loading: true,
+      }
+    case COMPANY_REDUCER_LOADING_FALSE:
+      return {
+        ...state,
+        loading: false,
+      }
     case GET_COMPANY_DETAILS:
       return {
         ...state,
@@ -43,31 +64,28 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: action.payload.company
       }
-    case ADD_TEAM_MEMBERS:
-      return {
-        ...state,
-        currentCompany: action.payload
-      }
-    case ADD_DIVISION_LOADING:
-      return {
-        ...state,
-        loading: true
-      }
-    case ADD_DIVISION_ERROR:
-      return {
-        ...state,
-        error: action.payload,
-        loading: false
-      }
-    case ADD_DIVISION:
+    // case ADD_TEAM_MEMBERS:
+    //   return {
+    //     ...state,
+    //     currentCompany: {
+    //       ...state.currentCompany,
+    //       members: [
+    //         ...state.currentCompany.members,
+    //         action.payload.member
+    //       ]
+    //     }
+    //   }
+
+    case GET_ALL_COMPANY_MEMBERS:
       return {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          divisions: [...state.currentCompany.divisions, action.payload.division]
+          members: action.payload.members
         },
-      };
-    case ADD_DEPARTMENT_LOADING:
+        loading: false
+      }
+    case COMPANY_DEPARTMENT_LOADING:
       return {
         ...state,
         loading: true
@@ -85,6 +103,16 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           ...state.currentCompany,
           departments: [...state.currentCompany.departments, action.payload.department]
         },
+        loading: false
+      };
+    case GET_ALL_DEPARTMENT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          departments: action.payload.departments
+        },
+        loading: false
       };
     default:
       return state;

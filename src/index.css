@@ -81,6 +81,9 @@ a:hover {
   border-bottom: 1px solid #0fa3a3 ;
   width: 100%;
 }
+.max-h5 {
+  max-height: 16rem;
+}
 .w-2{
   width: 2%;
 }

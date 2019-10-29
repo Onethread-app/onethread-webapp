@@ -156,6 +156,8 @@ const SkillEdit = (props: {
             items={skills}
             selectedItems={selectedItems}
             setSelectedItems={setSelectedItems}
+            isCreatable={true}
+            multipleItemSelect={true}
           />
         </div>
         <div className="fl w-100 mb2">

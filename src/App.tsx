@@ -9,7 +9,7 @@ import { FeedPage } from "pages/company/FeedPage";
 import { CompanyProfilePage } from 'pages/company/ProfilePage';
 import { Layout } from 'components/common/Layout';
 import { TaskPage } from 'pages/company/TaskPage';
-import { CompanyTeamMembersPage } from 'pages/company/CompanyTeamMembersPage';
+import { TeamMembersPage } from 'pages/company/TeamMembersPage';
 import { SettingsPage } from 'pages/company/SettingsPage';
 
 const PrivateRoute = (props: {
@@ -84,7 +84,7 @@ export const App = () => (
 			<PrivateRoute
 				path="/company/:cname/team"
 				exact={true}
-				component={CompanyTeamMembersPage}
+				component={TeamMembersPage}
 			/>
 			<PrivateRoute
 				path="/company/:cname/settings"
