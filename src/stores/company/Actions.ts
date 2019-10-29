@@ -60,7 +60,7 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
     if ((headers as any).headers.Authorization) {
       let companyName = getState().companyReducer.currentCompany.name;
       dispatch({ type: COMPANY_REDUCER_LOADING });
-      const response = await tigrowApi.get(`company/${companyName}/members`, headers);
+      const response = await tigrowApi.get(`company/${companyName}/members?limit=100`, headers);
       dispatch({ type: GET_ALL_COMPANY_MEMBERS, payload: response.data });
     } else {
       console.log("error in slection of company fetching")

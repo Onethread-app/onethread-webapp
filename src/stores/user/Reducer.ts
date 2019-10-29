@@ -1,4 +1,4 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR,} from './Types';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE,} from './Types';
 export interface User {
 	_id: string,
 	email: string
@@ -109,8 +109,13 @@ export const UserReducer = (state = InitialState, action: any) => {
 			error: action.payload,
 			loading: false
 		}
-}	
-	
+	}	
+	case CLEAR_USER_REDUCER_STATE: 
+		return {
+			user: {},
+			loading: false,
+			error: ''
+		}
 		default:
 			return state;
 	}

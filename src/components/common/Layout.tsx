@@ -55,9 +55,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       && isEqual((props.match.params as any).username, props.user.name) === false) {
       props.history.push(`/unavailable/profile`);
     }
-    if (isEmpty(props.user._id) 
-      || (isEmpty((props.match.params as any).cname) === false && isEmpty(props.company._id))) {
+      if (isEmpty(props.user._id) === true) {
         load(props.match, props.fetchUserAction, props.getCompanyDetails).then(r => setLoading(false));
+      } else if (isEmpty((props.match.params as any).cname) === false && isEmpty(props.company._id) === true) {
+        load(props.match, props.fetchUserAction, props.getCompanyDetails).then(r => setLoading(false));
+      } else if (isEmpty(props.user._id) === false && isEmpty((props.match.params as any).cname) === true && loading === true) {
+        setLoading(false);
       }
   }, [loading]);
 

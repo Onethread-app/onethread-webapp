@@ -1,4 +1,4 @@
-import { USER_SIGNUP_LOADING, USER_LOGIN_ERROR, USER_SIGNUP, USER_LOGIN, USER_LOGOUT } from './Types'
+import { USER_SIGNUP_LOADING, USER_LOGIN_ERROR, USER_SIGNUP, USER_LOGIN, USER_LOGOUT, CLEAR_AUTH_REDUCER_STATE } from './Types'
 
 export interface UserModel {
   firstName: string,
@@ -71,6 +71,17 @@ export const AuthReducer = (state = InitialState, action: any) => {
         },
         loading: false
       }
+    case CLEAR_AUTH_REDUCER_STATE:
+      return {
+        loginError: {
+          message: "",
+          email: false,
+          password: false,
+          network: false
+        },
+        loading: false,
+        token: null
+      } 
     default:
       return state;
   }

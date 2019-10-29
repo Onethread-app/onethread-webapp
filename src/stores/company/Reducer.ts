@@ -1,4 +1,4 @@
-import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT } from './Types';
+import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
 
@@ -114,6 +114,12 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
         loading: false
       };
+    case CLEAR_COMPANY_REDUCER_STATE:
+      return {
+        currentCompany: {},
+        loading: false,
+        error: ''
+      }
     default:
       return state;
   }

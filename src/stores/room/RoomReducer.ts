@@ -5,7 +5,7 @@ import {
 	CLEAR_ROOM_MESSAGES,
 	CURRENT_ROOM,
 	NEW_MESSAGE,
-	CLEAR_ROOMS,
+	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
 	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER
 } from "./Types";
@@ -59,7 +59,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				rooms: action.payload,
 				loading: false
 			};
-		case CLEAR_ROOMS:
+		case CLEAR_ROOMS_REDUCER_STATE:
 			return {
 				...state,
 				roomId: null,

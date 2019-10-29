@@ -3,7 +3,8 @@ import {
 	USER_LOGIN,
 	USER_LOGIN_ERROR,
 	USER_SIGNUP_LOADING,
-	USER_LOGOUT
+	USER_LOGOUT,
+	CLEAR_AUTH_REDUCER_STATE
 } from "./Types";
 import tigrowApi from "tigrowApi";
 import { AxiosRequestConfig } from "axios";
@@ -11,8 +12,9 @@ import { History } from "history";
 import { UserModel } from "stores/auth/Reducer";
 import { isEqual } from "lodash";
 import { tokenConfig } from "../UtilsActions";
-import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR } from 'stores/user/Types';
-import { CLEAR_ROOMS } from 'stores/room/Types';
+import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE } from 'stores/user/Types';
+import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
+import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 
 export const userSignupAction = (
 	newUser: UserModel,
@@ -123,7 +125,10 @@ export const logoutAction = (routeHistory: History) => async (
 			await tigrowApi.get(`/account/logout`, headers);
 			routeHistory.push("/signin");
 			dispatch({ type: USER_LOGOUT });
-			dispatch({ type: CLEAR_ROOMS });
+			dispatch({ type: CLEAR_AUTH_REDUCER_STATE });
+			dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
+			dispatch({ type: CLEAR_USER_REDUCER_STATE });
 		} else {
 			console.log("No token found in logout action");
 		}
