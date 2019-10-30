@@ -79,10 +79,13 @@ const register = async (req, res, next) => {
           );
           const infoObj = info.account.toObject();
           delete infoObj.password;
+          const accessToken = jwt.sign(info, config.jwtSecret, {
+            expiresIn: '1d',
+          });
           const emailResponse = await sendEmailForVerifyAccount(
             account.name,
             account.email,
-            token,
+            accessToken,
           );
           req.login(user, async function(err) {
             if (err) {
@@ -99,6 +102,7 @@ const register = async (req, res, next) => {
               return sendJSONresponse(res, 201, {
                 success: true,
                 message: 'User created',
+                emailResponse,
               });
             }
           });
@@ -129,6 +133,9 @@ const login = async (req, res, next) => {
     const payLoad = {
       email: req.user,
     };
+    const token = jwt.sign({ _id: req.user._id }, config.jwtSecret, {
+      expiresIn: 60 * 60 * 60 * 24,
+    });
     const accessToken = jwt.sign(payLoad, config.jwtSecret, {
       expiresIn: '1d',
     });
@@ -151,7 +158,6 @@ const login = async (req, res, next) => {
     userObj.timeline = timelineHistory;
     delete userObj.password;
     addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
-    let token = req.user.token;
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,

@@ -18,7 +18,7 @@ module.exports.addRefreshTokenToList = async (
       if (err) {
         logger.debug(`redis error while save in database ${err}`);
       } else {
-        logger.info(`successfully set to ${data} data`);
+        logger.info(`successfully set to  data`);
         return replies;
       }
     },
