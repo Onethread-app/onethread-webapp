@@ -22,10 +22,10 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
   //need to fix this
 
   useEffect(() => {
-    props.errorUnauthorized.email=false;
-    props.errorUnauthorized.password=false;
-    props.errorUnauthorized.message="";
-    props.errorUnauthorized.network=false;
+    props.errorUnauthorized.email = false;
+    props.errorUnauthorized.password = false;
+    props.errorUnauthorized.message = "";
+    props.errorUnauthorized.network = false;
   });
 
   const { email, password } = values;
@@ -90,8 +90,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
             <div className="mt3">
               <form className="dt fl cf w-100">
                 <div className="mw9 center ph3-ns v-mid dtc">
-                  {props.errorUnauthorized.email || props.errorUnauthorized.network ? 
-                    <small className="red">{props.errorUnauthorized.message}</small> 
+                  {props.errorUnauthorized.email || props.errorUnauthorized.network ?
+                    <small className="red">{props.errorUnauthorized.message}</small>
                     : ""}
                   <div className={`pt3 ${errors.email ? "mb3" : "mb4"}`}>
                     <div className="flex">
@@ -102,7 +102,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                         placeHolder="Email"
                         leftIcon="envelope"
                         className={`br0 ${props.errorUnauthorized.email || errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
-                        leftIconColor= {`${props.errorUnauthorized.email || errors.email ? 'red' : "#0fa3a3"}`}
+                        leftIconColor={`${props.errorUnauthorized.email || errors.email ? 'red' : "#0fa3a3"}`}
                         style={{
                           boxShadow: 'none',
                         }}
@@ -134,8 +134,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                         placeHolder="Password"
                         leftIcon="lock"
                         className={`br0 ${props.errorUnauthorized.password || errors.password ? 'bb b--red' : 'bb b--lightBlue'}`}
-                        leftIconColor= {`${props.errorUnauthorized.password || errors.password ? 'red' : "#0fa3a3"}`}
-                       
+                        leftIconColor={`${props.errorUnauthorized.password || errors.password ? 'red' : "#0fa3a3"}`}
+
                         rightElement={
                           <Icon
                             className="pt2 pr2"
@@ -160,8 +160,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                     </div>
                     {errors.password ? <small className="red">{errors.password}</small> : ""}
                   </div>
-                  <Button 
-                  type="submit"
+                  <Button
+                    type="submit"
                     className="b--none w-100 br3 fr grow h2 ph5 pointer pv2 mb3"
                     style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
                     onClick={(e: any) => {
@@ -174,10 +174,10 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   >
                     {props.loading ? <Spinner size={15} /> : 'Sign in'}
                   </Button>
-                  <div className="mb3 tc">
-                    <a href="" style={{ color: "#0fa3a3" }}>
+                  <div className="tc mb2">
+                    <Link style={{ color: "#0fa3a3", textAlign: "center" }} to="/forgot-password">
                       Forgot Password?
-                    </a>
+                  </Link>
                   </div>
                   <div className="tc mb2">
                     <p style={{ color: "#0fa3a3" }}>
@@ -202,9 +202,9 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
 }
 
 const mapStateToProps = (state: any) => {
-  return { 
+  return {
     loading: state.authReducer.loading,
-    errorUnauthorized: state.authReducer.loginError 
+    errorUnauthorized: state.authReducer.loginError
   };
 };
 
