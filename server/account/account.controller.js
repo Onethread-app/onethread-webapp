@@ -557,6 +557,7 @@ const getAccount = async (req, res, next) => {
     const userInfo = { ...req.user._doc };
     userInfo.timeline = timelineHistory;
     delete userInfo.password;
+    delete userInfo.companies;
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,
