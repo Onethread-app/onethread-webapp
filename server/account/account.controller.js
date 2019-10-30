@@ -38,6 +38,7 @@ const register = async (req, res, next) => {
   const lastName = req.body.lastName;
   const contactNo = req.body.contactNo;
   const role = req.body.role;
+
   const uniqueHash = shortid.generate();
   const name = firstName + uniqueHash;
   if (!email || !password) {
@@ -67,6 +68,8 @@ const register = async (req, res, next) => {
         account.contactNo = contactNo;
         account.role = role;
         account.password = password;
+        token = account.generateJwt();
+        account.token = token;
         account.save().then(async user => {
           const info = {};
           info.account = account;
@@ -76,14 +79,10 @@ const register = async (req, res, next) => {
           );
           const infoObj = info.account.toObject();
           delete infoObj.password;
-          console.log(infoObj);
-          let access_token = jwt.sign(infoObj, config.jwtSecret, {
-            expiresIn: '1d',
-          });
           const emailResponse = await sendEmailForVerifyAccount(
             account.name,
             account.email,
-            access_token,
+            token,
           );
           req.login(user, async function(err) {
             if (err) {
@@ -130,7 +129,7 @@ const login = async (req, res, next) => {
     const payLoad = {
       email: req.user,
     };
-    const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
+    const accessToken = jwt.sign(payLoad, config.jwtSecret, {
       expiresIn: '1d',
     });
     const refreshToken = jwt.sign(
@@ -152,16 +151,17 @@ const login = async (req, res, next) => {
     userObj.timeline = timelineHistory;
     delete userObj.password;
     addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
+    let token = req.user.token;
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,
-      token: accessToken,
+      token: token,
       refresh_token: refreshToken,
     });
   } catch (error) {
     logger.error(`ReferenceError:${error} is not defined`);
+    next(error);
   }
-  next();
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
