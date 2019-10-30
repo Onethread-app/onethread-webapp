@@ -4,7 +4,7 @@ import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestFi
 import { useStore, connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
-import { isEqual } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
 import { Button, Tag } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 // import { InputGroupField } from 'components/common/field/InputGroup';
@@ -41,8 +41,10 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
     try {
       const headers = tokenConfig(store.getState);
       if ((headers as any).headers.Authorization) {
-        const response = await tigrowApi.get(`account/search?username=${userName}`, headers);
-        setTeamMembers(response.data.employees.data);
+        if (isEmpty(userName) === false) {
+          const response = await tigrowApi.get(`company/${props.company.name}/members/search?name=${userName}`, headers);
+          setTeamMembers(response.data.employees.data);
+        }
       } else {
         console.log('no headers')
       }
