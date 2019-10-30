@@ -45,7 +45,16 @@ const createCompany = async (req, res, next) => {
     return res.status(201).json({
       status: true,
       message: 'New company created',
-      company,
+      company: {
+        _id: company._id,
+        name: company.name,
+        type: company.type,
+        email: company.email,
+        address: company.address,
+        legalOwnerName: company.legalOwnerName,
+        legalOwnerMail: company.legalOwnerMail,
+        role: 'superAdmin',
+      },
     });
   } catch (error) {
     return next(error);
