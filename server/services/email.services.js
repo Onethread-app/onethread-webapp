@@ -37,7 +37,7 @@ module.exports.sendEmailForVerifyAccount = async (
   emailID,
   token,
 ) => {
-  const link = `${host}/api/v1/account/verifyAccount/` + token;
+  const link = `${host}/api/v1/account/verify-account/` + token;
   const mailOptions = {
     to: emailID,
     subject: 'Please confirm your Email account',

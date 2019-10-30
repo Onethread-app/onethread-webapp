@@ -18,6 +18,9 @@ const jobExperienceSchema = new Schema({
   currentlyWork: {
     type: Boolean,
   },
+  jobDescription: {
+    type: String,
+  },
   account: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',

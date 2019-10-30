@@ -29,6 +29,10 @@ router
     schemaValidator(paramValidation.register),
     accountCtrl.register,
   );
+router.get(
+  '/verify-account/:token',
+  accountCtrl.getAccessTokenForVerifyAccount,
+);
 router
   .route('/login')
   .post(

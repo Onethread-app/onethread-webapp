@@ -167,6 +167,30 @@ const login = async (req, res, next) => {
     next(error);
   }
 };
+
+// token verification for mail
+const getAccessTokenForVerifyAccount = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const user = await Account.findOne({
+      _id: req.user._id,
+      verifyAccountToken: token,
+    });
+    if (!user)
+      return res.status(400).json({ message: 'No User Found' });
+    user.verifyAccountToken = undefined;
+    user.isAccountVerified = true;
+    const dbSavedUser = await user.save();
+    return res.json({
+      message: 'Account Verified Successfully',
+      user: dbSavedUser,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: 'server error',
+    });
+  }
+};
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
   Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
@@ -195,24 +219,6 @@ const accountUpdate = async (req, res, next) => {
     .catch(err => {
       return next(err);
     });
-  // if (!req.is('application/json')) {
-  //   return res.send("Expects 'application/json'");
-  // }
-  // const reqFile = req.file;
-  // if (reqFile) {
-  //   // const imageName = new Date().getTime() + reqFile.originalname;
-  //   // const bucketName = req.user.email;
-  //   // const avatarLink = imageUpload(reqFile, bucketName, imageName);
-  //   // console.log(avatarLink);
-  //   // req.user.avatar = avatarLink;
-  //   // await req.user.save();
-  //   // return sendJSONresponse(res, 201, {
-  //   //   success: true,
-  //   //   propic: avatarLink,
-  //   // });
-  // } else {
-
-  // }
 };
 const logout = async (req, res) => {
   req.logout();
@@ -709,8 +715,7 @@ module.exports = {
   register,
   login,
   logout,
-  //  verifyAccount,
-  // followAccount,
+  getAccessTokenForVerifyAccount,
   pendingFriendRequestList,
   //getAllAccounts,
   getAccount,

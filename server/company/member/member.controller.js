@@ -1,6 +1,6 @@
 const { Member } = require('./member.model');
 const Account = require('../../account/account.model');
-// const { Company } = require('../company.model');
+const { Company } = require('../company.model');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const {
@@ -100,60 +100,52 @@ const getMemberLoad = async (req, res, next) => {
   }
 };
 
-// const searchMember = async (req, res, next) => {
-//   const name = req.query.name;
-//   const companyList = Company.findById({
-//     _id: req.company._id,
-//   }).populate('members');
-//   console.log(companyList);
-//   const companyMember = req.company.members;
-//   console.log(companyMember);
-//   const memberListId = [
-//     '5db7e3282660d43b5af93cd8',
-//     '5db81f7930595402ee57a677',
-//     '5db82102e80535065d90848e',
-//     '5db81eb27edd8d0136d9d2f7',
-//   ];
-//   if (name === '') {
-//     const err = new BadRequestError(
-//       'Nothing Submitted',
-//       httpStatus.BAD_REQUEST,
-//       true,
-//     );
-//     logger.error(`Query Error: ${err}`);
-//     return next(err);
-//   }
-//   Account.find({ name: { $regex: name, $nin: memberList } })
-//     .select('_id email name')
-//     .then(data => {
-//       if (data.length < 1) {
-//         const err = new SearchNotMatchError(
-//           'Query does not found',
-//           httpStatus.BAD_REQUEST,
-//           true,
-//         );
-//         logger.error(`Query Error: ${err}`);
-//         return next(err);
-//       } else {
-//         logger.info(`Search complete ${name}`);
-//         return sendJSONresponse(res, 200, {
-//           employees: {
-//             success: true,
-//             message: `Search complete ${name}`,
-//             data,
-//           },
-//         });
-//       }
-//     })
-//     .catch(err => {
-//       return next(err);
-//     });
-// };
+const searchMember = async (req, res, next) => {
+  const name = req.query.name;
+  const companyList = await Company.findById({
+    _id: req.company._id,
+  }).populate('members account', 'name email');
+  const memberListId = [companyList.account.name];
+  if (name === '') {
+    const err = new BadRequestError(
+      'Nothing Submitted',
+      httpStatus.BAD_REQUEST,
+      true,
+    );
+    logger.error(`Query Error: ${err}`);
+    return next(err);
+  }
+  Account.find({ name: { $regex: name, $nin: memberListId } })
+    .select('_id email name')
+    .then(data => {
+      if (data.length < 1) {
+        const err = new SearchNotMatchError(
+          'Query does not found',
+          httpStatus.BAD_REQUEST,
+          true,
+        );
+        logger.error(`Query Error: ${err}`);
+        return next(err);
+      } else {
+        logger.info(`Search complete ${name}`);
+        return sendJSONresponse(res, 200, {
+          employees: {
+            success: true,
+            message: `Search complete ${name}`,
+            data,
+          },
+        });
+      }
+    })
+    .catch(err => {
+      return next(err);
+    });
+};
 
 module.exports = {
   addMember,
   list,
   getMember,
   getMemberLoad,
-  // searchMember,
+  searchMember,
 };

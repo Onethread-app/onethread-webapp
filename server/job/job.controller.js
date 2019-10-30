@@ -11,6 +11,7 @@ const createJobExperience = async (req, res, next) => {
     startYear: req.body.startYear,
     endYear: req.body.endingYear,
     currentlyWork: req.body.currentlyWork,
+    jobDescription: req.body.jobDescription,
     account: req.user._id,
   });
   await newJobExperience
