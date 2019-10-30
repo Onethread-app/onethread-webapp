@@ -15,7 +15,6 @@ const localLogin = new LocalStrategy(
   localOptions,
   (email, password, done) => {
     Account.findOne({ email })
-      .select('-companies')
       .populate('jobExperience education skillArea', '_id name')
       .exec((err, user) => {
         if (err) {
@@ -57,8 +56,11 @@ const jwtLogin = new JwtStrategy(
     // See if the user ID in the payload exists in our database
     try {
       const user = await Account.findById(payload._id)
-        .select('-password -companies')
-        .populate('skillArea jobExperience education', '_id name');
+        .select('-password')
+        .populate(
+          'companies skillArea jobExperience education',
+          '_id name',
+        );
       if (user) {
         done(null, user);
       } else {

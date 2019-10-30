@@ -1,5 +1,6 @@
 const { Member } = require('./member.model');
 const Account = require('../../account/account.model');
+// const { Company } = require('../company.model');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const {
@@ -101,7 +102,12 @@ const getMemberLoad = async (req, res, next) => {
 
 // const searchMember = async (req, res, next) => {
 //   const name = req.query.name;
-//   console.log(req);
+//   const companyList = Company.findById({
+//     _id: req.company._id,
+//   }).populate('members');
+//   console.log(companyList);
+//   const companyMember = req.company.members;
+//   console.log(companyMember);
 //   const memberListId = [
 //     '5db7e3282660d43b5af93cd8',
 //     '5db81f7930595402ee57a677',
