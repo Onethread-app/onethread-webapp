@@ -6,7 +6,7 @@ export interface UserModel {
   contactNo: string,
   email: string,
   password: string,
-  confirmPassword: string,
+  confirmPassword: string
 }
 
 const InitialState = {
@@ -58,7 +58,7 @@ export const AuthReducer = (state = InitialState, action: any) => {
         },
         loading: false
       }
-    
+
     case USER_LOGOUT:
       return {
         ...state,
