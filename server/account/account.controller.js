@@ -219,7 +219,7 @@ const logout = async (req, res) => {
   res.end();
 };
 
-const sendEmailForForgetPassword = async (req, res) => {
+const sendEmailForForgetPassword = async (req, res, next) => {
   try {
     crypto.randomBytes(32, async (err, buffer) => {
       if (err) return res.status(400).json(err);
@@ -247,7 +247,7 @@ const sendEmailForForgetPassword = async (req, res) => {
   }
 };
 
-const getAccessTokenForForgetPassword = async (req, res) => {
+const getAccessTokenForForgetPassword = async (req, res, next) => {
   try {
     const { token } = req.params;
     const user = await Account.findOne({
@@ -266,7 +266,7 @@ const getAccessTokenForForgetPassword = async (req, res) => {
     next(err);
   }
 };
-const resetPassword = async (req, res) => {
+const resetPassword = async (req, res, next) => {
   try {
     const { password, userID } = req.body;
     const user = await Account.findOne({ _id: userID }).select(
@@ -332,7 +332,7 @@ const resetPassword = async (req, res) => {
 // };
 
 // send friend request to an account
-const sendFriendRequest = async (req, res) => {
+const sendFriendRequest = async (req, res, next) => {
   let fromFriend = req.user.id;
   let toFriend = req.query.userID;
 
@@ -384,7 +384,7 @@ const sendFriendRequest = async (req, res) => {
 };
 
 // check in pending request the id exist or not
-const pendingFriendRequestList = async (req, res) => {
+const pendingFriendRequestList = async (req, res, next) => {
   let reqUserID = req.account.id;
   Account.findById(reqUserID).then(account => {
     let pendingList = account.pendingFriends;
@@ -401,7 +401,7 @@ const pendingFriendRequestList = async (req, res) => {
 };
 
 // Accept Friend request
-const acceptFriendRequest = async (req, res) => {
+const acceptFriendRequest = async (req, res, next) => {
   let reqUserID = req.user.id;
   let acceptedID = req.query.userID;
 
@@ -425,7 +425,7 @@ const acceptFriendRequest = async (req, res) => {
 };
 
 // friend List information
-const friendList = async (req, res) => {
+const friendList = async (req, res, next) => {
   Account.findById(req.user._id)
     .populate(
       'friends',
@@ -452,7 +452,7 @@ const friendList = async (req, res) => {
 };
 
 // sending Friend request List
-const sendFriendRequestList = async (req, res) => {
+const sendFriendRequestList = async (req, res, next) => {
   let reqUserID = req.account.id;
   Account.findById(reqUserID).then(account => {
     let sendFriendRequestList = account.sendingFriendList;
@@ -541,7 +541,7 @@ const sendFriendRequestList = async (req, res) => {
 //   console.log(req.user);
 // };
 
-const getAccount = async (req, res) => {
+const getAccount = async (req, res, next) => {
   try {
     const timeline = [
       ...req.user.jobExperience,
@@ -622,7 +622,7 @@ const searchAccount = async (req, res, next) => {
     });
 };
 
-const tokenRefresh = async (req, res) => {
+const tokenRefresh = async (req, res, next) => {
   const refreshToken = req.body.refresh_token;
   if (refreshToken) {
     client.exists(refreshToken, function(err, exists) {
@@ -676,7 +676,7 @@ const tokenRefresh = async (req, res) => {
   }
 };
 
-const tokenRevoke = async (req, res) => {
+const tokenRevoke = async (req, res, next) => {
   const refreshToken = req.body.refresh_token;
   if (refreshToken) {
     client.exists(refreshToken, function(err, exists) {
