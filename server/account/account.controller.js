@@ -68,8 +68,6 @@ const register = async (req, res, next) => {
         account.contactNo = contactNo;
         account.role = role;
         account.password = password;
-        token = account.generateJwt();
-        account.token = token;
         account.save().then(async user => {
           const info = {};
           info.account = account;
