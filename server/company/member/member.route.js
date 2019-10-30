@@ -7,7 +7,7 @@ const memberCtrl = require('./member.controller');
 
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
-router.route('/search').get(memberCtrl.searchMember);
+// router.route('/search').get(memberCtrl.searchMember);
 router
   .route('/')
   .post(

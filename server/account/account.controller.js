@@ -141,7 +141,6 @@ const login = async (req, res, next) => {
       },
     );
 
-    let token = req.user.token;
     const userObj = req.user.toObject();
     const timeline = [
       ...req.user.jobExperience,
@@ -156,8 +155,7 @@ const login = async (req, res, next) => {
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,
-      token: token,
-      access_token: accessToken,
+      token: accessToken,
       refresh_token: refreshToken,
     });
   } catch (error) {

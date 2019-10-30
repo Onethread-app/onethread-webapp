@@ -99,57 +99,55 @@ const getMemberLoad = async (req, res, next) => {
   }
 };
 
-const searchMember = async (req, res, next) => {
-  const name = req.query.name;
-  const memberList = [
-    '5db81f45f2bfce027c6eb8f4',
-    '5db7e3282660d43b5af93cd8',
-    '5db82a2a7a4e3c08e900d815',
-    '5db6dab7da8a02466eca1e0b',
-    '5db6dab7da8a02466eca1e0b',
-  ];
-  if (name === '') {
-    const err = new BadRequestError(
-      'Nothing Submitted',
-      httpStatus.BAD_REQUEST,
-      true,
-    );
-    logger.error(`Query Error: ${err}`);
-    return next(err);
-  }
-  Account.find({
-    $and: [{ name: { $nin: memberList } }],
-  })
-    .select('email name _id')
-    .then(data => {
-      if (data.length < 1) {
-        const err = new SearchNotMatchError(
-          'Query does not found',
-          httpStatus.BAD_REQUEST,
-          true,
-        );
-        logger.error(`Query Error: ${err}`);
-        return next(err);
-      } else {
-        logger.info(`Search complete ${name}`);
-        return sendJSONresponse(res, 200, {
-          employees: {
-            success: true,
-            message: `Search complete ${name}`,
-            data,
-          },
-        });
-      }
-    })
-    .catch(err => {
-      return next(err);
-    });
-};
+// const searchMember = async (req, res, next) => {
+//   const name = req.query.name;
+//   console.log(req);
+//   const memberListId = [
+//     '5db7e3282660d43b5af93cd8',
+//     '5db81f7930595402ee57a677',
+//     '5db82102e80535065d90848e',
+//     '5db81eb27edd8d0136d9d2f7',
+//   ];
+//   if (name === '') {
+//     const err = new BadRequestError(
+//       'Nothing Submitted',
+//       httpStatus.BAD_REQUEST,
+//       true,
+//     );
+//     logger.error(`Query Error: ${err}`);
+//     return next(err);
+//   }
+//   Account.find({ name: { $regex: name, $nin: memberList } })
+//     .select('_id email name')
+//     .then(data => {
+//       if (data.length < 1) {
+//         const err = new SearchNotMatchError(
+//           'Query does not found',
+//           httpStatus.BAD_REQUEST,
+//           true,
+//         );
+//         logger.error(`Query Error: ${err}`);
+//         return next(err);
+//       } else {
+//         logger.info(`Search complete ${name}`);
+//         return sendJSONresponse(res, 200, {
+//           employees: {
+//             success: true,
+//             message: `Search complete ${name}`,
+//             data,
+//           },
+//         });
+//       }
+//     })
+//     .catch(err => {
+//       return next(err);
+//     });
+// };
 
 module.exports = {
   addMember,
   list,
   getMember,
   getMemberLoad,
-  searchMember,
+  // searchMember,
 };

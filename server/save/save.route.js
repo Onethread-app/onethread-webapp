@@ -1,6 +1,5 @@
 'use strict';
 
-
 const express = require('express');
 const validate = require('express-validation');
 const passport = require('passport');
@@ -20,7 +19,7 @@ router
     requireAuth,
     permit('user', 'admin'),
     validate(paramValidation.createSave),
-    saveCtrl.create
+    saveCtrl.create,
   );
 
 router
