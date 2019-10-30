@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Popover, Position, ButtonGroup } from '@blueprintjs/core';
+import { Button, Popover, Position, ButtonGroup, Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { logoutAction } from 'stores/auth/Actions';
@@ -9,68 +9,93 @@ import user from '../resources/images/user.png';
 import logo from '../resources/images/tigrowLogo.png';
 import { User } from 'stores/user/Reducer';
 import { ListView } from './company/ListView';
+import { CompanySignupForm } from './company/SignupForm';
 
 interface NavbarTopInternalProps {
   user: User
   logoutAction: (history: History) => void;
 }
 
-const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => (
-  <nav className="bp3-navbar bp3-fixed-top">
-    <div className="bp3-navbar-group bp3-align-left">
-      <div className="bp3-navbar-heading">
-        <Link to={`/${props.user.name}`}>
-          <img
-            src={logo}
-            className="dib"
-            alt="Site Name"
-            style={{ width: '5rem' }}
+const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
+  const [showDialog, setShowDialog] = React.useState(false);
+
+  return (
+    <>
+      <nav className="bp3-navbar bp3-fixed-top">
+        <div className="bp3-navbar-group bp3-align-left">
+          <div className="bp3-navbar-heading">
+            <Link to={`/${props.user.name}`}>
+              <img
+                src={logo}
+                className="dib"
+                alt="Site Name"
+                style={{ width: '5rem' }}
+              />
+            </Link>
+          </div>
+        </div>
+        <div className="bp3-navbar-group bp3-align-right">
+          <Popover
+            popoverClassName="bp3-popover-content-sizing h5 overflow-y-auto bg-white "
+            position={Position.BOTTOM}
+            content={
+              <ListView
+                showDialog={showDialog}
+                setShowDialog={setShowDialog}
+              />
+            }
+            target={<Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>}
           />
-        </Link>
-      </div>
-    </div>
-    <div className="bp3-navbar-group bp3-align-right">
-      <Popover
-        popoverClassName="bp3-popover-content-sizing h5 overflow-y-auto bg-white "
-        position={Position.BOTTOM}
-        content={<ListView />}
-        target={<Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>}
-      />
-      <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-chat f6 f5-l dib mr3 mr4-l" ></button>
-      <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-notifications f6 f5-l dib mr3 mr4-l" ></button>
-      <Popover
-        popoverClassName="bp3-popover-content-sizing"
-        position={Position.BOTTOM}
-        content={
-          <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
-            <Button>
-              <article
-                className="dt w-100 pb2 mt2 pointer"
-              >
-                <div className="dtc w1 w2-ns v-mid">
-                  <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
-                </div>
-                <div className="dtc v-mid pl3">
-                  <Link className="bp3-popover-dismiss" to={`/${props.user.name}`}>
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
-                  </Link>
-                </div>
-              </article>
+          <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-chat f6 f5-l dib mr3 mr4-l" ></button>
+          <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-notifications f6 f5-l dib mr3 mr4-l" ></button>
+          <Popover
+            popoverClassName="bp3-popover-content-sizing"
+            position={Position.BOTTOM}
+            content={
+              <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
+                <Button>
+                  <article
+                    className="dt w-100 pb2 mt2 pointer"
+                  >
+                    <div className="dtc w1 w2-ns v-mid">
+                      <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
+                    </div>
+                    <div className="dtc v-mid pl3">
+                      <Link className="bp3-popover-dismiss" to={`/${props.user.name}`}>
+                        <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
+                      </Link>
+                    </div>
+                  </article>
+                </Button>
+                <Button
+                  className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
+                  onClick={(e: any) => props.logoutAction(props.history)}
+                  icon="log-in"
+                >
+                  Logout
             </Button>
-            <Button
-              className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
-              onClick={(e: any) => props.logoutAction(props.history)}
-              icon="log-in"
-            >
-              Logout
-            </Button>
-          </ButtonGroup>
-        }
-        target={<img src={user} className="dim mid-gray f6 f5-l v-mid dib w2 h2 br-100" alt="user" />}
-      />
-    </div>
-  </nav>
-)
+              </ButtonGroup>
+            }
+            target={<img src={user} className="dim mid-gray f6 f5-l v-mid dib w2 h2 br-100" alt="user" />}
+          />
+        </div>
+      </nav>
+      {showDialog && (
+        <Dialog
+          icon="briefcase"
+          onClose={() => setShowDialog(!showDialog)}
+          title="Company Sign Up"
+          isOpen={showDialog}
+          style={{ background: '#fff' }}
+        >
+          <div>
+            <CompanySignupForm setShowDialog={setShowDialog} />
+          </div>
+        </Dialog>
+      )}
+    </>
+  );
+}
 
 const mapStateToProps = (state: any) => {
   return {

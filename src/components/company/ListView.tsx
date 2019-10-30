@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { ListItemViewWithImage } from 'components/common/ListItemViewWithImage';
-import { Dialog } from '@blueprintjs/core';
-import { CompanySignupForm } from './SignupForm';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { getCompanyDetails } from 'stores/company/Actions';
@@ -10,7 +8,11 @@ import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { User, ICompanyByUser } from 'stores/user/Reducer';
 import { Loading } from 'components/common/field/Loading';
 
-interface CompanyListViewInternalProps {
+interface CompanyListViewProps {
+  showDialog: boolean;
+  setShowDialog: (val: boolean) => void;
+}
+interface CompanyListViewInternalProps extends CompanyListViewProps {
   companies: ICompanyByUser[];
   user: User;
   getCompanyDetails: (companyId: string, history: History) => void;
@@ -18,11 +20,10 @@ interface CompanyListViewInternalProps {
 }
 
 export const ListViewComponent = (props: CompanyListViewInternalProps & RouteComponentProps) => {
-  const [showDialog, setShowDialog] = useState(false);
+  
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log(`get comapnies`)
     if (loading === true) {
       props.getAllCompaniesByUserId(props.user._id);
     }
@@ -34,6 +35,7 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
       <div className="mw6 center">
         {loading ? <Loading /> : props.companies && props.companies.length > 0 ? props.companies.map((c: ICompanyByUser) => (
           <ListItemViewWithImage
+            key={c.company._id}
             imageSrc={`https://robohash.org/${c.company.name}`}
             listTitle={c.company.name}
             // listDescription="C"
@@ -48,25 +50,12 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
         )) : undefined}
 
         <button
-          onClick={() => setShowDialog(!showDialog)}
+          onClick={() => props.setShowDialog(!props.showDialog)}
           className="b--none w-100 br3 grow h2 ph5 pointer pv2 white outline-0 bg-tigrowLightBlue ma2 bp3-popover-dismiss"
         >
           Create Company
                 </button>
-      </div>
-      {showDialog && (
-        <Dialog
-          icon="briefcase"
-          onClose={() => setShowDialog(!showDialog)}
-          title="Company Sign Up"
-          isOpen
-          style={{ background: '#fff' }}
-        >
-          <div>
-            <CompanySignupForm setShowDialog={setShowDialog} />
-          </div>
-        </Dialog>
-      )}
+      </div> 
     </>
   )
 }
