@@ -1,4 +1,13 @@
 import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE,} from './Types';
+
+export interface ICompanyByUser {
+	role: string;
+	company: {
+		_id: string;
+		name: string;
+	}
+}
+
 export interface User {
 	_id: string,
 	email: string
@@ -14,7 +23,7 @@ export interface User {
 	location: string,
 	about: string,
 	birthDate: Date,
-	companies: Object[],
+	companies: ICompanyByUser[],
 	friends: string[],
 	pendingFriends: string[],
 	sendingFriendList: string[],
@@ -79,10 +88,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 				...state,
 				user: {
 					...state.user,
-					companies: [
-						...state.user.companies,
-						action.payload
-					]
+					companies: action.payload.companies
 				}
 			}
 		case FETCH_USER:

@@ -3,7 +3,8 @@ import * as React from 'react';
 interface CompanyListItemProps {
   imageSrc: string;
   listTitle: string;
-  listDescription: string;
+  // listDescription: string;
+  role?: string;
   onClick?: () => void;
 }
 
@@ -17,7 +18,8 @@ export const ListItemViewWithImage = (props: CompanyListItemProps) => (
     </div>
     <div className="dtc v-mid pl3">
       <h1 className="f7 f6-ns fw4 lh-title black mv0">{props.listTitle}</h1>
-      <h2 className="f6 fw3 mt0 mb0 black-60">{props.listDescription}</h2>
+      {/* <h2 className="f6 fw3 mt0 mb0 black-60">{props.listDescription}</h2> */}
+      <h2 className="f6 fw3 mt0 mb0 black-60">{`Role: ${props.role}`}</h2>
     </div>
   </article>
 )

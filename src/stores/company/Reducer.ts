@@ -22,7 +22,8 @@ export interface CompanyModel {
   employees: User[],
   divisions: Entity[],
   departments: Entity[],
-  members: [ICompanyMembers]
+  members: [ICompanyMembers];
+  role: string;
 }
 
 const InitialState = {
@@ -36,7 +37,8 @@ const InitialState = {
     legalOwnerMail: "",
     members: [{}],
     divisions: [{}],
-    departments: [{}]
+    departments: [{}],
+    role: ""
   },
   loading: false,
   error: ''

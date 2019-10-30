@@ -5,7 +5,7 @@ import { History } from 'history';
 import { tokenConfig, Entity } from '../UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT } from './Types';
-import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
+// import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
 
 export const createCompanyAction = (companyData: CompanyModel, routeHistory: History) => async (dispatch: any, getState: any) => {
   try {
@@ -13,12 +13,12 @@ export const createCompanyAction = (companyData: CompanyModel, routeHistory: His
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.post(`/company`, companyData, headers);
       dispatch({ type: CREATE_COMPANY, payload: response.data });
-      dispatch({
-        type: USER_COMPANIES_UPDATE, payload: {
-          _id: response.data.company._id,
-          name: response.data.company.name
-        }
-      });
+      // dispatch({
+      //   type: USER_COMPANIES_UPDATE, payload: {
+      //     _id: response.data.company._id,
+      //     name: response.data.company.name
+      //   }
+      // });
       routeHistory.push(`/company/${response.data.company.name}`);
     } else {
       console.log("error in creation of company")

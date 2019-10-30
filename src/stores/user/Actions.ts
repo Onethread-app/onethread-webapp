@@ -1,4 +1,4 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR } from './Types';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from "lodash";
 import tigrowApi from 'tigrowApi';
@@ -30,7 +30,6 @@ export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, get
 };
 
 export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatch: any, getState: any) => {
-	console.log('ex', jobExperienceInfo);
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
@@ -39,7 +38,6 @@ export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatc
 				jobExperienceInfo,
 				headers
 			);
-			console.log('exp-job', response.data);
 			dispatch({ type: ADD_EXPERIENCE, payload: response.data.data });
 		} else {
 			console.log("token error")
@@ -50,7 +48,6 @@ export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatc
 }
 
 export const addEducationExperienceAction = (educationExperienceInfo: any) => async (dispatch: any, getState: any) => {
-	console.log('ex', educationExperienceInfo);
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
@@ -59,7 +56,6 @@ export const addEducationExperienceAction = (educationExperienceInfo: any) => as
 				educationExperienceInfo,
 				headers
 			);
-			console.log('exp-edu', response.data.data);
 			dispatch({ type: ADD_EXPERIENCE, payload: response.data.data });
 		} else {
 			console.log("token error")
@@ -67,4 +63,18 @@ export const addEducationExperienceAction = (educationExperienceInfo: any) => as
 	} catch (error) {
 		console.log(error.response)
 	}
+}
+
+export const getAllCompaniesByUserId = (userId: string) =>  async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.get(`/company/individual/${userId}`, headers);
+      dispatch({ type: USER_COMPANIES_UPDATE, payload: response.data });
+    } else {
+      console.log("error in get company list by user")
+    }
+  } catch (error) {
+      console.log(error.response);
+  }
 }

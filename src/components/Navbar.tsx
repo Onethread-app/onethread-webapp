@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Button, Popover, Position, Dialog, ButtonGroup } from '@blueprintjs/core';
+import { Button, Popover, Position, ButtonGroup } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import { logoutAction } from 'stores/auth/Actions';
@@ -7,122 +7,76 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import user from '../resources/images/user.png';
 import logo from '../resources/images/tigrowLogo.png';
-import { useState } from 'react';
-import { ListItemViewWithImage as ListItemViewWithImage } from './common/ListItemViewWithImage';
-import { CompanySignupForm } from './company/SignupForm';
-import { getCompanyDetails } from 'stores/company/Actions';
-import { CompanyModel } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
+import { ListView } from './company/ListView';
 
 interface NavbarTopInternalProps {
-  logoutAction: (history: History) => void;
-  getCompanyDetails: (companyId: string, history: History) => void;
-  companies: CompanyModel[],
   user: User
+  logoutAction: (history: History) => void;
 }
 
-const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
-  const [showDialog, setShowDialog] = useState(false);
-  return (
-    <>
-      <nav className="bp3-navbar bp3-fixed-top">
-        <div className="bp3-navbar-group bp3-align-left">
-          <div className="bp3-navbar-heading">
-            <Link to={`/${props.user.name}`}>
-              <img
-                src={logo}
-                className="dib"
-                alt="Site Name"
-                style={{ width: '5rem' }}
-              />
-            </Link>
-          </div>
-        </div>
-        <div className="bp3-navbar-group bp3-align-right">
-          <Popover
-            popoverClassName="bp3-popover-content-sizing h5 overflow-y-auto bg-white "
-            position={Position.BOTTOM}
-          >
-            <Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>
-            <div className="mw6 center">
-              {props.companies.map((company: CompanyModel) => (
-                <ListItemViewWithImage
-                  imageSrc={`https://robohash.org/${company.name}`}
-                  listTitle={company.name}
-                  listDescription="C"
-                  onClick={async () => {
-                    const response = await props.getCompanyDetails(company.name, props.history) as any;
-                    if (response) {
-                      props.history.push(`/company/${(response as any).company.name}`)
-                    }
-                  }}
-                />
-              ))}
-
-              <button
-                onClick={() => setShowDialog(!showDialog)}
-                className="b--none w-100 br3 grow h2 ph5 pointer pv2 white outline-0 bg-tigrowLightBlue ma2 bp3-popover-dismiss"
+const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => (
+  <nav className="bp3-navbar bp3-fixed-top">
+    <div className="bp3-navbar-group bp3-align-left">
+      <div className="bp3-navbar-heading">
+        <Link to={`/${props.user.name}`}>
+          <img
+            src={logo}
+            className="dib"
+            alt="Site Name"
+            style={{ width: '5rem' }}
+          />
+        </Link>
+      </div>
+    </div>
+    <div className="bp3-navbar-group bp3-align-right">
+      <Popover
+        popoverClassName="bp3-popover-content-sizing h5 overflow-y-auto bg-white "
+        position={Position.BOTTOM}
+        content={<ListView />}
+        target={<Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Company</Button>}
+      />
+      <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-chat f6 f5-l dib mr3 mr4-l" ></button>
+      <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-notifications f6 f5-l dib mr3 mr4-l" ></button>
+      <Popover
+        popoverClassName="bp3-popover-content-sizing"
+        position={Position.BOTTOM}
+        content={
+          <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
+            <Button>
+              <article
+                className="dt w-100 pb2 mt2 pointer"
               >
-                Create Company
-            </button>
-            </div>
-          </Popover>
-          <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-chat f6 f5-l dib mr3 mr4-l" ></button>
-          <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-notifications f6 f5-l dib mr3 mr4-l" ></button>
-          <Popover
-            popoverClassName="bp3-popover-content-sizing"
-            position={Position.BOTTOM}
-          >
-            <img src={user} className="dim mid-gray f6 f5-l v-mid dib w2 h2 br-100" alt="user" />
-            <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
-              <Button>
-                <article
-                  className="dt w-100 pb2 mt2 pointer"
-                >
-                  <div className="dtc w1 w2-ns v-mid">
-                    <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
-                  </div>
-                  <div className="dtc v-mid pl3">
-                    <Link className="bp3-popover-dismiss" to={`/${props.user.name}`}>
-                      <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
-                    </Link>
-                  </div>
-                </article>
-              </Button>
-              <Button
-                className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
-                onClick={(e: any) => props.logoutAction(props.history)}
-                icon="log-in"
-              >
-                Logout
+                <div className="dtc w1 w2-ns v-mid">
+                  <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
+                </div>
+                <div className="dtc v-mid pl3">
+                  <Link className="bp3-popover-dismiss" to={`/${props.user.name}`}>
+                    <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
+                  </Link>
+                </div>
+              </article>
             </Button>
-            </ButtonGroup>
-          </Popover>
-        </div>
-      </nav>
-      {showDialog && (
-        <Dialog
-          icon="briefcase"
-          onClose={() => setShowDialog(!showDialog)}
-          title="Company Sign Up"
-          isOpen
-          style={{ background: '#fff' }}
-        >
-          <div>
-            <CompanySignupForm setShowDialog={setShowDialog} />
-          </div>
-        </Dialog>
-      )}
-    </>
-  );
-}
+            <Button
+              className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
+              onClick={(e: any) => props.logoutAction(props.history)}
+              icon="log-in"
+            >
+              Logout
+            </Button>
+          </ButtonGroup>
+        }
+        target={<img src={user} className="dim mid-gray f6 f5-l v-mid dib w2 h2 br-100" alt="user" />}
+      />
+    </div>
+  </nav>
+)
 
 const mapStateToProps = (state: any) => {
   return {
-    companies: state.userReducer.user.companies,
     user: state.userReducer.user
   }
 }
 
-export const NavbarTop = connect(mapStateToProps, { logoutAction, getCompanyDetails })(withRouter(NavbarTopComponent));
+export const NavbarTop = connect(mapStateToProps, { logoutAction })(withRouter(NavbarTopComponent));
 
