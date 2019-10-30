@@ -12,15 +12,16 @@ interface TeamMember {
   companyLoading: boolean;
 }
 
-const loadCompanyMmeber = async (getCompanyMembers: () => void) => {
+const loadCompanyMember = async (getCompanyMembers: () => void) => {
   await getCompanyMembers();
 }
 
 const TeamMembersPageComponent = (props: TeamMember) => {
 
   const [showDialog, setShowDialog] = useState(false);
+
   useEffect(() => {
-    loadCompanyMmeber(props.getCompanyMembers);
+    loadCompanyMember(props.getCompanyMembers);
   }, []);
 
   return (

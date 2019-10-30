@@ -35,9 +35,7 @@ const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentP
           isOpen
           style={{ background: '#fff' }}
         >
-          <div>
-            <CreateForm setShowDialog={setShowDialog} />
-          </div>
+          <CreateForm setShowDialog={setShowDialog} />
         </Dialog>
       )}</>
   )

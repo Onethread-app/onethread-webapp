@@ -1,10 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icon } from '@blueprintjs/core';
+import { connect } from 'react-redux';
 import { RoomSideBar } from 'components/company/rooms/RoomSideBar';
 import { ChatLayout } from 'components/company/rooms/chats/ChatLayout';
+import { getCompanyMembers } from 'stores/company/Actions';
 
-export const RoomPage = () => {
+interface RoomMember {
+	getCompanyMembers: () => void;
+}
 
+const loadCompanyMember = async (getCompanyMembers: () => void) => {
+	await getCompanyMembers();
+}
+
+export const RoomPageComponent = (props: RoomMember) => {
+	useEffect(() => {
+		loadCompanyMember(props.getCompanyMembers);
+	}, []);
 	const [isOpen, setIsOpen] = useState(true);
 
 	return (
@@ -31,3 +43,5 @@ export const RoomPage = () => {
 		</div >
 	);
 };
+
+export const RoomPage = connect(null, { getCompanyMembers })(RoomPageComponent)
