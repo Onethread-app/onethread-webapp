@@ -11,6 +11,8 @@ import { Layout } from 'components/common/Layout';
 import { TaskPage } from 'pages/company/TaskPage';
 import { TeamMembersPage } from 'pages/company/TeamMembersPage';
 import { SettingsPage } from 'pages/company/SettingsPage';
+import { ForgotPasswordPage } from 'pages/ForgotPasswordPage';
+import { ResetPasswordPage } from 'pages/ResetPasswordPage';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -49,6 +51,19 @@ export const App = () => (
 				path="/signup"
 				render={r =>
 					isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
+				}
+			/>
+			<Route
+				exact
+				path="/forgot-password"
+				render={r =>
+					isAuthenticate() ? <Redirect to="/" /> : <ForgotPasswordPage />
+				}
+			/>
+			<Route
+				path="/reset-password/:token"
+				render={r =>
+					isAuthenticate() ? <Redirect to="/" /> : <ResetPasswordPage />
 				}
 			/>
 			<PrivateRoute
@@ -92,6 +107,7 @@ export const App = () => (
 				component={SettingsPage}
 			/>
 			<Route component={NoMatch} />
+			
 		</Switch>
 
 	</BrowserRouter>

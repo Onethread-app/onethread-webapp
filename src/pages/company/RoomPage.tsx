@@ -3,20 +3,9 @@ import { Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { RoomSideBar } from 'components/company/rooms/RoomSideBar';
 import { ChatLayout } from 'components/company/rooms/chats/ChatLayout';
-import { getCompanyMembers } from 'stores/company/Actions';
 
-interface RoomMember {
-	getCompanyMembers: () => void;
-}
+export const RoomPageComponent = () => {
 
-const loadCompanyMember = async (getCompanyMembers: () => void) => {
-	await getCompanyMembers();
-}
-
-export const RoomPageComponent = (props: RoomMember) => {
-	useEffect(() => {
-		loadCompanyMember(props.getCompanyMembers);
-	}, []);
 	const [isOpen, setIsOpen] = useState(true);
 
 	return (
@@ -44,4 +33,4 @@ export const RoomPageComponent = (props: RoomMember) => {
 	);
 };
 
-export const RoomPage = connect(null, { getCompanyMembers })(RoomPageComponent)
+export const RoomPage = connect(null, null)(RoomPageComponent)

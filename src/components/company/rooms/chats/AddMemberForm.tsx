@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { CompanyModel, ICompanyMembers } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useStore, connect, useSelector } from 'react-redux';
@@ -6,7 +6,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
 import { Button, Tag } from '@blueprintjs/core';
-import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
+import { addTeamMembers } from 'stores/company/Actions';
 
 interface RoomMembersViewProps {
   showDialog: boolean;
@@ -16,21 +16,43 @@ interface RoomMembersViewProps {
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
   company: CompanyModel;
   addTeamMembers: (members: { account: string | undefined, company: string }[], name: string) => void;
-  getCompanyMembers: () => void;
 }
+
 
 const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
 
-  const members = props.company.members.map(m => ({ _id: m.account._id, name: m.account.name }));
-
-  const [teamMembers, setTeamMembers]: any = useState(members);
+  const store = useStore();
+  const [teamMembers, setTeamMembers]: any = useState([]);
 
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
 
+  const getSuggestionsForRoomMembers = async () => {
+    try {
+      const headers = tokenConfig(store.getState);
+      if ((headers as any).headers.Authorization) {
+        const response = await tigrowApi.get(`/rooms/members/${store.getState().roomReducer.roomId}/${store.getState().companyReducer.currentCompany._id}`, headers);
+        console.log(response.data);
+        setTeamMembers(response.data.members);
+      } else {
+        console.log('no headers')
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        console.log('network error')
+      }
+      else {
+        console.log(error.response);
+      }
+    }
+  }
+
   const fetchTeamMembersByUsername = async (userName: string) => {
     console.log("Search: " + userName);
-    setTeamMembers(members);
   }
+
+  useEffect(() => {
+    getSuggestionsForRoomMembers()
+  }, []);
 
   return (
     <div className="pa3">
@@ -94,4 +116,4 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export const AddMemberForm = connect(mapStateToProps, { addTeamMembers, getCompanyMembers })(AddMemberFormComponent)
+export const AddMemberForm = connect(mapStateToProps, { addTeamMembers })(AddMemberFormComponent)

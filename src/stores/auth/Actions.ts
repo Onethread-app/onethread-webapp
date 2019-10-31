@@ -1,10 +1,10 @@
 import {
-	USER_SIGNUP,
 	USER_LOGIN,
 	USER_LOGIN_ERROR,
 	USER_SIGNUP_LOADING,
 	USER_LOGOUT,
-	CLEAR_AUTH_REDUCER_STATE
+	CLEAR_AUTH_REDUCER_STATE,
+	USER_SIGNUP_LOADING_FALSE
 } from "./Types";
 import tigrowApi from "tigrowApi";
 import { AxiosRequestConfig } from "axios";
@@ -26,13 +26,22 @@ export const userSignupAction = (
 			...newUser,
 			contactNo: `880${newUser.contactNo}`
 		};
-		const response = await tigrowApi.post("account/signup", user, {
+		const response: any = await tigrowApi.post("account/signup", user, {
 			"Content-Type": "application/json"
 		} as AxiosRequestConfig);
-		localStorage.setItem("token", JSON.stringify(response.data.token));
-		await dispatch({ type: USER_SIGNUP, payload: response.data });
-		await dispatch({ type: BASIC_INFO, payload: response.data });
-		routeHistory.push(`/${response.data.user.name}`);
+		if (isEqual(response.data.message, 'User created')) {
+			dispatch({ type: USER_SIGNUP_LOADING_FALSE });
+			routeHistory.push(`/signin`);
+		} else {
+			dispatch({
+				type: USER_LOGIN_ERROR,
+				payload: {
+					message: response.error,
+					email: false,
+					network: false
+				}
+			});
+		}
 	} catch (error) {
 		if (isEqual(error.message, "Network Error")) {
 			dispatch({

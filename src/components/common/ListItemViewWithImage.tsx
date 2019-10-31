@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 interface CompanyListItemProps {
+  key: string;
   imageSrc: string;
   listTitle: string;
   // listDescription: string;
@@ -10,6 +11,7 @@ interface CompanyListItemProps {
 
 export const ListItemViewWithImage = (props: CompanyListItemProps) => (
   <article
+    key={props.key}
     className="dt w-100 pb2 mt2 pointer bp3-popover-dismiss"
     onClick={props.onClick ? props.onClick : () => null}
   >

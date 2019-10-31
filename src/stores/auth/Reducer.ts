@@ -1,4 +1,4 @@
-import { USER_SIGNUP_LOADING, USER_LOGIN_ERROR, USER_SIGNUP, USER_LOGIN, USER_LOGOUT, CLEAR_AUTH_REDUCER_STATE } from './Types'
+import { USER_SIGNUP_LOADING, USER_LOGIN_ERROR, USER_LOGIN, USER_LOGOUT, CLEAR_AUTH_REDUCER_STATE, USER_SIGNUP_LOADING_FALSE } from './Types'
 
 export interface UserModel {
   firstName: string,
@@ -6,7 +6,7 @@ export interface UserModel {
   contactNo: string,
   email: string,
   password: string,
-  confirmPassword: string,
+  confirmPassword: string
 }
 
 const InitialState = {
@@ -28,24 +28,29 @@ export const AuthReducer = (state = InitialState, action: any) => {
         ...state,
         loading: true,
       }
+    case USER_SIGNUP_LOADING_FALSE:
+      return {
+        ...state,
+        loading: false,
+      }
     case USER_LOGIN_ERROR:
       return {
         ...state,
         loginError: action.payload,
         loading: false
       }
-    case USER_SIGNUP:
-      return {
-        ...state,
-        token: action.payload.token,
-        loginError: {
-          message: "",
-          email: false,
-          password: false,
-          network: false
-        },
-        loading: false
-      }
+    // case USER_SIGNUP:
+    //   return {
+    //     ...state,
+    //     token: action.payload.token,
+    //     loginError: {
+    //       message: "",
+    //       email: false,
+    //       password: false,
+    //       network: false
+    //     },
+    //     loading: false
+    //   }
     case USER_LOGIN:
       return {
         ...state,
@@ -58,7 +63,7 @@ export const AuthReducer = (state = InitialState, action: any) => {
         },
         loading: false
       }
-    
+
     case USER_LOGOUT:
       return {
         ...state,
@@ -81,7 +86,7 @@ export const AuthReducer = (state = InitialState, action: any) => {
         },
         loading: false,
         token: null
-      } 
+      }
     default:
       return state;
   }
