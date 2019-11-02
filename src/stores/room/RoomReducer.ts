@@ -7,7 +7,7 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR
 } from "./Types";
 
 const InitialState = {
@@ -16,6 +16,7 @@ const InitialState = {
 	messages: [],
 	rooms: [],
 	companyRooms: [],
+	roomMembers: [],
 	loading: true,
 	roomError: null
 };
@@ -80,12 +81,30 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				companyRooms: action.payload,
 				loading: false
 			};
+		case GET_ROOM_MEMBERS_FROM_SERVER:
+			return {
+				...state,
+				roomMembers: action.payload,
+				loading: false
+			};
+		case GET_ROOM_MEMBERS_FROM_SERVER_ERROR:
+			return {
+				...state,
+				roomError: action.payload,
+				loading: false
+			};
 		case CREATE_ROOM_ERROR:
 			return {
 				...state,
 				roomError: action.payload,
 				loading: false
-			}
+			};
+		case GET_ROOM_ERROR:
+			return {
+				...state,
+				roomError: action.payload,
+				loading: false
+			};
 		default:
 			return state;
 	}

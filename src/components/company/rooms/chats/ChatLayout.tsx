@@ -1,30 +1,44 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { SendMessageForm } from './SendMessageForm';
 import { MessageList } from './MessageList';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
 import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './AddMemberForm';
+import { getRoomMembers } from 'stores/room/Actions';
+import { isEmpty } from "lodash";
 
-interface ChatLayoutProps {
+interface ChatLayoutComponentProps {
+	getRoomMembers: (roomId: string) => void;
 }
 
-export const ChatLayout = (props: ChatLayoutProps) => {
+export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	const [showDialog, setShowDialog] = useState(false);
-	const roomName = useSelector((state: any) => state.roomReducer.roomName);
+	const { roomName, roomId, roomMembers } = useSelector((state: any) => state.roomReducer);
+
+	useEffect(() => {
+		if (!isEmpty(roomId)) {
+			props.getRoomMembers(roomId);
+		}
+	}, [roomId])
+
 	return (
 		<div>
 			<div className="flex justify-between ph3 bb b--tigrowLightGray-1">
-				<p className="f4 fw7 mv1">{roomName}</p>
-				<Button
-					onClick={() => setShowDialog(!showDialog)}
-					className="bp3-minimal ma1 outline-0 grow"
-					style={{ background: "#F55B7F" }}
-				>
-					<Icon
-						icon="new-person"
-						style={{ background: "#F55B7F", color: "white" }}
-					/>
-				</Button>
+				{roomName &&
+					<><div>
+						<p className="f4 fw7 mv1">{roomName}</p>
+						<h5 className="ma0">Members: {roomMembers.length}</h5>
+					</div>
+						<Button
+							onClick={() => setShowDialog(!showDialog)}
+							className="bp3-minimal ma1 outline-0 grow"
+							style={{ background: "#F55B7F" }}
+						>
+							<Icon
+								icon="new-person"
+								style={{ background: "#F55B7F", color: "white" }}
+							/>
+						</Button></>}
 			</div>
 			<div>
 				<MessageList />
@@ -46,3 +60,5 @@ export const ChatLayout = (props: ChatLayoutProps) => {
 		</div>
 	)
 }
+
+export const ChatLayout = connect(null, { getRoomMembers })(ChatLayoutComponent)

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { CompanyModel, ICompanyMembers } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useStore, connect, useSelector } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
-import { isEqual } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
 import { Button, Tag } from '@blueprintjs/core';
-import { addTeamMembers } from 'stores/company/Actions';
+import { addRoomMembers } from 'stores/room/Actions';
 
 interface RoomMembersViewProps {
   showDialog: boolean;
@@ -14,25 +13,26 @@ interface RoomMembersViewProps {
 }
 
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
-  company: CompanyModel;
-  addTeamMembers: (members: { account: string | undefined, company: string }[], name: string) => void;
+  addRoomMembers: (members: any) => void;
 }
 
 
 const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
 
-  const store = useStore();
-  const [teamMembers, setTeamMembers]: any = useState([]);
+  const roomId = useSelector((state: any) => state.roomReducer.roomId);
+  const companyId = useSelector((state: any) => state.companyReducer.currentCompany._id);
 
-  const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
+  const store = useStore();
+  const [suggestedMembers, setSuggestedMembers]: any = useState([]);
+  const [selectedRoomMember, setSelectedRoomMember] = useState([] as ItemEntityProps[]);
 
   const getSuggestionsForRoomMembers = async () => {
     try {
       const headers = tokenConfig(store.getState);
       if ((headers as any).headers.Authorization) {
-        const response = await tigrowApi.get(`/rooms/members/${store.getState().roomReducer.roomId}/${store.getState().companyReducer.currentCompany._id}`, headers);
+        const response = await tigrowApi.get(`/rooms/suggest-member/${roomId}/${companyId}`, headers);
         console.log(response.data);
-        setTeamMembers(response.data.members);
+        setSuggestedMembers(response.data.members);
       } else {
         console.log('no headers')
       }
@@ -46,12 +46,10 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
     }
   }
 
-  const fetchTeamMembersByUsername = async (userName: string) => {
-    console.log("Search: " + userName);
-  }
-
   useEffect(() => {
-    getSuggestionsForRoomMembers()
+    if (isEmpty(roomId) === false && isEmpty(companyId) === false) {
+      getSuggestionsForRoomMembers()
+    }
   }, []);
 
   return (
@@ -59,25 +57,24 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
       <div className=" w-100">
         <h1 className="f5">Add members</h1>
         <SuggestField
-          onChange={(query: string) => { fetchTeamMembersByUsername(query) }}
-          items={teamMembers}
-          selectedItems={selectedTeamMember}
-          setSelectedItems={setSelectedTeamMember}
+          items={suggestedMembers}
+          selectedItems={selectedRoomMember}
+          setSelectedItems={setSelectedRoomMember}
           multipleItemSelect={true}
         />
       </div>
 
       <div className="w-100 mb2">
-        {selectedTeamMember.map(item => (
+        {selectedRoomMember.map(item => (
           <Tag
             key={item._id}
             className="ma1 pa2"
             interactive={true}
             onRemove={e => {
-              const filteredItems = selectedTeamMember.filter(selectedItem => (
+              const filteredItems = selectedRoomMember.filter(selectedItem => (
                 item.name !== selectedItem.name
               ));
-              setSelectedTeamMember([
+              setSelectedRoomMember([
                 ...filteredItems
               ])
             }}
@@ -98,7 +95,15 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
         <Button className="grow h2 pointer white bp3-minimal w4"
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={async () => {
-
+            if (selectedRoomMember.length) {
+              let members = {
+                room: roomId,
+                members: selectedRoomMember.map(m => m._id)
+              }
+              console.log(selectedRoomMember);
+              console.log(members);
+              // await props.addRoomMembers(members);
+            }
             props.setShowDialog(!props.showDialog);
           }
           }
@@ -110,10 +115,4 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
   )
 }
 
-const mapStateToProps = (state: any) => {
-  return {
-    company: state.companyReducer.currentCompany
-  }
-}
-
-export const AddMemberForm = connect(mapStateToProps, { addTeamMembers })(AddMemberFormComponent)
+export const AddMemberForm = connect(null, { addRoomMembers })(AddMemberFormComponent)
