@@ -1,5 +1,5 @@
 import React from "react";
-import { ButtonGroup, Alignment, Button } from "@blueprintjs/core";
+import { ButtonGroup, Alignment, Button, Icon } from "@blueprintjs/core";
 import { NavLink } from "react-router-dom";
 import { User } from 'stores/user/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
@@ -17,9 +17,10 @@ const SidebarComponent = (props: {
 			>
 				{props.type === 'default' ?
 					<NavLink exact activeStyle={{ background: "#0fa3a3" }} to={`/${props.user.name}`}>
-						<Button name="userProfile" className="mv2 outline-0" icon="user">
+						<Button name="userProfile" className=" outline-0 " style={{ color: 'white' }}>
+							<Icon icon="user" style={{ color: 'white', marginRight: '25px' }} />
 							Profile
-								</Button>
+						</Button>
 					</NavLink>
 					:
 					<>
