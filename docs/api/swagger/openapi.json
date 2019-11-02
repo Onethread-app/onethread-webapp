@@ -12,28 +12,39 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   },
-  
-  "tags": [{
+
+  "tags": [
+    {
       "name": "admins",
       "description": "Secured Admin-only calls"
     },
     {
-      "name": "front-end-developers",
-      "description": "Operations available to Front-End developers"
+      "name": "product",
+      "description": ""
+    },
+    {
+      "name": "User Auth",
+      "description": ""
     }
   ],
 
   "paths": {
     "/account/signup": {
       "post": {
-        "summary": "Create a new acount",
+        "description": "Account signup",
+        "summary": "Create a new account",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
         "requestBody": {
           "description": "Optional description in *Markdown*",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Account"
+                "$ref": "#/components/schemas/SignupRequest"
               }
             }
           }
@@ -47,6 +58,7 @@
     },
     "/account/login": {
       "post": {
+        "tags": ["User Auth"],
         "summary": "Login information about account",
         "requestBody": {
           "description": "Optional description in *Markdown*",
@@ -54,7 +66,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Account"
+                "$ref": "#/components/schemas/loginRequest"
               }
             }
           }
@@ -66,93 +78,61 @@
         }
       }
     },
-    
-      "/users/profile": {
-        "get": {
-          "description":"",
-          "parameters": [],
-          "responses": {
-            "200": {
-              "description":"Success"
+    "/company": {
+      "post": {
+        "description": "Send company info to the account",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: name, type, address",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createCompanyRequest"
+              }
             }
           }
         },
-        "post": {
-          "description":"Information about particular user",
-          "security": [
-            {
-              "JWT": []
-            }
-          ],
-          "requestBody": {
-            "description": "Optional description in *Markdown*",
-            "required": true,
+        "responses": {
+          "201": {
+            "description": "Success",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegisteredUser"
+                  "$ref": "#/components/schemas/createCompanyResponse"
                 }
               }
             }
           },
-          "responses": {
-            "200": {
-              "description":"Success"
-            },
-            "401": {
-              "description":"You don't have permissions for the resource"
-            }
+          "401": {
+            "description": "You don't have permissions for the resource"
           }
         }
-      },
-      "/company/profile": {
-        "post": {
-          "description":"Send company info to the account",
-          "security": [
-            {
-              "JWT": []
-            }
-          ],
-          "requestBody": {
-            "description": "value that would be pass",
-            "required": true,
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Company"
-                }
-              }
-            }
-          },
-          "responses": {
-            "200": {
-              "description":"Success"
-            },
-            "401": {
-              "description":"You don't have permissions for the resource"
-            }
-          }
-        }
-      },
-    
-    
-    
+      }
+    },
+
     "/category": {
       "get": {
-        "tags": ["front-end-developers"],
+        "tags": ["product"],
         "summary": "searches category",
         "operationId": "searchInventory",
         "description": "By passing in the appropriate options, you can search for\navailable category in the system\n",
-        "parameters": [{
-          "in": "query",
-          "name": "type",
-          "description": "pass category option",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "enum": ["job-seeker", "emp", "business", "company"]
+        "parameters": [
+          {
+            "in": "query",
+            "name": "type",
+            "description": "pass category option",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["job-seeker", "emp", "business", "company"]
+            }
           }
-        }],
+        ],
         "responses": {
           "200": {
             "description": "search results matching 'type'",
@@ -174,21 +154,91 @@
       }
     }
   },
-  "servers": [{
-    "url": "http://127.0.0.1:4040/api/v1",
-    "description": "development server"
-  }],
+  "servers": [
+    {
+      "url": "http://192.168.8.252:4044/api/v1",
+      "description": "Development server"
+    },
+    {
+      "url": "http://localhost:4040/api/v1",
+      "description": "Local server"
+    }
+  ],
   "components": {
-  
-  "securitySchemes": {
+    "securitySchemes": {
       "JWT": {
-          "type": "apiKey",
-          "name": "Authorization",
-          "in": "header"
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
       }
-  },
+    },
     "schemas": {
-      "Account":{
+      "createCompanyRequest": {
+        "type": "object",
+        "required": ["name", "type", "address"],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Manufacturer",
+              "Trading Company",
+              "Buying Office",
+              "Agent",
+              "Distributor/Wholesaler",
+              "Government ministry/Bureau/Commission",
+              "Association",
+              "Business Service (Transportation, finance, travel, Ads, etc)",
+              "Other"
+            ]
+          },
+          "address": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "legalOwnerName": {
+            "type": "string"
+          },
+          "legalOwnerMail": {
+            "type": "string"
+          }
+        }
+      },
+      "createCompanyResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "name": {
+            "example": "TiGrow"
+          },
+          "type": {
+            "example": "Manufacturer"
+          },
+          "address": {
+            "example": "Mohakhali"
+          },
+          "email": {
+            "example": "test@tigrow.co"
+          },
+          "legalOwnerName": {
+            "example": "test name"
+          },
+          "legalOwnerMail": {
+            "example": "test@gmail.com"
+          },
+          "role": {
+            "default": "superAdmin"
+          }
+        }
+      },
+
+      "loginRequest": {
         "type": "object",
         "required": ["email", "password"],
         "properties": {
@@ -196,99 +246,121 @@
             "type": "string",
             "example": "o@o.com"
           },
-          "password":{
+          "password": {
             "type": "string",
             "example": "Rob@t124309"
           }
         }
       },
-      "RegisteredUser":{
+
+      "SignupRequest": {
         "type": "object",
-        "properties":{
-          "name":{
-            "type": "string",
-            "example": "orvi das"
+        "required": [
+          "firstName",
+          "lastName",
+          "contactNo",
+          "email",
+          "password",
+          "confirmPassword"
+      }],
+        "properties": {
+          "firstName": {
+            "type": "string"
           },
-          "gender":{
-            "type":"string",
-            "example":"m"
+          "lastName": {
+            "type": "string"
           },
-          "skillArea": {
-            "type": "string",
-            "example": "node, react"
+          "contactNo": {
+            "type": "number"
           },
-          "mobileNumber":{
-            "type": "string",
-            "example": "8801683754716"
+          "email": {
+            "type": "string"
           },
-          "secondaryEmail":{
-            "type": "string",
-            "example": "orvi1@gmail.com"
+          "password": {
+            "type": "string"
           },
-          "birthday": {
-            "type":"string",
-            "example": "12/12/2018"
-          },
-          "about":{
-            "type":"string",
-            "example": "I love what I am doing."
-          },
-          "bio": {
-            "type":"string",
-            "example": "GOOD GOOD GOOD"
+          "confirmPassword": {
+            "type": "string"
           }
         }
       },
-      "Company":{
+      "SignupResponse": {
         "type": "object",
-        "properties":{
-          "companyName" :{
-            "type" : "string",
+        "properties": {
+          "success": true,
+          "message": "User created",
+          "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NzI1MjQ4MTUsImV4cCI6MTU3NzcwODgxNX0.OYArAZ42-weX1P2s68L6OcdOSpFVnLVygj1iT7N6j8M",
+          "infoObj": {
+            "accountType": "normal",
+            "accountVerified": false,
+            "skillArea": [],
+            "friends": [],
+            "pendingFriends": [],
+            "sendingFriendList": [],
+            "jobExperience": [],
+            "education": [],
+            "_id": "5dbad30f4834fa2fb5542efb",
+            "email": "robatdas2018@gmail.com",
+            "firstName": "orvi",
+            "lastName": "das",
+            "name": "orviaQEZWGqS",
+            "contactNo": "8801683754716",
+            "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1NzI1MjQ4MTUsImV4cCI6MTU3NzcwODgxNX0.OYArAZ42-weX1P2s68L6OcdOSpFVnLVygj1iT7N6j8M",
+            "__v": 0
+          }
+        }
+      },
+
+      "Company": {
+        "type": "object",
+        "properties": {
+          "companyName": {
+            "type": "string",
             "example": "face@fb.com"
           },
-          "phoneNumber" : {
-            "type" : "string",
-            "example" : "8801673754716"
-          },
-          "companyAddress" : {
+          "phoneNumber": {
             "type": "string",
-            "example" : "mohkhali dohs"
+            "example": "8801673754716"
           },
-          "establishDate" : {
-            "type" : "string",
+          "companyAddress": {
+            "type": "string",
+            "example": "mohkhali dohs"
+          },
+          "establishDate": {
+            "type": "string",
             "example": "2019"
           },
-          "selectDistrict":{
-            "type" : "string",
-            "example" : "Dhaka"
-          },
-          "selectThana" : {
-            "type" : "string",
-            "example" : "banani"
-          },
-          "businessDescription" : {
-            "type" : "string",
-            "example" : "Social network site"
-          },
-          "tradelicense":{
+          "selectDistrict": {
             "type": "string",
-            "example" : "10000000"
+            "example": "Dhaka"
           },
-          "contactPersonName" : {
-            "type" : "string",
-            "example" : "orvi"
+          "selectThana": {
+            "type": "string",
+            "example": "banani"
           },
-          "contactPersonDesignation" : {
-            "type" : "string",
-            "example" : "software engineer"
+          "businessDescription": {
+            "type": "string",
+            "example": "Social network site"
+          },
+          "tradelicense": {
+            "type": "string",
+            "example": "10000000"
+          },
+          "contactPersonName": {
+            "type": "string",
+            "example": "orvi"
+          },
+          "contactPersonDesignation": {
+            "type": "string",
+            "example": "software engineer"
           },
           "contactPersonemail": {
             "type": "string",
-            "example" : "das.orvi@yahoo.com"
+            "example": "das.orvi@yahoo.com"
           },
           "contactPersonMobile": {
             "type": "string",
-            "example" : "8801683754716"
+            "example": "8801683754716"
           }
         }
       },
