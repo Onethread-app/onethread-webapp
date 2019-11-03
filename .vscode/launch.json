@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
 	// Use IntelliSense to learn about possible attributes.
 	// Hover to view descriptions of existing attributes.
 	// For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
@@ -14,4 +15,40 @@
 ]
 		}
 	]
+=======
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+					{
+						"type": "chrome",
+						"request": "attach",
+						"name": "Attach to Chrome",
+						"port": 9222,
+						"webRoot": "${workspaceFolder}"
+					},
+
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach",
+            "port": 9229
+        },
+        
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach",
+            "port": 9229
+        },
+       
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch Program",
+            "program": "${workspaceFolder}/index.js"
+        }
+    ]
+>>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
 }

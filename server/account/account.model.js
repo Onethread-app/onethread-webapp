@@ -215,6 +215,7 @@ accountsSchema.methods.comparePassword = function(
   });
 };
 
+<<<<<<< HEAD
 // generating jwt token
 accountsSchema.methods.generateJwt = function() {
   // const token = new token();
@@ -230,4 +231,6 @@ accountsSchema.methods.generateJwt = function() {
   );
 };
 
+=======
+>>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
 module.exports = mongoose.model('Account', accountsSchema);

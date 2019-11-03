@@ -59,7 +59,11 @@ const jwtLogin = new JwtStrategy(
         .select('-password')
         .populate(
           'companies skillArea jobExperience education',
+<<<<<<< HEAD
           '_id name companyName positionName currentlyWork startYear endingYear degree institutionName startYear endingYear  currentlyStudy name',
+=======
+          '_id name companyName positionName currentlyWork startYear endingYear degree institutionName startYear endingYear  currentlyStudy',
+>>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
         );
       if (user) {
         done(null, user);
@@ -83,4 +87,7 @@ passport.deserializeUser(function(user, done) {
   delete user.password;
   done(null, user);
 });
+<<<<<<< HEAD
 
+=======
+>>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
