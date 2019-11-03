@@ -20,7 +20,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
 }
 
 export const ListViewComponent = (props: CompanyListViewInternalProps & RouteComponentProps) => {
-  
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,11 +51,11 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
 
         <button
           onClick={() => props.setShowDialog(!props.showDialog)}
-          className="b--none w-100 br3 grow h2 ph5 pointer pv2 white outline-0 bg-tigrowLightBlue ma2 bp3-popover-dismiss"
+          className="b--none w-100 mt3 br2 grow ph5 pointer pv2 white outline-0 bg-tigrowLightBlue bp3-popover-dismiss"
         >
           Create Company
-                </button>
-      </div> 
+        </button>
+      </div>
     </>
   )
 }
