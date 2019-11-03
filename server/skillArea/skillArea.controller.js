@@ -199,13 +199,19 @@ const searchSkillSet = async (req, res, next) => {
 const updateUserSkillInfo = async (req, res, next) => {
   try {
     const skillId = req.body.skillArea;
+    const userID = req.user._id;
     const user = await Account.updateOne(
-      { _id: req.user._id },
-      { $addToSet: { skillArea: { _id: skillId } } },
-    ).populate('name');
-    return sendJSONresponse({ success: true, user });
+      { _id: userID },
+      { $addToSet: { skillArea: skillId } },
+    );
+    const userSkill = await Account.findOne({ _id: userID }).populate(
+      'skillArea',
+      'name',
+    );
+    const skillList = userSkill.skillArea;
+    return sendJSONresponse(res, 200, { success: true, skillList });
   } catch (error) {
-    return sendJSONresponse({ error });
+    return sendJSONresponse(res, 400, { error });
   }
 };
 module.exports = {

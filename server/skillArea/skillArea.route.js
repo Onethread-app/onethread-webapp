@@ -14,7 +14,7 @@ router.route('/').post(requireAuth, skillCtrl.createSkill);
 router
   .route('/update-skill')
   .put(requireAuth, skillCtrl.updateUserSkillInfo);
-// router.route('/').get(requireAuth, skillCtrl.getAllSkill);
+router.route('/').get(requireAuth, skillCtrl.getAllSkill);
 // router.route('/:id').get(requireAuth, skillCtrl.getSkillInfo);
 // router
 //   .route('/:id')

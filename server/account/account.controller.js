@@ -314,6 +314,7 @@ const getAccount = async (req, res, next) => {
     );
     const userInfo = { ...req.user._doc };
     userInfo.timeline = timelineHistory;
+    console.log(userInfo.skillArea);
     delete userInfo.password;
     delete userInfo.companies;
     logger.info('userInfo successfully fetched');
