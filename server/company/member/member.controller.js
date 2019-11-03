@@ -1,14 +1,14 @@
-const { Member } = require('./member.model');
 const Account = require('../../account/account.model');
+const { Member } = require('./member.model');
 const { Company } = require('../company.model');
+const { Room } = require('./../../room/room.model');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const {
-  APIError,
-  EmailIdExistError,
   BadRequestError,
   SearchNotMatchError,
 } = require('../../helpers/APIError.js');
+
 // add team member
 const addMember = async (req, res, next) => {
   // Check for JSON
@@ -25,19 +25,31 @@ const addMember = async (req, res, next) => {
       });
     }
 
-    let unique = members.map(m => {
+    let membersId = members.map(m => {
       return m._id;
     });
 
+    let accountsId = req.body.members.map(m => {
+      return m.account;
+    });
+
     // save ref in company
-    req.company.members.addToSet(...unique);
+    req.company.members.addToSet(...membersId);
     await req.company.save();
 
-    let response = members.map(
-      ({ _id, account, role, designation }) => {
-        return { _id, account, role, designation };
-      },
-    );
+    // add members into General room
+    const room = await Room.findOne({
+      name: 'General',
+      company: req.company._id,
+    });
+    if (room) {
+      room.members.addToSet(...accountsId);
+      await room.save();
+      await chatkit.addUsersToRoom({
+        roomId: room._id,
+        userIds: accountsId,
+      });
+    }
 
     return res.status(201).json({
       status: true,

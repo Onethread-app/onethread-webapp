@@ -3,10 +3,11 @@
 const Joi = require('joi');
 
 module.exports = {
-  createRoom: {
+  createMessage: {
     body: {
-      name: Joi.string(),
-      company: Joi.string()
+      text: Joi.string(),
+      room: Joi.string().regex(/^[0-9a-fA-F]{24}$/)
     }
+    
   }
 };

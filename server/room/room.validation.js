@@ -3,10 +3,23 @@
 const Joi = require('joi');
 
 module.exports = {
-  createRoom: {
-    body: {
-      name: Joi.string(),
+  createRoom: Joi.object().keys({
+    body: Joi.object().keys({
+      name: Joi.string().required(),
       company: Joi.string()
-    }
-  }
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .error(errors => {
+          return {
+            message: 'Invalid ID',
+          };
+        }),
+    }),
+  }),
+  addMember: {
+    body: {
+      room: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+      member: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
+    },
+  },
 };

@@ -155,6 +155,7 @@ const login = async (req, res, next) => {
     );
     userObj.timeline = timelineHistory;
     delete userObj.password;
+    delete userObj.companies;
     addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
     return sendJSONresponse(res, 200, {
       success: true,
