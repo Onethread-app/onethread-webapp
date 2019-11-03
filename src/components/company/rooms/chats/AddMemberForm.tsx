@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
-import { useStore, connect, useSelector } from 'react-redux';
+import { useStore, connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
 import { isEqual, isEmpty } from 'lodash';
@@ -13,14 +13,13 @@ interface RoomMembersViewProps {
 }
 
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
-  addRoomMembers: (members: any, selectedRoomMember: any) => void;
+  addRoomMembers: (members: { room: string, members: (string | undefined)[] }, selectedRoomMember: ItemEntityProps[]) => void;
+  roomId: string;
+  companyId: string;
 }
 
 
 const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
-
-  const roomId = useSelector((state: any) => state.roomReducer.roomId);
-  const companyId = useSelector((state: any) => state.companyReducer.currentCompany._id);
 
   const store = useStore();
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
@@ -30,7 +29,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
     try {
       const headers = tokenConfig(store.getState);
       if ((headers as any).headers.Authorization) {
-        const response = await tigrowApi.get(`/rooms/suggest-member/${roomId}/${companyId}`, headers);
+        const response = await tigrowApi.get(`/rooms/suggest-member/${props.roomId}/${props.companyId}`, headers);
         setSuggestedMembers(response.data.members);
       } else {
         console.log('no headers')
@@ -46,7 +45,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
   }
 
   useEffect(() => {
-    if (isEmpty(roomId) === false && isEmpty(companyId) === false) {
+    if (isEmpty(props.roomId) === false && isEmpty(props.companyId) === false) {
       getSuggestionsForRoomMembers()
     }
   }, []);
@@ -96,7 +95,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           onClick={async () => {
             if (selectedRoomMember.length) {
               let members = {
-                room: roomId,
+                room: props.roomId,
                 members: selectedRoomMember.map(m => m._id)
               }
               await props.addRoomMembers(members, selectedRoomMember);
@@ -110,6 +109,13 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
       </div>
     </div>
   )
+};
+
+const mapStateToProps = (state: any) => {
+  return {
+    roomId: state.roomReducer.roomId,
+    companyId: state.companyReducer.currentCompany._id
+  }
 }
 
-export const AddMemberForm = connect(null, { addRoomMembers })(AddMemberFormComponent)
+export const AddMemberForm = connect(mapStateToProps, { addRoomMembers })(AddMemberFormComponent)

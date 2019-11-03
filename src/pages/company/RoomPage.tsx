@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import { Icon } from '@blueprintjs/core';
-import { connect } from 'react-redux';
 import { RoomSideBar } from 'components/company/rooms/RoomSideBar';
 import { ChatLayout } from 'components/company/rooms/chats/ChatLayout';
 
-export const RoomPageComponent = () => {
+export const RoomPage = () => {
 
 	const [isOpen, setIsOpen] = useState(true);
 
@@ -32,5 +31,3 @@ export const RoomPageComponent = () => {
 		</div >
 	);
 };
-
-export const RoomPage = connect(null, null)(RoomPageComponent)
