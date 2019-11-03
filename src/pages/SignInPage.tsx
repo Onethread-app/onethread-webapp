@@ -84,16 +84,15 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
           </div>
         </div>
       </div>
-      <div className="fl w-100 w-50-ns dt pt4 vh-100">
+      <div className="w-50-ns dt vh-100">
         <div className=" v-mid dtc">
-          <div className="w-two-thirds ">
-            <div className="mt3">
+          <div className="w-60 ">
               <form className="dt fl cf w-100">
                 <div className="mw9 center ph3-ns v-mid dtc">
                   {props.errorUnauthorized.email || props.errorUnauthorized.network ?
                     <small className="red">{props.errorUnauthorized.message}</small>
                     : ""}
-                  <div className={`pt3 ${errors.email ? "mb3" : "mb4"}`}>
+                  <div className={`${errors.email ? "mb3" : "mb4"}`}>
                     <div className="flex">
                       <InputGroupField
                         id="email"
@@ -101,10 +100,11 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                         onChange={handleChange("email")}
                         placeHolder="Email"
                         leftIcon="envelope"
-                        className={`br0 ${props.errorUnauthorized.email || errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
+                        className={`${props.errorUnauthorized.email || errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
                         leftIconColor={`${props.errorUnauthorized.email || errors.email ? 'red' : "#0fa3a3"}`}
                         style={{
                           boxShadow: 'none',
+                          fontSize: '18px'
                         }}
                         validationOnBlur={() => {
                           if (isEmpty(email)) {
@@ -133,19 +133,20 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                         onChange={handleChange("password")}
                         placeHolder="Password"
                         leftIcon="lock"
-                        className={`br0 ${props.errorUnauthorized.password || errors.password ? 'bb b--red' : 'bb b--lightBlue'}`}
+                        className={`${props.errorUnauthorized.password || errors.password ? 'bb b--red' : 'bb b--lightBlue'}`}
                         leftIconColor={`${props.errorUnauthorized.password || errors.password ? 'red' : "#0fa3a3"}`}
 
                         rightElement={
                           <Icon
-                            className="pt2 pr2"
-                            icon={showPassword ? 'unlock' : 'lock'}
+                            className="pt2 pr2 pointer"
+                            icon={showPassword ? 'eye-open' : 'eye-off'}
                             color="#0fa3a3"
                             onClick={e => setShowPassword(!showPassword)}
                           />
                         }
                         style={{
                           boxShadow: 'none',
+                          fontSize: '18px'
                         }}
                         validationOnBlur={() => {
                           if (isEmpty(password)) {
@@ -163,7 +164,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   <Button
                     type="submit"
                     className="b--none w-100 br3 fr grow h2 ph5 pointer pv2 mb3"
-                    style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+                    style={{ background: "#0fa3a3", outline: "none", color: 'white', fontSize: '16px' }}
                     onClick={(e: any) => {
                       e.preventDefault();
                       if (!emptyValueCheck()) {
@@ -174,26 +175,25 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   >
                     {props.loading ? <Spinner size={15} /> : 'Sign in'}
                   </Button>
-                  <div className="tc mb2">
-                    <Link style={{ color: "#0fa3a3", textAlign: "center" }} to="/forgot-password">
+                  <div className="tc mb3">
+                    <Link style={{ color: "#0fa3a3", textAlign: "center"}} to="/forgot-password">
                       Forgot Password?
                   </Link>
                   </div>
-                  <div className="tc mb2">
+                  <div className="tc mb3">
                     <p style={{ color: "#0fa3a3" }}>
                       Don't have an Account?
                   </p>
                   </div>
                   <Link to="/signup">
                     <Button className="w-100 br3 fr grow h2 ph5 pointer pv2"
-                      style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+                      style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3", fontSize: '16px' }}
                     >
                       Sign Up here
                   </Button>
                   </Link>
                 </div>
               </form>
-            </div>
           </div>
         </div>
       </div>
