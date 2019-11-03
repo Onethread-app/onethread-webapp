@@ -22,7 +22,7 @@ const create = async (req, res, next) => {
 
     res.send(message);
   } catch (e) {
-    console.log(e);
+
     next(e);
   }
 };

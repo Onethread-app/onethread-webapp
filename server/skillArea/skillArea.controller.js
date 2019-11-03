@@ -1,4 +1,5 @@
 const SkillArea = require('./skillArea.model');
+const Account = require('../account/account.model');
 const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
@@ -194,6 +195,19 @@ const searchSkillSet = async (req, res, next) => {
       return next(err);
     });
 };
+
+const updateUserSkillInfo = async (req, res, next) => {
+  try {
+    const skillId = req.body.skillArea;
+    const user = await Account.updateOne(
+      { _id: req.user._id },
+      { $addToSet: { skillArea: { _id: skillId } } },
+    ).populate('name');
+    return sendJSONresponse({ success: true, user });
+  } catch (error) {
+    return sendJSONresponse({ error });
+  }
+};
 module.exports = {
   createSkill,
   getSkillInfo,
@@ -202,4 +216,5 @@ module.exports = {
   deleteSkillInfo,
   skillLoad,
   searchSkillSet,
+  updateUserSkillInfo,
 };
