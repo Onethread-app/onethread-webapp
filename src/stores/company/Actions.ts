@@ -5,6 +5,7 @@ import { History } from 'history';
 import { tokenConfig, Entity } from '../UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT } from './Types';
+import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 // import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
 
 export const createCompanyAction = (companyData: CompanyModel, routeHistory: History) => async (dispatch: any, getState: any) => {
@@ -41,6 +42,7 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`/company/${name}`, headers);
       dispatch({ type: GET_COMPANY_DETAILS, payload: response.data });
+      dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
       return response.data;
     } else {
       console.log("error in slection of company fetching")
@@ -63,7 +65,7 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
       const response = await tigrowApi.get(`company/${companyName}/members?limit=100`, headers);
       dispatch({ type: GET_ALL_COMPANY_MEMBERS, payload: response.data });
     } else {
-      console.log("error in slection of company fetching")
+      console.log("error in selection of company fetching")
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
@@ -79,11 +81,11 @@ export const addTeamMembers = (members: any, companyName: string) => async (disp
     const headers = tokenConfig(getState);
     if ((headers as any).headers.Authorization) {
       dispatch({ type: COMPANY_REDUCER_LOADING });
-      await tigrowApi.post(`company/${companyName}/members`, {members}, headers);
+      await tigrowApi.post(`company/${companyName}/members`, { members }, headers);
       dispatch({ type: COMPANY_REDUCER_LOADING_FALSE });
       // dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
     } else {
-      console.log("error in slection of company fetching")
+      console.log("error in selection of company fetching")
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {

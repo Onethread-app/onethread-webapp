@@ -7,7 +7,7 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM
 } from "./Types";
 
 const InitialState = {
@@ -17,7 +17,7 @@ const InitialState = {
 	rooms: [],
 	companyRooms: [],
 	roomMembers: [],
-	loading: true,
+	loading: false,
 	roomError: null
 };
 
@@ -60,15 +60,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				rooms: action.payload,
 				loading: false
 			};
-		case CLEAR_ROOMS_REDUCER_STATE:
-			return {
-				...state,
-				roomId: null,
-				roomName: null,
-				messages: [],
-				rooms: [],
-				loading: false
-			};
 		case CREATE_ROOM_FROM_SERVER:
 			return {
 				...state,
@@ -87,23 +78,24 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				roomMembers: action.payload,
 				loading: false
 			};
+		case ADD_MEMBER_IN_ROOM:
+			return {
+				...state,
+				roomMembers: [...state.roomMembers, ...action.payload],
+				loading: false
+			};
+		case ADD_MEMBER_IN_ROOM_ERROR:
 		case GET_ROOM_MEMBERS_FROM_SERVER_ERROR:
-			return {
-				...state,
-				roomError: action.payload,
-				loading: false
-			};
 		case CREATE_ROOM_ERROR:
-			return {
-				...state,
-				roomError: action.payload,
-				loading: false
-			};
 		case GET_ROOM_ERROR:
 			return {
 				...state,
 				roomError: action.payload,
 				loading: false
+			};
+		case CLEAR_ROOMS_REDUCER_STATE:
+			return {
+				...InitialState
 			};
 		default:
 			return state;

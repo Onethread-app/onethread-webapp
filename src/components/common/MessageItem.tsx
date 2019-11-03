@@ -28,7 +28,11 @@ export const MessageItem = (props: MessageItemProps) => {
             {dateFormatter(new Date(props.createdAt)).format}
           </h6>
         </div>
-        <h2 className={`f6 fw3 ma0 mt2 tj ${currentUser ? "white" : " black-60"}`}>{props.text}</h2>
+        <h2
+          className={`f6 fw3 ma0 mt2 tj ${currentUser ? "white" : " black-60"}`}
+          style={{ wordBreak: "break-word" }}
+        >{props.text}
+        </h2>
       </div>
     </article>
   )

@@ -13,7 +13,7 @@ interface RoomMembersViewProps {
 }
 
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
-  addRoomMembers: (members: any) => void;
+  addRoomMembers: (members: any, selectedRoomMember: any) => void;
 }
 
 
@@ -31,7 +31,6 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
       const headers = tokenConfig(store.getState);
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(`/rooms/suggest-member/${roomId}/${companyId}`, headers);
-        console.log(response.data);
         setSuggestedMembers(response.data.members);
       } else {
         console.log('no headers')
@@ -100,9 +99,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
                 room: roomId,
                 members: selectedRoomMember.map(m => m._id)
               }
-              console.log(selectedRoomMember);
-              console.log(members);
-              // await props.addRoomMembers(members);
+              await props.addRoomMembers(members, selectedRoomMember);
             }
             props.setShowDialog(!props.showDialog);
           }

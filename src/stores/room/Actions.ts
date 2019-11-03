@@ -1,7 +1,7 @@
 import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
 import { tokenConfig } from '../UtilsActions';
-import { CREATE_ROOM_FROM_SERVER, CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, LOADING_ROOM, GET_SUGGESTIONS_ROOM_MEMBER, GET_SUGGESTIONS_ROOM_MEMBER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR } from './Types';
+import { CREATE_ROOM_FROM_SERVER, CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, LOADING_ROOM, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR } from './Types';
 
 export const createRoomAction = (roomData: any) => async (dispatch: any, getState: any) => {
 
@@ -68,15 +68,15 @@ export const getRoomMembers = (roomId: string) => async (dispatch: any, getState
   }
 }
 
-export const addRoomMembers = (members: any) => async (dispatch: any, getState: any) => {
+export const addRoomMembers = (members: any, selectedRoomMember: any) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig(getState);
     if ((headers as any).headers.Authorization) {
       dispatch({ type: LOADING_ROOM });
-      let response = await tigrowApi.post(`/rooms/addUser`, members, headers);
-      dispatch({ type: ADD_MEMBER_IN_ROOM, payload: response.data });
+      await tigrowApi.post(`/rooms/addUser`, members, headers);
+      dispatch({ type: ADD_MEMBER_IN_ROOM, payload: selectedRoomMember });
     } else {
-      console.log("error in slection of company fetching")
+      console.log("error in adding members in a room")
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { SendMessageForm } from './SendMessageForm';
 import { MessageList } from './MessageList';
 import { useSelector, connect } from 'react-redux';
@@ -23,27 +23,29 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 
 	return (
 		<div>
-			<div className="flex justify-between ph3 bb b--tigrowLightGray-1">
-				{roomName &&
-					<><div>
-						<p className="f4 fw7 mv1">{roomName}</p>
-						<h5 className="ma0">Members: {roomMembers.length}</h5>
-					</div>
+			{roomName &&
+				<Fragment>
+					<div className="flex justify-between items-center ph3 bb b--tigrowLightGray-1">
+						<div>
+							<p className="f4 fw7 mv1">{roomName}</p>
+							<h5 className="ma0">Members: {roomMembers.length}</h5>
+						</div>
 						<Button
 							onClick={() => setShowDialog(!showDialog)}
-							className="bp3-minimal ma1 outline-0 grow"
+							className="bp3-minimal outline-0 grow"
 							style={{ background: "#F55B7F" }}
 						>
 							<Icon
 								icon="new-person"
 								style={{ background: "#F55B7F", color: "white" }}
 							/>
-						</Button></>}
-			</div>
-			<div>
-				<MessageList />
-				<SendMessageForm />
-			</div>
+						</Button>
+					</div>
+					<div>
+						<MessageList />
+						<SendMessageForm />
+					</div>
+				</Fragment>}
 			{showDialog && (
 				<Dialog
 					onClose={() => setShowDialog(!showDialog)}
