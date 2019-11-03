@@ -1,0 +1,13 @@
+/node_modules
+
+# testing
+/coverage
+
+# misc
+.DS_Store
+.env
+
+yarn-error.log*
+cemui.log
+cemui.info.log
+cemui.error.log
