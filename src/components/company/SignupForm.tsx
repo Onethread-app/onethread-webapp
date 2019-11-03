@@ -93,7 +93,7 @@ const CompanySignupFormComponent = (props: {
   }
 
   return (
-    <form className="fl w-100 pa2" >
+    <form className="fl w-100 ph4 pv3" >
       <div className={` ${errors.name ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
@@ -264,8 +264,8 @@ const CompanySignupFormComponent = (props: {
         {errors.legalOwnerMail ? <small style={{ color: 'red' }}>{errors.legalOwnerMail}</small> : ""}
       </div>
       <div className="tc">
-        <Button className="b--none w4 br3 grow h2  pointer pv2 white tc"
-          style={{ background: "#0fa3a3", outline: "none" }}
+        <Button className="w4 grow h2 pointer"
+          style={{ background: "#0fa3a3", outline: "none", color: "white" }}
           onClick={(e:any) => {
             e.preventDefault();
             if (!emptyValueCheck()) {
