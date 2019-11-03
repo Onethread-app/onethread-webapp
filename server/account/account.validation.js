@@ -2,16 +2,12 @@ const Joi = require('@hapi/joi');
 module.exports = {
   register: Joi.object().keys({
     body: Joi.object().keys({
-<<<<<<< HEAD
       firstName: Joi.string()
         .lowercase()
         .required()
         .error(error => {
           return { success: false, message: `recheck` };
         }),
-=======
-      firstName: Joi.string().required(),
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
       lastName: Joi.string().required(),
       email: Joi.string()
         .regex(
@@ -39,11 +35,7 @@ module.exports = {
         .valid(Joi.ref('password'))
         .required(),
       contactNo: Joi.string()
-<<<<<<< HEAD
-       // .regex(/\+?(88)?0?1[356789][0-9]{8}/)
-=======
         // .regex(/\+?(88)?0?1[356789][0-9]{8}/)
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
         .required(),
     }),
   }),

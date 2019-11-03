@@ -15,10 +15,7 @@ const imageRoutes = require('./server/image/image.route');
 const messageRoutes = require('./server/message/message.route');
 const jobRoutes = require('./server/job/job.route');
 const educationRoutes = require('./server/education/education.route');
-<<<<<<< HEAD
 const utilsRoutes = require('./server/utils/utils.route');
-=======
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -41,11 +38,6 @@ router.use('/rooms', roomRoutes);
 router.use('/skill', skillRoutes);
 router.use('/upload', imageRoutes);
 router.use('/message', messageRoutes);
-<<<<<<< HEAD
 router.use('/education', educationRoutes);
 router.use('/utils', utilsRoutes);
-=======
-router.use('/job', jobRoutes);
-router.use('/education', educationRoutes);
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
 module.exports = router;

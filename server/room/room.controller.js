@@ -1,17 +1,9 @@
 const Room = require('./room.model');
-<<<<<<< HEAD
 const { Company } = require('../company/company.model');
-=======
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
 const serviceRoom = require('./room.service');
 const { chatkit } = require('../services/pusher.services');
 const mongoose = require('mongoose');
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
 const create = async (req, res, next) => {
   const room = new Room({
     name: req.body.name,
@@ -19,10 +11,6 @@ const create = async (req, res, next) => {
     members: [req.user.id],
     account: req.user.id,
   });
-<<<<<<< HEAD
-=======
- 
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
 
   try {
     await room.save();
@@ -56,11 +44,6 @@ function edit(req, res) {}
 
 const list = async (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
   Room.find({ company: mongoose.Types.ObjectId(req.params.company) })
     .sort({ created: 1 })
     .skip(+skip)
@@ -81,7 +64,6 @@ const listByWorkplace = (req, res) => {
     .catch(e => next(e));
 };
 
-<<<<<<< HEAD
 const roomMemberSearch = async (req, res, next) => {
   // const name = req.query.name;
   // const cid = req.body.company;
@@ -147,10 +129,3 @@ const roomMemberSearch = async (req, res, next) => {
 };
 
 module.exports = { create, list, listByWorkplace, roomMemberSearch };
-=======
-function read(req, res) {}
-
-function invite(req, res) {}
-
-module.exports = { create, list, listByWorkplace };
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058

@@ -1,5 +1,4 @@
 const SkillArea = require('./skillArea.model');
-<<<<<<< HEAD
 const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
@@ -9,10 +8,6 @@ const {
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
-=======
-const logger = require('../../config/winston.js');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
 
 const createSkill = async (req, res) => {
   if (!req.is('application/json')) {
@@ -21,12 +16,8 @@ const createSkill = async (req, res) => {
   }
   const skill = req.body.skill;
   const newSkill = new SkillArea();
-<<<<<<< HEAD
   newSkill.name = skill;
   newSkill.accountId.push(req.user._id);
-=======
-  newSkill.skill = skill;
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
   newSkill
     .save()
     .then(skill => {
@@ -179,11 +170,7 @@ const searchSkillSet = async (req, res, next) => {
     logger.error(`Query Error: ${err}`);
     return next(err);
   }
-<<<<<<< HEAD
   SkillArea.find({ name: { $regex: new RegExp(name) } })
-=======
-  SkillArea.find({ skill: { $regex: new RegExp(name) } })
->>>>>>> 5d23780b51e807ad76d91ac0ebe217229b08f058
     .then(data => {
       if (data.length < 1) {
         const err = new SearchNotMatchError(
