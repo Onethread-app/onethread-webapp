@@ -1,6 +1,6 @@
-const Room = require('./room.model');
+const { Room } = require('./room.model');
+const { Member } = require('../company/member/member.model');
 const { Company } = require('../company/company.model');
-const serviceRoom = require('./room.service');
 const { chatkit } = require('../services/pusher.services');
 const mongoose = require('mongoose');
 
@@ -114,6 +114,7 @@ const suggestMember = async (req, res, next) => {
 
 const list = async (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
+
   Room.find({ company: mongoose.Types.ObjectId(req.params.company) })
     .sort({ created: 1 })
     .skip(+skip)
@@ -134,69 +135,3 @@ module.exports = {
   suggestMember,
   memberList,
 };
-
-const roomMemberSearch = async (req, res, next) => {
-  // const name = req.query.name;
-  // const cid = req.body.company;
-  // const room = req.body.room;
-  // let options = [
-  //   {
-  //     path: 'members',
-  //     select: '_id account',
-  //     populate: {
-  //       path: 'account',
-  //       select: 'name email',
-  //     },
-  //   },
-  //   {
-  //     path: 'rooms',
-  //     select: 'members',
-  //     populate: {
-  //       path: 'members',
-  //       select: 'name',
-  //     },
-  //   },
-  // ];
-  // const roomMemberList = await Company.findById({
-  //   _id: cid,
-  // }).populate(options);
-  // return res.send(roomMemberList);
-  // const roomMemberListId = [roomMemberList.members.account];
-  // const roomMemberListId = [companyMemberList.account.name];
-  // if (name === '') {
-  //   const err = new BadRequestError(
-  //     'Nothing Submitted',
-  //     httpStatus.BAD_REQUEST,
-  //     true,
-  //   );
-  //   logger.error(`Query Error: ${err}`);
-  //   return next(err);
-  // }
-  // Company.find({ name: { $regex: name, $nin: memberListId } })
-  //   .select('_id email name')
-  //   .then(data => {
-  //     if (data.length < 1) {
-  //       const err = new SearchNotMatchError(
-  //         'Query does not found',
-  //         httpStatus.BAD_REQUEST,
-  //         true,
-  //       );
-  //       logger.error(`Query Error: ${err}`);
-  //       return next(err);
-  //     } else {
-  //       logger.info(`Search complete ${name}`);
-  //       return sendJSONresponse(res, 200, {
-  //         employees: {
-  //           success: true,
-  //           message: `Search complete ${name}`,
-  //           data,
-  //         },
-  //       });
-  //     }
-  //   })
-  //   .catch(err => {
-  //     return next(err);
-  //   });
-};
-
-module.exports = { create, list, listByWorkplace, roomMemberSearch };
