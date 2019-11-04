@@ -4,7 +4,7 @@ import {
 	USER_SIGNUP_LOADING,
 	USER_LOGOUT,
 	CLEAR_AUTH_REDUCER_STATE,
-	USER_SIGNUP_LOADING_FALSE
+	USER_SIGNUP
 } from "./Types";
 import tigrowApi from "tigrowApi";
 import { AxiosRequestConfig } from "axios";
@@ -16,6 +16,7 @@ import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR, CLEAR_USE
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 
+
 export const userSignupAction = (
 	newUser: UserModel,
 	routeHistory: History
@@ -26,23 +27,17 @@ export const userSignupAction = (
 			...newUser,
 			contactNo: `880${newUser.contactNo}`
 		};
-		const response: any = await tigrowApi.post("account/signup", user, {
+		const response = await tigrowApi.post("account/signup", user, {
 			"Content-Type": "application/json"
 		} as AxiosRequestConfig);
-		if (isEqual(response.data.message, 'User created')) {
-			dispatch({ type: USER_SIGNUP_LOADING_FALSE });
-			routeHistory.push(`/signin`);
-		} else {
-			dispatch({
-				type: USER_LOGIN_ERROR,
-				payload: {
-					message: response.error,
-					email: false,
-					network: false
-				}
-			});
-		}
+		console.log(response.data);
+		localStorage.setItem("token", JSON.stringify(response.data.token));
+		await dispatch({ type: USER_SIGNUP, payload: response.data });
+		await dispatch({ type: BASIC_INFO, payload: response.data });
+		console.log(response.data)
+		routeHistory.push(`/${response.data.user.name}`);
 	} catch (error) {
+		console.log(error)
 		if (isEqual(error.message, "Network Error")) {
 			dispatch({
 				type: USER_LOGIN_ERROR,
@@ -130,14 +125,16 @@ export const logoutAction = (routeHistory: History) => async (
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
-			localStorage.removeItem("token");
-			await tigrowApi.get(`/account/logout`, headers);
-			routeHistory.push("/signin");
-			dispatch({ type: USER_LOGOUT });
-			dispatch({ type: CLEAR_AUTH_REDUCER_STATE });
-			dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
-			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
-			dispatch({ type: CLEAR_USER_REDUCER_STATE });
+			const response = await tigrowApi.get(`/account/logout`, headers);
+			if (isEqual(response.data.message, 'Successfully logout')) {
+				localStorage.removeItem("token");
+				routeHistory.push("/signin");
+				dispatch({ type: USER_LOGOUT });
+				dispatch({ type: CLEAR_AUTH_REDUCER_STATE });
+				dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+				dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
+				dispatch({ type: CLEAR_USER_REDUCER_STATE });
+			}
 		} else {
 			console.log("No token found in logout action");
 		}
