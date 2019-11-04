@@ -43,10 +43,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							/>
 						</Button>
 					</div>
-					<div>
-						<MessageList />
-						<SendMessageForm />
-					</div>
+					<MessageList />
+					<SendMessageForm />
 				</>}
 			{showDialog && (
 				<Dialog
