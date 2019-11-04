@@ -83,7 +83,6 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
       {showDialog && (
         <Dialog
           onClose={() => setShowDialog(!showDialog)}
-          title="Create Company"
           isOpen={showDialog}
           style={{ background: '#fff' }}
         >

@@ -89,11 +89,12 @@ const CompanySignupFormComponent = (props: {
   const onChangeSelectField = (name: string) => (event: any) => {
     const value = event.currentTarget.value;
     setValues({ ...values, [name]: value });
-    setErrors({...errors, [name]: ""})
+    setErrors({ ...errors, [name]: "" })
   }
 
   return (
-    <form className="fl w-100 ph4 pv3" >
+    <form className="fl w-100 pa4" >
+      <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Create Company</h1>
       <div className={` ${errors.name ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
@@ -263,10 +264,21 @@ const CompanySignupFormComponent = (props: {
         </div>
         {errors.legalOwnerMail ? <small style={{ color: 'red' }}>{errors.legalOwnerMail}</small> : ""}
       </div>
-      <div className="tc">
-        <Button className="w4 grow h2 pointer"
-          style={{ background: "#0fa3a3", outline: "none", color: "white" }}
-          onClick={(e:any) => {
+      <div className="flex justify-end">
+        <Button className="w4 grow h2 pointer mr3"
+          style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            props.setShowDialog(false);
+          }}
+        >
+          cancel
+        </Button>
+        <Button
+          type="submit"
+          className="w4 grow h2 pointer"
+          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+          onClick={(e: any) => {
             e.preventDefault();
             if (!emptyValueCheck()) {
               props.createCompanyAction(values, props.history);
@@ -274,7 +286,7 @@ const CompanySignupFormComponent = (props: {
             }
           }}
         >
-          Submit
+          Save
         </Button>
       </div>
 

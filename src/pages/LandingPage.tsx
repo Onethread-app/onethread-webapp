@@ -215,7 +215,7 @@ const SkillView = () => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
-      <div className="h-auto br3 ma2 pa3 bg-white cf">
+      <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4">
         <h1 className="f6 lh-copy">Skills</h1>
         <div className="tc">
           <img src={skill}></img>
@@ -307,7 +307,7 @@ const AboutView = (props: {
   const [showDialogAbout, setShowDialogAbout] = useState(false);
   return (
     <>
-      <div className="h-auto br3 ma2 pa3 bg-white cf">
+      <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4">
         <div className="cf ">
           <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
           <Icon className="fr mv3 tigrow-lightBlue pointer"
@@ -339,7 +339,7 @@ const BasicInfoDetailsView = (props: {
   const [showDialog, setShowDialog] = useState(false)
   return (
     <>
-      <div className="br3 bg-white h-auto pa4 mt3">
+      <div className="br3 bg-white h-auto pa4">
         <ListTitleView
           listTitle="Basic Information"
           iconType="edit"
@@ -396,10 +396,10 @@ export const LandingPageComponent = (props: LandingPageProps) => {
   return (
     <>
       <div className="cf w-100" >
-        <h1 className="f5 lh-title tigrow-lightGray-1 ml3 tigrow-lightGray-1 mb0">Profile</h1>
-        <div>
-          <div className="fl w-25-ns pa2 ">
-            <div className="h-auto br3 ma2 pa3 bg-white cf tc">
+        <h1 className="f4 tigrow-lightGray-1 ml4 tigrow-lightGray-1 mb0 mt5">Profile</h1>
+        <div className="mt1">
+          <div className="fl w-25-ns ph3">
+            <div className="h-auto br3 ma3 pa3 bg-white cf tc shadow-4">
               <img src={user}></img>
               <h1 className="f6 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
               <p className="tigrow-lightGray-1">Software Dev</p>
@@ -407,10 +407,8 @@ export const LandingPageComponent = (props: LandingPageProps) => {
             <AboutView user={props.user} />
             <SkillView />
           </div>
-          <div className="fl w-75-ns">
-            <BasicInfoDetailsView user={props.user} />
-
-            <div className="br3 bg-white h-auto pa4 mt3">
+          <div className="fl w-70-ns mt3">
+            <div className="br3 bg-white h-auto pa4 shadow-4">
               <ListTitleView
                 listTitle="Experience"
                 iconType="add"
@@ -422,6 +420,9 @@ export const LandingPageComponent = (props: LandingPageProps) => {
               </div>
               <Divider />
               <ExperienceView />
+            </div>
+            <div className="mt3 mb4 shadow-4">
+              <BasicInfoDetailsView user={props.user} />
             </div>
           </div>
         </div>
