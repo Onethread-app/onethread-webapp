@@ -1,4 +1,4 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE,} from './Types';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE, } from './Types';
 
 export interface ICompanyByUser {
 	role: string;
@@ -73,7 +73,10 @@ export const UserReducer = (state = InitialState, action: any) => {
 		case BASIC_INFO:
 			return {
 				...state,
-				user: action.payload.user
+				user: {
+					...state.user,
+					...action.payload
+				}
 			}
 		case EDIT_BASIC_INFO:
 			return {
@@ -99,7 +102,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 			}
 		case ADD_EXPERIENCE: {
 			return {
-			...state,
+				...state,
 				user: {
 					...state.user,
 					timeline: [
@@ -107,21 +110,21 @@ export const UserReducer = (state = InitialState, action: any) => {
 						action.payload
 					]
 				}
+			}
 		}
-	}
-	case EDIT_BASIC_INFO_ERROR: {
-		return {
-			...state,
-			error: action.payload,
-			loading: false
+		case EDIT_BASIC_INFO_ERROR: {
+			return {
+				...state,
+				error: action.payload,
+				loading: false
+			}
 		}
-	}	
-	case CLEAR_USER_REDUCER_STATE: 
-		return {
-			user: {},
-			loading: false,
-			error: ''
-		}
+		case CLEAR_USER_REDUCER_STATE:
+			return {
+				user: {},
+				loading: false,
+				error: ''
+			}
 		default:
 			return state;
 	}
