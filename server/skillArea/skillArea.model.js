@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const skillAreaSchema = mongoose.Schema({
-  skill: {
+  name: {
     type: String,
   },
   accountId: [

@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const httpStatus = require('http-status');
 const shortid = require('shortid');
-
 const Account = require('./account.model');
 const config = require('../../config/config');
-
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
@@ -17,8 +16,6 @@ const {
   removeRefreshTokenfromList,
 } = require('../services/redis.services');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
-const { webhook } = require('../services/slack.services.js');
-
 const {
   APIError,
   EmailIdExistError,
@@ -38,11 +35,10 @@ const register = async (req, res, next) => {
   const lastName = req.body.lastName;
   const contactNo = req.body.contactNo;
   const role = req.body.role;
-
   const uniqueHash = shortid.generate();
   const name = firstName + uniqueHash;
   if (!email || !password) {
-    return sendJSONresponse(res, 422, {
+    return sendJSONresponse(res, 400, {
       error: 'You must provide email and password.',
     });
   }
@@ -50,7 +46,6 @@ const register = async (req, res, next) => {
   Account.find({
     email: email,
   })
-    .select('-password')
     .exec()
     .then(user => {
       if (user.length >= 1) {
@@ -68,24 +63,24 @@ const register = async (req, res, next) => {
         account.contactNo = contactNo;
         account.role = role;
         account.password = password;
-        account.save().then(async user => {
+        account.save().then(async userInfo => {
           const info = {};
           info.account = account;
           info.expires = new Date(
             // expire within 1 month
             new Date().getTime() + 2630000,
           );
-          const infoObj = info.account.toObject();
-          delete infoObj.password;
-          const accessToken = jwt.sign(info, config.jwtSecret, {
+          let access_token = jwt.sign(info, config.jwtSecret, {
             expiresIn: '1d',
           });
           const emailResponse = await sendEmailForVerifyAccount(
             account.name,
             account.email,
-            accessToken,
+            access_token,
           );
-          req.login(user, async function(err) {
+          delete account.password;
+          delete account.companies;
+          req.login(userInfo, async function(err) {
             if (err) {
               return sendJSONresponse(res, 400, {
                 success: false,
@@ -97,10 +92,14 @@ const register = async (req, res, next) => {
                 id: req.user._id,
                 name: req.user.name,
               });
+              const user = userInfo.toObject();
+              user.token = account.generateJwt();
+              delete user.password;
               return sendJSONresponse(res, 201, {
                 success: true,
+                token: user.token,
                 message: 'User created',
-                emailResponse,
+                user,
               });
             }
           });
@@ -113,10 +112,9 @@ const register = async (req, res, next) => {
         'Bad Request Error',
         httpStatus.BAD_REQUEST,
       );
-      return next(error);
+      next(error);
     });
 };
-
 /**
  * Returns jwt token if valid uname and password is provided
  * @param req
@@ -156,6 +154,9 @@ const login = async (req, res, next) => {
     userObj.timeline = timelineHistory;
     delete userObj.password;
     delete userObj.companies;
+    delete userObj.friends;
+    delete userObj.pendingFriends;
+    delete userObj.sendingFriendList;
     addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
     return sendJSONresponse(res, 200, {
       success: true,
@@ -170,26 +171,26 @@ const login = async (req, res, next) => {
 };
 
 // token verification for mail
-const getAccessTokenForVerifyAccount = async (req, res) => {
+const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
     const { token } = req.params;
     const user = await Account.findOne({
-      _id: req.user._id,
       verifyAccountToken: token,
-    });
+    }).select(
+      '-password companies contactNo skillArea education name',
+    );
     if (!user)
-      return res.status(400).json({ message: 'No User Found' });
+      return sendJSONresponse(res, 400, { message: 'No User Found' });
     user.verifyAccountToken = undefined;
-    user.isAccountVerified = true;
+    user.accountVerified = true;
     const dbSavedUser = await user.save();
-    return res.json({
+    return sendJSONresponse(res, 200, {
+      success: true,
       message: 'Account Verified Successfully',
       user: dbSavedUser,
     });
   } catch (err) {
-    return res.status(500).json({
-      message: 'server error',
-    });
+    next(err);
   }
 };
 // account holder can update their account information
@@ -223,11 +224,11 @@ const accountUpdate = async (req, res, next) => {
 };
 const logout = async (req, res) => {
   req.logout();
-  res.json({
+  logger.info('Account successfully Logout');
+  return sendJSONresponse(res, 200, {
     success: true,
-    msg: 'You are successfully logout',
+    message: 'Successfully logout',
   });
-  res.end();
 };
 
 const sendEmailForForgetPassword = async (req, res, next) => {
@@ -237,7 +238,7 @@ const sendEmailForForgetPassword = async (req, res, next) => {
       const token = buffer.toString('hex');
       const user = await Account.findOne({
         email: req.body.email,
-      });
+      }).select('-password');
       if (!user)
         return sendJSONresponse(res, 400, {
           success: false,
@@ -251,7 +252,10 @@ const sendEmailForForgetPassword = async (req, res, next) => {
         user.email,
         token,
       );
-      return res.status(200).json({ dbSavedUser, emailResponse });
+      return sendJSONresponse(res, 200, {
+        dbSavedUser,
+        emailResponse,
+      });
     });
   } catch (error) {
     next(error);
@@ -289,269 +293,16 @@ const resetPassword = async (req, res, next) => {
     user.password = password;
     const dbSavedUser = await user.save();
     delete dbSavedUser.password;
-    return res.status(200).json({
+    logger.info(`password change`);
+    return sendJSONresponse(res, 200, {
       message: 'Password Changed',
       user: dbSavedUser,
     });
   } catch (err) {
+    logger.error(`password does not change`);
     next(err);
   }
 };
-
-// verifying mail address
-// const verifyAccount = async (req, res) => {
-//   let token = req.params.token;
-//   let data = jwt.decode(token, config.jwtSecret);
-//   if (new Date(data.expires) > new Date()) {
-//     Account.findOne({
-//       _id: data.account._id,
-//       email: data.account.email,
-//     })
-//       .select('-password')
-//       .exec(function(err, account) {
-//         if (err) {
-//           console.log(err);
-//           res.json(err);
-//         } else if (!account) {
-//           console.log('Account not found');
-//           res.json({ error: 'Account not found' });
-//         } else {
-//           account.accountVerified = true;
-//           account.save(function(update_err, update_data) {
-//             if (update_err) {
-//               res.json({ success: false, error: update_err });
-//             } else {
-//               res.status(200).json({
-//                 success: true,
-//                 message: 'Account is verified',
-//               });
-//             }
-//           });
-//         }
-//       });
-//   } else {
-//     Account.deleteOne({ _id: data.account._id })
-//       .then(account => {
-//         return;
-//       })
-//       .catch(err => {
-//         return res
-//           .status(200)
-//           .json({ success: false, error: 'Link is expired' });
-//       });
-//   }
-// };
-
-// send friend request to an account
-const sendFriendRequest = async (req, res, next) => {
-  let fromFriend = req.user.id;
-  let toFriend = req.query.userID;
-
-  // you can not add yourself
-  if (fromFriend === toFriend) {
-    return sendJSONresponse(res, 400, {
-      success: false,
-      message: 'You can not add yourself',
-    });
-  }
-  Account.findById(fromFriend)
-    .select('-password')
-    .then(account => {
-      if (
-        account.sendingFriendList.filter(
-          friend => friend.toString() === toFriend,
-        ).length > 0
-      ) {
-        return sendJSONresponse(res, 200, {
-          success: true,
-          message: `you already send request to this ${toFriend}`,
-        });
-      } else {
-        account.sendingFriendList.push(toFriend);
-        account.save();
-        // sending friend request to toFriend
-        Account.findById(toFriend).then(account => {
-          if (
-            account.pendingFriends.filter(
-              friend => friend.toString() === fromFriend,
-            ).length > 0
-          ) {
-            return res.status(400).json({
-              success: false,
-              msg: 'this id is already in your pending list',
-            });
-          }
-          account.pendingFriends.push(fromFriend);
-          account.save();
-          return sendJSONresponse(res, 200, {
-            success: true,
-            message: `Friend request send to ${toFriend}`,
-          });
-
-          //
-        });
-      }
-    });
-};
-
-// check in pending request the id exist or not
-const pendingFriendRequestList = async (req, res, next) => {
-  let reqUserID = req.account.id;
-  Account.findById(reqUserID).then(account => {
-    let pendingList = account.pendingFriends;
-    let listPendingReq = [];
-    pendingList.forEach((value, key) => {
-      listPendingReq.push(value);
-    });
-    return res.status(200).json({
-      success: true,
-      msg: 'pending friend request list',
-      list: listPendingReq,
-    });
-  });
-};
-
-// Accept Friend request
-const acceptFriendRequest = async (req, res, next) => {
-  let reqUserID = req.user.id;
-  let acceptedID = req.query.userID;
-
-  // accept friend request
-  Account.findById(reqUserID).then(account => {
-    account.friends.push(acceptedID);
-    account.pendingFriends.remove(acceptedID);
-    account.save();
-
-    //
-    Account.findById(acceptedID).then(account => {
-      account.friends.push(reqUserID);
-      account.sendingFriendList.remove(reqUserID);
-      account.save();
-      return sendJSONresponse(res, 200, {
-        success: true,
-        message: 'you both connect with each other',
-      });
-    });
-  });
-};
-
-// friend List information
-const friendList = async (req, res, next) => {
-  Account.findById(req.user._id)
-    .populate(
-      'friends',
-      '_id email firstName lastName accountVerified role contactNo companies friends pendingFriends sendingFriendList',
-    )
-    .exec()
-    .then(account => {
-      if (!account) {
-        return sendJSONresponse(res, 500, {
-          success: false,
-          message: 'No account found',
-        });
-      }
-      const { friends } = account;
-      return sendJSONresponse(res, 200, {
-        success: true,
-        message: 'List of friends',
-        friends,
-      });
-    })
-    .catch(err => {
-      next(err);
-    });
-};
-
-// sending Friend request List
-const sendFriendRequestList = async (req, res, next) => {
-  let reqUserID = req.account.id;
-  Account.findById(reqUserID).then(account => {
-    let sendFriendRequestList = account.sendingFriendList;
-    let listPendingReq = [];
-    pendingList.forEach((value, key) => {
-      listPendingReq.push(value);
-    });
-    return res.status(200).json({
-      success: true,
-      msg: 'pending friend request list',
-      list: listPendingReq,
-    });
-  });
-};
-
-// reject friend request
-// const rejectFriendRequest = async (req, res) => {
-// 	let reqUserID = req.user.id;
-// 	let reqQueryID = req.query.userID;
-// 	console.log(reqUserID, reqQueryID);
-
-// 	Account.findById(reqUserID)
-// 		.then(account => {
-// 			Account.findByIdAndUpdate(reqUserID, {
-// 					$pull: {
-// 						"pendingFriends": {
-// 							"user": reqQueryID
-// 						}
-// 					}
-// 				}, (err, result) => {
-// 					if (err) {
-// 						return res.status(400).json({
-// 							error: err
-// 						});
-// 					}
-// 					res.status(200).json({
-// 						success: true,
-// 						msg: "successfully reject the user",
-// 						result: result
-// 					});
-// 				}
-
-// 			);
-// 		});
-// };
-
-// remove friend from friend list
-// const removeFriend = async (req, res) => {
-// 	let reqUserID = req.user.id;
-// 	let reqQueryID = req.query.userID;
-// 	Account.findByIdAndUpdate(reqUserID, {
-// 		$pull: {
-// 			"friends": {
-// 				"user": reqQueryID
-// 			}
-// 		}
-// 	}, (err, result) => {
-// 		if (err) {
-// 			return res.status(400).json({
-// 				error: err
-// 			});
-// 		}
-// 		Account.findByIdAndUpdate(reqQueryID, {
-// 			$pull: {
-// 				"friends": {
-// 					"user": reqUserID
-// 				}
-// 			}
-// 		}, (err, result) => {
-// 			if (err) {
-// 				return res.status(400).json({
-// 					error: err
-// 				});
-// 			}
-// 			res.status(200).json({
-// 				success: true,
-// 				msg: "unfriend successful",
-// 				result: result
-// 			});
-// 		});
-// 	});
-
-// };
-
-// const getAllAccounts = async (req, res) => {
-//   console.log(req.user);
-// };
-
 const getAccount = async (req, res, next) => {
   try {
     const timeline = [
@@ -563,8 +314,10 @@ const getAccount = async (req, res, next) => {
     );
     const userInfo = { ...req.user._doc };
     userInfo.timeline = timelineHistory;
+    console.log(userInfo.skillArea);
     delete userInfo.password;
     delete userInfo.companies;
+    logger.info('userInfo successfully fetched');
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,
@@ -586,8 +339,8 @@ const accountLoad = async (req, res, next, id) => {
         next();
       } else {
         logger.warn(`No valid entry for provided id`);
-        return res.status(400).json({
-          message: 'No valid entry found for provided ID',
+        return sendJSONresponse(res, 400, {
+          message: `no valid entry found for id`,
         });
       }
     })
@@ -712,28 +465,54 @@ const tokenRevoke = async (req, res, next) => {
   }
 };
 
+const changePassword = async (req, res, next) => {
+  try {
+    const { user } = req;
+    const { oldPassword, newPassword } = req.body;
+    if (oldPassword === newPassword) {
+      return sendJSONresponse(res, 400, {
+        message: `you can not use the same password`,
+      });
+    }
+    await Account.findOne({ email: user.email }).exec((err, user) => {
+      if (err) {
+        next(err);
+      }
+      user.comparePassword(oldPassword, async (err, isMatched) => {
+        if (err) {
+          return next(err);
+        }
+        if (isMatched) {
+          user.password = newPassword;
+          await user.save();
+          return sendJSONresponse(res, 200, {
+            message: 'Password changed successfully',
+          });
+        } else {
+          return sendJSONresponse(res, 401, {
+            message: `your previous password is wrong.`,
+          });
+        }
+      });
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   register,
   login,
   logout,
   getAccessTokenForVerifyAccount,
-  pendingFriendRequestList,
-  //getAllAccounts,
   getAccount,
   accountLoad,
   accountUpdate,
-  sendFriendRequest,
-  friendList,
-  // removeFollowing,
-  // removeFollower,
-  acceptFriendRequest,
-  sendFriendRequestList,
-  // rejectFriendRequest,
-  // removeFriend
   searchAccount,
   tokenRefresh,
   tokenRevoke,
   sendEmailForForgetPassword,
   getAccessTokenForForgetPassword,
   resetPassword,
+  changePassword,
 };

@@ -215,4 +215,19 @@ accountsSchema.methods.comparePassword = function(
   });
 };
 
+// generating jwt token
+accountsSchema.methods.generateJwt = function() {
+  // const token = new token();
+  return jwt.sign(
+    {
+      _id: this._id,
+      role: this.role,
+    },
+    config.jwtSecret,
+    {
+      expiresIn: 60 * 60 * 60 * 24,
+    },
+  );
+};
+
 module.exports = mongoose.model('Account', accountsSchema);

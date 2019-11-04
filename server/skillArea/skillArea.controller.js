@@ -1,6 +1,14 @@
 const SkillArea = require('./skillArea.model');
+const Account = require('../account/account.model');
+const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  APIError,
+  EmailIdExistError,
+  BadRequestError,
+  SearchNotMatchError,
+} = require('../helpers/APIError');
 
 const createSkill = async (req, res) => {
   if (!req.is('application/json')) {
@@ -9,7 +17,8 @@ const createSkill = async (req, res) => {
   }
   const skill = req.body.skill;
   const newSkill = new SkillArea();
-  newSkill.skill = skill;
+  newSkill.name = skill;
+  newSkill.accountId.push(req.user._id);
   newSkill
     .save()
     .then(skill => {
@@ -162,7 +171,7 @@ const searchSkillSet = async (req, res, next) => {
     logger.error(`Query Error: ${err}`);
     return next(err);
   }
-  SkillArea.find({ skill: { $regex: new RegExp(name) } })
+  SkillArea.find({ name: { $regex: new RegExp(name) } })
     .then(data => {
       if (data.length < 1) {
         const err = new SearchNotMatchError(
@@ -186,6 +195,25 @@ const searchSkillSet = async (req, res, next) => {
       return next(err);
     });
 };
+
+const updateUserSkillInfo = async (req, res, next) => {
+  try {
+    const skillId = req.body.skillArea;
+    const userID = req.user._id;
+    const user = await Account.updateOne(
+      { _id: userID },
+      { $addToSet: { skillArea: skillId } },
+    );
+    const userSkill = await Account.findOne({ _id: userID }).populate(
+      'skillArea',
+      'name',
+    );
+    const skillList = userSkill.skillArea;
+    return sendJSONresponse(res, 200, { success: true, skillList });
+  } catch (error) {
+    return sendJSONresponse(res, 400, { error });
+  }
+};
 module.exports = {
   createSkill,
   getSkillInfo,
@@ -194,4 +222,5 @@ module.exports = {
   deleteSkillInfo,
   skillLoad,
   searchSkillSet,
+  updateUserSkillInfo,
 };

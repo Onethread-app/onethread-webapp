@@ -1,7 +1,9 @@
 const winston = require('winston');
+
 const winstonTimestampColorize = require('winston-timestamp-colorize');
 const logger = new winston.createLogger({
-  level: 'verbose',
+  levels: winston.config.syslog.levels,
+  //defaultMeta: { service: 'user-service' },
   format: winston.format.combine(
     winston.format.errors({ stack: true }),
     winston.format.metadata(),

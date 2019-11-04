@@ -2,7 +2,12 @@ const Joi = require('@hapi/joi');
 module.exports = {
   register: Joi.object().keys({
     body: Joi.object().keys({
-      firstName: Joi.string().required(),
+      firstName: Joi.string()
+        .lowercase()
+        .required()
+        .error(error => {
+          return { success: false, message: `recheck` };
+        }),
       lastName: Joi.string().required(),
       email: Joi.string()
         .regex(
