@@ -60,11 +60,11 @@ const ForgotPasswordComponnet = (props: { setEmailComponentView: (val: boolean) 
   return (
     <div className="dt cf w-100 vh-100">
       <div className="v-mid dtc">
-        <h1 className="f4 tc">Forgot your Password ?</h1>
-        <h1 className="f5 fw3 tc">Don't worry ! Resetting your password is super easy.</h1>
-        <h1 className="f5 fw3 tc">Enter your mail address</h1>
+        <h1 className="f3 tc">Forgot your Password ?</h1>
+        <h1 className="f4 fw3 tc">Don't worry ! Resetting your password is super easy.</h1>
+        <h1 className="f4 fw3 tc">Enter your mail address</h1>
         <div className="w-25 cf center mt3">
-          <h1 className="f6">Email</h1>
+          <h1 className="f5">Email</h1>
           <div className="mb3">
             <div className="flex">
               <InputGroupField
@@ -78,6 +78,7 @@ const ForgotPasswordComponnet = (props: { setEmailComponentView: (val: boolean) 
                 leftIconColor="#0fa3a3"
                 style={{
                   boxShadow: 'none',
+                  fontSize: '18px'
                 }}
                 validationOnBlur={() => {
                   if (isEmpty(values.email)) {
@@ -98,7 +99,7 @@ const ForgotPasswordComponnet = (props: { setEmailComponentView: (val: boolean) 
           <Button
             type="submit"
             className="b--none w-100 br3 fr grow h2 ph5 pointer pv2 mb3"
-            style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+            style={{ background: "#0fa3a3", outline: "none", color: 'white', fontSize: '18px' }}
             onClick={(e: any) => {
               e.preventDefault();
               if (!emptyValueCheck() && !errors.email) {
@@ -118,8 +119,8 @@ const ForgotPasswordComponnet = (props: { setEmailComponentView: (val: boolean) 
 const RouteToEmailConfirmation = () => (
   <div className="dt cf w-100 vh-100">
     <div className="v-mid dtc">
-      <h1 className="f4 lh-copy tc">We have sent you a mail.</h1>
-      <h1 className="f4 lh-copy tc">Please go to your mail to reset your password</h1>
+      <h1 className="f3 lh-copy tc">We have sent you a mail.</h1>
+      <h1 className="f3 lh-copy tc">Please go to your mail to reset your password</h1>
     </div>
   </div>
 )

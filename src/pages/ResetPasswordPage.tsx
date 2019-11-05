@@ -116,7 +116,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                 leftIcon="lock"
                 rightElement={
                   <Icon
-                    icon={showPassword ? 'unlock' : 'lock'}
+                    icon={showPassword ? 'eye-open' : 'eye-off'}
                     color="#0fa3a3"
                     onClick={e => setShowPassword(!showPassword)}
                     className="pt2 pr2"
@@ -126,6 +126,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                 leftIconColor={`${errors.password ? 'red' : "#0fa3a3"}`}
                 style={{
                   boxShadow: 'none',
+                  fontSize: '18px'
                 }}
                 validationOnBlur={() => {
                   if (isEmpty(values.password)) {
@@ -159,7 +160,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                 leftIcon="lock"
                 rightElement={
                   <Icon
-                    icon={showPassword ? 'unlock' : 'lock'}
+                    icon={showPassword ? 'eye-open' : 'eye-off'}
                     color="#0fa3a3"
                     onClick={e => setShowPassword(!showPassword)}
                     className="pt2 pr2"
@@ -169,6 +170,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                 leftIconColor={`${errors.confirmPassword ? 'red' : "#0fa3a3"}`}
                 style={{
                   boxShadow: 'none',
+                  fontSize: '18px'
                 }}
                 validationOnBlur={() => {
                   if (isEmpty(values.confirmPassword)) {
