@@ -158,12 +158,11 @@ const updateCompany = async (req, res, next) => {
       }
     }
 
-    let company = await req.company.save();
+    await req.company.save();
 
     return res.status(200).json({
       status: true,
       message: 'Company updated',
-      company,
     });
   } catch (error) {
     next(error);
