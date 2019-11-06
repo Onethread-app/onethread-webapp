@@ -118,7 +118,6 @@ const list = async (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
 
   Room.find({ company: mongoose.Types.ObjectId(req.params.company) })
-    .select('-name')
     .sort({ created: 1 })
     .skip(+skip)
     .limit(+limit)
