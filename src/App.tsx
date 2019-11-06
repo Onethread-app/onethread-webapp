@@ -11,8 +11,10 @@ import { Layout } from 'components/common/Layout';
 import { TaskPage } from 'pages/company/TaskPage';
 import { TeamMembersPage } from 'pages/company/TeamMembersPage';
 import { SettingsPage } from 'pages/company/SettingsPage';
+import { ProfileSettingsPage } from 'pages/ProfileSettingsPage';
 import { ForgotPasswordPage } from 'pages/ForgotPasswordPage';
 import { ResetPasswordPage } from 'pages/ResetPasswordPage';
+import { EmailVerificationPage } from 'pages/EmailVerificationPage';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -66,6 +68,12 @@ export const App = () => (
 					isAuthenticate() ? <Redirect to="/" /> : <ResetPasswordPage />
 				}
 			/>
+			<Route
+				path="/verify-account/:token"
+				render={r =>
+					isAuthenticate() ? <Redirect to="/" /> : <EmailVerificationPage />
+				}
+			/>
 			<PrivateRoute
 				exact
 				path="/"
@@ -75,6 +83,11 @@ export const App = () => (
 				path="/:username"
 				exact={true}
 				component={LandingPage}
+			/>
+			<PrivateRoute
+				path="/:username/settings"
+				exact={true}
+				component={ProfileSettingsPage}
 			/>
 			<PrivateRoute
 				exact={true}

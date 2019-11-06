@@ -1,4 +1,4 @@
-import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE } from './Types';
+import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE, EDIT_COMPANY_INFO } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
 
@@ -24,6 +24,8 @@ export interface CompanyModel {
   departments: Entity[],
   members: [ICompanyMembers];
   role: string;
+  about: string;
+  skill: [{}];
 }
 
 const InitialState = {
@@ -38,7 +40,9 @@ const InitialState = {
     members: [{}],
     divisions: [{}],
     departments: [{}],
-    role: ""
+    role: "",
+    about: "",
+    skill: [{}]
   },
   loading: false,
   error: ''
@@ -122,6 +126,15 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         loading: false,
         error: ''
       }
+
+      case EDIT_COMPANY_INFO:
+			return {
+				...state,
+				currentCompany: {
+					...state.currentCompany,
+					...action.payload
+				}
+			}
     default:
       return state;
   }

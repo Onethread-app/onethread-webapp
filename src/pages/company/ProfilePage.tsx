@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab, Tabs } from "@blueprintjs/core";
 import { InfoDetailsView } from 'components/company/profile/view/InfoDetailsView';
-import { ProductDetailsView } from 'components/company/profile/view/ProductDetailsView';
+// import { ProductDetailsView } from 'components/company/profile/view/ProductDetailsView';
 
 export const CompanyProfilePage = () => (
   <div className="w-100">
@@ -16,12 +16,13 @@ export const CompanyProfilePage = () => (
         panel={<InfoDetailsView />}
         className="outline-0"
       />
-      <Tab
+      {/* Todo */}
+      {/* <Tab
         id="product_details"
         title="Product Details"
         panel={<ProductDetailsView />}
         className="outline-0"
-      />
+      /> */}
     </Tabs>
   </div>
 );

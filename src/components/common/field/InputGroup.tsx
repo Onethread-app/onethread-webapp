@@ -15,6 +15,7 @@ interface InputGroupFieldProps {
   rightElement?: JSX.Element;
   type?: string;
   intent?: Intent;
+  disabled?: boolean;
 }
 
 export const InputGroupField = (props: InputGroupFieldProps) => (
@@ -35,5 +36,6 @@ export const InputGroupField = (props: InputGroupFieldProps) => (
     onChange={props.onChange}
     onBlur={props.validationOnBlur ? props.validationOnBlur : null}
     intent={props.intent ? props.intent : Intent.NONE}
+    disabled={props.disabled}
   />
 )

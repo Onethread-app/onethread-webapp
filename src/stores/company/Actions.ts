@@ -4,7 +4,7 @@ import { isEqual } from 'lodash';
 import { History } from 'history';
 import { tokenConfig, Entity } from '../UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
-import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT } from './Types';
+import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, EDIT_COMPANY_INFO } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 // import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
 
@@ -14,12 +14,6 @@ export const createCompanyAction = (companyData: CompanyModel, routeHistory: His
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.post(`/company`, companyData, headers);
       dispatch({ type: CREATE_COMPANY, payload: response.data });
-      // dispatch({
-      //   type: USER_COMPANIES_UPDATE, payload: {
-      //     _id: response.data.company._id,
-      //     name: response.data.company.name
-      //   }
-      // });
       routeHistory.push(`/company/${response.data.company.name}`);
     } else {
       console.log("error in creation of company")
@@ -141,3 +135,43 @@ export const getAllDepartments = () => async (dispatch: any, getState: any) => {
     }
   }
 }
+
+export const editCompanyInfoAction = (companyInfo: CompanyModel) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      let company = getState().companyReducer.currentCompany.name;
+      await tigrowApi.put(`company/${company}/basic`, companyInfo, headers);
+      dispatch({ type: EDIT_COMPANY_INFO, payload: companyInfo });
+    } else {
+      console.log("error in user fetching");
+    }
+  } catch (error) {
+    console.log(error);
+    if (isEqual(error.message, 'Network Error')) {
+      console.log('Network error');
+    } else {
+      console.log(error.response);
+    }
+  }
+};
+
+export const editCompanyAboutAction = (companyAbout: string) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      let company = getState().companyReducer.currentCompany.name;
+      await tigrowApi.put(`company/${company}/about`, { about: companyAbout }, headers);
+      dispatch({ type: EDIT_COMPANY_INFO, payload: { about: companyAbout } });
+    } else {
+      console.log("error in user fetching");
+    }
+  } catch (error) {
+    console.log(error);
+    if (isEqual(error.message, 'Network Error')) {
+      console.log('Network error');
+    } else {
+      console.log(error.response);
+    }
+  }
+};

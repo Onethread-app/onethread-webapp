@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ListTitleView } from '../../../ListTitleView';
-import { Dialog} from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core';
 import { SectionViewWithTitleAndDesciption } from '../../../ListItemView';
 import { connect } from 'react-redux';
 
@@ -32,7 +32,6 @@ const ProductDetailsViewComponent = (props: any) => {
           listTitle="Product Sub Categories"
           listDescription={props.company.email}
         />
-
         <SectionViewWithTitleAndDesciption
           listTitle="Product Name"
           listDescription={props.company.legalOwnerName}

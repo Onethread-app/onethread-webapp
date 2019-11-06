@@ -16,25 +16,25 @@ const SidebarComponent = (props: {
 				className="bp3-minimal bp3-vertical bp3-fill sidebar-margin"
 			>
 				{props.type === 'default' ?
-					<NavLink
-						exact
-						style={{ color: 'dimgray' }}
-						activeStyle={{
-							background: '#0fa3a3',
-							color: 'white'
-						}}
-						to={`/${props.user.name}`}
-					>
-						<Button
-							name="userProfile"
-							className="outline-0 bp3-large"
-							style={{ color: 'white' }}>
-							<Icon
-								icon="user"
-								style={{ color: 'white', marginRight: '20px', marginLeft: '5px' }} />
-							Profile
+						<NavLink
+							exact
+							style={{ color: 'dimgray' }}
+							activeStyle={{
+								background: '#0fa3a3',
+								color: 'white'
+							}}
+							to={`/${props.user.name}`}
+						>
+							<Button
+								className="outline-0 bp3-large"
+								style={{ color: 'inherit' }}
+							>
+								<Icon
+									icon="user"
+									style={{ marginRight: '20px', marginLeft: '5px', color: 'inherit' }} />
+								Profile
 						</Button>
-					</NavLink>
+						</NavLink>
 					:
 					<>
 						<NavLink

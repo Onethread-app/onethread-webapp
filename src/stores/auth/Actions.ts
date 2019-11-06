@@ -1,10 +1,10 @@
 import {
+	USER_SIGNUP,
 	USER_LOGIN,
 	USER_LOGIN_ERROR,
 	USER_SIGNUP_LOADING,
 	USER_LOGOUT,
-	CLEAR_AUTH_REDUCER_STATE,
-	USER_SIGNUP
+	CLEAR_AUTH_REDUCER_STATE
 } from "./Types";
 import tigrowApi from "tigrowApi";
 import { AxiosRequestConfig } from "axios";
@@ -30,11 +30,9 @@ export const userSignupAction = (
 		const response = await tigrowApi.post("account/signup", user, {
 			"Content-Type": "application/json"
 		} as AxiosRequestConfig);
-		console.log(response.data);
 		localStorage.setItem("token", JSON.stringify(response.data.token));
 		await dispatch({ type: USER_SIGNUP, payload: response.data });
 		await dispatch({ type: BASIC_INFO, payload: response.data });
-		console.log(response.data)
 		routeHistory.push(`/${response.data.user.name}`);
 	} catch (error) {
 		console.log(error)

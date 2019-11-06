@@ -92,7 +92,7 @@ const BasicInfoFormComponent = (props: {
           }}
           className="bb b--lightBlue"
           leftIconColor="#0fa3a3"
-          readOnly={true}
+          disabled={true}
         />
       </div>
       <div className={` ${errors.secondaryEmail ? "mb3" : "mb4"}`}>
@@ -149,7 +149,7 @@ const BasicInfoFormComponent = (props: {
                 if (isEmpty(values.contactNo)) {
                   const contactNoError = { ...errors, contactNo: "Required" };
                   setErrors(contactNoError);
-                }else if (values.contactNo.length !== 10) {
+                } else if (values.contactNo.length !== 10) {
                   const contactNoError = { ...errors, contactNo: "Not more or less than 10 character" };
                   setErrors(contactNoError);
                 }
@@ -265,7 +265,7 @@ const BasicInfoFormComponent = (props: {
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={(e: any) => {
             e.preventDefault();
-            if (!emptyValueCheck() && emptyErrorCheck() ) {
+            if (!emptyValueCheck() && emptyErrorCheck()) {
               props.editInfoAction(values);
               props.setShowDialog(false);
             }

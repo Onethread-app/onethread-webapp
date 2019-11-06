@@ -39,9 +39,9 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
         </Button>
         </div>
         <div className="mt4">
-          {props.loading ? <Loading /> : 
-            props.company.departments && props.company.departments.length > 0 ? 
-            props.company.departments.map((d: any) => (<p key={d._id}>{d.name}</p>)) : <p>No departments</p>}
+          {props.loading ? <Loading /> :
+            props.company.departments && props.company.departments.length > 0 ?
+              props.company.departments.map((d: any) => (<p key={d._id}>{d.name}</p>)) : <p>No departments</p>}
         </div>
       </div>
       {showDialogDepartment && (

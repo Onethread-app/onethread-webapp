@@ -74,7 +74,6 @@ const TeamMembersPageComponent = (props: TeamMember) => {
           <AddMemberForm
             showDialog={showDialog}
             setShowDialog={e => setShowDialog(!showDialog)}
-            members={props.company.members}
           />
         </Dialog>
       )}
