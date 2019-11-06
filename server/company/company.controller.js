@@ -143,8 +143,8 @@ const getCompany = async (req, res, next) => {
   }
 };
 
-// update a company profile
-const updateCompany = async (req, res, next) => {
+// update a company basic info
+const updateBasicInfo = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
@@ -162,7 +162,28 @@ const updateCompany = async (req, res, next) => {
 
     return res.status(200).json({
       status: true,
-      message: 'Company updated',
+      message: `Company's basic information updated`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update a company basic info
+const updateAbout = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+
+  try {
+    req.company.about = req.body.about;
+
+    await req.company.save();
+
+    return res.status(200).json({
+      status: true,
+      message: `Company's about updated`,
     });
   } catch (error) {
     next(error);
@@ -265,7 +286,8 @@ const addEmployees = async (req, res) => {
 module.exports = {
   createCompany,
   getCompany,
-  updateCompany,
+  updateBasicInfo,
+  updateAbout,
   getCompanyIndividual,
   deleteCompany,
   addEmployees,

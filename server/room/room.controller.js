@@ -81,7 +81,6 @@ const memberList = async (req, res) => {
 };
 
 const suggestMember = async (req, res, next) => {
-
   //req.params.roomId empty check require
   try {
     let roomMembers = await Room.findById(req.params.roomId)
@@ -105,7 +104,7 @@ const suggestMember = async (req, res, next) => {
     });
     // TODO: it will execute in client
     // members empty check
-     members = members.map(m => m.account);
+    members = members.map(m => m.account);
 
     return res.status(200).json({
       members,

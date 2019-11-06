@@ -11,7 +11,7 @@ const memberRoutes = require('./member/member.route');
 const deptRoutes = require('./department/department.route');
 const designationRoutes = require('./designation/designation.route');
 
-// for company profile
+// create company
 router
   .route('/')
   .post(
@@ -20,17 +20,31 @@ router
     companyCtrl.createCompany,
   );
 
+// get company
 router
   .route('/:cname')
   .get(
     requireAuth,
     SchemaValidator(joiSchema.getCompany),
     companyCtrl.getCompany,
-  )
+  );
+
+// update basic info
+router
+  .route('/:cname/basic')
   .put(
     requireAuth,
-    SchemaValidator(joiSchema.updateCompany),
-    companyCtrl.updateCompany,
+    SchemaValidator(joiSchema.updateBasicInfo),
+    companyCtrl.updateBasicInfo,
+  );
+
+// update about
+router
+  .route('/:cname/about')
+  .put(
+    requireAuth,
+    SchemaValidator(joiSchema.updateAbout),
+    companyCtrl.updateAbout,
   );
 // .delete(
 //   requireAuth,
