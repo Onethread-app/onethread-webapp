@@ -29,6 +29,7 @@ const create = async (req, res, next) => {
       id: room._id,
       creatorId: req.user._id,
       name: room.name,
+      isPrivate: true,
       customData: {
         company: req.body.company,
       },

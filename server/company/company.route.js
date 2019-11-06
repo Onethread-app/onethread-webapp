@@ -46,6 +46,16 @@ router
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
   );
+
+// update about
+router
+  .route('/:cname/changeName')
+  .put(
+    requireAuth,
+    SchemaValidator(joiSchema.changeName),
+    companyCtrl.changeName,
+  );
+
 // .delete(
 //   requireAuth,
 //   // SchemaValidator(joiSchema.deleteCompany),

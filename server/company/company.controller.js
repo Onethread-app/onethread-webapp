@@ -5,6 +5,36 @@ const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
 
 // create a company profile
+const changeName = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+
+  try {
+    // check duplicate company name
+    const duplicate = await Company.findOne({
+      name: req.body.name,
+    });
+    if (duplicate) {
+      return res.status(409).json({
+        status: false,
+        message: `Name already exist`,
+      });
+    }
+    req.company.name = req.body.name;
+    await req.company.save();
+
+    return res.status(200).json({
+      status: true,
+      message: `Company's name updated`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// create a company profile
 const createCompany = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
@@ -289,6 +319,7 @@ module.exports = {
   updateBasicInfo,
   updateAbout,
   getCompanyIndividual,
+  changeName,
   deleteCompany,
   addEmployees,
   getCompanyLoad,

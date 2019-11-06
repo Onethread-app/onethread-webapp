@@ -112,6 +112,12 @@ module.exports = {
     }),
     params: cname,
   }),
+  changeName: Joi.object().keys({
+    body: Joi.object().keys({
+      name: schema.name.required(),
+    }),
+    params: cname,
+  }),
   deleteCompany: Joi.object().keys({
     params: cname,
   }),
