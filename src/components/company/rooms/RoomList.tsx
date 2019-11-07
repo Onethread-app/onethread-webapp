@@ -5,7 +5,7 @@ import { useDispatch, useSelector, connect } from 'react-redux';
 import { RoomListItem } from "./RoomListItem";
 import { getRoomsAction } from "./../../../stores/room/Actions";
 import { Loading } from 'components/common/field/Loading';
-import { CURRENT_ROOM, NEW_MESSAGE, GET_ROOM_MESSAGES, GET_ROOMS, CLEAR_ROOM_MESSAGES } from 'stores/room/Types';
+import { CURRENT_ROOM, NEW_MESSAGE, GET_ROOM_MESSAGES, GET_ROOMS, CLEAR_ROOM_MESSAGES, ACTIVE_ROOM, ON_PRESENCE_CHANGE } from 'stores/room/Types';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const load = async (
@@ -26,6 +26,7 @@ export const RoomListComponent = withChatkit((
 	const dispatch = useDispatch();
 	const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
+	const activeRoom = useSelector((state: any) => state.roomReducer.activeRoom);
 
 	const subscribeToRoom = (roomId: any, name: string) => {
 		if (!props.chatkit.isLoading) {
@@ -36,35 +37,32 @@ export const RoomListComponent = withChatkit((
 				roomId: roomId,
 				hooks: {
 					onMessage: (newMessage: any) => {
-
-						let message = {
-							id: newMessage.id,
-							roomId: newMessage.roomId,
-							senderId: newMessage.senderId,
-							text: newMessage.parts[0].payload.content,
-							userStore: {
-								users: { senderId: newMessage.userStore.users[newMessage.senderId] }
-							},
-							roomStore: newMessage.roomStore,
-							createdAt: newMessage.createdAt,
-							updatedAt: newMessage.updatedAt,
-						};
-						message.userStore.users[newMessage.senderId] = newMessage.userStore.users[newMessage.senderId];
-						console.log("mew-message", message);
-						dispatch({ type: NEW_MESSAGE, payload: message });
-					}
+						console.log("new-message", newMessage);
+						dispatch({ type: NEW_MESSAGE, payload: newMessage });
+					},
+					// onPresenceChanged: () => {
+					// 	if (activeRoom) {
+					// 		let roomUsers = activeRoom.users.sort((user: any) => {
+					// 			if (user.presence.state === 'online') return -1;
+					// 			return 1;
+					// 		});
+					// 		dispatch({ type: ON_PRESENCE_CHANGE, payload: roomUsers });
+					// 	}
+					// },
 				},
 				messageLimit: 1
 			})
 				.then((room: any) => {
-					// do nothing
+					dispatch({ type: ACTIVE_ROOM, payload: room });
+					console.log(room.users);
+
 				})
 				.catch((err: any) => console.log('error on subscribing to room: ', err))
 		}
 	}
 
 	const fetchMessages = (roomId: any, limit = 100) => {
-		props.chatkit.currentUser.fetchMessages(
+		props.chatkit.currentUser.fetchMultipartMessages(
 			{
 				roomId,
 				limit,
@@ -76,7 +74,7 @@ export const RoomListComponent = withChatkit((
 
 	useEffect(() => {
 		if (!props.chatkit.isLoading) {
-			dispatch({ type: GET_ROOMS, payload: props.chatkit.currentUser.rooms });
+			// dispatch({ type: GET_ROOMS, payload: props.chatkit.currentUser.rooms });
 			load(props.getRoomsAction)
 		}
 	}, [props.chatkit])

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { dateFormatter } from "../../helpers/index";
+import { dateFormatter } from "../../../../helpers/index";
 import { useSelector } from 'react-redux';
 
 interface MessageItemProps {
@@ -23,8 +23,8 @@ export const MessageItem = (props: MessageItemProps) => {
         className={`shadow-1 pa3 pt1 br3 ${currentUser ? "mr2 bg-tigrowLightBlue" : "ml2 bg-white"}`}
         style={{ width: "auto" }}>
         <div className={`flex justify-between ${currentUser ? " flex-row-reverse" : ""}`}>
-          <h6 className="pa0 ma0">{props.sender.name}</h6>
-          <h6 className={`pa0 ma0 ${currentUser ? "mr5" : "ml5"}`}>
+          <h6 className={`pa0 ma0 ${currentUser ? "white" : ""}`}>{props.sender.name}</h6>
+          <h6 className={`pa0 ma0 ${currentUser ? "mr5 white" : "ml5"}`}>
             {dateFormatter(new Date(props.createdAt)).format}
           </h6>
         </div>

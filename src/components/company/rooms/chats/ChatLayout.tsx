@@ -6,34 +6,36 @@ import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
 import { isEmpty } from "lodash";
+import MembersList from './members/MembersList';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
-	roomName: string;
-	roomId: string;
-	roomMembers: string;
+	activeRoom: any;
 }
 
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
-	const [showDialog, setShowDialog] = useState(false);
+	const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
+	const [showMemberListDialog, setShowMemberListDialog] = useState(false);
 
 	useEffect(() => {
-		if (!isEmpty(props.roomId)) {
-			props.getRoomMembers(props.roomId);
+		if (props.activeRoom && !isEmpty(props.activeRoom.id)) {
+			props.getRoomMembers(props.activeRoom.id);
 		}
-	}, [props.roomId])
+	}, [props.activeRoom])
 
 	return (
 		<div>
-			{props.roomName &&
+			{props.activeRoom &&
 				<>
 					<div className="flex justify-between items-center ph3 bb b--tigrowLightGray-1">
 						<div>
-							<p className="f4 fw7 mv1">{props.roomName}</p>
-							<h5 className="ma0">Members: {props.roomMembers.length}</h5>
+							<p className="f4 fw7 mv1">{props.activeRoom.name}</p>
+							<h5
+								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
+								className="ma0 pointer">Members: {props.activeRoom.users.length}</h5>
 						</div>
 						<Button
-							onClick={() => setShowDialog(!showDialog)}
+							onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}
 							className="bp3-minimal outline-0 grow"
 							style={{ background: "#F55B7F" }}
 						>
@@ -46,25 +48,37 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					<MessageList />
 					<SendMessageForm />
 				</>}
-			{showDialog && (
+			{showMemberFormDialog && (
 				<Dialog
-					onClose={() => setShowDialog(!showDialog)}
+					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
 					title="Add Members"
-					isOpen={showDialog}
+					isOpen={showMemberFormDialog}
 					style={{ background: '#fff' }}
 				>
 					<AddMemberForm
-						showDialog={showDialog}
-						setShowDialog={e => setShowDialog(!showDialog)}
+						showDialog={showMemberFormDialog}
+						setShowDialog={e => setShowMemberFormDialog(!showMemberFormDialog)}
 					/>
 				</Dialog>
 			)}
+			{showMemberListDialog && (
+				<Dialog
+					onClose={() => setShowMemberListDialog(!showMemberListDialog)}
+					title="Room Members"
+					isOpen={showMemberListDialog}
+					style={{ background: '#fff' }}
+				>
+					<MembersList users={props.activeRoom.users} />
+				</Dialog>
+			)}
+
 		</div>
 	)
 };
 
 const mapStateToProps = (state: any) => {
 	return {
+		activeRoom: state.roomReducer.activeRoom,
 		roomName: state.roomReducer.roomName,
 		roomId: state.roomReducer.roomId,
 		roomMembers: state.roomReducer.roomMembers,
