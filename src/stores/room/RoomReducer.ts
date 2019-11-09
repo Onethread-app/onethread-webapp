@@ -7,7 +7,7 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM
 } from "./Types";
 
 const InitialState = {
@@ -16,8 +16,9 @@ const InitialState = {
 	roomName: null,
 	messages: [],
 	users: [],
-	companyRooms: [],
 	roomMembers: [],
+	rooms: [],
+	companyRooms: [],
 	loading: false,
 	roomError: null
 };
@@ -82,12 +83,28 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				messages: [],
 				loading: false
 			};
-		// case GET_ROOMS:
-		// 	return {
-		// 		...state,
-		// 		rooms: action.payload,
-		// 		loading: false
-		// 	};
+		case UPDATE_ROOM:
+			return {
+				...state,
+				rooms: state.rooms.map((room: any) => {
+					if (room.id === action.payload.id) {
+						return action.payload;
+					} else {
+						return room;
+					}
+				}),
+				loading: false
+			};
+		case GET_ROOMS:
+			return {
+				...state,
+				rooms: action.payload.sort((a: any, b: any) => {
+					a = a.unreadCount;
+					b = b.unreadCount;
+					return a > b ? -1 : a < b ? 1 : 0;
+				}),
+				loading: false
+			};
 		case CREATE_ROOM_FROM_SERVER:
 			return {
 				...state,

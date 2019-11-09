@@ -26,9 +26,9 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	}, [props.activeRoom])
 
 	return (
-		<div>
-			{props.activeRoom &&
-				<>
+		<>
+			{props.activeRoom ?
+				<div>
 					<div className="flex justify-between items-center ph3 bb b--tigrowLightGray-1">
 						<div>
 							<p className="f4 fw7 mv1">{props.activeRoom.name}</p>
@@ -49,7 +49,12 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					</div>
 					<MessageList />
 					<SendMessageForm />
-				</>}
+				</div> :
+				<div className="absolute--center tc">
+					<h2>Please, select a room!!</h2>
+					<p>General is a default room.</p>
+				</div>
+			}
 			{showMemberFormDialog && (
 				<Dialog
 					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
@@ -73,8 +78,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					<MembersList users={users} />
 				</Dialog>
 			)}
-
-		</div>
+		</>
 	)
 };
 
