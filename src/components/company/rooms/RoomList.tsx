@@ -24,6 +24,7 @@ export const RoomListComponent = withChatkit((
 ) => {
 
 	const dispatch = useDispatch();
+
 	const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
 	const activeRoom = useSelector((state: any) => state.roomReducer.activeRoom);
@@ -40,24 +41,19 @@ export const RoomListComponent = withChatkit((
 						console.log("new-message", newMessage);
 						dispatch({ type: NEW_MESSAGE, payload: newMessage });
 					},
-					// onPresenceChanged: () => {
-					// 	if (activeRoom) {
-					// 		let roomUsers = activeRoom.users.sort((user: any) => {
-					// 			if (user.presence.state === 'online') return -1;
-					// 			return 1;
-					// 		});
-					// 		dispatch({ type: ON_PRESENCE_CHANGE, payload: roomUsers });
-					// 	}
-					// },
+					onPresenceChanged: (state: any, user: any) => {
+						console.log("state", state);
+						console.log("user", user);
+						dispatch({ type: ON_PRESENCE_CHANGE });
+					},
 				},
 				messageLimit: 1
 			})
 				.then((room: any) => {
 					dispatch({ type: ACTIVE_ROOM, payload: room });
 					console.log(room.users);
-
 				})
-				.catch((err: any) => console.log('error on subscribing to room: ', err))
+				.catch((err: any) => { console.log('error on subscribing to room: ', err); subscribeToRoom(roomId, name) })
 		}
 	}
 

@@ -43,7 +43,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
             img={user}
             text={message.parts[0].payload.content}
             createdAt={message.createdAt}
-            sender={message.userStore.users[message.senderId]}
+            sender={message.sender}
           />
         );
       }) : "" : ""}

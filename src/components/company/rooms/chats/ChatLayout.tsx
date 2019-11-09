@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { SendMessageForm } from './SendMessageForm';
 import { MessageList } from './MessageList';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
@@ -16,6 +16,8 @@ interface ChatLayoutComponentProps {
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
 	const [showMemberListDialog, setShowMemberListDialog] = useState(false);
+
+	const users = useSelector((state: any) => state.roomReducer.users);
 
 	useEffect(() => {
 		if (props.activeRoom && !isEmpty(props.activeRoom.id)) {
@@ -68,7 +70,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					isOpen={showMemberListDialog}
 					style={{ background: '#fff' }}
 				>
-					<MembersList users={props.activeRoom.users} />
+					<MembersList users={users} />
 				</Dialog>
 			)}
 

@@ -34,12 +34,27 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				activeRoom: action.payload,
+				users: action.payload.users.map((user: { id: string, name: string, presence: { state: string } }) => ({
+					id: user.id,
+					name: user.name,
+					presence: user.presence.state
+				})).sort((user: any) => {
+					if (user.presence === 'online') return -1;
+					return 1;
+				}),
 				loading: false
 			};
 		case ON_PRESENCE_CHANGE:
 			return {
 				...state,
-				users: action.payload,
+				users: state.activeRoom !== null && (state.activeRoom as any).users.map((user: { id: string, name: string, presence: { state: string } }) => ({
+					id: user.id,
+					name: user.name,
+					presence: user.presence.state
+				})).sort((user: any) => {
+					if (user.presence === 'online') return -1;
+					return 1;
+				}),
 				loading: false
 			};
 		case CURRENT_ROOM:
@@ -52,7 +67,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case NEW_MESSAGE:
 			return {
 				...state,
-				messages: action.payload.roomId === state.roomId && state.messages.length === 0 ? [...state.messages, action.payload] : (state.messages[state.messages.length - 1] as any).id !== action.payload.id ? [...state.messages, action.payload] : [...state.messages],
+				messages: action.payload.roomId === (state.activeRoom as any).id ? state.messages.length === 0 || (state.messages[state.messages.length - 1] as any).id !== action.payload.id ? [...state.messages, action.payload] : [...state.messages] : [...state.messages],
 				loading: false
 			};
 		case GET_ROOM_MESSAGES:
