@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { SendMessageForm } from './SendMessageForm';
 import { MessageList } from './MessageList';
-import { connect, useSelector } from 'react-redux';
+import { connect } from 'react-redux';
 import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
@@ -11,23 +11,22 @@ import MembersList from './members/MembersList';
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
 	activeRoom: any;
+	users: [];
 }
 
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
 	const [showMemberListDialog, setShowMemberListDialog] = useState(false);
 
-	const users = useSelector((state: any) => state.roomReducer.users);
-
 	useEffect(() => {
-		if (props.activeRoom && !isEmpty(props.activeRoom.id)) {
+		if (!isEmpty(props.activeRoom)) {
 			props.getRoomMembers(props.activeRoom.id);
 		}
 	}, [props.activeRoom])
 
 	return (
 		<>
-			{props.activeRoom ?
+			{!isEmpty(props.activeRoom) ?
 				<div>
 					<div className="flex justify-between items-center ph3 bb b--tigrowLightGray-1">
 						<div>
@@ -75,7 +74,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					isOpen={showMemberListDialog}
 					style={{ background: '#fff' }}
 				>
-					<MembersList users={users} />
+					<MembersList users={props.users} />
 				</Dialog>
 			)}
 		</>
@@ -85,9 +84,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 const mapStateToProps = (state: any) => {
 	return {
 		activeRoom: state.roomReducer.activeRoom,
-		roomName: state.roomReducer.roomName,
-		roomId: state.roomReducer.roomId,
-		roomMembers: state.roomReducer.roomMembers,
+		users: state.roomReducer.users
 	}
 }
 export const ChatLayout = connect(mapStateToProps, { getRoomMembers })(ChatLayoutComponent)

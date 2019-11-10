@@ -14,6 +14,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
   const messages = useSelector((state: any) => state.roomReducer.messages);
   const roomId = useSelector((state: any) => state.roomReducer.roomId);
   const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
+  const typingUsers = useSelector((state: any) => state.roomReducer.typingUsers);
 
   const scrollToBottom = () => {
     // On new message, scroll to bottom
@@ -28,8 +29,14 @@ export const MessageList = withChatkit((props: MessageListProps) => {
   }
   useEffect(() => {
     setFirst(false)
-  }, [roomId])
+  }, [roomId]);
+
   useEffect(scrollToBottom, [messages]);
+
+  // typing indicator
+  useEffect(() => {
+    (messagesEndRef as any).current.scrollTop = (messagesEndRef as any).current.scrollHeight;
+  }, [typingUsers]);
 
   return (
     <div
@@ -47,6 +54,13 @@ export const MessageList = withChatkit((props: MessageListProps) => {
           />
         );
       }) : "" : ""}
+      {typingUsers.length ? typingUsers.map((user: any, i: number) => {
+        return (
+          <h6 key={i} className="mv1">{user} is typing ...</h6>
+        );
+      }) : ""}
+
+
     </div>
   )
 })

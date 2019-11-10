@@ -7,20 +7,34 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING
 } from "./Types";
-
-const InitialState = {
-	activeRoom: null,
-	roomId: null,
-	roomName: null,
+import { isEmpty } from 'lodash';
+interface IAppState {
+	activeRoom: {},
+	roomId: string,
+	roomName: string,
+	messages: any[],
+	typingUsers: any[],
+	users: any[],
+	roomMembers: any[],
+	rooms: any[],
+	companyRooms: any[],
+	loading: boolean,
+	roomError: string
+}
+const InitialState: IAppState = {
+	activeRoom: {},
+	roomId: "",
+	roomName: "",
 	messages: [],
+	typingUsers: [],
 	users: [],
 	roomMembers: [],
 	rooms: [],
 	companyRooms: [],
 	loading: false,
-	roomError: null
+	roomError: ""
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
@@ -30,6 +44,20 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				loading: true
+			};
+		case ON_USER_STARTED_TYPING:
+			return {
+				...state,
+				typingUsers: [...state.typingUsers, action.payload],
+				loading: false
+			};
+		case ON_USER_STOPPED_TYPING:
+			return {
+				...state,
+				typingUsers: state.typingUsers.filter((user: any) => {
+					return user !== action.payload;
+				}),
+				loading: false
 			};
 		case ACTIVE_ROOM:
 			return {
@@ -48,7 +76,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case ON_PRESENCE_CHANGE:
 			return {
 				...state,
-				users: state.activeRoom !== null && (state.activeRoom as any).users.map((user: { id: string, name: string, presence: { state: string } }) => ({
+				users: !isEmpty(state.activeRoom) && (state.activeRoom as any).users.map((user: { id: string, name: string, presence: { state: string } }) => ({
 					id: user.id,
 					name: user.name,
 					presence: user.presence.state

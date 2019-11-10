@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Icon
@@ -13,7 +13,9 @@ interface SendMessageFormProps {
 export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
   const roomId = useSelector((state: any) => state.roomReducer.activeRoom.id);
   const [text, setText] = useState("");
-
+  useEffect(() => {
+    setText("");
+  }, [roomId])
   const sendMessage = (text: string) => {
     // TODO: send to backend
     props.chatkit.currentUser.sendSimpleMessage({
@@ -21,7 +23,12 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
       text,
     })
   }
-  const onChange = (e: any) => setText(e.target.value);
+  const onChange = (e: any) => {
+    setText(e.target.value);
+    props.chatkit.currentUser
+      .isTypingIn({ roomId })
+      .catch((error: any) => console.error('error on typing', error))
+  };
   const handleKeyPress = (e: any) => {
     if (e.key === 'Enter' && text !== "") {
       sendMessage(text);

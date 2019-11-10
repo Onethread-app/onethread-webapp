@@ -1,4 +1,7 @@
 import * as React from 'react';
+import { useSelector } from 'react-redux';
+import { isEmpty, isEqual } from "lodash";
+const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface RoomListItemProps {
   roomId: string;
@@ -8,13 +11,21 @@ interface RoomListItemProps {
   active: string;
   unreadCount: number;
   subscribeToRoom: (roomId: string, name: string) => void;
+  chatkit?: any;
+
 }
 
-export const RoomListItem = (props: RoomListItemProps) => {
+export const RoomListItem = withChatkit((props: RoomListItemProps) => {
+  const activeRoom = useSelector((state: any) => state.roomReducer.activeRoom);
   return (
     <article
       onClick={() => {
-        props.subscribeToRoom(props.roomId, props.name);
+        if (!props.chatkit.isLoading && !isEqual(props.roomId, activeRoom.id)) {
+          if (!isEmpty(activeRoom)) {
+            props.chatkit.currentUser.roomSubscriptions[activeRoom.id].cancel()
+          }
+          props.subscribeToRoom(props.roomId, props.name);
+        }
       }}
       id="roomListItem"
       className={`flex items-center ph3 pv1 bb b--tigrowLightGray-1 pointer ${props.active} ${props.lastChild ? "bn" : ""}`} >
@@ -25,9 +36,15 @@ export const RoomListItem = (props: RoomListItemProps) => {
         <h1 className="f7 f6-ns fw4 mv0">{props.name}
         </h1>
         {props.unreadCount > 0 ? (
-          <span className="bg-tigrowLightBlue white br-100 pa1 fw8 ml2">{props.unreadCount}</span>
+          <h6
+            className="bg-tigrowLightBlue white fw8 ma0 ml1"
+            style={{
+              padding: "4px 8px",
+              borderRadius: "50%"
+            }}
+          >{props.unreadCount}</h6>
         ) : null}
       </div>
     </article>
   )
-}
+});

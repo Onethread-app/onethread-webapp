@@ -1,12 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { isEqual } from "lodash";
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { RoomListItem } from "./RoomListItem";
 import { getRoomsAction } from "./../../../stores/room/Actions";
-import { Loading } from 'components/common/field/Loading';
-import { CURRENT_ROOM, NEW_MESSAGE, GET_ROOM_MESSAGES, GET_ROOMS, CLEAR_ROOM_MESSAGES, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM } from 'stores/room/Types';
-import { async } from 'q';
+import { CURRENT_ROOM, NEW_MESSAGE, GET_ROOM_MESSAGES, GET_ROOMS, CLEAR_ROOM_MESSAGES, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING } from 'stores/room/Types';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const load = async (
@@ -17,13 +15,13 @@ const load = async (
 
 interface RoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
-	getRoomsAction: () => void
+	getRoomsAction: () => void;
+	activeRoom: any;
 }
 
 export const RoomListComponent = withChatkit((
 	props: RoomListComponentProps
 ) => {
-
 	const dispatch = useDispatch();
 
 	const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
@@ -39,22 +37,36 @@ export const RoomListComponent = withChatkit((
 				roomId: roomId.toString(),
 				hooks: {
 					onMessage: (newMessage: any) => {
-						// console.log("new-message", newMessage);
 						dispatch({ type: NEW_MESSAGE, payload: newMessage });
+						return props.chatkit.currentUser.setReadCursor({
+							roomId,
+							position: newMessage.id,
+						});
 					},
 					onPresenceChanged: (state: any, user: any) => {
-						// console.log("state", state);
-						// console.log("user", user);
 						dispatch({ type: ON_PRESENCE_CHANGE });
 					},
+					onUserStartedTyping: (user: any) => {
+						dispatch({ type: ON_USER_STARTED_TYPING, payload: user.name });
+					},
+					onUserStoppedTyping: (user: any) => {
+						dispatch({ type: ON_USER_STOPPED_TYPING, payload: user.name });
+					},
+					onUserJoined: (user: any) => {
+						console.log("joined : " + user.name);
+
+					},
+					onUserLeft: (user: any) => {
+						console.log("left : " + user.name);
+
+					}
 				},
 				messageLimit: 1
 			})
 				.then((room: any) => {
 					dispatch({ type: ACTIVE_ROOM, payload: room });
 				})
-				.catch((err: any) =>
-					console.log('error on subscribing to room: ', err))
+				.catch((err: any) => { console.log('error on subscribing to room: ', err); subscribeToRoom(roomId, name); })
 		}
 	}
 
@@ -74,7 +86,6 @@ export const RoomListComponent = withChatkit((
 			props.chatkit.chatManager
 				.connect({
 					onRoomUpdated: (room: any) => {
-						console.log("room", room);
 						dispatch({ type: UPDATE_ROOM, payload: room });
 					}
 				})
@@ -84,8 +95,6 @@ export const RoomListComponent = withChatkit((
 				.catch((err: any) => {
 					console.log('Error on connection', err)
 				})
-
-
 			load(props.getRoomsAction)
 		}
 	}, [props.chatkit])
@@ -105,13 +114,6 @@ export const RoomListComponent = withChatkit((
 			});
 		});
 		// console.log(rooms);
-		dispatch({ type: GET_ROOMS, payload: rooms });
-	}
-
-	const updateRooms = (room: any) => {
-		console.log("rooms.length", rooms.length);
-		const index = rooms.findIndex((r: any) => r.id === room.id);
-		rooms[index] = room;
 		dispatch({ type: GET_ROOMS, payload: rooms });
 	}
 
