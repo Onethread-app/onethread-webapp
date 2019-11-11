@@ -54,11 +54,9 @@ export const RoomListComponent = withChatkit((
 					},
 					onUserJoined: (user: any) => {
 						console.log("joined : " + user.name);
-
 					},
 					onUserLeft: (user: any) => {
 						console.log("left : " + user.name);
-
 					}
 				},
 				messageLimit: 1
@@ -101,8 +99,6 @@ export const RoomListComponent = withChatkit((
 
 	useEffect(() => {
 		if (!props.chatkit.isLoading && companyRooms.length) {
-			// dispatch({ type: CLEAR_ROOM_MESSAGES });
-			// subscribeToRoom(companyRooms[companyRooms.length - 1]._id, companyRooms[companyRooms.length - 1].name);
 			filteredRooms();
 		}
 	}, [companyRooms])
@@ -113,7 +109,6 @@ export const RoomListComponent = withChatkit((
 				return b._id === a.id;
 			});
 		});
-		// console.log(rooms);
 		dispatch({ type: GET_ROOMS, payload: rooms });
 	}
 

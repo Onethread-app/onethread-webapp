@@ -5,12 +5,14 @@ import { connect } from 'react-redux';
 import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
-import { isEmpty } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 import MembersList from './members/MembersList';
+import { showAddMember } from 'stores/UtilsActions';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
 	activeRoom: any;
+	companyRole: string;
 	users: [];
 }
 
@@ -22,7 +24,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 		if (!isEmpty(props.activeRoom)) {
 			props.getRoomMembers(props.activeRoom.id);
 		}
-	}, [props.activeRoom])
+	}, [props.activeRoom]);
 
 	return (
 		<>
@@ -33,18 +35,20 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							<p className="f4 fw7 mv1">{props.activeRoom.name}</p>
 							<h5
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
-								className="ma0 pointer">Members: {props.activeRoom.users.length}</h5>
+								className="ma0 pointer dim">Members: {props.activeRoom.users.length}</h5>
 						</div>
-						<Button
-							onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}
-							className="bp3-minimal outline-0 grow"
-							style={{ background: "#F55B7F" }}
-						>
-							<Icon
-								icon="new-person"
-								style={{ background: "#F55B7F", color: "white" }}
-							/>
-						</Button>
+						{showAddMember(props.activeRoom.name, props.companyRole) ?
+							<Button
+								onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}
+								className="bp3-minimal outline-0 grow"
+								style={{ background: "#F55B7F" }}
+							>
+								<Icon
+									icon="new-person"
+									style={{ background: "#F55B7F", color: "white" }}
+								/>
+							</Button>
+							: null}
 					</div>
 					<MessageList />
 					<SendMessageForm />
@@ -84,7 +88,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 const mapStateToProps = (state: any) => {
 	return {
 		activeRoom: state.roomReducer.activeRoom,
-		users: state.roomReducer.users
+		users: state.roomReducer.users,
+		companyRole: state.companyReducer.currentCompany.role,
 	}
 }
 export const ChatLayout = connect(mapStateToProps, { getRoomMembers })(ChatLayoutComponent)
