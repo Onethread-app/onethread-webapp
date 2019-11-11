@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { CompanySettingsView } from 'components/company/settings/CompanySettings';
 
 const SettingsPageComponent = () => (
-  <div className="bg-white mh4 mv5 br3 pa4">
+  <div className="bg-white mh4 mv5 br3 pa4 h-75 shadow-4 w-90">
     <Tabs
       id="TabsExample"
       vertical={true}

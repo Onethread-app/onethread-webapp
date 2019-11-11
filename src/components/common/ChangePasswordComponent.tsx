@@ -99,7 +99,8 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
   }
 
   return (
-    <div className="mh4">
+    <div className="pa4">
+      <h1 className="f5 lh-title tigrow-lightBlue mb4">Change Password</h1>
       <h1 className="f6">Old Password</h1>
       <div className={` ${errors.oldPassword ? "mb3" : "mb4"}`}>
         <div className="flex">
@@ -112,10 +113,10 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
             leftIcon="lock"
             rightElement={
               <Icon
-                icon={showPassword ? 'unlock' : 'lock'}
+                icon={showPassword ? 'eye-open' : 'eye-off'}
                 color="#0fa3a3"
                 onClick={e => setShowPassword(!showPassword)}
-                className="pt2 pr2"
+                className="pt2 pr2 pointer"
               />
             }
             className={`br0 ${errors.oldPassword ? 'bb b--red' : 'bb b--lightBlue'}`}
@@ -149,10 +150,10 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
             leftIcon="lock"
             rightElement={
               <Icon
-                icon={showPassword ? 'unlock' : 'lock'}
+                icon={showPassword ? 'eye-open' : 'eye-off'}
                 color="#0fa3a3"
                 onClick={e => setShowPassword(!showPassword)}
-                className="pt2 pr2"
+                className="pt2 pr2 pointer"
               />
             }
             className={`br0 ${errors.newPassword ? 'bb b--red' : 'bb b--lightBlue'}`}
@@ -192,10 +193,10 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
             leftIcon="lock"
             rightElement={
               <Icon
-                icon={showPassword ? 'unlock' : 'lock'}
+                icon={showPassword ? 'eye-open' : 'eye-off'}
                 color="#0fa3a3"
                 onClick={e => setShowPassword(!showPassword)}
-                className="pt2 pr2"
+                className="pt2 pr2 pointer"
               />
             }
             className={`br0 ${errors.confirmPassword ? 'bb b--red' : 'bb b--lightBlue'}`}
@@ -221,10 +222,19 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
         </div>
         {errors.confirmPassword ? <small className="red">{errors.confirmPassword}</small> : ""}
       </div>
-
-      <div className="w-30 center mt4 h2">
-        <Button className="w-100 grow h2 pointer white"
+      <div className="flex justify-end">
+        <Button className="w4 grow h2 pointer mr3"
+          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            props.setShowDialog(false);
+          }}
+        >
+          cancel
+        </Button>
+        <Button
           type="submit"
+          className="w4 grow h2 pointer"
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={(e: any) => {
             e.preventDefault();

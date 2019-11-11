@@ -52,7 +52,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             position={Position.BOTTOM}
             content={
               <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
-                <Button>
+                <Button className="bp3-popover-dismiss">
                   <article
                     className="pointer"
                   >
@@ -67,7 +67,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                   </article>
                 </Button>
                 <Button
-                  className="bp3-minimal outline-0"
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
                   icon="cog"
                   alignText="left"
                   onClick={() => props.history.push(`/${props.user.name}/settings`)}
@@ -75,7 +75,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                   Settings
                 </Button>
                 <Button
-                  className="bp3-minimal outline-0"
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
                   onClick={(e: any) => props.logoutAction(props.history)}
                   icon="log-in"
                   alignText="left"

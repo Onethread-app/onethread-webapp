@@ -114,7 +114,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
       <div className="fl w-100 w-50-ns dt vh-100">
         <div className="v-mid dtc">
           <div className="w-50 center">
-            <img className="w-75" src={require('./../resources/images/Artboard9.png')} />
+            <img className="w-75-l w-100-m" src={require('./../resources/images/Artboard9.png')} />
             <h2 className="mt0" style={{ color: "#0fa3a3" }}>
               Individual
             </h2>
@@ -126,7 +126,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
       </div>
       <div className="fl w-100 w-50-ns dt vh-100">
         <div className="v-mid dtc">
-          <div className="w-two-thirds">
+          <div className="w-two-thirds-l w-90-m">
             <form className="dt fl cf">
               <div className="mw9 center ph3-ns v-mid dtc">
                 {props.errorUnauthorized.email || props.errorUnauthorized.network ?
