@@ -14,6 +14,7 @@ interface SuggestFieldProps {
   setSelectedItems: ((item: ItemEntityProps | ItemEntityProps[] | any) => void)
   onChange?: (query: string) => void;
   isCreatable?: boolean;
+  isCreatableAPI?: (obj: { name: string }) => void
   multipleItemSelect?: boolean;
 }
 
@@ -63,19 +64,47 @@ export const SuggestField = (props: SuggestFieldProps) => {
           }
         />
       }
-      noResults={
-        props.isCreatable ?
+      // noResults={
+      //   props.isCreatable ?
+      //     <MenuItem
+      //       text={`Add this name`}
+      //       icon="new-object"
+      //       intent={Intent.PRIMARY}
+      //       onClick={async (e: any) => {
+      //         console.log(`new item create button clicked`, e);
+      //         // const newItem = {name: e};
+      //         // if (props.isCreatableAPI) {
+      //         //   const response = await props.isCreatableAPI(newItem);
+      //         //   props.selectedItems.push(response);
+      //         // }
+      //       }}
+      //     /> :
+      //     <MenuItem
+      //       text={`No Result Found`}
+      //       intent={Intent.WARNING}
+      //     />
+      // }
+      createNewItemFromQuery={(query: string) => {
+        return {
+          _id: undefined,
+          name: query
+        };
+      }}
+      createNewItemRenderer={item => {
+        return props.isCreatable ?
           <MenuItem
-            text={`Add this name`}
+            text={item}
             icon="new-object"
             intent={Intent.PRIMARY}
-            onClick={() => console.log(`new item create button clicked`)}
-          /> :
-          <MenuItem
-            text={`No Result Found`}
-            intent={Intent.WARNING}
+            onClick={async (e: any) => {
+              const newItem = { name: item };
+              if (props.isCreatableAPI) {
+                await props.isCreatableAPI(newItem);
+              }
+            }}
           />
-      }
+          : undefined
+      }}
       onItemSelect={selectedSkill => console.log(selectedSkill)}
       closeOnSelect={false}
       resetOnClose={true}

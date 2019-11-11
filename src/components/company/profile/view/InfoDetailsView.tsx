@@ -1,9 +1,95 @@
 import React, { useState } from 'react';
-import { Dialog } from '@blueprintjs/core';
+import { Dialog, EditableText, Divider, Button, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ListTitleView } from '../../../ListTitleView';
 import { SectionViewWithTitleAndDesciption } from '../../../ListItemView';
 import user from '../../../../resources/images/user.png';
+import { CompanyInfoForm } from '../editor/CompanyInfoDetailsForm';
+import { editCompanyAboutAction } from 'stores/company/Actions';
+import { CompanyModel } from 'stores/company/Reducer';
+
+interface CompanyAboutEditComponentProps {
+  setShowDialog: (val: boolean) => void;
+  company: CompanyModel
+}
+interface CompanyAboutEditInternalProps extends CompanyAboutEditComponentProps {
+  editInfoAction: (val: string) => void
+}
+
+const AboutCompanyEditComponent = (props: CompanyAboutEditInternalProps) => {
+  const [aboutInfo, setAboutInfo] = useState(props.company.about);
+  return (
+    <form className="fl w-100 pa4">
+      <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
+      <EditableText
+        className="mb4"
+        multiline={true}
+        minLines={3}
+        maxLines={20}
+        value={aboutInfo}
+        onChange={(e) => setAboutInfo(e)}
+      />
+      <Divider />
+      <div className="flex justify-end mt3">
+        <Button className="w4 grow h2 pointer mr3"
+          style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            props.setShowDialog(false);
+          }}
+        >
+          cancel
+        </Button>
+        <Button
+          type="submit"
+          className="w4 grow h2 pointer"
+          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            props.editInfoAction(aboutInfo);
+            props.setShowDialog(false);
+          }}
+        >
+          Save
+        </Button>
+      </div>
+    </form>
+  )
+}
+const AboutCompanyEdit = connect(null, { editInfoAction: editCompanyAboutAction })(AboutCompanyEditComponent)
+
+export const AboutCompanyView = (props: {
+  company: CompanyModel
+}) => {
+  const [showDialogAbout, setShowDialogAbout] = useState(false);
+  return (
+    <>
+      <div className="h-auto br3 ma2 pa3 bg-white cf">
+        <div className="cf ">
+          <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
+          <Icon className="fr mv3 tigrow-lightBlue pointer"
+            icon="edit"
+            onClick={() => setShowDialogAbout(true)}
+          />
+        </div>
+        <p>{props.company.about}</p>
+      </div>
+      {showDialogAbout && (
+        <Dialog
+          icon="briefcase"
+          onClose={() => setShowDialogAbout(!showDialogAbout)}
+          isOpen
+          style={{ background: '#fff' }}
+        >
+          <div>
+            <AboutCompanyEdit company={props.company} setShowDialog={setShowDialogAbout} />
+          </div>
+        </Dialog>
+      )}
+    </>
+  )
+}
+
 
 const InfoDetailsViewComponent = (props: any) => {
   const [showDialog, setShowDialog] = useState(false)
@@ -13,15 +99,10 @@ const InfoDetailsViewComponent = (props: any) => {
         <div className="fl w-25-ns pa2 ">
           <div className="h-auto br3 ma2 pa3 bg-white cf tc">
             <img src={user}></img>
-            <h1 className="f5 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
+            <h1 className="f5 lh-copy tigrow-lightGray-1">{props.company.name}</h1>
             <p className=" light-silver" >Software Developer</p>
           </div>
-          <div className="h-auto br3 ma2 pa3 bg-white cf">
-            <h1 className="f6 lh-copy tigrow-lightGray-1">About</h1>
-            <p className="tigrow-lightGray-2">Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-               Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-                 when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
-          </div>
+          <AboutCompanyView company={props.company} />
         </div>
         <div className="fl w-75-ns">
           <div className="br3 bg-white h-auto pa4 mt3">
@@ -32,12 +113,13 @@ const InfoDetailsViewComponent = (props: any) => {
             />
             {showDialog && (
               <Dialog
-                icon="briefcase"
                 onClose={() => setShowDialog(!showDialog)}
-                title="Company Sign Up"
                 isOpen
                 style={{ background: '#fff' }}
               >
+                <div>
+                  <CompanyInfoForm setShowDialog={setShowDialog} />
+                </div>
               </Dialog>
             )}
             <SectionViewWithTitleAndDesciption
@@ -67,8 +149,7 @@ const InfoDetailsViewComponent = (props: any) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.currentCompany,
-    user: state.userReducer.user
+    company: state.companyReducer.currentCompany
   }
 }
 

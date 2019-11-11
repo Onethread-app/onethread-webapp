@@ -15,7 +15,6 @@ export const ListTitleView = (props: InfoListTitleProps) => {
         <Icon className="fr mv3 tigrow-lightBlue pointer" icon={props.iconType} onClick={props.onClick} />
       </div>
       <Divider />
-      
     </>
   )
 }

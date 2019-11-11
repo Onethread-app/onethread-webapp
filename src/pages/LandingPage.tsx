@@ -1,35 +1,30 @@
 import React, { useState } from 'react';
-import { Icon, Divider, Dialog, Button, Tag, EditableText, Tabs, Tab } from '@blueprintjs/core';
+import { Icon, Divider, Dialog, Button, EditableText, Tabs, Tab } from '@blueprintjs/core';
 import skill from '../resources/images/skills.png';
 import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
-import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { ListTitleView } from 'components/ListTitleView';
 import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
-import { BasicInfoForm } from 'components/company/profile/editor/BasicInfoDetailsForm';
+import { BasicInfoForm } from 'components/user/BasicInfoDetailsForm';
 import 'react-vertical-timeline-component/style.min.css';
 import { User } from 'stores/user/Reducer';
-import { ExperienceView } from 'components/company/profile/view/ExperienceView';
 import { JobFormComponent } from 'components/company/profile/editor/JobForm';
 import { isNumber } from 'lodash';
 import { EducationFormComponent } from 'components/company/profile/editor/EducationForm';
 import { editUserInfoAction } from 'stores/user/Actions';
 import moment from 'moment';
 import { addJobExperienceAction, addEducationExperienceAction } from 'stores/user/Actions';
+import { isEmpty } from 'lodash';
+import { ExperienceView } from 'components/company/profile/view/ExperienceView';
+import { CompanyModel } from 'stores/company/Reducer';
+
 
 interface LandingPageProps {
   user: User,
+  company: CompanyModel
   addJobExperienceAction: (val: any) => void
   addEducationExperienceAction: (val: any) => void
 }
-
-const skills = [
-  { _id: '1', name: 'Programing C' },
-  { _id: '2', name: 'Java' },
-  { _id: '3', name: 'Dotnet' },
-  { _id: '4', name: 'Javascript' },
-  { _id: '5', name: 'React' },
-]
 
 const ExperienceEdit = (props:
   {
@@ -37,23 +32,25 @@ const ExperienceEdit = (props:
     addJobExperienceAction: (val: {}) => void
     addEducationExperienceAction: (val: {}) => void
   }
-
 ) => {
   const [jobInfo, setJobInfo] = useState({
     companyName: "",
     positionName: "",
     startYear: "",
-    endingYear: ""
+    endingYear: "",
+    currentlyWork: false,
+    jobDescription: ""
   });
   const [educationInfo, setEducationInfo] = useState({
     degree: "",
     institutionName: "",
     startYear: "",
-    endingYear: ""
+    endingYear: "",
+    currentlyStudy: false,
   });
+
   const handleSelectedTab = (id: any) => {
     setsSelectedTab(id);
-    console.log(id);
   }
 
   const [selectedTab, setsSelectedTab] = useState("Job");
@@ -76,17 +73,39 @@ const ExperienceEdit = (props:
     setJobInfo({
       ...jobInfo, [name]: date.toLocaleDateString()
     });
-    console.log('job', jobInfo)
   }
 
   const handleEducationDateChange = (name: string, date: Date) => {
     setEducationInfo({
       ...educationInfo, [name]: date.toLocaleDateString()
     });
-    console.log('edu', jobInfo)
-
   }
 
+  const handleWorkCheck = () => {
+    setJobInfo({
+      ...jobInfo, currentlyWork: !jobInfo.currentlyWork, endingYear: ""
+    });
+  }
+
+  const handleEducationCheck = () => {
+    setEducationInfo({
+      ...educationInfo, currentlyStudy: !educationInfo.currentlyStudy, endingYear: ""
+    });
+  }
+  const emptyJobInfo = () => {
+    if (isEmpty(jobInfo.companyName) || isEmpty(jobInfo.positionName) || isEmpty(jobInfo.startYear) || (isEmpty(jobInfo.endingYear) && !jobInfo.currentlyWork)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  const emptyEducationInfo = () => {
+    if (isEmpty(educationInfo.degree) || isEmpty(educationInfo.institutionName) || isEmpty(educationInfo.startYear) || (isEmpty(educationInfo.endingYear) && !educationInfo.currentlyStudy)) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   return (
     <div>
@@ -99,13 +118,27 @@ const ExperienceEdit = (props:
         <Tab
           id="Job"
           title="Job"
-          panel={<JobFormComponent handleChange={handleJobChange} values={jobInfo} handleDateChange={handleJobDateChange} />}
+          panel={<JobFormComponent
+            checked={jobInfo.currentlyWork}
+            handleCheck={handleWorkCheck}
+            handleChange={handleJobChange}
+            values={jobInfo}
+            handleDateChange={handleJobDateChange}
+            minEndYear={!jobInfo.startYear ? new Date() : new Date(jobInfo.startYear)}
+          />}
           className="outline-0"
         />
         <Tab
           id="Educations"
           title="Educations"
-          panel={<EducationFormComponent handleChange={handleEducationChange} values={educationInfo} handleDateChange={handleEducationDateChange} />}
+          panel={<EducationFormComponent
+            checked={educationInfo.currentlyStudy}
+            handleCheck={handleEducationCheck}
+            handleChange={handleEducationChange}
+            values={educationInfo}
+            handleDateChange={handleEducationDateChange}
+            minEndYear={!educationInfo.startYear ? new Date() : new Date(educationInfo.startYear)}
+          />}
           className="outline-0"
         />
       </Tabs>
@@ -126,12 +159,15 @@ const ExperienceEdit = (props:
           onClick={(e: any) => {
             e.preventDefault();
             if (selectedTab === "Job") {
-              props.addJobExperienceAction(jobInfo);
-              props.setShowDialog(false);
+              if (emptyJobInfo() === true) {
+                props.addJobExperienceAction(jobInfo);
+                props.setShowDialog(false);
+              }
             } else if (selectedTab === "Educations") {
-              console.log(selectedTab)
-              props.addEducationExperienceAction(educationInfo);
-              props.setShowDialog(false);
+              if (emptyEducationInfo() === true) {
+                props.addEducationExperienceAction(educationInfo);
+                props.setShowDialog(false);
+              }
             }
           }}
         >
@@ -142,107 +178,7 @@ const ExperienceEdit = (props:
   )
 }
 
-const SkillEdit = (props: {
-  setShowDialog: (val: boolean) => void;
-}) => {
-  // TODO Should comes from redux store
-  const [selectedItems, setSelectedItems] = useState([] as ItemEntityProps[]);
-  return (
-    <>
-      <div className="pa3 ">
-        <h1 className="f5 lh-copy">Add your skills</h1>
-        <div className="fl w-100 pv2">
-          <SuggestField
-            items={skills}
-            selectedItems={selectedItems}
-            setSelectedItems={setSelectedItems}
-            isCreatable={true}
-            multipleItemSelect={true}
-          />
-        </div>
-        <div className="fl w-100 mb2">
-          {selectedItems.map(item => (
-            <Tag
-              key={item._id}
-              className="ma1 pa2"
-              interactive={true}
-              intent="primary"
-              onRemove={e => {
-                const filteredItems = selectedItems.filter(selectedItem => (
-                  item.name !== selectedItem.name
-                ));
-                setSelectedItems([
-                  ...filteredItems
-                ])
-              }}
-              large={true}
-            >
-              {item.name}
-            </Tag>
-          ))}
-        </div>
-        <div className="fl w-100">
-          <div className="flex justify-end">
-            <Button className="w4 grow h2 pointer mr3"
-              onClick={(e: any) => {
-                e.preventDefault();
-                props.setShowDialog(false);
-              }}
-              style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
-            >
-              cancel
-            </Button>
-            <Button
-              type="submit"
-              onClick={(e: any) => {
-                e.preventDefault();
-                props.setShowDialog(false);
-              }}
-              className="w4 grow h2 pointer"
-              style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-            >
-              Save
-            </Button>
-          </div>
-        </div>
 
-      </div>
-    </>
-  )
-}
-
-const SkillView = () => {
-  const [showDialog, setShowDialog] = useState(false);
-  return (
-    <>
-      <div className="h-auto br3 ma2 pa3 bg-white cf">
-        <h1 className="f6 lh-copy">Skills</h1>
-        <div className="tc">
-          <img src={skill}></img>
-          <p>No skill has selected</p>
-          <button
-            className="br3 grow ph4 pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0"
-            onClick={() => setShowDialog(!showDialog)}
-          >
-            Add Skills
-      </button>
-        </div>
-      </div>
-      {
-        showDialog && (
-          <Dialog
-            onClose={() => setShowDialog(!showDialog)}
-            isOpen={showDialog}
-            style={{ background: '#fff' }}
-            canOutsideClickClose={false}
-          >
-            <SkillEdit setShowDialog={setShowDialog} />
-          </Dialog>
-        )
-      }
-    </>
-  )
-}
 interface AboutEditComponentProps {
   setShowDialog: (val: boolean) => void;
   user: User;
@@ -298,16 +234,15 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
 
   )
 }
-export const AboutEdit = connect(null, { editInfoAction: editUserInfoAction })(AboutEditComponent)
+const AboutEdit = connect(null, { editInfoAction: editUserInfoAction })(AboutEditComponent)
 
-
-const AboutView = (props: {
+export const AboutView = (props: {
   user: User
 }) => {
   const [showDialogAbout, setShowDialogAbout] = useState(false);
   return (
     <>
-      <div className="h-auto br3 ma2 pa3 bg-white cf">
+      <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4">
         <div className="cf ">
           <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
           <Icon className="fr mv3 tigrow-lightBlue pointer"
@@ -315,7 +250,7 @@ const AboutView = (props: {
             onClick={() => setShowDialogAbout(true)}
           />
         </div>
-        <p>{props.user.about} </p>
+        <p>{props.user.about}</p>
       </div>
       {showDialogAbout && (
         <Dialog
@@ -339,7 +274,7 @@ const BasicInfoDetailsView = (props: {
   const [showDialog, setShowDialog] = useState(false)
   return (
     <>
-      <div className="br3 bg-white h-auto pa4 mt3">
+      <div className="br3 bg-white h-auto pa4">
         <ListTitleView
           listTitle="Basic Information"
           iconType="edit"
@@ -396,32 +331,34 @@ export const LandingPageComponent = (props: LandingPageProps) => {
   return (
     <>
       <div className="cf w-100" >
-        <h1 className="f5 lh-title tigrow-lightGray-1 ml3 tigrow-lightGray-1 mb0">Profile</h1>
-        <div>
-          <div className="fl w-25-ns pa2 ">
-            <div className="h-auto br3 ma2 pa3 bg-white cf tc">
+        <h1 className="f4 tigrow-lightGray-1 ml4 tigrow-lightGray-1 mb0 mt5">Profile</h1>
+        <div className="mt1">
+          <div className="fl w-25-ns ph3">
+            <div className="h-auto br3 ma3 pa3 bg-white cf tc shadow-4">
               <img src={user}></img>
               <h1 className="f6 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
               <p className="tigrow-lightGray-1">Software Dev</p>
             </div>
             <AboutView user={props.user} />
-            <SkillView />
           </div>
-          <div className="fl w-75-ns">
-            <BasicInfoDetailsView user={props.user} />
-
-            <div className="br3 bg-white h-auto pa4 mt3">
+          <div className="fl w-70-ns mt3">
+            <div className="br3 bg-white h-auto pa4 shadow-4">
               <ListTitleView
                 listTitle="Experience"
                 iconType="add"
                 onClick={() => setShowDialog(true)}
               />
-              <div className="br3 bg-white h-auto">
-                <img src={skill}></img>
-                <p>No experience has added</p>
-              </div>
-              <Divider />
-              <ExperienceView />
+              {props.user.timeline.length > 0 ?
+                <ExperienceView />
+                :
+                <div className="br3 bg-white h-auto">
+                  <img src={skill}></img>
+                  <p>No experience has added</p>
+                </div>
+              }
+            </div>
+            <div className="mt3 mb4 shadow-4">
+              <BasicInfoDetailsView user={props.user} />
             </div>
           </div>
         </div>
@@ -445,7 +382,8 @@ export const LandingPageComponent = (props: LandingPageProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user
+    user: state.userReducer.user,
+    company: state.companyReducer.currentCompany,
   }
 }
 

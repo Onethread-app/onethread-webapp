@@ -13,7 +13,7 @@ export const ListItemViewWithDetails = (props: CompanyListItemDetailsProps) => (
       className="flex w-80 mt2 items-center"
     >
       <div className="" style={{ minWidth: "35px", maxWidth: "35px" }}>
-        <img src={props.imageSrc}/>
+        <img src={props.imageSrc} />
       </div>
 
       <div className="ml2 bg-white" style={{ width: "auto" }}>

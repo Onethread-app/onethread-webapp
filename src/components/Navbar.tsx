@@ -13,12 +13,11 @@ import { CompanySignupForm } from './company/SignupForm';
 
 interface NavbarTopInternalProps {
   user: User
-  logoutAction: (history: History) => void;
+  logoutAction: (history: History) => void
 }
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = React.useState(false);
-
   return (
     <>
       <nav className="bp3-navbar bp3-fixed-top">
@@ -44,7 +43,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                 setShowDialog={setShowDialog}
               />
             }
-            target={<Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l">My Companies</Button>}
+            target={<Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l outline-0">My Companies</Button>}
           />
           <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-chat f6 f5-l dib mr3 mr4-l" ></button>
           <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-notifications f6 f5-l dib mr3 mr4-l" ></button>
@@ -55,10 +54,10 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
               <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
                 <Button>
                   <article
-                    className="dt w-100 pb2 mt2 pointer"
+                    className="pointer"
                   >
-                    <div className="dtc w1 w2-ns v-mid">
-                      <img src={user} className=" db w1 w2-ns h1 h2-ns br3" />
+                    <div className="dtc w1 w2-ns">
+                      <img src={user} className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10" />
                     </div>
                     <div className="dtc v-mid pl3">
                       <Link className="bp3-popover-dismiss" to={`/${props.user.name}`}>
@@ -68,24 +67,33 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                   </article>
                 </Button>
                 <Button
-                  className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l"
+                  className="bp3-minimal outline-0"
+                  icon="cog"
+                  alignText="left"
+                  onClick={() => props.history.push(`/${props.user.name}/settings`)}
+                >
+                  Settings
+                </Button>
+                <Button
+                  className="bp3-minimal outline-0"
                   onClick={(e: any) => props.logoutAction(props.history)}
                   icon="log-in"
+                  alignText="left"
                 >
                   Logout
             </Button>
               </ButtonGroup>
             }
-            target={<img src={user} className="dim mid-gray f6 f5-l v-mid dib w2 h2 br-100" alt="user" />}
+            target={<img src={user} className="dim v-mid dib w2 h2 br-100 ba b--black-10 pointer" alt="user" />}
           />
         </div>
       </nav>
       {showDialog && (
         <Dialog
           onClose={() => setShowDialog(!showDialog)}
-          title="Create Company"
           isOpen={showDialog}
           style={{ background: '#fff' }}
+          canOutsideClickClose={false}
         >
           <div>
             <CompanySignupForm setShowDialog={setShowDialog} />

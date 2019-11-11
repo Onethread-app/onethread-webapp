@@ -164,7 +164,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   <Button
                     type="submit"
                     className="b--none w-100 br3 fr grow h2 ph5 pointer pv2 mb3"
-                    style={{ background: "#0fa3a3", outline: "none", color: 'white', fontSize: '16px' }}
+                    style={{ background: "#0fa3a3", outline: "none", color: 'white', fontSize: '18px' }}
                     onClick={(e: any) => {
                       e.preventDefault();
                       if (!emptyValueCheck()) {
@@ -186,8 +186,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   </p>
                   </div>
                   <Link to="/signup">
-                    <Button className="w-100 br3 fr grow h2 ph5 pointer pv2"
-                      style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3", fontSize: '16px' }}
+                    <Button className="w-100 grow pointer"
+                      style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3", fontSize: '18px' }}
                     >
                       Sign Up here
                   </Button>

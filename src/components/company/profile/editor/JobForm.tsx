@@ -2,10 +2,9 @@ import React from 'react';
 import { DateInput } from "@blueprintjs/datetime";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import { InputGroupField } from 'components/common/field/InputGroup';
-import { Icon, Checkbox} from '@blueprintjs/core';
+import { Icon, Checkbox } from '@blueprintjs/core';
 
-export const JobFormComponent = (props:any) => {
-
+export const JobFormComponent = (props: any) => {
   return (
     <form className="fl w-100 pr4 mt2">
       <div className="mb4 ">
@@ -48,6 +47,7 @@ export const JobFormComponent = (props:any) => {
             parseDate={(str: string) => new Date(str)}
             placeholder={"Start Year"}
             onChange={(date: Date) => props.handleDateChange("startYear", date)}
+            canClearSelection={false}
           />
         </div>
         <div className="experiencedatePicker w-100">
@@ -56,11 +56,18 @@ export const JobFormComponent = (props:any) => {
             parseDate={(str: string) => new Date(str)}
             placeholder={"End Year"}
             onChange={(date: Date) => props.handleDateChange("endingYear", date)}
+            disabled={props.checked}
+            minDate={props.minEndYear}
+            canClearSelection={false}
           />
         </div>
       </div>
       <div className="mb4">
-        <Checkbox label="I currently work here"  />
+        <Checkbox
+          checked={props.checked}
+          onChange={props.handleCheck}
+          label="I currently work here"
+        />
       </div>
     </form>
   )

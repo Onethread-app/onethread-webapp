@@ -4,5 +4,5 @@ import { Spinner } from '@blueprintjs/core';
 export const Loading = (props: {
   size?: number
 }) => (
-  <Spinner size={props.size} />
-)
+    <Spinner size={props.size} />
+  )

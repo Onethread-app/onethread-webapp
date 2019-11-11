@@ -1,4 +1,4 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE } from './Types';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE, ADD_SKILL } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from "lodash";
 import tigrowApi from 'tigrowApi';
@@ -9,10 +9,15 @@ export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, get
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: USER_FETCH_LOADING });
-			const user = {
-				...basicInfo,
-				contactNo: `880${basicInfo.contactNo}`
-			};
+			let user = {};
+			if (basicInfo.contactNo) {
+				user = {
+					...basicInfo,
+					contactNo: `880${basicInfo.contactNo}`
+				};
+			} else {
+				user = basicInfo
+			}
 			await tigrowApi.put(`/account/update`, user, headers);
 			dispatch({ type: EDIT_BASIC_INFO, payload: user });
 		} else {
@@ -29,6 +34,24 @@ export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, get
 	}
 };
 
+export const addSkillAction = (skill: User) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig(getState);
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.put(`/skill/update-skill`, skill, headers);
+			dispatch({ type: ADD_SKILL, payload: response.data.skillList });
+		} else {
+			console.log("error in user fetching");
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			console.log('Network error');
+		} else {
+			console.log(error.response);
+		}
+	}
+};
+
 export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig(getState);
@@ -38,7 +61,13 @@ export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatc
 				jobExperienceInfo,
 				headers
 			);
-			dispatch({ type: ADD_EXPERIENCE, payload: response.data.data });
+			const timelineResponse = response.data.data;
+			const timeline = getState().userReducer.user.timeline;
+			timeline.push(timelineResponse)
+			const timelineSort = timeline.sort((a: any, b: any) =>
+				a.startYear < b.startYear ? 1 : -1,
+			);
+			dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
 		} else {
 			console.log("token error")
 		}
@@ -56,7 +85,13 @@ export const addEducationExperienceAction = (educationExperienceInfo: any) => as
 				educationExperienceInfo,
 				headers
 			);
-			dispatch({ type: ADD_EXPERIENCE, payload: response.data.data });
+			const timelineResponse = response.data.data;
+			const timeline = getState().userReducer.user.timeline;
+			timeline.push(timelineResponse)
+			const timelineSort = timeline.sort((a: any, b: any) =>
+				a.startYear < b.startYear ? 1 : -1,
+			);
+			dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
 		} else {
 			console.log("token error")
 		}
@@ -65,16 +100,16 @@ export const addEducationExperienceAction = (educationExperienceInfo: any) => as
 	}
 }
 
-export const getAllCompaniesByUserId = (userId: string) =>  async (dispatch: any, getState: any) => {
+export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig(getState);
-    if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(`/company/individual/${userId}`, headers);
-      dispatch({ type: USER_COMPANIES_UPDATE, payload: response.data });
-    } else {
-      console.log("error in get company list by user")
-    }
-  } catch (error) {
-      console.log(error.response);
-  }
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.get(`/company/individual/${userId}`, headers);
+			dispatch({ type: USER_COMPANIES_UPDATE, payload: response.data });
+		} else {
+			console.log("error in get company list by user")
+		}
+	} catch (error) {
+		console.log(error.response);
+	}
 }

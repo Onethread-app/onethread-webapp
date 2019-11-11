@@ -1,4 +1,4 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE, } from './Types';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE, ADD_SKILL, } from './Types';
 
 export interface ICompanyByUser {
 	role: string;
@@ -27,7 +27,8 @@ export interface User {
 	friends: string[],
 	pendingFriends: string[],
 	sendingFriendList: string[],
-	timeline: string[]
+	timeline: string[],
+	skillArea: [{}];
 }
 
 
@@ -51,7 +52,8 @@ const InitialState = {
 		friends: [],
 		pendingFriends: [],
 		sendingFriendList: [],
-		timeline: []
+		timeline: [],
+		skillArea: []
 	},
 	loading: false,
 	error: ''
@@ -83,7 +85,16 @@ export const UserReducer = (state = InitialState, action: any) => {
 				...state,
 				user: {
 					...state.user,
-					...action.payload
+					...action.payload,
+					loading: false
+				}
+			}
+		case ADD_SKILL:
+			return {
+				...state,
+				user: {
+					...state.user,
+					skillArea: [...action.payload]
 				}
 			}
 		case USER_COMPANIES_UPDATE:
@@ -105,10 +116,8 @@ export const UserReducer = (state = InitialState, action: any) => {
 				...state,
 				user: {
 					...state.user,
-					timeline: [
-						...state.user.timeline,
-						action.payload
-					]
+					timeline: action.payload
+
 				}
 			}
 		}

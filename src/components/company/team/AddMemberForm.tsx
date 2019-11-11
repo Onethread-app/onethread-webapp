@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { CompanyModel, ICompanyMembers } from 'stores/company/Reducer';
+import { CompanyModel } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useStore, connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
@@ -12,7 +12,6 @@ import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 interface TeamMembersViewProps {
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
-  members: ICompanyMembers[];
 }
 
 interface TeamMembersViewInternalProps extends TeamMembersViewProps {
