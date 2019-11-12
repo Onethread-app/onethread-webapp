@@ -60,7 +60,7 @@ const addUsers = async (req, res) => {
           userIds: req.body.members,
         });
         res.status(201).json({
-          result,
+          message: 'new members added into room',
         });
       } else {
         res
@@ -122,6 +122,7 @@ const list = async (req, res) => {
     .sort({ created: 1 })
     .skip(+skip)
     .limit(+limit)
+    .select('-__v -members')
     .exec()
     .then(rooms =>
       res.status(200).json({
