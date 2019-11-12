@@ -122,9 +122,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
       };
     case CLEAR_COMPANY_REDUCER_STATE:
       return {
-        currentCompany: {},
-        loading: false,
-        error: ''
+        ...InitialState
       }
 
       case EDIT_COMPANY_INFO:

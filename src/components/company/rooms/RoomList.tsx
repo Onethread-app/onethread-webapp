@@ -4,8 +4,7 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import { RoomListItem } from "./RoomListItem";
 import { getRoomsAction } from "./../../../stores/room/Actions";
-import { Loading } from 'components/common/field/Loading';
-import { CURRENT_ROOM, NEW_MESSAGE, GET_ROOM_MESSAGES, GET_ROOMS, CLEAR_ROOM_MESSAGES } from 'stores/room/Types';
+import { CURRENT_ROOM, NEW_MESSAGE, GET_ROOM_MESSAGES, GET_ROOMS, CLEAR_ROOM_MESSAGES, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING } from 'stores/room/Types';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const load = async (
@@ -16,55 +15,61 @@ const load = async (
 
 interface RoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
-	getRoomsAction: () => void
+	getRoomsAction: () => void;
+	activeRoom: any;
 }
 
 export const RoomListComponent = withChatkit((
 	props: RoomListComponentProps
 ) => {
-
 	const dispatch = useDispatch();
+
 	const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
+	const rooms = useSelector((state: any) => state.roomReducer.rooms);
 
-	const subscribeToRoom = (roomId: any, name: string) => {
+	const subscribeToRoom = (roomId: string, name: string) => {
 		if (!props.chatkit.isLoading) {
 			dispatch({ type: CLEAR_ROOM_MESSAGES });
 			dispatch({ type: CURRENT_ROOM, payload: { roomId, name } });
 			fetchMessages(roomId);
 			props.chatkit.currentUser.subscribeToRoomMultipart({
-				roomId: roomId,
+				roomId: roomId.toString(),
 				hooks: {
 					onMessage: (newMessage: any) => {
-
-						let message = {
-							id: newMessage.id,
-							roomId: newMessage.roomId,
-							senderId: newMessage.senderId,
-							text: newMessage.parts[0].payload.content,
-							userStore: {
-								users: { senderId: newMessage.userStore.users[newMessage.senderId] }
-							},
-							roomStore: newMessage.roomStore,
-							createdAt: newMessage.createdAt,
-							updatedAt: newMessage.updatedAt,
-						};
-						message.userStore.users[newMessage.senderId] = newMessage.userStore.users[newMessage.senderId];
-						console.log("mew-message", message);
-						dispatch({ type: NEW_MESSAGE, payload: message });
+						dispatch({ type: NEW_MESSAGE, payload: newMessage });
+						return props.chatkit.currentUser.setReadCursor({
+							roomId,
+							position: newMessage.id,
+						});
+					},
+					onPresenceChanged: (state: any, user: any) => {
+						dispatch({ type: ON_PRESENCE_CHANGE });
+					},
+					onUserStartedTyping: (user: any) => {
+						dispatch({ type: ON_USER_STARTED_TYPING, payload: user.name });
+					},
+					onUserStoppedTyping: (user: any) => {
+						dispatch({ type: ON_USER_STOPPED_TYPING, payload: user.name });
+					},
+					onUserJoined: (user: any) => {
+						console.log("joined : " + user.name);
+					},
+					onUserLeft: (user: any) => {
+						console.log("left : " + user.name);
 					}
 				},
 				messageLimit: 1
 			})
 				.then((room: any) => {
-					// do nothing
+					dispatch({ type: ACTIVE_ROOM, payload: room });
 				})
-				.catch((err: any) => console.log('error on subscribing to room: ', err))
+				.catch((err: any) => { console.log('error on subscribing to room: ', err); subscribeToRoom(roomId, name); })
 		}
 	}
 
 	const fetchMessages = (roomId: any, limit = 100) => {
-		props.chatkit.currentUser.fetchMessages(
+		props.chatkit.currentUser.fetchMultipartMessages(
 			{
 				roomId,
 				limit,
@@ -76,30 +81,50 @@ export const RoomListComponent = withChatkit((
 
 	useEffect(() => {
 		if (!props.chatkit.isLoading) {
-			dispatch({ type: GET_ROOMS, payload: props.chatkit.currentUser.rooms });
+			props.chatkit.chatManager
+				.connect({
+					onRoomUpdated: (room: any) => {
+						dispatch({ type: UPDATE_ROOM, payload: room });
+					}
+				})
+				.then((currentUser: any) => {
+					console.log('Successful connection', currentUser)
+				})
+				.catch((err: any) => {
+					console.log('Error on connection', err)
+				})
 			load(props.getRoomsAction)
 		}
 	}, [props.chatkit])
 
 	useEffect(() => {
 		if (!props.chatkit.isLoading && companyRooms.length) {
-			dispatch({ type: CLEAR_ROOM_MESSAGES });
-			subscribeToRoom(companyRooms[companyRooms.length - 1]._id, companyRooms[companyRooms.length - 1].name)
+			filteredRooms();
 		}
 	}, [companyRooms])
+
+	const filteredRooms = () => {
+		let rooms = props.chatkit.currentUser.rooms.filter((a: any) => {
+			return companyRooms.some((b: any) => {
+				return b._id === a.id;
+			});
+		});
+		dispatch({ type: GET_ROOMS, payload: rooms });
+	}
 
 	return (
 		<>
 			<main className="mw6 center" id="roomList">
-				{props.chatkit.isLoading ? <Loading /> : companyRooms.length ? companyRooms.map((room: { _id: string; name: string; }, i: number, arr: { _id: any; }[]) => {
+				{props.chatkit.isLoading ? "" : rooms.length && (rooms[0] as any).id !== undefined ? rooms.map((room: any, i: number, arr: any) => {
 					return (
 						<RoomListItem
-							key={room._id}
-							roomId={room._id}
+							key={room.id}
+							roomId={room.id}
 							img={room.name[0]}
 							name={room.name}
-							lastChild={isEqual(room._id, arr[companyRooms.length - 1]._id)}
-							active={room._id === roomId ? 'bg-lightest-blue' : ''}
+							unreadCount={room.unreadCount}
+							lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
+							active={room.id === roomId ? 'bg-lightest-blue' : ''}
 							subscribeToRoom={subscribeToRoom}
 						/>
 					);

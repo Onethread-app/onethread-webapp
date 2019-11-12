@@ -4,8 +4,10 @@ import { connect } from 'react-redux'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Button, Dialog } from '@blueprintjs/core';
 import { CreateForm } from './CreateForm';
+import { permit } from 'stores/UtilsActions';
 
 interface RoomSideBarComponentProps {
+  companyRole?: string;
   isOpen: boolean;
   chatkit?: any;
 }
@@ -18,12 +20,14 @@ const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentP
       <div className={`mt5 t-25-a ${props.isOpen ? 'db' : 'dn'}`}>
         <div className="flex ph3">
           <div className="w-50 tl"><h3 className="tigrow-lightGray-1">Rooms</h3></div>
-          <div className="w-50 tr">
-            <Button
-              onClick={() => setShowDialog(!showDialog)}
-              className="mv2 bp3-button bp3-button bp3-intent-primary" icon='add'>
-            </Button>
-          </div>
+          {props.companyRole && permit(props.companyRole) ?
+            <div className="w-50 tr">
+              <Button
+                onClick={() => setShowDialog(!showDialog)}
+                className="mv2 bp3-button bp3-button bp3-intent-primary" icon='add'>
+              </Button>
+            </div>
+            : undefined}
         </div>
         <RoomList />
       </div>
@@ -41,7 +45,13 @@ const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentP
   )
 }
 
+const mapStateToProps = (state: any) => {
+  return {
+    companyRole: state.companyReducer.currentCompany.role,
+  }
+}
+
 export const RoomSideBar = connect(
-  null,
+  mapStateToProps,
   null
 )(withRouter(RoomSideBarComponent));

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { MessageItem } from 'components/common/MessageItem';
+import { MessageItem } from 'components/company/rooms/chats/MessageItem';
 import user from "../../../../resources/images/user.png";
 import { useSelector } from 'react-redux';
 const { withChatkit } = require("@pusher/chatkit-client-react");
@@ -14,6 +14,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
   const messages = useSelector((state: any) => state.roomReducer.messages);
   const roomId = useSelector((state: any) => state.roomReducer.roomId);
   const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
+  const typingUsers = useSelector((state: any) => state.roomReducer.typingUsers);
 
   const scrollToBottom = () => {
     // On new message, scroll to bottom
@@ -28,25 +29,38 @@ export const MessageList = withChatkit((props: MessageListProps) => {
   }
   useEffect(() => {
     setFirst(false)
-  }, [roomId])
+  }, [roomId]);
+
   useEffect(scrollToBottom, [messages]);
+
+  // typing indicator
+  useEffect(() => {
+    (messagesEndRef as any).current.scrollTop = (messagesEndRef as any).current.scrollHeight;
+  }, [typingUsers]);
 
   return (
     <div
       className="overflow-y-auto ph1 pt2"
       ref={messagesEndRef}
       style={{ height: "calc(100vh - 154px)" }}>
-      {!props.chatkit.isLoading && companyRooms.length ? messages.length ? messages.map((message: any, i: number, arr: any) => {
+      {!props.chatkit.isLoading && companyRooms.length ? messages.length ? messages.map((message: any) => {
         return (
           <MessageItem
             key={message.id}
             img={user}
-            text={message.text}
+            text={message.parts[0].payload.content}
             createdAt={message.createdAt}
-            sender={message.userStore.users[message.senderId]}
+            sender={message.sender}
           />
         );
       }) : "" : ""}
+      {typingUsers.length ? typingUsers.map((user: any, i: number) => {
+        return (
+          <h6 key={i} className="mv1">{user} is typing ...</h6>
+        );
+      }) : ""}
+
+
     </div>
   )
 })

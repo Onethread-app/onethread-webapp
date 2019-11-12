@@ -61,6 +61,13 @@ a:hover {
   outline: none;
 }
 
+.absolute--center {
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%, -50%);
+}
+
 .experiencedatePicker .bp3-input-group .bp3-input{
   box-shadow: none;
   border-radius: 0px;

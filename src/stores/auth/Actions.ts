@@ -124,14 +124,14 @@ export const logoutAction = (routeHistory: History) => async (
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`/account/logout`, headers);
-			if (isEqual(response.data.message, 'Successfully logout')) {
-				localStorage.removeItem("token");
+			if (isEqual(response.status, 200)) {
+				await localStorage.removeItem("token");
+				await dispatch({ type: USER_LOGOUT });
+				await dispatch({ type: CLEAR_AUTH_REDUCER_STATE });
+				await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+				await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
+				await dispatch({ type: CLEAR_USER_REDUCER_STATE });
 				routeHistory.push("/signin");
-				dispatch({ type: USER_LOGOUT });
-				dispatch({ type: CLEAR_AUTH_REDUCER_STATE });
-				dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
-				dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
-				dispatch({ type: CLEAR_USER_REDUCER_STATE });
 			}
 		} else {
 			console.log("No token found in logout action");

@@ -58,29 +58,18 @@ export const AuthReducer = (state = InitialState, action: any) => {
         },
         loading: false
       }
-
     case USER_LOGOUT:
-      return {
-        ...state,
-        token: "",
-        loginError: {
-          message: "",
-          email: false,
-          password: false,
-          network: false
-        },
-        loading: false
-      }
     case CLEAR_AUTH_REDUCER_STATE:
       return {
+        ...state,
         loginError: {
           message: "",
           email: false,
           password: false,
           network: false
         },
+        token: "",
         loading: false,
-        token: null
       }
     default:
       return state;

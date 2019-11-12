@@ -10,14 +10,14 @@ import { withRouter, RouteComponentProps, match } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
-import { InstanceLocator, TokenUrl } from 'config';
+import { InstanceLocator, TokenUrlServer } from 'config';
 const {
   ChatkitProvider,
   TokenProvider,
 } = require("@pusher/chatkit-client-react");
 
 const tokenProvider = new TokenProvider({
-  url: TokenUrl,
+  url: TokenUrlServer,
 });
 
 const load = async (

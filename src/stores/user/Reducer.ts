@@ -130,9 +130,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 		}
 		case CLEAR_USER_REDUCER_STATE:
 			return {
-				user: {},
-				loading: false,
-				error: ''
+				...InitialState
 			}
 		default:
 			return state;
