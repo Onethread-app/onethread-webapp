@@ -28,7 +28,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 
 	return (
 		<>
-			{!isEmpty(props.activeRoom) ?
+			{isEmpty(props.activeRoom) === false ?
 				<div>
 					<div className="flex justify-between items-center ph3 bb b--tigrowLightGray-1">
 						<div>
