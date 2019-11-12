@@ -27,7 +27,7 @@ const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentP
                 className="mv2 bp3-button bp3-button bp3-intent-primary" icon='add'>
               </Button>
             </div>
-            : null}
+            : undefined}
         </div>
         <RoomList />
       </div>
