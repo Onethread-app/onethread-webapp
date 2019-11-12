@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { getCompanyMembers } from 'stores/company/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { Loading } from 'components/common/field/Loading';
+import { permit } from 'stores/UtilsActions';
 
 interface TeamMember {
   company: CompanyModel;
@@ -28,15 +29,15 @@ const TeamMembersPageComponent = (props: TeamMember) => {
     <>
       <div>
         <h1 className="f4 tigrow-lightGray-1 ml4 mb0 mt5">Team</h1>
-        <div className="vh-50 cf bg-white mh4 mv3 br3 pa4 shadow-4 w-90">
+        <div className="cf bg-white mh4 mv3 br3 pa4 shadow-4 w-90">
           <div>
             <h1 className="f5 lh-title tigrow-lightGray-1 dib">Team Members</h1>
-            <Button className="grow fr h2 pointer white bp3-minimal "
+            {permit(props.company.role) ? <Button className="grow fr h2 pointer white bp3-minimal "
               style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
               onClick={() => setShowDialog(!showDialog)}
             >
               Add Team Members
-          </Button>
+            </Button> : undefined}
           </div>
           <HTMLTable
             className="w-100 mt4"
