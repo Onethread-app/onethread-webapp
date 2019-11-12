@@ -32,7 +32,7 @@ const AboutCompanyEditComponent = (props: CompanyAboutEditInternalProps) => {
       <Divider />
       <div className="flex justify-end mt3">
         <Button className="w4 grow h2 pointer mr3"
-          style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
           onClick={(e: any) => {
             e.preventDefault();
             props.setShowDialog(false);
@@ -64,7 +64,7 @@ export const AboutCompanyView = (props: {
   const [showDialogAbout, setShowDialogAbout] = useState(false);
   return (
     <>
-      <div className="h-auto br3 ma2 pa3 bg-white cf">
+      <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4 w-50-m">
         <div className="cf ">
           <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
           <Icon className="fr mv3 tigrow-lightBlue pointer"
@@ -96,16 +96,16 @@ const InfoDetailsViewComponent = (props: any) => {
   return (
     <>
       <div>
-        <div className="fl w-25-ns pa2 ">
-          <div className="h-auto br3 ma2 pa3 bg-white cf tc">
+        <div className="fl-l flex-m w-25-l w-100-m ph3">
+          <div className="h-auto br3 ma3 pa3 bg-white cf tc shadow-4 w-50-m">
             <img src={user}></img>
             <h1 className="f5 lh-copy tigrow-lightGray-1">{props.company.name}</h1>
-            <p className=" light-silver" >Software Developer</p>
+            <p className=" light-silver" >Company type</p>
           </div>
           <AboutCompanyView company={props.company} />
         </div>
-        <div className="fl w-75-ns">
-          <div className="br3 bg-white h-auto pa4 mt3">
+        <div className="fl-l mh4-m w-70-l w-90-m ">
+          <div className="br3 bg-white h-auto pa4 mt3-l mt2-m shadow-4">
             <ListTitleView
               listTitle="Basic Information"
               iconType="edit"

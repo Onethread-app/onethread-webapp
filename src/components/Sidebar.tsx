@@ -16,25 +16,27 @@ const SidebarComponent = (props: {
 				className="bp3-minimal bp3-vertical bp3-fill sidebar-margin"
 			>
 				{props.type === 'default' ?
-						<NavLink
-							exact
-							style={{ color: 'dimgray' }}
-							activeStyle={{
-								background: '#0fa3a3',
-								color: 'white'
-							}}
-							to={`/${props.user.name}`}
+					<NavLink
+						exact
+						style={{ color: 'dimgray' }}
+						activeStyle={{
+							background: '#0fa3a3',
+							color: 'white'
+						}}
+						to={`/${props.user.name}`}
+					>
+						<Button
+							className="outline-0 bp3-large"
+							style={{ color: 'inherit', padding: '0px' }}
 						>
-							<Button
-								className="outline-0 bp3-large"
+							<Icon
+								icon="user"
+								className="pr4-l pr3-m pl3-l"
 								style={{ color: 'inherit' }}
-							>
-								<Icon
-									icon="user"
-									style={{ marginRight: '20px', marginLeft: '5px', color: 'inherit' }} />
-								Profile
+							/>
+							Profile
 						</Button>
-						</NavLink>
+					</NavLink>
 					:
 					<>
 						<NavLink
@@ -45,11 +47,12 @@ const SidebarComponent = (props: {
 						>
 							<Button
 								className="outline-0 bp3-large"
-								style={{ color: 'inherit' }}
+								style={{ color: 'inherit', padding: '0px' }}
 							>
 								<Icon
 									icon="page-layout"
-									style={{ marginRight: '20px', marginLeft: '5px', color: 'inherit' }}
+									className="pr4-l pr3-m pl3-l"
+									style={{ color: 'inherit' }}
 								/>
 								Feed
 						</Button>
@@ -62,11 +65,12 @@ const SidebarComponent = (props: {
 						>
 							<Button
 								className="outline-0 bp3-large"
-								style={{ color: 'inherit' }}
+								style={{ color: 'inherit', padding: '0px' }}
 							>
 								<Icon
 									icon="square"
-									style={{ marginRight: '20px', marginLeft: '5px', color: 'inherit' }}
+									className="pr4-l pr3-m pl3-l"
+									style={{ color: 'inherit' }}
 								/>
 								Room
 						</Button>
@@ -79,11 +83,12 @@ const SidebarComponent = (props: {
 						>
 							<Button
 								className="outline-0 bp3-large"
-								style={{ color: 'inherit' }}
+								style={{ color: 'inherit', padding: '0px' }}
 							>
 								<Icon
 									icon="briefcase"
-									style={{ marginRight: '20px', marginLeft: '5px', color: 'inherit' }}
+									className="pr4-l pr3-m pl3-l"
+									style={{ color: 'inherit' }}
 								/>
 								Task
 						</Button>
@@ -96,11 +101,12 @@ const SidebarComponent = (props: {
 						>
 							<Button
 								className="outline-0 bp3-large"
-								style={{ color: 'inherit' }}
+								style={{ color: 'inherit', padding: '0px' }}
 							>
 								<Icon
 									icon="people"
-									style={{ marginRight: '20px', marginLeft: '5px', color: 'inherit' }}
+									className="pr4-l pr3-m pl3-l"
+									style={{ color: 'inherit' }}
 								/>
 								Team
 						</Button>
@@ -113,11 +119,12 @@ const SidebarComponent = (props: {
 						>
 							<Button
 								className="outline-0 bp3-large"
-								style={{ color: 'inherit' }}
+								style={{ color: 'inherit', padding: '0px' }}
 							>
 								<Icon
 									icon="user"
-									style={{ marginRight: '20px', marginLeft: '5px', color: 'inherit' }}
+									className="pr4-l pr3-m pl3-l"
+									style={{ color: 'inherit' }}
 								/>
 								Profile
 						</Button>
@@ -130,11 +137,12 @@ const SidebarComponent = (props: {
 						>
 							<Button
 								className="outline-0 bp3-large"
-								style={{ color: 'inherit' }}
+								style={{ color: 'inherit', padding: '0px' }}
 							>
 								<Icon
 									icon="cog"
-									style={{ marginRight: '20px', marginLeft: '5px', color: 'inherit' }}
+									className="pr4-l pr3-m pl3-l"
+									style={{ color: 'inherit' }}
 								/>
 								Settings
 						</Button>

@@ -4,10 +4,9 @@ import { Tabs, Tab, Dialog, Button } from '@blueprintjs/core';
 import { ChangePasswordComponent } from 'components/common/ChangePasswordComponent';
 
 const ProfileSettingsPageComponent = () => (
-  <div className="bg-white mh4 mv5 br3 pa3">
+  <div className="bg-white mh4 mv5 br3 pa4 h-75 shadow-4 w-90">
     <Tabs
       id="TabsExample"
-      className=""
       vertical={true}
     >
       <Tab
@@ -26,9 +25,11 @@ export const ProfileSettingsComponent = () => {
   const [showDialog, setShowDialog] = useState(false)
 
   return (
-    <div className="bl b--black-05 bw1 pl3">
+    <div className="bl b--black-05 bw1 pl3 vh-50">
       <Button
-        className="br3 grow ph4 pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0"
+        type="submit"
+        className="grow pointer outline-0 shadow-0 h2"
+        style={{ background: "#0fa3a3", color: 'white', fontSize: '16px' }}
         onClick={() => setShowDialog(true)}
       >
         Change Password
@@ -38,7 +39,6 @@ export const ProfileSettingsComponent = () => {
           onClose={() => setShowDialog(!showDialog)}
           isOpen
           style={{ background: '#fff' }}
-          title="Change Password"
           canOutsideClickClose={false}
         >
           <div>

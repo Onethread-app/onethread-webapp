@@ -251,7 +251,7 @@ const BasicInfoFormComponent = (props: {
       </div>
       <div className="flex justify-end">
         <Button className="w4 grow h2 pointer mr3"
-          style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
           onClick={(e: any) => {
             e.preventDefault();
             props.setShowDialog(false);

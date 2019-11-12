@@ -117,7 +117,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
   return (
     <div className="pa3">
       <div className=" w-100">
-        <h1 className="f5">Add members</h1>
+        <h1 className="f5 tigrow-lightBlue">Add members</h1>
         <SuggestField
           onChange={(query: string) => { fetchTeamMembersByUsername(query) }}
           items={teamMembers}
@@ -202,7 +202,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
         />
       </div> */}
 
-      <div className="w-100 mb2">
+      <div className="w-100">
         {selectedTeamMember.map(item => (
           <Tag
             key={item._id}
@@ -217,13 +217,14 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
               ])
             }}
             large={true}
+            intent="primary"
           >
             {item.name}
           </Tag>
         ))}
       </div>
 
-      <div className="flex justify-end mt2">
+      <div className="flex justify-end mt4">
         <Button className="grow h2 pointer white bp3-minimal w4 mr3"
           style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}

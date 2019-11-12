@@ -73,7 +73,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
           <div className="w-50 center">
             <img className="w-30" src={require('./../resources/images/tigrowLogo.png')} />
 
-            <h3 style={{ color: "#707070" }}>
+            <h3 className="tj" style={{ color: "#707070" }}>
               Lorem Ipsum is simply dummy text of the printing and typesetting
             industry. Lorem Ipsum has been the industry's standard dummy text
             ever since the 1500s, when an unknown printer took a galley of type
@@ -86,7 +86,7 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
       </div>
       <div className="w-50-ns dt vh-100">
         <div className=" v-mid dtc">
-          <div className="w-60 ">
+          <div className="w-60-l w-90-m ">
               <form className="dt fl cf w-100">
                 <div className="mw9 center ph3-ns v-mid dtc">
                   {props.errorUnauthorized.email || props.errorUnauthorized.network ?

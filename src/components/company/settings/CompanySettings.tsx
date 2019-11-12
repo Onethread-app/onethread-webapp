@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Dialog } from '@blueprintjs/core';
+import { Button, Dialog, Tabs, Tab } from '@blueprintjs/core';
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { connect } from 'react-redux';
-import { addDepartmentAction, getAllDepartments } from '../../../stores/company/Actions'
+import { addDepartmentAction, getAllDepartments} from '../../../stores/company/Actions'
 import { Entity } from 'stores/UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { Loading } from 'components/common/field/Loading';
@@ -31,11 +31,11 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
           <h1 className="f6 lh-copy">Department</h1>
           <Button
             type="submit"
-            className="grow pointer"
-            style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+            className="grow pointer w-15"
+            style={{ background: "#0fa3a3", outline: "none", color: 'white', fontSize: '16px' }}
             onClick={() => setShowDialogDepartment(true)}
           >
-            Add/Change
+            Add
         </Button>
         </div>
         <div className="mt4">
@@ -50,7 +50,7 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
           style={{ background: '#fff' }}
         >
           <form className="fl w-100 pa3">
-            <h1 className="f6 lh-copy">Add Department</h1>
+            <h1 className="f6 lh-title tigrow-lightBlue dib mb3">Add Department</h1>
             <div className="mb4">
               <InputGroupField
                 id="addDepartment"
@@ -70,14 +70,14 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
             </div>
             <div className="flex justify-end">
               <Button className="w4 grow h2 pointer mr3"
-                style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+                style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
                 onClick={(e: any) => {
                   e.preventDefault();
                   setShowDialogDepartment(false);
                 }}
               >
                 cancel
-            </Button>
+              </Button>
               <Button
                 type="submit"
                 className="w4 grow h2 pointer"
@@ -90,7 +90,7 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
                 }}
               >
                 Save
-            </Button>
+              </Button>
             </div>
           </form>
         </Dialog>
@@ -110,8 +110,25 @@ const DepartmentView = connect(mapStateToProps, { addDepartmentAction, getAllDep
 
 export const CompanySettingsView = () => {
   return (
-    <div className="bl b--black-05 bw1 pl3">
-      <DepartmentView />
+    <div className="bl b--black-05 bw1 pl4-l pl3-m ml4-l vh-50">
+      <div>
+        <Tabs
+          id="TabsExample"
+        >
+          <Tab
+            id="details"
+            title="Details"
+            panel={<DepartmentView />}
+            className="outline-0"
+          />
+          <Tab
+            id="fields"
+            title="Fields"
+            panel={<DepartmentView />}
+            className="outline-0"
+          />
+        </Tabs>
+      </div>
     </div>
   )
 }
