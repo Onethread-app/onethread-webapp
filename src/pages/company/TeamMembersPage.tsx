@@ -28,7 +28,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
     <>
       <div>
         <h1 className="f4 tigrow-lightGray-1 ml4 mb0 mt5">Team</h1>
-        <div className="vh-50 cf bg-white mh4 mv3 br3 pa4 shadow-4 w-90">
+        <div className="cf bg-white mh4 mv3 br3 pa4 shadow-4 w-90" style={{minHeight: '30em'}}>
           <div>
             <h1 className="f5 lh-title tigrow-lightGray-1 dib">Team Members</h1>
             <Button className="grow fr h2 pointer white bp3-minimal "
