@@ -60,8 +60,6 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                 ))
                 : <tr><td colSpan={3}>No members</td></tr>
               }
-
-
             </tbody>
           </HTMLTable>
         </div>
