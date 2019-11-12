@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
-import { isEmpty, isEqual } from "lodash";
+import { isEmpty } from "lodash";
 import MembersList from './members/MembersList';
 import { showAddMember } from 'stores/UtilsActions';
 
@@ -74,11 +74,11 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 			{showMemberListDialog && (
 				<Dialog
 					onClose={() => setShowMemberListDialog(!showMemberListDialog)}
-					title="Room Members"
 					isOpen={showMemberListDialog}
 					style={{ background: '#fff' }}
 				>
-					<MembersList users={props.users} />
+					<MembersList
+						users={props.users} />
 				</Dialog>
 			)}
 		</>
