@@ -2,6 +2,7 @@ const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
 const { Company } = require('../company.model');
 const { Room } = require('./../../room/room.model');
+const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const {

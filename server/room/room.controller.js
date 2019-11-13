@@ -29,6 +29,7 @@ const create = async (req, res, next) => {
       id: room._id,
       creatorId: req.user._id,
       name: room.name,
+      isPrivate: true,
       customData: {
         company: req.body.company,
       },
@@ -59,7 +60,7 @@ const addUsers = async (req, res) => {
           userIds: req.body.members,
         });
         res.status(201).json({
-          result,
+          message: 'new members added into room',
         });
       } else {
         res
@@ -81,6 +82,7 @@ const memberList = async (req, res) => {
 };
 
 const suggestMember = async (req, res, next) => {
+  //req.params.roomId empty check require
   try {
     let roomMembers = await Room.findById(req.params.roomId)
       .select('-_id members')
@@ -102,6 +104,7 @@ const suggestMember = async (req, res, next) => {
       });
     });
     // TODO: it will execute in client
+    // members empty check
     members = members.map(m => m.account);
 
     return res.status(200).json({
@@ -119,6 +122,7 @@ const list = async (req, res) => {
     .sort({ created: 1 })
     .skip(+skip)
     .limit(+limit)
+    .select('-__v -members')
     .exec()
     .then(rooms =>
       res.status(200).json({

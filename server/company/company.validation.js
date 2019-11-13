@@ -97,13 +97,24 @@ module.exports = {
   getCompany: Joi.object().keys({
     params: cname,
   }),
-  updateCompany: Joi.object().keys({
+  updateBasicInfo: Joi.object().keys({
     body: Joi.object().keys({
       address: schema.address.required(),
       email: schema.email,
       legalOwnerName: schema.legalOwnerName,
       legalOwnerMail: schema.legalOwnerMail,
+    }),
+    params: cname,
+  }),
+  updateAbout: Joi.object().keys({
+    body: Joi.object().keys({
       about: schema.about,
+    }),
+    params: cname,
+  }),
+  changeName: Joi.object().keys({
+    body: Joi.object().keys({
+      name: schema.name.required(),
     }),
     params: cname,
   }),

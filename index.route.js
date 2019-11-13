@@ -17,6 +17,7 @@ const jobRoutes = require('./server/job/job.route');
 const educationRoutes = require('./server/education/education.route');
 const boardRoutes = require('./server/board/board.route');
 const utilsRoutes = require('./server/utils/utils.route');
+const chatkitRoutes = require('./server/chatkit/chatkit.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -42,4 +43,5 @@ router.use('/boards', boardRoutes);
 router.use('/message', messageRoutes);
 router.use('/education', educationRoutes);
 router.use('/utils', utilsRoutes);
+router.use('/chatkit', chatkitRoutes);
 module.exports = router;

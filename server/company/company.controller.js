@@ -5,6 +5,36 @@ const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
 
 // create a company profile
+const changeName = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+
+  try {
+    // check duplicate company name
+    const duplicate = await Company.findOne({
+      name: req.body.name,
+    });
+    if (duplicate) {
+      return res.status(409).json({
+        status: false,
+        message: `Name already exist`,
+      });
+    }
+    req.company.name = req.body.name;
+    await req.company.save();
+
+    return res.status(200).json({
+      status: true,
+      message: `Company's name updated`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// create a company profile
 const createCompany = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
@@ -143,8 +173,8 @@ const getCompany = async (req, res, next) => {
   }
 };
 
-// update a company profile
-const updateCompany = async (req, res, next) => {
+// update a company basic info
+const updateBasicInfo = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
@@ -158,12 +188,32 @@ const updateCompany = async (req, res, next) => {
       }
     }
 
-    let company = await req.company.save();
+    await req.company.save();
 
     return res.status(200).json({
       status: true,
-      message: 'Company updated',
-      company,
+      message: `Company's basic information updated`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update a company basic info
+const updateAbout = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+
+  try {
+    req.company.about = req.body.about;
+
+    await req.company.save();
+
+    return res.status(200).json({
+      status: true,
+      message: `Company's about updated`,
     });
   } catch (error) {
     next(error);
@@ -266,8 +316,10 @@ const addEmployees = async (req, res) => {
 module.exports = {
   createCompany,
   getCompany,
-  updateCompany,
+  updateBasicInfo,
+  updateAbout,
   getCompanyIndividual,
+  changeName,
   deleteCompany,
   addEmployees,
   getCompanyLoad,
