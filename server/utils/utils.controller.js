@@ -32,7 +32,7 @@ const changeUserName = async (req, res, next) => {
     const username = await Account.findOne({ name: name });
     if (username) {
       return sendJSONresponse(res, 409, {
-        success: `username already exist`,
+        message: `username already exist`,
       });
     } else {
       await Account.updateOne({ _id: id }, { name: name })
@@ -41,7 +41,7 @@ const changeUserName = async (req, res, next) => {
         .then(user => {
           return sendJSONresponse(res, 200, {
             success: true,
-            msg: 'Username Changed',
+            message: 'Username Changed',
           });
         });
     }

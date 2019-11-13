@@ -37,10 +37,9 @@ const updateJobExperience = async (req, res, next) => {
     const newJobExp = await JobExperience.findByIdAndUpdate(
       { _id: req.query.jobexperienceid },
       req.body,
+      { new: true },
     );
-
-    const data = await JobExperience.findOne({ _id: newJobExp._id });
-    return sendJSONresponse(res, 200, data);
+    return sendJSONresponse(res, 200, { data: newJobExp });
   } catch (error) {
     next(error);
   }

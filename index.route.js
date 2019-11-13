@@ -24,24 +24,23 @@ const router = express.Router(); // eslint-disable-line new-cap
 // TODO: use glob to match *.route files
 
 // mount account user routes at /account
-router.use('/account', accountRoutes);
+router.use('/accounts', accountRoutes);
 router.use('/category', categoryRoutes);
 router.use('/comments', commentRoutes);
 router.use('/company', companyRoutes);
-router.use('/education', educationRoutes);
+router.use('/educations', educationRoutes);
 router.use('/hashtags', hashRoutes);
-router.use('/job', jobRoutes);
+router.use('/jobs', jobRoutes);
 router.use('/posts', postRoutes);
 router.use('/reacts', reactRoutes);
 router.use('/reports', reportRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/rooms', roomRoutes);
 // router.use('/saves', saveRoutes);
-router.use('/skill', skillRoutes);
-router.use('/upload', fileRoutes);
+router.use('/skills', skillRoutes);
+router.use('/files', fileRoutes);
 router.use('/boards', boardRoutes);
-router.use('/message', messageRoutes);
-router.use('/education', educationRoutes);
+router.use('/messages', messageRoutes);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
 module.exports = router;
