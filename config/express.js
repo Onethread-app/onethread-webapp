@@ -100,6 +100,7 @@ app.use((err, req, res, next) => {
     return next(error);
   }
   if (!(err instanceof APIError)) {
+    logger.error(`${err.message}`);
     const apiError = new APIError(
       err.message,
       err.status,
@@ -125,8 +126,6 @@ app.use((err, req, res, next) => {
     return next(searchNotMatchError);
   }
   if (err instanceof getErrorMessage) {
-    //logger.info(`${err.code}`);
-    console.log(err);
     const mongoDBError = new getErrorMessage(err);
     return next(mongoDBError);
   }
@@ -151,10 +150,16 @@ if (config.env !== 'test') {
 // // error handler, send stacktrace only during development
 app.use((err, req, res, next) => {
   const stack =
-    config.env === 'development' ? err.stack.split('\n') : {};
+    config.env === 'development'
+      ? err.stack.split('\n').slice(15)
+      : {};
+  let frame = err.stack.split('at ')[15].trim();
+  let lineNumber = frame.split(':')[1];
   res.status(err.status).json({
     message: err.isPublic ? err.message : httpStatus[err.status],
     stack,
+    lineNumber,
+    frame,
   });
 });
 

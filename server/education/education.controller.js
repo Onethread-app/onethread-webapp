@@ -10,6 +10,7 @@ const addEducation = async (req, res, next) => {
     institutionName: req.body.institutionName,
     startYear: req.body.startYear,
     endingYear: req.body.endingYear,
+    eduDescription: req.body.eduDescription,
     currentlyStudy: req.body.currentlyStudy,
     account: req.user._id,
   });

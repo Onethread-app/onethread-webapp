@@ -25,7 +25,6 @@ const {
 
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
-const { imageUpload } = require('../image/image.controller');
 
 // create a new account for individual users
 const register = async (req, res, next) => {
@@ -96,7 +95,6 @@ const register = async (req, res, next) => {
               user.token = account.generateJwt();
               delete user.password;
               return sendJSONresponse(res, 201, {
-                success: true,
                 token: user.token,
                 message: 'User created',
                 user,

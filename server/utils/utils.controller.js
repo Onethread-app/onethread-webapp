@@ -29,13 +29,13 @@ const EmailIDExist = async (req, res, next) => {
 const changeUserName = async (req, res, next) => {
   try {
     const name = req.query.name;
-    const username = await Account.findOne({ name });
+    const username = await Account.findOne({ name: name });
     if (username) {
       return sendJSONresponse(res, 409, {
         success: `username already exist`,
       });
     } else {
-      Account.findByIdAndUpdate({ name: req.user.name }, req.body)
+      await Account.updateOne({ _id: id }, { name: name })
         .select('-password')
         .exec()
         .then(user => {

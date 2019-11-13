@@ -59,7 +59,7 @@ const jwtLogin = new JwtStrategy(
         .select('-password')
         .populate(
           'companies skillArea jobExperience education',
-          '_id name companyName positionName currentlyWork startYear endingYear degree institutionName startYear endingYear  currentlyStudy name',
+          '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name',
         );
       if (user) {
         done(null, user);

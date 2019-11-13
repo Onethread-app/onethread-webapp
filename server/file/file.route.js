@@ -9,13 +9,13 @@ const requireLogin = passport.authenticate('local', {
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const uploadx = multer({ storage: storage });
-const imageCtrl = require('./image.controller');
+const fileCtrl = require('./file.controller');
 
 router.post(
   '/',
   requireAuth,
   uploadx.single('image'),
-  imageCtrl.imageUpload,
+  fileCtrl.fileUpload,
 );
 
 module.exports = router;

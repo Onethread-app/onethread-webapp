@@ -1,9 +1,9 @@
 const AWS = require('aws-sdk');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
-const Image = require('./image.model');
+const Image = require('./file.model');
 
-const imageUpload = function(reqFile, bucketName, imageName) {
+const fileUpload = function(reqFile, bucketName, imageName) {
   const s3FileURL = `https://tigrow.s3-ap-southeast-1.amazonaws.com`;
   const folderLink = `${bucketName}/${imageName}`;
   const photoURL = `${s3FileURL}/${folderLink}`;
@@ -45,4 +45,4 @@ const imageUpload = function(reqFile, bucketName, imageName) {
   return photoURL;
 };
 
-module.exports = { imageUpload };
+module.exports = { fileUpload };

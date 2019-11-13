@@ -63,8 +63,8 @@ const accountsSchema = new mongoose.Schema({
   },
   gender: {
     type: String,
-    description: 'can be only M,F,Others ',
-    enum: ['M', 'F', 'OTHERS'],
+    description: 'can be male,female & others',
+    enum: ['male', 'female', 'others'],
   },
   secondaryEmail: {
     type: String,

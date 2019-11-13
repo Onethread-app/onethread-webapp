@@ -7,7 +7,7 @@ const config = require('../../config/config');
 
 const { Schema } = mongoose;
 
-const imageShema = new mongoose.Schema({
+const fileSchema = new mongoose.Schema({
   photoURL: {
     type: String,
     required: true,
@@ -22,4 +22,4 @@ const imageShema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model('Images', imageShema);
+module.exports = mongoose.model('Images', fileSchema);
