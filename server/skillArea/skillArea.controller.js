@@ -142,13 +142,8 @@ const skillLoad = async (req, res, next, id) => {
 const searchSkillSet = async (req, res, next) => {
   const name = req.query.name;
   const userId = req.user._id;
-  const userSkill = await Account.findOne({ _id: userId }).populate(
-    'skillArea',
-    'name',
-  );
+  const userSkill = await Account.findOne({ _id: userId });
   const userskillId = userSkill.skillArea;
-  const skillId = [];
-  const id = userskillId.find(item => skillId.push(item.name));
   if (name === '') {
     const err = new BadRequestError(
       'Nothing Submitted',
@@ -159,7 +154,10 @@ const searchSkillSet = async (req, res, next) => {
     return next(err);
   }
   SkillArea.find({
-    name: { $regex: new RegExp(name), $nin: skillId },
+    $and: [
+      { name: { $regex: new RegExp(name) } },
+      { _id: { $nin: userskillId } },
+    ],
   })
     .select('-accountId')
     .then(data => {
