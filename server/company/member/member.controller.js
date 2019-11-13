@@ -131,26 +131,17 @@ const searchMember = async (req, res, next) => {
   Account.find({ name: { $regex: name, $nin: memberListId } })
     .select('_id email name')
     .then(data => {
-      if (data.length < 1) {
-        const err = new SearchNotMatchError(
-          'Query does not found',
-          httpStatus.BAD_REQUEST,
-          true,
-        );
-        logger.error(`Query Error: ${err}`);
-        return next(err);
-      } else {
-        logger.info(`Search complete ${name}`);
-        return sendJSONresponse(res, 200, {
-          employees: {
-            success: true,
-            message: `Search complete ${name}`,
-            data,
-          },
-        });
-      }
+      logger.info(`Search complete ${name}`);
+      return sendJSONresponse(res, 200, {
+        employees: {
+          success: true,
+          message: `Search complete ${name}`,
+          data,
+        },
+      });
     })
     .catch(err => {
+      logger.error(`${err}`);
       return next(err);
     });
 };

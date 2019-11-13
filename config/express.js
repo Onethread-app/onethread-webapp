@@ -36,13 +36,6 @@ app.use(
     extended: true,
   }),
 );
-
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'X-Requested-With');
-  next();
-});
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -53,23 +46,20 @@ app.use(methodOverride());
 // secure apps by setting various HTTP headers
 app.use(helmet());
 app.use(cors());
-// TODO: cors customize
-// enable CORS - Cross Origin Resource Sharing
-// const allowedOrigins = ['http://localhost:4040', ''];
-// app.use(cors({
-//   credentials: true,
-//   origin(origin, callback) { // allow requests with no origin
-//     // (like mobile apps or curl requests)
-//     if (!origin) {
-//       return callback(null, true);
-//     }
-//     if (allowedOrigins.indexOf(origin) === -1) {
-//       const msg = 'The CORS policy for this site does not. Allow access from the specified Origin.';
-//       return callback(new Error(msg), false);
-//     } return callback(null, true);
-//   }
-// }));
 
+app.options('/*', function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Methods',
+    'GET,PUT,POST,DELETE,OPTIONS',
+  );
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Content-Type, Authorization, Content-Length, X-Requested-With',
+  );
+  res.send(200);
+});
+// TODO: cors customize
 // enable detailed API logging in dev env
 if (config.env === 'development' || config.env === 'production') {
   expressWinston.requestWhitelist.push('body');
@@ -100,6 +90,7 @@ app.use((err, req, res, next) => {
     return next(error);
   }
   if (!(err instanceof APIError)) {
+    logger.error(`${err.message}`);
     const apiError = new APIError(
       err.message,
       err.status,
@@ -125,11 +116,10 @@ app.use((err, req, res, next) => {
     return next(searchNotMatchError);
   }
   if (err instanceof getErrorMessage) {
-    //logger.info(`${err.code}`);
-    console.log(err);
     const mongoDBError = new getErrorMessage(err);
     return next(mongoDBError);
   }
+  logger.error(`${err}`);
   return next(err);
 });
 
@@ -152,9 +142,13 @@ if (config.env !== 'test') {
 app.use((err, req, res, next) => {
   const stack =
     config.env === 'development' ? err.stack.split('\n') : {};
+  let frame = err.stack.split('at ')[15].trim();
+  let lineNumber = frame.split(':')[1];
   res.status(err.status).json({
     message: err.isPublic ? err.message : httpStatus[err.status],
     stack,
+    lineNumber,
+    frame,
   });
 });
 

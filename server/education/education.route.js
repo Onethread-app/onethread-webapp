@@ -10,6 +10,10 @@ const router = express.Router();
 router
   .route('/add-education')
   .post(requireAuth, educationCtrl.addEducation);
+
+router
+  .route('/update-education')
+  .put(requireAuth, educationCtrl.updateEducation);
 // router
 //   .route('/:jobexperienceid')
 //   .get(requireAuth, jobCtrl.getJobExperience);

@@ -62,7 +62,7 @@ module.exports = {
       bloodGroup: Joi.string(),
       location: Joi.string(),
       about: Joi.string(),
-      gender: Joi.string(),
+      gender: Joi.string().valid(['male', 'female', 'others']),
       secondaryEmail: Joi.string()
         .email()
         .lowercase(),

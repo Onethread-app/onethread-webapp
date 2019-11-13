@@ -15,18 +15,20 @@ const createSkill = async (req, res) => {
     logger.error("'Expects 'application/json'");
     return res.send("Expects 'application/json'");
   }
-  const skill = req.body.skill;
+  const skill = req.body.name;
   const newSkill = new SkillArea();
   newSkill.name = skill;
   newSkill.accountId.push(req.user._id);
   newSkill
     .save()
     .then(skill => {
-      logger.info(` process:${process.pid} new skill created`);
+      const skillInfo = {};
+      skillInfo._id = skill._id;
+      skillInfo.name = skill.name;
       return sendJSONresponse(res, 201, {
         success: true,
         message: 'new skill created',
-        skill,
+        skillInfo,
       });
     })
     .catch(err => {
@@ -119,29 +121,6 @@ const updateSkillInfo = async (req, res) => {
     });
 };
 
-const deleteSkillInfo = async (req, res) => {
-  SkillArea.findByIdAndRemove({ _id: req.params.skill })
-    .exec()
-    .then(result => {
-      if (result) {
-        return sendJSONresponse(res, 201, {
-          success: true,
-          message: 'Successfully deleted',
-          skillArea: result,
-        });
-      } else {
-        logger.error('404 document not found');
-        return sendJSONresponse(res, 404, {
-          success: false,
-          message: 'Document not found',
-        });
-      }
-    })
-    .catch(err => {
-      next(err);
-    });
-};
-
 const skillLoad = async (req, res, next, id) => {
   SkillArea.findById(id)
     .exec()
@@ -162,6 +141,9 @@ const skillLoad = async (req, res, next, id) => {
 };
 const searchSkillSet = async (req, res, next) => {
   const name = req.query.name;
+  const userId = req.user._id;
+  const userSkill = await Account.findOne({ _id: userId });
+  const userskillId = userSkill.skillArea;
   if (name === '') {
     const err = new BadRequestError(
       'Nothing Submitted',
@@ -171,7 +153,13 @@ const searchSkillSet = async (req, res, next) => {
     logger.error(`Query Error: ${err}`);
     return next(err);
   }
-  SkillArea.find({ name: { $regex: new RegExp(name) } })
+  SkillArea.find({
+    $and: [
+      { name: { $regex: new RegExp(name) } },
+      { _id: { $nin: userskillId } },
+    ],
+  })
+    .select('-accountId')
     .then(data => {
       if (data.length < 1) {
         const err = new SearchNotMatchError(
@@ -214,12 +202,32 @@ const updateUserSkillInfo = async (req, res, next) => {
     return sendJSONresponse(res, 400, { error });
   }
 };
+
+const deleteSkillInfoFromAccount = async (req, res, next) => {
+  try {
+    const skillId = req.query.skillId;
+    const userId = req.user._id;
+    const user = await Account.findOneAndUpdate(
+      { _id: userId },
+      { $pull: { skillArea: skillId } },
+      {
+        safe: true,
+        upsert: true,
+        new: true,
+      },
+    ).populate('skillArea', 'name');
+    const skillArea = user.skillArea;
+    return sendJSONresponse(res, 200, { skillArea });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   createSkill,
   getSkillInfo,
   getAllSkill,
   updateSkillInfo,
-  deleteSkillInfo,
+  deleteSkillInfoFromAccount,
   skillLoad,
   searchSkillSet,
   updateUserSkillInfo,
