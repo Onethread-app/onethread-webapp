@@ -53,7 +53,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
             <tbody>
               {props.companyLoading ? <Loading /> : props.company && props.company.members && props.company.members.length > 0 ?
                 props.company.members.map(member => (
-                  <tr>
+                  <tr key={member._id}>
                     <td>{member.account.name}</td>
                     <td></td>
                     <td></td>
