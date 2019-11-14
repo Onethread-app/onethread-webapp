@@ -47,6 +47,8 @@ const ExperienceEdit = (props:
     startYear: "",
     endingYear: "",
     currentlyStudy: false,
+    eduDescription: "",
+    // TODO: rename it to educationDescription 
   });
 
   const handleSelectedTab = (id: any) => {

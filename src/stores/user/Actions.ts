@@ -18,7 +18,7 @@ export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, get
 			} else {
 				user = basicInfo
 			}
-			await tigrowApi.put(`/account/update`, user, headers);
+			await tigrowApi.put(`/accounts/update`, user, headers);
 			dispatch({ type: EDIT_BASIC_INFO, payload: user });
 		} else {
 			dispatch({ type: USER_FETCH_ERROR, payload: "error in user fetching" });
@@ -57,7 +57,7 @@ export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatc
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(
-				"job/create-job-experience",
+				"jobs/create-job-experience",
 				jobExperienceInfo,
 				headers
 			);
@@ -81,7 +81,7 @@ export const addEducationExperienceAction = (educationExperienceInfo: any) => as
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(
-				"education/add-education",
+				"educations/add-education",
 				educationExperienceInfo,
 				headers
 			);
@@ -111,5 +111,56 @@ export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any,
 		}
 	} catch (error) {
 		console.log(error.response);
+	}
+}
+
+export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid:any) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig(getState);
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.put(
+				`jobs/job-experience-update?jobexperienceid=${jobexperienceid}`,
+				jobExperienceInfo,
+				headers
+			);
+			const timelineResponse = response.data.data;
+			const timeline = getState().userReducer.user.timeline;
+			const filteredTimeline = timeline.filter((exp:any) => exp._id !== timelineResponse._id );
+			filteredTimeline.push(timelineResponse);
+			const timelineSort = filteredTimeline.sort((a: any, b: any) =>
+				a.startYear < b.startYear ? 1 : -1,
+			);
+			dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
+			return response.data.data;
+		} else {
+			console.log("token error")
+		}
+	} catch (error) {
+		console.log(error.response)
+	}
+}
+
+export const editEducationExperienceAction = (educationExperienceInfo: any, educationexperienceid:any) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig(getState);
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.put(
+				`educations/update-education?educationId=${educationexperienceid}`,
+				educationExperienceInfo,
+				headers
+			);
+			const timelineResponse = response.data.data;
+			const timeline = getState().userReducer.user.timeline;
+			const filteredTimeline = timeline.filter((exp:any) => exp._id !== timelineResponse._id );
+			filteredTimeline.push(timelineResponse);
+			const timelineSort = filteredTimeline.sort((a: any, b: any) =>
+				a.startYear < b.startYear ? 1 : -1,
+			);
+			dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
+		} else {
+			console.log("token error")
+		}
+	} catch (error) {
+		console.log(error.response)
 	}
 }
