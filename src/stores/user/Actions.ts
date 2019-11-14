@@ -1,4 +1,4 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE, ADD_SKILL } from './Types';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE, ADD_SKILL, DELETE_SKILL } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from "lodash";
 import tigrowApi from 'tigrowApi';
@@ -34,11 +34,12 @@ export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, get
 	}
 };
 
-export const addSkillAction = (skill: User) => async (dispatch: any, getState: any) => {
+export const addSkillAction = (skillSet: string[]) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.put(`/skill/update-skill`, skill, headers);
+			let req = { skillArea: skillSet }
+			const response = await tigrowApi.put(`/skills/update-skill`, req, headers);
 			dispatch({ type: ADD_SKILL, payload: response.data.skillList });
 		} else {
 			console.log("error in user fetching");
@@ -113,6 +114,23 @@ export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any,
 		console.log(error.response);
 	}
 }
+export const deleteSkillAction = (skill: string) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig(getState);
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.delete(`/skills/delete-skill?skillId=${skill}`, headers );
+			dispatch({ type: DELETE_SKILL, payload: response.data.skillArea });
+		} else {
+			console.log("error in user fetching");
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			console.log('Network error');
+		} else {
+			console.log(error.response);
+		}
+	}
+};
 
 export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid:any) => async (dispatch: any, getState: any) => {
 	try {

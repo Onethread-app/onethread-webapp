@@ -93,7 +93,6 @@ export const addTeamMembers = (members: any, companyName: string) => async (disp
 export const addDepartmentAction = (name: Entity) => async (dispatch: any, getState: any) => {
 
   try {
-    console.log(name)
     const headers = tokenConfig(getState);
     if ((headers as any).headers.Authorization) {
       dispatch({ type: COMPANY_DEPARTMENT_LOADING });

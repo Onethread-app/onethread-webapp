@@ -17,7 +17,7 @@ import { addJobExperienceAction, addEducationExperienceAction } from 'stores/use
 import { isEmpty } from 'lodash';
 import { ExperienceView } from 'components/company/profile/view/ExperienceView';
 import { CompanyModel } from 'stores/company/Reducer';
-
+import { SkillView } from 'components/user/Skills';
 
 interface LandingPageProps {
   user: User,
@@ -342,6 +342,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
               <p className="tigrow-lightGray-1">Software Dev</p>
             </div>
             <AboutView user={props.user} />
+            <SkillView setShowDialog={setShowDialog} />
           </div>
           <div className="fl-l mh4-m  w-70-l w-90-m mt3-l">
             <div className="br3 bg-white h-auto pa4 shadow-4">

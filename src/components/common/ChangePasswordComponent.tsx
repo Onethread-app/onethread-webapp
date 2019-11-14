@@ -30,7 +30,7 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
     try {
       const headers = tokenConfig(store.getState);
       if ((headers as any).headers.Authorization) {
-        await tigrowApi.put("account/change-password", changePasswordInfo, headers);
+        await tigrowApi.put("accounts/change-password", changePasswordInfo, headers);
         setLoading(false);
       } else {
         console.log("error in user fetching");

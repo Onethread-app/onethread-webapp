@@ -100,7 +100,6 @@ export const loginAction = (
 	}
 };
 
-
 export const fetchUserAction = () => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig(getState);
@@ -123,7 +122,7 @@ export const logoutAction = (routeHistory: History) => async (
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.get(`/account/logout`, headers);
+			const response = await tigrowApi.get(`/accounts/logout`, headers);
 			if (isEqual(response.status, 200)) {
 				await localStorage.removeItem("token");
 				await dispatch({ type: USER_LOGOUT });
