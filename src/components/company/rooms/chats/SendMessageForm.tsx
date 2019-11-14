@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import {
   Button,
-  Icon
+  Icon,
+  TextArea,
+  FileInput,
+  Dialog
 } from "@blueprintjs/core";
 import user from "../../../../resources/images/user.png";
 import { useSelector } from 'react-redux';
@@ -10,9 +13,11 @@ const { withChatkit } = require("@pusher/chatkit-client-react");
 interface SendMessageFormProps {
   chatkit?: any;
 }
+
 export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
   const roomId = useSelector((state: any) => state.roomReducer.activeRoom.id);
   const [text, setText] = useState("");
+  const [showDialog, setShowDialog] = useState(false)
   useEffect(() => {
     setText("");
   }, [roomId])
@@ -36,21 +41,51 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
     }
   }
   return (
-    <div className="sendMessage shadow-3 flex pa1 w-100 bg-tigrow">
-      <div className="flex items-center mh1">
-        <img src={user} className="dib" alt="user" />
+    <>
+      <div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
+        <div className="flex items-center mh1" style={{ width: '42px' }}>
+          <img src={user} className="dib" alt="user" />
+        </div>
+        <TextArea
+          className="w-100 h-auto mv2"
+          style={{ resize: 'none' }}
+          placeholder="Write your message"
+          onKeyPress={handleKeyPress}
+          onChange={onChange}
+          value={text}
+          growVertically={true}
+        />
+        <Button
+          className="bp3-minimal outline-0 mh2 w2 mv3"
+          onClick={() => setShowDialog(true)}
+        >
+          <Icon icon="link" className="tigrow-lightBlue" />
+        </Button>
+        <div>
+        </div>
       </div>
-      <input
-        className="h-auto w-100 bp3-input ma1 outline-0 shadow-0"
-        style={{ resize: "none" }}
-        placeholder="Write your message"
-        onChange={onChange}
-        onKeyPress={handleKeyPress}
-        value={text}
-      />
-      <Button className="bp3-button bp3-minimal bp3-large">
-        <Icon icon="link" className="tigrow-lightBlue" />
-      </Button>
-    </div>
+      {showDialog && (
+        <Dialog
+          icon="briefcase"
+          onClose={() => setShowDialog(!showDialog)}
+          isOpen
+          style={{ background: '#fff' }}
+        >
+          <div className="pa3 cf">
+            <h1 className="f5">Attach Files</h1>
+            <FileInput className="bp3-fill" text="Choose file..." />
+            <div>
+              <Button
+                type="submit"
+                text="Attach"
+                className="grow h2 pointer w-40 fr mt2"
+                style={{ background: "#0fa3a3", outline: "none", color: 'white', boxShadow: 'none' }}
+              />
+            </div>
+          </div>
+        </Dialog>
+      )
+      }
+    </>
   )
 })

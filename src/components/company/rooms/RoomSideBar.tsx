@@ -35,7 +35,6 @@ const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentP
         <Dialog
           icon="layout-auto"
           onClose={() => setShowDialog(!showDialog)}
-          title="Create room"
           isOpen
           style={{ background: '#fff' }}
         >

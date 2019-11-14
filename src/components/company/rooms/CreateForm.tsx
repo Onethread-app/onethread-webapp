@@ -42,7 +42,8 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
   };
 
   return (
-    <form className="fl w-100 pa2" >
+    <form className="fl w-100 pa4" >
+      <h1 className="f5 tigrow-lightBlue">Create Room</h1>
       <div className={` ${errors.name ? "mb3" : "mb4"}`}>
         <div className="flex">
           <InputGroupField
@@ -60,11 +61,20 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
         </div>
         {errors.name ? <small style={{ color: 'red' }}>{errors.name}</small> : ""}
       </div>
-
-      <div className="tc">
-        <Button className="b--none w4 br3 grow h2  pointer pv2 white tc"
+      <div className="flex justify-end">
+        <Button className="w4 grow h2 pointer mr3"
+          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            props.setShowDialog(false);
+          }}
+        >
+          cancel
+        </Button>
+        <Button
           type="submit"
-          style={{ background: "#0fa3a3", outline: "none" }}
+          className="w4 grow h2 pointer"
+          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={(e: any) => {
             e.preventDefault();
             if (!emptyValueCheck()) {
