@@ -3,7 +3,7 @@ import { InputGroupField } from 'components/common/field/InputGroup';
 import { isEmpty } from 'lodash';
 import { Button } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { connect } from 'react-redux';
+import { connect, useStore } from 'react-redux';
 import { createRoomAction } from 'stores/room/Actions';
 
 interface CreateFormProps {
@@ -11,10 +11,12 @@ interface CreateFormProps {
 }
 
 interface CreateFormInternalProps extends CreateFormProps, RouteComponentProps {
-  createRoomAction: (val: any) => void
+  createRoomAction: (val: any) => void;
 }
 
 const CreateFormComponent = (props: CreateFormInternalProps) => {
+
+  const store = useStore();
 
   const [values, setValues] = useState({
     name: ""
@@ -75,11 +77,16 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
           type="submit"
           className="w4 grow h2 pointer"
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          onClick={(e: any) => {
+          onClick={async (e: any) => {
             e.preventDefault();
             if (!emptyValueCheck()) {
-              props.createRoomAction(values);
-              props.setShowDialog(false);
+              await props.createRoomAction(values);
+              const roomError = store.getState().roomReducer.roomError;
+              if (roomError !== "") {
+                setErrors({ ...errors, name: roomError });
+              } else {
+                props.setShowDialog(false);
+              }
             }
           }}
         >
@@ -90,6 +97,5 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
     </form>
   )
 }
-
 
 export const CreateForm = connect(null, { createRoomAction })(withRouter(CreateFormComponent));

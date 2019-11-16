@@ -88,7 +88,7 @@ export const RoomListComponent = withChatkit((
 					}
 				})
 				.then((currentUser: any) => {
-					console.log('Successful connection', currentUser)
+					// console.log('Successful connection', currentUser)
 				})
 				.catch((err: any) => {
 					console.log('Error on connection', err)

@@ -16,10 +16,13 @@ export const createRoomAction = (roomData: any) => async (dispatch: any, getStat
       console.log("error in creation of company")
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: CREATE_ROOM_ERROR, payload: 'Network error' });
+    if (error.response.status === 409) {
+      dispatch({ type: CREATE_ROOM_ERROR, payload: 'Room already exists' });
+      return;
     } else if (error.response.status === 401) {
-      dispatch({ type: CREATE_ROOM_ERROR, payload: 'Unauthorized user.' });
+      dispatch({ type: CREATE_ROOM_ERROR, payload: 'Unauthorized user' });
+    } else if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: CREATE_ROOM_ERROR, payload: 'Network error' });
     } else {
       console.log(error.response);
     }
