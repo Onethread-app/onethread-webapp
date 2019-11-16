@@ -9,7 +9,7 @@ const EmailVerificationComponent = (props: RouteComponentProps) => {
 
   const getUserId = async (token: string) => {
     try {
-      const response = await tigrowApi.get(`account/verify-account/${token}`, {
+      const response = await tigrowApi.get(`accounts/verify-account/${token}`, {
         "Content-Type": "application/json"
       } as AxiosRequestConfig);
       setAccountVerified(response.data.accountVerified)

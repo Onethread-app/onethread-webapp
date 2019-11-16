@@ -27,7 +27,7 @@ export const userSignupAction = (
 			...newUser,
 			contactNo: `880${newUser.contactNo}`
 		};
-		const response = await tigrowApi.post("account/signup", user, {
+		const response = await tigrowApi.post("accounts/signup", user, {
 			"Content-Type": "application/json"
 		} as AxiosRequestConfig);
 		localStorage.setItem("token", JSON.stringify(response.data.token));
@@ -66,7 +66,7 @@ export const loginAction = (
 ) => async (dispatch: any) => {
 	try {
 		dispatch({ type: USER_SIGNUP_LOADING });
-		const response = await tigrowApi.post("account/login", loginUser, {
+		const response = await tigrowApi.post("accounts/login", loginUser, {
 			"Content-Type": "application/json"
 		} as AxiosRequestConfig);
 		localStorage.setItem("token", JSON.stringify(response.data.token));
@@ -100,13 +100,12 @@ export const loginAction = (
 	}
 };
 
-
 export const fetchUserAction = () => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: USER_FETCH_LOADING });
-			const response = await tigrowApi.get(`/account`, headers);
+			const response = await tigrowApi.get(`/accounts`, headers);
 			dispatch({ type: FETCH_USER, payload: response.data.user });
 		} else {
 			dispatch({ type: USER_FETCH_ERROR, payload: "error in user fetching" });
@@ -123,7 +122,7 @@ export const logoutAction = (routeHistory: History) => async (
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.get(`/account/logout`, headers);
+			const response = await tigrowApi.get(`/accounts/logout`, headers);
 			if (isEqual(response.status, 200)) {
 				await localStorage.removeItem("token");
 				await dispatch({ type: USER_LOGOUT });

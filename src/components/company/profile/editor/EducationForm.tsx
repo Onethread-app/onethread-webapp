@@ -2,7 +2,7 @@ import React from 'react';
 import { DateInput } from "@blueprintjs/datetime";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import { InputGroupField } from 'components/common/field/InputGroup';
-import { Icon, Checkbox } from '@blueprintjs/core';
+import { Icon, Checkbox, TextArea } from '@blueprintjs/core';
 
 export const EducationFormComponent = (props: any) => {
 
@@ -49,6 +49,7 @@ export const EducationFormComponent = (props: any) => {
             placeholder={"Start Year"}
             onChange={(date: Date) => props.handleDateChange("startYear", date)}
             canClearSelection={false}
+            value={props.values.startYear ? new Date(props.values.startYear) : null}
           />
         </div>
         <div className="experiencedatePicker w-100">
@@ -60,11 +61,24 @@ export const EducationFormComponent = (props: any) => {
             disabled={props.checked}
             minDate={props.minEndYear}
             canClearSelection={false}
+            value={props.values.endingYear ? new Date(props.values.endingYear) : null}
           />
         </div>
       </div>
       <div className="mb4">
-        <Checkbox checked={props.checked} onChange={props.handleCheck} label="I currently study here" />
+        <TextArea
+          style={{ resize: "none", minHeight: "50px" }}
+          fill={true}
+          growVertically={true}
+          onChange={props.handleChange("eduDescription")}
+          value={props.values.eduDescription}
+        />
+      </div>
+      <div className="mb4">
+        <Checkbox
+          checked={props.checked}
+          onChange={props.handleCheck}
+          label="I currently study here" />
       </div>
     </form>
   )

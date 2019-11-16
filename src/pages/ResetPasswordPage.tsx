@@ -27,7 +27,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
   ) => {
     setLoading(true);
     try {
-      await tigrowApi.put("account/reset-password", resetPasswordInfo);
+      await tigrowApi.put("accounts/reset-password", resetPasswordInfo);
       setLoading(false);
       routeHistory.push("/signin");
     } catch (error) {
@@ -77,7 +77,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
   }
   const getUserId = async (token: string) => {
     try {
-      const response = await tigrowApi.get(`account/forget-password/${token}`, {
+      const response = await tigrowApi.get(`accounts/forget-password/${token}`, {
         "Content-Type": "application/json"
       } as AxiosRequestConfig);
       setValues({

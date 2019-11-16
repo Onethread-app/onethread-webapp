@@ -14,7 +14,7 @@ const ForgotPasswordComponnet = (props: { setEmailComponentView: (val: boolean) 
   const handleForgotPassword = async (email: { email: string }) => {
     try {
       setLoading(true);
-      await tigrowApi.post("account/forget-password", email, {
+      await tigrowApi.post("accounts/forget-password", email, {
         "Content-Type": "application/json"
       } as AxiosRequestConfig);
       setLoading(false);

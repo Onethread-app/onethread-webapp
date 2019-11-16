@@ -218,11 +218,12 @@ const BasicInfoFormComponent = (props: {
               ...values, birthDate: date
             });
           }}
-          value={new Date(values.birthDate)}
+          value={values.birthDate ? new Date(values.birthDate) : null}
           popoverProps={{
             targetClassName: 'w-100'
           }}
-        />
+          placeholder="Birth date"
+        /> 
       </div>
       <div className="mb4">
         <RadioGroup

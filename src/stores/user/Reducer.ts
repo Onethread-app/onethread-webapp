@@ -1,4 +1,5 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE, ADD_SKILL, } from './Types';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE, ADD_SKILL, DELETE_SKILL, } from './Types';
+import { ItemEntityProps } from 'components/common/field/SuggestField';
 
 export interface ICompanyByUser {
 	role: string;
@@ -28,7 +29,7 @@ export interface User {
 	pendingFriends: string[],
 	sendingFriendList: string[],
 	timeline: string[],
-	skillArea: [{}];
+	skillArea: ItemEntityProps[];
 }
 
 
@@ -90,6 +91,14 @@ export const UserReducer = (state = InitialState, action: any) => {
 				}
 			}
 		case ADD_SKILL:
+			return {
+				...state,
+				user: {
+					...state.user,
+					skillArea: [...action.payload]
+				}
+			}
+		case DELETE_SKILL:
 			return {
 				...state,
 				user: {
