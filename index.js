@@ -24,81 +24,81 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUri);
 mongoose.connection.on('error', () => {
-  logger.warn(`unable to connect to database: ${mongoUri}`);
-  throw new Error(`unable to connect to database: ${mongoUri}`);
+	logger.warn(`unable to connect to database: ${mongoUri}`);
+	throw new Error(`unable to connect to database: ${mongoUri}`);
 });
 
 // print mongoose logs in dev env
 if (config.mongooseDebug) {
-  mongoose.set('debug', (collectionName, method, query, doc) => {
-    debug(
-      `${collectionName}.${method}`,
-      util.inspect(query, false, 20),
-      doc,
-    );
-  });
+	mongoose.set('debug', (collectionName, method, query, doc) => {
+		debug(
+			`${collectionName}.${method}`,
+			util.inspect(query, false, 20),
+			doc,
+		);
+	});
 }
 
 // connect to redis connection
-client.on('connect', () => {
-  logger.info('REDIS ready');
-});
-client.on('error', err => {
-  logger.error('REDIS ' + err.message);
-});
-client.on('end', function() {
-  logger.info('REDIS disconnect');
-});
+// client.on('connect', () => {
+// 	logger.info('REDIS ready');
+// });
+// client.on('error', err => {
+// 	logger.error('REDIS ' + err.message);
+// });
+// client.on('end', function() {
+// 	logger.info('REDIS disconnect');
+// });
 
 app.on('listening', () => {
-  logger.info('ok, server is running');
+	logger.info('ok, server is running');
 });
 
 if (!module.parent) {
-  // listen on port config.port
-  app.listen(config.port, () => {
-    logger.info(
-      `server started on port ${config.port} (${config.env})`,
-    );
-  });
+	// listen on port config.port
+	app.listen(config.port, () => {
+		logger.info(
+			`server started on port ${config.port} (${config.env})`,
+		);
+	});
 }
 
 process.on('unhandledRejection', async (err, promise) => {
-  webhook(err);
-  logger.warn(err, {
-    dispatcher: loggerDispatcher,
-    from: 'unhandledRejection event',
-    promise,
-  });
+	webhook(err);
+	logger.warn(err, {
+		dispatcher: loggerDispatcher,
+		from: 'unhandledRejection event',
+		promise,
+	});
 });
 
 process.on('unhandledRejection', async (err, promise) => {
-  webhook(err);
-  logger.warn(err, {
-    dispatcher: loggerDispatcher,
-    from: 'unhandledRejection event',
-    promise,
-  });
+	webhook(err);
+	logger.warn(err, {
+		dispatcher: loggerDispatcher,
+		from: 'unhandledRejection event',
+		promise,
+	});
 });
 
 process.on('uncaughtException', err => {
-  webhook(err);
-  logger.error(
-    err,
-    { dispatcher: loggerDispatcher, from: 'uncaughtException event' },
-    () => {
-      process.exit(1);
-    },
-  );
+	webhook(err);
+	logger.error(
+		err,
+		{ dispatcher: loggerDispatcher, from: 'uncaughtException event' },
+		() => {
+			process.exit(1);
+		},
+	);
 });
 process.on('exit', async code => {
-  webhook(code);
-  mongoose.connection.close();
-  logger.info(`About to exit with code: ${code}`);
+	webhook(code);
+	mongoose.connection.close();
+	logger.info(`About to exit with code: ${code}`);
 });
 process.on('SIGINT', function() {
-  webhook(`Caught interrupt signal`);
-  logger.info('Caught interrupt signal');
-  process.exit();
+	webhook(`Caught interrupt signal`);
+	logger.info('Caught interrupt signal');
+	process.exit();
 });
 module.exports = app;
