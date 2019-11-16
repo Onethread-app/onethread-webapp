@@ -16,19 +16,20 @@ export const MessageItem = (props: MessageItemProps) => {
     <article
       className={`flex mb3 mh3 items-center flex ${currentUser ? " flex-row-reverse" : ""}`}
     >
-      <div className="" style={{ minWidth: "35px", maxWidth: "35px" }}>
+      {currentUser ? undefined : <div className="" style={{ minWidth: "35px", maxWidth: "35px" }}>
         <img src={props.img} className=" br3" />
-      </div>
+      </div>}
+
       <div
-        className={`shadow-4 pa3 pt1 br3 ${currentUser ? "mr2 bg-tigrowLightBlue" : "ml2 bg-white"}`}
-        style={{ width: "auto" }}>
+        className={`shadow-4 ph3 pv1 br3 ${currentUser ? "mr2 bg-tigrowLightBlue" : "ml2 bg-white"}`}
+        style={{ maxWidth: "65%" }}>
         <h2
-          className={`f6 fw3 ma0 mt2 tj ${currentUser ? "white" : " black-60"}`}
+          className={`f6 fw3 ma0 mt1 tj ${currentUser ? "white" : " black-60"}`}
           style={{ wordBreak: "break-word" }}
         >{props.text}
         </h2>
         <div className={`flex justify-between ${currentUser ? " flex-row-reverse" : ""}`}>
-          <h6 className={`pa0 ma0 ${currentUser ? "ml5 white" : "mr5"}`}>
+          <h6 className={`pa0 ma0 mt1 ${currentUser ? "ml5 white" : "mr5"}`}>
             {dateFormatter(new Date(props.createdAt)).format}
           </h6>
         </div>

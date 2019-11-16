@@ -42,7 +42,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
     <div
       className="overflow-y-auto ph1 pt2"
       ref={messagesEndRef}
-      style={{ height: "calc(100vh - 194px)" }}>
+      style={{ height: "calc(100vh - 186px)" }}>
       {!props.chatkit.isLoading && companyRooms.length ? messages.length ? messages.map((message: any) => {
         return (
           <MessageItem

@@ -30,6 +30,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 		<>
 			{isEmpty(props.activeRoom) === false ?
 				<div>
+					{/* chat heading starts */}
 					<div className="flex justify-between items-center ph4 pv2 bb b--tigrowLightGray-1">
 						<div>
 							<p className="f4 fw7 mv2">{props.activeRoom.name}</p>
@@ -50,6 +51,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							</Button>
 							: null}
 					</div>
+					{/* chat heading ends */}
 					<MessageList />
 					<SendMessageForm />
 				</div> :

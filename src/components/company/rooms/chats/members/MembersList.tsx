@@ -1,5 +1,5 @@
 import React from 'react'
-import {isEqual} from "lodash"
+import { isEqual } from "lodash"
 interface MembersListProps {
   users: [];
 }
@@ -10,8 +10,8 @@ const MembersList = (props: MembersListProps) => {
       <div className="">
         {props.users.length ? props.users.map((user: { id: string, name: string, presence: { state: string } }, i: number) => {
           return (
-            <article key={user.id} className={`flex w-100 pv1 ${i !== props.users.length - 1 ? "bb" : ""} b--black-05`}>
-              <div className={`ma1 ${isEqual(user.presence,"online") ? 'br-100 bg-green' : 'br-100 ba'}`} style={{ width: '10px', height: '10px' }}></div>
+            <article key={user.id} className={`flex items-center w-100 pv1 ${i !== props.users.length - 1 ? "bb" : ""} b--black-05`}>
+              <div className={`mr1 ${isEqual(user.presence, "online") ? 'br-100 bg-green' : 'br-100 ba'}`} style={{ width: '7px', height: '7px' }}></div>
               <h1 className="f7 black mv0">@{user.name}</h1>
             </article>
           );

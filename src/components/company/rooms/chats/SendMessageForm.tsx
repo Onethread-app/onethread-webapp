@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import {
   Button,
   Icon,
-  TextArea,
   FileInput,
   Dialog
 } from "@blueprintjs/core";
@@ -16,8 +15,10 @@ interface SendMessageFormProps {
 
 export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
   const roomId = useSelector((state: any) => state.roomReducer.activeRoom.id);
-  const [text, setText] = useState("");
+  const [text, setText] = useState("hello");
   const [showDialog, setShowDialog] = useState(false)
+  const inputMessageRef = useRef<HTMLTextAreaElement>(null);
+
   useEffect(() => {
     setText("");
   }, [roomId])
@@ -34,19 +35,59 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
       .isTypingIn({ roomId })
       .catch((error: any) => console.error('error on typing', error))
   };
+  function a(inputMessageRef: any) {
+    return {
+      clientHeight: (inputMessageRef.current as any).clientHeight,
+      clientLeft: (inputMessageRef.current as any).clientLeft,
+      clientTop: (inputMessageRef.current as any).clientTop,
+      clientWidth: (inputMessageRef.current as any).clientWidth,
+      cols: (inputMessageRef.current as any).cols,
+      rows: (inputMessageRef.current as any).rows,
+      defaultValue: (inputMessageRef.current as any).defaultValue,
+      innerHTML: (inputMessageRef.current as any).innerHTML,
+      offsetHeight: (inputMessageRef.current as any).offsetHeight,
+      offsetLeft: (inputMessageRef.current as any).offsetLeft,
+      offsetTop: (inputMessageRef.current as any).offsetTop,
+      offsetWidth: (inputMessageRef.current as any).offsetWidth,
+      scrollHeight: (inputMessageRef.current as any).scrollHeight,
+      scrollLeft: (inputMessageRef.current as any).scrollLeft,
+      scrollTop: (inputMessageRef.current as any).scrollTop,
+      scrollWidth: (inputMessageRef.current as any).scrollWidth,
+      value: (inputMessageRef.current as any).value
+    };
+  }
   const handleKeyPress = (e: any) => {
+
+    console.log("inputMessageRef", a(inputMessageRef));
     if (e.key === 'Enter' && text !== "") {
       sendMessage(text);
       setText("");
+      e.target.value = '';
+      (inputMessageRef.current as any).value = ''
+      console.log("inputMessageRef", a(inputMessageRef));
     }
   }
+
+  useEffect(() => {
+    console.log("inputMessageRef", a(inputMessageRef));
+  }, []);
+
   return (
     <>
       <div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
         <div className="flex items-center mh1" style={{ width: '42px' }}>
           <img src={user} className="dib" alt="user" />
         </div>
-        <TextArea
+        <textarea
+          ref={inputMessageRef}
+          className="w-100 mv2"
+          style={{ resize: "none" }}
+          value={text}
+          onChange={onChange}
+          onKeyPress={handleKeyPress}
+          placeholder="Write your message ">
+        </textarea>
+        {/* <TextArea
           className="w-100 h-auto mv2"
           style={{ resize: 'none' }}
           placeholder="Write your message"
@@ -54,15 +95,13 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
           onChange={onChange}
           value={text}
           growVertically={true}
-        />
+        /> */}
         <Button
           className="bp3-minimal outline-0 mh2 w2 mv3"
           onClick={() => setShowDialog(true)}
         >
           <Icon icon="link" className="tigrow-lightBlue" />
         </Button>
-        <div>
-        </div>
       </div>
       {showDialog && (
         <Dialog

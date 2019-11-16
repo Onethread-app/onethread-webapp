@@ -22,7 +22,7 @@ export const RoomPage = () => {
 			</div>
 			<div className="w-100 relative">
 				<Icon
-					className={`absolute top-0 mv2 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12`}
+					className="absolute top-0 mv2 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
 					icon={isOpen ? 'arrow-left' : 'arrow-right'}
 					iconSize={17}
 					onClick={() => setIsOpen(!isOpen)} />
