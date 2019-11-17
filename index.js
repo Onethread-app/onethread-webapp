@@ -22,10 +22,13 @@ mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
-mongoose.connect(mongoUri);
+mongoose.connect(mongoUri, () => {
+	logger.info('MongoDB is connected');
+});
+
 mongoose.connection.on('error', () => {
-	logger.warn(`unable to connect to database: ${mongoUri}`);
-	throw new Error(`unable to connect to database: ${mongoUri}`);
+	// webhook('unable to connect database');
+	logger.error(`unable to connect to database: ${mongoUri}`);
 });
 
 // print mongoose logs in dev env
@@ -39,24 +42,10 @@ if (config.mongooseDebug) {
 	});
 }
 
-// connect to redis connection
-// client.on('connect', () => {
-// 	logger.info('REDIS ready');
-// });
-// client.on('error', err => {
-// 	logger.error('REDIS ' + err.message);
-// });
-// client.on('end', function() {
-// 	logger.info('REDIS disconnect');
-// });
-
-app.on('listening', () => {
-	logger.info('ok, server is running');
-});
-
 if (!module.parent) {
 	// listen on port config.port
 	app.listen(config.port, () => {
+		logger.info('ok, server is running');
 		logger.info(
 			`server started on port ${config.port} (${config.env})`,
 		);
@@ -65,7 +54,7 @@ if (!module.parent) {
 
 process.on('unhandledRejection', async (err, promise) => {
 	webhook(err);
-	logger.warn(err, {
+	logger.error(err, {
 		dispatcher: loggerDispatcher,
 		from: 'unhandledRejection event',
 		promise,
@@ -74,7 +63,7 @@ process.on('unhandledRejection', async (err, promise) => {
 
 process.on('unhandledRejection', async (err, promise) => {
 	webhook(err);
-	logger.warn(err, {
+	logger.error(err, {
 		dispatcher: loggerDispatcher,
 		from: 'unhandledRejection event',
 		promise,
