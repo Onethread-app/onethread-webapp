@@ -3,18 +3,19 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const BoardColumnSchema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true,
     trim: true
   },
-  taskIds: [{
+  tasks: [{
     type: Schema.Types.ObjectId,
     ref: 'Task'
   }],
   boardId: {
     type: Schema.Types.ObjectId,
-    ref: 'Board'
+    ref: 'Board',
+    required: true
   },
   positionInBoard: {
     type: Number,
