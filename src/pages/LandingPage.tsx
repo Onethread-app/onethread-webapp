@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon, Divider, Dialog, Button, EditableText, Tabs, Tab } from '@blueprintjs/core';
+import { Icon, Divider, Dialog, Button, EditableText, Tabs, Tab, FileInput } from '@blueprintjs/core';
 import skill from '../resources/images/skills.png';
 import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
@@ -330,6 +330,7 @@ const BasicInfoDetailsView = (props: {
 
 export const LandingPageComponent = (props: LandingPageProps) => {
   const [showDialog, setShowDialog] = useState(false);
+  const [showDialogPicture, setShowDialogPicture] = useState(false);
   return (
     <>
       <div className="cf w-100" >
@@ -337,9 +338,16 @@ export const LandingPageComponent = (props: LandingPageProps) => {
         <div className="mt1">
           <div className="fl-l flex-m w-25-l w-100-m ph3">
             <div className="h-auto br3 ma3 pa3 bg-white cf tc shadow-4 w-50-m">
-              <img src={user}></img>
+              <div className="cf flex relative center" style={{ width: '112px' }}>
+                <img className="db br-100 ba b--black-10" style={{ minWidth: '110px' }} src={user} />
+                <div className="absolute bg-tigrowLightBlue br-100 pointer"
+                  onClick={() => setShowDialogPicture(true)}
+                  style={{ top: '4.5rem', right: '3px', width: '33px', height: '33px', paddingTop: '7px' }}
+                >
+                  <Icon className="white" icon="camera" iconSize={20} ></Icon>
+                </div>
+              </div>
               <h1 className="f6 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
-              <p className="tigrow-lightGray-1">Software Dev</p>
             </div>
             <AboutView user={props.user} />
             <SkillView setShowDialog={setShowDialog} />
@@ -375,6 +383,40 @@ export const LandingPageComponent = (props: LandingPageProps) => {
         >
           <div>
             <ExperienceEdit addJobExperienceAction={props.addJobExperienceAction} addEducationExperienceAction={props.addEducationExperienceAction} setShowDialog={setShowDialog} />
+          </div>
+        </Dialog>
+      )}
+      {showDialogPicture && (
+        <Dialog
+          icon="briefcase"
+          onClose={() => setShowDialogPicture(!showDialogPicture)}
+          isOpen
+          style={{ background: '#fff' }}
+        >
+          <div className="pa3 cf">
+            <h1 className="f5 tigrow-lightBlue">Upload Photo</h1>
+            <FileInput className="bp3-fill" text="Choose file..." />
+            <div className="flex justify-end mt3">
+              <Button className="w4 grow h2 pointer mr3"
+                style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  setShowDialogPicture(false);
+                }}
+              >
+                cancel
+              </Button>
+              <Button
+                type="submit"
+                className="w4 grow h2 pointer"
+                style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+                onClick={(e: any) => {
+                  e.preventDefault();
+                }}
+              >
+                Save
+              </Button>
+            </div>
           </div>
         </Dialog>
       )}
