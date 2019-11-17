@@ -7,7 +7,7 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, CLEAR_ROOMS_ERROR
 } from "./Types";
 import { isEmpty } from 'lodash';
 interface IAppState {
@@ -21,7 +21,7 @@ interface IAppState {
 	rooms: any[],
 	companyRooms: any[],
 	loading: boolean,
-	roomError: string
+	roomError: string,
 }
 const InitialState: IAppState = {
 	activeRoom: {},
@@ -34,7 +34,7 @@ const InitialState: IAppState = {
 	rooms: [],
 	companyRooms: [],
 	loading: false,
-	roomError: ""
+	roomError: "",
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
@@ -43,7 +43,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case LOADING_ROOM:
 			return {
 				...state,
-				loading: true
+				loading: true,
+				roomError: "Loading start. so no error"
 			};
 		case ON_USER_STARTED_TYPING:
 			return {
@@ -137,6 +138,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				companyRooms: [...state.companyRooms, action.payload],
+				roomError: "done",
 				loading: false
 			};
 		case GET_ROOMS_FROM_SERVER:
@@ -165,6 +167,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				...state,
 				roomError: action.payload,
 				loading: false
+			};
+		case CLEAR_ROOMS_ERROR:
+			return {
+				...state,
+				roomError: ""
 			};
 		case CLEAR_ROOMS_REDUCER_STATE:
 			return {

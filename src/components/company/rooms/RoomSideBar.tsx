@@ -5,14 +5,17 @@ import { withRouter, RouteComponentProps } from 'react-router-dom'
 import { Button, Dialog } from '@blueprintjs/core';
 import { CreateForm } from './CreateForm';
 import { permit } from 'stores/UtilsActions';
+import { clearRoomError } from "stores/room/Actions";
 
 interface RoomSideBarComponentProps {
   companyRole?: string;
   isOpen: boolean;
   chatkit?: any;
 }
-
-const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentProps) => {
+interface RoomSideBarInternalProps extends RoomSideBarComponentProps, RouteComponentProps {
+  clearRoomError: () => void;
+}
+const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
@@ -33,7 +36,10 @@ const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentP
       </div>
       {showDialog && (
         <Dialog
-          onClose={() => setShowDialog(!showDialog)}
+          onClose={() => {
+            props.clearRoomError();
+            setShowDialog(!showDialog)
+          }}
           isOpen
           style={{ background: '#fff' }}
         >
@@ -51,5 +57,5 @@ const mapStateToProps = (state: any) => {
 
 export const RoomSideBar = connect(
   mapStateToProps,
-  null
+  { clearRoomError }
 )(withRouter(RoomSideBarComponent));

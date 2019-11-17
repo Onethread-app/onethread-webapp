@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { isEmpty } from 'lodash';
 import { Button } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect, useStore } from 'react-redux';
-import { createRoomAction } from 'stores/room/Actions';
+import { createRoomAction, clearRoomError } from 'stores/room/Actions';
 
 interface CreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -12,11 +12,12 @@ interface CreateFormProps {
 
 interface CreateFormInternalProps extends CreateFormProps, RouteComponentProps {
   createRoomAction: (val: any) => void;
+  clearRoomError: () => void;
+  roomError: string;
+  loading: boolean;
 }
 
 const CreateFormComponent = (props: CreateFormInternalProps) => {
-
-  const store = useStore();
 
   const [values, setValues] = useState({
     name: ""
@@ -26,11 +27,20 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
     name: ""
   });
 
+  useEffect(() => {
+    setErrors({ ...errors, name: props.roomError });
+  }, [props.roomError]);
+
+  const emptyErrorCheck = () => {
+    if (isEmpty(errors.name)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   const emptyValueCheck = () => {
-    let e = errors;
     if (isEmpty(values.name)) {
-      e = { ...e, name: "Required" };
-      setErrors(e);
       return true;
     }
     else {
@@ -41,7 +51,9 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
   const handleChange = (name: string) => (event: any) => {
     const value = event.target.value;
     setValues({ ...values, [name]: value });
+    setErrors({ ...errors, [name]: value === "" ? "Required" : "" });
   };
+
 
   return (
     <form className="fl w-100 pa4" >
@@ -68,6 +80,7 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
           style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
           onClick={(e: any) => {
             e.preventDefault();
+            props.clearRoomError();
             props.setShowDialog(false);
           }}
         >
@@ -79,14 +92,8 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={async (e: any) => {
             e.preventDefault();
-            if (!emptyValueCheck()) {
+            if (!emptyValueCheck() && emptyErrorCheck()) {
               await props.createRoomAction(values);
-              const roomError = store.getState().roomReducer.roomError;
-              if (roomError !== "") {
-                setErrors({ ...errors, name: roomError });
-              } else {
-                props.setShowDialog(false);
-              }
             }
           }}
         >
@@ -98,4 +105,11 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
   )
 }
 
-export const CreateForm = connect(null, { createRoomAction })(withRouter(CreateFormComponent));
+const mapStateToProps = (state: any) => {
+  return {
+    loading: state.roomReducer.loading,
+    roomError: state.roomReducer.roomError
+  };
+};
+
+export const CreateForm = connect(mapStateToProps, { createRoomAction, clearRoomError })(withRouter(CreateFormComponent));

@@ -1,7 +1,7 @@
 import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
 import { tokenConfig } from '../UtilsActions';
-import { CREATE_ROOM_FROM_SERVER, CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, LOADING_ROOM, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR } from './Types';
+import { CREATE_ROOM_FROM_SERVER, CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, LOADING_ROOM, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, CLEAR_ROOMS_ERROR } from './Types';
 
 export const createRoomAction = (roomData: any) => async (dispatch: any, getState: any) => {
 
@@ -18,7 +18,6 @@ export const createRoomAction = (roomData: any) => async (dispatch: any, getStat
   } catch (error) {
     if (error.response.status === 409) {
       dispatch({ type: CREATE_ROOM_ERROR, payload: 'Room already exists' });
-      return;
     } else if (error.response.status === 401) {
       dispatch({ type: CREATE_ROOM_ERROR, payload: 'Unauthorized user' });
     } else if (isEqual(error.message, 'Network Error')) {
@@ -88,4 +87,8 @@ export const addRoomMembers = (members: any, selectedRoomMember: any) => async (
       console.log(error.response);
     }
   }
+}
+
+export const clearRoomError = () => async (dispatch: any) => {
+  dispatch({ type: CLEAR_ROOMS_ERROR });
 }
