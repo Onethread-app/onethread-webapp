@@ -43,6 +43,33 @@ if (config.mongooseDebug) {
 }
 
 if (!module.parent) {
+	// Event listener for HTTP server "error" event.
+	// function onError(error) {
+	// 	if (error.syscall !== 'listen') {
+	// 		throw error;
+	// 	}
+
+	// 	var bind =
+	// 		typeof port === 'string' ? 'Pipe ' + port : 'Port ' + port;
+	// 	console.log(error.code);
+	// 	// handle specific listen errors with friendly messages
+	// 	switch (error.code) {
+	// 		case 'EACCES':
+	// 			console.error(bind + ' requires elevated privileges');
+	// 			process.exit(1);
+	// 			break;
+	// 		case 'EADDRINUSE':
+	// 			console.error(bind + ' is already in use');
+	// 			process.exit(1);
+	// 			break;
+	// 		case 'ECONNREFUSED':
+	// 			logger.error(bind + 'is failed to connect');
+	// 			process.exit(1);
+	// 		default:
+	// 			throw error;
+	// 	}
+	// }
+
 	// listen on port config.port
 	app.listen(config.port, () => {
 		logger.info('ok, server is running');
@@ -50,6 +77,8 @@ if (!module.parent) {
 			`server started on port ${config.port} (${config.env})`,
 		);
 	});
+
+	// app.on('error', onError);
 }
 
 process.on('unhandledRejection', async (err, promise) => {

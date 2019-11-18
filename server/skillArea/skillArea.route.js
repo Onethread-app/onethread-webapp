@@ -3,21 +3,25 @@ const router = express.Router();
 const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', { session: false });
 const skillCtrl = require('./skillArea.controller');
+const paramValidation = require('./skillArea.validation');
 
-// router.use('/:id', (req, next) => {
-//   req.skill = req.body.skillArea;
-//   next();
-// });
-
-router.route('/').post(requireAuth, skillCtrl.createSkill);
+const schemaValidator = require('../helpers/joiSchemaValidator');
 
 router
-  .route('/update-skill')
-  .put(requireAuth, skillCtrl.updateUserSkillInfo);
+	.route('/')
+	.post(
+		requireAuth,
+		schemaValidator(paramValidation.createSkill),
+		skillCtrl.createSkill,
+	);
+
+router
+	.route('/update-skill')
+	.put(requireAuth, skillCtrl.updateUserSkillInfo);
 router.route('/').get(requireAuth, skillCtrl.getAllSkill);
 router
-  .route('/delete-skill')
-  .delete(requireAuth, skillCtrl.deleteSkillInfoFromAccount);
+	.route('/delete-skill')
+	.delete(requireAuth, skillCtrl.deleteSkillInfoFromAccount);
 router.route('/').get(requireAuth, skillCtrl.getAllSkill);
 // router.route('/:id').get(requireAuth, skillCtrl.getSkillInfo);
 // router

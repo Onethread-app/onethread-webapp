@@ -44,12 +44,7 @@ router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
 router.route('/').get(requireAuth, accountCtrl.getAccount);
-router.route('/update').put(
-	requireAuth,
-	// schemaValidator(paramValidation.update),
-	//uploadx.single('image'),
-	accountCtrl.accountUpdate,
-);
+router.route('/update').put(requireAuth, accountCtrl.accountUpdate);
 // router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
 // router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
 router.route('/logout').get(requireAuth, accountCtrl.logout);

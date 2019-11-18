@@ -1,4 +1,11 @@
+const httpStatus = require('http-status');
 const Board = require("./board.model");
+const BoardColumn = require("./../boardColumn/boardColumn.model");
+const logger = require('../../config/winston');
+const {
+  APIError,
+  BadRequestError
+} = require('../helpers/APIError');
 
 const load = (req, res, next, id) => {
   Board.findById(id)
@@ -14,8 +21,31 @@ const load = (req, res, next, id) => {
     });
 }
 
-const get = (req, res) => {
-  return res.json(req.board);
+const get = async (req, res) => {
+  const boardObj = await Board.findById(req.board._id)
+    .exec()
+    .then(result => result)
+    .catch(err => {
+      next(err);
+    });
+  await BoardColumn.find({
+    boardId: req.board._id,
+    removed: false
+  })
+    .select("_id name tasks positionInBoard")
+    .populate('tasks', '_id name description')
+    .exec()
+    .then(colResult => {
+      const responseResult = {
+        _id: boardObj._id,
+        name: boardObj.name,
+        description: boardObj.description,
+        members: boardObj.members,
+        columns: colResult
+      }
+      res.json(responseResult);
+    })
+    .catch(e => next(e));
 }
 
 const create = async (req, res, next) => {
@@ -30,7 +60,9 @@ const create = async (req, res, next) => {
     board.save().then(createdBoard => res.status(201).json(createdBoard))
       .catch(e => next(e));
   } catch (error) {
-    return res.status(500).json({ error: error });
+    logger.error(`Board create: ${error}`);
+    const err = new BadRequestError('board data is invalid.', httpStatus.BAD_REQUEST)
+    next(err);
   }
 }
 
@@ -50,11 +82,11 @@ const list = (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
   Board.find({
     $or: [
-      { account: req.user }, 
-      { members:  { $elemMatch: { _id: req.user } }}
+      { account: req.user },
+      { members: { $elemMatch: { _id: req.user } } }
     ],
     company: companyId,
-    removed: false 
+    removed: false
   }).select("_id name description")
     .sort({ createdAt: -1 })
     .skip(+skip)

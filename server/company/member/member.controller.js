@@ -117,12 +117,8 @@ const searchMember = async (req, res, next) => {
 	const name = req.query.name;
 	const companyList = await Company.findById({
 		_id: req.company._id,
-	});
-	const memberListId = companyList.members;
-	const accountId = [];
-	const id = memberListId.find(item => accountId.push(item._id));
-	console.log(req);
-	console.log(accountId);
+	}).populate('members account', 'name email');
+	const memberListId = [companyList.account.name];
 	if (name === '') {
 		const err = new BadRequestError(
 			'Nothing Submitted',
@@ -132,7 +128,7 @@ const searchMember = async (req, res, next) => {
 		logger.error(`Query Error: ${err}`);
 		return next(err);
 	}
-	Account.find({ $and: { name: { $regex: name, $nin: accountId } } })
+	Account.find({ name: { $regex: name, $nin: memberListId } })
 		.select('_id email name')
 		.then(data => {
 			logger.info(`Search complete ${name}`);
