@@ -101,7 +101,7 @@ const SkillEdit = (props: {
                 e.preventDefault();
                 props.setShowDialog(false);
               }}
-              style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+              style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
             >
               cancel
             </Button>
@@ -109,7 +109,7 @@ const SkillEdit = (props: {
               type="submit"
               onClick={async (e: any) => {
                 e.preventDefault();
-                let skillSet:string[]= [];
+                let skillSet: string[] = [];
                 selectedSkills.map(selected => {
                   skillSet.push(selected._id!)
                 })
@@ -130,46 +130,46 @@ const SkillEdit = (props: {
   )
 }
 
-export const SkillViewComponent = (props:{
-    user: User
-    addSkillAction: (skillSet: string[]) => void;
-    deleteSkillAction: (val: string) => void
-    setShowDialog: (val: boolean) => void
-  }
+export const SkillViewComponent = (props: {
+  user: User
+  addSkillAction: (skillSet: string[]) => void;
+  deleteSkillAction: (val: string) => void
+  setShowDialog: (val: boolean) => void
+}
 ) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
-      <div className="h-auto br3 ma2 pa3 bg-white cf">
+      <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4 w-50-m">
         <h1 className="f6 lh-copy">Skills</h1>
         <div className="tc">
           {props.user.skillArea.length > 0 ? props.user.skillArea.map((skill: ItemEntityProps) => {
-            return(
-            <div className="dib ma1">
-              <Tag key={skill._id}
-                className="ma1 pa2"
-                onRemove={e => {
-                  props.deleteSkillAction(skill._id!)
-                }}
-                intent={Intent.PRIMARY}
-                large={true}
-              >
-                {skill.name}</Tag>
-            </div>
-          )}) :
+            return (
+              <div className="dib ma1">
+                <Tag key={skill._id}
+                  className="ma1 pa2"
+                  onRemove={e => {
+                    props.deleteSkillAction(skill._id!)
+                  }}
+                  intent={Intent.PRIMARY}
+                  large={true}
+                >
+                  {skill.name}</Tag>
+              </div>
+            )
+          }) :
             <div>
               <img src={skill}></img>
               <p>No skill has selected</p>
             </div>
           }
           <div>
-
             <button
-              className="br3 grow ph4 pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0 mt2"
+              className="br3 grow ph3-l ph2-m pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0 mt2 mb2"
               onClick={() => setShowDialog(!showDialog)}
             >
               Add Skills
-      </button>
+            </button>
           </div>
         </div>
       </div>
