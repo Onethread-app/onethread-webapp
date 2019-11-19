@@ -74,6 +74,14 @@ const BasicInfoFormComponent = (props: {
     }
   }
 
+  const checkSecondaryEmail = () => {
+    if (isEqual(values.email, values.secondaryEmail)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   const handleChange = (name: string | number) => (event: any) => {
     const value = isNumber(event) ? event.toString() : event.target.value;
     setValues({ ...values, [name]: value });
@@ -108,10 +116,17 @@ const BasicInfoFormComponent = (props: {
           className={`br0 ${errors.secondaryEmail ? 'bb b--red' : 'bb b--lightBlue'}`}
           leftIconColor={`${errors.secondaryEmail ? 'red' : "#0fa3a3"}`}
           validationOnBlur={() => {
-            if (!emailValidation(values.secondaryEmail)) {
+            if (isEmpty(values.secondaryEmail)) {
+              const secondaryEmailError = { ...errors, secondaryEmail: "" };
+              setErrors(secondaryEmailError);
+            } else if (!emailValidation(values.secondaryEmail)) {
               const secondaryEmailError = { ...errors, secondaryEmail: "Invalid email address!" };
               setErrors(secondaryEmailError);
-            } else {
+            } else if (checkSecondaryEmail()) {
+              const secondaryEmailError = { ...errors, secondaryEmail: "You can't use same Primary Email and Secondary Email" };
+              setErrors(secondaryEmailError);
+            }
+            else {
               const secondaryEmailError = { ...errors, secondaryEmail: "" };
               setErrors(secondaryEmailError);
             }

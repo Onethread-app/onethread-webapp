@@ -15,14 +15,27 @@ export const createCompanyAction = (companyData: CompanyModel, routeHistory: His
       const response = await tigrowApi.post(`/company`, companyData, headers);
       dispatch({ type: CREATE_COMPANY, payload: response.data });
       routeHistory.push(`/company/${response.data.company.name}`);
+      return response.data;
     } else {
       console.log("error in creation of company")
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: CREATE_COMPANY_ERROR, payload: 'Network error' });
-    } else if (error.response.status === 401) {
-      dispatch({ type: CREATE_COMPANY_ERROR, payload: 'Unauthorized user. Please enter valid email and password.' });
+      dispatch({
+        type: CREATE_COMPANY_ERROR,
+        payload: {
+          message: "Network error",
+          network: true
+        }
+      });
+    } else if (error.response.status === 409) {
+      dispatch({
+        type: CREATE_COMPANY_ERROR,
+        payload: {
+          message: 'Duplicate Company Name',
+          network: false
+        }
+      });
     } else {
       console.log(error.response);
     }

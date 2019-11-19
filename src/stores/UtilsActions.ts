@@ -43,3 +43,12 @@ export const showAddMember = (roomName: string, companyRole: string): boolean =>
     return false;
   }
 }
+
+export const passwordValidation = (password: string) => {
+  const regex = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
+  if (password.match(regex)) {
+    return true;
+  } else {
+    return false
+  }
+}

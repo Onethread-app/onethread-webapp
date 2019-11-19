@@ -17,7 +17,6 @@ const CompanyInfoFormComponent = (props: {
   editCompanyInfoAction: (val: any) => void
   setShowDialog: (val: boolean) => void
 } & CompanyInfoProps) => {
-
   const [values, setValues] = useState({
     address: props.companyInfo.address,
     email: props.companyInfo.email,

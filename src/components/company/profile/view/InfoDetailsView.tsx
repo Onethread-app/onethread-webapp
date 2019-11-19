@@ -7,6 +7,7 @@ import user from '../../../../resources/images/user.png';
 import { CompanyInfoForm } from '../editor/CompanyInfoDetailsForm';
 import { editCompanyAboutAction } from 'stores/company/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
+import { permit } from 'stores/UtilsActions';
 
 interface CompanyAboutEditComponentProps {
   setShowDialog: (val: boolean) => void;
@@ -67,10 +68,11 @@ export const AboutCompanyView = (props: {
       <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4 w-50-m">
         <div className="cf ">
           <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
+          {permit(props.company.role)?
           <Icon className="fr mv3 tigrow-lightBlue pointer"
             icon="edit"
             onClick={() => setShowDialogAbout(true)}
-          />
+          /> : "" }
         </div>
         <p>{props.company.about}</p>
       </div>
@@ -119,7 +121,7 @@ const InfoDetailsViewComponent = (props: any) => {
           <div className="br3 bg-white h-auto pa4 mt3-l mt2-m shadow-4">
             <ListTitleView
               listTitle="Basic Information"
-              iconType="edit"
+              iconType={permit(props.company.role)? "edit" : ""}
               onClick={() => setShowDialog(true)}
             />
             {showDialog && (
