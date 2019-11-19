@@ -58,8 +58,8 @@ const jwtLogin = new JwtStrategy(
 			const user = await Account.findById(payload._id)
 				.select('-password')
 				.populate(
-					'companies skillArea jobExperience education avatar',
-					'_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name fileLink s3_key',
+					'companies skillArea jobExperience education',
+					'_id _id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name',
 				);
 			if (user) {
 				done(null, user);

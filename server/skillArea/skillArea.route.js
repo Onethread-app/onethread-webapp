@@ -4,7 +4,6 @@ const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', { session: false });
 const skillCtrl = require('./skillArea.controller');
 const paramValidation = require('./skillArea.validation');
-
 const schemaValidator = require('../helpers/joiSchemaValidator');
 
 router
@@ -17,11 +16,7 @@ router
 
 router
 	.route('/update-skill')
-	.put(
-		requireAuth,
-		schemaValidator(paramValidation.update),
-		skillCtrl.updateUserSkillInfo,
-	);
+	.put(requireAuth, skillCtrl.updateUserSkillInfo);
 router.route('/').get(requireAuth, skillCtrl.getAllSkill);
 router
 	.route('/delete-skill')

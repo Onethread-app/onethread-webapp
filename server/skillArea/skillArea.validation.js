@@ -2,7 +2,7 @@ const Joi = require('@hapi/joi');
 module.exports = {
 	create: Joi.object().keys({
 		body: Joi.object().keys({
-			createSkill: Joi.string()
+			name: Joi.string()
 				.lowercase()
 				.required()
 				.error(error => {
@@ -13,7 +13,7 @@ module.exports = {
 
 	update: Joi.object().keys({
 		body: Joi.object().keys({
-			skillId: Joi.string().error(error => {
+			skillArea: Joi.string().error(error => {
 				return { success: false, message: `must provide skillId` };
 			}),
 		}),

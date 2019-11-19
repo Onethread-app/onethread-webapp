@@ -1,6 +1,6 @@
 const express = require('express');
-const passportService = require('../services/passport.services');
 const passport = require('passport');
+const passportService = require('../services/passport.services');
 const multer = require('multer');
 const storage = multer.memoryStorage();
 const uploadx = multer({ storage: storage });
