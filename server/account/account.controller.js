@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const bcrypt = require('bcrypt');
 const httpStatus = require('http-status');
 const shortid = require('shortid');
 const Account = require('./account.model');
