@@ -1,6 +1,6 @@
 const Joi = require('@hapi/joi');
 module.exports = {
-	register: Joi.object().keys({
+	create: Joi.object().keys({
 		body: Joi.object().keys({
 			createSkill: Joi.string()
 				.lowercase()
@@ -11,32 +11,11 @@ module.exports = {
 		}),
 	}),
 
-	login: Joi.object().keys({
-		body: Joi.object().keys({
-			email: Joi.string()
-				.regex(
-					/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-				)
-				.email()
-				.lowercase()
-				.required(),
-			password: Joi.string().required(),
-		}),
-	}),
-
 	update: Joi.object().keys({
 		body: Joi.object().keys({
-			firstName: Joi.string(),
-			lastName: Joi.string(),
-			contactNo: Joi.string().regex(/\+?(88)?0?1[356789][0-9]{8}/),
-			birthday: Joi.date(),
-			bloodGroup: Joi.string(),
-			location: Joi.string(),
-			about: Joi.string(),
-			gender: Joi.string().valid(['male', 'female', 'others']),
-			secondaryEmail: Joi.string()
-				.email()
-				.lowercase(),
+			skillId: Joi.string().error(error => {
+				return { success: false, message: `must provide skillId` };
+			}),
 		}),
 	}),
 	search: Joi.string().min(1),

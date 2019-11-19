@@ -17,7 +17,11 @@ router
 
 router
 	.route('/update-skill')
-	.put(requireAuth, skillCtrl.updateUserSkillInfo);
+	.put(
+		requireAuth,
+		schemaValidator(paramValidation.update),
+		skillCtrl.updateUserSkillInfo,
+	);
 router.route('/').get(requireAuth, skillCtrl.getAllSkill);
 router
 	.route('/delete-skill')
