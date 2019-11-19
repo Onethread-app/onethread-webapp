@@ -44,7 +44,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				loading: true,
-				roomError: "Loading start. so no error"
+				roomError: ""
 			};
 		case ON_USER_STARTED_TYPING:
 			return {
@@ -138,7 +138,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				companyRooms: [...state.companyRooms, action.payload],
-				roomError: "done",
+				roomError: "",
 				loading: false
 			};
 		case GET_ROOMS_FROM_SERVER:
