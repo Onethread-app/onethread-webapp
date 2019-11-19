@@ -60,7 +60,7 @@ const { generateGetUrl, generatePutUrl } = require('../services/s3');
 
 const fileUpload = async (req, res, next) => {
 	const file = req.file;
-	const userID = req.body.userID;
+	const userID = req.query.userID;
 	const s3FileURL = `https://tigrow-test-1.s3.amazonaws.com/`;
 	let s3bucket = new AWS.S3({
 		accessKeyId: config.awsAccessKey,

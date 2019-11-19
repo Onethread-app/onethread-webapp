@@ -11,8 +11,6 @@
     "yarn": ">=1.5.1"
   },
   "scripts": {
-    "client": "cd client && npm start",
-    "startboth": "concurrently \"nodemon node index.js\" \"npm run client\"",
     "start": "nodemon node index.js",
     "start:debug": "cross-env DEBUG=express-mongoose-es6-rest-api:* yarn start",
     "start:prod": "export NODE_ENV=production && pm2 start index.js",
