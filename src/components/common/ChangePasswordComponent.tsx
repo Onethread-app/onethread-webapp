@@ -1,14 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { InputGroupField } from './field/InputGroup';
 import { Button, Icon, Spinner } from '@blueprintjs/core';
 import { isEmpty, isNumber, isEqual } from 'lodash';
 import tigrowApi from 'tigrowApi';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { tokenConfig } from 'stores/UtilsActions';
-import { useStore } from 'react-redux';
+import { tokenConfig, passwordValidation } from 'stores/UtilsActions';
+import { useStore, connect } from 'react-redux';
+import { logoutAction } from 'stores/auth/Actions';
+import { History } from 'history';
 
 
-const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => void } & RouteComponentProps) => {
+const ChangePasswordComponentView = (props: {
+  setShowDialog: (val: boolean) => void
+  logoutAction: (history: History) => void
+} & RouteComponentProps) => {
   const store = useStore();
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
@@ -19,10 +24,13 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
   const [errors, setErrors] = useState({
     oldPassword: "",
     newPassword: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    message: ""
   });
-  const [showPassword, setShowPassword] = useState(false);
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  
   const handleChangePassword = async (
     changePasswordInfo: {}
   ) => {
@@ -30,8 +38,9 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
     try {
       const headers = tokenConfig(store.getState);
       if ((headers as any).headers.Authorization) {
-        await tigrowApi.put("accounts/change-password", changePasswordInfo, headers);
+        const response = await tigrowApi.put("accounts/change-password", changePasswordInfo, headers);
         setLoading(false);
+        return response.data;
       } else {
         console.log("error in user fetching");
       }
@@ -43,13 +52,13 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
         console.log(error);
       } else if (error.response.request.status === 401) {
         console.log(error.response.data.message);
-        e = { ...e, oldPassword: error.response.data.message };
+        e = { ...e, message: error.response.data.message };
         setErrors(e);
         console.log(errors);
 
       } else if (error.response.request.status === 400) {
         console.log(error.response.data.message);
-        e = { ...e, oldPassword: error.response.data.message };
+        e = { ...e, message: error.response.data.message };
         setErrors(e);
         console.log(errors);
 
@@ -64,7 +73,7 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
     setValues({ ...values, [name]: value });
   };
 
-  const checkPassword = () => {
+  const checkConfirmPassword = () => {
     if (isEqual(values.newPassword, values.confirmPassword)) {
       return true
     } else {
@@ -72,8 +81,16 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
     }
   }
 
+  const checkNewPassword = () => {
+    if (isEqual(values.newPassword, values.oldPassword)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   const emptyErrorCheck = () => {
-    if (isEmpty(errors.newPassword) && isEmpty(errors.confirmPassword) && isEmpty(errors.oldPassword)) {
+    if (isEmpty(errors.newPassword) && isEmpty(errors.confirmPassword) && isEmpty(errors.oldPassword) && isEmpty(errors.message)) {
       return true;
     } else {
       return false;
@@ -98,9 +115,15 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
     }
   }
 
+  useEffect(() => {
+    errors.message = "";
+  });
+
   return (
     <div className="pa4">
+      {showSuccessMessage && <h3 className="green">"Your password has been changed Successfully"</h3>}
       <h1 className="f5 lh-title tigrow-lightBlue mb4">Change Password</h1>
+      {errors.message ? <p className="red">{errors.message}</p> : ""}
       <h1 className="f6">Old Password</h1>
       <div className={` ${errors.oldPassword ? "mb3" : "mb4"}`}>
         <div className="flex">
@@ -126,17 +149,31 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
             }}
             validationOnBlur={() => {
               if (isEmpty(values.oldPassword)) {
-                const passwordError = { ...errors, oldPassword: "Required" };
-                setErrors(passwordError);
-              } else {
-                const passwordError = { ...errors, oldPassword: "" };
-                setErrors(passwordError);
+                setErrors({ 
+                  ...errors, 
+                  oldPassword: "Required" 
+                });
+              } else if (checkNewPassword() === false) {
+                setErrors({ 
+                  ...errors, 
+                  newPassword: "" 
+                });
+              } else if (checkNewPassword()) {
+                setErrors({ 
+                  ...errors, 
+                  newPassword: "Old and New Password must be different" 
+                });
+              }
+              else {
+                setErrors({ 
+                  ...errors, 
+                  oldPassword: "" 
+                });
               }
             }}
           />
         </div>
         {errors.oldPassword ? <small className="red">{errors.oldPassword}</small> : ""}
-
       </div>
       <h1 className="f6">New Password</h1>
       <div className={` ${errors.newPassword ? "mb3" : "mb4"}`}>
@@ -163,19 +200,40 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
             }}
             validationOnBlur={() => {
               if (isEmpty(values.newPassword)) {
-                const passwordError = { ...errors, newPassword: "Required" };
-                setErrors(passwordError);
-              } else {
-                const regex = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
-                if (!(values.newPassword.match(regex))) {
-                  const passwordError = { ...errors, newPassword: "Should contain uppercase, lowercase, special character and min 8 chanracter long" };
-                  setErrors(passwordError);
-                } else {
-                  const passwordError = { ...errors, newPassword: "" };
-                  setErrors(passwordError);
-                }
+                setErrors({ 
+                  ...errors, 
+                  newPassword: "Required" 
+                });
+              } else if (checkNewPassword()) {
+                setErrors({ 
+                  ...errors, 
+                  newPassword: "Old and New Password must be different" 
+                });
+              } else if (checkNewPassword() === false) {
+                setErrors({ 
+                  ...errors, 
+                  newPassword: "" 
+                });
               }
-            }}
+              else if (!passwordValidation((values.newPassword))) {
+                setErrors({ 
+                  ...errors, 
+                  newPassword: "Should contain uppercase, lowercase, special character and min 8 chanracter long" 
+                });
+              } else if (checkConfirmPassword()) {
+                setErrors({ 
+                  ...errors, 
+                  confirmPassword: "" 
+                });
+              }
+              else {
+                setErrors({ 
+                  ...errors, 
+                  newPassword: "" 
+                });
+              }
+            }
+            }
           />
         </div>
         {errors.newPassword ? <small className="red">{errors.newPassword}</small> : ""}
@@ -206,16 +264,22 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
             }}
             validationOnBlur={() => {
               if (isEmpty(values.confirmPassword)) {
-                const confirmPasswordError = { ...errors, confirmPassword: "Please re-enter your password" };
-                setErrors(confirmPasswordError);
+                setErrors({ 
+                  ...errors, 
+                  confirmPassword: "Please re-enter your password" 
+                });
               }
-              else if (!checkPassword()) {
-                const confirmPasswordError = { ...errors, confirmPassword: "Mismatch Password" };
-                setErrors(confirmPasswordError);
+              else if (!checkConfirmPassword()) {
+                setErrors({ 
+                  ...errors, 
+                  confirmPassword: "Mismatch Password" 
+                });
               }
               else {
-                const confirmPasswordError = { ...errors, confirmPassword: "" };
-                setErrors(confirmPasswordError);
+                setErrors({ 
+                  ...errors, 
+                  confirmPassword: "" 
+                });
               }
             }}
           />
@@ -236,15 +300,32 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
           type="submit"
           className="w4 grow h2 pointer"
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          onClick={(e: any) => {
+          onClick={async (e: any) => {
             e.preventDefault();
+            const messageError = { ...errors, message: "" };
+            setErrors(messageError);
             let changePasswordvalues = {
               oldPassword: values.oldPassword,
               newPassword: values.newPassword,
             }
-            if (!emptyValueCheck() && emptyErrorCheck()) {
-              props.setShowDialog(false);
-              handleChangePassword(changePasswordvalues);
+            if (!checkConfirmPassword()) {
+              const confirmPasswordError = { ...errors, confirmPassword: "Mismatch Password" };
+              setErrors(confirmPasswordError);
+            }
+            if (checkNewPassword()) {
+              const passwordError = { ...errors, newPassword: "Old and New Password must be different" };
+              setErrors(passwordError);
+            }
+            if (!emptyValueCheck() && emptyErrorCheck() && checkConfirmPassword() && !checkNewPassword()) {
+              const response = await handleChangePassword(changePasswordvalues);
+              if (response) {
+                setShowSuccessMessage(true);
+                setTimeout(() => {
+                  setShowSuccessMessage(false);
+                  props.setShowDialog(false);
+                  props.logoutAction(props.history)
+                }, 3000);
+              }
             }
           }}
           disabled={loading}
@@ -256,4 +337,4 @@ const ChangePasswordComponentView = (props: { setShowDialog: (val: boolean) => v
   )
 }
 
-export const ChangePasswordComponent = withRouter(ChangePasswordComponentView)
+export const ChangePasswordComponent = connect(null, {logoutAction})(withRouter(ChangePasswordComponentView))

@@ -62,7 +62,6 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
     }
   }
 
-
   const handleChange = (name: string | number) => (event: any) => {
     const value = isNumber(event) ? event.toString() : event.target.value;
     setValues({ ...values, [name]: value });

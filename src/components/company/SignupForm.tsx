@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { InputGroupField } from 'components/common/field/InputGroup';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual, pickBy } from 'lodash';
 import { HTMLSelect, Icon, Button } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
@@ -22,6 +22,7 @@ const Type = [
 const CompanySignupFormComponent = (props: {
   setShowDialog: (val: boolean) => void;
   createCompanyAction: (val: any, history: History) => void
+  errorCompany: { message: string; network: boolean }
 } & RouteComponentProps) => {
   const [values, setValues] = useState({
     name: "",
@@ -35,37 +36,29 @@ const CompanySignupFormComponent = (props: {
   const [errors, setErrors] = useState({
     name: "",
     email: "",
-    legalOwnerName: "",
     legalOwnerMail: "",
     address: "",
     type: ""
   });
 
-
-
   const emailValidation = (email: string) => {
-    const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (email.match(regexForEmailValidation)) {
-      return true;
+    if (email !== "") {
+      const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      if (email.match(regexForEmailValidation)) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
-      return false;
+      return true;
     }
   }
 
   const emptyValueCheck = () => {
-    if (isEmpty(values.name) || isEmpty(values.email) || isEmpty(values.legalOwnerName) || isEmpty(values.legalOwnerMail) || isEmpty(values.address)) {
+    if (isEmpty(values.name) || isEmpty(values.address) || isEmpty(values.type)) {
       let e = errors;
       if (isEmpty(values.name)) {
         e = { ...e, name: "Required" };
-      }
-      if (isEmpty(values.email)) {
-        e = { ...e, email: "Required" };
-      }
-      if (isEmpty(values.legalOwnerName)) {
-        e = { ...e, legalOwnerName: "Required" };
-      }
-      if (isEmpty(values.legalOwnerMail)) {
-        e = { ...e, legalOwnerMail: "Required" };
       }
       if (isEmpty(values.address)) {
         e = { ...e, address: "Required" };
@@ -73,8 +66,15 @@ const CompanySignupFormComponent = (props: {
       if (isEmpty(values.type)) {
         e = { ...e, type: "Required" };
       }
-
       setErrors(e);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const emptyErrorCheck = () => {
+    if (isEmpty(errors.name) && isEmpty(errors.address) && isEmpty(errors.type) && isEmpty(errors.email) && isEmpty(errors.legalOwnerMail)) {
       return true;
     } else {
       return false;
@@ -91,6 +91,19 @@ const CompanySignupFormComponent = (props: {
     setValues({ ...values, [name]: value });
     setErrors({ ...errors, [name]: "" })
   }
+
+  const checkLegalOwnerMail = () => {
+    if (isEqual(values.email, values.legalOwnerMail)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
+  useEffect(() => {
+    props.errorCompany.message = "";
+    props.errorCompany.network = false;
+  });
 
   return (
     <form className="fl w-100 pa4" >
@@ -120,6 +133,7 @@ const CompanySignupFormComponent = (props: {
           />
         </div>
         {errors.name ? <small style={{ color: 'red' }}>{errors.name}</small> : ""}
+        {props.errorCompany.message ? <small style={{ color: 'red' }}>{props.errorCompany.message}</small> : ""}
       </div>
       <div className={` ${errors.address ? "mb3" : "mb4"}`}>
         <div className="flex">
@@ -192,8 +206,8 @@ const CompanySignupFormComponent = (props: {
             className={`br0 ${errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
             leftIconColor={`${errors.email ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.email)) {
-                const companyEmailError = { ...errors, email: "Please enter company email" };
+              if (checkLegalOwnerMail() && !isEmpty(values.email)) {
+                const companyEmailError = { ...errors, email: "Company email address and legal owner mail address must be different" };
                 setErrors(companyEmailError);
               } else if (!emailValidation(values.email)) {
                 const companyEmailError = { ...errors, email: "Invalid email address!" };
@@ -208,7 +222,7 @@ const CompanySignupFormComponent = (props: {
         {errors.email ? <small style={{ color: 'red' }}>{errors.email}</small> : ""}
       </div>
 
-      <div className={` ${errors.legalOwnerName ? "mb3" : "mb4"}`}>
+      <div className="mb4">
         <div className="flex">
           <InputGroupField
             id="legalOwnerName"
@@ -219,20 +233,10 @@ const CompanySignupFormComponent = (props: {
             style={{
               boxShadow: 'none'
             }}
-            className={`br0 ${errors.legalOwnerName ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.legalOwnerName ? 'red' : "#0fa3a3"}`}
-            validationOnBlur={() => {
-              if (isEmpty(values.legalOwnerName)) {
-                const ownerNameError = { ...errors, legalOwnerName: "Please enter legal owner's name" };
-                setErrors(ownerNameError);
-              } else {
-                const ownerNameError = { ...errors, legalOwnerName: "" }
-                setErrors(ownerNameError);
-              }
-            }}
+            className={"br0 bb b--lightBlue"}
+            leftIconColor="#0fa3a3"
           />
         </div>
-        {errors.legalOwnerName ? <small style={{ color: 'red' }}>{errors.legalOwnerName}</small> : ""}
       </div>
 
       <div className={` ${errors.legalOwnerMail ? "mb3" : "mb4"}`}>
@@ -249,8 +253,8 @@ const CompanySignupFormComponent = (props: {
             className={`br0 ${errors.legalOwnerMail ? 'bb b--red' : 'bb b--lightBlue'}`}
             leftIconColor={`${errors.legalOwnerMail ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
-              if (isEmpty(values.legalOwnerMail)) {
-                const ownerEmailError = { ...errors, legalOwnerMail: "Please enter legal owner's email address" };
+              if (checkLegalOwnerMail() && !isEmpty(values.legalOwnerMail)) {
+                const ownerEmailError = { ...errors, legalOwnerMail: "Company email address and legal owner mail address must be different" };
                 setErrors(ownerEmailError);
               } else if (!emailValidation(values.legalOwnerMail)) {
                 const ownerEmailError = { ...errors, legalOwnerMail: "Invalid email address!" };
@@ -278,11 +282,13 @@ const CompanySignupFormComponent = (props: {
           type="submit"
           className="w4 grow h2 pointer"
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          onClick={(e: any) => {
+          onClick={async (e: any) => {
             e.preventDefault();
-            if (!emptyValueCheck()) {
-              props.createCompanyAction(values, props.history);
-              props.setShowDialog(false);
+            if (!emptyValueCheck() && emptyErrorCheck()) {
+              const response = await props.createCompanyAction(pickBy(values, v => v !== ""), props.history) as any;
+              if (response) {
+                props.setShowDialog(false);
+              }
             }
           }}
         >
@@ -294,5 +300,10 @@ const CompanySignupFormComponent = (props: {
   )
 }
 
+const mapStateToProps = (state: any) => {
+  return {
+    errorCompany: state.companyReducer.createCompanyError
+  }
+}
 
-export const CompanySignupForm = connect(null, { createCompanyAction })(withRouter(CompanySignupFormComponent));
+export const CompanySignupForm = connect(mapStateToProps, { createCompanyAction })(withRouter(CompanySignupFormComponent));
