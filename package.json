@@ -21,6 +21,7 @@
     "lodash": "^4.17.15",
     "moment": "^2.24.0",
     "react": "^16.9.0",
+    "react-beautiful-dnd": "^11.0.5",
     "react-dom": "^16.9.0",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.0",
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.138",
+    "@types/react-beautiful-dnd": "^11.0.3",
     "@types/react-redux": "^7.1.2",
     "@types/redux-thunk": "^2.1.0"
   }
