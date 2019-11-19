@@ -49,4 +49,52 @@ router.use('/education', educationRoutes);
 router.use('/messages', messageRoutes);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
+
+const { Company } = require('./server/company/company.model');
+const Account = require('./server/account/account.model');
+const logger = require('./config/winston');
+const { sendJSONresponse } = require('./server/helpers/jsonResponse');
+// 1st step: Find member list from company.
+// 2nd step: Create a list of employee and account holder
+// 3rd step: Find account holders id
+// 3rd step: Exclude them from the Team Search
+router.route('/member-search').get(async (req, res, next) => {
+	const name = req.query.name;
+	const companyList = await Company.findById({
+		_id: '5dd3ba94021b6213f419477d',
+	}).populate('members account', 'account name email');
+	let memberListId = companyList.members;
+	memberListId = memberListId.map(account => account._id);
+	memberListId = [...memberListId, '5dd42c4d30af62559ac711a2'];
+	logger.info(`my members name:${memberListId}`);
+	// if (name === '') {
+	// 	const err = new BadRequestError(
+	// 		'Nothing Submitted',
+	// 		httpStatus.BAD_REQUEST,
+	// 		true,
+	// 	);
+	// 	logger.error(`Query Error: ${err}`);
+	// 	return next(err);
+	// }
+	await Account.find({
+		$and: [
+			{ name: { $regex: new RegExp(name) } },
+			{ _id: { $nin: memberListId } },
+		],
+	})
+		.select('_id email name')
+		.then(data => {
+			logger.info(`Search complete ${name}`);
+			return sendJSONresponse(res, 200, {
+				employees: {
+					message: `Search complete ${name}`,
+					data,
+				},
+			});
+		})
+		.catch(err => {
+			logger.error(`${err}`);
+			return next(err);
+		});
+});
 module.exports = router;
