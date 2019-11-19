@@ -12,6 +12,7 @@ export const createRoomAction = (roomData: any) => async (dispatch: any, getStat
       dispatch({ type: LOADING_ROOM });
       const response = await tigrowApi.post(`/rooms`, roomData, headers);
       dispatch({ type: CREATE_ROOM_FROM_SERVER, payload: response.data.room });
+      return response.status;
     } else {
       console.log("error in creation of company")
     }
@@ -25,6 +26,7 @@ export const createRoomAction = (roomData: any) => async (dispatch: any, getStat
     } else {
       console.log(error.response);
     }
+    return error.response.status;
   }
 }
 

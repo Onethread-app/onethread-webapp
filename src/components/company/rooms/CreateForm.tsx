@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { isEmpty } from 'lodash';
-import { Button } from '@blueprintjs/core';
+import { Button, InputGroup } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect, useStore } from 'react-redux';
 import { createRoomAction, clearRoomError } from 'stores/room/Actions';
+import { Form, Field } from 'react-final-form'
+import { FORM_ERROR } from 'final-form'
 
 interface CreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -19,89 +21,86 @@ interface CreateFormInternalProps extends CreateFormProps, RouteComponentProps {
 
 const CreateFormComponent = (props: CreateFormInternalProps) => {
 
-  const [values, setValues] = useState({
-    name: ""
-  });
+  const onSubmit: any = async (values: any) => {
+    const status: any = await props.createRoomAction(values);
+    if (status === 409) {
+      return { name: 'Duplicate name' }
+    } else if (status === 201) {
+      props.setShowDialog(false);
+    }
+    return {};
+  }
 
-  const [errors, setErrors] = useState({
-    name: ""
-  });
 
-  useEffect(() => {
-    setErrors({ ...errors, name: props.roomError });
-  }, [props.roomError]);
-
-  const emptyErrorCheck = () => {
-    if (isEmpty(errors.name)) {
+  const checkError = (meta: any) => {
+    if ((meta.error || meta.submitError) && meta.touched) {
       return true;
     } else {
       return false;
     }
   }
 
-  const emptyValueCheck = () => {
-    if (isEmpty(values.name)) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
-
-  const handleChange = (name: string) => (event: any) => {
-    const value = event.target.value;
-    setValues({ ...values, [name]: value });
-    setErrors({ ...errors, [name]: value === "" ? "Required" : "" });
-  };
-
-
   return (
-    <form className="fl w-100 pa4" >
-      <h1 className="f5 tigrow-lightBlue">Create Room</h1>
-      <div className={` ${errors.name ? "mb3" : "mb4"}`}>
-        <div className="flex">
-          <InputGroupField
-            id="roomName"
-            value={values.name}
-            onChange={handleChange("name")}
-            placeHolder="Room Name"
-            leftIcon="layout-balloon"
-            style={{
-              boxShadow: 'none'
-            }}
-            className={`br0 ${errors.name ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.name ? 'red' : "#0fa3a3"}`}
-          />
-        </div>
-        {errors.name ? <small style={{ color: 'red' }}>{errors.name}</small> : ""}
-      </div>
-      <div className="flex justify-end">
-        <Button className="w4 grow h2 pointer mr3"
-          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
-          onClick={(e: any) => {
-            e.preventDefault();
-            props.clearRoomError();
-            props.setShowDialog(false);
-          }}
-        >
-          cancel
-        </Button>
-        <Button
-          type="submit"
-          className="w4 grow h2 pointer"
-          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          onClick={async (e: any) => {
-            e.preventDefault();
-            if (!emptyValueCheck() && emptyErrorCheck()) {
-              await props.createRoomAction(values);
-            }
-          }}
-        >
-          Create
-        </Button>
-      </div>
-
-    </form>
+    <Form
+      onSubmit={onSubmit}
+      initialValues={{ name: '' }}
+      validate={values => {
+        const errors: any = {}
+        if (!values.name) {
+          errors.name = 'Required'
+        }
+        return errors
+      }}
+      render={({
+        submitError,
+        handleSubmit,
+        form,
+        submitting,
+        pristine,
+        values,
+      }) => (
+          <form
+            className="fl w-100 pa4"
+            onSubmit={handleSubmit}>
+            <h1 className="f5 tigrow-lightBlue">Create Room</h1>
+            <Field name="name" type="text">
+              {({ input, meta }) => (
+                <>
+                  <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                    <div className="">
+                      <InputGroupField
+                        {...input}
+                        id="roomName"
+                        placeHolder="Username"
+                        leftIcon="layout-balloon"
+                        leftIconColor={`${checkError(meta) ? 'red' : "#0fa3a3"}`}
+                        className={`br0 ${checkError(meta) ? 'bb b--red' : 'bb b--lightBlue'}`}
+                        style={{
+                          boxShadow: 'none'
+                        }}
+                      />
+                    </div>
+                    {checkError(meta) && <small style={{ color: 'red' }}>{meta.error || meta.submitError}</small>}
+                  </div>
+                </>
+              )}
+            </Field>
+            {submitError && <div className="error">{submitError}</div>}
+            <div className="buttons">
+              <button type="submit" disabled={submitting}>
+                Log In
+            </button>
+              <button
+                type="button"
+                onClick={form.reset}
+                disabled={submitting || pristine}
+              >
+                Reset
+            </button>
+            </div>
+          </form>
+        )}
+    />
   )
 }
 
