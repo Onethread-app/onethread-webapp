@@ -1,4 +1,4 @@
-import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, ADD_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE, EDIT_COMPANY_INFO, CLEAR_ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING } from './Types';
+import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, ADD_DEPARTMENT_LOADING, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE, EDIT_COMPANY_INFO, CHANGE_COMPANY_NAME, CHANGE_COMPANY_NAME_ERROR, CLEAR_CHANGE_COMPANY_NAME_ERROR, CHANGE_COMPANY_NAME_LOADING, CLEAR_ADD_DEPARTMENT_ERROR, } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
 
@@ -45,6 +45,7 @@ const InitialState = {
     skill: [{}]
   },
   loading: false,
+  changeCompanyNameLoading: false,
   departmentNameLoading: false,
   error: ''
 }
@@ -146,6 +147,34 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           ...action.payload
         }
       }
+    case CHANGE_COMPANY_NAME_LOADING:
+      return {
+        ...state,
+        changeCompanyNameLoading: true,
+      }
+    case CHANGE_COMPANY_NAME:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          name: action.payload,
+        },
+        changeCompanyNameLoading: false,
+        error: ""
+      };
+    case CHANGE_COMPANY_NAME_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+        changeCompanyNameLoading: false
+      };
+    case CLEAR_CHANGE_COMPANY_NAME_ERROR:
+      return {
+        ...state,
+        error: "",
+        changeCompanyNameLoading: false
+      };
+
     default:
       return state;
   }

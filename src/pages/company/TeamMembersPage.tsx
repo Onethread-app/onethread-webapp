@@ -6,7 +6,6 @@ import { getCompanyMembers } from 'stores/company/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { Loading } from 'components/common/field/Loading';
 import { permit } from 'stores/UtilsActions';
-
 interface TeamMember {
   company: CompanyModel;
   getCompanyMembers: () => void;
@@ -46,6 +45,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
             <thead>
               <tr>
                 <th>Name</th>
+                <th>Division</th>
                 <th>Department</th>
                 <th>Position</th>
               </tr>
@@ -57,6 +57,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                     <td>{member.account.name}</td>
                     <td></td>
                     <td></td>
+                    <td>{member.account.name}
+                    </td>
                   </tr>
                 ))
                 : <tr><td colSpan={3}>No members</td></tr>

@@ -19,8 +19,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
     email: "",
     password: "",
   });
+  
   //need to fix this
-
   useEffect(() => {
     props.errorUnauthorized.email = false;
     props.errorUnauthorized.password = false;

@@ -246,7 +246,7 @@ export const AboutView = (props: {
     <>
       <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4 w-50-m">
         <div className="cf ">
-          <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
+          <h1 className="f5 lh-copy dib tigrow-lightGray-1" style={{ wordBreak: 'break-word' }}>About</h1>
           <Icon className="fr mv3 tigrow-lightBlue pointer"
             icon="edit"
             onClick={() => setShowDialogAbout(true)}
@@ -362,7 +362,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
               {props.user.timeline.length > 0 ?
                 <ExperienceView />
                 :
-                <div className="br3 bg-white h-auto">
+                <div className="br3 bg-white h-auto tc">
                   <img src={skill}></img>
                   <p>No experience has added</p>
                 </div>
