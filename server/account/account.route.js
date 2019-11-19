@@ -10,63 +10,58 @@ const router = express.Router();
 
 const requireAuth = passport.authenticate('jwt', { session: false });
 const requireLogin = passport.authenticate('local', {
-  session: false,
+	session: false,
 });
 const accountCtrl = require('./account.controller');
 const {
-  permit,
-  authSelf,
-  hasAuthorization,
+	permit,
+	authSelf,
+	hasAuthorization,
 } = require('../helpers/permission');
 //const tokenChecker = require('../helpers/tokenChecker');
 const schemaValidator = require('../helpers/joiSchemaValidator');
 const tokenChecker = require('../helpers/tokenChecker');
 // authentication
 router
-  .route('/signup')
-  .post(
-    schemaValidator(paramValidation.register),
-    accountCtrl.register,
-  );
+	.route('/signup')
+	.post(
+		schemaValidator(paramValidation.register),
+		accountCtrl.register,
+	);
 router.get(
-  '/verify-account/:token',
-  accountCtrl.getAccessTokenForVerifyAccount,
+	'/verify-account/:token',
+	accountCtrl.getAccessTokenForVerifyAccount,
 );
 router
-  .route('/login')
-  .post(
-    schemaValidator(paramValidation.login),
-    requireLogin,
-    accountCtrl.login,
-  );
+	.route('/login')
+	.post(
+		schemaValidator(paramValidation.login),
+		requireLogin,
+		accountCtrl.login,
+	);
 
 // router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
 router.route('/').get(requireAuth, accountCtrl.getAccount);
-router.route('/update').put(
-  requireAuth,
-  // schemaValidator(paramValidation.update),
-  //uploadx.single('image'),
-  accountCtrl.accountUpdate,
-);
-router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
-router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
+router.route('/update').put(requireAuth, accountCtrl.accountUpdate);
+// router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
+// router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
 router.route('/logout').get(requireAuth, accountCtrl.logout);
 router
-  .route('/forget-password')
-  .post(accountCtrl.sendEmailForForgetPassword);
+	.route('/forget-password')
+	.post(accountCtrl.sendEmailForForgetPassword);
 router
-  .route('/forget-password/:token')
-  .get(accountCtrl.getAccessTokenForForgetPassword);
+	.route('/forget-password/:token')
+	.get(accountCtrl.getAccessTokenForForgetPassword);
 router.route('/reset-password').put(accountCtrl.resetPassword);
 router
-  .route('/change-password')
-  .put(requireAuth, accountCtrl.changePassword);
+	.route('/change-password')
+	.put(requireAuth, accountCtrl.changePassword);
 // for admin
 router
-  .route('/admin')
-  .post(requireLogin, permit('admin'), accountCtrl.login);
+	.route('/admin')
+	.post(requireLogin, permit('admin'), accountCtrl.login);
 
 router.param('account-id', accountCtrl.accountLoad);
 // router.use(tokenChecker);
