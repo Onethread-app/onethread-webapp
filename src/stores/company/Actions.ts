@@ -4,7 +4,7 @@ import { isEqual } from 'lodash';
 import { History } from 'history';
 import { tokenConfig } from '../UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
-import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR , GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, EDIT_COMPANY_INFO, CLEAR_ADD_DEPARTMENT_ERROR, ADD_DEPARTMENT_LOADING, COMPANY_DEPARTMENT_LOADING } from './Types';
+import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, EDIT_COMPANY_INFO, CHANGE_COMPANY_NAME_ERROR, CHANGE_COMPANY_NAME, CLEAR_CHANGE_COMPANY_NAME_ERROR, CHANGE_COMPANY_NAME_LOADING, CLEAR_ADD_DEPARTMENT_ERROR, ADD_DEPARTMENT_LOADING } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 // import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
 
@@ -181,3 +181,32 @@ export const editCompanyAboutAction = (companyAbout: string) => async (dispatch:
     }
   }
 };
+
+export const changeCompanyName = (companyName: string) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      dispatch({ type: CHANGE_COMPANY_NAME_LOADING });
+      let company = getState().companyReducer.currentCompany.name;
+      const response = await tigrowApi.put(`company/${company}/changeName`, { name: companyName }, headers);
+      if (isEqual(response.status, 200)) {
+        dispatch({ type: CHANGE_COMPANY_NAME, payload: companyName });
+        return response.data;
+      }
+    } else {
+      console.log("error in changing Company Name")
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      console.log('Network error');
+    } else if (error.response.status === 409) {
+      dispatch({ type: CHANGE_COMPANY_NAME_ERROR, payload: 'Name already exist' });
+    } else {
+      console.log(error.response)
+    }
+  }
+}
+
+export const clearChangeCompanyNameError = () => async (dispatch: any) => {
+  dispatch({ type: CLEAR_CHANGE_COMPANY_NAME_ERROR });
+}
