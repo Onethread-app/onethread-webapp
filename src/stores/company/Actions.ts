@@ -2,9 +2,9 @@
 import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
 import { History } from 'history';
-import { tokenConfig, Entity } from '../UtilsActions';
+import { tokenConfig } from '../UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
-import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, EDIT_COMPANY_INFO } from './Types';
+import { CREATE_COMPANY, CREATE_COMPANY_ERROR, GET_COMPANY_DETAILS, ADD_TEAM_MEMBERS_ERROR, ADD_DEPARTMENT, ADD_DEPARTMENT_ERROR , GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, EDIT_COMPANY_INFO, CLEAR_ADD_DEPARTMENT_ERROR, ADD_DEPARTMENT_LOADING, COMPANY_DEPARTMENT_LOADING } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 // import { USER_COMPANIES_UPDATE } from 'stores/user/Types';
 
@@ -90,27 +90,34 @@ export const addTeamMembers = (members: any, companyName: string) => async (disp
   }
 }
 
-export const addDepartmentAction = (name: Entity) => async (dispatch: any, getState: any) => {
+export const addDepartment = (name: string) => async (dispatch: any, getState: any) => {
 
   try {
     const headers = tokenConfig(getState);
     if ((headers as any).headers.Authorization) {
-      dispatch({ type: COMPANY_DEPARTMENT_LOADING });
+      dispatch({ type: ADD_DEPARTMENT_LOADING });
       let company = getState().companyReducer.currentCompany.name;
-      const response = await tigrowApi.post(`/company/${company}/departments`, name, headers);
+      const response = await tigrowApi.post(`/company/${company}/departments`, { name }, headers);
       dispatch({ type: ADD_DEPARTMENT, payload: response.data });
+      return response.data;
     } else {
       console.log("error in adding department")
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Network error' });
+      console.log('Network error');
     } else if (error.response.status === 401) {
       dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Unauthorized user.' });
+    } else if (error.response.status === 409) {
+      dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Department already exists' });
     } else {
       console.log(error.response);
     }
   }
+}
+
+export const clearAddDepartmentError = () => async (dispatch: any) => {
+  dispatch({ type: CLEAR_ADD_DEPARTMENT_ERROR });
 }
 
 export const getAllDepartments = () => async (dispatch: any, getState: any) => {

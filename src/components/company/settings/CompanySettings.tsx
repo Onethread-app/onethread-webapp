@@ -2,23 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { Button, Dialog, Tabs, Tab } from '@blueprintjs/core';
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { connect } from 'react-redux';
-import { addDepartmentAction, getAllDepartments} from '../../../stores/company/Actions'
-import { Entity } from 'stores/UtilsActions';
+import { addDepartment, getAllDepartments, clearAddDepartmentError } from '../../../stores/company/Actions'
 import { CompanyModel } from 'stores/company/Reducer';
 import { Loading } from 'components/common/field/Loading';
+import { isEmpty } from 'lodash'
 interface DepartmentViewProps {
   company: CompanyModel;
   loading: boolean;
-  addDepartmentAction: (name: Entity) => void;
+  departmentError: string;
+  addDepartment: (name: string) => void;
   getAllDepartments: () => void;
+  clearAddDepartmentError: () => void;
 }
 
 const DepartmentViewComponent = (props: DepartmentViewProps) => {
 
   const [showDialogDepartment, setShowDialogDepartment] = useState(false)
-  const [values, setValues] = useState({
-    name: ""
-  });
+  const [departmentName, setDepartmentName] = useState("");
 
   useEffect(() => {
     props.getAllDepartments();
@@ -51,7 +51,7 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
         >
           <form className="fl w-100 pa3">
             <h1 className="f6 lh-title tigrow-lightBlue dib mb3">Add Department</h1>
-            <div className="mb4">
+            <div className={`${props.departmentError ? "mb3" : "mb4"}`}>
               <InputGroupField
                 id="addDepartment"
                 placeHolder="Add Department"
@@ -62,11 +62,11 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
                 className='bb b--lightBlue'
                 leftIconColor="#0fa3a3"
                 onChange={(event: any) => {
-                  const value = event.target.value;
-                  setValues({ name: value });
+                  setDepartmentName(event.target.value);
                 }}
-                value={values.name}
+                value={departmentName}
               />
+              {props.departmentError ? <small className="red">{props.departmentError}</small> : ""}
             </div>
             <div className="flex justify-end">
               <Button className="w4 grow h2 pointer mr3"
@@ -74,6 +74,8 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
                 onClick={(e: any) => {
                   e.preventDefault();
                   setShowDialogDepartment(false);
+                  props.clearAddDepartmentError();
+                  setDepartmentName("");
                 }}
               >
                 cancel
@@ -84,9 +86,13 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
                 style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
                 onClick={async (e: any) => {
                   e.preventDefault();
-                  await props.addDepartmentAction(values);
-                  setShowDialogDepartment(false);
-                  setValues({ name: '' })
+                  if (isEmpty(departmentName) === false) {
+                    const response = await props.addDepartment(departmentName) as any;
+                    if (response) {
+                      setShowDialogDepartment(false);
+                      setDepartmentName("")
+                    }
+                  }
                 }}
               >
                 Save
@@ -102,11 +108,12 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
-    loading: state.companyReducer.loading
+    loading: state.companyReducer.loading,
+    departmentError: state.companyReducer.error
   }
 }
 
-const DepartmentView = connect(mapStateToProps, { addDepartmentAction, getAllDepartments })(DepartmentViewComponent)
+const DepartmentView = connect(mapStateToProps, { addDepartment, getAllDepartments, clearAddDepartmentError })(DepartmentViewComponent)
 
 export const CompanySettingsView = () => {
   return (

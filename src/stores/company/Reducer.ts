@@ -1,4 +1,4 @@
-import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE, EDIT_COMPANY_INFO } from './Types';
+import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, ADD_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE, EDIT_COMPANY_INFO, CLEAR_ADD_DEPARTMENT_ERROR, COMPANY_DEPARTMENT_LOADING } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
 
@@ -45,6 +45,7 @@ const InitialState = {
     skill: [{}]
   },
   loading: false,
+  departmentNameLoading: false,
   error: ''
 }
 
@@ -96,11 +97,16 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         loading: true
       }
+    case ADD_DEPARTMENT_LOADING:
+      return {
+        ...state,
+        departmentNameLoading: true
+      }
     case ADD_DEPARTMENT_ERROR:
       return {
         ...state,
         error: action.payload,
-        loading: false
+        departmentNameLoading: false
       }
     case ADD_DEPARTMENT:
       return {
@@ -109,8 +115,15 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           ...state.currentCompany,
           departments: [...state.currentCompany.departments, action.payload.department]
         },
-        loading: false
+        departmentNameLoading: false,
+        error: ""
       };
+    case CLEAR_ADD_DEPARTMENT_ERROR:
+      return {
+        ...state,
+        error: "",
+        departmentNameLoading: false
+      }
     case GET_ALL_DEPARTMENT:
       return {
         ...state,
@@ -125,14 +138,14 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...InitialState
       }
 
-      case EDIT_COMPANY_INFO:
-			return {
-				...state,
-				currentCompany: {
-					...state.currentCompany,
-					...action.payload
-				}
-			}
+    case EDIT_COMPANY_INFO:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          ...action.payload
+        }
+      }
     default:
       return state;
   }
