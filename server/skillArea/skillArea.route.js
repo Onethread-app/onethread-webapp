@@ -11,7 +11,7 @@ router
 	.route('/')
 	.post(
 		requireAuth,
-		schemaValidator(paramValidation.createSkill),
+		schemaValidator(paramValidation.create),
 		skillCtrl.createSkill,
 	);
 
