@@ -9,13 +9,11 @@ const { Schema } = mongoose;
 
 // defining all the fields of individual account
 const accountsSchema = new mongoose.Schema({
-	avatar: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'File',
-			currentlyActive: { type: Boolean, default: true },
-		},
-	],
+	avatar: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'File',
+		currentlyActive: { type: Boolean, default: true },
+	},
 
 	name: {
 		type: String,
@@ -111,41 +109,6 @@ const accountsSchema = new mongoose.Schema({
 		type: Boolean,
 		default: false,
 	},
-	// following: [
-	//   {
-	//     user: {
-	//       type: Schema.ObjectId,
-	//       ref: 'Account'
-	//     }
-	//   }
-	// ],
-	// followers: [
-	//   {
-	//     user: {
-	//       type: Schema.ObjectId,
-	//       ref: 'Account'
-	//     }
-	//   }
-	// ],
-
-	friends: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Account',
-		},
-	],
-	pendingFriends: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Account',
-		},
-	],
-	sendingFriendList: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Account',
-		},
-	],
 	jobExperience: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

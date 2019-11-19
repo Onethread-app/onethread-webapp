@@ -15,7 +15,6 @@ const createSkill = async (req, res, next) => {
 		logger.error("'Expects 'application/json'");
 		return res.send("Expects 'application/json'");
 	}
-	console.log(req.user);
 	const skill = req.body.name;
 	const newSkill = new SkillArea();
 	newSkill.name = skill;

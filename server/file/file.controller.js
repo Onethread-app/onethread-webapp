@@ -3,6 +3,7 @@ const config = require('../../config/config');
 const logger = require('../../config/winston');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 const File = require('./file.model');
+const Account = require('../account/account.model');
 const { generateGetUrl, generatePutUrl } = require('../services/s3');
 
 // const fileUpload = function(reqFile, bucketName, imageName) {
@@ -60,7 +61,7 @@ const { generateGetUrl, generatePutUrl } = require('../services/s3');
 
 const fileUpload = async (req, res, next) => {
 	const file = req.file;
-	const userID = req.query.userID;
+	const userID = req.user._id;
 	const s3FileURL = `https://tigrow-test-1.s3.amazonaws.com/`;
 	let s3bucket = new AWS.S3({
 		accessKeyId: config.awsAccessKey,
@@ -69,33 +70,42 @@ const fileUpload = async (req, res, next) => {
 	});
 	const params = {
 		Bucket: 'tigrow-test-1',
-		Key: file.originalname,
+		Key: `${userID}/${file.originalname}`,
 		Body: file.buffer,
 		ContentType: file.mimetype,
 		ACL: 'public-read',
 	};
-	s3bucket.upload(params, function(err, data) {
-		if (err) {
-			return sendJSONresponse(res, 500, { message: err });
-		} else {
+	await s3bucket
+		.upload(params)
+		.promise()
+		.then(async data => {
 			logger.info(`File Successfully upload to S3`);
 			const newFile = {
 				fileLink: s3FileURL + params.Bucket,
-				s3_key: params.Key,
+				s3Key: params.Key,
 				account: userID,
 				fileType: params.ContentType,
 			};
 			const file = new File(newFile);
-			file.save(function(error, files) {
-				if (error) {
+			file
+				.save()
+				.then(async data => {
+					logger.info('File Link successfully save to Database');
+					const account = await Account.findOne({
+						_id: userID,
+					}).select('avatar');
+					account.avatar = data._id;
+					await account.save();
+					return sendJSONresponse(res, 200, data);
+				})
+				.catch(error => {
 					logger.error(`${error}`);
 					next(error);
-				}
-				logger.info('File successfully save to Database');
-				return sendJSONresponse(res, 200, files);
-			});
-		}
-	});
+				});
+		})
+		.catch(err => {
+			next(err);
+		});
 };
 
 module.exports = { fileUpload };

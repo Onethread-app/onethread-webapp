@@ -14,7 +14,7 @@ const fileCtrl = require('./file.controller');
 router.post(
 	'/upload',
 	upload.single('file'),
-	//requireAuth,
+	requireAuth,
 	fileCtrl.fileUpload,
 );
 

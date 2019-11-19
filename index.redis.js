@@ -20,8 +20,8 @@ const client = redis.createClient({
 		// reconnect after
 		return Math.min(options.attempt * 100, 3000);
 	},
-	port: 15356,
-	host: config.redis.host,
+	port: 6379,
+	host: `127.0.0.1`,
 });
 
 client.auth(config.redis.password, function(err, response) {
@@ -39,5 +39,5 @@ client.on('error', err => {
 client.on('end', function() {
 	logger.info('REDIS disconnect');
 });
-client.quit();
+// client.quit();
 module.exports = client;
