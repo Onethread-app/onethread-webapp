@@ -113,37 +113,46 @@ const getMemberLoad = async (req, res, next) => {
 	}
 };
 
+// 1st step: Find member list from company.
+// 2nd step: Create a list of employee
+// 3rd step: Exclude them from the Team Search
+
 const searchMember = async (req, res, next) => {
-	const name = req.query.name;
-	const companyList = await Company.findById({
-		_id: req.company._id,
-	}).populate('members account', 'name email');
-	const memberListId = [companyList.account.name];
-	if (name === '') {
-		const err = new BadRequestError(
-			'Nothing Submitted',
-			httpStatus.BAD_REQUEST,
-			true,
-		);
-		logger.error(`Query Error: ${err}`);
-		return next(err);
-	}
-	Account.find({ name: { $regex: name, $nin: memberListId } })
-		.select('_id email name')
-		.then(data => {
-			logger.info(`Search complete ${name}`);
-			return sendJSONresponse(res, 200, {
-				employees: {
-					success: true,
-					message: `Search complete ${name}`,
-					data,
-				},
-			});
+	try {
+		const name = req.query.name;
+		const companyID = req.company._id;
+		const company = await Company.findById({
+			_id: companyID,
+		}).populate('members', 'account');
+		logger.info(`Company Information: ${company}`);
+		let memberListId = company.members;
+		logger.info(`memberList: ${memberListId}`);
+		memberListId = memberListId.map(member => member.account);
+		logger.info(`memberList in company: ${memberListId}`);
+		await Account.find({
+			$and: [
+				{ name: { $regex: new RegExp(name) } },
+				{ _id: { $nin: memberListId } },
+			],
 		})
-		.catch(err => {
-			logger.error(`${err}`);
-			return next(err);
-		});
+			.select('_id email name')
+			.then(data => {
+				logger.info(`Search complete ${name}`);
+				return sendJSONresponse(res, 200, {
+					employees: {
+						message: `Search complete ${name}`,
+						data,
+					},
+				});
+			})
+			.catch(err => {
+				logger.error(`${err}`);
+				return next(err);
+			});
+	} catch (error) {
+		logger.error(`${error}`);
+		next(error);
+	}
 };
 
 module.exports = {
