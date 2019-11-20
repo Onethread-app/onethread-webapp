@@ -19,6 +19,10 @@ const fileSchema = new mongoose.Schema({
 		ref: 'Account',
 		required: true,
 	},
+	company: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Company',
+	},
 	date: {
 		type: Date,
 		default: Date.now(),

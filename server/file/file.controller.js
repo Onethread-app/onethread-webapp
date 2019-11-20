@@ -6,46 +6,6 @@ const File = require('./file.model');
 const Account = require('../account/account.model');
 const { generateGetUrl, generatePutUrl } = require('../services/s3');
 
-// const fileUpload = function(reqFile, bucketName, imageName) {
-//   // const s3FileURL = `https://tigrow.s3-ap-southeast-1.amazonaws.com`;
-//   // const folderLink = `${bucketName}/${imageName}`;
-//   // const photoURL = `${s3FileURL}/${folderLink}`;
-//   // AWS.config.update({
-//   //   accessKeyId: config.awsAccessKey,
-//   //   secretAccessKey: config.awsSecretAccessKey,
-//   //   region: config.s3Region,
-//   // });
-//   // const s3bucket = new AWS.S3();
-//   // let params = {
-//   //   Bucket: 'tigrow',
-//   //   Key: folderLink,
-//   //   Body: reqFile.buffer,
-//   //   ContentType: reqFile.mimetype,
-//   //   ACL: 'public-read',
-//   // };
-//   // s3bucket
-//   //   .upload(params)
-//   //   .promise()
-//   //   .then(async data => {
-//   //     const newImage = new Image({
-//   //       photoURL: photoURL,
-//   //       s3_key: params.Key,
-//   //     });
-//   //     await newImage.save((err, imageInfo) => {
-//   //       if (err) {
-//   //         return logger.error(`HEY ${err}`);
-//   //       }
-//   //       logger.info('Image uploaded to s3 successfully');
-//   //       console.log(imageInfo._id);
-//   //     });
-//   //   })
-//   //   .catch(err => {
-//   //     logger.error(`HEY ${err}`);
-//   //     return err;
-//   //   });
-//   // return photoURL;
-// };
-
 // const fileUpload = async (req, res, next) => {
 // 	const { Key, ContentType } = req.query;
 // 	generatePutUrl(Key, ContentType)
@@ -62,6 +22,7 @@ const { generateGetUrl, generatePutUrl } = require('../services/s3');
 const fileUpload = async (req, res, next) => {
 	const file = req.file;
 	const userID = req.user._id;
+	const companyID = req.query.cid;
 	const s3FileURL = `https://tigrow-test-1.s3.amazonaws.com/`;
 	let s3bucket = new AWS.S3({
 		accessKeyId: config.awsAccessKey,
@@ -91,11 +52,16 @@ const fileUpload = async (req, res, next) => {
 				.save()
 				.then(async data => {
 					logger.info('File Link successfully save to Database');
-					const account = await Account.findOne({
-						_id: userID,
-					}).select('avatar');
-					account.avatar = data._id;
-					await account.save();
+					if (userID) {
+						const account = await Account.findOne({
+							_id: userID,
+						}).select('avatar');
+						account.avatar = data._id;
+						await account.save();
+					}
+					if (company) {
+						const company = await company.findOne({ _id: companyID });
+					}
 					return sendJSONresponse(res, 200, data);
 				})
 				.catch(error => {
