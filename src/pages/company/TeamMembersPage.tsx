@@ -57,8 +57,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                     <td>{member.account.name}</td>
                     <td></td>
                     <td></td>
-                    <td>{member.account.name}
-                    </td>
+                    <td></td>
                   </tr>
                 ))
                 : <tr><td colSpan={3}>No members</td></tr>
