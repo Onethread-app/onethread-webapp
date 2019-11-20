@@ -23,7 +23,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 
 	return (
 		<>
-			<div className={`mt5 t-25-a ${props.isOpen ? "db" : "dn"}`}>
+			<div className={`t-25-a ${props.isOpen ? "db" : "dn"}`}>
 				<div className="flex justify-between items-center ph3">
 					<h3 className="tigrow-darkGray">Rooms</h3>
 					{props.companyRole && permit(props.companyRole) ? (

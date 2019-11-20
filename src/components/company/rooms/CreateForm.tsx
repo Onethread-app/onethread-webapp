@@ -6,6 +6,7 @@ import { withRouter, RouteComponentProps } from "react-router";
 import { connect } from "react-redux";
 import { createRoomAction, clearRoomError } from "stores/room/Actions";
 import { Form, Field } from "react-final-form";
+import { required, checkError } from "helpers/final-form";
 
 interface CreateFormProps {
 	setShowDialog: (val: boolean) => void;
@@ -23,32 +24,34 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 		const status: any = await props.createRoomAction(values);
 		if (status === 409) {
 			return { name: "Duplicate name" };
+			// return { [FORM_ERROR]: "Duplicate name" };
 		} else if (status === 201) {
 			props.setShowDialog(false);
 		}
 		return {};
 	};
 
-	const checkError = (meta: any) => {
-		if ((meta.error || meta.submitError) && meta.touched) {
-			return true;
-		} else {
-			return false;
-		}
-	};
-
 	return (
 		<Form
 			onSubmit={onSubmit}
 			initialValues={{ name: "" }}
-			validate={values => {
-				const errors: any = {};
-				if (!values.name) {
-					errors.name = "Required";
-				}
-				return errors;
-			}}
-			render={({ handleSubmit, form, submitting, pristine, invalid }) => (
+			// validate={values => {
+			// 	const errors: any = {};
+			// 	if (!values.name) {
+			// 		errors.name = "Required";
+			// 	}
+			// 	return errors;
+			// }}
+			render={({
+				handleSubmit,
+				form,
+				submitting,
+				pristine,
+				submitError,
+				submitErrors,
+				submitFailed,
+				submitSucceeded
+			}) => (
 				<>
 					<div className="flex justify-end pa3">
 						<Icon
@@ -58,9 +61,23 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 							onClick={(e: any) => props.setShowDialog(false)}
 						/>
 					</div>
+					<pre>
+						{JSON.stringify(
+							{
+								submitting,
+								pristine,
+								submitError,
+								submitErrors,
+								submitFailed,
+								submitSucceeded
+							},
+							undefined,
+							2
+						)}
+					</pre>
 					<form className="fl w-100 pa4 pt0" onSubmit={handleSubmit}>
 						<h1 className="f5 tigrow-lightBlue">Create Room</h1>
-						<Field name="name" type="text">
+						<Field name="name" type="text" validate={required}>
 							{({ input, meta }) => (
 								<>
 									<div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
@@ -112,8 +129,9 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 									outline: "none",
 									color: "white"
 								}}
+								loading={submitting}
 								type="submit"
-								disabled={submitting || invalid}
+								disabled={submitting || pristine}
 							>
 								Add
 							</Button>

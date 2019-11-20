@@ -37,7 +37,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 				</span>
 			</div>
 			<div className="flex justify-around items-center">
-				<h1 className="ttc f7 f6-ns fw4 mv0">{props.name}</h1>
+				<h1 className="f7 f6-ns fw4 mv0">{props.name}</h1>
 				{props.unreadCount > 0 ? (
 					<h6
 						className="bg-tigrowLightBlue white fw8 ma0 ml1"
