@@ -128,7 +128,11 @@ export const RoomListComponent = withChatkit(
 
 		return (
 			<>
-				<main className="mw6 center" id="roomList">
+				<main
+					className="mw6 center overflow-y-scroll"
+					id="roomList"
+					style={{ height: "calc(100vh - 105px)" }}
+				>
 					{props.chatkit.isLoading ? (
 						""
 					) : rooms.length && (rooms[0] as any).id !== undefined ? (
