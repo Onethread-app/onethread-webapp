@@ -49,4 +49,5 @@ router.use('/education', educationRoutes);
 router.use('/messages', messageRoutes);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
+
 module.exports = router;
