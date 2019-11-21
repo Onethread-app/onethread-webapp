@@ -37,6 +37,9 @@ export const RoomListComponent = withChatkit(
 		);
 		const roomId = useSelector((state: any) => state.roomReducer.roomId);
 		const rooms = useSelector((state: any) => state.roomReducer.rooms);
+		const companyId = useSelector(
+			(state: any) => state.companyReducer.currentCompany._id
+		);
 
 		const subscribeToRoom = (roomId: string, name: string) => {
 			if (!props.chatkit.isLoading) {
@@ -92,8 +95,7 @@ export const RoomListComponent = withChatkit(
 					dispatch({ type: GET_ROOM_MESSAGES, payload: messages });
 				});
 		};
-
-		useEffect(() => {
+		const connectChatManager = () => {
 			if (!props.chatkit.isLoading) {
 				props.chatkit.chatManager
 					.connect({
@@ -106,22 +108,26 @@ export const RoomListComponent = withChatkit(
 					})
 					.catch((err: any) => {
 						console.log("Error on connection", err);
+						connectChatManager();
 					});
+			}
+		};
+		useEffect(() => {
+			if (!props.chatkit.isLoading) {
+				connectChatManager();
 				load(props.getRoomsAction);
 			}
 		}, [props.chatkit]);
 
 		useEffect(() => {
-			if (!props.chatkit.isLoading && companyRooms.length) {
+			if (!props.chatkit.isLoading && companyId) {
 				filteredRooms();
 			}
 		}, [companyRooms]);
 
 		const filteredRooms = () => {
-			let rooms = props.chatkit.currentUser.rooms.filter((a: any) => {
-				return companyRooms.some((b: any) => {
-					return b._id === a.id;
-				});
+			let rooms = props.chatkit.currentUser.rooms.filter((room: any) => {
+				return room.customData.company === companyId;
 			});
 			dispatch({ type: GET_ROOMS, payload: rooms });
 		};
@@ -129,7 +135,7 @@ export const RoomListComponent = withChatkit(
 		return (
 			<>
 				<main
-					className="mw6 center overflow-y-scroll"
+					className="mw6 center overflow-y-auto"
 					id="roomList"
 					style={{ height: "calc(100vh - 105px)" }}
 				>

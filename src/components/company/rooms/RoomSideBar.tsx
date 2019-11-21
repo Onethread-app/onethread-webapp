@@ -30,7 +30,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 						<Icon
 							icon={IconNames.ADD}
 							iconSize={20}
-							className="grow pointer tigrow-lightBlue"
+							className="grow pointer tigrow-lightBlue pr2"
 							onClick={() => setShowDialog(!showDialog)}
 						/>
 					) : (
