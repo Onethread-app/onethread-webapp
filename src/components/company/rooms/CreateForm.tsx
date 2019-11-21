@@ -1,12 +1,13 @@
 import React from "react";
-import { InputGroupField } from "components/common/field/InputGroup";
-import { Button, Icon } from "@blueprintjs/core";
+import { Icon } from "@blueprintjs/core";
 import { IconNames } from "@blueprintjs/icons";
 import { withRouter, RouteComponentProps } from "react-router";
 import { connect } from "react-redux";
-import { createRoomAction, clearRoomError } from "stores/room/Actions";
+import { createRoomAction } from "stores/room/Actions";
 import { Form, Field } from "react-final-form";
-import { required, checkError } from "helpers/final-form";
+import { required } from "helpers/final-form";
+import TextInput from "components/common/final-form/TextInput";
+import SubmitResetButtons from "components/common/final-form/SubmitResetButtons";
 
 interface CreateFormProps {
 	setShowDialog: (val: boolean) => void;
@@ -14,9 +15,6 @@ interface CreateFormProps {
 
 interface CreateFormInternalProps extends CreateFormProps, RouteComponentProps {
 	createRoomAction: (val: any) => void;
-	clearRoomError: () => void;
-	roomError: string;
-	loading: boolean;
 }
 
 const CreateFormComponent = (props: CreateFormInternalProps) => {
@@ -24,7 +22,6 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 		const status: any = await props.createRoomAction(values);
 		if (status === 409) {
 			return { name: "Duplicate name" };
-			// return { [FORM_ERROR]: "Duplicate name" };
 		} else if (status === 201) {
 			props.setShowDialog(false);
 		}
@@ -42,16 +39,7 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 			// 	}
 			// 	return errors;
 			// }}
-			render={({
-				handleSubmit,
-				form,
-				submitting,
-				pristine,
-				submitError,
-				submitErrors,
-				submitFailed,
-				submitSucceeded
-			}) => (
+			render={({ handleSubmit, form, submitting, pristine }) => (
 				<>
 					<div className="flex justify-end pa3">
 						<Icon
@@ -61,81 +49,22 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 							onClick={(e: any) => props.setShowDialog(false)}
 						/>
 					</div>
-					<pre>
-						{JSON.stringify(
-							{
-								submitting,
-								pristine,
-								submitError,
-								submitErrors,
-								submitFailed,
-								submitSucceeded
-							},
-							undefined,
-							2
-						)}
-					</pre>
 					<form className="fl w-100 pa4 pt0" onSubmit={handleSubmit}>
 						<h1 className="f5 tigrow-lightBlue">Create Room</h1>
-						<Field name="name" type="text" validate={required}>
-							{({ input, meta }) => (
-								<>
-									<div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
-										<div className="">
-											<InputGroupField
-												{...input}
-												id="roomName"
-												placeHolder="Username"
-												leftIcon="layout-balloon"
-												leftIconColor={`${
-													checkError(meta) ? "red" : "#0fa3a3"
-												}`}
-												className={`br0 ${
-													checkError(meta) ? "bb b--red" : "bb b--lightBlue"
-												}`}
-												style={{
-													boxShadow: "none"
-												}}
-											/>
-										</div>
-										{checkError(meta) && (
-											<small style={{ color: "red" }}>
-												{meta.error || meta.submitError}
-											</small>
-										)}
-									</div>
-								</>
-							)}
-						</Field>
-						<div className="flex justify-end mt4">
-							<Button
-								icon="refresh"
-								className="grow h2 pointer white bp3-minimal w4 mr3"
-								style={{
-									background: "#fff",
-									outline: "none",
-									border: "1px solid #0fa3a3",
-									color: "#0fa3a3"
-								}}
-								onClick={form.reset}
-								disabled={submitting || pristine}
-							>
-								Reset
-							</Button>
-							<Button
-								className="grow h2 pointer white bp3-minimal w4"
-								style={{
-									background: "#0fa3a3",
-									outline: "none",
-									color: "white"
-								}}
-								loading={submitting}
-								type="submit"
-								disabled={submitting || pristine}
-							>
-								Add
-							</Button>
-						</div>
+						<Field<string>
+							name="name"
+							placeHolder="Room name"
+							component={TextInput}
+							validate={required}
+							leftIcon="layout-balloon"
+						/>
+						<SubmitResetButtons
+							reset={form.reset}
+							submitting={submitting}
+							pristine={pristine}
+							resetBtnName="Reset"
+							submitBtnName="Add"
+						/>
 					</form>
 				</>
 			)}
@@ -144,13 +73,9 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 };
 
 const mapStateToProps = (state: any) => {
-	return {
-		loading: state.roomReducer.loading,
-		roomError: state.roomReducer.roomError
-	};
+	return {};
 };
 
 export const CreateForm = connect(mapStateToProps, {
-	createRoomAction,
-	clearRoomError
+	createRoomAction
 })(withRouter(CreateFormComponent));
