@@ -9,25 +9,26 @@ import SubmitResetButtons from "components/common/final-form/SubmitResetButtons"
 import SelectInput from "components/common/final-form/SelectInput";
 import Error from "components/common/final-form/Error";
 import { Condition } from "components/common/final-form/Condition";
+import { ICompanyMembers } from "stores/company/Reducer";
 
 interface AddDesignationFormProps {
+	member: ICompanyMembers | undefined;
 	setShowDialogAdd: (val: boolean) => void;
+	addDesignation: (values: any, memberId: string) => void;
+	getCompanyMembers: () => void;
 	divisions: Entity[];
 	departments: Entity[];
 }
 
-interface AddDesignationFormInternalProps extends AddDesignationFormProps {}
-
-export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
+export const AddDesignationForm = (props: AddDesignationFormProps) => {
 	const onSubmit: any = async (values: any) => {
-		// const status: any = await props.createRoomAction(values);
-		// if (status === 409) {
-		// 	return { name: "Duplicate name" };
-		// 	// return { [FORM_ERROR]: "Duplicate name" };
-		// } else if (status === 201) {
-		// 	props.setShowDialog(false);
-		// }
-		window.alert(JSON.stringify(values, undefined, 2));
+		if (props.member) {
+			const status: any = await props.addDesignation(values, props.member._id);
+			if (status === 201) {
+				await props.getCompanyMembers();
+				props.setShowDialogAdd(false);
+			}
+		}
 		return {};
 	};
 
@@ -60,7 +61,7 @@ export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
 								component={SelectInput}
 								validate={required}
 							>
-								<option selected value="Please select a division">
+								<option selected value="">
 									Please select a value
 								</option>
 								{props.divisions &&
@@ -83,7 +84,7 @@ export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
 									component={SelectInput}
 									validate={required}
 								>
-									<option selected value="Please select a department">
+									<option selected value="">
 										Please select a value
 									</option>
 									{props.departments &&
@@ -110,7 +111,6 @@ export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
 							resetBtnName="Reset"
 							submitBtnName="Save"
 						/>
-						<pre>{JSON.stringify(values, undefined, 2)}</pre>
 					</form>
 				</div>
 			)}

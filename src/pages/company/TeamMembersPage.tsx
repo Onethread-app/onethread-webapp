@@ -9,8 +9,12 @@ import {
 } from "@blueprintjs/core";
 import { AddMemberForm } from "components/company/team/AddMemberForm";
 import { connect } from "react-redux";
-import { getCompanyMembers, getAllDepartments } from "stores/company/Actions";
-import { CompanyModel } from "stores/company/Reducer";
+import {
+	getCompanyMembers,
+	getAllDepartments,
+	addDesignation
+} from "stores/company/Actions";
+import { CompanyModel, ICompanyMembers } from "stores/company/Reducer";
 import { Loading } from "components/common/field/Loading";
 import { permit } from "stores/UtilsActions";
 import { AddDesignationForm } from "components/company/team/AddDesignationForm";
@@ -28,24 +32,22 @@ interface TeamMember {
 	company: CompanyModel;
 	getCompanyMembers: () => void;
 	getAllDepartments: () => void;
+	addDesignation: (values: any, memberId: string) => void;
 	companyLoading: boolean;
 }
 
-const loadCompanyMember = async (
-	getCompanyMembers: () => void,
-	getAllDepartments: () => void
-) => {
+const loadCompanyMember = async (getCompanyMembers: () => void) => {
 	await getCompanyMembers();
-	await getAllDepartments();
 };
 
 const TeamMembersPageComponent = (props: TeamMember) => {
 	const [showDialog, setShowDialog] = useState(false);
 	const [showDialogAdd, setShowDialogAdd] = useState(false);
 	const [showDialogEdit, setShowDialogEdit] = useState(false);
+	const [member, setMember] = useState<ICompanyMembers | undefined>(undefined);
 
 	useEffect(() => {
-		loadCompanyMember(props.getCompanyMembers, props.getAllDepartments);
+		loadCompanyMember(props.getCompanyMembers);
 	}, []);
 
 	return (
@@ -89,9 +91,22 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								props.company.members.map(member => (
 									<tr className="hide-child">
 										<td>{member.account.name}</td>
-										<td></td>
-										<td></td>
-										<td></td>
+										<td>
+											{member.designations.length
+												? member.designations[0].division
+												: null}
+										</td>
+										<td>
+											{member.designations.length &&
+											member.designations[0].department
+												? member.designations[0].department.name
+												: null}
+										</td>
+										<td>
+											{member.designations.length
+												? member.designations[0].position
+												: null}
+										</td>
 										<td className="flex justify-between">
 											<Popover
 												className="fr"
@@ -104,9 +119,10 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 															<>
 																<p
 																	className="pointer bp3-popover-dismiss"
-																	onClick={() =>
-																		setShowDialogEdit(!showDialogEdit)
-																	}
+																	onClick={async () => {
+																		setShowDialogEdit(!showDialogEdit);
+																		await props.getAllDepartments();
+																	}}
 																>
 																	Edit Role
 																</p>
@@ -117,7 +133,11 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 														) : (
 															<p
 																className="pointer bp3-popover-dismiss"
-																onClick={() => setShowDialogAdd(!showDialogAdd)}
+																onClick={async () => {
+																	setShowDialogAdd(!showDialogAdd);
+																	setMember(member);
+																	await props.getAllDepartments();
+																}}
 															>
 																Add Role
 															</p>
@@ -163,6 +183,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 					style={{ background: "#fff" }}
 				>
 					<AddDesignationForm
+						addDesignation={props.addDesignation}
+						getCompanyMembers={props.getCompanyMembers}
+						member={member}
 						divisions={divisions}
 						departments={props.company.departments}
 						setShowDialogAdd={e => setShowDialogAdd(!showDialogAdd)}
@@ -193,5 +216,6 @@ const mapStateToProps = (state: any) => {
 
 export const TeamMembersPage = connect(mapStateToProps, {
 	getCompanyMembers,
-	getAllDepartments
+	getAllDepartments,
+	addDesignation
 })(TeamMembersPageComponent);
