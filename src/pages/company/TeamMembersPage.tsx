@@ -99,21 +99,29 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 												popoverClassName="bp3-popover-content-sizing bg-white "
 												content={
 													<div className="ph2">
-														<p
-															className="pointer bp3-popover-dismiss"
-															onClick={() => setShowDialogAdd(!showDialogAdd)}
-														>
-															Add Role
-														</p>
-														<p
-															className="pointer bp3-popover-dismiss"
-															onClick={() => setShowDialogEdit(!showDialogEdit)}
-														>
-															Edit Role
-														</p>
-														<p className="pointer bp3-popover-dismiss">
-															remove
-														</p>
+														{member.designations &&
+														member.designations.length ? (
+															<>
+																<p
+																	className="pointer bp3-popover-dismiss"
+																	onClick={() =>
+																		setShowDialogEdit(!showDialogEdit)
+																	}
+																>
+																	Edit Role
+																</p>
+																<p className="pointer bp3-popover-dismiss">
+																	remove
+																</p>
+															</>
+														) : (
+															<p
+																className="pointer bp3-popover-dismiss"
+																onClick={() => setShowDialogAdd(!showDialogAdd)}
+															>
+																Add Role
+															</p>
+														)}
 													</div>
 												}
 												target={
