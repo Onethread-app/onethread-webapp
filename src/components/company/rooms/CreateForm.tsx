@@ -5,8 +5,9 @@ import { withRouter, RouteComponentProps } from "react-router";
 import { connect } from "react-redux";
 import { createRoomAction } from "stores/room/Actions";
 import { Form, Field } from "react-final-form";
-import { required } from "helpers/final-form";
+import { required } from "components/common/final-form/utils";
 import TextInput from "components/common/final-form/TextInput";
+import Error from "components/common/final-form/Error";
 import SubmitResetButtons from "components/common/final-form/SubmitResetButtons";
 
 interface CreateFormProps {
@@ -32,13 +33,6 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 		<Form
 			onSubmit={onSubmit}
 			initialValues={{ name: "" }}
-			// validate={values => {
-			// 	const errors: any = {};
-			// 	if (!values.name) {
-			// 		errors.name = "Required";
-			// 	}
-			// 	return errors;
-			// }}
 			render={({ handleSubmit, form, submitting, pristine }) => (
 				<>
 					<div className="flex justify-end pa3">
@@ -58,6 +52,7 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 							validate={required}
 							leftIcon="layout-balloon"
 						/>
+						<Error name={"name"} />
 						<SubmitResetButtons
 							reset={form.reset}
 							submitting={submitting}

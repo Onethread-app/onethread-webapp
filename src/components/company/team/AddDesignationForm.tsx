@@ -2,11 +2,13 @@ import React from "react";
 import { Icon } from "@blueprintjs/core";
 import { Entity } from "stores/UtilsActions";
 import { Form, Field } from "react-final-form";
-import { required } from "helpers/final-form";
+import { required } from "components/common/final-form/utils";
 import { IconNames } from "@blueprintjs/icons";
 import TextInput from "components/common/final-form/TextInput";
 import SubmitResetButtons from "components/common/final-form/SubmitResetButtons";
 import SelectInput from "components/common/final-form/SelectInput";
+import Error from "components/common/final-form/Error";
+import { Condition } from "components/common/final-form/Condition";
 
 interface AddDesignationFormProps {
 	setShowDialogAdd: (val: boolean) => void;
@@ -25,12 +27,14 @@ export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
 		// } else if (status === 201) {
 		// 	props.setShowDialog(false);
 		// }
+		window.alert(JSON.stringify(values, undefined, 2));
 		return {};
 	};
+
 	return (
 		<Form
 			onSubmit={onSubmit}
-			initialValues={{ name: "" }}
+			// initialValues={{ division: "", department: "", position: "" }}
 			// validate={values => {
 			// 	const errors: any = {};
 			// 	if (!values.name) {
@@ -38,7 +42,7 @@ export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
 			// 	}
 			// 	return errors;
 			// }}
-			render={({ handleSubmit, form, submitting, pristine }) => (
+			render={({ handleSubmit, form, submitting, pristine, values }) => (
 				<div>
 					<div className="flex justify-end pa3">
 						<Icon
@@ -50,19 +54,46 @@ export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
 					</div>
 					<form className="fl w-100 pa4 pt0" onSubmit={handleSubmit}>
 						<h1 className="f5 tigrow-lightBlue">Add Role</h1>
-						<div className="flex justify-between">
+						<div className="flex flex-column">
 							<Field<string>
-								name="divisions"
+								name="division"
 								component={SelectInput}
-								divisions={props.divisions}
-								placeHolder="Please select a division"
-							/>
-							<Field<string>
-								name="departments"
-								component={SelectInput}
-								departments={props.departments}
-								placeHolder="Please select a department"
-							/>
+								validate={required}
+							>
+								<option selected value="Please select a division">
+									Please select a value
+								</option>
+								{props.divisions &&
+									props.divisions.length &&
+									props.divisions.map((d: Entity) => (
+										<option value={d._id}>{d.name}</option>
+									))}
+							</Field>
+							<Error name={"division"} />
+							<Condition
+								when="division"
+								match={[
+									"seniorManager",
+									"middleManager",
+									"operationalEmployee"
+								]}
+							>
+								<Field<string>
+									name="department"
+									component={SelectInput}
+									validate={required}
+								>
+									<option selected value="Please select a department">
+										Please select a value
+									</option>
+									{props.departments &&
+										props.departments.length &&
+										props.departments.map((d: Entity) => (
+											<option value={d._id}>{d.name}</option>
+										))}
+								</Field>
+								<Error name={"department"} />
+							</Condition>
 						</div>
 						<Field<string>
 							name="position"
@@ -71,6 +102,7 @@ export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
 							validate={required}
 							leftIcon="id-number"
 						/>
+						<Error name={"position"} />
 						<SubmitResetButtons
 							reset={form.reset}
 							submitting={submitting}
@@ -78,6 +110,7 @@ export const AddDesignationForm = (props: AddDesignationFormInternalProps) => {
 							resetBtnName="Reset"
 							submitBtnName="Save"
 						/>
+						<pre>{JSON.stringify(values, undefined, 2)}</pre>
 					</form>
 				</div>
 			)}

@@ -78,7 +78,6 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								<th>Division</th>
 								<th>Department</th>
 								<th>Position</th>
-								<th>Action</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -94,12 +93,6 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 										<td></td>
 										<td></td>
 										<td className="flex justify-between">
-											<h1
-												className="ma0 f6 tigrow-lightBlue child pointer"
-												onClick={() => setShowDialogEdit(!showDialogEdit)}
-											>
-												Edit Role
-											</h1>
 											<Popover
 												className="fr"
 												position={Position.BOTTOM}
@@ -111,6 +104,12 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 															onClick={() => setShowDialogAdd(!showDialogAdd)}
 														>
 															Add Role
+														</p>
+														<p
+															className="pointer bp3-popover-dismiss"
+															onClick={() => setShowDialogEdit(!showDialogEdit)}
+														>
+															Edit Role
 														</p>
 														<p className="pointer bp3-popover-dismiss">
 															remove

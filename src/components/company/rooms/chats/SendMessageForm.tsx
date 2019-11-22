@@ -30,27 +30,27 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 			.isTypingIn({ roomId })
 			.catch((error: any) => console.error("error on typing", error));
 	};
-	function a(inputMessageRef: any) {
-		return {
-			clientHeight: (inputMessageRef.current as any).clientHeight,
-			clientLeft: (inputMessageRef.current as any).clientLeft,
-			clientTop: (inputMessageRef.current as any).clientTop,
-			clientWidth: (inputMessageRef.current as any).clientWidth,
-			cols: (inputMessageRef.current as any).cols,
-			rows: (inputMessageRef.current as any).rows,
-			defaultValue: (inputMessageRef.current as any).defaultValue,
-			innerHTML: (inputMessageRef.current as any).innerHTML,
-			offsetHeight: (inputMessageRef.current as any).offsetHeight,
-			offsetLeft: (inputMessageRef.current as any).offsetLeft,
-			offsetTop: (inputMessageRef.current as any).offsetTop,
-			offsetWidth: (inputMessageRef.current as any).offsetWidth,
-			scrollHeight: (inputMessageRef.current as any).scrollHeight,
-			scrollLeft: (inputMessageRef.current as any).scrollLeft,
-			scrollTop: (inputMessageRef.current as any).scrollTop,
-			scrollWidth: (inputMessageRef.current as any).scrollWidth,
-			value: (inputMessageRef.current as any).value
-		};
-	}
+	// function a(inputMessageRef: any) {
+	// 	return {
+	// 		clientHeight: (inputMessageRef.current as any).clientHeight,
+	// 		clientLeft: (inputMessageRef.current as any).clientLeft,
+	// 		clientTop: (inputMessageRef.current as any).clientTop,
+	// 		clientWidth: (inputMessageRef.current as any).clientWidth,
+	// 		cols: (inputMessageRef.current as any).cols,
+	// 		rows: (inputMessageRef.current as any).rows,
+	// 		defaultValue: (inputMessageRef.current as any).defaultValue,
+	// 		innerHTML: (inputMessageRef.current as any).innerHTML,
+	// 		offsetHeight: (inputMessageRef.current as any).offsetHeight,
+	// 		offsetLeft: (inputMessageRef.current as any).offsetLeft,
+	// 		offsetTop: (inputMessageRef.current as any).offsetTop,
+	// 		offsetWidth: (inputMessageRef.current as any).offsetWidth,
+	// 		scrollHeight: (inputMessageRef.current as any).scrollHeight,
+	// 		scrollLeft: (inputMessageRef.current as any).scrollLeft,
+	// 		scrollTop: (inputMessageRef.current as any).scrollTop,
+	// 		scrollWidth: (inputMessageRef.current as any).scrollWidth,
+	// 		value: (inputMessageRef.current as any).value
+	// 	};
+	// }
 	const handleKeyPress = (e: any) => {
 		// console.log("inputMessageRef", a(inputMessageRef));
 		if (e.key === "Enter" && text !== "") {

@@ -1,6 +1,6 @@
 import React from "react";
 import { FieldRenderProps } from "react-final-form";
-import { checkError } from "helpers/final-form";
+import { checkError } from "components/common/final-form/utils";
 import { InputGroupField } from "../field/InputGroup";
 
 type Props = FieldRenderProps<string, any>;
@@ -8,7 +8,7 @@ type Props = FieldRenderProps<string, any>;
 const TextInput: React.FC<Props> = ({ input, meta, ...rest }: Props) => {
 	return (
 		<>
-			<div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+			<div className={` ${checkError(meta) ? "mt2 mb3" : "mt1 mb4"}`}>
 				<div className="">
 					<InputGroupField
 						{...input}
@@ -23,11 +23,6 @@ const TextInput: React.FC<Props> = ({ input, meta, ...rest }: Props) => {
 						}}
 					/>
 				</div>
-				{checkError(meta) && (
-					<small style={{ color: "red" }}>
-						{meta.error || meta.submitError}
-					</small>
-				)}
 			</div>
 		</>
 	);

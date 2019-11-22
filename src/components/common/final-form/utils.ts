@@ -7,7 +7,10 @@ export const composeValidators = (...validators: any) => (value: any) =>
 	);
 
 export const checkError = (meta: any) => {
-	if ((meta.error || meta.submitError) && meta.touched) {
+	if (
+		(meta.error || (meta.submitError && !meta.dirtySinceLastSubmit)) &&
+		meta.touched
+	) {
 		return true;
 	} else {
 		return false;
