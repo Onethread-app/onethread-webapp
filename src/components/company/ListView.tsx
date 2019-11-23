@@ -13,6 +13,7 @@ interface CompanyListViewProps {
   setShowDialog: (val: boolean) => void;
 }
 interface CompanyListViewInternalProps extends CompanyListViewProps {
+  currentCompany: string;
   companies: ICompanyByUser[];
   user: User;
   getCompanyDetails: (companyId: string, history: History) => void;
@@ -36,8 +37,10 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
         {loading ? <Loading /> : props.companies && props.companies.length > 0 ? props.companies.map((c: ICompanyByUser) => (
           <ListItemViewWithImage
             key={c.company._id}
+            class={"hover-bg-black-10 pa2"}
             imageSrc={`https://robohash.org/${c.company.name}`}
             listTitle={c.company.name}
+            active={props.currentCompany === c.company._id ? true : false}
             // listDescription="C"
             role={c.role}
             onClick={async () => {
@@ -63,7 +66,8 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
 const mapStateToProps = (state: any) => {
   return {
     companies: state.userReducer.user.companies,
-    user: state.userReducer.user
+    user: state.userReducer.user,
+    currentCompany: state.companyReducer.currentCompany._id,
   }
 }
 

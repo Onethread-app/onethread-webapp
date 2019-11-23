@@ -30,9 +30,10 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 		<>
 			{isEmpty(props.activeRoom) === false ?
 				<div>
-					<div className="flex justify-between items-center ph3 bb b--tigrowLightGray-1">
+					{/* chat heading starts */}
+					<div className="flex justify-between items-center ph4 pv2 bb b--tigrowLightGray-1">
 						<div>
-							<p className="f4 fw7 mv1">{props.activeRoom.name}</p>
+							<p className="f4 fw7 mv2">{props.activeRoom.name}</p>
 							<h5
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
 								className="ma0 pointer dim">Members: {props.activeRoom.users.length}</h5>
@@ -50,6 +51,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							</Button>
 							: null}
 					</div>
+					{/* chat heading ends */}
 					<MessageList />
 					<SendMessageForm />
 				</div> :
@@ -61,7 +63,6 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 			{showMemberFormDialog && (
 				<Dialog
 					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
-					title="Add Members"
 					isOpen={showMemberFormDialog}
 					style={{ background: '#fff' }}
 				>

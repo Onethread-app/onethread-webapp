@@ -1,57 +1,66 @@
-import React, { useState } from 'react'
-import { RoomList } from './RoomList'
-import { connect } from 'react-redux'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
-import { Button, Dialog } from '@blueprintjs/core';
-import { CreateForm } from './CreateForm';
-import { permit } from 'stores/UtilsActions';
+import React, { useState } from "react";
+import { RoomList } from "./RoomList";
+import { connect } from "react-redux";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import { Dialog, Icon } from "@blueprintjs/core";
+import { CreateForm } from "./CreateForm";
+import { permit } from "stores/UtilsActions";
+import { clearRoomError } from "stores/room/Actions";
+import { IconNames } from "@blueprintjs/icons";
 
 interface RoomSideBarComponentProps {
-  companyRole?: string;
-  isOpen: boolean;
-  chatkit?: any;
+	companyRole?: string;
+	isOpen: boolean;
+	chatkit?: any;
 }
-
-const RoomSideBarComponent = (props: RoomSideBarComponentProps & RouteComponentProps) => {
-  const [showDialog, setShowDialog] = useState(false);
-
-  return (
-    <>
-      <div className={`mt5 t-25-a ${props.isOpen ? 'db' : 'dn'}`}>
-        <div className="flex ph3">
-          <div className="w-50 tl"><h3 className="tigrow-lightGray-1">Rooms</h3></div>
-          {props.companyRole && permit(props.companyRole) ?
-            <div className="w-50 tr">
-              <Button
-                onClick={() => setShowDialog(!showDialog)}
-                className="mv2 bp3-button bp3-button bp3-intent-primary" icon='add'>
-              </Button>
-            </div>
-            : undefined}
-        </div>
-        <RoomList />
-      </div>
-      {showDialog && (
-        <Dialog
-          icon="layout-auto"
-          onClose={() => setShowDialog(!showDialog)}
-          title="Create room"
-          isOpen
-          style={{ background: '#fff' }}
-        >
-          <CreateForm setShowDialog={setShowDialog} />
-        </Dialog>
-      )}</>
-  )
+interface RoomSideBarInternalProps
+	extends RoomSideBarComponentProps,
+		RouteComponentProps {
+	clearRoomError: () => void;
 }
+const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
+	const [showDialog, setShowDialog] = useState(false);
+
+	return (
+		<>
+			<div className={`t-25-a ${props.isOpen ? "db" : "dn"}`}>
+				<div className="flex justify-between items-center ph3">
+					<h3 className="tigrow-darkGray">Rooms</h3>
+					{props.companyRole && permit(props.companyRole) ? (
+						<Icon
+							icon={IconNames.ADD}
+							iconSize={20}
+							className="grow pointer tigrow-lightBlue pr2"
+							onClick={() => setShowDialog(!showDialog)}
+						/>
+					) : (
+						undefined
+					)}
+				</div>
+				<RoomList />
+			</div>
+			{showDialog && (
+				<Dialog
+					onClose={() => {
+						props.clearRoomError();
+						setShowDialog(!showDialog);
+					}}
+					isOpen
+					style={{ background: "#fff" }}
+				>
+					<CreateForm setShowDialog={setShowDialog} />
+				</Dialog>
+			)}
+		</>
+	);
+};
 
 const mapStateToProps = (state: any) => {
-  return {
-    companyRole: state.companyReducer.currentCompany.role,
-  }
-}
+	return {
+		companyRole: state.companyReducer.currentCompany.role
+	};
+};
 
-export const RoomSideBar = connect(
-  mapStateToProps,
-  null
-)(withRouter(RoomSideBarComponent));
+export const RoomSideBar = connect(mapStateToProps, { clearRoomError })(
+	withRouter(RoomSideBarComponent)
+);
