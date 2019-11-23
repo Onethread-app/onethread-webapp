@@ -35,7 +35,7 @@ describe('## Registration APIs for User', () => {
         .post('/api/v1/account/signup')
         .send(userAccount)
         .end((err, res) => {
-          userAccount = res.body.createdUser;
+          userAccount = res.body.user;
           done();
         });
     });

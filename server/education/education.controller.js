@@ -10,6 +10,7 @@ const addEducation = async (req, res, next) => {
     institutionName: req.body.institutionName,
     startYear: req.body.startYear,
     endingYear: req.body.endingYear,
+    eduDescription: req.body.eduDescription,
     currentlyStudy: req.body.currentlyStudy,
     account: req.user._id,
   });
@@ -27,8 +28,25 @@ const addEducation = async (req, res, next) => {
     });
 };
 
-// const getEducation = async(req);
+const updateEducation = async (req, res, next) => {
+  try {
+    if (!req.is('application/json')) {
+      return res.send("Expects 'application/json'");
+    }
+    const updateEdu = await Education.findByIdAndUpdate(
+      {
+        _id: req.query.educationId,
+      },
+      req.body,
+      { new: true },
+    );
+    return sendJSONresponse(res, 200, { data: updateEdu });
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   addEducation,
+  updateEducation,
 };

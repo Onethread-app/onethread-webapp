@@ -1,6 +1,38 @@
 const Account = require('../account/account.model');
 const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
+const { Room } = require('./../room/room.model');
+const { chatkit } = require('../services/pusher.services');
+
+// create a company profile
+const changeName = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+
+  try {
+    // check duplicate company name
+    const duplicate = await Company.findOne({
+      name: req.body.name,
+    });
+    if (duplicate) {
+      return res.status(409).json({
+        status: false,
+        message: `Name already exist`,
+      });
+    }
+    req.company.name = req.body.name;
+    await req.company.save();
+
+    return res.status(200).json({
+      status: true,
+      message: `Company's name updated`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 // create a company profile
 const createCompany = async (req, res, next) => {
@@ -24,19 +56,37 @@ const createCompany = async (req, res, next) => {
     req.body.account = req.user._id;
     const newCompany = new Company(req.body);
 
+    // create a default room
+    const newRoom = new Room({
+      name: 'General',
+      company: newCompany._id,
+      members: [req.user._id],
+      account: req.user._id,
+    });
+
     // create a default member
     const newMember = new Member({
       account: req.user._id,
       company: newCompany._id,
       role: 'superAdmin',
     });
-    const member = await newMember.save();
 
-    // add member ref in company
-    newCompany.members.push(member._id);
+    // add ref[member,room] in company
+    newCompany.members.push(newMember._id);
+    newCompany.rooms.push(newRoom._id);
 
     // company creation
     const company = await newCompany.save();
+    const room = await newRoom.save();
+    await chatkit.createRoom({
+      id: room._id,
+      creatorId: req.user._id,
+      name: room.name,
+      customData: {
+        company: company._id,
+      },
+    });
+    await newMember.save();
 
     // add company ref in user
     req.user.companies.push(newCompany._id);
@@ -123,8 +173,8 @@ const getCompany = async (req, res, next) => {
   }
 };
 
-// update a company profile
-const updateCompany = async (req, res, next) => {
+// update a company basic info
+const updateBasicInfo = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
@@ -138,12 +188,32 @@ const updateCompany = async (req, res, next) => {
       }
     }
 
-    let company = await req.company.save();
+    await req.company.save();
 
     return res.status(200).json({
       status: true,
-      message: 'Company updated',
-      company,
+      message: `Company's basic information updated`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// update a company basic info
+const updateAbout = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+
+  try {
+    req.company.about = req.body.about;
+
+    await req.company.save();
+
+    return res.status(200).json({
+      status: true,
+      message: `Company's about updated`,
     });
   } catch (error) {
     next(error);
@@ -246,8 +316,10 @@ const addEmployees = async (req, res) => {
 module.exports = {
   createCompany,
   getCompany,
-  updateCompany,
+  updateBasicInfo,
+  updateAbout,
   getCompanyIndividual,
+  changeName,
   deleteCompany,
   addEmployees,
   getCompanyLoad,

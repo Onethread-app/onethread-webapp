@@ -20,6 +20,9 @@ const educationSchema = new Schema({
   currentlyStudy: {
     type: Boolean,
   },
+  eduDescription: {
+    type: String,
+  },
   account: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',

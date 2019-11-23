@@ -1,4 +1,3 @@
-// need to kno moreconst mongoose = require('mongoose');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -6,31 +5,41 @@ const RoomSchema = new mongoose.Schema({
   name: {
     type: String,
     trim: true,
-    required: true
+    unique: false,
+    required: true,
   },
-  members: [{
-    type: Schema.ObjectId,
-    ref: 'Account'
-  }],
+  members: [
+    {
+      type: Schema.ObjectId,
+      ref: 'Account',
+    },
+  ],
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   updated: {
-    type: Date
+    type: Date,
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   company: {
     type: Schema.ObjectId,
-    ref: 'Company'
+    unique: false,
+    ref: 'Company',
   },
   account: {
     type: Schema.ObjectId,
-    ref: 'Account'
-  }
+    ref: 'Account',
+  },
 });
 
-module.exports = mongoose.model('Room', RoomSchema);
+RoomSchema.index({ name: 1, company: 1 }, { unique: true });
+
+let Room = mongoose.model('Room', RoomSchema);
+
+module.exports = {
+  Room,
+};

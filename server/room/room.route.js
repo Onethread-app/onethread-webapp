@@ -1,35 +1,35 @@
-'use strict';
-
-
 const express = require('express');
-const validate = require('express-validation');
 const passport = require('passport');
-const paramValidation = require('./room.validation');
-const roomCtrl = require('./room.controller');
-
 const requireAuth = passport.authenticate('jwt', { session: false });
-const { permit, authSelf } = require('../helpers/permission');
+const joiSchema = require('./room.validation');
+const roomCtrl = require('./room.controller');
+const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
+const router = express.Router();
 
-const router = express.Router(); // eslint-disable-line new-cap
-
+// create a room for a company
 router
   .route('/')
-  .get(requireAuth, permit('user', 'admin'), roomCtrl.list)
   .post(
     requireAuth,
-    permit('user', 'admin'),
-    validate(paramValidation.createRoom),
-    roomCtrl.create
+    SchemaValidator(joiSchema.createRoom),
+    roomCtrl.create,
   );
 
-  
+// get rooms for a company
+router.route('/:company').get(requireAuth, roomCtrl.list);
 
- router
-   .route('/:company')
-   .get(requireAuth, permit('user', 'admin'), roomCtrl.list);
-//   .delete(requireAuth, authSelf('save'), roomCtrl.remove); 
+// get members for a room
+router
+  .route('/members/:roomId')
+  .get(requireAuth, roomCtrl.memberList);
 
+// add user into a company's room
+router.route('/addUser').post(requireAuth, roomCtrl.addUsers);
 
+// get suggestions for adding members
+router
+  .route('/suggest-member/:roomId/:companyId')
+  .get(requireAuth, roomCtrl.suggestMember);
 
 module.exports = router;

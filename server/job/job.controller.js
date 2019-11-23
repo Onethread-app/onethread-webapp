@@ -9,11 +9,12 @@ const createJobExperience = async (req, res, next) => {
     companyName: req.body.companyName,
     positionName: req.body.positionName,
     startYear: req.body.startYear,
-    endYear: req.body.endingYear,
+    endingYear: req.body.endingYear,
     currentlyWork: req.body.currentlyWork,
     jobDescription: req.body.jobDescription,
     account: req.user._id,
   });
+
   await newJobExperience
     .save()
     .then(async data => {
@@ -28,33 +29,20 @@ const createJobExperience = async (req, res, next) => {
     });
 };
 
-const updateJobExperience = async (req, res) => {
-  jobExperience.findByIdAndUpdate(
-    req.params.jobexperienceid,
-    function(err, user) {
-      if (err) {
-        return next(err);
-      } else {
-        user.companyName = req.body.companyName;
-        user.positionName = req.body.positionName;
-        user.startYear = req.body.startYear;
-        user.endingYear = req.body.endingYear;
-        user.currentlyWork = req.body.currentlyWork;
-        user
-          .save()
-          .then(data => {
-            return sendJSONresponse(res, 200, {
-              success: true,
-              msg: 'job experience update successful',
-            });
-          })
-          .catch(err => {
-            logger.error(`Error: ${err}`);
-            return next(err);
-          });
-      }
-    },
-  );
+const updateJobExperience = async (req, res, next) => {
+  try {
+    if (!req.is('application/json')) {
+      return res.send("Expects 'application/json'");
+    }
+    const newJobExp = await JobExperience.findByIdAndUpdate(
+      { _id: req.query.jobexperienceid },
+      req.body,
+      { new: true },
+    );
+    return sendJSONresponse(res, 200, { data: newJobExp });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const getAllJobExperience = async (req, res) => {

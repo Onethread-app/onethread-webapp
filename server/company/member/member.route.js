@@ -7,24 +7,24 @@ const memberCtrl = require('./member.controller');
 
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
-router.route('/search').get(memberCtrl.searchMember);
+router.route('/search').get(requireAuth, memberCtrl.searchMember);
 router
-  .route('/')
-  .post(
-    requireAuth,
-    // TODO: member validations
-    // SchemaValidator(joiSchema.newMember),
-    memberCtrl.addMember,
-  )
-  .get(requireAuth, memberCtrl.list);
+	.route('/')
+	.post(
+		requireAuth,
+		// TODO: member validations
+		// SchemaValidator(joiSchema.newMember),
+		memberCtrl.addMember,
+	)
+	.get(requireAuth, memberCtrl.list);
 
 router
-  .route('/:memberId')
-  .get(
-    requireAuth,
-    SchemaValidator(joiSchema.getMember),
-    memberCtrl.getMember,
-  );
+	.route('/:memberId')
+	.get(
+		requireAuth,
+		SchemaValidator(joiSchema.getMember),
+		memberCtrl.getMember,
+	);
 
 //   .put(
 //     requireAuth,

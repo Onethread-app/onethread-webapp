@@ -1,9 +1,8 @@
-const Room = require('./room.model');
-const serviceRoom = require('./room.service');
+const { Room } = require('./room.model');
+const { Member } = require('../company/member/member.model');
+const { Company } = require('../company/company.model');
 const { chatkit } = require('../services/pusher.services');
 const mongoose = require('mongoose');
-
-
 
 const create = async (req, res, next) => {
   const room = new Room({
@@ -12,12 +11,11 @@ const create = async (req, res, next) => {
     members: [req.user.id],
     account: req.user.id,
   });
- 
 
   try {
     await room.save();
     //will remove future
-    await mongoose.model('Company').findByIdAndUpdate(
+    await Company.findByIdAndUpdate(
       req.body.company,
       {
         $addToSet: {
@@ -31,44 +29,113 @@ const create = async (req, res, next) => {
       id: room._id,
       creatorId: req.user._id,
       name: room.name,
+      isPrivate: true,
+      customData: {
+        company: req.body.company,
+      },
     });
 
-    res.send(room);
+    return res.status(201).json({
+      room,
+    });
   } catch (e) {
-    console.log(e);
     next(e);
   }
 };
 
-function remove(req, res, next) {}
+const addUsers = async (req, res) => {
+  Room.updateOne(
+    { _id: req.body.room },
+    {
+      $addToSet: {
+        members: { $each: req.body.members },
+      },
+    },
+  )
+    .exec()
+    .then(async result => {
+      if (result) {
+        await chatkit.addUsersToRoom({
+          roomId: req.body.room,
+          userIds: req.body.members,
+        });
+        res.status(201).json({
+          message: 'new members added into room',
+        });
+      } else {
+        res
+          .status(404)
+          .json({ status: false, message: 'No room found' });
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ error: err });
+    });
+};
 
-function edit(req, res) {}
+const memberList = async (req, res) => {
+  Room.findById(req.params.roomId)
+    .populate('members', 'name')
+    .exec()
+    .then(({ members }) => res.json({ members: members }))
+    .catch(e => next(e));
+};
+
+const suggestMember = async (req, res, next) => {
+  //req.params.roomId empty check require
+  try {
+    let roomMembers = await Room.findById(req.params.roomId)
+      .select('-_id members')
+      .populate('members', '_id name')
+      .exec();
+
+    let companyMembers = await Member.find({
+      company: req.params.companyId,
+    })
+      .select('-_id account')
+      .populate('account', '_id name')
+      .exec();
+
+    let members = companyMembers.filter(({ account }) => {
+      return !roomMembers.members.some(existingMember => {
+        return (
+          existingMember._id.toString() === account._id.toString()
+        );
+      });
+    });
+    // TODO: it will execute in client
+    // members empty check
+    members = members.map(m => m.account);
+
+    return res.status(200).json({
+      members,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const list = async (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
-  
+
   Room.find({ company: mongoose.Types.ObjectId(req.params.company) })
     .sort({ created: 1 })
     .skip(+skip)
     .limit(+limit)
+    .select('-__v -members')
     .exec()
-    .then(result => res.json(result))
+    .then(rooms =>
+      res.status(200).json({
+        rooms,
+      }),
+    )
     .catch(e => next(e));
 };
 
-const listByWorkplace = (req, res) => {
-  const { limit = 5, skip = 0, workplace = '' } = req.query;
-  Workplace.find({ workplace: workplace, removed: false })
-    .sort({ createdAt: 1 })
-    .skip(+skip)
-    .limit(+limit)
-    .exec()
-    .then(result => res.json(result))
-    .catch(e => next(e));
+module.exports = {
+  create,
+  list,
+  addUsers,
+  suggestMember,
+  memberList,
 };
-
-function read(req, res) {}
-
-function invite(req, res) {}
-
-module.exports = { create, list, listByWorkplace };
