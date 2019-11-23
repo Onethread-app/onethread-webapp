@@ -58,16 +58,16 @@ const list = async (req, res, next) => {
 
 const update = (req, res, next) => {
   BoardColumn.findByIdAndUpdate(
-    req.boardColumn,
+    req.boardColumn._id,
     { $set: req.body },
     { "new": true },
-    (error, updatedBoard) => {
+    (error, updatedColumn) => {
       if (error) {
         logger.error(`Board column update: ${error}`);
         const err = new BadRequestError('board column updated data is invalid.', httpStatus.BAD_REQUEST)
         next(err);
       }
-      return res.status(200).send(updatedBoard);
+      return res.status(200).send(updatedColumn);
     });
 }
 
