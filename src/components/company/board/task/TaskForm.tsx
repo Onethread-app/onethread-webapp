@@ -119,7 +119,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
             }
           }
           disabled={props.loading ? true : isTaskFormEmpty()}
-          text={props.loading ? <Spinner size={15} /> : 'Create Column'}
+          text={props.loading ? <Spinner size={15} /> : 'Create Task'}
           onClick={async (e: any) => {
             e.preventDefault();
             const modifiedTask = {

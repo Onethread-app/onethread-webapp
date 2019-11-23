@@ -9,6 +9,7 @@ export const SELECT_BOARD = 'SELECT_BOARD';
 export const COLUMN_LOADING = "COLUMN_LOADING";
 export const CREATE_COLUMN = 'CREATE_COLUMN';
 export const CREATE_COLUMN_ERROR = 'CREATE_COLUMN_ERROR';
+export const UPDATE_COLUMN = 'UPDATE_COLUMN';
 
 // Task
 

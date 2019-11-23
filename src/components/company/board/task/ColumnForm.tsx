@@ -3,22 +3,25 @@ import { InputGroupField } from 'components/common/field/InputGroup'
 import { Button, Spinner } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
-import { createColumn } from 'stores/board/Actions';
-import { TaskBoard } from 'stores/board/Reducer';
+import { createColumn, updateColumn } from 'stores/board/Actions';
+import { TaskBoard, IColumn } from 'stores/board/Reducer';
 
 interface ColumnFormProps {
   setShowColumnFormDialog: (val: boolean) => void;
+  column?: IColumn;
 }
 
 interface ColumnFormInternalProps extends ColumnFormProps {
   loading: boolean;
   currentBoard: TaskBoard;
   createColumn: (columnInfo: any) => void;
+  updateColumn: (columnIndo: any) => Promise<any>;
 }
 
 const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
-  const [columnName, setColumnName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [columnName, setColumnName] = useState(props.column ? props.column.name : '');
 
   return (
     <div className="pa3">
@@ -50,16 +53,26 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
               color: 'white'
             }
           }
-          disabled={props.loading ? true : isEmpty(columnName)}
-          text={props.loading ? <Spinner size={15} /> : 'Create Column'}
+          disabled={props.loading || loading ? true : isEmpty(columnName)}
+          text={props.loading || loading ? <Spinner size={15} /> : 'Create Column'}
           onClick={async (e: any) => {
             e.preventDefault();
+            setLoading(true);
             const columnInfo = {
+              _id: props.column!._id,
               name: columnName,
-              positionInBoard: props.currentBoard.columns ? props.currentBoard.columns.length + 1 : 1,
+              positionInBoard: props.column && isEmpty(props.column.name) === false ? 
+                props.column.positionInBoard : props.currentBoard.columns ? props.currentBoard.columns.length + 1 : 1,
               boardId: props.currentBoard._id
             }
-            await props.createColumn(columnInfo);
+            if (props.column && isEmpty(props.column.name) === false) {
+              // edit column name
+              await props.updateColumn(columnInfo);
+            } else {
+              // New column create
+              await props.createColumn(columnInfo);
+            }
+            setLoading(false);
             setColumnName('');
             if (props.setShowColumnFormDialog) {
               props.setShowColumnFormDialog(false);
@@ -78,4 +91,4 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export const ColumnForm = connect(mapStateToProps, { createColumn })(ColumnFormComponent);
+export const ColumnForm = connect(mapStateToProps, { createColumn, updateColumn })(ColumnFormComponent);

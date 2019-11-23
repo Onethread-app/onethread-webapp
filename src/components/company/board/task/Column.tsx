@@ -6,6 +6,7 @@ import { IColumn } from 'stores/board/Reducer'
 import { TaskForm } from './TaskForm'
 import { connect } from 'react-redux'
 import { Loading } from 'components/common/field/Loading'
+import { ColumnForm } from './ColumnForm'
 
 interface ColumnProps {
   key: string
@@ -125,11 +126,10 @@ const ColumnComponent = (props: ColumnInternalProps) => {
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
         >
-          {/* <ColumnForm 
+          <ColumnForm 
             setShowColumnFormDialog={setShowColumnFormDialog}
-            boardColumn={props.column}
-          /> */}
-          Column edit form
+            column={props.column}
+          />
         </Dialog>
       )}
     </>

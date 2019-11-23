@@ -1,6 +1,6 @@
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, CREATE_COLUMN_ERROR, CREATE_TASK_LOADING, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR } from './Types';
+import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, CREATE_COLUMN_ERROR, CREATE_TASK_LOADING, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN } from './Types';
 import { isEqual } from 'lodash';
 import { TaskBoard } from './Reducer';
 
@@ -83,6 +83,28 @@ export const createColumn = (columnName: any) => async (dispatch: any, getState:
       if (companyName) {
         const response = await tigrowApi.post(`/boardColumns`, columnName, headers);
         dispatch({ type: CREATE_COLUMN, payload: response.data });
+        return response.data;
+      }
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: CREATE_COLUMN_ERROR, payload: 'Network error' });
+    } else if (error.response.status === 401) {
+      dispatch({ type: CREATE_COLUMN_ERROR, payload: 'Unauthorized user. Please enter valid email and password.' });
+    } else {
+      console.log(error.response);
+    }
+  }
+}
+
+export const updateColumn = (columnInfo: any) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig(getState);
+    const companyName = getState().companyReducer.currentCompany.name;
+    if ((headers as any).headers.Authorization) {
+      if (companyName) {
+        const response = await tigrowApi.put(`/boardColumns/${columnInfo._id}`, columnInfo, headers);
+        dispatch({ type: UPDATE_COLUMN, payload: response.data });
         return response.data;
       }
     }
