@@ -43,6 +43,24 @@ const SidebarComponent = (props: {
 							exact
 							style={{ color: 'dimgray' }}
 							activeStyle={{ background: '#0fa3a3', color: 'white' }}
+							to={`/company/${props.company.name}`}
+						>
+							<Button
+								className="outline-0 bp3-large"
+								style={{ color: 'inherit', padding: '0px' }}
+							>
+								<Icon
+									icon="user"
+									className="pr4-l pr3-m pl3-l"
+									style={{ color: 'inherit' }}
+								/>
+								Profile
+						</Button>
+						</NavLink>
+						{/* <NavLink
+							exact
+							style={{ color: 'dimgray' }}
+							activeStyle={{ background: '#0fa3a3', color: 'white' }}
 							to={`/company/${props.company.name}/feed`}
 						>
 							<Button
@@ -56,7 +74,7 @@ const SidebarComponent = (props: {
 								/>
 								Feed
 						</Button>
-						</NavLink>
+						</NavLink> */}
 						<NavLink
 							exact
 							style={{ color: 'dimgray' }}
@@ -109,24 +127,6 @@ const SidebarComponent = (props: {
 									style={{ color: 'inherit' }}
 								/>
 								Team
-						</Button>
-						</NavLink>
-						<NavLink
-							exact
-							style={{ color: 'dimgray' }}
-							activeStyle={{ background: '#0fa3a3', color: 'white' }}
-							to={`/company/${props.company.name}`}
-						>
-							<Button
-								className="outline-0 bp3-large"
-								style={{ color: 'inherit', padding: '0px' }}
-							>
-								<Icon
-									icon="user"
-									className="pr4-l pr3-m pl3-l"
-									style={{ color: 'inherit' }}
-								/>
-								Profile
 						</Button>
 						</NavLink>
 						<NavLink
