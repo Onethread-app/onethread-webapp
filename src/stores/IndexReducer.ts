@@ -1,9 +1,9 @@
 import { combineReducers } from "redux";
 import { AuthReducer } from "./auth/Reducer";
-import { UserReducer } from './user/Reducer';
-import { CompanyReducer } from './company/Reducer';
-import { RoomReducer } from './room/RoomReducer';
-import { TaskManagementReducer } from './TaskManagementReducer';
+import { UserReducer } from "./user/Reducer";
+import { CompanyReducer } from "./company/Reducer";
+import { RoomReducer } from "./room/Reducer";
+import { TaskManagementReducer } from "./TaskManagementReducer";
 
 export const RootReducer = combineReducers({
 	authReducer: AuthReducer,

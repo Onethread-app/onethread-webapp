@@ -227,7 +227,7 @@ const GeneralView = connect(mapStateToProps, { changeCompanyName, clearChangeCom
 
 export const CompanySettingsView = () => {
   return (
-    <div className="bl b--black-05 bw1 pl4-l pl3-m ml4-l vh-50">
+    <div className="bl b--black-05 bw1 pl4-l pl3-m ml4-l" style={{minHeight: '30em'}}>
       <div>
         <Tabs
           id="TabsExample"
