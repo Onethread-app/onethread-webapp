@@ -59,7 +59,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
             e.preventDefault();
             setLoading(true);
             const columnInfo = {
-              _id: props.column!._id,
+              _id: props.column ? props.column._id : undefined,
               name: columnName,
               positionInBoard: props.column && isEmpty(props.column.name) === false ? 
                 props.column.positionInBoard : props.currentBoard.columns ? props.currentBoard.columns.length + 1 : 1,
