@@ -29,7 +29,7 @@ describe('## Registration APIs for User', () => {
     confirmPassword: 'Orvi@123456',
     contactNo: '+8801683754716',
   };
-  describe('# POST /api/v1/account/signup', () => {
+  describe('# POST /api/v1/accounts/signup', () => {
     it('should create an account', done => {
       request(app)
         .post('/api/v1/account/signup')
@@ -41,21 +41,21 @@ describe('## Registration APIs for User', () => {
     });
   });
 
-  let companyAccount = {
+  let userAccount2 = {
     firstName: 'orvi',
     lastName: 'das',
-    email: 'hr@tigrow.com',
+    email: '',
     password: 'Orvi@123456',
     confirmPassword: 'Orvi@123456',
     contactNo: '+8801683754716',
   };
-  describe('# POST /api/v1/account/signup', () => {
-    it('should create an account', done => {
+  describe('# POST /api/v1/accounts/signup', () => {
+    it('should not create an account', done => {
       request(app)
-        .post('/api/v1/account/signup')
-        .send(companyAccount)
+        .post('/api/v1/accounts/signup')
+        .send(userAccount2)
         .end((err, res) => {
-          companyAccount = res.body.createdUser;
+          userAccount2 = res.body.user;
           done();
         });
     });
@@ -63,34 +63,34 @@ describe('## Registration APIs for User', () => {
 });
 
 describe('## Login APIs for Account Holders', () => {
-  let userAccount = {
+  let userAccount3 = {
     email: 'robatdas2018@gmail.com',
     password: 'Orvi@123456',
   };
-  describe('# POST /api/v1/account/login', () => {
+  describe('# POST /api/v1/accounts/login', () => {
     it('should login in their account', done => {
       request(app)
-        .post('/api/v1/account/login')
-        .send(userAccount)
+        .post('/api/v1/accounts/login')
+        .send(userAccount3)
         .end((err, res) => {
-          userAccount.token = res.body.token;
+          userAccount3.token = res.body.token;
           done();
         });
     });
   });
-  let companyAccount = {
-    email: 'hr@tigrow.com',
-    password: 'Orvi@123456',
-  };
-  describe('# POST /api/v1/account/login', () => {
-    it('should login in their account', done => {
-      request(app)
-        .post('/api/v1/account/login')
-        .send(companyAccount)
-        .end((err, res) => {
-          userAccount.token = res.body.token;
-          done();
-        });
-    });
-  });
+  // let Account = {
+  //   email: 'hr@tigrow.com',
+  //   password: 'Orvi@123456',
+  // };
+  // describe('# POST /api/v1/account/login', () => {
+  //   it('should login in their account', done => {
+  //     request(app)
+  //       .post('/api/v1/accounts/login')
+  //       .send(companyAccount)
+  //       .end((err, res) => {
+  //         userAccount.token = res.body.token;
+  //         done();
+  //       });
+  //   });
+  // });
 });

@@ -158,7 +158,7 @@ const login = async (req, res, next) => {
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,
-      token: token,
+      token: accessToken,
       refresh_token: refreshToken,
     });
   } catch (error) {

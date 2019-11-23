@@ -15,9 +15,9 @@ router.post(
   '/upload',
   upload.single('file'),
   requireAuth,
-  fileCtrl.fileUpload,
+  fileCtrl.profilePicture,
 );
 
-router.get('/show-file', fileCtrl.displayFile);
+router.get('/show-file', fileCtrl.displayproPic);
 
 module.exports = router;
