@@ -1,8 +1,10 @@
 const httpStatus = require('http-status');
 const Board = require('./board.model');
 const BoardColumn = require('./../boardColumn/boardColumn.model');
+const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
+const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 const load = (req, res, next, id) => {
   Board.findById(id)
@@ -23,6 +25,7 @@ const load = (req, res, next, id) => {
 
 const get = async (req, res) => {
   const boardObj = await Board.findById(req.board._id)
+    .populate('members', '_id name')
     .exec()
     .then(result => result)
     .catch(err => {
@@ -55,10 +58,13 @@ const create = async (req, res, next) => {
       description: req.body.description,
       account: req.user._id,
       company: req.body.companyId,
+      members: [req.user.id],
     });
     board
       .save()
-      .then(createdBoard => res.status(201).json(createdBoard))
+      .then(createdBoard => {
+        return res.status(201).json(createdBoard);
+      })
       .catch(e => next(e));
   } catch (error) {
     logger.error(`Board create: ${error}`);
@@ -72,19 +78,37 @@ const create = async (req, res, next) => {
 
 const update = (req, res, next) => {};
 
-const addBoardMembers = (req, res, next) => {};
+const addBoardMembers = async (req, res, next) => {
+  try {
+    const boardID = req.params.boardId;
+    console.log('board', boardID);
+    const memberID = req.body.memberId;
+    console.log('memberID', memberID);
+    await Board.updateOne(
+      { _id: boardID },
+      { $addToSet: { members: memberID } },
+      { safe: true, upsert: true, new: true },
+    );
+    const boardMembers = await Board.findOne({
+      _id: boardID,
+    }).populate('members', 'name');
+    const memberList = boardMembers.members;
+    console.log(boardMembers);
+    console.log('memberlist', memberList);
+    return sendJSONresponse(res, 200, memberList);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const addBoardColumn = (req, res, next) => {};
 
-const list = (req, res, next) => {
+const list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
-  Board.find({
-    $or: [
-      { account: req.user },
-      { members: { $elemMatch: { _id: req.user } } },
-    ],
+  // console.log(companyId);
+  await Board.find({
     company: companyId,
-    removed: false,
+    members: { $in: req.user._id },
   })
     .select('_id name description')
     .sort({ createdAt: -1 })
@@ -92,7 +116,8 @@ const list = (req, res, next) => {
     .limit(+limit)
     .exec()
     .then(result => {
-      res.json(result);
+      logger.info(`${result}`);
+      return sendJSONresponse(res, 200, result);
     })
     .catch(e => next(e));
 };
@@ -110,14 +135,12 @@ const suggestMember = async (req, res, next) => {
       .select('-_id members')
       .populate('members', '_id name')
       .exec();
-
     let companyMembers = await Member.find({
-      company: req.body.companyId,
+      company: req.query.companyId,
     })
       .select('-_id account')
       .populate('account', '_id name')
       .exec();
-
     let members = companyMembers.filter(({ account }) => {
       return !boardMembers.members.some(existingMember => {
         return (
@@ -126,7 +149,7 @@ const suggestMember = async (req, res, next) => {
       });
     });
     members = members.map(m => m.account);
-
+    console.log(members);
     return res.status(200).json({
       members,
     });

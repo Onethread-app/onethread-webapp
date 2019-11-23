@@ -83,7 +83,7 @@ const addUsers = async (req, res) => {
     });
 };
 
-const memberList = async (req, res) => {
+const memberList = async (req, res, next) => {
   Room.findById(req.params.roomId)
     .populate('members', 'name')
     .exec()
