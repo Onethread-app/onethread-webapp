@@ -74,19 +74,19 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 				</div>
 				<textarea
 					ref={inputMessageRef}
-					className="w-100 mv2"
+					className="w-100 mv2 mr1"
 					style={{ resize: "none" }}
 					value={text}
 					onChange={onChange}
 					onKeyPress={handleKeyPress}
 					placeholder="Write your message "
 				></textarea>
-				<Button
+				{/* <Button
 					className="bp3-minimal outline-0 mh2 w2 mv3"
 					onClick={() => setShowDialog(true)}
 				>
 					<Icon icon="link" className="tigrow-lightBlue" />
-				</Button>
+				</Button> */}
 			</div>
 			{showDialog && (
 				<Dialog

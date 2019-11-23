@@ -118,7 +118,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 														member.designations.length ? (
 															<>
 																<p
-																	className="pointer bp3-popover-dismiss"
+																	className="pointer bp3-popover-dismiss mb0"
 																	onClick={async () => {
 																		setShowDialogEdit(!showDialogEdit);
 																		await props.getAllDepartments();
@@ -126,9 +126,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																>
 																	Edit Role
 																</p>
-																<p className="pointer bp3-popover-dismiss">
+																{/* <p className="pointer bp3-popover-dismiss">
 																	remove
-																</p>
+																</p> */}
 															</>
 														) : (
 															<p
