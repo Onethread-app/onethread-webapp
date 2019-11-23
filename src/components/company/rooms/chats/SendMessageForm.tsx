@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, Icon, FileInput, Dialog } from "@blueprintjs/core";
+import { Button, FileInput, Dialog } from "@blueprintjs/core";
 import user from "../../../../resources/images/user.png";
 import { useSelector } from "react-redux";
 const { withChatkit } = require("@pusher/chatkit-client-react");
