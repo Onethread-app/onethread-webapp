@@ -38,10 +38,18 @@ const designationSchema = mongoose.Schema(
     current: {
       type: Boolean,
     },
+    removed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,
   },
 );
 
-module.exports = mongoose.model('Designation', designationSchema);
+let Designation = mongoose.model('Designation', designationSchema);
+
+module.exports = {
+  Designation,
+};

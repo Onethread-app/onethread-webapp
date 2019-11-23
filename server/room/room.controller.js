@@ -5,14 +5,24 @@ const { chatkit } = require('../services/pusher.services');
 const mongoose = require('mongoose');
 
 const create = async (req, res, next) => {
-  const room = new Room({
-    name: req.body.name,
-    company: req.body.company,
-    members: [req.user.id],
-    account: req.user.id,
-  });
-
   try {
+    // check room already exists with same company
+    const duplicate = await Room.findOne({
+      name: req.body.name,
+      company: req.body.company,
+    });
+    if (duplicate) {
+      return res.status(409).json({
+        status: false,
+        message: `Room already exists`,
+      });
+    }
+    const room = new Room({
+      name: req.body.name,
+      company: req.body.company,
+      members: [req.user.id],
+      account: req.user.id,
+    });
     await room.save();
     //will remove future
     await Company.findByIdAndUpdate(
@@ -118,7 +128,7 @@ const suggestMember = async (req, res, next) => {
 const list = async (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
 
-  Room.find({ company: mongoose.Types.ObjectId(req.params.company) })
+  Room.find({ company: req.params.company, removed: false })
     .sort({ created: 1 })
     .skip(+skip)
     .limit(+limit)

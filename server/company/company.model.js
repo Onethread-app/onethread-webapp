@@ -117,12 +117,6 @@ const company = new Schema(
         ref: 'Department',
       },
     ],
-    divisions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Division',
-      },
-    ],
     registrationYear: {
       type: Number,
       get: v => Number(v),
@@ -157,6 +151,10 @@ const company = new Schema(
     about: {
       type: String,
       maxlength: 256,
+    },
+    removed: {
+      type: Boolean,
+      default: false,
     },
   },
   {
