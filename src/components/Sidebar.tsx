@@ -126,7 +126,7 @@ const SidebarComponent = (props: {
 							exact
 							style={{ color: "dimgray" }}
 							activeStyle={{ background: "#0fa3a3", color: "white" }}
-							to={`/company/${props.company.name}/task`}
+							to={`/company/${props.company.name}/board`}
 						>
 							<Button
 								className="outline-0 bp3-large"
@@ -137,7 +137,7 @@ const SidebarComponent = (props: {
 									className="pr4-l pr3-m pl3-l"
 									style={{ color: "inherit" }}
 								/>
-								Task
+								Board
 							</Button>
 						</NavLink>
 						<NavLink
