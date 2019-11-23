@@ -121,6 +121,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																	className="pointer bp3-popover-dismiss mb0"
 																	onClick={async () => {
 																		setShowDialogEdit(!showDialogEdit);
+																		setMember(member);
 																		await props.getAllDepartments();
 																	}}
 																>
@@ -199,6 +200,11 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 					style={{ background: "#fff" }}
 				>
 					<EditDesignationForm
+						addDesignation={props.addDesignation}
+						getCompanyMembers={props.getCompanyMembers}
+						member={member}
+						divisions={divisions}
+						departments={props.company.departments}
 						setShowDialogEdit={e => setShowDialogEdit(!showDialogEdit)}
 					/>
 				</Dialog>
