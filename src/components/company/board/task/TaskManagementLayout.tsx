@@ -100,7 +100,7 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
                 {...provided.droppableProps}
                 {...allowedProps}
               >
-                <div className="fl nowrap overtodoflow-x-auto overflow-y-hidden w-100">
+                <div className="fl nowrap overflow-y-hidden w-100">
                   {props.columns && props.columns.length > 0 ? props.columns.map((colmun, index) => (
                     <Column
                       key={colmun._id ? colmun._id : `col${index}`}

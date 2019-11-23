@@ -138,7 +138,8 @@ a:hover {
 
 /**  custom scrollbar **/
 ::-webkit-scrollbar {
-	width: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 10px;
   background-color: #0FA3A3;
 }
@@ -163,6 +164,9 @@ a:hover {
   .w-15-ns{
     width: 15%;
   }
+  .w-23-ns {
+    width: 23%;
+  }
   .w-85-ns{
     width: 85%;
   }
@@ -186,6 +190,9 @@ a:hover {
   .w-15-m{
     width: 15%;
   }
+  .w-23-m {
+    width: 23%;
+  }
   .w-85-m{
     width: 85%;
   }
@@ -208,6 +215,9 @@ a:hover {
 @media only screen and (min-width: 60em) {
   .w-15-l{
     width: 15%;
+  }
+  .w-23-l {
+    width: 23%;
   }
   .w-85-l{
     width: 85%;

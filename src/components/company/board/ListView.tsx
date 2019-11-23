@@ -5,19 +5,18 @@ import { connect } from 'react-redux';
 import { Loading } from 'components/common/field/Loading';
 import { Form } from './Form';
 import { getAllBoards, getSelectedBoard } from 'stores/board/Actions';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { CompanyModel } from 'stores/company/Reducer';
 
-interface BoardListViewProps {
-  setBoardView: (val: number) => void
-}
-
-interface BoardListViewInternalProps extends BoardListViewProps {
+interface BoardListViewInternalProps {
   boardList: TaskBoard[];
   loading: boolean;
+  company: CompanyModel;
   getAllBoards: () => void;
-  getSelectedBoard: (boardId: string | undefined) => void;
+  getSelectedBoard: (boardId: string | undefined) => Promise<number>;
 }
 
-const BoardListViewComponent = (props: BoardListViewInternalProps) => {
+const BoardListViewComponent = (props: BoardListViewInternalProps & RouteComponentProps) => {
 
   const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(false);
 
@@ -48,8 +47,10 @@ const BoardListViewComponent = (props: BoardListViewInternalProps) => {
                   elevation={Elevation.TWO}
                   onClick={async (e) => {
                     e.preventDefault();
-                    await props.getSelectedBoard(board._id);
-                    props.setBoardView(1);
+                    const currentBoard: any = await props.getSelectedBoard(board._id);
+                    if (currentBoard._id) {
+                      props.history.push(`/company/${props.company.name}/board/${currentBoard._id}`);
+                    }
                   }}
                 >
                   <h5 className="mt0 mb2"><a href="!#">{board.name}</a></h5>
@@ -78,8 +79,9 @@ const BoardListViewComponent = (props: BoardListViewInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     boardList: state.taskManagementReducer.boardReducer.boardList,
-    loading: state.taskManagementReducer.boardReducer.loading
+    loading: state.taskManagementReducer.boardReducer.loading,
+    company: state.companyReducer.currentCompany
   }
 }
 
-export const BoardListView = connect(mapStateToProps, { getAllBoards, getSelectedBoard })(BoardListViewComponent);
+export const BoardListView = connect(mapStateToProps, { getAllBoards, getSelectedBoard })(withRouter(BoardListViewComponent));

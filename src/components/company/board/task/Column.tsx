@@ -23,11 +23,11 @@ const ColumnComponent = (props: ColumnInternalProps) => {
   const [showTaskFormDialog, setShowTaskFormDialog] = useState(false);
   return (
     <>
-      <div className="pl2 pb2 dib bg-white h-100 w-34 w-50-m">
-        <div className="flex flex-column h-100 b--black-20 ba br2 bw1">
-          <div className="flex bb b--black-10">
+      <div className="pl2 pb2 dib h-100 w-23-l w-50-m">
+        <div className="flex flex-column h-100">
+          <div className="flex">
             <h3
-              className="pa2 ma0 flex-grow-1"
+              className="ma0 flex-grow-1"
             >
               {props.column.name}
             </h3>
@@ -42,6 +42,12 @@ const ColumnComponent = (props: ColumnInternalProps) => {
               }
               target={
                 <Button
+                  style={{
+                    transform: 'rotate(90deg)',
+                    OTransform: 'rotate(90deg)',
+                    msTransform: 'rotate(90deg)',
+                    WebkitTransform: 'rotate(90deg)'
+                  }}
                   icon="more"
                   minimal={true}
                   small={true}
@@ -60,7 +66,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     const allowedProps = { ref: provided.innerRef }
                     return (
                       <div
-                        className={`pa2 flex-grow-1 flex flex-column h5 overflow-auto ${snapshot.isDraggingOver ? 'bg-lightest-blue' : 'bg-white'}`}
+                        className={`pa2 flex-grow-1 flex flex-column h5 overflow-auto ${snapshot.isDraggingOver ? 'bg-lightest-blue' : ''}`}
                         style={{ transition: 'background-color 0.2s ease', minHeight: '100px', whiteSpace: 'normal' }}
                         {...provided.droppableProps}
                         {...allowedProps}
@@ -79,7 +85,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     )
                   }}
                 </Droppable>
-                <div className="overflow-hidden ph2">
+                <div className="overflow-hidden">
                   <Button
                     className="grow h2 mb2 pointer bp3-minimal"
                     style={{
