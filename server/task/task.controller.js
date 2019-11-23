@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const Task = require('./task.model');
 const BoardColumn = require('./../boardColumn/boardColumn.model');
+const ActivityCtrl = require('./../activity/activity.controller');
 const logger = require('../../config/winston');
 const {
   APIError,
@@ -39,6 +40,13 @@ const create = async (req, res, next) => {
     column.tasks.push(createdTask._id);
     await column.save();
 
+    await ActivityCtrl.create(
+      `added this card to ${column.name}`,
+      'create',
+      createdTask._id,
+      req.user
+    );
+
     const responseData = {
       _id: createdTask._id,
       name: createdTask.name,
@@ -46,8 +54,8 @@ const create = async (req, res, next) => {
     }
     res.status(201).send(responseData);
   } catch (error) {
-    logger.error(`Board column create: ${error}`);
-    const err = new BadRequestError('board column data is invalid.', httpStatus.BAD_REQUEST)
+    logger.error(`Task column create: ${error}`);
+    const err = new BadRequestError('task data is invalid.', httpStatus.BAD_REQUEST)
     next(err);
   }
 }
@@ -91,6 +99,13 @@ const dragTask = async (req, res, next) => {
       },
       { new: true }
     ).populate("tasks", "_id name description").exec();
+
+    await ActivityCtrl.create(
+      `moved this card from ${sourceColumn.name} to ${destinationColumn.name}`,
+      'move',
+      req.body.taskId,
+      req.user
+    );
 
     const responseData = {
       sourceColumn: {

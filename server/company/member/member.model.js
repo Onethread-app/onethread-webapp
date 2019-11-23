@@ -33,7 +33,10 @@ const member = new Schema(
         ref: 'Designation',
       },
     ],
-    // TODO: currently working: boolean
+    removed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

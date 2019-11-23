@@ -1,4 +1,5 @@
-const Division = require('./designation.model');
+const { Designation } = require('./designation.model.js');
+const { Member } = require('./../member/member.model');
 const logger = require('../../../config/winston.js');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 
@@ -8,32 +9,25 @@ const create = async (req, res, next) => {
     return res.send("Expects 'application/json'");
   }
   try {
-    // check division already exists with same company
-    const duplicate = await Division.findOne({
-      name: req.body.name,
-      company: req.company._id,
-    });
-    if (duplicate) {
-      logger.info(`Division already exist`);
-      return res.status(409).json({
-        status: false,
-        message: `Division already exists`,
-      });
+    let divisions = ['director', 'cxo'],
+      body = req.body;
+    if (divisions.includes(req.body.division)) {
+      delete body.department;
     }
 
-    req.body.company = req.company._id;
-    const newDivision = new Division(req.body);
-    const division = await newDivision.save();
+    body.member = req.params.memberId;
+    body.account = req.user._id;
 
-    // save ref in company
-    req.company.divisions.push(division._id);
-    await req.company.save();
+    const newDesignation = new Designation(body);
+    const designation = await newDesignation.save();
 
-    const { _id, name } = division;
+    // save ref in member
+    req.member.designations.push(designation._id);
+    await req.member.save();
 
     return sendJSONresponse(res, 201, {
       success: true,
-      division: { _id, name },
+      designation,
     });
   } catch (err) {
     next(err);
@@ -42,21 +36,42 @@ const create = async (req, res, next) => {
 
 const list = async (req, res, next) => {
   try {
-    const divisions = await Division.find({
-      company: req.company._id,
-    }).select('_id name');
+    const designations = await Designation.find({
+      member: req.params.memberId,
+      removed: false,
+    });
 
-    if (divisions) {
+    if (designations.length) {
       return sendJSONresponse(res, 200, {
         success: true,
-        divisions,
+        designations,
       });
     }
 
-    return res.status(404).json({
+    return sendJSONresponse(res, 404, {
       status: false,
-      message: 'No divisions found.',
+      message: 'No designations found',
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// member will be found on req.member
+const load = async (req, res, next) => {
+  try {
+    const member = await Member.findOne({
+      _id: req.params.memberId,
+    });
+    if (member) {
+      req.member = member;
+      return next();
+    } else {
+      return res.status(404).json({
+        status: false,
+        message: 'No valid entry found for provided Member ID',
+      });
+    }
   } catch (error) {
     next(error);
   }
@@ -65,4 +80,5 @@ const list = async (req, res, next) => {
 module.exports = {
   create,
   list,
+  load,
 };

@@ -2,33 +2,31 @@ const BoardColumn = require('./boardColumn.model');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
 
-const load = (req, res, next, id) => {
-  BoardColumn.findById(id)
+const load = async (req, res, next, id) => {
+  await BoardColumn.findById(id)
     .exec()
     .then(result => {
       if (result) {
         req.boardColumn = result;
         return next();
       }
-      return res
-        .status(400)
-        .json({
-          message: 'No valid entry found for provided Board ID',
-        });
+      return res.status(400).json({
+        message: 'No valid entry found for provided Board ID',
+      });
     })
     .catch(err => {
       next(err);
     });
 };
 
-const create = (req, res, next) => {
+const create = async (req, res, next) => {
   try {
     const boardColumn = new BoardColumn({
       name: req.body.name,
       positionInBoard: req.body.positionInBoard,
       boardId: req.body.boardId,
     });
-    boardColumn
+    await boardColumn
       .save()
       .then(createdColumn => {
         const resposneObj = {

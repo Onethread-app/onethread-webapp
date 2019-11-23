@@ -124,6 +124,7 @@ const getCompanyIndividual = async (req, res, next) => {
 
     let companies = await Member.find({
       account: req.params.account,
+      removed: false,
     })
       .select('-_id company role')
       .populate(options);
@@ -141,12 +142,13 @@ const getCompanyIndividual = async (req, res, next) => {
 const getCompany = async (req, res, next) => {
   try {
     // populate options
-    // let options = [
-    //   {
-    //     path: 'logo',
-    //     select: 'fileLink s3Key fileType',
-    //   },
-    // ];
+    let options = [
+      // {
+      //   path: 'members',
+      //   select: '_id account role designations',
+      //   populate: [{ path: 'account', select: '_id name' }],
+      // },
+    ];
 
     // company details
     let company = await Company.findOne({
@@ -156,8 +158,8 @@ const getCompany = async (req, res, next) => {
         '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
       )
       .populate('logo', 'fileLink s3Key fileType');
+
     // role info
-    console.log(company);
     let member = await Member.findOne({
       account: req.user._id,
       company: req.company._id,
@@ -278,40 +280,6 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-// TODO: will be work on member controller
-const addEmployees = async (req, res) => {
-  // Check for JSON
-  if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
-  }
-
-  // TODO: some minor checking
-  Company.update(
-    { name: req.params.cname },
-    {
-      $addToSet: {
-        employees: { $each: req.body.employees },
-      },
-    },
-  )
-    .exec()
-    .then(result => {
-      if (result) {
-        res.status(200).json({
-          status: true,
-          message: 'New employees added',
-        });
-      } else {
-        res
-          .status(404)
-          .json({ status: false, message: 'No company found' });
-      }
-    })
-    .catch(err => {
-      res.status(500).json({ error: err });
-    });
-};
-
 module.exports = {
   createCompany,
   getCompany,
@@ -320,6 +288,5 @@ module.exports = {
   getCompanyIndividual,
   changeName,
   deleteCompany,
-  addEmployees,
   getCompanyLoad,
 };

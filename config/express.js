@@ -16,8 +16,8 @@ const routes = require('../index.route');
 const config = require('./config');
 const {
   APIError,
-  EmailIdExistError,
   SearchNotMatchError,
+  EmailIdExistError,
 } = require('../server/helpers/APIError');
 
 const {

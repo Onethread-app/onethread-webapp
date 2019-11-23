@@ -19,7 +19,7 @@ router.route('/')
 
 router.route('/:taskId')
   .get(requireAuth, permit('user', 'admin'), taskCtrl.get)
-  .patch(
+  .put(
     requireAuth, 
     permit('user', 'admin'), 
     // TODO: Will do in next push

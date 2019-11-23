@@ -69,6 +69,7 @@ const list = async (req, res, next) => {
 
     const members = await Member.find({
       company: req.company._id,
+      removed: false,
     })
       .sort({ createdAt: 1 })
       .skip(+skip)
@@ -76,6 +77,11 @@ const list = async (req, res, next) => {
       .select('-__v -company -createdAt -updatedAt')
       .populate([
         { path: 'account', select: '_id name firstName lastName' },
+        {
+          path: 'designations',
+          select: 'division department position',
+          populate: [{ path: 'department', select: 'name' }],
+        },
       ]);
     return res.status(200).json({
       status: true,

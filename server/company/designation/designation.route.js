@@ -7,12 +7,18 @@ const joiSchema = require('./designation.validation');
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
 router
-  .route('/')
+  .route('/:memberId')
   .post(
     requireAuth,
     SchemaValidator(joiSchema.create),
     designationCtrl.create,
   )
-  .get(requireAuth, designationCtrl.list);
+  .get(
+    requireAuth,
+    SchemaValidator(joiSchema.get),
+    designationCtrl.list,
+  );
+
+router.param('memberId', designationCtrl.load);
 
 module.exports = router;
