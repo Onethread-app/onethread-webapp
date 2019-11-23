@@ -115,7 +115,7 @@ interface DetailsViewProps {
   history: History;
 }
 
-const DetailsViewComponent = (props: DetailsViewProps & RouteComponentProps) => {
+const GeneralViewComponent = (props: DetailsViewProps & RouteComponentProps) => {
 
   const [companyName, setCompanyName] = useState(props.company.name)
   const [errors, setErrors] = useState("")
@@ -223,7 +223,7 @@ const mapStateToProps = (state: any) => {
 }
 
 const DepartmentView = connect(mapStateToProps, { addDepartment, getAllDepartments, clearAddDepartmentError })(DepartmentViewComponent)
-const DetailsView = connect(mapStateToProps, { changeCompanyName, clearChangeCompanyNameError })(withRouter(DetailsViewComponent))
+const GeneralView = connect(mapStateToProps, { changeCompanyName, clearChangeCompanyNameError })(withRouter(GeneralViewComponent))
 
 export const CompanySettingsView = () => {
   return (
@@ -233,9 +233,9 @@ export const CompanySettingsView = () => {
           id="TabsExample"
         >
           <Tab
-            id="details"
-            title="Details"
-            panel={<DetailsView />}
+            id="General"
+            title="General"
+            panel={<GeneralView />}
             className="outline-0"
           />
           <Tab

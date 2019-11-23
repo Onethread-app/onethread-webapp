@@ -15,6 +15,7 @@ import { ProfileSettingsPage } from 'pages/ProfileSettingsPage';
 import { ForgotPasswordPage } from 'pages/ForgotPasswordPage';
 import { ResetPasswordPage } from 'pages/ResetPasswordPage';
 import { EmailVerificationPage } from 'pages/EmailVerificationPage';
+import { BoardDetailsView } from 'components/company/board/DetailsView';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -105,9 +106,14 @@ export const App = () => (
 				component={RoomPage}
 			/>
 			<PrivateRoute
-				path="/company/:cname/task"
+				path="/company/:cname/board"
 				exact={true}
 				component={TaskPage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/board/:boardId"
+				exact={true}
+				component={BoardDetailsView}
 			/>
 			<PrivateRoute
 				path="/company/:cname/team"

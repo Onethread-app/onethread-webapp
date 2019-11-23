@@ -58,6 +58,9 @@ export const getSelectedBoard = (boardId: string | undefined) => async (dispatch
       dispatch({ type: BOARD_LOADING });
       const response = await tigrowApi.get(`/boards/${boardId}`, headers);
       dispatch({ type: SELECT_BOARD, payload: response.data });
+      return response.data;
+    } else {
+      return 500;
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
@@ -67,6 +70,7 @@ export const getSelectedBoard = (boardId: string | undefined) => async (dispatch
     } else {
       console.log(error.response);
     }
+    return error.response.status
   }
 }
 

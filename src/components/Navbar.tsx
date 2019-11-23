@@ -52,7 +52,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             position={Position.BOTTOM}
             content={
               <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
-                <Button className="bp3-popover-dismiss">
+                <Button className="bp3-popover-dismiss outline-0">
                   <article
                     className="pointer"
                   >

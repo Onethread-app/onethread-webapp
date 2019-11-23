@@ -68,13 +68,13 @@ export const AboutCompanyView = (props: {
       <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4 w-50-m">
         <div className="cf ">
           <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
-          {permit(props.company.role)?
-          <Icon className="fr mv3 tigrow-lightBlue pointer"
-            icon="edit"
-            onClick={() => setShowDialogAbout(true)}
-          /> : "" }
+          {permit(props.company.role) ?
+            <Icon className="fr mv3 tigrow-lightBlue pointer"
+              icon="edit"
+              onClick={() => setShowDialogAbout(true)}
+            /> : ""}
         </div>
-        <p>{props.company.about}</p>
+        <p style={{wordBreak: 'break-word'}} >{props.company.about}</p>
       </div>
       {showDialogAbout && (
         <Dialog
@@ -113,7 +113,7 @@ const InfoDetailsViewComponent = (props: any) => {
               </div>
             </div>
             <h1 className="f5 lh-copy tigrow-lightGray-1">{props.company.name}</h1>
-            <p className=" light-silver" >Company type</p>
+            <p className=" light-silver" >{props.company.type}</p>
           </div>
           <AboutCompanyView company={props.company} />
         </div>
@@ -121,7 +121,7 @@ const InfoDetailsViewComponent = (props: any) => {
           <div className="br3 bg-white h-auto pa4 mt3-l mt2-m shadow-4">
             <ListTitleView
               listTitle="Basic Information"
-              iconType={permit(props.company.role)? "edit" : ""}
+              iconType={permit(props.company.role) ? "edit" : ""}
               onClick={() => setShowDialog(true)}
             />
             {showDialog && (

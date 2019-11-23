@@ -11,6 +11,7 @@ import { fetchUserAction } from 'stores/auth/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
+import { getSelectedBoard } from 'stores/board/Actions';
 const {
   ChatkitProvider,
   TokenProvider,
@@ -23,11 +24,15 @@ const tokenProvider = new TokenProvider({
 const load = async (
   match: match,
   fetchUserAction: () => void,
-  getCompanyDetails: (companyName: string) => void
+  getCompanyDetails: (companyName: string) => void,
+  getSelectedBoard: (boardId: string) => void
 ) => {
   await fetchUserAction();
   if (isEmpty((match.params as any).cname) === false) {
     await getCompanyDetails((match.params as any).cname);
+  }
+  if (isEmpty((match.params as any).boardId) === false) {
+    await getSelectedBoard((match.params as any).boardId);
   }
   return Promise.resolve({});
 }
@@ -40,6 +45,7 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   user: User;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => void;
+  getSelectedBoard: (boardId: string) => void;
   company: CompanyModel
 }
 
@@ -56,9 +62,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       props.history.push(`/unavailable/profile`);
     }
     if (isEmpty(props.user._id) === true) {
-      load(props.match, props.fetchUserAction, props.getCompanyDetails).then(r => setLoading(false));
+      load(props.match, props.fetchUserAction, props.getCompanyDetails, props.getSelectedBoard).then(r => setLoading(false));
     } else if (isEmpty((props.match.params as any).cname) === false && isEmpty(props.company._id) === true) {
-      load(props.match, props.fetchUserAction, props.getCompanyDetails).then(r => setLoading(false));
+      load(props.match, props.fetchUserAction, props.getCompanyDetails, props.getSelectedBoard).then(r => setLoading(false));
     } else if (isEmpty(props.user._id) === false && isEmpty((props.match.params as any).cname) === true && loading === true) {
       setLoading(false);
     }
@@ -105,4 +111,4 @@ const mapStateToProps = (state: any) => {
   }
 }
 
-export const Layout = connect(mapStateToProps, { fetchUserAction, getCompanyDetails })(withRouter(LayoutComponent));
+export const Layout = connect(mapStateToProps, { fetchUserAction, getCompanyDetails, getSelectedBoard })(withRouter(LayoutComponent));

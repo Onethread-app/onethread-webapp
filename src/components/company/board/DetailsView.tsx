@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Dialog, Intent } from '@blueprintjs/core';
+import { Button, Dialog, Icon } from '@blueprintjs/core';
 import { TaskManagementLayout } from './task/TaskManagementLayout';
 import { connect } from 'react-redux';
 import { TaskBoard } from 'stores/board/Reducer';
@@ -18,11 +18,11 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
   const [showAddMemberFormDialog, setShowAddMemberFormDialog] = useState(false);
 
   return (
-    <>
-      <div className="flex mt3">
+    <div className="br3 h-100 pa3 cf flex flex-column">
+      <div className="flex">
         <h1 className="f3 flex-grow-1 lh-title tigrow-lightGray-1 dib ma0">{props.currentBoard!.name}</h1>
         <Button
-          className="grow fr h2 pointer white bp3-minimal mr2"
+          className="grow fr h2 pointer white bp3-minimal mr3"
           style={props.currentBoard!.columns!.length > 0 ?
             {
               background: "#0fa3a3",
@@ -34,27 +34,31 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
               color: 'white'
             }
           }
-          text="Add Task"
+          text={<span className="ph4">Add Task</span>}
           disabled={props.currentBoard!.columns!.length > 0 ? false : true}
           onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
         />
         <Button
-          className="grow fr h2 pointer white bp3-minimal mr2"
-          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          text="Add Column"
+          className="grow fr h2 pointer white bp3-minimal mr3"
+          style={{ background: "#00a8e8", outline: "none", color: 'white' }}
+          text={<span className="ph4">Add Column</span>}
           onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
         />
-        <Button 
-          icon="new-person"
-          text="Add member"
-          intent={Intent.PRIMARY}
-          minimal={true} 
+        <Button
+          icon={
+            <Icon
+              icon="new-person"
+              iconSize={17}
+              style={{ color: 'white' }}
+            />
+          }
+          style={{ background: "#f55b7f", outline: "none", color: 'white' }}
           onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
         />
       </div>
       <div className="flex-auto">
         <div className="fl h-100 w-100">
-          <TaskManagementLayout 
+          <TaskManagementLayout
             columns={props.currentBoard!.columns!}
           />
         </div>
@@ -92,14 +96,14 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
           <AddTeamMemberForm setShowAddMemberFormDialog={setShowAddMemberFormDialog} />
         </Dialog>
       )}
-    </>
+    </div>
   )
 }
 
 const mapStateToProps = (state: any) => {
-	return {
-		currentBoard: state.taskManagementReducer.boardReducer.currentBoard
-	}
+  return {
+    currentBoard: state.taskManagementReducer.boardReducer.currentBoard
+  }
 }
 
 export const BoardDetailsView = connect(mapStateToProps, null)(BoardDetailsViewComponent);
