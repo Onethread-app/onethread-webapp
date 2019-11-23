@@ -252,7 +252,7 @@ export const AboutView = (props: {
             onClick={() => setShowDialogAbout(true)}
           />
         </div>
-        <p>{props.user.about}</p>
+        <p style={{ wordBreak: 'break-word' }} >{props.user.about}</p>
       </div>
       {showDialogAbout && (
         <Dialog
@@ -338,8 +338,7 @@ export const LandingPageComponent = (props: LandingPageProps) => {
           <div className="fl-l flex-m w-25-l w-100-m ph3">
             <div className="h-auto br3 ma3 pa3 bg-white cf tc shadow-4 w-50-m">
               <img src={user}></img>
-              <h1 className="f6 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
-              <p className="tigrow-lightGray-1">Software Dev</p>
+              <h1 className="f6 lh-copy tigrow-lightGray-1">{props.user.name}</h1>
             </div>
             <AboutView user={props.user} />
             <SkillView setShowDialog={setShowDialog} />
