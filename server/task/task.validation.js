@@ -27,7 +27,7 @@ module.exports = {
   createTask: Joi.object().keys({
     body: Joi.object().keys({
       name: taskSchema.name.required(),
-      description: taskSchema.description,
+      description: taskSchema.description.allow(''),
       columnId: taskSchema.columnId.required(),
       boardId: taskSchema.boardId.required()
     }),

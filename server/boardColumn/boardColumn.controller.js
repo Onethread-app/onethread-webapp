@@ -5,8 +5,8 @@ const {
   BadRequestError
 } = require('../helpers/APIError');
 
-const load = (req, res, next, id) => {
-  BoardColumn.findById(id)
+const load = async (req, res, next, id) => {
+  await BoardColumn.findById(id)
     .exec()
     .then(result => {
       if (result) {
@@ -19,14 +19,14 @@ const load = (req, res, next, id) => {
     });
 }
 
-const create = (req, res, next) => {
+const create = async (req, res, next) => {
   try {
     const boardColumn = new BoardColumn({
       name: req.body.name,
       positionInBoard: req.body.positionInBoard,
       boardId: req.body.boardId
     });
-    boardColumn.save()
+    await boardColumn.save()
       .then(createdColumn => {
         const resposneObj = {
           _id: createdColumn._id,
