@@ -14,6 +14,12 @@ const RoomSchema = new mongoose.Schema({
       ref: 'Account',
     },
   ],
+  files: [
+    {
+      type: Schema.ObjectId,
+      ref: 'File',
+    },
+  ],
   removed: {
     type: Boolean,
     default: false,

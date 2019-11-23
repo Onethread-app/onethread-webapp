@@ -158,7 +158,7 @@ const login = async (req, res, next) => {
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,
-      token: accessToken,
+      token: token,
       refresh_token: refreshToken,
     });
   } catch (error) {
@@ -311,7 +311,6 @@ const getAccount = async (req, res, next) => {
     );
     const userInfo = { ...req.user._doc };
     userInfo.timeline = timelineHistory;
-    console.log(userInfo.skillArea);
     delete userInfo.password;
     delete userInfo.companies;
     logger.info('userInfo successfully fetched');

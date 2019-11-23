@@ -4,32 +4,20 @@ const logger = require('../../config/winston');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 const File = require('./file.model');
 const Account = require('../account/account.model');
-const { Company } = require('./company.model');
+const { Company } = require('../company/company.model');
+const { Room } = require('../room/room.model');
 const { generateGetUrl, generatePutUrl } = require('../services/s3');
 
-// const fileUpload = async (req, res, next) => {
-// 	const { Key, ContentType } = req.query;
-// 	generatePutUrl(Key, ContentType)
-// 		.then(putURL => {
-// 			logger.info(`pre-signed url generated for the user`);
-
-// 			return sendJSONresponse(res, 200, putURL);
-// 		})
-// 		.catch(err => {
-// 			next(err);
-// 		});
-// };
+const s3FileURL = `https://tigrow-test-1.s3.amazonaws.com/`;
+let s3bucket = new AWS.S3({
+  accessKeyId: config.awsAccessKey,
+  secretAccessKey: config.awsSecretAccessKey,
+  region: config.s3Region,
+});
 
 const profilePicture = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
-  // const companyID = req.query.cid;
-  const s3FileURL = `https://tigrow-test-1.s3.amazonaws.com/`;
-  let s3bucket = new AWS.S3({
-    accessKeyId: config.awsAccessKey,
-    secretAccessKey: config.awsSecretAccessKey,
-    region: config.s3Region,
-  });
   const params = {
     Bucket: 'tigrow-test-1',
     Key: `${userID}/${file.originalname}`,
@@ -86,13 +74,7 @@ const displayProPic = async (req, res, next) => {
 const companyLogo = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
-  const companyID = req.body.cid;
-  const s3FileURL = `https://tigrow-test-1.s3.amazonaws.com/`;
-  let s3bucket = new AWS.S3({
-    accessKeyId: config.awsAccessKey,
-    secretAccessKey: config.awsSecretAccessKey,
-    region: config.s3Region,
-  });
+  const companyID = req.query.cid;
   const params = {
     Bucket: 'tigrow-test-1',
     Key: `${companyID}/${file.originalname}`,
@@ -104,26 +86,27 @@ const companyLogo = async (req, res, next) => {
     .upload(params)
     .promise()
     .then(async data => {
-      logger.info(`File Successfully upload to S3`);
+      logger.info(`Company Logo Successfully upload to S3`);
       const newFile = {
         fileLink: s3FileURL + params.Bucket,
         s3Key: params.Key,
         company: companyID,
         fileType: params.ContentType,
+        account: userID,
       };
       const file = new File(newFile);
       file
         .save()
         .then(async data => {
           logger.info('File Link successfully save to Database');
-          if (userID) {
-            const company = await Company.findOne({
-              _id: userID,
-            }).select('companyLogo');
-            company.logo = data._id;
-            await company.save();
-            return sendJSONresponse(res, 200, data);
-          }
+          const company = await Company.findOne({
+            _id: companyID,
+          }).select('logo');
+          company.logo = data._id;
+
+          await company.save();
+          console.log(data);
+          return sendJSONresponse(res, 200, data);
         })
         .catch(error => {
           logger.error(`${error}`);
@@ -134,4 +117,54 @@ const companyLogo = async (req, res, next) => {
       next(err);
     });
 };
-module.exports = { profilePicture, displayProPic, companyLogo };
+
+const fileInRooms = async (req, res, next) => {
+  const roomID = req.query.roomID;
+  const userID = req.user._id;
+  const params = {
+    Bucket: 'tigrow-test-1',
+    Key: `${roomID}/${file.originalname}`,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+    ACL: 'public-read',
+  };
+  await s3bucket
+    .upload(params)
+    .promise()
+    .then(async data => {
+      logger.info(`File in rooms Successfully upload to S3`);
+      const newFile = {
+        fileLink: s3FileURL + params.Bucket,
+        s3Key: params.Key,
+        company: companyID,
+        fileType: params.ContentType,
+        account: userID,
+        room: roomID,
+      };
+      const file = new File(newFile);
+      file
+        .save()
+        .then(async data => {
+          logger.info('File Link successfully save to Database');
+          const room = await Room.findOne({
+            _id: roomID,
+          }).select('files');
+          room.files.push(data._id);
+          await room.save();
+          return sendJSONresponse(res, 200, data);
+        })
+        .catch(error => {
+          logger.error(`${error}`);
+          next(error);
+        });
+    })
+    .catch(err => {
+      next(err);
+    });
+};
+module.exports = {
+  profilePicture,
+  displayProPic,
+  companyLogo,
+  fileInRooms,
+};

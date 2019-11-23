@@ -18,6 +18,17 @@ router.post(
   fileCtrl.profilePicture,
 );
 
-router.get('/show-file', fileCtrl.displayproPic);
-
+router.get('/show-file', fileCtrl.displayProPic);
+router.post(
+  '/company-logo',
+  upload.single('file'),
+  requireAuth,
+  fileCtrl.companyLogo,
+);
+router.post(
+  '/file-upload',
+  upload.single('file'),
+  requireAuth,
+  fileCtrl.fileInRooms,
+);
 module.exports = router;

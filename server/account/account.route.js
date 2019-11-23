@@ -44,9 +44,7 @@ router
 // router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
-router
-  .route('/')
-  .get(tokenChecker, cacheMiddleware, accountCtrl.getAccount);
+router.route('/').get(requireAuth, accountCtrl.getAccount);
 router.route('/update').put(requireAuth, accountCtrl.accountUpdate);
 // router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
 // router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
