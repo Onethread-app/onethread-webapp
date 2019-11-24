@@ -101,11 +101,10 @@ const companyLogo = async (req, res, next) => {
           logger.info('File Link successfully save to Database');
           const company = await Company.findOne({
             _id: companyID,
-          }).select('logo');
+          });
           company.logo = data._id;
-
-          await company.save();
-          console.log(data);
+          company.save();
+          console.log(company);
           return sendJSONresponse(res, 200, data);
         })
         .catch(error => {

@@ -47,7 +47,6 @@ const company = new Schema(
     logo: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'File',
-      currentlyActive: { type: Boolean, default: true },
     },
     name: {
       type: String,
@@ -106,9 +105,6 @@ const company = new Schema(
         ref: 'Room',
       },
     ],
-    logo: {
-      type: String,
-    },
     location: {
       type: String,
     },
