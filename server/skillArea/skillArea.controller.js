@@ -17,10 +17,10 @@ const createSkill = async (req, res, next) => {
   }
 
   const skill = req.body.name;
-  const skillExist = await SkillArea.find({ name: skill });
-  if (skillExist) {
-    return sendJSONresponse(res, 200, 'skill already exist');
-  }
+  // const skillExist = await SkillArea.find({ name: skill });
+  // if (skillExist) {
+  //   return sendJSONresponse(res, 200, 'skill already exist');
+  // }
   const newSkill = new SkillArea();
   newSkill.name = skill;
   newSkill.accountId.push(req.user._id);
