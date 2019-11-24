@@ -149,7 +149,6 @@ const getCompany = async (req, res, next) => {
         '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
       )
       .populate('logo', 'link s3Key type');
-    console.log(company);
     // role info
     let member = await Member.findOne({
       account: req.user._id,
