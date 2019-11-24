@@ -148,7 +148,7 @@ const getCompany = async (req, res, next) => {
       .select(
         '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
       )
-      .populate('logo', 'fileLink s3Key fileType');
+      .populate('logo', 'link s3Key type');
     console.log(company);
     // role info
     let member = await Member.findOne({
