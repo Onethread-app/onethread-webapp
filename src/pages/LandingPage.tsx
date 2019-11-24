@@ -1,35 +1,22 @@
-import React, { useState } from "react";
-import {
-	Icon,
-	Divider,
-	Dialog,
-	Button,
-	EditableText,
-	Tabs,
-	Tab,
-	FileInput
-} from "@blueprintjs/core";
-import skill from "../resources/images/skills.png";
-import user from "../resources/images/user.png";
-import { connect } from "react-redux";
-import { ListTitleView } from "components/ListTitleView";
-import { SectionViewWithTitleAndDesciption } from "components/ListItemView";
-import { BasicInfoForm } from "components/user/BasicInfoDetailsForm";
-import "react-vertical-timeline-component/style.min.css";
-import { User } from "stores/user/Reducer";
-import { JobFormComponent } from "components/company/profile/editor/JobForm";
-import { isNumber } from "lodash";
-import { EducationFormComponent } from "components/company/profile/editor/EducationForm";
-import { editUserInfoAction } from "stores/user/Actions";
-import moment from "moment";
-import {
-	addJobExperienceAction,
-	addEducationExperienceAction
-} from "stores/user/Actions";
-import { isEmpty } from "lodash";
-import { ExperienceView } from "components/company/profile/view/ExperienceView";
-import { CompanyModel } from "stores/company/Reducer";
-import { SkillView } from "components/user/Skills";
+import React, { useState } from 'react';
+import { Icon, Divider, Dialog, Button, EditableText, Tabs, Tab, FileInput } from '@blueprintjs/core';
+import skill from '../resources/images/skills.png';
+import user from '../resources/images/user.png';
+import { connect } from 'react-redux';
+import { ListTitleView } from 'components/ListTitleView';
+import { SectionViewWithTitleAndDesciption } from 'components/ListItemView';
+import { BasicInfoForm } from 'components/user/BasicInfoDetailsForm';
+import 'react-vertical-timeline-component/style.min.css';
+import { User } from 'stores/user/Reducer';
+import { JobFormComponent } from 'components/company/profile/editor/JobForm';
+import { isNumber, isEmpty } from 'lodash';
+import { EducationFormComponent } from 'components/company/profile/editor/EducationForm';
+import { editUserInfoAction } from 'stores/user/Actions';
+import moment from 'moment';
+import { addJobExperienceAction, addEducationExperienceAction } from 'stores/user/Actions';
+import { ExperienceView } from 'components/company/profile/view/ExperienceView';
+import { CompanyModel } from 'stores/company/Reducer';
+import { SkillView } from 'components/user/Skills';
 
 interface LandingPageProps {
 	user: User;
@@ -38,28 +25,50 @@ interface LandingPageProps {
 	addEducationExperienceAction: (val: any) => void;
 }
 
-const ExperienceEdit = (props: {
-	setShowDialog: (val: boolean) => void;
-	addJobExperienceAction: (val: {}) => void;
-	addEducationExperienceAction: (val: {}) => void;
-}) => {
-	const [jobInfo, setJobInfo] = useState({
-		companyName: "",
-		positionName: "",
-		startYear: "",
-		endingYear: "",
-		currentlyWork: false,
-		jobDescription: ""
-	});
-	const [educationInfo, setEducationInfo] = useState({
-		degree: "",
-		institutionName: "",
-		startYear: "",
-		endingYear: "",
-		currentlyStudy: false,
-		eduDescription: ""
-		// TODO: rename it to educationDescription
-	});
+const ExperienceEdit = (props:
+  {
+    setShowDialog: (val: boolean) => void
+    addJobExperienceAction: (val: {}) => void
+    addEducationExperienceAction: (val: {}) => void
+  }
+) => {
+  const [jobInfo, setJobInfo] = useState({
+    companyName: "",
+    positionName: "",
+    startYear: "",
+    endingYear: "",
+    currentlyWork: false,
+    jobDescription: ""
+  });
+  const [educationInfo, setEducationInfo] = useState({
+    degree: "",
+    institutionName: "",
+    startYear: "",
+    endingYear: "",
+    currentlyStudy: false,
+    eduDescription: "",
+    // TODO: rename it to educationDescription 
+  });
+
+  const [jobErrors, setJobErrors] = useState({
+    companyName: "",
+    positionName: "",
+    startYear: "",
+    endingYear: "",
+    currentlyWork: "",
+  });
+
+  const [educationErrors, setEducationErrors] = useState({
+    degree: "",
+    institutionName: "",
+    startYear: "",
+    endingYear: "",
+    currentlyStudy: ""
+  });
+
+
+
+
 
 	const handleSelectedTab = (id: any) => {
 		setsSelectedTab(id);
@@ -75,6 +84,17 @@ const ExperienceEdit = (props: {
 		});
 	};
 
+  const handleJobDateChange = (name: string, date: Date) => {
+    setJobInfo({
+      ...jobInfo, [name]: date
+    });
+  }
+
+  const handleEducationDateChange = (name: string, date: Date) => {
+    setEducationInfo({
+      ...educationInfo, [name]: date
+    });
+  }
 	const handleEducationChange = (name: string | number) => (event: any) => {
 		const value = isNumber(event) ? event.toString() : event.target.value;
 		setEducationInfo({
@@ -83,20 +103,21 @@ const ExperienceEdit = (props: {
 		});
 	};
 
-	const handleJobDateChange = (name: string, date: Date) => {
-		setJobInfo({
-			...jobInfo,
-			[name]: date.toLocaleDateString()
-		});
-	};
 
-	const handleEducationDateChange = (name: string, date: Date) => {
-		setEducationInfo({
-			...educationInfo,
-			[name]: date.toLocaleDateString()
-		});
-	};
+  const handleEducationCheck = () => {
+    setEducationInfo({
+      ...educationInfo, currentlyStudy: !educationInfo.currentlyStudy, endingYear: ""
+    });
+	}
 
+  const emptyJobErrorCheck = () => {
+    if (isEmpty(jobErrors.companyName) && isEmpty(jobErrors.positionName) && isEmpty(jobErrors.startYear) && isEmpty(jobErrors.endingYear) && isEmpty(jobErrors.currentlyWork)) {
+      return true;
+    } else {
+      return false;
+    }
+	}
+	
 	const handleWorkCheck = () => {
 		setJobInfo({
 			...jobInfo,
@@ -105,124 +126,143 @@ const ExperienceEdit = (props: {
 		});
 	};
 
-	const handleEducationCheck = () => {
-		setEducationInfo({
-			...educationInfo,
-			currentlyStudy: !educationInfo.currentlyStudy,
-			endingYear: ""
-		});
-	};
-	const emptyJobInfo = () => {
-		if (
-			isEmpty(jobInfo.companyName) ||
-			isEmpty(jobInfo.positionName) ||
-			isEmpty(jobInfo.startYear) ||
-			(isEmpty(jobInfo.endingYear) && !jobInfo.currentlyWork)
-		) {
-			return false;
-		} else {
-			return true;
-		}
-	};
-	const emptyEducationInfo = () => {
-		if (
-			isEmpty(educationInfo.degree) ||
-			isEmpty(educationInfo.institutionName) ||
-			isEmpty(educationInfo.startYear) ||
-			(isEmpty(educationInfo.endingYear) && !educationInfo.currentlyStudy)
-		) {
-			return false;
-		} else {
-			return true;
-		}
-	};
+  const emptyJobValueCheck = () => {
+    if (isEmpty(jobInfo.companyName) || isEmpty(jobInfo.positionName) || jobInfo.startYear === "" || (jobInfo.endingYear === "" && jobInfo.currentlyWork === false)) {
+      let e = jobErrors;
+      if (isEmpty(jobInfo.companyName)) {
+        e = { ...e, companyName: "Required" };
+      }
+      if (isEmpty(jobInfo.positionName)) {
+        e = { ...e, positionName: "Required" };
+      }
+      if (jobInfo.startYear === ""){
+          e = { ...e, startYear: "Required", endingYear: "Required", currentlyWork: "Required" };
+      }
+      if (jobInfo.endingYear === "" && jobInfo.currentlyWork === false && new Date(jobInfo.startYear).toDateString() != new Date().toDateString()) {
+        e = { ...e, currentlyWork: "Required", endingYear: "Required" };
+      } 
+      if (new Date(jobInfo.startYear).toDateString() === new Date().toDateString()) {
+        e = { ...e, currentlyWork: "Required" };
+      } 
+      setJobErrors(e);
+      return true;
+    } else {
+      return false;
+    }
+  }
 
-	return (
-		<div>
-			<Tabs
-				id="TabsExample"
-				className="ml4-ns ml3 mt4 mr2"
-				onChange={id => handleSelectedTab(id)}
-				selectedTabId={selectedTab}
-			>
-				<Tab
-					id="Job"
-					title="Job"
-					panel={
-						<JobFormComponent
-							checked={jobInfo.currentlyWork}
-							handleCheck={handleWorkCheck}
-							handleChange={handleJobChange}
-							values={jobInfo}
-							handleDateChange={handleJobDateChange}
-							minEndYear={
-								!jobInfo.startYear ? new Date() : new Date(jobInfo.startYear)
-							}
-						/>
-					}
-					className="outline-0"
-				/>
-				<Tab
-					id="Educations"
-					title="Educations"
-					panel={
-						<EducationFormComponent
-							checked={educationInfo.currentlyStudy}
-							handleCheck={handleEducationCheck}
-							handleChange={handleEducationChange}
-							values={educationInfo}
-							handleDateChange={handleEducationDateChange}
-							minEndYear={
-								!educationInfo.startYear
-									? new Date()
-									: new Date(educationInfo.startYear)
-							}
-						/>
-					}
-					className="outline-0"
-				/>
-			</Tabs>
-			<div className="fr mr4 mb4">
-				<Button
-					className="w4 grow h2 pointer mr3"
-					style={{
-						background: "#fff",
-						outline: "none",
-						border: "1px solid #0fa3a3",
-						color: "#0fa3a3"
-					}}
-					onClick={(e: any) => {
-						e.preventDefault();
-						props.setShowDialog(false);
-					}}
-				>
-					cancel
-				</Button>
-				<Button
-					type="submit"
-					className="w4 grow h2 pointer"
-					style={{ background: "#0fa3a3", outline: "none", color: "white" }}
-					onClick={(e: any) => {
-						e.preventDefault();
-						if (selectedTab === "Job") {
-							if (emptyJobInfo() === true) {
-								props.addJobExperienceAction(jobInfo);
-								props.setShowDialog(false);
-							}
-						} else if (selectedTab === "Educations") {
-							if (emptyEducationInfo() === true) {
-								props.addEducationExperienceAction(educationInfo);
-								props.setShowDialog(false);
-							}
-						}
-					}}
-				>
-					Save
-				</Button>
-			</div>
-		</div>
-	);
-};
+  const emptyEducationErrorCheck = () => {
+    if (isEmpty(educationErrors.degree) && isEmpty(educationErrors.institutionName) && isEmpty(educationErrors.startYear) && isEmpty(educationErrors.endingYear) && isEmpty(educationErrors.currentlyStudy)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const emptyEducationValueCheck = () => {
+    if (isEmpty(educationInfo.degree) || isEmpty(educationInfo.institutionName) || educationInfo.startYear === "" || (educationInfo.endingYear === "" && educationInfo.currentlyStudy === false)) {
+      let e = educationErrors;
+      if (isEmpty(educationInfo.degree)) {
+        e = { ...e, degree: "Required" };
+      }
+      if (isEmpty(educationInfo.institutionName)) {
+        e = { ...e, institutionName: "Required" };
+      }
+      if (educationInfo.startYear === "") {
+        e = { ...e, startYear: "Required", endingYear: "Required", currentlyStudy: "Required" };
+      }
+      if (educationInfo.endingYear === "" && educationInfo.currentlyStudy === false && new Date(educationInfo.startYear).toDateString() != new Date().toDateString()) {
+        e = { ...e, currentlyStudy: "Required", endingYear: "Required" };
+      } 
+      if (new Date(educationInfo.startYear).toDateString() === new Date().toDateString()) {
+        e = { ...e, currentlyStudy: "Required" };
+      } 
+      setEducationErrors(e);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  return (
+    <div>
+      <Tabs
+        id="TabsExample"
+        className="ml4-ns ml3 mt4 mr2"
+        onChange={(id) => handleSelectedTab(id)}
+        selectedTabId={selectedTab}
+      >
+        <Tab
+          id="Job"
+          title="Job"
+          panel={<JobFormComponent
+            checked={jobInfo.currentlyWork}
+            handleCheck={handleWorkCheck}
+            handleChange={handleJobChange}
+            values={jobInfo}
+            handleDateChange={handleJobDateChange}
+            minEndYear={jobInfo.startYear === "" ? new Date() : new Date(jobInfo.startYear)}
+            emptyErrorCheck={emptyJobErrorCheck}
+            emptyValueCheck={emptyJobValueCheck}
+            errors={jobErrors}
+          />}
+          className="outline-0"
+        />
+        <Tab
+          id="Educations"
+          title="Educations"
+          panel={<EducationFormComponent
+            checked={educationInfo.currentlyStudy}
+            handleCheck={handleEducationCheck}
+            handleChange={handleEducationChange}
+            values={educationInfo}
+            handleDateChange={handleEducationDateChange}
+            minEndYear={educationInfo.startYear === "" ? new Date() : new Date(educationInfo.startYear)}
+            emptyErrorCheck={emptyEducationErrorCheck}
+            emptyValueCheck={emptyEducationValueCheck}
+            errors={educationErrors}
+          />}
+          className="outline-0"
+        />
+      </Tabs>
+      <div className="fr mr4 mb4">
+        <Button className="w4 grow h2 pointer mr3"
+          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            props.setShowDialog(false);
+          }}
+        >
+          cancel
+      </Button>
+        <Button
+          type="submit"
+          className="w4 grow h2 pointer"
+          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            if (selectedTab === "Job") {
+              if (!emptyJobValueCheck() && emptyJobErrorCheck()) {
+                props.addJobExperienceAction(jobInfo);
+                props.setShowDialog(false);
+              }
+            } else if (selectedTab === "Educations") {
+              if (!emptyEducationValueCheck() && emptyEducationErrorCheck()) {
+                props.addEducationExperienceAction(educationInfo);
+                props.setShowDialog(false);
+              }
+            }
+          }}
+        >
+          Save
+      </Button>
+      </div>
+    </div>
+  )
+}
+	
+
+
 
 interface AboutEditComponentProps {
 	setShowDialog: (val: boolean) => void;

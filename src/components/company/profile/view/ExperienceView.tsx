@@ -21,8 +21,8 @@ const ExperienceViewComponent = (props: {
     _id: "",
     companyName: "",
     positionName: "",
-    startYear: new Date(),
-    endingYear: null,
+    startYear: "",
+    endingYear: "",
     currentlyWork: false,
     jobDescription: "",
   });
@@ -31,55 +31,130 @@ const ExperienceViewComponent = (props: {
     _id: "",
     degree: "",
     institutionName: "",
-    startYear: new Date(),
-    endingYear: null,
+    startYear: "",
+    endingYear: "",
     currentlyStudy: false,
     eduDescription: ""
   });
+
+  const [jobErrors, setJobErrors] = useState({
+    companyName: "",
+    positionName: "",
+    startYear: "",
+    endingYear: "",
+    currentlyWork: "",
+  });
+
+  const [educationErrors, setEducationErrors] = useState({
+    degree: "",
+    institutionName: "",
+    startYear: "",
+    endingYear: "",
+    currentlyStudy: ""
+  });
+
   const handleJobChange = (name: string | number) => (event: any) => {
     const value = isNumber(event) ? event.toString() : event.target.value;
     setJobInfo({
       ...jobInfo, [name]: value
     });
   }
+
   const handleEducationChange = (name: string | number) => (event: any) => {
     const value = isNumber(event) ? event.toString() : event.target.value;
     setEducationInfo({
       ...educationInfo, [name]: value
     });
   }
+
   const handleJobDateChange = (name: string, date: Date) => {
     setJobInfo({
-      ...jobInfo, [name]: date.toLocaleDateString()
+      ...jobInfo, [name]: date
     });
   }
+
   const handleEducationDateChange = (name: string, date: Date) => {
     setEducationInfo({
-      ...educationInfo, [name]: date.toLocaleDateString()
+      ...educationInfo, [name]: date
     });
   }
+
   const handleWorkCheck = () => {
     setJobInfo({
-      ...jobInfo, currentlyWork: !jobInfo.currentlyWork, endingYear: null
+      ...jobInfo, currentlyWork: !jobInfo.currentlyWork, endingYear: ""
     });
   }
+
   const handleEducationCheck = () => {
     setEducationInfo({
-      ...educationInfo, currentlyStudy: !educationInfo.currentlyStudy, endingYear: null
+      ...educationInfo, currentlyStudy: !educationInfo.currentlyStudy, endingYear: ""
     });
   }
-  const emptyJobInfo = () => {
-    if (isEmpty(jobInfo.companyName) || isEmpty(jobInfo.positionName) || isEmpty(jobInfo.startYear) || (isEmpty(jobInfo.endingYear) && !jobInfo.currentlyWork)) {
-      return false;
-    } else {
+
+  const emptyJobErrorCheck = () => {
+    if (isEmpty(jobErrors.companyName) && isEmpty(jobErrors.positionName) && isEmpty(jobErrors.startYear) && isEmpty(jobErrors.endingYear) && isEmpty(jobErrors.currentlyWork)) {
       return true;
+    } else {
+      return false;
     }
   }
-  const emptyEducationInfo = () => {
-    if (isEmpty(educationInfo.degree) || isEmpty(educationInfo.institutionName) || isEmpty(educationInfo.startYear) || (isEmpty(educationInfo.endingYear) && !educationInfo.currentlyStudy)) {
-      return false;
-    } else {
+
+  const emptyJobValueCheck = () => {
+    if (isEmpty(jobInfo.companyName) || isEmpty(jobInfo.positionName) || jobInfo.startYear === "" || (jobInfo.endingYear === "" && jobInfo.currentlyWork === false)) {
+      let e = jobErrors;
+      if (isEmpty(jobInfo.companyName)) {
+        e = { ...e, companyName: "Required" };
+      }
+      if (isEmpty(jobInfo.positionName)) {
+        e = { ...e, positionName: "Required" };
+      }
+      if (jobInfo.startYear === ""){
+          e = { ...e, startYear: "Required", endingYear: "Required", currentlyWork: "Required" };
+      }
+      if (jobInfo.endingYear === "" && jobInfo.currentlyWork === false && new Date(jobInfo.startYear).toDateString() != new Date().toDateString()) {
+        e = { ...e, currentlyWork: "Required", endingYear: "Required" };
+        console.log('true')
+      } 
+      if (new Date(jobInfo.startYear).toDateString() === new Date().toDateString()) {
+        e = { ...e, currentlyWork: "Required" };
+      } 
+      setJobErrors(e);
       return true;
+    } else {
+      return false;
+    }
+  }
+
+  const emptyEducationErrorCheck = () => {
+    if (isEmpty(educationErrors.degree) && isEmpty(educationErrors.institutionName) && isEmpty(educationErrors.startYear) && isEmpty(educationErrors.endingYear) && isEmpty(educationErrors.currentlyStudy)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  const emptyEducationValueCheck = () => {
+    if (isEmpty(educationInfo.degree) || isEmpty(educationInfo.institutionName) || educationInfo.startYear === "" || (educationInfo.endingYear === "" && educationInfo.currentlyStudy === false)) {
+      let e = educationErrors;
+      if (isEmpty(educationInfo.degree)) {
+        e = { ...e, degree: "Required" };
+      }
+      if (isEmpty(educationInfo.institutionName)) {
+        e = { ...e, institutionName: "Required" };
+      }
+      if (educationInfo.startYear === "") {
+        e = { ...e, startYear: "Required", endingYear: "Required", currentlyStudy: "Required" };
+      }
+      if (educationInfo.endingYear === "" && educationInfo.currentlyStudy === false && new Date(educationInfo.startYear).toDateString() != new Date().toDateString()) {
+        e = { ...e, currentlyStudy: "Required", endingYear: "Required" };
+      } 
+      if (new Date(educationInfo.startYear).toDateString() === new Date().toDateString()) {
+        e = { ...e, currentlyStudy: "Required" };
+      } 
+      setEducationErrors(e);
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -124,14 +199,14 @@ const ExperienceViewComponent = (props: {
                             positionName: experience.positionName,
                             startYear: experience.startYear,
                             endingYear: experience.endingYear,
-                            jobDescription : experience.jobDescription,
+                            jobDescription: experience.jobDescription,
                             currentlyWork: experience.currentlyWork
                           })
                         } else if (experience.institutionName) {
                           setShowEducationForm(true);
                           setEducationInfo({
                             _id: experience._id,
-                            degree : experience.degree,
+                            degree: experience.degree,
                             institutionName: experience.degree,
                             startYear: experience.startYear,
                             endingYear: experience.endingYear,
@@ -165,8 +240,11 @@ const ExperienceViewComponent = (props: {
               handleChange={handleJobChange}
               values={jobInfo}
               handleDateChange={handleJobDateChange}
-              minEndYear={!jobInfo.startYear ? new Date() : new Date(jobInfo.startYear)}
+              minEndYear={jobInfo.startYear === "" ? new Date() : new Date(jobInfo.startYear)}
               setShowDialog={setShowJobForm}
+              emptyErrorCheck={emptyJobErrorCheck}
+              emptyValueCheck={emptyJobValueCheck}
+              errors={jobErrors}
             />
             <div className="fr mr4">
               <Button className="w4 grow h2 pointer mr3"
@@ -184,7 +262,7 @@ const ExperienceViewComponent = (props: {
                 style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
                 onClick={(e: any) => {
                   e.preventDefault();
-                  if (emptyJobInfo() === true) {
+                  if (!emptyJobValueCheck() && emptyJobErrorCheck()) {
                     const response = props.editJobExperienceAction(jobInfo, jobInfo._id);
                     if (response) {
                       setShowJobForm(false);
@@ -213,7 +291,10 @@ const ExperienceViewComponent = (props: {
               handleChange={handleEducationChange}
               values={educationInfo}
               handleDateChange={handleEducationDateChange}
-              minEndYear={!educationInfo.startYear ? new Date() : new Date(educationInfo.startYear)}
+              minEndYear={educationInfo.startYear === "" ? new Date() : new Date(educationInfo.startYear)}
+              emptyErrorCheck={emptyEducationErrorCheck}
+              emptyValueCheck={emptyEducationValueCheck}
+              errors={educationErrors}
             />
             <div className="fr mr4">
               <Button className="w4 grow h2 pointer mr3"
@@ -231,7 +312,7 @@ const ExperienceViewComponent = (props: {
                 style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
                 onClick={(e: any) => {
                   e.preventDefault();
-                  if (emptyEducationInfo() === true) {
+                  if (!emptyEducationValueCheck() && emptyEducationErrorCheck()) {
                     const response = props.editEducationExperienceAction(educationInfo, educationInfo._id);
                     if (response) {
                       setShowEducationForm(false);

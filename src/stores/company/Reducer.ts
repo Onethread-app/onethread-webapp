@@ -31,13 +31,15 @@ export interface IDesignations {
 	department: Entity;
 }
 export interface ICompanyMembers {
-	_id: string;
-	account: {
-		_id: string;
-		name: string;
-	};
-	role: string;
-	designations: [IDesignations];
+  _id: string,
+  account: {
+    _id: string;
+    name: string;
+    firstName: string;
+    lastName: string;
+  },
+  role: string;
+  designations: [IDesignations];
 }
 export interface CompanyModel {
 	_id: string;

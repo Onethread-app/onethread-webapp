@@ -77,12 +77,8 @@ a:hover {
 	border-bottom: 1px solid #0fa3a3;
 }
 
-.experiencedatePicker span.bp3-popover-target {
-	width: 100%;
-}
-
-.birthdatePicker .bp3-input-group .bp3-input {
-	box-shadow: none;
+.birthdatePicker .bp3-input-group .bp3-input{
+  box-shadow: none;
 }
 
 .birthdatePicker .bp3-popover-wrapper {
