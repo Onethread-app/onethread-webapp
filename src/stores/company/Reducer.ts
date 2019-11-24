@@ -1,28 +1,6 @@
-import {
-	GET_COMPANY_DETAILS,
-	CREATE_COMPANY,
-	ADD_DEPARTMENT,
-	ADD_DEPARTMENT_LOADING,
-	COMPANY_DEPARTMENT_LOADING,
-	ADD_DEPARTMENT_ERROR,
-	GET_ALL_COMPANY_MEMBERS,
-	COMPANY_REDUCER_LOADING,
-	COMPANY_REDUCER_LOADING_FALSE,
-	GET_ALL_DEPARTMENT,
-	CLEAR_COMPANY_REDUCER_STATE,
-	EDIT_COMPANY_INFO,
-	CHANGE_COMPANY_NAME,
-	CHANGE_COMPANY_NAME_ERROR,
-	CLEAR_CHANGE_COMPANY_NAME_ERROR,
-	CHANGE_COMPANY_NAME_LOADING,
-	CLEAR_ADD_DEPARTMENT_ERROR,
-	CREATE_COMPANY_ERROR,
-	COMPANY_DESIGNATION_LOADING,
-	ADD_DESIGNATION,
-	ADD_DESIGNATION_ERROR
-} from "./Types";
-import { User } from "stores/user/Reducer";
-import { Entity } from "stores/UtilsActions";
+import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, ADD_DEPARTMENT_LOADING, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE, EDIT_COMPANY_INFO, CHANGE_COMPANY_NAME, CHANGE_COMPANY_NAME_ERROR, CLEAR_CHANGE_COMPANY_NAME_ERROR, CHANGE_COMPANY_NAME_LOADING, CLEAR_ADD_DEPARTMENT_ERROR, CREATE_COMPANY_ERROR, LOGO_UPLOAD, COMPANY_DESIGNATION_LOADING, ADD_DESIGNATION, ADD_DESIGNATION_ERROR, } from './Types';
+import { User } from 'stores/user/Reducer';
+import { Entity } from 'stores/UtilsActions';
 
 export interface IDesignations {
 	_id: string;
@@ -42,20 +20,21 @@ export interface ICompanyMembers {
   designations: [IDesignations];
 }
 export interface CompanyModel {
-	_id: string;
-	name: string;
-	type: string;
-	email: string;
-	address: string;
-	legalOwnerName: string;
-	legalOwnerMail: string;
-	employees: User[];
-	divisions: Entity[];
-	departments: Entity[];
+	_id: string,
+	name: string,
+	type: string,
+	email: string,
+	address: string
+	legalOwnerName: string,
+	legalOwnerMail: string,
+	employees: User[],
+	divisions: Entity[],
+	departments: Entity[],
 	members: [ICompanyMembers];
 	role: string;
 	about: string;
 	skill: [{}];
+	logo: object;
 }
 
 const InitialState = {
@@ -72,18 +51,20 @@ const InitialState = {
 		departments: [{}],
 		role: "",
 		about: "",
-		skill: [{}]
+		skill: [{}],
+		logo: {}
 	},
 	createCompanyError: {
 		message: "",
 		network: false
 	},
 	loading: false,
+	logoLoading: false,
 	changeCompanyNameLoading: false,
 	departmentNameLoading: false,
 	designationLoading: false,
-	error: ""
-};
+	error: ''
+}
 
 export const CompanyReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
@@ -234,6 +215,16 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 				error: action.payload,
 				designationLoading: false
 			};
+		case LOGO_UPLOAD:
+			return {
+				...state,
+				currentCompany: {
+					...state.currentCompany,
+					logo: {
+						...state.currentCompany.logo, ...action.payload
+					}
+				},
+			}
 		default:
 			return state;
 	}

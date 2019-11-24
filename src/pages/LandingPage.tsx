@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Icon, Divider, Dialog, Button, EditableText, Tabs, Tab, FileInput } from '@blueprintjs/core';
+import { Icon, Divider, Dialog, Button, EditableText, Tabs, Tab, Spinner } from '@blueprintjs/core';
 import skill from '../resources/images/skills.png';
 import user from '../resources/images/user.png';
 import { connect } from 'react-redux';
@@ -11,7 +11,7 @@ import { User } from 'stores/user/Reducer';
 import { JobFormComponent } from 'components/company/profile/editor/JobForm';
 import { isNumber, isEmpty } from 'lodash';
 import { EducationFormComponent } from 'components/company/profile/editor/EducationForm';
-import { editUserInfoAction } from 'stores/user/Actions';
+import { editUserInfoAction, profileImageUploadAction } from 'stores/user/Actions';
 import moment from 'moment';
 import { addJobExperienceAction, addEducationExperienceAction } from 'stores/user/Actions';
 import { ExperienceView } from 'components/company/profile/view/ExperienceView';
@@ -19,52 +19,52 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { SkillView } from 'components/user/Skills';
 
 interface LandingPageProps {
-	user: User;
-	company: CompanyModel;
-	addJobExperienceAction: (val: any) => void;
-	addEducationExperienceAction: (val: any) => void;
+	user: User,
+	company: CompanyModel
+	addJobExperienceAction: (val: any) => void
+	addEducationExperienceAction: (val: any) => void
 }
 
 const ExperienceEdit = (props:
-  {
-    setShowDialog: (val: boolean) => void
-    addJobExperienceAction: (val: {}) => void
-    addEducationExperienceAction: (val: {}) => void
-  }
+	{
+		setShowDialog: (val: boolean) => void
+		addJobExperienceAction: (val: {}) => void
+		addEducationExperienceAction: (val: {}) => void
+	}
 ) => {
-  const [jobInfo, setJobInfo] = useState({
-    companyName: "",
-    positionName: "",
-    startYear: "",
-    endingYear: "",
-    currentlyWork: false,
-    jobDescription: ""
-  });
-  const [educationInfo, setEducationInfo] = useState({
-    degree: "",
-    institutionName: "",
-    startYear: "",
-    endingYear: "",
-    currentlyStudy: false,
-    eduDescription: "",
-    // TODO: rename it to educationDescription 
-  });
+	const [jobInfo, setJobInfo] = useState({
+		companyName: "",
+		positionName: "",
+		startYear: "",
+		endingYear: "",
+		currentlyWork: false,
+		jobDescription: ""
+	});
+	const [educationInfo, setEducationInfo] = useState({
+		degree: "",
+		institutionName: "",
+		startYear: "",
+		endingYear: "",
+		currentlyStudy: false,
+		eduDescription: "",
+		// TODO: rename it to educationDescription 
+	});
 
-  const [jobErrors, setJobErrors] = useState({
-    companyName: "",
-    positionName: "",
-    startYear: "",
-    endingYear: "",
-    currentlyWork: "",
-  });
+	const [jobErrors, setJobErrors] = useState({
+		companyName: "",
+		positionName: "",
+		startYear: "",
+		endingYear: "",
+		currentlyWork: "",
+	});
 
-  const [educationErrors, setEducationErrors] = useState({
-    degree: "",
-    institutionName: "",
-    startYear: "",
-    endingYear: "",
-    currentlyStudy: ""
-  });
+	const [educationErrors, setEducationErrors] = useState({
+		degree: "",
+		institutionName: "",
+		startYear: "",
+		endingYear: "",
+		currentlyStudy: ""
+	});
 
 
 
@@ -84,17 +84,17 @@ const ExperienceEdit = (props:
 		});
 	};
 
-  const handleJobDateChange = (name: string, date: Date) => {
-    setJobInfo({
-      ...jobInfo, [name]: date
-    });
-  }
+	const handleJobDateChange = (name: string, date: Date) => {
+		setJobInfo({
+			...jobInfo, [name]: date
+		});
+	}
 
-  const handleEducationDateChange = (name: string, date: Date) => {
-    setEducationInfo({
-      ...educationInfo, [name]: date
-    });
-  }
+	const handleEducationDateChange = (name: string, date: Date) => {
+		setEducationInfo({
+			...educationInfo, [name]: date
+		});
+	}
 	const handleEducationChange = (name: string | number) => (event: any) => {
 		const value = isNumber(event) ? event.toString() : event.target.value;
 		setEducationInfo({
@@ -104,20 +104,20 @@ const ExperienceEdit = (props:
 	};
 
 
-  const handleEducationCheck = () => {
-    setEducationInfo({
-      ...educationInfo, currentlyStudy: !educationInfo.currentlyStudy, endingYear: ""
-    });
+	const handleEducationCheck = () => {
+		setEducationInfo({
+			...educationInfo, currentlyStudy: !educationInfo.currentlyStudy, endingYear: ""
+		});
 	}
 
-  const emptyJobErrorCheck = () => {
-    if (isEmpty(jobErrors.companyName) && isEmpty(jobErrors.positionName) && isEmpty(jobErrors.startYear) && isEmpty(jobErrors.endingYear) && isEmpty(jobErrors.currentlyWork)) {
-      return true;
-    } else {
-      return false;
-    }
+	const emptyJobErrorCheck = () => {
+		if (isEmpty(jobErrors.companyName) && isEmpty(jobErrors.positionName) && isEmpty(jobErrors.startYear) && isEmpty(jobErrors.endingYear) && isEmpty(jobErrors.currentlyWork)) {
+			return true;
+		} else {
+			return false;
+		}
 	}
-	
+
 	const handleWorkCheck = () => {
 		setJobInfo({
 			...jobInfo,
@@ -126,141 +126,141 @@ const ExperienceEdit = (props:
 		});
 	};
 
-  const emptyJobValueCheck = () => {
-    if (isEmpty(jobInfo.companyName) || isEmpty(jobInfo.positionName) || jobInfo.startYear === "" || (jobInfo.endingYear === "" && jobInfo.currentlyWork === false)) {
-      let e = jobErrors;
-      if (isEmpty(jobInfo.companyName)) {
-        e = { ...e, companyName: "Required" };
-      }
-      if (isEmpty(jobInfo.positionName)) {
-        e = { ...e, positionName: "Required" };
-      }
-      if (jobInfo.startYear === ""){
-          e = { ...e, startYear: "Required", endingYear: "Required", currentlyWork: "Required" };
-      }
-      if (jobInfo.endingYear === "" && jobInfo.currentlyWork === false && new Date(jobInfo.startYear).toDateString() != new Date().toDateString()) {
-        e = { ...e, currentlyWork: "Required", endingYear: "Required" };
-      } 
-      if (new Date(jobInfo.startYear).toDateString() === new Date().toDateString()) {
-        e = { ...e, currentlyWork: "Required" };
-      } 
-      setJobErrors(e);
-      return true;
-    } else {
-      return false;
-    }
-  }
+	const emptyJobValueCheck = () => {
+		if (isEmpty(jobInfo.companyName) || isEmpty(jobInfo.positionName) || jobInfo.startYear === "" || (jobInfo.endingYear === "" && jobInfo.currentlyWork === false)) {
+			let e = jobErrors;
+			if (isEmpty(jobInfo.companyName)) {
+				e = { ...e, companyName: "Required" };
+			}
+			if (isEmpty(jobInfo.positionName)) {
+				e = { ...e, positionName: "Required" };
+			}
+			if (jobInfo.startYear === "") {
+				e = { ...e, startYear: "Required", endingYear: "Required", currentlyWork: "Required" };
+			}
+			if (jobInfo.endingYear === "" && jobInfo.currentlyWork === false && new Date(jobInfo.startYear).toDateString() != new Date().toDateString()) {
+				e = { ...e, currentlyWork: "Required", endingYear: "Required" };
+			}
+			if (new Date(jobInfo.startYear).toDateString() === new Date().toDateString()) {
+				e = { ...e, currentlyWork: "Required" };
+			}
+			setJobErrors(e);
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-  const emptyEducationErrorCheck = () => {
-    if (isEmpty(educationErrors.degree) && isEmpty(educationErrors.institutionName) && isEmpty(educationErrors.startYear) && isEmpty(educationErrors.endingYear) && isEmpty(educationErrors.currentlyStudy)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
+	const emptyEducationErrorCheck = () => {
+		if (isEmpty(educationErrors.degree) && isEmpty(educationErrors.institutionName) && isEmpty(educationErrors.startYear) && isEmpty(educationErrors.endingYear) && isEmpty(educationErrors.currentlyStudy)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-  const emptyEducationValueCheck = () => {
-    if (isEmpty(educationInfo.degree) || isEmpty(educationInfo.institutionName) || educationInfo.startYear === "" || (educationInfo.endingYear === "" && educationInfo.currentlyStudy === false)) {
-      let e = educationErrors;
-      if (isEmpty(educationInfo.degree)) {
-        e = { ...e, degree: "Required" };
-      }
-      if (isEmpty(educationInfo.institutionName)) {
-        e = { ...e, institutionName: "Required" };
-      }
-      if (educationInfo.startYear === "") {
-        e = { ...e, startYear: "Required", endingYear: "Required", currentlyStudy: "Required" };
-      }
-      if (educationInfo.endingYear === "" && educationInfo.currentlyStudy === false && new Date(educationInfo.startYear).toDateString() != new Date().toDateString()) {
-        e = { ...e, currentlyStudy: "Required", endingYear: "Required" };
-      } 
-      if (new Date(educationInfo.startYear).toDateString() === new Date().toDateString()) {
-        e = { ...e, currentlyStudy: "Required" };
-      } 
-      setEducationErrors(e);
-      return true;
-    } else {
-      return false;
-    }
-  }
+	const emptyEducationValueCheck = () => {
+		if (isEmpty(educationInfo.degree) || isEmpty(educationInfo.institutionName) || educationInfo.startYear === "" || (educationInfo.endingYear === "" && educationInfo.currentlyStudy === false)) {
+			let e = educationErrors;
+			if (isEmpty(educationInfo.degree)) {
+				e = { ...e, degree: "Required" };
+			}
+			if (isEmpty(educationInfo.institutionName)) {
+				e = { ...e, institutionName: "Required" };
+			}
+			if (educationInfo.startYear === "") {
+				e = { ...e, startYear: "Required", endingYear: "Required", currentlyStudy: "Required" };
+			}
+			if (educationInfo.endingYear === "" && educationInfo.currentlyStudy === false && new Date(educationInfo.startYear).toDateString() != new Date().toDateString()) {
+				e = { ...e, currentlyStudy: "Required", endingYear: "Required" };
+			}
+			if (new Date(educationInfo.startYear).toDateString() === new Date().toDateString()) {
+				e = { ...e, currentlyStudy: "Required" };
+			}
+			setEducationErrors(e);
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-  return (
-    <div>
-      <Tabs
-        id="TabsExample"
-        className="ml4-ns ml3 mt4 mr2"
-        onChange={(id) => handleSelectedTab(id)}
-        selectedTabId={selectedTab}
-      >
-        <Tab
-          id="Job"
-          title="Job"
-          panel={<JobFormComponent
-            checked={jobInfo.currentlyWork}
-            handleCheck={handleWorkCheck}
-            handleChange={handleJobChange}
-            values={jobInfo}
-            handleDateChange={handleJobDateChange}
-            minEndYear={jobInfo.startYear === "" ? new Date() : new Date(jobInfo.startYear)}
-            emptyErrorCheck={emptyJobErrorCheck}
-            emptyValueCheck={emptyJobValueCheck}
-            errors={jobErrors}
-          />}
-          className="outline-0"
-        />
-        <Tab
-          id="Educations"
-          title="Educations"
-          panel={<EducationFormComponent
-            checked={educationInfo.currentlyStudy}
-            handleCheck={handleEducationCheck}
-            handleChange={handleEducationChange}
-            values={educationInfo}
-            handleDateChange={handleEducationDateChange}
-            minEndYear={educationInfo.startYear === "" ? new Date() : new Date(educationInfo.startYear)}
-            emptyErrorCheck={emptyEducationErrorCheck}
-            emptyValueCheck={emptyEducationValueCheck}
-            errors={educationErrors}
-          />}
-          className="outline-0"
-        />
-      </Tabs>
-      <div className="fr mr4 mb4">
-        <Button className="w4 grow h2 pointer mr3"
-          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
-          onClick={(e: any) => {
-            e.preventDefault();
-            props.setShowDialog(false);
-          }}
-        >
-          cancel
+	return (
+		<div>
+			<Tabs
+				id="TabsExample"
+				className="ml4-ns ml3 mt4 mr2"
+				onChange={(id) => handleSelectedTab(id)}
+				selectedTabId={selectedTab}
+			>
+				<Tab
+					id="Job"
+					title="Job"
+					panel={<JobFormComponent
+						checked={jobInfo.currentlyWork}
+						handleCheck={handleWorkCheck}
+						handleChange={handleJobChange}
+						values={jobInfo}
+						handleDateChange={handleJobDateChange}
+						minEndYear={jobInfo.startYear === "" ? new Date() : new Date(jobInfo.startYear)}
+						emptyErrorCheck={emptyJobErrorCheck}
+						emptyValueCheck={emptyJobValueCheck}
+						errors={jobErrors}
+					/>}
+					className="outline-0"
+				/>
+				<Tab
+					id="Educations"
+					title="Educations"
+					panel={<EducationFormComponent
+						checked={educationInfo.currentlyStudy}
+						handleCheck={handleEducationCheck}
+						handleChange={handleEducationChange}
+						values={educationInfo}
+						handleDateChange={handleEducationDateChange}
+						minEndYear={educationInfo.startYear === "" ? new Date() : new Date(educationInfo.startYear)}
+						emptyErrorCheck={emptyEducationErrorCheck}
+						emptyValueCheck={emptyEducationValueCheck}
+						errors={educationErrors}
+					/>}
+					className="outline-0"
+				/>
+			</Tabs>
+			<div className="fr mr4 mb4">
+				<Button className="w4 grow h2 pointer mr3"
+					style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+					onClick={(e: any) => {
+						e.preventDefault();
+						props.setShowDialog(false);
+					}}
+				>
+					cancel
       </Button>
-        <Button
-          type="submit"
-          className="w4 grow h2 pointer"
-          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          onClick={(e: any) => {
-            e.preventDefault();
-            if (selectedTab === "Job") {
-              if (!emptyJobValueCheck() && emptyJobErrorCheck()) {
-                props.addJobExperienceAction(jobInfo);
-                props.setShowDialog(false);
-              }
-            } else if (selectedTab === "Educations") {
-              if (!emptyEducationValueCheck() && emptyEducationErrorCheck()) {
-                props.addEducationExperienceAction(educationInfo);
-                props.setShowDialog(false);
-              }
-            }
-          }}
-        >
-          Save
+				<Button
+					type="submit"
+					className="w4 grow h2 pointer"
+					style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+					onClick={(e: any) => {
+						e.preventDefault();
+						if (selectedTab === "Job") {
+							if (!emptyJobValueCheck() && emptyJobErrorCheck()) {
+								props.addJobExperienceAction(jobInfo);
+								props.setShowDialog(false);
+							}
+						} else if (selectedTab === "Educations") {
+							if (!emptyEducationValueCheck() && emptyEducationErrorCheck()) {
+								props.addEducationExperienceAction(educationInfo);
+								props.setShowDialog(false);
+							}
+						}
+					}}
+				>
+					Save
       </Button>
-      </div>
-    </div>
-  )
+			</div>
+		</div>
+	)
 }
-	
+
 
 
 
@@ -412,7 +412,7 @@ const BasicInfoDetailsView = (props: { user: User }) => {
 						props.user.birthDate
 							? moment(props.user.birthDate).format("MM/DD/YYYY")
 							: ""
-					}`}
+						}`}
 				/>
 				<SectionViewWithTitleAndDesciption
 					listTitle="Gender"
@@ -423,44 +423,45 @@ const BasicInfoDetailsView = (props: { user: User }) => {
 	);
 };
 
-export const LandingPageComponent = (props: LandingPageProps) => {
+export const LandingPageComponent = (props: LandingPageProps &
+{
+	profileImageUploadAction: (val: any) => any
+	user: {
+		profileImage: any
+	}
+}
+) => {
 	const [showDialog, setShowDialog] = useState(false);
 	const [showDialogPicture, setShowDialogPicture] = useState(false);
+	const [imageSelected, setImageSelected] = useState({}) as any;
+	const [imageName, setImageName] = useState({}) as any;
+	const [imageLoading, setImageLoading] = useState(false);
+
+	const imageChangeHandler = (event: any) => {
+		const data = new FormData();
+		data.append('file', event.target.files[0], event.target.files[0].name);
+		setImageName(event.target.files[0]);
+		setImageSelected(data);
+		return data;
+	}
+
 	return (
 		<>
-			<div className="cf w-100">
-				<h1 className="f4 tigrow-lightGray-1 ml4 tigrow-lightGray-1 mb0 mt5">
-					Profile
-				</h1>
+			<div className="cf w-100" >
+				<h1 className="f4 tigrow-lightGray-1 ml4 tigrow-lightGray-1 mb0 mt5">Profile</h1>
 				<div className="mt1">
 					<div className="fl-l flex-m w-25-l w-100-m ph3">
 						<div className="h-auto br3 ma3 pa3 bg-white cf tc shadow-4 w-50-m">
-							<div
-								className="cf flex relative center"
-								style={{ width: "112px" }}
-							>
-								<img
-									className="db br-100 ba b--black-10"
-									style={{ minWidth: "110px" }}
-									src={user}
-								/>
-								<div
-									className="absolute bg-tigrowLightBlue br-100 pointer"
+							<div className="cf flex relative center" style={{ width: '112px' }}>
+								<img className="db br-100 ba b--black-10" style={{ width: '112px', height: '112px' }} src={props.user.profileImage ? props.user.profileImage.imageSource : user} />
+								<div className="absolute bg-tigrowLightBlue br-100 pointer"
 									onClick={() => setShowDialogPicture(true)}
-									style={{
-										top: "4.5rem",
-										right: "3px",
-										width: "33px",
-										height: "33px",
-										paddingTop: "7px"
-									}}
+									style={{ top: '4.5rem', right: '3px', width: '33px', height: '33px', paddingTop: '7px' }}
 								>
-									<Icon className="white" icon="camera" iconSize={20}></Icon>
+									<Icon className="white" icon="camera" iconSize={20} ></Icon>
 								</div>
 							</div>
-							<h1 className="f6 lh-copy tigrow-lightGray-1">
-								{props.user.name}
-							</h1>
+							<h1 className="f6 lh-copy tigrow-lightGray-1">{props.user.firstName}</h1>
 						</div>
 						<AboutView user={props.user} />
 						<SkillView setShowDialog={setShowDialog} />
@@ -472,14 +473,14 @@ export const LandingPageComponent = (props: LandingPageProps) => {
 								iconType="add"
 								onClick={() => setShowDialog(true)}
 							/>
-							{props.user.timeline.length > 0 ? (
+							{props.user.timeline.length > 0 ?
 								<ExperienceView />
-							) : (
+								:
 								<div className="br3 bg-white h-auto tc">
 									<img src={skill}></img>
 									<p>No experience has added</p>
 								</div>
-							)}
+							}
 						</div>
 						<div className="mt3 mb4 shadow-4">
 							<BasicInfoDetailsView user={props.user} />
@@ -492,14 +493,10 @@ export const LandingPageComponent = (props: LandingPageProps) => {
 					icon="briefcase"
 					onClose={() => setShowDialog(!showDialog)}
 					isOpen
-					style={{ background: "#fff" }}
+					style={{ background: '#fff' }}
 				>
 					<div>
-						<ExperienceEdit
-							addJobExperienceAction={props.addJobExperienceAction}
-							addEducationExperienceAction={props.addEducationExperienceAction}
-							setShowDialog={setShowDialog}
-						/>
+						<ExperienceEdit addJobExperienceAction={props.addJobExperienceAction} addEducationExperienceAction={props.addEducationExperienceAction} setShowDialog={setShowDialog} />
 					</div>
 				</Dialog>
 			)}
@@ -508,57 +505,59 @@ export const LandingPageComponent = (props: LandingPageProps) => {
 					icon="briefcase"
 					onClose={() => setShowDialogPicture(!showDialogPicture)}
 					isOpen
-					style={{ background: "#fff" }}
+					style={{ background: '#fff' }}
 				>
 					<div className="pa3 cf">
 						<h1 className="f5 tigrow-lightBlue">Upload Photo</h1>
-						<FileInput className="bp3-fill" text="Choose file..." />
+						<label className="bp3-file-input .modifier bp3-fill">
+							<input type="file" onChange={(e) => imageChangeHandler(e)} />
+							<span className="bp3-file-upload-input">
+								{imageName.name ? imageName.name : <p>choose your file...</p>}
+							</span>
+						</label>
 						<div className="flex justify-end mt3">
-							<Button
-								className="w4 grow h2 pointer mr3"
-								style={{
-									background: "#fff",
-									outline: "none",
-									border: "1px solid #0fa3a3",
-									color: "#0fa3a3"
-								}}
+							<Button className="w4 grow h2 pointer mr3"
+								style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
 								onClick={(e: any) => {
 									e.preventDefault();
 									setShowDialogPicture(false);
+									setImageName({});
+									setImageLoading(false);
 								}}
 							>
 								cancel
-							</Button>
+              </Button>
 							<Button
 								type="submit"
 								className="w4 grow h2 pointer"
-								style={{
-									background: "#0fa3a3",
-									outline: "none",
-									color: "white"
-								}}
-								onClick={(e: any) => {
+								style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+								onClick={async (e: any) => {
 									e.preventDefault();
+									setImageLoading(true);
+									const response = await props.profileImageUploadAction(imageSelected);
+									if (response) {
+										setShowDialogPicture(false);
+										setImageName({});
+									}
+									setImageLoading(false);
 								}}
+								disabled={imageLoading}
 							>
-								Save
+								{imageLoading ? <Spinner size={15} /> : 'Save'}
 							</Button>
 						</div>
 					</div>
 				</Dialog>
 			)}
 		</>
-	);
-};
+	)
+}
 
 const mapStateToProps = (state: any) => {
 	return {
 		user: state.userReducer.user,
-		company: state.companyReducer.currentCompany
-	};
-};
+		company: state.companyReducer.currentCompany,
+	}
+}
 
-export const LandingPage = connect(mapStateToProps, {
-	addJobExperienceAction,
-	addEducationExperienceAction
-})(LandingPageComponent);
+export const LandingPage = connect(mapStateToProps, { addJobExperienceAction, addEducationExperienceAction, profileImageUploadAction })(LandingPageComponent)

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Dialog, EditableText, Divider, Button, Icon, FileInput } from '@blueprintjs/core';
+import { Dialog, EditableText, Divider, Button, Icon, Spinner } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ListTitleView } from '../../../ListTitleView';
 import { SectionViewWithTitleAndDesciption } from '../../../ListItemView';
 import user from '../../../../resources/images/user.png';
 import { CompanyInfoForm } from '../editor/CompanyInfoDetailsForm';
-import { editCompanyAboutAction } from 'stores/company/Actions';
+import { editCompanyAboutAction, companyLogoUploadAction } from 'stores/company/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { permit } from 'stores/UtilsActions';
 
@@ -74,7 +74,7 @@ export const AboutCompanyView = (props: {
               onClick={() => setShowDialogAbout(true)}
             /> : ""}
         </div>
-        <p style={{wordBreak: 'break-word'}} >{props.company.about}</p>
+        <p style={{ wordBreak: 'break-word' }} >{props.company.about}</p>
       </div>
       {showDialogAbout && (
         <Dialog
@@ -97,6 +97,17 @@ const InfoDetailsViewComponent = (props: any) => {
 
   const [showDialog, setShowDialog] = useState(false)
   const [showDialogPicture, setShowDialogPicture] = useState(false);
+  const [imageSelected, setImageSelected] = useState({}) as any;
+  const [imageName, setImageName] = useState({}) as any;
+  const [logoLoading, setLogoLoading] = useState(false);
+
+  const imageChangeHandler = (event: any) => {
+    const data = new FormData();
+    data.append('file', event.target.files[0], event.target.files[0].name);
+    setImageName(event.target.files[0]);
+    setImageSelected(data);
+    return data;
+  }
 
   return (
     <>
@@ -104,13 +115,15 @@ const InfoDetailsViewComponent = (props: any) => {
         <div className="fl-l flex-m w-25-l w-100-m ph3">
           <div className="h-auto br3 ma3 pa3 bg-white cf tc shadow-4 w-50-m">
             <div className="cf flex relative center" style={{ width: '112px' }}>
-              <img className="db br-100 ba b--black-10" style={{ minWidth: '110px' }} src={user} />
-              <div className="absolute bg-tigrowLightBlue br-100 pointer"
-                onClick={() => setShowDialogPicture(true)}
-                style={{ top: '4.5rem', right: '3px', width: '33px', height: '33px', paddingTop: '7px' }}
-              >
-                <Icon className="white" icon="camera" iconSize={20} ></Icon>
-              </div>
+              <img className="db br-100 ba b--black-10" style={{ width: '112px', height: '112px' }} src={props.company.logo ? props.company.logo.imageSource : user} />
+              {permit(props.company.role) ?
+                <div className="absolute bg-tigrowLightBlue br-100 pointer"
+                  onClick={() => setShowDialogPicture(true)}
+                  style={{ top: '4.5rem', right: '3px', width: '33px', height: '33px', paddingTop: '7px' }}
+                >
+                  <Icon className="white" icon="camera" iconSize={20} ></Icon>
+                </div>
+                : ""}
             </div>
             <h1 className="f5 lh-copy tigrow-lightGray-1">{props.company.name}</h1>
             <p className=" light-silver" >{props.company.type}</p>
@@ -165,13 +178,20 @@ const InfoDetailsViewComponent = (props: any) => {
         >
           <div className="pa3 cf">
             <h1 className="f5 tigrow-lightBlue">Upload Photo</h1>
-            <FileInput className="bp3-fill" text="Choose file..." />
+            <label className="bp3-file-input .modifier bp3-fill">
+              <input type="file" onChange={(e) => imageChangeHandler(e)} />
+              <span className="bp3-file-upload-input">
+                {imageName.name ? imageName.name : <p>choose your file...</p>}
+              </span>
+            </label>
             <div className="flex justify-end mt3">
               <Button className="w4 grow h2 pointer mr3"
                 style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
                 onClick={(e: any) => {
                   e.preventDefault();
                   setShowDialogPicture(false);
+                  setImageName({});
+                  setLogoLoading(false);
                 }}
               >
                 cancel
@@ -180,11 +200,19 @@ const InfoDetailsViewComponent = (props: any) => {
                 type="submit"
                 className="w4 grow h2 pointer"
                 style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-                onClick={(e: any) => {
+                onClick={async (e: any) => {
                   e.preventDefault();
+                  setLogoLoading(true);
+                  const response = await props.companyLogoUploadAction(imageSelected);
+                  if (response) {
+                    setShowDialogPicture(false);
+                    setImageName({});
+                  }
+                  setLogoLoading(false);
                 }}
+                disabled={logoLoading}
               >
-                Save
+                {logoLoading ? <Spinner size={15} /> : 'Save'}
               </Button>
             </div>
           </div>
@@ -197,8 +225,8 @@ const InfoDetailsViewComponent = (props: any) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
   }
 }
 
-export const InfoDetailsView = connect(mapStateToProps)(InfoDetailsViewComponent)
+export const InfoDetailsView = connect(mapStateToProps, { companyLogoUploadAction })(InfoDetailsViewComponent)
