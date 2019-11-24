@@ -232,7 +232,18 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           Cancel
           </Button>
         <Button className="grow h2 pointer white bp3-minimal w4"
-          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+          style={selectedTeamMember.length < 1 === false ?
+            {
+              background: "#0fa3a3",
+              outline: "none",
+              color: 'white'
+            } : {
+              background: '#011b1b2e',
+              outline: "none",
+              color: 'white'
+            }
+          }
+          disabled={selectedTeamMember.length < 1}
           onClick={async () => {
             // let teamMemberInfo: any = {
             //   ...addTeamMemberForm,

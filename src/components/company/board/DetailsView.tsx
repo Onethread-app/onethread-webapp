@@ -16,11 +16,20 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
   const [showColumnFormDialog, setShowColumnFormDialog] = useState(false);
   const [showTaskFormDialog, setShowTaskFormDialog] = useState(false);
   const [showAddMemberFormDialog, setShowAddMemberFormDialog] = useState(false);
+  const [showMemberListDialog, setShowMemberListDialog] = useState(false);
 
   return (
     <div className="br3 h-100 pa3 cf flex flex-column">
       <div className="flex">
-        <h1 className="f3 flex-grow-1 lh-title tigrow-lightGray-1 dib ma0">{props.currentBoard!.name}</h1>
+        <div className="flex-auto">
+          <h1 className="f3 flex-grow-1 lh-title tigrow-lightGray-1 dib ma0">{props.currentBoard!.name}</h1>
+          <p
+            className="mb0 f7 pointer dim"
+            onClick={() => setShowMemberListDialog(!showMemberListDialog)}
+          >
+            {`Members: ${props.currentBoard!.members!.length}`}
+          </p>
+        </div>
         <Button
           className="grow fr h2 pointer white bp3-minimal mr3"
           style={props.currentBoard!.columns!.length > 0 ?
@@ -45,6 +54,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
           onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
         />
         <Button
+          className="h2"
           icon={
             <Icon
               icon="new-person"
@@ -88,12 +98,35 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
       {showAddMemberFormDialog && (
         <Dialog
           onClose={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
-          title="Add Team Member"
+          title="Add Board Member"
           isOpen={showAddMemberFormDialog}
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
         >
-          <AddTeamMemberForm setShowAddMemberFormDialog={setShowAddMemberFormDialog} />
+          <AddTeamMemberForm
+            setShowAddMemberFormDialog={setShowAddMemberFormDialog}
+            currentBoard={props.currentBoard!}
+          />
+        </Dialog>
+      )}
+      {showMemberListDialog && (
+        <Dialog
+          onClose={() => setShowMemberListDialog(!showMemberListDialog)}
+          isOpen={showMemberListDialog}
+          style={{ background: '#fff' }}
+        >
+          <div className="pa3">
+            <h1 className="f4 tigrow-lightBlue">Board members</h1>
+            <div className="">
+              {props.currentBoard!.members!.length ? props.currentBoard!.members!.map((member: any, i: number) => {
+                return (
+                  <article key={member._id} className={`flex items-center w-100 pv1 ${i !== props.currentBoard!.members!.length - 1 ? "bb" : ""} b--black-05`}>
+                    <h1 className="f7 black mv0">{member.name}</h1>
+                  </article>
+                );
+              }) : ""}
+            </div>
+          </div>
         </Dialog>
       )}
     </div>

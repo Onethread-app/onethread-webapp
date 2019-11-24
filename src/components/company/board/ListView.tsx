@@ -28,7 +28,7 @@ const BoardListViewComponent = (props: BoardListViewInternalProps & RouteCompone
     <>
       <div>
         <h1 className="f5 lh-title tigrow-lightGray-1 dib">Task boards</h1>
-        <Button 
+        <Button
           className="grow fr h2 pointer white bp3-minimal "
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
           onClick={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
@@ -54,7 +54,12 @@ const BoardListViewComponent = (props: BoardListViewInternalProps & RouteCompone
                   }}
                 >
                   <h5 className="mt0 mb2"><a href="!#">{board.name}</a></h5>
-                  <p className="mb0">{board.description}</p>
+                  <p
+                    className="mb0"
+                    style={{ wordBreak: 'break-word' }}
+                  >
+                    {board.description}
+                  </p>
                 </Card>
               </div>
             ))}

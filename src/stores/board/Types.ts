@@ -3,6 +3,7 @@ export const CREATE_BOARD = 'CREATE_BOARD';
 export const CREATE_BOARD_ERROR = 'CREATE_BOARD_ERROR';
 export const GET_ALL_BOARDS = 'GET_ALL_BOARDS';
 export const SELECT_BOARD = 'SELECT_BOARD';
+export const ADD_TEAM_MEMBER_IN_BOARD = 'ADD_TEAM_MEMBER_IN_BOARD';
 
 // Board column
 
