@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const fileSchema = new mongoose.Schema({
-  fileLink: {
+  link: {
     type: String,
     required: true,
   },
@@ -10,7 +10,7 @@ const fileSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  fileType: {
+  type: {
     type: String,
     required: true,
   },

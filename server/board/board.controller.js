@@ -81,20 +81,17 @@ const update = (req, res, next) => {};
 const addBoardMembers = async (req, res, next) => {
   try {
     const boardID = req.params.boardId;
-    console.log('board', boardID);
     const memberID = req.body.memberId;
-    console.log('memberID', memberID);
     await Board.updateOne(
       { _id: boardID },
       { $addToSet: { members: memberID } },
       { safe: true, upsert: true, new: true },
-    );
+    ).populate('members', '_id name');
     const boardMembers = await Board.findOne({
       _id: boardID,
     }).populate('members', 'name');
+
     const memberList = boardMembers.members;
-    console.log(boardMembers);
-    console.log('memberlist', memberList);
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {
     next(error);
@@ -108,7 +105,7 @@ const list = async (req, res, next) => {
   // console.log(companyId);
   await Board.find({
     company: companyId,
-    members: { $in: req.user._id },
+    members: req.user._id,
   })
     .select('_id name description')
     .sort({ createdAt: -1 })

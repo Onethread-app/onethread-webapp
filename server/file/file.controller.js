@@ -31,10 +31,10 @@ const profilePicture = async (req, res, next) => {
     .then(async data => {
       logger.info(`File Successfully upload to S3`);
       const newFile = {
-        fileLink: s3FileURL + params.Bucket,
+        link: s3FileURL + params.Bucket,
         s3Key: params.Key,
         account: userID,
-        fileType: params.ContentType,
+        type: params.ContentType,
       };
       const file = new File(newFile);
       file
@@ -88,10 +88,10 @@ const companyLogo = async (req, res, next) => {
     .then(async data => {
       logger.info(`Company Logo Successfully upload to S3`);
       const newFile = {
-        fileLink: s3FileURL + params.Bucket,
+        link: s3FileURL + params.Bucket,
         s3Key: params.Key,
         company: companyID,
-        fileType: params.ContentType,
+        type: params.ContentType,
         account: userID,
       };
       const file = new File(newFile);
@@ -133,10 +133,10 @@ const fileInRooms = async (req, res, next) => {
     .then(async data => {
       logger.info(`File in rooms Successfully upload to S3`);
       const newFile = {
-        fileLink: s3FileURL + params.Bucket,
+        link: s3FileURL + params.Bucket,
         s3Key: params.Key,
         company: companyID,
-        fileType: params.ContentType,
+        type: params.ContentType,
         account: userID,
         room: roomID,
       };

@@ -40,7 +40,6 @@ const register = async (req, res, next) => {
       error: 'You must provide email and password.',
     });
   }
-  const user = await Account.findOne({ email: email });
   Account.find({
     email: email,
   })
