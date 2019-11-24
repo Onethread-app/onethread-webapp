@@ -37,7 +37,7 @@ export const TaskItem = (props: {
                 <div>
                   <p
                     className="pa2"
-                    style={{ backgroundColor: 'aliceblue' }}
+                    style={{ backgroundColor: 'aliceblue', wordBreak: 'break-word' }}
                   >
                     {props.task.description}
                   </p>
