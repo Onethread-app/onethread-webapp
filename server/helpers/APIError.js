@@ -37,11 +37,12 @@ class APIError extends ExtendableError {
 
 class EmailIdExistError extends APIError {
   constructor(
+    name,
     message,
     status = httpStatus.CONFLICT,
     isPublic = true,
   ) {
-    super(message, status, isPublic);
+    super(name, message, status, isPublic);
   }
 }
 

@@ -12,10 +12,23 @@ const upload = multer({ storage: storage });
 const fileCtrl = require('./file.controller');
 
 router.post(
-	'/upload',
-	upload.single('file'),
-	//requireAuth,
-	fileCtrl.fileUpload,
+  '/upload',
+  upload.single('file'),
+  requireAuth,
+  fileCtrl.profilePicture,
 );
 
+router.get('/show-file', fileCtrl.displayProPic);
+router.post(
+  '/company-logo',
+  upload.single('file'),
+  requireAuth,
+  fileCtrl.companyLogo,
+);
+router.post(
+  '/file-upload',
+  upload.single('file'),
+  requireAuth,
+  fileCtrl.fileInRooms,
+);
 module.exports = router;

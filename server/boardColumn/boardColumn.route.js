@@ -9,21 +9,23 @@ const { permit } = require('./../helpers/permission');
 
 const router = express.Router();
 
-router.route('/')
-  .get(requireAuth, permit('user', 'admin'),boardColumnCtrl.list)
+router
+  .route('/')
+  .get(requireAuth, permit('user', 'admin'), boardColumnCtrl.list)
   .post(
     requireAuth,
     permit('user', 'admin'),
     SchemaValidator(joiSchema.createBoardColumn),
-    boardColumnCtrl.create
+    boardColumnCtrl.create,
   );
 
-router.route('/:boardColumnId')
+router
+  .route('/:boardColumnId')
   .put(
     requireAuth,
     permit('user', 'admin'),
     SchemaValidator(joiSchema.updateBoardColumn),
-    boardColumnCtrl.update
+    boardColumnCtrl.update,
   );
 
 router.param('boardColumnId', boardColumnCtrl.load);

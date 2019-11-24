@@ -76,7 +76,7 @@ const list = async (req, res, next) => {
       .limit(+limit)
       .select('-__v -company -createdAt -updatedAt')
       .populate([
-        { path: 'account', select: '_id name' },
+        { path: 'account', select: '_id name firstName lastName' },
         {
           path: 'designations',
           select: 'division department position',
@@ -104,7 +104,7 @@ const getMember = (req, res, next) => {
 const getMemberLoad = async (req, res, next) => {
   try {
     const member = await Member.findById(req.params.memberId)
-      .populate('account', '_id name email')
+      .populate('account', '_id name email firstName lastName')
       .populate('company', '_id name email address');
 
     if (member) {
@@ -143,7 +143,7 @@ const searchMember = async (req, res, next) => {
         { _id: { $nin: memberListId } },
       ],
     })
-      .select('_id email name')
+      .select('_id email name firstName lastName')
       .then(data => {
         logger.info(`Search complete ${name}`);
         return sendJSONresponse(res, 200, {
@@ -154,8 +154,7 @@ const searchMember = async (req, res, next) => {
         });
       })
       .catch(err => {
-        logger.error(`${err}`);
-        return next(err);
+        return res.json(res, 404, 'no result found');
       });
   } catch (error) {
     logger.error(`${error}`);

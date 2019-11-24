@@ -10,24 +10,33 @@ const { permit, authSelf } = require('./../helpers/permission');
 const router = express.Router();
 
 // get borad list
-router.route('/')
+router
+  .route('/')
   .get(requireAuth, permit('user', 'admin'), boardCtrl.list)
   .post(
-    requireAuth, 
+    requireAuth,
     permit('user', 'admin'),
-    SchemaValidator(joiSchema.createBoard), 
-    boardCtrl.create);
+    SchemaValidator(joiSchema.createBoard),
+    boardCtrl.create,
+  );
 
 // get specific board details
-router.route('/:boardId')
-    .get(requireAuth, permit('user', 'admin'), boardCtrl.get)
-    .put(requireAuth, permit('user', 'admin'), boardCtrl.update);
+router
+  .route('/:boardId')
+  .get(requireAuth, permit('user', 'admin'), boardCtrl.get)
+  .put(requireAuth, permit('user', 'admin'), boardCtrl.update);
 
-router.route('/:boardId/members')
-    .put(requireAuth, boardCtrl.addBoardMembers);
+router
+  .route('/:boardId/members')
+  .put(requireAuth, boardCtrl.addBoardMembers);
 
-router.route('/:boardId/columns')
-    .put(requireAuth, boardCtrl.addBoardColumn);
+router
+  .route('/:boardId/columns')
+  .put(requireAuth, boardCtrl.addBoardColumn);
+
+router
+  .route('/:boardId/suggest-member')
+  .get(requireAuth, boardCtrl.suggestMember);
 
 router.param('boardId', boardCtrl.load);
 

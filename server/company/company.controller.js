@@ -141,15 +141,6 @@ const getCompanyIndividual = async (req, res, next) => {
 // get a company profile
 const getCompany = async (req, res, next) => {
   try {
-    // populate options
-    let options = [
-      // {
-      //   path: 'members',
-      //   select: '_id account role designations',
-      //   populate: [{ path: 'account', select: '_id name' }],
-      // },
-    ];
-
     // company details
     let company = await Company.findOne({
       name: req.params.cname,
@@ -157,8 +148,8 @@ const getCompany = async (req, res, next) => {
       .select(
         '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
       )
-      .populate(options);
-
+      .populate('logo', 'fileLink s3Key fileType');
+    console.log(company);
     // role info
     let member = await Member.findOne({
       account: req.user._id,
@@ -230,6 +221,7 @@ const getCompanyLoad = async (req, res, next) => {
 
     if (company) {
       req.company = company;
+      console.log(req.company);
       return next();
     } else {
       return res.status(404).json({
