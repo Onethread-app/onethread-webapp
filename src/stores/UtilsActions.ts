@@ -52,3 +52,13 @@ export const passwordValidation = (password: string) => {
     return false
   }
 }
+
+export const awsImageOption = (response: any) => {
+  const options = {
+    params: {
+      Key: response.s3Key,
+      ContentType: response.type
+    }
+  };
+  return options
+}
