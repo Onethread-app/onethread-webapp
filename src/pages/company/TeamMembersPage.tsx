@@ -50,6 +50,25 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 		loadCompanyMember(props.getCompanyMembers);
 	}, []);
 
+	const showDepartment = (member: ICompanyMembers) => {
+		if (
+			member.designations.length &&
+			["director", "cxo"].includes(member.designations[0].division) === false
+		) {
+			// show department
+			if (
+				member.designations[0].department &&
+				member.designations[0].department.name
+			) {
+				return member.designations[0].department.name;
+			} else {
+				return null;
+			}
+		} else {
+			return null;
+		}
+	};
+
 	return (
 		<>
 			<div>
@@ -96,12 +115,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 												? member.designations[0].division
 												: null}
 										</td>
-										<td>
-											{member.designations.length &&
-											member.designations[0].department
-												? member.designations[0].department.name
-												: null}
-										</td>
+										<td>{showDepartment(member)}</td>
 										<td>
 											{member.designations.length
 												? member.designations[0].position

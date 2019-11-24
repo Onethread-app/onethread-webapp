@@ -28,7 +28,7 @@ export interface IDesignations {
 	_id: string;
 	division: string;
 	position: string;
-	department: Entity;
+	department: { _id: string; name: string };
 }
 export interface ICompanyMembers {
 	_id: string;

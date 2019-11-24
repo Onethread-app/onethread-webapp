@@ -38,15 +38,27 @@ export const EditDesignationForm = (
 	};
 
 	const initialValues: any = () => {
+		let divisions = ["director", "cxo"];
 		if (props.member && props.member.designations.length) {
-			return {
-				division: props.member.designations[0].division,
-				department: props.member.designations[0].department._id,
-				position: props.member.designations[0].position
-			};
+			if (divisions.includes(props.member.designations[0].division)) {
+				return {
+					division: props.member.designations[0].division,
+					position: props.member.designations[0].position
+				};
+			} else {
+				return {
+					division: props.member.designations[0].division,
+					department: props.member.designations[0].department._id,
+					position: props.member.designations[0].position
+				};
+			}
 		}
-		return { division: "", department: "", position: "" };
+		return {};
 	};
+
+	useEffect(() => {
+		console.log(props.member);
+	}, []);
 
 	return (
 		<Form
