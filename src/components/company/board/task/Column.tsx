@@ -7,6 +7,8 @@ import { TaskForm } from './TaskForm'
 import { connect } from 'react-redux'
 import { Loading } from 'components/common/field/Loading'
 import { ColumnForm } from './ColumnForm'
+import { permit } from 'stores/UtilsActions'
+import { CompanyModel } from 'stores/company/Reducer'
 
 interface ColumnProps {
   key: string
@@ -15,7 +17,8 @@ interface ColumnProps {
 }
 
 interface ColumnInternalProps extends ColumnProps {
-  loading?: boolean
+  loading?: boolean;
+  company?: CompanyModel;
 }
 
 const ColumnComponent = (props: ColumnInternalProps) => {
@@ -33,29 +36,31 @@ const ColumnComponent = (props: ColumnInternalProps) => {
             >
               {props.column.name}
             </h3>
-            <Popover
-              content={
-                <Menu>
-                  <MenuItem
-                    text="Edit"
-                    onClick={(e: any) => setShowColumnFormDialog(true)}
+            {props.company && permit(props.company.role) === true ?
+              <Popover
+                content={
+                  <Menu>
+                    <MenuItem
+                      text="Edit"
+                      onClick={(e: any) => setShowColumnFormDialog(true)}
+                    />
+                  </Menu>
+                }
+                target={
+                  <Button
+                    style={{
+                      transform: 'rotate(90deg)',
+                      OTransform: 'rotate(90deg)',
+                      msTransform: 'rotate(90deg)',
+                      WebkitTransform: 'rotate(90deg)'
+                    }}
+                    icon="more"
+                    minimal={true}
+                    small={true}
                   />
-                </Menu>
-              }
-              target={
-                <Button
-                  style={{
-                    transform: 'rotate(90deg)',
-                    OTransform: 'rotate(90deg)',
-                    msTransform: 'rotate(90deg)',
-                    WebkitTransform: 'rotate(90deg)'
-                  }}
-                  icon="more"
-                  minimal={true}
-                  small={true}
-                />
-              }
-            />
+                }
+              />
+              : undefined}
           </div>
           <div className={` flex-grow-1 flex flex-column`}>
             {props.loading ? <Loading />
@@ -87,19 +92,21 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     )
                   }}
                 </Droppable>
-                <div className="overflow-hidden">
-                  <Button
-                    className="grow h2 mb2 pointer bp3-minimal"
-                    style={{
-                      background: "#0fa3a3",
-                      outline: "none",
-                      color: 'white'
-                    }}
-                    text="Add Task"
-                    fill={true}
-                    onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
-                  />
-                </div>
+                {props.company && permit(props.company.role) === true ?
+                  <div className="overflow-hidden">
+                    <Button
+                      className="grow h2 mb2 pointer bp3-minimal"
+                      style={{
+                        background: "#0fa3a3",
+                        outline: "none",
+                        color: 'white'
+                      }}
+                      text="Add Task"
+                      fill={true}
+                      onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
+                    />
+                  </div>
+                  : undefined}
               </>
             }
           </div>
@@ -127,7 +134,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
         >
-          <ColumnForm 
+          <ColumnForm
             setShowColumnFormDialog={setShowColumnFormDialog}
             column={props.column}
           />
@@ -140,6 +147,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     loading: state.taskManagementReducer.boardReducer.dragTaskLoading,
+    company: state.companyReducer.currentCompany
   }
 }
 

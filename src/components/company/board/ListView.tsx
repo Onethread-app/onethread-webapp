@@ -7,6 +7,7 @@ import { Form } from './Form';
 import { getAllBoards, getSelectedBoard } from 'stores/board/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { CompanyModel } from 'stores/company/Reducer';
+import { permit } from 'stores/UtilsActions';
 
 interface BoardListViewInternalProps {
   boardList: TaskBoard[];
@@ -28,13 +29,15 @@ const BoardListViewComponent = (props: BoardListViewInternalProps & RouteCompone
     <>
       <div>
         <h1 className="f5 lh-title tigrow-lightGray-1 dib">Task boards</h1>
-        <Button
-          className="grow fr h2 pointer white bp3-minimal "
-          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          onClick={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
-        >
-          Create new board
+        {permit(props.company.role) ?
+          <Button
+            className="grow fr h2 pointer white bp3-minimal "
+            style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+            onClick={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
+          >
+            Create new board
         </Button>
+          : undefined}
       </div>
       <div className="fl w-100 flex-grow-1 overflow-auto">
         {props.loading === false ? props.boardList.length > 0 ?

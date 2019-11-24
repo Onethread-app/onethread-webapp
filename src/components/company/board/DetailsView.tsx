@@ -6,9 +6,12 @@ import { TaskBoard } from 'stores/board/Reducer';
 import { ColumnForm } from './task/ColumnForm';
 import { TaskForm } from './task/TaskForm';
 import { AddTeamMemberForm } from './task/AddTeamMemberForm';
+import { permit } from 'stores/UtilsActions';
+import { CompanyModel } from 'stores/company/Reducer';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
+  company: CompanyModel;
 }
 
 const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
@@ -30,41 +33,45 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
             {`Members: ${props.currentBoard!.members!.length}`}
           </p>
         </div>
-        <Button
-          className="grow fr h2 pointer white bp3-minimal mr3"
-          style={props.currentBoard!.columns!.length > 0 ?
-            {
-              background: "#0fa3a3",
-              outline: "none",
-              color: 'white'
-            } : {
-              background: '#011b1b2e',
-              outline: "none",
-              color: 'white'
-            }
-          }
-          text={<span className="ph4">Add Task</span>}
-          disabled={props.currentBoard!.columns!.length > 0 ? false : true}
-          onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
-        />
-        <Button
-          className="grow fr h2 pointer white bp3-minimal mr3"
-          style={{ background: "#00a8e8", outline: "none", color: 'white' }}
-          text={<span className="ph4">Add Column</span>}
-          onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
-        />
-        <Button
-          className="h2"
-          icon={
-            <Icon
-              icon="new-person"
-              iconSize={17}
-              style={{ color: 'white' }}
+        {permit(props.company.role) === true ?
+          <>
+            <Button
+              className="grow fr h2 pointer white bp3-minimal mr3"
+              style={props.currentBoard!.columns!.length > 0 ?
+                {
+                  background: "#0fa3a3",
+                  outline: "none",
+                  color: 'white'
+                } : {
+                  background: '#011b1b2e',
+                  outline: "none",
+                  color: 'white'
+                }
+              }
+              text={<span className="ph4">Add Task</span>}
+              disabled={props.currentBoard!.columns!.length > 0 ? false : true}
+              onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
             />
-          }
-          style={{ background: "#f55b7f", outline: "none", color: 'white' }}
-          onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
-        />
+            <Button
+              className="grow fr h2 pointer white bp3-minimal mr3"
+              style={{ background: "#00a8e8", outline: "none", color: 'white' }}
+              text={<span className="ph4">Add Column</span>}
+              onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
+            />
+            <Button
+              className="h2"
+              icon={
+                <Icon
+                  icon="new-person"
+                  iconSize={17}
+                  style={{ color: 'white' }}
+                />
+              }
+              style={{ background: "#f55b7f", outline: "none", color: 'white' }}
+              onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
+            />
+          </>
+          : undefined}
       </div>
       <div className="flex-auto">
         <div className="fl h-100 w-100">
@@ -135,7 +142,8 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentBoard: state.taskManagementReducer.boardReducer.currentBoard
+    currentBoard: state.taskManagementReducer.boardReducer.currentBoard,
+    company: state.companyReducer.currentCompany
   }
 }
 
