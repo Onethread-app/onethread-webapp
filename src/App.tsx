@@ -16,7 +16,7 @@ import { ForgotPasswordPage } from 'pages/ForgotPasswordPage';
 import { ResetPasswordPage } from 'pages/ResetPasswordPage';
 import { EmailVerificationPage } from 'pages/EmailVerificationPage';
 import { BoardDetailsView } from 'components/company/board/DetailsView';
-
+import { HomePage } from "pages/HomePage";
 const PrivateRoute = (props: {
 	component: any;
 	path: string;
@@ -29,7 +29,7 @@ const PrivateRoute = (props: {
 			render={r =>
 				isAuthenticate() ?
 					<Layout Component={props.component} />
-					: <Redirect to="/signin" />
+					: <Redirect to="/home" />
 			}
 		/>
 	);
@@ -42,6 +42,13 @@ const NoMatch = () => (<div>This page is not available</div>)
 export const App = () => (
 	<BrowserRouter>
 		<Switch>
+			<Route
+				exact
+				path="/home"
+				render={r =>
+					isAuthenticate() ? <Redirect to="/" /> : <HomePage />
+				}
+			/>
 			<Route
 				exact
 				path="/signin"
@@ -126,7 +133,7 @@ export const App = () => (
 				component={SettingsPage}
 			/>
 			<Route component={NoMatch} />
-			
+
 		</Switch>
 
 	</BrowserRouter>

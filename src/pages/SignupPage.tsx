@@ -114,12 +114,6 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
         <div className="v-mid dtc">
           <div className="w-50 center">
             <img className="w-75-l w-100-m" src={require('./../resources/images/Artboard9.png')} />
-            <h2 className="mt0" style={{ color: "#0fa3a3" }}>
-              Individual
-            </h2>
-            <p style={{ color: "#707070" }}>
-              Search for jobs, Track your task and projects.
-            </p>
           </div>
         </div>
       </div>
