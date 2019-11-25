@@ -22,6 +22,7 @@ const schema = {
   ]),
   department: idSchema.id,
   position: Joi.string(),
+  designation: idSchema.id,
 };
 
 // memberId
@@ -38,7 +39,16 @@ module.exports = {
     }),
     params: memberId,
   }),
-  get: Joi.object().keys({
+  edit: Joi.object().keys({
+    body: Joi.object().keys({
+      division: schema.division.required(),
+      department: schema.department,
+      position: schema.position.required(),
+      designation: schema.designation.required(),
+    }),
+    params: memberId,
+  }),
+  list: Joi.object().keys({
     params: memberId,
   }),
 };

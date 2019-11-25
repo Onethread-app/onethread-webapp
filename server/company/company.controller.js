@@ -220,7 +220,6 @@ const getCompanyLoad = async (req, res, next) => {
 
     if (company) {
       req.company = company;
-      console.log(req.company);
       return next();
     } else {
       return res.status(404).json({

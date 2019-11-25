@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const { port } = config;
-const host = `http://localhost:3000`;
+const host = `http://tigrow.co/`;
 
 module.exports.sendEmailForResetPassword = async (
   name,
@@ -37,7 +37,7 @@ module.exports.sendEmailForVerifyAccount = async (
   emailID,
   token,
 ) => {
-  const link = `${host}/api/v1/account/verify-account/` + token;
+  const link = `${host}/verify-account/` + token;
   const mailOptions = {
     to: emailID,
     subject: 'Please confirm your Email account',

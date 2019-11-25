@@ -154,7 +154,8 @@ const searchMember = async (req, res, next) => {
         });
       })
       .catch(err => {
-        return res.json(res, 404, 'no result found');
+        logger.error(`${err}`);
+        return next(err);
       });
   } catch (error) {
     logger.error(`${error}`);

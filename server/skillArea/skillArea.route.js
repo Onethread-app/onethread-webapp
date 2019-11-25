@@ -7,20 +7,20 @@ const paramValidation = require('./skillArea.validation');
 const schemaValidator = require('../helpers/joiSchemaValidator');
 
 router
-	.route('/')
-	.post(
-		requireAuth,
-		schemaValidator(paramValidation.create),
-		skillCtrl.createSkill,
-	);
+  .route('/')
+  .post(
+    requireAuth,
+    schemaValidator(paramValidation.create),
+    skillCtrl.createSkill,
+  );
 
 router
-	.route('/update-skill')
-	.put(requireAuth, skillCtrl.updateUserSkillInfo);
+  .route('/update-skill')
+  .put(requireAuth, skillCtrl.updateUserSkillInfo);
 router.route('/').get(requireAuth, skillCtrl.getAllSkill);
 router
-	.route('/delete-skill')
-	.delete(requireAuth, skillCtrl.deleteSkillInfoFromAccount);
+  .route('/delete-skill')
+  .delete(requireAuth, skillCtrl.deleteSkillInfoFromAccount);
 router.route('/').get(requireAuth, skillCtrl.getAllSkill);
 // router.route('/:id').get(requireAuth, skillCtrl.getSkillInfo);
 // router
