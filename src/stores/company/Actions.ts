@@ -1,7 +1,7 @@
 import tigrowApi from "tigrowApi";
 import { isEqual } from "lodash";
 import { History } from "history";
-import { tokenConfig } from "../UtilsActions";
+import { tokenConfig, awsImageOption } from "../UtilsActions";
 import { CompanyModel } from "stores/company/Reducer";
 import {
 	CREATE_COMPANY,
@@ -26,9 +26,36 @@ import {
 	ADD_DESIGNATION,
 	ADD_DESIGNATION_ERROR,
 	EDIT_DESIGNATION,
-	EDIT_DESIGNATION_ERROR
+	EDIT_DESIGNATION_ERROR,
+	LOGO_UPLOAD
 } from "./Types";
 import { CLEAR_ROOMS_REDUCER_STATE } from "stores/room/Types";
+
+export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig(getState);
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.get(`/company/${name}`, headers);
+			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data });
+			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
+			const storeObject = getState();
+			if (storeObject.companyReducer.currentCompany.logo) {
+				const awsOptions = awsImageOption(storeObject.companyReducer.currentCompany.logo)
+				const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
+				dispatch({ type: LOGO_UPLOAD, payload: { imageSource: imgRes.data } })
+			}
+			return response.data;
+		} else {
+			console.log("error in slection of company fetching")
+		}
+	} catch (error) {
+		if (isEqual(error.message, "Network Error")) {
+			dispatch({ type: CREATE_COMPANY_ERROR, payload: "Network error" });
+		} else {
+			console.log(error.response);
+		}
+	}
+}
 
 export const createCompanyAction = (
 	companyData: CompanyModel,
@@ -61,29 +88,6 @@ export const createCompanyAction = (
 					network: false
 				}
 			});
-		} else {
-			console.log(error.response);
-		}
-	}
-};
-
-export const getCompanyDetails = (name: string) => async (
-	dispatch: any,
-	getState: any
-) => {
-	try {
-		const headers = tokenConfig(getState);
-		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.get(`/company/${name}`, headers);
-			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data });
-			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
-			return response.data;
-		} else {
-			console.log("error in selection of company fetching");
-		}
-	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({ type: CREATE_COMPANY_ERROR, payload: "Network error" });
 		} else {
 			console.log(error.response);
 		}
@@ -291,7 +295,30 @@ export const changeCompanyName = (companyName: string) => async (
 
 export const clearChangeCompanyNameError = () => async (dispatch: any) => {
 	dispatch({ type: CLEAR_CHANGE_COMPANY_NAME_ERROR });
-};
+}
+
+export const companyLogoUploadAction = (imageSelected: any) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig(getState);
+		const companyId = getState().companyReducer.currentCompany._id;
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.post(`files/company-logo?cid=${companyId}`, imageSelected, headers);
+			const awsOptions = awsImageOption(response.data);
+			const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
+			dispatch({ type: LOGO_UPLOAD, payload: { imageSource: imgRes.data } })
+			return imgRes.data;
+		} else {
+			console.log('no headers')
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			console.log('network error')
+		}
+		else {
+			console.log(error.response);
+		}
+	}
+}
 
 export const addDesignation = (values: any, memberId: string) => async (
 	dispatch: any,

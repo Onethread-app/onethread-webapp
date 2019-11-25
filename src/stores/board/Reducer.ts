@@ -1,4 +1,4 @@
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN_ERROR, CREATE_COLUMN, CREATE_TASK_LOADING, CREATE_TASK, CREATE_TASK_ERROR, DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR } from './Types';
+import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN_ERROR, CREATE_COLUMN, CREATE_TASK_LOADING, CREATE_TASK, CREATE_TASK_ERROR, DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD } from './Types';
 import { ITask } from 'stores/boardTask/Reducer';
 import { isEqual } from 'lodash';
 
@@ -88,6 +88,14 @@ export const BoardReducer = (state = InitialState, action: any) => {
         currentBoard: action.payload,
         loading: false
       }
+    case ADD_TEAM_MEMBER_IN_BOARD:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          members: action.payload
+        }
+      }
     case COLUMN_LOADING:
       return {
         ...state,
@@ -111,6 +119,20 @@ export const BoardReducer = (state = InitialState, action: any) => {
         boardColumnError: action.payload,
         boardColumnLoading: false
       }
+    case UPDATE_COLUMN:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          columns: state.currentBoard.columns.map((column: IColumn, i) => (
+            isEqual(column._id, action.payload._id) ?
+              {
+                ...column,
+                name: action.payload.name
+              } : column
+          ))
+        }
+      }
     case CREATE_TASK_LOADING:
       return {
         ...state,
@@ -122,7 +144,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
         currentBoard: {
           ...state.currentBoard,
           columns: state.currentBoard.columns.map((column: IColumn, i) => (
-            isEqual(column._id, action.payload.columnId) ? 
+            isEqual(column._id, action.payload.columnId) ?
               {
                 ...column,
                 tasks: [

@@ -21,7 +21,8 @@ import {
 	ADD_DESIGNATION,
 	ADD_DESIGNATION_ERROR,
 	EDIT_DESIGNATION,
-	EDIT_DESIGNATION_ERROR
+	EDIT_DESIGNATION_ERROR,
+	LOGO_UPLOAD
 } from "./Types";
 import { User } from "stores/user/Reducer";
 import { Entity } from "stores/UtilsActions";
@@ -33,29 +34,32 @@ export interface IDesignations {
 	department: { _id: string; name: string };
 }
 export interface ICompanyMembers {
-	_id: string;
+	_id: string,
 	account: {
 		_id: string;
 		name: string;
-	};
+		firstName: string;
+		lastName: string;
+	},
 	role: string;
 	designations: [IDesignations];
 }
 export interface CompanyModel {
-	_id: string;
-	name: string;
-	type: string;
-	email: string;
-	address: string;
-	legalOwnerName: string;
-	legalOwnerMail: string;
-	employees: User[];
-	divisions: Entity[];
-	departments: Entity[];
+	_id: string,
+	name: string,
+	type: string,
+	email: string,
+	address: string
+	legalOwnerName: string,
+	legalOwnerMail: string,
+	employees: User[],
+	divisions: Entity[],
+	departments: Entity[],
 	members: [ICompanyMembers];
 	role: string;
 	about: string;
 	skill: [{}];
+	logo: object;
 }
 
 const InitialState = {
@@ -72,18 +76,20 @@ const InitialState = {
 		departments: [{}],
 		role: "",
 		about: "",
-		skill: [{}]
+		skill: [{}],
+		logo: {}
 	},
 	createCompanyError: {
 		message: "",
 		network: false
 	},
 	loading: false,
+	logoLoading: false,
 	changeCompanyNameLoading: false,
 	departmentNameLoading: false,
 	designationLoading: false,
-	error: ""
-};
+	error: ''
+}
 
 export const CompanyReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
@@ -246,6 +252,16 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 				error: action.payload,
 				designationLoading: false
 			};
+		case LOGO_UPLOAD:
+			return {
+				...state,
+				currentCompany: {
+					...state.currentCompany,
+					logo: {
+						...state.currentCompany.logo, ...action.payload
+					}
+				},
+			}
 		default:
 			return state;
 	}

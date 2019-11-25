@@ -1,31 +1,63 @@
 import React, { useState } from 'react'
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { Tag, Button } from '@blueprintjs/core';
+import { useStore, connect } from 'react-redux';
+import { tokenConfig } from 'stores/UtilsActions';
+import { isEmpty, isEqual } from 'lodash';
+import tigrowApi from 'tigrowApi';
+import { TaskBoard } from 'stores/board/Reducer';
+import { CompanyModel } from 'stores/company/Reducer';
+import { addTeamMembersIntoBoard } from 'stores/board/Actions';
 
 interface AddTeamMemberFormProps {
   setShowAddMemberFormDialog?: (val: boolean) => void;
+  currentBoard: TaskBoard;
 }
 
-const skills = [
-  { _id: '1', name: 'Mithhu' },
-  { _id: '2', name: 'Labiba' },
-  { _id: '3', name: 'Nizam' },
-  { _id: '4', name: 'Arif' },
-  { _id: '5', name: 'Orvi' },
-]
+interface AddTeamMemberFormInternalProps extends AddTeamMemberFormProps {
+  company?: CompanyModel;
+  addTeamMembersIntoBoard: (memberId: (string | undefined)[], name: string | undefined) => void;
+}
 
-export const AddTeamMemberForm = (props: AddTeamMemberFormProps) => {
+const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
 
+  const [teamMembers, setTeamMembers]: any = useState([]);
+  const [loading, setLoading] = useState(false);
   // TODO Should comes from redux store
   const [selectedItems, setSelectedItems] = useState([] as ItemEntityProps[]);
+
+  const store = useStore();
+
+  const fetchTeamMembersByUsername = async (userName: string) => {
+    try {
+      const headers = tokenConfig(store.getState);
+      if ((headers as any).headers.Authorization) {
+        if (isEmpty(userName) === false) {
+          const response = await tigrowApi.get(`/boards/${props.currentBoard._id}/suggest-member?companyId=${props.company!._id}`, headers);
+          setTeamMembers(response.data.members);
+        }
+      } else {
+        console.log('no headers')
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        console.log('network error')
+      }
+      else {
+        console.log(error.response);
+      }
+    }
+  }
 
   return (
     <div className="pa3 bg-white cf">
       <div className="fl w-100 pv2">
         <SuggestField
-          items={skills}
+          onChange={(query: string) => { fetchTeamMembersByUsername(query) }}
+          items={teamMembers}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
+          multipleItemSelect={true}
         />
       </div>
       <div className="fl w-100 mb2">
@@ -64,13 +96,32 @@ export const AddTeamMemberForm = (props: AddTeamMemberFormProps) => {
             </Button>
           <Button
             type="submit"
-            onClick={(e: any) => {
+            onClick={async (e: any) => {
               e.preventDefault();
-              if (props.setShowAddMemberFormDialog)
+              setLoading(true);
+              const userIds = selectedItems.map(selected => selected._id);
+              if (userIds) {
+                await props.addTeamMembersIntoBoard(userIds, props.currentBoard._id);
+              }
+              setLoading(false);
+              if (props.setShowAddMemberFormDialog) {
                 props.setShowAddMemberFormDialog(false);
+              }
             }}
             className="w4 grow h2 pointer"
-            style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+            loading={loading}
+            style={selectedItems.length < 1 === false ?
+              {
+                background: "#0fa3a3",
+                outline: "none",
+                color: 'white'
+              } : {
+                background: '#011b1b2e',
+                outline: "none",
+                color: 'white'
+              }
+            }
+            disabled={selectedItems.length < 1}
           >
             Add
             </Button>
@@ -80,3 +131,11 @@ export const AddTeamMemberForm = (props: AddTeamMemberFormProps) => {
     </div>
   )
 }
+
+const mapStateToProps = (state: any) => {
+  return {
+    company: state.companyReducer.currentCompany
+  }
+}
+
+export const AddTeamMemberForm = connect(mapStateToProps, { addTeamMembersIntoBoard })(AddTeamMemberFormComponent)
