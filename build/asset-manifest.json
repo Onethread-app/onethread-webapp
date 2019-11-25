@@ -1,0 +1,21 @@
+{
+  "files": {
+    "main.css": "/static/css/main.d47a7fc4.chunk.css",
+    "main.js": "/static/js/main.a84192ee.chunk.js",
+    "main.js.map": "/static/js/main.a84192ee.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.1b29abf3.js",
+    "runtime-main.js.map": "/static/js/runtime-main.1b29abf3.js.map",
+    "static/css/2.abb69f9f.chunk.css": "/static/css/2.abb69f9f.chunk.css",
+    "static/js/2.633140ed.chunk.js": "/static/js/2.633140ed.chunk.js",
+    "static/js/2.633140ed.chunk.js.map": "/static/js/2.633140ed.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.e643cbdd95d145c0de3d63a4f3ab2e13.js": "/precache-manifest.e643cbdd95d145c0de3d63a4f3ab2e13.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.abb69f9f.chunk.css.map": "/static/css/2.abb69f9f.chunk.css.map",
+    "static/css/main.d47a7fc4.chunk.css.map": "/static/css/main.d47a7fc4.chunk.css.map",
+    "static/media/Artboard9.png": "/static/media/Artboard9.4b5218e1.png",
+    "static/media/index.css": "/static/media/Bg-png.2f80a363.png",
+    "static/media/blueprint-icons.css": "/static/media/icons-20.9f1e6164.woff",
+    "static/media/tigrowLogo.png": "/static/media/tigrowLogo.e8b137ec.png"
+  }
+}
