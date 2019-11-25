@@ -70,8 +70,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								Add Team Members
 							</Button>
 						) : (
-							undefined
-						)}
+								undefined
+							)}
 					</div>
 					<HTMLTable className="w-100 mt4" striped={true}>
 						<thead>
@@ -86,79 +86,79 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 							{props.companyLoading ? (
 								<Loading />
 							) : props.company &&
-							  props.company.members &&
-							  props.company.members.length > 0 ? (
-								props.company.members.map(member => (
-									<tr className="hide-child">
-										<td>{member.account.name}</td>
-										<td>
-											{member.designations.length
-												? member.designations[0].division
-												: null}
-										</td>
-										<td>
-											{member.designations.length &&
-											member.designations[0].department
-												? member.designations[0].department.name
-												: null}
-										</td>
-										<td>
-											{member.designations.length
-												? member.designations[0].position
-												: null}
-										</td>
-										<td className="flex justify-between">
-											<Popover
-												className="fr"
-												position={Position.BOTTOM}
-												popoverClassName="bp3-popover-content-sizing bg-white "
-												content={
-													<div className="ph2">
-														{member.designations &&
-														member.designations.length ? (
-															<>
-																<p
-																	className="pointer bp3-popover-dismiss mb0"
-																	onClick={async () => {
-																		setShowDialogEdit(!showDialogEdit);
-																		await props.getAllDepartments();
-																	}}
-																>
-																	Edit Role
+								props.company.members &&
+								props.company.members.length > 0 ? (
+										props.company.members.map(member => (
+											<tr className="hide-child">
+												<td>{member.account.firstName} {member.account.lastName}</td>
+												<td>
+													{member.designations.length
+														? member.designations[0].division
+														: null}
+												</td>
+												<td>
+													{member.designations.length &&
+														member.designations[0].department
+														? member.designations[0].department.name
+														: null}
+												</td>
+												<td>
+													{member.designations.length
+														? member.designations[0].position
+														: null}
+												</td>
+												<td className="flex justify-between">
+													<Popover
+														className="fr"
+														position={Position.BOTTOM}
+														popoverClassName="bp3-popover-content-sizing bg-white "
+														content={
+															<div className="ph2">
+																{member.designations &&
+																	member.designations.length ? (
+																		<>
+																			<p
+																				className="pointer bp3-popover-dismiss mb0"
+																				onClick={async () => {
+																					setShowDialogEdit(!showDialogEdit);
+																					await props.getAllDepartments();
+																				}}
+																			>
+																				Edit Role
 																</p>
-																{/* <p className="pointer bp3-popover-dismiss">
+																			{/* <p className="pointer bp3-popover-dismiss">
 																	remove
 																</p> */}
-															</>
-														) : (
-															<p
-																className="pointer bp3-popover-dismiss"
-																onClick={async () => {
-																	setShowDialogAdd(!showDialogAdd);
-																	setMember(member);
-																	await props.getAllDepartments();
-																}}
-															>
-																Add Role
+																		</>
+																	) : (
+																		<p
+																			className="pointer bp3-popover-dismiss"
+																			onClick={async () => {
+																				setShowDialogAdd(!showDialogAdd);
+																				setMember(member);
+																				await props.getAllDepartments();
+																			}}
+																		>
+																			Add Role
 															</p>
-														)}
-													</div>
-												}
-												target={
-													<Icon
-														className=" pointer"
-														icon="drag-handle-vertical"
+																	)}
+															</div>
+														}
+														target={
+															<Icon
+																className=" pointer"
+																icon="drag-handle-vertical"
+															/>
+														}
 													/>
-												}
-											/>
-										</td>
-									</tr>
-								))
-							) : (
-								<tr>
-									<td colSpan={3}>No members</td>
-								</tr>
-							)}
+												</td>
+											</tr>
+										))
+									) : (
+										<tr>
+											<td colSpan={3}>No members</td>
+										</tr>
+									)}
 						</tbody>
 					</HTMLTable>
 				</div>

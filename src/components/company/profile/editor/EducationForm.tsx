@@ -1,10 +1,26 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { DateInput } from "@blueprintjs/datetime";
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { Icon, Checkbox, TextArea } from '@blueprintjs/core';
+import { isEmpty } from 'lodash';
 
 export const EducationFormComponent = (props: any) => {
+  const [errors, setErrors] = useState({
+    degree: "",
+    institutionName: "",
+    startYear: "",
+    endingYear: "",
+    currentlyStudy: ""
+  });
+
+  useEffect(() => {
+    props.errors.degree = "";
+    props.errors.institutionName = "";
+    props.errors.startYear = "";
+    props.errors.endingYear = "";
+    props.errors.currentlyStudy = "";
+  })
 
   return (
     <form className="fl w-100 pr4 mt2">
@@ -21,8 +37,19 @@ export const EducationFormComponent = (props: any) => {
             }}
             className='bb b--lightBlue'
             leftIconColor="#0fa3a3"
+            validationOnBlur={() => {
+              if (isEmpty(props.values.degree)) {
+                const degreeError = { ...errors, degree: "Required" };
+                setErrors(degreeError);
+              } else {
+                const degreeError = { ...errors, degree: "" };
+                setErrors(degreeError);
+              }
+            }}
           />
         </div>
+        {(errors.degree || props.errors.degree) &&
+          <small style={{ color: 'red' }}>Required</small>}
       </div>
       <div className="mb4">
         <div className="flex">
@@ -37,32 +64,60 @@ export const EducationFormComponent = (props: any) => {
             }}
             className='bb b--lightBlue'
             leftIconColor="#0fa3a3"
+            validationOnBlur={() => {
+              if (isEmpty(props.values.institutionName)) {
+                const institutionNameError = { ...errors, institutionName: "Required" };
+                setErrors(institutionNameError);
+              } else {
+                const institutionNameError = { ...errors, institutionName: "" };
+                setErrors(institutionNameError);
+              }
+            }}
           />
         </div>
+        {(errors.institutionName || props.errors.institutionName) &&
+          <small style={{ color: 'red' }}>Required</small>}
       </div>
       <div className="flex justify-around mb4">
-        <div className="experiencedatePicker w-100 flex">
-          <Icon className='bb b--lightBlue pa1 tigrow-lightBlue' icon="calendar" />
-          <DateInput
-            formatDate={(date: Date) => date.toLocaleDateString()}
-            parseDate={(str: string) => new Date(str)}
-            placeholder={"Start Year"}
-            onChange={(date: Date) => props.handleDateChange("startYear", date)}
-            canClearSelection={false}
-            value={props.values.startYear ? new Date(props.values.startYear) : null}
-          />
+        <div className="experiencedatePicker w-100">
+          <div className="flex">
+            <Icon className='bb b--lightBlue pa1 tigrow-lightBlue' icon="calendar" />
+            <DateInput
+              formatDate={(date: Date) => date.toLocaleDateString()}
+              parseDate={(str: string) => new Date(str)}
+              placeholder={"Start Year"}
+              onChange={(date: Date) => props.handleDateChange("startYear", date)}
+              canClearSelection={false}
+              value={props.values.startYear ? new Date(props.values.startYear) : null}
+              popoverProps={{
+                targetClassName: 'w-100'
+              }}
+              minDate={new Date("1800/01/01")}
+              maxDate={props.values.endingYear ? new Date(props.values.endingYear) : new Date()}
+            />
+          </div>
+          {(errors.startYear || props.errors.startYear) &&
+            <small style={{ color: 'red' }}>Required</small>}
         </div>
         <div className="experiencedatePicker w-100">
-          <DateInput
-            formatDate={(date: Date) => date.toLocaleDateString()}
-            parseDate={(str: string) => new Date(str)}
-            placeholder={"End Year"}
-            onChange={(date: Date) => props.handleDateChange("endingYear", date)}
-            disabled={props.checked}
-            minDate={props.minEndYear}
-            canClearSelection={false}
-            value={props.values.endingYear ? new Date(props.values.endingYear) : null}
-          />
+          <div>
+            <DateInput
+              formatDate={(date: Date) => date.toLocaleDateString()}
+              parseDate={(str: string) => new Date(str)}
+              placeholder={"End Year"}
+              onChange={(date: Date) => props.handleDateChange("endingYear", date)}
+              disabled={(new Date(props.values.startYear)).getDate() >= (new Date()).getDate() || props.values.startYear === "" ? true : props.checked}
+              minDate={props.minEndYear}
+              canClearSelection={false}
+              value={props.values.endingYear ? new Date(props.values.endingYear) : null}
+              maxDate={new Date()}
+              popoverProps={{
+                targetClassName: 'w-100'
+              }}
+            />
+          </div>
+          {(errors.endingYear || props.errors.endingYear) &&
+            <small style={{ color: 'red' }}>Required</small>}
         </div>
       </div>
       <div className="mb4">
@@ -75,10 +130,16 @@ export const EducationFormComponent = (props: any) => {
         />
       </div>
       <div className="mb4">
-        <Checkbox
-          checked={props.checked}
-          onChange={props.handleCheck}
-          label="I currently study here" />
+        <div>
+          <Checkbox
+            checked={props.checked}
+            onChange={props.handleCheck}
+            disabled={ props.values.startYear === "" ? true : false}
+            label="I currently study here"
+          />
+        </div>
+        {(errors.currentlyStudy || props.errors.currentlyStudy) &&
+          <small style={{ color: 'red' }}>Required</small>}
       </div>
     </form>
   )

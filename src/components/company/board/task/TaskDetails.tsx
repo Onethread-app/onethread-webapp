@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, EditableText, ProgressBar, Checkbox, Popover, FileInput, TextArea, Card, Elevation, FormGroup } from '@blueprintjs/core'
-import { AddTeamMemberForm } from './AddTeamMemberForm'
+// import { AddTeamMemberForm } from './AddTeamMemberForm'
 // import { DateInput } from '@blueprintjs/datetime'
 import { ITask } from 'stores/boardTask/Reducer'
 import { InputGroupField } from 'components/common/field/InputGroup'
@@ -141,7 +141,7 @@ export const TaskDetails = (props: {
                       }
                     />
                   </div>
-                  <div className="fr">
+                  {/* <div className="fr">
                     <Popover
                       content={<AddTeamMemberForm />}
                       target={
@@ -153,7 +153,7 @@ export const TaskDetails = (props: {
                         />
                       }
                     />
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, CREATE_COLUMN_ERROR, CREATE_TASK_LOADING, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN } from './Types';
+import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, CREATE_COLUMN_ERROR, CREATE_TASK_LOADING, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD } from './Types';
 import { isEqual } from 'lodash';
 import { TaskBoard } from './Reducer';
 
@@ -180,3 +180,30 @@ export const dragAndDropTask = (taskId: string, sourceColumnId: string, destinat
       }
     }
   }
+
+export const addTeamMembersIntoBoard = (members: (string | undefined)[], boardId: string | undefined) => async (
+  dispatch: any,
+  getState: any
+) => {
+  try {
+    const headers = tokenConfig(getState);
+    if ((headers as any).headers.Authorization) {
+      console.log(`members in add: `, members)
+      const response = await tigrowApi.put(
+        `boards/${boardId}/members`,
+        { memberId: members },
+        headers
+      );
+      dispatch({ type: ADD_TEAM_MEMBER_IN_BOARD, payload: response.data });
+    } else {
+      console.log("error on member add in board");
+    }
+  } catch (error) {
+    if (isEqual(error.message, "Network Error")) {
+      // dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: "Network error" });
+      console.log('Network error')
+    } else {
+    console.log(error.response);
+    }
+  }
+};

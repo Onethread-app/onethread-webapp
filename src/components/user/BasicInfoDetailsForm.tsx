@@ -44,6 +44,13 @@ const BasicInfoFormComponent = (props: {
     contactNo: ""
   });
 
+  const maxBirthDate = () => {
+    let d = new Date();
+    let maxDate = d.getFullYear() - 13;
+    d.setFullYear(maxDate);
+    return d;
+  }
+
   const emailValidation = (email: string) => {
     const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (email.match(regexForEmailValidation)) {
@@ -238,7 +245,10 @@ const BasicInfoFormComponent = (props: {
             targetClassName: 'w-100'
           }}
           placeholder="Birth date"
-        /> 
+          minDate={new Date("1800-01-01")}
+          maxDate={maxBirthDate()}
+          canClearSelection={false}
+        />
       </div>
       <div className="mb4">
         <RadioGroup

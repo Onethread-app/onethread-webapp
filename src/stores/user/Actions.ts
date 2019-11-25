@@ -1,5 +1,5 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE, ADD_SKILL, DELETE_SKILL } from './Types';
-import { tokenConfig } from 'stores/UtilsActions';
+import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE, ADD_SKILL, DELETE_SKILL, IMAGE_UPLOAD } from './Types';
+import { tokenConfig, awsImageOption } from 'stores/UtilsActions';
 import { isEqual } from "lodash";
 import tigrowApi from 'tigrowApi';
 import { User } from './Reducer';
@@ -116,9 +116,9 @@ export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any,
 }
 export const deleteSkillAction = (skill: string) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig(getState());
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.delete(`/skills/delete-skill?skillId=${skill}`, headers );
+			const response = await tigrowApi.delete(`/skills/delete-skill?skillId=${skill}`, headers);
 			dispatch({ type: DELETE_SKILL, payload: response.data.skillArea });
 		} else {
 			console.log("error in user fetching");
@@ -132,7 +132,7 @@ export const deleteSkillAction = (skill: string) => async (dispatch: any, getSta
 	}
 };
 
-export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid:any) => async (dispatch: any, getState: any) => {
+export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid: any) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
@@ -143,7 +143,7 @@ export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid:
 			);
 			const timelineResponse = response.data.data;
 			const timeline = getState().userReducer.user.timeline;
-			const filteredTimeline = timeline.filter((exp:any) => exp._id !== timelineResponse._id );
+			const filteredTimeline = timeline.filter((exp: any) => exp._id !== timelineResponse._id);
 			filteredTimeline.push(timelineResponse);
 			const timelineSort = filteredTimeline.sort((a: any, b: any) =>
 				a.startYear < b.startYear ? 1 : -1,
@@ -158,7 +158,7 @@ export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid:
 	}
 }
 
-export const editEducationExperienceAction = (educationExperienceInfo: any, educationexperienceid:any) => async (dispatch: any, getState: any) => {
+export const editEducationExperienceAction = (educationExperienceInfo: any, educationexperienceid: any) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
@@ -169,7 +169,7 @@ export const editEducationExperienceAction = (educationExperienceInfo: any, educ
 			);
 			const timelineResponse = response.data.data;
 			const timeline = getState().userReducer.user.timeline;
-			const filteredTimeline = timeline.filter((exp:any) => exp._id !== timelineResponse._id );
+			const filteredTimeline = timeline.filter((exp: any) => exp._id !== timelineResponse._id);
 			filteredTimeline.push(timelineResponse);
 			const timelineSort = filteredTimeline.sort((a: any, b: any) =>
 				a.startYear < b.startYear ? 1 : -1,
@@ -180,5 +180,27 @@ export const editEducationExperienceAction = (educationExperienceInfo: any, educ
 		}
 	} catch (error) {
 		console.log(error.response)
+	}
+}
+
+export const profileImageUploadAction = (imageSelected: any) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig(getState);
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.post(`files/upload`, imageSelected, headers);
+			const awsOptions = awsImageOption(response.data);
+			const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
+			dispatch({ type: IMAGE_UPLOAD, payload: { imageSource: imgRes.data } })
+			return imgRes.data;
+		} else {
+			console.log('no headers')
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			console.log('network error')
+		}
+		else {
+			console.log(error.response);
+		}
 	}
 }
