@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Dialog, Tabs, Tab } from '@blueprintjs/core';
 import { InputGroupField } from 'components/common/field/InputGroup';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { addDepartment, getAllDepartments, changeCompanyName, clearChangeCompanyNameError, clearAddDepartmentError } from '../../../stores/company/Actions'
 import { CompanyModel } from 'stores/company/Reducer';
 import { Loading } from 'components/common/field/Loading';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { isEqual, isEmpty } from 'lodash';
 import { History } from 'history';
+import { permit } from 'stores/UtilsActions';
 interface DepartmentViewProps {
   company: CompanyModel;
   loading: boolean;
@@ -226,25 +227,27 @@ const DepartmentView = connect(mapStateToProps, { addDepartment, getAllDepartmen
 const GeneralView = connect(mapStateToProps, { changeCompanyName, clearChangeCompanyNameError })(withRouter(GeneralViewComponent))
 
 export const CompanySettingsView = () => {
+  const company = useSelector((state: any) => state.companyReducer.currentCompany);
   return (
-    <div className="bl b--black-05 bw1 pl4-l pl3-m ml4-l" style={{minHeight: '30em'}}>
+    <div className="bl b--black-05 bw1 pl4-l pl3-m ml4-l" style={{ minHeight: '30em' }}>
       <div>
-        <Tabs
-          id="TabsExample"
-        >
-          <Tab
-            id="General"
-            title="General"
-            panel={<GeneralView />}
-            className="outline-0"
-          />
-          <Tab
-            id="fields"
-            title="Fields"
-            panel={<DepartmentView />}
-            className="outline-0"
-          />
-        </Tabs>
+        {company.role && permit(company.role) ? (
+          <Tabs
+            id="TabsExample"
+          >
+            <Tab
+              id="General"
+              title="General"
+              panel={<GeneralView />}
+              className="outline-0"
+            />
+            <Tab
+              id="fields"
+              title="Fields"
+              panel={<DepartmentView />}
+              className="outline-0"
+            />
+          </Tabs>) : <h5 className="mv2 red">Restricted for {company.role}</h5>}
       </div>
     </div>
   )
