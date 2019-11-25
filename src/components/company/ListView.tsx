@@ -7,6 +7,7 @@ import { History } from 'history';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { User, ICompanyByUser } from 'stores/user/Reducer';
 import { Loading } from 'components/common/field/Loading';
+import user from '../../../../tigrowfront/src/resources/images/user.png'
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -16,6 +17,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   currentCompany: string;
   companies: ICompanyByUser[];
   user: User;
+  logo: any;
   getCompanyDetails: (companyId: string, history: History) => void;
   getAllCompaniesByUserId: (userId: string) => void;
 }
@@ -38,7 +40,7 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
           <ListItemViewWithImage
             key={c.company._id}
             class={"hover-bg-black-10 pa2"}
-            imageSrc={`https://robohash.org/${c.company.name}`}
+            imageSrc={props.logo ? props.logo.imageSource : user}
             listTitle={c.company.name}
             active={props.currentCompany === c.company._id ? true : false}
             // listDescription="C"
@@ -68,6 +70,7 @@ const mapStateToProps = (state: any) => {
     companies: state.userReducer.user.companies,
     user: state.userReducer.user,
     currentCompany: state.companyReducer.currentCompany._id,
+    logo: state.companyReducer.currentCompany.logo
   }
 }
 
