@@ -1,12 +1,15 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
+import { Link } from 'react-router-dom';
 
 export const HomePage = () => {
   return (
     <div>
       <div className="relative homePageBackground cover">
         <div className="flex w-100 justify-end">
-          <Button className="mr4-l mt4-l mr5-m mt5-m mt2 mr2 outline-0" style={{ background: '#060517', color: 'white', fontSize: '1rem' }}>Login</Button>
+          <Link to="/signin">
+            <Button className="mr4-l mt4-l mr5-m mt5-m mt2 mr2 outline-0" style={{ background: '#060517', color: 'white', fontSize: '1rem' }}>Login</Button>
+          </Link>
         </div>
         <div className="cf flex-ns">
           <div className="w-100 w-50-ns dt vh-100-ns">
@@ -19,22 +22,16 @@ export const HomePage = () => {
                 ever since the 1500s, when an unknown printer took a galley of type
                 and scrambled it to make a type specimen book. It has survived not
                 </h1>
-                <Button className="grow pointer"
-                  style={{ outline: "none", color: "white", background: '#0fa3a3', borderRadius: '26px', width: '132px', height: '41px' }}
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                  }}
-                >
-                  Sign In
-              </Button>
-                <Button className="grow pointer ml3-l ml1"
-                  style={{ outline: "none", color: "white", background: '#060517', border: '1px solid #fff', borderRadius: '26px', width: '132px', height: '41px' }}
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                  }}
-                >
-                  Watch Demo
-              </Button>
+                <Link to="/signin">
+                  <Button className="grow pointer"
+                    style={{ outline: "none", color: "white", background: '#0fa3a3', borderRadius: '26px', width: '132px', height: '41px' }}
+                    onClick={(e: any) => {
+                      e.preventDefault();
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                </Link>
                 <p className="pointer white mt5-l mt4-m f4-ns mt1 mv3">Don't have an account?</p>
               </div>
             </div>
