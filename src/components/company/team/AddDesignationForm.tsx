@@ -62,7 +62,7 @@ export const AddDesignationForm = (props: AddDesignationFormProps) => {
 								validate={required}
 							>
 								<option selected value="">
-									Please select a division
+									Please select a value
 								</option>
 								{props.divisions &&
 									props.divisions.length &&
@@ -85,7 +85,7 @@ export const AddDesignationForm = (props: AddDesignationFormProps) => {
 									validate={required}
 								>
 									<option selected value="">
-										Please select a department
+										Please select a value
 									</option>
 									{props.departments &&
 										props.departments.length &&

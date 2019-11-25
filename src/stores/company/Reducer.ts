@@ -1,23 +1,48 @@
-import { GET_COMPANY_DETAILS, CREATE_COMPANY, ADD_DEPARTMENT, ADD_DEPARTMENT_LOADING, COMPANY_DEPARTMENT_LOADING, ADD_DEPARTMENT_ERROR, GET_ALL_COMPANY_MEMBERS, COMPANY_REDUCER_LOADING, COMPANY_REDUCER_LOADING_FALSE, GET_ALL_DEPARTMENT, CLEAR_COMPANY_REDUCER_STATE, EDIT_COMPANY_INFO, CHANGE_COMPANY_NAME, CHANGE_COMPANY_NAME_ERROR, CLEAR_CHANGE_COMPANY_NAME_ERROR, CHANGE_COMPANY_NAME_LOADING, CLEAR_ADD_DEPARTMENT_ERROR, CREATE_COMPANY_ERROR, LOGO_UPLOAD, COMPANY_DESIGNATION_LOADING, ADD_DESIGNATION, ADD_DESIGNATION_ERROR, } from './Types';
-import { User } from 'stores/user/Reducer';
-import { Entity } from 'stores/UtilsActions';
+import {
+	GET_COMPANY_DETAILS,
+	CREATE_COMPANY,
+	ADD_DEPARTMENT,
+	ADD_DEPARTMENT_LOADING,
+	COMPANY_DEPARTMENT_LOADING,
+	ADD_DEPARTMENT_ERROR,
+	GET_ALL_COMPANY_MEMBERS,
+	COMPANY_REDUCER_LOADING,
+	COMPANY_REDUCER_LOADING_FALSE,
+	GET_ALL_DEPARTMENT,
+	CLEAR_COMPANY_REDUCER_STATE,
+	EDIT_COMPANY_INFO,
+	CHANGE_COMPANY_NAME,
+	CHANGE_COMPANY_NAME_ERROR,
+	CLEAR_CHANGE_COMPANY_NAME_ERROR,
+	CHANGE_COMPANY_NAME_LOADING,
+	CLEAR_ADD_DEPARTMENT_ERROR,
+	CREATE_COMPANY_ERROR,
+	COMPANY_DESIGNATION_LOADING,
+	ADD_DESIGNATION,
+	ADD_DESIGNATION_ERROR,
+	EDIT_DESIGNATION,
+	EDIT_DESIGNATION_ERROR,
+	LOGO_UPLOAD
+} from "./Types";
+import { User } from "stores/user/Reducer";
+import { Entity } from "stores/UtilsActions";
 
 export interface IDesignations {
 	_id: string;
 	division: string;
 	position: string;
-	department: Entity;
+	department: { _id: string; name: string };
 }
 export interface ICompanyMembers {
-  _id: string,
-  account: {
-    _id: string;
-    name: string;
-    firstName: string;
-    lastName: string;
-  },
-  role: string;
-  designations: [IDesignations];
+	_id: string,
+	account: {
+		_id: string;
+		name: string;
+		firstName: string;
+		lastName: string;
+	},
+	role: string;
+	designations: [IDesignations];
 }
 export interface CompanyModel {
 	_id: string,
@@ -210,6 +235,18 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 				designationLoading: false
 			};
 		case ADD_DESIGNATION_ERROR:
+			return {
+				...state,
+				error: action.payload,
+				designationLoading: false
+			};
+		case EDIT_DESIGNATION:
+			return {
+				...state,
+				error: "",
+				designationLoading: false
+			};
+		case EDIT_DESIGNATION_ERROR:
 			return {
 				...state,
 				error: action.payload,

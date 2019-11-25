@@ -1,124 +1,136 @@
 import React from "react";
-import { Icon, HTMLSelect, Button } from "@blueprintjs/core";
-import { InputGroupField } from "components/common/field/InputGroup";
+import { Icon } from "@blueprintjs/core";
+import { ICompanyMembers } from "stores/company/Reducer";
+import { Entity } from "stores/UtilsActions";
+import { Form, Field } from "react-final-form";
+import { IconNames } from "@blueprintjs/icons";
+import SelectInput from "components/common/final-form/SelectInput";
+import { required } from "components/common/final-form/utils";
+import { Condition } from "components/common/final-form/Condition";
+import TextInput from "components/common/final-form/TextInput";
+import SubmitResetButtons from "components/common/final-form/SubmitResetButtons";
+import Error from "components/common/final-form/Error";
 interface EditDesignationFormProps {
 	setShowDialogEdit: (val: boolean) => void;
 }
 
-interface EditDesignationFormInternalProps extends EditDesignationFormProps {}
+interface EditDesignationFormInternalProps extends EditDesignationFormProps {
+	member: ICompanyMembers | undefined;
+	setShowDialogEdit: (val: boolean) => void;
+	editDesignation: (values: any, memberId: string) => void;
+	getCompanyMembers: () => void;
+	divisions: Entity[];
+	departments: Entity[];
+}
 export const EditDesignationForm = (
 	props: EditDesignationFormInternalProps
 ) => {
-	const Division = ["ui", "ux", "frontend", "backend"];
-	const Department = ["ui", "ux", "frontend", "backend"];
+	const onSubmit: any = async (values: any) => {
+		if (props.member) {
+			values.designation = props.member.designations[0]._id;
+			const status: any = await props.editDesignation(values, props.member._id);
+			if (status === 200) {
+				await props.getCompanyMembers();
+				props.setShowDialogEdit(false);
+			}
+		}
+		return {};
+	};
+
+	const initialValues: any = () => {
+		let divisions = ["director", "cxo"];
+		if (props.member && props.member.designations.length) {
+			if (divisions.includes(props.member.designations[0].division)) {
+				return {
+					division: props.member.designations[0].division,
+					position: props.member.designations[0].position
+				};
+			} else {
+				return {
+					division: props.member.designations[0].division,
+					department: props.member.designations[0].department._id,
+					position: props.member.designations[0].position
+				};
+			}
+		}
+		return {};
+	};
+
 	return (
-		<div>
-			<div className="pa4">
-				<h1 className="f5 tigrow-lightBlue">Edit Role</h1>
-				<form className="">
-					<h1 className="f7 black-40">#Role1</h1>
-					<div className="flex justify-between">
-						<div className="mb4">
-							<div className="flex">
-								<div className=" f5 pa1 bb b--lightBlue">
-									<Icon icon={"comparison"} className="tigrow-lightBlue" />
-								</div>
-								<HTMLSelect
-									fill={true}
-									minimal={true}
-									className=" bb b--lightBlue"
-									style={{
-										boxShadow: "none",
-										borderRadius: "0px",
-										backgroundColor: "white",
-										flex: "1",
-										outline: "none"
-									}}
-								>
-									<option selected value="">
-										Please select a division
-									</option>
-									{Division.map(t => (
-										<option value={t}>{t}</option>
+		<Form
+			onSubmit={onSubmit}
+			initialValues={initialValues}
+			render={({ handleSubmit, form, submitting, pristine, values }) => (
+				<div>
+					<div className="flex justify-end pa3">
+						<Icon
+							icon={IconNames.DELETE}
+							iconSize={20}
+							className="grow pointer tigrow-lightBlue"
+							onClick={(e: any) => props.setShowDialogEdit(false)}
+						/>
+					</div>
+					<form className="fl w-100 pa4 pt0" onSubmit={handleSubmit}>
+						<h1 className="f5 tigrow-lightBlue">Edit Role</h1>
+						<div className="flex flex-column">
+							<Field<string>
+								name="division"
+								component={SelectInput}
+								validate={required}
+							>
+								<option selected value="">
+									Please select a division
+								</option>
+								{props.divisions &&
+									props.divisions.length &&
+									props.divisions.map((d: Entity) => (
+										<option value={d._id}>{d.name}</option>
 									))}
-								</HTMLSelect>
-							</div>
-						</div>
-						<div className="mb4">
-							<div className="flex">
-								<div className=" f5 pa1 bb b--lightBlue">
-									<Icon icon={"comparison"} className="tigrow-lightBlue" />
-								</div>
-								<HTMLSelect
-									fill={true}
-									minimal={true}
-									className=" bb b--lightBlue"
-									style={{
-										boxShadow: "none",
-										borderRadius: "0px",
-										backgroundColor: "white",
-										flex: "1",
-										outline: "none"
-									}}
+							</Field>
+							<Error name={"division"} />
+							<Condition
+								when="division"
+								match={[
+									"seniorManager",
+									"middleManager",
+									"operationalEmployee"
+								]}
+							>
+								<Field<string>
+									name="department"
+									component={SelectInput}
+									validate={required}
 								>
 									<option selected value="">
 										Please select a department
 									</option>
-									{Department.map(t => (
-										<option value={t}>{t}</option>
-									))}
-								</HTMLSelect>
-							</div>
+									{props.departments &&
+										props.departments.length &&
+										props.departments.map((d: Entity) => (
+											<option value={d._id}>{d.name}</option>
+										))}
+								</Field>
+								<Error name={"department"} />
+							</Condition>
 						</div>
-					</div>
-					<div className="mb1">
-						<div className="flex">
-							<InputGroupField
-								value=""
-								id="position"
-								placeHolder="Position"
-								leftIcon="id-number"
-								style={{
-									boxShadow: "none"
-								}}
-								className="bb b--lightBlue"
-								leftIconColor="#0fa3a3"
-							/>
-						</div>
-					</div>
-					<div className="flex justify-end mt4">
-						<Button
-							className="w4 grow h2 pointer mr3"
-							style={{
-								background: "#fff",
-								outline: "none",
-								border: "1px solid #0fa3a3",
-								color: "#0fa3a3"
-							}}
-							onClick={(e: any) => {
-								e.preventDefault();
-								props.setShowDialogEdit(false);
-							}}
-						>
-							cancel
-						</Button>
-						<Button
-							type="submit"
-							className="w4 grow h2 pointer"
-							style={{
-								background: "#0fa3a3",
-								outline: "none",
-								color: "white"
-							}}
-							onClick={(e: any) => {
-								e.preventDefault();
-							}}
-						>
-							Save
-						</Button>
-					</div>
-				</form>
-			</div>
-		</div>
+						<Field<string>
+							name="position"
+							placeHolder="Position"
+							component={TextInput}
+							validate={required}
+							leftIcon="id-number"
+						/>
+						<Error name={"position"} />
+						<SubmitResetButtons
+							reset={form.reset}
+							submitting={submitting}
+							pristine={pristine}
+							resetBtnName="Reset"
+							submitBtnName="Save"
+						/>
+					</form>
+				</div>
+			)}
+		/>
 	);
 };
