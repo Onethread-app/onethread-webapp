@@ -116,9 +116,9 @@ export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any,
 }
 export const deleteSkillAction = (skill: string) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState());
+		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.delete(`/skills/delete-skill?skillId=${skill}`, headers);
+			const response = await tigrowApi.delete(`skills/delete-skill?skillId=${skill}`, headers);
 			dispatch({ type: DELETE_SKILL, payload: response.data.skillArea });
 		} else {
 			console.log("error in user fetching");
