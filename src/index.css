@@ -281,3 +281,8 @@ a:hover {
 	margin-left: 20px;
 }
 /**************************************/
+
+.homePageBackground {
+	background-image: url(./resources/images/homeBg.png);
+	background-repeat: no-repeat; 
+}
