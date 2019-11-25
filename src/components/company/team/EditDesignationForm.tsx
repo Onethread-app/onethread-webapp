@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Icon } from "@blueprintjs/core";
 import { ICompanyMembers } from "stores/company/Reducer";
 import { Entity } from "stores/UtilsActions";
@@ -17,7 +17,7 @@ interface EditDesignationFormProps {
 interface EditDesignationFormInternalProps extends EditDesignationFormProps {
 	member: ICompanyMembers | undefined;
 	setShowDialogEdit: (val: boolean) => void;
-	addDesignation: (values: any, memberId: string) => void;
+	editDesignation: (values: any, memberId: string) => void;
 	getCompanyMembers: () => void;
 	divisions: Entity[];
 	departments: Entity[];
@@ -27,12 +27,12 @@ export const EditDesignationForm = (
 ) => {
 	const onSubmit: any = async (values: any) => {
 		if (props.member) {
-			window.alert(JSON.stringify(values, undefined, 2));
-			// const status: any = await props.addDesignation(values, props.member._id);
-			// if (status === 201) {
-			// 	await props.getCompanyMembers();
-			// 	props.setShowDialogEdit(false);
-			// }
+			values.designation = props.member.designations[0]._id;
+			const status: any = await props.editDesignation(values, props.member._id);
+			if (status === 200) {
+				await props.getCompanyMembers();
+				props.setShowDialogEdit(false);
+			}
 		}
 		return {};
 	};
@@ -56,21 +56,10 @@ export const EditDesignationForm = (
 		return {};
 	};
 
-	useEffect(() => {
-		console.log(props.member);
-	}, []);
-
 	return (
 		<Form
 			onSubmit={onSubmit}
 			initialValues={initialValues}
-			// validate={values => {
-			// 	const errors: any = {};
-			// 	if (!values.name) {
-			// 		errors.name = "Required";
-			// 	}
-			// 	return errors;
-			// }}
 			render={({ handleSubmit, form, submitting, pristine, values }) => (
 				<div>
 					<div className="flex justify-end pa3">
@@ -139,7 +128,6 @@ export const EditDesignationForm = (
 							resetBtnName="Reset"
 							submitBtnName="Save"
 						/>
-						<pre>{JSON.stringify(values, undefined, 2)}</pre>
 					</form>
 				</div>
 			)}

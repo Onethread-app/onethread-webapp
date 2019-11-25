@@ -19,7 +19,9 @@ import {
 	CREATE_COMPANY_ERROR,
 	COMPANY_DESIGNATION_LOADING,
 	ADD_DESIGNATION,
-	ADD_DESIGNATION_ERROR
+	ADD_DESIGNATION_ERROR,
+	EDIT_DESIGNATION,
+	EDIT_DESIGNATION_ERROR
 } from "./Types";
 import { User } from "stores/user/Reducer";
 import { Entity } from "stores/UtilsActions";
@@ -227,6 +229,18 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 				designationLoading: false
 			};
 		case ADD_DESIGNATION_ERROR:
+			return {
+				...state,
+				error: action.payload,
+				designationLoading: false
+			};
+		case EDIT_DESIGNATION:
+			return {
+				...state,
+				error: "",
+				designationLoading: false
+			};
+		case EDIT_DESIGNATION_ERROR:
 			return {
 				...state,
 				error: action.payload,

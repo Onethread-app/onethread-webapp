@@ -12,13 +12,16 @@ import { connect } from "react-redux";
 import {
 	getCompanyMembers,
 	getAllDepartments,
-	addDesignation
+	addDesignation,
+	editDesignation
 } from "stores/company/Actions";
 import { CompanyModel, ICompanyMembers } from "stores/company/Reducer";
 import { Loading } from "components/common/field/Loading";
 import { permit } from "stores/UtilsActions";
 import { AddDesignationForm } from "components/company/team/AddDesignationForm";
 import { EditDesignationForm } from "components/company/team/EditDesignationForm";
+import { isEqual } from 'lodash';
+import { User } from 'stores/user/Reducer';
 
 const divisions = [
 	{ _id: "director", name: "Director" },
@@ -30,9 +33,11 @@ const divisions = [
 
 interface TeamMember {
 	company: CompanyModel;
+	user: User;
 	getCompanyMembers: () => void;
 	getAllDepartments: () => void;
 	addDesignation: (values: any, memberId: string) => void;
+	editDesignation: (values: any, memberId: string) => void;
 	companyLoading: boolean;
 }
 
@@ -89,8 +94,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								Add Team Members
 							</Button>
 						) : (
-							undefined
-						)}
+								undefined
+							)}
 					</div>
 					<HTMLTable className="w-100 mt4" striped={true}>
 						<thead>
@@ -99,81 +104,89 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								<th>Division</th>
 								<th>Department</th>
 								<th>Position</th>
+								<th></th>
 							</tr>
 						</thead>
 						<tbody>
 							{props.companyLoading ? (
 								<Loading />
 							) : props.company &&
-							  props.company.members &&
-							  props.company.members.length > 0 ? (
-								props.company.members.map(member => (
-									<tr className="hide-child">
-										<td>{member.account.name}</td>
-										<td>
-											{member.designations.length
-												? member.designations[0].division
-												: null}
-										</td>
-										<td>{showDepartment(member)}</td>
-										<td>
-											{member.designations.length
-												? member.designations[0].position
-												: null}
-										</td>
-										<td className="flex justify-between">
-											<Popover
-												className="fr"
-												position={Position.BOTTOM}
-												popoverClassName="bp3-popover-content-sizing bg-white "
-												content={
-													<div className="ph2">
-														{member.designations &&
-														member.designations.length ? (
-															<>
-																<p
-																	className="pointer bp3-popover-dismiss mb0"
-																	onClick={async () => {
-																		setShowDialogEdit(!showDialogEdit);
-																		setMember(member);
-																		await props.getAllDepartments();
-																	}}
-																>
-																	Edit Role
-																</p>
-																{/* <p className="pointer bp3-popover-dismiss">
-																	remove
-																</p> */}
-															</>
-														) : (
-															<p
-																className="pointer bp3-popover-dismiss"
-																onClick={async () => {
-																	setShowDialogAdd(!showDialogAdd);
-																	setMember(member);
-																	await props.getAllDepartments();
-																}}
-															>
-																Add Role
-															</p>
+								props.company.members &&
+								props.company.members.length > 0 ? (
+										props.company.members.map(member => (
+											<tr className="hide-child">
+												<td>{member.account.name}</td>
+												<td>
+													{member.designations.length
+														? member.designations[0].division
+														: null}
+												</td>
+												<td>{showDepartment(member)}</td>
+												<td>
+													{member.designations.length
+														? member.designations[0].position
+														: null}
+												</td>
+												<td className="flex justify-between">
+													{/* Popover starts */}
+													{permit(props.company.role) || isEqual(member.account._id, props.user._id) ? (
+														<Popover
+															className="fr"
+															position={Position.BOTTOM}
+															popoverClassName="bp3-popover-content-sizing bg-white "
+															content={
+																<div className="ph2">
+																	{member.designations &&
+																		member.designations.length ? (
+																			<>
+																				<p
+																					className="pointer bp3-popover-dismiss mb0"
+																					onClick={async () => {
+																						setShowDialogEdit(!showDialogEdit);
+																						setMember(member);
+																						await props.getAllDepartments();
+																					}}
+																				>
+																					Edit Role
+																			</p>
+																				{/* <p className="pointer bp3-popover-dismiss">
+																						remove
+																						</p> */}
+																			</>
+																		) : (
+																			<p
+																				className="pointer bp3-popover-dismiss"
+																				onClick={async () => {
+																					setShowDialogAdd(!showDialogAdd);
+																					setMember(member);
+																					await props.getAllDepartments();
+																				}}
+																			>
+																				Add Role
+																			</p>
+																		)}
+																</div>
+															}
+															target={
+																<Icon
+																	className=" pointer"
+																	icon="drag-handle-vertical"
+																/>
+															}
+														/>
+													) : (
+															undefined
 														)}
-													</div>
-												}
-												target={
-													<Icon
-														className=" pointer"
-														icon="drag-handle-vertical"
-													/>
-												}
-											/>
-										</td>
-									</tr>
-								))
-							) : (
-								<tr>
-									<td colSpan={3}>No members</td>
-								</tr>
-							)}
+
+													{/* Popover ends */}
+												</td>
+											</tr>
+										))
+									) : (
+										<tr>
+											<td colSpan={3}>No members</td>
+										</tr>
+									)}
 						</tbody>
 					</HTMLTable>
 				</div>
@@ -214,7 +227,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 					style={{ background: "#fff" }}
 				>
 					<EditDesignationForm
-						addDesignation={props.addDesignation}
+						editDesignation={props.editDesignation}
 						getCompanyMembers={props.getCompanyMembers}
 						member={member}
 						divisions={divisions}
@@ -230,12 +243,14 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 const mapStateToProps = (state: any) => {
 	return {
 		company: state.companyReducer.currentCompany,
-		companyLoading: state.companyReducer.loading
+		companyLoading: state.companyReducer.loading,
+		user: state.userReducer.user,
 	};
 };
 
 export const TeamMembersPage = connect(mapStateToProps, {
 	getCompanyMembers,
 	getAllDepartments,
-	addDesignation
+	addDesignation,
+	editDesignation
 })(TeamMembersPageComponent);

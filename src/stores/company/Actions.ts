@@ -24,7 +24,9 @@ import {
 	ADD_DEPARTMENT_LOADING,
 	COMPANY_DESIGNATION_LOADING,
 	ADD_DESIGNATION,
-	ADD_DESIGNATION_ERROR
+	ADD_DESIGNATION_ERROR,
+	EDIT_DESIGNATION,
+	EDIT_DESIGNATION_ERROR
 } from "./Types";
 import { CLEAR_ROOMS_REDUCER_STATE } from "stores/room/Types";
 
@@ -315,6 +317,37 @@ export const addDesignation = (values: any, memberId: string) => async (
 			dispatch({ type: ADD_DESIGNATION_ERROR, payload: "Network error" });
 		} else if (error.response.status === 401) {
 			dispatch({ type: ADD_DESIGNATION_ERROR, payload: "Unauthorized user." });
+		} else {
+			console.log(error.response);
+		}
+		return error.response.status;
+	}
+};
+
+export const editDesignation = (values: any, memberId: string) => async (
+	dispatch: any,
+	getState: any
+) => {
+	try {
+		const headers = tokenConfig(getState);
+		if ((headers as any).headers.Authorization) {
+			dispatch({ type: COMPANY_DESIGNATION_LOADING });
+			let company = getState().companyReducer.currentCompany.name;
+			const response = await tigrowApi.put(
+				`/company/${company}/designations/${memberId}`,
+				values,
+				headers
+			);
+			dispatch({ type: EDIT_DESIGNATION });
+			return response.status;
+		} else {
+			console.log("error in adding designation");
+		}
+	} catch (error) {
+		if (isEqual(error.message, "Network Error")) {
+			dispatch({ type: EDIT_DESIGNATION_ERROR, payload: "Network error" });
+		} else if (error.response.status === 401) {
+			dispatch({ type: EDIT_DESIGNATION_ERROR, payload: "Unauthorized user." });
 		} else {
 			console.log(error.response);
 		}
