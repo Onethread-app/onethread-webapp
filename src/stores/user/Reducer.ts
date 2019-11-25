@@ -30,7 +30,7 @@ export interface User {
 	sendingFriendList: string[],
 	timeline: string[],
 	skillArea: ItemEntityProps[];
-	profileImage: object
+	profileImage: any
 }
 
 

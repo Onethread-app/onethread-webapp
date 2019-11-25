@@ -57,7 +57,10 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                     className="pointer"
                   >
                     <div className="dtc w1 w2-ns">
-                      <img src={user} className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10" />
+                      <img
+                        src={props.user.profileImage ? props.user.profileImage.imageSource : user}
+                        className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10"
+                      />
                     </div>
                     <div className="dtc v-mid pl3">
                       <Link className="bp3-popover-dismiss" to={`/${props.user.name}`}>
@@ -84,7 +87,12 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             </Button>
               </ButtonGroup>
             }
-            target={<img src={user} className="dim v-mid dib w2 h2 br-100 ba b--black-10 pointer" alt="user" />}
+            target={
+              <img
+                src={props.user.profileImage ? props.user.profileImage.imageSource : user}
+                className="dim v-mid dib w2 h2 br-100 ba b--black-10 pointer" alt="user"
+              />
+            }
           />
         </div>
       </nav>
