@@ -17,10 +17,6 @@ const createSkill = async (req, res, next) => {
   }
 
   const skill = req.body.name;
-  // const skillExist = await SkillArea.find({ name: skill });
-  // if (skillExist) {
-  //   return sendJSONresponse(res, 200, 'skill already exist');
-  // }
   const newSkill = new SkillArea();
   newSkill.name = skill;
   newSkill.accountId.push(req.user._id);
@@ -144,6 +140,10 @@ const skillLoad = async (req, res, next, id) => {
 const searchSkillSet = async (req, res, next) => {
   try {
     const name = req.query.name;
+    // const nameExistInSkill = SkillArea.find({ name: name });
+    // if (nameExistInSkill) {
+    //   return sendJSONresponse(res, 200, 'skill already exist');
+    // }
     const userId = req.user._id;
     const userSkill = await Account.findOne({ _id: userId });
     const userskillId = userSkill.skillArea;
