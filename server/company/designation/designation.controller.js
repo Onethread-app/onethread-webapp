@@ -34,6 +34,48 @@ const create = async (req, res, next) => {
   }
 };
 
+const edit = async (req, res, next) => {
+  if (!req.is('application/json')) {
+    logger.error("'Expects 'application/json'");
+    return res.send("Expects 'application/json'");
+  }
+  try {
+    // find designation
+    const designation = await Designation.findOne({
+      _id: req.body.designation,
+    });
+
+    // if not found
+    if (!designation) {
+      return sendJSONresponse(res, 404, {
+        status: false,
+        message: 'No designation found',
+      });
+    }
+
+    // check division
+    let checkDivisions = ['director', 'cxo'];
+
+    if (checkDivisions.includes(req.body.division)) {
+      designation.department = undefined;
+    } else {
+      designation.department = req.body.department;
+    }
+
+    // update designation
+    designation.division = req.body.division;
+    designation.position = req.body.position;
+    await designation.save();
+
+    return sendJSONresponse(res, 200, {
+      success: true,
+      designation,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 const list = async (req, res, next) => {
   try {
     const designations = await Designation.find({
@@ -80,5 +122,6 @@ const load = async (req, res, next) => {
 module.exports = {
   create,
   list,
+  edit,
   load,
 };

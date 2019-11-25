@@ -13,9 +13,14 @@ router
     SchemaValidator(joiSchema.create),
     designationCtrl.create,
   )
+  .put(
+    requireAuth,
+    SchemaValidator(joiSchema.edit),
+    designationCtrl.edit,
+  )
   .get(
     requireAuth,
-    SchemaValidator(joiSchema.get),
+    SchemaValidator(joiSchema.list),
     designationCtrl.list,
   );
 
