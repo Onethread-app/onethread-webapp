@@ -3,8 +3,7 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useStore, connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi, { server } from 'tigrowApi';
-import { isEqual, isEmpty } from 'lodash';
+import { server } from 'tigrowApi';
 import { Button, Tag } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 import useLiveSearch from 'components/common/observer/useLiveSearch';
@@ -28,27 +27,6 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
   const [username, setUsername] = useState('');
 
   const store = useStore();
-
-  const fetchTeamMembersByUsername = async (userName: string) => {
-    try {
-      const headers = tokenConfig(store.getState);
-      if ((headers as any).headers.Authorization) {
-        if (isEmpty(userName) === false) {
-          const response = await tigrowApi.get(`company/${props.company.name}/members/search?name=${userName}`, headers);
-          setTeamMembers(response.data.employees.data);
-        }
-      } else {
-        console.log('no headers')
-      }
-    } catch (error) {
-      if (isEqual(error.message, 'Network Error')) {
-        console.log('network error')
-      }
-      else {
-        console.log(error.response);
-      }
-    }
-  }
 
   const userRequestFactory = (userName: string): Promise<any> => {
     const headers = tokenConfig(store.getState);

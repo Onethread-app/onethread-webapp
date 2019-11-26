@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button, FileInput, Dialog } from "@blueprintjs/core";
 import user from "../../../../resources/images/user.png";
 import { useSelector } from "react-redux";
-import { trim, isEqual } from "lodash";
+import { trim, isEqual, isEmpty } from "lodash";
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 
@@ -13,7 +13,6 @@ interface SendMessageFormProps {
 export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 	const roomId = useSelector((state: any) => state.roomReducer.activeRoom.id);
 	const [text, setText] = useState("hello");
-	const [sendStatus, setSendStatus] = useState(false)
 	const [showDialog, setShowDialog] = useState(false);
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
 
@@ -67,7 +66,7 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 	const handleKeyPress = (e: any) => {
 		// console.log("inputMessageRef", a(inputMessageRef));
 		let trimmedText = trim(text);
-		if (e.key === "Enter" && trimmedText !== "") {
+		if (e.key === "Enter" && isEmpty(trimmedText) === false) {
 			sendMessage(trimmedText);
 			setText("");
 			// e.target.value = "";
