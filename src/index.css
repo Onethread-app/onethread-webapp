@@ -101,7 +101,16 @@ a:hover {
 }
 
 .ws-break {
-	word-break: break-word
+	-webkit-word-break: break-word;
+	-moz-word-break: break-word;
+	-o-word-break: break-word;
+	-ms-word-break: break-word;
+	word-break: break-word;
+}
+
+.break-word {
+	word-wrap: break-word;
+  word-break: break-word;
 }
 
 .lh-2 {

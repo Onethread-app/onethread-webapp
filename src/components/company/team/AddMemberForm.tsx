@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { CompanyModel } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/common/field/SuggestField';
 import { useStore, connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
-import { isEqual, isEmpty } from 'lodash';
+import { server } from 'tigrowApi';
 import { Button, Tag } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
-// import { InputGroupField } from 'components/common/field/InputGroup';
+import useLiveSearch from 'components/common/observer/useLiveSearch';
 
 interface TeamMembersViewProps {
   showDialog: boolean;
@@ -23,184 +22,43 @@ interface TeamMembersViewInternalProps extends TeamMembersViewProps {
 const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
 
   const [teamMembers, setTeamMembers]: any = useState([]);
-  // const [allDivisions, setAllDivisions]: any = useState([]);
-  // const [allDepartments, setAllDepartments]: any = useState([]);
-  // const [addTeamMemberForm, setAddTeamMemberForm] = useState({
-  //   name: {} as ItemEntityProps,
-  //   division: "",
-  //   department: "",
-  //   position: ""
-  // })
 
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
+  const [username, setUsername] = useState('');
 
   const store = useStore();
 
-  const fetchTeamMembersByUsername = async (userName: string) => {
-    try {
-      const headers = tokenConfig(store.getState);
-      if ((headers as any).headers.Authorization) {
-        if (isEmpty(userName) === false) {
-          const response = await tigrowApi.get(`company/${props.company.name}/members/search?name=${userName}`, headers);
-          setTeamMembers(response.data.employees.data);
-        }
-      } else {
-        console.log('no headers')
-      }
-    } catch (error) {
-      if (isEqual(error.message, 'Network Error')) {
-        console.log('network error')
-      }
-      else {
-        console.log(error.response);
-      }
-    }
+  const userRequestFactory = (userName: string): Promise<any> => {
+    const headers = tokenConfig(store.getState);
+    return fetch(`${server}company/${props.company.name}/members/search?name=${userName}`, headers)
+      .then(res => res.json())
+      .then(res => res.employees.data)
+      .catch(err => []);
   }
 
-  // const fetchDivisions = async () => {
-  //   try {
-  //     const headers = tokenConfig(store.getState);
-  //     let companyName = store.getState().companyReducer.currentCompany.name;
-  //     if ((headers as any).headers.Authorization) {
-  //       const response = await tigrowApi.get(`/company/${companyName}/divisions`, headers);
+  let result: any = [];
+  result = useLiveSearch(username, userRequestFactory, 800);
 
-  //       setAllDivisions(response.data.divisions);
-  //     } else {
-  //       console.log('no headers')
-  //     }
-  //   } catch (error) {
-  //     if (isEqual(error.message, 'Network Error')) {
-  //       console.log('network error')
-  //     }
-  //     else {
-  //       console.log(error.response);
-  //     }
-  //   }
-  // }
+  useEffect(() => {
+    setTeamMembers(result)
+  }, [result])
 
-  // const fetchDepartments = async () => {
-  //   try {
-  //     const headers = tokenConfig(store.getState);
-  //     let companyName = store.getState().companyReducer.currentCompany.name;
-  //     if ((headers as any).headers.Authorization) {
-  //       const response = await tigrowApi.get(`/company/${companyName}/departments`, headers);
-  //       setAllDepartments(response.data.departments);
-  //     } else {
-  //       console.log('no headers')
-  //     }
-  //   } catch (error) {
-  //     if (isEqual(error.message, 'Network Error')) {
-  //       console.log('network error')
-  //     }
-  //     else {
-  //       console.log(error.response);
-  //     }
-  //   }
-  // }
-
-  // const handleChange = (name: string) => (event: any) => {
-  //   const value = event.target.value;
-  //   setAddTeamMemberForm({ ...addTeamMemberForm, [name]: value });
-  // };
-
-  // const onChangeSelectField = (name: string) => (event: any) => {
-  //   const value = event.currentTarget.value;
-  //   setAddTeamMemberForm({ ...addTeamMemberForm, [name]: value });
-  //   // setErrors({...errors, [name]: ""})
-  // }
-
-  // useEffect(() => {
-  //   fetchDivisions();
-  //   fetchDepartments();
-  // }, [])
 
   return (
     <div className="pa3">
       <div className=" w-100">
         <h1 className="f5 tigrow-lightBlue">Add members</h1>
         <SuggestField
-          onChange={(query: string) => { fetchTeamMembersByUsername(query) }}
+          onChange={(query: string) => {
+            setUsername(query);
+            // fetchTeamMembersByUsername(query) 
+          }}
           items={teamMembers}
           selectedItems={selectedTeamMember}
           setSelectedItems={setSelectedTeamMember}
           multipleItemSelect={true}
-        // selectedItems={addTeamMemberForm.name}
-        // setSelectedItems={e => {
-        //   setAddTeamMemberForm({
-        //     ...addTeamMemberForm,
-        //     name: e
-        //   });
-        // }}
         />
       </div>
-
-      {/* <div className=" w-100">
-        <h1 className="f5">Division</h1>
-        <HTMLSelect
-          fill={true}
-          minimal={true}
-          onChange={onChangeSelectField('division')}
-          className=" bb b--lightBlue"
-          style={{
-            boxShadow: 'none',
-            borderRadius: '0px',
-            backgroundColor: 'white',
-            flex: '1',
-            outline: 'none'
-          }}
-        >
-          <option selected value=''>Select division</option>
-          {allDivisions.length > 0 && allDivisions.map((t: any) => (
-            <option value={t._id}>{t.name}</option>
-          ))}
-        </HTMLSelect>
-      </div>
-
-      <div className=" w-100">
-        <h1 className="f5">Departments</h1>
-        <HTMLSelect
-          fill={true}
-          minimal={true}
-          onChange={onChangeSelectField('department')}
-          className=" bb b--lightBlue"
-          style={{
-            boxShadow: 'none',
-            borderRadius: '0px',
-            backgroundColor: 'white',
-            flex: '1',
-            outline: 'none'
-          }}
-        >
-          <option selected value=''>Select department</option>
-          {allDepartments.length > 0 && allDepartments.map((t: any) => (
-            <option value={t._id}>{t.name}</option>
-          ))}
-        </HTMLSelect>
-      </div>
-
-      <div className=" w-100">
-        <h1 className="f5">Position</h1>
-        <InputGroupField
-          id="companyPosition"
-          value={addTeamMemberForm.position}
-          onChange={handleChange("position")}
-          placeHolder="Company Name"
-          style={{
-            boxShadow: 'none'
-          }}
-          className={`br0 bb b--lightBlue`}
-          leftIconColor={`#0fa3a3`}
-          // validationOnBlur={() => {
-          //   if (isEmpty(values.name)) {
-          //     const companyNameError = { ...errors, name: "Please enter company name" };
-          //     setErrors(companyNameError);
-          //   } else {
-          //     const companyNameError = { ...errors, name: "" }
-          //     setErrors(companyNameError);
-          //   }
-          // }}
-        />
-      </div> */}
 
       <div className="w-100">
         {selectedTeamMember.map(item => (
@@ -245,15 +103,6 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           }
           disabled={selectedTeamMember.length < 1}
           onClick={async () => {
-            // let teamMemberInfo: any = {
-            //   ...addTeamMemberForm,
-            //   account: addTeamMemberForm.name._id
-            // }
-            // teamMemberInfo = omit(teamMemberInfo, ['name'])
-            // console.log(teamMemberInfo);
-            // if (isEmpty(teamMemberInfo.account) === false) {
-            //   props.addTeamMembers(teamMemberInfo, props.company.name);
-            // }
             const userIdWithCompany = selectedTeamMember.map(selected => {
               return {
                 account: selected._id,
@@ -265,18 +114,6 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
             }
             await props.getCompanyMembers();
             props.setShowDialog(!props.showDialog);
-            // console.log(`userIds: `, userIdWithCompany);
-            // if (!isEmpty(selectedTeamMember)) {
-            //   if (selectedTeamMember._id) {
-            //     props.addTeamMembers(selectedTeamMember._id, props.company.name);
-            //     // setAddTeamMemberForm({
-            //     //   ...addTeamMemberForm,
-            //     //   name: selectedTeamMember._id
-            //     // });
-            //   }
-            //   // setShowDialog(!showDialog)
-            //   props.setShowDialog(!props.showDialog);
-            // }
           }
           }
         >

@@ -16,6 +16,7 @@ import {
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING
 } from "stores/room/Types";
+import { Loading } from 'components/common/field/Loading';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const load = async (getRoomsAction: () => void) => {
@@ -139,9 +140,7 @@ export const RoomListComponent = withChatkit(
 					id="roomList"
 					style={{ height: "calc(100vh - 105px)" }}
 				>
-					{props.chatkit.isLoading ? (
-						""
-					) : rooms.length && (rooms[0] as any).id !== undefined ? (
+					{props.chatkit.isLoading ? <Loading /> : rooms.length && (rooms[0] as any).id !== undefined ? (
 						rooms.map((room: any, i: number, arr: any) => {
 							return (
 								<RoomListItem
@@ -156,9 +155,7 @@ export const RoomListComponent = withChatkit(
 								/>
 							);
 						})
-					) : (
-						<p className="ph3">No rooms available for you.</p>
-					)}
+					) : <Loading />}
 				</main>
 			</>
 		);

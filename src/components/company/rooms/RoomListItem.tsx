@@ -29,7 +29,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 			id="roomListItem"
 			className={`flex items-center mh2 ph1 pv2 bb b--black-10 pointer ${
 				props.active
-			} ${props.lastChild ? "bn" : ""}`}
+				} ${props.lastChild ? "bn" : ""}`}
 		>
 			<div className="dn db-ns pr3">
 				<span className="ttc ba b--black-10 db w1 w2-ns h1 h2-ns br3 tc lh-2 bg-light-gray">
@@ -37,7 +37,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 				</span>
 			</div>
 			<div className="flex justify-around items-center">
-				<h1 className="f7 f6-ns fw4 mv0">{props.name}</h1>
+				<h1 className="f7 f6-ns fw4 mv0 break-word">{props.name}</h1>
 				{props.unreadCount > 0 ? (
 					<h6
 						className="bg-tigrowLightBlue white fw8 ma0 ml1"

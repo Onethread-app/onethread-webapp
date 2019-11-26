@@ -24,7 +24,6 @@ export const createRoomAction = (roomData: any) => async (
 			roomData.company = getState().companyReducer.currentCompany._id;
 			dispatch({ type: LOADING_ROOM });
 			const response = await tigrowApi.post(`/rooms`, roomData, headers);
-			console.log("response", response);
 			await dispatch({
 				type: CREATE_ROOM_FROM_SERVER,
 				payload: response.data.room
