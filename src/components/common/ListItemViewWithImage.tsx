@@ -18,8 +18,8 @@ export const ListItemViewWithImage = (props: CompanyListItemProps) => (
       <img src={props.imageSrc} className="ba b--black-10 db w1 w2-ns h1 h2-ns br3" />
     </div>
     <div className="dtc v-mid pl3">
-      <h1 className="f7 f6-ns fw4 lh-title black mv0">{props.listTitle} </h1>
-      <h2 className="f6 fw3 mt0 mb0 black-60">{`Role: ${props.role}`}</h2>
+      <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">{props.listTitle} </h1>
+      <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${props.role}`}</h2>
     </div>
   </article>
 )

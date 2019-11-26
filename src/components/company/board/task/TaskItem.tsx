@@ -36,8 +36,8 @@ export const TaskItem = (props: {
               {isEmpty(props.task.description) === false ?
                 <div>
                   <p
-                    className="pa2"
-                    style={{ backgroundColor: 'aliceblue', wordBreak: 'break-word' }}
+                    className="pa2 ws-break"
+                    style={{ backgroundColor: 'aliceblue' }}
                   >
                     {props.task.description}
                   </p>

@@ -57,10 +57,7 @@ const BoardListViewComponent = (props: BoardListViewInternalProps & RouteCompone
                   }}
                 >
                   <h5 className="mt0 mb2"><a href="!#">{board.name}</a></h5>
-                  <p
-                    className="mb0"
-                    style={{ wordBreak: 'break-word' }}
-                  >
+                  <p className="mb0 ws-break">
                     {board.description}
                   </p>
                 </Card>
