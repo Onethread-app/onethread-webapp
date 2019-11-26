@@ -132,31 +132,21 @@ const searchMember = async (req, res, next) => {
     const company = await Company.findById({
       _id: companyID,
     }).populate('members', 'account');
-    logger.info(`Company Information: ${company}`);
     let memberListId = company.members;
-    logger.info(`memberList: ${memberListId}`);
     memberListId = memberListId.map(member => member.account);
-    logger.info(`memberList in company: ${memberListId}`);
-    await Account.find({
+    let data = await Account.find({
       $and: [
         { name: { $regex: new RegExp(name) } },
         { _id: { $nin: memberListId } },
       ],
-    })
-      .select('_id email name firstName lastName')
-      .then(data => {
-        logger.info(`Search complete ${name}`);
-        return sendJSONresponse(res, 200, {
-          employees: {
-            message: `Search complete ${name}`,
-            data,
-          },
-        });
-      })
-      .catch(err => {
-        logger.error(`${err}`);
-        return next(err);
-      });
+    }).select('_id email name firstName lastName');
+
+    return sendJSONresponse(res, 200, {
+      employees: {
+        message: `Search complete ${name}`,
+        data,
+      },
+    });
   } catch (error) {
     logger.error(`${error}`);
     next(error);
