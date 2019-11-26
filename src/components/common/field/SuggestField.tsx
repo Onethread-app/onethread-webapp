@@ -91,7 +91,7 @@ export const SuggestField = (props: SuggestFieldProps) => {
         };
       }}
       createNewItemRenderer={item => {
-        return props.isCreatable ?
+        return props.isCreatable === true ?
           <MenuItem
             text={item}
             icon="new-object"
@@ -103,7 +103,15 @@ export const SuggestField = (props: SuggestFieldProps) => {
               }
             }}
           />
-          : undefined
+          : !props.isCreatable === true && props.items.length === 0 ? 
+          <MenuItem
+            text="No item found"
+            icon="blank"
+            intent={Intent.WARNING}
+            onClick={async (e: any) => {
+              console.log(`No item found clicked`)
+            }}
+          /> : undefined
       }}
       onItemSelect={selectedSkill => console.log(selectedSkill)}
       closeOnSelect={false}
