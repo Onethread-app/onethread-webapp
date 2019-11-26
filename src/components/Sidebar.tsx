@@ -43,8 +43,8 @@ const SidebarComponent = (props: {
 				) : (
 					<>
 						<h1
-							className="ml4 ml3-m f4 tigrow-lightBlue ttc"
-							style={{ marginTop: "3rem" }}
+							className="ml4 ml3-m f4 tigrow-lightBlue ttc mr2 ws-break"
+							style={{ marginTop: "3rem"}}
 						>
 							{props.companyName}
 						</h1>

@@ -35,7 +35,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
         </div>
         <div className="bp3-navbar-group bp3-align-right">
           <Popover
-            popoverClassName="bp3-popover-content-sizing overflow-y-auto bg-white "
+            popoverClassName="bp3-popover-content-sizing bg-white "
             position={Position.BOTTOM}
             content={
               <ListView
@@ -45,8 +45,8 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             }
             target={<Button className="bp3-minimal  dim dark-gray f6 f5-l dib mr3 mr4-l outline-0">My Companies</Button>}
           />
-          <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-chat f6 f5-l dib mr3 mr4-l" ></button>
-          <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-notifications f6 f5-l dib mr3 mr4-l" ></button>
+          {/* <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-chat f6 f5-l dib mr3 mr4-l" ></button>
+          <button className="bp3-button bp3-minimal dim dark-gray bp3-icon-notifications f6 f5-l dib mr3 mr4-l" ></button> */}
           <Popover
             popoverClassName="bp3-popover-content-sizing"
             position={Position.BOTTOM}

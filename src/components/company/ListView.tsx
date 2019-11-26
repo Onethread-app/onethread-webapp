@@ -35,32 +35,34 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
 
   return (
     <>
-      <div className="mw6 center">
+      <div className="mw6 center overflow-y-auto" style={{ maxHeight: '16rem' }}>
         {loading ? <Loading /> : props.companies && props.companies.length > 0 ? props.companies.map((c: ICompanyByUser) => (
-          <ListItemViewWithImage
-            key={c.company._id}
-            class={"hover-bg-black-10 pa2"}
-            imageSrc={props.logo ? props.logo.imageSource : user}
-            listTitle={c.company.name}
-            active={props.currentCompany === c.company._id ? true : false}
-            // listDescription="C"
-            role={c.role}
-            onClick={async () => {
-              const response = await props.getCompanyDetails(c.company.name, props.history) as any;
-              if (response) {
-                props.history.push(`/company/${(response as any).company.name}`)
-              }
-            }}
-          />
+          <div>
+            <ListItemViewWithImage
+              key={c.company._id}
+              class={"hover-bg-black-10 pa2"}
+              imageSrc={props.logo ? props.logo.imageSource : user}
+              listTitle={c.company.name}
+              active={props.currentCompany === c.company._id ? true : false}
+              // listDescription="C"
+              role={c.role}
+              onClick={async () => {
+                const response = await props.getCompanyDetails(c.company.name, props.history) as any;
+                if (response) {
+                  props.history.push(`/company/${(response as any).company.name}`)
+                }
+              }}
+            />
+          </div>
         )) : undefined}
 
-        <button
-          onClick={() => props.setShowDialog(!props.showDialog)}
-          className="b--none w-100 mt3 br2 grow ph5 pointer pv2 white outline-0 bg-tigrowLightBlue bp3-popover-dismiss"
-        >
-          Create Company
-        </button>
       </div>
+      <button
+        onClick={() => props.setShowDialog(!props.showDialog)}
+        className="b--none w-100 mt3 br2 grow ph5 pointer pv2 white outline-0 bg-tigrowLightBlue bp3-popover-dismiss"
+      >
+        Create Company
+        </button>
     </>
   )
 }

@@ -100,6 +100,10 @@ a:hover {
 	width: 85%;
 }
 
+.ws-break {
+	word-break: break-word
+}
+
 .lh-2 {
 	line-height: 2rem;
 }
@@ -286,3 +290,4 @@ a:hover {
 	background-image: url(./resources/images/homeBg.png);
 	background-repeat: no-repeat; 
 }
+
