@@ -32,7 +32,7 @@ export const TaskItem = (props: {
                 // setShowTaskDetailsDialog(!showTaskDetailsDialog)
               }}
             >
-              <h1 className="f6">{props.task.name}</h1>
+              <h1 className="f6 ws-break">{props.task.name}</h1>
               {isEmpty(props.task.description) === false ?
                 <div>
                   <p

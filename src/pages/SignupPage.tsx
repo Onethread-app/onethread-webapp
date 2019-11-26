@@ -8,6 +8,7 @@ import { userSignupAction } from 'stores/auth/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import { Link } from 'react-router-dom';
+import { passwordValidation } from 'stores/UtilsActions';
 
 interface UserModel {
   firstName: string,
@@ -249,7 +250,7 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                           const emailError = { ...errors, email: "Required" };
                           setErrors(emailError);
                         } else if (!emailValidation(email)) {
-                          const emailError = { ...errors, email: "Email should contain @ and . sign" };
+                          const emailError = { ...errors, email: "Please enter a valid email" };
                           setErrors(emailError);
                         } else {
                           const emailError = { ...errors, email: "" };
@@ -287,15 +288,27 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         if (isEmpty(password)) {
                           const passwordError = { ...errors, password: "Required" };
                           setErrors(passwordError);
-                        } else {
-                          const regex = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
-                          if (!(password.match(regex))) {
-                            const passwordError = { ...errors, password: "Should contain uppercase, lowercase, special character and min 8 chanracter long" };
-                            setErrors(passwordError);
-                          } else {
+                        }
+                        else if (!passwordValidation((password))) {
+                          const passwordError = { ...errors, password: "Should contain uppercase, lowercase, special character and min 8 chanracter long" };
+                          setErrors(passwordError);
+                        }
+                        else if (!checkPassword()) {
+                          const confirmPasswordError = { ...errors, confirmPassword: "Mismatch Password" };
+                          setErrors(confirmPasswordError);
+                          if (passwordValidation((password))) {
                             const passwordError = { ...errors, password: "" };
                             setErrors(passwordError);
+
                           }
+                        }
+                        else if (checkPassword()) {
+                          const confirmPasswordError = { ...errors, password: "", confirmPassword: "" };
+                          setErrors(confirmPasswordError);
+                        }
+                        else {
+                          const passwordError = { ...errors, password: "" };
+                          setErrors(passwordError);
                         }
                       }}
                     />
@@ -333,6 +346,10 @@ const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProp
                         else if (!checkPassword()) {
                           const confirmPasswordError = { ...errors, confirmPassword: "Mismatch Password" };
                           setErrors(confirmPasswordError);
+                        }
+                        else if (checkPassword() === true && isEmpty(errors.password) === true) {
+                          const passwordError = { ...errors, password: "", confirmPassword: "" };
+                          setErrors(passwordError);
                         }
                         else {
                           const confirmPasswordError = { ...errors, confirmPassword: "" };

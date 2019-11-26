@@ -345,7 +345,11 @@ export const AboutView = (props: { user: User }) => {
             onClick={() => setShowDialogAbout(true)}
           />
         </div>
-        <p className="ws-break">{props.user.about}</p>
+        <div>
+          <pre className="ws-break" style={{whiteSpace: 'pre-line'}}>
+            {props.user.about}
+          </pre>
+        </div>
       </div>
       {showDialogAbout && (
         <Dialog
