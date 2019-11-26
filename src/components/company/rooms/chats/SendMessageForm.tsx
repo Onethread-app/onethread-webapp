@@ -2,7 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { Button, FileInput, Dialog } from "@blueprintjs/core";
 import user from "../../../../resources/images/user.png";
 import { useSelector } from "react-redux";
+import { trim, isEqual } from "lodash";
 const { withChatkit } = require("@pusher/chatkit-client-react");
+
 
 interface SendMessageFormProps {
 	chatkit?: any;
@@ -11,12 +13,15 @@ interface SendMessageFormProps {
 export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 	const roomId = useSelector((state: any) => state.roomReducer.activeRoom.id);
 	const [text, setText] = useState("hello");
+	const [sendStatus, setSendStatus] = useState(false)
 	const [showDialog, setShowDialog] = useState(false);
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
 
 	useEffect(() => {
 		setText("");
 	}, [roomId]);
+
+
 	const sendMessage = (text: string) => {
 		// TODO: send to backend
 		props.chatkit.currentUser.sendSimpleMessage({
@@ -24,12 +29,20 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 			text
 		});
 	};
+
+	const resetMessage = (text: string) => {
+		let resetText = text.replace(/(\r\n|\n|\r)/gm, "")
+		setText(resetText)
+		return resetText;
+	};
+
 	const onChange = (e: any) => {
 		setText(e.target.value);
 		props.chatkit.currentUser
 			.isTypingIn({ roomId })
 			.catch((error: any) => console.error("error on typing", error));
 	};
+
 	// function a(inputMessageRef: any) {
 	// 	return {
 	// 		clientHeight: (inputMessageRef.current as any).clientHeight,
@@ -53,11 +66,12 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 	// }
 	const handleKeyPress = (e: any) => {
 		// console.log("inputMessageRef", a(inputMessageRef));
-		if (e.key === "Enter" && text !== "") {
-			sendMessage(text);
+		let trimmedText = trim(text);
+		if (e.key === "Enter" && trimmedText !== "") {
+			sendMessage(trimmedText);
 			setText("");
-			e.target.value = "";
-			(inputMessageRef.current as any).value = "";
+			// e.target.value = "";
+			// (inputMessageRef.current as any).value = "";
 			// console.log("inputMessageRef", a(inputMessageRef));
 		}
 	};
@@ -76,7 +90,7 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 					ref={inputMessageRef}
 					className="w-100 mv2 mr1"
 					style={{ resize: "none" }}
-					value={text}
+					value={isEqual(text.length, 1) && isEqual(text, "\n") ? resetMessage(text) : text}
 					onChange={onChange}
 					onKeyPress={handleKeyPress}
 					placeholder="Write your message "
@@ -88,6 +102,7 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 					<Icon icon="link" className="tigrow-lightBlue" />
 				</Button> */}
 			</div>
+			{/* <div>{JSON.stringify({ text, length: text.length, sendStatus }, null, 2)}</div> */}
 			{showDialog && (
 				<Dialog
 					icon="briefcase"
