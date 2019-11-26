@@ -12,7 +12,7 @@ function useLiveSearch(query: string, requestFactory: any, delay = 250, neglectV
     if (debouncedQuery !== neglectValue) {
       requestFactory(debouncedQuery).then((res: any) => {
         if (isActive) {
-          setResponse(res.employees.data);
+          setResponse(res);
         }
       });
     } else {

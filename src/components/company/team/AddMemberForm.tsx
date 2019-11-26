@@ -54,6 +54,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
     const headers = tokenConfig(store.getState);
     return fetch(`${server}company/${props.company.name}/members/search?name=${userName}`, headers)
       .then(res => res.json())
+      .then(res => res.employees.data)
       .catch(err => []);
   }
 
