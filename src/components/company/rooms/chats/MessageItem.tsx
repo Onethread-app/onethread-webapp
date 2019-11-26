@@ -24,8 +24,7 @@ export const MessageItem = (props: MessageItemProps) => {
         className={`shadow-4 ph3 pv1 br3 ${currentUser ? "mr2 bg-tigrowLightBlue" : "ml2 bg-white"}`}
         style={{ maxWidth: "65%" }}>
         <h2
-          className={`f6 fw3 ma0 mt1 tj ${currentUser ? "white" : " black-60"}`}
-          style={{ wordBreak: "break-word" }}
+          className={`f6 fw3 ma0 mt1 tj ${currentUser ? "white" : " black-60"} ws-break`}
         >{props.text}
         </h2>
         <div className={`flex justify-between ${currentUser ? " flex-row-reverse" : ""}`}>

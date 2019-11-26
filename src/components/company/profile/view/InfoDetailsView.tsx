@@ -8,6 +8,7 @@ import { CompanyInfoForm } from '../editor/CompanyInfoDetailsForm';
 import { editCompanyAboutAction, companyLogoUploadAction } from 'stores/company/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { permit } from 'stores/UtilsActions';
+import { isEmpty } from 'lodash';
 
 interface CompanyAboutEditComponentProps {
   setShowDialog: (val: boolean) => void;
@@ -74,7 +75,7 @@ export const AboutCompanyView = (props: {
               onClick={() => setShowDialogAbout(true)}
             /> : ""}
         </div>
-        <p style={{ wordBreak: 'break-word' }} >{props.company.about}</p>
+        <p className="ws-break">{props.company.about}</p>
       </div>
       {showDialogAbout && (
         <Dialog
@@ -100,15 +101,27 @@ const InfoDetailsViewComponent = (props: any) => {
   const [imageSelected, setImageSelected] = useState({}) as any;
   const [imageName, setImageName] = useState({}) as any;
   const [logoLoading, setLogoLoading] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const imageChangeHandler = (event: any) => {
-    const data = new FormData();
-    data.append('file', event.target.files[0], event.target.files[0].name);
-    setImageName(event.target.files[0]);
-    setImageSelected(data);
-    return data;
+    if (event.target.files) {
+      if (event.target.files[0]) {
+        if (event.target.files[0].size / 1024 / 1024 > 1) {
+          setImageName("");
+          setImageError(true);
+          return false;
+        } else {
+          const data = new FormData();
+          data.append('file', event.target.files[0], event.target.files[0].name);
+          setImageName(event.target.files[0]);
+          setImageSelected(data);
+          setImageError(false);
+          return data;
+        }
+      }
+    }
+    return false
   }
-
   return (
     <>
       <div>
@@ -125,7 +138,7 @@ const InfoDetailsViewComponent = (props: any) => {
                 </div>
                 : ""}
             </div>
-            <h1 className="f5 lh-copy tigrow-lightGray-1">{props.company.name}</h1>
+            <h1 className="f5 lh-copy tigrow-lightGray-1 ws-break">{props.company.name}</h1>
             <p className=" light-silver" >{props.company.type}</p>
           </div>
           <AboutCompanyView company={props.company} />
@@ -175,15 +188,22 @@ const InfoDetailsViewComponent = (props: any) => {
           onClose={() => setShowDialogPicture(!showDialogPicture)}
           isOpen
           style={{ background: '#fff' }}
+          canOutsideClickClose={false}
         >
           <div className="pa3 cf">
             <h1 className="f5 tigrow-lightBlue">Upload Photo</h1>
             <label className="bp3-file-input .modifier bp3-fill">
-              <input type="file" onChange={(e) => imageChangeHandler(e)} />
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => imageChangeHandler(e)}
+              />
               <span className="bp3-file-upload-input">
                 {imageName.name ? imageName.name : <p>choose your file...</p>}
               </span>
             </label>
+            {imageError &&
+              <small style={{ color: 'red' }}>Image size can't be greater than 1 MB</small>}
             <div className="flex justify-end mt3">
               <Button className="w4 grow h2 pointer mr3"
                 style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
@@ -192,6 +212,7 @@ const InfoDetailsViewComponent = (props: any) => {
                   setShowDialogPicture(false);
                   setImageName({});
                   setLogoLoading(false);
+                  setImageError(false);
                 }}
               >
                 cancel
@@ -199,7 +220,17 @@ const InfoDetailsViewComponent = (props: any) => {
               <Button
                 type="submit"
                 className="w4 grow h2 pointer"
-                style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+                style={imageName && isEmpty(imageName.name) === false ?
+                  {
+                    background: "#0fa3a3",
+                    outline: "none",
+                    color: 'white'
+                  } : {
+                    background: '#011b1b2e',
+                    outline: "none",
+                    color: 'white'
+                  }
+                }
                 onClick={async (e: any) => {
                   e.preventDefault();
                   setLogoLoading(true);
@@ -210,7 +241,7 @@ const InfoDetailsViewComponent = (props: any) => {
                   }
                   setLogoLoading(false);
                 }}
-                disabled={logoLoading}
+                disabled={logoLoading === true || isEmpty(imageName.name) ? true : false}
               >
                 {logoLoading ? <Spinner size={15} /> : 'Save'}
               </Button>

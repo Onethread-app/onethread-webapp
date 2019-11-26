@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { InputGroupField } from 'components/common/field/InputGroup';
 import { isEmpty, isEqual, pickBy } from 'lodash';
-import { HTMLSelect, Icon, Button } from '@blueprintjs/core';
+import { HTMLSelect, Icon, Button, Spinner } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { createCompanyAction } from 'stores/company/Actions';
@@ -40,6 +40,8 @@ const CompanySignupFormComponent = (props: {
     address: "",
     type: ""
   });
+
+  const [loading, setLoading] = useState(false);
 
   const emailValidation = (email: string) => {
     if (email !== "") {
@@ -274,6 +276,7 @@ const CompanySignupFormComponent = (props: {
           onClick={(e: any) => {
             e.preventDefault();
             props.setShowDialog(false);
+            setLoading(false);
           }}
         >
           cancel
@@ -285,14 +288,17 @@ const CompanySignupFormComponent = (props: {
           onClick={async (e: any) => {
             e.preventDefault();
             if (!emptyValueCheck() && emptyErrorCheck()) {
+              setLoading(true);
               const response = await props.createCompanyAction(pickBy(values, v => v !== ""), props.history) as any;
+              setLoading(false);
               if (response) {
                 props.setShowDialog(false);
               }
             }
           }}
+          disabled={loading}
         >
-          Save
+          {loading ? <Spinner size={15} /> : 'Save'}
         </Button>
       </div>
 

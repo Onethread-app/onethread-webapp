@@ -35,7 +35,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
         </div>
         <div className="bp3-navbar-group bp3-align-right">
           <Popover
-            popoverClassName="bp3-popover-content-sizing overflow-y-auto bg-white "
+            popoverClassName="bp3-popover-content-sizing bg-white "
             position={Position.BOTTOM}
             content={
               <ListView

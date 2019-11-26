@@ -207,7 +207,7 @@ const ExperienceViewComponent = (props: {
                           setEducationInfo({
                             _id: experience._id,
                             degree: experience.degree,
-                            institutionName: experience.degree,
+                            institutionName: experience.institutionName,
                             startYear: experience.startYear,
                             endingYear: experience.endingYear,
                             eduDescription: experience.eduDescription,

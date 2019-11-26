@@ -31,8 +31,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
         <div className="flex flex-column h-100">
           <div className="flex">
             <h3
-              className="ma0 flex-grow-1 ws-normal"
-              style={{ wordBreak: 'break-word' }}
+              className="ma0 flex-grow-1 ws-normal ws-break"
             >
               {props.column.name}
             </h3>
