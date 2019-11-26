@@ -35,7 +35,7 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
 
   return (
     <>
-      <div className="mw6 center overflow-y-auto h5">
+      <div className="mw6 center overflow-y-auto" style={{ maxHeight: '16rem' }}>
         {loading ? <Loading /> : props.companies && props.companies.length > 0 ? props.companies.map((c: ICompanyByUser) => (
           <div>
             <ListItemViewWithImage
@@ -57,11 +57,11 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
         )) : undefined}
 
       </div>
-        <button
-          onClick={() => props.setShowDialog(!props.showDialog)}
-          className="b--none w-100 mt3 br2 grow ph5 pointer pv2 white outline-0 bg-tigrowLightBlue bp3-popover-dismiss"
-        >
-          Create Company
+      <button
+        onClick={() => props.setShowDialog(!props.showDialog)}
+        className="b--none w-100 mt3 br2 grow ph5 pointer pv2 white outline-0 bg-tigrowLightBlue bp3-popover-dismiss"
+      >
+        Create Company
         </button>
     </>
   )
