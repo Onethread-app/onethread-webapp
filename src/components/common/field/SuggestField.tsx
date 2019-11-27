@@ -105,7 +105,7 @@ export const SuggestField = (props: SuggestFieldProps) => {
           />
           : !props.isCreatable === true && props.items.length === 0 ? 
           <MenuItem
-            text="No item found"
+            text="No result found"
             icon="blank"
             intent={Intent.WARNING}
             onClick={async (e: any) => {
