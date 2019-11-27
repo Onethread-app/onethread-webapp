@@ -12,7 +12,7 @@ AWS.config = new AWS.Config({
 const s3 = new AWS.S3();
 
 // Retrieving the bucket name from env variable
-const Bucket = `tigrow-test-1`;
+const Bucket = `tigrow-file`;
 
 // In order to create pre-signed GET adn PUT URLs we use the AWS SDK s3.getSignedUrl method.
 // getSignedUrl(operation, params, callback) ⇒ String
