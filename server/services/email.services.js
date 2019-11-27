@@ -17,6 +17,7 @@ module.exports.sendEmailForResetPassword = async (
   name,
   emailID,
   token,
+  next,
 ) => {
   const link = `${host}/reset-password/${token}`;
   const mailOptions = {
@@ -29,7 +30,13 @@ module.exports.sendEmailForResetPassword = async (
     `,
   };
 
-  return transporter.sendMail(mailOptions);
+  return transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      return next(err);
+    }
+    logger.info(`send reset password mail to user successfully`);
+    return info;
+  });
 };
 
 module.exports.sendEmailForVerifyAccount = async (

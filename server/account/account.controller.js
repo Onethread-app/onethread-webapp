@@ -247,6 +247,7 @@ const sendEmailForForgetPassword = async (req, res, next) => {
         user.name,
         user.email,
         token,
+        next,
       );
       logger.info(`send reset password mail to user successfully`);
       return sendJSONresponse(res, 200, {
