@@ -22,6 +22,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 				if (!props.chatkit.isLoading && !isEqual(props.roomId, activeRoom.id)) {
 					if (!isEmpty(activeRoom)) {
 						props.chatkit.currentUser.roomSubscriptions[activeRoom.id].cancel();
+						props.chatkit.currentUser.roomSubscriptions[activeRoom.id].connected = false;
 					}
 					props.subscribeToRoom(props.roomId, props.name);
 				}

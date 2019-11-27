@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { isEqual } from "lodash";
+import { isEqual, isEmpty } from "lodash";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector, connect } from "react-redux";
 import { RoomListItem } from "./RoomListItem";
@@ -121,10 +121,26 @@ export const RoomListComponent = withChatkit(
 		}, [props.chatkit]);
 
 		useEffect(() => {
-			if (!props.chatkit.isLoading && companyId) {
-				filteredRooms();
+			if (!props.chatkit.isLoading && companyId && rooms && companyRooms && rooms.length !== companyRooms.length) {
+				// filteredRooms();
+				let rooms = props.chatkit.currentUser.rooms.filter((room: any) => {
+					return room.customData.company === companyId;
+				});
+				dispatch({ type: GET_ROOMS, payload: rooms });
 			}
-		}, [companyRooms]);
+		}, [companyRooms, rooms]);
+
+		useEffect(() => {
+			if (!props.chatkit.isLoading) {
+				for (const roomId in props.chatkit.currentUser.roomSubscriptions) {
+					if (props.chatkit.currentUser.roomSubscriptions.hasOwnProperty(roomId)) {
+						const room = props.chatkit.currentUser.roomSubscriptions[roomId];
+						room.cancel();
+						room.connected = false;
+					}
+				}
+			}
+		}, [companyId])
 
 		const filteredRooms = () => {
 			let rooms = props.chatkit.currentUser.rooms.filter((room: any) => {
