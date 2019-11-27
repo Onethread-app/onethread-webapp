@@ -190,7 +190,7 @@ export const profileImageUploadAction = (imageSelected: any) => async (dispatch:
 			const response = await tigrowApi.post(`files/upload`, imageSelected, headers);
 			const awsOptions = awsImageOption(response.data);
 			const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-			dispatch({ type: IMAGE_UPLOAD, payload: { imageSource: imgRes.data } })
+			dispatch({ type: IMAGE_UPLOAD, payload: { ...response.data, imageSource: imgRes.data } })
 			return imgRes.data;
 		} else {
 			console.log('no headers')
