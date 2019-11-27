@@ -119,6 +119,12 @@ const getCompanyIndividual = async (req, res, next) => {
       {
         path: 'company',
         select: '_id name',
+        populate: [
+          {
+            path: 'logo',
+            select: 'link s3Key type',
+          },
+        ],
       },
     ];
 
