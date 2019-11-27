@@ -40,7 +40,9 @@ export const HomePage = () => {
                     Sign In
                   </Button>
                 </Link>
-                <p className="pointer white mt5-l mt4-m f4-ns mt1 mv3">Don't have an account?</p>
+                <Link to="/signup">
+                  <p className="pointer white mt5-l mt4-m f4-ns mt1 mv3">Don't have an account?</p>
+                </Link>
               </div>
             </div>
           </div>
@@ -58,9 +60,9 @@ export const HomePage = () => {
           <img src={require('./../resources/images/homeSS3.png')} />
           <h1 className="f5">Workplace</h1>
           <p>
-          A Hub for Organizations
-Internal & External
-Communication
+            A Hub for Organizations
+  Internal & External
+  Communication
           </p>
         </div>
         <div className="tc cf mh3-ns w-25-ns w-100 ph4">
@@ -74,9 +76,9 @@ Communication
           <img src={require('./../resources/images/homeSS3.png')} />
           <h1 className="f5">Reseller Dashboard</h1>
           <p>
-              Resell products from hundreds
-              of wholesalers to start your
-              entrepreneurial journey.
+            Resell products from hundreds
+            of wholesalers to start your
+            entrepreneurial journey.
           </p>
         </div>
         <div className="tc cf mh3-ns w-25-ns w-100 ph4">

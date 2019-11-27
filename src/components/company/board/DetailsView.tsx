@@ -25,7 +25,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
     <div className="br3 h-100 pa3 cf flex flex-column">
       <div className="flex">
         <div className="flex-auto">
-          <h1 className="f3 flex-grow-1 lh-title tigrow-lightGray-1 dib ma0">{props.currentBoard!.name}</h1>
+          <h1 className="f3 flex-grow-1 lh-title tigrow-lightGray-1 dib ma0 ws-break">{props.currentBoard!.name}</h1>
           <p
             className="mb0 f7 pointer dim"
             onClick={() => setShowMemberListDialog(!showMemberListDialog)}
@@ -36,7 +36,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
         {permit(props.company.role) === true ?
           <>
             <Button
-              className="grow fr h2 pointer white bp3-minimal mr3"
+              className="grow fr h2 pointer white bp3-minimal mr3 w5"
               style={props.currentBoard!.columns!.length > 0 ?
                 {
                   background: "#0fa3a3",
@@ -48,14 +48,14 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
                   color: 'white'
                 }
               }
-              text={<span className="ph4">Add Task</span>}
+              text={<span >Add Task</span>}
               disabled={props.currentBoard!.columns!.length > 0 ? false : true}
               onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
             />
             <Button
-              className="grow fr h2 pointer white bp3-minimal mr3"
+              className="grow fr h2 pointer white bp3-minimal mr3 w5"
               style={{ background: "#00a8e8", outline: "none", color: 'white' }}
-              text={<span className="ph4">Add Column</span>}
+              text={<span >Add Column</span>}
               onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
             />
             <Button
