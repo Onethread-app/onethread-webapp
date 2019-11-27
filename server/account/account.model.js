@@ -61,6 +61,7 @@ const accountsSchema = new mongoose.Schema({
   contactNo: {
     type: String,
     required: false,
+    unique: true,
   },
   gender: {
     type: String,

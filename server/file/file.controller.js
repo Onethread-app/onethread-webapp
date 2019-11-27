@@ -8,7 +8,7 @@ const { Company } = require('../company/company.model');
 const { Room } = require('../room/room.model');
 const { generateGetUrl, generatePutUrl } = require('../services/s3');
 
-const s3FileURL = `https://tigrow-test-1.s3.amazonaws.com/`;
+const s3FileURL = `https://tigrow-file.s3-ap-southeast-1.amazonaws.com/`;
 let s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
   secretAccessKey: config.awsSecretAccessKey,
@@ -19,7 +19,7 @@ const profilePicture = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
   const params = {
-    Bucket: 'tigrow-test-1',
+    Bucket: 'tigrow-file',
     Key: `${userID}/${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
