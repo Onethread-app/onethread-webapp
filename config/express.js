@@ -62,6 +62,7 @@ app.options('/*', function(req, res, next) {
 // TODO: cors customize
 // enable detailed API logging in dev env
 if (config.env === 'development' || config.env === 'production') {
+  console.log(config.env);
   expressWinston.requestWhitelist.push('body');
   expressWinston.responseWhitelist.push('body');
   app.use(
@@ -70,7 +71,7 @@ if (config.env === 'development' || config.env === 'production') {
       meta: true,
       msg:
         'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
-      colorStatus: true, // Color the status code (default green, 3XX cyan, 4XX yellow, 5XX red).
+      colorStatus: true,
     }),
   );
 }
@@ -81,12 +82,14 @@ app.use('/api/v1', routes); // v1.0
 
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
+  console.log(err);
   if (err instanceof expressValidation.ValidationError) {
     // validation error contains errors which is an array of error each containing message[]
     const unifiedErrorMessage = err.errors
       .map(error => error.messages.join('. '))
       .join(' and ');
     const error = new APIError(unifiedErrorMessage, err.status, true);
+    console.log(err);
     return next(error);
   }
   if (!(err instanceof APIError)) {
@@ -141,13 +144,17 @@ if (config.env !== 'test') {
 app.use((err, req, res, next) => {
   const stack =
     config.env === 'development' ? err.stack.split('\n') : {};
-  let frame = err.stack.split('at ')[15].trim();
+  let frame = err.stack.split('at ').trim();
   let lineNumber = frame.split(':')[1];
-  res.status(err.status).json({
+  const response = {
     message: err.isPublic ? err.message : httpStatus[err.status],
     stack,
     lineNumber,
     frame,
+  };
+  logger.info(`${response}`);
+  res.status(err.status).json({
+    message: err.isPublic ? err.message : httpStatus[err.status],
   });
 });
 

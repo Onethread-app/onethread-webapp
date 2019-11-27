@@ -104,7 +104,6 @@ const companyLogo = async (req, res, next) => {
           });
           company.logo = data._id;
           company.save();
-          console.log(company);
           return sendJSONresponse(res, 200, data);
         })
         .catch(error => {

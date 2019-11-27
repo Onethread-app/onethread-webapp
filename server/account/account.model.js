@@ -77,10 +77,12 @@ const accountsSchema = new mongoose.Schema({
   },
   location: {
     type: String,
+    trim: true,
   },
   about: {
     type: String,
     max: 250,
+    trim: true,
   },
   skillArea: [
     {

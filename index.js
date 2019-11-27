@@ -77,7 +77,6 @@ if (!module.parent) {
 }
 
 process.on('unhandledRejection', async (err, promise) => {
-  webhook(err);
   logger.error(err, {
     dispatcher: loggerDispatcher,
     from: 'unhandledRejection event',
@@ -86,7 +85,6 @@ process.on('unhandledRejection', async (err, promise) => {
 });
 
 process.on('unhandledRejection', async (err, promise) => {
-  webhook(err);
   logger.error(err, {
     dispatcher: loggerDispatcher,
     from: 'unhandledRejection event',
@@ -95,7 +93,6 @@ process.on('unhandledRejection', async (err, promise) => {
 });
 
 process.on('uncaughtException', err => {
-  webhook(err);
   logger.error(
     err,
     { dispatcher: loggerDispatcher, from: 'uncaughtException event' },
@@ -105,12 +102,10 @@ process.on('uncaughtException', err => {
   );
 });
 process.on('exit', async code => {
-  webhook(code);
   mongoose.connection.close();
   logger.info(`About to exit with code: ${code}`);
 });
 process.on('SIGINT', function() {
-  webhook(`Caught interrupt signal`);
   logger.info('Caught interrupt signal');
   process.exit();
 });
