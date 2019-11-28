@@ -12,6 +12,7 @@ interface SendMessageFormProps {
 
 export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 	const roomId = useSelector((state: any) => state.roomReducer.activeRoom.id);
+	const currentUser = useSelector((state: any) => state.userReducer.user);
 	const [text, setText] = useState("hello");
 	const [showDialog, setShowDialog] = useState(false);
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
@@ -83,7 +84,10 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 		<>
 			<div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
 				<div className="flex items-center mh1" style={{ width: "42px" }}>
-					<img src={user} className="dib" alt="user" />
+					<img src={currentUser.profileImage ? currentUser.profileImage.imageSource : user}
+						className="db br-100"
+						style={{ width: "40px", height: "40px", objectFit: "cover" }}
+						alt="user" />
 				</div>
 				<textarea
 					ref={inputMessageRef}

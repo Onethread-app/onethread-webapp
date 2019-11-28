@@ -90,7 +90,9 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             target={
               <img
                 src={props.user.profileImage ? props.user.profileImage.imageSource : user}
-                className="dim v-mid dib w2 h2 br-100 ba b--black-10 pointer" alt="user"
+                className="dim v-mid dib br-100 pointer"
+                style={{ width: "40px", height: "40px", objectFit: "cover" }}
+                alt="user"
               />
             }
           />

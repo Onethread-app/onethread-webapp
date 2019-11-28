@@ -90,11 +90,13 @@ export const EditDesignationForm = (
 							<Error name={"division"} />
 							<Condition
 								when="division"
-								match={[
-									"seniorManager",
-									"middleManager",
-									"operationalEmployee"
-								]}
+								validate={(value => {
+									return [
+										"seniorManager",
+										"middleManager",
+										"operationalEmployee"
+									].includes(value);
+								})}
 							>
 								<Field<string>
 									name="department"

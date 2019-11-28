@@ -41,33 +41,33 @@ const SidebarComponent = (props: {
 						</Button>
 					</NavLink>
 				) : (
-					<>
-						<h1
-							className="ml4 ml3-m f4 tigrow-lightBlue ttc mr2 ws-break"
-							style={{ marginTop: "3rem"}}
-						>
-							{props.companyName}
-						</h1>
-						<NavLink
-							exact
-							className="mt5"
-							style={{ color: "dimgray" }}
-							activeStyle={{ background: "#0fa3a3", color: "white" }}
-							to={`/company/${props.company.name}`}
-						>
-							<Button
-								className="outline-0 bp3-large"
-								style={{ color: "inherit", padding: "0px" }}
+						<>
+							<NavLink
+								exact
+								className="ml4 ml3-m f4 tigrow-lightBlue ttc mr2 ws-break"
+								style={{ marginTop: "3rem" }}
+								to={`/company/${props.company.name}`}
+							>	{props.companyName}</NavLink>
+							<NavLink
+								exact
+								className="mt5"
+								style={{ color: "dimgray" }}
+								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								to={`/company/${props.company.name}`}
 							>
-								<Icon
-									icon="user"
-									className="pr4-l pr3-m pl3-l"
-									style={{ color: "inherit" }}
-								/>
-								Profile
+								<Button
+									className="outline-0 bp3-large"
+									style={{ color: "inherit", padding: "0px" }}
+								>
+									<Icon
+										icon="user"
+										className="pr4-l pr3-m pl3-l"
+										style={{ color: "inherit" }}
+									/>
+									Profile
 							</Button>
-						</NavLink>
-						{/* <NavLink
+							</NavLink>
+							{/* <NavLink
 							exact
 							className="mt5"
 							style={{ color: 'dimgray' }}
@@ -104,80 +104,80 @@ const SidebarComponent = (props: {
 								Feed
 						</Button>
 						</NavLink> */}
-						<NavLink
-							exact
-							style={{ color: "dimgray" }}
-							activeStyle={{ background: "#0fa3a3", color: "white" }}
-							to={`/company/${props.company.name}/room`}
-						>
-							<Button
-								className="outline-0 bp3-large"
-								style={{ color: "inherit", padding: "0px" }}
+							<NavLink
+								exact
+								style={{ color: "dimgray" }}
+								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								to={`/company/${props.company.name}/room`}
 							>
-								<Icon
-									icon="square"
-									className="pr4-l pr3-m pl3-l"
-									style={{ color: "inherit" }}
-								/>
-								Room
+								<Button
+									className="outline-0 bp3-large"
+									style={{ color: "inherit", padding: "0px" }}
+								>
+									<Icon
+										icon="square"
+										className="pr4-l pr3-m pl3-l"
+										style={{ color: "inherit" }}
+									/>
+									Room
 							</Button>
-						</NavLink>
-						<NavLink
-							exact
-							style={{ color: "dimgray" }}
-							activeStyle={{ background: "#0fa3a3", color: "white" }}
-							to={`/company/${props.company.name}/board`}
-						>
-							<Button
-								className="outline-0 bp3-large"
-								style={{ color: "inherit", padding: "0px" }}
+							</NavLink>
+							<NavLink
+								exact
+								style={{ color: "dimgray" }}
+								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								to={`/company/${props.company.name}/board`}
 							>
-								<Icon
-									icon="briefcase"
-									className="pr4-l pr3-m pl3-l"
-									style={{ color: "inherit" }}
-								/>
-								Board
+								<Button
+									className="outline-0 bp3-large"
+									style={{ color: "inherit", padding: "0px" }}
+								>
+									<Icon
+										icon="briefcase"
+										className="pr4-l pr3-m pl3-l"
+										style={{ color: "inherit" }}
+									/>
+									Board
 							</Button>
-						</NavLink>
-						<NavLink
-							exact
-							style={{ color: "dimgray" }}
-							activeStyle={{ background: "#0fa3a3", color: "white" }}
-							to={`/company/${props.company.name}/team`}
-						>
-							<Button
-								className="outline-0 bp3-large"
-								style={{ color: "inherit", padding: "0px" }}
+							</NavLink>
+							<NavLink
+								exact
+								style={{ color: "dimgray" }}
+								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								to={`/company/${props.company.name}/team`}
 							>
-								<Icon
-									icon="people"
-									className="pr4-l pr3-m pl3-l"
-									style={{ color: "inherit" }}
-								/>
-								Team
+								<Button
+									className="outline-0 bp3-large"
+									style={{ color: "inherit", padding: "0px" }}
+								>
+									<Icon
+										icon="people"
+										className="pr4-l pr3-m pl3-l"
+										style={{ color: "inherit" }}
+									/>
+									Team
 							</Button>
-						</NavLink>
-						<NavLink
-							exact
-							style={{ color: "dimgray" }}
-							activeStyle={{ background: "#0fa3a3", color: "white" }}
-							to={`/company/${props.company.name}/settings`}
-						>
-							<Button
-								className="outline-0 bp3-large"
-								style={{ color: "inherit", padding: "0px" }}
+							</NavLink>
+							<NavLink
+								exact
+								style={{ color: "dimgray" }}
+								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								to={`/company/${props.company.name}/settings`}
 							>
-								<Icon
-									icon="cog"
-									className="pr4-l pr3-m pl3-l"
-									style={{ color: "inherit" }}
-								/>
-								Settings
+								<Button
+									className="outline-0 bp3-large"
+									style={{ color: "inherit", padding: "0px" }}
+								>
+									<Icon
+										icon="cog"
+										className="pr4-l pr3-m pl3-l"
+										style={{ color: "inherit" }}
+									/>
+									Settings
 							</Button>
-						</NavLink>
-					</>
-				)}
+							</NavLink>
+						</>
+					)}
 			</ButtonGroup>
 		</div>
 	);

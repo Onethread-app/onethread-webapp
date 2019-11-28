@@ -469,7 +469,7 @@ export const LandingPageComponent = (props: LandingPageProps &
           <div className="fl-l flex-m w-25-l w-100-m ph3">
             <div className="h-auto br3 ma3 pa3 bg-white cf tc shadow-4 w-50-m">
               <div className="cf flex relative center" style={{ width: '112px' }}>
-                <img className="db br-100 ba b--black-10" style={{ width: '112px', height: '112px' }} src={props.user.profileImage ? props.user.profileImage.imageSource : user} />
+                <img className="db br-100 ba b--black-10" style={{ width: '112px', height: '112px',objectFit:"cover" }} src={props.user.profileImage ? props.user.profileImage.imageSource : user} />
                 <div className="absolute bg-tigrowLightBlue br-100 pointer"
                   onClick={() => setShowDialogPicture(true)}
                   style={{ top: '4.5rem', right: '3px', width: '33px', height: '33px', paddingTop: '7px' }}
