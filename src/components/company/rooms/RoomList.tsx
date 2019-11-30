@@ -156,22 +156,24 @@ export const RoomListComponent = withChatkit(
 					id="roomList"
 					style={{ height: "calc(100vh - 105px)" }}
 				>
-					{props.chatkit.isLoading ? <Loading /> : rooms.length && (rooms[0] as any).id !== undefined ? (
-						rooms.map((room: any, i: number, arr: any) => {
-							return (
-								<RoomListItem
-									key={room.id}
-									roomId={room.id}
-									img={room.name[0]}
-									name={room.name}
-									unreadCount={room.unreadCount}
-									lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
-									active={room.id === roomId ? "bg-lightest-blue" : ""}
-									subscribeToRoom={subscribeToRoom}
-								/>
-							);
-						})
-					) : <Loading />}
+					<ul className="list pl0">
+						{props.chatkit.isLoading ? <Loading /> : rooms.length && (rooms[0] as any).id !== undefined ? (
+							rooms.map((room: any, i: number, arr: any) => {
+								return (
+									<RoomListItem
+										key={room.id}
+										roomId={room.id}
+										img={room.name[0]}
+										name={room.name}
+										unreadCount={room.unreadCount}
+										lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
+										active={room.id === roomId ? "bg-lightest-blue" : ""}
+										subscribeToRoom={subscribeToRoom}
+									/>
+								);
+							})
+						) : <Loading />}
+					</ul>
 				</main>
 			</>
 		);
