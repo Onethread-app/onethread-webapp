@@ -144,7 +144,7 @@ if (config.env !== 'test') {
 app.use((err, req, res, next) => {
   const stack =
     config.env === 'development' ? err.stack.split('\n') : {};
-  let frame = err.stack.split('at ').trim();
+  let frame = err.stack;
   let lineNumber = frame.split(':')[1];
   const response = {
     message: err.isPublic ? err.message : httpStatus[err.status],
@@ -152,7 +152,7 @@ app.use((err, req, res, next) => {
     lineNumber,
     frame,
   };
-  logger.info(`${response}`);
+  winstonInstance.info(`${response}`);
   res.status(err.status).json({
     message: err.isPublic ? err.message : httpStatus[err.status],
   });

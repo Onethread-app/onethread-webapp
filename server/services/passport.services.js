@@ -4,6 +4,7 @@ const { ExtractJwt } = require('passport-jwt');
 const LocalStrategy = require('passport-local');
 const config = require('../../config/config');
 const Account = require('../account/account.model');
+const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 // Setup options of local strategy
 const localOptions = {
