@@ -36,14 +36,20 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`/company/${name}`, headers);
-			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data });
-			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
-			const storeObject = getState();
-			if (storeObject.companyReducer.currentCompany.logo) {
-				const awsOptions = awsImageOption(storeObject.companyReducer.currentCompany.logo)
+			let updatedCompanyDetails = response.data.company;
+			if (updatedCompanyDetails.logo) {
+				const awsOptions = awsImageOption(updatedCompanyDetails.logo)
 				const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-				dispatch({ type: LOGO_UPLOAD, payload: { imageSource: imgRes.data } })
+				updatedCompanyDetails = {
+					...updatedCompanyDetails,
+					logo: {
+						...updatedCompanyDetails.logo,
+						imageSource: imgRes.data
+					}
+				}
 			}
+			dispatch({ type: GET_COMPANY_DETAILS, payload: updatedCompanyDetails })
+			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
 			return response.data;
 		} else {
 			console.log("error in slection of company fetching")
@@ -305,7 +311,7 @@ export const companyLogoUploadAction = (imageSelected: any) => async (dispatch: 
 			const response = await tigrowApi.post(`files/company-logo?cid=${companyId}`, imageSelected, headers);
 			const awsOptions = awsImageOption(response.data);
 			const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-			dispatch({ type: LOGO_UPLOAD, payload: { imageSource: imgRes.data } })
+			dispatch({ type: LOGO_UPLOAD, payload: { ...response.data, imageSource: imgRes.data } })
 			return imgRes.data;
 		} else {
 			console.log('no headers')

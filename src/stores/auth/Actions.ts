@@ -106,8 +106,8 @@ export const fetchUserAction = () => async (dispatch: any, getState: any) => {
 			dispatch({ type: USER_FETCH_LOADING });
 			const response = await tigrowApi.get(`/accounts`, headers);
 			let updatedUserInfo = response.data.user;
-			if (response.data.user.profileImage) {
-				const awsOptions = awsImageOption(response.data.user.profileImage);
+			if (updatedUserInfo.profileImage) {
+				const awsOptions = awsImageOption(updatedUserInfo.profileImage);
 				const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
 				updatedUserInfo = {
 					...updatedUserInfo,

@@ -106,7 +106,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 		case GET_COMPANY_DETAILS:
 			return {
 				...state,
-				currentCompany: action.payload.company
+				currentCompany: action.payload
 			};
 		case CREATE_COMPANY:
 			return {
@@ -257,9 +257,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 				...state,
 				currentCompany: {
 					...state.currentCompany,
-					logo: {
-						...state.currentCompany.logo, ...action.payload
-					}
+					logo: action.payload
 				},
 			}
 		default:
