@@ -303,14 +303,17 @@ const resetPassword = async (req, res, next) => {
 };
 const getAccount = async (req, res, next) => {
   try {
-    const timeline = [
-      ...req.user.jobExperience,
-      ...req.user.education,
-    ];
+    const user = await Account.findById({ _id: req.user._id });
+    if (!user) {
+      return sendJSONresponse(res, 404, {
+        message: 'user does not found',
+      });
+    }
+    const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
     );
-    const userInfo = { ...req.user._doc };
+    const userInfo = { ...user._doc };
     userInfo.timeline = timelineHistory;
     delete userInfo.password;
     delete userInfo.companies;

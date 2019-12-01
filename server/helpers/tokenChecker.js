@@ -172,8 +172,9 @@ module.exports = async (req, res, next) => {
             message: err.message,
           });
         }
+        console.log(req);
         req.user.email = decoded;
-        console.log(req.user);
+
         next();
       });
     }
