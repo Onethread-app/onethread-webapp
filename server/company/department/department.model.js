@@ -1,13 +1,20 @@
 const mongoose = require('mongoose');
-const departmentSchema = mongoose.Schema({
-  name: {
-    type: String,
-    require: true,
+const departmentSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      require: true,
+    },
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      require: true,
+    },
+    removed: {
+      type: Boolean,
+      default: false,
+    },
   },
-  company: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company',
-    require: true,
-  },
-});
+  { timestamps: true },
+);
 module.exports = mongoose.model('Department', departmentSchema);

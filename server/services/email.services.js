@@ -11,12 +11,13 @@ const transporter = nodemailer.createTransport({
 });
 
 const { port } = config;
-const host = `http://localhost:3000`;
+const host = `http://tigrow.co/`;
 
 module.exports.sendEmailForResetPassword = async (
   name,
   emailID,
   token,
+  next,
 ) => {
   const link = `${host}/reset-password/${token}`;
   const mailOptions = {
@@ -29,7 +30,13 @@ module.exports.sendEmailForResetPassword = async (
     `,
   };
 
-  return transporter.sendMail(mailOptions);
+  return transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      return next(err);
+    }
+    logger.info(`send reset password mail to user successfully`);
+    return info;
+  });
 };
 
 module.exports.sendEmailForVerifyAccount = async (
@@ -37,7 +44,7 @@ module.exports.sendEmailForVerifyAccount = async (
   emailID,
   token,
 ) => {
-  const link = `${host}/api/v1/account/verify-account/` + token;
+  const link = `${host}/verify-account/` + token;
   const mailOptions = {
     to: emailID,
     subject: 'Please confirm your Email account',

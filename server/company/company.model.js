@@ -44,6 +44,10 @@ const validateUrl = [
 // company schema
 const company = new Schema(
   {
+    logo: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'File',
+    },
     name: {
       type: String,
       unique: true,
@@ -101,9 +105,6 @@ const company = new Schema(
         ref: 'Room',
       },
     ],
-    logo: {
-      type: String,
-    },
     location: {
       type: String,
     },
@@ -115,12 +116,6 @@ const company = new Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Department',
-      },
-    ],
-    divisions: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Division',
       },
     ],
     registrationYear: {
@@ -157,6 +152,10 @@ const company = new Schema(
     about: {
       type: String,
       maxlength: 256,
+    },
+    removed: {
+      type: Boolean,
+      default: false,
     },
   },
   {

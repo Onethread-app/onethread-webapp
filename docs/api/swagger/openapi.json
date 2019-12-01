@@ -612,6 +612,7 @@
 						"type": "object",
 						"required": ["firstName", "lastName", "contactNo", "email", "password", "confirmPassword"],
 						"properties": {
+<<<<<<< HEAD
 							"firstName": {
 								"type": "string",
 								"example": "orvi"
@@ -1014,5 +1015,174 @@
 				}
 			}
 		}
+=======
+								"firstName": {
+										"type": "string",
+										"example": "orvi"
+								},
+								"lastName": {
+										"type": "string",
+										"example": "das"
+
+								},
+								"contactNo": {
+										"type": "number",
+										"example": "8801683754716"
+
+								},
+								"email": {
+										"type": "string",
+										"example": "robatdas2018@gmail.com"
+								},
+								"password": {
+										"type": "string",
+										"example": "Purba12@"
+								},
+								"confirmPassword": {
+										"type": "string",
+										"example": "Purba12@"
+								}
+						}
+				},
+				"loginResponse": {
+					"type": "object",
+					"properties": {
+							"success": {
+									"type": "string"
+							},
+							"user": {
+									"type": "object",
+									"properties": {
+											"role": {
+													"type": "string",
+													"example": "user"
+											},
+											"firstName": {
+													"type": "string",
+													"example": "orvi"
+											}
+									}
+							}
+					}
+			},
+					"Company":{
+							"type": "object",
+							"properties":{
+									"companyName" :{
+											"type" : "string",
+											"example": "face@fb.com"
+									},
+									"phoneNumber" : {
+											"type" : "string",
+											"example" : "8801673754716"
+									},
+									"companyAddress" : {
+											"type": "string",
+											"example" : "mohkhali dohs"
+									},
+									"establishDate" : {
+											"type" : "string",
+											"example": "2019"
+									},
+									"selectDistrict":{
+											"type" : "string",
+											"example" : "Dhaka"
+									},
+									"selectThana" : {
+											"type" : "string",
+											"example" : "banani"
+									},
+									"businessDescription" : {
+											"type" : "string",
+											"example" : "Social network site"
+									},
+									"tradelicense":{
+											"type": "string",
+											"example" : "10000000"
+									},
+									"contactPersonName" : {
+											"type" : "string",
+											"example" : "orvi"
+									},
+									"contactPersonDesignation" : {
+											"type" : "string",
+											"example" : "software engineer"
+									},
+									"contactPersonemail": {
+											"type": "string",
+											"example" : "das.orvi@yahoo.com"
+									},
+									"contactPersonMobile": {
+											"type": "string",
+											"example" : "8801683754716"
+									}
+							}
+					},
+					"Category": {
+							"type": "object",
+							"required": ["name", "type"],
+							"properties": {
+									"id": {
+											"type": "string",
+											"pattern": "^[0-9a-fA-F]{24}$",
+											"example": "5cf367d2c8ec086b7c98a52f"
+									},
+									"name": {
+											"type": "string",
+											"example": "Field of Expertise",
+											"default": "sad"
+									},
+									"type": {
+											"type": "string",
+											"enum": ["job-seeker", "emp", "business", "company"],
+											"example": "job-seeker"
+									},
+									"subcategories": {
+											"$ref": "#/components/schemas/SubCategory"
+									}
+							}
+					},
+					"SubCategory": {
+							"required": ["cid", "name"],
+							"properties": {
+									"id": {
+											"type": "string",
+											"pattern": "^[0-9a-fA-F]{24}$",
+											"example": "5cf367d2c8ec086b7c98a52f"
+									},
+									"cid": {
+											"$ref": "#/components/schemas/Category"
+									},
+									"name": {
+											"type": "string",
+											"example": "Engineering & Computer Science"
+									},
+									"subcategories": {
+											"$ref": "#/components/schemas/SubSubCategory"
+									}
+							}
+					},
+					"SubSubCategory": {
+							"required": ["cid", "name"],
+							"properties": {
+									"id": {
+											"type": "string",
+											"pattern": "^[0-9a-fA-F]{24}$",
+											"example": "5cf367d2c8ec086b7c98a52f"
+									},
+									"cid": {
+											"$ref": "#/components/schemas/Category"
+									},
+									"name": {
+											"type": "string",
+											"example": "Engineering & Computer Science"
+									},
+									"subcategories": {
+											"$ref": "#/components/schemas/SubSubCategory"
+									}
+							}
+					}
+			}
+>>>>>>> fa3a2680300f3fd83666a08b366fcf8e7caae0c1
 	}
 }

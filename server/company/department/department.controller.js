@@ -49,6 +49,7 @@ const list = async (req, res) => {
   try {
     const departments = await Department.find({
       company: req.company._id,
+      removed: false,
     }).select('_id name');
 
     if (departments) {
