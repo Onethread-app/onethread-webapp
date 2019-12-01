@@ -1,16 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button, FileInput, Dialog } from "@blueprintjs/core";
 import user from "../../../../resources/images/user.png";
-import { useSelector } from "react-redux";
+import { useSelector, connect } from "react-redux";
 import { trim, isEqual, isEmpty } from "lodash";
+import { sendRoomMessage } from 'stores/room/Actions';
 const { withChatkit } = require("@pusher/chatkit-client-react");
-
 
 interface SendMessageFormProps {
 	chatkit?: any;
+	sendRoomMessage: (data: { text: string, room: string, type?: string }) => void;
 }
 
-export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
+export const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	const roomId = useSelector((state: any) => state.roomReducer.activeRoom.id);
 	const currentUser = useSelector((state: any) => state.userReducer.user);
 	const [text, setText] = useState("hello");
@@ -22,12 +23,9 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 	}, [roomId]);
 
 
-	const sendMessage = (text: string) => {
-		// TODO: send to backend
-		props.chatkit.currentUser.sendSimpleMessage({
-			roomId,
-			text
-		});
+	const sendMessage = async (text: string) => {
+		// TODO: Future feature
+		let status = await props.sendRoomMessage({ text, room: roomId });
 	};
 
 	const resetMessage = (text: string) => {
@@ -135,3 +133,9 @@ export const SendMessageForm = withChatkit((props: SendMessageFormProps) => {
 		</>
 	);
 });
+
+const mapStateToProps = (state: any) => {
+	return {
+	}
+}
+export const SendMessageForm = connect(mapStateToProps, { sendRoomMessage })(SendMessageFormComponent)

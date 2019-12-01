@@ -38,8 +38,9 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 			>
 				<div className="dn db-ns pr3">
 					<span
-						className="ttc ba b--black-10 db w1 w2-ns h1 h2-ns br3 tc lh-2"
-						style={{ backgroundColor: generateColor() }}>
+						className="ttc ba b--black-10 db w1 w2-ns h1 h2-ns br3 tc lh-2 bg-light-gray"
+					// style={{ backgroundColor: generateColor() }}
+					>
 						{props.img}
 					</span>
 				</div>
