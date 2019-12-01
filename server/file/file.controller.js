@@ -76,7 +76,7 @@ const companyLogo = async (req, res, next) => {
   const userID = req.user._id;
   const companyID = req.query.cid;
   const params = {
-    Bucket: 'tigrow-test-1',
+    Bucket: 'tigrow-file',
     Key: `${companyID}/${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -120,7 +120,7 @@ const fileInRooms = async (req, res, next) => {
   const roomID = req.query.roomID;
   const userID = req.user._id;
   const params = {
-    Bucket: 'tigrow-test-1',
+    Bucket: 'tigrow-file',
     Key: `${roomID}/${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
