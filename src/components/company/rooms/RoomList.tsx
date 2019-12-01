@@ -128,7 +128,7 @@ export const RoomListComponent = withChatkit(
 				});
 				dispatch({ type: GET_ROOMS, payload: rooms });
 			}
-		}, [companyRooms, rooms]);
+		}, [companyRooms]);
 
 		useEffect(() => {
 			if (!props.chatkit.isLoading) {
