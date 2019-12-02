@@ -27,6 +27,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 // mount account user routes at /account
 router.use('/accounts', accountRoutes);
+router.use('/messages', messageRoutes);
 router.use('/category', categoryRoutes);
 router.use('/comments', commentRoutes);
 router.use('/company', companyRoutes);
@@ -44,9 +45,7 @@ router.use('/files', fileRoutes);
 router.use('/boards', boardRoutes);
 router.use('/boardColumns', boardColumnRoutes);
 router.use('/tasks', taskRoutes);
-router.use('/message', messageRoutes);
 router.use('/education', educationRoutes);
-router.use('/messages', messageRoutes);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
 
