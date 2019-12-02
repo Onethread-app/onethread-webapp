@@ -11,7 +11,9 @@ import {
 	ADD_MEMBER_IN_ROOM,
 	GET_ROOM_MEMBERS_FROM_SERVER,
 	GET_ROOM_MEMBERS_FROM_SERVER_ERROR,
-	CLEAR_ROOMS_ERROR
+	CLEAR_ROOMS_ERROR,
+	SEND_MESSAGE,
+	SEND_MESSAGE_ERROR
 } from "./Types";
 
 export const createRoomAction = (roomData: any) => async (
@@ -127,4 +129,29 @@ export const addRoomMembers = (members: any, selectedRoomMember: any) => async (
 
 export const clearRoomError = () => async (dispatch: any) => {
 	dispatch({ type: CLEAR_ROOMS_ERROR });
+};
+
+export const sendRoomMessage = (data: { text: string, room: string, type?: string }) => async (
+	dispatch: any,
+	getState: any
+) => {
+	try {
+		const headers = tokenConfig(getState);
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.post(`/messages`, data, headers);
+			await dispatch({ type: SEND_MESSAGE });
+			return response.status;
+		} else {
+			console.log("error in sending a room message");
+		}
+	} catch (error) {
+		if (error.response.status === 401) {
+			dispatch({ type: SEND_MESSAGE_ERROR, payload: "Unauthorized user" });
+		} else if (isEqual(error.message, "Network Error")) {
+			dispatch({ type: SEND_MESSAGE_ERROR, payload: "Network error" });
+		} else {
+			console.log(error.response);
+		}
+		return error.response.status;
+	}
 };

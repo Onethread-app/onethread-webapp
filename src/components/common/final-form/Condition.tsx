@@ -3,15 +3,15 @@ import { Field } from "react-final-form";
 
 interface props {
 	when: any;
-	match: any[];
+	validate: (value: any) => boolean;
 	children: any;
 }
 
-export const Condition = ({ when, match, children }: props) => {
+export const Condition = ({ when, validate, children }: props) => {
 	return (
 		<>
 			<Field name={when} subscription={{ value: true }}>
-				{({ input: { value } }) => (match.includes(value) ? children : null)}
+				{({ input: { value } }) => (validate(value) ? children : null)}
 			</Field>
 		</>
 	);

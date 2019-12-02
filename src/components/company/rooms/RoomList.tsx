@@ -121,17 +121,24 @@ export const RoomListComponent = withChatkit(
 		}, [props.chatkit]);
 
 		useEffect(() => {
-			if (!props.chatkit.isLoading && companyId) {
-				filteredRooms();
+			if (!props.chatkit.isLoading && companyId && rooms && companyRooms && rooms.length !== companyRooms.length) {
+				// filteredRooms
+				let rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
+				dispatch({ type: GET_ROOMS, payload: rooms });
 			}
 		}, [companyRooms]);
 
-		const filteredRooms = () => {
-			let rooms = props.chatkit.currentUser.rooms.filter((room: any) => {
-				return room.customData.company === companyId;
-			});
-			dispatch({ type: GET_ROOMS, payload: rooms });
-		};
+		useEffect(() => {
+			if (!props.chatkit.isLoading) {
+				for (const roomId in props.chatkit.currentUser.roomSubscriptions) {
+					if (props.chatkit.currentUser.roomSubscriptions.hasOwnProperty(roomId)) {
+						const room = props.chatkit.currentUser.roomSubscriptions[roomId];
+						room.cancel();
+						room.connected = false;
+					}
+				}
+			}
+		}, [companyId])
 
 		return (
 			<>
@@ -140,22 +147,24 @@ export const RoomListComponent = withChatkit(
 					id="roomList"
 					style={{ height: "calc(100vh - 105px)" }}
 				>
-					{props.chatkit.isLoading ? <Loading /> : rooms.length && (rooms[0] as any).id !== undefined ? (
-						rooms.map((room: any, i: number, arr: any) => {
-							return (
-								<RoomListItem
-									key={room.id}
-									roomId={room.id}
-									img={room.name[0]}
-									name={room.name}
-									unreadCount={room.unreadCount}
-									lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
-									active={room.id === roomId ? "bg-lightest-blue" : ""}
-									subscribeToRoom={subscribeToRoom}
-								/>
-							);
-						})
-					) : <Loading />}
+					<ul className="list pl0">
+						{props.chatkit.isLoading ? <Loading /> : rooms.length && (rooms[0] as any).id !== undefined ? (
+							rooms.map((room: any, i: number, arr: any) => {
+								return (
+									<RoomListItem
+										key={room.id}
+										roomId={room.id}
+										img={room.name[0]}
+										name={room.name}
+										unreadCount={room.unreadCount}
+										lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
+										active={room.id === roomId ? "bg-lightest-blue" : ""}
+										subscribeToRoom={subscribeToRoom}
+									/>
+								);
+							})
+						) : <Loading />}
+					</ul>
 				</main>
 			</>
 		);
