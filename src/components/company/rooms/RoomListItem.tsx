@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { isEmpty, isEqual } from "lodash";
-import React, { useEffect } from 'react';
+import React from 'react';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface RoomListItemProps {
@@ -16,9 +16,9 @@ interface RoomListItemProps {
 
 export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 	const activeRoom = useSelector((state: any) => state.roomReducer.activeRoom);
-	const generateColor = () => {
-		return "#" + ((1 << 24) * Math.random() | 0).toString(16);
-	}
+	// const generateColor = () => {
+	// 	return "#" + ((1 << 24) * Math.random() | 0).toString(16);
+	// }
 
 	return (
 		<li

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { isEqual, isEmpty } from "lodash";
+import { isEqual } from "lodash";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import { useDispatch, useSelector, connect } from "react-redux";
 import { RoomListItem } from "./RoomListItem";
@@ -122,10 +122,8 @@ export const RoomListComponent = withChatkit(
 
 		useEffect(() => {
 			if (!props.chatkit.isLoading && companyId && rooms && companyRooms && rooms.length !== companyRooms.length) {
-				// filteredRooms();
-				let rooms = props.chatkit.currentUser.rooms.filter((room: any) => {
-					return room.customData.company === companyId;
-				});
+				// filteredRooms
+				let rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
 				dispatch({ type: GET_ROOMS, payload: rooms });
 			}
 		}, [companyRooms]);
@@ -141,13 +139,6 @@ export const RoomListComponent = withChatkit(
 				}
 			}
 		}, [companyId])
-
-		const filteredRooms = () => {
-			let rooms = props.chatkit.currentUser.rooms.filter((room: any) => {
-				return room.customData.company === companyId;
-			});
-			dispatch({ type: GET_ROOMS, payload: rooms });
-		};
 
 		return (
 			<>

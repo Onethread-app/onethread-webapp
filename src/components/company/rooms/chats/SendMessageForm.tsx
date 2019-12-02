@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button, FileInput, Dialog } from "@blueprintjs/core";
 import user from "../../../../resources/images/user.png";
-import { useSelector, connect } from "react-redux";
+import { connect } from "react-redux";
 import { trim, isEqual, isEmpty } from "lodash";
 import { sendRoomMessage } from 'stores/room/Actions';
 const { withChatkit } = require("@pusher/chatkit-client-react");
@@ -9,23 +9,23 @@ const { withChatkit } = require("@pusher/chatkit-client-react");
 interface SendMessageFormProps {
 	chatkit?: any;
 	sendRoomMessage: (data: { text: string, room: string, type?: string }) => void;
+	roomId: string;
+	profileImage: any;
 }
 
-export const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
-	const roomId = useSelector((state: any) => state.roomReducer.activeRoom.id);
-	const currentUser = useSelector((state: any) => state.userReducer.user);
+const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	const [text, setText] = useState("hello");
 	const [showDialog, setShowDialog] = useState(false);
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
 
 	useEffect(() => {
 		setText("");
-	}, [roomId]);
+	}, [props.roomId]);
 
 
 	const sendMessage = async (text: string) => {
 		// TODO: Future feature
-		let status = await props.sendRoomMessage({ text, room: roomId });
+		await props.sendRoomMessage({ text, room: props.roomId });
 	};
 
 	const resetMessage = (text: string) => {
@@ -37,7 +37,7 @@ export const SendMessageFormComponent = withChatkit((props: SendMessageFormProps
 	const onChange = (e: any) => {
 		setText(e.target.value);
 		props.chatkit.currentUser
-			.isTypingIn({ roomId })
+			.isTypingIn({ roomId: props.roomId })
 			.catch((error: any) => console.error("error on typing", error));
 	};
 
@@ -82,7 +82,7 @@ export const SendMessageFormComponent = withChatkit((props: SendMessageFormProps
 		<>
 			<div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
 				<div className="flex items-center mh1" style={{ width: "42px" }}>
-					<img src={currentUser.profileImage ? currentUser.profileImage.imageSource : user}
+					<img src={props.profileImage ? props.profileImage.imageSource : user}
 						className="db br-100"
 						style={{ width: "40px", height: "40px", objectFit: "cover" }}
 						alt="user" />
@@ -136,6 +136,8 @@ export const SendMessageFormComponent = withChatkit((props: SendMessageFormProps
 
 const mapStateToProps = (state: any) => {
 	return {
+		profileImage: state.userReducer.user.profileImage,
+		roomId: state.roomReducer.activeRoom.id
 	}
 }
 export const SendMessageForm = connect(mapStateToProps, { sendRoomMessage })(SendMessageFormComponent)

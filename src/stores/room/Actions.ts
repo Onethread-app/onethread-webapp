@@ -138,7 +138,6 @@ export const sendRoomMessage = (data: { text: string, room: string, type?: strin
 	try {
 		const headers = tokenConfig(getState);
 		if ((headers as any).headers.Authorization) {
-			dispatch({ type: LOADING_ROOM });
 			const response = await tigrowApi.post(`/messages`, data, headers);
 			await dispatch({ type: SEND_MESSAGE });
 			return response.status;
