@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { isNumber, isEmpty } from 'lodash';
+import { isNumber, isEmpty, isEqual } from 'lodash';
 import { connect } from 'react-redux';
 import { Button } from '@blueprintjs/core';
 import { InputGroupField } from 'components/common/field/InputGroup';
@@ -66,6 +66,14 @@ const CompanyInfoFormComponent = (props: {
     setValues({ ...values, [name]: value });
   };
 
+  const checkLegalOwnerMail = () => {
+    if (isEqual(values.email, values.legalOwnerMail)) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Basic Information</h1>
@@ -106,7 +114,10 @@ const CompanyInfoFormComponent = (props: {
           className={`br0 ${errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
           leftIconColor={`${errors.email ? 'red' : "#0fa3a3"}`}
           validationOnBlur={() => {
-            if (!emailValidation(values.email)) {
+            if (checkLegalOwnerMail() && !isEmpty(values.email)) {
+              const companyEmailError = { ...errors, email: "Company email address and legal owner mail address must be different" };
+              setErrors(companyEmailError);
+            } else if (!emailValidation(values.email)) {
               const emailError = { ...errors, email: "Invalid email address!" };
               setErrors(emailError);
             } else {
@@ -145,7 +156,10 @@ const CompanyInfoFormComponent = (props: {
           className={`br0 ${errors.legalOwnerMail ? 'bb b--red' : 'bb b--lightBlue'}`}
           leftIconColor={`${errors.legalOwnerMail ? 'red' : "#0fa3a3"}`}
           validationOnBlur={() => {
-            if (!emailValidation(values.legalOwnerMail)) {
+            if (checkLegalOwnerMail() && !isEmpty(values.legalOwnerMail)) {
+              const ownerEmailError = { ...errors, legalOwnerMail: "Company email address and legal owner mail address must be different" };
+              setErrors(ownerEmailError);
+            } else if (!emailValidation(values.legalOwnerMail)) {
               const legalOwnerMailError = { ...errors, legalOwnerMail: "Invalid email address!" };
               setErrors(legalOwnerMailError);
             } else {

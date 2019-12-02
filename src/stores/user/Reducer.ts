@@ -9,6 +9,14 @@ export interface ICompanyByUser {
 	}
 }
 
+export interface IProfilePhoto {
+	_id: string;
+	link: string;
+	s3key: string;
+	type: string;
+	imageSource: string;
+}
+
 export interface User {
 	_id: string,
 	email: string
@@ -30,7 +38,7 @@ export interface User {
 	sendingFriendList: string[],
 	timeline: string[],
 	skillArea: ItemEntityProps[];
-	profileImage: any
+	profileImage: IProfilePhoto
 }
 
 
@@ -59,7 +67,6 @@ const InitialState = {
 		profileImage: {}
 	},
 	loading: false,
-	imageLoading: false,
 	error: ''
 }
 
@@ -148,9 +155,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 				...state,
 				user: {
 					...state.user,
-					profileImage: { 
-						...state.user.profileImage, ...action.payload
-					}
+					profileImage: action.payload
 			},
 		}
 	}

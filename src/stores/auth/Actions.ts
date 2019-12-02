@@ -12,7 +12,7 @@ import { History } from "history";
 import { UserModel } from "stores/auth/Reducer";
 import { isEqual } from "lodash";
 import { tokenConfig, awsImageOption } from "../UtilsActions";
-import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE, IMAGE_UPLOAD } from 'stores/user/Types';
+import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE } from 'stores/user/Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 
@@ -105,14 +105,19 @@ export const fetchUserAction = () => async (dispatch: any, getState: any) => {
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: USER_FETCH_LOADING });
 			const response = await tigrowApi.get(`/accounts`, headers);
-			dispatch({ type: FETCH_USER, payload: response.data.user });
-			const storeObject = getState();
-			if (storeObject.userReducer.user.profileImage) {
-				const awsOptions = awsImageOption(response.data.user.profileImage);
+			let updatedUserInfo = response.data.user;
+			if (updatedUserInfo.profileImage) {
+				const awsOptions = awsImageOption(updatedUserInfo.profileImage);
 				const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-				dispatch({ type: IMAGE_UPLOAD, payload: { imageSource: imgRes.data } })
-				return imgRes.data
+				updatedUserInfo = {
+					...updatedUserInfo,
+					profileImage: {
+						...updatedUserInfo.profileImage,
+						imageSource: imgRes.data
+					}
+				}
 			}
+			dispatch({ type: FETCH_USER, payload: updatedUserInfo });
 		} else {
 			dispatch({ type: USER_FETCH_ERROR, payload: "error in user fetching" });
 		}

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
 import 'react-vertical-timeline-component/style.min.css';
-import userProfilePic from '../../../../resources/images/user.png';
+import job from '../../../../resources/images/job.png';
+import education from '../../../../resources/images/education.png';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { Dialog, Button, Icon } from '@blueprintjs/core';
@@ -178,7 +179,7 @@ const ExperienceViewComponent = (props: {
                   className="flex w-100 mt2 items-center"
                 >
                   <div className="" style={{ minWidth: "35px", maxWidth: "35px" }}>
-                    <img src={userProfilePic} />
+                    <img src={experience.companyName ? job : education} />
                   </div>
 
                   <div className="ml2 bg-white w-100">
