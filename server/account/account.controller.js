@@ -24,7 +24,7 @@ const {
 
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
-
+//need to check account
 // create a new account for individual users
 const register = async (req, res, next) => {
   const email = req.body.email;

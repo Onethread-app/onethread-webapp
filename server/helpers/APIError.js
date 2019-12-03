@@ -35,7 +35,7 @@ class APIError extends ExtendableError {
   }
 }
 
-class EmailIdExistError extends APIError {
+class EmailIdExistError extends ExtendableError {
   constructor(
     name,
     message,
@@ -46,7 +46,7 @@ class EmailIdExistError extends APIError {
   }
 }
 
-class BadRequestError extends APIError {
+class BadRequestError extends ExtendableError {
   constructor(
     message,
     status = httpStatus.BAD_REQUEST,
@@ -56,7 +56,7 @@ class BadRequestError extends APIError {
   }
 }
 
-class SearchNotMatchError extends APIError {
+class SearchNotMatchError extends ExtendableError {
   constructor(
     message,
     status = httpStatus.NOT_FOUND,
