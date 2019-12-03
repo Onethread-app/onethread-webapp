@@ -15,7 +15,7 @@ interface RoomSideBarComponentProps {
 }
 interface RoomSideBarInternalProps
 	extends RoomSideBarComponentProps,
-		RouteComponentProps {
+	RouteComponentProps {
 	clearRoomError: () => void;
 }
 const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
@@ -34,8 +34,8 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 							onClick={() => setShowDialog(!showDialog)}
 						/>
 					) : (
-						undefined
-					)}
+							undefined
+						)}
 				</div>
 				<RoomList />
 			</div>
@@ -48,7 +48,9 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 					isOpen
 					style={{ background: "#fff" }}
 				>
-					<CreateForm setShowDialog={setShowDialog} />
+					<CreateForm
+						setShowDialog={setShowDialog}
+					/>
 				</Dialog>
 			)}
 		</>

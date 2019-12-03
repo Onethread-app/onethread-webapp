@@ -115,10 +115,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								props.company.members.length > 0 ? (
 										props.company.members.map(member => (
 											<tr className="hide-child">
-												<td><small className="mr2">{member.account.name}</small> {permit(member.role) && <Icon
-													className=" pointer"
-													icon="badge"
-												/>}</td>
+												<td><small className="mr2">{member.account.name}</small> {permit(member.role) && <Icon icon="star" />}</td>
 												<td>
 													{member.designations.length
 														? member.designations[0].division

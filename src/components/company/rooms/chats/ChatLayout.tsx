@@ -68,7 +68,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 				>
 					<AddMemberForm
 						showDialog={showMemberFormDialog}
-						setShowDialog={e => setShowMemberFormDialog(!showMemberFormDialog)}
+						setShowDialog={(e: any) => setShowMemberFormDialog(!showMemberFormDialog)}
 					/>
 				</Dialog>
 			)}
