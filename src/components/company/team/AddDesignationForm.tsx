@@ -2,14 +2,13 @@ import React from "react";
 import { Icon } from "@blueprintjs/core";
 import { Entity } from "stores/UtilsActions";
 import { Form, Field } from "react-final-form";
-import { required } from "components/common/final-form/utils";
+import { required, checkError } from "components/common/final-form/utils";
 import { IconNames } from "@blueprintjs/icons";
-import TextInput from "components/common/final-form/TextInput";
 import SubmitResetButtons from "components/common/final-form/SubmitResetButtons";
-import SelectInput from "components/common/final-form/SelectInput";
-import Error from "components/common/final-form/Error";
 import { Condition } from "components/common/final-form/Condition";
 import { ICompanyMembers } from "stores/company/Reducer";
+import { InputGroupFieldWithError } from 'components/common/field/InputGroup';
+import { DropdownFieldWithError } from 'components/common/field/DropdownField';
 
 interface AddDesignationFormProps {
 	member: ICompanyMembers | undefined;
@@ -56,21 +55,25 @@ export const AddDesignationForm = (props: AddDesignationFormProps) => {
 					<form className="fl w-100 pa4 pt0" onSubmit={handleSubmit}>
 						<h1 className="f5 tigrow-lightBlue">Add Role</h1>
 						<div className="flex flex-column">
-							<Field<string>
-								name="division"
-								component={SelectInput}
-								validate={required}
-							>
-								<option selected value="">
-									Please select a value
-								</option>
-								{props.divisions &&
-									props.divisions.length &&
-									props.divisions.map((d: Entity) => (
-										<option value={d._id}>{d.name}</option>
-									))}
-							</Field>
-							<Error name={"division"} />
+							<div className="mb4">
+								<Field<string>
+									name="division"
+									validate={required}
+									render={({ input, meta }) =>
+										<DropdownFieldWithError
+											id={input.name}
+											selectedValue={input.value}
+											options={
+												props.divisions && props.divisions.length > 0 ?
+													props.divisions : [] as any
+											}
+											onChange={input.onChange}
+											leftIcon="id-number"
+											error={checkError(meta) && (meta.error || meta.submitError)}
+										/>
+									}
+								/>
+							</div>
 							<Condition
 								when="division"
 								validate={(value => {
@@ -81,31 +84,45 @@ export const AddDesignationForm = (props: AddDesignationFormProps) => {
 									].includes(value);
 								})}
 							>
-								<Field<string>
-									name="department"
-									component={SelectInput}
-									validate={required}
-								>
-									<option selected value="">
-										Please select a value
-									</option>
-									{props.departments &&
-										props.departments.length &&
-										props.departments.map((d: Entity) => (
-											<option value={d._id}>{d.name}</option>
-										))}
-								</Field>
-								<Error name={"department"} />
+								<div className="mb4">
+									<Field<string>
+										name="department"
+										validate={required}
+										render={({ input, meta }) =>
+											<DropdownFieldWithError
+												id={input.name}
+												selectedValue={input.value}
+												options={
+													props.departments &&
+														props.departments.length > 0 ?
+														props.departments : [] as any
+												}
+												onChange={input.onChange}
+												leftIcon="comparison"
+												error={checkError(meta) && (meta.error || meta.submitError)}
+											/>
+										}
+									/>
+								</div>
 							</Condition>
 						</div>
 						<Field<string>
 							name="position"
-							placeHolder="Position"
-							component={TextInput}
 							validate={required}
-							leftIcon="id-number"
+							render={({ input, meta }) =>
+								<InputGroupFieldWithError
+									id={input.name}
+									className={`br0 ${checkError(meta) ? "bb b--red" : "bb b--lightBlue"}`}
+									placeHolder="Position"
+									value={input.value}
+									onChange={input.onChange}
+									leftIcon="id-number"
+									leftIconColor={`${checkError(meta) ? "red" : "#0fa3a3"}`}
+									style={{ boxShadow: "none" }}
+									error={checkError(meta) && (meta.error || meta.submitError)}
+								/>
+							}
 						/>
-						<Error name={"position"} />
 						<SubmitResetButtons
 							reset={form.reset}
 							submitting={submitting}

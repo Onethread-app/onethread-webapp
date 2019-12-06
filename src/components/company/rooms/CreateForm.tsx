@@ -6,9 +6,9 @@ import { connect } from "react-redux";
 import { createRoomAction } from "stores/room/Actions";
 import { Form, Field } from "react-final-form";
 import { required } from "components/common/final-form/utils";
-import TextInput from "components/common/final-form/TextInput";
-import Error from "components/common/final-form/Error";
 import SubmitResetButtons from "components/common/final-form/SubmitResetButtons";
+import { InputGroupFieldWithError } from 'components/common/field/InputGroup';
+import { checkError } from 'components/common/final-form/utils';
 
 interface CreateFormProps {
 	setShowDialog: (val: boolean) => void;
@@ -47,12 +47,21 @@ const CreateFormComponent = (props: CreateFormInternalProps) => {
 						<h1 className="f5 tigrow-lightBlue">Create Room</h1>
 						<Field<string>
 							name="name"
-							placeHolder="Room name"
-							component={TextInput}
 							validate={required}
-							leftIcon="layout-balloon"
+							render={({ input, meta }) =>
+								<InputGroupFieldWithError
+									id={input.name}
+									className={`br0 ${checkError(meta) ? "bb b--red" : "bb b--lightBlue"}`}
+									placeHolder="Room name"
+									value={input.value}
+									onChange={input.onChange}
+									leftIcon="layout-balloon"
+									leftIconColor={`${checkError(meta) ? "red" : "#0fa3a3"}`}
+									style={{ boxShadow: "none" }}
+									error={checkError(meta) && (meta.error || meta.submitError)}
+								/>
+							}
 						/>
-						<Error name={"name"} />
 						<SubmitResetButtons
 							reset={form.reset}
 							submitting={submitting}
