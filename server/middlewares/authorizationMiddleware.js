@@ -4,7 +4,6 @@ const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 module.exports.auth = (req, res, next) => {
   let accessToken;
-  let hasMultiplePlaces = false;
   if (req.headers && req.headers.authorization) {
     const parts = req.headers.authorization;
     if (parts) {
@@ -14,12 +13,6 @@ module.exports.auth = (req, res, next) => {
         message: 'Bad HTTP authentication header format',
       });
     }
-  }
-  if (hasMultiplePlaces) {
-    return sendJSONresponse(res, 400, {
-      message:
-        'RFC6750 states the access_token MUST NOT be provided in more than one place in a single request',
-    });
   }
   if (accessToken) {
     jwt.verify(accessToken, config.jwtSecret, (err, decoded) => {
