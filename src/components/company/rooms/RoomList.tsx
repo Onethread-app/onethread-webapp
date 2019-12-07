@@ -63,10 +63,10 @@ export const RoomListComponent = withChatkit(
 								dispatch({ type: ON_PRESENCE_CHANGE });
 							},
 							onUserStartedTyping: (user: any) => {
-								dispatch({ type: ON_USER_STARTED_TYPING, payload: user.name });
+								dispatch({ type: ON_USER_STARTED_TYPING, payload: { name: user.name, roomId } });
 							},
 							onUserStoppedTyping: (user: any) => {
-								dispatch({ type: ON_USER_STOPPED_TYPING, payload: user.name });
+								dispatch({ type: ON_USER_STOPPED_TYPING, payload: { name: user.name, roomId } });
 							},
 							onUserJoined: (user: any) => {
 								// console.log("joined : " + user.name);

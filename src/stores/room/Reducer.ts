@@ -15,7 +15,9 @@ interface IAppState {
 	roomId: string;
 	roomName: string;
 	messages: any[];
-	typingUsers: any[];
+	typing: {
+		users: { name: string, roomId: string; }[]
+	};
 	users: any[];
 	roomMembers: any[];
 	rooms: any[];
@@ -28,7 +30,9 @@ const InitialState: IAppState = {
 	roomId: "",
 	roomName: "",
 	messages: [],
-	typingUsers: [],
+	typing: {
+		users: []
+	},
 	users: [],
 	roomMembers: [],
 	rooms: [],
@@ -48,15 +52,24 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case ON_USER_STARTED_TYPING:
 			return {
 				...state,
-				typingUsers: [...state.typingUsers, action.payload],
+				// typingUsers: [...state.typingUsers, action.payload],
+				typing: {
+					users: [...state.typing.users, action.payload]
+					// users: [action.payload]
+				},
 				loading: false
 			};
 		case ON_USER_STOPPED_TYPING:
 			return {
 				...state,
-				typingUsers: state.typingUsers.filter((user: any) => {
-					return user !== action.payload;
-				}),
+				typing: {
+					...state.typing, users: state.typing.users.filter((user: any) => {
+						return user.name !== action.payload.name;
+					})
+				},
+				// typingUsers: state.typingUsers.filter((user: any) => {
+				// 	return user !== action.payload;
+				// }),
 				loading: false
 			};
 		case ACTIVE_ROOM:
