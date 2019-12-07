@@ -17,7 +17,6 @@ const {
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 const {
   APIError,
-  EmailIdExistError,
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
@@ -40,75 +39,58 @@ const register = async (req, res, next) => {
       error: 'You must provide email and password.',
     });
   }
-  Account.find({
-    email: email,
-  })
-    .exec()
-    .then(user => {
-      if (user.length >= 1) {
-        const error = new EmailIdExistError(
-          'Email id exist',
-          httpStatus.CONFLICT,
-        );
-        return next(error);
-      } else {
-        let account = new Account();
-        account.email = email;
-        account.firstName = firstName;
-        account.lastName = lastName;
-        account.name = name;
-        account.contactNo = contactNo;
-        account.role = role;
-        account.password = password;
-        account.save().then(async userInfo => {
-          const info = {};
-          info.account = account;
-          info.expires = new Date(
-            // expire within 1 month
-            new Date().getTime() + 2630000,
-          );
-          let access_token = jwt.sign(info, config.jwtSecret, {
-            expiresIn: '1d',
+  let account = new Account();
+  account.email = email;
+  account.firstName = firstName;
+  account.lastName = lastName;
+  account.name = name;
+  account.contactNo = contactNo;
+  account.role = role;
+  account.password = password;
+  account
+    .save()
+    .then(async userInfo => {
+      const info = {};
+      info.account = account;
+      info.expires = new Date(
+        // expire within 1 month
+        new Date().getTime() + 2630000,
+      );
+      let access_token = jwt.sign(info, config.jwtSecret, {
+        expiresIn: '1d',
+      });
+      const emailResponse = await sendEmailForVerifyAccount(
+        account.name,
+        account.email,
+        access_token,
+      );
+      delete account.password;
+      delete account.companies;
+      req.login(userInfo, async function(err) {
+        if (err) {
+          return sendJSONresponse(res, 400, {
+            success: false,
+            message: err,
           });
-          const emailResponse = await sendEmailForVerifyAccount(
-            account.name,
-            account.email,
-            access_token,
-          );
-          delete account.password;
-          delete account.companies;
-          req.login(userInfo, async function(err) {
-            if (err) {
-              return sendJSONresponse(res, 400, {
-                success: false,
-                message: err,
-              });
-            } else {
-              // user created in chatkit
-              await chatkit.createUser({
-                id: req.user._id,
-                name: req.user.name,
-              });
-              const user = userInfo.toObject();
-              user.token = account.generateJwt();
-              delete user.password;
-              return sendJSONresponse(res, 201, {
-                token: user.token,
-                message: 'User created',
-                user,
-              });
-            }
+        } else {
+          // user created in chatkit
+          await chatkit.createUser({
+            id: req.user._id,
+            name: req.user.name,
           });
-        });
-      }
+          const user = userInfo.toObject();
+          user.token = account.generateJwt();
+          delete user.password;
+          return sendJSONresponse(res, 201, {
+            token: user.token,
+            message: 'User created',
+            user,
+          });
+        }
+      });
     })
     .catch(err => {
-      logger.error(`Registration Error: ${err}`);
-      const error = new BadRequestError(
-        'Bad Request Error',
-        httpStatus.BAD_REQUEST,
-      );
-      next(error);
+      next(err);
     });
 };
 /**

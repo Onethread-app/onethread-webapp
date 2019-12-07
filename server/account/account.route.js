@@ -24,17 +24,13 @@ const tokenChecker = require('../helpers/tokenChecker');
 const { cacheMiddleware } = require('../middlewares/redisMiddleware');
 const { auth } = require('../middlewares/authorizationMiddleware');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
-const methodNotAllowed = (req, res, next) => {
-  return sendJSONresponse(res, 405, { message: 'Check the method' });
-};
 // authentication
 router
   .route('/signup')
   .post(
     schemaValidator(paramValidation.register),
     accountCtrl.register,
-  )
-  .all(methodNotAllowed);
+  );
 router.get(
   '/verify-account/:token',
   accountCtrl.getAccessTokenForVerifyAccount,
@@ -50,10 +46,7 @@ router
 // router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
-router
-  .route('/')
-  .get(auth, accountCtrl.getAccount)
-  .all(methodNotAllowed);
+router.route('/').get(auth, accountCtrl.getAccount);
 router.route('/update').put(requireAuth, accountCtrl.accountUpdate);
 // router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
 // router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);

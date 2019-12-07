@@ -20,9 +20,7 @@ const {
   EmailIdExistError,
 } = require('../server/helpers/APIError');
 
-const {
-  getErrorMessage,
-} = require('../server/helpers/mongooseErrorFormat');
+const mongoErrorHandler = require('../server/helpers/mongoErrorFormat');
 const app = express();
 
 if (config.env === 'development' || config.env === 'production') {
@@ -79,17 +77,15 @@ if (config.env === 'development' || config.env === 'production') {
 // mount all routes on /api path
 
 app.use('/api/v1', routes); // v1.0
-
+app.use(mongoErrorHandler);
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
-  console.log(err);
   if (err instanceof expressValidation.ValidationError) {
     // validation error contains errors which is an array of error each containing message[]
     const unifiedErrorMessage = err.errors
       .map(error => error.messages.join('. '))
       .join(' and ');
     const error = new APIError(unifiedErrorMessage, err.status, true);
-    console.log(err);
     return next(error);
   }
   if (!(err instanceof APIError)) {
