@@ -4,7 +4,7 @@ const companyRoutes = require('./server/company/company.route');
 const categoryRoutes = require('./server/category/category.route');
 const postRoutes = require('./server/post/post.route');
 const reactRoutes = require('./server/react/react.route');
-// const saveRoutes = require('./server/save/save.route');
+ const saveRoutes = require('./server/save/save.route');
 const commentRoutes = require('./server/comment/comment.route');
 const reportRoutes = require('./server/report/report.route');
 const reviewRoutes = require('./server/review/review.route');
@@ -27,6 +27,7 @@ const router = express.Router(); // eslint-disable-line new-cap
 
 // mount account user routes at /account
 router.use('/accounts', accountRoutes);
+router.use('/messages', messageRoutes);
 router.use('/category', categoryRoutes);
 router.use('/comments', commentRoutes);
 router.use('/company', companyRoutes);
@@ -38,15 +39,13 @@ router.use('/reacts', reactRoutes);
 router.use('/reports', reportRoutes);
 router.use('/reviews', reviewRoutes);
 router.use('/rooms', roomRoutes);
-// router.use('/saves', saveRoutes);
+router.use('/saves', saveRoutes);
 router.use('/skills', skillRoutes);
 router.use('/files', fileRoutes);
 router.use('/boards', boardRoutes);
 router.use('/boardColumns', boardColumnRoutes);
 router.use('/tasks', taskRoutes);
-router.use('/message', messageRoutes);
 router.use('/education', educationRoutes);
-router.use('/messages', messageRoutes);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
 

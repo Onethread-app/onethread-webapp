@@ -45,20 +45,24 @@ app.use(methodOverride());
 
 // secure apps by setting various HTTP headers
 app.use(helmet());
+app.use(helmet.xssFilter());
+app.use(helmet.frameguard());
+app.use(helmet.noSniff());
+
 app.use(cors());
 
-app.options('/*', function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header(
-    'Access-Control-Allow-Methods',
-    'GET,PUT,POST,DELETE,OPTIONS',
-  );
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Content-Type, Authorization, Content-Length, X-Requested-With',
-  );
-  res.send(200);
-});
+// app.options('/*', function(req, res, next) {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header(
+//     'Access-Control-Allow-Methods',
+//     'GET,PUT,POST,DELETE,OPTIONS',
+//   );
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Content-Type, Authorization, Content-Length, X-Requested-With',
+//   );
+//   res.send(200);
+// });
 // TODO: cors customize
 // enable detailed API logging in dev env
 if (config.env === 'development' || config.env === 'production') {
@@ -92,7 +96,7 @@ app.use((err, req, res, next) => {
     console.log(err);
     return next(error);
   }
-  if (!(err instanceof APIError)) {
+  else if (!(err instanceof APIError)) {
     logger.error(`${err.message}`);
     const apiError = new APIError(
       err.message,
@@ -101,27 +105,27 @@ app.use((err, req, res, next) => {
     );
     return next(apiError);
   }
-  if (err instanceof EmailIdExistError) {
-    const emailApiError = new EmailIdExistError(
-      err.message,
-      err.status,
-      err.isPublic,
-    );
-    return next(emailApiError);
-  }
+  // if (err instanceof EmailIdExistError) {
+  //   const emailApiError = new EmailIdExistError(
+  //     err.message,
+  //     err.status,
+  //     err.isPublic,
+  //   );
+  //   return next(emailApiError);
+  // }
 
-  if (err instanceof SearchNotMatchError) {
-    const searchNotMatchError = new SearchNotMatchError(
-      err.message,
-      err.status,
-      err.isPublic,
-    );
-    return next(searchNotMatchError);
-  }
-  if (err instanceof getErrorMessage) {
-    const mongoDBError = new getErrorMessage(err);
-    return next(mongoDBError);
-  }
+  // if (err instanceof SearchNotMatchError) {
+  //   const searchNotMatchError = new SearchNotMatchError(
+  //     err.message,
+  //     err.status,
+  //     err.isPublic,
+  //   );
+  //   return next(searchNotMatchError);
+  // }
+  // if (err instanceof getErrorMessage) {
+  //   const mongoDBError = new getErrorMessage(err);
+  //   return next(mongoDBError);
+  // }
   return next(err);
 });
 

@@ -6,7 +6,7 @@ Promise = require('bluebird');
 const loggerDispatcher = 'Index';
 // config should be imported before importing any other file
 const config = require('./config/config');
-const client = require('./index.redis');
+//const client = require('./index.redis');
 const app = require('./config/express');
 const logger = require('./config/winston');
 
