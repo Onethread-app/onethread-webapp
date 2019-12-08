@@ -52,10 +52,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case ON_USER_STARTED_TYPING:
 			return {
 				...state,
-				// typingUsers: [...state.typingUsers, action.payload],
 				typing: {
 					users: [...state.typing.users, action.payload]
-					// users: [action.payload]
 				},
 				loading: false
 			};
@@ -67,9 +65,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
 						return user.name !== action.payload.name;
 					})
 				},
-				// typingUsers: state.typingUsers.filter((user: any) => {
-				// 	return user !== action.payload;
-				// }),
 				loading: false
 			};
 		case ACTIVE_ROOM:
