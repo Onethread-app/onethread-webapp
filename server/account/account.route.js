@@ -22,6 +22,8 @@ const {
 const schemaValidator = require('../helpers/joiSchemaValidator');
 const tokenChecker = require('../helpers/tokenChecker');
 const { cacheMiddleware } = require('../middlewares/redisMiddleware');
+const { auth } = require('../middlewares/authorizationMiddleware');
+const { sendJSONresponse } = require('../helpers/jsonResponse');
 // authentication
 router
   .route('/signup')
@@ -44,7 +46,7 @@ router
 // router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
-router.route('/').get(requireAuth, accountCtrl.getAccount);
+router.route('/').get(auth, accountCtrl.getAccount);
 router.route('/update').put(requireAuth, accountCtrl.accountUpdate);
 // router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
 // router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
