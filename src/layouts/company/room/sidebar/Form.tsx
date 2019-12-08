@@ -4,12 +4,11 @@ import { IconNames } from "@blueprintjs/icons";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { createRoomAction } from "stores/room/Actions";
 import { Form, Field } from "react-final-form";
-import { required, composeValidators } from "components/final-form/utils";
+import { required, composeValidators, maxValue } from "components/final-form/utils";
 import { SubmitAndResetButtons } from "components/final-form/SubmitResetButtons";
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
 import { GET_ROOMS } from 'stores/room/Types';
-import { maxValue } from 'components/common/final-form/utils';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 interface CreateFormProps {
