@@ -20,7 +20,7 @@ const {
 } = require('../helpers/permission');
 //const tokenChecker = require('../helpers/tokenChecker');
 const schemaValidator = require('../helpers/joiSchemaValidator');
-const tokenChecker = require('../helpers/tokenChecker');
+const { verifyToken } = require('../helpers/tokenChecker');
 const { cacheMiddleware } = require('../middlewares/redisMiddleware');
 const { auth } = require('../middlewares/authorizationMiddleware');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
@@ -33,8 +33,7 @@ router
   .post(
     schemaValidator(paramValidation.register),
     accountCtrl.register,
-  )
-  .all(methodNotAllowed);
+  );
 router.get(
   '/verify-account/:token',
   accountCtrl.getAccessTokenForVerifyAccount,
@@ -46,14 +45,11 @@ router
     requireLogin,
     accountCtrl.login,
   );
-
+router.get('/checking', verifyToken, accountCtrl.checking);
 // router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
-router
-  .route('/')
-  .get(auth, accountCtrl.getAccount)
-  .all(methodNotAllowed);
+router.route('/').get(verifyToken, accountCtrl.getAccount);
 router.route('/update').put(requireAuth, accountCtrl.accountUpdate);
 // router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
 // router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);

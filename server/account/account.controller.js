@@ -128,8 +128,8 @@ const login = async (req, res, next) => {
     const token = jwt.sign({ _id: req.user._id }, config.jwtSecret, {
       expiresIn: 60 * 60 * 60 * 24,
     });
-    const accessToken = jwt.sign(payLoad, config.jwtSecret, {
-      expiresIn: '1d',
+    const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
+      expiresIn: '15m',
     });
     const refreshToken = jwt.sign(
       payLoad,
@@ -153,11 +153,14 @@ const login = async (req, res, next) => {
     delete userObj.friends;
     delete userObj.pendingFriends;
     delete userObj.sendingFriendList;
-    addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
+    // addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
+    client.SET(`userID:${req.user.email}`, refreshToken);
+    client.SET(accessToken, refreshToken);
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,
       token: token,
+      accessToken: accessToken,
       refresh_token: refreshToken,
     });
   } catch (error) {
@@ -500,6 +503,10 @@ const changePassword = async (req, res, next) => {
   }
 };
 
+const checking = (req, res) => {
+  return res.status(200).json({ success: true });
+};
+
 module.exports = {
   register,
   login,
@@ -515,4 +522,5 @@ module.exports = {
   getAccessTokenForForgetPassword,
   resetPassword,
   changePassword,
+  checking,
 };
