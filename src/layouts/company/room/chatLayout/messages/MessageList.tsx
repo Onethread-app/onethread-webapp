@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import { useSelector } from 'react-redux';
-import { isEmpty } from "lodash";
+import { isEmpty, isEqual } from "lodash";
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const UserIcon = require('./../../../../../resources/images/user.png');
@@ -59,11 +59,18 @@ export const MessageList = withChatkit((props: MessageListProps) => {
           />
         );
       }) : "" : ""}
-      {typingUsers.length ? typingUsers.map((e: { name: string, roomId: string; }, i: number) => {
-        if (!isEmpty(roomId) && roomId === e.roomId) {
-          return (<h6 key={i} className="mv1">{e.name} is typing ...</h6>);
+      {typingUsers.length ? typingUsers.map((user: { name: string, roomId: string; }, i: number) => {
+        if (isEmpty(roomId) === false && isEqual(roomId, user.roomId) === true) {
+          return (
+            <h6
+              key={i}
+              className="mv1"
+            >
+              {user.name} is typing ...
+            </h6>
+          );
         }
-        return (null);
+        return null;
       }) : ""}
 
 

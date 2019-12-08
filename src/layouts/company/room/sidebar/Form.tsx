@@ -31,7 +31,7 @@ const CreateFormComponent: React.FC<any> = withChatkit((props: CreateFormInterna
 			return { name: "Duplicate name" };
 		} else if (status === 201) {
 			if (!props.chatkit.isLoading) {
-				let rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
+				const rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
 				await dispatch({ type: GET_ROOMS, payload: rooms });
 				props.setShowDialog(false);
 			}

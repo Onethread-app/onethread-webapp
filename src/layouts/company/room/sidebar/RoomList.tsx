@@ -39,7 +39,7 @@ export const RoomListComponent = withChatkit(
 			await getRoomsAction();
 			if (!props.chatkit.isLoading && companyId) {
 				// filteredRooms
-				let rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
+				const rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
 				dispatch({ type: GET_ROOMS, payload: rooms });
 			}
 		};
