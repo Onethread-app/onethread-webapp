@@ -142,9 +142,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																				<p
 																					className="pointer bp3-popover-dismiss mb0"
 																					onClick={async () => {
-																						setShowDialogEdit(!showDialogEdit);
 																						setMember(member);
 																						await props.getAllDepartments();
+																						setShowDialogEdit(!showDialogEdit);
 																					}}
 																				>
 																					Edit Role
@@ -157,9 +157,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																			<p
 																				className="pointer bp3-popover-dismiss"
 																				onClick={async () => {
-																					setShowDialogAdd(!showDialogAdd);
 																					setMember(member);
 																					await props.getAllDepartments();
+																					setShowDialogAdd(!showDialogAdd);
 																				}}
 																			>
 																				Add Role

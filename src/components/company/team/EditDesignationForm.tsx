@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Icon } from "@blueprintjs/core";
 import { ICompanyMembers } from "stores/company/Reducer";
 import { Entity } from "stores/UtilsActions";
@@ -25,6 +25,8 @@ interface EditDesignationFormInternalProps extends EditDesignationFormProps {
 export const EditDesignationForm = (
 	props: EditDesignationFormInternalProps
 ) => {
+	const [initial, setInitial] = useState({})
+
 	const onSubmit: any = async (values: any) => {
 		if (props.member) {
 			values.designation = props.member.designations[0]._id;
@@ -56,10 +58,14 @@ export const EditDesignationForm = (
 		return {};
 	};
 
+	useEffect(() => {
+		setInitial(initialValues());
+	}, [])
+
 	return (
 		<Form
 			onSubmit={onSubmit}
-			initialValues={initialValues}
+			initialValues={initial}
 			render={({ handleSubmit, form, submitting, pristine, values }) => (
 				<div>
 					<div className="flex justify-end pa3">
@@ -130,6 +136,7 @@ export const EditDesignationForm = (
 							resetBtnName="Reset"
 							submitBtnName="Save"
 						/>
+						<pre>{JSON.stringify({ initial, values }, null, 2)}</pre>
 					</form>
 				</div>
 			)}
