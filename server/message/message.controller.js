@@ -1,55 +1,95 @@
-'use strict';
-
-const Message = require('./message.model');
-
+const { Message } = require('./message.model');
+const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
 
 const create = async (req, res, next) => {
-  const message = new Message({
-    text: req.body.text,
-    room: req.body.room,
-    account: req.user.id,
-  });
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
 
   try {
+    const room = await Room.findById(req.body.room);
+    if (!room) {
+      return res.status(404).json({
+        status: false,
+        message: `No room exists`,
+      });
+    }
+
+    const message = new Message({
+      text: req.body.text,
+      room: req.body.room,
+      type: req.body.type,
+      account: req.user.id,
+    });
     await message.save();
-    //need to send from here arif
-    // await chatkit.sendSimpleMessage({
-    //   userId: message.account,
-    //   roomId: message.room,
-    //   text: message.text,
-    // });
 
-    res.send(message);
-  } catch (e) {
+    //send to chatkit-server
+    await chatkit.sendSimpleMessage({
+      userId: message.account,
+      roomId: message.room,
+      text: message.text,
+    });
 
-    next(e);
+    return res.status(201).json({
+      status: true,
+      message,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: false,
+      error,
+    });
   }
 };
 
-const getUser = async (req, res) => {
-  chatkit
-    .getUser({
-      id: req.query.id,
-    })
-    .then(user => {
-      return res.status(200).send(user);
-    })
-    .catch(({ status, error_description }) => {
-      return res.status(status).json({
+const getRoomMessages = async (req, res, next) => {
+  try {
+    const room = await Room.findById(req.params.roomId);
+    if (!room) {
+      return res.status(404).json({
         status: false,
-        message: error_description,
+        message: `No room exists`,
       });
+    }
+
+    const { limit = 50, skip = 0 } = req.query;
+
+    const messages = await Message.find({
+      room: req.params.roomId,
+      removed: false,
+    })
+      .sort({ createdAt: 1 })
+      .skip(+skip)
+      .limit(+limit);
+    // .select('-__v -company -createdAt -updatedAt')
+    // .populate([
+    //   { path: 'account', select: '_id name firstName lastName' },
+    //   {
+    //     path: 'designations',
+    //     select: 'division department position',
+    //     populate: [{ path: 'department', select: 'name' }],
+    //   },
+    // ]);
+    return res.status(200).json({
+      status: true,
+      messages,
     });
 
-  // const authData = chatkit.authenticate({
-  //   userId: req.user._id + '1',
-  // });
-
-  // return res.status(authData.status).send(authData.body);
+    return res.status(201).json({
+      status: true,
+      message,
+    });
+  } catch (error) {
+    return res.status(400).json({
+      status: false,
+      error,
+    });
+  }
 };
 
 module.exports = {
-  getUser,
   create,
+  getRoomMessages,
 };

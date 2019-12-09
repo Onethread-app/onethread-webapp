@@ -1,18 +1,26 @@
 const express = require('express');
-const validate = require('express-validation');
-const passportService = require('../services/passport.services');
-const paramValidation = require('./message.validation');
-const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', { session: false });
-const messageCtrl = require('./message.controller');
-const { permit, authSelf } = require('../helpers/permission');
-
 const router = express.Router();
+const passport = require('passport');
+
+const requireAuth = passport.authenticate('jwt', { session: false });
+const joiSchema = require('./message.validation');
+const messageCtrl = require('./message.controller');
+const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
 router
   .route('/')
-  .post(requireAuth, permit('user', 'admin'), validate(paramValidation.createMessage), messageCtrl.create);
+  .post(
+    requireAuth,
+    SchemaValidator(joiSchema.create),
+    messageCtrl.create,
+  );
 
-router.route('/:id').get(requireAuth,  messageCtrl.getUser);
+router
+  .route('/room/:roomId')
+  .get(
+    requireAuth,
+    SchemaValidator(joiSchema.getRoomMessages),
+    messageCtrl.getRoomMessages,
+  );
 
 module.exports = router;

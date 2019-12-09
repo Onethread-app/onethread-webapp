@@ -1,14 +1,9 @@
 const express = require('express');
 const passport = require('passport');
 const passportService = require('../services/passport.services');
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const uploadx = multer({ storage: storage });
 const paramValidation = require('./account.validation');
 
 const router = express.Router();
-
-const requireAuth = passport.authenticate('jwt', { session: false });
 const requireLogin = passport.authenticate('local', {
   session: false,
 });
@@ -47,10 +42,10 @@ router
 //   .route('/token')
 //   .post(requireAuth, accountCtrl.tokenVerification);
 router.route('/').get(auth, accountCtrl.getAccount);
-router.route('/update').put(requireAuth, accountCtrl.accountUpdate);
+router.route('/update').put(auth, accountCtrl.accountUpdate);
 // router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
 // router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
-router.route('/logout').get(requireAuth, accountCtrl.logout);
+router.route('/logout').get(auth, accountCtrl.logout);
 router
   .route('/forget-password')
   .post(accountCtrl.sendEmailForForgetPassword);
@@ -60,13 +55,12 @@ router
 router.route('/reset-password').put(accountCtrl.resetPassword);
 router
   .route('/change-password')
-  .put(requireAuth, accountCtrl.changePassword);
+  .put(auth, accountCtrl.changePassword);
 // for admin
 router
   .route('/admin')
   .post(requireLogin, permit('admin'), accountCtrl.login);
 
 router.param('account-id', accountCtrl.accountLoad);
-// router.use(tokenChecker);
 
 module.exports = router;

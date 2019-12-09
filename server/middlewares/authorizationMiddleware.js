@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
+const Account = require('../account/account.model');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 module.exports.auth = (req, res, next) => {
@@ -15,13 +16,32 @@ module.exports.auth = (req, res, next) => {
     }
   }
   if (accessToken) {
-    jwt.verify(accessToken, config.jwtSecret, (err, decoded) => {
-      if (err) {
-        return sendJSONresponse(res, 401, { message: err.message });
-      }
-      req.user = decoded;
-      next();
-    });
+    jwt.verify(
+      accessToken,
+      config.jwtSecret,
+      async (err, decoded) => {
+        if (err) {
+          return sendJSONresponse(res, 401, { message: err.message });
+        }
+        try {
+          const user = await Account.findById(decoded._id)
+            .select('-password')
+            .populate(
+              'companies skillArea jobExperience education profileImage',
+              '_id _id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name link s3Key type',
+            );
+          if (!user) {
+            return sendJSONresponse(res, 404, {
+              message: 'user not found',
+            });
+          }
+          req.user = user;
+          next();
+        } catch (error) {
+          next(error);
+        }
+      },
+    );
   } else {
     return sendJSONresponse(res, 401, {
       message: 'No token provided',

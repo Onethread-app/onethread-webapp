@@ -8,7 +8,7 @@ const mongoErrorHandler = (err, req, res, next) => {
   // logger.error(error);
   // console.log(error);
   // Mongoose duplicate key
-  console.log(error.code);
+  // console.log(error.code);
   if (err.code === 11000 || err.code === 11001) {
     const pathRegex = err.message
       .split('index:')[1]
