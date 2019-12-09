@@ -34,7 +34,7 @@ const ExperienceEdit = (props:
   const [jobInfo, setJobInfo] = useState({
     companyName: "",
     positionName: "",
-    startYear: "",
+    startYear: "", //TODO: Date type must be used instead of string
     endingYear: "",
     currentlyWork: false,
     jobDescription: ""
@@ -42,7 +42,7 @@ const ExperienceEdit = (props:
   const [educationInfo, setEducationInfo] = useState({
     degree: "",
     institutionName: "",
-    startYear: "",
+    startYear: "", //TODO: Date type must be used instead of string
     endingYear: "",
     currentlyStudy: false,
     eduDescription: "",
