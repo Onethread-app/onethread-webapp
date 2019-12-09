@@ -4,6 +4,7 @@ import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { Icon, Checkbox, TextArea } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
+import { useSelector } from 'react-redux';
 
 export const JobFormComponent = (props: any) => {
   const [errors, setErrors] = useState({
@@ -21,6 +22,15 @@ export const JobFormComponent = (props: any) => {
     props.errors.endingYear = "";
     props.errors.currentlyWork = "";
   })
+
+  const birthDate = useSelector((state: any) => state.userReducer.user.birthDate);
+
+  const maxJobStartDate = () => {
+    let d = new Date(birthDate);
+    let maxDate = d.getFullYear() + 10;
+    d.setFullYear(maxDate);
+    return d;
+  }
 
   return (
     <form className="fl w-100 pr4 mt2">
@@ -93,7 +103,7 @@ export const JobFormComponent = (props: any) => {
               popoverProps={{
                 targetClassName: 'w-100'
               }}
-              minDate={new Date("1800/01/01")}
+              minDate={maxJobStartDate()}
               maxDate={props.values.endingYear ? new Date(props.values.endingYear) : new Date()}
             />
           </div>
@@ -107,7 +117,7 @@ export const JobFormComponent = (props: any) => {
               parseDate={(str: string) => new Date(str)}
               placeholder={"End Year"}
               onChange={(date: Date) => props.handleDateChange("endingYear", date)}
-              disabled={new Date(props.values.startYear).getDate() === new Date().getDate() || props.values.startYear === "" ? true : props.checked}
+              disabled={new Date(props.values.startYear).toLocaleDateString() === new Date().toLocaleDateString() || props.values.startYear === "" ? true : props.checked}
               minDate={props.minEndYear}
               canClearSelection={false}
               value={props.values.endingYear ? new Date(props.values.endingYear) : null}
