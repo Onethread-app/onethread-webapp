@@ -17,14 +17,13 @@ const {
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 const {
   APIError,
-  EmailIdExistError,
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
 
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
-
+//need to check account
 // create a new account for individual users
 const register = async (req, res, next) => {
   const email = req.body.email;
@@ -40,75 +39,58 @@ const register = async (req, res, next) => {
       error: 'You must provide email and password.',
     });
   }
-  Account.find({
-    email: email,
-  })
-    .exec()
-    .then(user => {
-      if (user.length >= 1) {
-        const error = new EmailIdExistError(
-          'Email id exist',
-          httpStatus.CONFLICT,
-        );
-        return next(error);
-      } else {
-        let account = new Account();
-        account.email = email;
-        account.firstName = firstName;
-        account.lastName = lastName;
-        account.name = name;
-        account.contactNo = contactNo;
-        account.role = role;
-        account.password = password;
-        account.save().then(async userInfo => {
-          const info = {};
-          info.account = account;
-          info.expires = new Date(
-            // expire within 1 month
-            new Date().getTime() + 2630000,
-          );
-          let access_token = jwt.sign(info, config.jwtSecret, {
-            expiresIn: '1d',
+  let account = new Account();
+  account.email = email;
+  account.firstName = firstName;
+  account.lastName = lastName;
+  account.name = name;
+  account.contactNo = contactNo;
+  account.role = role;
+  account.password = password;
+  account
+    .save()
+    .then(async userInfo => {
+      const info = {};
+      info.account = account;
+      info.expires = new Date(
+        // expire within 1 month
+        new Date().getTime() + 2630000,
+      );
+      let access_token = jwt.sign(info, config.jwtSecret, {
+        expiresIn: '1d',
+      });
+      const emailResponse = await sendEmailForVerifyAccount(
+        account.name,
+        account.email,
+        access_token,
+      );
+      delete account.password;
+      delete account.companies;
+      req.login(userInfo, async function(err) {
+        if (err) {
+          return sendJSONresponse(res, 400, {
+            success: false,
+            message: err,
           });
-          const emailResponse = await sendEmailForVerifyAccount(
-            account.name,
-            account.email,
-            access_token,
-          );
-          delete account.password;
-          delete account.companies;
-          req.login(userInfo, async function(err) {
-            if (err) {
-              return sendJSONresponse(res, 400, {
-                success: false,
-                message: err,
-              });
-            } else {
-              // user created in chatkit
-              await chatkit.createUser({
-                id: req.user._id,
-                name: req.user.name,
-              });
-              const user = userInfo.toObject();
-              user.token = account.generateJwt();
-              delete user.password;
-              return sendJSONresponse(res, 201, {
-                token: user.token,
-                message: 'User created',
-                user,
-              });
-            }
+        } else {
+          // user created in chatkit
+          await chatkit.createUser({
+            id: req.user._id,
+            name: req.user.name,
           });
-        });
-      }
+          const user = userInfo.toObject();
+          user.token = account.generateJwt();
+          delete user.password;
+          return sendJSONresponse(res, 201, {
+            token: user.token,
+            message: 'User created',
+            user,
+          });
+        }
+      });
     })
     .catch(err => {
-      logger.error(`Registration Error: ${err}`);
-      const error = new BadRequestError(
-        'Bad Request Error',
-        httpStatus.BAD_REQUEST,
-      );
-      next(error);
+      next(err);
     });
 };
 /**
@@ -123,7 +105,7 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const payLoad = {
-      email: req.user,
+      email: req.user.email,
     };
     const token = jwt.sign({ _id: req.user._id }, config.jwtSecret, {
       expiresIn: 60 * 60 * 60 * 24,
@@ -153,19 +135,49 @@ const login = async (req, res, next) => {
     delete userObj.friends;
     delete userObj.pendingFriends;
     delete userObj.sendingFriendList;
-    // addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
+    // addRefreshTokenToList(
+    //   refreshToken,
+    //   req.user.email,
+    //   accessToken,
+    //   100,
+    // );
     client.SET(`userID:${req.user.email}`, refreshToken);
     client.SET(accessToken, refreshToken);
+
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,
       token: token,
       accessToken: accessToken,
-      refresh_token: refreshToken,
+      refreshToken: refreshToken,
     });
   } catch (error) {
     logger.error(`ReferenceError:${error} is not defined`);
     next(error);
+  }
+};
+
+const getAccount = async (req, res, next) => {
+  try {
+    const timeline = [
+      ...req.user.jobExperience,
+      ...req.user.education,
+    ];
+    const timelineHistory = timeline.sort((a, b) =>
+      a.startYear < b.startYear ? 1 : -1,
+    );
+    const userInfo = { ...req.user._doc };
+    userInfo.timeline = timelineHistory;
+    delete userInfo.password;
+    delete userInfo.companies;
+    logger.info('userInfo successfully fetched');
+    return sendJSONresponse(res, 200, {
+      success: true,
+      user: userInfo,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    return next(error);
   }
 };
 
@@ -302,32 +314,6 @@ const resetPassword = async (req, res, next) => {
   } catch (err) {
     logger.error(`password does not change`);
     next(err);
-  }
-};
-const getAccount = async (req, res, next) => {
-  try {
-    const user = await Account.findById({ _id: req.user._id });
-    if (!user) {
-      return sendJSONresponse(res, 404, {
-        message: 'user does not found',
-      });
-    }
-    const timeline = [...user.jobExperience, ...user.education];
-    const timelineHistory = timeline.sort((a, b) =>
-      a.startYear < b.startYear ? 1 : -1,
-    );
-    const userInfo = { ...user._doc };
-    userInfo.timeline = timelineHistory;
-    delete userInfo.password;
-    delete userInfo.companies;
-    logger.info('userInfo successfully fetched');
-    return sendJSONresponse(res, 200, {
-      success: true,
-      user: userInfo,
-    });
-  } catch (error) {
-    logger.error(`ReferenceError:${error} is not defined`);
-    return next(error);
   }
 };
 
