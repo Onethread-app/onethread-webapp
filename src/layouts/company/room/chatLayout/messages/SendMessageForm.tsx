@@ -66,7 +66,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	const handleKeyPress = (e: any) => {
 		// console.log("inputMessageRef", a(inputMessageRef));
 		let trimmedText = trim(text);
-		if (e.key === "Enter" && isEmpty(trimmedText) === false) {
+		if (e.key === "Enter" && e.shiftKey === false && isEmpty(trimmedText) === false) {
 			sendMessage(trimmedText);
 			setText("");
 			// e.target.value = "";
@@ -91,13 +91,14 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					/>
 				</div>
 				<textarea
+					defaultValue={""}
 					ref={inputMessageRef}
 					className="w-100 mv2 mr1"
 					style={{ resize: "none" }}
 					value={isEqual(text.length, 1) && isEqual(text, "\n") ? resetMessage(text) : text}
 					onChange={onChange}
 					onKeyPress={handleKeyPress}
-					placeholder="Write your message "
+					placeholder="Type your message and hit ENTER to send"
 				></textarea>
 				{/* <Button
 					className="bp3-minimal outline-0 mh2 w2 mv3"
