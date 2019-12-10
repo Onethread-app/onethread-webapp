@@ -155,7 +155,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																			</>
 																		) : (
 																			<p
-																				className="pointer bp3-popover-dismiss"
+																				className="pointer bp3-popover-dismiss mb0"
 																				onClick={async () => {
 																					setMember(member);
 																					await props.getAllDepartments();
