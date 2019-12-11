@@ -4,6 +4,9 @@ const httpStatus = require('http-status');
 const shortid = require('shortid');
 const Account = require('./account.model');
 const config = require('../../config/config');
+const logger = require('../../config/winston');
+const client = require('../../index.redis');
+const { generateUsername } = require('../services/username.services');
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
@@ -11,6 +14,7 @@ const {
 const { chatkit } = require('../services/pusher.services');
 const {
   addRefreshTokenToList,
+  addAccessTokenToBlackList,
   updateRefreshTokenfromList,
   removeRefreshTokenfromList,
 } = require('../services/redis.services');
@@ -20,33 +24,26 @@ const {
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
-
-const logger = require('../../config/winston');
-const client = require('../../index.redis');
-//need to check account
 // create a new account for individual users
 const register = async (req, res, next) => {
-  const email = req.body.email;
-  const password = req.body.password;
-  const firstName = req.body.firstName;
-  const lastName = req.body.lastName;
-  const contactNo = req.body.contactNo;
-  const role = req.body.role;
+  const data = req.body;
+  // const name = await generateUsername(data.firstName, data.lastName);
   const uniqueHash = shortid.generate();
-  const name = firstName + uniqueHash;
-  if (!email || !password) {
+  const name = data.firstName + uniqueHash;
+  if (!data.email || !data.password) {
     return sendJSONresponse(res, 400, {
       error: 'You must provide email and password.',
     });
   }
-  let account = new Account();
-  account.email = email;
-  account.firstName = firstName;
-  account.lastName = lastName;
-  account.name = name;
-  account.contactNo = contactNo;
-  account.role = role;
-  account.password = password;
+  let account = new Account({
+    email: data.email,
+    firstName: data.firstName,
+    lastName: data.lastName,
+    name: name,
+    contactNo: data.contactNo,
+    password: data.password,
+  });
+
   account
     .save()
     .then(async userInfo => {
@@ -56,13 +53,17 @@ const register = async (req, res, next) => {
         // expire within 1 month
         new Date().getTime() + 2630000,
       );
-      let access_token = jwt.sign(info, config.jwtSecret, {
+      let token = jwt.sign(info, config.jwtSecret, {
         expiresIn: '1d',
       });
+      // crypto.randomBytes(32, async (err, buffer) => {
+      //   if (err) return res.status(400).json(err);
+      //   token = buffer.toString('hex');
+      // });
       const emailResponse = await sendEmailForVerifyAccount(
         account.name,
         account.email,
-        access_token,
+        token,
       );
       delete account.password;
       delete account.companies;
@@ -111,7 +112,7 @@ const login = async (req, res, next) => {
       expiresIn: 60 * 60 * 60 * 24,
     });
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
-      expiresIn: '15m',
+      expiresIn: '45m',
     });
     const refreshToken = jwt.sign(
       payLoad,
@@ -234,8 +235,19 @@ const accountUpdate = async (req, res, next) => {
     });
 };
 const logout = async (req, res) => {
+  console.log(req);
+  console.log(req.headers.authorization);
+  // addRefreshTokenToList(
+  //   refreshToken,
+  //   req.user.email,
+  //   accessToken,
+  //   100,
+  // );
+  addAccessTokenToBlackList(req.headers.authorization);
+  addAccessTokenToHashList('');
   req.logout();
   logger.info('Account successfully Logout');
+
   return sendJSONresponse(res, 200, {
     success: true,
     message: 'Successfully logout',

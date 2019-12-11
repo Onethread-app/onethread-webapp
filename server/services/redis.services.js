@@ -38,3 +38,8 @@ module.exports.removeRefreshTokenfromList = function(refreshToken) {
   client.del(refreshToken, redis.print);
   logger.info(`remove refresh token for the user`);
 };
+
+module.exports.addAccessTokenToBlackList = function(accessToken) {
+  console.log(accessToken);
+  client.LPUSH('blackListToken', accessToken);
+};

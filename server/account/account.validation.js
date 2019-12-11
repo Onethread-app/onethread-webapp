@@ -37,7 +37,7 @@ module.exports = {
         .valid(Joi.ref('password'))
         .required(),
       contactNo: Joi.string()
-        .regex(/^(\+?(88)?0?1[356789][0-9]{8})$/)
+        .regex(/^(\+?(88)?0?1[123456789][0-9]{8})$/)
         .required()
         .error(error => {
           return {
@@ -56,7 +56,13 @@ module.exports = {
         )
         .email()
         .lowercase()
-        .required(),
+        .required()
+        .error(error => {
+          return {
+            success: false,
+            message: 'mail id is not valid format',
+          };
+        }),
       password: Joi.string().required(),
     }),
   }),
