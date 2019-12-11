@@ -5,7 +5,9 @@ import {
 	Dialog,
 	Popover,
 	Position,
-	Icon
+	Icon,
+	ButtonGroup,
+	Alignment
 } from "@blueprintjs/core";
 import { AddMemberForm } from "layouts/company/team/AddMemberForm";
 import { connect } from "react-redux";
@@ -133,39 +135,60 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 														<Popover
 															className="fr"
 															position={Position.BOTTOM}
-															popoverClassName="bp3-popover-content-sizing bg-white "
+															popoverClassName="bp3-popover-content-sizing bg-white"
 															content={
-																<div className="ph2">
+																<ButtonGroup
+																	alignText={Alignment.LEFT}
+																	className="bp3-minimal bp3-vertical bp3-fill"
+																>
+																	<Button
+																		className="outline-0 bp3-large bp3-popover-dismiss"
+																	>
+																		<Icon
+																			icon="star"
+																			className="pr4-l pr3-m pl2"
+																			style={{ color: "inherit" }}
+																		/>
+																		Make Admin
+																	</Button>
 																	{member.designations &&
 																		member.designations.length ? (
 																			<>
-																				<p
-																					className="pointer bp3-popover-dismiss mb0"
+																				<Button
+																					className="outline-0 bp3-large bp3-popover-dismiss"
 																					onClick={async () => {
 																						setMember(member);
 																						await props.getAllDepartments();
 																						setShowDialogEdit(!showDialogEdit);
 																					}}
 																				>
-																					Edit Role
-																			</p>
-																				{/* <p className="pointer bp3-popover-dismiss">
-																						remove
-																						</p> */}
+																					<Icon
+																						icon="edit"
+																						className="pr4-l pr3-m pl2"
+																						style={{ color: "inherit" }}
+																					/>
+																					Edit Designation
+																				</Button>
 																			</>
 																		) : (
-																			<p
-																				className="pointer bp3-popover-dismiss mb0"
-																				onClick={async () => {
-																					setMember(member);
-																					await props.getAllDepartments();
-																					setShowDialogAdd(!showDialogAdd);
-																				}}
-																			>
-																				Add Role
-																			</p>
+																			<>
+																				<Button
+																					className="outline-0 bp3-large bp3-popover-dismiss"
+																					onClick={async () => {
+																						setMember(member);
+																						await props.getAllDepartments();
+																						setShowDialogAdd(!showDialogAdd);
+																					}}
+																				>
+																					<Icon
+																						icon="add"
+																						className="pr4-l pr3-m pl2"
+																						style={{ color: "inherit" }}
+																					/>Add Designation
+																				</Button>
+																			</>
 																		)}
-																</div>
+																</ButtonGroup>
 															}
 															target={
 																<Icon
