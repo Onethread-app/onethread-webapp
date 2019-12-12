@@ -13,7 +13,6 @@ const InitialState = {
   loginError: {
     message: "",
     email: false,
-    phoneNumber:  false,
     password: false,
     network: false
   }
