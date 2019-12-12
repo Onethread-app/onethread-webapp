@@ -36,7 +36,7 @@ const ChangePasswordComponentView = (props: {
   ) => {
     setLoading(true);
     try {
-      const headers = tokenConfig(store.getState);
+      const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.put("accounts/change-password", changePasswordInfo, headers);
         setLoading(false);

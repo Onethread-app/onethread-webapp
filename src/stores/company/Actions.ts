@@ -33,7 +33,7 @@ import { CLEAR_ROOMS_REDUCER_STATE } from "stores/room/Types";
 
 export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`/company/${name}`, headers);
 			let updatedCompanyDetails = response.data.company;
@@ -68,7 +68,7 @@ export const createCompanyAction = (
 	routeHistory: History
 ) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`/company`, companyData, headers);
 			dispatch({ type: CREATE_COMPANY, payload: response.data });
@@ -102,7 +102,7 @@ export const createCompanyAction = (
 
 export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			let companyName = getState().companyReducer.currentCompany.name;
 			dispatch({ type: COMPANY_REDUCER_LOADING });
@@ -128,7 +128,7 @@ export const addTeamMembers = (members: any, companyName: string) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_REDUCER_LOADING });
 			await tigrowApi.post(
@@ -155,7 +155,7 @@ export const addDepartment = (name: string) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: ADD_DEPARTMENT_LOADING });
 			let company = getState().companyReducer.currentCompany.name;
@@ -191,7 +191,7 @@ export const clearAddDepartmentError = () => async (dispatch: any) => {
 
 export const getAllDepartments = () => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DEPARTMENT_LOADING });
 			let company = getState().companyReducer.currentCompany.name;
@@ -219,7 +219,7 @@ export const editCompanyInfoAction = (companyInfo: CompanyModel) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			let company = getState().companyReducer.currentCompany.name;
 			await tigrowApi.put(`company/${company}/basic`, companyInfo, headers);
@@ -242,7 +242,7 @@ export const editCompanyAboutAction = (companyAbout: string) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			let company = getState().companyReducer.currentCompany.name;
 			await tigrowApi.put(
@@ -269,7 +269,7 @@ export const changeCompanyName = (companyName: string) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: CHANGE_COMPANY_NAME_LOADING });
 			let company = getState().companyReducer.currentCompany.name;
@@ -305,7 +305,7 @@ export const clearChangeCompanyNameError = () => async (dispatch: any) => {
 
 export const companyLogoUploadAction = (imageSelected: any) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		const companyId = getState().companyReducer.currentCompany._id;
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`files/company-logo?cid=${companyId}`, imageSelected, headers);
@@ -331,7 +331,7 @@ export const addDesignation = (values: any, memberId: string) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DESIGNATION_LOADING });
 			let company = getState().companyReducer.currentCompany.name;
@@ -362,7 +362,7 @@ export const editDesignation = (values: any, memberId: string) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DESIGNATION_LOADING });
 			let company = getState().companyReducer.currentCompany.name;

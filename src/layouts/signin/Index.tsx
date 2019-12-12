@@ -12,7 +12,6 @@ const TigrowLogo = require('./../../resources/images/tigrowLogo.png');
 
 interface SignInPageComponentProps {
   errorUnauthorized: { email: boolean; password: boolean; message: string; network: boolean }
-  loading: boolean;
   loginAction: (val: any, history: History) => void;
 }
 
@@ -37,6 +36,8 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
     email: "",
     password: "",
   });
+
+  const [loading, setLoading] = useState(false);
 
   const emailValidation = (email: string) => {
     const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -76,7 +77,6 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
             <Link to="/home">
               <img className="w-30" src={TigrowLogo} />
             </Link>
-
             <h3 className="tj" style={{ color: "#707070" }}>
               TiGrow is a professional network crafted for
                     Business Professionals, where they can
@@ -172,15 +172,17 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
                   type="submit"
                   className="b--none w-100 br3 fr grow h2 ph5 pointer pv2 mb3"
                   style={{ background: "#0fa3a3", outline: "none", color: 'white', fontSize: '18px' }}
-                  onClick={(e: any) => {
+                  onClick={async (e: any) => {
                     e.preventDefault();
                     if (!emptyValueCheck()) {
-                      props.loginAction(values, props.history);
+                      setLoading(true);
+                      await props.loginAction(values, props.history);
+                      setLoading(false);
                     }
                   }}
-                  disabled={props.loading}
+                  disabled={loading}
                 >
-                  {props.loading ? <Spinner size={15} /> : 'Sign in'}
+                  {loading ? <Spinner size={15} /> : 'Sign in'}
                 </Button>
                 <div className="tc mb3">
                   <Link style={{ color: "#0fa3a3", textAlign: "center" }} to="/forgot-password">
@@ -210,7 +212,6 @@ const SignInPageComponent = (props: SignInPageComponentProps & RouteComponentPro
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.authReducer.loading,
     errorUnauthorized: state.authReducer.loginError
   };
 };
