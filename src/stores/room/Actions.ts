@@ -21,7 +21,7 @@ export const createRoomAction = (roomData: any) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			roomData.company = getState().companyReducer.currentCompany._id;
 			dispatch({ type: LOADING_ROOM });
@@ -50,7 +50,7 @@ export const createRoomAction = (roomData: any) => async (
 
 export const getRoomsAction = () => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: LOADING_ROOM });
 			const response = await tigrowApi.get(
@@ -77,7 +77,7 @@ export const getRoomMembers = (roomId: string) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: LOADING_ROOM });
 			const response = await tigrowApi.get(`/rooms/members/${roomId}`, headers);
@@ -110,7 +110,7 @@ export const addRoomMembers = (members: any, selectedRoomMember: any) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: LOADING_ROOM });
 			await tigrowApi.post(`/rooms/addUser`, members, headers);
@@ -136,7 +136,7 @@ export const sendRoomMessage = (data: { text: string, room: string, type?: strin
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`/messages`, data, headers);
 			await dispatch({ type: SEND_MESSAGE });

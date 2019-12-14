@@ -64,14 +64,15 @@ export const loginAction = (
 	routeHistory: History
 ) => async (dispatch: any) => {
 	try {
-		dispatch({ type: USER_SIGNUP_LOADING });
 		const response = await tigrowApi.post("accounts/login", loginUser, {
 			"Content-Type": "application/json"
 		} as AxiosRequestConfig);
+
 		localStorage.setItem("token", JSON.stringify(response.data.token));
 		dispatch({ type: USER_LOGIN, payload: response.data });
 		dispatch({ type: BASIC_INFO, payload: response.data });
 		routeHistory.push(`/${response.data.user.name}`);
+		
 	} catch (error) {
 		if (isEqual(error.message, "Network Error")) {
 			dispatch({
@@ -99,9 +100,9 @@ export const loginAction = (
 	}
 };
 
-export const fetchUserAction = () => async (dispatch: any, getState: any) => {
+export const fetchUserAction = () => async (dispatch: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: USER_FETCH_LOADING });
 			const response = await tigrowApi.get(`/accounts`, headers);
@@ -131,7 +132,7 @@ export const logoutAction = (routeHistory: History) => async (
 	getState: any
 ) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`/accounts/logout`, headers);
 			if (isEqual(response.status, 200)) {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { CompanyModel } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
-import { useStore, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { server } from 'tigrowApi';
 import { Button, Tag } from '@blueprintjs/core';
@@ -26,10 +26,8 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
   const [username, setUsername] = useState('');
 
-  const store = useStore();
-
   const userRequestFactory = (userName: string): Promise<any> => {
-    const headers = tokenConfig(store.getState);
+    const headers = tokenConfig();
     return fetch(`${server}company/${props.company.name}/members/search?name=${userName}`, headers)
       .then(res => res.json())
       .then(res => res.employees.data)
