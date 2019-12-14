@@ -5,7 +5,7 @@ import { isEmpty, isNumber, isEqual } from 'lodash';
 import tigrowApi from 'tigrowApi';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { tokenConfig, passwordValidation } from 'stores/UtilsActions';
-import { useStore, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { logoutAction } from 'stores/auth/Actions';
 import { History } from 'history';
 
@@ -14,7 +14,6 @@ const ChangePasswordComponentView = (props: {
   setShowDialog: (val: boolean) => void
   logoutAction: (history: History) => void
 } & RouteComponentProps) => {
-  const store = useStore();
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
     oldPassword: "",

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { Tag, Button } from '@blueprintjs/core';
-import { useStore, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEmpty, isEqual } from 'lodash';
 import tigrowApi from 'tigrowApi';
@@ -25,8 +25,6 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
   const [loading, setLoading] = useState(false);
   // TODO Should comes from redux store
   const [selectedItems, setSelectedItems] = useState([] as ItemEntityProps[]);
-
-  const store = useStore();
 
   const fetchTeamMembersByUsername = async (userName: string) => {
     try {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
-import { useStore, connect } from 'react-redux';
+import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
 import { isEqual, isEmpty } from 'lodash';
@@ -21,7 +21,6 @@ interface RoomMembersViewInternalProps extends RoomMembersViewProps {
 
 const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
 
-  const store = useStore();
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
   const [selectedRoomMember, setSelectedRoomMember] = useState([] as ItemEntityProps[]);
 
