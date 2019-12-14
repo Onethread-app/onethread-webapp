@@ -4,7 +4,7 @@ const companyRoutes = require('./server/company/company.route');
 const categoryRoutes = require('./server/category/category.route');
 const postRoutes = require('./server/post/post.route');
 const reactRoutes = require('./server/react/react.route');
- const saveRoutes = require('./server/save/save.route');
+const saveRoutes = require('./server/save/save.route');
 const commentRoutes = require('./server/comment/comment.route');
 const reportRoutes = require('./server/report/report.route');
 const reviewRoutes = require('./server/review/review.route');
@@ -45,7 +45,6 @@ router.use('/files', fileRoutes);
 router.use('/boards', boardRoutes);
 router.use('/boardColumns', boardColumnRoutes);
 router.use('/tasks', taskRoutes);
-router.use('/education', educationRoutes);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
 

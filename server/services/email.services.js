@@ -58,7 +58,7 @@ module.exports.sendEmailForVerifyAccount = async (
     if (err) {
       logger.error(' Message send to failed ' + err);
     } else {
-      logger.info('Message send to user successfully');
+      logger.info(`send confirmation mail to user successfully`);
     }
   });
 };

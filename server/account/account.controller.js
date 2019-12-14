@@ -1,12 +1,10 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const httpStatus = require('http-status');
-const shortid = require('shortid');
 const Account = require('./account.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
-const { generateUsername } = require('../services/username.services');
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
@@ -14,6 +12,8 @@ const {
 const { chatkit } = require('../services/pusher.services');
 const {
   addRefreshTokenToList,
+  addAccessTokenToSet,
+  addAccessTokenToHashList,
   addAccessTokenToBlackList,
   updateRefreshTokenfromList,
   removeRefreshTokenfromList,
@@ -27,14 +27,21 @@ const {
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
-  // const name = await generateUsername(data.firstName, data.lastName);
-  const uniqueHash = shortid.generate();
-  const name = data.firstName + uniqueHash;
   if (!data.email || !data.password) {
     return sendJSONresponse(res, 400, {
-      error: 'You must provide email and password.',
+      message: 'You must provide email and password.',
     });
   }
+  let name = '';
+  await Account.countDocuments({
+    firstName: data.firstName,
+    lastName: data.lastName,
+  })
+    .exec()
+    .then(result => {
+      let uniqueId = result + 1;
+      name = data.firstName + '.' + data.lastName + '.' + uniqueId;
+    });
   let account = new Account({
     email: data.email,
     firstName: data.firstName,
@@ -43,54 +50,46 @@ const register = async (req, res, next) => {
     contactNo: data.contactNo,
     password: data.password,
   });
-
   account
     .save()
-    .then(async userInfo => {
-      const info = {};
-      info.account = account;
-      info.expires = new Date(
-        // expire within 1 month
-        new Date().getTime() + 2630000,
-      );
-      let token = jwt.sign(info, config.jwtSecret, {
-        expiresIn: '1d',
-      });
-      // crypto.randomBytes(32, async (err, buffer) => {
-      //   if (err) return res.status(400).json(err);
-      //   token = buffer.toString('hex');
-      // });
-      const emailResponse = await sendEmailForVerifyAccount(
-        account.name,
-        account.email,
-        token,
-      );
-      delete account.password;
-      delete account.companies;
-      req.login(userInfo, async function(err) {
-        if (err) {
-          return sendJSONresponse(res, 400, {
-            success: false,
-            message: err,
-          });
-        } else {
-          // user created in chatkit
-          await chatkit.createUser({
-            id: req.user._id,
-            name: req.user.name,
-          });
-          const user = userInfo.toObject();
-          user.token = account.generateJwt();
-          delete user.password;
-          return sendJSONresponse(res, 201, {
-            token: user.token,
-            message: 'User created',
-            user,
-          });
-        }
+    .then(async user => {
+      crypto.randomBytes(32, async (err, buffer) => {
+        if (err) return res.status(400).json(err);
+        const token = buffer.toString('hex');
+        user.verifyAccountToken = token;
+        user.verifyAccountTokenExpiration = Date.now() + 259200;
+        await user.save();
+        const emailResponse = sendEmailForVerifyAccount(
+          user.name,
+          user.email,
+          token,
+          next,
+        );
+        req.login(user, async function(err) {
+          if (err) {
+            return sendJSONresponse(res, 400, {
+              success: false,
+              message: err,
+            });
+          } else {
+            // user created in chatkit
+            await chatkit.createUser({
+              id: user._id,
+              name: user.name,
+            });
+            user.token = account.generateJwt();
+            delete user.password;
+            return sendJSONresponse(res, 201, {
+              token: user.token,
+              message: 'User created',
+              user,
+            });
+          }
+        });
       });
     })
     .catch(err => {
+      console.log(err);
       next(err);
     });
 };
@@ -235,16 +234,23 @@ const accountUpdate = async (req, res, next) => {
     });
 };
 const logout = async (req, res) => {
-  console.log(req);
-  console.log(req.headers.authorization);
   // addRefreshTokenToList(
   //   refreshToken,
   //   req.user.email,
   //   accessToken,
   //   100,
   // );
+  let refreshToken = req.body.refreshToken;
+  let accessToken = req.headers.authorization;
   addAccessTokenToBlackList(req.headers.authorization);
-  addAccessTokenToHashList('');
+  addAccessTokenToHashList(
+    refreshToken,
+    `user:${req.user.email}`,
+    accessToken,
+    100,
+  );
+  addAccessTokenToSet(req.user.email, accessToken);
+  // client.set
   req.logout();
   logger.info('Account successfully Logout');
 

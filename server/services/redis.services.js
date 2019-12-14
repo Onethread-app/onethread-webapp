@@ -40,6 +40,30 @@ module.exports.removeRefreshTokenfromList = function(refreshToken) {
 };
 
 module.exports.addAccessTokenToBlackList = function(accessToken) {
-  console.log(accessToken);
   client.LPUSH('blackListToken', accessToken);
+};
+module.exports.addAccessTokenToHashList = function(
+  blackList,
+  user,
+  accessToken,
+  exp,
+) {
+  client.HMSET(
+    blackList,
+    user,
+    accessToken,
+
+    (err, replies) => {
+      if (err) {
+        logger.debug(`redis error while save in database ${err}`);
+      } else {
+        logger.info(`successfully set to  data`);
+        return replies;
+      }
+    },
+  );
+  client.expire(user, exp);
+};
+module.exports.addAccessTokenToSet = function(email, accessToken) {
+  client.SET(`userID:${email}`, accessToken);
 };

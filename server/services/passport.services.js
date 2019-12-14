@@ -16,10 +16,9 @@ const localLogin = new LocalStrategy(
   localOptions,
   (email, password, done) => {
     Account.findOne({ email })
-      // .populate('jobExperience education skillArea', '_id name')
+      .populate('jobExperience education skillArea', '_id name')
       .exec((err, user) => {
         if (err) {
-          console.log(err);
           return done(err);
         }
         if (!user) {
