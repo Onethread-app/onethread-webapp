@@ -234,26 +234,8 @@ const accountUpdate = async (req, res, next) => {
     });
 };
 const logout = async (req, res) => {
-  // addRefreshTokenToList(
-  //   refreshToken,
-  //   req.user.email,
-  //   accessToken,
-  //   100,
-  // );
-  let refreshToken = req.body.refreshToken;
-  let accessToken = req.headers.authorization;
-  addAccessTokenToBlackList(req.headers.authorization);
-  addAccessTokenToHashList(
-    refreshToken,
-    `user:${req.user.email}`,
-    accessToken,
-    100,
-  );
-  addAccessTokenToSet(req.user.email, accessToken);
-  // client.set
   req.logout();
   logger.info('Account successfully Logout');
-
   return sendJSONresponse(res, 200, {
     success: true,
     message: 'Successfully logout',

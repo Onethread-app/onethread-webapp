@@ -6,9 +6,13 @@ module.exports = {
         .lowercase()
         .required()
         .error(error => {
-          return { success: false, message: `recheck` };
+          return { success: false, message: `First Name Required` };
         }),
-      lastName: Joi.string().required(),
+      lastName: Joi.string()
+        .required()
+        .error(error => {
+          return { success: false, message: `Last Name Required` };
+        }),
       email: Joi.string()
         .regex(
           /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
@@ -18,7 +22,7 @@ module.exports = {
         .error(error => {
           return {
             success: false,
-            message: 'mail id is not valid format',
+            message: 'Eail id is not valid format',
           };
         }),
       password: Joi.string()
