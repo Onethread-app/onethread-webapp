@@ -132,9 +132,6 @@ const login = async (req, res, next) => {
     userObj.timeline = timelineHistory;
     delete userObj.password;
     delete userObj.companies;
-    client.SET(`userID:${req.user.email}`, refreshToken);
-    client.SET(accessToken, refreshToken);
-
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,

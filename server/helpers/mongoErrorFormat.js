@@ -16,7 +16,9 @@ const mongoErrorHandler = (err, req, res, next) => {
       .split('_')[0];
     const keyRegex = err.message.match(/key:\s+{\s+:\s\"(.*)(?=\")/);
     const key = keyRegex ? keyRegex[1] : '';
-    const output = `fieldName:${pathRegex}, value:${key} already exists`;
+    const output = {};
+    output.fieldName = pathRegex;
+    output.value = `${key} already exists`;
     return sendJSONresponse(res, 409, { message: output });
   }
 

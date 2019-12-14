@@ -22,7 +22,7 @@ module.exports = {
         .error(error => {
           return {
             success: false,
-            message: 'Eail id is not valid format',
+            message: 'Email id is not valid format',
           };
         }),
       password: Joi.string()

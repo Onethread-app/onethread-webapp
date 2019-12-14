@@ -91,8 +91,7 @@ app.use((err, req, res, next) => {
       .join(' and ');
     const error = new APIError(unifiedErrorMessage, err.status, true);
     return next(error);
-  }
-  else if (!(err instanceof APIError)) {
+  } else if (!(err instanceof APIError)) {
     logger.error(`${err.message}`);
     const apiError = new APIError(
       err.message,
