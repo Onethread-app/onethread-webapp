@@ -2,7 +2,6 @@ import {
 	USER_SIGNUP,
 	USER_LOGIN,
 	USER_LOGIN_ERROR,
-	USER_SIGNUP_LOADING,
 	USER_LOGOUT,
 	CLEAR_AUTH_REDUCER_STATE
 } from "./Types";
@@ -21,7 +20,6 @@ export const userSignupAction = (
 	routeHistory: History
 ) => async (dispatch: any) => {
 	try {
-		dispatch({ type: USER_SIGNUP_LOADING });
 		const user = {
 			...newUser,
 			contactNo: `880${newUser.contactNo}`

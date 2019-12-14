@@ -14,6 +14,7 @@ const ChangePasswordComponentView = (props: {
   setShowDialog: (val: boolean) => void
   logoutAction: (history: History) => void
 } & RouteComponentProps) => {
+  // const store = useStore();
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
     oldPassword: "",

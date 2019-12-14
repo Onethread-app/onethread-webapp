@@ -21,6 +21,7 @@ interface RoomMembersViewInternalProps extends RoomMembersViewProps {
 
 const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
 
+  // const store = useStore();
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
   const [selectedRoomMember, setSelectedRoomMember] = useState([] as ItemEntityProps[]);
 
