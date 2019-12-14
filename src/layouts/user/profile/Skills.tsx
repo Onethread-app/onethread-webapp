@@ -21,7 +21,7 @@ const SkillEdit = (props: {
   const [selectedSkills, setSelectedSkills] = useState([] as ItemEntityProps[]);
   const fetchSkillByQuery = async (userName: string) => {
     try {
-      const headers = tokenConfig(store.getState);
+      const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         if (isEmpty(userName) === false) {
           const response = await tigrowApi.get(`skills/search?name=${userName}`, headers);
@@ -42,7 +42,7 @@ const SkillEdit = (props: {
 
   const addNewSkill = async (newSkill: {}) => {
     try {
-      const headers = tokenConfig(store.getState);
+      const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.post('/skills', newSkill, headers);
         setSelectedSkills([...selectedSkills, response.data.skillInfo])

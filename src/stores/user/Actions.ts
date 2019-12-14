@@ -6,7 +6,7 @@ import { User } from './Reducer';
 
 export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: USER_FETCH_LOADING });
 			let user = {};
@@ -36,7 +36,7 @@ export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, get
 
 export const addSkillAction = (skillSet: string[]) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			let req = { skillArea: skillSet }
 			const response = await tigrowApi.put(`/skills/update-skill`, req, headers);
@@ -55,7 +55,7 @@ export const addSkillAction = (skillSet: string[]) => async (dispatch: any, getS
 
 export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(
 				"jobs/create-job-experience",
@@ -79,7 +79,7 @@ export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatc
 
 export const addEducationExperienceAction = (educationExperienceInfo: any) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(
 				"educations/add-education",
@@ -103,7 +103,7 @@ export const addEducationExperienceAction = (educationExperienceInfo: any) => as
 
 export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`/company/individual/${userId}`, headers);
 			dispatch({ type: USER_COMPANIES_UPDATE, payload: response.data });
@@ -116,7 +116,7 @@ export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any,
 }
 export const deleteSkillAction = (skill: string) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.delete(`skills/delete-skill?skillId=${skill}`, headers);
 			dispatch({ type: DELETE_SKILL, payload: response.data.skillArea });
@@ -134,7 +134,7 @@ export const deleteSkillAction = (skill: string) => async (dispatch: any, getSta
 
 export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid: any) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.put(
 				`jobs/job-experience-update?jobexperienceid=${jobexperienceid}`,
@@ -160,7 +160,7 @@ export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid:
 
 export const editEducationExperienceAction = (educationExperienceInfo: any, educationexperienceid: any) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.put(
 				`educations/update-education?educationId=${educationexperienceid}`,
@@ -185,7 +185,7 @@ export const editEducationExperienceAction = (educationExperienceInfo: any, educ
 
 export const profileImageUploadAction = (imageSelected: any) => async (dispatch: any, getState: any) => {
 	try {
-		const headers = tokenConfig(getState);
+		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`files/upload`, imageSelected, headers);
 			const awsOptions = awsImageOption(response.data);

@@ -7,7 +7,7 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, CLEAR_ROOMS_ERROR
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, CLEAR_ROOMS_ERROR, REFRESH_MEMBER
 } from "./Types";
 import { isEmpty } from "lodash";
 interface IAppState {
@@ -15,7 +15,9 @@ interface IAppState {
 	roomId: string;
 	roomName: string;
 	messages: any[];
-	typingUsers: any[];
+	typing: {
+		users: { name: string, roomId: string; }[]
+	};
 	users: any[];
 	roomMembers: any[];
 	rooms: any[];
@@ -28,7 +30,9 @@ const InitialState: IAppState = {
 	roomId: "",
 	roomName: "",
 	messages: [],
-	typingUsers: [],
+	typing: {
+		users: []
+	},
 	users: [],
 	roomMembers: [],
 	rooms: [],
@@ -48,15 +52,19 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case ON_USER_STARTED_TYPING:
 			return {
 				...state,
-				typingUsers: [...state.typingUsers, action.payload],
+				typing: {
+					users: [...state.typing.users, action.payload]
+				},
 				loading: false
 			};
 		case ON_USER_STOPPED_TYPING:
 			return {
 				...state,
-				typingUsers: state.typingUsers.filter((user: any) => {
-					return user !== action.payload;
-				}),
+				typing: {
+					...state.typing, users: state.typing.users.filter((user: any) => {
+						return user.name !== action.payload.name;
+					})
+				},
 				loading: false
 			};
 		case ACTIVE_ROOM:
@@ -81,6 +89,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 					}),
 				loading: false
 			};
+		case REFRESH_MEMBER:
 		case ON_PRESENCE_CHANGE:
 			return {
 				...state,
@@ -117,8 +126,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				messages:
 					action.payload.roomId === (state.activeRoom as any).id
 						? state.messages.length === 0 ||
-						  (state.messages[state.messages.length - 1] as any).id !==
-								action.payload.id
+							(state.messages[state.messages.length - 1] as any).id !==
+							action.payload.id
 							? [...state.messages, action.payload]
 							: [...state.messages]
 						: [...state.messages],

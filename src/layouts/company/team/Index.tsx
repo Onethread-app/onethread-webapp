@@ -115,10 +115,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								props.company.members.length > 0 ? (
 										props.company.members.map(member => (
 											<tr className="hide-child">
-												<td><small className="mr2">{member.account.name}</small> {permit(member.role) && <Icon
-													className=" pointer"
-													icon="badge"
-												/>}</td>
+												<td><small className="mr2">{member.account.name}</small> {permit(member.role) && <Icon icon="star" />}</td>
 												<td>
 													{member.designations.length
 														? member.designations[0].division
@@ -145,9 +142,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																				<p
 																					className="pointer bp3-popover-dismiss mb0"
 																					onClick={async () => {
-																						setShowDialogEdit(!showDialogEdit);
 																						setMember(member);
 																						await props.getAllDepartments();
+																						setShowDialogEdit(!showDialogEdit);
 																					}}
 																				>
 																					Edit Role
@@ -160,9 +157,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																			<p
 																				className="pointer bp3-popover-dismiss"
 																				onClick={async () => {
-																					setShowDialogAdd(!showDialogAdd);
 																					setMember(member);
 																					await props.getAllDepartments();
+																					setShowDialogAdd(!showDialogAdd);
 																				}}
 																			>
 																				Add Role

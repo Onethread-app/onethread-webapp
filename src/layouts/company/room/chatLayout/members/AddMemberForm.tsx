@@ -27,7 +27,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
 
   const getSuggestionsForRoomMembers = async () => {
     try {
-      const headers = tokenConfig(store.getState);
+      const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(`/rooms/suggest-member/${props.roomId}/${props.companyId}`, headers);
         setSuggestedMembers(response.data.members);

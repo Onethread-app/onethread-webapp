@@ -5,6 +5,7 @@ import { InputGroupField } from 'components/fields/InputGroupField';
 import { Icon, Checkbox, TextArea } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { useSelector } from 'react-redux';
+import moment from 'moment';
 
 export const JobFormComponent = (props: any) => {
   const [errors, setErrors] = useState({
@@ -24,13 +25,6 @@ export const JobFormComponent = (props: any) => {
   })
 
   const birthDate = useSelector((state: any) => state.userReducer.user.birthDate);
-
-  const maxJobStartDate = () => {
-    let d = new Date(birthDate);
-    let maxDate = d.getFullYear() + 10;
-    d.setFullYear(maxDate);
-    return d;
-  }
 
   return (
     <form className="fl w-100 pr4 mt2">
@@ -103,7 +97,7 @@ export const JobFormComponent = (props: any) => {
               popoverProps={{
                 targetClassName: 'w-100'
               }}
-              minDate={maxJobStartDate()}
+              minDate={moment(birthDate).add(10, 'years').toDate()}
               maxDate={props.values.endingYear ? new Date(props.values.endingYear) : new Date()}
             />
           </div>

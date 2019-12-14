@@ -4,15 +4,16 @@ export interface Entity {
   _id?: string,
   name: string,
 }
-// Setup config/headers and token
-export const tokenConfig = (getState: any) => {
-  const token = getState().authReducer.token;
+
+export const tokenConfig = () => {
+  const token = typeof window !== undefined && localStorage.getItem('token') ? 
+  JSON.parse(localStorage.getItem('token')!) : null
   return {
     headers: {
       "Content-type": "application/json",
-      "Authorization": token ? token : null
+      "Authorization": token
     }
-  };
+  }; 
 };
 
 export const isAuthenticate = () => {

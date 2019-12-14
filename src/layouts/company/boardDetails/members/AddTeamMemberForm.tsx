@@ -30,7 +30,7 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
 
   const fetchTeamMembersByUsername = async (userName: string) => {
     try {
-      const headers = tokenConfig(store.getState);
+      const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         if (isEmpty(userName) === false) {
           const response = await tigrowApi.get(`/boards/${props.currentBoard._id}/suggest-member?companyId=${props.company!._id}`, headers);

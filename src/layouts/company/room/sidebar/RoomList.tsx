@@ -13,15 +13,13 @@ import {
 	ON_PRESENCE_CHANGE,
 	UPDATE_ROOM,
 	ON_USER_STARTED_TYPING,
-	ON_USER_STOPPED_TYPING
+	ON_USER_STOPPED_TYPING,
+	REFRESH_MEMBER
 } from "stores/room/Types";
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
-const load = async (getRoomsAction: () => void) => {
-	await getRoomsAction();
-};
 
 interface RoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
@@ -33,15 +31,18 @@ export const RoomListComponent = withChatkit(
 	(props: RoomListComponentProps) => {
 		const dispatch = useDispatch();
 
-		const companyRooms = useSelector(
-			(state: any) => state.roomReducer.companyRooms
-		);
 		const roomId = useSelector((state: any) => state.roomReducer.roomId);
 		const rooms = useSelector((state: any) => state.roomReducer.rooms);
-		const companyId = useSelector(
-			(state: any) => state.companyReducer.currentCompany._id
-		);
+		const companyId = useSelector((state: any) => state.companyReducer.currentCompany._id);
 
+		const load = async (getRoomsAction: () => void) => {
+			await getRoomsAction();
+			if (!props.chatkit.isLoading && companyId) {
+				// filteredRooms
+				const rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
+				dispatch({ type: GET_ROOMS, payload: rooms });
+			}
+		};
 		const subscribeToRoom = (roomId: string, name: string) => {
 			if (!props.chatkit.isLoading) {
 				dispatch({ type: CLEAR_ROOM_MESSAGES });
@@ -62,16 +63,17 @@ export const RoomListComponent = withChatkit(
 								dispatch({ type: ON_PRESENCE_CHANGE });
 							},
 							onUserStartedTyping: (user: any) => {
-								dispatch({ type: ON_USER_STARTED_TYPING, payload: user.name });
+								dispatch({ type: ON_USER_STARTED_TYPING, payload: { name: user.name, roomId } });
 							},
 							onUserStoppedTyping: (user: any) => {
-								dispatch({ type: ON_USER_STOPPED_TYPING, payload: user.name });
+								dispatch({ type: ON_USER_STOPPED_TYPING, payload: { name: user.name, roomId } });
 							},
 							onUserJoined: (user: any) => {
-								console.log("joined : " + user.name);
+								// console.log("joined : " + user.name);
+								dispatch({ type: REFRESH_MEMBER });
 							},
 							onUserLeft: (user: any) => {
-								console.log("left : " + user.name);
+								// console.log("left : " + user.name);
 							}
 						},
 						messageLimit: 1
@@ -119,14 +121,6 @@ export const RoomListComponent = withChatkit(
 				load(props.getRoomsAction);
 			}
 		}, [props.chatkit]);
-
-		useEffect(() => {
-			if (!props.chatkit.isLoading && companyId && rooms && companyRooms && rooms.length !== companyRooms.length) {
-				// filteredRooms
-				let rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
-				dispatch({ type: GET_ROOMS, payload: rooms });
-			}
-		}, [companyRooms]);
 
 		useEffect(() => {
 			if (!props.chatkit.isLoading) {

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import { useSelector } from 'react-redux';
+import { isEmpty, isEqual } from "lodash";
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const UserIcon = require('./../../../../../resources/images/user.png');
@@ -15,7 +16,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
   const messages = useSelector((state: any) => state.roomReducer.messages);
   const roomId = useSelector((state: any) => state.roomReducer.roomId);
   const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
-  const typingUsers = useSelector((state: any) => state.roomReducer.typingUsers);
+  const typingUsers = useSelector((state: any) => state.roomReducer.typing.users);
 
   const scrollToBottom = () => {
     // On new message, scroll to bottom
@@ -58,10 +59,18 @@ export const MessageList = withChatkit((props: MessageListProps) => {
           />
         );
       }) : "" : ""}
-      {typingUsers.length ? typingUsers.map((user: any, i: number) => {
-        return (
-          <h6 key={i} className="mv1">{user} is typing ...</h6>
-        );
+      {typingUsers.length ? typingUsers.map((user: { name: string, roomId: string; }, i: number) => {
+        if (isEmpty(roomId) === false && isEqual(roomId, user.roomId) === true) {
+          return (
+            <h6
+              key={i}
+              className="mv1"
+            >
+              {user.name} is typing ...
+            </h6>
+          );
+        }
+        return null;
       }) : ""}
 
 
