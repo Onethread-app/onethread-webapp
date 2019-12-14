@@ -13,12 +13,8 @@ const {
   authSelf,
   hasAuthorization,
 } = require('../helpers/permission');
-//const tokenChecker = require('../helpers/tokenChecker');
 const schemaValidator = require('../helpers/joiSchemaValidator');
-const { verifyToken } = require('../helpers/tokenChecker');
-const { cacheMiddleware } = require('../middlewares/redisMiddleware');
 const { auth } = require('../middlewares/authorizationMiddleware');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
 // authentication
 router
   .route('/signup')
@@ -37,14 +33,9 @@ router
     requireLogin,
     accountCtrl.login,
   );
-router.get('/checking', verifyToken, accountCtrl.checking);
-// router
-//   .route('/token')
-//   .post(requireAuth, accountCtrl.tokenVerification);
+
 router.route('/').get(auth, accountCtrl.getAccount);
 router.route('/update').put(auth, accountCtrl.accountUpdate);
-// router.route('/refresh').post(tokenChecker, accountCtrl.tokenRefresh);
-// router.route('/revoke').post(tokenChecker, accountCtrl.tokenRevoke);
 router.route('/logout').get(auth, accountCtrl.logout);
 router
   .route('/forget-password')

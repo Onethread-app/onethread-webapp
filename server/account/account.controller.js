@@ -132,15 +132,6 @@ const login = async (req, res, next) => {
     userObj.timeline = timelineHistory;
     delete userObj.password;
     delete userObj.companies;
-    delete userObj.friends;
-    delete userObj.pendingFriends;
-    delete userObj.sendingFriendList;
-    // addRefreshTokenToList(
-    //   refreshToken,
-    //   req.user.email,
-    //   accessToken,
-    //   100,
-    // );
     client.SET(`userID:${req.user.email}`, refreshToken);
     client.SET(accessToken, refreshToken);
 
@@ -152,7 +143,6 @@ const login = async (req, res, next) => {
       refreshToken: refreshToken,
     });
   } catch (error) {
-    logger.error(`ReferenceError:${error} is not defined`);
     next(error);
   }
 };
