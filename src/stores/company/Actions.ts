@@ -27,7 +27,9 @@ import {
 	ADD_DESIGNATION_ERROR,
 	EDIT_DESIGNATION,
 	EDIT_DESIGNATION_ERROR,
-	LOGO_UPLOAD
+	LOGO_UPLOAD,
+	CHANGE_MEMBER_ROLE,
+	CHANGE_MEMBER_ROLE_ERROR
 } from "./Types";
 import { CLEAR_ROOMS_REDUCER_STATE } from "stores/room/Types";
 
@@ -381,6 +383,36 @@ export const editDesignation = (values: any, memberId: string) => async (
 			dispatch({ type: EDIT_DESIGNATION_ERROR, payload: "Network error" });
 		} else if (error.response.status === 401) {
 			dispatch({ type: EDIT_DESIGNATION_ERROR, payload: "Unauthorized user." });
+		} else {
+			console.log(error.response);
+		}
+		return error.response.status;
+	}
+};
+
+export const changeMemberRole = (values: { role: string }, memberId: string) => async (
+	dispatch: any,
+	getState: any
+) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			let company = getState().companyReducer.currentCompany.name;
+			const response = await tigrowApi.put(
+				`/company/${company}/members/${memberId}/changeRole`,
+				values,
+				headers
+			);
+			dispatch({ type: CHANGE_MEMBER_ROLE, payload: { memberId, role: values.role } });
+			return response.status;
+		} else {
+			console.log("error in changing member role");
+		}
+	} catch (error) {
+		if (isEqual(error.message, "Network Error")) {
+			dispatch({ type: CHANGE_MEMBER_ROLE_ERROR, payload: "Network error" });
+		} else if (error.response.status === 401) {
+			dispatch({ type: CHANGE_MEMBER_ROLE_ERROR, payload: "Unauthorized user." });
 		} else {
 			console.log(error.response);
 		}

@@ -15,7 +15,8 @@ import {
 	getCompanyMembers,
 	getAllDepartments,
 	addDesignation,
-	editDesignation
+	editDesignation,
+	changeMemberRole
 } from "stores/company/Actions";
 import { CompanyModel, ICompanyMembers } from "stores/company/Reducer";
 import { Loading } from "components/Loading";
@@ -40,6 +41,7 @@ interface TeamMember {
 	getAllDepartments: () => void;
 	addDesignation: (values: any, memberId: string) => void;
 	editDesignation: (values: any, memberId: string) => void;
+	changeMemberRole: (values: { role: string }, memberId: string) => void;
 	companyLoading: boolean;
 }
 
@@ -117,7 +119,11 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								props.company.members.length > 0 ? (
 										props.company.members.map(member => (
 											<tr className="hide-child">
-												<td><small className="mr2">{member.account.name}</small> {permit(member.role) && <Icon icon="star" />}</td>
+												<td><small className="mr2">{member.account.name}</small>
+													{
+														permit(member.role) ? member.role === "superAdmin" ? <Icon icon="star" style={{ "color": "rgb(228, 162, 0)" }} /> : <Icon icon="star" /> : null
+													}
+												</td>
 												<td>
 													{member.designations.length
 														? member.designations[0].division
@@ -141,16 +147,39 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																	alignText={Alignment.LEFT}
 																	className="bp3-minimal bp3-vertical bp3-fill"
 																>
-																	<Button
-																		className="outline-0 bp3-large bp3-popover-dismiss"
-																	>
-																		<Icon
-																			icon="star"
-																			className="pr4-l pr3-m pl2"
-																			style={{ color: "inherit" }}
-																		/>
-																		Make Admin
-																	</Button>
+																	{
+																		permit(props.company.role) &&
+																			isEqual(member.role, "superAdmin") === false ?
+																			isEqual(member.role, "admin") === true ?
+																				<Button
+																					className="outline-0 bp3-large bp3-popover-dismiss"
+																					onClick={async () => {
+																						await props.changeMemberRole({ role: "employee" }, member._id)
+																					}}
+																				>
+																					<Icon
+																						icon="star"
+																						className="pr4-l pr3-m pl2"
+																						style={{ color: "inherit" }}
+																					/>
+																					Make Employee
+																				</Button>
+																				:
+																				<Button
+																					className="outline-0 bp3-large bp3-popover-dismiss"
+																					onClick={async () => {
+																						await props.changeMemberRole({ role: "admin" }, member._id)
+																					}}
+																				>
+																					<Icon
+																						icon="star"
+																						className="pr4-l pr3-m pl2"
+																						style={{ color: "inherit" }}
+																					/>
+																					Make Admin
+																			</Button> : null
+																	}
+
 																	{member.designations &&
 																		member.designations.length ? (
 																			<>
@@ -275,5 +304,6 @@ export const TeamMembersPage = connect(mapStateToProps, {
 	getCompanyMembers,
 	getAllDepartments,
 	addDesignation,
-	editDesignation
+	editDesignation,
+	changeMemberRole
 })(TeamMembersPageComponent);
