@@ -1,50 +1,38 @@
 const jwt = require('jsonwebtoken');
 const config = require('../../config/config');
-const Account = require('../account/account.model');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 module.exports.auth = (req, res, next) => {
   let accessToken;
   if (req.headers && req.headers.authorization) {
     const parts = req.headers.authorization;
     if (parts) {
+      console.log(parts);
       accessToken = parts;
     } else {
-      return sendJSONresponse(res, 400, {
+      return sendErrorResponse(res, 400, {
         message: 'Bad HTTP authentication header format',
       });
     }
   }
   if (accessToken) {
-    jwt.verify(
-      accessToken,
-      config.jwtSecret,
-      async (err, decoded) => {
-        if (err) {
-          return sendJSONresponse(res, 401, { message: err.message });
-        }
-        try {
-          const user = await Account.findById(decoded._id)
-            .select('-password')
-            .populate(
-              'companies skillArea jobExperience education profileImage',
-              '_id _id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name link s3Key type',
-            );
-          if (!user) {
-            return sendJSONresponse(res, 404, {
-              message: 'user not found',
-            });
-          }
-          req.user = user;
-          next();
-        } catch (error) {
-          next(error);
-        }
-      },
-    );
+    jwt.verify(accessToken, config.jwtSecret, (err, decoded) => {
+      if (err) {
+        return sendErrorResponse(res, 401, 'AuthError', {
+          message: err.message,
+          field: 'headers',
+        });
+      }
+      req.user = decoded;
+      next();
+    });
   } else {
-    return sendJSONresponse(res, 401, {
+    return sendErrorResponse(res, 401, 'AuthError', {
       message: 'No token provided',
+      field: 'Header',
     });
   }
 };

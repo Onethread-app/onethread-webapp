@@ -3,6 +3,7 @@ const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
+const { sendErrorResponse } = require('../helpers/jsonResponse');
 
 // create a company profile
 const changeName = async (req, res, next) => {
@@ -47,6 +48,10 @@ const createCompany = async (req, res, next) => {
       name: req.body.name,
     });
     if (duplicate) {
+      return sendErrorResponse(res, 409, '', {
+        message: 'Name already exist',
+        fieldName: 'name',
+      });
       return res.status(409).json({
         status: false,
         message: `Duplicate company name`,

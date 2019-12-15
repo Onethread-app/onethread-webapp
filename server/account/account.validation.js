@@ -6,12 +6,12 @@ module.exports = {
         .lowercase()
         .required()
         .error(error => {
-          return { success: false, message: `First Name Required` };
+          return { success: false, message: `firstName Required` };
         }),
       lastName: Joi.string()
         .required()
         .error(error => {
-          return { success: false, message: `Last Name Required` };
+          return { success: false, message: `lastName Required` };
         }),
       email: Joi.string()
         .regex(
@@ -45,8 +45,7 @@ module.exports = {
         .required()
         .error(error => {
           return {
-            success: false,
-            message: 'ContactNo did not match the validation',
+            message: 'ContactNo is not a valid format',
           };
         }),
     }),

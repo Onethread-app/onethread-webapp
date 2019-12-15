@@ -3,4 +3,15 @@ const sendJSONresponse = function(res, status, content) {
   res.json(content);
 };
 
-module.exports = { sendJSONresponse };
+const sendErrorResponse = function(res, status, type, content) {
+  console.log(type);
+  let errorBody = {
+    type: type || 'CustomError',
+    errors: [content],
+  };
+  console.log(errorBody);
+  res.status(status);
+  res.json(errorBody);
+};
+
+module.exports = { sendJSONresponse, sendErrorResponse };

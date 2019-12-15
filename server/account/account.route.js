@@ -2,6 +2,7 @@ const express = require('express');
 const passport = require('passport');
 const passportService = require('../services/passport.services');
 const paramValidation = require('./account.validation');
+const { sendErrorResponse } = require('../helpers/jsonResponse');
 
 const router = express.Router();
 const requireLogin = passport.authenticate('local', {

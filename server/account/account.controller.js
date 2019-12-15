@@ -89,7 +89,6 @@ const register = async (req, res, next) => {
       });
     })
     .catch(err => {
-      console.log(err);
       next(err);
     });
 };
@@ -104,6 +103,7 @@ const register = async (req, res, next) => {
 // account holder can login their account
 const login = async (req, res, next) => {
   try {
+    console.log(req);
     const payLoad = {
       email: req.user.email,
     };
@@ -146,14 +146,20 @@ const login = async (req, res, next) => {
 
 const getAccount = async (req, res, next) => {
   try {
-    const timeline = [
-      ...req.user.jobExperience,
-      ...req.user.education,
-    ];
+    const user = await Account.findById(req.user._id).select(
+      '-password',
+    );
+    if (!user) {
+      return sendJSONresponse(res, 404, {
+        message: 'user not found',
+        fieldName: 'id',
+      });
+    }
+    const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
     );
-    const userInfo = { ...req.user._doc };
+    const userInfo = { ...user._doc };
     userInfo.timeline = timelineHistory;
     delete userInfo.password;
     delete userInfo.companies;
@@ -476,10 +482,6 @@ const changePassword = async (req, res, next) => {
   }
 };
 
-const checking = (req, res) => {
-  return res.status(200).json({ success: true });
-};
-
 module.exports = {
   register,
   login,
@@ -495,5 +497,4 @@ module.exports = {
   getAccessTokenForForgetPassword,
   resetPassword,
   changePassword,
-  checking,
 };

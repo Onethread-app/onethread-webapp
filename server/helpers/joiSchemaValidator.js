@@ -20,17 +20,14 @@ module.exports = (_schema, useJoiError = true) => {
         return null;
       })
       .catch(validationError => {
-        // Joi Error
         const JoiError = {
-          status: 'failed',
-          error: {
-            details: validationError.details.map(d => {
-              return {
-                message: d.message.replace(/['"]/g, ''),
-                path: d.path,
-              };
-            }),
-          },
+          type: 'ValidationError',
+          errors: validationError.details.map(d => {
+            return {
+              message: d.message.replace(/['"]/g, ''),
+              fieldName: d.path[1],
+            };
+          }),
         };
         // Custom Error
         const CustomError = {

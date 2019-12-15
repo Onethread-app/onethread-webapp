@@ -1,20 +1,20 @@
 const passport = require('passport');
-const JwtStrategy = require('passport-jwt').Strategy;
-const { ExtractJwt } = require('passport-jwt');
 const LocalStrategy = require('passport-local');
-const config = require('../../config/config');
 const Account = require('../account/account.model');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 // Setup options of local strategy
 const localOptions = {
   usernameField: 'email',
+  passReqToCallback: true,
+  failWithError: true,
+  badRequestMessage: 'Please fill the form',
 };
 
 // Create local strategy
 const localLogin = new LocalStrategy(
   localOptions,
-  (email, password, done) => {
+  (req, email, password, done) => {
     Account.findOne({ email })
       .populate('jobExperience education skillArea', '_id name')
       .exec((err, user) => {
@@ -22,6 +22,7 @@ const localLogin = new LocalStrategy(
           return done(err);
         }
         if (!user) {
+          // return res.json(user);
           return done(null, false);
         }
 
@@ -31,7 +32,8 @@ const localLogin = new LocalStrategy(
             return done(err);
           }
           if (!isMatch) {
-            return done(null, false);
+            console.log(err);
+            return done(null, false, { message: 'invalid password' });
           }
 
           return done(null, user);
@@ -40,41 +42,7 @@ const localLogin = new LocalStrategy(
   },
 );
 
-// Setup options for jwt strategy
-const jwtOptions = {
-  jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: config.jwtSecret,
-};
-
-// Create jwt strategy
-const jwtLogin = new JwtStrategy(
-  jwtOptions,
-  async (payload, done) => {
-    const expirationDate = new Date(payload.exp * 1000);
-    if (expirationDate < new Date()) {
-      return done(null, false);
-    }
-    // See if the user ID in the payload exists in our database
-    try {
-      const user = await Account.findById(payload._id)
-        .select('-password')
-        .populate(
-          'companies skillArea jobExperience education profileImage',
-          '_id _id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name link s3Key type',
-        );
-      if (user) {
-        done(null, user);
-      } else {
-        done(null, false);
-      }
-    } catch (error) {
-      return done(err, false);
-    }
-  },
-);
-
 // Tell passport to use this strategy
-passport.use(jwtLogin);
 passport.use(localLogin);
 
 passport.serializeUser(function(user, done) {
