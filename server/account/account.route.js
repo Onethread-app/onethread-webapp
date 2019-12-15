@@ -3,11 +3,10 @@ const passport = require('passport');
 const passportService = require('../services/passport.services');
 const paramValidation = require('./account.validation');
 const { sendErrorResponse } = require('../helpers/jsonResponse');
+const httpStatus = require('http-status');
 
 const router = express.Router();
-const requireLogin = passport.authenticate('local', {
-  session: false,
-});
+
 const accountCtrl = require('./account.controller');
 const {
   permit,
@@ -27,13 +26,29 @@ router.get(
   '/verify-account/:token',
   accountCtrl.getAccessTokenForVerifyAccount,
 );
-router
-  .route('/login')
-  .post(
-    schemaValidator(paramValidation.login),
-    requireLogin,
-    accountCtrl.login,
-  );
+router.route('/login').post(
+  function(req, res, next) {
+    passport.authenticate('local', { session: false }, function(
+      err,
+      user,
+      info,
+    ) {
+      if (err) {
+        return next(err);
+      }
+      if (!user) {
+        return sendErrorResponse(res, 401, 'AuthError', {
+          message: info.message,
+        });
+      }
+      req.user = user; // Forward user information to the next middleware
+      next();
+    })(req, res, next);
+  },
+  schemaValidator(paramValidation.login),
+  // requireLogin,
+  accountCtrl.login,
+);
 
 router.route('/').get(auth, accountCtrl.getAccount);
 router.route('/update').put(auth, accountCtrl.accountUpdate);
@@ -49,9 +64,9 @@ router
   .route('/change-password')
   .put(auth, accountCtrl.changePassword);
 // for admin
-router
-  .route('/admin')
-  .post(requireLogin, permit('admin'), accountCtrl.login);
+// router
+//   .route('/admin')
+//   .post(requireLogin, permit('admin'), accountCtrl.login);
 
 router.param('account-id', accountCtrl.accountLoad);
 

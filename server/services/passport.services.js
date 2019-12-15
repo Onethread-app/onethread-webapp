@@ -6,6 +6,7 @@ const { sendJSONresponse } = require('../helpers/jsonResponse');
 // Setup options of local strategy
 const localOptions = {
   usernameField: 'email',
+  passwordField: 'password',
   passReqToCallback: true,
   failWithError: true,
   badRequestMessage: 'Please fill the form',
@@ -22,20 +23,18 @@ const localLogin = new LocalStrategy(
           return done(err);
         }
         if (!user) {
-          // return res.json(user);
-          return done(null, false);
+          return done(null, false, {
+            message: 'email does not exist',
+          });
         }
-
         // compare passwords - is 'password' equal to user.password?
         user.comparePassword(password, (err, isMatch) => {
           if (err) {
             return done(err);
           }
           if (!isMatch) {
-            console.log(err);
             return done(null, false, { message: 'invalid password' });
           }
-
           return done(null, user);
         });
       });
@@ -46,9 +45,11 @@ const localLogin = new LocalStrategy(
 passport.use(localLogin);
 
 passport.serializeUser(function(user, done) {
-  done(null, user);
-});
-passport.deserializeUser(function(user, done) {
   delete user.password;
   done(null, user);
 });
+passport.deserializeUser(function(user, done) {
+  done(null, user);
+});
+
+// const requireLogin =
