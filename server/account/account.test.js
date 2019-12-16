@@ -1,18 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest-as-promised');
 const app = require('../../index');
-
-// // const request = require("supertest-as-promised");
-// // const httpStatus = require("http-status");
-// // const chai = require("chai"); // eslint-disable-line import/newline-after-import
-// // const expect = chai.expect;
-// // const app = require("../../index.js");
-
-// // chai.config.includeStack = true;
-
-// // /**
-// //  * root level hooks
-// //  */
+const httpStatus = require('http-status');
 
 after(done => {
   mongoose.models = {};
@@ -78,19 +67,172 @@ describe('## Login APIs for Account Holders', () => {
         });
     });
   });
-  // let Account = {
-  //   email: 'hr@tigrow.com',
-  //   password: 'Orvi@123456',
-  // };
-  // describe('# POST /api/v1/account/login', () => {
-  //   it('should login in their account', done => {
-  //     request(app)
-  //       .post('/api/v1/accounts/login')
-  //       .send(companyAccount)
-  //       .end((err, res) => {
-  //         userAccount.token = res.body.token;
-  //         done();
-  //       });
-  //   });
-  // });
+  let Account1 = {
+    email: 'hr@tigrow.com',
+    password: 'Orvi@123456',
+  };
+  describe('# POST /api/v1/account/login', () => {
+    it('should tell an auth Error', done => {
+      request(app)
+        .post('/api/v1/accounts/login')
+        .send(Account1)
+        .end((err, res) => {
+          Account1.token = res.body.token;
+          done();
+        });
+    });
+  });
+  let Account2 = {
+    email: 'sayemome1r@gmail.com',
+    password: 'newPassword!QAZ6yhn8ikl',
+  };
+  describe('# POST /api/v1/account/login', () => {
+    it('should login in his account', done => {
+      request(app)
+        .post('/api/v1/accounts/login')
+        .send(Account2)
+        .expect(httpStatus.OK)
+        .end((err, res) => {
+          Account2.token = res.body.token;
+          done();
+        });
+    });
+  });
+  describe('Only validate account holder can access', () => {
+    let accessToken;
+
+    beforeEach(done => {
+      request(app)
+        .post('/api/v1/accounts/login')
+        .send(Account2)
+        .expect(httpStatus.OK)
+        .then(res => {
+          accessToken = res.body.token;
+          done();
+        })
+        .catch(done);
+    });
+    describe('POST /api/v1/accounts/update', () => {
+      it('it should update the account information', done => {
+        request(app)
+          .put('/api/v1/accounts/update')
+          .set('authorization', `${accessToken}`)
+          .send({
+            firstName: 'ori',
+            lastName: 'ds',
+          })
+          .then(res => {
+            res.message = 'profile updated';
+            done();
+          })
+          .catch(done);
+      });
+      it('it should not update the account information', done => {
+        request(app)
+          .put('/api/v1/accounts/update')
+          .set('authorization', ``)
+          .send({
+            firstName: 'ori',
+            lastName: 'ds',
+          })
+          .expect(httpStatus.UNAUTHORIZED)
+          .then(res => {
+            res.type = 'AuthError';
+            done();
+          })
+          .catch(done);
+      });
+    });
+    describe('GET /api/v1/accounts', () => {
+      it('Account holder can view his account information', done => {
+        request(app)
+          .get('/api/v1/accounts')
+          .set('authorization', `${accessToken}`)
+          .expect(httpStatus.OK)
+          .then(res => {
+            res.text.success = res.body.success;
+            done();
+          })
+          .catch(done);
+      });
+      it('Account holder can not see his information due to invalid token', done => {
+        request(app)
+          .get('/api/v1/accounts')
+          .set('authorization', ``)
+          .expect(httpStatus.UNAUTHORIZED)
+          .then(res => {
+            res.type = 'AuthError';
+            done();
+          })
+          .catch(done);
+      });
+      it('Account holder did not provide a valid token ', done => {
+        request(app)
+          .get('/api/v1/accounts')
+          .set('authorization', `1223333`)
+          .expect(httpStatus.UNAUTHORIZED)
+          .then(res => {
+            res.type = 'AuthError';
+            done();
+          })
+          .catch(done);
+      });
+    });
+  });
+  describe('Account holder forget his password', () => {
+    let token;
+    let UserID;
+    before(done => {
+      request(app)
+        .post('/api/v1/accounts/forget-password')
+        .send({ email: Account2.email })
+        .expect(httpStatus.OK)
+        .then(res => {
+          token = res.body.dbSavedUser.resetPasswordToken;
+          done();
+        })
+        .catch(done);
+    });
+    describe('Account holder get permission to change his password', () => {
+      it('GET /api/v1/accounts/forget-password/:token', done => {
+        request(app)
+          .get(`/api/v1/accounts/forget-password/${token}`)
+          .expect(httpStatus.OK)
+          .then(res => {
+            UserID = res.body.user._id;
+            done();
+          })
+          .catch(done);
+      });
+    });
+    describe('Account holder change his password', () => {
+      it('GET /api/v1/accounts/reset-password/', done => {
+        request(app)
+          .put(`/api/v1/accounts/reset-password/`)
+          .send({
+            password: 'newPassword!QAZ6yhn8ikl',
+            confirmPassword: 'newPassword!QAZ6yhn8ikl',
+            userID: UserID,
+          })
+          .expect(httpStatus.OK)
+          .then(res => {
+            res.message = res.body.message;
+            done();
+          })
+          .catch(done);
+      });
+    });
+    describe('Account holder has no permission to view this page', () => {
+      it('GET /api/v1/accounts/forget-password/:token', done => {
+        request(app)
+          .get(`/api/v1/accounts/forget-password/1111`)
+          .expect(httpStatus.BAD_REQUEST)
+          .then(res => {
+            res.message = res.body.message;
+            done();
+          })
+          .catch(done);
+      });
+    });
+  });
 });
