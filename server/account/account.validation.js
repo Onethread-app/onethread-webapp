@@ -1,3 +1,4 @@
+// Reference: https://www.w3.org/International/questions/qa-personal-names
 const Joi = require('@hapi/joi');
 module.exports = {
   register: Joi.object().keys({
@@ -5,11 +6,15 @@ module.exports = {
       firstName: Joi.string()
         .lowercase()
         .required()
+        .min(3)
+        .max(30)
         .error(error => {
           return { success: false, message: `firstName Required` };
         }),
       lastName: Joi.string()
         .required()
+        .min(3)
+        .max(30)
         .error(error => {
           return { success: false, message: `lastName Required` };
         }),
@@ -18,6 +23,8 @@ module.exports = {
           /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         )
         .lowercase()
+        .min(3)
+        .max(62)
         .required()
         .error(error => {
           return {
@@ -58,6 +65,8 @@ module.exports = {
           /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         )
         .email()
+        .min(3)
+        .max(62)
         .lowercase()
         .required()
         .error(error => {
@@ -72,13 +81,19 @@ module.exports = {
 
   update: Joi.object().keys({
     body: Joi.object().keys({
-      firstName: Joi.string(),
-      lastName: Joi.string(),
+      firstName: Joi.string()
+        .min(3)
+        .max(30),
+      lastName: Joi.string()
+        .min(3)
+        .max(30),
       contactNo: Joi.string().regex(/\+?(88)?0?1[356789][0-9]{8}/),
       birthday: Joi.date(),
       bloodGroup: Joi.string(),
-      location: Joi.string(),
-      about: Joi.string(),
+      location: Joi.string()
+        .min(3)
+        .max(100),
+      about: Joi.string().max(200),
       gender: Joi.string().valid(['male', 'female', 'others']),
       secondaryEmail: Joi.string()
         .email()
