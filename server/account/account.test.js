@@ -13,25 +13,109 @@ describe('## Registration APIs for User', () => {
   let userAccount = {
     firstName: 'orvi',
     lastName: 'das',
-    email: 'robatda2018@gmail.com',
+    email: 'robatdas2018@gmail.com',
     password: 'Orvi@123456',
     confirmPassword: 'Orvi@123456',
     contactNo: '+8801683754716',
   };
   describe('# POST /api/v1/accounts/signup', () => {
+    it('should not create an account because of duplicate email', done => {
+      request(app)
+        .post('/api/v1/accounts/signup')
+        .send(userAccount)
+        .expect(httpStatus.CONFLICT)
+        .then(res => {
+          res.type = 'DuplicateKeyError';
+          done();
+        })
+        .catch(done);
+    });
+  });
+  let userAccount89 = {
+    firstName: 'orvi',
+    lastName: 'das',
+    email: `robatdas${Date.now()}@gmail.com`,
+    password: 'Orvi@123456',
+    confirmPassword: 'Orvi@123456',
+    contactNo: '+8801683754716',
+  };
+  it('should not create an account because of duplicate contactNo', done => {
+    request(app)
+      .post('/api/v1/accounts/signup')
+      .send(userAccount89)
+      .expect(httpStatus.CONFLICT)
+      .then(res => {
+        res.text.type = 'DuplicateKeyError';
+        done();
+      })
+      .catch(done);
+  });
+  let userAccount1 = {
+    firstName: '',
+    lastName: 'das',
+    email: `robatdas${Date.now()}@gmail.com`,
+    password: 'Orvi@123456',
+    confirmPassword: 'Orvi@123456',
+    contactNo: `${Math.random()
+      .toString()
+      .slice(2, 11)}`,
+  };
+  it('should not create an account because of firstName is not a valid format', done => {
+    request(app)
+      .post('/api/v1/accounts/signup')
+      .send(userAccount1)
+      .expect(httpStatus.BAD_REQUEST)
+      .then(res => {
+        res.type = 'ValidationError';
+        done();
+      })
+      .catch(done);
+  });
+  let userAccount2 = {
+    firstName: 'orvi',
+    lastName: 'das',
+    email: `robatdas${Date.now()}@gmail.com`,
+    password: 'Orvi@123456',
+    confirmPassword: 'Orvi@123456',
+    contactNo: `+880${Math.floor(Math.random() * 10000000000)}`,
+  };
+
+  describe('# POST /api/v1/accounts/signup', () => {
     it('should create an account', done => {
       request(app)
-        .post('/api/v1/account/signup')
-        .send(userAccount)
-        .end((err, res) => {
-          userAccount = res.body.user;
+        .post('/api/v1/accounts/signup')
+        .send(userAccount2)
+        .expect(httpStatus.CREATED)
+        .then(res => {
+          userAccount2 = res.body.user;
           done();
-        });
+        })
+        .catch(done);
     });
   });
 
-  let userAccount2 = {
+  let userAccount3 = {
     firstName: 'orvi',
+    lastName: 'das',
+    email: '',
+    password: 'Orvi@123456',
+    confirmPassword: 'Orvi@123456',
+    contactNo: '+8801683754716',
+  };
+  describe('# POST /api/v1/accounts/signup', () => {
+    it('Email id is invalid so should not create an account', done => {
+      request(app)
+        .post('/api/v1/accounts/signup')
+        .send(userAccount3)
+        .then(res => {
+          userAccount3 = res.body.user;
+          done();
+        })
+        .catch(done);
+    });
+  });
+  let userAccount4 = {
+    firstName: '',
     lastName: 'das',
     email: '',
     password: 'Orvi@123456',
@@ -42,9 +126,10 @@ describe('## Registration APIs for User', () => {
     it('should not create an account', done => {
       request(app)
         .post('/api/v1/accounts/signup')
-        .send(userAccount2)
+        .send(userAccount4)
+        .expect(httpStatus.UNAUTHORIZED)
         .end((err, res) => {
-          userAccount2 = res.body.user;
+          userAccount4 = res.body.user;
           done();
         });
     });

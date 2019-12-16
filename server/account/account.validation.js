@@ -96,9 +96,21 @@ module.exports = {
       about: Joi.string().max(200),
       gender: Joi.string().valid(['male', 'female', 'others']),
       secondaryEmail: Joi.string()
+        .regex(
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        )
         .email()
-        .lowercase(),
+        .min(3)
+        .max(62)
+        .lowercase()
+        .required()
+        .error(error => {
+          return {
+            success: false,
+            message: 'mail id is not valid format',
+          };
+        }),
     }),
   }),
-  search: Joi.string().min(1),
+  search: Joi.string().min(2),
 };
