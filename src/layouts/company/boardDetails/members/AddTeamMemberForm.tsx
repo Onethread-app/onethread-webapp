@@ -26,6 +26,8 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
   // TODO Should comes from redux store
   const [selectedItems, setSelectedItems] = useState([] as ItemEntityProps[]);
 
+  // const store = useStore();
+
   const fetchTeamMembersByUsername = async (userName: string) => {
     try {
       const headers = tokenConfig();

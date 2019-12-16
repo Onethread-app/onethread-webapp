@@ -13,6 +13,7 @@ const InitialState = {
   loginError: {
     message: "",
     email: false,
+    phoneNumber:  false,
     password: false,
     network: false
   }
@@ -34,8 +35,7 @@ export const AuthReducer = (state = InitialState, action: any) => {
           email: false,
           password: false,
           network: false
-        },
-        loading: false
+        }
       }
     case USER_LOGIN:
       return {
@@ -56,8 +56,7 @@ export const AuthReducer = (state = InitialState, action: any) => {
           email: false,
           password: false,
           network: false
-        },
-        loading: false,
+        }
       }
     default:
       return state;

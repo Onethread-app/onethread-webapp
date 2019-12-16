@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Dialog, Tag, Button, Intent } from '@blueprintjs/core';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { tokenConfig } from 'stores/UtilsActions';
+// import { useStore } from 'react-redux';
 import { isEmpty, isEqual } from 'lodash';
 import tigrowApi from 'tigrowApi';
 import { connect } from 'react-redux';
@@ -16,6 +17,7 @@ const SkillEdit = (props: {
   showDialog: boolean;
 }) => {
   const [skills, setSkills] = useState([]);
+  // const store = useStore();
   const [selectedSkills, setSelectedSkills] = useState([] as ItemEntityProps[]);
   const fetchSkillByQuery = async (userName: string) => {
     try {
