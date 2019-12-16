@@ -19,7 +19,7 @@ interface ChatLayoutComponentProps {
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
 	const [showMemberListDialog, setShowMemberListDialog] = useState(false);
-
+	const [showEmojiPicker, setShowEmojiPicker] = useState(false)
 	// TODO: future works
 	// useEffect(() => {
 	// 	if (!isEmpty(props.activeRoom)) {
@@ -31,7 +31,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 		<>
 			{isEmpty(props.activeRoom) === false ?
 				<div
-					className="chat-screen"
+					className="flex flex-column"
 					style={{ height: "calc(100vh - 50px)" }}
 				>
 					{/* chat heading starts */}
@@ -57,7 +57,10 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					</div>
 					{/* chat heading ends */}
 					<MessageList />
-					<SendMessageForm />
+					<SendMessageForm
+					// showEmojiPicker={showEmojiPicker}
+					// setShowEmojiPicker={() => setShowEmojiPicker(!showEmojiPicker)} 
+					/>
 				</div> :
 				<div className="absolute--center tc">
 					<h2>Please, select a room!!</h2>

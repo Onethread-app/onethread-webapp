@@ -21,13 +21,14 @@ export const MessageItem = (props: MessageItemProps) => {
       </div>}
 
       <div
-        className={`shadow-4 ph3 pv1 br3 ${currentUser ? "mr2 bg-tigrowLightBlue" : "ml2 bg-white"}`}
+        className={`shadow-4 ph3 pv1 br4 ${currentUser ? "message-mine mr2 bg-tigrowLightBlue" : "message-others ml2 bg-white"}`}
         style={{ maxWidth: "65%" }}>
         <h6 className="ma0">
           {props.sender.name}
         </h6>
         <h2
           className={`f6 fw3 ma0 mt1 tj ${currentUser ? "white" : " black-60"} break-word`}
+          style={{ whiteSpace: "pre-wrap" }}
         >{props.text}
         </h2>
         <div className={`flex ${currentUser ? " flex-row-reverse" : ""}`}>

@@ -52,9 +52,9 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 	return (
 		<div
 			// className="overflow-y-auto ph1 pt2"
+			className="flex-grow-1 overflow-y-auto flex flex-column ph1 pt2"
 			ref={messagesEndRef}
-			// style={{ height: "calc(100vh - 186px)" }}
-			className="chat-messages"
+		// style={{ height: "calc(100vh - 186px)" }}
 		>
 			{!props.chatkit.isLoading && rooms.length
 				? messages.length

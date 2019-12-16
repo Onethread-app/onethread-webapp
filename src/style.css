@@ -6,17 +6,10 @@
   height: auto;
 }
 
-/* ChatLayout */  
-.chat-screen {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
+.message-mine{
+  border-top-right-radius: 0.3rem;
 }
-.chat-messages {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  margin-bottom: 0;
-  min-height: min-content;
+
+.message-others{
+  border-top-left-radius: 0.3rem;
 }

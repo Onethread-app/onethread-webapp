@@ -1,20 +1,27 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, FileInput, Dialog } from "@blueprintjs/core";
+import { Button, FileInput, Dialog, Icon } from "@blueprintjs/core";
 import { connect } from "react-redux";
 import { trim, isEqual, isEmpty } from "lodash";
 import { sendRoomMessage } from 'stores/room/Actions';
+import { Picker } from 'emoji-mart';
+import 'emoji-mart/css/emoji-mart.css';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const UserIcon = require('./../../../../../resources/images/user.png');
 
 interface SendMessageFormProps {
+	// showEmojiPicker: boolean;
+	// setShowEmojiPicker: (val: boolean) => void;
+}
+
+interface SendMessageFormInternalProps extends SendMessageFormProps {
 	chatkit?: any;
 	sendRoomMessage: (data: { text: string, room: string, type?: string }) => void;
 	roomId: string;
 	profileImage: any;
 }
 
-const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
+const SendMessageFormComponent = withChatkit((props: SendMessageFormInternalProps) => {
 	const [text, setText] = useState("hello");
 	const [showDialog, setShowDialog] = useState(false);
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
@@ -83,11 +90,11 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 		<>
 			<div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
 				<div className="flex items-center mh1" style={{ width: "42px" }}>
-					<img 
+					<img
 						src={props.profileImage ? props.profileImage.imageSource : UserIcon}
 						className="db br-100"
 						style={{ width: "40px", height: "40px", objectFit: "cover" }}
-						alt="user" 
+						alt="user"
 					/>
 				</div>
 				<textarea
@@ -100,6 +107,12 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					onKeyPress={handleKeyPress}
 					placeholder="Type your message and hit ENTER to send"
 				></textarea>
+				<Button
+					className="bp3-minimal outline-0 toggle-emoji"
+				// onClick={() => setShowDialog(true)}
+				>
+					<Icon icon="globe-network" className="tigrow-lightBlue" iconSize={30} />
+				</Button>
 				{/* <Button
 					className="bp3-minimal outline-0 mh2 w2 mv3"
 					onClick={() => setShowDialog(true)}
