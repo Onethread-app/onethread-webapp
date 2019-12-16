@@ -79,21 +79,18 @@ describe('## Registration APIs for User', () => {
     confirmPassword: 'Orvi@123456',
     contactNo: `+880${Math.floor(Math.random() * 10000000000)}`,
   };
-
-  describe('# POST /api/v1/accounts/signup', () => {
-    it('should create an account', done => {
-      request(app)
-        .post('/api/v1/accounts/signup')
-        .send(userAccount2)
-        .expect(httpStatus.CREATED)
-        .then(res => {
-          userAccount2 = res.body.user;
-          done();
-        })
-        .catch(done);
-    });
+  it('should create an account', done => {
+    request(app)
+      .post('/api/v1/accounts/signup')
+      .send(userAccount2)
+      .expect(httpStatus.BAD_REQUEST)
+      .then(res => {
+        console.log(res);
+        userAccount2 = res.body.user;
+        done();
+      })
+      .catch(done);
   });
-
   let userAccount3 = {
     firstName: 'orvi',
     lastName: 'das',
@@ -107,8 +104,9 @@ describe('## Registration APIs for User', () => {
       request(app)
         .post('/api/v1/accounts/signup')
         .send(userAccount3)
+        .expect(httpStatus.BAD_REQUEST)
         .then(res => {
-          userAccount3 = res.body.user;
+          userAccount3.type = res.body.type;
           done();
         })
         .catch(done);
