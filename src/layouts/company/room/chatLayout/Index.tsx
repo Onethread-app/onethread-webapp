@@ -20,11 +20,12 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
 	const [showMemberListDialog, setShowMemberListDialog] = useState(false);
 
-	useEffect(() => {
-		if (!isEmpty(props.activeRoom)) {
-			props.getRoomMembers(props.activeRoom.id);
-		}
-	}, [props.activeRoom]);
+	// TODO: future works
+	// useEffect(() => {
+	// 	if (!isEmpty(props.activeRoom)) {
+	// 		props.getRoomMembers(props.activeRoom.id);
+	// 	}
+	// }, [props.activeRoom]);
 
 	return (
 		<>
