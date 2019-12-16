@@ -51,7 +51,13 @@ router.route('/login').post(
 );
 
 router.route('/').get(auth, accountCtrl.getAccount);
-router.route('/update').put(auth, accountCtrl.accountUpdate);
+router
+  .route('/update')
+  .put(
+    auth,
+    schemaValidator(paramValidation.update),
+    accountCtrl.accountUpdate,
+  );
 router.route('/logout').get(auth, accountCtrl.logout);
 router
   .route('/forget-password')

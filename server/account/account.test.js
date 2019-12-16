@@ -56,9 +56,7 @@ describe('## Registration APIs for User', () => {
     email: `robatdas${Date.now()}@gmail.com`,
     password: 'Orvi@123456',
     confirmPassword: 'Orvi@123456',
-    contactNo: `${Math.random()
-      .toString()
-      .slice(2, 11)}`,
+    contactNo: ``,
   };
   it('should not create an account because of firstName is not a valid format', done => {
     request(app)
@@ -71,21 +69,44 @@ describe('## Registration APIs for User', () => {
       })
       .catch(done);
   });
+  let userAccount12 = {
+    firstName: '1111',
+    lastName: '',
+    email: `robatdas${Date.now()}@gmail.com`,
+    password: 'Orvi@123456',
+    confirmPassword: 'Orvi@123456',
+    contactNo: `${Math.random()
+      .toString()
+      .slice(2, 11)}`,
+  };
+  it('should not create an account because of lastName is not a valid format', done => {
+    request(app)
+      .post('/api/v1/accounts/signup')
+      .send(userAccount12)
+      .expect(httpStatus.BAD_REQUEST)
+      .then(res => {
+        res.type = 'ValidationError';
+        done();
+      })
+      .catch(done);
+  });
+  const phoneNumber = `+880${Math.floor(
+    Math.random() * 10000000000,
+  )}`;
   let userAccount2 = {
     firstName: 'orvi',
     lastName: 'das',
     email: `robatdas${Date.now()}@gmail.com`,
     password: 'Orvi@123456',
     confirmPassword: 'Orvi@123456',
-    contactNo: `+880${Math.floor(Math.random() * 10000000000)}`,
+    contactNo: phoneNumber,
   };
   it('should create an account', done => {
     request(app)
       .post('/api/v1/accounts/signup')
       .send(userAccount2)
-      .expect(httpStatus.BAD_REQUEST)
+      .expect(httpStatus.CREATED)
       .then(res => {
-        console.log(res);
         userAccount2 = res.body.user;
         done();
       })
@@ -121,13 +142,13 @@ describe('## Registration APIs for User', () => {
     contactNo: '+8801683754716',
   };
   describe('# POST /api/v1/accounts/signup', () => {
-    it('should not create an account', done => {
+    it('contactNo is invalid so should not create an account ', done => {
       request(app)
         .post('/api/v1/accounts/signup')
         .send(userAccount4)
-        .expect(httpStatus.UNAUTHORIZED)
+        .expect(httpStatus.BAD_REQUEST)
         .end((err, res) => {
-          userAccount4 = res.body.user;
+          userAccount4.type = res.body.type;
           done();
         });
     });
@@ -210,10 +231,9 @@ describe('## Login APIs for Account Holders', () => {
           })
           .catch(done);
       });
-      it('it should not update the account information', done => {
+      it('it should not update the account information because no valid token provided', done => {
         request(app)
           .put('/api/v1/accounts/update')
-          .set('authorization', ``)
           .send({
             firstName: 'ori',
             lastName: 'ds',
@@ -221,6 +241,69 @@ describe('## Login APIs for Account Holders', () => {
           .expect(httpStatus.UNAUTHORIZED)
           .then(res => {
             res.type = 'AuthError';
+            done();
+          })
+          .catch(done);
+      });
+      it('it should not update the account information because firstName is less than 3 character', done => {
+        request(app)
+          .put('/api/v1/accounts/update')
+          .set('authorization', `${accessToken}`)
+          .send({
+            firstName: 'or',
+            lastName: 'ds',
+          })
+          .expect(httpStatus.BAD_REQUEST)
+          .then(res => {
+            res.type = 'ValidationError';
+            done();
+          })
+          .catch(done);
+      });
+      it('it should not update the account information because lastName is less than 3 character', done => {
+        request(app)
+          .put('/api/v1/accounts/update')
+          .set('authorization', `${accessToken}`)
+          .send({
+            firstName: 'orv',
+            lastName: 'ds',
+          })
+          .expect(httpStatus.BAD_REQUEST)
+          .then(res => {
+            res.type = 'ValidationError';
+            done();
+          })
+          .catch(done);
+      });
+      it('it should update the location bloodGroup, about, gender, location', done => {
+        request(app)
+          .put('/api/v1/accounts/update')
+          .set('authorization', `${accessToken}`)
+          .send({
+            firstName: 'orv',
+            lastName: 'das',
+            bloodGroup: 'B+',
+            location: 'Mohakhali',
+            about: 'I am awesome',
+            gender: 'Others',
+          })
+          .expect(httpStatus.BAD_REQUEST)
+          .then(res => {
+            res.type = 'ValidationError';
+            done();
+          })
+          .catch(done);
+      });
+      it('it should not update because secondaryEmail is not a valid format', done => {
+        request(app)
+          .put('/api/v1/accounts/update')
+          .set('authorization', `${accessToken}`)
+          .send({
+            secondaryEmail: `a*c`,
+          })
+          .expect(httpStatus.BAD_REQUEST)
+          .then(res => {
+            res.type = 'ValidationError';
             done();
           })
           .catch(done);

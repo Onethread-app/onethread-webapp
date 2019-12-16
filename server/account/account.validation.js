@@ -48,7 +48,7 @@ module.exports = {
         .valid(Joi.ref('password'))
         .required(),
       contactNo: Joi.string()
-        .regex(/^(\+?(88)?0?1[123456789][0-9]{8})$/)
+        .regex(/^(\+?(880)[0-9]{10})$/)
         .required()
         .error(error => {
           return {
