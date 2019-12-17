@@ -24,7 +24,7 @@ const localLogin = new LocalStrategy(
         }
         if (!user) {
           return done(null, false, {
-            message: 'email does not exist',
+            message: 'invalid email or password',
           });
         }
         // compare passwords - is 'password' equal to user.password?
@@ -33,7 +33,9 @@ const localLogin = new LocalStrategy(
             return done(err);
           }
           if (!isMatch) {
-            return done(null, false, { message: 'invalid password' });
+            return done(null, false, {
+              message: 'invalid email or password',
+            });
           }
           return done(null, user);
         });
