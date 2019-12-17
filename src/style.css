@@ -7,9 +7,15 @@
 }
 
 .message-mine{
-  border-top-right-radius: 0.3rem;
+  border-top-right-radius: 0.1rem;
 }
 
 .message-others{
-  border-top-left-radius: 0.3rem;
+  border-top-left-radius: 0.1rem;
+}
+
+.emoji-mart {
+  position: absolute;
+  bottom: 20px;
+  right: 10px;
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { SendMessageForm } from './messages/SendMessageForm';
 import { MessageList } from './messages/MessageList';
 import { connect } from 'react-redux';
@@ -19,7 +19,6 @@ interface ChatLayoutComponentProps {
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
 	const [showMemberListDialog, setShowMemberListDialog] = useState(false);
-	const [showEmojiPicker, setShowEmojiPicker] = useState(false)
 	// TODO: future works
 	// useEffect(() => {
 	// 	if (!isEmpty(props.activeRoom)) {
@@ -57,10 +56,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					</div>
 					{/* chat heading ends */}
 					<MessageList />
-					<SendMessageForm
-					// showEmojiPicker={showEmojiPicker}
-					// setShowEmojiPicker={() => setShowEmojiPicker(!showEmojiPicker)} 
-					/>
+					<SendMessageForm />
 				</div> :
 				<div className="absolute--center tc">
 					<h2>Please, select a room!!</h2>

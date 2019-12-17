@@ -1,30 +1,30 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button, FileInput, Dialog, Icon } from "@blueprintjs/core";
-import { connect } from "react-redux";
+import { Button, FileInput, Dialog } from "@blueprintjs/core";
+import { connect, useDispatch } from "react-redux";
 import { trim, isEqual, isEmpty } from "lodash";
 import { sendRoomMessage } from 'stores/room/Actions';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
+import { TOGGLE_EMOJI_PICKER } from 'stores/room/Types';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const UserIcon = require('./../../../../../resources/images/user.png');
+const SmileIcon = require('./../../../../../resources/images/smile-24px.svg');
 
 interface SendMessageFormProps {
-	// showEmojiPicker: boolean;
-	// setShowEmojiPicker: (val: boolean) => void;
-}
-
-interface SendMessageFormInternalProps extends SendMessageFormProps {
 	chatkit?: any;
 	sendRoomMessage: (data: { text: string, room: string, type?: string }) => void;
 	roomId: string;
 	profileImage: any;
+	emojiPicker: boolean
 }
 
-const SendMessageFormComponent = withChatkit((props: SendMessageFormInternalProps) => {
-	const [text, setText] = useState("hello");
+const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
+	const [text, setText] = useState("");
 	const [showDialog, setShowDialog] = useState(false);
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setText("");
@@ -86,8 +86,34 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormInternalProp
 	//   console.log("inputMessageRef", a(inputMessageRef));
 	// }, []);
 
+	const toggleEmojiPicker = () => {
+		dispatch({
+			type: TOGGLE_EMOJI_PICKER,
+			payload: !props.emojiPicker
+		});
+	}
+
+	const addEmoji = (emoji: any) => {
+		const t = `${text} ${emoji.native}`;
+		setText(t);
+		dispatch({
+			type: TOGGLE_EMOJI_PICKER,
+			payload: false
+		});
+	}
+
 	return (
 		<>
+			{props.emojiPicker ? (
+				<Picker
+					set="twitter"
+					onSelect={addEmoji}
+					emoji="sunglasses"
+					title="TiGrow Ltd"
+					autoFocus={true}
+					color="#0fa3a3"
+				/>
+			) : null}
 			<div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
 				<div className="flex items-center mh1" style={{ width: "42px" }}>
 					<img
@@ -109,9 +135,16 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormInternalProp
 				></textarea>
 				<Button
 					className="bp3-minimal outline-0 toggle-emoji"
-				// onClick={() => setShowDialog(true)}
+					onClick={toggleEmojiPicker}
 				>
-					<Icon icon="globe-network" className="tigrow-lightBlue" iconSize={30} />
+					<span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
+						<img
+							src={SmileIcon}
+							width="30px"
+							height="30px"
+							color="#0FA3A3"
+						/>
+					</span>
 				</Button>
 				{/* <Button
 					className="bp3-minimal outline-0 mh2 w2 mv3"
@@ -154,7 +187,8 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormInternalProp
 const mapStateToProps = (state: any) => {
 	return {
 		profileImage: state.userReducer.user.profileImage,
-		roomId: state.roomReducer.activeRoom.id
+		roomId: state.roomReducer.activeRoom.id,
+		emojiPicker: state.roomReducer.emojiPicker
 	}
 }
 export const SendMessageForm = connect(mapStateToProps, { sendRoomMessage })(SendMessageFormComponent)

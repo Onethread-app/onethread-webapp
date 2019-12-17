@@ -7,7 +7,7 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, CLEAR_ROOMS_ERROR, REFRESH_MEMBER
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER
 } from "./Types";
 import { isEmpty } from "lodash";
 interface IAppState {
@@ -23,6 +23,7 @@ interface IAppState {
 	rooms: any[];
 	companyRooms: any[];
 	loading: boolean;
+	emojiPicker: boolean;
 	roomError: string;
 }
 const InitialState: IAppState = {
@@ -37,6 +38,7 @@ const InitialState: IAppState = {
 	roomMembers: [],
 	rooms: [],
 	companyRooms: [],
+	emojiPicker: false,
 	loading: false,
 	roomError: "",
 };
@@ -197,6 +199,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				...state,
 				roomMembers: [...state.roomMembers, ...action.payload],
 				loading: false
+			};
+		case TOGGLE_EMOJI_PICKER:
+			return {
+				...state,
+				emojiPicker: action.payload
 			};
 		case ADD_MEMBER_IN_ROOM_ERROR:
 		case GET_ROOM_MEMBERS_FROM_SERVER_ERROR:
