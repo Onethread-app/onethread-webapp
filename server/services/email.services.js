@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const { port } = config;
-const host = `http://tigrow.co/`;
+const host = `http://tigrow.co`;
 
 module.exports.sendEmailForResetPassword = async (
   name,
@@ -58,7 +58,7 @@ module.exports.sendEmailForVerifyAccount = async (
     if (err) {
       logger.error(' Message send to failed ' + err);
     } else {
-      logger.info('Message send to user successfully');
+      logger.info(`send confirmation mail to user successfully`);
     }
   });
 };

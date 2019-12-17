@@ -140,7 +140,7 @@ const searchMember = async (req, res, next) => {
         { _id: { $nin: memberListId } },
       ],
     }).select('_id email name firstName lastName');
-
+    // TODO: pore ami change korbo query onusaree
     return sendJSONresponse(res, 200, {
       employees: {
         message: `Search complete ${name}`,

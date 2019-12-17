@@ -6,6 +6,7 @@
 					"birthdate",
 					"chatkit",
 					"jobexperienceid",
-					"loadtest"
+					"loadtest",
+					"userskill"
 				]
 }

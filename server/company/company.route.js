@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
-const requireAuth = passport.authenticate('jwt', { session: false });
+// const auth = passport.authenticate('jwt', { session: false });
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
 const joiSchema = require('./company.validation');
 const companyCtrl = require('./company.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
@@ -15,7 +18,7 @@ const designationRoutes = require('./designation/designation.route');
 router
   .route('/')
   .post(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.newCompany),
     companyCtrl.createCompany,
   );
@@ -24,7 +27,7 @@ router
 router
   .route('/:cname')
   .get(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.getCompany),
     companyCtrl.getCompany,
   );
@@ -33,7 +36,7 @@ router
 router
   .route('/:cname/basic')
   .put(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.updateBasicInfo),
     companyCtrl.updateBasicInfo,
   );
@@ -42,7 +45,7 @@ router
 router
   .route('/:cname/about')
   .put(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
   );
@@ -51,13 +54,13 @@ router
 router
   .route('/:cname/changeName')
   .put(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.changeName),
     companyCtrl.changeName,
   );
 
 // .delete(
-//   requireAuth,
+//   auth,
 //   // SchemaValidator(joiSchema.deleteCompany),
 //   companyCtrl.deleteCompany,
 // );
@@ -65,7 +68,7 @@ router
 // companies list for individual user
 router
   .route('/individual/:account')
-  .get(requireAuth, companyCtrl.getCompanyIndividual);
+  .get(authorization, companyCtrl.getCompanyIndividual);
 
 // redirect to member
 router.use('/:cname/members', memberRoutes);

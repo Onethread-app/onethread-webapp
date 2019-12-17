@@ -108,6 +108,9 @@ const accountsSchema = new mongoose.Schema({
   verifyAccountToken: {
     type: String,
   },
+  verifyAccountTokenExpiration: {
+    type: String,
+  },
   isAccountVerified: {
     type: Boolean,
     default: false,

@@ -12,11 +12,14 @@ const {
 
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
-    logger.error("'Expects 'application/json'");
     return res.send("Expects 'application/json'");
   }
 
   const skill = req.body.name;
+  // const skillExist = await SkillArea.findOne({ name: skill });
+  // if (skillExist) {
+  //   return sendJSONresponse(res, 200);
+  // }
   const newSkill = new SkillArea();
   newSkill.name = skill;
   newSkill.accountId.push(req.user._id);
