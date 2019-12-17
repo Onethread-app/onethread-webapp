@@ -5,7 +5,7 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 
-module.exports.auth = (req, res, next) => {
+module.exports.authorization = (req, res, next) => {
   let accessToken;
   if (req.headers && req.headers.authorization) {
     const parts = req.headers.authorization;

@@ -1,10 +1,6 @@
 const express = require('express');
-const passport = require('passport');
 const passportService = require('../services/passport.services');
 const paramValidation = require('./account.validation');
-const { sendErrorResponse } = require('../helpers/jsonResponse');
-const httpStatus = require('http-status');
-
 const router = express.Router();
 
 const accountCtrl = require('./account.controller');
@@ -14,7 +10,12 @@ const {
   hasAuthorization,
 } = require('../helpers/permission');
 const schemaValidator = require('../helpers/joiSchemaValidator');
-const { auth } = require('../middlewares/authorizationMiddleware');
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
+const {
+  authentication,
+} = require('../middlewares/authenticationMiddleware');
 // authentication
 router
   .route('/signup')
@@ -26,39 +27,23 @@ router.get(
   '/verify-account/:token',
   accountCtrl.getAccessTokenForVerifyAccount,
 );
-router.route('/login').post(
-  function(req, res, next) {
-    passport.authenticate('local', { session: false }, function(
-      err,
-      user,
-      info,
-    ) {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return sendErrorResponse(res, 401, 'AuthError', {
-          message: info.message,
-        });
-      }
-      req.user = user; // Forward user information to the next middleware
-      next();
-    })(req, res, next);
-  },
-  schemaValidator(paramValidation.login),
-  // requireLogin,
-  accountCtrl.login,
-);
+router
+  .route('/login')
+  .post(
+    authentication,
+    schemaValidator(paramValidation.login),
+    accountCtrl.login,
+  );
 
-router.route('/').get(auth, accountCtrl.getAccount);
+router.route('/').get(authorization, accountCtrl.getAccount);
 router
   .route('/update')
   .put(
-    auth,
+    authorization,
     schemaValidator(paramValidation.update),
     accountCtrl.accountUpdate,
   );
-router.route('/logout').get(auth, accountCtrl.logout);
+router.route('/logout').get(authorization, accountCtrl.logout);
 router
   .route('/forget-password')
   .post(accountCtrl.sendEmailForForgetPassword);
@@ -68,7 +53,7 @@ router
 router.route('/reset-password').put(accountCtrl.resetPassword);
 router
   .route('/change-password')
-  .put(auth, accountCtrl.changePassword);
+  .put(authorization, accountCtrl.changePassword);
 // for admin
 // router
 //   .route('/admin')
