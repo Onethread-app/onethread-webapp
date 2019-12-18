@@ -6,6 +6,7 @@ import { sendRoomMessage } from 'stores/room/Actions';
 import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 import { TOGGLE_EMOJI_PICKER } from 'stores/room/Types';
+import ReactDOM from 'react-dom';
 const { withChatkit } = require("@pusher/chatkit-client-react");
 
 const UserIcon = require('./../../../../../resources/images/user.png');
@@ -22,7 +23,9 @@ interface SendMessageFormProps {
 const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	const [text, setText] = useState("");
 	const [showDialog, setShowDialog] = useState(false);
+
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
+	const emojiRef = useRef<any>(null);
 
 	const dispatch = useDispatch();
 
@@ -102,6 +105,20 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 		});
 	}
 
+	const checkClickOutside = (e: any) => {
+		let node = ReactDOM.findDOMNode(emojiRef.current);
+		if (node && !node.contains(e.target)) {
+			toggleEmojiPicker();
+		}
+	};
+
+	useEffect(() => {
+		document.addEventListener("click", checkClickOutside);
+		return function () {
+			document.removeEventListener("click", checkClickOutside);
+		};
+	});
+
 	return (
 		<>
 			{props.emojiPicker ? (
@@ -112,8 +129,10 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					title="TiGrow Ltd"
 					autoFocus={true}
 					color="#0fa3a3"
+					ref={emojiRef}
 				/>
-			) : null}
+			) : null
+			}
 			<div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
 				<div className="flex items-center mh1" style={{ width: "42px" }}>
 					<img
