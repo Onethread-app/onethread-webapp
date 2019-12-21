@@ -105,13 +105,13 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     const payLoad = {
-      email: req.user,
+      email: req.user.email,
     };
     const token = jwt.sign({ _id: req.user._id }, config.jwtSecret, {
       expiresIn: 60 * 60 * 60 * 24,
     });
-    const accessToken = jwt.sign(payLoad, config.jwtSecret, {
-      expiresIn: '1d',
+    const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
+      expiresIn: '45m',
     });
     const refreshToken = jwt.sign(
       payLoad,
@@ -132,18 +132,15 @@ const login = async (req, res, next) => {
     userObj.timeline = timelineHistory;
     delete userObj.password;
     delete userObj.companies;
-    delete userObj.friends;
-    delete userObj.pendingFriends;
-    delete userObj.sendingFriendList;
     addRefreshTokenToList(refreshToken, req.user, accessToken, 100);
     return sendJSONresponse(res, 200, {
       success: true,
       user: userObj,
       token: token,
-      refresh_token: refreshToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     });
   } catch (error) {
-    logger.error(`ReferenceError:${error} is not defined`);
     next(error);
   }
 };
@@ -370,7 +367,7 @@ const searchAccount = async (req, res, next) => {
 };
 
 const tokenRefresh = async (req, res, next) => {
-  const refreshToken = req.body.refresh_token;
+  const refreshToken = req.body.refreshToken;
   if (refreshToken) {
     client.exists(refreshToken, function(err, exists) {
       if (exists) {
@@ -380,10 +377,7 @@ const tokenRefresh = async (req, res, next) => {
           user,
         ) {
           if (err) {
-            console.log(err);
-            return res.status(401).json({
-              statusCode: 401,
-              error: 'Unauthorized',
+            return sendJSONresponse(res, 401, {
               message: err.message,
             });
           }
@@ -395,20 +389,26 @@ const tokenRefresh = async (req, res, next) => {
         const accessToken = jwt.sign(
           payload,
           config.accessTokenSecret,
-          { expiresIn: '1d' },
+          { expiresIn: '45m' },
+        );
+        const refreshToken1 = jwt.sign(
+          payload,
+          config.refreshTokenSecret,
+          {
+            expiresIn: '48h',
+          },
         );
         const response = {
-          access_token: accessToken,
-          expires_in: '1d',
-          token_type: 'Bearer',
+          accessToken: accessToken,
+          tokenType: 'Bearer',
+          refreshToken: refreshToken1,
         };
-        updateRefreshTokenfromList(refreshToken, accessToken);
+        updateRefreshTokenfromList(refreshToken1, accessToken);
         return sendJSONresponse(res, 200, response);
       } else {
         logger.error('The refresh token does not exist');
         return sendJSONresponse(res, 401, {
-          error: 'Unauthorized',
-          message: 'The refresh token does not exist',
+          message: 'Refresh token does not exist',
         });
       }
     });
@@ -491,7 +491,7 @@ module.exports = {
   accountLoad,
   accountUpdate,
   searchAccount,
-  // tokenRefresh,
+  tokenRefresh,
   // tokenRevoke,
   sendEmailForForgetPassword,
   getAccessTokenForForgetPassword,
