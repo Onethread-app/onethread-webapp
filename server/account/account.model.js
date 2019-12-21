@@ -70,6 +70,7 @@ const accountsSchema = new mongoose.Schema({
   },
   secondaryEmail: {
     type: String,
+    unique: true,
   },
   bloodGroup: {
     type: String,

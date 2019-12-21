@@ -4,13 +4,13 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
+const client = require('../../index.redis');
 
-module.exports.authorization = (req, res, next) => {
+module.exports.authorization = async (req, res, next) => {
   let accessToken;
   if (req.headers && req.headers.authorization) {
     const parts = req.headers.authorization;
     if (parts) {
-      console.log(parts);
       accessToken = parts;
     } else {
       return sendErrorResponse(res, 400, {

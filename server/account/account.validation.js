@@ -101,15 +101,7 @@ module.exports = {
         )
         .email()
         .min(3)
-        .max(62)
-        .lowercase()
-        .required()
-        .error(error => {
-          return {
-            success: false,
-            message: 'mail id is not valid format',
-          };
-        }),
+        .max(62),
     }),
   }),
   search: Joi.string().min(2),
