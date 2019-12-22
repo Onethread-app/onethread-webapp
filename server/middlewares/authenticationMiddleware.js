@@ -11,7 +11,7 @@ module.exports.authentication = (req, res, next) => {
     }
     if (!user) {
       return sendErrorResponse(res, 401, 'AuthError', {
-        message: info.message,
+        message: 'Mismatch Credentials',
       });
     }
     req.user = user; // Forward user information to the next middleware

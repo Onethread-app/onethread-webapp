@@ -13,11 +13,8 @@ module.exports = {
         }),
       lastName: Joi.string()
         .required()
-<<<<<<< HEAD
-=======
         .min(3)
         .max(30)
->>>>>>> 5c17153fc7693e504185a5be32b93b75865f764d
         .error(error => {
           return { success: false, message: `lastName Required` };
         }),
@@ -51,11 +48,7 @@ module.exports = {
         .valid(Joi.ref('password'))
         .required(),
       contactNo: Joi.string()
-<<<<<<< HEAD
-        .regex(/^(\+?(88)?0?1[123456789][0-9]{8})$/)
-=======
         .regex(/^(\+?(880)[0-9]{10})$/)
->>>>>>> 5c17153fc7693e504185a5be32b93b75865f764d
         .required()
         .error(error => {
           return {

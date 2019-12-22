@@ -26,7 +26,7 @@ module.exports.authorization = async (req, res, next) => {
         if (err) {
           return sendErrorResponse(res, 401, 'AuthError', {
             message: err.message,
-            field: 'headers',
+            fieldName: 'headers',
           });
         }
         req.user = decoded;
@@ -36,7 +36,7 @@ module.exports.authorization = async (req, res, next) => {
   } else {
     return sendErrorResponse(res, 401, 'AuthError', {
       message: 'No token provided',
-      field: 'headers',
+      fieldName: 'headers',
     });
   }
 };
