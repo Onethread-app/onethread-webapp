@@ -18,7 +18,10 @@ const {
   updateRefreshTokenfromList,
   removeRefreshTokenfromList,
 } = require('../services/redis.services');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const {
   APIError,
   BadRequestError,
@@ -77,7 +80,15 @@ const register = async (req, res, next) => {
               id: user._id,
               name: user.name,
             });
-            user.token = account.generateJwt();
+            user.token = jwt.sign(
+              {
+                email: req.user.email,
+              },
+              config.accessTokenSecret,
+              {
+                expiresIn: '45m',
+              },
+            );
             delete user.password;
             return sendJSONresponse(res, 201, {
               token: user.token,
@@ -106,9 +117,13 @@ const login = async (req, res, next) => {
     const payLoad = {
       email: req.user.email,
     };
-    const token = jwt.sign({ _id: req.user._id }, config.jwtSecret, {
-      expiresIn: 60 * 60 * 60 * 24,
-    });
+    const token = jwt.sign(
+      { email: req.user.email },
+      config.jwtSecret,
+      {
+        expiresIn: 60 * 60 * 60 * 24,
+      },
+    );
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
       expiresIn: '45m',
     });
@@ -145,19 +160,19 @@ const login = async (req, res, next) => {
 
 const getAccount = async (req, res, next) => {
   try {
-    const user = await Account.findById(req.user._id).select(
-      '-password',
-    );
-    if (!user) {
-      return sendJSONresponse(res, 404, {
-        message: 'user not found',
-        fieldName: 'id',
-      });
-    }
+    const user = await Account.findOne({
+      email: req.user.email,
+    })
+      .select('-password')
+      .populate(
+        'companies skillArea jobExperience education profileImage',
+        '_id _id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name fileLink s3Key fileType',
+      );
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
     );
+    console.log(user);
     const userInfo = { ...user._doc };
     userInfo.timeline = timelineHistory;
     delete userInfo.password;
@@ -168,7 +183,6 @@ const getAccount = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
-    logger.error(`${error}`);
     return next(error);
   }
 };
@@ -198,14 +212,15 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
-  Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
+  await Account.findOneAndUpdate({ email: req.user.email }, req.body)
     .select('-password')
     .exec()
     .then(async user => {
       if (user) {
         if (req.body.name !== user.name) {
+          console.log(user);
           await chatkit.updateUser({
-            id: req.user.id,
+            id: user._id,
             name: req.body.name,
           });
         }
@@ -242,9 +257,9 @@ const sendEmailForForgetPassword = async (req, res, next) => {
         email: req.body.email,
       }).select('-password');
       if (!user)
-        return sendJSONresponse(res, 400, {
-          success: false,
+        return sendErrorResponse(res, 404, '', {
           message: 'no user found',
+          fieldName: 'email',
         });
       user.resetPasswordToken = token;
       user.resetPasswordTokenExpiration = Date.now() + 3600000;
@@ -489,7 +504,7 @@ module.exports = {
   accountLoad,
   accountUpdate,
   searchAccount,
-  // tokenRefresh,
+  tokenRefresh,
   // tokenRevoke,
   sendEmailForForgetPassword,
   getAccessTokenForForgetPassword,

@@ -158,7 +158,7 @@ describe('## Registration APIs for User', () => {
 describe('## Login APIs for Account Holders', () => {
   let userAccount3 = {
     email: 'robatdas2018@gmail.com',
-    password: 'Orvi@123456',
+    password: 'Labiba@123',
   };
   describe('# POST /api/v1/accounts/login', () => {
     it('should login in their account', done => {
@@ -187,8 +187,8 @@ describe('## Login APIs for Account Holders', () => {
     });
   });
   let Account2 = {
-    email: 'sayemome1r@gmail.com',
-    password: 'newPassword!QAZ6yhn8ikl',
+    email: 'robatdas2018@gmail.com',
+    password: 'Labiba@123',
   };
   describe('# POST /api/v1/account/login', () => {
     it('should login in his account', done => {
@@ -204,11 +204,14 @@ describe('## Login APIs for Account Holders', () => {
   });
   describe('Only validate account holder can access', () => {
     let accessToken;
-
+    let userAccount34 = {
+      email: 'robatdas18@gmail.com',
+      password: 'Orvi@123',
+    };
     beforeEach(done => {
       request(app)
         .post('/api/v1/accounts/login')
-        .send(Account2)
+        .send(userAccount34)
         .expect(httpStatus.OK)
         .then(res => {
           accessToken = res.body.token;
@@ -220,11 +223,12 @@ describe('## Login APIs for Account Holders', () => {
       it('it should update the account information', done => {
         request(app)
           .put('/api/v1/accounts/update')
-          .set('authorization', `${accessToken}`)
+          .set('Authorization', `${accessToken}`)
           .send({
-            firstName: 'ori',
-            lastName: 'ds',
+            firstName: 'orvi',
+            lastName: 'dass',
           })
+          .expect(httpStatus.OK)
           .then(res => {
             res.message = 'profile updated';
             done();

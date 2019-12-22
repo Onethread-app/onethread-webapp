@@ -29,7 +29,7 @@ module.exports = {
         .error(error => {
           return {
             success: false,
-            message: 'Email id is not valid format',
+            message: 'mail id is not valid format',
           };
         }),
       password: Joi.string()
@@ -52,7 +52,7 @@ module.exports = {
         .required()
         .error(error => {
           return {
-            message: 'ContactNo is not a valid format',
+            message: 'contactNo is not a valid format',
           };
         }),
     }),

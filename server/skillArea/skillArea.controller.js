@@ -194,15 +194,14 @@ const searchSkillSet = async (req, res, next) => {
 const updateUserSkillInfo = async (req, res, next) => {
   try {
     const skillId = req.body.skillArea;
-    const userID = req.user._id;
+    const userID = req.user.email;
     const user = await Account.updateOne(
-      { _id: userID },
+      { email: userID },
       { $addToSet: { skillArea: skillId } },
     );
-    const userSkill = await Account.findOne({ _id: userID }).populate(
-      'skillArea',
-      '_id name',
-    );
+    const userSkill = await Account.findOne({
+      email: userID,
+    }).populate('skillArea', '_id name');
     const skillList = userSkill.skillArea;
     return sendJSONresponse(res, 200, { skillList });
   } catch (error) {

@@ -11,8 +11,12 @@ const transporter = nodemailer.createTransport({
 });
 
 const { port } = config;
-const host = `http://tigrow.co`;
-
+let host = ``;
+if (config.env !== 'production') {
+  host = `http://127.0.0.1:3000`;
+} else {
+  host = `http://tigrow.co`;
+}
 module.exports.sendEmailForResetPassword = async (
   name,
   emailID,
