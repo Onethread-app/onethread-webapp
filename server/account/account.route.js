@@ -50,10 +50,19 @@ router
 router
   .route('/forget-password/:token')
   .get(accountCtrl.getAccessTokenForForgetPassword);
-router.route('/reset-password').put(accountCtrl.resetPassword);
+router
+  .route('/reset-password')
+  .put(
+    schemaValidator(paramValidation.resetPassword),
+    accountCtrl.resetPassword,
+  );
 router
   .route('/change-password')
-  .put(authorization, accountCtrl.changePassword);
+  .put(
+    authorization,
+    schemaValidator(paramValidation.resetPassword),
+    accountCtrl.changePassword,
+  );
 // for admin
 // router
 //   .route('/admin')
