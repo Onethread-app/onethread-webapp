@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { InputGroup, Icon, IconName, Intent, FormGroup } from '@blueprintjs/core';
+import { isString } from 'lodash';
 
 interface InputGroupFieldProps {
   id: string;
@@ -8,7 +9,7 @@ interface InputGroupFieldProps {
   onChange?: (value: any) => void;
   placeHolder?: string;
   style?: any;
-  leftIcon?: IconName;
+  leftIcon?: IconName | JSX.Element;
   leftIconColor?: string;
   validationOnBlur?: any;
   readOnly?: boolean;
@@ -18,6 +19,7 @@ interface InputGroupFieldProps {
   disabled?: boolean;
   error?: string;
   autoFocus?: boolean;
+  keypress?: (e: any) => void
 }
 
 export const InputGroupField = (props: InputGroupFieldProps) => (
@@ -30,8 +32,8 @@ export const InputGroupField = (props: InputGroupFieldProps) => (
     readOnly={props.readOnly}
     placeholder={props.placeHolder}
     style={props.style ? props.style : {}}
-    leftIcon={props.leftIconColor ?
-      <Icon icon={props.leftIcon} color={props.leftIconColor} />
+    leftIcon={isString(props.leftIcon) === true ?
+      <Icon icon={props.leftIcon} color={props.leftIconColor ? props.leftIconColor : '#0fa3a3'} />
       : props.leftIcon
     }
     rightElement={props.rightElement ? props.rightElement : undefined}
@@ -40,6 +42,7 @@ export const InputGroupField = (props: InputGroupFieldProps) => (
     onBlur={props.validationOnBlur ? props.validationOnBlur : null}
     intent={props.error ? Intent.DANGER : props.intent ? props.intent : Intent.NONE}
     disabled={props.disabled}
+    onKeyPress={props.keypress}
   />
 );
 
