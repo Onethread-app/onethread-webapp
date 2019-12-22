@@ -48,7 +48,7 @@ module.exports = {
         .valid(Joi.ref('password'))
         .required(),
       contactNo: Joi.string()
-        .regex(/^(\+?(880)[0-9]{10})$/)
+        .regex(/^(?:\+?88)?01[15-9]\d{8}$/)
         .required()
         .error(error => {
           return {
@@ -87,7 +87,7 @@ module.exports = {
       lastName: Joi.string()
         .min(3)
         .max(30),
-      contactNo: Joi.string().regex(/\+?(88)?0?1[356789][0-9]{8}/),
+      contactNo: Joi.string().regex(/^(?:\+?88)?01[15-9]\d{8}$/),
       birthday: Joi.date(),
       bloodGroup: Joi.string(),
       location: Joi.string()
