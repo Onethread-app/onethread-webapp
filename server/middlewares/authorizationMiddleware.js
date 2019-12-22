@@ -10,7 +10,6 @@ module.exports.auth = (req, res, next) => {
   if (req.headers && req.headers.authorization) {
     const parts = req.headers.authorization;
     if (parts) {
-      console.log(parts);
       accessToken = parts;
     } else {
       return sendErrorResponse(res, 400, {
@@ -19,20 +18,24 @@ module.exports.auth = (req, res, next) => {
     }
   }
   if (accessToken) {
-    jwt.verify(accessToken, config.jwtSecret, (err, decoded) => {
-      if (err) {
-        return sendErrorResponse(res, 401, 'AuthError', {
-          message: err.message,
-          field: 'headers',
-        });
-      }
-      req.user = decoded;
-      next();
-    });
+    jwt.verify(
+      accessToken,
+      config.accessTokenSecret,
+      (err, decoded) => {
+        if (err) {
+          return sendErrorResponse(res, 401, 'AuthError', {
+            message: err.message,
+            field: 'headers',
+          });
+        }
+        req.user = decoded;
+        next();
+      },
+    );
   } else {
     return sendErrorResponse(res, 401, 'AuthError', {
       message: 'No token provided',
-      field: 'Header',
+      field: 'headers',
     });
   }
 };

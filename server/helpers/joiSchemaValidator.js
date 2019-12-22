@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const { sendErrorResponse } = require('../helpers/jsonResponse');
 
 module.exports = (_schema, useJoiError = true) => {
   const _useJoiError = _.isBoolean(useJoiError) && useJoiError;
@@ -20,23 +21,20 @@ module.exports = (_schema, useJoiError = true) => {
         return null;
       })
       .catch(validationError => {
-        const JoiError = {
-          type: 'ValidationError',
-          errors: validationError.details.map(d => {
-            return {
-              message: d.message.replace(/['"]/g, ''),
-              fieldName: d.path[1],
-            };
-          }),
-        };
-        // Custom Error
-        const CustomError = {
-          status: 'failed',
-          error:
-            'Invalid request data. Please review request and try again.',
-        };
-
-        res.status(400).send(_useJoiError ? JoiError : CustomError);
+        const errors = validationError.details.map(d => {
+          return {
+            message: d.message.replace(/['"]/g, ''),
+            fieldName: d.path[1],
+          };
+        });
+        const customError =
+          'Invalid request data. Please review request and try again.';
+        return sendErrorResponse(
+          res,
+          400,
+          'ValidationError',
+          _useJoiError ? errors : customError,
+        );
       });
   };
 };

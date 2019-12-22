@@ -18,7 +18,10 @@ const {
   updateRefreshTokenfromList,
   removeRefreshTokenfromList,
 } = require('../services/redis.services');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const {
   APIError,
   BadRequestError,
@@ -145,15 +148,9 @@ const login = async (req, res, next) => {
 
 const getAccount = async (req, res, next) => {
   try {
-    const user = await Account.findById(req.user._id).select(
-      '-password',
-    );
-    if (!user) {
-      return sendJSONresponse(res, 404, {
-        message: 'user not found',
-        fieldName: 'id',
-      });
-    }
+    const user = await Account.findOne({
+      email: req.user.email,
+    }).select('-password');
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
@@ -168,7 +165,6 @@ const getAccount = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
-    logger.error(`${error}`);
     return next(error);
   }
 };
