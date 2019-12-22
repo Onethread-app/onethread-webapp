@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Field } from 'react-final-form';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { required, checkError, composeValidators, isEmail } from "components/final-form/utils";
@@ -6,6 +6,7 @@ import { Link, NavLink, withRouter, RouteComponentProps } from 'react-router-dom
 import { Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { loginAction, LoginModel } from '../../stores/auth/Actions';
+import { isEmpty } from 'lodash';
 
 
 const logo = require('./../../resources/images/logo.png');
@@ -31,7 +32,13 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
     return { [response.fieldName]: response.message }
   }
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
 
+  useEffect(() => {
+    const search = props.location.search;
+    const params = new URLSearchParams(search);
+    setEmail(params.get('email') ? params.get('email')! : '');
+  }, [props.location.search]);
 
   return (
     <div className="cf">
@@ -68,6 +75,7 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
           <div className="w-two-thirds-l w-90-m center">
             <Form
               onSubmit={onSubmit}
+              initialValues={{ email : email ? email : '', password: '' }}
               validate={values => {
                 const errors = {} as any;
                 return errors;
@@ -141,97 +149,98 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
                     </div>
 
                     <div>
-                        <div>
-                          <Field<string>
-                            name="email"
-                            validate={composeValidators(required, isEmail)}
-                            render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
-                                <InputGroupFieldWithError
-                                  id="email"
-                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <img
-                                        src={emailIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
-                                  rightElement={
-                                    <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
-                                      <img
-                                        src={greyLockIcon}
-                                        width="15px"
-                                        height="15px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px'
-                                  }}
-                                  placeHolder="Email Address"
-                                  error={checkError(meta) && (meta.error || meta.submitError)}
-                                />
-                              </div>
-                            }
-                          />
-                        </div>
+                      <div>
+                        <Field<string>
+                          name="email"
+                          validate={composeValidators(required, isEmail)}
+                          render={({ input, meta }) =>
+                          <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                              <InputGroupFieldWithError
+                                id="email"
+                                className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                value={input.value}
+                                onChange={input.onChange}
+                                leftIcon={
+                                  <span className="bp3-icon">
+                                    <img
+                                      src={emailIcon}
+                                      width="20px"
+                                      height="20px"
+                                      color="#0fa3a3"
+                                    />
+                                  </span>
+                                }
+                                rightElement={
+                                  <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
+                                    <img
+                                      src={greyLockIcon}
+                                      width="15px"
+                                      height="15px"
+                                      color="#0fa3a3"
+                                    />
+                                  </span>
+                                }
+                                style={{
+                                  boxShadow: 'none',
+                                  fontSize: '18px'
+                                }}
+                                placeHolder="Email Address"
+                                error={checkError(meta) && (meta.error || meta.submitError)}
+                                disabled={isEmpty(email) === false}
+                              />
+                            </div>
+                          }
+                        />
                       </div>
-              
+                    </div>
+
 
                     <div>
                       <div>
-                      <Field<string>
-                            name="password"
-                            validate={composeValidators(required)}
-                            render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
-                                <InputGroupFieldWithError
-                                  id="password"
-                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  type={`${showPassword ? 'text' : 'password'}`}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <img
-                                        src={lockIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
-                                  rightElement={
-                                    <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
-                                      <img
-                                        onMouseDown={() => setShowPassword(true)}
-                                        onMouseUp={() => setShowPassword(false)}
-                                        src={eyeIcon}
-                                        width="15px"
-                                        height="15px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px'
-                                  }}
-                                  placeHolder="Confirm Password"
-                                  error={checkError(meta) && (meta.error || meta.submitError)}
-                                />
-                                </div>
+                        <Field<string>
+                          name="password"
+                          validate={composeValidators(required)}
+                          render={({ input, meta }) =>
+                            <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                              <InputGroupFieldWithError
+                                id="password"
+                                className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                value={input.value}
+                                onChange={input.onChange}
+                                type={`${showPassword ? 'text' : 'password'}`}
+                                leftIcon={
+                                  <span className="bp3-icon">
+                                    <img
+                                      src={lockIcon}
+                                      width="20px"
+                                      height="20px"
+                                      color="#0fa3a3"
+                                    />
+                                  </span>
                                 }
-                                />
-                             
+                                rightElement={
+                                  <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
+                                    <img
+                                      onMouseDown={() => setShowPassword(true)}
+                                      onMouseUp={() => setShowPassword(false)}
+                                      src={eyeIcon}
+                                      width="15px"
+                                      height="15px"
+                                      color="#0fa3a3"
+                                    />
+                                  </span>
+                                }
+                                style={{
+                                  boxShadow: 'none',
+                                  fontSize: '18px'
+                                }}
+                                placeHolder="Confirm Password"
+                                error={checkError(meta) && (meta.error || meta.submitError)}
+                              />
+                            </div>
+                          }
+                        />
+
                       </div>
                     </div>
 

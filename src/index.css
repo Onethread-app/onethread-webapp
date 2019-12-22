@@ -1,5 +1,5 @@
 body {
-	font-family: "Lato", sans-serif;
+	font-family: "Open Sans", sans-serif;
 	box-sizing: border-box;
 }
 .signinPageBackground {
@@ -295,7 +295,3 @@ a:hover {
 }
 /**************************************/
 
-.homePageBackground {
-	background-image: url(./resources/images/homeBg.png);
-	background-repeat: no-repeat; 
-}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Field } from 'react-final-form';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { required, checkError, composeValidators, isEmail, phoneNoValidation, passwordValidation } from "components/final-form/utils";
@@ -6,6 +6,7 @@ import { Link, NavLink, withRouter, RouteComponentProps } from 'react-router-dom
 import { Tooltip, Button, Position } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { userSignupAction, UserModel } from 'stores/auth/Actions';
+import { isEmpty } from 'lodash';
 
 const logo = require('./../../resources/images/logo.png');
 const nameTagIcon = require('./../../resources/images/nameTag.png');
@@ -26,7 +27,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const onSubmit = async (values: UserModel) => {
+  const onSubmit = async (values: any) => {
     const response = await props.userSignupAction(values);
     if (response.message === 200) {
       props.history.push(`/${response.payload.data.user.name}`);
@@ -34,6 +35,14 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
     }
     return { [response.fieldName]: response.message }
   }
+  
+  const [email, setEmail] = useState('');
+
+  useEffect(() => {
+    const search = props.location.search;
+    const params = new URLSearchParams(search);
+    setEmail(params.get('email') ? params.get('email')! : '');
+  }, [props.location.search]);
 
   return (
     <div className="cf ph2-ns">
@@ -42,7 +51,8 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
           <div className="w-two-thirds-l w-90-m center">
             <Form
               onSubmit={onSubmit}
-              validate={values => {
+              initialValues={{ email : email ? email : '' }}
+              validate={(values: any) => {
                 const errors = {} as any;
                 if (values.password !== values.confirmPassword) {
                   errors.confirmPassword = 'Password does not match'
@@ -245,6 +255,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                   }}
                                   placeHolder="Email Address"
                                   error={checkError(meta) && (meta.error || meta.submitError)}
+                                  disabled={isEmpty(email) === false}
                                 />
                               </div>
                             }
