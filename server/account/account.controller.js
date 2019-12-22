@@ -194,14 +194,14 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
-  Account.findByIdAndUpdate({ _id: req.user.id }, req.body)
+  await Account.findByIdAndUpdate({ _id: req.user._id }, req.body)
     .select('-password')
     .exec()
     .then(async user => {
       if (user) {
         if (req.body.name !== user.name) {
           await chatkit.updateUser({
-            id: req.user.id,
+            id: req.user._id,
             name: req.body.name,
           });
         }

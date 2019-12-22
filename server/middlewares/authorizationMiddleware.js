@@ -4,8 +4,9 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
+const client = require('../../index.redis');
 
-module.exports.auth = (req, res, next) => {
+module.exports.authorization = async (req, res, next) => {
   let accessToken;
   if (req.headers && req.headers.authorization) {
     const parts = req.headers.authorization;
