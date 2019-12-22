@@ -17,7 +17,8 @@ let s3bucket = new AWS.S3({
 
 const profilePicture = async (req, res, next) => {
   const file = req.file;
-  const userID = req.user._id;
+  const userID = req.user.email;
+  const accountId = await Account.findOne({ email: userID });
   const params = {
     Bucket: 'tigrow-file',
     Key: `${userID}/${file.originalname}`,
@@ -33,17 +34,18 @@ const profilePicture = async (req, res, next) => {
       const newFile = {
         link: s3FileURL + params.Bucket,
         s3Key: params.Key,
-        account: userID,
+        account: accountId._id,
         type: params.ContentType,
       };
       const file = new File(newFile);
       file
         .save()
         .then(async data => {
+          console.log(data);
           logger.info('File Link successfully save to Database');
           if (userID) {
             const account = await Account.findOne({
-              _id: userID,
+              email: userID,
             }).select('profileImage');
             account.profileImage = data._id;
             await account.save();

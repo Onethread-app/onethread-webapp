@@ -29,7 +29,7 @@ module.exports = {
         .error(error => {
           return {
             success: false,
-            message: 'Email id is not valid format',
+            message: 'mail id is not valid format',
           };
         }),
       password: Joi.string()
@@ -48,11 +48,11 @@ module.exports = {
         .valid(Joi.ref('password'))
         .required(),
       contactNo: Joi.string()
-        .regex(/^(\+?(880)[0-9]{10})$/)
+        .regex(/^(\+?(880)[1-9]{10})$/)
         .required()
         .error(error => {
           return {
-            message: 'ContactNo is not a valid format',
+            message: 'contactNo is not a valid format',
           };
         }),
     }),
@@ -87,7 +87,13 @@ module.exports = {
       lastName: Joi.string()
         .min(3)
         .max(30),
-      contactNo: Joi.string().regex(/\+?(88)?0?1[356789][0-9]{8}/),
+      contactNo: Joi.string()
+        .regex(/^(\+?(880)[1-9]{10})$/)
+        .error(error => {
+          return {
+            message: 'contactNo is not a valid format',
+          };
+        }),
       birthday: Joi.date(),
       bloodGroup: Joi.string(),
       location: Joi.string()
@@ -101,7 +107,13 @@ module.exports = {
         )
         .email()
         .min(3)
-        .max(62),
+        .max(62)
+        .error(error => {
+          return {
+            success: false,
+            message: 'mail id is not valid format',
+          };
+        }),
     }),
   }),
   search: Joi.string().min(2),
