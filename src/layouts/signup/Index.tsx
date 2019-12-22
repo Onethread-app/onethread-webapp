@@ -390,7 +390,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
 
         </div>
       </div>
-      <div className="fl w-100 w-50-ns dt vh-100 animated slideInLeft fast delay-1s absolute-l"
+      <div className="fl w-100 w-50-ns dt vh-100 animated slideInLeft fast absolute-l"
         style={{
           zIndex: 9999, left: '50%', backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover',
           backgroundRepeat: 'no-repeat', backgroundPosition: 'left-bottom', backgroundColor: "#060517"
