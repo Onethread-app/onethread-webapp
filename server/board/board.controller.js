@@ -101,7 +101,6 @@ const addBoardMembers = async (req, res, next) => {
 const addBoardColumn = (req, res, next) => {};
 
 const list = async (req, res, next) => {
-  console.log(req.query);
   const { limit = 50, skip = 0, companyId } = req.query;
   // console.log(companyId);
   await Board.find({
