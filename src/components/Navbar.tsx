@@ -28,7 +28,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                 src={logo}
                 className="dib"
                 alt="Site Name"
-                style={{ width: '5rem' }}
+                style={{ width: '2rem' }}
               />
             </Link>
           </div>
