@@ -15,11 +15,9 @@ const load = (req, res, next, id) => {
         req.task = result;
         return next();
       }
-      return res
-        .status(400)
-        .json({
-          message: 'No valid entry found for provided Task ID',
-        });
+      return res.status(400).json({
+        message: 'No valid entry found for provided Task ID',
+      });
     })
     .catch(err => {
       next(err);
@@ -58,7 +56,6 @@ const create = async (req, res, next) => {
     };
     res.status(201).send(responseData);
   } catch (error) {
-    console.log(error);
     logger.error(`Task column create: ${error}`);
     const err = new BadRequestError(
       'task data is invalid.',

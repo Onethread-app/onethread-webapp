@@ -105,10 +105,8 @@ const suggestMember = async (req, res, next) => {
       .select('-_id account')
       .populate('account', '_id name')
       .exec();
-    console.log(roomMembers);
     let members = companyMembers.filter(({ account }) => {
       return !roomMembers.members.some(existingMember => {
-        console.log(existingMember);
         return (
           existingMember._id.toString() === account._id.toString()
         );
