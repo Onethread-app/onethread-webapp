@@ -26,11 +26,11 @@ export const isEmail = (email: string) => {
 }
 
 export const phoneNoValidation = (number: string) => {
-  const regexForPhoneNoValidation = /^(?:\+?88)?01[15-9]\d{8}$/;
+  const regexForPhoneNoValidation = /^(?:\+?88)?01[1-9]\d{8}$/;
   if (number.match(regexForPhoneNoValidation)) {
     return undefined;
   }
-  return "Please enter a 10 digit no e.g. 1711111111";
+  return "Please enter a 11 digit no e.g. 01711111111";
 }
 
 export const passwordValidation = (password: string) => {

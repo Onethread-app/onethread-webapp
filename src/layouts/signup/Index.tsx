@@ -163,7 +163,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                 <InputGroupFieldWithError
                                   id="countryCode"
                                   className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
-                                  value="+880"
+                                  value="+88"
                                   readOnly={true}
                                   onChange={input.onChange}
                                   leftIcon={
