@@ -1,102 +1,59 @@
-import {
-	USER_SIGNUP,
-	USER_LOGIN,
-	USER_LOGIN_ERROR,
-	USER_SIGNUP_LOADING,
-	USER_LOGOUT,
-	CLEAR_AUTH_REDUCER_STATE
-} from "./Types";
 import tigrowApi from "tigrowApi";
 import { AxiosRequestConfig } from "axios";
 import { History } from "history";
-import { UserModel } from "stores/auth/Reducer";
 import { isEqual } from "lodash";
 import { tokenConfig, awsImageOption } from "../UtilsActions";
 import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE } from 'stores/user/Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
+import { errorMessgeHandler } from 'components/final-form/utils';
+
+export interface UserModel {
+	firstName: string,
+	lastName: string,
+	contactNo: string,
+	email: string,
+	password: string,
+	confirmPassword: string
+}
+
+export interface LoginModel {
+	email: string,
+	password: string
+}
+
 
 export const userSignupAction = (
-	newUser: UserModel,
-	routeHistory: History
+	newUser: UserModel
 ) => async (dispatch: any) => {
 	try {
-		dispatch({ type: USER_SIGNUP_LOADING });
 		const user = {
 			...newUser,
-			contactNo: `880${newUser.contactNo}`
+			contactNo: `+880${newUser.contactNo}`
 		};
 		const response = await tigrowApi.post("accounts/signup", user, {
 			"Content-Type": "application/json"
 		} as AxiosRequestConfig);
 		localStorage.setItem("token", JSON.stringify(response.data.token));
-		await dispatch({ type: USER_SIGNUP, payload: response.data });
 		await dispatch({ type: BASIC_INFO, payload: response.data });
-		routeHistory.push(`/${response.data.user.name}`);
+		return	errorMessgeHandler(response);
 	} catch (error) {
-		console.log(error)
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({
-				type: USER_LOGIN_ERROR,
-				payload: {
-					message: "Network error",
-					email: false,
-					network: true
-				}
-			});
-		} else if (error.response.status === 409) {
-			dispatch({
-				type: USER_LOGIN_ERROR,
-				payload: {
-					message: "Email has been already registered",
-					email: true,
-					network: false
-				}
-			});
-		} else {
-			console.log(error.response);
-		}
+		return	errorMessgeHandler(error);
 	}
 };
 
 export const loginAction = (
-	loginUser: UserModel,
-	routeHistory: History
+	loginUser: LoginModel
 ) => async (dispatch: any) => {
 	try {
 		const response = await tigrowApi.post("accounts/login", loginUser, {
 			"Content-Type": "application/json"
-		} as AxiosRequestConfig);
-
+		} as AxiosRequestConfig);	
 		localStorage.setItem("token", JSON.stringify(response.data.token));
-		dispatch({ type: USER_LOGIN, payload: response.data });
 		dispatch({ type: BASIC_INFO, payload: response.data });
-		routeHistory.push(`/${response.data.user.name}`);
-		
+		return	errorMessgeHandler(response);
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({
-				type: USER_LOGIN_ERROR,
-				payload: {
-					message: "Network Error",
-					email: false,
-					password: false,
-					network: true
-				}
-			});
-		} else if (error.response && error.response.status === 401) {
-			dispatch({
-				type: USER_LOGIN_ERROR,
-				payload: {
-					message: "Unauthorized user. please enter valid email and password.",
-					email: true,
-					password: true,
-					network: false
-				}
-			});
-		} else {
-			console.log(error.response);
-		}
+		return	errorMessgeHandler(error);
 	}
 };
 
@@ -137,8 +94,6 @@ export const logoutAction = (routeHistory: History) => async (
 			const response = await tigrowApi.get(`/accounts/logout`, headers);
 			if (isEqual(response.status, 200)) {
 				await localStorage.removeItem("token");
-				await dispatch({ type: USER_LOGOUT });
-				await dispatch({ type: CLEAR_AUTH_REDUCER_STATE });
 				await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
 				await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
 				await dispatch({ type: CLEAR_USER_REDUCER_STATE });

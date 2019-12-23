@@ -26,6 +26,8 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
   const [username, setUsername] = useState('');
 
+  // const store = useStore();
+
   const userRequestFactory = (userName: string): Promise<any> => {
     const headers = tokenConfig();
     return fetch(`${server}company/${props.company.name}/members/search?name=${userName}`, headers)

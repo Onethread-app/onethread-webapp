@@ -1,389 +1,435 @@
-import * as React from "react";
-import { useState, useEffect } from 'react';
-import { isEqual, isEmpty, isNumber } from 'lodash';
-import { InputGroupField } from 'components/fields/InputGroupField';
-import { NumericInput, Icon, Spinner, Button } from '@blueprintjs/core';
+import React, { useState, useEffect } from "react";
+import { Form, Field } from 'react-final-form';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { required, checkError, composeValidators, isEmail, phoneNoValidation, passwordValidation } from "components/final-form/utils";
+import { Link, NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Tooltip, Button, Position } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { userSignupAction } from 'stores/auth/Actions';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { History } from 'history';
-import { Link } from 'react-router-dom';
-import { passwordValidation } from 'stores/UtilsActions';
-import { UserModel } from 'stores/auth/Reducer';
+import { userSignupAction, UserModel } from 'stores/auth/Actions';
+import { isEmpty } from 'lodash';
 
-const SignupPageLeftImage = require('./../../resources/images/Artboard9.png');
+const logo = require('./../../resources/images/logo.png');
+const nameTagIcon = require('./../../resources/images/nameTag.png');
+const phoneIcon = require('./../../resources/images/phone.png');
+const emailIcon = require('./../../resources/images/email.png');
+const lockIcon = require('./../../resources/images/lock.png');
+const warningIcon = require('./../../resources/images/warningIcon.png');
+const eyeIcon = require('./../../resources/images/eye.png');
+const questionIcon = require('./../../resources/images/question.png');
+const greyLockIcon = require('./../../resources/images/lock-grey.png');
+const backgroundImage = require('./../../resources/images/Bg-png.png');
 
 interface SignUpPageInternalProps {
-  errorUnauthorized: { email: boolean; message: string; network: boolean }
-  loading: boolean;
-  userSignupAction: (user: UserModel, history: History) => void;
+  userSignupAction: (user: UserModel) => any
 }
 
-const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProps) => {
-  const [values, setValues] = useState({
-    firstName: "",
-    lastName: "",
-    contactNo: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  //need to fix this
-  useEffect(() => {
-    props.errorUnauthorized.email = false;
-    props.errorUnauthorized.message = "";
-    props.errorUnauthorized.network = false;
-  });
-
-  const { firstName, lastName, contactNo, email, password, confirmPassword } = values;
-
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-    contactNo: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
-
+export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProps) => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const emailValidation = (email: string) => {
-    const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (email.match(regexForEmailValidation)) {
+  const onSubmit = async (values: any) => {
+    const response = await props.userSignupAction(values);
+    if (response.message === 200) {
+      props.history.push(`/${response.payload.data.user.name}`);
       return true;
-    } else {
-      return false;
     }
+    return { [response.fieldName]: response.message }
   }
+  
+  const [email, setEmail] = useState('');
 
-  const handleChange = (name: string | number) => (event: any) => {
-    const value = isNumber(event) ? event.toString() : event.target.value;
-    setValues({ ...values, [name]: value });
-  };
+  useEffect(() => {
+    const search = props.location.search;
+    const params = new URLSearchParams(search);
+    setEmail(params.get('email') ? params.get('email')! : '');
+  }, [props.location.search]);
 
-  const checkPassword = () => {
-    if (isEqual(password, confirmPassword)) {
-      return true
-    } else {
-      return false
-    }
-  }
-  const emptyErrorCheck = () => {
-    if (isEmpty(errors.firstName) && isEmpty(errors.lastName) && isEmpty(errors.contactNo) && isEmpty(errors.email) && isEmpty(errors.password) && isEmpty(errors.confirmPassword)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  const emptyValueCheck = () => {
-    if (isEmpty(values.firstName) || isEmpty(values.lastName) || isEmpty(values.contactNo) || isEmpty(values.email) || isEmpty(values.password) || isEmpty(values.confirmPassword)) {
-      let e = errors;
-      if (isEmpty(values.firstName)) {
-        e = { ...e, firstName: "Required" };
-      }
-      if (isEmpty(values.lastName)) {
-        e = { ...e, lastName: "Required" };
-      }
-      if (isEmpty(values.contactNo)) {
-        e = { ...e, contactNo: "Required" };
-      }
-      if (isEmpty(values.email)) {
-        e = { ...e, email: "Required" };
-      }
-      if (isEmpty(values.password)) {
-        e = { ...e, password: "Required" };
-      }
-      if (isEmpty(values.confirmPassword)) {
-        e = { ...e, confirmPassword: "Required" };
-      }
-      setErrors(e);
-      return true;
-    } else {
-      return false;
-    }
-  }
   return (
     <div className="cf ph2-ns">
-      <div className="fl w-100 w-50-ns dt vh-100">
+      <div className="fl w-100 w-50-ns dt vh-100" style={{ backgroundColor: "white" }}>
         <div className="v-mid dtc">
-          <div className="w-50 center">
-            <img className="w-75-l w-100-m" src={SignupPageLeftImage} />
+          <div className="w-two-thirds-l w-90-m center">
+            <Form
+              onSubmit={onSubmit}
+              initialValues={{ email : email ? email : '' }}
+              validate={(values: any) => {
+                const errors = {} as any;
+                if (values.password !== values.confirmPassword) {
+                  errors.confirmPassword = 'Password does not match'
+                }
+                return errors;
+              }}
+              render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
+                <>
+                  <h1 className="pl3">Sign Up</h1>
+                  <form
+                    className="dt fl cf"
+                    onSubmit={handleSubmit}>
+                    <div className="mw9 center ph3-ns v-mid dtc">
+                      <div>
+                        <Field
+                          name="network"
+                          subscription={{
+                            touched: true,
+                            error: true,
+                            submitError: true,
+                            dirtySinceLastSubmit: true
+                          }}
+                          render={({ meta }) =>
+                            checkError(meta) && (
+                              <div
+                                className="flex"
+                                style={{
+                                  backgroundColor: "#FCEBEB", paddingLeft: "10px", paddingTop: "10px"
+                                }}>
+                                <span className="bp3-icon">
+                                  <img
+                                    src={warningIcon}
+                                    width="20px"
+                                    height="20px"
+                                    color="#0fa3a3"
+                                  />
+                                </span>
+                                <p style={{ color: "#962414", paddingLeft: "10px" }}>{meta.error || meta.submitError}</p>
+                              </div>
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="flex pt3 justify-content">
+                        <div>
+                          <Field<string>
+                            name="firstName"
+                            validate={composeValidators(required)}
+                            render={({ input, meta }) =>
+                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                                <InputGroupFieldWithError
+                                  id="firstName"
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={nameTagIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px'
+                                  }}
+                                  placeHolder="First Name"
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                />
+                              </div>
+                            }
+                          />
+                        </div>
+                        <Field<string>
+                          name="lastName"
+                          validate={composeValidators(required)}
+                          render={({ input, meta }) =>
+                            <div className="ml3">
+                              <div>
+                                <InputGroupFieldWithError
+                                  id="lastName"
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px'
+                                  }}
+                                  placeHolder="Last Name"
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                />
+                              </div>
+                            </div>
+                          }
+                        />
+                      </div>
+
+                      <div className={`flex justify-content`}>
+                        <div style={{ width: '114px' }}>
+                          <Field<string>
+                            name="countryCode"
+                            render={({ input, meta }) =>
+                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                                <InputGroupFieldWithError
+                                  id="countryCode"
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  value="+880"
+                                  readOnly={true}
+                                  onChange={input.onChange}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={phoneIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px'
+                                  }}
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                />
+                              </div>
+                            }
+                          />
+                        </div>
+
+                        <div className="ml3 ml1-m flex-auto">
+                          <div className="w-100">
+                            <Field<string>
+                              name="contactNo"
+                              validate={composeValidators(required, phoneNoValidation)}
+                              render={({ input, meta, ...rest }) =>
+                                <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                                  <InputGroupFieldWithError
+                                    id="contactNo"
+                                    className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                    value={input.value}
+                                    onChange={input.onChange}
+                                    style={{
+                                      boxShadow: 'none',
+                                      fontSize: '18px'
+                                    }}
+                                    placeHolder="Contact Number"
+                                    keypress={e => {
+                                      if ((e.which < 48 || e.which > 57)) {
+                                        e.preventDefault();
+                                      }
+                                    }}
+                                    error={checkError(meta) && (meta.error || meta.submitError)}
+                                  />
+                                </div>
+                              }
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <div>
+                          <Field<string>
+                            name="email"
+                            validate={composeValidators(required, isEmail)}
+                            render={({ input, meta }) =>
+                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                                <InputGroupFieldWithError
+                                  id="email"
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={emailIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  rightElement={
+                                    <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
+                                      <img
+                                        src={greyLockIcon}
+                                        width="15px"
+                                        height="15px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px'
+                                  }}
+                                  placeHolder="Email Address"
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                  disabled={isEmpty(email) === false}
+                                />
+                              </div>
+                            }
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <div>
+                          <Field<string>
+                            name="password"
+                            validate={composeValidators(required, passwordValidation)}
+                            render={({ input, meta }) =>
+                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                                <InputGroupFieldWithError
+                                  id="password"
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  type={`${showPassword ? 'text' : 'password'}`}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={lockIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  rightElement={
+                                    <span className="bp3-icon" style={{ paddingTop: "5px", paddingRight: "5px" }}>
+                                      <span style={{ paddingRight: "10px" }}>
+                                        <img
+                                          onMouseDown={() => setShowPassword(true)}
+                                          onMouseUp={() => setShowPassword(false)}
+                                          src={eyeIcon}
+                                          width="15px"
+                                          height="15px"
+                                          color="#0fa3a3"
+                                        />
+                                      </span>
+                                      <Tooltip content={
+                                        <p style={{ width: "400px" }}>
+                                          Password should contain at least 1 capital letter, 1 small letter, 1 special character and 1 numeric value
+                                        </p>}
+                                        position={Position.TOP_RIGHT}>
+                                        <img
+                                          src={questionIcon}
+                                          width="20px"
+                                          height="20px"
+                                          color="#0fa3a3"
+                                        />
+                                      </Tooltip>
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px'
+                                  }}
+                                  placeHolder="Password"
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                />
+                              </div>
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <Field<string>
+                            name="confirmPassword"
+                            validate={composeValidators(required)}
+                            render={({ input, meta }) =>
+                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                                <InputGroupFieldWithError
+                                  id="confirmPassword"
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  type={`${showConfirmPassword ? 'text' : 'password'}`}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={lockIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  rightElement={
+                                    <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
+                                      <img
+                                        onMouseDown={() => setShowConfirmPassword(true)}
+                                        onMouseUp={() => setShowConfirmPassword(false)}
+                                        src={eyeIcon}
+                                        width="15px"
+                                        height="15px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px'
+                                  }}
+                                  placeHolder="Confirm Password"
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                />
+                              </div>
+                            }
+                          />
+                        </div>
+                      </div>
+                      <Button
+                        className="grow h2 pointer white bp3-minimal w4"
+                        style={{
+                          background: "#0FA3A3",
+                          outline: "none",
+                          color: "white",
+                          width: '100%',
+                          height: '45px',
+                          fontWeight: "bold",
+                          fontSize: "1.2rem"
+                        }}
+                        loading={submitting}
+                        type="submit"
+                        disabled={submitting || pristine}
+                      >
+                        Sign up
+            </Button>
+                      <NavLink className="pa4" to="/signin">
+                        <p className="fw9 dt center tigrow-lightBlue">Already have an account?</p>
+                      </NavLink>
+                    </div>
+                  </form>
+                </>
+              )
+              }
+            />
           </div>
+
         </div>
       </div>
-      <div className="fl w-100 w-50-ns dt vh-100">
+      <div className="fl w-100 w-50-ns dt vh-100 animated slideInLeft fast absolute-l"
+        style={{
+          zIndex: 9999, left: '50%', backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'left-bottom', backgroundColor: "#060517"
+        }}
+      >
         <div className="v-mid dtc">
-          <div className="w-two-thirds-l w-90-m">
-            <form className="dt fl cf">
-              <div className="mw9 center ph3-ns v-mid dtc">
-                {props.errorUnauthorized.email || props.errorUnauthorized.network ?
-                  <small className="red">{props.errorUnauthorized.message}</small>
-                  : ""}
-                <div className={`flex pt3 justify-content ${errors.firstName ? "mb3" : "mb4"}`}>
-                  <div>
-                    <div className=" w-100">
-                      <InputGroupField
-                        id="firstName"
-                        value={firstName}
-                        onChange={handleChange("firstName")}
-                        leftIcon="person"
-                        className={`br0 ${errors.firstName ? 'bb b--red' : 'bb b--lightBlue'}`}
-                        leftIconColor={`${errors.firstName ? 'red' : "#0fa3a3"}`}
-                        style={{
-                          boxShadow: 'none',
-                          fontSize: '18px'
-                        }}
-                        placeHolder="John"
-                        validationOnBlur={() => {
-                          if (firstName === "") {
-                            const firstNameError = { ...errors, firstName: "Required" };
-                            setErrors(firstNameError);
-                          } else {
-                            const firstNameError = { ...errors, firstName: "" };
-                            setErrors(firstNameError);
-                          }
-                        }}
-                      />
-                    </div>
-                    {errors.firstName ? <small className="red">{errors.firstName}</small> : ""}
-                  </div>
-                  <div className="ml3">
-                    <div className=" w-100">
-                      <InputGroupField
-                        id="lastName"
-                        value={lastName}
-                        onChange={handleChange("lastName")}
-                        placeHolder="Doe"
-                        className={`br0 ${errors.lastName ? 'bb b--red' : 'bb b--lightBlue'}`}
-
-                        style={{
-                          boxShadow: 'none',
-                          fontSize: '18px'
-                        }}
-                        validationOnBlur={() => {
-                          if (isEmpty(lastName)) {
-                            const lastNameError = { ...errors, lastName: "Required" };
-                            setErrors(lastNameError);
-                          } else {
-                            const lastNameError = { ...errors, lastName: "" };
-                            setErrors(lastNameError);
-                          }
-                        }}
-                      />
-                    </div>
-                    {errors.lastName ? <small className="red">{errors.lastName}</small> : ""}
-                  </div>
-                </div>
-                <div className={`flex justify-content ${errors.contactNo ? "mb3" : "mb4"}`}>
-                  <div style={{ width: '114px' }}>
-                    <InputGroupField
-                      id="contactNo"
-                      value="+880"
-                      leftIcon="phone"
-                      className={`pl2-l ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'}`}
-                      leftIconColor={`${errors.contactNo ? 'red' : "#0fa3a3"}`}
-                      style={{
-                        boxShadow: 'none',
-                        fontSize: '18px',
-                        padding: '0px',
-                        paddingLeft: '21px'
-                      }}
-                      readOnly={true}
-                    />
-                  </div>
-                  <div className="ml3 ml1-m flex-auto">
-                    <div className="w-100">
-                      <NumericInput
-                        className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'}`}
-                        style={{
-                          boxShadow: 'none',
-                          fontSize: '18px',
-                          padding: '0px',
-                          paddingRight: '0px'
-                        }}
-                        fill={true}
-                        placeholder="e.g1789442325"
-                        value={contactNo}
-                        onValueChange={handleChange("contactNo")}
-                        buttonPosition="none"
-                        onBlur={() => {
-                          if (isEmpty(contactNo)) {
-                            const contactNoError = { ...errors, contactNo: "Required" };
-                            setErrors(contactNoError);
-                          } else if (contactNo.length !== 10) {
-                            const contactNoError = { ...errors, contactNo: "Not more or less than 10 character" };
-                            setErrors(contactNoError);
-                          }
-                          else {
-                            const contactNoError = { ...errors, contactNo: "" };
-                            setErrors(contactNoError);
-                          }
-                        }}
-                      />
-                    </div>
-                    {errors.contactNo ? <small style={{ color: 'red' }}>{errors.contactNo}</small> : ""}
-                  </div>
-                </div>
-                <div className={` ${errors.email ? "mb3" : "mb4"}`}>
-                  <div className="flex">
-                    <InputGroupField
-                      id="email"
-                      value={email}
-                      onChange={handleChange("email")}
-                      placeHolder="john@gmail.com"
-                      leftIcon="envelope"
-                      className={`br0 ${props.errorUnauthorized.email || errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
-                      leftIconColor={`${props.errorUnauthorized.email || errors.email ? 'red' : "#0fa3a3"}`}
-                      style={{
-                        boxShadow: 'none',
-                        fontSize: '18px'
-                      }}
-                      validationOnBlur={() => {
-                        if (isEmpty(email)) {
-                          const emailError = { ...errors, email: "Required" };
-                          setErrors(emailError);
-                        } else if (!emailValidation(email)) {
-                          const emailError = { ...errors, email: "Please enter a valid email" };
-                          setErrors(emailError);
-                        } else {
-                          const emailError = { ...errors, email: "" };
-                          setErrors(emailError);
-                        }
-                      }}
-                    />
-                  </div>
-                  {errors.email ? <small className="red">{errors.email}</small> : ""}
-                </div>
-                <div className={` ${errors.password ? "mb3" : "mb4"}`}>
-                  <div className="flex">
-                    <InputGroupField
-                      id="password"
-                      type={`${showPassword ? 'text' : 'password'}`}
-                      value={password}
-                      onChange={handleChange("password")}
-                      placeHolder="password"
-                      leftIcon="lock"
-                      rightElement={
-                        <Icon
-                          icon={showPassword ? 'eye-open' : 'eye-off'}
-                          color="#0fa3a3"
-                          onClick={e => setShowPassword(!showPassword)}
-                          className="pt2 pr2"
-                        />
-                      }
-                      className={`br0 ${errors.password ? 'bb b--red' : 'bb b--lightBlue'}`}
-                      leftIconColor={`${errors.password ? 'red' : "#0fa3a3"}`}
-                      style={{
-                        boxShadow: 'none',
-                        fontSize: '18px'
-                      }}
-                      validationOnBlur={() => {
-                        if (isEmpty(password)) {
-                          const passwordError = { ...errors, password: "Required" };
-                          setErrors(passwordError);
-                        }
-                        else if (!passwordValidation((password))) {
-                          const passwordError = { ...errors, password: "Should contain uppercase, lowercase, special character and min 8 chanracter long" };
-                          setErrors(passwordError);
-                        }
-                        else if (!checkPassword()) {
-                          const confirmPasswordError = { ...errors, confirmPassword: "Mismatch Password" };
-                          setErrors(confirmPasswordError);
-                          if (passwordValidation((password))) {
-                            const passwordError = { ...errors, password: "" };
-                            setErrors(passwordError);
-
-                          }
-                        }
-                        else if (checkPassword()) {
-                          const confirmPasswordError = { ...errors, password: "", confirmPassword: "" };
-                          setErrors(confirmPasswordError);
-                        }
-                        else {
-                          const passwordError = { ...errors, password: "" };
-                          setErrors(passwordError);
-                        }
-                      }}
-                    />
-                  </div>
-                  {errors.password ? <small className="red">{errors.password}</small> : ""}
-                </div>
-                <div className={`${errors.confirmPassword ? "mb3" : "mb4"}`}>
-                  <div className="flex">
-                    <InputGroupField
-                      id="confirmPassword"
-                      type={`${showPassword ? 'text' : 'password'}`}
-                      value={confirmPassword}
-                      onChange={handleChange("confirmPassword")}
-                      placeHolder="confirm password"
-                      leftIcon="lock"
-                      rightElement={
-                        <Icon
-                          icon={showPassword ? 'eye-open' : 'eye-off'}
-                          color="#0fa3a3"
-                          onClick={e => setShowPassword(!showPassword)}
-                          className="pt2 pr2"
-                        />
-                      }
-                      className={`br0 ${errors.confirmPassword ? 'bb b--red' : 'bb b--lightBlue'}`}
-                      leftIconColor={`${errors.confirmPassword ? 'red' : "#0fa3a3"}`}
-                      style={{
-                        boxShadow: 'none',
-                        fontSize: '18px'
-                      }}
-                      validationOnBlur={() => {
-                        if (isEmpty(confirmPassword)) {
-                          const confirmPasswordError = { ...errors, confirmPassword: "Please re-enter your password" };
-                          setErrors(confirmPasswordError);
-                        }
-                        else if (!checkPassword()) {
-                          const confirmPasswordError = { ...errors, confirmPassword: "Mismatch Password" };
-                          setErrors(confirmPasswordError);
-                        }
-                        else if (checkPassword() === true && isEmpty(errors.password) === true) {
-                          const passwordError = { ...errors, password: "", confirmPassword: "" };
-                          setErrors(passwordError);
-                        }
-                        else {
-                          const confirmPasswordError = { ...errors, confirmPassword: "" };
-                          setErrors(confirmPasswordError);
-                        }
-                      }}
-                    />
-                  </div>
-                  {errors.confirmPassword ? <small className="red">{errors.confirmPassword}</small> : ""}
-                </div>
-                <Button className="w-100 grow pointer white mb3 mt4"
-                  type="submit"
-                  style={{ background: "#0fa3a3", outline: "none", color: 'white', fontSize: '18px' }}
-                  onClick={(e: any) => {
-                    e.preventDefault();
-                    if (!emptyValueCheck() && emptyErrorCheck()) {
-                      props.userSignupAction(values, props.history);
-                    }
-                  }}
-                  disabled={props.loading}
-                >
-                  {props.loading ? <Spinner size={15} /> : 'Sign up'}
-                </Button>
-                <Link to="/signin">
-                  <p className="fw9 dt center tigrow-lightBlue">Already have an account?</p>
-                </Link>
-              </div>
-            </form>
+          <div className="w-50 center">
+            <Link to="/home">
+              <img width="150px"
+                height="70px"
+                src={logo} />
+            </Link>
+            <h3 className="tj mt4" style={{ color: "#E0E0E3" }}>
+              TiGrow is a professional network crafted for
+                    Business Professionals, where they can
+                    trade between each other, find nearest
+                    suppliers, create workplaces in which they
+                    can maintain not only intra company
+                    communications but also external
+                    communications with organizations where
+                    they can create smart contracts between
+                    them.
+            </h3>
           </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-const mapStateToProps = (state: any) => {
-  return {
-    loading: state.authReducer.loading,
-    errorUnauthorized: state.authReducer.loginError
-  };
-};
-
-export const SignUpPage = connect(mapStateToProps, { userSignupAction })(withRouter(SignUpPageComponent));
+export const SignUpPage = connect(null, { userSignupAction })(withRouter(SignUpPageComponent));
