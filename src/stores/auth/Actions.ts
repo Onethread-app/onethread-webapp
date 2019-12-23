@@ -29,7 +29,7 @@ export const userSignupAction = (
 	try {
 		const user = {
 			...newUser,
-			contactNo: `+880${newUser.contactNo}`
+			contactNo: `+88${newUser.contactNo}`
 		};
 		const response = await tigrowApi.post("accounts/signup", user, {
 			"Content-Type": "application/json"
