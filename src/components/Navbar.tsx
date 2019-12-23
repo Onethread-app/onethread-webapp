@@ -8,8 +8,8 @@ import { History } from 'history';
 import user from '../resources/images/user.png';
 import logo from '../resources/images/tigrowLogo.png';
 import { User } from 'stores/user/Reducer';
-import { ListView } from './company/ListView';
-import { CompanySignupForm } from './company/SignupForm';
+import { CompanyListView } from '../layouts/company/ListView';
+import { CompanySignupForm } from '../layouts/company/Form';
 
 interface NavbarTopInternalProps {
   user: User
@@ -28,7 +28,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                 src={logo}
                 className="dib"
                 alt="Site Name"
-                style={{ width: '5rem' }}
+                style={{ width: '2rem' }}
               />
             </Link>
           </div>
@@ -38,7 +38,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             popoverClassName="bp3-popover-content-sizing bg-white "
             position={Position.BOTTOM}
             content={
-              <ListView
+              <CompanyListView
                 showDialog={showDialog}
                 setShowDialog={setShowDialog}
               />

@@ -1,0 +1,145 @@
+import React, { useState } from 'react';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { Button } from '@blueprintjs/core';
+import tigrowApi from 'tigrowApi';
+import { AxiosRequestConfig } from 'axios';
+import { Form, Field } from 'react-final-form';
+import { composeValidators, required, isEmail, checkError } from 'components/final-form/utils';
+import { errorMessgeHandler } from 'components/final-form/utils';
+
+const forgotPass = require('./../../resources/images/forgotPassword.png');
+const warningIcon = require('./../../resources/images/warningIcon.png');
+interface ForgotPasswordProps {
+  setEmailComponentView: (val: boolean) => void
+}
+
+const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
+
+  const onSubmit = async (values: { email: string }) => {
+    try {
+      const response = await tigrowApi.post("accounts/forget-password", values, {
+        "Content-Type": "application/json"
+      } as AxiosRequestConfig)
+      if (response.status === 200) {
+        props.setEmailComponentView(true);
+      }
+      return true
+    }
+    catch (error) {
+      const err = errorMessgeHandler(error)
+      return { [err.fieldName]: err.message }
+    }
+  }
+
+  return (
+    <div className="dt cf w-100 vh-100">
+      <div className="v-mid dtc">
+        <div className="center w-15">
+          <img src={forgotPass}></img>
+        </div>
+        <h1 className="f3 tc">Forgot your Password ?</h1>
+        <h1 className="f5 fw3 tc">Don't worry ! Resetting your password is super easy.</h1>
+        <h1 className="f5 fw3 tc">Enter your mail address</h1>
+        <Form
+          onSubmit={onSubmit}
+          render={({ handleSubmit, submitting, pristine }) => (
+            <form className="w-25-l w-50-m center mt4-ns" onSubmit={handleSubmit}>
+              <div>
+                <Field
+                  name="network"
+                  subscription={{
+                    touched: true,
+                    error: true,
+                    submitError: true,
+                    dirtySinceLastSubmit: true
+                  }}
+                  render={({ meta }) =>
+                    checkError(meta) && (
+                      <div
+                        className="flex"
+                        style={{
+                          backgroundColor: "#FCEBEB", paddingLeft: "10px", paddingTop: "10px"
+                        }}>
+                        <span className="bp3-icon">
+                          <img
+                            src={warningIcon}
+                            width="20px"
+                            height="20px"
+                            color="#0fa3a3"
+                          />
+                        </span>
+                        <p style={{ color: "#962414", paddingLeft: "10px" }}>{meta.error || meta.submitError}</p>
+                      </div>
+                    )
+                  }
+                />
+              </div>
+              <h1 className="f4 lh-copy">Email</h1>
+              <Field<string>
+                name="email"
+                validate={composeValidators(required, isEmail)}
+                render={({ input, meta }) =>
+                  <InputGroupFieldWithError
+                    className="ba b--black-40"
+                    id={input.name}
+                    placeHolder="Enter your email address"
+                    value={input.value}
+                    onChange={input.onChange}
+                    style={{ boxShadow: "none", height: '42px' }}
+                    error={checkError(meta) && (meta.error || meta.submitError)}
+                  />
+                }
+              />
+              <Button
+                className="grow pointer white bp3-minimal w-100 mt3"
+                style={{
+                  background: "#0fa3a3",
+                  outline: "none",
+                  color: "white",
+                  height: '42px',
+                  fontSize: '1rem'
+                }}
+                loading={submitting}
+                type="submit"
+                disabled={submitting || pristine}
+              >
+                Send
+		        </Button>
+            </form>
+          )}
+        />
+        <div className="center w-15 tc mv3 fw6">
+          <a href="/signin"
+            className="link black hover-blue tc"
+            style={{ fontSize: '1rem', outline: '0px' }}
+          >
+            Back to Sign In
+        </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+const RouteToEmailConfirmation = () => (
+  <div className="dt cf w-100 vh-100">
+    <div className="v-mid dtc">
+      <h1 className="f3 lh-copy tc">We have sent you a mail.</h1>
+      <h1 className="f3 lh-copy tc">Please go to your mail to reset your password</h1>
+    </div>
+  </div>
+)
+
+
+export const ForgotPasswordPage = () => {
+  const [emailComponentView, setEmailComponentView] = useState(false);
+  return (
+    emailComponentView === false ?
+      <ForgotPasswordComponnet setEmailComponentView={setEmailComponentView} />
+      : <RouteToEmailConfirmation />
+  )
+}
+
+
+
+

@@ -1,5 +1,5 @@
 import { USER_FETCH_LOADING, USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE, ADD_SKILL, DELETE_SKILL, IMAGE_UPLOAD } from './Types';
-import { ItemEntityProps } from 'components/common/field/SuggestField';
+import { ItemEntityProps } from 'components/fields/SuggestField';
 
 export interface ICompanyByUser {
 	role: string;
