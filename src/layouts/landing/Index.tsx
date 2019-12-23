@@ -80,7 +80,7 @@ export const HomePage = () => {
         style={{ backgroundImage: `url(${BgHalfCircle})`, backgroundRepeat: 'no-repeat' }}
       >
         <div className="absolute bg-white shadow-4 br3 pv4 ph5 w-70-l w-90" style={{ left: '50%', transform: 'translateX(-50%)', top: '-9%' }} >
-          <h1 className="f2-ns f3 lh-title tc mt0 mt2-ns mb4  ">Introducing TiGrow</h1>
+          <h1 className="f2-ns f3 lh-title tc mt0 mt2-ns mb4">Introducing TiGrow</h1>
           <p className="tj tc-ns ">TiGrow is a professional network crafted for Business Professionals, where they</p>
           <p className="tj tc-ns "> can trade between each other, find nearest suppliers, create workplaces in which</p>
           <p className="tj tc-ns "> they can maintain not only intra company communications but also external</p>
