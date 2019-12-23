@@ -21,7 +21,7 @@ const create = async (req, res, next) => {
       text: req.body.text,
       room: req.body.room,
       type: req.body.type,
-      account: req.user.id,
+      account: req.user._id,
     });
     await message.save();
 

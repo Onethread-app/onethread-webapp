@@ -83,6 +83,7 @@ const register = async (req, res, next) => {
             user.token = jwt.sign(
               {
                 email: req.user.email,
+                _id: req.user._id,
               },
               config.accessTokenSecret,
               {
@@ -116,9 +117,10 @@ const login = async (req, res, next) => {
   try {
     const payLoad = {
       email: req.user.email,
+      _id: req.user._id,
     };
     const token = jwt.sign(
-      { email: req.user.email },
+      { email: req.user.email, _id: req.user._id },
       config.jwtSecret,
       {
         expiresIn: 60 * 60 * 60 * 24,
@@ -172,7 +174,6 @@ const getAccount = async (req, res, next) => {
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
     );
-    console.log(user);
     const userInfo = { ...user._doc };
     userInfo.timeline = timelineHistory;
     delete userInfo.password;
@@ -218,7 +219,6 @@ const accountUpdate = async (req, res, next) => {
     .then(async user => {
       if (user) {
         if (req.body.name !== user.name) {
-          console.log(user);
           await chatkit.updateUser({
             id: user._id,
             name: req.body.name,

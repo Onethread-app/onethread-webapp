@@ -93,6 +93,7 @@ const memberList = async (req, res, next) => {
 
 const suggestMember = async (req, res, next) => {
   //req.params.roomId empty check require
+  console.log(req);
   try {
     let roomMembers = await Room.findById(req.params.roomId)
       .select('-_id members')
@@ -107,7 +108,8 @@ const suggestMember = async (req, res, next) => {
       .exec();
 
     let members = companyMembers.filter(({ account }) => {
-      return !roomMembers.members.some(existingMember => {
+      return !roomMembers.members(existingMember => {
+        console.log(existingMember);
         return (
           existingMember._id.toString() === account._id.toString()
         );
@@ -121,6 +123,7 @@ const suggestMember = async (req, res, next) => {
       members,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
