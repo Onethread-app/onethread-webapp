@@ -73,9 +73,7 @@ const accountsSchema = new mongoose.Schema({
   secondaryEmail: {
     type: String,
     lowercase: true,
-    index: true,
-    unique: true,
-    sparse: true,
+    unique: false,
     trim: true,
   },
   bloodGroup: {
@@ -135,7 +133,10 @@ const accountsSchema = new mongoose.Schema({
     },
   ],
 });
-
+accountsSchema.index(
+  { email: 1, secondaryEmail: 1 },
+  { unique: true },
+);
 accountsSchema.pre('save', function(next) {
   const account = this;
 

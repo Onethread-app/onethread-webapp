@@ -29,6 +29,7 @@ module.exports.authorization = async (req, res, next) => {
             fieldName: 'headers',
           });
         }
+        console.log(decoded);
         req.user = decoded;
         next();
       },

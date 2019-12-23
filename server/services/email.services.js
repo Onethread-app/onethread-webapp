@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 const { port } = config;
 let host = ``;
 if (config.env !== 'production') {
-  host = `http://127.0.0.1:3000`;
+  host = `http://localhost:3000`;
 } else {
   host = `http://tigrow.co`;
 }

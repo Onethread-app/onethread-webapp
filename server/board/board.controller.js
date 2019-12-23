@@ -58,7 +58,7 @@ const create = async (req, res, next) => {
       description: req.body.description,
       account: req.user._id,
       company: req.body.companyId,
-      members: [req.user.id],
+      members: [req.user._id],
     });
     board
       .save()
@@ -101,6 +101,7 @@ const addBoardMembers = async (req, res, next) => {
 const addBoardColumn = (req, res, next) => {};
 
 const list = async (req, res, next) => {
+  console.log(req.query);
   const { limit = 50, skip = 0, companyId } = req.query;
   // console.log(companyId);
   await Board.find({
@@ -146,7 +147,6 @@ const suggestMember = async (req, res, next) => {
       });
     });
     members = members.map(m => m.account);
-    console.log(members);
     return res.status(200).json({
       members,
     });

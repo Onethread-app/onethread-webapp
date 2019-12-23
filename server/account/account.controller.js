@@ -191,12 +191,14 @@ const getAccount = async (req, res, next) => {
 // token verification for mail
 const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
-    const { token } = req.params;
+				const { token } = req.params;
+			
     const user = await Account.findOne({
       verifyAccountToken: token,
     }).select(
       '-password companies contactNo skillArea education name',
-    );
+				);
+				console.log(user)
     if (!user)
       return sendJSONresponse(res, 400, { message: 'No User Found' });
     user.verifyAccountToken = undefined;
@@ -301,11 +303,13 @@ const getAccessTokenForForgetPassword = async (req, res, next) => {
   }
 };
 const resetPassword = async (req, res, next) => {
+  console.log(req.body);
   try {
     const { password, userID } = req.body;
-    const user = await Account.findOne({ _id: userID }).select(
-      '-password',
-    );
+    const user = await Account.findById({
+      _id: userID,
+    }).select('-password');
+    console.log(user);
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiration = undefined;
     user.accountVerified = true;
@@ -318,6 +322,7 @@ const resetPassword = async (req, res, next) => {
       user: dbSavedUser,
     });
   } catch (err) {
+    console.log(err);
     logger.error(`password does not change`);
     next(err);
   }

@@ -101,7 +101,6 @@ module.exports = {
         .min(3)
         .max(62)
         .lowercase()
-        .required()
         .error(error => {
           return {
             success: false,
@@ -124,9 +123,7 @@ module.exports = {
               'Password should contain Uppercase, Lowercase, Special character, Number',
           };
         }),
-      confirmPassword: Joi.string()
-        .valid(Joi.ref('password'))
-        .required(),
+      userID: Joi.string(),
     }),
   }),
   search: Joi.string().min(2),

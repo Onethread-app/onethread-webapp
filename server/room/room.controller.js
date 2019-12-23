@@ -20,8 +20,8 @@ const create = async (req, res, next) => {
     const room = new Room({
       name: req.body.name,
       company: req.body.company,
-      members: [req.user.id],
-      account: req.user.id,
+      members: [req.user._id],
+      account: req.user._id,
     });
     await room.save();
     //will remove future
@@ -93,7 +93,6 @@ const memberList = async (req, res, next) => {
 
 const suggestMember = async (req, res, next) => {
   //req.params.roomId empty check require
-  console.log(req);
   try {
     let roomMembers = await Room.findById(req.params.roomId)
       .select('-_id members')
@@ -106,9 +105,9 @@ const suggestMember = async (req, res, next) => {
       .select('-_id account')
       .populate('account', '_id name')
       .exec();
-
+    console.log(roomMembers);
     let members = companyMembers.filter(({ account }) => {
-      return !roomMembers.members(existingMember => {
+      return !roomMembers.members.some(existingMember => {
         console.log(existingMember);
         return (
           existingMember._id.toString() === account._id.toString()
