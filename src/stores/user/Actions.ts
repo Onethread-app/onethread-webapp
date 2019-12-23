@@ -13,7 +13,7 @@ export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, get
 			if (basicInfo.contactNo) {
 				user = {
 					...basicInfo,
-					contactNo: `880${basicInfo.contactNo}`
+					contactNo: `+88${basicInfo.contactNo}`
 				};
 			} else {
 				user = basicInfo
