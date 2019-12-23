@@ -26,7 +26,7 @@ export const isEmail = (email: string) => {
 }
 
 export const phoneNoValidation = (number: string) => {
-  const regexForPhoneNoValidation = /^(\+?[0-9]{10})$/;
+  const regexForPhoneNoValidation = /^(?:\+?88)?01[15-9]\d{8}$/;
   if (number.match(regexForPhoneNoValidation)) {
     return undefined;
   }
