@@ -75,7 +75,7 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
           <div className="w-two-thirds-l w-90-m center">
             <Form
               onSubmit={onSubmit}
-              initialValues={{ email : email ? email : '', password: '' }}
+              initialValues={{ email: email ? email : '', password: '' }}
               validate={values => {
                 const errors = {} as any;
                 return errors;
@@ -154,7 +154,7 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
                           name="email"
                           validate={composeValidators(required, isEmail)}
                           render={({ input, meta }) =>
-                          <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                            <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
                               <InputGroupFieldWithError
                                 id="email"
                                 className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
@@ -182,7 +182,8 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
                                 }
                                 style={{
                                   boxShadow: 'none',
-                                  fontSize: '18px'
+                                  fontSize: '18px',
+                                  paddingLeft: '40px'
                                 }}
                                 placeHolder="Email Address"
                                 error={checkError(meta) && (meta.error || meta.submitError)}
@@ -232,7 +233,8 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
                                 }
                                 style={{
                                   boxShadow: 'none',
-                                  fontSize: '18px'
+                                  fontSize: '18px',
+                                  paddingLeft: '40px'
                                 }}
                                 placeHolder="Confirm Password"
                                 error={checkError(meta) && (meta.error || meta.submitError)}
@@ -260,22 +262,17 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
                       disabled={submitting || pristine}
                     >
                       Sign in
-            </Button>
-                    <div className="tc mb3">
-                      <NavLink className="pa4" to="/forgot-password">
-                        <p className="fw9 dt center tigrow-lightBlue">Forget Password ?</p>
+                    </Button>
+                    <div className="tc mv4">
+                      <NavLink className="fw9 dt center tigrow-lightBlue" to="/forgot-password">
+                        Forget Password ?
                       </NavLink>
-
                     </div>
-                    <div>
-
-                      <NavLink className="pa4" to="/signup">
-                        <p className="fw9 dt center tigrow-lightBlue">Don't have an account?</p>
+                    <div className="tc mv4">
+                      <NavLink className="fw9 dt center tigrow-lightBlue" to="/signup">
+                        Don't have an account?
                       </NavLink>
-
                     </div>
-
-
                     <Link to="/signup">
                       <Button className="w-100 grow pointer"
                         style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3", fontSize: '18px' }}

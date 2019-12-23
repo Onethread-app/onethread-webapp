@@ -120,7 +120,8 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                   }
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px'
+                                    fontSize: '18px',
+                                    paddingLeft: '40px'
                                   }}
                                   placeHolder="First Name"
                                   error={checkError(meta) && (meta.error || meta.submitError)}
@@ -177,7 +178,8 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                   }
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px'
+                                    fontSize: '18px',
+                                    paddingLeft: '40px'
                                   }}
                                   error={checkError(meta) && (meta.error || meta.submitError)}
                                 />
@@ -251,7 +253,8 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                   }
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px'
+                                    fontSize: '18px',
+                                    paddingLeft: '40px'
                                   }}
                                   placeHolder="Email Address"
                                   error={checkError(meta) && (meta.error || meta.submitError)}
@@ -314,7 +317,8 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                   }
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px'
+                                    fontSize: '18px',
+                                    paddingLeft: '40px'
                                   }}
                                   placeHolder="Password"
                                   error={checkError(meta) && (meta.error || meta.submitError)}
@@ -361,7 +365,8 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                   }
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px'
+                                    fontSize: '18px',
+                                    paddingLeft: '40px'
                                   }}
                                   placeHolder="Confirm Password"
                                   error={checkError(meta) && (meta.error || meta.submitError)}
@@ -387,9 +392,9 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                         disabled={submitting || pristine}
                       >
                         Sign up
-            </Button>
-                      <NavLink className="pa4" to="/signin">
-                        <p className="fw9 dt center tigrow-lightBlue">Already have an account?</p>
+                      </Button>
+                      <NavLink className="fw9 dt center tigrow-lightBlue pt4" to="/signin">
+                        Already have an account?
                       </NavLink>
                     </div>
                   </form>
