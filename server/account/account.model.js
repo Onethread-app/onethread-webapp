@@ -68,9 +68,13 @@ const accountsSchema = new mongoose.Schema({
     description: 'can be male,female & others',
     enum: ['male', 'female', 'others'],
   },
+  // it must be empty
+  // if null, it will create an duplicateError
   secondaryEmail: {
     type: String,
-    unique: true,
+    lowercase: true,
+    unique: false,
+    trim: true,
   },
   bloodGroup: {
     type: String,
@@ -129,7 +133,10 @@ const accountsSchema = new mongoose.Schema({
     },
   ],
 });
-
+accountsSchema.index(
+  { email: 1, secondaryEmail: 1 },
+  { unique: true },
+);
 accountsSchema.pre('save', function(next) {
   const account = this;
 

@@ -19,20 +19,24 @@ module.exports.authorization = async (req, res, next) => {
     }
   }
   if (accessToken) {
-    jwt.verify(accessToken, config.jwtSecret, (err, decoded) => {
-      if (err) {
-        return sendErrorResponse(res, 401, 'AuthError', {
-          message: err.message,
-          field: 'headers',
-        });
-      }
-      req.user = decoded;
-      next();
-    });
+    jwt.verify(
+      accessToken,
+      config.accessTokenSecret,
+      (err, decoded) => {
+        if (err) {
+          return sendErrorResponse(res, 401, 'AuthError', {
+            message: err.message,
+            fieldName: 'headers',
+          });
+        }
+        req.user = decoded;
+        next();
+      },
+    );
   } else {
     return sendErrorResponse(res, 401, 'AuthError', {
       message: 'No token provided',
-      field: 'Header',
+      fieldName: 'headers',
     });
   }
 };

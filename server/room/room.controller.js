@@ -20,8 +20,8 @@ const create = async (req, res, next) => {
     const room = new Room({
       name: req.body.name,
       company: req.body.company,
-      members: [req.user.id],
-      account: req.user.id,
+      members: [req.user._id],
+      account: req.user._id,
     });
     await room.save();
     //will remove future
@@ -105,7 +105,6 @@ const suggestMember = async (req, res, next) => {
       .select('-_id account')
       .populate('account', '_id name')
       .exec();
-
     let members = companyMembers.filter(({ account }) => {
       return !roomMembers.members.some(existingMember => {
         return (

@@ -1,6 +1,9 @@
 const { APIError } = require('../helpers/APIError');
 const logger = require('../../config/winston');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 const mongoErrorHandler = (err, req, res, next) => {
   let error = { ...err };
@@ -16,12 +19,8 @@ const mongoErrorHandler = (err, req, res, next) => {
       message: `${pathRegex} already exists`,
       fieldName: pathRegex,
     };
-    let response = {
-      type: 'DuplicateKeyError',
-      errors: [output],
-    };
     logger.error(`${error.name}: ${pathRegex}`);
-    return sendJSONresponse(res, 409, response);
+    return sendErrorResponse(res, 409, 'DuplicateKeyError', output);
   }
 
   // Mongoose bad objectID

@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', { session: false });
+const {
+  authorization,
+} = require('../../middlewares/authorizationMiddleware');
 const designationCtrl = require('./designation.controller');
 const joiSchema = require('./designation.validation');
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
@@ -9,17 +11,17 @@ const SchemaValidator = require('../../helpers/joiSchemaValidator');
 router
   .route('/:memberId')
   .post(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.create),
     designationCtrl.create,
   )
   .put(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.edit),
     designationCtrl.edit,
   )
   .get(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.list),
     designationCtrl.list,
   );

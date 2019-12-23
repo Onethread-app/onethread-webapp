@@ -4,36 +4,48 @@ const taskCtrl = require('./task.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 const joiSchema = require('./task.validation');
 
-const requireAuth = passport.authenticate('jwt', { session: false });
+// const authorization = passport.authenticate('jwt', { session: false });
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
 const { permit } = require('./../helpers/permission');
 const router = express.Router();
 
-router.route('/')
-  .get(requireAuth, permit('user', 'admin'), taskCtrl.list)
+router
+  .route('/')
+  .get(
+    authorization,
+    // permit('user', 'admin'),
+    taskCtrl.list,
+  )
   .post(
-    requireAuth,
-    permit('user', 'admin'),
+    authorization,
+    // permit('user', 'admin'),
     SchemaValidator(joiSchema.createTask),
-    taskCtrl.create
+    taskCtrl.create,
   );
 
-router.route('/:taskId')
-  .get(requireAuth, permit('user', 'admin'), taskCtrl.get)
+router
+  .route('/:taskId')
+  .get(
+    authorization,
+    // permit('user', 'admin'),
+    taskCtrl.get,
+  )
   .put(
-    requireAuth, 
-    permit('user', 'admin'), 
+    authorization,
+    // permit('user', 'admin'),
     // TODO: Will do in next push
     // SchemaValidator(joiSchema.updateTask),
     taskCtrl.update,
   );
 
-router.route('/dragTask')
-  .post(
-    requireAuth,
-    permit('user', 'admin'),
-    SchemaValidator(joiSchema.dragTask),
-    taskCtrl.dragTask
-  )
+router.route('/dragTask').post(
+  authorization,
+  // permit('user', 'admin'),
+  SchemaValidator(joiSchema.dragTask),
+  taskCtrl.dragTask,
+);
 
 router.param('taskId', taskCtrl.load);
 

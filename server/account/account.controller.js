@@ -18,7 +18,10 @@ const {
   updateRefreshTokenfromList,
   removeRefreshTokenfromList,
 } = require('../services/redis.services');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const {
   APIError,
   BadRequestError,
@@ -77,7 +80,16 @@ const register = async (req, res, next) => {
               id: user._id,
               name: user.name,
             });
-            user.token = account.generateJwt();
+            user.token = jwt.sign(
+              {
+                email: req.user.email,
+                _id: req.user._id,
+              },
+              config.accessTokenSecret,
+              {
+                expiresIn: '45m',
+              },
+            );
             delete user.password;
             return sendJSONresponse(res, 201, {
               token: user.token,
@@ -105,10 +117,15 @@ const login = async (req, res, next) => {
   try {
     const payLoad = {
       email: req.user.email,
+      _id: req.user._id,
     };
-    const token = jwt.sign({ _id: req.user._id }, config.jwtSecret, {
-      expiresIn: 60 * 60 * 60 * 24,
-    });
+    const token = jwt.sign(
+      { email: req.user.email, _id: req.user._id },
+      config.jwtSecret,
+      {
+        expiresIn: 60 * 60 * 60 * 24,
+      },
+    );
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
       expiresIn: '45m',
     });
@@ -145,15 +162,14 @@ const login = async (req, res, next) => {
 
 const getAccount = async (req, res, next) => {
   try {
-    const user = await Account.findById(req.user._id).select(
-      '-password',
-    );
-    if (!user) {
-      return sendJSONresponse(res, 404, {
-        message: 'user not found',
-        fieldName: 'id',
-      });
-    }
+    const user = await Account.findOne({
+      email: req.user.email,
+    })
+      .select('-password')
+      .populate(
+        'companies skillArea jobExperience education profileImage',
+        '_id _id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name fileLink s3Key fileType',
+      );
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
@@ -168,7 +184,6 @@ const getAccount = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
-    logger.error(`${error}`);
     return next(error);
   }
 };
@@ -177,6 +192,7 @@ const getAccount = async (req, res, next) => {
 const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
     const { token } = req.params;
+
     const user = await Account.findOne({
       verifyAccountToken: token,
     }).select(
@@ -198,20 +214,19 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
-  await Account.findByIdAndUpdate({ _id: req.user._id }, req.body)
+  await Account.findOneAndUpdate({ email: req.user.email }, req.body)
     .select('-password')
     .exec()
     .then(async user => {
       if (user) {
         if (req.body.name !== user.name) {
           await chatkit.updateUser({
-            id: req.user._id,
+            id: user._id,
             name: req.body.name,
           });
         }
         return sendJSONresponse(res, 200, {
-          success: true,
-          msg: 'profile updated',
+          message: 'profile updated',
         });
       } else {
         const err = new APIError(
@@ -243,9 +258,9 @@ const sendEmailForForgetPassword = async (req, res, next) => {
         email: req.body.email,
       }).select('-password');
       if (!user)
-        return sendJSONresponse(res, 400, {
-          success: false,
+        return sendErrorResponse(res, 404, '', {
           message: 'no user found',
+          fieldName: 'email',
         });
       user.resetPasswordToken = token;
       user.resetPasswordTokenExpiration = Date.now() + 3600000;
@@ -289,9 +304,10 @@ const getAccessTokenForForgetPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   try {
     const { password, userID } = req.body;
-    const user = await Account.findOne({ _id: userID }).select(
-      '-password',
-    );
+    const user = await Account.findById({
+      _id: userID,
+    }).select('-password');
+    console.log(user);
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiration = undefined;
     user.accountVerified = true;
@@ -304,6 +320,7 @@ const resetPassword = async (req, res, next) => {
       user: dbSavedUser,
     });
   } catch (err) {
+    console.log(err);
     logger.error(`password does not change`);
     next(err);
   }
@@ -490,7 +507,7 @@ module.exports = {
   accountLoad,
   accountUpdate,
   searchAccount,
-  // tokenRefresh,
+  tokenRefresh,
   // tokenRevoke,
   sendEmailForForgetPassword,
   getAccessTokenForForgetPassword,

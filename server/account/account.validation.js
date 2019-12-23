@@ -29,7 +29,7 @@ module.exports = {
         .error(error => {
           return {
             success: false,
-            message: 'Email id is not valid format',
+            message: 'mail id is not valid format',
           };
         }),
       password: Joi.string()
@@ -52,12 +52,11 @@ module.exports = {
         .required()
         .error(error => {
           return {
-            message: 'ContactNo is not a valid format',
+            message: 'contactNo is not a valid format',
           };
         }),
     }),
   }),
-
   login: Joi.object().keys({
     body: Joi.object().keys({
       email: Joi.string()
@@ -78,7 +77,6 @@ module.exports = {
       password: Joi.string().required(),
     }),
   }),
-
   update: Joi.object().keys({
     body: Joi.object().keys({
       firstName: Joi.string()
@@ -87,7 +85,7 @@ module.exports = {
       lastName: Joi.string()
         .min(3)
         .max(30),
-      contactNo: Joi.string().regex(/\+?(88)?0?1[356789][0-9]{8}/),
+      contactNo: Joi.string().regex(/^(\+?(880)[0-9]{10})$/),
       birthday: Joi.date(),
       bloodGroup: Joi.string(),
       location: Joi.string()
@@ -101,7 +99,31 @@ module.exports = {
         )
         .email()
         .min(3)
-        .max(62),
+        .max(62)
+        .lowercase()
+        .error(error => {
+          return {
+            success: false,
+            message: 'mail id is not valid format',
+          };
+        }),
+    }),
+  }),
+  resetPassword: Joi.object().keys({
+    body: Joi.object().keys({
+      password: Joi.string()
+        .regex(
+          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
+        )
+        .required()
+        .error(error => {
+          return {
+            success: false,
+            message:
+              'Password should contain Uppercase, Lowercase, Special character, Number',
+          };
+        }),
+      userID: Joi.string(),
     }),
   }),
   search: Joi.string().min(2),

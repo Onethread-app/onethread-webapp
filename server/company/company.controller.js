@@ -52,10 +52,10 @@ const createCompany = async (req, res, next) => {
         message: 'Name already exist',
         fieldName: 'name',
       });
-      return res.status(409).json({
-        status: false,
-        message: `Duplicate company name`,
-      });
+      // return res.status(409).json({
+      //   status: false,
+      //   message: `Duplicate company name`,
+      // });
     }
 
     req.body.account = req.user._id;
@@ -93,9 +93,9 @@ const createCompany = async (req, res, next) => {
     });
     await newMember.save();
 
-    // add company ref in user
-    req.user.companies.push(newCompany._id);
-    await req.user.save();
+    // // add company ref in user
+    // req.user.companies.push(newCompany._id);
+    // await req.user.save();
 
     return res.status(201).json({
       status: true,

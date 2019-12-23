@@ -2,7 +2,9 @@ const express = require('express');
 const multer = require('multer');
 const router = express.Router();
 const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', { session: false });
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
 
 // Multer ships with storage engines DiskStorage and MemoryStorage
 // And Multer adds a body object and a file or files object to the request object. The body object contains the values of the text fields of the form, the file or files object contains the files uploaded via the form.
@@ -14,7 +16,7 @@ const fileCtrl = require('./file.controller');
 router.post(
   '/upload',
   upload.single('file'),
-  requireAuth,
+  authorization,
   fileCtrl.profilePicture,
 );
 
@@ -22,13 +24,13 @@ router.get('/show-file', fileCtrl.displayProPic);
 router.post(
   '/company-logo',
   upload.single('file'),
-  requireAuth,
+  authorization,
   fileCtrl.companyLogo,
 );
 router.post(
   '/file-upload',
   upload.single('file'),
-  requireAuth,
+  authorization,
   fileCtrl.fileInRooms,
 );
 module.exports = router;

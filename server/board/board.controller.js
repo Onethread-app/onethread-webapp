@@ -58,7 +58,7 @@ const create = async (req, res, next) => {
       description: req.body.description,
       account: req.user._id,
       company: req.body.companyId,
-      members: [req.user.id],
+      members: [req.user._id],
     });
     board
       .save()
@@ -146,7 +146,6 @@ const suggestMember = async (req, res, next) => {
       });
     });
     members = members.map(m => m.account);
-    console.log(members);
     return res.status(200).json({
       members,
     });
