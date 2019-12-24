@@ -11,10 +11,6 @@ const {
 } = require('../services/email.services');
 const { chatkit } = require('../services/pusher.services');
 const {
-  addRefreshTokenToList,
-  addAccessTokenToSet,
-  addAccessTokenToHashList,
-  addAccessTokenToBlackList,
   updateRefreshTokenfromList,
   removeRefreshTokenfromList,
 } = require('../services/redis.services');
@@ -307,7 +303,6 @@ const resetPassword = async (req, res, next) => {
     const user = await Account.findById({
       _id: userID,
     }).select('-password');
-    console.log(user);
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiration = undefined;
     user.accountVerified = true;

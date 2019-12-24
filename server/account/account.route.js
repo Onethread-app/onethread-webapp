@@ -60,7 +60,7 @@ router
   .route('/change-password')
   .put(
     authorization,
-    schemaValidator(paramValidation.resetPassword),
+    schemaValidator(paramValidation.changePassword),
     accountCtrl.changePassword,
   );
 // for admin
