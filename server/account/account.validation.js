@@ -6,7 +6,7 @@ module.exports = {
       firstName: Joi.string()
         .lowercase()
         .required()
-        .min(3)
+        .min(2)
         .max(30)
         .error(error => {
           return { success: false, message: `firstName Required` };
@@ -14,7 +14,7 @@ module.exports = {
       lastName: Joi.string()
         .required()
         .lowercase()
-        .min(3)
+        .min(2)
         .max(30)
         .error(error => {
           return { success: false, message: `lastName Required` };
@@ -80,22 +80,12 @@ module.exports = {
   }),
   update: Joi.object().keys({
     body: Joi.object().keys({
-      firstName: Joi.string()
-        .min(3)
-        .max(30),
-      lastName: Joi.string()
-        .min(3)
-        .max(30),
-      contactNo: Joi.string().regex(/^(\+?(880)[0-9]{10})$/),
-      birthDate: Joi.date()
-        .iso()
-        .error(error => {
-          return { message: 'please, send the date into iso format' };
-        }),
+      contactNo: Joi.string()
+        .regex(/^(\+?(880)[0-9]{10})$/)
+        .required(),
+      birthDate: Joi.date(),
       bloodGroup: Joi.string(),
-      location: Joi.string()
-        .min(3)
-        .max(100),
+      location: Joi.string().allow(''),
       about: Joi.string().max(200),
       gender: Joi.string().valid(['male', 'female', 'others']),
       secondaryEmail: Joi.string()

@@ -307,7 +307,6 @@ const resetPassword = async (req, res, next) => {
     const user = await Account.findById({
       _id: userID,
     }).select('-password');
-    console.log(user);
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiration = undefined;
     user.accountVerified = true;
