@@ -11,10 +11,6 @@ const {
 } = require('../services/email.services');
 const { chatkit } = require('../services/pusher.services');
 const {
-  addRefreshTokenToList,
-  addAccessTokenToSet,
-  addAccessTokenToHashList,
-  addAccessTokenToBlackList,
   updateRefreshTokenfromList,
   removeRefreshTokenfromList,
 } = require('../services/redis.services');
