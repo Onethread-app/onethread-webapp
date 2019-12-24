@@ -20,7 +20,7 @@ import { Loading } from "components/Loading";
 import { permit } from "stores/UtilsActions";
 import { AddDesignationForm } from "layouts/company/team/AddDesignationForm";
 import { EditDesignationForm } from "layouts/company/team/EditDesignationForm";
-import { isEqual } from 'lodash';
+import { isEqual, upperFirst } from 'lodash';
 import { User } from 'stores/user/Reducer';
 
 const divisions = [
@@ -115,7 +115,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								props.company.members.length > 0 ? (
 										props.company.members.map(member => (
 											<tr className="hide-child">
-												<td><small className="mr2">{member.account.name}</small> {permit(member.role) && <Icon icon="star" />}</td>
+							<td><small className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</small> {permit(member.role) && <Icon icon="star" />}</td>
 												<td>
 													{member.designations.length
 														? member.designations[0].division
