@@ -122,4 +122,33 @@ module.exports = {
     }),
   }),
   search: Joi.string().min(2),
+
+  changePassword: Joi.object().keys({
+    body: Joi.object().keys({
+      newPassword: Joi.string()
+        .regex(
+          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
+        )
+        .required()
+        .error(error => {
+          return {
+            success: false,
+            message:
+              'Password should contain Uppercase, Lowercase, Special character, Number',
+          };
+        }),
+      oldPassword: Joi.string()
+        .regex(
+          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
+        )
+        .required()
+        .error(error => {
+          return {
+            success: false,
+            message:
+              'Password should contain Uppercase, Lowercase, Special character, Number',
+          };
+        }),
+    }),
+  }),
 };
