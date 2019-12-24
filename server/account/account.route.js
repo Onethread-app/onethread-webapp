@@ -58,11 +58,7 @@ router
   );
 router
   .route('/change-password')
-  .put(
-    authorization,
-    schemaValidator(paramValidation.resetPassword),
-    accountCtrl.changePassword,
-  );
+  .put(authorization, accountCtrl.changePassword);
 // for admin
 // router
 //   .route('/admin')

@@ -13,6 +13,7 @@ module.exports = {
         }),
       lastName: Joi.string()
         .required()
+        .lowercase()
         .min(3)
         .max(30)
         .error(error => {
@@ -86,7 +87,11 @@ module.exports = {
         .min(3)
         .max(30),
       contactNo: Joi.string().regex(/^(\+?(880)[0-9]{10})$/),
-      birthday: Joi.date(),
+      birthDate: Joi.date()
+        .iso()
+        .error(error => {
+          return { message: 'please, send the date into iso format' };
+        }),
       bloodGroup: Joi.string(),
       location: Joi.string()
         .min(3)

@@ -1,7 +1,10 @@
 const express = require('express');
 const passport = require('passport');
 
-const requireAuth = passport.authenticate('jwt', { session: false });
+// const authorization = passport.authenticate('jwt', { session: false });auth
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
 const { permit, authSelf } = require('./../helpers/permission');
 const educationCtrl = require('./education.controller');
 
@@ -9,18 +12,18 @@ const router = express.Router();
 
 router
   .route('/add-education')
-  .post(requireAuth, educationCtrl.addEducation);
+  .post(authorization, educationCtrl.addEducation);
 
 router
   .route('/update-education')
-  .put(requireAuth, educationCtrl.updateEducation);
+  .put(authorization, educationCtrl.updateEducation);
 // router
 //   .route('/:jobexperienceid')
-//   .get(requireAuth, jobCtrl.getJobExperience);
+//   .get(authorization, jobCtrl.getJobExperience);
 // router
 //   .route('/job-experience-update')
-//   .put(requireAuth, jobCtrl.updateJobExperience);
+//   .put(authorization, jobCtrl.updateJobExperience);
 
-// router.route('/').get(requireAuth, jobCtrl.getAllJobExperience);
+// router.route('/').get(authorization, jobCtrl.getAllJobExperience);
 // router.param('jobexperienceid', jobCtrl.jobExperienceLoad);
 module.exports = router;

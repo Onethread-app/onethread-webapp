@@ -214,6 +214,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
+  console.log('mithu ki pathai', req.body);
   await Account.findOneAndUpdate({ email: req.user.email }, req.body)
     .select('-password')
     .exec()
