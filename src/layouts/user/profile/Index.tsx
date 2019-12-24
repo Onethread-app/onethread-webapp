@@ -5,7 +5,7 @@ import { BasicInfoForm } from 'layouts/user/profile/BasicInfoDetailsForm';
 import 'react-vertical-timeline-component/style.min.css';
 import { User } from 'stores/user/Reducer';
 import { JobFormComponent } from 'layouts/user/profile/JobDetailsEditor';
-import { isNumber, isEmpty } from 'lodash';
+import { isNumber, isEmpty, upperFirst } from 'lodash';
 import { EducationFormComponent } from 'layouts/user/profile/EducationDetailsEditor';
 import { editUserInfoAction, profileImageUploadAction } from 'stores/user/Actions';
 import moment from 'moment';
@@ -482,7 +482,7 @@ export const LandingPageComponent = (props: LandingPageProps &
                   <Icon className="white" icon="camera" iconSize={20} ></Icon>
                 </div>
               </div>
-              <h1 className="f6 lh-copy tigrow-lightGray-1 ws-break">{props.user.firstName} {props.user.lastName}</h1>
+              <h1 className="f6 lh-copy tigrow-lightGray-1 ws-break">{upperFirst(props.user.firstName)} {upperFirst(props.user.lastName)}</h1>
             </div>
             <AboutView user={props.user} />
             <SkillView setShowDialog={setShowDialog} />
