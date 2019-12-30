@@ -275,6 +275,9 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
   const [values, setValues] = useState({
     about: props.user.about
   });
+
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (name: string) => (event: any) => {
     const value = event;
     setValues({ ...values, [name]: value });
@@ -311,14 +314,16 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
           type="submit"
           className="w4 grow h2 pointer"
           style={{ background: "#0fa3a3", outline: "none", color: "white" }}
-          onClick={(e: any) => {
+          disabled={loading}
+          text={loading ? <Spinner size={15} /> : 'Save'}
+          onClick={async (e: any) => {
             e.preventDefault();
-            props.editInfoAction(values);
+            setLoading(true);
+            await props.editInfoAction(values);
+            setLoading(false);
             props.setShowDialog(false);
           }}
-        >
-          Save
-				</Button>
+        />
       </div>
     </form>
   );

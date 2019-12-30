@@ -3,7 +3,7 @@ import { AxiosRequestConfig } from "axios";
 import { History } from "history";
 import { isEqual } from "lodash";
 import { tokenConfig, awsImageOption } from "../UtilsActions";
-import { BASIC_INFO, USER_FETCH_LOADING, FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE } from 'stores/user/Types';
+import { BASIC_INFO, FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE } from 'stores/user/Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -61,8 +61,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			dispatch({ type: USER_FETCH_LOADING });
-			const response = await tigrowApi.get(`/accounts`, headers);
+			const response = await tigrowApi.get(`accounts`, headers);
 			let updatedUserInfo = response.data.user;
 			if (updatedUserInfo.profileImage) {
 				const awsOptions = awsImageOption(updatedUserInfo.profileImage);
@@ -84,14 +83,11 @@ export const fetchUserAction = () => async (dispatch: any) => {
 	}
 };
 
-export const logoutAction = (routeHistory: History) => async (
-	dispatch: any,
-	getState: any
-) => {
+export const logoutAction = (routeHistory: History) => async (dispatch: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.get(`/accounts/logout`, headers);
+			const response = await tigrowApi.get(`accounts/logout`, headers);
 			if (isEqual(response.status, 200)) {
 				await localStorage.removeItem("token");
 				await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });

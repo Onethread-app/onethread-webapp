@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { isEmpty, isNumber } from 'lodash';
 import { connect } from 'react-redux';
 import { editUserInfoAction } from 'stores/user/Actions';
-import { Button, RadioGroup, Radio, HTMLSelect, Icon } from '@blueprintjs/core';
+import { Button, RadioGroup, Radio, HTMLSelect, Icon, Spinner } from '@blueprintjs/core';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { User } from 'stores/user/Reducer';
 import { DateInput } from '@blueprintjs/datetime';
@@ -40,6 +40,8 @@ const BasicInfoFormComponent = (props: {
     birthDate: props.userInfo.birthDate,
     bloodGroup: props.userInfo.bloodGroup
   });
+
+  const [loading, setLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     secondaryEmail: "",
@@ -306,16 +308,18 @@ const BasicInfoFormComponent = (props: {
           type="submit"
           className="w4 grow h2 pointer"
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          onClick={(e: any) => {
+          disabled={loading}
+          text={loading ? <Spinner size={15} /> : 'Save'}
+          onClick={async (e: any) => {
             e.preventDefault();
             if (!emptyValueCheck() && emptyErrorCheck()) {
-              props.editInfoAction(values);
+              setLoading(true);
+              await props.editInfoAction(values);
+              setLoading(false);
               props.setShowDialog(false);
             }
           }}
-        >
-          Save
-        </Button>
+        />
       </div>
     </form>
   )

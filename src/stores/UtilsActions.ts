@@ -6,14 +6,14 @@ export interface Entity {
 }
 
 export const tokenConfig = () => {
-  const token = typeof window !== undefined && localStorage.getItem('token') ? 
-  JSON.parse(localStorage.getItem('token')!) : null
+  const token = typeof window !== undefined && localStorage.getItem('token') ?
+    JSON.parse(localStorage.getItem('token')!) : null
   return {
     headers: {
       "Content-type": "application/json",
       "Authorization": token
     }
-  }; 
+  };
 };
 
 export const isAuthenticate = () => {
