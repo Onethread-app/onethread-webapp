@@ -80,9 +80,7 @@ module.exports = {
   }),
   update: Joi.object().keys({
     body: Joi.object().keys({
-      contactNo: Joi.string()
-        .regex(/^(\+?(880)[0-9]{10})$/)
-        .required(),
+      contactNo: Joi.string().regex(/^(\+?(880)[0-9]{10})$/),
       birthDate: Joi.date(),
       bloodGroup: Joi.string(),
       location: Joi.string().allow(''),
@@ -96,6 +94,7 @@ module.exports = {
         .min(3)
         .max(62)
         .lowercase()
+        .allow('')
         .error(error => {
           return {
             success: false,
