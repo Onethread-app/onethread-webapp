@@ -45,9 +45,9 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 	useEffect(scrollToBottom, [messages]);
 
 	// typing indicator
-	useEffect(() => {
-		(messagesEndRef as any).current.scrollTop = (messagesEndRef as any).current.scrollHeight;
-	}, [typingUsers]);
+	// useEffect(() => {
+	// 	(messagesEndRef as any).current.scrollTop = (messagesEndRef as any).current.scrollHeight;
+	// }, [typingUsers]);
 
 	return (
 		<div
@@ -74,7 +74,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 					})
 					: ""
 				: ""}
-			{typingUsers.length
+			{/* {typingUsers.length
 				? typingUsers.map(
 					(user: { name: string; roomId: string }, i: number) => {
 						if (
@@ -90,7 +90,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 						return null;
 					}
 				)
-				: ""}
+				: ""} */}
 		</div>
 	);
 });

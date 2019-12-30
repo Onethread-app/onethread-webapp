@@ -17,7 +17,8 @@ interface SendMessageFormProps {
 	sendRoomMessage: (data: { text: string, room: string, type?: string }) => void;
 	roomId: string;
 	profileImage: any;
-	emojiPicker: boolean
+	emojiPicker: boolean;
+	typingUsers: { name: string, roomId: string; }[]
 }
 
 const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
@@ -121,6 +122,23 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 
 	return (
 		<>
+			{props.typingUsers.length
+				? props.typingUsers.map(
+					(user: { name: string; roomId: string }, i: number) => {
+						if (
+							isEmpty(props.roomId) === false &&
+							isEqual(props.roomId, user.roomId) === true
+						) {
+							return (
+								<h6 key={i} className="mv1 pl1">
+									{user.name} is typing ...
+									</h6>
+							);
+						}
+						return null;
+					}
+				)
+				: ""}
 			{props.emojiPicker ? (
 				<Picker
 					set="twitter"
@@ -206,8 +224,9 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 const mapStateToProps = (state: any) => {
 	return {
 		profileImage: state.userReducer.user.profileImage,
-		roomId: state.roomReducer.activeRoom.id,
-		emojiPicker: state.roomReducer.emojiPicker
+		roomId: state.roomReducer.roomId,
+		emojiPicker: state.roomReducer.emojiPicker,
+		typingUsers: state.roomReducer.typing.users
 	}
 }
 export const SendMessageForm = connect(mapStateToProps, { sendRoomMessage })(SendMessageFormComponent)
