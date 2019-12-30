@@ -27,7 +27,10 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
   ) => {
     setLoading(true);
     try {
-      await tigrowApi.put("accounts/reset-password", resetPasswordInfo);
+      await tigrowApi.put("accounts/reset-password", {
+        password: values.password,
+        userID: values.userID
+      });
       setLoading(false);
       routeHistory.push("/signin");
     } catch (error) {

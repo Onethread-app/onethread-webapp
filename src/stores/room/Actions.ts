@@ -25,7 +25,7 @@ export const createRoomAction = (roomData: any) => async (
 		if ((headers as any).headers.Authorization) {
 			roomData.company = getState().companyReducer.currentCompany._id;
 			dispatch({ type: LOADING_ROOM });
-			const response = await tigrowApi.post(`/rooms`, roomData, headers);
+			const response = await tigrowApi.post(`rooms`, roomData, headers);
 			await dispatch({
 				type: CREATE_ROOM_FROM_SERVER,
 				payload: response.data.room
@@ -54,7 +54,7 @@ export const getRoomsAction = () => async (dispatch: any, getState: any) => {
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: LOADING_ROOM });
 			const response = await tigrowApi.get(
-				`/rooms/${getState().companyReducer.currentCompany._id}`,
+				`rooms/${getState().companyReducer.currentCompany._id}`,
 				headers
 			);
 			dispatch({ type: GET_ROOMS_FROM_SERVER, payload: response.data.rooms });
@@ -80,7 +80,7 @@ export const getRoomMembers = (roomId: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: LOADING_ROOM });
-			const response = await tigrowApi.get(`/rooms/members/${roomId}`, headers);
+			const response = await tigrowApi.get(`rooms/members/${roomId}`, headers);
 			dispatch({
 				type: GET_ROOM_MEMBERS_FROM_SERVER,
 				payload: response.data.members
@@ -113,7 +113,7 @@ export const addRoomMembers = (members: any, selectedRoomMember: any) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: LOADING_ROOM });
-			await tigrowApi.post(`/rooms/addUser`, members, headers);
+			await tigrowApi.post(`rooms/addUser`, members, headers);
 			dispatch({ type: ADD_MEMBER_IN_ROOM, payload: selectedRoomMember });
 		} else {
 			console.log("error in adding members in a room");
@@ -138,7 +138,7 @@ export const sendRoomMessage = (data: { text: string, room: string, type?: strin
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.post(`/messages`, data, headers);
+			const response = await tigrowApi.post(`messages`, data, headers);
 			await dispatch({ type: SEND_MESSAGE });
 			return response.status;
 		} else {

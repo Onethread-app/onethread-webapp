@@ -1,4 +1,4 @@
-import { USER_FETCH_LOADING, USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE, ADD_SKILL, DELETE_SKILL, IMAGE_UPLOAD } from './Types';
+import { USER_FETCH_ERROR, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, USER_COMPANIES_UPDATE, ADD_SKILL, DELETE_SKILL, IMAGE_UPLOAD } from './Types';
 import { tokenConfig, awsImageOption } from 'stores/UtilsActions';
 import { isEqual } from "lodash";
 import tigrowApi from 'tigrowApi';
@@ -8,17 +8,16 @@ export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, get
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			dispatch({ type: USER_FETCH_LOADING });
 			let user = {};
 			if (basicInfo.contactNo) {
 				user = {
 					...basicInfo,
-					contactNo: `880${basicInfo.contactNo}`
+					contactNo: `+88${basicInfo.contactNo}`
 				};
 			} else {
 				user = basicInfo
 			}
-			await tigrowApi.put(`/accounts/update`, user, headers);
+			await tigrowApi.put(`accounts/update`, user, headers);
 			dispatch({ type: EDIT_BASIC_INFO, payload: user });
 		} else {
 			dispatch({ type: USER_FETCH_ERROR, payload: "error in user fetching" });
@@ -39,7 +38,7 @@ export const addSkillAction = (skillSet: string[]) => async (dispatch: any, getS
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			let req = { skillArea: skillSet }
-			const response = await tigrowApi.put(`/skills/update-skill`, req, headers);
+			const response = await tigrowApi.put(`skills/update-skill`, req, headers);
 			dispatch({ type: ADD_SKILL, payload: response.data.skillList });
 		} else {
 			console.log("error in user fetching");
@@ -105,7 +104,7 @@ export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any,
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.get(`/company/individual/${userId}`, headers);
+			const response = await tigrowApi.get(`company/individual/${userId}`, headers);
 			dispatch({ type: USER_COMPANIES_UPDATE, payload: response.data });
 		} else {
 			console.log("error in get company list by user")

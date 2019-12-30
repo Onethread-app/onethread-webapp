@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { isEmpty, isNumber } from 'lodash';
 import { connect } from 'react-redux';
 import { editUserInfoAction } from 'stores/user/Actions';
-import { NumericInput, Button, RadioGroup, Radio, HTMLSelect, Icon } from '@blueprintjs/core';
+import { Button, RadioGroup, Radio, HTMLSelect, Icon, Spinner } from '@blueprintjs/core';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { User } from 'stores/user/Reducer';
 import { DateInput } from '@blueprintjs/datetime';
 import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
 import { isEqual } from 'lodash';
+
+const phoneIcon = require("../../../resources/images/phone.png")
 
 interface BasicInfoProps {
   userInfo: User
@@ -38,6 +40,8 @@ const BasicInfoFormComponent = (props: {
     birthDate: props.userInfo.birthDate,
     bloodGroup: props.userInfo.bloodGroup
   });
+
+  const [loading, setLoading] = useState(false);
 
   const [errors, setErrors] = useState({
     secondaryEmail: "",
@@ -144,35 +148,50 @@ const BasicInfoFormComponent = (props: {
       <div className={`flex justify-content ${errors.contactNo ? "mb3" : "mb4"}`}>
         <div className=" w-20 ">
           <InputGroupField
-            id="contactNo"
-            value="+880"
-            leftIcon="phone"
-            className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'}`}
-            leftIconColor={`${errors.contactNo ? 'red' : "#0fa3a3"}`}
+            id="countryCode"
+            className="pb2 br0 bb b--lightBlue"
+            value="+88"
+            readOnly={true}
+            leftIcon={
+              <span className="bp3-icon">
+                <img
+                  src={phoneIcon}
+                  width="20px"
+                  height="20px"
+                  color="#0fa3a3"
+                />
+              </span>
+            }
             style={{
               boxShadow: 'none',
+              fontSize: '18px',
+              paddingLeft: '40px'
             }}
-            readOnly={true}
           />
         </div>
         <div className="ml3 flex-auto">
           <div className=" w-100">
-            <NumericInput
-              className={`br0 ${errors.contactNo ? 'bb b--red' : 'bb b--lightBlue'} w-100`}
+            <InputGroupField
+              id="contactNo"
+              className={`pb2 br0 bb ${errors.contactNo ? "b--red" : "b--lightBlue"}`}
+              value={values.contactNo}
+              onChange={handleChange("contactNo")}
               style={{
                 boxShadow: 'none',
               }}
-              fill={true}
-              placeholder="e.g. 1789442325"
-              value={values.contactNo}
-              onValueChange={handleChange("contactNo")}
-              buttonPosition="none"
-              onBlur={() => {
+              placeHolder="e.g. 01789442325"
+              keypress={e => {
+                if ((e.which < 48 || e.which > 57)) {
+                  e.preventDefault();
+                }
+              }}
+              error={isEmpty(errors.contactNo) === false ? errors.contactNo : undefined}
+              validationOnBlur={() => {
                 if (isEmpty(values.contactNo)) {
                   const contactNoError = { ...errors, contactNo: "Required" };
                   setErrors(contactNoError);
-                } else if (values.contactNo.length !== 10) {
-                  const contactNoError = { ...errors, contactNo: "Not more or less than 10 character" };
+                } else if (values.contactNo.length !== 11) {
+                  const contactNoError = { ...errors, contactNo: "Not more or less than 11 character" };
                   setErrors(contactNoError);
                 }
                 else {
@@ -289,16 +308,18 @@ const BasicInfoFormComponent = (props: {
           type="submit"
           className="w4 grow h2 pointer"
           style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
-          onClick={(e: any) => {
+          disabled={loading}
+          text={loading ? <Spinner size={15} /> : 'Save'}
+          onClick={async (e: any) => {
             e.preventDefault();
             if (!emptyValueCheck() && emptyErrorCheck()) {
-              props.editInfoAction(values);
+              setLoading(true);
+              await props.editInfoAction(values);
+              setLoading(false);
               props.setShowDialog(false);
             }
           }}
-        >
-          Save
-        </Button>
+        />
       </div>
     </form>
   )

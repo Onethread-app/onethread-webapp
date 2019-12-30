@@ -37,7 +37,7 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.get(`/company/${name}`, headers);
+			const response = await tigrowApi.get(`company/${name}`, headers);
 			let updatedCompanyDetails = response.data.company;
 			if (updatedCompanyDetails.logo) {
 				const awsOptions = awsImageOption(updatedCompanyDetails.logo)
@@ -72,7 +72,7 @@ export const createCompanyAction = (
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.post(`/company`, companyData, headers);
+			const response = await tigrowApi.post(`company`, companyData, headers);
 			dispatch({ type: CREATE_COMPANY, payload: response.data });
 			routeHistory.push(`/company/${response.data.company.name}`);
 			return response.data;
@@ -162,7 +162,7 @@ export const addDepartment = (name: string) => async (
 			dispatch({ type: ADD_DEPARTMENT_LOADING });
 			let company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.post(
-				`/company/${company}/departments`,
+				`company/${company}/departments`,
 				{ name },
 				headers
 			);
@@ -198,7 +198,7 @@ export const getAllDepartments = () => async (dispatch: any, getState: any) => {
 			dispatch({ type: COMPANY_DEPARTMENT_LOADING });
 			let company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.get(
-				`/company/${company}/departments`,
+				`company/${company}/departments`,
 				headers
 			);
 			dispatch({ type: GET_ALL_DEPARTMENT, payload: response.data });
@@ -338,7 +338,7 @@ export const addDesignation = (values: any, memberId: string) => async (
 			dispatch({ type: COMPANY_DESIGNATION_LOADING });
 			let company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.post(
-				`/company/${company}/designations/${memberId}`,
+				`company/${company}/designations/${memberId}`,
 				values,
 				headers
 			);
@@ -369,7 +369,7 @@ export const editDesignation = (values: any, memberId: string) => async (
 			dispatch({ type: COMPANY_DESIGNATION_LOADING });
 			let company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.put(
-				`/company/${company}/designations/${memberId}`,
+				`company/${company}/designations/${memberId}`,
 				values,
 				headers
 			);
