@@ -35,7 +35,7 @@ export const MessageItem = (props: MessageItemProps) => {
             {props.sender.name}
           </h6>
           <h2
-            className={`f6 fw3 ma0 mt1 tj ${currentUser ? "white" : " black-60"} break-word`}
+            className={`f6 fw3 ma0 mt1 tj ${currentUser ? "white" : "c-message-from"} break-word`}
             style={{ whiteSpace: "pre-wrap" }}
           >{props.text}
           </h2>

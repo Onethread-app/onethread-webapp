@@ -43,6 +43,14 @@ const InitialState: IAppState = {
 	roomError: "",
 };
 
+const sortRooms = (a: any, b: any) => {
+	let unreadCountA = a.unreadCount,
+		unreadCountB = b.unreadCount,
+		nameA = a.name.toLowerCase(),
+		nameB = b.name.toLowerCase();
+	return unreadCountA > unreadCountB ? -1 : unreadCountA < unreadCountB ? 1 : nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+}
+
 export const RoomReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
 		case LOADING_ROOM:
@@ -158,21 +166,13 @@ export const RoomReducer = (state = InitialState, action: any) => {
 							return room;
 						}
 					})
-					.sort((a: any, b: any) => {
-						a = a.unreadCount;
-						b = b.unreadCount;
-						return a > b ? -1 : a < b ? 1 : 0;
-					}),
+					.sort(sortRooms),
 				loading: false
 			};
 		case GET_ROOMS:
 			return {
 				...state,
-				rooms: action.payload.sort((a: any, b: any) => {
-					a = a.unreadCount;
-					b = b.unreadCount;
-					return a > b ? -1 : a < b ? 1 : 0;
-				}),
+				rooms: action.payload.sort(sortRooms),
 				loading: false
 			};
 		case CREATE_ROOM_FROM_SERVER:
