@@ -6,7 +6,7 @@ import { Loading } from './Loading';
 import { connect } from 'react-redux';
 import { User } from 'stores/user/Reducer';
 import { isEmpty, isEqual } from 'lodash';
-import { withRouter, RouteComponentProps, match } from 'react-router-dom';
+import { withRouter, RouteComponentProps, match, Link } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
@@ -73,32 +73,45 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   return (
     <div className="cf">
       <div className="fl w-100">
-        <NavbarTop />
-        <div className="fl w-100 bg-tigrowLightGray-1" style={{ marginTop: '50px' }}>
-          {loading ? <Loading />
+        {loading === true && isEmpty(props.user._id) === true ? <Loading />
+          : loading === false && isEmpty(props.user._id) === true ?
+            <p className="f3 tc fw5 pt4">
+              Your Session is expired. Please
+              <Link 
+                className="fw9 dt center tigrow-lightBlue pt4" 
+                to="/signin"
+                onClick={() => localStorage.removeItem('token')}
+              >
+                Sign in
+              </Link>
+            </p>
             :
-            <ChatkitProvider
-              instanceLocator={InstanceLocator}
-              tokenProvider={tokenProvider}
-              userId={props.user._id}
-            >
-              <div className="flex w-100">
-                <div className="db">
-                  <Sidebar
-                    user={props.user}
-                    company={props.company}
-                    type={(props.match.params as any).cname ? 'company' : 'default'}
-                  />
-                </div>
-                <div className="fl w-100 pl5 pl11-l pl6-m bg-tigrow">
-                  <div className="cf" style={{ height: 'calc(100vh - 50px)' }}>
-                    <props.Component />
+            <>
+              <NavbarTop />
+              <div className="fl w-100 bg-tigrowLightGray-1" style={{ marginTop: '50px' }}>
+                <ChatkitProvider
+                  instanceLocator={InstanceLocator}
+                  tokenProvider={tokenProvider}
+                  userId={props.user._id}
+                >
+                  <div className="flex w-100">
+                    <div className="db">
+                      <Sidebar
+                        user={props.user}
+                        company={props.company}
+                        type={(props.match.params as any).cname ? 'company' : 'default'}
+                      />
+                    </div>
+                    <div className="fl w-100 pl5 pl11-l pl6-m bg-tigrow">
+                      <div className="cf" style={{ height: 'calc(100vh - 50px)' }}>
+                        <props.Component />
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </ChatkitProvider>
               </div>
-            </ChatkitProvider>
-          }
-        </div>
+            </>
+        }
       </div>
     </div>
   )
