@@ -3,12 +3,13 @@ import { Button, FileInput, Dialog } from "@blueprintjs/core";
 import { connect, useDispatch } from "react-redux";
 import { trim, isEqual, isEmpty } from "lodash";
 import { sendRoomMessage } from 'stores/room/Actions';
-import { Picker } from 'emoji-mart';
 import 'emoji-mart/css/emoji-mart.css';
 import { TOGGLE_EMOJI_PICKER } from 'stores/room/Types';
 import ReactDOM from 'react-dom';
-const { withChatkit } = require("@pusher/chatkit-client-react");
+import { Picker, emojiIndex, BaseEmoji } from 'emoji-mart';
+import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
 
+const { withChatkit } = require("@pusher/chatkit-client-react");
 const UserIcon = require('./../../../../../resources/images/user.png');
 const SmileIcon = require('./../../../../../resources/images/smile-24px.svg');
 
@@ -152,29 +153,57 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 			) : null
 			}
 			<div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
-				<div className="flex items-center mh1" style={{ width: "42px" }}>
+				{/* <div className="flex items-center mh1" style={{ width: "42px" }}>
 					<img
 						src={props.profileImage ? props.profileImage.imageSource : UserIcon}
 						className="db br-100"
 						style={{ width: "40px", height: "40px", objectFit: "cover" }}
 						alt="user"
 					/>
-				</div>
-				<textarea
+				</div> */}
+				{/* <textarea
 					defaultValue={""}
 					ref={inputMessageRef}
-					className="w-100 mv2 mr1"
+					className="w-100 mv2 mh1"
 					style={{ resize: "none" }}
 					value={isEqual(text.length, 1) && isEqual(text, "\n") ? resetMessage(text) : text}
 					onChange={onChange}
 					onKeyPress={handleKeyPress}
 					placeholder="Type your message and hit ENTER to send"
-				></textarea>
+				></textarea> */}
+				{/* TODO onKeyPress has not found yet */}
+				<ReactTextareaAutocomplete
+					className="message-input my-textarea"
+					value={isEqual(text.length, 1) && isEqual(text, "\n") ? resetMessage(text) : text}
+					loadingComponent={() => <span>Loading</span>}
+					onChange={onChange}
+					trigger={{
+						':': {
+							dataProvider: (token: any): any => {
+								if (token) {
+									let a = (emojiIndex.search(token) as any).map((o: BaseEmoji) => ({
+										colons: o.colons,
+										native: o.native,
+									}));
+									return a;
+								}
+								return null;
+							},
+							component: (obj: any) => {
+								const { colons, native } = obj.entity;
+								return (
+									<div>{`${colons.replace(/:/, '')} ${native}`}</div>
+								)
+							},
+							output: (item: any) => `${item.native}`,
+						},
+					}}
+				/>
 				<Button
 					className="bp3-minimal outline-0 toggle-emoji"
 					onClick={toggleEmojiPicker}
 				>
-					<span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
+					<span className="bp3-icon" style={{ paddingRight: "5px" }}>
 						<img
 							src={SmileIcon}
 							width="30px"
