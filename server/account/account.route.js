@@ -48,10 +48,7 @@ router
   .route('/forget-password')
   .post(accountCtrl.sendEmailForForgetPassword);
 router
-  .route('/forget-password/:token')
-  .get(accountCtrl.getAccessTokenForForgetPassword);
-router
-  .route('/reset-password')
+  .route('/reset-password/')
   .put(
     schemaValidator(paramValidation.resetPassword),
     accountCtrl.resetPassword,

@@ -117,7 +117,7 @@ module.exports = {
               'Password should contain Uppercase, Lowercase, Special character, Number',
           };
         }),
-      userID: Joi.string(),
+      token: Joi.string(),
     }),
   }),
   search: Joi.string().min(2),

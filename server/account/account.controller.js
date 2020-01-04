@@ -260,27 +260,24 @@ const sendEmailForForgetPassword = async (req, res, next) => {
         });
       user.resetPasswordToken = token;
       user.resetPasswordTokenExpiration = Date.now() + 3600000;
-      const dbSavedUser = await user.save();
-      const emailResponse = await sendEmailForResetPassword(
+      await user.save();
+      const emailResponse = sendEmailForResetPassword(
         user.name,
         user.email,
         token,
         next,
       );
       logger.info(`send reset password mail to user successfully`);
-      return sendJSONresponse(res, 200, {
-        dbSavedUser,
-        emailResponse,
-      });
+      return sendJSONresponse(res, 200, emailResponse);
     });
   } catch (error) {
     next(error);
   }
 };
 
-const getAccessTokenForForgetPassword = async (req, res, next) => {
+const resetPassword = async (req, res, next) => {
   try {
-    const { token } = req.params;
+    const { password, token } = req.body;
     const user = await Account.findOne({
       resetPasswordToken: token,
       resetPasswordTokenExpiration: { $gt: Date.now() },
@@ -289,33 +286,15 @@ const getAccessTokenForForgetPassword = async (req, res, next) => {
       return sendJSONresponse(res, 400, {
         message: 'token time expired',
       });
-    return sendJSONresponse(res, 200, {
-      message: 'Now I get the permission to change the password',
-      user,
-    });
-  } catch (err) {
-    next(err);
-  }
-};
-const resetPassword = async (req, res, next) => {
-  try {
-    const { password, userID } = req.body;
-    const user = await Account.findById({
-      _id: userID,
-    }).select('-password');
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiration = undefined;
-    user.accountVerified = true;
     user.password = password;
-    const dbSavedUser = await user.save();
-    delete dbSavedUser.password;
-    logger.info(`password change`);
+    await user.save();
+    logger.info(`password successfully change`);
     return sendJSONresponse(res, 200, {
       message: 'Password Changed',
-      user: dbSavedUser,
     });
   } catch (err) {
-    console.log(err);
     logger.error(`password does not change`);
     next(err);
   }
@@ -505,7 +484,7 @@ module.exports = {
   tokenRefresh,
   // tokenRevoke,
   sendEmailForForgetPassword,
-  getAccessTokenForForgetPassword,
+  // getAccessTokenForForgetPassword,
   resetPassword,
   changePassword,
 };
