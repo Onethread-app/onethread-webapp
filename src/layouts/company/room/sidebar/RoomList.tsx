@@ -139,19 +139,20 @@ export const RoomListComponent = withChatkit(
 			}
 		}, [props.chatkit]);
 
-		useEffect(() => {
-			if (!props.chatkit.isLoading) {
-				for (const roomId in props.chatkit.currentUser.roomSubscriptions) {
-					if (
-						props.chatkit.currentUser.roomSubscriptions.hasOwnProperty(roomId)
-					) {
-						const room = props.chatkit.currentUser.roomSubscriptions[roomId];
-						room.cancel();
-						room.connected = false;
-					}
-				}
-			}
-		}, [companyId]);
+		// TODO [TEST-1] I have to test typing indicator by removing this block
+		// useEffect(() => {
+		// 	if (!props.chatkit.isLoading) {
+		// 		for (const roomId in props.chatkit.currentUser.roomSubscriptions) {
+		// 			if (
+		// 				props.chatkit.currentUser.roomSubscriptions.hasOwnProperty(roomId)
+		// 			) {
+		// 				const room = props.chatkit.currentUser.roomSubscriptions[roomId];
+		// 				room.cancel();
+		// 				room.connected = false;
+		// 			}
+		// 		}
+		// 	}
+		// }, [companyId]);
 
 		return (
 			<>
@@ -159,7 +160,7 @@ export const RoomListComponent = withChatkit(
 					className="mw6"
 					id="roomList"
 				>
-					<ul className="list pa0 ma0">
+					<ul className="list pa0">
 						{props.chatkit.isLoading ? (
 							<Loading />
 						) : rooms.length && (rooms[0] as any).id !== undefined ? (
