@@ -6,11 +6,10 @@ import { sendRoomMessage } from 'stores/room/Actions';
 import 'emoji-mart/css/emoji-mart.css';
 import { TOGGLE_EMOJI_PICKER } from 'stores/room/Types';
 import ReactDOM from 'react-dom';
-import { Picker, emojiIndex, BaseEmoji } from 'emoji-mart';
-import ReactTextareaAutocomplete from '@webscopeio/react-textarea-autocomplete';
+import { Picker } from 'emoji-mart';
 
 const { withChatkit } = require("@pusher/chatkit-client-react");
-const UserIcon = require('./../../../../../resources/images/user.png');
+// const UserIcon = require('./../../../../../resources/images/user.png');
 const SmileIcon = require('./../../../../../resources/images/smile-24px.svg');
 
 interface SendMessageFormProps {
@@ -152,7 +151,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 				/>
 			) : null
 			}
-			<div className="sendMessage shadow-3 flex w-100 bg-tigrow justify-around">
+			<div className="sendMessage shadow-3 flex w-100 justify-around">
 				{/* <div className="flex items-center mh1" style={{ width: "42px" }}>
 					<img
 						src={props.profileImage ? props.profileImage.imageSource : UserIcon}
@@ -161,7 +160,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 						alt="user"
 					/>
 				</div> */}
-				{/* <textarea
+				<textarea
 					defaultValue={""}
 					ref={inputMessageRef}
 					className="w-100 mv2 mh1"
@@ -170,9 +169,9 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					onChange={onChange}
 					onKeyPress={handleKeyPress}
 					placeholder="Type your message and hit ENTER to send"
-				></textarea> */}
+				></textarea>
 				{/* TODO onKeyPress has not found yet */}
-				<ReactTextareaAutocomplete
+				{/* <ReactTextareaAutocomplete
 					className="message-input my-textarea"
 					value={isEqual(text.length, 1) && isEqual(text, "\n") ? resetMessage(text) : text}
 					loadingComponent={() => <span>Loading</span>}
@@ -198,7 +197,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 							output: (item: any) => `${item.native}`,
 						},
 					}}
-				/>
+				/> */}
 				<Button
 					className="bp3-minimal outline-0 toggle-emoji"
 					onClick={toggleEmojiPicker}

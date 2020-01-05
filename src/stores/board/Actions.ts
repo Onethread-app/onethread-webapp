@@ -203,7 +203,7 @@ export const addTeamMembersIntoBoard = (members: (string | undefined)[], boardId
       // dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: "Network error" });
       console.log('Network error')
     } else {
-    console.log(error.response);
+      console.log(error.response);
     }
   }
 };
