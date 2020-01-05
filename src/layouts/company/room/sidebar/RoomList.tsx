@@ -156,11 +156,10 @@ export const RoomListComponent = withChatkit(
 		return (
 			<>
 				<main
-					className="mw6 center overflow-y-auto"
+					className="mw6"
 					id="roomList"
-					style={{ height: "calc(100vh - 105px)" }}
 				>
-					<ul className="list pl0">
+					<ul className="list pa0 ma0">
 						{props.chatkit.isLoading ? (
 							<Loading />
 						) : rooms.length && (rooms[0] as any).id !== undefined ? (

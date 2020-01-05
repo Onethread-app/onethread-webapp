@@ -10,7 +10,10 @@ export const RoomPage = () => {
 	return (
 		<div className="flex h-100">
 			<div
-				className={`t-25-a bg-white br b--tigrowLightGray-1 ${isOpen ? 'w5' : 'w1'}`}
+				className={`overflow-hidden t-25-a bg-white br b--tigrowLightGray-1 ${isOpen ? 'w5' : 'w1'}`}
+				style={{
+					borderBottomLeftRadius: "0.5rem"
+				}}
 			// TODO: mouse active
 			// onMouseEnter={() => !isOpen && setIsOpen(true)}
 			// onMouseLeave={() => isOpen && setIsOpen(false)}

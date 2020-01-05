@@ -23,7 +23,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 
 	return (
 		<>
-			<div className={`t-25-a ${props.isOpen ? "db" : "dn"}`}>
+			<div className={`flex flex-column h-100 t-25-a ${props.isOpen ? "db" : "dn"}`}>
 				<div className="flex justify-between items-center ph3">
 					<h3 className="tigrow-darkGray">Rooms</h3>
 					{props.companyRole && permit(props.companyRole) ? (
@@ -37,7 +37,9 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 							undefined
 						)}
 				</div>
-				<RoomList />
+				<div className="flex-grow-1 overflow-y-auto">
+					<RoomList />
+				</div>
 			</div>
 			{showDialog && (
 				<Dialog
