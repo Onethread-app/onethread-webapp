@@ -77,11 +77,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   return (
     <div
       className="cf vh-100 pa1"
-      style={{
-        background: "#060517",
-        // height: "100vh",
-        // padding: "4px"
-      }}
+      style={{ background: "#060517" }}
       onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
     >
       <div className="flex overflow-hidden">
