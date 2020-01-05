@@ -161,7 +161,6 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					/>
 				</div> */}
 				<textarea
-					defaultValue={""}
 					ref={inputMessageRef}
 					className="w-100 mv2 mh1"
 					style={{ resize: "none" }}
