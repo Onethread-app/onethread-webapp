@@ -236,7 +236,7 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
                                   fontSize: '18px',
                                   paddingLeft: '40px'
                                 }}
-                                placeHolder="Confirm Password"
+                                placeHolder="Password"
                                 error={checkError(meta) && (meta.error || meta.submitError)}
                               />
                             </div>
