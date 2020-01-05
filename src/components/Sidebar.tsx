@@ -5,17 +5,44 @@ import { User } from "stores/user/Reducer";
 import { CompanyModel } from "stores/company/Reducer";
 import { connect } from "react-redux";
 
+const logo = require("../resources/images/logo.png")
+
 const SidebarComponent = (props: {
 	user: User;
 	company: CompanyModel;
 	type: string;
 	companyName: string;
+	leftOpen: boolean;
 }) => {
 	return (
-		<div className="fixed bg-white w3 w6-m w11-l vh-100 br b--black-10">
+		<div className="vh-100"
+			style={{
+				background: "#060517",
+				width: props.leftOpen ? "15%" : "3%"
+			}}
+		>
+			<div className="bp3-navbar-group bp3-align-left ml3">
+				<div
+					style={{
+						marginTop: "4rem",
+						height: "5rem",
+						width: "5rem"
+					}}>
+					<NavLink to={`/${props.user.name}`}
+						className="mt6"
+						style={{ color: "dimgray" }}>
+						<img src={logo} />
+					</NavLink>
+				</div>
+			</div>
 			<ButtonGroup
 				alignText={Alignment.LEFT}
-				className="bp3-minimal bp3-vertical bp3-fill sidebar-margin"
+				className={`bp3-minimal bp3-vertical bp3-fill sidebar-margin   
+				content`}
+				style={{
+					transition: "transform 0.4s",
+					width: "calc(.5vw * 25)"
+				}}
 			>
 				{props.type === "default" ? (
 					<NavLink
@@ -23,7 +50,7 @@ const SidebarComponent = (props: {
 						className="mt6"
 						style={{ color: "dimgray" }}
 						activeStyle={{
-							background: "#0fa3a3",
+							background: "#3F61C5",
 							color: "white"
 						}}
 						to={`/${props.user.name}`}
@@ -47,12 +74,14 @@ const SidebarComponent = (props: {
 								className="ml4 ml3-m f4 tigrow-lightBlue ttc mr2 ws-break"
 								style={{ marginTop: "3rem" }}
 								to={`/company/${props.company.name}`}
-							>	{props.companyName}</NavLink>
+							>
+								{props.companyName}
+							</NavLink>
 							<NavLink
 								exact
 								className="mt5"
 								style={{ color: "dimgray" }}
-								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								activeStyle={{ background: "#3F61C5", color: "white" }}
 								to={`/company/${props.company.name}`}
 							>
 								<Button
@@ -67,47 +96,10 @@ const SidebarComponent = (props: {
 									Profile
 							</Button>
 							</NavLink>
-							{/* <NavLink
-							exact
-							className="mt5"
-							style={{ color: 'dimgray' }}
-							activeStyle={{ background: '#0fa3a3', color: 'white' }}
-							to={`/company/${props.company.name}`}
-						>
-							<Button
-								className="outline-0 bp3-large"
-								style={{ color: 'inherit', padding: '0px' }}
-							>
-								<Icon
-									icon="user"
-									className="pr4-l pr3-m pl3-l"
-									style={{ color: 'inherit' }}
-								/>
-								Profile
-						</Button>
-						</NavLink>
-						{/* <NavLink
-							exact
-							style={{ color: 'dimgray' }}
-							activeStyle={{ background: '#0fa3a3', color: 'white' }}
-							to={`/company/${props.company.name}/feed`}
-						>
-							<Button
-								className="outline-0 bp3-large"
-								style={{ color: "inherit", padding: "0px" }}
-							>
-								<Icon
-									icon="page-layout"
-									className="pr4-l pr3-m pl3-l"
-									style={{ color: "inherit" }}
-								/>
-								Feed
-						</Button>
-						</NavLink> */}
 							<NavLink
 								exact
 								style={{ color: "dimgray" }}
-								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								activeStyle={{ background: "#3F61C5", color: "white" }}
 								to={`/company/${props.company.name}/room`}
 							>
 								<Button
@@ -125,7 +117,7 @@ const SidebarComponent = (props: {
 							<NavLink
 								exact
 								style={{ color: "dimgray" }}
-								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								activeStyle={{ background: "#3F61C5", color: "white" }}
 								to={`/company/${props.company.name}/board`}
 							>
 								<Button
@@ -143,7 +135,7 @@ const SidebarComponent = (props: {
 							<NavLink
 								exact
 								style={{ color: "dimgray" }}
-								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								activeStyle={{ background: "#3F61C5", color: "white" }}
 								to={`/company/${props.company.name}/team`}
 							>
 								<Button
@@ -161,7 +153,7 @@ const SidebarComponent = (props: {
 							<NavLink
 								exact
 								style={{ color: "dimgray" }}
-								activeStyle={{ background: "#0fa3a3", color: "white" }}
+								activeStyle={{ background: "#3F61C5", color: "white" }}
 								to={`/company/${props.company.name}/settings`}
 							>
 								<Button
