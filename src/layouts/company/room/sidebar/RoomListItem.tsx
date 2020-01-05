@@ -27,10 +27,11 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 			<article
 				onClick={() => {
 					if (!props.chatkit.isLoading && !isEqual(props.roomId, activeRoom.id)) {
-						if (!isEmpty(activeRoom)) {
-							props.chatkit.currentUser.roomSubscriptions[activeRoom.id].cancel();
-							props.chatkit.currentUser.roomSubscriptions[activeRoom.id].connected = false;
-						}
+						// TODO [TEST-2] I have to test typing indicator by removing this block
+						// if (!isEmpty(activeRoom)) {
+						// 	props.chatkit.currentUser.roomSubscriptions[activeRoom.id].cancel();
+						// 	props.chatkit.currentUser.roomSubscriptions[activeRoom.id].connected = false;
+						// }
 						props.subscribeToRoom(props.roomId, props.name);
 					}
 				}}
