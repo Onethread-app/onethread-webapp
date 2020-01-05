@@ -61,24 +61,20 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       && isEqual((props.match.params as any).username, props.user.name) === false) {
       props.history.push(`/unavailable/profile`);
     }
-    if (isEmpty(props.user._id) === true) {
+    if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false && isEmpty(props.company._id) === true)) {
       load(props.match, props.fetchUserAction, props.getCompanyDetails, props.getSelectedBoard).then(r => setLoading(false));
-    } else if (isEmpty((props.match.params as any).cname) === false && isEmpty(props.company._id) === true) {
-      load(props.match, props.fetchUserAction, props.getCompanyDetails, props.getSelectedBoard).then(r => setLoading(false));
-    } else if (isEmpty(props.user._id) === false && isEmpty((props.match.params as any).cname) === true && loading === true) {
-      setLoading(false);
     }
   }, [loading]);
 
   return (
     <div className="cf">
       <div className="fl w-100">
-        {loading === true && isEmpty(props.user._id) === true ? <Loading />
-          : loading === false && isEmpty(props.user._id) === true ?
+        {loading === true ? <Loading />
+          : isEmpty(props.user._id) === true ?
             <p className="f3 tc fw5 pt4">
               Your Session is expired. Please
-              <Link 
-                className="fw9 dt center tigrow-lightBlue pt4" 
+               <Link
+                className="fw9 dt center tigrow-lightBlue pt4"
                 to="/signin"
                 onClick={() => localStorage.removeItem('token')}
               >
