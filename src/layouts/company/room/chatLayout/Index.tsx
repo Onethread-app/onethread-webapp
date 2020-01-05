@@ -30,8 +30,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 		<>
 			{isEmpty(props.activeRoom) === false ?
 				<div
-					className="flex flex-column"
-					style={{ height: "calc(100vh - 50px)" }}
+					className="flex flex-column h-100"
+				// style={{ height: "calc(100vh - 50px)" }}
 				>
 					{/* chat heading starts */}
 					<div className="flex justify-between items-center ph4 pv2 bb b--tigrowLightGray-1">

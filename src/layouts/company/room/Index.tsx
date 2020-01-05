@@ -20,7 +20,7 @@ export const RoomPage = () => {
 					isOpen={isOpen}
 				/>
 			</div>
-			<div className="w-100 relative">
+			<div className="w-100 relative flex-grow-1">
 				<Icon
 					className="absolute top-0 mv2 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
 					icon={isOpen ? 'arrow-left' : 'arrow-right'}
