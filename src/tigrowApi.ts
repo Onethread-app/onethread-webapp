@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const local = "http://localhost:4040/api/v1/";
+export const local = "http://192.168.8.3:4040/api/v1/";
 export const test = "http://test.tigrow.co/api/v1/";
 export const prod = "https://betaback.tigrow.co/api/v1/";
 
