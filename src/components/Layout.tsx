@@ -71,18 +71,19 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   }, [loading]);
 
   const [leftOpen, setLeftOpen] = useState(true);
+  const [formOpen, setFormOpen] = useState(false);
   const [scrollTop, setScrollTop] = React.useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   return (
     <div
-      className="cf vh-100 pa1"
+      className="cf vh-100"
       style={{ background: "#060517" }}
       onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
     >
       <div className="flex overflow-hidden">
         <div
-          className="w-100 border-box overflow-auto">
+          className="w-100 border-box">
           {loading === true ? <Loading />
             : isEmpty(props.user._id) === true ?
               <p className="f3 tc fw5 pt4 white">
@@ -102,6 +103,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 userId={props.user._id}
               >
                 <div className="flex">
+                  {/* left-sidebar starts */}
                   <div
                     className="relative"
                     style={{
@@ -109,7 +111,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       width: leftOpen ? "15%" : "3%"
                     }}>
                     <div
-                      className="fixed"
                       style={{
                         transform: leftOpen ? "translateX(0%)" : "translateX(-100%)",
                         msTransform: leftOpen ? "" : "translateX(-100%)",
@@ -123,7 +124,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       />
                     </div>
                   </div>
-                  <div className="fl w-100 bg-tigrow relative br3">
+                  {/* left-sidebar ends */}
+
+                  <div className="fl w-100 bg-tigrow relative br3 mv1">
+                    {/* btn-left-sidebar starts */}
                     <span
                       className="pointer absolute bp3-icon z-999 top-1 left--1"
                       onClick={() => setLeftOpen(!leftOpen)}
@@ -134,6 +138,21 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         color="#0FA3A3"
                       />
                     </span>
+                    {/* btn-left-sidebar ends */}
+
+                    {/* btn-form-sidebar starts */}
+                    <span
+                      className="pointer absolute bp3-icon z-999 top-1 right--1"
+                      onClick={() => setFormOpen(!formOpen)}
+                    >
+                      <img
+                        src={formOpen ? arrowRight : arrowLeft}
+                        className="br2 w2"
+                        color="#0FA3A3"
+                      />
+                    </span>
+                    {/* btn-form-sidebar ends */}
+
                     <div
                       className="flex flex-column"
                       style={{
@@ -147,6 +166,23 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       </div>
                     </div>
                   </div>
+
+                  {/* form-sidebar starts */}
+                  <div
+                    className="relative"
+                    style={{
+                      transition: "width 0.4s",
+                      width: formOpen ? "30%" : "0%"
+                    }}>
+                    <div>
+                      <div
+                        className="bg-white"
+                      >
+                        ARIF
+                      </div>
+                    </div>
+                  </div>
+                  {/* form-sidebar ends */}
                 </div>
               </ChatkitProvider>
           }
