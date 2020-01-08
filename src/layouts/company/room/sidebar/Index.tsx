@@ -7,6 +7,7 @@ import { CreateForm } from "./Form";
 import { permit } from "stores/UtilsActions";
 import { clearRoomError } from "stores/room/Actions";
 import { IconNames } from "@blueprintjs/icons";
+import { RightSidebar } from 'components/RightSidebar';
 
 interface RoomSideBarComponentProps {
 	companyRole?: string;
@@ -41,7 +42,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 					<RoomList />
 				</div>
 			</div>
-			{showDialog && (
+			{/* {showDialog && (
 				<Dialog
 					onClose={() => {
 						props.clearRoomError();
@@ -54,7 +55,12 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 						setShowDialog={setShowDialog}
 					/>
 				</Dialog>
-			)}
+			)} */}
+			<RightSidebar open={showDialog}>
+				<CreateForm
+					setShowDialog={setShowDialog}
+				/>
+			</RightSidebar>
 		</>
 	);
 };

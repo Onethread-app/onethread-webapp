@@ -89,3 +89,12 @@ input[type="text"].message-input, textarea.message-input {
 .rta__autocomplete li:hover {
   background-color: rgb(108, 221, 193);
 }
+
+/* right sidebar */
+.sidebar-right{
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  width: 30%;
+  z-index: 100000;
+}

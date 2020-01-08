@@ -8,10 +8,12 @@ import { User } from 'stores/user/Reducer';
 import { isEmpty, isEqual } from 'lodash';
 import { withRouter, RouteComponentProps, match, Link } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
+import { toggleRightSidebar } from 'stores/layout/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard } from 'stores/board/Actions';
+import { RightSidebar } from './RightSidebar';
 
 const arrowLeft = require("../resources/images/arrow left.svg");
 const arrowRight = require("../resources/images/arrow right.svg");
@@ -50,7 +52,9 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => void;
   getSelectedBoard: (boardId: string) => void;
-  company: CompanyModel
+  toggleRightSidebar: () => void;
+  company: CompanyModel;
+  rightSidebarOpen: boolean;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -71,7 +75,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   }, [loading]);
 
   const [leftOpen, setLeftOpen] = useState(true);
-  const [formOpen, setFormOpen] = useState(true);
   const [scrollTop, setScrollTop] = React.useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -126,7 +129,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
                   {/* left-sidebar ends */}
 
-                  <div className="fl w-100 bg-tigrow relative br3 mv1">
+                  <div className="fl bg-tigrow relative br3 mv1"
+                    style={{ width: props.rightSidebarOpen ? "55%" : "85%" }}>
                     {/* btn-left-sidebar starts */}
                     <span
                       className="pointer absolute bp3-icon z-999 top-1 left--1"
@@ -141,16 +145,16 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     {/* btn-left-sidebar ends */}
 
                     {/* btn-form-sidebar starts */}
-                    <span
+                    {/* <span
                       className="pointer absolute bp3-icon z-999 top-1 right--1"
-                      onClick={() => setFormOpen(!formOpen)}
+                      onClick={() => props.toggleRightSidebar()}
                     >
                       <img
-                        src={formOpen ? arrowRight : arrowLeft}
+                        src={props.rightSidebarOpen ? arrowRight : arrowLeft}
                         className="br2 w2"
                         color="#0FA3A3"
                       />
-                    </span>
+                    </span> */}
                     {/* btn-form-sidebar ends */}
 
                     <div
@@ -171,13 +175,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   <div
                     className="relative"
                     style={{
-                      transition: "width 0.4s",
-                      width: formOpen ? "30%" : "0%"
+                      width: props.rightSidebarOpen ? "30%" : "0%"
                     }}>
                     <div
-                      className="bg-white b--dark-red ba h-100"
+                      className="bg-white b--dark-red ba h-100 pa2"
                     >
-                      ARIF
+                      {/* <RightSidebar /> */}
                     </div>
                   </div>
                   {/* form-sidebar ends */}
@@ -193,8 +196,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
+    rightSidebarOpen: state.layoutReducer.rightSidebar.open
   }
 }
 
-export const Layout = connect(mapStateToProps, { fetchUserAction, getCompanyDetails, getSelectedBoard })(withRouter(LayoutComponent));
+export const Layout = connect(mapStateToProps, { fetchUserAction, getCompanyDetails, getSelectedBoard, toggleRightSidebar })(withRouter(LayoutComponent));
