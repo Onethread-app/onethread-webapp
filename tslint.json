@@ -1,6 +1,7 @@
 {
-  "extends": ["tslint-react"],
-  "rules": {
+    "extends": ["tslint:recommended"],
+    "defaultSeverity": "error",
+    "rules": {
       "align": [
           true
       ],
@@ -26,6 +27,11 @@
           "static-before-instance",
           "variables-before-functions"
       ],
+      "ordered-imports": [true, {
+        "import-sources-order": "any",
+        "named-imports-order": "case-insensitive"
+      }],
+      "object-literal-sort-keys": false,
       "no-any": false,
       "no-arg": true,
       "no-bitwise": true,
