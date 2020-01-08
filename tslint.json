@@ -27,10 +27,7 @@
           "static-before-instance",
           "variables-before-functions"
       ],
-      "ordered-imports": [true, {
-        "import-sources-order": "any",
-        "named-imports-order": "case-insensitive"
-      }],
+      "ordered-imports": [false],
       "object-literal-sort-keys": false,
       "no-any": false,
       "no-arg": true,
