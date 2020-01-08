@@ -71,7 +71,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   }, [loading]);
 
   const [leftOpen, setLeftOpen] = useState(true);
-  const [formOpen, setFormOpen] = useState(false);
+  const [formOpen, setFormOpen] = useState(true);
   const [scrollTop, setScrollTop] = React.useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -174,12 +174,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       transition: "width 0.4s",
                       width: formOpen ? "30%" : "0%"
                     }}>
-                    <div>
-                      <div
-                        className="bg-white"
-                      >
-                        ARIF
-                      </div>
+                    <div
+                      className="bg-white b--dark-red ba h-100"
+                    >
+                      ARIF
                     </div>
                   </div>
                   {/* form-sidebar ends */}
