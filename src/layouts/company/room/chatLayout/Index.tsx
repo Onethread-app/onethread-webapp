@@ -8,6 +8,7 @@ import { getRoomMembers } from 'stores/room/Actions';
 import { isEmpty } from "lodash";
 import { showAddMember } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
+import { RightSidebar } from 'components/RightSidebar';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
@@ -63,7 +64,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					<p>General is a default room.</p>
 				</div>
 			}
-			{showMemberFormDialog && (
+			{/* {showMemberFormDialog && (
 				<Dialog
 					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
 					isOpen={showMemberFormDialog}
@@ -74,7 +75,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
 					/>
 				</Dialog>
-			)}
+			)} */}
 			{showMemberListDialog && (
 				<Dialog
 					onClose={() => setShowMemberListDialog(!showMemberListDialog)}
@@ -85,6 +86,17 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 						users={props.users} />
 				</Dialog>
 			)}
+
+			{
+				showMemberFormDialog &&
+				<RightSidebar open={showMemberFormDialog}>
+					<AddMemberForm
+						showDialog={showMemberFormDialog}
+						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
+					/>
+				</RightSidebar>
+			}
+
 		</>
 	)
 };

@@ -183,9 +183,18 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       width: props.rightSidebarOpen ? '30%' : '0%'
                     }}>
                     <div
-                      className="bg-white b--dark-red ba h-100 pa2"
+                      className="bg-white b--dark-red ba h-100"
                     >
-                      {/* <RightSidebar /> */}
+                      <div
+                        id="rightSidebar"
+                        className="h-100 c-tigrowWhite"
+                        style={{
+                          // display: props.rightSidebarOpen ? "block" : "none",
+                          background: "rgb(6, 5, 23)"
+                        }}
+                      >
+                        {/* <RightSidebar /> */}
+                      </div>
                     </div>
                   </div>
                   {/* form-sidebar ends */}
