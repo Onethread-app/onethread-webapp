@@ -1,7 +1,7 @@
-import * as React from 'react'
+import * as React from 'react';
 import { Button, Popover, Position, ButtonGroup, Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import { logoutAction } from 'stores/auth/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
@@ -11,9 +11,9 @@ import { CompanyListView } from '../layouts/company/ListView';
 import { CompanySignupForm } from '../layouts/company/Form';
 
 interface NavbarTopInternalProps {
-  user: User
-  logoutAction: (history: History) => void,
-  scrollTop: number
+  user: User;
+  logoutAction: (history: History) => void;
+  scrollTop: number;
 }
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
@@ -21,14 +21,16 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
 
   return (
     <>
-      <div className="top-0 z-2 pr3 pv1"
+      <div className="top-0 z-2 pr5 pv3"
         style={{
-          height: "50px",
-          backgroundColor: props.scrollTop > 50 ? "#C3D0DE" : "transparent",
-          position: "sticky", borderRadius: "0.5rem 0.5rem 0px 0px"
+          height: '60px',
+          backgroundColor: props.scrollTop > 60 ? '#C3D0DE' : 'white',
+          position: 'sticky', 
+          borderRadius: '0.5rem 0.5rem 0px 0px',
+          borderBottom: '1px solid #d3d3d370'
         }}
       >
-        <div className="fr pt1 pb1">
+        <div className="fr">
           <Popover
             popoverClassName="bp3-popover-content-sizing bg-white"
             position={Position.BOTTOM}
@@ -41,7 +43,11 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             target={
               <Button
                 className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l outline-0"
-                style={{ fontSize: "0.8rem", fontWeight: 600 }}
+                style={{ 
+                  fontSize: '0.8rem', 
+                  fontWeight: 600,
+                  border: '1px solid'
+                }}
                 text="My Companies"
               />
             }
@@ -90,7 +96,11 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
               <img
                 src={props.user.profileImage ? props.user.profileImage.imageSource : user}
                 className="dim v-mid dib br-100 pointer"
-                style={{ width: "2rem", height: "2rem", objectFit: "cover" }}
+                style={{ 
+                  width: '2rem', 
+                  height: '2rem', 
+                  objectFit: 'cover'
+                }}
                 alt="user"
               />
             }
@@ -111,13 +121,12 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
       )}
     </>
   );
-}
+};
 
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user
-  }
-}
+  };
+};
 
 export const NavbarTop = connect(mapStateToProps, { logoutAction })(withRouter(NavbarTopComponent));
-

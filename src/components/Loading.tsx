@@ -5,4 +5,4 @@ export const Loading = (props: {
   size?: number
 }) => (
     <Spinner size={props.size} />
-  )
+  );

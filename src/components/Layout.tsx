@@ -15,33 +15,29 @@ import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard } from 'stores/board/Actions';
 import { RightSidebar } from './RightSidebar';
 
-const arrowLeft = require("../resources/images/arrow left.svg");
-const arrowRight = require("../resources/images/arrow right.svg");
+import arrowLeft from '../resources/images/arrow left.svg';
+import arrowRight from '../resources/images/arrow right.svg';
 
-const {
-  ChatkitProvider,
-  TokenProvider,
-} = require("@pusher/chatkit-client-react");
+// tslint:disable-next-line: no-var-requires
+const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
 
-const tokenProvider = new TokenProvider({
-  url: TokenUrlServer,
-});
+const tokenProvider = new TokenProvider({ url: TokenUrlServer });
 
 const load = async (
-  match: match,
-  fetchUserAction: () => void,
-  getCompanyDetails: (companyName: string) => void,
-  getSelectedBoard: (boardId: string) => void
+  reactRouterMatch: match,
+  fetchUser: () => void,
+  getCompanyInformation: (companyName: string) => void,
+  getSelectedBoardDetails: (boardId: string) => void
 ) => {
-  await fetchUserAction();
-  if (isEmpty((match.params as any).cname) === false) {
-    await getCompanyDetails((match.params as any).cname);
+  await fetchUser();
+  if (isEmpty((reactRouterMatch.params as any).cname) === false) {
+    await getCompanyInformation((reactRouterMatch.params as any).cname);
   }
-  if (isEmpty((match.params as any).boardId) === false) {
-    await getSelectedBoard((match.params as any).boardId);
+  if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
+    await getSelectedBoardDetails((reactRouterMatch.params as any).boardId);
   }
   return Promise.resolve({});
-}
+};
 
 interface LayoutProps {
   Component: React.ComponentClass | React.StatelessComponent;
@@ -69,8 +65,16 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       && isEqual((props.match.params as any).username, props.user.name) === false) {
       props.history.push(`/unavailable/profile`);
     }
-    if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false && isEmpty(props.company._id) === true)) {
-      load(props.match, props.fetchUserAction, props.getCompanyDetails, props.getSelectedBoard).then(r => setLoading(false));
+    if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false
+      && isEmpty(props.company._id) === true)) {
+      load(
+        props.match,
+        props.fetchUserAction,
+        props.getCompanyDetails,
+        props.getSelectedBoard
+      ).then(() =>
+        setLoading(false)
+      );
     }
   }, [loading]);
 
@@ -81,7 +85,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   return (
     <div
       className="cf vh-100"
-      style={{ background: "#060517" }}
+      style={{ background: '#060517' }}
       onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
     >
       <div className="flex overflow-hidden">
@@ -110,14 +114,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   <div
                     className="relative"
                     style={{
-                      transition: "width 0.4s",
-                      width: leftOpen ? "15%" : "3%"
+                      transition: 'width 0.4s',
+                      width: leftOpen ? '15%' : '3%'
                     }}>
                     <div
                       style={{
-                        transform: leftOpen ? "translateX(0%)" : "translateX(-100%)",
-                        msTransform: leftOpen ? "" : "translateX(-100%)",
-                        WebkitTransition: leftOpen ? "" : "translateX(-100%)",
+                        transform: leftOpen ? 'translateX(0%)' : 'translateX(-100%)',
+                        msTransform: leftOpen ? '' : 'translateX(-100%)',
+                        WebkitTransition: leftOpen ? '' : 'translateX(-100%)',
                       }}>
                       <Sidebar
                         user={props.user}
@@ -161,7 +165,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     <div
                       className="flex flex-column"
                       style={{
-                        height: "calc(100vh - 0.7rem)",
+                        height: 'calc(100vh - 0.7rem)',
                       }}>
                       <NavbarTop scrollTop={scrollTop} />
                       <div
@@ -176,7 +180,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   <div
                     className="relative"
                     style={{
-                      width: props.rightSidebarOpen ? "30%" : "0%"
+                      width: props.rightSidebarOpen ? '30%' : '0%'
                     }}>
                     <div
                       className="bg-white b--dark-red ba h-100 pa2"
@@ -191,7 +195,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 const mapStateToProps = (state: any) => {
@@ -199,7 +203,8 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     company: state.companyReducer.currentCompany,
     rightSidebarOpen: state.layoutReducer.rightSidebar.open
-  }
-}
+  };
+};
 
-export const Layout = connect(mapStateToProps, { fetchUserAction, getCompanyDetails, getSelectedBoard, toggleRightSidebar })(withRouter(LayoutComponent));
+export const Layout = connect(mapStateToProps,
+  { fetchUserAction, getCompanyDetails, getSelectedBoard, toggleRightSidebar })(withRouter(LayoutComponent));

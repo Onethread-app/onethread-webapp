@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { Button, Dialog, Icon } from '@blueprintjs/core';
 import { TaskManagementLayout } from './TaskManagementLayout';
 import { connect } from 'react-redux';
@@ -36,15 +36,15 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
         {permit(props.company.role) === true ?
           <>
             <Button
-              className="grow fr h2 pointer white bp3-minimal mr3 w5"
+              className="grow fr h2 pointer white bp3-minimal mr3"
               style={props.currentBoard!.columns!.length > 0 ?
                 {
-                  background: "#0fa3a3",
-                  outline: "none",
+                  background: '#0fa3a3',
+                  outline: 'none',
                   color: 'white'
                 } : {
                   background: '#011b1b2e',
-                  outline: "none",
+                  outline: 'none',
                   color: 'white'
                 }
               }
@@ -53,8 +53,12 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
               onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
             />
             <Button
-              className="grow fr h2 pointer white bp3-minimal mr3 w5"
-              style={{ background: "#00a8e8", outline: "none", color: 'white' }}
+              className="grow fr h2 pointer white bp3-minimal mr3"
+              style={{ 
+                background: '#00a8e8', 
+                outline: 'none', 
+                color: 'white' 
+              }}
               text={<span >Add Column</span>}
               onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
             />
@@ -67,7 +71,11 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
                   style={{ color: 'white' }}
                 />
               }
-              style={{ background: "#f55b7f", outline: "none", color: 'white' }}
+              style={{ 
+                background: '#f55b7f', 
+                outline: 'none', 
+                color: 'white' 
+              }}
               onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
             />
           </>
@@ -124,27 +132,30 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
         >
           <div className="pa3">
             <h1 className="f4 tigrow-lightBlue">Board members</h1>
-            <div className="">
-              {props.currentBoard!.members!.length ? props.currentBoard!.members!.map((member: any, i: number) => {
+            <div>
+              {props.currentBoard!.members!.length > 0 && props.currentBoard!.members!.map((member: any, i: number) => {
                 return (
-                  <article key={member._id} className={`flex items-center w-100 pv1 ${i !== props.currentBoard!.members!.length - 1 ? "bb" : ""} b--black-05`}>
+                  <article 
+                    key={member._id} 
+                    className={`flex items-center w-100 pv1 ${i !== props.currentBoard!.members!.length - 1 ? 'bb' : ''} b--black-05`}
+                  >
                     <h1 className="f7 black mv0">{member.name}</h1>
                   </article>
                 );
-              }) : ""}
+              })}
             </div>
           </div>
         </Dialog>
       )}
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
     currentBoard: state.taskManagementReducer.boardReducer.currentBoard,
     company: state.companyReducer.currentCompany
-  }
-}
+  };
+};
 
 export const BoardDetailsView = connect(mapStateToProps, null)(BoardDetailsViewComponent);

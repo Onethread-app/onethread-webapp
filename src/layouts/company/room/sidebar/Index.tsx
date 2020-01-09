@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import { RoomList } from "./RoomList";
-import { connect } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
-import { Dialog, Icon } from "@blueprintjs/core";
-import { CreateForm } from "./Form";
-import { permit } from "stores/UtilsActions";
-import { clearRoomError } from "stores/room/Actions";
-import { IconNames } from "@blueprintjs/icons";
+import React, { useState } from 'react';
+import { RoomList } from './RoomList';
+import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Dialog, Icon } from '@blueprintjs/core';
+import { CreateForm } from './Form';
+import { permit } from 'stores/UtilsActions';
+import { clearRoomError } from 'stores/room/Actions';
+import { IconNames } from '@blueprintjs/icons';
 import { RightSidebar } from 'components/RightSidebar';
 
 interface RoomSideBarComponentProps {
@@ -24,7 +24,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 
 	return (
 		<>
-			<div className={`flex flex-column h-100 t-25-a ${props.isOpen ? "db" : "dn"}`}>
+			<div className={`flex flex-column h-100 t-25-a ${props.isOpen ? 'db' : 'dn'}`}>
 				<div className="flex justify-between items-center ph3">
 					<h3 className="tigrow-darkGray">Rooms</h3>
 					{props.companyRole && permit(props.companyRole) ? (
