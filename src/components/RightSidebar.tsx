@@ -21,22 +21,27 @@ const RightSidebarComponent = (props: RightSidebarInternalProps) => {
 
   const [target, setTarget] = useState<HTMLElement | null>(null);
 
-  const createRootElement: any = (id: string) => {
-    const rootContainer = document.createElement('div');
-    rootContainer.setAttribute('id', id);
-    return rootContainer;
+  const createInnerElement: any = (id: string) => {
+    const innerContainer = document.createElement('div');
+    innerContainer.setAttribute('id', id);
+    return innerContainer;
   };
 
   useEffect(() => {
-    setTarget(document.getElementById('rightSidebar'));
-    if (target && target.children.length) {
-      while (target.firstChild) {
-        target.removeChild(target.firstChild);
-      }
+    const rightSidebar: HTMLElement | null = document.getElementById('rightSidebar');
+    // t.appendChild(createInnerElement('inner--right-sidebar'))
+    setTarget(rightSidebar);
+
+    const innerRightSidebar: HTMLElement | null = document.getElementById('inner--right-sidebar');
+
+    if (innerRightSidebar) {
+      innerRightSidebar.remove();
     }
+
   }, []);
 
-  return target !== null && props.rightSidebarOpen ? createPortal(props.children, target) : null;
+  return target !== null && props.rightSidebarOpen ?
+    createPortal(props.children, target.appendChild(createInnerElement('inner--right-sidebar'))) : null;
 };
 
 const mapStateToProps = (state: any) => {
