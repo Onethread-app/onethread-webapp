@@ -129,8 +129,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
                   {/* left-sidebar ends */}
 
-                  <div className="fl bg-tigrow relative br3 mv1"
-                    style={{ width: props.rightSidebarOpen ? "55%" : "85%" }}>
+                  <div
+                    className="flex-grow-1 bg-tigrow relative br3 mv1"
+                  >
                     {/* btn-left-sidebar starts */}
                     <span
                       className="pointer absolute bp3-icon z-999 top-1 left--1"
