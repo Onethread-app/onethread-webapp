@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Button, FileInput, Dialog } from "@blueprintjs/core";
-import { connect, useDispatch } from "react-redux";
-import { trim, isEqual, isEmpty } from "lodash";
+import React, { useState, useEffect, useRef } from 'react';
+import { Button, FileInput, Dialog } from '@blueprintjs/core';
+import { connect, useDispatch } from 'react-redux';
+import { trim, isEqual, isEmpty } from 'lodash';
 import { sendRoomMessage } from 'stores/room/Actions';
 import 'emoji-mart/css/emoji-mart.css';
 import { TOGGLE_EMOJI_PICKER } from 'stores/room/Types';
 import ReactDOM from 'react-dom';
 import { Picker } from 'emoji-mart';
 
-const { withChatkit } = require("@pusher/chatkit-client-react");
+const { withChatkit } = require('@pusher/chatkit-client-react');
 // const UserIcon = require('./../../../../../resources/images/user.png');
 const SmileIcon = require('./../../../../../resources/images/smile-24px.svg');
 
@@ -18,11 +18,11 @@ interface SendMessageFormProps {
 	roomId: string;
 	profileImage: any;
 	emojiPicker: boolean;
-	typingUsers: { name: string, roomId: string; }[]
+	typingUsers: Array<{ name: string, roomId: string; }>
 }
 
 const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
-	const [text, setText] = useState("");
+	const [text, setText] = useState('');
 	const [showDialog, setShowDialog] = useState(false);
 
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
@@ -31,18 +31,19 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		setText("");
+		setText('');
 	}, [props.roomId]);
 
-
+	// tslint:disable-next-line: no-shadowed-variable
 	const sendMessage = async (text: string) => {
 		// TODO: Future feature
 		await props.sendRoomMessage({ text, room: props.roomId });
 	};
 
+	// tslint:disable-next-line: no-shadowed-variable
 	const resetMessage = (text: string) => {
-		let resetText = text.replace(/(\r\n|\n|\r)/gm, "")
-		setText(resetText)
+		const resetText = text.replace(/(\r\n|\n|\r)/gm, '');
+		setText(resetText);
 		return resetText;
 	};
 
@@ -50,7 +51,8 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 		setText(e.target.value);
 		props.chatkit.currentUser
 			.isTypingIn({ roomId: props.roomId })
-			.catch((error: any) => console.error("error on typing", error));
+			// tslint:disable-next-line: no-console
+			.catch((error: any) => console.error('error on typing', error));
 	};
 
 	// function a(inputMessageRef: any) {
@@ -76,10 +78,10 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	// }
 	const handleKeyPress = (e: any) => {
 		// console.log("inputMessageRef", a(inputMessageRef));
-		let trimmedText = trim(text);
-		if (e.key === "Enter" && e.shiftKey === false && isEmpty(trimmedText) === false) {
+		const trimmedText = trim(text);
+		if (e.key === 'Enter' && e.shiftKey === false && isEmpty(trimmedText) === false) {
 			sendMessage(trimmedText);
-			setText("");
+			setText('');
 			// e.target.value = "";
 			// (inputMessageRef.current as any).value = "";
 			// console.log("inputMessageRef", a(inputMessageRef));
@@ -95,7 +97,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 			type: TOGGLE_EMOJI_PICKER,
 			payload: !props.emojiPicker
 		});
-	}
+	};
 
 	const addEmoji = (emoji: any) => {
 		const t = `${text} ${emoji.native}`;
@@ -104,19 +106,19 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 			type: TOGGLE_EMOJI_PICKER,
 			payload: false
 		});
-	}
+	};
 
 	const checkClickOutside = (e: any) => {
-		let node = ReactDOM.findDOMNode(emojiRef.current);
+		const node = ReactDOM.findDOMNode(emojiRef.current);
 		if (node && !node.contains(e.target)) {
 			toggleEmojiPicker();
 		}
 	};
 
 	useEffect(() => {
-		document.addEventListener("click", checkClickOutside);
-		return function () {
-			document.removeEventListener("click", checkClickOutside);
+		document.addEventListener('click', checkClickOutside);
+		return () => {
+			document.removeEventListener('click', checkClickOutside);
 		};
 	});
 
@@ -138,7 +140,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 						return null;
 					}
 				)
-				: ""}
+				: ''}
 			{props.emojiPicker ? (
 				<Picker
 					set="twitter"
@@ -161,10 +163,11 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					/>
 				</div> */}
 				<textarea
+					autoFocus={true}
 					ref={inputMessageRef}
 					className="w-100 mv2 mh1"
-					style={{ resize: "none" }}
-					value={isEqual(text.length, 1) && isEqual(text, "\n") ? resetMessage(text) : text}
+					style={{ resize: 'none' }}
+					value={isEqual(text.length, 1) && isEqual(text, '\n') ? resetMessage(text) : text}
 					onChange={onChange}
 					onKeyPress={handleKeyPress}
 					placeholder="Type your message and hit ENTER to send"
@@ -201,7 +204,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					className="bp3-minimal outline-0 toggle-emoji"
 					onClick={toggleEmojiPicker}
 				>
-					<span className="bp3-icon" style={{ paddingRight: "5px" }}>
+					<span className="bp3-icon" style={{ paddingRight: '5px' }}>
 						<img
 							src={SmileIcon}
 							width="30px"
@@ -223,7 +226,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					icon="briefcase"
 					onClose={() => setShowDialog(!showDialog)}
 					isOpen
-					style={{ background: "#fff" }}
+					style={{ background: '#fff' }}
 				>
 					<div className="pa3 cf">
 						<h1 className="f5">Attach Files</h1>
@@ -234,10 +237,10 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 								text="Attach"
 								className="grow h2 pointer w-40 fr mt2"
 								style={{
-									background: "#0fa3a3",
-									outline: "none",
-									color: "white",
-									boxShadow: "none"
+									background: '#0fa3a3',
+									outline: 'none',
+									color: 'white',
+									boxShadow: 'none'
 								}}
 							/>
 						</div>
@@ -254,6 +257,6 @@ const mapStateToProps = (state: any) => {
 		roomId: state.roomReducer.roomId,
 		emojiPicker: state.roomReducer.emojiPicker,
 		typingUsers: state.roomReducer.typing.users
-	}
-}
-export const SendMessageForm = connect(mapStateToProps, { sendRoomMessage })(SendMessageFormComponent)
+	};
+};
+export const SendMessageForm = connect(mapStateToProps, { sendRoomMessage })(SendMessageFormComponent);

@@ -87,12 +87,16 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 				</Dialog>
 			)}
 
-			<RightSidebar open={showMemberFormDialog}>
-				<AddMemberForm
-					showDialog={showMemberFormDialog}
-					setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
-				/>
-			</RightSidebar>
+			{showMemberFormDialog &&
+				<RightSidebar
+					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
+					open={showMemberFormDialog}>
+					<AddMemberForm
+						showDialog={showMemberFormDialog}
+						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
+					/>
+				</RightSidebar>
+			}
 
 		</>
 	)
@@ -103,6 +107,7 @@ const mapStateToProps = (state: any) => {
 		activeRoom: state.roomReducer.activeRoom,
 		users: state.roomReducer.users,
 		companyRole: state.companyReducer.currentCompany.role,
-	}
-}
-export const ChatLayout = connect(mapStateToProps, { getRoomMembers })(ChatLayoutComponent)
+	};
+};
+
+export const ChatLayout = connect(mapStateToProps, { getRoomMembers })(ChatLayoutComponent);

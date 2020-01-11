@@ -56,11 +56,17 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 					/>
 				</Dialog>
 			)} */}
-			<RightSidebar open={showDialog}>
-				<CreateForm
-					setShowDialog={setShowDialog}
-				/>
-			</RightSidebar>
+			{showDialog &&
+				<RightSidebar
+					onClose={() => {
+						setShowDialog(!showDialog);
+					}}
+					open={showDialog}>
+					<CreateForm
+						setShowDialog={setShowDialog}
+					/>
+				</RightSidebar>
+			}
 		</>
 	);
 };

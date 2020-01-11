@@ -109,10 +109,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 tokenProvider={tokenProvider}
                 userId={props.user._id}
               >
-                <div className="flex">
+                <div
+                  className={`flex relative ${props.rightSidebarOpen && 'main-layout-overlay'}`}
+                >
                   {/* left-sidebar starts */}
                   <div
-                    className="relative"
+                    className={`relative `}
                     style={{
                       transition: 'width 0.4s',
                       width: leftOpen ? '15%' : '3%'
@@ -133,12 +135,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
                   {/* left-sidebar ends */}
 
+                  {/* main-layout starts */}
                   <div
-                    className="flex-grow-1 bg-tigrow relative br3 mv1"
+                    className={`flex-grow-1 bg-tigrow relative br3 mv1 ${props.rightSidebarOpen && 'main-layout-overlay'}`}
                   >
                     {/* btn-left-sidebar starts */}
                     <span
-                      className="pointer absolute bp3-icon z-999 top-1 left--1"
+                      className="pointer absolute bp3-icon z-3 top-1 left--1"
                       onClick={() => setLeftOpen(!leftOpen)}
                     >
                       <img
@@ -175,12 +178,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       </div>
                     </div>
                   </div>
+                  {/* main-layout ends */}
 
                   {/* form-sidebar starts */}
                   <div
                     className="relative"
                     style={{
-                      width: props.rightSidebarOpen ? '30%' : '0%'
+                      width: props.rightSidebarOpen ? '30%' : '0%',
+                      zIndex: 5
                     }}>
                     <div
                       className="bg-white b--dark-red ba h-100"
@@ -189,11 +194,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         id="rightSidebar"
                         className="h-100 c-tigrowWhite"
                         style={{
-                          // display: props.rightSidebarOpen ? "block" : "none",
-                          background: "rgb(6, 5, 23)"
+                          background: 'rgb(6, 5, 23)'
                         }}
                       >
-                        {/* <RightSidebar /> */}
                       </div>
                     </div>
                   </div>
