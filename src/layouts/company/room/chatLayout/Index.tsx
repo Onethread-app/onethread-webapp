@@ -90,7 +90,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 			{showMemberFormDialog &&
 				<RightSidebar
 					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
-					open={showMemberFormDialog}>
+				>
 					<AddMemberForm
 						showDialog={showMemberFormDialog}
 						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}

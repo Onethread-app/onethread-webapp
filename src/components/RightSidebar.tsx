@@ -17,9 +17,10 @@ const RightSidebarComponent = (props: RightSidebarInternalProps) => {
 
   const [target, setTarget] = useState<HTMLElement | null>(null);
 
-  const createInnerElement: any = (id: string) => {
+  const createInnerElement: any = (idName: string, className: string = '') => {
     const innerContainer = document.createElement('div');
-    innerContainer.setAttribute('id', id);
+    innerContainer.setAttribute('id', idName);
+    innerContainer.setAttribute('class', className);
     return innerContainer;
   };
 
@@ -59,7 +60,8 @@ const RightSidebarComponent = (props: RightSidebarInternalProps) => {
   }, []);
 
   return target !== null && props.rightSidebarOpen ?
-    createPortal(props.children, target.appendChild(createInnerElement('inner--right-sidebar'))) : null;
+    createPortal(props.children,
+      target.appendChild(createInnerElement('inner--right-sidebar', 'h-100 overflow-y-auto'))) : null;
 };
 
 const mapStateToProps = (state: any) => {
