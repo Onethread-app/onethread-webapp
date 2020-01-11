@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { setRightSidebar, toggleRightSidebar } from 'stores/layout/Actions';
+import { setRightSidebar } from 'stores/layout/Actions';
 import { createPortal, findDOMNode } from 'react-dom';
 
 interface RightSidebarProps {
   children: JSX.Element;
-  open: boolean;
   onClose: () => void;
 }
 interface RightSidebarInternalProps extends RightSidebarProps, RouteComponentProps {
   setRightSidebar: (data: boolean) => void;
-  toggleRightSidebar: () => void;
   rightSidebarOpen: boolean;
 }
 
@@ -33,7 +31,9 @@ const RightSidebarComponent = (props: RightSidebarInternalProps) => {
   };
 
   const checkClickOutside = (e: any) => {
-    if (e.target.id !== 'rightSidebar') {
+    const mainLayout: HTMLElement | null = document.getElementById('main-layout');
+
+    if (mainLayout && e.target === mainLayout) {
       props.onClose();
       clearInnerElement();
       props.setRightSidebar(false);
@@ -47,14 +47,11 @@ const RightSidebarComponent = (props: RightSidebarInternalProps) => {
     };
   });
 
-  // TODO remove open props
   useEffect(() => {
-    props.setRightSidebar(props.open);
-  }, [props.open]);
-
-  useEffect(() => {
+    props.setRightSidebar(true);
     const rightSidebar: HTMLElement | null = document.getElementById('rightSidebar');
     setTarget(rightSidebar);
+
     return () => {
       clearInnerElement();
       props.setRightSidebar(false);
@@ -72,5 +69,5 @@ const mapStateToProps = (state: any) => {
 };
 
 export const RightSidebar = connect(mapStateToProps, {
-  setRightSidebar, toggleRightSidebar
+  setRightSidebar
 })(withRouter(RightSidebarComponent));
