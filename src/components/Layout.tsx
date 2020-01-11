@@ -110,9 +110,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 userId={props.user._id}
               >
                 <div
+                  id="main-layout"
                   className={`flex relative ${props.rightSidebarOpen && 'main-layout-overlay'}`}
                 >
-                  {/* left-sidebar starts */}
                   <div
                     className={`relative `}
                     style={{
@@ -133,13 +133,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       />
                     </div>
                   </div>
-                  {/* left-sidebar ends */}
 
-                  {/* main-layout starts */}
                   <div
-                    className={`flex-grow-1 bg-tigrow relative br3 mv1 ${props.rightSidebarOpen && 'main-layout-overlay'}`}
+                    className="flex-grow-1 bg-tigrow relative br3 mv1"
                   >
-                    {/* btn-left-sidebar starts */}
                     <span
                       className="pointer absolute bp3-icon z-3 top-1 left--1"
                       onClick={() => setLeftOpen(!leftOpen)}
@@ -150,9 +147,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         color="#0FA3A3"
                       />
                     </span>
-                    {/* btn-left-sidebar ends */}
 
-                    {/* btn-form-sidebar starts */}
                     {/* <span
                       className="pointer absolute bp3-icon z-999 top-1 right--1"
                       onClick={() => props.toggleRightSidebar()}
@@ -163,7 +158,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         color="#0FA3A3"
                       />
                     </span> */}
-                    {/* btn-form-sidebar ends */}
 
                     <div
                       className="flex flex-column"
@@ -178,9 +172,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       </div>
                     </div>
                   </div>
-                  {/* main-layout ends */}
 
-                  {/* form-sidebar starts */}
                   <div
                     className="relative"
                     style={{
@@ -188,19 +180,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       zIndex: 5
                     }}>
                     <div
-                      className="bg-white b--dark-red ba h-100"
+                      id="rightSidebar"
+                      className="h-100 c-tigrowWhite"
+                      style={{
+                        background: 'rgb(6, 5, 23)'
+                      }}
                     >
-                      <div
-                        id="rightSidebar"
-                        className="h-100 c-tigrowWhite"
-                        style={{
-                          background: 'rgb(6, 5, 23)'
-                        }}
-                      >
-                      </div>
                     </div>
                   </div>
-                  {/* form-sidebar ends */}
                 </div>
               </ChatkitProvider>
           }
