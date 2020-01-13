@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { MessageItem } from "layouts/company/room/chatLayout/messages/MessageItem";
-import { useSelector } from "react-redux";
-import { isEmpty, isEqual } from "lodash";
-const { withChatkit } = require("@pusher/chatkit-client-react");
+import React, { useEffect, useRef, useState } from 'react';
+import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
+import { useSelector } from 'react-redux';
 
-const UserIcon = require("./../../../../../resources/images/user.png");
+import UserIcon from './../../../../../resources/images/user.png';
+
+// tslint:disable-next-line: no-var-requires
+const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface MessageListProps {
 	chatkit?: any;
@@ -16,9 +17,9 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 	const messages = useSelector((state: any) => state.roomReducer.messages);
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
 	const rooms = useSelector((state: any) => state.roomReducer.rooms);
-	const typingUsers = useSelector(
-		(state: any) => state.roomReducer.typing.users
-	);
+	// const typingUsers = useSelector(
+	// 	(state: any) => state.roomReducer.typing.users
+	// );
 
 	const scrollToBottom = () => {
 		// On new message, scroll to bottom
@@ -31,9 +32,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 			messagesEndRef.current.scrollHeight
 		) {
 			messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-		}
-		// at first, scroll to bottom
-		else if (messagesEndRef && messagesEndRef.current && !first) {
+		} else if (messagesEndRef && messagesEndRef.current && !first) {
 			messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
 			setFirst(true);
 		}
@@ -72,8 +71,8 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 							/>
 						);
 					})
-					: ""
-				: ""}
+					: ''
+				: ''}
 			{/* {typingUsers.length
 				? typingUsers.map(
 					(user: { name: string; roomId: string }, i: number) => {

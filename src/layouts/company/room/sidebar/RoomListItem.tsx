@@ -1,7 +1,9 @@
-import { useSelector } from "react-redux";
-import { isEmpty, isEqual } from "lodash";
+import { useSelector } from 'react-redux';
+import { isEqual } from 'lodash';
 import React from 'react';
-const { withChatkit } = require("@pusher/chatkit-client-react");
+
+// tslint:disable-next-line: no-var-requires
+const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface RoomListItemProps {
 	roomId: string;
@@ -35,7 +37,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 						props.subscribeToRoom(props.roomId, props.name);
 					}
 				}}
-				className={`flex items-center mh2 ph1 pv2 bb b--black-10 ${props.lastChild ? "bn" : ""}`}
+				className={`flex items-center mh2 ph1 pv2 bb b--black-10 ${props.lastChild ? 'bn' : ''}`}
 			>
 				<div className="dn db-ns pr3">
 					<span
@@ -51,8 +53,8 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 						<h6
 							className="bg-tigrowLightBlue white fw8 ma0 ml1"
 							style={{
-								padding: "4px 8px",
-								borderRadius: "50%"
+								padding: '4px 8px',
+								borderRadius: '50%'
 							}}
 						>
 							{props.unreadCount}

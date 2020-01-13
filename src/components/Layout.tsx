@@ -13,7 +13,6 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard } from 'stores/board/Actions';
-import { RightSidebar } from './RightSidebar';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -176,6 +175,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   <div
                     className="relative"
                     style={{
+                      transition: 'width 0.4s',
                       width: props.rightSidebarOpen ? '30%' : '0%',
                       zIndex: 5
                     }}>

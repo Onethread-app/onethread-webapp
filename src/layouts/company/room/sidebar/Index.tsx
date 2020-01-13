@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { RoomList } from './RoomList';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { Dialog, Icon } from '@blueprintjs/core';
+import { Icon } from '@blueprintjs/core';
 import { CreateForm } from './Form';
 import { permit } from 'stores/UtilsActions';
 import { clearRoomError } from 'stores/room/Actions';

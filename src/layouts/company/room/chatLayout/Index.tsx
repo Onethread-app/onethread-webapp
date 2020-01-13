@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import { SendMessageForm } from './messages/SendMessageForm';
 import { MessageList } from './messages/MessageList';
 import { connect } from 'react-redux';
 import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './members/AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
-import { isEmpty } from "lodash";
+import { isEmpty } from 'lodash';
 import { showAddMember } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
 import { RightSidebar } from 'components/RightSidebar';
@@ -46,11 +46,11 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							<Button
 								onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}
 								className="bp3-minimal outline-0 grow"
-								style={{ background: "#F55B7F" }}
+								style={{ background: '#F55B7F' }}
 							>
 								<Icon
 									icon="new-person"
-									style={{ background: "#F55B7F", color: "white" }}
+									style={{ background: '#F55B7F', color: 'white' }}
 								/>
 							</Button>
 							: null}
@@ -99,7 +99,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 			}
 
 		</>
-	)
+	);
 };
 
 const mapStateToProps = (state: any) => {
