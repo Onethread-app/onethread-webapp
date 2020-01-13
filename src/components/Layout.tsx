@@ -47,6 +47,7 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   getCompanyDetails: (companyName: string) => void;
   getSelectedBoard: (boardId: string) => void;
   company: CompanyModel;
+  rightSidebarOpen: boolean;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -64,9 +65,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false
       && isEmpty(props.company._id) === true)) {
       load(
-        props.match, 
-        props.fetchUserAction, 
-        props.getCompanyDetails, 
+        props.match,
+        props.fetchUserAction,
+        props.getCompanyDetails,
         props.getSelectedBoard
       ).then(() =>
         setLoading(false)
@@ -80,13 +81,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 
   return (
     <div
-      className="cf vh-100 pa1"
+      className="cf vh-100"
       style={{ background: '#060517' }}
       onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
     >
       <div className="flex overflow-hidden">
         <div
-          className="w-100 border-box overflow-auto">
+          className="w-100 border-box">
           {loading === true ? <Loading />
             : isEmpty(props.user._id) === true ?
               <p className="f3 tc fw5 pt4 white">
@@ -105,15 +106,17 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 tokenProvider={tokenProvider}
                 userId={props.user._id}
               >
-                <div className="flex">
+                <div
+                  id="main-layout"
+                  className={`flex relative ${props.rightSidebarOpen && 'main-layout-overlay'}`}
+                >
                   <div
-                    className="relative"
+                    className={`relative `}
                     style={{
                       transition: 'width 0.4s',
                       width: leftOpen ? '15%' : '3%'
                     }}>
                     <div
-                      className="fixed"
                       style={{
                         transform: leftOpen ? 'translateX(0%)' : 'translateX(-100%)',
                         msTransform: leftOpen ? '' : 'translateX(-100%)',
@@ -127,9 +130,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       />
                     </div>
                   </div>
-                  <div className="fl w-100 bg-white relative br3">
+
+                  <div
+                    className="flex-grow-1 bg-tigrow relative br3 mv1"
+                  >
                     <span
-                      className="pointer absolute bp3-icon z-999 top-1 left--1"
+                      className="pointer absolute bp3-icon z-3 top-1 left--1"
                       onClick={() => setLeftOpen(!leftOpen)}
                     >
                       <img
@@ -151,6 +157,23 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       </div>
                     </div>
                   </div>
+
+                  <div
+                    className="relative"
+                    style={{
+                      transition: 'width 0.4s',
+                      width: props.rightSidebarOpen ? '30%' : '0%',
+                      zIndex: 5
+                    }}>
+                    <div
+                      id="rightSidebar"
+                      className="h-100 c-tigrowWhite"
+                      style={{
+                        background: 'rgb(6, 5, 23)'
+                      }}
+                    >
+                    </div>
+                  </div>
                 </div>
               </ChatkitProvider>
           }
@@ -163,7 +186,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
+    rightSidebarOpen: state.layoutReducer.rightSidebar.open
   };
 };
 

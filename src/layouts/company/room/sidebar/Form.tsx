@@ -61,6 +61,7 @@ const CreateFormComponent: React.FC<any> = withChatkit((props: CreateFormInterna
 							render={({ input, meta }) =>
 								<InputGroupFieldWithError
 									id={input.name}
+									autoFocus={true}
 									className={`br0 ${checkError(meta) ? "bb b--red" : "bb b--lightBlue"}`}
 									placeHolder="Room name"
 									value={input.value}

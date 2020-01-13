@@ -16,10 +16,9 @@ import {
 	ON_USER_STOPPED_TYPING,
 	REFRESH_MEMBER
 } from "stores/room/Types";
-import { Loading } from 'components/Loading';
-import { RoomListItem } from './RoomListItem';
+import { Loading } from "components/Loading";
+import { RoomListItem } from "./RoomListItem";
 const { withChatkit } = require("@pusher/chatkit-client-react");
-
 
 interface RoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
@@ -33,16 +32,21 @@ export const RoomListComponent = withChatkit(
 
 		const roomId = useSelector((state: any) => state.roomReducer.roomId);
 		const rooms = useSelector((state: any) => state.roomReducer.rooms);
-		const companyId = useSelector((state: any) => state.companyReducer.currentCompany._id);
+		const companyId = useSelector(
+			(state: any) => state.companyReducer.currentCompany._id
+		);
 
-		const load = async (getRoomsAction: () => void) => {
-			await getRoomsAction();
-			if (!props.chatkit.isLoading && companyId) {
-				// filteredRooms
-				const rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
-				dispatch({ type: GET_ROOMS, payload: rooms });
-			}
-		};
+		// const load = async (getRoomsAction: () => void) => {
+		// 	await getRoomsAction();
+		// 	if (!props.chatkit.isLoading && companyId) {
+		// 		// filteredRooms
+		// 		const rooms = props.chatkit.currentUser.rooms.filter(
+		// 			(room: any) => room.customData.company === companyId
+		// 		);
+		// 		dispatch({ type: GET_ROOMS, payload: rooms });
+		// 	}
+		// };
+
 		const subscribeToRoom = (roomId: string, name: string) => {
 			if (!props.chatkit.isLoading) {
 				dispatch({ type: CLEAR_ROOM_MESSAGES });
@@ -63,10 +67,16 @@ export const RoomListComponent = withChatkit(
 								dispatch({ type: ON_PRESENCE_CHANGE });
 							},
 							onUserStartedTyping: (user: any) => {
-								dispatch({ type: ON_USER_STARTED_TYPING, payload: { name: user.name, roomId } });
+								dispatch({
+									type: ON_USER_STARTED_TYPING,
+									payload: { name: user.name, roomId }
+								});
 							},
 							onUserStoppedTyping: (user: any) => {
-								dispatch({ type: ON_USER_STOPPED_TYPING, payload: { name: user.name, roomId } });
+								dispatch({
+									type: ON_USER_STOPPED_TYPING,
+									payload: { name: user.name, roomId }
+								});
 							},
 							onUserJoined: (user: any) => {
 								// console.log("joined : " + user.name);
@@ -116,33 +126,44 @@ export const RoomListComponent = withChatkit(
 			}
 		};
 		useEffect(() => {
-			if (!props.chatkit.isLoading) {
+			if (!props.chatkit.isLoading && companyId) {
 				connectChatManager();
-				load(props.getRoomsAction);
+				// load(props.getRoomsAction);
+
+				// filteredRooms
+				const rooms = props.chatkit.currentUser.rooms.filter(
+					(room: any) => room.customData.company === companyId
+				);
+				dispatch({ type: GET_ROOMS, payload: rooms });
+
 			}
 		}, [props.chatkit]);
 
-		useEffect(() => {
-			if (!props.chatkit.isLoading) {
-				for (const roomId in props.chatkit.currentUser.roomSubscriptions) {
-					if (props.chatkit.currentUser.roomSubscriptions.hasOwnProperty(roomId)) {
-						const room = props.chatkit.currentUser.roomSubscriptions[roomId];
-						room.cancel();
-						room.connected = false;
-					}
-				}
-			}
-		}, [companyId])
+		// TODO [TEST-1] I have to test typing indicator by removing this block
+		// useEffect(() => {
+		// 	if (!props.chatkit.isLoading) {
+		// 		for (const roomId in props.chatkit.currentUser.roomSubscriptions) {
+		// 			if (
+		// 				props.chatkit.currentUser.roomSubscriptions.hasOwnProperty(roomId)
+		// 			) {
+		// 				const room = props.chatkit.currentUser.roomSubscriptions[roomId];
+		// 				room.cancel();
+		// 				room.connected = false;
+		// 			}
+		// 		}
+		// 	}
+		// }, [companyId]);
 
 		return (
 			<>
 				<main
-					className="mw6 center overflow-y-auto"
+					className="mw6"
 					id="roomList"
-					style={{ height: "calc(100vh - 105px)" }}
 				>
-					<ul className="list pl0">
-						{props.chatkit.isLoading ? <Loading /> : rooms.length && (rooms[0] as any).id !== undefined ? (
+					<ul className="list pa0">
+						{props.chatkit.isLoading ? (
+							<Loading />
+						) : rooms.length && (rooms[0] as any).id !== undefined ? (
 							rooms.map((room: any, i: number, arr: any) => {
 								return (
 									<RoomListItem
@@ -157,7 +178,9 @@ export const RoomListComponent = withChatkit(
 									/>
 								);
 							})
-						) : <Loading />}
+						) : (
+									<Loading />
+								)}
 					</ul>
 				</main>
 			</>

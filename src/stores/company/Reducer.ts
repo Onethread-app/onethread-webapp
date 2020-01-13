@@ -22,7 +22,8 @@ import {
 	ADD_DESIGNATION_ERROR,
 	EDIT_DESIGNATION,
 	EDIT_DESIGNATION_ERROR,
-	LOGO_UPLOAD
+	LOGO_UPLOAD,
+	CHANGE_MEMBER_ROLE
 } from "./Types";
 import { User } from "stores/user/Reducer";
 import { Entity } from "stores/UtilsActions";
@@ -258,6 +259,26 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 				currentCompany: {
 					...state.currentCompany,
 					logo: action.payload
+				},
+			}
+		case CHANGE_MEMBER_ROLE:
+			return {
+				...state,
+				currentCompany: {
+					...state.currentCompany,
+					members: state.currentCompany.members
+						.map(
+							(member: ICompanyMembers) => {
+								if (action.payload.memberId === member._id) {
+									return {
+										...member,
+										role: action.payload.role
+									}
+								} else {
+									return member;
+								}
+							}
+						)
 				},
 			}
 		default:

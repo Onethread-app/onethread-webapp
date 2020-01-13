@@ -16,6 +16,9 @@ body {
 .c-tigrowWhite {
 	color: #ffffff;
 }
+.c-message-from{
+	color: rgb(74, 73, 73);
+}
 .bg-tigrowLightBlue {
 	background-color: #0fa3a3;
 }

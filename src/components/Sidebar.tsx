@@ -15,10 +15,10 @@ const SidebarComponent = (props: {
 	leftOpen: boolean;
 }) => {
 	return (
-		<div className="vh-100"
+		<div className="vh-100 flex flex-column"
 			style={{
 				background: "#060517",
-				width: props.leftOpen ? "15%" : "3%"
+				display: props.leftOpen ? "flex" : "none"
 			}}
 		>
 			<div className="bp3-navbar-group bp3-align-left ml3">
@@ -37,11 +37,10 @@ const SidebarComponent = (props: {
 			</div>
 			<ButtonGroup
 				alignText={Alignment.LEFT}
-				className={`bp3-minimal bp3-vertical bp3-fill sidebar-margin   
+				className={`flex-grow-1 bp3-minimal bp3-vertical bp3-fill sidebar-margin   
 				content`}
 				style={{
 					transition: "transform 0.4s",
-					width: "calc(.5vw * 25)"
 				}}
 			>
 				{props.type === "default" ? (

@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import { RoomList } from "./RoomList";
-import { connect } from "react-redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
-import { Dialog, Icon } from "@blueprintjs/core";
-import { CreateForm } from "./Form";
-import { permit } from "stores/UtilsActions";
-import { clearRoomError } from "stores/room/Actions";
-import { IconNames } from "@blueprintjs/icons";
+import React, { useState } from 'react';
+import { RoomList } from './RoomList';
+import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { Icon } from '@blueprintjs/core';
+import { CreateForm } from './Form';
+import { permit } from 'stores/UtilsActions';
+import { clearRoomError } from 'stores/room/Actions';
+import { IconNames } from '@blueprintjs/icons';
+import { RightSidebar } from 'components/RightSidebar';
 
 interface RoomSideBarComponentProps {
 	companyRole?: string;
@@ -23,7 +24,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 
 	return (
 		<>
-			<div className={`t-25-a ${props.isOpen ? "db" : "dn"}`}>
+			<div className={`flex flex-column h-100 t-25-a ${props.isOpen ? 'db' : 'dn'}`}>
 				<div className="flex justify-between items-center ph3">
 					<h3 className="tigrow-darkGray">Rooms</h3>
 					{props.companyRole && permit(props.companyRole) ? (
@@ -37,9 +38,11 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 							undefined
 						)}
 				</div>
-				<RoomList />
+				<div className="flex-grow-1 overflow-y-auto">
+					<RoomList />
+				</div>
 			</div>
-			{showDialog && (
+			{/* {showDialog && (
 				<Dialog
 					onClose={() => {
 						props.clearRoomError();
@@ -52,7 +55,16 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 						setShowDialog={setShowDialog}
 					/>
 				</Dialog>
-			)}
+			)} */}
+			{showDialog &&
+				<RightSidebar
+					onClose={() => { setShowDialog(!showDialog); }}
+				>
+					<CreateForm
+						setShowDialog={setShowDialog}
+					/>
+				</RightSidebar>
+			}
 		</>
 	);
 };
