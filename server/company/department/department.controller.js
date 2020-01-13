@@ -16,7 +16,6 @@ const create = async (req, res) => {
     if (duplicate) {
       logger.info(`Department already exist`);
       return res.status(409).json({
-        status: false,
         message: `Department already exists`,
       });
     }
@@ -60,7 +59,6 @@ const list = async (req, res) => {
     }
 
     return res.status(404).json({
-      status: false,
       message: 'No departments found.',
     });
   } catch (error) {

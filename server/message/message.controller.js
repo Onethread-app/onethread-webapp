@@ -12,7 +12,6 @@ const create = async (req, res, next) => {
     const room = await Room.findById(req.body.room);
     if (!room) {
       return res.status(404).json({
-        status: false,
         message: `No room exists`,
       });
     }
@@ -33,12 +32,10 @@ const create = async (req, res, next) => {
     });
 
     return res.status(201).json({
-      status: true,
       message,
     });
   } catch (error) {
     return res.status(400).json({
-      status: false,
       error,
     });
   }
@@ -49,7 +46,6 @@ const getRoomMessages = async (req, res, next) => {
     const room = await Room.findById(req.params.roomId);
     if (!room) {
       return res.status(404).json({
-        status: false,
         message: `No room exists`,
       });
     }
@@ -73,17 +69,14 @@ const getRoomMessages = async (req, res, next) => {
     //   },
     // ]);
     return res.status(200).json({
-      status: true,
       messages,
     });
 
     return res.status(201).json({
-      status: true,
       message,
     });
   } catch (error) {
     return res.status(400).json({
-      status: false,
       error,
     });
   }
