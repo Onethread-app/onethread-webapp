@@ -8,9 +8,10 @@ import { TOGGLE_EMOJI_PICKER } from 'stores/room/Types';
 import ReactDOM from 'react-dom';
 import { Picker } from 'emoji-mart';
 
+import SmileIcon from './../../../../../resources/images/smile-24px.svg';
+
+// tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
-// const UserIcon = require('./../../../../../resources/images/user.png');
-const SmileIcon = require('./../../../../../resources/images/smile-24px.svg');
 
 interface SendMessageFormProps {
 	chatkit?: any;

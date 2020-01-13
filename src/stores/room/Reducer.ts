@@ -7,20 +7,41 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER
-} from "./Types";
-import { isEmpty } from "lodash";
+	CREATE_ROOM_ERROR,
+	GET_ROOMS_FROM_SERVER,
+	GET_ROOM_ERROR,
+	GET_ROOM_MEMBERS_FROM_SERVER,
+	GET_ROOM_MEMBERS_FROM_SERVER_ERROR,
+	ADD_MEMBER_IN_ROOM_ERROR,
+	ADD_MEMBER_IN_ROOM,
+	ACTIVE_ROOM,
+	ON_PRESENCE_CHANGE,
+	UPDATE_ROOM,
+	ON_USER_STARTED_TYPING,
+	ON_USER_STOPPED_TYPING,
+	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER, GET_ROOMS_FROM_FORM, GET_ROOMS_FROM_ROOM
+} from './Types';
+import { isEmpty } from 'lodash';
+
+// tslint:disable-next-line: interface-name
+export interface IRoom {
+	id: string;
+	name: string;
+	unreadCount: number;
+}
+
+// tslint:disable-next-line: interface-name
 interface IAppState {
 	activeRoom: {};
 	roomId: string;
 	roomName: string;
 	messages: any[];
 	typing: {
-		users: { name: string, roomId: string; }[]
+		users: Array<{ name: string, roomId: string; }>
 	};
 	users: any[];
 	roomMembers: any[];
-	rooms: any[];
+	rooms: [IRoom];
 	companyRooms: any[];
 	loading: boolean;
 	emojiPicker: boolean;
@@ -28,28 +49,29 @@ interface IAppState {
 }
 const InitialState: IAppState = {
 	activeRoom: {},
-	roomId: "",
-	roomName: "",
+	roomId: '',
+	roomName: '',
 	messages: [],
 	typing: {
 		users: []
 	},
 	users: [],
 	roomMembers: [],
-	rooms: [],
+	rooms: [{ id: '', name: '', unreadCount: 0 }],
 	companyRooms: [],
 	emojiPicker: false,
 	loading: false,
-	roomError: "",
+	roomError: '',
 };
 
 const sortRooms = (a: any, b: any) => {
-	let unreadCountA = a.unreadCount,
+	// tslint:disable-next-line: one-variable-per-declaration
+	const unreadCountA = a.unreadCount,
 		unreadCountB = b.unreadCount,
 		nameA = a.name.toLowerCase(),
 		nameB = b.name.toLowerCase();
 	return unreadCountA > unreadCountB ? -1 : unreadCountA < unreadCountB ? 1 : nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
-}
+};
 
 export const RoomReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
@@ -57,7 +79,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				loading: true,
-				roomError: ""
+				roomError: ''
 			};
 		case ON_USER_STARTED_TYPING:
 			return {
@@ -94,7 +116,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 						})
 					)
 					.sort((user: any) => {
-						if (user.presence === "online") return -1;
+						if (user.presence === 'online') { return -1; }
 						return 1;
 					}),
 				loading: false
@@ -118,7 +140,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 							})
 						)
 						.sort((user: any) => {
-							if (user.presence === "online") return -1;
+							if (user.presence === 'online') { return -1; }
 							return 1;
 						}),
 				loading: false
@@ -159,7 +181,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				rooms: state.rooms
-					.map((room: any) => {
+					.map((room: IRoom) => {
 						if (room.id === action.payload.id) {
 							return action.payload;
 						} else {
@@ -169,6 +191,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
 					.sort(sortRooms),
 				loading: false
 			};
+		case GET_ROOMS_FROM_FORM:
+		case GET_ROOMS_FROM_ROOM:
 		case GET_ROOMS:
 			return {
 				...state,
@@ -179,7 +203,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				companyRooms: [...state.companyRooms, action.payload],
-				roomError: "",
+				rooms: [...state.rooms, {
+					id: action.payload._id,
+					name: action.payload.name,
+					unreadCount: 0
+				}],
+				roomError: '',
 				loading: false
 			};
 		case GET_ROOMS_FROM_SERVER:
@@ -217,7 +246,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case CLEAR_ROOMS_ERROR:
 			return {
 				...state,
-				roomError: ""
+				roomError: ''
 			};
 		case CLEAR_ROOMS_REDUCER_STATE:
 			return {

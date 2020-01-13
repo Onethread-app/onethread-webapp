@@ -24,38 +24,40 @@ import {
 	EDIT_DESIGNATION_ERROR,
 	LOGO_UPLOAD,
 	CHANGE_MEMBER_ROLE
-} from "./Types";
-import { User } from "stores/user/Reducer";
-import { Entity } from "stores/UtilsActions";
+} from './Types';
+import { User } from 'stores/user/Reducer';
+import { Entity } from 'stores/UtilsActions';
 
+// tslint:disable-next-line: interface-name
 export interface IDesignations {
 	_id: string;
 	division: string;
 	position: string;
 	department: { _id: string; name: string };
 }
+// tslint:disable-next-line: interface-name
 export interface ICompanyMembers {
-	_id: string,
+	_id: string;
 	account: {
 		_id: string;
 		name: string;
 		firstName: string;
 		lastName: string;
-	},
+	};
 	role: string;
 	designations: [IDesignations];
 }
 export interface CompanyModel {
-	_id: string,
-	name: string,
-	type: string,
-	email: string,
-	address: string
-	legalOwnerName: string,
-	legalOwnerMail: string,
-	employees: User[],
-	divisions: Entity[],
-	departments: Entity[],
+	_id: string;
+	name: string;
+	type: string;
+	email: string;
+	address: string;
+	legalOwnerName: string;
+	legalOwnerMail: string;
+	employees: User[];
+	divisions: Entity[];
+	departments: Entity[];
 	members: [ICompanyMembers];
 	role: string;
 	about: string;
@@ -65,23 +67,23 @@ export interface CompanyModel {
 
 const InitialState = {
 	currentCompany: {
-		_id: "",
-		name: "",
-		type: "",
-		email: "",
-		address: "",
-		legalOwnerName: "",
-		legalOwnerMail: "",
+		_id: '',
+		name: '',
+		type: '',
+		email: '',
+		address: '',
+		legalOwnerName: '',
+		legalOwnerMail: '',
 		members: [],
 		divisions: [{}],
 		departments: [{}],
-		role: "",
-		about: "",
+		role: '',
+		about: '',
 		skill: [{}],
 		logo: {}
 	},
 	createCompanyError: {
-		message: "",
+		message: '',
 		network: false
 	},
 	loading: false,
@@ -90,7 +92,7 @@ const InitialState = {
 	departmentNameLoading: false,
 	designationLoading: false,
 	error: ''
-}
+};
 
 export const CompanyReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
@@ -162,12 +164,12 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 					]
 				},
 				departmentNameLoading: false,
-				error: ""
+				error: ''
 			};
 		case CLEAR_ADD_DEPARTMENT_ERROR:
 			return {
 				...state,
-				error: "",
+				error: '',
 				departmentNameLoading: false
 			};
 		case GET_ALL_DEPARTMENT:
@@ -210,7 +212,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 					name: action.payload
 				},
 				changeCompanyNameLoading: false,
-				error: ""
+				error: ''
 			};
 		case CHANGE_COMPANY_NAME_ERROR:
 			return {
@@ -221,7 +223,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 		case CLEAR_CHANGE_COMPANY_NAME_ERROR:
 			return {
 				...state,
-				error: "",
+				error: '',
 				changeCompanyNameLoading: false
 			};
 		case COMPANY_DESIGNATION_LOADING:
@@ -232,7 +234,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 		case ADD_DESIGNATION:
 			return {
 				...state,
-				error: "",
+				error: '',
 				designationLoading: false
 			};
 		case ADD_DESIGNATION_ERROR:
@@ -244,7 +246,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 		case EDIT_DESIGNATION:
 			return {
 				...state,
-				error: "",
+				error: '',
 				designationLoading: false
 			};
 		case EDIT_DESIGNATION_ERROR:
@@ -260,7 +262,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 					...state.currentCompany,
 					logo: action.payload
 				},
-			}
+			};
 		case CHANGE_MEMBER_ROLE:
 			return {
 				...state,
@@ -273,14 +275,14 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 									return {
 										...member,
 										role: action.payload.role
-									}
+									};
 								} else {
 									return member;
 								}
 							}
 						)
 				},
-			}
+			};
 		default:
 			return state;
 	}

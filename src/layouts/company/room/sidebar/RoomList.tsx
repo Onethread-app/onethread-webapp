@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
-import { isEqual } from "lodash";
-import { withRouter, RouteComponentProps } from "react-router-dom";
-import { useDispatch, useSelector, connect } from "react-redux";
-import { getRoomsAction } from "../../../../stores/room/Actions";
+import React, { useEffect } from 'react';
+import { isEqual } from 'lodash';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useDispatch, useSelector, connect } from 'react-redux';
+import { getRoomsAction } from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
@@ -14,11 +14,15 @@ import {
 	UPDATE_ROOM,
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING,
-	REFRESH_MEMBER
-} from "stores/room/Types";
-import { Loading } from "components/Loading";
-import { RoomListItem } from "./RoomListItem";
-const { withChatkit } = require("@pusher/chatkit-client-react");
+	REFRESH_MEMBER,
+	GET_ROOMS_FROM_ROOM
+} from 'stores/room/Types';
+import { Loading } from 'components/Loading';
+import { RoomListItem } from './RoomListItem';
+import { IRoom } from 'stores/room/Reducer';
+
+// tslint:disable-next-line: no-var-requires
+const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface RoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
@@ -32,6 +36,7 @@ export const RoomListComponent = withChatkit(
 
 		const roomId = useSelector((state: any) => state.roomReducer.roomId);
 		const rooms = useSelector((state: any) => state.roomReducer.rooms);
+		const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
 		const companyId = useSelector(
 			(state: any) => state.companyReducer.currentCompany._id
 		);
@@ -47,6 +52,19 @@ export const RoomListComponent = withChatkit(
 		// 	}
 		// };
 
+		// tslint:disable-next-line: no-shadowed-variable
+		const fetchMessages = (roomId: any, limit = 100) => {
+			props.chatkit.currentUser
+				.fetchMultipartMessages({
+					roomId,
+					limit
+				})
+				.then((messages: any) => {
+					dispatch({ type: GET_ROOM_MESSAGES, payload: messages });
+				});
+		};
+
+		// tslint:disable-next-line: no-shadowed-variable
 		const subscribeToRoom = (roomId: string, name: string) => {
 			if (!props.chatkit.isLoading) {
 				dispatch({ type: CLEAR_ROOM_MESSAGES });
@@ -92,22 +110,11 @@ export const RoomListComponent = withChatkit(
 						dispatch({ type: ACTIVE_ROOM, payload: room });
 					})
 					.catch((err: any) => {
-						console.log("error on subscribing to room: ", err);
 						subscribeToRoom(roomId, name);
 					});
 			}
 		};
 
-		const fetchMessages = (roomId: any, limit = 100) => {
-			props.chatkit.currentUser
-				.fetchMultipartMessages({
-					roomId,
-					limit
-				})
-				.then((messages: any) => {
-					dispatch({ type: GET_ROOM_MESSAGES, payload: messages });
-				});
-		};
 		const connectChatManager = () => {
 			if (!props.chatkit.isLoading) {
 				props.chatkit.chatManager
@@ -120,17 +127,19 @@ export const RoomListComponent = withChatkit(
 						// console.log('Successful connection', currentUser)
 					})
 					.catch((err: any) => {
-						console.log("Error on connection", err);
 						connectChatManager();
 					});
 			}
 		};
+
 		useEffect(() => {
 			if (!props.chatkit.isLoading && companyId) {
 				connectChatManager();
 				// load(props.getRoomsAction);
 
 				// filteredRooms
+				console.log('1', props.chatkit.currentUser.rooms);
+				// tslint:disable-next-line: no-shadowed-variable
 				const rooms = props.chatkit.currentUser.rooms.filter(
 					(room: any) => room.customData.company === companyId
 				);
@@ -164,7 +173,7 @@ export const RoomListComponent = withChatkit(
 						{props.chatkit.isLoading ? (
 							<Loading />
 						) : rooms.length && (rooms[0] as any).id !== undefined ? (
-							rooms.map((room: any, i: number, arr: any) => {
+							rooms.map((room: IRoom, i: number, arr: any) => {
 								return (
 									<RoomListItem
 										key={room.id}
@@ -173,7 +182,7 @@ export const RoomListComponent = withChatkit(
 										name={room.name}
 										unreadCount={room.unreadCount}
 										lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
-										active={room.id === roomId ? "bg-lightest-blue" : ""}
+										active={room.id === roomId ? 'bg-lightest-blue' : ''}
 										subscribeToRoom={subscribeToRoom}
 									/>
 								);
