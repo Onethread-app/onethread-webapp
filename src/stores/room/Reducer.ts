@@ -7,7 +7,7 @@ import {
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
-	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, CLEAR_ROOMS_ERROR, REFRESH_MEMBER
+	CREATE_ROOM_ERROR, GET_ROOMS_FROM_SERVER, GET_ROOM_ERROR, GET_ROOM_MEMBERS_FROM_SERVER, GET_ROOM_MEMBERS_FROM_SERVER_ERROR, ADD_MEMBER_IN_ROOM_ERROR, ADD_MEMBER_IN_ROOM, ACTIVE_ROOM, ON_PRESENCE_CHANGE, UPDATE_ROOM, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER
 } from "./Types";
 import { isEmpty } from "lodash";
 interface IAppState {
@@ -23,6 +23,7 @@ interface IAppState {
 	rooms: any[];
 	companyRooms: any[];
 	loading: boolean;
+	emojiPicker: boolean;
 	roomError: string;
 }
 const InitialState: IAppState = {
@@ -37,9 +38,18 @@ const InitialState: IAppState = {
 	roomMembers: [],
 	rooms: [],
 	companyRooms: [],
+	emojiPicker: false,
 	loading: false,
 	roomError: "",
 };
+
+const sortRooms = (a: any, b: any) => {
+	let unreadCountA = a.unreadCount,
+		unreadCountB = b.unreadCount,
+		nameA = a.name.toLowerCase(),
+		nameB = b.name.toLowerCase();
+	return unreadCountA > unreadCountB ? -1 : unreadCountA < unreadCountB ? 1 : nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+}
 
 export const RoomReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
@@ -156,21 +166,13 @@ export const RoomReducer = (state = InitialState, action: any) => {
 							return room;
 						}
 					})
-					.sort((a: any, b: any) => {
-						a = a.unreadCount;
-						b = b.unreadCount;
-						return a > b ? -1 : a < b ? 1 : 0;
-					}),
+					.sort(sortRooms),
 				loading: false
 			};
 		case GET_ROOMS:
 			return {
 				...state,
-				rooms: action.payload.sort((a: any, b: any) => {
-					a = a.unreadCount;
-					b = b.unreadCount;
-					return a > b ? -1 : a < b ? 1 : 0;
-				}),
+				rooms: action.payload.sort(sortRooms),
 				loading: false
 			};
 		case CREATE_ROOM_FROM_SERVER:
@@ -197,6 +199,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				...state,
 				roomMembers: [...state.roomMembers, ...action.payload],
 				loading: false
+			};
+		case TOGGLE_EMOJI_PICKER:
+			return {
+				...state,
+				emojiPicker: action.payload
 			};
 		case ADD_MEMBER_IN_ROOM_ERROR:
 		case GET_ROOM_MEMBERS_FROM_SERVER_ERROR:

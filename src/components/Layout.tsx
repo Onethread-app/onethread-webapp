@@ -13,33 +13,29 @@ import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard } from 'stores/board/Actions';
 
-const arrowLeft = require("../resources/images/arrow left.svg");
-const arrowRight = require("../resources/images/arrow right.svg");
+import arrowLeft from '../resources/images/arrow left.svg';
+import arrowRight from '../resources/images/arrow right.svg';
 
-const {
-  ChatkitProvider,
-  TokenProvider,
-} = require("@pusher/chatkit-client-react");
+// tslint:disable-next-line: no-var-requires
+const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
 
-const tokenProvider = new TokenProvider({
-  url: TokenUrlServer,
-});
+const tokenProvider = new TokenProvider({ url: TokenUrlServer });
 
 const load = async (
-  match: match,
-  fetchUserAction: () => void,
-  getCompanyDetails: (companyName: string) => void,
-  getSelectedBoard: (boardId: string) => void
+  reactRouterMatch: match,
+  fetchUser: () => void,
+  getCompanyInformation: (companyName: string) => void,
+  getSelectedBoardDetails: (boardId: string) => void
 ) => {
-  await fetchUserAction();
-  if (isEmpty((match.params as any).cname) === false) {
-    await getCompanyDetails((match.params as any).cname);
+  await fetchUser();
+  if (isEmpty((reactRouterMatch.params as any).cname) === false) {
+    await getCompanyInformation((reactRouterMatch.params as any).cname);
   }
-  if (isEmpty((match.params as any).boardId) === false) {
-    await getSelectedBoard((match.params as any).boardId);
+  if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
+    await getSelectedBoardDetails((reactRouterMatch.params as any).boardId);
   }
   return Promise.resolve({});
-}
+};
 
 interface LayoutProps {
   Component: React.ComponentClass | React.StatelessComponent;
@@ -50,7 +46,8 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => void;
   getSelectedBoard: (boardId: string) => void;
-  company: CompanyModel
+  company: CompanyModel;
+  rightSidebarOpen: boolean;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -65,8 +62,16 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       && isEqual((props.match.params as any).username, props.user.name) === false) {
       props.history.push(`/unavailable/profile`);
     }
-    if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false && isEmpty(props.company._id) === true)) {
-      load(props.match, props.fetchUserAction, props.getCompanyDetails, props.getSelectedBoard).then(r => setLoading(false));
+    if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false
+      && isEmpty(props.company._id) === true)) {
+      load(
+        props.match,
+        props.fetchUserAction,
+        props.getCompanyDetails,
+        props.getSelectedBoard
+      ).then(() =>
+        setLoading(false)
+      );
     }
   }, [loading]);
 
@@ -76,13 +81,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 
   return (
     <div
-      className="cf vh-100 pa1"
-      style={{ background: "#060517" }}
+      className="cf vh-100"
+      style={{ background: '#060517' }}
       onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
     >
       <div className="flex overflow-hidden">
         <div
-          className="w-100 border-box overflow-auto">
+          className="w-100 border-box">
           {loading === true ? <Loading />
             : isEmpty(props.user._id) === true ?
               <p className="f3 tc fw5 pt4 white">
@@ -101,19 +106,21 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 tokenProvider={tokenProvider}
                 userId={props.user._id}
               >
-                <div className="flex">
+                <div
+                  id="main-layout"
+                  className={`flex relative ${props.rightSidebarOpen && 'main-layout-overlay'}`}
+                >
                   <div
-                    className="relative"
+                    className={`relative `}
                     style={{
-                      transition: "width 0.4s",
-                      width: leftOpen ? "15%" : "3%"
+                      transition: 'width 0.4s',
+                      width: leftOpen ? '15%' : '3%'
                     }}>
                     <div
-                      className="fixed"
                       style={{
-                        transform: leftOpen ? "translateX(0%)" : "translateX(-100%)",
-                        msTransform: leftOpen ? "" : "translateX(-100%)",
-                        WebkitTransition: leftOpen ? "" : "translateX(-100%)",
+                        transform: leftOpen ? 'translateX(0%)' : 'translateX(-100%)',
+                        msTransform: leftOpen ? '' : 'translateX(-100%)',
+                        WebkitTransition: leftOpen ? '' : 'translateX(-100%)',
                       }}>
                       <Sidebar
                         user={props.user}
@@ -123,9 +130,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       />
                     </div>
                   </div>
-                  <div className="fl w-100 bg-tigrow relative br3">
+
+                  <div
+                    className="flex-grow-1 bg-tigrow relative br3 mv1"
+                  >
                     <span
-                      className="pointer absolute bp3-icon z-999 top-1 left--1"
+                      className="pointer absolute bp3-icon z-3 top-1 left--1"
                       onClick={() => setLeftOpen(!leftOpen)}
                     >
                       <img
@@ -137,7 +147,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     <div
                       className="flex flex-column"
                       style={{
-                        height: "calc(100vh - 0.7rem)",
+                        height: 'calc(100vh - 0.7rem)',
                       }}>
                       <NavbarTop scrollTop={scrollTop} />
                       <div
@@ -147,20 +157,39 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       </div>
                     </div>
                   </div>
+
+                  <div
+                    className="relative"
+                    style={{
+                      transition: 'width 0.4s',
+                      width: props.rightSidebarOpen ? '30%' : '0%',
+                      zIndex: 5
+                    }}>
+                    <div
+                      id="rightSidebar"
+                      className="h-100 c-tigrowWhite"
+                      style={{
+                        background: 'rgb(6, 5, 23)'
+                      }}
+                    >
+                    </div>
+                  </div>
                 </div>
               </ChatkitProvider>
           }
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
-    company: state.companyReducer.currentCompany
-  }
-}
+    company: state.companyReducer.currentCompany,
+    rightSidebarOpen: state.layoutReducer.rightSidebar.open
+  };
+};
 
-export const Layout = connect(mapStateToProps, { fetchUserAction, getCompanyDetails, getSelectedBoard })(withRouter(LayoutComponent));
+export const Layout = connect(mapStateToProps,
+  { fetchUserAction, getCompanyDetails, getSelectedBoard })(withRouter(LayoutComponent));

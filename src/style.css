@@ -5,3 +5,98 @@
 .sendMessage .bp3-input{
   height: auto;
 }
+
+.message-mine{
+  border-top-right-radius: 0.1rem;
+}
+
+.message-others{
+  border-top-left-radius: 0.1rem;
+}
+
+/* emoji */
+.emoji-mart {
+  position: absolute;
+  bottom: 55px;
+  right: 10px;
+}
+
+/*  */
+
+.message-form, .message-input {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+input[type="text"].message-input, textarea.message-input {
+  height: 80px;
+  flex-grow: 1;
+  line-height: 35px;
+  padding-left: 20px;
+  border-radius: 0;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  border: none;
+  font-size: 16px;
+  color: #333;
+  min-height: auto;
+  overflow-y: auto;
+  resize: none;
+  border-right: 1px solid #ccc;
+}
+
+.message-input:focus {
+  outline: none;
+}
+
+/* react textarea */
+.rta {
+  flex-grow: 1;
+}
+
+.rta {
+  position: relative;
+  border-right: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+}
+
+.rta__autocomplete {
+  position: absolute;
+  width: 250px;
+  height: 400px;
+  overflow-y: auto;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.rta__autocomplete ul {
+  list-style: none;
+  text-align: left;
+  margin: 4px;
+  padding-left: 0px;
+}
+
+.rta__autocomplete li {
+  margin-bottom: 5px;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.rta__autocomplete li:hover {
+  background-color: rgb(108, 221, 193);
+}
+
+.main-layout-overlay::before{
+  content: "";
+  background-color: transparent;
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 4;
+}

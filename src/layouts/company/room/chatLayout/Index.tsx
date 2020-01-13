@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from 'react';
 import { SendMessageForm } from './messages/SendMessageForm';
 import { MessageList } from './messages/MessageList';
 import { connect } from 'react-redux';
 import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './members/AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
-import { isEmpty } from "lodash";
+import { isEmpty } from 'lodash';
 import { showAddMember } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
+import { RightSidebar } from 'components/RightSidebar';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
@@ -19,17 +20,20 @@ interface ChatLayoutComponentProps {
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
 	const [showMemberListDialog, setShowMemberListDialog] = useState(false);
-
-	useEffect(() => {
-		if (!isEmpty(props.activeRoom)) {
-			props.getRoomMembers(props.activeRoom.id);
-		}
-	}, [props.activeRoom]);
+	// TODO: future works
+	// useEffect(() => {
+	// 	if (!isEmpty(props.activeRoom)) {
+	// 		props.getRoomMembers(props.activeRoom.id);
+	// 	}
+	// }, [props.activeRoom]);
 
 	return (
 		<>
 			{isEmpty(props.activeRoom) === false ?
-				<div>
+				<div
+					className="flex flex-column h-100"
+				// style={{ height: "calc(100vh - 50px)" }}
+				>
 					{/* chat heading starts */}
 					<div className="flex justify-between items-center ph4 pv2 bb b--tigrowLightGray-1">
 						<div>
@@ -42,11 +46,11 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							<Button
 								onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}
 								className="bp3-minimal outline-0 grow"
-								style={{ background: "#F55B7F" }}
+								style={{ background: '#F55B7F' }}
 							>
 								<Icon
 									icon="new-person"
-									style={{ background: "#F55B7F", color: "white" }}
+									style={{ background: '#F55B7F', color: 'white' }}
 								/>
 							</Button>
 							: null}
@@ -60,7 +64,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					<p>General is a default room.</p>
 				</div>
 			}
-			{showMemberFormDialog && (
+			{/* {showMemberFormDialog && (
 				<Dialog
 					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
 					isOpen={showMemberFormDialog}
@@ -71,7 +75,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
 					/>
 				</Dialog>
-			)}
+			)} */}
 			{showMemberListDialog && (
 				<Dialog
 					onClose={() => setShowMemberListDialog(!showMemberListDialog)}
@@ -82,8 +86,20 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 						users={props.users} />
 				</Dialog>
 			)}
+
+			{showMemberFormDialog &&
+				<RightSidebar
+					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
+				>
+					<AddMemberForm
+						showDialog={showMemberFormDialog}
+						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
+					/>
+				</RightSidebar>
+			}
+
 		</>
-	)
+	);
 };
 
 const mapStateToProps = (state: any) => {
@@ -91,6 +107,7 @@ const mapStateToProps = (state: any) => {
 		activeRoom: state.roomReducer.activeRoom,
 		users: state.roomReducer.users,
 		companyRole: state.companyReducer.currentCompany.role,
-	}
-}
-export const ChatLayout = connect(mapStateToProps, { getRoomMembers })(ChatLayoutComponent)
+	};
+};
+
+export const ChatLayout = connect(mapStateToProps, { getRoomMembers })(ChatLayoutComponent);
