@@ -35,8 +35,11 @@ export const MessageItem = (props: MessageItemProps) => {
             {props.sender.name}
           </h6>
           <h2
-            className={`f6 fw3 ma0 mt1 tj ${currentUser ? 'white' : 'c-message-from'} break-word`}
-            style={{ whiteSpace: 'pre-wrap' }}
+            className={`f6 fw3 ma0 mt1 tj break-word`}
+            style={{
+              color: currentUser ? 'white' : 'rgb(74, 73, 73)',
+              whiteSpace: 'pre-wrap'
+            }}
           >{props.text}
           </h2>
           {/* <div className={`flex ${currentUser ? " flex-row-reverse" : ""}`}>

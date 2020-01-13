@@ -8,7 +8,6 @@ import { User } from 'stores/user/Reducer';
 import { isEmpty, isEqual } from 'lodash';
 import { withRouter, RouteComponentProps, match, Link } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
-import { toggleRightSidebar } from 'stores/layout/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
@@ -47,7 +46,6 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => void;
   getSelectedBoard: (boardId: string) => void;
-  toggleRightSidebar: () => void;
   company: CompanyModel;
   rightSidebarOpen: boolean;
 }
@@ -146,18 +144,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         color="#0FA3A3"
                       />
                     </span>
-
-                    {/* <span
-                      className="pointer absolute bp3-icon z-999 top-1 right--1"
-                      onClick={() => props.toggleRightSidebar()}
-                    >
-                      <img
-                        src={props.rightSidebarOpen ? arrowRight : arrowLeft}
-                        className="br2 w2"
-                        color="#0FA3A3"
-                      />
-                    </span> */}
-
                     <div
                       className="flex flex-column"
                       style={{
@@ -206,4 +192,4 @@ const mapStateToProps = (state: any) => {
 };
 
 export const Layout = connect(mapStateToProps,
-  { fetchUserAction, getCompanyDetails, getSelectedBoard, toggleRightSidebar })(withRouter(LayoutComponent));
+  { fetchUserAction, getCompanyDetails, getSelectedBoard })(withRouter(LayoutComponent));
