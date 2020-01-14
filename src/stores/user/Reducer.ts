@@ -8,7 +8,6 @@ export interface ICompanyByUser {
 		name: string;
 	}
 }
-
 export interface IProfilePhoto {
 	_id: string;
 	link: string;
@@ -16,7 +15,15 @@ export interface IProfilePhoto {
 	type: string;
 	imageSource: string;
 }
-
+export interface IExperience {
+	_id: string,
+	name: string,
+	qualification: string,
+	startYear: string,
+	endingYear: string,
+	currentStatus: boolean,
+	description: string
+}
 export interface User {
 	_id: string,
 	email: string
@@ -33,14 +40,10 @@ export interface User {
 	about: string,
 	birthDate: Date,
 	companies: ICompanyByUser[],
-	friends: string[],
-	pendingFriends: string[],
-	sendingFriendList: string[],
 	timeline: string[],
 	skillArea: ItemEntityProps[];
 	profileImage: IProfilePhoto
 }
-
 
 const InitialState = {
 	user: {
@@ -146,9 +149,9 @@ export const UserReducer = (state = InitialState, action: any) => {
 				user: {
 					...state.user,
 					profileImage: action.payload
-			},
+				},
+			}
 		}
-	}
 		default:
 			return state;
 	}

@@ -19,9 +19,9 @@ export const checkError = (meta: any) => {
 
 export const isEmail = (email: string) => {
   const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (email.match(regexForEmailValidation)) {
+  if (email && email.match(regexForEmailValidation)) {
     return undefined;
-  } 
+  }
   return 'Please enter a valid email';
 }
 
@@ -54,9 +54,15 @@ export const errorMessgeHandler = (handlerResponse: any) => {
       payload: handlerResponse
     }
   }
+  if (handlerResponse.response.status === 401) {
+    return {
+      message:  handlerResponse.response.data.errors[0].message,
+      fieldName: 'authError'
+    };
+  }
   return {
     message: handlerResponse.response.data.errors[0].message,
-    fieldName: handlerResponse.response.data.errors[0].fieldName ? 
-                handlerResponse.response.data.errors[0].fieldName : "authError"
+    fieldName: handlerResponse.response.data.errors[0].fieldName ?
+      handlerResponse.response.data.errors[0].fieldName : ""
   }
 }
