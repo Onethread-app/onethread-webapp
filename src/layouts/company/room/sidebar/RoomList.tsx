@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { useDispatch, useSelector, connect } from 'react-redux';
+import { useDispatch, connect } from 'react-redux';
 import { getRoomsAction } from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
@@ -15,7 +15,6 @@ import {
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING,
 	REFRESH_MEMBER,
-	GET_ROOMS_FROM_ROOM
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
@@ -28,19 +27,14 @@ interface RoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
 	getRoomsAction: () => void;
 	activeRoom: any;
+	roomId: string;
+	rooms: [IRoom];
+	companyId: string;
 }
 
 export const RoomListComponent = withChatkit(
 	(props: RoomListComponentProps) => {
 		const dispatch = useDispatch();
-
-		const roomId = useSelector((state: any) => state.roomReducer.roomId);
-		const rooms = useSelector((state: any) => state.roomReducer.rooms);
-		const companyRooms = useSelector((state: any) => state.roomReducer.companyRooms);
-		const companyId = useSelector(
-			(state: any) => state.companyReducer.currentCompany._id
-		);
-
 		// const load = async (getRoomsAction: () => void) => {
 		// 	await getRoomsAction();
 		// 	if (!props.chatkit.isLoading && companyId) {
@@ -133,15 +127,14 @@ export const RoomListComponent = withChatkit(
 		};
 
 		useEffect(() => {
-			if (!props.chatkit.isLoading && companyId) {
+			if (!props.chatkit.isLoading && props.companyId) {
 				connectChatManager();
 				// load(props.getRoomsAction);
 
 				// filteredRooms
-				console.log('1', props.chatkit.currentUser.rooms);
 				// tslint:disable-next-line: no-shadowed-variable
 				const rooms = props.chatkit.currentUser.rooms.filter(
-					(room: any) => room.customData.company === companyId
+					(room: any) => room.customData.company === props.companyId
 				);
 				dispatch({ type: GET_ROOMS, payload: rooms });
 
@@ -172,8 +165,8 @@ export const RoomListComponent = withChatkit(
 					<ul className="list pa0">
 						{props.chatkit.isLoading ? (
 							<Loading />
-						) : rooms.length && (rooms[0] as any).id !== undefined ? (
-							rooms.map((room: IRoom, i: number, arr: any) => {
+						) : props.rooms.length && (props.rooms[0] as any).id !== undefined ? (
+							props.rooms.map((room: IRoom, i: number, arr: any) => {
 								return (
 									<RoomListItem
 										key={room.id}
@@ -181,8 +174,8 @@ export const RoomListComponent = withChatkit(
 										img={room.name[0]}
 										name={room.name}
 										unreadCount={room.unreadCount}
-										lastChild={isEqual(room.id, arr[rooms.length - 1].id)}
-										active={room.id === roomId ? 'bg-lightest-blue' : ''}
+										lastChild={isEqual(room.id, arr[props.rooms.length - 1].id)}
+										active={room.id === props.roomId ? 'bg-lightest-blue' : ''}
 										subscribeToRoom={subscribeToRoom}
 									/>
 								);
@@ -197,6 +190,14 @@ export const RoomListComponent = withChatkit(
 	}
 );
 
-export const RoomList = connect(null, { getRoomsAction })(
+const mapStateToProps = (state: any) => {
+	return {
+		roomId: state.roomReducer.roomId,
+		rooms: state.roomReducer.rooms,
+		companyId: state.companyReducer.currentCompany._id
+	};
+};
+
+export const RoomList = connect(mapStateToProps, { getRoomsAction })(
 	withRouter(RoomListComponent)
 );

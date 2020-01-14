@@ -1,14 +1,13 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 import { IconNames } from '@blueprintjs/icons';
-import { connect, useSelector, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { createRoomAction } from 'stores/room/Actions';
 import { Form, Field } from 'react-final-form';
 import { required, composeValidators, maxValue } from 'components/final-form/utils';
 import { SubmitAndResetButtons } from 'components/final-form/SubmitResetButtons';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
-import { GET_ROOMS, GET_ROOMS_FROM_FORM } from 'stores/room/Types';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -23,9 +22,6 @@ interface CreateFormInternalProps extends CreateFormProps {
 }
 
 const CreateFormComponent: React.FC<any> = withChatkit((props: CreateFormInternalProps) => {
-	const dispatch = useDispatch();
-
-	const companyId = useSelector((state: any) => state.companyReducer.currentCompany._id);
 
 	const onSubmit: any = async (values: any) => {
 		const status: any = await props.createRoomAction(values);
@@ -33,9 +29,6 @@ const CreateFormComponent: React.FC<any> = withChatkit((props: CreateFormInterna
 			return { name: 'Duplicate name' };
 		} else if (status === 201) {
 			if (!props.chatkit.isLoading) {
-				console.log('3', props.chatkit.currentUser.rooms);
-				const rooms = props.chatkit.currentUser.rooms.filter((room: any) => room.customData.company === companyId);
-				await dispatch({ type: GET_ROOMS_FROM_FORM, payload: rooms });
 				props.setShowDialog(false);
 			}
 		}

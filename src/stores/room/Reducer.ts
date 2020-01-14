@@ -31,7 +31,7 @@ export interface IRoom {
 }
 
 // tslint:disable-next-line: interface-name
-interface IAppState {
+export interface IRoomReducer {
 	activeRoom: {};
 	roomId: string;
 	roomName: string;
@@ -47,7 +47,7 @@ interface IAppState {
 	emojiPicker: boolean;
 	roomError: string;
 }
-const InitialState: IAppState = {
+const InitialState: IRoomReducer = {
 	activeRoom: {},
 	roomId: '',
 	roomName: '',
@@ -207,7 +207,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 					id: action.payload._id,
 					name: action.payload.name,
 					unreadCount: 0
-				}],
+				}].sort(sortRooms),
 				roomError: '',
 				loading: false
 			};
