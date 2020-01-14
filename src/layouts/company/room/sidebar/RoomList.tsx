@@ -133,9 +133,18 @@ export const RoomListComponent = withChatkit(
 
 				// filteredRooms
 				// tslint:disable-next-line: no-shadowed-variable
-				const rooms = props.chatkit.currentUser.rooms.filter(
-					(room: any) => room.customData.company === props.companyId
-				);
+				const rooms = props.chatkit.currentUser.rooms
+					.filter((room: any) => room.customData.company === props.companyId)
+					.map((room: any) => ({
+						id: room.id,
+						name: room.name,
+						unreadCount: room.unreadCount,
+						company: room.customData.company,
+						createdByUserId: room.createdByUserId,
+						createdAt: room.createdAt,
+						updatedAt: room.updatedAt
+					}));
+
 				dispatch({ type: GET_ROOMS, payload: rooms });
 
 			}

@@ -19,7 +19,7 @@ import {
 	UPDATE_ROOM,
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING,
-	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER, GET_ROOMS_FROM_FORM, GET_ROOMS_FROM_ROOM
+	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -28,6 +28,10 @@ export interface IRoom {
 	id: string;
 	name: string;
 	unreadCount: number;
+	company: string;
+	createdByUserId: string;
+	createdAt: string;
+	updatedAt: string;
 }
 
 // tslint:disable-next-line: interface-name
@@ -57,20 +61,33 @@ const InitialState: IRoomReducer = {
 	},
 	users: [],
 	roomMembers: [],
-	rooms: [{ id: '', name: '', unreadCount: 0 }],
+	rooms: [{
+		id: '',
+		name: '',
+		unreadCount: 0,
+		company: '',
+		createdByUserId: '',
+		createdAt: '',
+		updatedAt: ''
+	}],
 	companyRooms: [],
 	emojiPicker: false,
 	loading: false,
 	roomError: '',
 };
 
-const sortRooms = (a: any, b: any) => {
+export const sortRooms = (a: IRoom, b: IRoom) => {
 	// tslint:disable-next-line: one-variable-per-declaration
 	const unreadCountA = a.unreadCount,
 		unreadCountB = b.unreadCount,
-		nameA = a.name.toLowerCase(),
-		nameB = b.name.toLowerCase();
-	return unreadCountA > unreadCountB ? -1 : unreadCountA < unreadCountB ? 1 : nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+		createdAtA = Date.parse(a.createdAt),
+		createdAtB = Date.parse(b.createdAt);
+
+	return unreadCountA > unreadCountB ?
+		-1 : unreadCountA < unreadCountB ?
+			1 : createdAtA > createdAtB ?
+				1 : createdAtA < createdAtB ?
+					-1 : 0;
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
@@ -187,12 +204,10 @@ export const RoomReducer = (state = InitialState, action: any) => {
 						} else {
 							return room;
 						}
-					})
-					.sort(sortRooms),
+					}).sort(sortRooms)
+				,
 				loading: false
 			};
-		case GET_ROOMS_FROM_FORM:
-		case GET_ROOMS_FROM_ROOM:
 		case GET_ROOMS:
 			return {
 				...state,
@@ -206,8 +221,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				rooms: [...state.rooms, {
 					id: action.payload._id,
 					name: action.payload.name,
-					unreadCount: 0
-				}].sort(sortRooms),
+					unreadCount: 0,
+					company: action.payload.company,
+					createdByUserId: action.payload.account,
+					createdAt: action.payload.createdAt,
+					updatedAt: action.payload.updatedAt
+				}],
 				roomError: '',
 				loading: false
 			};
