@@ -19,10 +19,10 @@ const schema = {
   division: idSchema.id,
   position: Joi.string(),
   role: Joi.string().valid([
-    'Super Admin',
-    'Admin',
-    'Manager',
-    'Moderator',
+    'superAdmin',
+    'admin',
+    'manager',
+    'moderator',
     'employee',
   ]),
 };
@@ -42,6 +42,12 @@ module.exports = {
     }),
   }),
   getMember: Joi.object().keys({
+    params: memberId,
+  }),
+  changeRole: Joi.object().keys({
+    body: Joi.object().keys({
+      role: schema.role.required(),
+    }),
     params: memberId,
   }),
   // updateCompany: Joi.object().keys({

@@ -13,21 +13,32 @@ const changeName = async (req, res, next) => {
   }
 
   try {
+    // check member & role: superAdmin/admin
+    const member = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    });
+
+    if (!member || !['superAdmin', 'admin'].includes(member.role)) {
+      return res.status(403).json({
+        message: `Restricted`,
+      });
+    }
+
     // check duplicate company name
     const duplicate = await Company.findOne({
       name: req.body.name,
     });
     if (duplicate) {
       return res.status(409).json({
-        status: false,
         message: `Name already exist`,
       });
     }
+
     req.company.name = req.body.name;
     await req.company.save();
 
     return res.status(200).json({
-      status: true,
       message: `Company's name updated`,
     });
   } catch (error) {
@@ -48,14 +59,9 @@ const createCompany = async (req, res, next) => {
       name: req.body.name,
     });
     if (duplicate) {
-      return sendErrorResponse(res, 409, '', {
-        message: 'Name already exist',
-        fieldName: 'name',
+      return res.status(409).json({
+        message: `Duplicate company name`,
       });
-      // return res.status(409).json({
-      //   status: false,
-      //   message: `Duplicate company name`,
-      // });
     }
 
     req.body.account = req.user._id;
@@ -98,7 +104,6 @@ const createCompany = async (req, res, next) => {
     // await req.user.save();
 
     return res.status(201).json({
-      status: true,
       message: 'New company created',
       company: {
         _id: company._id,
@@ -141,7 +146,6 @@ const getCompanyIndividual = async (req, res, next) => {
       .populate(options);
 
     return res.status(200).json({
-      status: true,
       companies,
     });
   } catch (error) {
@@ -167,7 +171,6 @@ const getCompany = async (req, res, next) => {
     }).select('-_id role');
 
     return res.status(200).json({
-      status: true,
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
@@ -193,7 +196,6 @@ const updateBasicInfo = async (req, res, next) => {
     await req.company.save();
 
     return res.status(200).json({
-      status: true,
       message: `Company's basic information updated`,
     });
   } catch (error) {
@@ -214,7 +216,6 @@ const updateAbout = async (req, res, next) => {
     await req.company.save();
 
     return res.status(200).json({
-      status: true,
       message: `Company's about updated`,
     });
   } catch (error) {
@@ -234,7 +235,6 @@ const getCompanyLoad = async (req, res, next) => {
       return next();
     } else {
       return res.status(404).json({
-        status: false,
         message: 'No valid entry found for provided Company Name',
       });
     }
@@ -261,7 +261,6 @@ const deleteCompany = async (req, res, next) => {
           .exec()
           .then(data => {
             res.status(200).json({
-              status: true,
               message: 'Company deleted',
             });
           })
@@ -271,9 +270,7 @@ const deleteCompany = async (req, res, next) => {
             });
           });
       } else {
-        res
-          .status(404)
-          .json({ status: false, message: 'No company found' });
+        res.status(404);
       }
     })
     .catch(err => {

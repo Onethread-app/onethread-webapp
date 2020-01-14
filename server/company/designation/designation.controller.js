@@ -48,7 +48,6 @@ const edit = async (req, res, next) => {
     // if not found
     if (!designation) {
       return sendJSONresponse(res, 404, {
-        status: false,
         message: 'No designation found',
       });
     }
@@ -91,7 +90,6 @@ const list = async (req, res, next) => {
     }
 
     return sendJSONresponse(res, 404, {
-      status: false,
       message: 'No designations found',
     });
   } catch (error) {
@@ -110,7 +108,6 @@ const load = async (req, res, next) => {
       return next();
     } else {
       return res.status(404).json({
-        status: false,
         message: 'No valid entry found for provided Member ID',
       });
     }

@@ -2,7 +2,6 @@ const { Room } = require('./room.model');
 const { Member } = require('../company/member/member.model');
 const { Company } = require('../company/company.model');
 const { chatkit } = require('../services/pusher.services');
-const mongoose = require('mongoose');
 
 const create = async (req, res, next) => {
   try {
@@ -13,7 +12,6 @@ const create = async (req, res, next) => {
     });
     if (duplicate) {
       return res.status(409).json({
-        status: false,
         message: `Room already exists`,
       });
     }
@@ -73,9 +71,7 @@ const addUsers = async (req, res) => {
           message: 'new members added into room',
         });
       } else {
-        res
-          .status(404)
-          .json({ status: false, message: 'No room found' });
+        res.status(404).json({ message: 'No room found' });
       }
     })
     .catch(err => {
