@@ -19,7 +19,7 @@ interface SendMessageFormProps {
 	roomId: string;
 	profileImage: any;
 	emojiPicker: boolean;
-	typingUsers: Array<{ name: string, roomId: string; }>
+	typingUsers: Array<{ name: string, roomId: string; }>;
 }
 
 const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
