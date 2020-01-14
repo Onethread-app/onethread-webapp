@@ -84,7 +84,9 @@ module.exports = {
       birthDate: Joi.date(),
       bloodGroup: Joi.string(),
       location: Joi.string().allow(''),
-      about: Joi.string().max(200),
+      about: Joi.string()
+        .max(200)
+        .allow(''),
       gender: Joi.string().valid(['male', 'female', 'others']),
       secondaryEmail: Joi.string()
         .regex(
