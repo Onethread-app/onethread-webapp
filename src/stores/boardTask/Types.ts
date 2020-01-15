@@ -1,2 +1,0 @@
-export const BOARD_TASK_LOADING = "BOARD_TASK_LOADING";
-export const SELECTED_TASK = 'SELECTED_TASK';
