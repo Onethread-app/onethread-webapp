@@ -34,15 +34,7 @@ const InitialState: IRoomReducer = {
 	},
 	users: [],
 	roomMembers: [],
-	rooms: [{
-		id: '',
-		name: '',
-		unreadCount: 0,
-		company: '',
-		createdByUserId: '',
-		createdAt: '',
-		updatedAt: ''
-	}],
+	rooms: [],
 	companyRooms: [],
 	emojiPicker: false,
 	loading: false,

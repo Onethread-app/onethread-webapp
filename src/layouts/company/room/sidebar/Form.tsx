@@ -1,27 +1,25 @@
 import React from 'react';
-import { Icon } from '@blueprintjs/core';
-import { IconNames } from '@blueprintjs/icons';
+import { Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { createRoomAction } from 'stores/room/Actions';
 import { Form, Field } from 'react-final-form';
 import { required, composeValidators, maxValue } from 'components/final-form/utils';
-import { SubmitAndResetButtons } from 'components/final-form/SubmitResetButtons';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
-interface CreateFormProps {
+interface ICreateFormProps {
 	setShowDialog: (val: boolean) => void;
 }
 
-interface CreateFormInternalProps extends CreateFormProps {
+interface ICreateFormInternalProps extends ICreateFormProps {
 	chatkit?: any;
 	createRoomAction: (val: any) => void;
 }
 
-const CreateFormComponent: React.FC<any> = withChatkit((props: CreateFormInternalProps) => {
+const CreateFormComponent: React.FC<any> = withChatkit((props: ICreateFormInternalProps) => {
 
 	const onSubmit: any = async (values: any) => {
 		const status: any = await props.createRoomAction(values);
@@ -39,17 +37,9 @@ const CreateFormComponent: React.FC<any> = withChatkit((props: CreateFormInterna
 		<Form
 			onSubmit={onSubmit}
 			initialValues={{ name: '' }}
-			render={({ handleSubmit, form, submitting, pristine }) => (
+			render={({ handleSubmit, submitting, pristine }) => (
 				<>
-					<div className="flex justify-end pa3">
-						<Icon
-							icon={IconNames.DELETE}
-							iconSize={20}
-							className="grow pointer tigrow-lightBlue"
-							onClick={(e: any) => props.setShowDialog(false)}
-						/>
-					</div>
-					<form className="fl w-100 pa4 pt0" onSubmit={handleSubmit}>
+					<form className="fl w-100 pa4 pt0 mt4" onSubmit={handleSubmit}>
 						<h1 className="f5 tigrow-lightBlue">Create Room</h1>
 						<Field<string>
 							name="name"
@@ -69,13 +59,33 @@ const CreateFormComponent: React.FC<any> = withChatkit((props: CreateFormInterna
 								/>
 							}
 						/>
-						<SubmitAndResetButtons
-							reset={form.reset}
-							submitting={submitting}
-							pristine={pristine}
-							resetBtnName="Reset"
-							submitBtnName="Add"
-						/>
+						<div className="flex justify-end mt4">
+							<Button
+								className="grow h2 pointer white bp3-minimal w4 mr3"
+								style={{
+									background: '#fff',
+									outline: 'none',
+									border: '1px solid #0fa3a3',
+									color: '#0fa3a3'
+								}}
+								onClick={() => props.setShowDialog(false)}
+							>
+								Cancel
+							</Button>
+							<Button
+								className="grow h2 pointer white bp3-minimal w4"
+								style={{
+									background: '#0fa3a3',
+									outline: 'none',
+									color: 'white'
+								}}
+								loading={submitting}
+								type="submit"
+								disabled={submitting || pristine}
+							>
+								Create
+							</Button>
+						</div>
 					</form>
 				</>
 			)}
