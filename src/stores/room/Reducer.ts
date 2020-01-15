@@ -200,7 +200,15 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				rooms: state.rooms
 					.map((room: IRoom) => {
 						if (room.id === action.payload.id) {
-							return action.payload;
+							return {
+								id: action.payload.id,
+								name: action.payload.name,
+								unreadCount: action.payload.unreadCount,
+								company: action.payload.customData.company,
+								createdByUserId: action.payload.createdByUserId,
+								createdAt: action.payload.createdAt,
+								updatedAt: action.payload.updatedAt
+							};
 						} else {
 							return room;
 						}
