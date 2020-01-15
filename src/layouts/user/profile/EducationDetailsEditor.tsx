@@ -1,149 +1,319 @@
-import React, { useState, useEffect } from 'react';
-import { DateInput } from "@blueprintjs/datetime";
-import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
-import { InputGroupField } from 'components/fields/InputGroupField';
-import { Icon, Checkbox, TextArea } from '@blueprintjs/core';
-import { isEmpty } from 'lodash';
+import React from 'react';
+import { DateInput } from '@blueprintjs/datetime';
+import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { Checkbox, TextArea, Button } from '@blueprintjs/core';
 import { useSelector } from 'react-redux';
+import { required, checkError } from 'components/final-form/utils';
+import { Field, Form } from 'react-final-form';
+import { connect } from 'react-redux';
+import { addEducationExperienceAction, editEducationExperienceAction } from 'stores/user/Actions';
+import { IExperience } from 'stores/user/Reducer';
 
-export const EducationFormComponent = (props: any) => {
-  const [errors, setErrors] = useState({
-    degree: "",
-    institutionName: "",
-    startYear: "",
-    endingYear: "",
-    currentlyStudy: ""
-  });
+import warningIcon from './../../../resources/images/warningIcon.png';
+import nameTagIcon from './../../../resources/images/nameTag.png';
+interface EduFormProps {
+  setShowDialog: (val: boolean) => void;
+  edit: boolean;
+  values?: IExperience;
+}
+interface EduFormInternalProps extends EduFormProps {
+  addEducationExperienceAction: (val: {}) => any;
+  editEducationExperienceAction: (jobInfo: {}, id: string) => any;
+}
 
-  useEffect(() => {
-    props.errors.degree = "";
-    props.errors.institutionName = "";
-    props.errors.startYear = "";
-    props.errors.endingYear = "";
-    props.errors.currentlyStudy = "";
-  })
+const EducationFormComponent = (props: EduFormInternalProps) => {
 
   const birthDate = useSelector((state: any) => state.userReducer.user.birthDate);
 
+  const onSubmit = async (values: any) => {
+    let response;
+    if (values.currentlyStudy) {
+      delete values.endingYear;
+    }
+    if (props.edit === false) {
+      delete values._id;
+    }
+    if (props.edit === false) {
+      response = await props.addEducationExperienceAction(values);
+    } else if (props.edit === true) {
+      response = await props.editEducationExperienceAction(values, values._id);
+    }
+    if (response.message === 200) {
+      props.setShowDialog(false);
+      return true;
+    }
+    return { [response.fieldName]: response.message };
+  };
+
   return (
-    <form className="fl w-100 pr4 mt2">
-      <div className="mb4 ">
-        <div className="flex">
-          <InputGroupField
-            id="degree"
-            value={props.values.degree}
-            onChange={props.handleChange("degree")}
-            placeHolder="Degree"
-            leftIcon="crown"
-            style={{
-              boxShadow: 'none'
-            }}
-            className='bb b--lightBlue'
-            leftIconColor="#0fa3a3"
-            validationOnBlur={() => {
-              if (isEmpty(props.values.degree)) {
-                const degreeError = { ...errors, degree: "Required" };
-                setErrors(degreeError);
-              } else {
-                const degreeError = { ...errors, degree: "" };
-                setErrors(degreeError);
-              }
-            }}
-          />
-        </div>
-        {(errors.degree || props.errors.degree) &&
-          <small style={{ color: 'red' }}>Required</small>}
-      </div>
-      <div className="mb4">
-        <div className="flex">
-          <InputGroupField
-            id="institutionName"
-            value={props.values.institutionName}
-            onChange={props.handleChange("institutionName")}
-            placeHolder="Institution Name"
-            leftIcon="office"
-            style={{
-              boxShadow: 'none'
-            }}
-            className='bb b--lightBlue'
-            leftIconColor="#0fa3a3"
-            validationOnBlur={() => {
-              if (isEmpty(props.values.institutionName)) {
-                const institutionNameError = { ...errors, institutionName: "Required" };
-                setErrors(institutionNameError);
-              } else {
-                const institutionNameError = { ...errors, institutionName: "" };
-                setErrors(institutionNameError);
-              }
-            }}
-          />
-        </div>
-        {(errors.institutionName || props.errors.institutionName) &&
-          <small style={{ color: 'red' }}>Required</small>}
-      </div>
-      <div className="flex justify-around mb4">
-        <div className="experiencedatePicker w-100">
-          <div className="flex">
-            <Icon className='bb b--lightBlue pa1 tigrow-lightBlue' icon="calendar" />
-            <DateInput
-              formatDate={(date: Date) => date.toLocaleDateString()}
-              parseDate={(str: string) => new Date(str)}
-              placeholder={"Start Year"}
-              onChange={(date: Date) => props.handleDateChange("startYear", date)}
-              canClearSelection={false}
-              value={props.values.startYear ? new Date(props.values.startYear) : null}
-              popoverProps={{
-                targetClassName: 'w-100'
+    <Form
+      onSubmit={onSubmit}
+      initialValues={{
+        _id: props.values && props.values._id ? props.values._id : '',
+        degree: props.values && props.values.name ? props.values.name : '',
+        institutionName: props.values && props.values.qualification ? props.values.qualification : '',
+        // TODO: Date type must be used instead of string
+        startYear: props.values && props.values.startYear ? props.values.startYear : '',
+        endingYear: props.values && props.values.endingYear ? props.values.endingYear : '',
+        currentlyStudy: props.values && props.values.currentStatus ? props.values.currentStatus : false,
+        eduDescription: props.values && props.values.description ? props.values.description : ''
+      }}
+      validate={(values: any) => {
+        const errors = {} as any;
+        if (values.startYear !== '' && values.endingYear === '' && values.currentlyStudy === false) {
+          errors.endingYear = 'required';
+          errors.currentlyStudy = 'required';
+        }
+        return errors;
+      }}
+      render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
+        <form
+          className="fl w-100 pr4 mt2"
+          onSubmit={handleSubmit}
+        >
+          <div className="mb3">
+            <Field
+              name="network"
+              subscription={{
+                touched: true,
+                error: true,
+                submitError: true,
+                dirtySinceLastSubmit: true
               }}
-              minDate={new Date(birthDate)}
-              maxDate={props.values.endingYear ? new Date(props.values.endingYear) : new Date()}
+              render={({ meta }) =>
+                checkError(meta) && (
+                  <div
+                    className="flex"
+                    style={{
+                      backgroundColor: '#FCEBEB', paddingLeft: '10px', paddingTop: '10px'
+                    }}>
+                    <span className="bp3-icon">
+                      <img
+                        src={warningIcon}
+                        width="20px"
+                        height="20px"
+                        color="#0fa3a3"
+                      />
+                    </span>
+                    <p style={{ color: '#962414', paddingLeft: '10px' }}>{meta.error || meta.submitError}</p>
+                  </div>
+                )
+              }
+            />
+            <Field
+              name="authError"
+              subscription={{
+                touched: true,
+                error: true,
+                submitError: true,
+                dirtySinceLastSubmit: true
+              }}
+              render={({ meta }) =>
+                checkError(meta) && (
+                  <div
+                    className="flex"
+                    style={{
+                      backgroundColor: '#FCEBEB', paddingLeft: '10px', paddingTop: '10px'
+                    }}>
+                    <span className="bp3-icon">
+                      <img
+                        src={warningIcon}
+                        width="20px"
+                        height="20px"
+                        color="#0fa3a3"
+                      />
+                    </span>
+                    <p style={{ color: '#962414', paddingLeft: '10px' }}>{meta.error || meta.submitError}</p>
+                  </div>
+                )
+              }
             />
           </div>
-          {(errors.startYear || props.errors.startYear) &&
-            <small style={{ color: 'red' }}>Required</small>}
-        </div>
-        <div className="experiencedatePicker w-100">
-          <div>
-            <DateInput
-              formatDate={(date: Date) => date.toLocaleDateString()}
-              parseDate={(str: string) => new Date(str)}
-              placeholder={"End Year"}
-              onChange={(date: Date) => props.handleDateChange("endingYear", date)}
-              disabled={new Date(props.values.startYear).toLocaleDateString() === new Date().toLocaleDateString() || props.values.startYear === "" ? true : props.checked}
-              minDate={props.minEndYear}
-              canClearSelection={false}
-              value={props.values.endingYear ? new Date(props.values.endingYear) : null}
-              maxDate={new Date()}
-              popoverProps={{
-                targetClassName: 'w-100'
-              }}
-            />
-          </div>
-          {(errors.endingYear || props.errors.endingYear) &&
-            <small style={{ color: 'red' }}>Required</small>}
-        </div>
-      </div>
-      <div className="mb4">
-        <TextArea
-          style={{ resize: "none", minHeight: "50px" }}
-          fill={true}
-          growVertically={true}
-          onChange={props.handleChange("eduDescription")}
-          value={props.values.eduDescription}
-        />
-      </div>
-      <div className="mb4">
-        <div>
-          <Checkbox
-            checked={props.checked}
-            onChange={props.handleCheck}
-            disabled={ props.values.startYear === "" ? true : false}
-            label="I currently study here"
+          <Field<string>
+            name="degree"
+            validate={required}
+            render={({ input, meta }) =>
+              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <InputGroupFieldWithError
+                  id="degree"
+                  className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                  value={input.value}
+                  onChange={input.onChange}
+                  leftIcon={
+                    <span className="bp3-icon">
+                      <img
+                        src={nameTagIcon}
+                        width="20px"
+                        height="20px"
+                        color="#0fa3a3"
+                      />
+                    </span>
+                  }
+                  style={{
+                    boxShadow: 'none'
+                  }}
+                  placeHolder="Degree"
+                  error={checkError(meta) && (meta.error || meta.submitError)}
+                />
+              </div>
+            }
           />
-        </div>
-        {(errors.currentlyStudy || props.errors.currentlyStudy) &&
-          <small style={{ color: 'red' }}>Required</small>}
-      </div>
-    </form>
-  )
-}
+          <Field<string>
+            name="institutionName"
+            validate={required}
+            render={({ input, meta }) =>
+              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <InputGroupFieldWithError
+                  id="institutionName"
+                  className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                  value={input.value}
+                  onChange={input.onChange}
+                  leftIcon={
+                    <span className="bp3-icon">
+                      <img
+                        src={nameTagIcon}
+                        width="20px"
+                        height="20px"
+                        color="#0fa3a3"
+                      />
+                    </span>
+                  }
+                  style={{
+                    boxShadow: 'none'
+                  }}
+                  placeHolder="Institution Name"
+                  error={checkError(meta) && (meta.error || meta.submitError)}
+                />
+              </div>
+            }
+          />
+          <Field<string>
+            name="startYear"
+            validate={required}
+            render={({ input, meta }) =>
+              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <DateInput
+                  formatDate={(date: Date) => date.toLocaleDateString()}
+                  parseDate={(str: string) => new Date(str)}
+                  onChange={input.onChange}
+                  placeholder={'Start Year'}
+                  canClearSelection={false}
+                  value={values.startYear ? new Date(values.startYear) : null}
+                  className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                  popoverProps={{
+                    targetClassName: 'w-100'
+                  }}
+                  minDate={new Date(birthDate)}
+                  maxDate={values.endingYear ? new Date(values.endingYear) : new Date()}
+                />
+                {checkError(meta) &&
+                  <small className="mv3" style={{ color: 'red' }}>
+                    {meta.error || meta.submitError}
+                  </small>
+                }
+              </div>
+            }
+          />
+          <Field<string>
+            name="endingYear"
+            render={({ input, meta }) =>
+              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <DateInput
+                  formatDate={(date: Date) => date.toLocaleDateString()}
+                  parseDate={(str: string) => new Date(str)}
+                  placeholder={'End Year'}
+                  onChange={input.onChange}
+                  disabled={
+                    new Date(values.startYear).toLocaleDateString() === new Date().toLocaleDateString() ||
+                      values.startYear === '' ? true : values.currentlyStudy
+                  }
+                  minDate={values.startYear === '' ? new Date() : new Date(values.startYear)}
+                  canClearSelection={false}
+                  value={values.endingYear ? new Date(values.endingYear) : null}
+                  maxDate={new Date()}
+                  popoverProps={{
+                    targetClassName: 'w-100'
+                  }}
+                />
+                {checkError(meta) &&
+                  <small className="mv3" style={{ color: 'red' }}>
+                    {meta.error || meta.submitError}
+                  </small>}
+              </div>
+            }
+          />
+          <Field<string>
+            name="eduDescription"
+            render={({ input, meta }) =>
+              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <TextArea
+                  id="eduDescription"
+                  value={input.value}
+                  onChange={input.onChange}
+                  style={{
+                    resize: 'none',
+                    minHeight: '50px'
+                  }}
+                  fill={true}
+                  growVertically={true}
+                />
+                {checkError(meta) &&
+                  <small className="mv3" style={{ color: 'red' }}>
+                    {meta.error || meta.submitError}</small>}
+              </div>
+            }
+          />
+          <Field<string>
+            name="currentlyStudy"
+            type="checkbox"
+            render={({ input, meta }) =>
+              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <Checkbox
+                  id="currentlyStudy"
+                  value={input.value}
+                  onChange={(e) => {
+                    input.onChange(e);
+                    values.currentlyStudy = !values.currentlyStudy;
+                    values.endingYear = '';
+                  }}
+                  checked={values.currentlyStudy}
+                  label="I currently study here"
+                  disabled={values.startYear === '' ? true : false}
+                />
+                {checkError(meta) &&
+                  <small className="mv3" style={{ color: 'red' }}>
+                    {meta.error || meta.submitError}
+                  </small>}
+              </div>
+            }
+          />
+          <div className="fr mr4 mb4">
+            <Button className="w4 grow h2 pointer mr3"
+              style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
+              onClick={(e: any) => {
+                e.preventDefault();
+                props.setShowDialog(false);
+              }}
+            >
+              cancel
+              </Button>
+            <Button
+              className="w4 grow h2 pointer"
+              style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
+              loading={submitting}
+              type="submit"
+              disabled={submitting || pristine}
+            >
+              Save
+          </Button>
+          </div>
+        </form>
+      )}
+    />
+  );
+};
+
+export const EducationForm = connect(null,
+  { addEducationExperienceAction, editEducationExperienceAction })
+  (EducationFormComponent);

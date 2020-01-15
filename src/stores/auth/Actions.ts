@@ -36,7 +36,7 @@ export const userSignupAction = (
 		localStorage.setItem('token', JSON.stringify(response.data.token));
 		return	errorMessgeHandler(response);
 	} catch (error) {
-		return	errorMessgeHandler(error);
+		return errorMessgeHandler(error);
 	}
 };
 
@@ -48,7 +48,7 @@ export const loginAction = (loginUser: LoginModel) => async (dispatch: any) => {
 		await localStorage.setItem('token', JSON.stringify(response.data.token));
 		return	errorMessgeHandler(response);
 	} catch (error) {
-		return	errorMessgeHandler(error);
+		return errorMessgeHandler(error);
 	}
 };
 
