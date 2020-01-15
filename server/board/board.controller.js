@@ -25,7 +25,7 @@ const load = (req, res, next, id) => {
 
 const get = async (req, res) => {
   const boardObj = await Board.findById(req.board._id)
-    .populate('members', '_id name')
+    .populate('members', '_id name color')
     .exec()
     .then(result => result)
     .catch(err => {
@@ -36,7 +36,7 @@ const get = async (req, res) => {
     removed: false,
   })
     .select('_id name tasks positionInBoard')
-    .populate('tasks', '_id name description')
+    .populate('tasks', '_id name color description')
     .exec()
     .then(colResult => {
       const responseResult = {
@@ -52,10 +52,13 @@ const get = async (req, res) => {
 };
 
 const create = async (req, res, next) => {
+
   try {
+    console.log(req.body);
     const board = new Board({
       name: req.body.name,
-      description: req.body.description,
+      department : req.body.department,
+      color : req.body.color,
       account: req.user._id,
       company: req.body.companyId,
       members: [req.user._id],
@@ -102,12 +105,12 @@ const addBoardColumn = (req, res, next) => {};
 
 const list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
-  // console.log(companyId);
+
   await Board.find({
     company: companyId,
     members: req.user._id,
   })
-    .select('_id name description')
+    .select('_id name color department members')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)

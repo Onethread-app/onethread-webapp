@@ -9,6 +9,7 @@
 .env
 
 yarn-error.log*
+package-lock.json
 cemui.log
 cemui.info.log
 cemui.error.log
