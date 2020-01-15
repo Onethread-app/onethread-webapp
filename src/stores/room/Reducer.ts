@@ -22,35 +22,8 @@ import {
 	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER
 } from './Types';
 import { isEmpty } from 'lodash';
+import { IRoomReducer, IRoom } from './Dto';
 
-// tslint:disable-next-line: interface-name
-export interface IRoom {
-	id: string;
-	name: string;
-	unreadCount: number;
-	company: string;
-	createdByUserId: string;
-	createdAt: string;
-	updatedAt: string;
-}
-
-// tslint:disable-next-line: interface-name
-export interface IRoomReducer {
-	activeRoom: {};
-	roomId: string;
-	roomName: string;
-	messages: any[];
-	typing: {
-		users: Array<{ name: string, roomId: string; }>
-	};
-	users: any[];
-	roomMembers: any[];
-	rooms: [IRoom];
-	companyRooms: any[];
-	loading: boolean;
-	emojiPicker: boolean;
-	roomError: string;
-}
 const InitialState: IRoomReducer = {
 	activeRoom: {},
 	roomId: '',
@@ -200,7 +173,15 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				rooms: state.rooms
 					.map((room: IRoom) => {
 						if (room.id === action.payload.id) {
-							return action.payload;
+							return {
+								id: action.payload.id,
+								name: action.payload.name,
+								unreadCount: action.payload.unreadCount,
+								company: action.payload.customData.company,
+								createdByUserId: action.payload.createdByUserId,
+								createdAt: action.payload.createdAt,
+								updatedAt: action.payload.updatedAt
+							};
 						} else {
 							return room;
 						}
