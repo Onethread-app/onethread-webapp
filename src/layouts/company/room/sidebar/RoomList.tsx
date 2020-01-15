@@ -18,12 +18,12 @@ import {
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
-import { IRoom } from 'stores/room/Reducer';
+import { IRoom } from 'stores/room/Dto';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
-interface RoomListComponentProps extends RouteComponentProps {
+interface IRoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
 	getRoomsAction: () => void;
 	activeRoom: any;
@@ -33,7 +33,7 @@ interface RoomListComponentProps extends RouteComponentProps {
 }
 
 export const RoomListComponent = withChatkit(
-	(props: RoomListComponentProps) => {
+	(props: IRoomListComponentProps) => {
 		const dispatch = useDispatch();
 		// const load = async (getRoomsAction: () => void) => {
 		// 	await getRoomsAction();
