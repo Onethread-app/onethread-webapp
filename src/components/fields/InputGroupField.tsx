@@ -19,7 +19,7 @@ interface InputGroupFieldProps {
   disabled?: boolean;
   error?: string;
   autoFocus?: boolean;
-  keypress?: (e: any) => void
+  keypress?: (e: any) => void;
 }
 
 export const InputGroupField = (props: InputGroupFieldProps) => (

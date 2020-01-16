@@ -39,13 +39,13 @@ export const SuggestField = (props: SuggestFieldProps) => {
                 props.setSelectedItems([
                   ...(props.selectedItems as any),
                   item
-                ])
+                ]);
               } else {
                 const index = findIndex(props.selectedItems as any, { _id: item._id, name: item.name });
                 (props.selectedItems as any).splice(index, 1);
                 props.setSelectedItems([
                   ...props.selectedItems as any
-                ])
+                ]);
               }
             } else {
               // select single item
@@ -110,11 +110,15 @@ export const SuggestField = (props: SuggestFieldProps) => {
               icon="blank"
               intent={Intent.WARNING}
               onClick={async (e: any) => {
-                console.log(`No item found clicked`)
+                // tslint:disable-next-line: no-console
+                console.log(`No item found clicked`);
               }}
-            /> : undefined
+            /> : undefined;
       }}
-      onItemSelect={selectedSkill => console.log(selectedSkill)}
+      onItemSelect={selectedSkill => {
+        // tslint:disable-next-line: no-console
+        console.log(selectedSkill);
+      }}
       closeOnSelect={false}
       resetOnClose={true}
       popoverProps={{
@@ -125,5 +129,5 @@ export const SuggestField = (props: SuggestFieldProps) => {
       inputValueRenderer={(item: ItemEntityProps) => item.name!}
       selectedItem={currentQuery}
     />
-  )
-}
+  );
+};

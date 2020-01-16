@@ -198,5 +198,4 @@ const mapStateToProps = (state: any) => {
 };
 
 export const Layout = connect(mapStateToProps,
-  { fetchUserAction, getCompanyDetails, getSelectedBoard , getSelectedTaskDetails })
-  (withRouter(LayoutComponent));
+  { fetchUserAction, getCompanyDetails, getSelectedBoard , getSelectedTaskDetails })(withRouter(LayoutComponent));

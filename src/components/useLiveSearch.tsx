@@ -9,12 +9,12 @@ function useDebounce(value: string, delay: number) {
     }, delay);
 
     return () => clearTimeout(timeoutRef);
-  })
+  });
 
   return debouncedValue;
 }
 
-export function useLiveSearch(query: string, requestFactory: any, delay = 250, neglectValue = '') {
+export function useLiveSearch(query: string, requestFactory: any, delay: number = 250, neglectValue: string = '') {
   const [response, setResponse] = useState([]);
   const debouncedQuery = useDebounce(query, delay);
 
