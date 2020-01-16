@@ -33,7 +33,7 @@ export function useLiveSearch(query: string, requestFactory: any, delay: number 
     return () => {
       isActive = false;
     };
-  }, [debouncedQuery])
+  }, [debouncedQuery]);
 
   return response;
 }
