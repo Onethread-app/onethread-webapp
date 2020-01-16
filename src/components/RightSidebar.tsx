@@ -4,16 +4,16 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { setRightSidebar } from 'stores/layout/Actions';
 import { createPortal } from 'react-dom';
 
-interface RightSidebarProps {
+interface IRightSidebarProps {
   children: JSX.Element;
   onClose: () => void;
 }
-interface RightSidebarInternalProps extends RightSidebarProps, RouteComponentProps {
+interface IRightSidebarInternalProps extends IRightSidebarProps, RouteComponentProps {
   setRightSidebar: (data: boolean) => void;
   rightSidebarOpen: boolean;
 }
 
-const RightSidebarComponent = (props: RightSidebarInternalProps) => {
+const RightSidebarComponent = (props: IRightSidebarInternalProps) => {
 
   const [target, setTarget] = useState<HTMLElement | null>(null);
 
@@ -24,10 +24,17 @@ const RightSidebarComponent = (props: RightSidebarInternalProps) => {
     return innerContainer;
   };
 
-  const clearInnerElement = () => {
-    const innerRightSidebar: HTMLElement | null = document.getElementById('inner--right-sidebar');
-    if (innerRightSidebar) {
-      innerRightSidebar.remove();
+  // const clearInnerElement = () => {
+  // const innerRightSidebar: HTMLElement | null = document.getElementById('inner--right-sidebar');
+  // if (innerRightSidebar) {
+  //   innerRightSidebar.remove();
+  // }
+  // };
+
+  const clear = () => {
+    const myNode: HTMLElement | null = document.getElementById('rightSidebar');
+    while (myNode && myNode.firstChild) {
+      myNode.removeChild(myNode.firstChild);
     }
   };
 
@@ -36,7 +43,7 @@ const RightSidebarComponent = (props: RightSidebarInternalProps) => {
 
     if (mainLayout && e.target === mainLayout) {
       props.onClose();
-      clearInnerElement();
+      clear();
       props.setRightSidebar(false);
     }
   };
@@ -54,7 +61,7 @@ const RightSidebarComponent = (props: RightSidebarInternalProps) => {
     setTarget(rightSidebar);
 
     return () => {
-      clearInnerElement();
+      clear();
       props.setRightSidebar(false);
     };
   }, []);
