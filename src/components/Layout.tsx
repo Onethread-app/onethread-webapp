@@ -25,7 +25,7 @@ const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => void,
-  getSelectedBoardDetails: (boardId: string) => void,
+  getSelectedBoardDetails: (boardId: string) => void ,
   getSelectedTask: (taskId: string) => void
 ) => {
   await fetchUser();
@@ -70,9 +70,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false
       && isEmpty(props.company._id) === true)) {
       load(
-        props.match,
-        props.fetchUserAction,
-        props.getCompanyDetails,
+        props.match, 
+        props.fetchUserAction, 
+        props.getCompanyDetails, 
         props.getSelectedBoard,
         props.getSelectedTaskDetails
       ).then(() =>
@@ -198,4 +198,5 @@ const mapStateToProps = (state: any) => {
 };
 
 export const Layout = connect(mapStateToProps,
-  { fetchUserAction, getCompanyDetails, getSelectedBoard, getSelectedTaskDetails })(withRouter(LayoutComponent));
+  { fetchUserAction, getCompanyDetails, getSelectedBoard , getSelectedTaskDetails })
+  (withRouter(LayoutComponent));

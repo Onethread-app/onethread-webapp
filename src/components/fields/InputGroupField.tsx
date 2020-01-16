@@ -50,7 +50,7 @@ export const InputGroupFieldWithError = (props: InputGroupFieldProps) => (
   <>
     <InputGroupField {...props} />
     {props.error &&
-      <small className="mv3" style={{ color: "red" }}>
+      <small className="mv3" style={{ color: 'red' }}>
         {props.error}
       </small>
     }

@@ -7,6 +7,9 @@ import { TaskBoard, ITask } from 'stores/board/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getSelectedTaskDetails } from 'stores/board/Actions';
 
+import attach from './../../../../resources/images/attach.png';
+import complete from './../../../../resources/images/complete.png';
+
 interface TaskItemProps {
   key: string;
   task: ITask;
@@ -31,7 +34,7 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
           const allowedProps = { ref: provided.innerRef };
           return (
             <div
-              className={`ba b--black-20 br2 pa2 mb2
+              className={`ba b--black-20 br2 mb2
               ${snapshot.isDragging ? 'bg-light-green' : 'bg-white'}`}
               {...provided.draggableProps}
               {...provided.dragHandleProps}
@@ -43,36 +46,50 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                 }
               }}
             >
-              <h1 className="f6 ws-break">{props.task.name}</h1>
+              <div
+                className="br3"
+                style={{
+                  borderLeft: '4px solid rgb(97, 163, 250)',
+                  borderRadius: '3px',
+                  height: '40px',
+                  marginLeft: '-2px'
+                }}>
+                <h1 className="f6 ws-break pt2 pl2">{props.task.name}</h1>
+              </div>
               {isEmpty(props.task.description) === false ?
                 <div>
                   <p
-                    className="pa2 ws-break"
-                    style={{ backgroundColor: 'aliceblue' }}
+                    className="ph2 pt2 ws-break"
                   >
                     {props.task.description}
                   </p>
                 </div>
                 : undefined}
-              {/* <div className="flex justify-between">
-                <div className="flex ">
-                  <div className="cf mr3" >
-                    <Icon className="dib mr1" icon="link" iconSize={14} />
-                    <h1 className="f7 dib">3</h1>
+              <div className="flex justify-between pa2">
+                <div className="flex pt1">
+                  <div className="cf flex" style={{ height: '30px', width: '50px' }}>
+                    <img
+                      style={{ height: '25px', width: '25px' }}
+                      src={attach}
+                    />
+                    <div className="pt1">
+                      <p className="f7 dib">3</p>
+                    </div>
                   </div>
-                  <div className="cf mr3">
-                    <Icon className="dib mr1" icon="tick" iconSize={14} />
-                    <h1 className="f7 dib">3</h1>
-                  </div>
-                  <div className="cf mr3">
-                    <Icon className="dib mr1" icon="people" iconSize={14} />
-                    <h1 className="f7 dib">3</h1>
+                  <div className="cf flex" style={{ height: '30px', width: '50px' }}>
+                    <img
+                      style={{ height: '25px', width: '25px' }}
+                      src={complete}
+                    />
+                    <div className="pt1">
+                      <p className="f7 dib">3</p>
+                    </div>
                   </div>
                 </div>
                 <div className="mr0">
-                  <p className="bg-washed-red ph2 pv1 red br2 mv1">urgent</p>
+                  <p className="bg-washed-red ph2 pv1 red br2 mv1">10 days left</p>
                 </div>
-              </div> */}
+              </div>
             </div>
           );
         }}

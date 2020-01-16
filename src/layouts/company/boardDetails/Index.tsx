@@ -8,6 +8,7 @@ import { TaskForm } from './task/TaskForm';
 import { AddTeamMemberForm } from './members/AddTeamMemberForm';
 import { permit } from 'stores/UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
+import { RightSidebar } from 'components/RightSidebar';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
@@ -89,26 +90,18 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
         </div>
       </div>
       {showColumnFormDialog && (
-        <Dialog
+        <RightSidebar
           onClose={() => setShowColumnFormDialog(!showColumnFormDialog)}
-          title="Add Column"
-          isOpen={showColumnFormDialog}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
         >
           <ColumnForm setShowColumnFormDialog={setShowColumnFormDialog} />
-        </Dialog>
+        </RightSidebar>
       )}
       {showTaskFormDialog && (
-        <Dialog
+        <RightSidebar
           onClose={() => setShowTaskFormDialog(!showTaskFormDialog)}
-          title="Create Task"
-          isOpen={showTaskFormDialog}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
         >
           <TaskForm setShowTaskFormDialog={setShowTaskFormDialog} />
-        </Dialog>
+        </RightSidebar>
       )}
       {showAddMemberFormDialog && (
         <Dialog

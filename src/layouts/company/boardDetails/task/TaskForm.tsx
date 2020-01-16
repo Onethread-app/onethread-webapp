@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { InputGroupField } from 'components/fields/InputGroupField';
-import { Button, TextArea, Intent, Spinner, FormGroup, HTMLSelect } from '@blueprintjs/core';
+import { Button, Spinner, FormGroup, HTMLSelect } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import { TaskBoard, IColumn } from 'stores/board/Reducer';
@@ -8,7 +8,7 @@ import { createTask } from 'stores/board/Actions';
 
 interface TaskFormProps {
   setShowTaskFormDialog: (val: boolean) => void;
-  column?: IColumn
+  column?: IColumn;
 }
 
 interface TaskFormInternalProps extends TaskFormProps {
@@ -20,9 +20,9 @@ interface TaskFormInternalProps extends TaskFormProps {
 export const TaskFormComponent = (props: TaskFormInternalProps) => {
 
   const [task, setTask] = useState({
-    name: "",
-    description: "",
-    columnId: props.column ? props.column._id : ""
+    name: '',
+    description: '',
+    columnId: props.column ? props.column._id : ''
   });
 
   const handleChange = (name: string) => (event: any) => {
@@ -37,12 +37,14 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
 
   return (
     <div className="pa3">
+      <div className="mt5">
+        <h2>Create Task</h2>
+      </div>
       <div className="mb3 w-100">
         <FormGroup
           className="b"
           label="Task name"
           labelFor="task_name"
-          labelInfo="(required)"
         >
           <InputGroupField
             id="task_name"
@@ -50,36 +52,18 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
             value={task.name}
             onChange={handleChange('name')}
             placeHolder="task title"
-            leftIcon="clipboard"
             style={{
               boxShadow: 'none'
             }}
           />
         </FormGroup>
       </div>
-      <div className="mb3 w-100">
+      <div className="mb3 w-100"
+        style={{ display: props.column ? 'none' : 'block' }}>
         <FormGroup
           className="b"
-          label="Task description"
-          labelFor="task_description"
-        >
-          <TextArea
-            id="task_description"
-            large={true}
-            intent={Intent.PRIMARY}
-            onChange={handleChange('description')}
-            value={task.description}
-            fill={true}
-            style={{ resize: 'none' }}
-          />
-        </FormGroup>
-      </div>
-      <div className="mb3 w-100">
-        <FormGroup
-          className="b"
-          label="Column"
+          label="Select Column"
           labelFor="task_column"
-          labelInfo="(required)"
         >
           <HTMLSelect
             className=" bb b--lightBlue"
@@ -87,7 +71,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
             minimal={true}
             disabled={props.column ? true : false}
             value={props.column ? props.column._id : task.columnId}
-            onChange={e => setTask({ ...task, columnId: e.currentTarget.value })}
+            onChange={(e) => setTask({ ...task, columnId: e.currentTarget.value })}
             style={{
               boxShadow: 'none',
               borderRadius: '0px',
@@ -96,8 +80,8 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
               outline: 'none'
             }}
           >
-            <option selected value=''>Please select column</option>
-            {props.currentBoard.columns!.map(column => (
+            <option selected value="">Select column</option>
+            {props.currentBoard.columns!.map((column) => (
               <option value={column._id}>{column.name}</option>
             ))}
           </HTMLSelect>
@@ -107,17 +91,11 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
         <Button
           className="grow pointer white bp3-minimal w4"
           type="submit"
-          style={isTaskFormEmpty() === false ?
-            {
-              background: "#0fa3a3",
-              outline: "none",
-              color: 'white'
-            } : {
-              background: '#011b1b2e',
-              outline: "none",
-              color: 'white'
-            }
-          }
+          style={{
+            background: '#0fa3a3',
+            outline: 'none',
+            color: 'white'
+          }}
           disabled={props.loading ? true : isTaskFormEmpty()}
           text={props.loading ? <Spinner size={15} /> : 'Create Task'}
           onClick={async (e: any) => {
@@ -126,11 +104,11 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
               ...task,
               columnId: props.column ? props.column._id : task.columnId,
               boardId: props.currentBoard._id
-            }
+            };
             await props.createTask(modifiedTask);
             setTask({
-              name: "",
-              description: "",
+              name: '',
+              description: '',
               columnId: props.currentBoard.columns![0]._id!
             });
             if (props.setShowTaskFormDialog) {
@@ -140,14 +118,14 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
     loading: state.taskManagementReducer.boardReducer.boardTaskLoading,
     currentBoard: state.taskManagementReducer.boardReducer.currentBoard
-  }
-}
+  };
+};
 
 export const TaskForm = connect(mapStateToProps, { createTask })(TaskFormComponent);

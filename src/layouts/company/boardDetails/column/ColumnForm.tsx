@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import { InputGroupField } from 'components/fields/InputGroupField'
-import { Button, Spinner } from '@blueprintjs/core';
+import React, { useState } from 'react';
+import { InputGroupField } from 'components/fields/InputGroupField';
+import { Button, Spinner, FormGroup } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import { createColumn, updateColumn } from 'stores/board/Actions';
@@ -25,18 +25,24 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
   return (
     <div className="pa3">
+      <div className="mt5">
+        <h2>Create Column</h2>
+      </div>
       <div className="mb3 w-100">
-        <InputGroupField
-          id="column_name"
-          className={`br0 bb b--lightBlue`}
-          value={columnName}
-          onChange={e => setColumnName(e.target.value)}
-          placeHolder="Column title"
-          leftIcon="clipboard"
-          style={{
-            boxShadow: 'none'
-          }}
-        />
+        <FormGroup
+          label="Column Name"
+        >
+          <InputGroupField
+            id="column_name"
+            className={`br0 bb b--lightBlue`}
+            value={columnName}
+            onChange={(e) => setColumnName(e.target.value)}
+            leftIcon="clipboard"
+            style={{
+              boxShadow: 'none'
+            }}
+          />
+        </FormGroup>
       </div>
       <div className="flex justify-end">
         <Button
@@ -44,12 +50,12 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
           type="submit"
           style={isEmpty(columnName) === false ?
             {
-              background: "#0fa3a3",
-              outline: "none",
+              background: '#0fa3a3',
+              outline: 'none',
               color: 'white'
             } : {
               background: '#011b1b2e',
-              outline: "none",
+              outline: 'none',
               color: 'white'
             }
           }
@@ -61,10 +67,10 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
             const columnInfo = {
               _id: props.column ? props.column._id : undefined,
               name: columnName,
-              positionInBoard: props.column && isEmpty(props.column.name) === false ? 
+              positionInBoard: props.column && isEmpty(props.column.name) === false ?
                 props.column.positionInBoard : props.currentBoard.columns ? props.currentBoard.columns.length + 1 : 1,
               boardId: props.currentBoard._id
-            }
+            };
             if (props.column && isEmpty(props.column.name) === false) {
               // edit column name
               await props.updateColumn(columnInfo);
@@ -81,14 +87,14 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
         />
       </div>
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
     loading: state.taskManagementReducer.boardReducer.boardColumnLoading,
     currentBoard: state.taskManagementReducer.boardReducer.currentBoard
-  }
-}
+  };
+};
 
 export const ColumnForm = connect(mapStateToProps, { createColumn, updateColumn })(ColumnFormComponent);
