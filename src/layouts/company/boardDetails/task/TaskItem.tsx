@@ -1,17 +1,25 @@
-import React, { useState } from 'react'
-import { Draggable } from 'react-beautiful-dnd'
-import { ITask } from 'stores/boardTask/Reducer'
-import { Dialog } from '@blueprintjs/core';
-import { TaskDetails } from './TaskDetails';
+import React from 'react';
+import { Draggable } from 'react-beautiful-dnd';
 import { isEmpty } from 'lodash';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { TaskBoard, ITask } from 'stores/board/Reducer';
+import { CompanyModel } from 'stores/company/Reducer';
+import { getSelectedTaskDetails } from 'stores/board/Actions';
 
-export const TaskItem = (props: {
+interface TaskItemProps {
   key: string;
   task: ITask;
   index: number;
-}) => {
+}
 
-  const [showTaskDetailsDialog, setShowTaskDetailsDialog] = useState(false);
+interface TaskItemInternalProps extends TaskItemProps {
+  currentBoard?: TaskBoard;
+  company?: CompanyModel;
+  getSelectedTaskDetails: (task: string | undefined) => Promise<any>;
+}
+
+const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) => {
 
   return (
     <>
@@ -20,7 +28,7 @@ export const TaskItem = (props: {
         index={props.index}
       >
         {(provided, snapshot) => {
-          const allowedProps = { ref: provided.innerRef }
+          const allowedProps = { ref: provided.innerRef };
           return (
             <div
               className={`ba b--black-20 br2 pa2 mb2
@@ -28,8 +36,11 @@ export const TaskItem = (props: {
               {...provided.draggableProps}
               {...provided.dragHandleProps}
               {...allowedProps}
-              onClick={() => {
-                // setShowTaskDetailsDialog(!showTaskDetailsDialog)
+              onClick={async () => {
+                const responseTask = await props.getSelectedTaskDetails(props.task._id);
+                if (responseTask._id) {
+                  props.history.push(`/company/${props.company!.name}/board/${props.currentBoard!._id}/task/${props.task._id}`);
+                }
               }}
             >
               <h1 className="f6 ws-break">{props.task.name}</h1>
@@ -63,20 +74,18 @@ export const TaskItem = (props: {
                 </div>
               </div> */}
             </div>
-          )
+          );
         }}
       </Draggable>
-      {showTaskDetailsDialog && (
-        <Dialog
-          onClose={() => setShowTaskDetailsDialog(!showTaskDetailsDialog)}
-          title="Task details"
-          isOpen={showTaskDetailsDialog}
-          style={{ background: '#fff', width: '90%' }}
-          canOutsideClickClose={false}
-        >
-          <TaskDetails task={props.task} />
-        </Dialog>
-      )}
     </>
-  )
-}
+  );
+};
+
+const mapStateToProps = (state: any) => {
+  return {
+    currentBoard: state.taskManagementReducer.boardReducer.currentBoard,
+    company: state.companyReducer.currentCompany
+  };
+};
+
+export const TaskItem = connect(mapStateToProps, { getSelectedTaskDetails })(withRouter(TaskItemComponent));

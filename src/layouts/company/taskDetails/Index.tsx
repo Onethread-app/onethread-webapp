@@ -1,18 +1,21 @@
-import React, { useState } from 'react'
-import { Button, EditableText, ProgressBar, Checkbox, Popover, FileInput, TextArea, Card, Elevation, FormGroup } from '@blueprintjs/core'
+import React, { useState } from 'react';
+import { Button, EditableText, ProgressBar, Checkbox, Popover, FileInput, TextArea, Card, Elevation, FormGroup } from '@blueprintjs/core';
 // import { AddTeamMemberForm } from './AddTeamMemberForm'
 // import { DateInput } from '@blueprintjs/datetime'
-import { ITask } from 'stores/boardTask/Reducer'
-import { InputGroupField } from 'components/fields/InputGroupField'
+import { InputGroupField } from 'components/fields/InputGroupField';
+import { connect } from 'react-redux';
+import { ITask } from 'stores/board/Reducer';
 
-export const TaskDetails = (props: {
-  task: ITask;
-}) => {
+interface TaskDetailsInternalProps {
+  currentTask: ITask;
+}
+
+const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
 
   const [nameEdit, setNameEdit] = useState(false);
 
   return (
-    <div className="pa3 overflow-y-auto flex flex-column flex-row-l" style={{ height: '75vh' }}>
+    <div className="pa3 overflow-y-auto flex flex-column flex-row-l">
       <div className="fl w-50-l w-100 min-h-100 overflow-y-auto pa2">
         <Card interactive={true} elevation={Elevation.TWO}>
           <div className="cf">
@@ -41,7 +44,8 @@ export const TaskDetails = (props: {
                       <div className="flex">
                         <InputGroupField
                           id="task_title"
-                          value={props.task.name}
+                          value={props.currentTask.name}
+                          // value="Demo task name"
                         // onChange={handleChange('name')}
                         />
                         <Button
@@ -52,7 +56,8 @@ export const TaskDetails = (props: {
                       </div>
                       :
                       <>
-                        <label>{props.task.name}</label>
+                        <label>{props.currentTask.name}</label>
+                        {/* <label>Demo task name</label> */}
                         <p className="mb0 f7">
                           <Button
                             text={
@@ -61,7 +66,7 @@ export const TaskDetails = (props: {
                                 style={{ color: '#0fa3a3' }}
                               >
                                 Edit
-                          </span>
+                              </span>
                             }
                             small={true}
                             minimal={true}
@@ -92,7 +97,6 @@ export const TaskDetails = (props: {
                     </div>
                   </div>
                 </div>
-
 
               </div>
               <div className="fl w-30">
@@ -126,7 +130,7 @@ export const TaskDetails = (props: {
                               type="submit"
                               text="Attach"
                               className="grow h2 pointer w-40 fr mt2"
-                              style={{ background: "#0fa3a3", outline: "none", color: 'white', boxShadow: 'none' }}
+                              style={{ background: '#0fa3a3', outline: 'none', color: 'white', boxShadow: 'none' }}
                             />
                           </div>
                         </div>
@@ -136,7 +140,7 @@ export const TaskDetails = (props: {
                           className="outline-0 bp3-minimal grow mb2"
                           text="Attach Files"
                           icon="document"
-                          style={{ backgroundColor: "#c1dede" }}
+                          style={{ backgroundColor: '#c1dede' }}
                         />
                       }
                     />
@@ -170,8 +174,12 @@ export const TaskDetails = (props: {
                   value={.5}
                 />
                 <div className="mt3 mb3">
-                  <Checkbox label="Long established fact that a reader will be distracted when looking at its layout." />
-                  <Checkbox label="Long established fact that a reader will be distracted when looking at its layout." />
+                  <Checkbox 
+                    label="Long established fact that a reader will be distracted when looking at its layout." 
+                  />
+                  <Checkbox 
+                    label="Long established fact that a reader will be distracted when looking at its layout." 
+                  />
                 </div>
                 <TextArea
                   className="w-100 h-auto"
@@ -184,7 +192,7 @@ export const TaskDetails = (props: {
                     type="submit"
                     text="Add SubTask"
                     className="grow h2 pointer dib"
-                    style={{ background: "#0fa3a3", outline: "none", color: 'white', borderRadius: '0px', boxShadow: 'none' }}
+                    style={{ background: '#0fa3a3', outline: 'none', color: 'white', borderRadius: '0px', boxShadow: 'none' }}
                   />
                   <h1 className="f6 blue fr dim pointer">Cancel</h1>
                 </div>
@@ -217,7 +225,14 @@ export const TaskDetails = (props: {
                 </div>
                 <div className="dtc v-mid pl3">
                   <h1 className="f6 fw6 lh-title black mv0">Md Saiful Islam </h1>
-                  <p className="pa2 br3 mt2" style={{ backgroundColor: "#F2FAFA" }}>It is a long established fact that a reader will be distracted by the readable</p>
+                  <p 
+                    className="pa2 br3 mt2" 
+                    style={{ 
+                      backgroundColor: '#F2FAFA' 
+                    }}
+                  >
+                    It is a long established fact that a reader will be distracted by the readable
+                  </p>
                 </div>
               </article>
               <article className="dt pb2 mt2">
@@ -226,7 +241,14 @@ export const TaskDetails = (props: {
                 </div>
                 <div className="dtc v-mid pl3">
                   <h1 className="f6 fw6 lh-title black mv0">Md Saiful Islam </h1>
-                  <p className="pa2 br3 mt2" style={{ backgroundColor: "#F2FAFA" }}>It is a long established fact that a reader will be distracted by the readable</p>
+                  <p 
+                    className="pa2 br3 mt2" 
+                    style={{ 
+                      backgroundColor: '#F2FAFA' 
+                    }}
+                  >
+                    It is a long established fact that a reader will be distracted by the readable
+                  </p>
                 </div>
               </article>
               <article className="dt pb2 mt2">
@@ -235,7 +257,14 @@ export const TaskDetails = (props: {
                 </div>
                 <div className="dtc v-mid pl3">
                   <h1 className="f6 fw6 lh-title black mv0">Md Saiful Islam </h1>
-                  <p className="pa2 br3 mt2" style={{ backgroundColor: "#F2FAFA" }}>It is a long established fact that a reader will be distracted by the readable</p>
+                  <p 
+                    className="pa2 br3 mt2" 
+                    style={{ 
+                      backgroundColor: '#F2FAFA' 
+                    }}
+                  >
+                    It is a long established fact that a reader will be distracted by the readable
+                  </p>
                 </div>
               </article>
               <article className="dt pb2 mt2">
@@ -244,7 +273,14 @@ export const TaskDetails = (props: {
                 </div>
                 <div className="dtc v-mid pl3">
                   <h1 className="f6 fw6 lh-title black mv0">Md Saiful Islam </h1>
-                  <p className="pa2 br3 mt2" style={{ backgroundColor: "#F2FAFA" }}>It is a long established fact that a reader will be distracted by the readable</p>
+                  <p 
+                    className="pa2 br3 mt2" 
+                    style={{ 
+                      backgroundColor: '#F2FAFA' 
+                    }}
+                  >
+                    It is a long established fact that a reader will be distracted by the readable
+                  </p>
                 </div>
               </article>
               <article className="dt pb2 mt2">
@@ -253,7 +289,14 @@ export const TaskDetails = (props: {
                 </div>
                 <div className="dtc v-mid pl3">
                   <h1 className="f6 fw6 lh-title black mv0">Md Saiful Islam </h1>
-                  <p className="pa2 br3 mt2" style={{ backgroundColor: "#F2FAFA" }}>It is a long established fact that a reader will be distracted by the readable</p>
+                  <p 
+                    className="pa2 br3 mt2" 
+                    style={{ 
+                      backgroundColor: '#F2FAFA' 
+                    }}
+                  >
+                    It is a long established fact that a reader will be distracted by the readable
+                  </p>
                 </div>
               </article>
               <article className="dt pb2 mt2">
@@ -262,7 +305,14 @@ export const TaskDetails = (props: {
                 </div>
                 <div className="dtc v-mid pl3">
                   <h1 className="f6 fw6 lh-title black mv0">Md Saiful Islam </h1>
-                  <p className="pa2 br3 mt2" style={{ backgroundColor: "#F2FAFA" }}>It is a long established fact that a reader will be distracted by the readable</p>
+                  <p 
+                    className="pa2 br3 mt2" 
+                    style={{ 
+                      backgroundColor: '#F2FAFA' 
+                    }}
+                  >
+                    It is a long established fact that a reader will be distracted by the readable
+                  </p>
                 </div>
               </article>
             </div>
@@ -270,5 +320,13 @@ export const TaskDetails = (props: {
         </Card>
       </div>
     </div>
-  )
-}
+  );
+};
+
+const mapStateToProps = (state: any) => {
+  return {
+    currentTask: state.taskManagementReducer.boardReducer.currentTask,
+  };
+};
+
+export const TaskDetails = connect(mapStateToProps, null)(TaskDetailsComponent);

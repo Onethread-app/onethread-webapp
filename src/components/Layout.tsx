@@ -11,7 +11,7 @@ import { fetchUserAction } from 'stores/auth/Actions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
-import { getSelectedBoard } from 'stores/board/Actions';
+import { getSelectedBoard, getSelectedTaskDetails } from 'stores/board/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -25,7 +25,8 @@ const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => void,
-  getSelectedBoardDetails: (boardId: string) => void
+  getSelectedBoardDetails: (boardId: string) => void,
+  getSelectedTask: (taskId: string) => void
 ) => {
   await fetchUser();
   if (isEmpty((reactRouterMatch.params as any).cname) === false) {
@@ -33,6 +34,9 @@ const load = async (
   }
   if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
     await getSelectedBoardDetails((reactRouterMatch.params as any).boardId);
+  }
+  if (isEmpty((reactRouterMatch.params as any).taskId) === false) {
+    await getSelectedTask((reactRouterMatch.params as any).taskId);
   }
   return Promise.resolve({});
 };
@@ -46,6 +50,7 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => void;
   getSelectedBoard: (boardId: string) => void;
+  getSelectedTaskDetails: (taskId: string) => void;
   company: CompanyModel;
   rightSidebarOpen: boolean;
 }
@@ -68,7 +73,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         props.match,
         props.fetchUserAction,
         props.getCompanyDetails,
-        props.getSelectedBoard
+        props.getSelectedBoard,
+        props.getSelectedTaskDetails
       ).then(() =>
         setLoading(false)
       );
@@ -192,4 +198,4 @@ const mapStateToProps = (state: any) => {
 };
 
 export const Layout = connect(mapStateToProps,
-  { fetchUserAction, getCompanyDetails, getSelectedBoard })(withRouter(LayoutComponent));
+  { fetchUserAction, getCompanyDetails, getSelectedBoard, getSelectedTaskDetails })(withRouter(LayoutComponent));

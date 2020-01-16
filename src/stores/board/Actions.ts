@@ -1,6 +1,6 @@
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, CREATE_COLUMN_ERROR, CREATE_TASK_LOADING, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD } from './Types';
+import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, CREATE_COLUMN_ERROR, CREATE_TASK_LOADING, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK } from './Types';
 import { isEqual } from 'lodash';
 import { TaskBoard } from './Reducer';
 
@@ -207,3 +207,34 @@ export const addTeamMembersIntoBoard = (members: (string | undefined)[], boardId
     }
   }
 };
+
+export const getSelectedTaskDetails = (taskId: string | undefined) => async (dispatch: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization && taskId) {
+      // dispatch({ type: BOARD_LOADING });
+      // const response = await tigrowApi.get(`tasks/${task._id}`, headers);
+      // dispatch({ type: SELECT_BOARD, payload: response.data });
+      // const response = await tigrowApi.get(`tasks/${task._id}`, headers);
+      const response = {
+        _id: taskId,
+        name: 'Dummy text',
+        description: 'something description'
+      };
+      dispatch({ type: SELECT_TASK, payload: response });
+      return response;
+    } else {
+      return 500;
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
+    } else if (error.response.status === 401) {
+      dispatch({ type: CREATE_BOARD_ERROR, payload: 'Unauthorized user. Please enter valid email and password.' });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+    return error.response.status;
+  }
+}
