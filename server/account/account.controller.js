@@ -210,7 +210,11 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 };
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
-  await Account.findOneAndUpdate({ email: req.user.email }, req.body)
+  await Account.findOneAndUpdate(
+    { email: req.user.email },
+    req.body,
+    { safe: true, upsert: true, new: true },
+  )
     .select('-password')
     .exec()
     .then(async user => {

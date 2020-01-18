@@ -9,9 +9,14 @@ const BoardSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    description: {
-      type: String,
-      trim: true,
+    department: {
+      type: Schema.Types.ObjectId,
+      ref:'Department'
+    },
+    color: {
+      type: Number ,
+      enum : [0,1,2,3 ,4 ,5,6],
+      default : 0
     },
     account: {
       type: Schema.Types.ObjectId,
@@ -39,6 +44,10 @@ const BoardSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    version : {
+      type : Number,
+      default : 0
+    }
   },
   { timestamps: true },
 );
