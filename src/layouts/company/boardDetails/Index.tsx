@@ -9,6 +9,7 @@ import { AddTeamMemberForm } from './members/AddTeamMemberForm';
 import { permit } from 'stores/UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { RightSidebar } from 'components/RightSidebar';
+import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
@@ -24,6 +25,14 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
 
   return (
     <div className="br3 h-100 pa3 cf flex flex-column">
+      <div className="flex mb3">
+        <BreadCrumbs
+          items={[
+            { text: `Board`, href: `/company/${props.company.name}/board` },
+            { text: `${props.currentBoard!.name}`, href: `/company/${props.company.name}/board/${props.currentBoard!._id}` }
+          ]}
+        />
+      </div>
       <div className="flex">
         <div className="flex-auto">
           <h1 className="w-30 fw6 overflow-hidden f5"
