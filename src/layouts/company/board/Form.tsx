@@ -21,15 +21,7 @@ const FormComponent = (props: {
   departments: [],
   company: CompanyModel;
 }) => {
-  // TODO make it dictionary
-  // const colors = ['#FA617F', '#A8D16B', '#FFD7D0', '#FE5E41', '#3F61C5', '#11B468', '#5A1DD6'];
-
   const onSubmit = async (values: any) => {
-    // tslint:disable-next-line: no-console
-    // const valueWrapper = {
-    //   ...values,
-    //   color: colors.indexOf(values.color)
-    // };
     await props.createBoard(values);
     if (props.setShowTaskBoardDialog) {
       props.setShowTaskBoardDialog(false);
@@ -38,11 +30,6 @@ const FormComponent = (props: {
   };
 
   const [labelColor, setLabelColor] = useState(null as any);
-  // const changeLabel = (event: any, label: string) => {
-  //   event.preventDefault();
-  //   setLabelColor(label);
-  // };
-
   const [teamMembers, setTeamMembers]: any = useState([]);
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ICompanyTeamMembers[]);
   const [username, setUsername] = useState('');
@@ -64,8 +51,8 @@ const FormComponent = (props: {
 
   return (
     <>
-      <div className="mt5 pl3">
-        <h2>Create Board</h2>
+      <div className="pl3" style={{ marginTop: '6rem' }}>
+        <h3>Create Board</h3>
       </div>
       <Form
         onSubmit={onSubmit}
@@ -88,14 +75,13 @@ const FormComponent = (props: {
                         fontSize: '18px',
                       }}
                       error={checkError(meta) && (meta.error || meta.submitError)}
-                      label="Board Name"
+                      label="Board Name*"
                     />
                   </div>
                 }
               />
               <Field<string>
                 name="department"
-                validate={required}
                 render={({ input, meta }) =>
                   <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
                     <DropdownFieldErrorWithLabel
@@ -108,6 +94,7 @@ const FormComponent = (props: {
                       onChange={input.onChange}
                       error={checkError(meta) && (meta.error || meta.submitError)}
                       label="Department"
+                      className="bn"
                     />
                   </div>
                 }
@@ -116,19 +103,24 @@ const FormComponent = (props: {
                 name="color"
                 render={({ input, meta }) =>
                   <div className="mb3">
-                    <span className="f5 fw5">Label</span>
+                    <p className="fw5 mb3" style={{ fontSize: '.8rem' }}>Label</p>
                     <div className="flex">
                       {boardColor.map((color) => (
-                        <div className="pa1" key={color.code}>
+                        <div className="pr2" key={color.code}>
                           <Icon
-                            className="pa3"
+                            className="br2"
                             icon={isEqual(color.code, labelColor) === true ? 'tick' : 'blank'}
                             onClick={(e) => {
                               e.preventDefault();
                               input.onChange(color.code);
                               setLabelColor(color.code);
                             }}
-                            style={{ backgroundColor: color.value }}
+                            style={{
+                              backgroundColor: color.value,
+                              border: isEqual(color.code, labelColor) === true ? '3px solid #ffffff' : 'none',
+                              height: '3rem',
+                              padding: '0.8rem'
+                            }}
                           />
                         </div>
                       ))}
@@ -142,7 +134,7 @@ const FormComponent = (props: {
                   <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                     <div className="fl w-100 pb2">
                       <div className="mb1">
-                        <span className="f5 fw5">Add Members</span>
+                        <p className="fw5" style={{ fontSize: '.8rem' }}>Add Members</p>
                       </div>
                       <SuggestField
                         onChange={(query: string) => {
@@ -157,47 +149,51 @@ const FormComponent = (props: {
                         multipleItemSelect={true}
                       />
                     </div>
-                    <div className="w-100">
-                      <div
-                        style={{
-                          border: '1px solid #707070',
-                          borderRadius: '5px',
-                          height: '120px',
-                          overflowY: 'scroll',
-                          background: '#707070'
-                        }}>
-                        {selectedTeamMember.map((item) => (
-                          <Tag
-                            key={item._id}
-                            className="pa1"
-                            interactive={true}
-                            style={{ background: '#707070' }}
-                            onRemove={(e) => {
-                              const filteredItems = selectedTeamMember.filter((selectedItem) => (
-                                item.name !== selectedItem.name
-                              ));
-                              setSelectedTeamMember([
-                                ...filteredItems
-                              ]);
-                              input.onChange(
-                                isEmpty(filteredItems) ?
-                                  undefined :
-                                  filteredItems.map((member: ICompanyTeamMembers) => member._id));
-                            }}
-                            large={true}
-                            intent="primary"
-                          >
-                            <p className="mb0"
-                              style={{ color: '#ffffff' }}>
-                              {upperFirst(item.firstName)} {upperFirst(item.lastName)} has been added</p>
-                          </Tag>
-                        ))}
+                    {selectedTeamMember.length > 0 &&
+                      <div className="w-100">
+                        <div
+                          className="overflow-auto br2"
+                          style={{
+                            border: '1px solid #707070',
+                            maxHeight: '120px',
+                            background: '#707070'
+                          }}>
+                          {selectedTeamMember.map((item) => (
+                            <div>
+                              <Tag
+                                key={item._id}
+                                className="pa1"
+                                interactive={true}
+                                style={{ background: '#707070' }}
+                                onRemove={(e) => {
+                                  const filteredItems = selectedTeamMember.filter((selectedItem) => (
+                                    item.name !== selectedItem.name
+                                  ));
+                                  setSelectedTeamMember([
+                                    ...filteredItems
+                                  ]);
+                                  input.onChange(
+                                    isEmpty(filteredItems) ?
+                                      undefined :
+                                      filteredItems.map((member: ICompanyTeamMembers) => member._id));
+                                }}
+                                large={true}
+                                intent="primary"
+                              >
+                                <p className="mb0"
+                                  style={{ color: '#ffffff' }}>
+                                  {upperFirst(item.firstName)} {upperFirst(item.lastName)} has been added
+                              </p>
+                              </Tag>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    }
                   </div>
                 }
               />
-              <div className="flex justify-end">
+              <div className="fr">
                 <Button
                   className="grow pointer white bp3-minimal w4 mt2"
                   style={{
@@ -209,7 +205,7 @@ const FormComponent = (props: {
                   type="submit"
                   disabled={submitting || pristine}
                 >
-                  Add board
+                  Create
               </Button>
               </div>
             </div>

@@ -85,7 +85,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   }}
                   text="Add Task"
                   fill={true}
-                  onClick={() => setShowTaskInput(!showTaskInput)}
+                  // onClick={() => setShowTaskInput(!showTaskInput)} // TODO add functionality
                 />
               </div>
               : undefined}
