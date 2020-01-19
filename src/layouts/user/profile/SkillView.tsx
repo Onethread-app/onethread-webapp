@@ -1,12 +1,12 @@
 import { User } from 'stores/user/Reducer';
 import React, { useState } from 'react';
 import { ItemEntityProps } from 'components/fields/SuggestField';
-import { Tag, Intent, Dialog } from '@blueprintjs/core';
 import { SkillEdit } from './SkillEditor';
 import { connect } from 'react-redux';
 import { addSkillAction, deleteSkillAction } from 'stores/user/Actions';
 
 import skillImage from './../../../resources/images/skills.png';
+import { RightSidebar } from 'components/RightSidebar';
 interface SkillViewComponentProps {
   user: User;
   addSkillAction: (skillSet: string[]) => void;
@@ -17,53 +17,51 @@ export const SkillViewComponent = (props: SkillViewComponentProps) => {
   const [showDialog, setShowDialog] = useState(false);
   return (
     <>
-      <div className="h-auto br3 ma3 pa3 bg-white cf shadow-4 w-50-m">
-        <h1 className="f6 lh-copy">Skills</h1>
-        <div className="tc">
-          {props.user.skillArea.length > 0 ? props.user.skillArea.map((skill: ItemEntityProps) => {
-            return (
-              <div className="dib ma1">
-                <Tag key={skill._id}
-                  className="ma1 pa2"
-                  onRemove={(e) => {
+      <h1 className="f5 lh-copy">Skills</h1>
+      <div className="dib">
+        {props.user.skillArea.length > 0 ? props.user.skillArea.map((skill: ItemEntityProps) => {
+          return (
+            <div className="mv1 fl">
+              <span className="bp3-tag ma1 pv2 ph3"
+                style={{ backgroundColor: '#0fa3a3', color: 'white', fontSize: '15px' }}>
+                {skill.name}
+                <span
+                  className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
+                  style={{ backgroundColor: 'white', color: '#0fa3a3', borderRadius: '30px', paddingTop: '1px' }}
+                  onClick={(e: any) => {
                     props.deleteSkillAction(skill._id!);
+
                   }}
-                  intent={Intent.PRIMARY}
-                  large={true}
-                >
-                  {skill.name}</Tag>
-              </div>
-            );
-          }) :
-            <div>
-              <img src={skillImage}></img>
-              <p>No skill has selected</p>
+                ></span>
+              </span>
             </div>
-          }
+          );
+        }) :
           <div>
-            <button
-              className="br3 grow ph3-l ph2-m pointer pv2 f7 bg-white ba b--lightBlue tigrow-lightBlue outline-0 mt2 mb2"
-              onClick={() => setShowDialog(!showDialog)}
-            >
-              Add Skills
-            </button>
+            <img src={skillImage}></img>
+            <p>No skill has selected</p>
           </div>
-        </div>
+        }
+      </div>
+      <div className="tc">
+        <button
+          className="br3 grow ph3-l ph2-m pointer pv2 bg-white ba b--lightBlue tigrow-lightBlue outline-0 mt3 mb2 bw1 fw7"
+          onClick={() => setShowDialog(!showDialog)}
+        >
+          Add Skills
+            </button>
       </div>
       {
         showDialog && (
-          <Dialog
+          <RightSidebar
             onClose={() => setShowDialog(!showDialog)}
-            isOpen={showDialog}
-            style={{ background: '#fff' }}
-            canOutsideClickClose={false}
           >
             <SkillEdit
               showDialog={showDialog}
               setShowDialog={() => setShowDialog(!showDialog)}
               addSkillAction={props.addSkillAction}
             />
-          </Dialog>
+          </RightSidebar>
         )
       }
     </>

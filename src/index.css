@@ -1,6 +1,9 @@
+*{
+	box-sizing: border-box;
+	font-family: "Open Sans", sans-serif;
+}
 body {
 	font-family: "Open Sans", sans-serif;
-	box-sizing: border-box;
 }
 .signinPageBackground {
 	background-image: url(./resources/images/Bg-png.png);
@@ -74,22 +77,6 @@ a:hover {
 	transform: translate(-50%, -50%);
 }
 
-.experiencedatePicker .bp3-input-group .bp3-input {
-	box-shadow: none;
-	border-radius: 0px;
-	border-bottom: 1px solid #0fa3a3;
-}
-
-.birthdatePicker .bp3-input-group .bp3-input{
-  box-shadow: none;
-}
-
-.birthdatePicker .bp3-popover-wrapper {
-	box-shadow: none;
-	border-radius: 0px;
-	border-bottom: 1px solid #0fa3a3;
-	width: 100%;
-}
 .max-h5 {
 	max-height: 16rem;
 }

@@ -1,6 +1,18 @@
-import { USER_FETCH_ERROR, BASIC_INFO, USER_COMPANIES_UPDATE, FETCH_USER, EDIT_BASIC_INFO, ADD_EXPERIENCE, EDIT_BASIC_INFO_ERROR, CLEAR_USER_REDUCER_STATE, ADD_SKILL, DELETE_SKILL, IMAGE_UPLOAD } from './Types';
+import {
+	USER_FETCH_ERROR,
+	BASIC_INFO,
+	USER_COMPANIES_UPDATE,
+	FETCH_USER,
+	EDIT_BASIC_INFO,
+	ADD_EXPERIENCE,
+	EDIT_BASIC_INFO_ERROR,
+	CLEAR_USER_REDUCER_STATE,
+	ADD_SKILL,
+	DELETE_SKILL,
+	PROFILE_IMAGE_UPLOAD,
+	COVER_IMAGE_UPLOAD
+} from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
-
 export interface ICompanyByUser {
 	role: string;
 	company: {
@@ -42,7 +54,9 @@ export interface User {
 	companies: ICompanyByUser[],
 	timeline: string[],
 	skillArea: ItemEntityProps[];
-	profileImage: IProfilePhoto
+	profileImage: IProfilePhoto;
+	coverImage: IProfilePhoto;
+	position: string;
 }
 
 const InitialState = {
@@ -67,7 +81,9 @@ const InitialState = {
 		sendingFriendList: [],
 		timeline: [],
 		skillArea: [],
-		profileImage: {}
+		profileImage: {},
+		coverImage: {},
+		position: ''
 	},
 	error: ''
 }
@@ -143,14 +159,23 @@ export const UserReducer = (state = InitialState, action: any) => {
 			return {
 				...InitialState
 			}
-		case IMAGE_UPLOAD: {
+		case PROFILE_IMAGE_UPLOAD: {
 			return {
 				...state,
 				user: {
 					...state.user,
 					profileImage: action.payload
 				},
-			}
+			};
+		}
+		case COVER_IMAGE_UPLOAD: {
+			return {
+				...state,
+				user: {
+					...state.user,
+					coverImage: action.payload
+				},
+			};
 		}
 		default:
 			return state;

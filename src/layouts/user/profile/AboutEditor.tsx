@@ -7,6 +7,7 @@ import { Form, Field } from 'react-final-form';
 import { checkError } from 'components/final-form/utils';
 
 import warningIcon from './../../../resources/images/warningIcon.png';
+import { isEmpty } from 'lodash';
 interface AboutEditComponentProps {
   setShowDialog: (val: boolean) => void;
 }
@@ -18,6 +19,9 @@ interface AboutEditInternalProps extends AboutEditComponentProps {
 const AboutEditComponent = (props: AboutEditInternalProps) => {
 
   const onSubmit = async (values: any) => {
+    if (isEmpty(values.about)) {
+      values.about = '';
+    }
     const response = await props.editInfoAction(values);
     if (response.message === 200) {
       props.setShowDialog(false);
@@ -34,7 +38,7 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
       }}
       render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
         <form
-          className="fl w-100 pa4"
+          className="fl w-100 ph2 pt6"
           onSubmit={handleSubmit}
         >
           <div>
@@ -95,13 +99,13 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
               }
             />
           </div>
-          <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
+          <h1 className="f5 lh-copy white">About</h1>
           <Field<string>
             name="about"
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <EditableText
-                  className="mb4"
+                  className="mb4 bg-white black"
                   multiline={true}
                   minLines={3}
                   maxLines={20}
@@ -116,7 +120,7 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
             }
           />
           <Divider />
-          <div className="fr mr4 mb4">
+          <div className="flex justify-end">
             <Button className="w4 grow h2 pointer mr3"
               style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
               onClick={(e: any) => {

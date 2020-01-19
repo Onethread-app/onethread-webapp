@@ -6,24 +6,21 @@ import { InputGroupField, InputGroupFieldWithError } from 'components/fields/Inp
 import { User } from 'stores/user/Reducer';
 import { DateInput } from '@blueprintjs/datetime';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
-import { isEqual } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
 import { Form, Field } from 'react-final-form';
 import { required, checkError, isEmail } from 'components/final-form/utils';
 import { DropdownField } from 'components/fields/DropdownField';
 
-import phoneIcon from '../../../resources/images/phone.png';
-import nameTagIcon from './../../../resources/images/nameTag.png';
 import warningIcon from './../../../resources/images/warningIcon.png';
-
-interface BasicInfoProps {
+interface IBasicInfoProps {
   setShowDialog: (val: boolean) => void;
 }
-interface BasicInfoInternalProps extends BasicInfoProps {
+interface IBasicInfoInternalProps extends IBasicInfoProps {
   userInfo: User;
   editInfoAction: (val: User) => any;
 }
 
-const BasicInfoFormComponent = (props: BasicInfoInternalProps) => {
+const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
 
   const maxBirthDate = () => {
     const d = new Date();
@@ -34,6 +31,9 @@ const BasicInfoFormComponent = (props: BasicInfoInternalProps) => {
 
   const onSubmit = async (values: any) => {
 
+    if (isEmpty(values.location)) {
+      values.location = '';
+    }
     const response = await props.editInfoAction(values);
     if (response.message === 200) {
       props.setShowDialog(false);
@@ -66,7 +66,7 @@ const BasicInfoFormComponent = (props: BasicInfoInternalProps) => {
       }}
       render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
         <form
-          className="fl w-100 pa4"
+          className="fl w-100 ph2 pt5"
           onSubmit={handleSubmit}
         >
           <div>
@@ -127,31 +127,21 @@ const BasicInfoFormComponent = (props: BasicInfoInternalProps) => {
               }
             />
           </div>
-          <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Basic Information</h1>
+          <h1 className="f5 lh-title white mb4">Edit Basic Information</h1>
           <Field<string>
             name="email"
             render={({ input, meta }) =>
               <div className="mb4">
+                <label>Email</label>
                 <InputGroupField
                   id="email"
-                  className="br0 bb b--lightBlue"
+                  className="mt1 bg-white"
                   value={input.value}
                   onChange={input.onChange}
-                  leftIcon={
-                    <span className="bp3-icon">
-                      <img
-                        src={nameTagIcon}
-                        width="20px"
-                        height="20px"
-                        color="#0fa3a3"
-                      />
-                    </span>
-                  }
                   style={{
                     boxShadow: 'none'
                   }}
                   disabled={true}
-                  placeHolder="Email"
                 />
               </div>
             }
@@ -161,99 +151,62 @@ const BasicInfoFormComponent = (props: BasicInfoInternalProps) => {
             validate={isEmail}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <label>Secondary Email</label>
                 <InputGroupFieldWithError
                   id="secondaryEmail"
-                  className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                  className="mt1"
                   value={input.value}
                   onChange={input.onChange}
-                  leftIcon={
-                    <span className="bp3-icon">
-                      <img
-                        src={nameTagIcon}
-                        width="20px"
-                        height="20px"
-                        color="#0fa3a3"
-                      />
-                    </span>
-                  }
                   style={{
                     boxShadow: 'none'
                   }}
-                  placeHolder="Secondary Email"
                   error={checkError(meta) && (meta.error || meta.submitError)}
                 />
               </div>
             }
           />
-          <div className="flex justify-content">
-            <div className=" w-20 ">
-              <InputGroupField
-                id="countryCode"
-                className="br0 bb b--lightBlue"
-                value="+88"
-                readOnly={true}
-                leftIcon={
-                  <span className="bp3-icon">
-                    <img
-                      src={phoneIcon}
-                      width="20px"
-                      height="20px"
-                      color="#0fa3a3"
-                    />
-                  </span>
-                }
-                style={{
-                  boxShadow: 'none'
-                }}
-              />
-            </div>
-            <div className="ml3 flex-auto">
-              <Field<string>
-                name="contactNo"
-                validate={required}
-                render={({ input, meta }) =>
-                  <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                    <InputGroupFieldWithError
-                      id="contactNo"
-                      className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
-                      value={input.value}
-                      onChange={input.onChange}
-                      style={{
-                        boxShadow: 'none'
-                      }}
-                      keypress={(e) => {
-                        if ((e.which < 48 || e.which > 57)) {
-                          e.preventDefault();
-                        }
-                      }}
-                      placeHolder="e.g. 01789442325"
-                      error={checkError(meta) && (meta.error || meta.submitError)}
-                    />
-                  </div>
-                }
-              />
-            </div>
-          </div>
+          <label>Contact No</label>
+          <Field<string>
+            name="contactNo"
+            validate={required}
+            render={({ input, meta }) =>
+              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <InputGroupFieldWithError
+                  id="contactNo"
+                  value={input.value}
+                  onChange={input.onChange}
+                  style={{
+                    boxShadow: 'none'
+                  }}
+                  keypress={(e) => {
+                    if ((e.which < 48 || e.which > 57)) {
+                      e.preventDefault();
+                    }
+                  }}
+                  error={checkError(meta) && (meta.error || meta.submitError)}
+                />
+              </div>
+            }
+          />
           <Field<string>
             name="location"
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <label>Address</label>
                 <InputGroupField
                   id="location"
                   value={input.value}
                   onChange={input.onChange}
-                  placeHolder="Address"
-                  leftIcon="map-marker"
                   style={{
                     boxShadow: 'none'
                   }}
-                  className="bb b--lightBlue"
-                  leftIconColor="#0fa3a3"
+                  className="mt1"
                 />
               </div>
             }
           />
           <div className="mb4">
+            <label>Blood Group</label>
             <Field<string>
               name="bloodGroup"
               render={({ input, meta }) =>
@@ -271,7 +224,6 @@ const BasicInfoFormComponent = (props: BasicInfoInternalProps) => {
                     { _id: 'B-', name: 'B-' }]
                   }
                   onChange={input.onChange}
-                  leftIcon="comparison"
                 />
               }
             />
@@ -280,14 +232,13 @@ const BasicInfoFormComponent = (props: BasicInfoInternalProps) => {
             name="birthDate"
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <label>Birth Date</label>
                 <DateInput
                   formatDate={(date: Date) => date.toLocaleDateString()}
                   parseDate={(str: string) => new Date(str)}
                   onChange={input.onChange}
-                  placeholder={'Birth date'}
                   canClearSelection={false}
                   value={values.birthDate ? new Date(values.birthDate) : null}
-                  className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                   popoverProps={{
                     targetClassName: 'w-100'
                   }}
@@ -325,7 +276,7 @@ const BasicInfoFormComponent = (props: BasicInfoInternalProps) => {
               </RadioGroup>
             }
           />
-          <div className="fr mr4 mb4">
+          <div className="flex justify-end">
             <Button className="w4 grow h2 pointer mr3"
               style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
               onClick={(e: any) => {

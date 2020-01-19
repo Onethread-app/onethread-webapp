@@ -86,8 +86,10 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                     </div>
                   </div>
                 </div>
-                <div className="mr0">
-                  <p className="bg-washed-red ph2 pv1 red br2 mv1">10 days left</p>
+                <div className="mr0 pt1">
+                  <p className="bg-washed-red ph2 pv1 red br2 mv1"
+                    style={{ fontSize: '.8rem' }}
+                  >10 days left</p>
                 </div>
               </div>
             </div>

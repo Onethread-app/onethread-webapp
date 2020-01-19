@@ -1,5 +1,5 @@
-import React from "react";
-import { Field } from "react-final-form";
+import React from 'react';
+import { Field } from 'react-final-form';
 
 interface FormConditionProps {
 	when: string;

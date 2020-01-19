@@ -12,17 +12,18 @@ import { FormBoard } from './Form';
 import { RightSidebar } from 'components/RightSidebar';
 import { find } from 'lodash';
 
+import addIcon from '../../../resources/images/addIcon.png';
+
 interface IBoardCardComponent {
 	boardList: TaskBoard[];
 	company: CompanyModel;
-	// color: string[];
 	getSelectedBoard: (boardId: string | undefined) => Promise<number>;
 }
 
 const BoardCard = withRouter((props: IBoardCardComponent & RouteComponentProps) => (
 	<>
 		{props.boardList.map((board) => (
-			<div className="fl w-100 w-25-ns pa2">
+			<div className="pa2">
 				<Card
 					className="h-100"
 					interactive={true}
@@ -39,23 +40,24 @@ const BoardCard = withRouter((props: IBoardCardComponent & RouteComponentProps) 
 					<div
 						className="flex"
 						style={{
-							borderLeft: `5px solid ${
-								find(boardColor , ['code', board.color]) ? find(boardColor , ['code', board.color])!.value : 'white'}`,
-							// borderLeft: `5px solid ${board.color}`,
+							borderLeft: `5px solid 
+							${find(boardColor, ['code', board.color]) ?
+									find(boardColor, ['code', board.color])!.value : 'white'
+								}`, // TODO use dictionary
 							paddingLeft: '20px',
 							marginLeft: '-2px',
 							borderRadius: '3px'
 						}}
 					>
-						<h3 className="mt0 mb2 ws-break flex-grow-1 ws-normal"
+						<h3 className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
 							style={{
-								height: '35px',
-								fontWeight: 600,
-								fontSize: '15px',
-								overflow: 'hidden',
-								textOverflow: 'ellipsis',
+								height: '2.5rem',
+								display: '-webkit-box',
+								WebkitLineClamp: 2,
+								WebkitBoxOrient: 'vertical',
 							}}>
-							<a style={{ color: 'black' }} href="!#">{board.name}</a></h3>
+							{board.name}
+						</h3>
 						<Popover
 							content={
 								<Menu>
@@ -84,14 +86,18 @@ const BoardCard = withRouter((props: IBoardCardComponent & RouteComponentProps) 
 						<div>
 							<p className="mb0 ws-break" style={{ fontSize: '0.7rem' }}>
 								Total task
-				</p>
-							<p className="fw8">18</p>
+							</p>
+							<p className="fw8">
+								0
+							</p>
 						</div>
 						<div>
 							<p className="mb0 ws-break" style={{ fontSize: '0.7rem' }}>
 								Total Members
-				</p>
-							<p className="fw8">5</p>
+							</p>
+							<p className="fw8">
+								{board.members ? board.members.length : 0}
+							</p>
 						</div>
 					</div>
 
@@ -111,7 +117,6 @@ interface IBoardListViewInternalProps {
 }
 
 const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentProps) => {
-
 	const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(false);
 
 	useEffect(() => {
@@ -121,61 +126,51 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 
 	const [department, setDepartment] = useState('');
 	const boards = props.boardList.filter((board) => board.department === department);
-	// const colors = ['#FA617F', '#A8D16B', '#FFD7D0', '#FE5E41', '#3F61C5', '#11B468', '#5A1DD6'];
 
 	return (
 		<div className="h-100">
 			<div className="br3 bg-white h-100 pa4 cf flex flex-column">
 				<div className="pl2 flex" style={{ justifyContent: 'space-between' }}>
-					<h2 className="f5 lh-title tigrow-lightGray-1 dib">Board</h2>
+					<h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">Board</h3>
 					<div className="flex">
-					<p className="mt3 pr3">Filter By</p>
-					<div className="mt2" style={{ width: '200px' }}>
-						<HTMLSelect
-							fill={true}
-							minimal={true}
-							onChange={(event: any) => {
-								setDepartment(event.currentTarget.value);
-							}}
-							className="bp3-elevation-2"
-							style={{
-								boxShadow: 'none',
-								borderRadius: '0px',
-								backgroundColor: 'white',
-								flex: '1',
-								outline: 'none',
-
-							}}
-						>
-							<option selected value="">
-								All
-							</option>
-							{
-								props.company.departments ?
+						<p className="pr3 fw7" style={{ marginTop: '.8rem' }}>Filter By</p>
+						<div className="mt2" style={{ width: '200px' }}>
+							<HTMLSelect
+								fill={true}
+								minimal={true}
+								onChange={(event: any) => {
+									setDepartment(event.currentTarget.value);
+								}}
+								style={{
+									outline: 'none',
+									border: '1px solid #E1E1E1',
+									fontWeight: 600,
+									textAlignLast: 'center'
+								}}
+							>
+								<option selected value="">
+									All
+								</option>
+								{props.company.departments ?
 									props.company.departments.map((d) => (
 										<option value={d._id}>{d.name}</option>
 									))
 									: undefined
-							}
-						</HTMLSelect>
-					</div>
+								}
+							</HTMLSelect>
+						</div>
 					</div>
 				</div>
-				<div>
-					{permit(props.company.role) ?
-						<Button
-							className="grow fr h2 pointer white bp3-minimal "
-							style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
-							onClick={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
-						>
-							Create new board
-						</Button>
-						: undefined}
-				</div>
-				<p className="pl2 mt3">My Boards</p>
-				<div className="fl w-100 flex-grow-1 overflow-auto">
+				<p className="pl2 mt3" style={{ color: '#6B6B6B' }}>My Boards</p>
+				<div className="overflow-auto">
 					{props.loading === false ? props.boardList.length > 0 ?
-						<div className="cf flex flex-wrap">
+						<div
+							style={{
+								display: 'grid',
+								gridGap: '5px',
+								gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 270px))',
+								gridTemplateRows: 'repeat(2, 150px)'
+							}}>
 							{/* TODO make one */}
 							{
 								department ?
@@ -183,17 +178,32 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 										boardList={boards}
 										company={props.company}
 										getSelectedBoard={props.getSelectedBoard}
-										// color={colors}
 									/> :
 									<BoardCard
 										boardList={props.boardList}
 										company={props.company}
 										getSelectedBoard={props.getSelectedBoard}
-										// color={colors}
 									/>
 							}
 						</div>
 						: <p>No boards</p> : <Loading />}
+					<div>
+						{permit(props.company.role) ?
+							<img
+								onClick={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
+								src={addIcon}
+								className={`fixed pointer ${showTaskBoardDialog ? 'dn' : 'db'}`}
+								style={{
+									bottom: '2.2rem',
+									right: '7rem',
+									height: '4rem',
+									width: '4rem',
+									boxShadow: '-2px 2px 0px 0 #00000029',
+									borderRadius: '50%'
+								}}
+							/>
+							: undefined}
+					</div>
 				</div>
 				{showTaskBoardDialog && (
 					<RightSidebar

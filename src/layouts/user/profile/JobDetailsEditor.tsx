@@ -11,18 +11,17 @@ import { required, checkError } from 'components/final-form/utils';
 import { IExperience } from 'stores/user/Reducer';
 
 import warningIcon from './../../../resources/images/warningIcon.png';
-import nameTagIcon from './../../../resources/images/nameTag.png';
-interface JobFormProps {
+interface IJobFormProps {
   setShowDialog: (val: boolean) => void;
   edit: boolean;
   values?: IExperience;
 }
-interface JobFormInternalProps extends JobFormProps {
+interface IJobFormInternalProps extends IJobFormProps {
   addJobExperienceAction: (val: {}) => any;
   editJobExperienceAction: (jobInfo: {}, id: string) => any;
 }
 
-const JobFormComponent = (props: JobFormInternalProps) => {
+const JobFormComponent = (props: IJobFormInternalProps) => {
 
   const birthDate = useSelector((state: any) => state.userReducer.user.birthDate);
 
@@ -69,7 +68,7 @@ const JobFormComponent = (props: JobFormInternalProps) => {
         }}
         render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
           <form
-            className="fl w-100 pr4 mt2"
+            className="fl w-100"
             onSubmit={handleSubmit}
           >
             <div className="mb3">
@@ -135,25 +134,15 @@ const JobFormComponent = (props: JobFormInternalProps) => {
               validate={required}
               render={({ input, meta }) =>
                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                  <label>Company Name</label>
                   <InputGroupFieldWithError
                     id="companyName"
-                    className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                    className="mt1"
                     value={input.value}
                     onChange={input.onChange}
-                    leftIcon={
-                      <span className="bp3-icon">
-                        <img
-                          src={nameTagIcon}
-                          width="20px"
-                          height="20px"
-                          color="#0fa3a3"
-                        />
-                      </span>
-                    }
                     style={{
                       boxShadow: 'none'
                     }}
-                    placeHolder="Company Name"
                     error={checkError(meta) && (meta.error || meta.submitError)}
                   />
                 </div>
@@ -164,25 +153,15 @@ const JobFormComponent = (props: JobFormInternalProps) => {
               validate={required}
               render={({ input, meta }) =>
                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                  <label>Position Name</label>
                   <InputGroupFieldWithError
                     id="positionName"
-                    className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                    className="mt1"
                     value={input.value}
                     onChange={input.onChange}
-                    leftIcon={
-                      <span className="bp3-icon">
-                        <img
-                          src={nameTagIcon}
-                          width="20px"
-                          height="20px"
-                          color="#0fa3a3"
-                        />
-                      </span>
-                    }
                     style={{
                       boxShadow: 'none'
                     }}
-                    placeHolder="Position Name"
                     error={checkError(meta) && (meta.error || meta.submitError)}
                   />
                 </div>
@@ -192,15 +171,14 @@ const JobFormComponent = (props: JobFormInternalProps) => {
               name="startYear"
               validate={required}
               render={({ input, meta }) =>
-                <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <div className={`${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                  <label>Start Year</label>
                   <DateInput
                     formatDate={(date: Date) => date.toLocaleDateString()}
                     parseDate={(str: string) => new Date(str)}
                     onChange={input.onChange}
-                    placeholder={'Start Year'}
                     canClearSelection={false}
                     value={values.startYear ? new Date(values.startYear) : null}
-                    className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                     popoverProps={{
                       targetClassName: 'w-100'
                     }}
@@ -218,10 +196,10 @@ const JobFormComponent = (props: JobFormInternalProps) => {
               name="endingYear"
               render={({ input, meta }) =>
                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                  <label>End Year</label>
                   <DateInput
                     formatDate={(date: Date) => date.toLocaleDateString()}
                     parseDate={(str: string) => new Date(str)}
-                    placeholder={'End Year'}
                     onChange={input.onChange}
                     disabled={
                       new Date(values.startYear).toLocaleDateString() === new Date().toLocaleDateString()
@@ -247,11 +225,17 @@ const JobFormComponent = (props: JobFormInternalProps) => {
               name="jobDescription"
               render={({ input, meta }) =>
                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                  <label>Description</label>
                   <TextArea
+                    className="mt1"
                     id="jobDescription"
                     value={input.value}
                     onChange={input.onChange}
-                    style={{ resize: 'none' }}
+                    style={{
+                      resize: 'none',
+                      minHeight: '50px',
+                      maxHeight: '150px'
+                    }}
                     fill={true}
                     growVertically={true}
                   />
@@ -269,6 +253,7 @@ const JobFormComponent = (props: JobFormInternalProps) => {
                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                   <Checkbox
                     id="currentlyWork"
+                    className="white"
                     value={input.value}
                     onChange={(e) => {
                       input.onChange(e);
@@ -287,7 +272,7 @@ const JobFormComponent = (props: JobFormInternalProps) => {
                 </div>
               }
             />
-            <div className="fr mr4 mb4">
+            <div className="flex justify-end">
               <Button className="w4 grow h2 pointer mr3"
                 style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
                 onClick={(e: any) => {

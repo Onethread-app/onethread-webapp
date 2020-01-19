@@ -19,7 +19,7 @@ interface InputGroupFieldProps {
   disabled?: boolean;
   error?: string;
   autoFocus?: boolean;
-  keypress?: (e: any) => void
+  keypress?: (e: any) => void;
 }
 
 export const InputGroupField = (props: InputGroupFieldProps) => (
@@ -68,7 +68,7 @@ export const InputGroupFieldWithLabel = (props: InputGroupFieldWithLabelProps) =
   <FormGroup
     inline={props.inline}
     intent={props.error ? Intent.DANGER : Intent.NONE}
-    label={<span className="f5 fw5">{props.label}</span>}
+    label={<p className="fw5" style={{fontSize: '.8rem'}}>{props.label}</p>}
     helperText={props.error ? props.error : props.helperText}
     labelFor={props.id}
   >

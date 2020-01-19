@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
+import { ButtonGroup, Button } from '@blueprintjs/core';
 import { JobForm } from './JobDetailsEditor';
 import { EducationForm } from './EducationDetailsEditor';
 
@@ -9,40 +9,47 @@ interface ExperienceEditorProps {
 
 export const ExperienceEditor = (props: ExperienceEditorProps) => {
 
-  const [selectedTab, setsSelectedTab] = useState('Job');
-  const handleSelectedTab = (id: any) => {
-    setsSelectedTab(id);
-  };
+  const [selectedJob, setSelectedJob] = useState(true);
+  const [selectedEducation, setSelectedEducation] = useState(false);
 
   return (
-    <div>
-      <Tabs
-        id="TabsExample"
-        className="ml4-ns ml3 mt4 mr2"
-        onChange={(id) => handleSelectedTab(id)}
-        selectedTabId={selectedTab}
-      >
-        <Tab
-          id="Job"
-          title="Job"
-          panel={
-            <JobForm
-              setShowDialog={props.setShowDialog}
-              edit={false}
-            />
-          }
-          className="outline-0"
-        />
-        <Tab
-          id="Educations"
-          title="Educations"
-          panel={<EducationForm
+    <div className="mt5">
+      <ButtonGroup className="mh2">
+        <Button
+          className="ba bw1 pa2 w-100 bp3-minimal"
+          style={{ color: 'white' }}
+          onClick={() => {
+            setSelectedEducation(false);
+            setSelectedJob(true);
+          }}>
+          Job
+          </Button>
+        <Button
+          className="ba bw1 pa2 w-100 bp3-minimal ml3"
+          style={{ color: 'white' }}
+          onClick={() => {
+            setSelectedJob(false);
+            setSelectedEducation(true);
+          }} >
+          Education
+          </Button>
+      </ButtonGroup>
+      {selectedJob &&
+        <div className="mh2 mt2">
+          <JobForm
             setShowDialog={props.setShowDialog}
             edit={false}
-          />}
-          className="outline-0"
-        />
-      </Tabs>
+          />
+        </div>
+      }
+      {selectedEducation &&
+        <div className="mh2 mt2">
+          <EducationForm
+            setShowDialog={props.setShowDialog}
+            edit={false}
+          />
+        </div>
+      }
     </div>
   );
 };

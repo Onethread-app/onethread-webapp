@@ -5,7 +5,8 @@ import {
 	USER_COMPANIES_UPDATE,
 	ADD_SKILL,
 	DELETE_SKILL,
-	IMAGE_UPLOAD
+	PROFILE_IMAGE_UPLOAD,
+	COVER_IMAGE_UPLOAD
 } from './Types';
 import { tokenConfig, awsImageOption } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
@@ -195,14 +196,18 @@ export const editEducationExperienceAction = (educationExperienceInfo: any, educ
 	}
 };
 
-export const profileImageUploadAction = (imageSelected: any) => async (dispatch: any, getState: any) => {
+export const imageUploadAction = (imageSelected: any, type: string) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.post(`files/upload`, imageSelected, headers);
+			const response = await tigrowApi.post(`files/upload?imageType=${type}`, imageSelected, headers);
 			const awsOptions = awsImageOption(response.data);
 			const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-			dispatch({ type: IMAGE_UPLOAD, payload: { ...response.data, imageSource: imgRes.data } });
+			if (response.data.imageType === 'profilePic') {
+				dispatch({ type: PROFILE_IMAGE_UPLOAD, payload: { ...response.data, imageSource: imgRes.data } });
+			} else if (response.data.imageType === 'coverPhoto') {
+				dispatch({ type: COVER_IMAGE_UPLOAD, payload: { ...response.data, imageSource: imgRes.data } });
+			}
 			return imgRes.data;
 		} else {
 			console.log('no headers');

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { TaskItem } from '../task/TaskItem';
 import { Button, Popover, Menu, MenuItem, Dialog } from '@blueprintjs/core';
-import { IColumn } from 'stores/board/Reducer';
+import { IColumn, TaskBoard } from 'stores/board/Reducer';
 import { TaskForm } from '../task/TaskForm';
 import { connect } from 'react-redux';
 import { Loading } from 'components/Loading';
@@ -12,6 +12,7 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { Field, Form } from 'react-final-form';
 import { required, checkError } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { createTask } from 'stores/board/Actions';
 
 import cancel from '../../../../resources/images/cancel.png';
 import doneWhite from '../../../../resources/images/doneWhite.png';
@@ -25,6 +26,8 @@ interface ColumnProps {
 interface ColumnInternalProps extends ColumnProps {
   loading?: boolean;
   company?: CompanyModel;
+  createTask: (task: any) => void;
+  currentBoard?: TaskBoard;
 }
 
 const ColumnComponent = (props: ColumnInternalProps) => {
@@ -33,18 +36,29 @@ const ColumnComponent = (props: ColumnInternalProps) => {
   const [showTaskFormDialog, setShowTaskFormDialog] = useState(false);
   const [showTaskInput, setShowTaskInput] = useState(false);
 
-  const onSubmit = async (values: string) => {
-    setShowTaskInput(!showTaskInput);
+  const onSubmit = async (values: any) => {
+    const modifiedTask = {
+      ...values,
+      boardId: props.currentBoard!._id,
+      columnId: props.column._id
+    };
+    await props.createTask(modifiedTask);
+    if (showTaskInput) {
+      setShowTaskInput(false);
+    }
+    return;
   };
 
   return (
     <>
-      <div className="pl2 pb2 dib h-100 w-23-l w-50-m overflow-y-auto">
-        <div className="flex flex-column h-100 pr2">
+      <div
+        className="dib h-100 w-23-l w-50-m"
+      >
+        <div className="flex flex-column h-100 pr3">
           <div>
             <div className="flex">
               <h3
-                className="ma0 flex-grow-1 ws-normal ws-break"
+                className="pl1 ma0 flex-grow-1 ws-normal ws-break"
               >
                 {props.column.name}
               </h3>
@@ -54,7 +68,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     <Menu>
                       <MenuItem
                         text="Edit"
-                        onClick={(e: any) => setShowColumnFormDialog(true)}
+                      // onClick={(e: any) => setShowColumnFormDialog(true)} // TODO change ui
                       />
                     </Menu>
                   }
@@ -75,7 +89,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 : undefined}
             </div>
             {props.company && permit(props.company.role) === true ?
-              <div className="overflow-hidden ph2 pt2">
+              <div
+                className="overflow-hidden ph2 pt2"
+                style={{ background: '#F6F6F6', borderRadius: '5px 5px 0 0' }}>
                 <Button
                   className="grow h2 mb2 pointer bp3-minimal"
                   style={{
@@ -85,13 +101,13 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   }}
                   text="Add Task"
                   fill={true}
-                  onClick={() => setShowTaskInput(!showTaskInput)}
+                  onClick={() => setShowTaskInput(!showTaskInput)} // TODO add functionality
                 />
               </div>
               : undefined}
             <div>
               {showTaskInput && (
-                <div className="overflow-hidden ph2 pt2">
+                <div className="overflow-hidden">
                   <Form
                     onSubmit={onSubmit}
                     render={({
@@ -107,30 +123,30 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                         <form
                           onSubmit={handleSubmit}
                         >
-                          <div>
+                          <div className="ph2 pt2" style={{ background: '#F6F6F6' }}>
                             <Field<string>
                               name="name"
                               validate={required}
                               render={({ input, meta }) =>
-                                  <InputGroupFieldWithError
-                                    id="name"
-                                    className={`bw1 pb2 br0 b--lightBlue'}`}
-                                    value={input.value}
-                                    onChange={input.onChange}
-                                    style={{
-                                      boxShadow: 'none',
-                                      fontSize: '18px',
-                                    }}
-                                    error={checkError(meta) && (meta.error || meta.submitError)}
-                                    placeHolder="Task Name"
-                                  />
+                                <InputGroupFieldWithError
+                                  id="name"
+                                  className={`bw1 pb2 br0 b--lightBlue ph2}`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px',
+                                  }}
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                  placeHolder="Task Name"
+                                />
                               }
                             />
                             <div className="flex justify-end">
                               <button
                                 className="pa1 ma0 b--none pointer outline-0"
                                 type="submit"
-                                style={{background: '#F5F6FA'}}
+                                style={{ background: '#F5F6FA' }}
                                 onClick={() => setShowTaskInput(!showTaskInput)}
                               >
                                 <img
@@ -141,7 +157,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                               <button
                                 className="pa1 ma0 b--none pointer outline-0"
                                 type="submit"
-                                style={{background: '#F5F6FA', outline: 'none'}}
+                                style={{ background: '#F5F6FA', outline: 'none' }}
                               >
                                 <img
                                   style={{ width: '25px', height: '25px' }}
@@ -159,8 +175,14 @@ const ColumnComponent = (props: ColumnInternalProps) => {
             </div>
           </div>
 
-          <div className="h-100" style={{ background: '#F6F6F6' }}>
-            <div className={` flex-grow-1 flex flex-column`}>
+          <div
+            className="h-100 mb3 overflow-y-auto"
+            style={{
+              background: '#F6F6F6',
+              borderRadius: '0 0 5px 5px'
+            }}
+          >
+            <div className="flex-grow-1 flex flex-column h-100">
               {props.loading ? <Loading />
                 : <>
                   <Droppable
@@ -171,10 +193,12 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                       const allowedProps = { ref: provided.innerRef };
                       return (
                         <div
-                          className={`pa2 flex-grow-1 flex flex-column overflow-auto ${snapshot.isDraggingOver ? 'bg-lightest-blue' : ''}`}
+                          className={`pa2 flex-grow-1 flex 
+                          flex-column overflow-auto 
+                          ${snapshot.isDraggingOver ? 'bg-lightest-blue' : ''}`
+                          }
                           style={{
                             transition: 'background-color 0.2s ease',
-                            // height: '25rem', 
                             minHeight: '100px',
                             whiteSpace: 'normal'
                           }}
@@ -236,8 +260,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     loading: state.taskManagementReducer.boardReducer.dragTaskLoading,
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
+    currentBoard: state.taskManagementReducer.boardReducer.currentBoard
   };
 };
 
-export const Column = connect(mapStateToProps, null)(ColumnComponent);
+export const Column = connect(mapStateToProps, { createTask })(ColumnComponent);
