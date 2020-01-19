@@ -163,8 +163,8 @@ const getAccount = async (req, res, next) => {
     })
       .select('-password')
       .populate(
-        'companies skillArea jobExperience education profileImage',
-        '_id _id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name fileLink s3Key fileType',
+        'companies skillArea jobExperience education profileImage coverImage',
+        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name fileLink s3Key fileType imageType',
       );
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
@@ -188,7 +188,6 @@ const getAccount = async (req, res, next) => {
 const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
     const { token } = req.params;
-
     const user = await Account.findOne({
       verifyAccountToken: token,
     }).select(

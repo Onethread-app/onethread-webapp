@@ -12,9 +12,11 @@ const accountsSchema = new mongoose.Schema({
   profileImage: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'File',
-    currentlyActive: { type: Boolean, default: true },
   },
-
+  coverImage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'File',
+  },
   name: {
     type: String,
     trim: true,
@@ -29,6 +31,11 @@ const accountsSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
+  },
+  position: {
+    type: String,
+    trim: true,
+    max: 32,
   },
   email: {
     type: String,
