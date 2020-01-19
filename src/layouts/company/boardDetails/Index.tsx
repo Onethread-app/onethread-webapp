@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, Icon } from '@blueprintjs/core';
+import { Button, Dialog, Icon, Popover } from '@blueprintjs/core';
 import { TaskManagementLayout } from './TaskManagementLayout';
 import { connect } from 'react-redux';
 import { TaskBoard } from 'stores/board/Reducer';
@@ -10,6 +10,10 @@ import { permit } from 'stores/UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { RightSidebar } from 'components/RightSidebar';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
+
+import addIcon from 'resources/images/addIcon.png';
+import taskIcon from 'resources/images/taskIcon.png';
+import columnIcon from 'resources/images/columnIcon.png';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
@@ -24,7 +28,10 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
   const [showMemberListDialog, setShowMemberListDialog] = useState(false);
 
   return (
-    <div className="br3 h-100 pa3 cf flex flex-column">
+    <div
+      className="br3 h-100 pt4 ph3 cf flex flex-column"
+      style={{ background: 'white' }}
+    >
       <div className="flex mb3">
         <BreadCrumbs
           items={[
@@ -33,68 +40,109 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
           ]}
         />
       </div>
-      <div className="flex">
-        <div className="flex-auto">
-          <h1 className="w-30 fw6 overflow-hidden f5"
-            style={{
-              height: '2.5rem',
-              display: '-webkit-box',
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: 'vertical',
-            }}>
-            {props.currentBoard!.name}
-          </h1>
-          <p
-            className="mb0 f7 pointer dim"
-            onClick={() => setShowMemberListDialog(!showMemberListDialog)}
-          >
-            {`Members: ${props.currentBoard!.members!.length}`}
-          </p>
-        </div>
-        {permit(props.company.role) === true ?
-          <>
-            <Button
-              className="grow fr h2 pointer white bp3-minimal mr3 outline-0"
-              style={props.currentBoard!.columns!.length > 0 ?
-                {
-                  background: '#0fa3a3',
-                  color: 'white'
-                } : {
-                  background: '#011b1b2e',
-                  color: 'white'
+      <div
+        className="flex items-center"
+        style={{ justifyContent: 'space-between' }}
+      >
+        <h3 className="w-100 ma0 f3 mv3">
+          {props.currentBoard!.name}
+        </h3>
+        <div className="flex mh3">
+          {permit(props.company.role) === true ?
+            <>
+              <Button
+                className="bp3-minimal h2 outline-0 mr3"
+                icon={
+                  <Icon
+                    icon="cog"
+                    iconSize={17}
+                    style={{ color: 'white' }}
+                  />
                 }
-              }
-              text={<span >Add Task</span>}
-              disabled={props.currentBoard!.columns!.length > 0 ? false : true}
-              onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
-            />
-            <Button
-              className="grow fr h2 pointer white bp3-minimal mr3 outline-0"
-              style={{
-                background: '#00a8e8',
-                color: 'white'
-              }}
-              text={<span >Add Column</span>}
-              onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
-            />
-            <Button
-              className="h2 outline-0"
-              icon={
-                <Icon
-                  icon="new-person"
-                  iconSize={17}
-                  style={{ color: 'white' }}
-                />
-              }
-              style={{
-                background: '#f55b7f',
-                color: 'white'
-              }}
-              onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
-            />
-          </>
-          : undefined}
+                style={{
+                  background: '#0FA3A3',
+                  color: 'white'
+                }}
+                onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
+              />
+              <Button
+                className="bp3-minimal h2 outline-0"
+                icon={
+                  <Icon
+                    icon="new-person"
+                    iconSize={17}
+                    style={{ color: 'white' }}
+                  />
+                }
+                style={{
+                  background: '#f55b7f',
+                  color: 'white'
+                }}
+                onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
+              />
+            </>
+            : undefined}
+        </div>
       </div>
+      {permit(props.company.role) === true ?
+        <div
+          className="fixed"
+          style={{
+            bottom: '10rem',
+            right: '8rem',
+          }}
+        >
+          <Popover
+            minimal={true}
+            content={
+              <div className={`pa3 ${showTaskFormDialog || showColumnFormDialog ? 'dn' : 'db'}`}>
+                <div className="mb2">
+                  <Button
+                    className="grow h2 pointer white bp3-minimal flex outline-0"
+                    text={<span className="fw8">Add Task</span>}
+                    icon={
+                      <img
+                        style={{ height: '25px', paddingRight: '1rem' }}
+                        src={taskIcon}
+                      />
+                    }
+                    disabled={props.currentBoard!.columns!.length > 0 ? false : true}
+                    onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
+                  />
+                </div>
+                <div>
+                  <Button
+                    className="grow h2 pointer white bp3-minimal flex outline-0"
+                    text={<span className="fw8" >Add Column</span>}
+                    icon={
+                      <img
+                        style={{ height: '25px', paddingRight: '1rem' }}
+                        src={columnIcon}
+                      />
+                    }
+                    onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
+                  />
+                </div>
+              </div>
+            }
+            target={
+              <div>
+                <img
+                  src={addIcon}
+                  className="fixed pointer"
+                  style={{
+                    bottom: '2.2rem',
+                    right: '7rem',
+                    height: '4rem',
+                    width: '4rem',
+                    boxShadow: '-2px 2px 0px 0 #00000029',
+                    borderRadius: '50%'
+                  }}
+                />
+              </div>
+            }
+          />
+        </div> : undefined}
       <div className="flex-auto">
         <div className="fl h-100 w-100">
           <TaskManagementLayout
