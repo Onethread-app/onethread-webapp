@@ -47,6 +47,14 @@ export interface ICompanyMembers {
 	role: string;
 	designations: [IDesignations];
 }
+
+export interface ICompanyTeamMembers {
+		_id: string;
+		name: string;
+		firstName: string;
+		lastName: string;
+}
+
 export interface CompanyModel {
 	_id: string;
 	name: string;

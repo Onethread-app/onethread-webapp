@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Icon, HTMLSelect, IconName } from '@blueprintjs/core';
+import { HTMLSelect, IconName, FormGroup, Intent } from '@blueprintjs/core';
 import { Entity } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
 
@@ -11,33 +11,45 @@ interface DropdownFieldProps {
   leftIcon?: IconName;
   leftIconColor?: string;
   error?: string;
+  className?: string;
+}
+
+interface DropdownFieldWithLabelProps extends DropdownFieldProps {
+  label: string | JSX.Element;
+  helperText?: string;
+  inline?: boolean;
+  required?: boolean;
 }
 
 export const DropdownField = (props: DropdownFieldProps) => (
   <div className="flex">
-    <div className={`f5 pa1 bb ${props.error ? 'b--red' : 'b--lightBlue'}`}>
+    {/* <div className={`f5 pa1 bb bw1 ${props.error ? 'b--red' : 'b--lightBlue'}`}>
       <Icon
         icon={props.leftIcon ? props.leftIcon : 'briefcase'}
         color={props.error ? 'red' : props.leftIconColor ? `${props.leftIconColor}` : '#0fa3a3'}
       />
-    </div>
+    </div> */}
     <HTMLSelect
       id={props.id}
       fill={true}
       minimal={true}
       onChange={props.onChange}
-      className={props.error ? 'bb b--red' : 'bb b--lightBlue'}
+      className={
+        `${props.error ?
+          'bb b--red' :
+          props.className ? props.className : 'bb b--lightBlue'
+        }`
+      }
       style={{
         boxShadow: 'none',
-        borderRadius: '0px',
         backgroundColor: 'white',
         flex: '1',
         outline: 'none'
       }}
     >
-      <option selected value=''>Please select a value</option>
+      <option selected value=""></option>
       {props.options.map(opt => (
-        <option 
+        <option
           value={opt._id}
           selected={isEqual(opt._id, props.selectedValue) === true}
         >
@@ -52,9 +64,21 @@ export const DropdownFieldWithError = (props: DropdownFieldProps) => (
   <>
     <DropdownField {...props} />
     {props.error &&
-      <small style={{ color: "red" }}>
+      <small style={{ color: 'red' }}>
         {props.error}
       </small>
     }
   </>
+);
+
+export const DropdownFieldErrorWithLabel = (props: DropdownFieldWithLabelProps) => (
+  <FormGroup
+    inline={props.inline}
+    intent={props.error ? Intent.DANGER : Intent.NONE}
+    label={<p className="fw5" style={{ fontSize: '.8rem' }}>{props.label}</p>}
+    helperText={props.error ? props.error : props.helperText}
+    labelFor={props.id}
+  >
+    <DropdownField {...props} />
+  </FormGroup>
 );

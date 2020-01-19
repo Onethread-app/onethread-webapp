@@ -16,7 +16,6 @@ export const createBoard = (board: TaskBoard) => async (dispatch: any, getState:
       };
       const response = await tigrowApi.post(`boards`, reqBody, headers);
       dispatch({ type: CREATE_BOARD, payload: response.data });
-      // console.log(`response.data: `, response.data);
       return response.data;
     }
   } catch (error) {

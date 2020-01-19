@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { isNumber, isEmpty, isEqual } from 'lodash';
 import { connect } from 'react-redux';
 import { Button } from '@blueprintjs/core';
 import { InputGroupField } from 'components/fields/InputGroupField';
-import "@blueprintjs/datetime/lib/css/blueprint-datetime.css";
+import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { CompanyModel } from 'stores/company/Reducer';
 import { editCompanyInfoAction } from 'stores/company/Actions';
 
 
 interface CompanyInfoProps {
-  companyInfo: CompanyModel
+  companyInfo: CompanyModel;
 }
 
 const CompanyInfoFormComponent = (props: {
@@ -38,7 +38,7 @@ const CompanyInfoFormComponent = (props: {
     } else {
       return false;
     }
-  }
+  };
 
   const emptyErrorCheck = () => {
     if (isEmpty(errors.legalOwnerMail) && isEmpty(errors.email)) {
@@ -46,7 +46,7 @@ const CompanyInfoFormComponent = (props: {
     } else {
       return false;
     }
-  }
+  };
 
   const emptyValueCheck = () => {
     if (isEmpty(values.address)) {
@@ -59,7 +59,7 @@ const CompanyInfoFormComponent = (props: {
     } else {
       return false;
     }
-  }
+  };
 
   const handleChange = (name: string | number) => (event: any) => {
     const value = isNumber(event) ? event.toString() : event.target.value;
@@ -68,11 +68,11 @@ const CompanyInfoFormComponent = (props: {
 
   const checkLegalOwnerMail = () => {
     if (isEqual(values.email, values.legalOwnerMail)) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
-  }
+  };
 
   return (
     <form className="fl w-100 pa4">
@@ -196,13 +196,13 @@ const CompanyInfoFormComponent = (props: {
         </Button>
       </div>
     </form>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
     companyInfo: state.companyReducer.currentCompany,
-  }
-}
+  };
+};
 
 export const CompanyInfoForm = connect(mapStateToProps, { editCompanyInfoAction })(CompanyInfoFormComponent);

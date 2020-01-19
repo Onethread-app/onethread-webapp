@@ -13,7 +13,8 @@
       true,
       "check-space"
     ],
-    "curly": true,
+    "curly": false,
+    "arrow-parens": false,
     "eofline": false,
     "forin": true,
     "indent": [
@@ -21,7 +22,7 @@
       "tabs"
     ],
     "interface-name": [
-      true,
+      false,
       "always-prefix"
     ],
     "jsdoc-format": true,

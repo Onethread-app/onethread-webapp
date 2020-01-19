@@ -63,3 +63,13 @@ export const awsImageOption = (response: any) => {
   };
   return options
 }
+
+export const boardColor = [
+  { code : 0 , value : '#FA617F'},
+  { code : 1 , value : '#A8D16B'},
+  { code : 2 , value : '#FFD7D0'},
+  { code : 3 , value : '#FE5E41'},
+  { code : 4 , value : '#3F61C5'},
+  { code : 5 , value : '#11B468'},
+  { code : 6 , value : '#5A1DD6'}
+];
