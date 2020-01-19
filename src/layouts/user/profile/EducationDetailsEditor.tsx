@@ -11,18 +11,17 @@ import { addEducationExperienceAction, editEducationExperienceAction } from 'sto
 import { IExperience } from 'stores/user/Reducer';
 
 import warningIcon from './../../../resources/images/warningIcon.png';
-import nameTagIcon from './../../../resources/images/nameTag.png';
-interface EduFormProps {
+interface IEduFormProps {
   setShowDialog: (val: boolean) => void;
   edit: boolean;
   values?: IExperience;
 }
-interface EduFormInternalProps extends EduFormProps {
+interface IEduFormInternalProps extends IEduFormProps {
   addEducationExperienceAction: (val: {}) => any;
   editEducationExperienceAction: (jobInfo: {}, id: string) => any;
 }
 
-const EducationFormComponent = (props: EduFormInternalProps) => {
+const EducationFormComponent = (props: IEduFormInternalProps) => {
 
   const birthDate = useSelector((state: any) => state.userReducer.user.birthDate);
 
@@ -69,7 +68,7 @@ const EducationFormComponent = (props: EduFormInternalProps) => {
       }}
       render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
         <form
-          className="fl w-100 pr4 mt2"
+          className="fl w-100"
           onSubmit={handleSubmit}
         >
           <div className="mb3">
@@ -135,25 +134,15 @@ const EducationFormComponent = (props: EduFormInternalProps) => {
             validate={required}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <label>Degree</label>
                 <InputGroupFieldWithError
                   id="degree"
-                  className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                  className="mt1"
                   value={input.value}
                   onChange={input.onChange}
-                  leftIcon={
-                    <span className="bp3-icon">
-                      <img
-                        src={nameTagIcon}
-                        width="20px"
-                        height="20px"
-                        color="#0fa3a3"
-                      />
-                    </span>
-                  }
                   style={{
                     boxShadow: 'none'
                   }}
-                  placeHolder="Degree"
                   error={checkError(meta) && (meta.error || meta.submitError)}
                 />
               </div>
@@ -164,25 +153,15 @@ const EducationFormComponent = (props: EduFormInternalProps) => {
             validate={required}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <label>Institution Name</label>
                 <InputGroupFieldWithError
                   id="institutionName"
-                  className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                  className="mt1"
                   value={input.value}
                   onChange={input.onChange}
-                  leftIcon={
-                    <span className="bp3-icon">
-                      <img
-                        src={nameTagIcon}
-                        width="20px"
-                        height="20px"
-                        color="#0fa3a3"
-                      />
-                    </span>
-                  }
                   style={{
                     boxShadow: 'none'
                   }}
-                  placeHolder="Institution Name"
                   error={checkError(meta) && (meta.error || meta.submitError)}
                 />
               </div>
@@ -193,11 +172,11 @@ const EducationFormComponent = (props: EduFormInternalProps) => {
             validate={required}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <label>Start Year</label>
                 <DateInput
                   formatDate={(date: Date) => date.toLocaleDateString()}
                   parseDate={(str: string) => new Date(str)}
                   onChange={input.onChange}
-                  placeholder={'Start Year'}
                   canClearSelection={false}
                   value={values.startYear ? new Date(values.startYear) : null}
                   className={`br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
@@ -219,10 +198,10 @@ const EducationFormComponent = (props: EduFormInternalProps) => {
             name="endingYear"
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <label>End Year</label>
                 <DateInput
                   formatDate={(date: Date) => date.toLocaleDateString()}
                   parseDate={(str: string) => new Date(str)}
-                  placeholder={'End Year'}
                   onChange={input.onChange}
                   disabled={
                     new Date(values.startYear).toLocaleDateString() === new Date().toLocaleDateString() ||
@@ -247,13 +226,16 @@ const EducationFormComponent = (props: EduFormInternalProps) => {
             name="eduDescription"
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                <label>Description</label>
                 <TextArea
                   id="eduDescription"
+                  className="mt1"
                   value={input.value}
                   onChange={input.onChange}
                   style={{
                     resize: 'none',
-                    minHeight: '50px'
+                    minHeight: '50px',
+                    maxHeight: '150px'
                   }}
                   fill={true}
                   growVertically={true}
@@ -288,7 +270,7 @@ const EducationFormComponent = (props: EduFormInternalProps) => {
               </div>
             }
           />
-          <div className="fr mr4 mb4">
+          <div className="flex justify-end">
             <Button className="w4 grow h2 pointer mr3"
               style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
               onClick={(e: any) => {

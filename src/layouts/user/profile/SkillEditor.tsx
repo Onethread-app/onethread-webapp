@@ -57,7 +57,7 @@ export const SkillEdit = (props: SkillEditProps) => {
   }, [result]);
 
   return (
-    <div className="pa3">
+    <div className="ph2 pt6">
       <h1 className="f5 lh-copy">Add your skills</h1>
       <div className="fl w-100 pv2">
         <SuggestField
@@ -100,7 +100,7 @@ export const SkillEdit = (props: SkillEditProps) => {
             </Tag>
           ))}
         </div>
-        <div className="fl w-100">
+        <div className="fl w-100 mt4">
           <div className="flex justify-end">
             <Button className="w4 grow h2 pointer mr3"
               onClick={(e: any) => {

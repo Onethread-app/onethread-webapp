@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import { Button, Spinner } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
-import { profileImageUploadAction } from 'stores/user/Actions';
+import { imageUploadAction } from 'stores/user/Actions';
 
-interface ImageUploadEditProps {
+interface IImageEditProps {
   setShowDialog: (val: boolean) => void;
-  profileImageUploadAction: (val: any) => any;
-
+  imageUploadAction: (val: any, type: string) => any;
+  type: string;
 }
-const ImageUploadEditComponent = (props: ImageUploadEditProps) => {
-  
+const ImageEditComponent = (props: IImageEditProps) => {
+
   const [imageSelected, setImageSelected] = useState({}) as any;
   const [imageName, setImageName] = useState({}) as any;
   const [imageLoading, setImageLoading] = useState(false);
@@ -81,7 +81,7 @@ const ImageUploadEditComponent = (props: ImageUploadEditProps) => {
           onClick={async (e: any) => {
             e.preventDefault();
             setImageLoading(true);
-            const response = await props.profileImageUploadAction(imageSelected);
+            const response = await props.imageUploadAction(imageSelected, props.type);
             if (response) {
               props.setShowDialog(false);
               setImageName({});
@@ -98,4 +98,4 @@ const ImageUploadEditComponent = (props: ImageUploadEditProps) => {
   );
 };
 
-export const ImageUploadEdit = connect(null, { profileImageUploadAction })(ImageUploadEditComponent);
+export const ImageEdit = connect(null, { imageUploadAction })(ImageEditComponent);

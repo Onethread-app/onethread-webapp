@@ -34,7 +34,7 @@ export const userSignupAction = (
 			'Content-Type': 'application/json'
 		} as AxiosRequestConfig);
 		localStorage.setItem('token', JSON.stringify(response.data.token));
-		return	errorMessgeHandler(response);
+		return errorMessgeHandler(response);
 	} catch (error) {
 		return errorMessgeHandler(error);
 	}
@@ -46,7 +46,7 @@ export const loginAction = (loginUser: LoginModel) => async (dispatch: any) => {
 			'Content-Type': 'application/json'
 		} as AxiosRequestConfig);
 		await localStorage.setItem('token', JSON.stringify(response.data.token));
-		return	errorMessgeHandler(response);
+		return errorMessgeHandler(response);
 	} catch (error) {
 		return errorMessgeHandler(error);
 	}
@@ -65,6 +65,17 @@ export const fetchUserAction = () => async (dispatch: any) => {
 					...updatedUserInfo,
 					profileImage: {
 						...updatedUserInfo.profileImage,
+						imageSource: imgRes.data
+					}
+				};
+			}
+			if (updatedUserInfo.coverImage) {
+				const awsOptions = awsImageOption(updatedUserInfo.coverImage);
+				const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
+				updatedUserInfo = {
+					...updatedUserInfo,
+					coverImage: {
+						...updatedUserInfo.coverImage,
 						imageSource: imgRes.data
 					}
 				};
