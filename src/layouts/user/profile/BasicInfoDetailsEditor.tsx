@@ -224,6 +224,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                     { _id: 'B-', name: 'B-' }]
                   }
                   onChange={input.onChange}
+                  className="bn"
                 />
               }
             />

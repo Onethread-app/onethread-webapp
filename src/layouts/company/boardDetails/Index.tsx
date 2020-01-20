@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Dialog, Icon, Popover } from '@blueprintjs/core';
+import { Button, Dialog, Popover } from '@blueprintjs/core';
 import { TaskManagementLayout } from './TaskManagementLayout';
 import { connect } from 'react-redux';
 import { TaskBoard } from 'stores/board/Reducer';
@@ -14,6 +14,8 @@ import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import addIcon from 'resources/images/addIcon.png';
 import taskIcon from 'resources/images/taskIcon.png';
 import columnIcon from 'resources/images/columnIcon.png';
+import settingIcon from 'resources/images/settingIcon.png';
+import addMemberIcon from 'resources/images/addMemberIcon.png';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
@@ -29,10 +31,10 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
 
   return (
     <div
-      className="br3 h-100 pt4 ph3 cf flex flex-column"
+      className="br3 h-100 ph3 cf flex flex-column"
       style={{ background: 'white' }}
     >
-      <div className="flex mb3">
+      <div className="flex">
         <BreadCrumbs
           items={[
             { text: `Board`, href: `/company/${props.company.name}/board` },
@@ -41,43 +43,26 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
         />
       </div>
       <div
-        className="flex items-center"
+        className="flex items-center mt3 mb4"
         style={{ justifyContent: 'space-between' }}
       >
-        <h3 className="w-100 ma0 f3 mv3">
+        <h3 className="w-100 ma0 f3">
           {props.currentBoard!.name}
         </h3>
         <div className="flex mh3">
           {permit(props.company.role) === true ?
             <>
-              <Button
-                className="bp3-minimal h2 outline-0 mr3"
-                icon={
-                  <Icon
-                    icon="cog"
-                    iconSize={17}
-                    style={{ color: 'white' }}
-                  />
-                }
-                style={{
-                  background: '#0FA3A3',
-                  color: 'white'
-                }}
-                onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
+              <img
+                className="mr3 br2 pointer"
+                style={{ height: '1.8rem', width: '1.8rem' }}
+                src={settingIcon}
+                alt="Setting icon"
               />
-              <Button
-                className="bp3-minimal h2 outline-0"
-                icon={
-                  <Icon
-                    icon="new-person"
-                    iconSize={17}
-                    style={{ color: 'white' }}
-                  />
-                }
-                style={{
-                  background: '#f55b7f',
-                  color: 'white'
-                }}
+              <img
+                className="br2 pointer"
+                style={{ height: '1.8rem', width: '1.8rem' }}
+                src={addMemberIcon}
+                alt="Add Member Icon"
                 onClick={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
               />
             </>
@@ -126,15 +111,13 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
               </div>
             }
             target={
-              <div>
+              <div className={`${showTaskFormDialog || showColumnFormDialog ? 'dn' : 'db'}`}>
                 <img
                   src={addIcon}
                   className="fixed pointer"
                   style={{
-                    bottom: '2.2rem',
                     right: '7rem',
-                    height: '4rem',
-                    width: '4rem',
+                    width: '5rem',
                     boxShadow: '-2px 2px 0px 0 #00000029',
                     borderRadius: '50%'
                   }}
@@ -166,17 +149,17 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
       )}
       {showAddMemberFormDialog && (
         <Dialog
-          onClose={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
-          title="Add Board Member"
-          isOpen={showAddMemberFormDialog}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
-        >
-          <AddTeamMemberForm
-            setShowAddMemberFormDialog={setShowAddMemberFormDialog}
-            currentBoard={props.currentBoard!}
-          />
-        </Dialog>
+        onClose={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
+        title="Add Board Member"
+        isOpen={showAddMemberFormDialog}
+        style={{ background: '#fff' }}
+        canOutsideClickClose={false}
+      >
+        <AddTeamMemberForm
+          setShowAddMemberFormDialog={setShowAddMemberFormDialog}
+          currentBoard={props.currentBoard!}
+        />
+      </Dialog>
       )}
       {showMemberListDialog && (
         <Dialog
