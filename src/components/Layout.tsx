@@ -138,7 +138,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
 
                   <div
-                    className="flex-grow-1 bg-tigrow relative br3 mv1"
+                    className="flex-grow-1 relative br3 mv1 mr2"
                   >
                     <span
                       className="pointer absolute bp3-icon z-3 top-1 left--1"
@@ -158,7 +158,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       <NavbarTop scrollTop={scrollTop} />
                       <div
                         ref={scrollRef}
-                        className="flex-grow-1 overflow-y-auto">
+                        className="flex-grow-1 overflow-y-auto bg-white"
+                        style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
                         <props.Component />
                       </div>
                     </div>

@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import { Button, Icon, Tag } from '@blueprintjs/core';
+import { Button, Icon } from '@blueprintjs/core';
 import { createBoard } from 'stores/board/Actions';
 import { TaskBoard } from 'stores/board/Reducer';
 import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { checkError, required } from 'components/final-form/utils';
 import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
-import { SuggestField } from 'components/fields/SuggestField';
-import { tokenConfig, boardColor } from 'stores/UtilsActions';
-import { server } from 'tigrowApi';
-import { CompanyModel, ICompanyTeamMembers } from 'stores/company/Reducer';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { isEmpty, upperFirst, isEqual } from 'lodash';
+import { boardColor } from 'stores/UtilsActions';
+// import { server } from 'tigrowApi';
+import { CompanyModel } from 'stores/company/Reducer';
+// import { useLiveSearch } from 'components/useLiveSearch';
+import { isEqual } from 'lodash';
 
 const FormComponent = (props: {
   loading: boolean;
@@ -30,24 +29,24 @@ const FormComponent = (props: {
   };
 
   const [labelColor, setLabelColor] = useState(null as any);
-  const [teamMembers, setTeamMembers]: any = useState([]);
-  const [selectedTeamMember, setSelectedTeamMember] = useState([] as ICompanyTeamMembers[]);
-  const [username, setUsername] = useState('');
+  // const [teamMembers, setTeamMembers]: any = useState([]);
+  // const [selectedTeamMember, setSelectedTeamMember] = useState([] as ICompanyTeamMembers[]);
+  // const [username, setUsername] = useState('');
 
-  const userRequestFactory = (userName: string): Promise<any> => {
-    const headers = tokenConfig();
-    return fetch(`${server}company/${props.company.name}/members/search?name=${userName}`, headers)
-      .then((res) => res.json())
-      .then((res) => res.employees.data)
-      .catch((err) => []);
-  };
+  // const userRequestFactory = (userName: string): Promise<any> => {
+  //   const headers = tokenConfig();
+  //   return fetch(`${server}company/${props.company.name}/members/search?name=${userName}`, headers)
+  //     .then((res) => res.json())
+  //     .then((res) => res.employees.data)
+  //     .catch((err) => []);
+  // };
 
-  let result: any = [];
-  result = useLiveSearch(username, userRequestFactory, 800);
+  // let result: any = [];
+  // result = useLiveSearch(username, userRequestFactory, 800);
 
-  useEffect(() => {
-    setTeamMembers(result);
-  }, [result]);
+  // useEffect(() => {
+  //   setTeamMembers(result);
+  // }, [result]);
 
   return (
     <>
@@ -128,7 +127,7 @@ const FormComponent = (props: {
                   </div>
                 }
               />
-              <Field<string>
+              {/* <Field<string>
                 name="member"
                 render={({ input, meta }) =>
                   <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
@@ -192,7 +191,7 @@ const FormComponent = (props: {
                     }
                   </div>
                 }
-              />
+              /> */}
               <div className="fr">
                 <Button
                   className="grow pointer white bp3-minimal w4 mt2"

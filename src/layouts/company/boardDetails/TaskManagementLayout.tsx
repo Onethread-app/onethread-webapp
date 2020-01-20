@@ -83,7 +83,7 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
   }
 
   return (
-    <div className="pa2 h-100">
+    <div className="h-100">
       <DragDropContext
         onDragEnd={(result) => dragEnd(result)}
       >
@@ -100,7 +100,7 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
                 {...provided.droppableProps}
                 {...allowedProps}
               >
-                <div className="fl nowrap w-100">
+                <div className="fl nowrap w-100 overflow-y-hidden">
                   {props.columns && props.columns.length > 0 ? props.columns.map((colmun, index) => (
                     <Column
                       key={colmun._id ? colmun._id : `col${index}`}

@@ -168,7 +168,7 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 							style={{
 								display: 'grid',
 								gridGap: '5px',
-								gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 1fr))',
+								gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 270px))',
 								gridTemplateRows: 'repeat(2, 150px)'
 							}}>
 							{/* TODO make one */}

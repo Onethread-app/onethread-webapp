@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { InputGroupField } from 'components/fields/InputGroupField';
-import { Button, Spinner, FormGroup, HTMLSelect } from '@blueprintjs/core';
-import { isEmpty } from 'lodash';
+import React from 'react';
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
+import { Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { TaskBoard, IColumn } from 'stores/board/Reducer';
 import { createTask } from 'stores/board/Actions';
+import { Form, Field } from 'react-final-form';
+import { required, checkError } from 'components/final-form/utils';
+import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
 
 interface TaskFormProps {
   setShowTaskFormDialog: (val: boolean) => void;
@@ -18,105 +20,89 @@ interface TaskFormInternalProps extends TaskFormProps {
 }
 
 export const TaskFormComponent = (props: TaskFormInternalProps) => {
-
-  const [task, setTask] = useState({
-    name: '',
-    description: '',
-    columnId: props.column ? props.column._id : ''
-  });
-
-  const handleChange = (name: string) => (event: any) => {
-    const value = event.target.value;
-    setTask({ ...task, [name]: value });
+  const onSubmit = async (values: any) => {
+    const modifiedTask = {
+      ...values,
+      boardId: props.currentBoard._id
+    };
+    await props.createTask(modifiedTask)
+    if (props.setShowTaskFormDialog) {
+      props.setShowTaskFormDialog(false);
+    }
+    return {};
   };
-
-  const isTaskFormEmpty = () => (
-    // isEmpty(task.name) || isEmpty(task.description)
-    isEmpty(task.name) || isEmpty(task.columnId)
-  );
 
   return (
     <div className="pa3">
-      <div className="mt5">
-        <h2>Create Task</h2>
+      <div style={{ marginTop: '7rem' }}>
+        <h3>Create Task</h3>
       </div>
-      <div className="mb3 w-100">
-        <FormGroup
-          className="b"
-          label="Task name"
-          labelFor="task_name"
-        >
-          <InputGroupField
-            id="task_name"
-            className={`br0 bb b--lightBlue`}
-            value={task.name}
-            onChange={handleChange('name')}
-            placeHolder="task title"
-            style={{
-              boxShadow: 'none'
-            }}
-          />
-        </FormGroup>
-      </div>
-      <div className="mb3 w-100"
-        style={{ display: props.column ? 'none' : 'block' }}>
-        <FormGroup
-          className="b"
-          label="Select Column"
-          labelFor="task_column"
-        >
-          <HTMLSelect
-            className=" bb b--lightBlue"
-            fill={true}
-            minimal={true}
-            disabled={props.column ? true : false}
-            value={props.column ? props.column._id : task.columnId}
-            onChange={(e) => setTask({ ...task, columnId: e.currentTarget.value })}
-            style={{
-              boxShadow: 'none',
-              borderRadius: '0px',
-              backgroundColor: 'white',
-              flex: '1',
-              outline: 'none'
-            }}
+      <Form
+        onSubmit={onSubmit}
+        render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
+          <form
+            onSubmit={handleSubmit}
           >
-            <option selected value="">Select column</option>
-            {props.currentBoard.columns!.map((column) => (
-              <option value={column._id}>{column.name}</option>
-            ))}
-          </HTMLSelect>
-        </FormGroup>
-      </div>
-      <div className="flex justify-end">
-        <Button
-          className="grow pointer white bp3-minimal w4"
-          type="submit"
-          style={{
-            background: '#0fa3a3',
-            outline: 'none',
-            color: 'white'
-          }}
-          disabled={props.loading ? true : isTaskFormEmpty()}
-          text={props.loading ? <Spinner size={15} /> : 'Create Task'}
-          onClick={async (e: any) => {
-            e.preventDefault();
-            const modifiedTask = {
-              ...task,
-              columnId: props.column ? props.column._id : task.columnId,
-              boardId: props.currentBoard._id
-            };
-            await props.createTask(modifiedTask);
-            setTask({
-              name: '',
-              description: '',
-              columnId: props.currentBoard.columns![0]._id!
-            });
-            if (props.setShowTaskFormDialog) {
-              props.setShowTaskFormDialog(false);
-            }
-          }}
-        />
-      </div>
+            <div className="pv3 justify-content w-100">
+              <Field<string>
+                name="name"
+                validate={required}
+                render={({ input, meta }) =>
+                  <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
+                    <InputGroupFieldWithLabel
+                      id="name"
+                      value={input.value}
+                      onChange={input.onChange}
+                      style={{
+                        boxShadow: 'none',
+                        fontSize: '18px',
+                      }}
+                      error={checkError(meta) && (meta.error || meta.submitError)}
+                      label="Task Name"
+                    />
+                  </div>
+                }
+              />
+              <Field<string>
+                name="columnId"
+                validate={required}
+                render={({ input, meta }) =>
+                  <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
+                    <DropdownFieldErrorWithLabel
+                      id={input.name}
+                      selectedValue={input.value}
+                      options={
+                        props.currentBoard.columns && props.currentBoard.columns.length > 0 ?
+                          props.currentBoard.columns : [] as any
+                      }
+                      onChange={input.onChange}
+                      error={checkError(meta) && (meta.error || meta.submitError)}
+                      label="Select Column"
+                      className="bn"
+                    />
+                  </div>
+                }
+              />
+              <div className="fr">
+                <Button
+                  className="grow pointer white bp3-minimal w4 mt2"
+                  style={{
+                    background: '#0FA3A3',
+                    outline: 'none',
+                    color: 'white',
+                  }}
+                  loading={submitting}
+                  type="submit"
+                  disabled={submitting || pristine}
+                >
+                  Create
+              </Button>
+              </div>
+            </div>
+          </form>
+        )
+        }
+      />
     </div>
   );
 };

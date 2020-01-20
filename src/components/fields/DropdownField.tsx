@@ -22,24 +22,12 @@ interface DropdownFieldWithLabelProps extends DropdownFieldProps {
 }
 
 export const DropdownField = (props: DropdownFieldProps) => (
-  <div className="flex">
-    {/* <div className={`f5 pa1 bb bw1 ${props.error ? 'b--red' : 'b--lightBlue'}`}>
-      <Icon
-        icon={props.leftIcon ? props.leftIcon : 'briefcase'}
-        color={props.error ? 'red' : props.leftIconColor ? `${props.leftIconColor}` : '#0fa3a3'}
-      />
-    </div> */}
+  <div>
     <HTMLSelect
       id={props.id}
       fill={true}
       minimal={true}
       onChange={props.onChange}
-      className={
-        `${props.error ?
-          'bb b--red' :
-          props.className ? props.className : 'bb b--lightBlue'
-        }`
-      }
       style={{
         boxShadow: 'none',
         backgroundColor: 'white',

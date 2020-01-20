@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { InputGroupField } from 'components/fields/InputGroupField';
-import { Button, Spinner, FormGroup } from '@blueprintjs/core';
+import React from 'react';
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
+import { Button } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import { createColumn, updateColumn } from 'stores/board/Actions';
 import { TaskBoard, IColumn } from 'stores/board/Reducer';
+import { Form, Field } from 'react-final-form';
+import { required, checkError } from 'components/final-form/utils';
 
 interface ColumnFormProps {
   setShowColumnFormDialog: (val: boolean) => void;
@@ -20,72 +22,78 @@ interface ColumnFormInternalProps extends ColumnFormProps {
 
 const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
-  const [loading, setLoading] = useState(false);
-  const [columnName, setColumnName] = useState(props.column ? props.column.name : '');
+  const onSubmit = async (values: any) => {
+    const columnInfo = {
+      ...values,
+      _id: props.column ? props.column._id : undefined,
+      positionInBoard: props.column && isEmpty(props.column.name) === false ?
+        props.column.positionInBoard : props.currentBoard.columns ? props.currentBoard.columns.length + 1 : 1,
+      boardId: props.currentBoard._id
+    };
+    if (props.column && isEmpty(props.column.name) === false) {
+      // edit column name
+      await props.updateColumn(columnInfo);
+    } else {
+      // New column create
+      await props.createColumn(columnInfo);
+    }
+    if (props.setShowColumnFormDialog) {
+      props.setShowColumnFormDialog(false);
+    }
+    return {};
+  };
 
   return (
     <div className="pa3">
-      <div className="mt5">
-        <h2>Create Column</h2>
+      <div style={{ marginTop: '7rem' }}>
+        <h3>Create Column</h3>
       </div>
-      <div className="mb3 w-100">
-        <FormGroup
-          label="Column Name"
-        >
-          <InputGroupField
-            id="column_name"
-            className={`br0 bb b--lightBlue`}
-            value={columnName}
-            onChange={(e) => setColumnName(e.target.value)}
-            leftIcon="clipboard"
-            style={{
-              boxShadow: 'none'
-            }}
-          />
-        </FormGroup>
-      </div>
-      <div className="flex justify-end">
-        <Button
-          className="grow pointer white bp3-minimal w4"
-          type="submit"
-          style={isEmpty(columnName) === false ?
-            {
-              background: '#0fa3a3',
-              outline: 'none',
-              color: 'white'
-            } : {
-              background: '#011b1b2e',
-              outline: 'none',
-              color: 'white'
-            }
-          }
-          disabled={props.loading || loading ? true : isEmpty(columnName)}
-          text={props.loading || loading ? <Spinner size={15} /> : 'Create Column'}
-          onClick={async (e: any) => {
-            e.preventDefault();
-            setLoading(true);
-            const columnInfo = {
-              _id: props.column ? props.column._id : undefined,
-              name: columnName,
-              positionInBoard: props.column && isEmpty(props.column.name) === false ?
-                props.column.positionInBoard : props.currentBoard.columns ? props.currentBoard.columns.length + 1 : 1,
-              boardId: props.currentBoard._id
-            };
-            if (props.column && isEmpty(props.column.name) === false) {
-              // edit column name
-              await props.updateColumn(columnInfo);
-            } else {
-              // New column create
-              await props.createColumn(columnInfo);
-            }
-            setLoading(false);
-            setColumnName('');
-            if (props.setShowColumnFormDialog) {
-              props.setShowColumnFormDialog(false);
-            }
-          }}
-        />
-      </div>
+      <Form
+        onSubmit={onSubmit}
+        render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
+          <form
+            onSubmit={handleSubmit}
+          >
+            <div className="pv3 justify-content w-100">
+              <Field<string>
+                name="name"
+                validate={required}
+                render={({ input, meta }) =>
+                  <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
+                    <InputGroupFieldWithLabel
+                      id="name"
+                      value={input.value}
+                      onChange={input.onChange}
+                      style={{
+                        boxShadow: 'none',
+                        fontSize: '18px',
+                      }}
+                      error={checkError(meta) && (meta.error || meta.submitError)}
+                      label="Column Name"
+                    />
+                  </div>
+                }
+              />
+              <div className="fr">
+                <Button
+                  className="grow pointer white bp3-minimal w4 mt2"
+                  style={{
+                    background: '#0FA3A3',
+                    outline: 'none',
+                    color: 'white',
+                  }}
+                  loading={submitting}
+                  type="submit"
+                  disabled={submitting || pristine}
+                >
+                  Create
+            </Button>
+              </div>
+            </div>
+          </form>
+        )
+        }
+      />
     </div>
   );
 };
