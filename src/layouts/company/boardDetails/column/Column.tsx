@@ -16,6 +16,7 @@ import { createTask } from 'stores/board/Actions';
 
 import cancel from '../../../../resources/images/cancel.png';
 import doneWhite from '../../../../resources/images/doneWhite.png';
+import { RightSidebar } from 'components/RightSidebar';
 
 interface ColumnProps {
   key: string;
@@ -105,7 +106,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   }}
                   text="Add Task"
                   fill={true}
-                  onClick={() => setShowTaskInput(!showTaskInput)} // TODO add functionality
+                  onClick={() => setShowTaskInput(!showTaskInput)}
                 />
               </div>
               : undefined}
@@ -139,7 +140,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                   onChange={input.onChange}
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px',
+                                    fontSize: '12px',
                                   }}
                                   error={checkError(meta) && (meta.error || meta.submitError)}
                                   placeHolder="Task Name"
@@ -244,18 +245,14 @@ const ColumnComponent = (props: ColumnInternalProps) => {
         </Dialog>
       )}
       {showColumnFormDialog && (
-        <Dialog
+        <RightSidebar
           onClose={() => setShowColumnFormDialog(!showColumnFormDialog)}
-          title="Edit Column"
-          isOpen={showColumnFormDialog}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
         >
           <ColumnForm
             setShowColumnFormDialog={setShowColumnFormDialog}
             column={props.column}
           />
-        </Dialog>
+        </RightSidebar>
       )}
     </>
   );

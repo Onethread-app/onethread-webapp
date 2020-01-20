@@ -14,7 +14,7 @@ import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import addIcon from 'resources/images/addIcon.png';
 import taskIcon from 'resources/images/taskIcon.png';
 import columnIcon from 'resources/images/columnIcon.png';
-import settingIcon from 'resources/images/settingIcon.png';
+// import settingIcon from 'resources/images/settingIcon.png';
 import addMemberIcon from 'resources/images/addMemberIcon.png';
 
 interface BoardDetailsViewInternalProps {
@@ -52,12 +52,12 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
         <div className="flex mh3">
           {permit(props.company.role) === true ?
             <>
-              <img
+              {/* <img
                 className="mr3 br2 pointer"
                 style={{ height: '1.8rem', width: '1.8rem' }}
                 src={settingIcon}
                 alt="Setting icon"
-              />
+              /> */}
               <img
                 className="br2 pointer"
                 style={{ height: '1.8rem', width: '1.8rem' }}
@@ -116,9 +116,10 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
                   src={addIcon}
                   className="fixed pointer"
                   style={{
+                    bottom: '2.2rem',
                     right: '7rem',
-                    width: '5rem',
-                    boxShadow: '-2px 2px 0px 0 #00000029',
+                    width: '4rem',
+                    boxShadow: '0px 3px 6px #00000029',
                     borderRadius: '50%'
                   }}
                 />
@@ -149,17 +150,17 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
       )}
       {showAddMemberFormDialog && (
         <Dialog
-        onClose={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
-        title="Add Board Member"
-        isOpen={showAddMemberFormDialog}
-        style={{ background: '#fff' }}
-        canOutsideClickClose={false}
-      >
-        <AddTeamMemberForm
-          setShowAddMemberFormDialog={setShowAddMemberFormDialog}
-          currentBoard={props.currentBoard!}
-        />
-      </Dialog>
+          onClose={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}
+          title="Add Board Member"
+          isOpen={showAddMemberFormDialog}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+        >
+          <AddTeamMemberForm
+            setShowAddMemberFormDialog={setShowAddMemberFormDialog}
+            currentBoard={props.currentBoard!}
+          />
+        </Dialog>
       )}
       {showMemberListDialog && (
         <Dialog

@@ -46,7 +46,10 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
   return (
     <div className="pa3">
       <div style={{ marginTop: '7rem' }}>
-        <h3>Create Column</h3>
+        {props.column ?
+          <h3>Edit Column</h3>
+          : <h3>Create Column</h3>
+        }
       </div>
       <Form
         onSubmit={onSubmit}
@@ -86,8 +89,8 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                   type="submit"
                   disabled={submitting || pristine}
                 >
-                  Create
-            </Button>
+                  {props.column ? 'Update' : 'Create'}
+                </Button>
               </div>
             </div>
           </form>
