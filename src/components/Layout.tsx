@@ -91,9 +91,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       style={{ background: '#060517' }}
       onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
     >
-      <div className="flex overflow-hidden">
+      <div className="flex overflow-hidden h-100">
         <div
-          className="w-100 border-box">
+          className="w-100 border-box h-100">
           {loading === true ? <Loading />
             : isEmpty(props.user._id) === true ?
               <p className="f3 tc fw5 pt4 white">
@@ -114,7 +114,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
               >
                 <div
                   id="main-layout"
-                  className={`flex relative ${props.rightSidebarOpen && 'main-layout-overlay'}`}
+                  className={`flex relative h-100 ${props.rightSidebarOpen && 'main-layout-overlay'}`}
                 >
                   <div
                     className={`relative `}
@@ -166,7 +166,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
 
                   <div
-                    className="relative"
+                    className="relative h-100"
                     style={{
                       transition: 'width 0.4s',
                       width: props.rightSidebarOpen ? '30%' : '0%',

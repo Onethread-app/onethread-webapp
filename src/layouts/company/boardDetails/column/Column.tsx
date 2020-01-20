@@ -56,9 +56,13 @@ const ColumnComponent = (props: ColumnInternalProps) => {
       >
         <div className="flex flex-column h-100 pr3">
           <div>
-            <div className="flex">
+            <div className="flex pb1">
               <h3
-                className="pl1 ma0 flex-grow-1 ws-normal ws-break"
+                className="pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break"
+                style={{
+                  whiteSpace: 'nowrap',
+                  textOverflow: 'ellipsis'
+                }}
               >
                 {props.column.name}
               </h3>
@@ -68,7 +72,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     <Menu>
                       <MenuItem
                         text="Edit"
-                      // onClick={(e: any) => setShowColumnFormDialog(true)} // TODO change ui
+                        onClick={(e: any) => setShowColumnFormDialog(true)} // TODO change ui
                       />
                     </Menu>
                   }
@@ -176,7 +180,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
           </div>
 
           <div
-            className="h-100 mb3 overflow-y-auto"
+            className="h-100 mb1 overflow-y-auto"
             style={{
               background: '#F6F6F6',
               borderRadius: '0 0 5px 5px'
