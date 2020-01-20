@@ -25,7 +25,7 @@ const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => void,
-  getSelectedBoardDetails: (boardId: string) => void ,
+  getSelectedBoardDetails: (boardId: string) => void,
   getSelectedTask: (taskId: string) => void
 ) => {
   await fetchUser();
@@ -70,9 +70,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false
       && isEmpty(props.company._id) === true)) {
       load(
-        props.match, 
-        props.fetchUserAction, 
-        props.getCompanyDetails, 
+        props.match,
+        props.fetchUserAction,
+        props.getCompanyDetails,
         props.getSelectedBoard,
         props.getSelectedTaskDetails
       ).then(() =>
@@ -138,8 +138,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
 
                   <div
-                    className="flex-grow-1 relative br3 mv1 mr2"
-                  >
+                    className="relative br3 pv1"
+                    style={{
+                      transition: 'width 0.4s',
+                      width: leftOpen ? props.rightSidebarOpen ? '55%' : '85%' : props.rightSidebarOpen ? '70%' : '97%'
+                    }}>
                     <span
                       className="pointer absolute bp3-icon z-3 top-1 left--1"
                       onClick={() => setLeftOpen(!leftOpen)}
@@ -151,10 +154,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       />
                     </span>
                     <div
-                      className="flex flex-column"
-                      style={{
-                        height: 'calc(100vh - 0.7rem)',
-                      }}>
+                      className="flex flex-column h-100"
+                    // style={{
+                    //   height: 'calc(100vh - 0.7rem)',
+                    // }}
+                    >
                       <NavbarTop scrollTop={scrollTop} />
                       <div
                         ref={scrollRef}
@@ -199,4 +203,4 @@ const mapStateToProps = (state: any) => {
 };
 
 export const Layout = connect(mapStateToProps,
-  { fetchUserAction, getCompanyDetails, getSelectedBoard , getSelectedTaskDetails })(withRouter(LayoutComponent));
+  { fetchUserAction, getCompanyDetails, getSelectedBoard, getSelectedTaskDetails })(withRouter(LayoutComponent));
