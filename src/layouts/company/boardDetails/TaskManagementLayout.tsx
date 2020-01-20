@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { Column } from './column/Column';
 import { IColumn } from 'stores/board/Reducer';
@@ -6,11 +6,12 @@ import { connect } from 'react-redux';
 import { dragAndDropTask } from 'stores/board/Actions';
 
 interface TaskManagementLayoutProps {
-  columns: IColumn[]
+  columns: IColumn[];
 }
 
 interface TaskManagementLayoutInternalProps extends TaskManagementLayoutProps {
-  dragAndDropTask: (taskId: string, sourceColumnId: string, destinationColumnId: string, taskIndexOfDestinationColumn: number) => void
+  dragAndDropTask: (taskId: string, sourceColumnId: string, destinationColumnId: string, 
+    taskIndexOfDestinationColumn: number) => void;
 }
 
 const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps) => {
@@ -80,7 +81,7 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
     //   }
     // })
     // }
-  }
+  };
 
   return (
     <div className="h-100">
@@ -93,7 +94,7 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
           direction="horizontal"
         >
           {(provided) => {
-            const allowedProps = { ref: provided.innerRef }
+            const allowedProps = { ref: provided.innerRef };
             return (
               <div
                 className="flex h-100"
@@ -117,7 +118,7 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
         </Droppable>
       </DragDropContext>
     </div>
-  )
-}
+  );
+};
 
-export const TaskManagementLayout = connect(null, { dragAndDropTask })(TaskManagementLayoutComponent)
+export const TaskManagementLayout = connect(null, { dragAndDropTask })(TaskManagementLayoutComponent);

@@ -28,6 +28,12 @@ export const DropdownField = (props: DropdownFieldProps) => (
       fill={true}
       minimal={true}
       onChange={props.onChange}
+      className={
+        `${props.error ?
+          'bb b--red' :
+          props.className ? props.className : 'bb b--lightBlue'
+        }`
+      }
       style={{
         boxShadow: 'none',
         backgroundColor: 'white',
