@@ -15,19 +15,18 @@ export const LandingPage = (props: { user: User }) => {
       <div className="w-100 bg-white ph4">
         <CoverPhotoView />
         <div className="w-100 relative">
-          <div className="flex w-100 mt6 ph4">
-            <div className="w-15 mt3 ph1"
-              style={{ minWidth: '230px' }}
+          <div className="flex-l w-100 mt6 ph4">
+            <div className="mt3 ph1 w-15-l w-100"
+              style={{ minWidth: '235px' }}
             >
-              <div className="h-auto ma1 cf">
+              <div className="h-auto ma1">
                 <AboutView />
               </div>
-              <div className="h-auto ma1 mv1 cf">
+              <div className="h-auto ma1 mv1">
                 <SkillView />
               </div>
             </div>
-            <div className="w-75 mt4 mw8 "
-              style={{ marginLeft: '4rem' }}
+            <div className="w-85-l w-100 mt4 ml5-tigrow-l ph2-m mb5-l mb4-m"
             >
               <Tabs
                 id="TabsExample"

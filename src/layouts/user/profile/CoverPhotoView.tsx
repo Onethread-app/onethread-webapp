@@ -21,7 +21,7 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
 
   return (
     <>
-      <div className="relative cover br4 mt2 w-100"
+      <div className="relative cover br4 w-100"
         style={{
           backgroundImage: `url(${props.user.coverImage ? props.user.coverImage.imageSource : coverPic})`,
           height: '340px',
@@ -36,15 +36,16 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
         >
           <div
             className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray"
-            style={{ width: '220px', height: '235px' }}
+            style={{ width: '235px', height: '235px' }}
           >
             <ProfilePictureView />
           </div>
-          <div className="mt6"
-            style={{ marginLeft: '5rem' }}
+          <div
+            className="ml5-tigrow-l ml1-m"
+            style={{ marginTop: '9rem' }}
           >
             <h1
-              className="f3 ma0 ws-break">
+              className="f3-l f4 ma0 ws-break">
               {upperFirst(props.user.firstName)} {upperFirst(props.user.lastName)}
             </h1>
             <div className="cf ">
@@ -74,7 +75,7 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
         >
-          <ImageEdit setShowDialog={setShowDialogPicture} type="coverPhoto"/>
+          <ImageEdit setShowDialog={setShowDialogPicture} type="coverPhoto" />
         </Dialog>
       )}
       {showDialogPosition && (
