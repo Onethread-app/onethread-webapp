@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ButtonGroup, Button } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { JobForm } from './JobDetailsEditor';
 import { EducationForm } from './EducationDetailsEditor';
 
@@ -14,9 +14,9 @@ export const ExperienceEditor = (props: ExperienceEditorProps) => {
 
   return (
     <div className="mt5">
-      <ButtonGroup className="mh2">
+      <div className="flex-ns mh2">
         <Button
-          className="ba bw1 pa2 w-100 bp3-minimal"
+          className="ba bw1 pa2 w-30-ns w-100 bp3-minimal"
           style={{ color: 'white' }}
           onClick={() => {
             setSelectedEducation(false);
@@ -25,7 +25,7 @@ export const ExperienceEditor = (props: ExperienceEditorProps) => {
           Job
           </Button>
         <Button
-          className="ba bw1 pa2 w-100 bp3-minimal ml3"
+          className="ba bw1 pa2 w-30-ns w-100 bp3-minimal ml3-l"
           style={{ color: 'white' }}
           onClick={() => {
             setSelectedJob(false);
@@ -33,7 +33,7 @@ export const ExperienceEditor = (props: ExperienceEditorProps) => {
           }} >
           Education
           </Button>
-      </ButtonGroup>
+      </div>
       {selectedJob &&
         <div className="mh2 mt2">
           <JobForm

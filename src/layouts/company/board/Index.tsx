@@ -196,9 +196,8 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 								style={{
 									bottom: '2.2rem',
 									right: '7rem',
-									height: '4rem',
 									width: '4rem',
-									boxShadow: '-2px 2px 0px 0 #00000029',
+									boxShadow: '0px 3px 6px #00000029',
 									borderRadius: '50%'
 								}}
 							/>

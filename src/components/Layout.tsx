@@ -25,7 +25,7 @@ const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => void,
-  getSelectedBoardDetails: (boardId: string) => void ,
+  getSelectedBoardDetails: (boardId: string) => void,
   getSelectedTask: (taskId: string) => void
 ) => {
   await fetchUser();
@@ -70,9 +70,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false
       && isEmpty(props.company._id) === true)) {
       load(
-        props.match, 
-        props.fetchUserAction, 
-        props.getCompanyDetails, 
+        props.match,
+        props.fetchUserAction,
+        props.getCompanyDetails,
         props.getSelectedBoard,
         props.getSelectedTaskDetails
       ).then(() =>
@@ -91,101 +91,97 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       style={{ background: '#060517' }}
       onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
     >
-      <div className="flex overflow-hidden h-100">
-        <div
-          className="w-100 border-box h-100">
-          {loading === true ? <Loading />
-            : isEmpty(props.user._id) === true ?
-              <p className="f3 tc fw5 pt4 white">
-                Your Session is expired. Please
+      {loading === true ? <Loading />
+        : isEmpty(props.user._id) === true ?
+          <p className="f3 tc fw5 pt4 white">
+            Your Session is expired. Please
               <Link
-                  className="fw9 dt center tigrow-lightBlue pt4"
-                  to="/signin"
-                  onClick={() => localStorage.removeItem('token')}
-                >
-                  Sign in
+              className="fw9 dt center tigrow-lightBlue pt4"
+              to="/signin"
+              onClick={() => localStorage.removeItem('token')}
+            >
+              Sign in
               </Link>
-              </p>
-              :
-              <ChatkitProvider
-                instanceLocator={InstanceLocator}
-                tokenProvider={tokenProvider}
-                userId={props.user._id}
-              >
+          </p>
+          :
+          <ChatkitProvider
+            instanceLocator={InstanceLocator}
+            tokenProvider={tokenProvider}
+            userId={props.user._id}
+          >
+            <div
+              id="main-layout"
+              className={`flex relative h-100 ${props.rightSidebarOpen && 'main-layout-overlay'}`}
+            >
+              <div
+                className={`relative`}
+                style={{
+                  transition: 'width 0.4s',
+                  width: leftOpen ? '15%' : '3%'
+                }}>
                 <div
-                  id="main-layout"
-                  className={`flex relative h-100 ${props.rightSidebarOpen && 'main-layout-overlay'}`}
+                  style={{
+                    transform: leftOpen ? 'translateX(0%)' : 'translateX(-100%)',
+                    msTransform: leftOpen ? '' : 'translateX(-100%)',
+                    WebkitTransition: leftOpen ? '' : 'translateX(-100%)',
+                  }}>
+                  <Sidebar
+                    user={props.user}
+                    company={props.company}
+                    type={(props.match.params as any).cname ? 'company' : 'default'}
+                    leftOpen={leftOpen}
+                  />
+                </div>
+              </div>
+
+              <div
+                className="relative br3 pv1"
+                style={{
+                  transition: 'width 0.4s',
+                  width: leftOpen ? props.rightSidebarOpen ? '55%' : '85%' : props.rightSidebarOpen ? '70%' : '97%'
+                }}>
+                <span
+                  className="pointer absolute bp3-icon z-3 top-1 left--1"
+                  onClick={() => setLeftOpen(!leftOpen)}
                 >
+                  <img
+                    src={leftOpen ? arrowLeft : arrowRight}
+                    className="br2 w2"
+                    color="#0FA3A3"
+                  />
+                </span>
+                <div
+                  className="flex flex-column h-100"
+                >
+                  <NavbarTop scrollTop={scrollTop} />
                   <div
-                    className={`relative `}
-                    style={{
-                      transition: 'width 0.4s',
-                      width: leftOpen ? '15%' : '3%'
-                    }}>
-                    <div
-                      style={{
-                        transform: leftOpen ? 'translateX(0%)' : 'translateX(-100%)',
-                        msTransform: leftOpen ? '' : 'translateX(-100%)',
-                        WebkitTransition: leftOpen ? '' : 'translateX(-100%)',
-                      }}>
-                      <Sidebar
-                        user={props.user}
-                        company={props.company}
-                        type={(props.match.params as any).cname ? 'company' : 'default'}
-                        leftOpen={leftOpen}
-                      />
-                    </div>
-                  </div>
-
-                  <div
-                    className="flex-grow-1 relative br3 mv1 mr2"
-                  >
-                    <span
-                      className="pointer absolute bp3-icon z-3 top-1 left--1"
-                      onClick={() => setLeftOpen(!leftOpen)}
-                    >
-                      <img
-                        src={leftOpen ? arrowLeft : arrowRight}
-                        className="br2 w2"
-                        color="#0FA3A3"
-                      />
-                    </span>
-                    <div
-                      className="flex flex-column"
-                      style={{
-                        height: 'calc(100vh - 0.7rem)',
-                      }}>
-                      <NavbarTop scrollTop={scrollTop} />
-                      <div
-                        ref={scrollRef}
-                        className="flex-grow-1 overflow-y-auto bg-white"
-                        style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
-                        <props.Component />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div
-                    className="relative h-100"
-                    style={{
-                      transition: 'width 0.4s',
-                      width: props.rightSidebarOpen ? '30%' : '0%',
-                      zIndex: 5
-                    }}>
-                    <div
-                      id="rightSidebar"
-                      className="h-100 c-tigrowWhite"
-                      style={{
-                        background: 'rgb(6, 5, 23)'
-                      }}
-                    >
-                    </div>
+                    ref={scrollRef}
+                    className="flex-grow-1 overflow-y-auto bg-white"
+                    style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+                    <props.Component />
                   </div>
                 </div>
-              </ChatkitProvider>
-          }
-        </div>
-      </div>
+              </div>
+
+              <div
+                className="relative h-100"
+                style={{
+                  transition: 'width 0.4s',
+                  width: props.rightSidebarOpen ? '30%' : '0%',
+                  zIndex: 5
+                }}>
+                <div
+                  id="rightSidebar"
+                  className="h-100 c-tigrowWhite"
+                  style={{
+                    background: 'rgb(6, 5, 23)'
+                  }}
+                >
+                </div>
+              </div>
+            </div>
+          </ChatkitProvider>
+      }
     </div>
   );
 };
@@ -199,4 +195,4 @@ const mapStateToProps = (state: any) => {
 };
 
 export const Layout = connect(mapStateToProps,
-  { fetchUserAction, getCompanyDetails, getSelectedBoard , getSelectedTaskDetails })(withRouter(LayoutComponent));
+  { fetchUserAction, getCompanyDetails, getSelectedBoard, getSelectedTaskDetails })(withRouter(LayoutComponent));

@@ -85,7 +85,6 @@ const ExperienceViewComponent = (props: IExperienceViewProps) => {
                           className="tigrow-lightBlue pointer"
                           src={editIcon}
                           width="38"
-                          height="38"
                           onClick={() => {
                             if (experience.companyName) {
                               setShowJobForm(true);
@@ -139,10 +138,14 @@ const ExperienceViewComponent = (props: IExperienceViewProps) => {
       }
       <div>
         <img
-          width="55"
-          height="55"
           className="fixed pointer"
-          style={{ bottom: '8%', right: '8%' }}
+          style={{
+            bottom: '5rem',
+            right: '7rem',
+            width: '5rem',
+            boxShadow: '0px 6px 6px #00000029',
+            borderRadius: '50%'
+          }}
           onClick={() => setAddExperienceForm(true)}
           src={addIcon}
         />
