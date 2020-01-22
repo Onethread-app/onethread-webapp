@@ -3,6 +3,7 @@ import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageIte
 import { useSelector } from 'react-redux';
 
 import UserIcon from './../../../../../resources/images/user.png';
+import { IRoomMessage } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -43,11 +44,6 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 
 	useEffect(scrollToBottom, [messages]);
 
-	// typing indicator
-	// useEffect(() => {
-	// 	(messagesEndRef as any).current.scrollTop = (messagesEndRef as any).current.scrollHeight;
-	// }, [typingUsers]);
-
 	return (
 		<div
 			// className="overflow-y-auto ph1 pt2"
@@ -57,39 +53,19 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 		>
 			{!props.chatkit.isLoading && rooms.length
 				? messages.length
-					? messages.map((message: any) => {
+					? messages.map((message: IRoomMessage) => {
 						return (
 							<MessageItem
-								key={message.id}
+								key={message._id}
 								img={UserIcon}
-								text={message.parts[0].payload.content}
+								text={message.text}
 								createdAt={message.createdAt}
-								sender={{
-									id: message.userStore.users[message.senderId].id,
-									name: message.userStore.users[message.senderId].name
-								}}
+								sender={message.account}
 							/>
 						);
 					})
 					: ''
 				: ''}
-			{/* {typingUsers.length
-				? typingUsers.map(
-					(user: { name: string; roomId: string }, i: number) => {
-						if (
-							isEmpty(roomId) === false &&
-							isEqual(roomId, user.roomId) === true
-						) {
-							return (
-								<h6 key={i} className="mv1">
-									{user.name} is typing ...
-									</h6>
-							);
-						}
-						return null;
-					}
-				)
-				: ""} */}
 		</div>
 	);
 });

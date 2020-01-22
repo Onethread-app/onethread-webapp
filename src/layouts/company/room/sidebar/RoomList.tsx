@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, connect } from 'react-redux';
-import { getRoomsAction } from '../../../../stores/room/Actions';
+import { getRoomsAction, getRoomMessages } from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
-	GET_ROOM_MESSAGES,
 	GET_ROOMS,
 	CLEAR_ROOM_MESSAGES,
 	ACTIVE_ROOM,
@@ -18,7 +17,7 @@ import {
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
-import { IRoom } from 'stores/room/Dto';
+import { IRoom } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -26,6 +25,7 @@ const { withChatkit } = require('@pusher/chatkit-client-react');
 interface IRoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
 	getRoomsAction: () => void;
+	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
 	activeRoom: any;
 	roomId: string;
 	rooms: [IRoom];
@@ -47,23 +47,13 @@ export const RoomListComponent = withChatkit(
 		// };
 
 		// tslint:disable-next-line: no-shadowed-variable
-		const fetchMessages = (roomId: any, limit = 100) => {
-			props.chatkit.currentUser
-				.fetchMultipartMessages({
-					roomId,
-					limit
-				})
-				.then((messages: any) => {
-					dispatch({ type: GET_ROOM_MESSAGES, payload: messages });
-				});
-		};
-
-		// tslint:disable-next-line: no-shadowed-variable
-		const subscribeToRoom = (roomId: string, name: string) => {
+		const subscribeToRoom = async (roomId: string, name: string) => {
 			if (!props.chatkit.isLoading) {
 				dispatch({ type: CLEAR_ROOM_MESSAGES });
 				dispatch({ type: CURRENT_ROOM, payload: { roomId, name } });
-				fetchMessages(roomId);
+
+				await props.getRoomMessages(roomId);
+
 				props.chatkit.currentUser
 					.subscribeToRoomMultipart({
 						roomId: roomId.toString(),
@@ -207,6 +197,6 @@ const mapStateToProps = (state: any) => {
 	};
 };
 
-export const RoomList = connect(mapStateToProps, { getRoomsAction })(
+export const RoomList = connect(mapStateToProps, { getRoomsAction, getRoomMessages })(
 	withRouter(RoomListComponent)
 );

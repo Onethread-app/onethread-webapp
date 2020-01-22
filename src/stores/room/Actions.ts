@@ -13,7 +13,9 @@ import {
 	GET_ROOM_MEMBERS_FROM_SERVER_ERROR,
 	CLEAR_ROOMS_ERROR,
 	SEND_MESSAGE,
-	SEND_MESSAGE_ERROR
+	SEND_MESSAGE_ERROR,
+	GET_ROOM_MESSAGES,
+	GET_ROOM_MESSAGES_ERROR
 } from './Types';
 
 export const createRoomAction = (roomData: any) => async (
@@ -32,6 +34,7 @@ export const createRoomAction = (roomData: any) => async (
 			});
 			return response.status;
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('error in creation of company');
 		}
 	} catch (error) {
@@ -42,6 +45,7 @@ export const createRoomAction = (roomData: any) => async (
 		} else if (isEqual(error.message, 'Network Error')) {
 			dispatch({ type: CREATE_ROOM_ERROR, payload: 'Network error' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 		return error.response.status;
@@ -59,6 +63,7 @@ export const getRoomsAction = () => async (dispatch: any, getState: any) => {
 			);
 			dispatch({ type: GET_ROOMS_FROM_SERVER, payload: response.data.rooms });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('error in rooms fetching');
 		}
 	} catch (error) {
@@ -67,6 +72,7 @@ export const getRoomsAction = () => async (dispatch: any, getState: any) => {
 		} else if (error.response.status === 401) {
 			dispatch({ type: GET_ROOM_ERROR, payload: 'Unauthorized user' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -86,6 +92,7 @@ export const getRoomMembers = (roomId: string) => async (
 				payload: response.data.members
 			});
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('error in room\'s members fetching');
 		}
 	} catch (error) {
@@ -100,6 +107,7 @@ export const getRoomMembers = (roomId: string) => async (
 				payload: 'Unauthorized user'
 			});
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -116,12 +124,14 @@ export const addRoomMembers = (members: any, selectedRoomMember: any) => async (
 			await tigrowApi.post(`rooms/addUser`, members, headers);
 			dispatch({ type: ADD_MEMBER_IN_ROOM, payload: selectedRoomMember });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('error in adding members in a room');
 		}
 	} catch (error) {
 		if (isEqual(error.message, 'Network Error')) {
 			dispatch({ type: ADD_MEMBER_IN_ROOM_ERROR, payload: 'Network error' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -142,6 +152,7 @@ export const sendRoomMessage = (data: { text: string, room: string, type?: strin
 			await dispatch({ type: SEND_MESSAGE });
 			return response.status;
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('error in sending a room message');
 		}
 	} catch (error) {
@@ -150,8 +161,38 @@ export const sendRoomMessage = (data: { text: string, room: string, type?: strin
 		} else if (isEqual(error.message, 'Network Error')) {
 			dispatch({ type: SEND_MESSAGE_ERROR, payload: 'Network error' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 		return error.response.status;
+	}
+};
+
+export const getRoomMessages = (roomId: string, limit: number = 50, skip: number = 0) => async (
+	dispatch: any,
+	getState: any
+) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.get(`messages/room/${roomId}?limit=${limit}&skip=${skip}`, headers);
+			dispatch({
+				type: GET_ROOM_MESSAGES,
+				payload: response.data.messages
+			});
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in room\'s message fetching');
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({
+				type: GET_ROOM_MESSAGES_ERROR,
+				payload: 'Network error'
+			});
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log(error.response);
+		}
 	}
 };

@@ -22,8 +22,54 @@ import {
 	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER
 } from './Types';
 import { isEmpty } from 'lodash';
-import { IRoomReducer, IRoom } from './Dto';
 
+export interface IRoom {
+	id: string;
+	name: string;
+	unreadCount: number;
+	company: string;
+	createdByUserId: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface IRoomMessage {
+	type: string;
+	removed: boolean;
+	_id: string;
+	chatkitId: number;
+	text: string;
+	room: string;
+	account: {
+		_id: string;
+		email: string;
+		firstName: string;
+		lastName: string;
+		name: string;
+	};
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface IRoomReducer {
+	activeRoom: {};
+	roomId: string;
+	roomName: string;
+	messages: IRoomMessage[];
+	typing: {
+		users: Array<{
+			name: string;
+			roomId: string;
+		}>;
+	};
+	users: any[];
+	roomMembers: any[];
+	rooms: IRoom[];
+	companyRooms: any[];
+	loading: boolean;
+	emojiPicker: boolean;
+	roomError: string;
+}
 const InitialState: IRoomReducer = {
 	activeRoom: {},
 	roomId: '',
@@ -140,7 +186,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				messages:
 					action.payload.roomId === (state.activeRoom as any).id
 						? state.messages.length === 0 ||
-							(state.messages[state.messages.length - 1] as any).id !==
+							(state.messages[state.messages.length - 1] as any).chatkitId !==
 							action.payload.id
 							? [...state.messages, action.payload]
 							: [...state.messages]
