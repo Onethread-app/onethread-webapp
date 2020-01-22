@@ -212,12 +212,14 @@ export const getSelectedTaskDetails = (taskId: string | undefined) => async (dis
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization && taskId) {
       // dispatch({ type: BOARD_LOADING });
-      // const response = await tigrowApi.get(`tasks/${task._id}`, headers);
+      const res = await tigrowApi.get(`tasks/${taskId}`, headers);
+      // tslint:disable-next-line: no-console
+      console.log(res.data.name);
       // dispatch({ type: SELECT_BOARD, payload: response.data });
       // const response = await tigrowApi.get(`tasks/${task._id}`, headers);
       const response = {
         _id: taskId,
-        name: 'Dummy text',
+        name: res.data.name,
         description: 'something description'
       };
       dispatch({ type: SELECT_TASK, payload: response });

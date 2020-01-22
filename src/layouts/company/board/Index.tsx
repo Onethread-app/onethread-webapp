@@ -194,10 +194,10 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 								src={addIcon}
 								className={`fixed pointer ${showTaskBoardDialog ? 'dn' : 'db'}`}
 								style={{
-									bottom: '2.2rem',
+									bottom: '5rem',
 									right: '7rem',
-									width: '4rem',
-									boxShadow: '0px 3px 6px #00000029',
+									width: '5rem',
+									boxShadow: '0px 6px 6px #00000029',
 									borderRadius: '50%'
 								}}
 							/>
@@ -224,5 +224,5 @@ const mapStateToProps = (state: any) => {
 	};
 };
 
-export const TaskPage = connect(mapStateToProps,
+export const BoardPage = connect(mapStateToProps,
 	{ getAllBoards, getSelectedBoard, getAllDepartments })(withRouter(TaskPageComponent));
