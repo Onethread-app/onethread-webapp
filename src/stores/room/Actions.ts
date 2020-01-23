@@ -9,8 +9,8 @@ import {
 	LOADING_ROOM,
 	ADD_MEMBER_IN_ROOM_ERROR,
 	ADD_MEMBER_IN_ROOM,
-	GET_ROOM_MEMBERS_FROM_SERVER,
-	GET_ROOM_MEMBERS_FROM_SERVER_ERROR,
+	GET_ROOM_MEMBERS,
+	GET_ROOM_MEMBERS_ERROR,
 	CLEAR_ROOMS_ERROR,
 	SEND_MESSAGE,
 	SEND_MESSAGE_ERROR,
@@ -85,10 +85,9 @@ export const getRoomMembers = (roomId: string) => async (
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			dispatch({ type: LOADING_ROOM });
 			const response = await tigrowApi.get(`rooms/members/${roomId}`, headers);
 			dispatch({
-				type: GET_ROOM_MEMBERS_FROM_SERVER,
+				type: GET_ROOM_MEMBERS,
 				payload: response.data.members
 			});
 		} else {
@@ -98,12 +97,12 @@ export const getRoomMembers = (roomId: string) => async (
 	} catch (error) {
 		if (isEqual(error.message, 'Network Error')) {
 			dispatch({
-				type: GET_ROOM_MEMBERS_FROM_SERVER_ERROR,
+				type: GET_ROOM_MEMBERS_ERROR,
 				payload: 'Network error'
 			});
 		} else if (error.response.status === 401) {
 			dispatch({
-				type: GET_ROOM_MEMBERS_FROM_SERVER_ERROR,
+				type: GET_ROOM_MEMBERS_ERROR,
 				payload: 'Unauthorized user'
 			});
 		} else {
@@ -169,8 +168,7 @@ export const sendRoomMessage = (data: { text: string, room: string, type?: strin
 };
 
 export const getRoomMessages = (roomId: string, limit: number = 50, skip: number = 0) => async (
-	dispatch: any,
-	getState: any
+	dispatch: any
 ) => {
 	try {
 		const headers = tokenConfig();

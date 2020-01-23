@@ -10,8 +10,8 @@ import {
 	CREATE_ROOM_ERROR,
 	GET_ROOMS_FROM_SERVER,
 	GET_ROOM_ERROR,
-	GET_ROOM_MEMBERS_FROM_SERVER,
-	GET_ROOM_MEMBERS_FROM_SERVER_ERROR,
+	GET_ROOM_MEMBERS,
+	GET_ROOM_MEMBERS_ERROR,
 	ADD_MEMBER_IN_ROOM_ERROR,
 	ADD_MEMBER_IN_ROOM,
 	ACTIVE_ROOM,
@@ -33,6 +33,15 @@ export interface IRoom {
 	updatedAt: string;
 }
 
+export interface IRoomMember {
+	_id: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+	name: string;
+	presence: string;
+}
+
 export interface IRoomMessage {
 	type: string;
 	removed: boolean;
@@ -40,13 +49,7 @@ export interface IRoomMessage {
 	chatkitId: number;
 	text: string;
 	room: string;
-	account: {
-		_id: string;
-		email: string;
-		firstName: string;
-		lastName: string;
-		name: string;
-	};
+	account: IRoomMember;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -62,7 +65,8 @@ export interface IRoomReducer {
 			roomId: string;
 		}>;
 	};
-	users: any[];
+	// tslint:disable-next-line: no-unused-expression
+	users: IRoomMember[];
 	roomMembers: any[];
 	rooms: IRoom[];
 	companyRooms: any[];
@@ -154,23 +158,23 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				users:
-					!isEmpty(state.activeRoom) &&
-					(state.activeRoom as any).users
-						.map(
-							(user: {
-								id: string;
-								name: string;
-								presence: { state: string };
-							}) => ({
-								id: user.id,
-								name: user.name,
-								presence: user.presence.state
-							})
-						)
-						.sort((user: any) => {
-							if (user.presence === 'online') { return -1; }
-							return 1;
-						}),
+					!isEmpty(state.activeRoom) ?
+						(state.activeRoom as any).users
+							.map(
+								(user: {
+									id: string;
+									name: string;
+									presence: { state: string };
+								}) => ({
+									id: user.id,
+									name: user.name,
+									presence: user.presence.state
+								})
+							)
+							.sort((user: any) => {
+								if (user.presence === 'online') { return -1; }
+								return 1;
+							}) : [...state.users],
 				loading: false
 			};
 		case CURRENT_ROOM:
@@ -255,10 +259,10 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				companyRooms: action.payload,
 				loading: false
 			};
-		case GET_ROOM_MEMBERS_FROM_SERVER:
+		case GET_ROOM_MEMBERS:
 			return {
 				...state,
-				roomMembers: action.payload,
+				users: action.payload,
 				loading: false
 			};
 		case ADD_MEMBER_IN_ROOM:
@@ -273,7 +277,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				emojiPicker: action.payload
 			};
 		case ADD_MEMBER_IN_ROOM_ERROR:
-		case GET_ROOM_MEMBERS_FROM_SERVER_ERROR:
+		case GET_ROOM_MEMBERS_ERROR:
 		case CREATE_ROOM_ERROR:
 		case GET_ROOM_ERROR:
 			return {

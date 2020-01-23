@@ -9,12 +9,13 @@ import { isEmpty } from 'lodash';
 import { showAddMember } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
 import { RightSidebar } from 'components/RightSidebar';
+import { IRoomMember } from 'stores/room/Reducer';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
 	activeRoom: any;
 	companyRole: string;
-	users: [];
+	users: IRoomMember[];
 }
 
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
