@@ -14,7 +14,6 @@ interface TaskFormProps {
 }
 
 interface TaskFormInternalProps extends TaskFormProps {
-  loading: boolean;
   currentBoard: TaskBoard;
   createTask: (task: any) => void;
 }
@@ -109,7 +108,6 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.boardReducer.boardTaskLoading,
     currentBoard: state.boardReducer.currentBoard
   };
 };

@@ -6,14 +6,12 @@ export const ADD_TEAM_MEMBER_IN_BOARD = 'ADD_TEAM_MEMBER_IN_BOARD';
 
 // Board column
 
-export const COLUMN_LOADING = 'COLUMN_LOADING';
 export const CREATE_COLUMN = 'CREATE_COLUMN';
 export const CREATE_COLUMN_ERROR = 'CREATE_COLUMN_ERROR';
 export const UPDATE_COLUMN = 'UPDATE_COLUMN';
 
 // Task
 
-export const CREATE_TASK_LOADING = 'CREATE_TASK_LOADING';
 export const CREATE_TASK = 'CREATE_TASK';
 export const CREATE_TASK_ERROR = 'CREATE_TASK_ERROR';
 export const SELECT_TASK = 'SELECT_TASK';

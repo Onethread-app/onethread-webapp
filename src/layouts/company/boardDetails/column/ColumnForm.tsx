@@ -14,7 +14,6 @@ interface ColumnFormProps {
 }
 
 interface ColumnFormInternalProps extends ColumnFormProps {
-  loading: boolean;
   currentBoard: TaskBoard;
   createColumn: (columnInfo: any) => void;
   updateColumn: (columnIndo: any) => Promise<any>;
@@ -103,7 +102,6 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.boardReducer.boardColumnLoading,
     currentBoard: state.boardReducer.currentBoard
   };
 };

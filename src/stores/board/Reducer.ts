@@ -1,5 +1,5 @@
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, COLUMN_LOADING, 
-  CREATE_COLUMN_ERROR, CREATE_COLUMN, CREATE_TASK_LOADING, CREATE_TASK, CREATE_TASK_ERROR, 
+import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, 
+  CREATE_COLUMN_ERROR, CREATE_COLUMN, CREATE_TASK, CREATE_TASK_ERROR, 
   DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, 
   UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK } from './Types';
 import { isEqual } from 'lodash';
@@ -41,9 +41,7 @@ export interface IBoard {
   currentBoard: TaskBoard;
   currentTask: ITask;
   boardError: string;
-  boardColumnLoading: boolean;
   boardColumnError: string;
-  boardTaskLoading: boolean;
   boardTaskError: string;
   dragTaskLoading: boolean;
   dragTaskError: string;
@@ -60,9 +58,7 @@ const InitialState = {
   },
   currentTask: {},
   boardError: '',
-  boardColumnLoading: false,
   boardColumnError: '',
-  boardTaskLoading: false,
   boardTaskError: '',
   dragTaskLoading: false,
   dragTaskError: ''
@@ -107,11 +103,6 @@ export const BoardReducer = (state = InitialState, action: any) => {
           members: action.payload
         }
       };
-    case COLUMN_LOADING:
-      return {
-        ...state,
-        boardColumnLoading: true,
-      };
     case CREATE_COLUMN:
       return {
         ...state,
@@ -122,13 +113,11 @@ export const BoardReducer = (state = InitialState, action: any) => {
             action.payload
           ]
         },
-        boardColumnLoading: false,
       };
     case CREATE_COLUMN_ERROR:
       return {
         ...state,
         boardColumnError: action.payload,
-        boardColumnLoading: false
       };
     case UPDATE_COLUMN:
       return {
@@ -143,11 +132,6 @@ export const BoardReducer = (state = InitialState, action: any) => {
               } : column
           ))
         }
-      };
-    case CREATE_TASK_LOADING:
-      return {
-        ...state,
-        boardTaskLoading: true,
       };
     case CREATE_TASK:
       return {
@@ -165,13 +149,11 @@ export const BoardReducer = (state = InitialState, action: any) => {
               } : column
           ))
         },
-        boardTaskLoading: false,
       };
     case CREATE_TASK_ERROR:
       return {
         ...state,
         boardTaskError: action.payload,
-        boardTaskLoading: false
       };
     case DRAG_AND_DROP_TASK_LOADING:
       return {

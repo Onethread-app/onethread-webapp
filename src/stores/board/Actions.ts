@@ -1,7 +1,7 @@
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, 
-  CREATE_COLUMN_ERROR, CREATE_TASK_LOADING, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, 
+import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, CREATE_COLUMN, 
+  CREATE_COLUMN_ERROR, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, 
   DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK 
 } from './Types';
 import { isEqual } from 'lodash';
@@ -81,7 +81,6 @@ export const createColumn = (columnName: any) => async (dispatch: any, getState:
     const headers = tokenConfig();
     const companyName = getState().companyReducer.currentCompany.name;
     if ((headers as any).headers.Authorization) {
-      dispatch({ type: COLUMN_LOADING });
       if (companyName) {
         const response = await tigrowApi.post(`boardColumns`, columnName, headers);
         dispatch({ type: CREATE_COLUMN, payload: response.data });
@@ -127,7 +126,6 @@ export const createTask = (task: any) => async (dispatch: any, getState: any) =>
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      dispatch({ type: CREATE_TASK_LOADING });
       const response = await tigrowApi.post(`tasks`, task, headers);
       const responseValue = {
         ...response.data,
