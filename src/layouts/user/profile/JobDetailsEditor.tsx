@@ -9,8 +9,7 @@ import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { required, checkError } from 'components/final-form/utils';
 import { IExperience } from 'stores/user/Reducer';
-
-import warningIcon from './../../../resources/images/warningIcon.png';
+import { SubmitError } from 'components/final-form/SubmitError';
 interface IJobFormProps {
   setShowDialog: (val: boolean) => void;
   edit: boolean;
@@ -72,62 +71,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
             onSubmit={handleSubmit}
           >
             <div className="mb3">
-              <Field
-                name="network"
-                subscription={{
-                  touched: true,
-                  error: true,
-                  submitError: true,
-                  dirtySinceLastSubmit: true
-                }}
-                render={({ meta }) =>
-                  checkError(meta) && (
-                    <div
-                      className="flex"
-                      style={{
-                        backgroundColor: '#FCEBEB', paddingLeft: '10px', paddingTop: '10px'
-                      }}>
-                      <span className="bp3-icon">
-                        <img
-                          src={warningIcon}
-                          width="20px"
-                          height="20px"
-                          color="#0fa3a3"
-                        />
-                      </span>
-                      <p style={{ color: '#962414', paddingLeft: '10px' }}>{meta.error || meta.submitError}</p>
-                    </div>
-                  )
-                }
-              />
-              <Field
-                name="authError"
-                subscription={{
-                  touched: true,
-                  error: true,
-                  submitError: true,
-                  dirtySinceLastSubmit: true
-                }}
-                render={({ meta }) =>
-                  checkError(meta) && (
-                    <div
-                      className="flex"
-                      style={{
-                        backgroundColor: '#FCEBEB', paddingLeft: '10px', paddingTop: '10px'
-                      }}>
-                      <span className="bp3-icon">
-                        <img
-                          src={warningIcon}
-                          width="20px"
-                          height="20px"
-                          color="#0fa3a3"
-                        />
-                      </span>
-                      <p style={{ color: '#962414', paddingLeft: '10px' }}>{meta.error || meta.submitError}</p>
-                    </div>
-                  )
-                }
-              />
+              <SubmitError errorMessage={submitError} />
             </div>
             <Field<string>
               name="companyName"

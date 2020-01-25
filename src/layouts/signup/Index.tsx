@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { Form, Field } from 'react-final-form';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { required, checkError, composeValidators, isEmail, phoneNoValidation, passwordValidation } from "components/final-form/utils";
+import { required, checkError, composeValidators, isEmail, phoneNoValidation, passwordValidation } from 'components/final-form/utils';
 import { Link, NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import { Tooltip, Button, Position } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { userSignupAction, UserModel } from 'stores/auth/Actions';
 import { isEmpty } from 'lodash';
 
-const logo = require('./../../resources/images/logo.png');
-const nameTagIcon = require('./../../resources/images/nameTag.png');
-const phoneIcon = require('./../../resources/images/phone.png');
-const emailIcon = require('./../../resources/images/email.png');
-const lockIcon = require('./../../resources/images/lock.png');
-const warningIcon = require('./../../resources/images/warningIcon.png');
-const eyeIcon = require('./../../resources/images/eye.png');
-const questionIcon = require('./../../resources/images/question.png');
-const greyLockIcon = require('./../../resources/images/lock-grey.png');
-const backgroundImage = require('./../../resources/images/Bg-png.png');
+import logo from './../../resources/images/logo.png';
+import nameTagIcon from './../../resources/images/nameTag.png';
+import phoneIcon from './../../resources/images/phone.png';
+import emailIcon from './../../resources/images/email.png';
+import lockIcon from './../../resources/images/lock.png';
+import eyeIcon from './../../resources/images/eye.png';
+import questionIcon from './../../resources/images/question.png';
+import greyLockIcon from './../../resources/images/lock-grey.png';
+import backgroundImage from './../../resources/images/Bg-png.png';
+import { SubmitError } from 'components/final-form/SubmitError';
 
 interface SignUpPageInternalProps {
-  userSignupAction: (user: UserModel) => any
+  userSignupAction: (user: UserModel) => any;
 }
 
 export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProps) => {
@@ -33,8 +33,8 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
       props.history.push(`/${response.payload.data.user.name}`);
       return true;
     }
-    return { [response.fieldName]: response.message }
-  }
+    return { [response.fieldName]: response.message };
+  };
   
   const [email, setEmail] = useState('');
 
@@ -46,7 +46,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
 
   return (
     <div className="cf ph2-ns">
-      <div className="fl w-100 w-50-ns dt vh-100" style={{ backgroundColor: "white" }}>
+      <div className="fl w-100 w-50-ns dt vh-100" style={{ backgroundColor: 'white' }}>
         <div className="v-mid dtc">
           <div className="w-two-thirds-l w-90-m center">
             <Form
@@ -55,57 +55,29 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
               validate={(values: any) => {
                 const errors = {} as any;
                 if (values.password !== values.confirmPassword) {
-                  errors.confirmPassword = 'Password does not match'
+                  errors.confirmPassword = 'Password does not match';
                 }
                 return errors;
               }}
-              render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
+              render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, 
+                ...rest }) => (
                 <>
                   <h1 className="pl3">Sign Up</h1>
                   <form
                     className="dt fl cf"
                     onSubmit={handleSubmit}>
                     <div className="mw9 center ph3-ns v-mid dtc">
-                      <div>
-                        <Field
-                          name="network"
-                          subscription={{
-                            touched: true,
-                            error: true,
-                            submitError: true,
-                            dirtySinceLastSubmit: true
-                          }}
-                          render={({ meta }) =>
-                            checkError(meta) && (
-                              <div
-                                className="flex"
-                                style={{
-                                  backgroundColor: "#FCEBEB", paddingLeft: "10px", paddingTop: "10px"
-                                }}>
-                                <span className="bp3-icon">
-                                  <img
-                                    src={warningIcon}
-                                    width="20px"
-                                    height="20px"
-                                    color="#0fa3a3"
-                                  />
-                                </span>
-                                <p style={{ color: "#962414", paddingLeft: "10px" }}>{meta.error || meta.submitError}</p>
-                              </div>
-                            )
-                          }
-                        />
-                      </div>
+                      <SubmitError errorMessage={submitError} />
                       <div className="flex pt3 justify-content">
                         <div>
                           <Field<string>
                             name="firstName"
                             validate={composeValidators(required)}
                             render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                                 <InputGroupFieldWithError
                                   id="firstName"
-                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                                   value={input.value}
                                   onChange={input.onChange}
                                   leftIcon={
@@ -138,7 +110,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                               <div>
                                 <InputGroupFieldWithError
                                   id="lastName"
-                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                                   value={input.value}
                                   onChange={input.onChange}
                                   style={{
@@ -159,10 +131,10 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                           <Field<string>
                             name="countryCode"
                             render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                                 <InputGroupFieldWithError
                                   id="countryCode"
-                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                                   value="+88"
                                   readOnly={true}
                                   onChange={input.onChange}
@@ -193,11 +165,11 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                             <Field<string>
                               name="contactNo"
                               validate={composeValidators(required, phoneNoValidation)}
-                              render={({ input, meta, ...rest }) =>
-                                <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                              render={({ input, meta }) =>
+                                <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                                   <InputGroupFieldWithError
                                     id="contactNo"
-                                    className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                    className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                                     value={input.value}
                                     onChange={input.onChange}
                                     style={{
@@ -225,10 +197,10 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                             name="email"
                             validate={composeValidators(required, isEmail)}
                             render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                                 <InputGroupFieldWithError
                                   id="email"
-                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                                   value={input.value}
                                   onChange={input.onChange}
                                   leftIcon={
@@ -242,7 +214,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                     </span>
                                   }
                                   rightElement={
-                                    <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
+                                    <span className="bp3-icon" style={{ paddingTop: '10px', paddingRight: '5px' }}>
                                       <img
                                         src={greyLockIcon}
                                         width="15px"
@@ -272,10 +244,10 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                             name="password"
                             validate={composeValidators(required, passwordValidation)}
                             render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                                 <InputGroupFieldWithError
                                   id="password"
-                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                                   value={input.value}
                                   onChange={input.onChange}
                                   type={`${showPassword ? 'text' : 'password'}`}
@@ -290,8 +262,8 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                     </span>
                                   }
                                   rightElement={
-                                    <span className="bp3-icon" style={{ paddingTop: "5px", paddingRight: "5px" }}>
-                                      <span style={{ paddingRight: "10px" }}>
+                                    <span className="bp3-icon" style={{ paddingTop: '5px', paddingRight: '5px' }}>
+                                      <span style={{ paddingRight: '10px' }}>
                                         <img
                                           onMouseDown={() => setShowPassword(true)}
                                           onMouseUp={() => setShowPassword(false)}
@@ -302,8 +274,9 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                         />
                                       </span>
                                       <Tooltip content={
-                                        <p style={{ width: "400px" }}>
-                                          Password should contain at least 1 capital letter, 1 small letter, 1 special character and 1 numeric value
+                                        <p style={{ width: '400px' }}>
+                                          Password should contain at least 1 capital letter, 1 small letter, 
+                                          1 special character and 1 numeric value
                                         </p>}
                                         position={Position.TOP_RIGHT}>
                                         <img
@@ -334,10 +307,10 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                             name="confirmPassword"
                             validate={composeValidators(required)}
                             render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
+                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                                 <InputGroupFieldWithError
                                   id="confirmPassword"
-                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
                                   value={input.value}
                                   onChange={input.onChange}
                                   type={`${showConfirmPassword ? 'text' : 'password'}`}
@@ -352,7 +325,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                     </span>
                                   }
                                   rightElement={
-                                    <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
+                                    <span className="bp3-icon" style={{ paddingTop: '10px', paddingRight: '5px' }}>
                                       <img
                                         onMouseDown={() => setShowConfirmPassword(true)}
                                         onMouseUp={() => setShowConfirmPassword(false)}
@@ -379,13 +352,13 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                       <Button
                         className="grow h2 pointer white bp3-minimal w4"
                         style={{
-                          background: "#0FA3A3",
-                          outline: "none",
-                          color: "white",
+                          background: '#0FA3A3',
+                          outline: 'none',
+                          color: 'white',
                           width: '100%',
                           height: '45px',
-                          fontWeight: "bold",
-                          fontSize: "1.2rem"
+                          fontWeight: 'bold',
+                          fontSize: '1.2rem'
                         }}
                         loading={submitting}
                         type="submit"
@@ -409,7 +382,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
       <div className="fl w-100 w-50-ns dt vh-100 animated slideInLeft fast absolute-l"
         style={{
           zIndex: 9999, left: '50%', backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat', backgroundPosition: 'left-bottom', backgroundColor: "#060517"
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'left-bottom', backgroundColor: '#060517'
         }}
       >
         <div className="v-mid dtc">
@@ -419,7 +392,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                 height="70px"
                 src={logo} />
             </Link>
-            <h3 className="tj mt4" style={{ color: "#E0E0E3" }}>
+            <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
               TiGrow is a professional network crafted for
                     Business Professionals, where they can
                     trade between each other, find nearest
@@ -434,7 +407,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export const SignUpPage = connect(null, { userSignupAction })(withRouter(SignUpPageComponent));

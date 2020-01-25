@@ -1,4 +1,5 @@
 import { isEqual } from 'lodash';
+import { FORM_ERROR } from 'final-form';
 
 export const required = (value: any) => (value ? undefined : 'Required');
 
@@ -43,22 +44,22 @@ export const passwordValidation = (password: string) => {
 };
 
 export const errorMessgeHandler = (handlerResponse: any) => {
-  if (isEqual(handlerResponse.message, 'Network Error')) {
-    return {
-      message: handlerResponse.message,
-      fieldName: 'network'
-    };
-  }
   if (handlerResponse.status === 200 || handlerResponse.status === 201) {
     return {
       message: 200,
       payload: handlerResponse
     };
   }
+  if (isEqual(handlerResponse.message, 'Network Error')) {
+    return {
+      message: handlerResponse.message,
+      fieldName: FORM_ERROR
+    };
+  }
   if (handlerResponse.response.status === 401) {
     return {
       message:  handlerResponse.response.data.errors[0].message,
-      fieldName: 'authError'
+      fieldName: FORM_ERROR
     };
   }
   return {

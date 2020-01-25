@@ -118,8 +118,13 @@ interface IBoardListViewInternalProps {
 
 const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentProps) => {
 	const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(false);
+	// const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
+		// Promise.all([
+		// 	props.getAllBoards(),
+		// 	props.getAllDepartments()
+		// ]).then(() => setLoading(false));
 		props.getAllBoards();
 		props.getAllDepartments();
 	}, []);

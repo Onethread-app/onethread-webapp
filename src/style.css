@@ -92,7 +92,7 @@ input[type="text"].message-input, textarea.message-input {
 
 .main-layout-overlay::before{
   content: "";
-  background-color: transparent;
+  background-color: #00000091;
   position: absolute;
   top: 0;
   right: 0;
