@@ -260,9 +260,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.taskManagementReducer.boardReducer.dragTaskLoading,
+    loading: state.boardReducer.dragTaskLoading,
     company: state.companyReducer.currentCompany,
-    currentBoard: state.taskManagementReducer.boardReducer.currentBoard
+    currentBoard: state.boardReducer.currentBoard
   };
 };
 

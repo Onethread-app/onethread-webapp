@@ -222,12 +222,12 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
-    currentTask: state.taskManagementReducer.boardReducer.currentTask,
+    currentTask: state.boardReducer.currentTask,
   };
 };
 

@@ -191,7 +191,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentBoard: state.taskManagementReducer.boardReducer.currentBoard,
+    currentBoard: state.boardReducer.currentBoard,
     company: state.companyReducer.currentCompany
   };
 };

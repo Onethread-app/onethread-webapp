@@ -103,8 +103,8 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.taskManagementReducer.boardReducer.boardColumnLoading,
-    currentBoard: state.taskManagementReducer.boardReducer.currentBoard
+    loading: state.boardReducer.boardColumnLoading,
+    currentBoard: state.boardReducer.currentBoard
   };
 };
 

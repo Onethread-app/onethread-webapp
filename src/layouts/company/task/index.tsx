@@ -44,8 +44,8 @@ const TaskPageComponent = (props: TaskInternalProps) => {
 
 const mapStateToProps = (state: any) => {
     return {
-        currentTask: state.taskManagementReducer.boardReducer.currentTask,
-        currentBoard: state.taskManagementReducer.boardReducer.currentBoard,
+        currentTask: state.boardReducer.currentTask,
+        currentBoard: state.boardReducer.currentBoard,
         company: state.companyReducer.currentCompany
     };
 };

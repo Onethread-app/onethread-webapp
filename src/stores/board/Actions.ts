@@ -1,6 +1,6 @@
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, 
+import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, COLUMN_LOADING, CREATE_COLUMN, 
   CREATE_COLUMN_ERROR, CREATE_TASK_LOADING, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, 
   DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK 
 } from './Types';
@@ -12,7 +12,6 @@ export const createBoard = (board: TaskBoard) => async (dispatch: any, getState:
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
     if ((headers as any).headers.Authorization) {
-      dispatch({ type: BOARD_LOADING });
       const reqBody = {
         ...board,
         companyId
@@ -38,7 +37,6 @@ export const getAllBoards = () => async (dispatch: any, getState: any) => {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
     if ((headers as any).headers.Authorization) {
-      dispatch({ type: BOARD_LOADING });
       const response = await tigrowApi.get(`boards?companyId=${companyId}`, headers);
       dispatch({ type: GET_ALL_BOARDS, payload: response.data });
       // return response.data;
@@ -59,7 +57,6 @@ export const getSelectedBoard = (boardId: string | undefined) => async (dispatch
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization && boardId) {
-      dispatch({ type: BOARD_LOADING });
       const response = await tigrowApi.get(`boards/${boardId}`, headers);
       dispatch({ type: SELECT_BOARD, payload: response.data });
       return response.data;
@@ -157,7 +154,7 @@ export const dragAndDropTask = (
   async (dispatch: any, getState: any) => {
     try {
       const headers = tokenConfig();
-      const currentBoard: TaskBoard = getState().taskManagementReducer.boardReducer.currentBoard;
+      const currentBoard: TaskBoard = getState().boardReducer.currentBoard;
       if ((headers as any).headers.Authorization) {
         dispatch({ type: DRAG_AND_DROP_TASK_LOADING });
         const requestData = {

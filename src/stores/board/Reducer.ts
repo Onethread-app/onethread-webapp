@@ -1,4 +1,4 @@
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, BOARD_LOADING, SELECT_BOARD, COLUMN_LOADING, 
+import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, COLUMN_LOADING, 
   CREATE_COLUMN_ERROR, CREATE_COLUMN, CREATE_TASK_LOADING, CREATE_TASK, CREATE_TASK_ERROR, 
   DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, 
   UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK } from './Types';
@@ -37,7 +37,6 @@ export interface ITask {
 }
 
 export interface IBoard {
-  loading: boolean;
   boardList: TaskBoard[];
   currentBoard: TaskBoard;
   currentTask: ITask;
@@ -51,7 +50,6 @@ export interface IBoard {
 }
 
 const InitialState = {
-  loading: false,
   boardList: [] as any,
   currentBoard: {
     _id: '',
@@ -72,15 +70,9 @@ const InitialState = {
 
 export const BoardReducer = (state = InitialState, action: any) => {
   switch (action.type) {
-    case BOARD_LOADING:
-      return {
-        ...state,
-        loading: true,
-      };
     case CREATE_BOARD:
       return {
         ...state,
-        loading: false,
         boardList: [
           {
             _id: action.payload._id,
@@ -96,19 +88,16 @@ export const BoardReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         boardError: action.payload,
-        loading: false
       };
     case GET_ALL_BOARDS:
       return {
         ...state,
         boardList: action.payload,
-        loading: false
       };
     case SELECT_BOARD:
       return {
         ...state,
         currentBoard: action.payload,
-        loading: false
       };
     case ADD_TEAM_MEMBER_IN_BOARD:
       return {
@@ -208,7 +197,6 @@ export const BoardReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         currentTask: action.payload,
-        loading: false
       };
     default:
       return state;
