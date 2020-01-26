@@ -4,11 +4,12 @@ const BoardColumn = require('./../boardColumn/boardColumn.model');
 const ActivityCtrl = require('./../activity/activity.controller');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
+const TaskAssign = require('./taskAssign.model');
 
 const load = (req, res, next, id) => {
   Task.findById(id)
-    .populate('comments')
-    .populate('account assignedPersons', '_id name')
+    .populate('')
+    .populate('account', '_id name')
     .exec()
     .then(result => {
       if (result) {
@@ -28,7 +29,7 @@ const create = async (req, res, next) => {
   try {
     const task = new Task({
       name: req.body.name,
-      description: req.body.description,
+      // description: req.body.description,
       account: req.user._id,
       columnId: req.body.columnId,
       boardId: req.body.boardId,
@@ -49,10 +50,13 @@ const create = async (req, res, next) => {
       req.user,
     );
 
+    //TODO: add total sub task here
+
     const responseData = {
       _id: createdTask._id,
       name: createdTask.name,
       description: createdTask.description,
+      dueDate: createdTask.dueDate,
     };
     res.status(201).send(responseData);
   } catch (error) {
@@ -69,7 +73,67 @@ const get = (req, res, next) => {
   return res.json(req.task);
 };
 
-const update = (req, res, next) => {};
+
+const getMembers = async (req,res , next) => {
+  try {
+    TaskAssign.find({
+      taskId : req.task._id
+    })
+    .exec()
+    .then((result)=>{
+      res.status(200).send(result)
+    })
+  } catch (error) {
+    next(error)
+  }
+};
+
+const addMember = async (req , res, next ) => {
+  try {
+
+    TaskAssign.findOne({
+      taskId : req.task._id,
+      assignedPerson : req.body.assignedPerson
+    })
+    .exec()
+    .then(async(result) => {
+
+      if(result){
+
+        res.status(400).send({
+          message: 'Member already exits'
+        })
+        
+      }else{
+        const newTaskMember = new TaskAssign({
+          taskId : req.task._id ,
+          assignedPerson : req.body.assignedPerson
+          });
+        const responseData = await newTaskMember.save();
+        res.status(201).send(responseData);
+      }
+
+    })
+  
+  } catch (error) {
+    next(error);
+  }
+}
+
+const update = async (req, res, next) => {
+
+  try {
+
+    const newTask = await Task.findByIdAndUpdate(
+      { _id: req.task._id },
+      req.body,
+      { new: true },
+    );
+    res.status(200).send(newTask);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const list = (req, res, next) => {};
 
@@ -133,4 +197,4 @@ const dragTask = async (req, res, next) => {
   }
 };
 
-module.exports = { create, get, update, list, load, dragTask };
+module.exports = { create, get, update, list, load, dragTask , addMember , getMembers};

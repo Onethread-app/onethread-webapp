@@ -18,6 +18,7 @@ const educationRoutes = require('./server/education/education.route');
 const boardRoutes = require('./server/board/board.route');
 const boardColumnRoutes = require('./server/boardColumn/boardColumn.route');
 const taskRoutes = require('./server/task/task.route');
+const subTasks = require('./server/task/subtask/subtask.route');
 const utilsRoutes = require('./server/utils/utils.route');
 const chatkitRoutes = require('./server/chatkit/chatkit.route');
 
@@ -45,6 +46,7 @@ router.use('/files', fileRoutes);
 router.use('/boards', boardRoutes);
 router.use('/boardColumns', boardColumnRoutes);
 router.use('/tasks', taskRoutes);
+router.use('/subTasks', subTasks);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
 

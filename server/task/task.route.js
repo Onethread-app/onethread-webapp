@@ -35,10 +35,20 @@ router
   .put(
     authorization,
     // permit('user', 'admin'),
-    // TODO: Will do in next push
-    // SchemaValidator(joiSchema.updateTask),
+    SchemaValidator(joiSchema.updateTask),
     taskCtrl.update,
   );
+  
+  router
+  .route('/member/:taskId')
+  .get(
+    authorization ,
+    taskCtrl.getMembers
+  )
+  .post(
+    authorization ,
+    taskCtrl.addMember
+  )
 
 router.route('/dragTask').post(
   authorization,

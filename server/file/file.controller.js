@@ -18,7 +18,6 @@ let s3bucket = new AWS.S3({
 const profilePicture = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
-  const accountId = await Account.findOne({ _id: userID });
   const params = {
     Bucket: 'tigrow-file',
     Key: `${userID}/${file.originalname}`,
@@ -34,9 +33,11 @@ const profilePicture = async (req, res, next) => {
       const newFile = {
         link: s3FileURL + params.Bucket,
         s3Key: params.Key,
-        account: req.user._id,
+        account: userID,
         type: params.ContentType,
+        imageType: req.query.imageType,
       };
+
       const file = new File(newFile);
       file
         .save()
@@ -45,8 +46,13 @@ const profilePicture = async (req, res, next) => {
           if (userID) {
             const account = await Account.findOne({
               _id: userID,
-            }).select('profileImage');
-            account.profileImage = data._id;
+            }).select('profileImage coverImage');
+            if (data.imageType === 'profilePic') {
+              account.profileImage = data._id;
+            }
+            if (data.imageType === 'coverPhoto') {
+              account.coverImage = data._id;
+            }
             await account.save();
             return sendJSONresponse(res, 200, data);
           }

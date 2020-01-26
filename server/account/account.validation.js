@@ -84,6 +84,9 @@ module.exports = {
       birthDate: Joi.date(),
       bloodGroup: Joi.string(),
       location: Joi.string().allow(''),
+      position: Joi.string()
+        .allow('')
+        .max(32),
       about: Joi.string()
         .max(200)
         .allow(''),
