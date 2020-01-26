@@ -6,7 +6,7 @@ import { isAuthenticate } from 'stores/UtilsActions';
 import { RoomPage } from 'layouts/company/room/Index';
 import { CompanyProfilePage } from 'layouts/company/profile/Index';
 import { Layout } from 'components/Layout';
-import { TaskPage } from 'layouts/company/board/Index';
+import { BoardPage } from 'layouts/company/board/Index';
 import { TeamMembersPage } from 'layouts/company/team/Index';
 import { SettingsPage } from 'layouts/company/settings/Index';
 import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
@@ -17,7 +17,7 @@ import { LandingPage } from 'layouts/user/profile/Index';
 import { ProfileSettingsPage } from 'layouts/user/settings/Index';
 import { FeedPage } from 'layouts/company/feed/Index';
 import { HomePage } from 'layouts/landing/Index';
-import { TaskDetails } from 'layouts/company/taskDetails/Index';
+import { TaskPage } from 'layouts/company/task';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -117,7 +117,7 @@ export const App = () => (
 			<PrivateRoute
 				path="/company/:cname/board"
 				exact={true}
-				component={TaskPage}
+				component={BoardPage}
 			/>
 			<PrivateRoute
 				path="/company/:cname/board/:boardId"
@@ -127,7 +127,7 @@ export const App = () => (
 			<PrivateRoute
 				path="/company/:cname/board/:boardId/task/:taskId"
 				exact={true}
-				component={TaskDetails}
+				component={TaskPage}
 			/>
 			<PrivateRoute
 				path="/company/:cname/team"

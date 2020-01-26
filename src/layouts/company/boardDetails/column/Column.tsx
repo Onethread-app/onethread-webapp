@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Droppable } from 'react-beautiful-dnd';
 import { TaskItem } from '../task/TaskItem';
-import { Button, Popover, Menu, MenuItem, Dialog } from '@blueprintjs/core';
+import { Button, Popover, Menu, MenuItem, Dialog, Icon } from '@blueprintjs/core';
 import { IColumn, TaskBoard } from 'stores/board/Reducer';
 import { TaskForm } from '../task/TaskForm';
 import { connect } from 'react-redux';
@@ -13,9 +13,7 @@ import { Field, Form } from 'react-final-form';
 import { required, checkError } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { createTask } from 'stores/board/Actions';
-
-import cancel from '../../../../resources/images/cancel.png';
-import doneWhite from '../../../../resources/images/doneWhite.png';
+import { RightSidebar } from 'components/RightSidebar';
 
 interface ColumnProps {
   key: string;
@@ -105,7 +103,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   }}
                   text="Add Task"
                   fill={true}
-                  onClick={() => setShowTaskInput(!showTaskInput)} // TODO add functionality
+                  onClick={() => setShowTaskInput(!showTaskInput)}
                 />
               </div>
               : undefined}
@@ -139,7 +137,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                   onChange={input.onChange}
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px',
+                                    fontSize: '12px',
                                   }}
                                   error={checkError(meta) && (meta.error || meta.submitError)}
                                   placeHolder="Task Name"
@@ -147,27 +145,25 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                               }
                             />
                             <div className="flex justify-end">
-                              <button
-                                className="pa1 ma0 b--none pointer outline-0"
+                              <Button
+                                className="mr2"
                                 type="submit"
-                                style={{ background: '#F5F6FA' }}
+                                style={{ background: 'transparent' }}
+                                icon="cross"
                                 onClick={() => setShowTaskInput(!showTaskInput)}
-                              >
-                                <img
-                                  style={{ width: '25px', height: '25px' }}
-                                  src={cancel}
-                                />
-                              </button>
-                              <button
-                                className="pa1 ma0 b--none pointer outline-0"
+                              />
+                              <Button
                                 type="submit"
-                                style={{ background: '#F5F6FA', outline: 'none' }}
-                              >
-                                <img
-                                  style={{ width: '25px', height: '25px' }}
-                                  src={doneWhite}
-                                />
-                              </button>
+                                style={{ background: '#0FA3A3' }}
+                                loading={submitting}
+                                icon={
+                                  <Icon
+                                    icon="tick"
+                                    iconSize={20}
+                                    style={{ color: 'white' }}
+                                  />
+                                }
+                              />
                             </div>
 
                           </div>
@@ -188,7 +184,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
           >
             <div className="flex-grow-1 flex flex-column h-100">
               {props.loading ? <Loading />
-                : <>
+                : 
                   <Droppable
                     droppableId={props.column._id!}
                     type="task"
@@ -197,7 +193,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                       const allowedProps = { ref: provided.innerRef };
                       return (
                         <div
-                          className={`pa2 flex-grow-1 flex 
+                          className={`pa2 flex-grow-1 flex
                           flex-column overflow-auto 
                           ${snapshot.isDraggingOver ? 'bg-lightest-blue' : ''}`
                           }
@@ -223,7 +219,6 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                       );
                     }}
                   </Droppable>
-                </>
               }
             </div>
           </div>
@@ -244,18 +239,14 @@ const ColumnComponent = (props: ColumnInternalProps) => {
         </Dialog>
       )}
       {showColumnFormDialog && (
-        <Dialog
+        <RightSidebar
           onClose={() => setShowColumnFormDialog(!showColumnFormDialog)}
-          title="Edit Column"
-          isOpen={showColumnFormDialog}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
         >
           <ColumnForm
             setShowColumnFormDialog={setShowColumnFormDialog}
             column={props.column}
           />
-        </Dialog>
+        </RightSidebar>
       )}
     </>
   );
@@ -263,9 +254,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.taskManagementReducer.boardReducer.dragTaskLoading,
+    loading: state.boardReducer.dragTaskLoading,
     company: state.companyReducer.currentCompany,
-    currentBoard: state.taskManagementReducer.boardReducer.currentBoard
+    currentBoard: state.boardReducer.currentBoard
   };
 };
 

@@ -1,24 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import { Form, Field } from 'react-final-form';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { required, checkError, composeValidators, isEmail } from "components/final-form/utils";
+import { required, checkError, composeValidators, isEmail } from 'components/final-form/utils';
 import { Link, NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { loginAction, LoginModel } from '../../stores/auth/Actions';
 import { isEmpty } from 'lodash';
+import { SubmitError } from 'components/final-form/SubmitError';
 
-
-const logo = require('./../../resources/images/logo.png');
-const emailIcon = require('./../../resources/images/email.png');
-const lockIcon = require('./../../resources/images/lock.png');
-const warningIcon = require('./../../resources/images/warningIcon.png');
-const eyeIcon = require('./../../resources/images/eye.png');
-const greyLockIcon = require('./../../resources/images/lock-grey.png');
-const backgroundImage = require('./../../resources/images/Bg-png.png');
+import logo from './../../resources/images/logo.png';
+import emailIcon from './../../resources/images/email.png';
+import lockIcon from './../../resources/images/lock.png';
+import eyeIcon from './../../resources/images/eye.png';
+import greyLockIcon from './../../resources/images/lock-grey.png';
+import backgroundImage from './../../resources/images/Bg-png.png';
 
 interface SignInPageInternalProps {
-  loginAction: (login: LoginModel) => any
+  loginAction: (login: LoginModel) => any;
 }
 
 export const SignInPageComponent = (props: SignInPageInternalProps & RouteComponentProps) => {
@@ -29,8 +28,8 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
       props.history.push(`/${response.payload.data.user.name}`);
       return true;
     }
-    return { [response.fieldName]: response.message }
-  }
+    return { [response.fieldName]: response.message };
+  };
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
 
@@ -45,7 +44,7 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
       <div className="fl w-100 w-50-ns dt vh-100"
         style={{
           zIndex: 9999, left: '50%', backgroundImage: `url(${backgroundImage})`, backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat', backgroundPosition: 'left-bottom', backgroundColor: "#060517"
+          backgroundRepeat: 'no-repeat', backgroundPosition: 'left-bottom', backgroundColor: '#060517'
         }}
       >
         <div className="v-mid dtc">
@@ -55,7 +54,7 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
                 height="70px"
                 src={logo} />
             </Link>
-            <h3 className="tj mt4" style={{ color: "#E0E0E3" }}>
+            <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
               TiGrow is a professional network crafted for
                     Business Professionals, where they can
                     trade between each other, find nearest
@@ -70,7 +69,7 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
         </div>
       </div>
 
-      <div className="fl w-100 w-50-ns dt vh-100" style={{ backgroundColor: "white" }}>
+      <div className="fl w-100 w-50-ns dt vh-100" style={{ backgroundColor: 'white' }}>
         <div className="v-mid dtc">
           <div className="w-two-thirds-l w-90-m center">
             <Form
@@ -80,222 +79,166 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
                 const errors = {} as any;
                 return errors;
               }}
-              render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
-                <>
-                  <h1 className="pl3">Sign In</h1>
-                  <form
-                    className="fl w-100 cf"
-                    onSubmit={handleSubmit}>
-                    <div className="mw9 center mb2">
-
+              render={({ handleSubmit, form, submitting, pristine, values, submitError,
+                hasValidationErrors, ...rest }) => (
+                  <>
+                    <h1 className="pl3">Sign In</h1>
+                    <form
+                      className="fl w-100 cf"
+                      onSubmit={handleSubmit}>
+                      <div className="mw9 center mb2">
+                        <SubmitError errorMessage={submitError} />
+                      </div>
                       <div>
-                        <Field
-                          name="network"
-                          subscription={{
-                            touched: true,
-                            error: true,
-                            submitError: true,
-                            dirtySinceLastSubmit: true
-                          }}
-                          render={({ meta }) =>
-                            checkError(meta) && (
-                              <div
-                                className="flex"
-                                style={{
-                                  backgroundColor: "#FCEBEB", paddingLeft: "10px", paddingTop: "10px"
-                                }}>
-                                <span className="bp3-icon">
-                                  <img
-                                    src={warningIcon}
-                                    width="20px"
-                                    height="20px"
-                                    color="#0fa3a3"
-                                  />
-                                </span>
-                                <p style={{ color: "#962414", paddingLeft: "10px" }}>{meta.error || meta.submitError}</p>
+                        <div>
+                          <Field<string>
+                            name="email"
+                            validate={composeValidators(required, isEmail)}
+                            render={({ input, meta }) =>
+                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                                <InputGroupFieldWithError
+                                  id="email"
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={emailIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  rightElement={
+                                    <span className="bp3-icon" style={{ paddingTop: '10px', paddingRight: '5px' }}>
+                                      <img
+                                        src={greyLockIcon}
+                                        width="15px"
+                                        height="15px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px',
+                                    paddingLeft: '40px'
+                                  }}
+                                  placeHolder="Email Address"
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                  disabled={isEmpty(email) === false}
+                                />
                               </div>
-                            )
-                          }
-                        />
-                        <Field
-                          name="authError"
-                          subscription={{
-                            touched: true,
-                            error: true,
-                            submitError: true,
-                            dirtySinceLastSubmit: true
-                          }}
-                          render={({ meta }) =>
-                            checkError(meta) && (
-                              <div
-                                className="flex"
-                                style={{
-                                  backgroundColor: "#FCEBEB", paddingLeft: "10px", paddingTop: "10px"
-                                }}>
-                                <span className="bp3-icon">
-                                  <img
-                                    src={warningIcon}
-                                    width="20px"
-                                    height="20px"
-                                    color="#0fa3a3"
-                                  />
-                                </span>
-                                <p style={{ color: "#962414", paddingLeft: "10px" }}>{meta.error || meta.submitError}</p>
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <div>
+                          <Field<string>
+                            name="password"
+                            validate={composeValidators(required)}
+                            render={({ input, meta }) =>
+                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                                <InputGroupFieldWithError
+                                  id="password"
+                                  className={`bw1 pb2 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  type={`${showPassword ? 'text' : 'password'}`}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={lockIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  rightElement={
+                                    <span className="bp3-icon" style={{ paddingTop: '10px', paddingRight: '5px' }}>
+                                      <img
+                                        onMouseDown={() => setShowPassword(true)}
+                                        onMouseUp={() => setShowPassword(false)}
+                                        src={eyeIcon}
+                                        width="15px"
+                                        height="15px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px',
+                                    paddingLeft: '40px'
+                                  }}
+                                  placeHolder="Password"
+                                  error={checkError(meta) && (meta.error || meta.submitError)}
+                                />
                               </div>
-                            )
-                          }
-                        />
+                            }
+                          />
+
+                        </div>
                       </div>
-                    </div>
 
-                    <div>
-                      <div>
-                        <Field<string>
-                          name="email"
-                          validate={composeValidators(required, isEmail)}
-                          render={({ input, meta }) =>
-                            <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
-                              <InputGroupFieldWithError
-                                id="email"
-                                className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
-                                value={input.value}
-                                onChange={input.onChange}
-                                leftIcon={
-                                  <span className="bp3-icon">
-                                    <img
-                                      src={emailIcon}
-                                      width="20px"
-                                      height="20px"
-                                      color="#0fa3a3"
-                                    />
-                                  </span>
-                                }
-                                rightElement={
-                                  <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
-                                    <img
-                                      src={greyLockIcon}
-                                      width="15px"
-                                      height="15px"
-                                      color="#0fa3a3"
-                                    />
-                                  </span>
-                                }
-                                style={{
-                                  boxShadow: 'none',
-                                  fontSize: '18px',
-                                  paddingLeft: '40px'
-                                }}
-                                placeHolder="Email Address"
-                                error={checkError(meta) && (meta.error || meta.submitError)}
-                                disabled={isEmpty(email) === false}
-                              />
-                            </div>
-                          }
-                        />
-                      </div>
-                    </div>
-
-
-                    <div>
-                      <div>
-                        <Field<string>
-                          name="password"
-                          validate={composeValidators(required)}
-                          render={({ input, meta }) =>
-                            <div className={` ${checkError(meta) ? "mb3" : "mb4"}`}>
-                              <InputGroupFieldWithError
-                                id="password"
-                                className={`bw1 pb2 br0 bb ${checkError(meta) ? "b--red" : "b--lightBlue"}`}
-                                value={input.value}
-                                onChange={input.onChange}
-                                type={`${showPassword ? 'text' : 'password'}`}
-                                leftIcon={
-                                  <span className="bp3-icon">
-                                    <img
-                                      src={lockIcon}
-                                      width="20px"
-                                      height="20px"
-                                      color="#0fa3a3"
-                                    />
-                                  </span>
-                                }
-                                rightElement={
-                                  <span className="bp3-icon" style={{ paddingTop: "10px", paddingRight: "5px" }}>
-                                    <img
-                                      onMouseDown={() => setShowPassword(true)}
-                                      onMouseUp={() => setShowPassword(false)}
-                                      src={eyeIcon}
-                                      width="15px"
-                                      height="15px"
-                                      color="#0fa3a3"
-                                    />
-                                  </span>
-                                }
-                                style={{
-                                  boxShadow: 'none',
-                                  fontSize: '18px',
-                                  paddingLeft: '40px'
-                                }}
-                                placeHolder="Password"
-                                error={checkError(meta) && (meta.error || meta.submitError)}
-                              />
-                            </div>
-                          }
-                        />
-
-                      </div>
-                    </div>
-
-                    <Button
-                      className="grow h2 pointer white bp3-minimal w4"
-                      style={{
-                        background: "#0FA3A3",
-                        outline: "none",
-                        color: "white",
-                        width: '100%',
-                        height: '45px',
-                        fontWeight: "bold",
-                        fontSize: "1.2rem"
-                      }}
-                      loading={submitting}
-                      type="submit"
-                      disabled={submitting || pristine}
-                    >
-                      Sign in
-                    </Button>
-                    <div className="tc mv4">
-                      <NavLink className="fw9 dt center tigrow-lightBlue" to="/forgot-password">
-                        Forget Password ?
-                      </NavLink>
-                    </div>
-                    <div className="tc mv4">
-                      <NavLink className="fw9 dt center tigrow-lightBlue" to="/signup">
-                        Don't have an account?
-                      </NavLink>
-                    </div>
-                    <Link to="/signup">
-                      <Button className="w-100 grow pointer"
-                        style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3", fontSize: '18px' }}
+                      <Button
+                        className="grow h2 pointer white bp3-minimal w4"
+                        style={{
+                          background: '#0FA3A3',
+                          outline: 'none',
+                          color: 'white',
+                          width: '100%',
+                          height: '45px',
+                          fontWeight: 'bold',
+                          fontSize: '1.2rem'
+                        }}
+                        loading={submitting}
+                        type="submit"
+                        disabled={submitting || pristine}
                       >
-                        Sign Up here
+                        Sign in
+                    </Button>
+                      <div className="tc mv4">
+                        <NavLink className="fw9 dt center tigrow-lightBlue" to="/forgot-password">
+                          Forget Password ?
+                      </NavLink>
+                      </div>
+                      <div className="tc mv4">
+                        <NavLink className="fw9 dt center tigrow-lightBlue" to="/signup">
+                          Don't have an account?
+                      </NavLink>
+                      </div>
+                      <Link to="/signup">
+                        <Button
+                          className="w-100 grow pointer"
+                          style={{
+                            background: '#fff',
+                            outline: 'none',
+                            border: '2px solid #0fa3a3',
+                            color: '#0fa3a3',
+                            fontSize: '18px'
+                          }}
+                        >
+                          Sign Up here
                         </Button>
-                    </Link>
+                      </Link>
 
-                  </form>
-                </>
+                    </form>
+                  </>
 
-              )
+                )
               }
             />
           </div>
 
         </div>
       </div>
-
-
-
     </div>
-  )
-}
+  );
+};
 
 export const SignInPage = connect(null, { loginAction })(withRouter(SignInPageComponent));

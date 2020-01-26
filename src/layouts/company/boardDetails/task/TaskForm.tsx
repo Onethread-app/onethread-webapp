@@ -14,7 +14,6 @@ interface TaskFormProps {
 }
 
 interface TaskFormInternalProps extends TaskFormProps {
-  loading: boolean;
   currentBoard: TaskBoard;
   createTask: (task: any) => void;
 }
@@ -25,7 +24,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
       ...values,
       boardId: props.currentBoard._id
     };
-    await props.createTask(modifiedTask)
+    await props.createTask(modifiedTask);
     if (props.setShowTaskFormDialog) {
       props.setShowTaskFormDialog(false);
     }
@@ -109,8 +108,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.taskManagementReducer.boardReducer.boardTaskLoading,
-    currentBoard: state.taskManagementReducer.boardReducer.currentBoard
+    currentBoard: state.boardReducer.currentBoard
   };
 };
 

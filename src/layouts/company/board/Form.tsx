@@ -14,7 +14,6 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { isEqual } from 'lodash';
 
 const FormComponent = (props: {
-  loading: boolean;
   setShowTaskBoardDialog?: (val: boolean) => void;
   createBoard: (board: TaskBoard) => void;
   departments: [],
@@ -218,7 +217,6 @@ const FormComponent = (props: {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.taskManagementReducer.boardReducer.loading,
     departments: state.companyReducer.currentCompany.departments,
     company: state.companyReducer.currentCompany
   };

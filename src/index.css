@@ -141,6 +141,7 @@ a:hover {
 /**  custom scrollbar **/
 ::-webkit-scrollbar {
 	width: 7px;
+	height: 7px;
 	border-radius: 10px;
 	background-color: #0fa3a3; 
 }
@@ -159,6 +160,10 @@ a:hover {
 
 ::-webkit-scrollbar-thumb:hover {
 	background: #0fa3a3;
+}
+
+.ml5-tigrow {
+	margin-left: 5rem;
 }
 
 @media only screen and (min-width: 30em) {
@@ -186,6 +191,9 @@ a:hover {
 	.w2tigrow-ns {
 		width: 3rem;
 	}
+	.ml5-tigrow-ns{
+		margin-left: 5rem;
+	}
 }
 @media only screen and (min-width: 30em) and (max-width: 60em) {
 	.w-15-m {
@@ -212,6 +220,9 @@ a:hover {
 	.w2tigrow-m {
 		width: 3rem;
 	}
+	.ml5-tigrow-m{
+		margin-left: 5rem;
+	}
 }
 @media only screen and (min-width: 60em) {
 	.w-15-l {
@@ -237,6 +248,9 @@ a:hover {
 	}
 	.w2tigrow-l {
 		width: 3rem;
+	}
+	.ml5-tigrow-l{
+		margin-left: 5rem;
 	}
 }
 

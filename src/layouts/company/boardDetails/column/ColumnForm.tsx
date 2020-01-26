@@ -14,7 +14,6 @@ interface ColumnFormProps {
 }
 
 interface ColumnFormInternalProps extends ColumnFormProps {
-  loading: boolean;
   currentBoard: TaskBoard;
   createColumn: (columnInfo: any) => void;
   updateColumn: (columnIndo: any) => Promise<any>;
@@ -46,7 +45,10 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
   return (
     <div className="pa3">
       <div style={{ marginTop: '7rem' }}>
-        <h3>Create Column</h3>
+        {props.column ?
+          <h3>Edit Column</h3>
+          : <h3>Create Column</h3>
+        }
       </div>
       <Form
         onSubmit={onSubmit}
@@ -86,8 +88,8 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                   type="submit"
                   disabled={submitting || pristine}
                 >
-                  Create
-            </Button>
+                  {props.column ? 'Update' : 'Create'}
+                </Button>
               </div>
             </div>
           </form>
@@ -100,8 +102,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.taskManagementReducer.boardReducer.boardColumnLoading,
-    currentBoard: state.taskManagementReducer.boardReducer.currentBoard
+    currentBoard: state.boardReducer.currentBoard
   };
 };
 

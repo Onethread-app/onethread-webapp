@@ -18,8 +18,9 @@ const BasicInfoDetailsViewComponent = (props: IBasicInfoDetailsViewProps) => {
 
   return (
     <>
-      <div>
-        <div className="relative mb4">
+      <div className="relative">
+        <div className="relative"
+        >
           <div className="flex justify-between items-center">
             <h1 className="f6">Email</h1>
             <p className="black-60 fw4">{props.user.email}</p>
@@ -60,10 +61,14 @@ const BasicInfoDetailsViewComponent = (props: IBasicInfoDetailsViewProps) => {
         </div>
         <div>
           <img
-            width="55"
-            height="55"
             className="fixed pointer"
-            style={{ bottom: '8%', right: '8%' }}
+            style={{
+              bottom: '5rem',
+              right: '7rem',
+              width: '5rem',
+              boxShadow: '0px 6px 6px #00000029',
+              borderRadius: '50%'
+            }}
             onClick={() => setBasicInfoForm(true)}
             src={editIcon}
           />
