@@ -48,6 +48,14 @@ module.exports = {
       confirmPassword: Joi.string()
         .valid(Joi.ref('password'))
         .required(),
+      birthDate: Joi.date()
+        .required()
+        .error(error => {
+          return {
+            success: false,
+            message: 'BirthDate field required',
+          };
+        }),
       contactNo: Joi.string()
         .regex(/^(\+?(880)[0-9]{10})$/)
         .required()
