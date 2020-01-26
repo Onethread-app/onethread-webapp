@@ -91,6 +91,7 @@ const register = async (req, res, next) => {
             return sendJSONresponse(res, 201, {
               token: user.token,
               message: 'User created',
+              user,
             });
           }
         });
@@ -149,6 +150,7 @@ const login = async (req, res, next) => {
       token: token,
       accessToken: accessToken,
       refreshToken: refreshToken,
+      user: userObj,
     });
   } catch (error) {
     next(error);
