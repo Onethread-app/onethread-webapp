@@ -149,6 +149,7 @@ const login = async (req, res, next) => {
       token: token,
       accessToken: accessToken,
       refreshToken: refreshToken,
+      user: userObj,
     });
   } catch (error) {
     next(error);
