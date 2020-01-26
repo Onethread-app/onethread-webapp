@@ -48,6 +48,7 @@ const register = async (req, res, next) => {
     name: name,
     contactNo: data.contactNo,
     password: data.password,
+    birthDate: data.birthDate,
   });
   account
     .save()
@@ -90,7 +91,6 @@ const register = async (req, res, next) => {
             return sendJSONresponse(res, 201, {
               token: user.token,
               message: 'User created',
-              user,
             });
           }
         });
@@ -146,7 +146,6 @@ const login = async (req, res, next) => {
     delete userObj.companies;
     return sendJSONresponse(res, 200, {
       success: true,
-      user: userObj,
       token: token,
       accessToken: accessToken,
       refreshToken: refreshToken,
