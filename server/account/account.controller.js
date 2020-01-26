@@ -91,6 +91,7 @@ const register = async (req, res, next) => {
             return sendJSONresponse(res, 201, {
               token: user.token,
               message: 'User created',
+              user,
             });
           }
         });
