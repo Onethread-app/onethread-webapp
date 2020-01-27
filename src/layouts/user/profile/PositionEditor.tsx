@@ -38,7 +38,7 @@ const PositionEditComponent = (props: IPositionEditInternalProps) => {
       }}
       render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
         <form
-          className="ph2 pt6"
+          className="ph4 pt6"
           onSubmit={handleSubmit}
         >
           <SubmitError errorMessage={submitError} />

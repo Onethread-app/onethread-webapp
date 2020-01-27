@@ -37,7 +37,7 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
       }}
       render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
         <form
-          className="fl w-100 ph2 pt6"
+          className="fl w-100 ph4 pt6"
           onSubmit={handleSubmit}
         >
           <SubmitError errorMessage={submitError} />

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import { useSelector } from 'react-redux';
 
-import UserIcon from './../../../../../resources/images/user.png';
+import UserIcon from './../../../../../resources/images/CompanyIcon.svg';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');

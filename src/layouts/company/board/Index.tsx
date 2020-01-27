@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { TaskBoard } from 'stores/board/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
 import { permit, boardColor } from 'stores/UtilsActions';
-import { Button, Card, Elevation, Menu, MenuItem, Popover, HTMLSelect } from '@blueprintjs/core';
+import { Card, Elevation, HTMLSelect } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 import { connect } from 'react-redux';
 import { getAllBoards, getSelectedBoard } from 'stores/board/Actions';
@@ -58,7 +58,7 @@ const BoardCard = withRouter((props: IBoardCardComponent & RouteComponentProps) 
 							}}>
 							{board.name}
 						</h3>
-						<Popover
+						{/* <Popover
 							content={
 								<Menu>
 									<MenuItem
@@ -80,7 +80,7 @@ const BoardCard = withRouter((props: IBoardCardComponent & RouteComponentProps) 
 									small={true}
 								/>
 							}
-						/>
+						/> */}
 					</div>
 					<div className="flex pt3 pr3" style={{ justifyContent: 'space-between', paddingLeft: '20px' }}>
 						<div>
@@ -169,7 +169,6 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 						<div
 							style={{
 								display: 'grid',
-								gridGap: '5px',
 								gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 270px))',
 								gridTemplateRows: 'repeat(2, 150px)'
 							}}>

@@ -1,183 +1,267 @@
 import React from 'react';
-import { ButtonGroup, Alignment, Button, Icon } from '@blueprintjs/core';
 import { NavLink } from 'react-router-dom';
 import { User } from 'stores/user/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
-import { connect } from 'react-redux';
 
 import logo from '../resources/images/logo.png';
+import tigrowLogo from '../resources/images/tigrowLogo.png';
+import individualProfile from '../resources/images/sidebarIndividualProfile.svg';
+import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
+import room from '../resources/images/sidebarRoom.svg';
+import board from '../resources/images/sideBarBoard.svg';
+import team from '../resources/images/sidebarTeam.svg';
+import settings from '../resources/images/sidebarSettings.svg';
+import { Tooltip } from '@blueprintjs/core';
 
-const SidebarComponent = (props: {
+export const Sidebar = (props: {
 	user: User;
 	company: CompanyModel;
 	type: string;
-	companyName: string;
 	leftOpen: boolean;
 }) => {
 	return (
-		<div className="vh-100 flex flex-column"
+		<div
 			style={{
-				background: '#060517',
-				display: props.leftOpen ? 'flex' : 'none'
+				background: '#060517'
 			}}
 		>
-			<div className="bp3-navbar-group bp3-align-left ml3">
-				<div
-					style={{
-						marginTop: '4rem',
-						height: '5rem',
-						width: '5rem'
-					}}>
-					<NavLink to={`/${props.user.name}`}
-						className="mt6"
-						style={{ color: 'dimgray' }}>
-						<img src={logo} />
-					</NavLink>
-				</div>
-			</div>
-			<ButtonGroup
-				alignText={Alignment.LEFT}
-				className={`flex-grow-1 bp3-minimal bp3-vertical bp3-fill sidebar-margin   
-				content`}
+			<div
+				className={` ${props.leftOpen ? 'ml4' : 'ml3'}`}
 				style={{
-					transition: 'transform 0.4s',
-				}}
+					marginTop: '4rem',
+					height: '5rem',
+					width: '5rem'
+				}}>
+				<NavLink to={`/${props.user.name}`}
+				>
+					{props.leftOpen ?
+						<img src={logo} />
+						:
+						<img src={tigrowLogo} />
+					}
+				</NavLink>
+			</div>
+			<div
 			>
 				{props.type === 'default' ? (
 					<NavLink
 						exact
-						className="mt6"
-						style={{ color: 'dimgray' }}
-						activeStyle={{
-							background: '#3F61C5',
-							color: 'white'
-						}}
+						className="mh1 hover-bg-white-20 mt5 flex items-center nowrap"
+						style={{ color: 'white' }}
+						activeStyle={{ background: '#3F61C5' }}
 						to={`/${props.user.name}`}
 					>
-						<Button
-							className="outline-0 bp3-large"
-							style={{ color: 'inherit', padding: '0px' }}
-						>
-							<Icon
-								icon="user"
-								className="pr4-l pr3-m pl3-l"
-								style={{ color: 'inherit' }}
-							/>
-							Profile
-						</Button>
+						{props.leftOpen ?
+							<span className="pl4">
+								<img
+									src={individualProfile}
+									className="w2 pt1"
+								/>
+							</span> :
+							<Tooltip
+								content={<p>Individual Profile</p>}
+								position="right"
+							>
+								<span className="pl3">
+									<img
+										src={individualProfile}
+										className="w2 pt1"
+									/>
+								</span>
+							</Tooltip>
+						}
+						{props.leftOpen &&
+							<span
+								className="outline-0 bp3-large pl4"
+								style={{
+									color: 'inherit'
+								}}
+							>
+								Profile
+							</span>
+						}
+
 					</NavLink>
 				) : (
 						<>
 							<NavLink
 								exact
-								className="ml4 ml3-m f4 tigrow-lightBlue ttc mr2 ws-break"
-								style={{ marginTop: '3rem' }}
+								className="flex items-center nowrap ma1 hover-bg-white-20"
+								style={{ color: 'white', marginTop: '4rem' }}
+								activeStyle={{ background: '#3F61C5' }}
 								to={`/company/${props.company.name}`}
 							>
-								{props.companyName}
-							</NavLink>
-							<NavLink
-								exact
-								className="mt5"
-								style={{ color: 'dimgray' }}
-								activeStyle={{ background: '#3F61C5', color: 'white' }}
-								to={`/company/${props.company.name}`}
-							>
-								<Button
-									className="outline-0 bp3-large"
-									style={{ color: 'inherit', padding: '0px' }}
-								>
-									<Icon
-										icon="user"
-										className="pr4-l pr3-m pl3-l"
+								{props.leftOpen ?
+									<span className="pl4">
+										<img
+											src={companyProfile}
+											className="w2 pt1"
+										/>
+									</span> :
+									<Tooltip
+										content={<p>Company Profile</p>}
+										position="right"
+									>
+										<span className="pl3">
+											<img
+												src={companyProfile}
+												className="w2 pt1"
+											/>
+										</span>
+									</Tooltip>
+								}
+								{props.leftOpen &&
+									<span
+										className="outline-0 bp3-large pl4"
 										style={{ color: 'inherit' }}
-									/>
-									Profile
-							</Button>
+									>
+										Profile
+								</span>
+								}
 							</NavLink>
 							<NavLink
 								exact
-								style={{ color: 'dimgray' }}
-								activeStyle={{ background: '#3F61C5', color: 'white' }}
+								className="flex items-center nowrap ma1 hover-bg-white-20"
+								style={{ color: 'white' }}
+								activeStyle={{ background: '#3F61C5' }}
 								to={`/company/${props.company.name}/room`}
 							>
-								<Button
-									className="outline-0 bp3-large"
-									style={{ color: 'inherit', padding: '0px' }}
-								>
-									<Icon
-										icon="square"
-										className="pr4-l pr3-m pl3-l"
+								{props.leftOpen ?
+									<span className="pl4">
+										<img
+											src={room}
+											className="w2 pt1"
+										/>
+									</span> :
+									<Tooltip
+										content={<p>Room</p>}
+										position="right"
+									>
+										<span className="pl3">
+											<img
+												src={room}
+												className="w2 pt1"
+											/>
+										</span>
+									</Tooltip>
+								}
+								{props.leftOpen &&
+									<span
+										className="outline-0 bp3-large pl4"
 										style={{ color: 'inherit' }}
-									/>
-									Room
-							</Button>
+									>
+										Room
+								</span>
+								}
 							</NavLink>
 							<NavLink
 								exact
-								style={{ color: 'dimgray' }}
-								activeStyle={{ background: '#3F61C5', color: 'white' }}
+								className="flex items-center nowrap ma1 hover-bg-white-20"
+								style={{ color: 'white' }}
+								activeStyle={{ background: '#3F61C5' }}
 								to={`/company/${props.company.name}/board`}
 							>
-								<Button
-									className="outline-0 bp3-large"
-									style={{ color: 'inherit', padding: '0px' }}
-								>
-									<Icon
-										icon="briefcase"
-										className="pr4-l pr3-m pl3-l"
+								{props.leftOpen ?
+									<span className="pl4">
+										<img
+											src={board}
+											className="w2 pt1"
+										/>
+									</span> :
+									<Tooltip
+										content={<p>Board</p>}
+										position="right"
+									>
+										<span className="pl3">
+											<img
+												src={board}
+												className="w2 pt1"
+											/>
+										</span>
+									</Tooltip>
+								}
+								{props.leftOpen &&
+									<span
+										className="outline-0 bp3-large pl4"
 										style={{ color: 'inherit' }}
-									/>
-									Board
-							</Button>
+									>
+										Board
+								</span>
+								}
 							</NavLink>
 							<NavLink
 								exact
-								style={{ color: 'dimgray' }}
-								activeStyle={{ background: '#3F61C5', color: 'white' }}
+								className="flex items-center nowrap ma1 hover-bg-white-20"
+								style={{ color: 'white' }}
+								activeStyle={{ background: '#3F61C5' }}
 								to={`/company/${props.company.name}/team`}
 							>
-								<Button
-									className="outline-0 bp3-large"
-									style={{ color: 'inherit', padding: '0px' }}
-								>
-									<Icon
-										icon="people"
-										className="pr4-l pr3-m pl3-l"
+								{props.leftOpen ?
+									<span className="pl4">
+										<img
+											src={team}
+											className="w2 pt1"
+										/>
+									</span> :
+									<Tooltip
+										content={<p>Team</p>}
+										position="right"
+									>
+										<span className="pl3">
+											<img
+												src={team}
+												className="w2 pt1"
+											/>
+										</span>
+									</Tooltip>
+								}
+								{props.leftOpen &&
+									<span
+										className="outline-0 bp3-large pl4"
 										style={{ color: 'inherit' }}
-									/>
-									Team
-							</Button>
+									>
+										Team
+								</span>
+								}
 							</NavLink>
 							<NavLink
 								exact
-								style={{ color: 'dimgray' }}
-								activeStyle={{ background: '#3F61C5', color: 'white' }}
+								className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+								style={{ color: 'white' }}
+								activeStyle={{ background: '#3F61C5' }}
 								to={`/company/${props.company.name}/settings`}
 							>
-								<Button
-									className="outline-0 bp3-large"
-									style={{ color: 'inherit', padding: '0px' }}
-								>
-									<Icon
-										icon="cog"
-										className="pr4-l pr3-m pl3-l"
+								{props.leftOpen ?
+									<span className="pl4">
+										<img
+											src={settings}
+											className="w2 pt1"
+										/>
+									</span> :
+									<Tooltip
+										content={<p>Settings</p>}
+										position="right"
+									>
+										<span className="pl3">
+											<img
+												src={settings}
+												className="w2 pt1"
+											/>
+										</span>
+									</Tooltip>
+								}
+								{props.leftOpen &&
+									<span
+										className="outline-0 bp3-large pl4"
 										style={{ color: 'inherit' }}
-									/>
-									Settings
-							</Button>
+									>
+										Settings
+								</span>
+								}
 							</NavLink>
 						</>
 					)}
-			</ButtonGroup>
+			</div>
 		</div>
 	);
 };
-
-const mapStateToProps = (state: any) => {
-	return {
-		companyName: state.companyReducer.currentCompany.name
-	};
-};
-
-export const Sidebar = connect(mapStateToProps)(SidebarComponent);

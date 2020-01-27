@@ -293,7 +293,7 @@ a:hover {
 	line-height: initial !important;
 }
 
-/*******************sidebar************/
-.sidebar-margin .bp3-button > * {
-	margin-left: 20px;
+.birthdatePicker .bp3-input-group .bp3-input{
+	box-shadow: none;
+	font-size: 18px;
 }

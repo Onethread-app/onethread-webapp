@@ -3,7 +3,7 @@ import { User } from 'stores/user/Reducer';
 import { Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ImageEdit } from './ImageEditor';
-import DefaultUserImage from './../../../resources/images/profilePhoto.png';
+import DefaultUserImage from './../../../resources/images/profilePhoto.svg';
 interface IProfilePictureViewProps {
   user: User;
 }

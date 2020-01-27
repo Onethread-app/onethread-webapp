@@ -18,6 +18,7 @@ import { ProfileSettingsPage } from 'layouts/user/settings/Index';
 import { FeedPage } from 'layouts/company/feed/Index';
 import { HomePage } from 'layouts/landing/Index';
 import { TaskPage } from 'layouts/company/task';
+import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -82,6 +83,12 @@ export const App = () => (
 				path="/verify-account/:token"
 				render={() =>
 					isAuthenticate() ? <Redirect to="/" /> : <EmailVerificationPage />
+				}
+			/>
+			<Route
+				path="/signup-confirmation"
+				render={() =>
+					localStorage.getItem('email') ? <SignupConfirmationPage /> : <Redirect to="/signin" />
 				}
 			/>
 			<PrivateRoute
