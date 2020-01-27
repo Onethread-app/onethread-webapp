@@ -32,7 +32,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
   const onSubmit = async (values: any) => {
     const response = await props.userSignupAction(values);
     if (response.message === 200) {
-      props.history.push(`/${response.payload.data.user.name}`);
+      props.history.push(`/signup-confirmation`);
       return true;
     }
     return { [response.fieldName]: response.message };

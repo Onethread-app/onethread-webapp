@@ -33,7 +33,9 @@ export const userSignupAction = (
 		const response = await tigrowApi.post('accounts/signup', user, {
 			'Content-Type': 'application/json'
 		} as AxiosRequestConfig);
-		localStorage.setItem('token', JSON.stringify(response.data.token));
+		if (response.status === 201) {
+			await localStorage.setItem('email', JSON.stringify(newUser.email));
+		}
 		return errorMessgeHandler(response);
 	} catch (error) {
 		return errorMessgeHandler(error);
@@ -45,7 +47,12 @@ export const loginAction = (loginUser: LoginModel) => async (dispatch: any) => {
 		const response = await tigrowApi.post('accounts/login', loginUser, {
 			'Content-Type': 'application/json'
 		} as AxiosRequestConfig);
-		await localStorage.setItem('token', JSON.stringify(response.data.token));
+		if (response.status === 200) {
+			await localStorage.setItem('token', JSON.stringify(response.data.token));
+			if (localStorage.getItem('email')) {
+				await localStorage.removeItem('email');
+			}
+		}
 		return errorMessgeHandler(response);
 	} catch (error) {
 		return errorMessgeHandler(error);
@@ -109,5 +116,20 @@ export const logoutAction = (routeHistory: History) => async (dispatch: any) => 
 	} catch (error) {
 		// tslint:disable-next-line: no-console
 		console.log('error in logout', error);
+	}
+};
+
+export const resendMailForSignup = () => async (dispatch: any) => {
+	try {
+		const requestData = {
+			email: JSON.parse(localStorage.getItem('email')!),
+			resentType: 'verify-account'
+		};
+		const response = await tigrowApi.post('accounts/resend-email', requestData, {
+			'Content-Type': 'application/json'
+		} as AxiosRequestConfig);
+		return errorMessgeHandler(response);
+	} catch (error) {
+		return errorMessgeHandler(error);
 	}
 };
