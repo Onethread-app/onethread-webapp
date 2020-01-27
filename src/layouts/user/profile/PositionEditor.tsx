@@ -5,10 +5,9 @@ import { editUserInfoAction } from 'stores/user/Actions';
 import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { checkError } from 'components/final-form/utils';
-
-import warningIcon from './../../../resources/images/warningIcon.png';
 import { isEmpty } from 'lodash';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
+import { SubmitError } from 'components/final-form/SubmitError';
 interface IPositionEditProps {
   setShowDialog: (val: boolean) => void;
 }
@@ -42,64 +41,7 @@ const PositionEditComponent = (props: IPositionEditInternalProps) => {
           className="ph2 pt6"
           onSubmit={handleSubmit}
         >
-          <div>
-            <Field
-              name="network"
-              subscription={{
-                touched: true,
-                error: true,
-                submitError: true,
-                dirtySinceLastSubmit: true
-              }}
-              render={({ meta }) =>
-                checkError(meta) && (
-                  <div
-                    className="flex"
-                    style={{
-                      backgroundColor: '#FCEBEB', paddingLeft: '10px', paddingTop: '10px'
-                    }}>
-                    <span className="bp3-icon">
-                      <img
-                        src={warningIcon}
-                        width="20px"
-                        height="20px"
-                        color="#0fa3a3"
-                      />
-                    </span>
-                    <p style={{ color: '#962414', paddingLeft: '10px' }}>{meta.error || meta.submitError}</p>
-                  </div>
-                )
-              }
-            />
-            <Field
-              name="authError"
-              subscription={{
-                touched: true,
-                error: true,
-                submitError: true,
-                dirtySinceLastSubmit: true
-              }}
-              render={({ meta }) =>
-                checkError(meta) && (
-                  <div
-                    className="flex"
-                    style={{
-                      backgroundColor: '#FCEBEB', paddingLeft: '10px', paddingTop: '10px'
-                    }}>
-                    <span className="bp3-icon">
-                      <img
-                        src={warningIcon}
-                        width="20px"
-                        height="20px"
-                        color="#0fa3a3"
-                      />
-                    </span>
-                    <p style={{ color: '#962414', paddingLeft: '10px' }}>{meta.error || meta.submitError}</p>
-                  </div>
-                )
-              }
-            />
-          </div>
+          <SubmitError errorMessage={submitError} />
           <h1 className="f5 lh-copy white">Position</h1>
           <Field<string>
             name="position"

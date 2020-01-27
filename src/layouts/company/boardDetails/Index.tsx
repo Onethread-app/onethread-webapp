@@ -116,10 +116,10 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
                   src={addIcon}
                   className="fixed pointer"
                   style={{
-                    bottom: '2.2rem',
+                    bottom: '5rem',
                     right: '7rem',
-                    width: '4rem',
-                    boxShadow: '0px 3px 6px #00000029',
+                    width: '5rem',
+                    boxShadow: '0px 6px 6px #00000029',
                     borderRadius: '50%'
                   }}
                 />
@@ -191,7 +191,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentBoard: state.taskManagementReducer.boardReducer.currentBoard,
+    currentBoard: state.boardReducer.currentBoard,
     company: state.companyReducer.currentCompany
   };
 };

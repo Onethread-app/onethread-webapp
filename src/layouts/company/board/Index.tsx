@@ -109,7 +109,6 @@ const BoardCard = withRouter((props: IBoardCardComponent & RouteComponentProps) 
 
 interface IBoardListViewInternalProps {
 	boardList: TaskBoard[];
-	loading: boolean;
 	company: CompanyModel;
 	getAllBoards: () => void;
 	getAllDepartments: () => void;
@@ -118,10 +117,13 @@ interface IBoardListViewInternalProps {
 
 const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentProps) => {
 	const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(false);
+	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		props.getAllBoards();
-		props.getAllDepartments();
+		Promise.all([
+			props.getAllBoards(),
+			props.getAllDepartments()
+		]).then(() => setLoading(false));
 	}, []);
 
 	const [department, setDepartment] = useState('');
@@ -163,7 +165,7 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 				</div>
 				<p className="pl2 mt3" style={{ color: '#6B6B6B' }}>My Boards</p>
 				<div className="overflow-auto">
-					{props.loading === false ? props.boardList.length > 0 ?
+					{loading === false ? props.boardList.length > 0 ?
 						<div
 							style={{
 								display: 'grid',
@@ -194,10 +196,10 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 								src={addIcon}
 								className={`fixed pointer ${showTaskBoardDialog ? 'dn' : 'db'}`}
 								style={{
-									bottom: '2.2rem',
+									bottom: '5rem',
 									right: '7rem',
-									width: '4rem',
-									boxShadow: '0px 3px 6px #00000029',
+									width: '5rem',
+									boxShadow: '0px 6px 6px #00000029',
 									borderRadius: '50%'
 								}}
 							/>
@@ -218,11 +220,10 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 
 const mapStateToProps = (state: any) => {
 	return {
-		boardList: state.taskManagementReducer.boardReducer.boardList,
-		loading: state.taskManagementReducer.boardReducer.loading,
+		boardList: state.boardReducer.boardList,
 		company: state.companyReducer.currentCompany
 	};
 };
 
-export const TaskPage = connect(mapStateToProps,
+export const BoardPage = connect(mapStateToProps,
 	{ getAllBoards, getSelectedBoard, getAllDepartments })(withRouter(TaskPageComponent));

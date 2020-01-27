@@ -6,30 +6,29 @@ import { AxiosRequestConfig } from 'axios';
 import { Form, Field } from 'react-final-form';
 import { composeValidators, required, isEmail, checkError } from 'components/final-form/utils';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { SubmitError } from 'components/final-form/SubmitError';
 
-const forgotPass = require('./../../resources/images/forgotPassword.png');
-const warningIcon = require('./../../resources/images/warningIcon.png');
+import forgotPass from './../../resources/images/forgotPassword.png';
 interface ForgotPasswordProps {
-  setEmailComponentView: (val: boolean) => void
+  setEmailComponentView: (val: boolean) => void;
 }
 
 const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
 
   const onSubmit = async (values: { email: string }) => {
     try {
-      const response = await tigrowApi.post("accounts/forget-password", values, {
-        "Content-Type": "application/json"
-      } as AxiosRequestConfig)
+      const response = await tigrowApi.post('accounts/forget-password', values, {
+        'Content-Type': 'application/json'
+      } as AxiosRequestConfig);
       if (response.status === 200) {
         props.setEmailComponentView(true);
       }
-      return true
+      return true;
+    } catch (error) {
+      const err = errorMessgeHandler(error);
+      return { [err.fieldName]: err.message };
     }
-    catch (error) {
-      const err = errorMessgeHandler(error)
-      return { [err.fieldName]: err.message }
-    }
-  }
+  };
 
   return (
     <div className="dt cf w-100 vh-100">
@@ -42,38 +41,9 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
         <h1 className="f5 fw3 tc">Enter your mail address</h1>
         <Form
           onSubmit={onSubmit}
-          render={({ handleSubmit, submitting, pristine }) => (
+          render={({ handleSubmit, submitting, pristine, submitError }) => (
             <form className="w-25-l w-50-m center mt4-ns" onSubmit={handleSubmit}>
-              <div>
-                <Field
-                  name="network"
-                  subscription={{
-                    touched: true,
-                    error: true,
-                    submitError: true,
-                    dirtySinceLastSubmit: true
-                  }}
-                  render={({ meta }) =>
-                    checkError(meta) && (
-                      <div
-                        className="flex"
-                        style={{
-                          backgroundColor: "#FCEBEB", paddingLeft: "10px", paddingTop: "10px"
-                        }}>
-                        <span className="bp3-icon">
-                          <img
-                            src={warningIcon}
-                            width="20px"
-                            height="20px"
-                            color="#0fa3a3"
-                          />
-                        </span>
-                        <p style={{ color: "#962414", paddingLeft: "10px" }}>{meta.error || meta.submitError}</p>
-                      </div>
-                    )
-                  }
-                />
-              </div>
+              <SubmitError errorMessage={submitError} />
               <h1 className="f4 lh-copy">Email</h1>
               <Field<string>
                 name="email"
@@ -85,7 +55,7 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
                     placeHolder="Enter your email address"
                     value={input.value}
                     onChange={input.onChange}
-                    style={{ boxShadow: "none", height: '42px' }}
+                    style={{ boxShadow: 'none', height: '42px' }}
                     error={checkError(meta) && (meta.error || meta.submitError)}
                   />
                 }
@@ -93,9 +63,9 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
               <Button
                 className="grow pointer white bp3-minimal w-100 mt3"
                 style={{
-                  background: "#0fa3a3",
-                  outline: "none",
-                  color: "white",
+                  background: '#0fa3a3',
+                  outline: 'none',
+                  color: 'white',
                   height: '42px',
                   fontSize: '1rem'
                 }}
@@ -118,8 +88,8 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const RouteToEmailConfirmation = () => (
   <div className="dt cf w-100 vh-100">
@@ -128,8 +98,7 @@ const RouteToEmailConfirmation = () => (
       <h1 className="f3 lh-copy tc">Please go to your mail to reset your password</h1>
     </div>
   </div>
-)
-
+);
 
 export const ForgotPasswordPage = () => {
   const [emailComponentView, setEmailComponentView] = useState(false);
@@ -137,9 +106,5 @@ export const ForgotPasswordPage = () => {
     emailComponentView === false ?
       <ForgotPasswordComponnet setEmailComponentView={setEmailComponentView} />
       : <RouteToEmailConfirmation />
-  )
-}
-
-
-
-
+  );
+};
