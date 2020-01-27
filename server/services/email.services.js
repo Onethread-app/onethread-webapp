@@ -14,8 +14,9 @@ const { port } = config;
 let host = ``;
 if (config.env !== 'production') {
   host = `http://localhost:3000`;
-} else {
-  host = `http://tigrow.co`;
+}
+if (config.env === 'test') {
+  host = `http://13.229.85.106:3000`;
 }
 module.exports.sendEmailForResetPassword = async (
   firstName,
