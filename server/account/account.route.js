@@ -23,6 +23,7 @@ router
     schemaValidator(paramValidation.register),
     accountCtrl.register,
   );
+router.route('/resend-email').post(accountCtrl.resendEmail);
 router.get(
   '/verify-account/:token',
   accountCtrl.getAccessTokenForVerifyAccount,

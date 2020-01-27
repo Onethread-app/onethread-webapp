@@ -18,17 +18,18 @@ if (config.env !== 'production') {
   host = `http://tigrow.co`;
 }
 module.exports.sendEmailForResetPassword = async (
-  name,
+  firstName,
+  lastName,
   emailID,
   token,
-  next,
 ) => {
   const link = `${host}/reset-password/${token}`;
+  const fullName = firstName + ' ' + lastName;
   const mailOptions = {
     to: emailID,
     subject: 'Generated Token For Reset Password',
     html: `
-      <h1> Hi ${name}, </h1>
+      <h1> Hi ${fullName}, </h1>
       <h2> Please Reset Your password from following <a href="${link}"> Link </a> </h2>
   
     `,
@@ -44,16 +45,18 @@ module.exports.sendEmailForResetPassword = async (
 };
 
 module.exports.sendEmailForVerifyAccount = async (
-  username,
+  firstName,
+  lastName,
   emailID,
   token,
 ) => {
   const link = `${host}/verify-account/` + token;
+  const fullName = firstName + ' ' + lastName;
   const mailOptions = {
     to: emailID,
     subject: 'Please confirm your Email account',
     html:
-      `Hello ${emailID}, <br> Please Click on the link to verify your email.<br><a href=` +
+      `Hello ${fullName}, <br> Please Click on the link to verify your email.<br><a href=` +
       link +
       '>Click here to verify</a>',
   };

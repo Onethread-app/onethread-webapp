@@ -50,52 +50,28 @@ const register = async (req, res, next) => {
     password: data.password,
     birthDate: data.birthDate,
   });
-  account
+  const token = crypto.randomBytes(20).toString('hex');
+  const verifyToken = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
+  account.verifyAccountToken = verifyToken;
+  account.verifyAccountTokenExpiration = Date.now() + 604800;
+  await sendEmailForVerifyAccount(
+    account.firstName,
+    account.lastName,
+    account.email,
+    verifyToken,
+  );
+  await account.save();
+  await chatkit.createUser({
+    id: account._id,
+    name: account.name,
+  });
+  await account
     .save()
-    .then(async user => {
-      crypto.randomBytes(32, async (err, buffer) => {
-        if (err) return res.status(400).json(err);
-        const token = buffer.toString('hex');
-        user.verifyAccountToken = token;
-        user.verifyAccountTokenExpiration = Date.now() + 259200;
-        await user.save();
-        const emailResponse = sendEmailForVerifyAccount(
-          user.name,
-          user.email,
-          token,
-          next,
-        );
-        req.login(user, async function(err) {
-          if (err) {
-            return sendJSONresponse(res, 400, {
-              success: false,
-              message: err,
-            });
-          } else {
-            // user created in chatkit
-            await chatkit.createUser({
-              id: user._id,
-              name: user.name,
-            });
-            user.token = jwt.sign(
-              {
-                email: req.user.email,
-                _id: req.user._id,
-              },
-              config.accessTokenSecret,
-              {
-                expiresIn: '45m',
-              },
-            );
-            delete user.password;
-            return sendJSONresponse(res, 201, {
-              token: user.token,
-              message: 'User created',
-              user,
-            });
-          }
-        });
-      });
+    .then(() => {
+      return sendJSONresponse(res, 201, { message: 'User created' });
     })
     .catch(err => {
       next(err);
@@ -189,21 +165,36 @@ const getAccount = async (req, res, next) => {
 const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
     const { token } = req.params;
-    const user = await Account.findOne({
+    const isUserExist = await Account.findOne({
       verifyAccountToken: token,
-    }).select(
-      '-password companies contactNo skillArea education name',
-    );
-    if (!user)
-      return sendJSONresponse(res, 400, { message: 'No User Found' });
-    user.verifyAccountToken = undefined;
-    user.accountVerified = true;
-    const dbSavedUser = await user.save();
-    return sendJSONresponse(res, 200, {
-      success: true,
-      message: 'Account Verified Successfully',
-      user: dbSavedUser,
     });
+    if (!isUserExist)
+      return sendJSONresponse(res, 404, {
+        message: 'User is not exist',
+      });
+    const isTimeLimit = await Account.findOne({
+      verifyAccountTokenExpiration: { $gt: Date.now() },
+    });
+    if (!isTimeLimit)
+      return sendJSONresponse(res, 400, {
+        message: 'Token time is expired',
+      });
+    if (isUserExist && isTimeLimit) {
+      await Account.findOneAndUpdate(
+        { verifyAccountToken: token },
+        {
+          $set: {
+            verifyAccountToken: undefined,
+            isAccountVerified: true,
+          },
+        },
+        { safe: true, upsert: true, new: true },
+      );
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: 'Account Verified Successfully',
+      });
+    }
   } catch (err) {
     next(err);
   }
@@ -251,29 +242,30 @@ const logout = async (req, res) => {
 
 const sendEmailForForgetPassword = async (req, res, next) => {
   try {
-    crypto.randomBytes(32, async (err, buffer) => {
-      if (err) return res.status(400).json(err);
-      const token = buffer.toString('hex');
-      const user = await Account.findOne({
-        email: req.body.email,
-      }).select('-password');
-      if (!user)
-        return sendErrorResponse(res, 404, '', {
-          message: 'no user found',
-          fieldName: 'email',
-        });
-      user.resetPasswordToken = token;
-      user.resetPasswordTokenExpiration = Date.now() + 3600000;
-      await user.save();
-      const emailResponse = sendEmailForResetPassword(
-        user.name,
-        user.email,
-        token,
-        next,
-      );
-      logger.info(`send reset password mail to user successfully`);
-      return sendJSONresponse(res, 200, emailResponse);
+    const token = crypto.randomBytes(20).toString('hex');
+    const verifyToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+    const user = await Account.findOne({
+      email: req.body.email,
     });
+    if (!user)
+      return sendErrorResponse(res, 404, '', {
+        message: 'no user found',
+        fieldName: 'email',
+      });
+    user.resetPasswordToken = verifyToken;
+    user.resetPasswordTokenExpiration = Date.now() + 86400; // 1 day
+    sendEmailForResetPassword(
+      user.firstName,
+      user.lastName,
+      user.email,
+      token,
+    );
+    await user.save();
+    logger.info(`send reset password mail to user successfully`);
+    return sendJSONresponse(res, 200, emailResponse);
   } catch (error) {
     next(error);
   }
@@ -476,8 +468,54 @@ const changePassword = async (req, res, next) => {
   }
 };
 
+const resendEmail = async (req, res, next) => {
+  try {
+    const email = req.body.email;
+    const resentType = req.body.resentType;
+    const token = crypto.randomBytes(20).toString('hex');
+    const verifyToken = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex');
+    const account = await Account.findOne({
+      email: email,
+    });
+    if (!resentType) {
+      return sendErrorResponse(res, 400, {
+        message: 'Please provide resent-type',
+      });
+    }
+    if (resentType === 'verify-account') {
+      account.verifyAccountToken = verifyToken;
+      account.verifyAccountTokenExpiration = Date.now() + 604800;
+      await sendEmailForVerifyAccount(
+        account.firstName,
+        account.lastName,
+        account.email,
+        verifyToken,
+      );
+    }
+    if (resentType === 'reset-password-mail') {
+      account.resetPasswordToken = verifyToken;
+      account.resetPasswordTokenExpiration = Date.now() + 86400;
+      await sendEmailForResetPassword(
+        account.name,
+        account.email,
+        verifyToken,
+        next,
+      );
+    }
+    await account.save();
+    return sendJSONresponse(res, 200, {
+      message: 'resend email successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   register,
+  resendEmail,
   login,
   logout,
   getAccessTokenForVerifyAccount,

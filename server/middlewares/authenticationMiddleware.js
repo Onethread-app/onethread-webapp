@@ -14,6 +14,11 @@ module.exports.authentication = (req, res, next) => {
         message: 'Mismatch Credentials',
       });
     }
+    if (!user.isAccountVerified) {
+      return sendErrorResponse(res, 401, 'AuthError', {
+        message: 'Your account is not verified yet',
+      });
+    }
     req.user = user; // Forward user information to the next middleware
     next();
   })(req, res, next);

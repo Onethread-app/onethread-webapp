@@ -62,10 +62,6 @@ const accountsSchema = new mongoose.Schema({
     enum: ['premium', 'normal'],
     default: 'normal',
   },
-  accountVerified: {
-    type: Boolean,
-    default: false,
-  },
   contactNo: {
     type: String,
     required: false,
@@ -167,7 +163,6 @@ accountsSchema.pre('save', function(next) {
         if (err) {
           return reject(err);
         }
-
         // Hash generated successfully!
         account.password = hash;
         return resolve(hash);
