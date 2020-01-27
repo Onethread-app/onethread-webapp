@@ -67,6 +67,7 @@ export interface IRoomReducer {
 	};
 	// tslint:disable-next-line: no-unused-expression
 	users: IRoomMember[];
+	userStatus: any;
 	roomMembers: any[];
 	rooms: IRoom[];
 	companyRooms: any[];
@@ -83,6 +84,7 @@ const InitialState: IRoomReducer = {
 		users: []
 	},
 	users: [],
+	userStatus: {},
 	roomMembers: [],
 	rooms: [],
 	companyRooms: [],
@@ -103,6 +105,16 @@ export const sortRooms = (a: IRoom, b: IRoom) => {
 			1 : createdAtA > createdAtB ?
 				1 : createdAtA < createdAtB ?
 					-1 : 0;
+};
+
+const userStatus = (arr: any) => {
+	// tslint:disable-next-line: prefer-const
+	let c: any = {};
+	// b.forEach(e, i, arr);
+	for (const e of arr) {
+		c[e.id] = e.presence.state;
+	}
+	return c;
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
@@ -131,50 +143,59 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				},
 				loading: false
 			};
+		case GET_ROOM_MEMBERS:
+			return {
+				...state,
+				users: action.payload,
+				loading: false
+			};
 		case ACTIVE_ROOM:
 			return {
 				...state,
 				activeRoom: action.payload,
-				users: action.payload.users
-					.map(
-						(user: {
-							id: string;
-							name: string;
-							presence: { state: string };
-						}) => ({
-							id: user.id,
-							name: user.name,
-							presence: user.presence.state
-						})
-					)
-					.sort((user: any) => {
-						if (user.presence === 'online') { return -1; }
-						return 1;
-					}),
+				// users: action.payload.users
+				// 	.map(
+				// 		(user: {
+				// 			id: string;
+				// 			name: string;
+				// 			presence: { state: string };
+				// 		}) => ({
+				// 			id: user.id,
+				// 			name: user.name,
+				// 			presence: user.presence.state
+				// 		})
+				// 	),
+				userStatus: userStatus(action.payload.users),
+				// .sort((user: any) => {
+				// 	if (user.presence === 'online') { return -1; }
+				// 	return 1;
+				// }),
 				loading: false
 			};
 		case REFRESH_MEMBER:
 		case ON_PRESENCE_CHANGE:
 			return {
 				...state,
-				users:
-					!isEmpty(state.activeRoom) ?
-						(state.activeRoom as any).users
-							.map(
-								(user: {
-									id: string;
-									name: string;
-									presence: { state: string };
-								}) => ({
-									id: user.id,
-									name: user.name,
-									presence: user.presence.state
-								})
-							)
-							.sort((user: any) => {
-								if (user.presence === 'online') { return -1; }
-								return 1;
-							}) : [...state.users],
+				// users:
+				// 	!isEmpty(state.activeRoom) ?
+				// 		(state.activeRoom as any).users
+				// 			.map(
+				// 				(user: {
+				// 					id: string;
+				// 					name: string;
+				// 					presence: { state: string };
+				// 				}) => ({
+				// 					id: user.id,
+				// 					name: user.name,
+				// 					presence: user.presence.state
+				// 				})
+				// 			)
+				// 		// .sort((user: any) => {
+				// 		// 	if (user.presence === 'online') { return -1; }
+				// 		// 	return 1;
+				// 		// }) 
+				// 		: [...state.users],
+				userStatus: !isEmpty(state.activeRoom) ? userStatus((state.activeRoom as any).users) : state.userStatus,
 				loading: false
 			};
 		case CURRENT_ROOM:
@@ -257,12 +278,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				companyRooms: action.payload,
-				loading: false
-			};
-		case GET_ROOM_MEMBERS:
-			return {
-				...state,
-				users: action.payload,
 				loading: false
 			};
 		case ADD_MEMBER_IN_ROOM:
