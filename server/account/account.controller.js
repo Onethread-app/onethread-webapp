@@ -63,7 +63,6 @@ const register = async (req, res, next) => {
     account.email,
     verifyToken,
   );
-  await account.save();
   await chatkit.createUser({
     id: account._id,
     name: account.name,
