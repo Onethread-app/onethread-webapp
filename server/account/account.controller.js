@@ -57,12 +57,6 @@ const register = async (req, res, next) => {
     .digest('hex');
   account.verifyAccountToken = verifyToken;
   account.verifyAccountTokenExpiration = Date.now() + 604800;
-  await sendEmailForVerifyAccount(
-    account.firstName,
-    account.lastName,
-    account.email,
-    verifyToken,
-  );
   await chatkit.createUser({
     id: account._id,
     name: account.name,
@@ -70,6 +64,12 @@ const register = async (req, res, next) => {
   await account
     .save()
     .then(() => {
+      sendEmailForVerifyAccount(
+        account.firstName,
+        account.lastName,
+        account.email,
+        verifyToken,
+      );
       return sendJSONresponse(res, 201, { message: 'User created' });
     })
     .catch(err => {
