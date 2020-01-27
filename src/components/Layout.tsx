@@ -117,14 +117,9 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 className={`relative`}
                 style={{
                   transition: 'width 0.4s',
-                  width: leftOpen ? '15%' : '3%'
+                  width: leftOpen ? '15%' : '4%'
                 }}>
-                <div
-                  style={{
-                    transform: leftOpen ? 'translateX(0%)' : 'translateX(-100%)',
-                    msTransform: leftOpen ? '' : 'translateX(-100%)',
-                    WebkitTransition: leftOpen ? '' : 'translateX(-100%)',
-                  }}>
+                <div>
                   <Sidebar
                     user={props.user}
                     company={props.company}
@@ -138,7 +133,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 className="relative br3 pv1"
                 style={{
                   transition: 'width 0.4s',
-                  width: leftOpen ? props.rightSidebarOpen ? '55%' : '85%' : props.rightSidebarOpen ? '70%' : '97%'
+                  width: leftOpen ? props.rightSidebarOpen ? '55%' : '85%' : props.rightSidebarOpen ? '66%' : '96%'
                 }}>
                 <span
                   className="pointer absolute bp3-icon z-3 top-1 left--1"
@@ -153,7 +148,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 <div
                   className="flex flex-column h-100"
                 >
-                  <NavbarTop scrollTop={scrollTop} />
+                  <NavbarTop
+                    scrollTop={scrollTop}
+                    type={(props.match.params as any).cname ? 'company' : 'default'}
+
+                  />
                   <div
                     ref={scrollRef}
                     className="flex-grow-1 overflow-y-auto bg-white"

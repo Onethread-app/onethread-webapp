@@ -64,7 +64,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
       }}
       render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
         <form
-          className="fl w-100 ph2 pt5"
+          className="fl w-100 ph4 pt5"
           onSubmit={handleSubmit}
         >
           <SubmitError errorMessage={submitError} />
@@ -175,17 +175,19 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>Birth Date</label>
-                <DateInput
+                <DateInput 
+                 className="bg-white"
                   formatDate={(date: Date) => date.toLocaleDateString()}
                   parseDate={(str: string) => new Date(str)}
                   onChange={input.onChange}
                   canClearSelection={false}
                   value={values.birthDate ? new Date(values.birthDate) : null}
                   popoverProps={{
-                    targetClassName: 'w-100'
+                    targetClassName: 'w-100 bg-white br2'
                   }}
                   minDate={new Date('1800-01-01')}
                   maxDate={maxBirthDate()}
+                  disabled={true}
                 />
                 {checkError(meta) &&
                   <small className="mv3" style={{ color: 'red' }}>

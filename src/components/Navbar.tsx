@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Button, Popover, Position, ButtonGroup, Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { logoutAction } from 'stores/auth/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
-import user from '../resources/images/user.png';
+import user from '../resources/images/profilePhoto.svg';
 import { User } from 'stores/user/Reducer';
 import { CompanyListView } from '../layouts/company/ListView';
 import { CompanySignupForm } from '../layouts/company/Form';
@@ -14,6 +14,8 @@ interface NavbarTopInternalProps {
   user: User;
   logoutAction: (history: History) => void;
   scrollTop: number;
+  companyName: string;
+  type: string;
 }
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
@@ -21,7 +23,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
 
   return (
     <>
-      <div className="top-0 z-2 pr5 pv3 bg-white bb"
+      <div className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between"
         style={{
           height: '60px',
           borderColor: props.scrollTop > 60 ? '#0fa3a3' : 'white',
@@ -29,7 +31,22 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
           borderRadius: '0.5rem 0.5rem 0px 0px'
         }}
       >
-        <div className="fr">
+        <div>
+          <NavLink
+            exact
+            to={`/company/${props.companyName}`}
+          >
+            <div
+              className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
+              style={{
+                textOverflow: 'ellipsis'
+              }}
+            >
+              {props.type === 'company' ? props.companyName : ''}
+            </div>
+          </NavLink>
+        </div>
+        <div>
           <Popover
             popoverClassName="bp3-popover-content-sizing bg-white"
             position={Position.BOTTOM}
@@ -124,7 +141,8 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user
+    user: state.userReducer.user,
+    companyName: state.companyReducer.currentCompany.name
   };
 };
 

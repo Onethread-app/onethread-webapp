@@ -57,7 +57,7 @@ export const SkillEdit = (props: SkillEditProps) => {
   }, [result]);
 
   return (
-    <div className="ph2 pt6">
+    <div className="ph4 pt6">
       <h1 className="f5 lh-copy">Add your skills</h1>
       <div className="fl w-100 pv2">
         <SuggestField
