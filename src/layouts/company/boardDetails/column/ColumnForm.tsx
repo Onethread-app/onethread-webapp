@@ -102,7 +102,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentBoard: state.boardReducer.currentBoard
+    currentBoard: state.boardIndexReducer.boardReducer.currentBoard
   };
 };
 

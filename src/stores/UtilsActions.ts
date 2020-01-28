@@ -63,3 +63,11 @@ export const boardColor = [
   { code: 5, value: '#11B468' },
   { code: 6, value: '#5A1DD6' }
 ];
+
+export const priorityColor = [
+  { code : 0, name : 'Highest', value: '#C43600', container: '#F9E9E3' },
+  { code : 1, name : 'High', value: '#CB5800', container: '#F9EDE3' },
+  { code : 2, name : 'Medium', value: '#D48A0B', container: '#FFF5E3' },
+  { code : 3, name : 'Low', value: '#5387AF', container: '#ECF2F6' },
+  { code : 4, name : 'Lowest', value: '#093F68', container: '#E4EAEE' },
+];

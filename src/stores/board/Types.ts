@@ -15,6 +15,7 @@ export const UPDATE_COLUMN = 'UPDATE_COLUMN';
 export const CREATE_TASK = 'CREATE_TASK';
 export const CREATE_TASK_ERROR = 'CREATE_TASK_ERROR';
 export const SELECT_TASK = 'SELECT_TASK';
+export const UPDATE_TASK = 'UPDATE_TASK';
 
 // Drag and drop task
 

@@ -1,7 +1,7 @@
 import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, 
   CREATE_COLUMN_ERROR, CREATE_COLUMN, CREATE_TASK, CREATE_TASK_ERROR, 
   DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, 
-  UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK } from './Types';
+  UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK, UPDATE_TASK } from './Types';
 import { isEqual } from 'lodash';
 
 export interface IColumn {
@@ -23,15 +23,13 @@ export interface TaskBoard {
 export interface ITask {
   _id?: string;
   name: string;
-  description: string;
-  // status: {
-  //   _id: string;
-  //   name: string;
-  // }
-  status?: {};
+  description?: string;
+  currentColumnName: string;
+  createdAt: Date;
+  createdBy: string;
   assignedMembers?: Object[];
   dueDate?: Date;
-  priority?: string;
+  priority?: number;
   comments?: Object[];
   column?: IColumn;
 }
@@ -180,6 +178,11 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ...state,
         currentTask: action.payload,
       };
+    case UPDATE_TASK:
+      return {
+        ...state,
+        currentTask: action.payload
+      }
     default:
       return state;
   }

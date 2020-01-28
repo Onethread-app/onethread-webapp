@@ -254,9 +254,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.boardReducer.dragTaskLoading,
+    loading: state.boardIndexReducer.boardReducer.dragTaskLoading,
     company: state.companyReducer.currentCompany,
-    currentBoard: state.boardReducer.currentBoard
+    currentBoard: state.boardIndexReducer.boardReducer.currentBoard
   };
 };
 
