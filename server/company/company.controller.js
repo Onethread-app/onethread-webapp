@@ -68,12 +68,12 @@ const createCompany = async (req, res, next) => {
     const newCompany = new Company(req.body);
 
     // create a default room
-    const newRoom = new Room({
-      name: 'General',
-      company: newCompany._id,
-      members: [req.user._id],
-      account: req.user._id,
-    });
+    // const newRoom = new Room({
+    //   name: 'General',
+    //   company: newCompany._id,
+    //   members: [req.user._id],
+    //   account: req.user._id,
+    // });
 
     // create a default member
     const newMember = new Member({
@@ -84,19 +84,19 @@ const createCompany = async (req, res, next) => {
 
     // add ref[member,room] in company
     newCompany.members.push(newMember._id);
-    newCompany.rooms.push(newRoom._id);
+    // newCompany.rooms.push(newRoom._id);
 
     // company creation
     const company = await newCompany.save();
-    const room = await newRoom.save();
-    await chatkit.createRoom({
-      id: room._id,
-      creatorId: req.user._id,
-      name: room.name,
-      customData: {
-        company: company._id,
-      },
-    });
+    // const room = await newRoom.save();
+    // await chatkit.createRoom({
+    //   id: room._id,
+    //   creatorId: req.user._id,
+    //   name: room.name,
+    //   customData: {
+    //     company: company._id,
+    //   },
+    // });
     await newMember.save();
 
     // // add company ref in user
@@ -164,16 +164,24 @@ const getCompany = async (req, res, next) => {
         '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
       )
       .populate('logo', 'link s3Key type');
+
     // role info
     let member = await Member.findOne({
       account: req.user._id,
       company: req.company._id,
     }).select('-_id role');
 
+    if (!member) {
+      return res.status(401).json({
+        message: "You're not authorized with this company",
+      });
+    }
+
     return res.status(200).json({
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
+    console.log('getCompany', error);
     next(error);
   }
 };

@@ -30,8 +30,12 @@ module.exports = {
   }),
   updateSubTask: Joi.object().keys({
       body:Joi.object().keys({
-          done : subTaskSchema.done.required()
+          done : subTaskSchema.done,
+          name : subTaskSchema.name
       }),
       params: subTaskId 
+  }),
+  deleteSubtask : Joi.object().keys({
+    params: subTaskId
   })
 }

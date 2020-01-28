@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const MessageSchema = new Schema(
   {
+    chatkitId: {
+      type: Number,
+    },
     text: {
       type: String,
       trim: true,
@@ -12,6 +15,12 @@ const MessageSchema = new Schema(
       enum: ['text', 'url', 'file'],
       default: 'text',
     },
+    file: [
+      {
+        type: Schema.ObjectId,
+        ref: 'File',
+      },
+    ],
     account: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',

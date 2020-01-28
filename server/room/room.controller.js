@@ -81,7 +81,7 @@ const addUsers = async (req, res) => {
 
 const memberList = async (req, res, next) => {
   Room.findById(req.params.roomId)
-    .populate('members', 'name')
+    .populate('members', 'name firstName lastName email')
     .exec()
     .then(({ members }) => res.json({ members: members }))
     .catch(e => next(e));
@@ -99,7 +99,7 @@ const suggestMember = async (req, res, next) => {
       company: req.params.companyId,
     })
       .select('-_id account')
-      .populate('account', '_id name')
+      .populate('account', '_id name firstName lastName email')
       .exec();
     let members = companyMembers.filter(({ account }) => {
       return !roomMembers.members.some(existingMember => {

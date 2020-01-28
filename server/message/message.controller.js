@@ -1,5 +1,6 @@
 const { Message } = require('./message.model');
 const { Room } = require('./../room/room.model');
+const Account = require('./../account/account.model');
 const { chatkit } = require('../services/pusher.services');
 
 const create = async (req, res, next) => {
@@ -22,14 +23,37 @@ const create = async (req, res, next) => {
       type: req.body.type,
       account: req.user._id,
     });
-    await message.save();
+
+    const account = await Account.findById(req.user._id).select(
+      'name firstName lastName email',
+    );
 
     //send to chatkit-server
-    await chatkit.sendSimpleMessage({
+    let msg = await chatkit.sendMultipartMessage({
       userId: message.account,
       roomId: message.room,
-      text: message.text,
+      parts: [
+        {
+          type: 'text/plain',
+          content: JSON.stringify({ message, account }),
+        },
+        // {
+        //   type: 'audio/ogg',
+        //   url: 'https://example.com/oink.ogg',
+        // },
+        // {
+        //   type: 'image/gif',
+        //   file: data,
+        //   customData: { foo: 'bar' },
+        // },
+      ],
     });
+    // save ref of chatkit
+    if (msg) {
+      message.chatkitId = msg.message_id;
+    }
+
+    await message.save();
 
     return res.status(201).json({
       message,
@@ -56,24 +80,15 @@ const getRoomMessages = async (req, res, next) => {
       room: req.params.roomId,
       removed: false,
     })
+      .select('-__v')
+      .populate('account', 'name firstName lastName email')
       .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit);
-    // .select('-__v -company -createdAt -updatedAt')
-    // .populate([
-    //   { path: 'account', select: '_id name firstName lastName' },
-    //   {
-    //     path: 'designations',
-    //     select: 'division department position',
-    //     populate: [{ path: 'department', select: 'name' }],
-    //   },
-    // ]);
-    return res.status(200).json({
-      messages,
-    });
 
-    return res.status(201).json({
-      message,
+    return res.status(200).json({
+      count: messages.length,
+      messages,
     });
   } catch (error) {
     return res.status(400).json({

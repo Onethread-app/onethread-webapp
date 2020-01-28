@@ -58,13 +58,22 @@ const update = async (req, res, next) => {
   }
 };
 
+const deleteSubtask = async (req, res, next) => {
+  try {
+    await SubTask.findByIdAndDelete(req.SubTask._id);
+    res.status(200).json({ message : 'SUBTASK DELETED' })
+  } catch (error) {
+    next(error);
+  }
+};
+
 const list = async (req, res, next) => {
   const { limit = 50, skip = 0, taskId } = req.query;
 
   await SubTask.find({
     taskId: taskId,
   })
-    .select('_id name done boardId taskId')
+    .select('_id name done ')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -75,4 +84,4 @@ const list = async (req, res, next) => {
     })
     .catch(e => next(e));
 };
-module.exports = { create, load, list, get, update };
+module.exports = { create, load, list, get, update , deleteSubtask };
