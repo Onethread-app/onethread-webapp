@@ -66,7 +66,6 @@ export interface IRoomReducer {
 			roomId: string;
 		}>;
 	};
-	// tslint:disable-next-line: no-unused-expression
 	users: IRoomMember[];
 	userStatus: any;
 	roomMembers: any[];
@@ -109,12 +108,10 @@ export const sortRooms = (a: IRoom, b: IRoom) => {
 };
 
 const userStatus = (arr: any) => {
-	// tslint:disable-next-line: prefer-const
-	let c: any = {};
-	// b.forEach(e, i, arr);
-	for (const e of arr) {
+	const c = {};
+	arr.forEach((e: any) => {
 		c[e.id] = e.presence.state;
-	}
+	});
 	return c;
 };
 
