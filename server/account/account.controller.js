@@ -169,6 +169,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
     });
     if (!isUserExist)
       return sendJSONresponse(res, 404, {
+        isAccountVerified: false,
         message: 'User is not exist',
       });
     const isTimeLimit = await Account.findOne({
@@ -176,6 +177,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
     });
     if (!isTimeLimit)
       return sendJSONresponse(res, 400, {
+        isAccountVerified: false,
         message: 'Token time is expired',
       });
     if (isUserExist && isTimeLimit) {
@@ -190,7 +192,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
         { safe: true, upsert: true, new: true },
       );
       return sendJSONresponse(res, 200, {
-        success: true,
+        isAccountVerified: true,
         message: 'Account Verified Successfully',
       });
     }
@@ -501,7 +503,6 @@ const resendEmail = async (req, res, next) => {
         account.name,
         account.email,
         verifyToken,
-        next,
       );
     }
     await account.save();
