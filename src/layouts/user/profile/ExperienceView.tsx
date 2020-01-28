@@ -14,7 +14,7 @@ import EducationIcon from './../../../resources/images/education.png';
 import DefaultSkillImage from './../../../resources/images/skills.png';
 import { RightSidebar } from 'components/RightSidebar';
 import editIcon from './../../../resources/images/editIcon.png';
-import addIcon from './../../../resources/images/experienceAdd.png';
+import addIcon from './../../../resources/images/addIcon.png';
 interface IExperienceViewProps {
   user: User;
   editJobExperienceAction: (jobInfo: {}, id: string) => {};
@@ -65,26 +65,26 @@ const ExperienceViewComponent = (props: IExperienceViewProps) => {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div style={{ minWidth: '35px', maxWidth: '35px' }}>
+                        <div style={{ width: '35px' }}>
                           <img src={experience.companyName ? JobIcon : EducationIcon} />
                         </div>
                         <div className="ml2">
                           <h1
-                            className="f5 fw7 mt0 mb0 tj black-70"
+                            className="f5 fw7 mt0 mb0 black-70"
                           >{experience.companyName ? experience.companyName : experience.degree}
                           </h1>
                           <h1
-                            className="tj f5 fw2 mv1"
+                            className="f5 fw2 mv1"
                           >
                             {experience.positionName ? experience.positionName : experience.institutionName}
                           </h1>
                         </div>
                       </div>
-                      <div className="mh1">
+                      <div className="mh1 pointer" style={{ minWidth: '35px' }}>
                         <img
                           className="tigrow-lightBlue pointer"
+                          style={{ width: '35px' }}
                           src={editIcon}
-                          width="38"
                           onClick={() => {
                             if (experience.companyName) {
                               setShowJobForm(true);

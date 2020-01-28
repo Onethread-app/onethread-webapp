@@ -44,11 +44,12 @@ export interface IRoomMember {
 
 export interface IRoomMessage {
 	type: string;
+	file: any[];
 	removed: boolean;
 	_id: string;
-	chatkitId: number;
 	text: string;
 	room: string;
+	chatkitId: number;
 	account: IRoomMember;
 	createdAt: string;
 	updatedAt: string;
@@ -149,6 +150,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				users: action.payload,
 				loading: false
 			};
+		case ADD_MEMBER_IN_ROOM:
+			return {
+				...state,
+				users: [...state.users, ...action.payload],
+				loading: false
+			};
 		case ACTIVE_ROOM:
 			return {
 				...state,
@@ -209,10 +216,10 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				messages:
-					action.payload.roomId === (state.activeRoom as any).id
+					action.payload.room === (state.activeRoom as any).id
 						? state.messages.length === 0 ||
-							(state.messages[state.messages.length - 1] as any).chatkitId !==
-							action.payload.id
+							(state.messages[state.messages.length - 1] as IRoomMessage)._id !==
+							action.payload._id
 							? [...state.messages, action.payload]
 							: [...state.messages]
 						: [...state.messages],
@@ -278,12 +285,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				companyRooms: action.payload,
-				loading: false
-			};
-		case ADD_MEMBER_IN_ROOM:
-			return {
-				...state,
-				roomMembers: [...state.roomMembers, ...action.payload],
 				loading: false
 			};
 		case TOGGLE_EMOJI_PICKER:

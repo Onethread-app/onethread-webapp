@@ -14,8 +14,9 @@ export const ExperienceEditor = (props: ExperienceEditorProps) => {
 
   return (
     <div className="mt5">
-      <div className="flex-ns mh2">
+      <div className="flex-ns ph4">
         <Button
+          active={selectedJob}
           className="ba bw1 pa2 w-30-ns w-100 bp3-minimal"
           style={{ color: 'white' }}
           onClick={() => {
@@ -25,6 +26,7 @@ export const ExperienceEditor = (props: ExperienceEditorProps) => {
           Job
           </Button>
         <Button
+          active={selectedEducation}
           className="ba bw1 pa2 w-30-ns w-100 bp3-minimal ml3-l"
           style={{ color: 'white' }}
           onClick={() => {
@@ -35,7 +37,7 @@ export const ExperienceEditor = (props: ExperienceEditorProps) => {
           </Button>
       </div>
       {selectedJob &&
-        <div className="mh2 mt2">
+        <div className="ph4 mt2">
           <JobForm
             setShowDialog={props.setShowDialog}
             edit={false}
@@ -43,7 +45,7 @@ export const ExperienceEditor = (props: ExperienceEditorProps) => {
         </div>
       }
       {selectedEducation &&
-        <div className="mh2 mt2">
+        <div className="ph4 mt2">
           <EducationForm
             setShowDialog={props.setShowDialog}
             edit={false}

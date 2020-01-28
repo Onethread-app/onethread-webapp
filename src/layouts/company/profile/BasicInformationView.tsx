@@ -7,7 +7,7 @@ import { permit } from 'stores/UtilsActions';
 import { isEmpty } from 'lodash';
 import { CompanyAboutView } from './AboutView';
 
-const UserImage = require('./../../../resources/images/user.png');
+const UserImage = require('./../../../resources/images/CompanyIcon.svg');
 
 const BasicInfoDetailsViewComponent = (props: any) => {
 

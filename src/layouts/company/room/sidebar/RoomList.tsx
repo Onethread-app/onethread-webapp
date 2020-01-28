@@ -17,7 +17,7 @@ import {
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
-import { IRoom } from 'stores/room/Reducer';
+import { IRoom, IRoomMessage } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -50,7 +50,22 @@ export const RoomListComponent = withChatkit(
 						roomId: roomId.toString(),
 						hooks: {
 							onMessage: (newMessage: any) => {
-								dispatch({ type: NEW_MESSAGE, payload: newMessage });
+								const content = JSON.parse(newMessage.parts[0].payload.content);
+
+								const formatMessage: IRoomMessage = {
+									type: content.message.type,
+									file: content.message.file,
+									removed: content.message.removed,
+									_id: content.message._id,
+									text: content.message.text,
+									room: content.message.room,
+									account: content.account,
+									chatkitId: newMessage.id,
+									createdAt: newMessage.createdAt,
+									updatedAt: newMessage.updatedAt,
+								};
+
+								dispatch({ type: NEW_MESSAGE, payload: formatMessage });
 								return props.chatkit.currentUser.setReadCursor({
 									roomId,
 									position: newMessage.id

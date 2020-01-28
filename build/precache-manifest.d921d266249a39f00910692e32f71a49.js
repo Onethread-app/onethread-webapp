@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "51bdc1b3552cc27c2f502b927e5737b9",
+    "revision": "ac6f93b7fe4f0a1d17801a738a562a1b",
     "url": "/index.html"
   },
   {
-    "revision": "9ea8f46a4f85c45c6fd4",
-    "url": "/static/css/2.34c628bc.chunk.css"
+    "revision": "0c2ffa81cf33373973ae",
+    "url": "/static/css/2.4793b387.chunk.css"
   },
   {
-    "revision": "2c1d6e7202b0d3840f73",
-    "url": "/static/css/main.11373c66.chunk.css"
+    "revision": "63cc46cee240152902a8",
+    "url": "/static/css/main.4fd8b5a8.chunk.css"
   },
   {
-    "revision": "9ea8f46a4f85c45c6fd4",
-    "url": "/static/js/2.3290786a.chunk.js"
+    "revision": "0c2ffa81cf33373973ae",
+    "url": "/static/js/2.78835a32.chunk.js"
   },
   {
-    "revision": "2c1d6e7202b0d3840f73",
-    "url": "/static/js/main.ea3540bb.chunk.js"
+    "revision": "63cc46cee240152902a8",
+    "url": "/static/js/main.80d6a04e.chunk.js"
   },
   {
     "revision": "763ce8cd39e8b4d69668",
@@ -34,6 +34,10 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
     "revision": "4f8761fd0f2aab34502ac228b82fdc4b",
     "url": "/static/media/Bg-png.4f8761fd.png"
+  },
+  {
+    "revision": "c8f8d09a5cd833512638b5db913ac418",
+    "url": "/static/media/CompanyIcon.c8f8d09a.svg"
   },
   {
     "revision": "855a3771857fd0162df03ac8d82dd0f3",
@@ -264,8 +268,32 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/open-sans-latin-800italic.c62c3eea.woff2"
   },
   {
-    "revision": "68e53869a5d22b6efc246f916acb91e9",
-    "url": "/static/media/profilePhoto.68e53869.png"
+    "revision": "41c0ae6d103783b12acc188ec021e1f1",
+    "url": "/static/media/profilePhoto.41c0ae6d.svg"
+  },
+  {
+    "revision": "89f93115b1f98d31477c72b390a68fd0",
+    "url": "/static/media/sideBarBoard.89f93115.svg"
+  },
+  {
+    "revision": "ab629269569beed90a4e749b8d9345cc",
+    "url": "/static/media/sidebarCompanyProfile.ab629269.svg"
+  },
+  {
+    "revision": "74c94969db627c5e15479d4523050c34",
+    "url": "/static/media/sidebarIndividualProfile.74c94969.svg"
+  },
+  {
+    "revision": "6f1ed16c472651e61850443758b8c0cd",
+    "url": "/static/media/sidebarRoom.6f1ed16c.svg"
+  },
+  {
+    "revision": "3217f47a69fe40d4a5f52cab0c09ad49",
+    "url": "/static/media/sidebarSettings.3217f47a.svg"
+  },
+  {
+    "revision": "0eb16678c03376b104f7d9425e7213e9",
+    "url": "/static/media/sidebarTeam.0eb16678.svg"
   },
   {
     "revision": "52ce32cc2c49a7a54513eb74322aff9e",

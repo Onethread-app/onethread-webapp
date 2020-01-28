@@ -41,7 +41,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							<p className="f4 fw7 mv2">{props.activeRoom.name}</p>
 							<h5
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
-								className="ma0 pointer dim">Members: {props.activeRoom.users.length}</h5>
+								className="ma0 pointer dim">Members: {props.users.length}</h5>
 						</div>
 						{showAddMember(props.activeRoom.name, props.companyRole) ?
 							<Button

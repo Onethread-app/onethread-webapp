@@ -19,14 +19,14 @@ export const LandingPage = (props: { user: User }) => {
             <div className="mt3 ph1 w-15-l w-100"
               style={{ minWidth: '235px' }}
             >
-              <div className="h-auto ma1">
+              <div className="h-auto">
                 <AboutView />
               </div>
-              <div className="h-auto ma1 mv1">
+              <div className="h-auto mv4">
                 <SkillView />
               </div>
             </div>
-            <div className="w-85-l w-100 mt4 ml5-tigrow-l ph2-m mb5-l mb4-m"
+            <div className="w-85-l w-100 mt4 ml5-tigrow-l ph2-m mb6"
             >
               <Tabs
                 id="TabsExample"
