@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "ac6f93b7fe4f0a1d17801a738a562a1b",
+    "revision": "3627d66960baa0fb28e9920640b80ab3",
     "url": "/index.html"
   },
   {
-    "revision": "0c2ffa81cf33373973ae",
-    "url": "/static/css/2.4793b387.chunk.css"
+    "revision": "a02be781a2e3cec6bd57",
+    "url": "/static/css/2.eac6f90d.chunk.css"
   },
   {
-    "revision": "63cc46cee240152902a8",
-    "url": "/static/css/main.4fd8b5a8.chunk.css"
+    "revision": "66e054acfb5325d6d802",
+    "url": "/static/css/main.486c1ddc.chunk.css"
   },
   {
-    "revision": "0c2ffa81cf33373973ae",
-    "url": "/static/js/2.78835a32.chunk.js"
+    "revision": "a02be781a2e3cec6bd57",
+    "url": "/static/js/2.6017a003.chunk.js"
   },
   {
-    "revision": "63cc46cee240152902a8",
-    "url": "/static/js/main.80d6a04e.chunk.js"
+    "revision": "66e054acfb5325d6d802",
+    "url": "/static/js/main.c64adfd3.chunk.js"
   },
   {
     "revision": "763ce8cd39e8b4d69668",
@@ -52,8 +52,16 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/static/media/Marketplace.ac79b71d.png"
   },
   {
+    "revision": "089328108c73601e77689e68d03337e9",
+    "url": "/static/media/PrioritySetActivity.08932810.svg"
+  },
+  {
     "revision": "d25ffd3daf8855b558ffaddf2b04f914",
     "url": "/static/media/Recruitment.d25ffd3d.png"
+  },
+  {
+    "revision": "8924cfc0ca43dd12cffa627df054f4d4",
+    "url": "/static/media/TaskCreatedActivity.8924cfc0.svg"
   },
   {
     "revision": "b5c7787595aa545a98ad0706631f36d1",
