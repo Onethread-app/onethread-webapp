@@ -187,7 +187,7 @@ export const RoomListComponent = withChatkit(
 									/>
 								);
 							})
-						) : (<p>No rooms</p>)}
+						) : (<p className="ph2">No rooms</p>)}
 					</ul>
 				</main>
 			</>
