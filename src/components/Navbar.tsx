@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Button, Popover, Position, ButtonGroup, Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { logoutAction } from 'stores/auth/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
@@ -31,7 +31,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
           borderRadius: '0.5rem 0.5rem 0px 0px'
         }}
       >
-        <div>
+        <div className="w-80">
           <NavLink
             exact
             to={`/company/${props.companyName}`}
@@ -73,22 +73,21 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             position={Position.BOTTOM}
             content={
               <ButtonGroup minimal={true} className="bp3-vertical bp3-fill">
-                <Button className="bp3-popover-dismiss outline-0">
-                  <article
-                    className="pointer"
-                  >
-                    <div className="dtc w1 w2-ns">
-                      <img
-                        src={props.user.profileImage ? props.user.profileImage.link : user}
-                        className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10"
-                      />
-                    </div>
-                    <div className="dtc v-mid pl3">
-                      <Link className="bp3-popover-dismiss" to={`/${props.user.name}`}>
-                        <h1 className="f7 f6-ns fw4 lh-title black mv0">{`${props.user.firstName} ${props.user.lastName}`}</h1>
-                      </Link>
-                    </div>
-                  </article>
+                <Button
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
+                  onClick={() => props.history.push(`/${props.user.name}`)}
+                >
+                  <div className="dtc w1 w2-ns">
+                    <img
+                      src={props.user.profileImage ? props.user.profileImage.link : user}
+                      className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10 "
+                    />
+                  </div>
+                  <div className="dtc v-mid pl3">
+                    <h1 className="f7 f6-ns fw4 lh-title black mv0">
+                      {`${props.user.firstName} ${props.user.lastName}`}
+                    </h1>
+                  </div>
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"

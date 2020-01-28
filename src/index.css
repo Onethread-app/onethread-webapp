@@ -296,4 +296,5 @@ a:hover {
 .birthdatePicker .bp3-input-group .bp3-input{
 	box-shadow: none;
 	font-size: 18px;
+	padding-bottom: 10px;
 }

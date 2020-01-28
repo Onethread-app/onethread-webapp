@@ -65,8 +65,8 @@ const ExperienceViewComponent = (props: IExperienceViewProps) => {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div style={{ width: '35px' }}>
-                          <img src={experience.companyName ? JobIcon : EducationIcon} />
+                        <div style={{ minWidth: '35px' }}>
+                          <img style={{ width: '35px' }} src={experience.companyName ? JobIcon : EducationIcon} />
                         </div>
                         <div className="ml2">
                           <h1
