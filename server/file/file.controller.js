@@ -124,6 +124,9 @@ const companyLogo = async (req, res, next) => {
 };
 
 const fileInRooms = async (req, res, next) => {
+  console.log(req.body.text);
+
+  const file = req.file;
   const roomID = req.query.roomID;
   const userID = req.user._id;
   const params = {
@@ -137,31 +140,32 @@ const fileInRooms = async (req, res, next) => {
     .upload(params)
     .promise()
     .then(async data => {
-      logger.info(`File in rooms Successfully upload to S3`);
-      const newFile = {
-        link: s3FileURL + params.Bucket,
-        s3Key: params.Key,
-        company: companyID,
-        type: params.ContentType,
-        account: userID,
-        room: roomID,
-      };
-      const file = new File(newFile);
-      file
-        .save()
-        .then(async data => {
-          logger.info('File Link successfully save to Database');
-          const room = await Room.findOne({
-            _id: roomID,
-          }).select('files');
-          room.files.push(data._id);
-          await room.save();
-          return sendJSONresponse(res, 200, data);
-        })
-        .catch(error => {
-          logger.error(`${error}`);
-          next(error);
+      logger.info(data);
+      try {
+        logger.info(`File in rooms Successfully upload to S3`);
+        const newFile = new File({
+          link: data.Location,
+          s3Key: params.Key,
+          type: params.ContentType,
+          account: userID,
+          room: roomID,
         });
+        await newFile.save();
+        logger.info('File Link successfully save to file collection');
+
+        const room = await Room.findOne({ _id: roomID });
+        logger.info(room);
+
+        room.file.push(newFile._id);
+        await room.save();
+        logger.info('File ref successfully save to room collection');
+
+        logger.info(newFile);
+        return sendJSONresponse(res, 200, { data, newFile });
+      } catch (error) {
+        logger.error(`${error}`);
+        next(error);
+      }
     })
     .catch(err => {
       next(err);

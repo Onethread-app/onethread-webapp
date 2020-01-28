@@ -16,6 +16,12 @@ const RoomSchema = new mongoose.Schema(
         ref: 'Account',
       },
     ],
+    file: [
+      {
+        type: Schema.ObjectId,
+        ref: 'File',
+      },
+    ],
     company: {
       type: Schema.ObjectId,
       unique: false,
