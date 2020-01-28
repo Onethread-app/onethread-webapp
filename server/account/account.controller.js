@@ -140,7 +140,7 @@ const getAccount = async (req, res, next) => {
       .select('-password')
       .populate(
         'companies skillArea jobExperience education profileImage coverImage',
-        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name fileLink s3Key fileType imageType',
+        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name link s3Key fileType imageType',
       );
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
@@ -169,6 +169,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
     });
     if (!isUserExist)
       return sendJSONresponse(res, 404, {
+        isAccountVerified: false,
         message: 'User is not exist',
       });
     const isTimeLimit = await Account.findOne({
@@ -176,7 +177,8 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
     });
     if (!isTimeLimit)
       return sendJSONresponse(res, 400, {
-        message: 'Token time is expired',
+        isAccountVerified: false,
+        message: 'Link is expired',
       });
     if (isUserExist && isTimeLimit) {
       await Account.findOneAndUpdate(
@@ -190,7 +192,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
         { safe: true, upsert: true, new: true },
       );
       return sendJSONresponse(res, 200, {
-        success: true,
+        isAccountVerified: true,
         message: 'Account Verified Successfully',
       });
     }
@@ -256,15 +258,15 @@ const sendEmailForForgetPassword = async (req, res, next) => {
       });
     user.resetPasswordToken = verifyToken;
     user.resetPasswordTokenExpiration = Date.now() + 86400; // 1 day
+    user.save();
     sendEmailForResetPassword(
       user.firstName,
       user.lastName,
       user.email,
-      token,
+      verifyToken,
     );
-    await user.save();
     logger.info(`send reset password mail to user successfully`);
-    return sendJSONresponse(res, 200, emailResponse);
+    return sendJSONresponse(res, 200);
   } catch (error) {
     next(error);
   }
@@ -277,6 +279,7 @@ const resetPassword = async (req, res, next) => {
       resetPasswordToken: token,
       resetPasswordTokenExpiration: { $gt: Date.now() },
     }).select('-password');
+
     if (!user)
       return sendJSONresponse(res, 400, {
         message: 'token time expired',
@@ -501,7 +504,6 @@ const resendEmail = async (req, res, next) => {
         account.name,
         account.email,
         verifyToken,
-        next,
       );
     }
     await account.save();
