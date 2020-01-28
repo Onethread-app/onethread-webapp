@@ -9,12 +9,14 @@ import { isEmpty } from 'lodash';
 import { showAddMember } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
 import { RightSidebar } from 'components/RightSidebar';
+import { IRoomReducer } from 'stores/room/Reducer';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
 	activeRoom: any;
 	companyRole: string;
-	users: [];
+	users: IRoomReducer['users'];
+	userStatus: IRoomReducer['userStatus'];
 }
 
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
@@ -40,7 +42,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							<p className="f4 fw7 mv2">{props.activeRoom.name}</p>
 							<h5
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
-								className="ma0 pointer dim">Members: {props.activeRoom.users.length}</h5>
+								className="ma0 pointer dim">Members: {props.users.length}</h5>
 						</div>
 						{showAddMember(props.activeRoom.name, props.companyRole) ?
 							<Button
@@ -64,18 +66,6 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					<p>General is a default room.</p>
 				</div>
 			}
-			{/* {showMemberFormDialog && (
-				<Dialog
-					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
-					isOpen={showMemberFormDialog}
-					style={{ background: '#fff' }}
-				>
-					<AddMemberForm
-						showDialog={showMemberFormDialog}
-						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
-					/>
-				</Dialog>
-			)} */}
 			{showMemberListDialog && (
 				<Dialog
 					onClose={() => setShowMemberListDialog(!showMemberListDialog)}
@@ -83,7 +73,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					style={{ background: '#fff' }}
 				>
 					<MembersList
-						users={props.users} />
+						users={props.users}
+						userStatus={props.userStatus} />
 				</Dialog>
 			)}
 
@@ -106,6 +97,7 @@ const mapStateToProps = (state: any) => {
 	return {
 		activeRoom: state.roomReducer.activeRoom,
 		users: state.roomReducer.users,
+		userStatus: state.roomReducer.userStatus,
 		companyRole: state.companyReducer.currentCompany.role,
 	};
 };

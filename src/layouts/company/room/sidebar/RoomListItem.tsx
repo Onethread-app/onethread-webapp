@@ -10,10 +10,11 @@ interface RoomListItemProps {
 	name: string;
 	img: string;
 	lastChild: boolean;
-	active: string;
+	active: boolean;
 	unreadCount: number;
 	subscribeToRoom: (roomId: string, name: string) => void;
 	chatkit?: any;
+	iconBgColor: string;
 }
 
 export const RoomListItem = withChatkit((props: RoomListItemProps) => {
@@ -25,7 +26,12 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 	return (
 		<li
 			id="roomListItem"
-			className={`pointer ${props.active}`}>
+			className="pointer"
+			style={{
+				background: props.active ? 'rgb(63, 97, 197)' : '',
+				color: props.active ? '#FFFFFF' : ''
+			}}
+		>
 			<article
 				onClick={() => {
 					if (!props.chatkit.isLoading && !isEqual(props.roomId, activeRoom.id)) {
@@ -37,12 +43,15 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 						props.subscribeToRoom(props.roomId, props.name);
 					}
 				}}
-				className={`flex items-center mh2 ph1 pv2 bb b--black-10 ${props.lastChild ? 'bn' : ''}`}
+				className={`flex items-center ph2 pv2 bb b--black-10 ${props.lastChild ? 'bn' : ''}`}
 			>
 				<div className="dn db-ns pr3">
 					<span
 						className="ttc ba b--black-10 db w1 w2-ns h1 h2-ns br3 tc lh-2 bg-light-gray"
-					// style={{ backgroundColor: generateColor() }}
+						style={{
+							backgroundColor: props.iconBgColor,
+							color: '#FFFFFF'
+						}}
 					>
 						{props.img}
 					</span>
@@ -62,6 +71,6 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 					) : null}
 				</div>
 			</article>
-		</li>
+		</li >
 	);
 });

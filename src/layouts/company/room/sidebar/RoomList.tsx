@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, connect } from 'react-redux';
-import { getRoomsAction } from '../../../../stores/room/Actions';
+import { getRoomMembers, getRoomMessages } from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
-	GET_ROOM_MESSAGES,
 	GET_ROOMS,
 	CLEAR_ROOM_MESSAGES,
 	ACTIVE_ROOM,
@@ -18,14 +17,15 @@ import {
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
-import { IRoom } from 'stores/room/Dto';
+import { IRoom, IRoomMessage } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface IRoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
-	getRoomsAction: () => void;
+	getRoomMembers: (roomId: string) => void;
+	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
 	activeRoom: any;
 	roomId: string;
 	rooms: [IRoom];
@@ -35,41 +35,37 @@ interface IRoomListComponentProps extends RouteComponentProps {
 export const RoomListComponent = withChatkit(
 	(props: IRoomListComponentProps) => {
 		const dispatch = useDispatch();
-		// const load = async (getRoomsAction: () => void) => {
-		// 	await getRoomsAction();
-		// 	if (!props.chatkit.isLoading && companyId) {
-		// 		// filteredRooms
-		// 		const rooms = props.chatkit.currentUser.rooms.filter(
-		// 			(room: any) => room.customData.company === companyId
-		// 		);
-		// 		dispatch({ type: GET_ROOMS, payload: rooms });
-		// 	}
-		// };
 
 		// tslint:disable-next-line: no-shadowed-variable
-		const fetchMessages = (roomId: any, limit = 100) => {
-			props.chatkit.currentUser
-				.fetchMultipartMessages({
-					roomId,
-					limit
-				})
-				.then((messages: any) => {
-					dispatch({ type: GET_ROOM_MESSAGES, payload: messages });
-				});
-		};
-
-		// tslint:disable-next-line: no-shadowed-variable
-		const subscribeToRoom = (roomId: string, name: string) => {
+		const subscribeToRoom = async (roomId: string, name: string) => {
 			if (!props.chatkit.isLoading) {
 				dispatch({ type: CLEAR_ROOM_MESSAGES });
 				dispatch({ type: CURRENT_ROOM, payload: { roomId, name } });
-				fetchMessages(roomId);
+
+				await props.getRoomMessages(roomId);
+				await props.getRoomMembers(roomId);
+
 				props.chatkit.currentUser
 					.subscribeToRoomMultipart({
 						roomId: roomId.toString(),
 						hooks: {
 							onMessage: (newMessage: any) => {
-								dispatch({ type: NEW_MESSAGE, payload: newMessage });
+								const content = JSON.parse(newMessage.parts[0].payload.content);
+
+								const formatMessage: IRoomMessage = {
+									type: content.message.type,
+									file: content.message.file,
+									removed: content.message.removed,
+									_id: content.message._id,
+									text: content.message.text,
+									room: content.message.room,
+									account: content.account,
+									chatkitId: newMessage.id,
+									createdAt: newMessage.createdAt,
+									updatedAt: newMessage.updatedAt,
+								};
+
+								dispatch({ type: NEW_MESSAGE, payload: formatMessage });
 								return props.chatkit.currentUser.setReadCursor({
 									roomId,
 									position: newMessage.id
@@ -129,7 +125,6 @@ export const RoomListComponent = withChatkit(
 		useEffect(() => {
 			if (!props.chatkit.isLoading && props.companyId) {
 				connectChatManager();
-				// load(props.getRoomsAction);
 
 				// filteredRooms
 				// tslint:disable-next-line: no-shadowed-variable
@@ -165,16 +160,18 @@ export const RoomListComponent = withChatkit(
 		// 	}
 		// }, [companyId]);
 
+		const roomBgColor = ['#D8315B', '#744FC6', '#0FA3A3', '#456990', '#CDA2AB', '#FE5E41'];
+
 		return (
 			<>
 				<main
-					className="mw6"
+					className="mw6 nowrap"
 					id="roomList"
 				>
-					<ul className="list pa0">
+					<ul className="list pa0 mh2">
 						{props.chatkit.isLoading ? (
 							<Loading />
-						) : props.rooms.length && (props.rooms[0] as any).id !== undefined ? (
+						) : props.rooms.length ? (
 							props.rooms.map((room: IRoom, i: number, arr: any) => {
 								return (
 									<RoomListItem
@@ -184,14 +181,13 @@ export const RoomListComponent = withChatkit(
 										name={room.name}
 										unreadCount={room.unreadCount}
 										lastChild={isEqual(room.id, arr[props.rooms.length - 1].id)}
-										active={room.id === props.roomId ? 'bg-lightest-blue' : ''}
+										active={room.id === props.roomId}
 										subscribeToRoom={subscribeToRoom}
+										iconBgColor={roomBgColor[i % roomBgColor.length]}
 									/>
 								);
 							})
-						) : (
-									<Loading />
-								)}
+						) : (<p className="ph2">No rooms</p>)}
 					</ul>
 				</main>
 			</>
@@ -207,6 +203,6 @@ const mapStateToProps = (state: any) => {
 	};
 };
 
-export const RoomList = connect(mapStateToProps, { getRoomsAction })(
+export const RoomList = connect(mapStateToProps, { getRoomMembers, getRoomMessages })(
 	withRouter(RoomListComponent)
 );

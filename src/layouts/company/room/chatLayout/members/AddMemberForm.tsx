@@ -13,6 +13,7 @@ interface RoomMembersViewProps {
 }
 
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
+  // tslint:disable-next-line: max-line-length
   addRoomMembers: (members: { room: string, members: Array<string | undefined> }, selectedRoomMember: ItemEntityProps[]) => void;
   roomId: string;
   companyId: string;

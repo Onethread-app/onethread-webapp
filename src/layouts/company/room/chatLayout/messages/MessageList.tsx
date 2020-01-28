@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import { useSelector } from 'react-redux';
 
-import UserIcon from './../../../../../resources/images/CompanyIcon.svg';
+import UserIcon from './../../../../../resources/images/profilePhoto.svg';
+import { IRoomMessage } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -16,10 +17,6 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const messages = useSelector((state: any) => state.roomReducer.messages);
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
-	const rooms = useSelector((state: any) => state.roomReducer.rooms);
-	// const typingUsers = useSelector(
-	// 	(state: any) => state.roomReducer.typing.users
-	// );
 
 	const scrollToBottom = () => {
 		// On new message, scroll to bottom
@@ -43,11 +40,6 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 
 	useEffect(scrollToBottom, [messages]);
 
-	// typing indicator
-	// useEffect(() => {
-	// 	(messagesEndRef as any).current.scrollTop = (messagesEndRef as any).current.scrollHeight;
-	// }, [typingUsers]);
-
 	return (
 		<div
 			// className="overflow-y-auto ph1 pt2"
@@ -55,41 +47,19 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 			ref={messagesEndRef}
 		// style={{ height: "calc(100vh - 186px)" }}
 		>
-			{!props.chatkit.isLoading && rooms.length
-				? messages.length
-					? messages.map((message: any) => {
-						return (
-							<MessageItem
-								key={message.id}
-								img={UserIcon}
-								text={message.parts[0].payload.content}
-								createdAt={message.createdAt}
-								sender={{
-									id: message.userStore.users[message.senderId].id,
-									name: message.userStore.users[message.senderId].name
-								}}
-							/>
-						);
-					})
-					: ''
+			{messages.length
+				? messages.map((message: IRoomMessage) => {
+					return (
+						<MessageItem
+							key={message._id}
+							img={UserIcon}
+							text={message.text}
+							createdAt={message.createdAt}
+							sender={message.account}
+						/>
+					);
+				})
 				: ''}
-			{/* {typingUsers.length
-				? typingUsers.map(
-					(user: { name: string; roomId: string }, i: number) => {
-						if (
-							isEmpty(roomId) === false &&
-							isEqual(roomId, user.roomId) === true
-						) {
-							return (
-								<h6 key={i} className="mv1">
-									{user.name} is typing ...
-									</h6>
-							);
-						}
-						return null;
-					}
-				)
-				: ""} */}
 		</div>
 	);
 });

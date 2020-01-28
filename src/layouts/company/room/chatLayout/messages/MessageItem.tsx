@@ -2,17 +2,18 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { Tooltip } from '@blueprintjs/core';
+import { IRoomMessage } from 'stores/room/Reducer';
 
 interface MessageItemProps {
   img: string;
   text: string;
   createdAt: string;
-  sender: { id: string, name: string };
+  sender: IRoomMessage['account'];
 }
 
 export const MessageItem = (props: MessageItemProps) => {
   const user = useSelector((state: any) => state.userReducer.user);
-  const currentUser = user._id === props.sender.id;
+  const currentUser = user._id === props.sender._id;
   return (
     <article
       className={`flex mb3 mh3 items-center flex ${currentUser ? ' flex-row-reverse' : ''}`}
@@ -22,6 +23,7 @@ export const MessageItem = (props: MessageItemProps) => {
       </div>}
 
       <Tooltip
+        // tslint:disable-next-line: max-line-length
         className={`shadow-4 ph3 pv1 br4 mw6 ${currentUser ? 'message-mine mr2 bg-tigrowLightBlue' : 'message-others ml2 bg-white'}`}
         content={moment(props.createdAt).format('lll')}
         position="left"
@@ -31,8 +33,12 @@ export const MessageItem = (props: MessageItemProps) => {
         // "message-mine mr2 bg-tigrowLightBlue" : "message-others ml2 bg-white"}`}
         // style={{ maxWidth: "65%" }}
         >
-          <h6 className="ma0">
-            {props.sender.name}
+          <h6 className="ma0"
+            style={{
+              textTransform: 'capitalize'
+            }}
+          >
+            {props.sender.firstName + ' ' + props.sender.lastName}
           </h6>
           <h2
             className={`f6 fw3 ma0 mt1 tj break-word`}

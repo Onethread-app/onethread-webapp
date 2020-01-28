@@ -10,8 +10,8 @@ import {
 	CREATE_ROOM_ERROR,
 	GET_ROOMS_FROM_SERVER,
 	GET_ROOM_ERROR,
-	GET_ROOM_MEMBERS_FROM_SERVER,
-	GET_ROOM_MEMBERS_FROM_SERVER_ERROR,
+	GET_ROOM_MEMBERS,
+	GET_ROOM_MEMBERS_ERROR,
 	ADD_MEMBER_IN_ROOM_ERROR,
 	ADD_MEMBER_IN_ROOM,
 	ACTIVE_ROOM,
@@ -22,8 +22,59 @@ import {
 	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER
 } from './Types';
 import { isEmpty } from 'lodash';
-import { IRoomReducer, IRoom } from './Dto';
 
+export interface IRoom {
+	id: string;
+	name: string;
+	unreadCount: number;
+	company: string;
+	createdByUserId: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface IRoomMember {
+	_id: string;
+	email: string;
+	firstName: string;
+	lastName: string;
+	name: string;
+	presence: string;
+}
+
+export interface IRoomMessage {
+	type: string;
+	file: any[];
+	removed: boolean;
+	_id: string;
+	text: string;
+	room: string;
+	chatkitId: number;
+	account: IRoomMember;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface IRoomReducer {
+	activeRoom: {};
+	roomId: string;
+	roomName: string;
+	messages: IRoomMessage[];
+	typing: {
+		users: Array<{
+			name: string;
+			roomId: string;
+		}>;
+	};
+	users: IRoomMember[];
+	userStatus: any;
+	roomMembers: any[];
+	rooms: IRoom[];
+	companyRooms: any[];
+	loading: boolean;
+	emojiPicker: boolean;
+	roomError: string;
+}
 const InitialState: IRoomReducer = {
 	activeRoom: {},
 	roomId: '',
@@ -33,6 +84,7 @@ const InitialState: IRoomReducer = {
 		users: []
 	},
 	users: [],
+	userStatus: {},
 	roomMembers: [],
 	rooms: [],
 	companyRooms: [],
@@ -53,6 +105,14 @@ export const sortRooms = (a: IRoom, b: IRoom) => {
 			1 : createdAtA > createdAtB ?
 				1 : createdAtA < createdAtB ?
 					-1 : 0;
+};
+
+const userStatus = (arr: any) => {
+	const c = {};
+	arr.forEach((e: any) => {
+		c[e.id] = e.presence.state;
+	});
+	return c;
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
@@ -81,50 +141,65 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				},
 				loading: false
 			};
+		case GET_ROOM_MEMBERS:
+			return {
+				...state,
+				users: action.payload,
+				loading: false
+			};
+		case ADD_MEMBER_IN_ROOM:
+			return {
+				...state,
+				users: [...state.users, ...action.payload],
+				loading: false
+			};
 		case ACTIVE_ROOM:
 			return {
 				...state,
 				activeRoom: action.payload,
-				users: action.payload.users
-					.map(
-						(user: {
-							id: string;
-							name: string;
-							presence: { state: string };
-						}) => ({
-							id: user.id,
-							name: user.name,
-							presence: user.presence.state
-						})
-					)
-					.sort((user: any) => {
-						if (user.presence === 'online') { return -1; }
-						return 1;
-					}),
+				// users: action.payload.users
+				// 	.map(
+				// 		(user: {
+				// 			id: string;
+				// 			name: string;
+				// 			presence: { state: string };
+				// 		}) => ({
+				// 			id: user.id,
+				// 			name: user.name,
+				// 			presence: user.presence.state
+				// 		})
+				// 	),
+				userStatus: userStatus(action.payload.users),
+				// .sort((user: any) => {
+				// 	if (user.presence === 'online') { return -1; }
+				// 	return 1;
+				// }),
 				loading: false
 			};
 		case REFRESH_MEMBER:
 		case ON_PRESENCE_CHANGE:
 			return {
 				...state,
-				users:
-					!isEmpty(state.activeRoom) &&
-					(state.activeRoom as any).users
-						.map(
-							(user: {
-								id: string;
-								name: string;
-								presence: { state: string };
-							}) => ({
-								id: user.id,
-								name: user.name,
-								presence: user.presence.state
-							})
-						)
-						.sort((user: any) => {
-							if (user.presence === 'online') { return -1; }
-							return 1;
-						}),
+				// users:
+				// 	!isEmpty(state.activeRoom) ?
+				// 		(state.activeRoom as any).users
+				// 			.map(
+				// 				(user: {
+				// 					id: string;
+				// 					name: string;
+				// 					presence: { state: string };
+				// 				}) => ({
+				// 					id: user.id,
+				// 					name: user.name,
+				// 					presence: user.presence.state
+				// 				})
+				// 			)
+				// 		// .sort((user: any) => {
+				// 		// 	if (user.presence === 'online') { return -1; }
+				// 		// 	return 1;
+				// 		// }) 
+				// 		: [...state.users],
+				userStatus: !isEmpty(state.activeRoom) ? userStatus((state.activeRoom as any).users) : state.userStatus,
 				loading: false
 			};
 		case CURRENT_ROOM:
@@ -138,10 +213,10 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				messages:
-					action.payload.roomId === (state.activeRoom as any).id
+					action.payload.room === (state.activeRoom as any).id
 						? state.messages.length === 0 ||
-							(state.messages[state.messages.length - 1] as any).id !==
-							action.payload.id
+							(state.messages[state.messages.length - 1] as IRoomMessage)._id !==
+							action.payload._id
 							? [...state.messages, action.payload]
 							: [...state.messages]
 						: [...state.messages],
@@ -209,25 +284,13 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				companyRooms: action.payload,
 				loading: false
 			};
-		case GET_ROOM_MEMBERS_FROM_SERVER:
-			return {
-				...state,
-				roomMembers: action.payload,
-				loading: false
-			};
-		case ADD_MEMBER_IN_ROOM:
-			return {
-				...state,
-				roomMembers: [...state.roomMembers, ...action.payload],
-				loading: false
-			};
 		case TOGGLE_EMOJI_PICKER:
 			return {
 				...state,
 				emojiPicker: action.payload
 			};
 		case ADD_MEMBER_IN_ROOM_ERROR:
-		case GET_ROOM_MEMBERS_FROM_SERVER_ERROR:
+		case GET_ROOM_MEMBERS_ERROR:
 		case CREATE_ROOM_ERROR:
 		case GET_ROOM_ERROR:
 			return {
