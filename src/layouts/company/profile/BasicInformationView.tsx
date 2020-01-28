@@ -7,11 +7,11 @@ import { permit } from 'stores/UtilsActions';
 import { isEmpty } from 'lodash';
 import { CompanyAboutView } from './AboutView';
 
-const UserImage = require('./../../../resources/images/CompanyIcon.svg');
+import UserImage from './../../../resources/images/CompanyIcon.svg';
 
 const BasicInfoDetailsViewComponent = (props: any) => {
 
-  const [showDialog, setShowDialog] = useState(false)
+  const [showDialog, setShowDialog] = useState(false);
   const [showDialogPicture, setShowDialogPicture] = useState(false);
   const [imageSelected, setImageSelected] = useState({}) as any;
   const [imageName, setImageName] = useState({}) as any;
@@ -22,7 +22,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
     if (event.target.files) {
       if (event.target.files[0]) {
         if (event.target.files[0].size / 1024 / 1024 > 1) {
-          setImageName("");
+          setImageName('');
           setImageError(true);
           return false;
         } else {
@@ -35,8 +35,8 @@ const BasicInfoDetailsViewComponent = (props: any) => {
         }
       }
     }
-    return false
-  }
+    return false;
+  };
   return (
     <>
       <div>
@@ -46,7 +46,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
               <img
                 className="db br-100 ba b--black-10"
                 style={{ width: '112px', height: '112px' }}
-                src={props.company.logo ? props.company.logo.imageSource : UserImage}
+                src={props.company.logo ? props.company.logo.link : UserImage}
               />
               {permit(props.company.role) ?
                 <div className="absolute bg-tigrowLightBlue br-100 pointer"
@@ -55,7 +55,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
                 >
                   <Icon className="white" icon="camera" iconSize={20} ></Icon>
                 </div>
-                : ""}
+                : ''}
             </div>
             <h1 className="f5 lh-copy tigrow-lightGray-1 ws-break">{props.company.name}</h1>
             <p className=" light-silver" >{props.company.type}</p>
@@ -68,7 +68,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
               <h1 className="f5 lh-copy dib tigrow-lightGray-1">Basic Information</h1>
               <Icon
                 className="fr mv3 tigrow-lightBlue pointer"
-                icon={permit(props.company.role) ? "edit" : "blank"}
+                icon={permit(props.company.role) ? 'edit' : 'blank'}
                 onClick={() => setShowDialog(true)}
               />
             </div>
@@ -128,7 +128,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
               <small style={{ color: 'red' }}>Image size can't be greater than 1 MB</small>}
             <div className="flex justify-end mt3">
               <Button className="w4 grow h2 pointer mr3"
-                style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+                style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
                 onClick={(e: any) => {
                   e.preventDefault();
                   setShowDialogPicture(false);
@@ -144,12 +144,12 @@ const BasicInfoDetailsViewComponent = (props: any) => {
                 className="w4 grow h2 pointer"
                 style={imageName && isEmpty(imageName.name) === false ?
                   {
-                    background: "#0fa3a3",
-                    outline: "none",
+                    background: '#0fa3a3',
+                    outline: 'none',
                     color: 'white'
                   } : {
                     background: '#011b1b2e',
-                    outline: "none",
+                    outline: 'none',
                     color: 'white'
                   }
                 }
@@ -173,13 +173,14 @@ const BasicInfoDetailsViewComponent = (props: any) => {
       )}
     </>
 
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
-  }
-}
+  };
+};
 
-export const BasicInfoDetailsView = connect(mapStateToProps, { companyLogoUploadAction })(BasicInfoDetailsViewComponent)
+export const BasicInfoDetailsView = connect(mapStateToProps, { 
+  companyLogoUploadAction })(BasicInfoDetailsViewComponent);

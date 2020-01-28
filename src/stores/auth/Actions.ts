@@ -2,7 +2,7 @@ import tigrowApi from 'tigrowApi';
 import { AxiosRequestConfig } from 'axios';
 import { History } from 'history';
 import { isEqual } from 'lodash';
-import { tokenConfig, awsImageOption } from '../UtilsActions';
+import { tokenConfig } from '../UtilsActions';
 import { FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE } from 'stores/user/Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
@@ -64,30 +64,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`accounts`, headers);
-			let updatedUserInfo = response.data.user;
-			if (updatedUserInfo.profileImage) {
-				const awsOptions = awsImageOption(updatedUserInfo.profileImage);
-				const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-				updatedUserInfo = {
-					...updatedUserInfo,
-					profileImage: {
-						...updatedUserInfo.profileImage,
-						imageSource: imgRes.data
-					}
-				};
-			}
-			if (updatedUserInfo.coverImage) {
-				const awsOptions = awsImageOption(updatedUserInfo.coverImage);
-				const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-				updatedUserInfo = {
-					...updatedUserInfo,
-					coverImage: {
-						...updatedUserInfo.coverImage,
-						imageSource: imgRes.data
-					}
-				};
-			}
-			dispatch({ type: FETCH_USER, payload: updatedUserInfo });
+			dispatch({ type: FETCH_USER, payload: response.data.user });
 		} else {
 			dispatch({ type: USER_FETCH_ERROR, payload: 'error in user fetching' });
 		}

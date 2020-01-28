@@ -1,8 +1,8 @@
-import tigrowApi from "tigrowApi";
-import { isEqual } from "lodash";
-import { History } from "history";
-import { tokenConfig, awsImageOption } from "../UtilsActions";
-import { CompanyModel } from "stores/company/Reducer";
+import tigrowApi from 'tigrowApi';
+import { isEqual } from 'lodash';
+import { History } from 'history';
+import { tokenConfig } from '../UtilsActions';
+import { CompanyModel } from 'stores/company/Reducer';
 import {
 	CREATE_COMPANY,
 	CREATE_COMPANY_ERROR,
@@ -30,40 +30,30 @@ import {
 	LOGO_UPLOAD,
 	CHANGE_MEMBER_ROLE,
 	CHANGE_MEMBER_ROLE_ERROR
-} from "./Types";
-import { CLEAR_ROOMS_REDUCER_STATE } from "stores/room/Types";
+} from './Types';
+import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 
 export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`company/${name}`, headers);
-			let updatedCompanyDetails = response.data.company;
-			if (updatedCompanyDetails.logo) {
-				const awsOptions = awsImageOption(updatedCompanyDetails.logo)
-				const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-				updatedCompanyDetails = {
-					...updatedCompanyDetails,
-					logo: {
-						...updatedCompanyDetails.logo,
-						imageSource: imgRes.data
-					}
-				}
-			}
-			dispatch({ type: GET_COMPANY_DETAILS, payload: updatedCompanyDetails })
+			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
 			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
 			return response.data;
 		} else {
-			console.log("error in slection of company fetching")
+			// tslint:disable-next-line: no-console
+			console.log('error in slection of company fetching');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({ type: CREATE_COMPANY_ERROR, payload: "Network error" });
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: CREATE_COMPANY_ERROR, payload: 'Network error' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
-}
+};
 
 export const createCompanyAction = (
 	companyData: CompanyModel,
@@ -77,14 +67,15 @@ export const createCompanyAction = (
 			routeHistory.push(`/company/${response.data.company.name}`);
 			return response.data;
 		} else {
-			console.log("error in creation of company");
+			// tslint:disable-next-line: no-console
+			console.log('error in creation of company');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
+		if (isEqual(error.message, 'Network Error')) {
 			dispatch({
 				type: CREATE_COMPANY_ERROR,
 				payload: {
-					message: "Network error",
+					message: 'Network error',
 					network: true
 				}
 			});
@@ -92,11 +83,12 @@ export const createCompanyAction = (
 			dispatch({
 				type: CREATE_COMPANY_ERROR,
 				payload: {
-					message: "Duplicate Company Name",
+					message: 'Duplicate Company Name',
 					network: false
 				}
 			});
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -106,7 +98,7 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			let companyName = getState().companyReducer.currentCompany.name;
+			const companyName = getState().companyReducer.currentCompany.name;
 			dispatch({ type: COMPANY_REDUCER_LOADING });
 			const response = await tigrowApi.get(
 				`company/${companyName}/members?limit=100`,
@@ -114,12 +106,14 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 			);
 			dispatch({ type: GET_ALL_COMPANY_MEMBERS, payload: response.data });
 		} else {
-			console.log("error in selection of company fetching");
+			// tslint:disable-next-line: no-console
+			console.log('error in selection of company fetching');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: "Network error" });
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: 'Network error' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -141,12 +135,14 @@ export const addTeamMembers = (members: any, companyName: string) => async (
 			dispatch({ type: COMPANY_REDUCER_LOADING_FALSE });
 			// dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
 		} else {
-			console.log("error in selection of company fetching");
+			// tslint:disable-next-line: no-console
+			console.log('error in selection of company fetching');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: "Network error" });
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: 'Network error' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -160,7 +156,7 @@ export const addDepartment = (name: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: ADD_DEPARTMENT_LOADING });
-			let company = getState().companyReducer.currentCompany.name;
+			const company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.post(
 				`company/${company}/departments`,
 				{ name },
@@ -169,19 +165,22 @@ export const addDepartment = (name: string) => async (
 			dispatch({ type: ADD_DEPARTMENT, payload: response.data });
 			return response.data;
 		} else {
-			console.log("error in adding department");
+			// tslint:disable-next-line: no-console
+			console.log('error in adding department');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			console.log("Network error");
+		if (isEqual(error.message, 'Network Error')) {
+			// tslint:disable-next-line: no-console
+			console.log('Network error');
 		} else if (error.response.status === 401) {
-			dispatch({ type: ADD_DEPARTMENT_ERROR, payload: "Unauthorized user." });
+			dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Unauthorized user.' });
 		} else if (error.response.status === 409) {
 			dispatch({
 				type: ADD_DEPARTMENT_ERROR,
-				payload: "Department already exists"
+				payload: 'Department already exists'
 			});
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -196,21 +195,23 @@ export const getAllDepartments = () => async (dispatch: any, getState: any) => {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DEPARTMENT_LOADING });
-			let company = getState().companyReducer.currentCompany.name;
+			const company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.get(
 				`company/${company}/departments`,
 				headers
 			);
 			dispatch({ type: GET_ALL_DEPARTMENT, payload: response.data });
 		} else {
-			console.log("error in adding department");
+			// tslint:disable-next-line: no-console
+			console.log('error in adding department');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({ type: ADD_DEPARTMENT_ERROR, payload: "Network error" });
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Network error' });
 		} else if (error.response.status === 401) {
-			dispatch({ type: ADD_DEPARTMENT_ERROR, payload: "Unauthorized user." });
+			dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Unauthorized user.' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -223,17 +224,21 @@ export const editCompanyInfoAction = (companyInfo: CompanyModel) => async (
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			let company = getState().companyReducer.currentCompany.name;
+			const company = getState().companyReducer.currentCompany.name;
 			await tigrowApi.put(`company/${company}/basic`, companyInfo, headers);
 			dispatch({ type: EDIT_COMPANY_INFO, payload: companyInfo });
 		} else {
-			console.log("error in user fetching");
+			// tslint:disable-next-line: no-console
+			console.log('error in user fetching');
 		}
 	} catch (error) {
+		// tslint:disable-next-line: no-console
 		console.log(error);
-		if (isEqual(error.message, "Network Error")) {
-			console.log("Network error");
+		if (isEqual(error.message, 'Network Error')) {
+			// tslint:disable-next-line: no-console
+			console.log('Network error');
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -246,7 +251,7 @@ export const editCompanyAboutAction = (companyAbout: string) => async (
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			let company = getState().companyReducer.currentCompany.name;
+			const company = getState().companyReducer.currentCompany.name;
 			await tigrowApi.put(
 				`company/${company}/about`,
 				{ about: companyAbout },
@@ -254,13 +259,15 @@ export const editCompanyAboutAction = (companyAbout: string) => async (
 			);
 			dispatch({ type: EDIT_COMPANY_INFO, payload: { about: companyAbout } });
 		} else {
-			console.log("error in user fetching");
+			// tslint:disable-next-line: no-console
+			console.log('error in user fetching');
 		}
 	} catch (error) {
-		console.log(error);
-		if (isEqual(error.message, "Network Error")) {
-			console.log("Network error");
+		if (isEqual(error.message, 'Network Error')) {
+			// tslint:disable-next-line: no-console
+			console.log('Network error');
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -274,7 +281,7 @@ export const changeCompanyName = (companyName: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: CHANGE_COMPANY_NAME_LOADING });
-			let company = getState().companyReducer.currentCompany.name;
+			const company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.put(
 				`company/${company}/changeName`,
 				{ name: companyName },
@@ -285,17 +292,20 @@ export const changeCompanyName = (companyName: string) => async (
 				return response.data;
 			}
 		} else {
-			console.log("error in changing Company Name");
+			// tslint:disable-next-line: no-console
+			console.log('error in changing Company Name');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			console.log("Network error");
+		if (isEqual(error.message, 'Network Error')) {
+			// tslint:disable-next-line: no-console
+			console.log('Network error');
 		} else if (error.response.status === 409) {
 			dispatch({
 				type: CHANGE_COMPANY_NAME_ERROR,
-				payload: "Name already exist"
+				payload: 'Name already exist'
 			});
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -303,7 +313,7 @@ export const changeCompanyName = (companyName: string) => async (
 
 export const clearChangeCompanyNameError = () => async (dispatch: any) => {
 	dispatch({ type: CLEAR_CHANGE_COMPANY_NAME_ERROR });
-}
+};
 
 export const companyLogoUploadAction = (imageSelected: any) => async (dispatch: any, getState: any) => {
 	try {
@@ -311,22 +321,22 @@ export const companyLogoUploadAction = (imageSelected: any) => async (dispatch: 
 		const companyId = getState().companyReducer.currentCompany._id;
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`files/company-logo?cid=${companyId}`, imageSelected, headers);
-			const awsOptions = awsImageOption(response.data);
-			const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
-			dispatch({ type: LOGO_UPLOAD, payload: { ...response.data, imageSource: imgRes.data } })
-			return imgRes.data;
+			dispatch({ type: LOGO_UPLOAD, payload: { ...response.data, link: response.data.link } });
+			return response.data;
 		} else {
-			console.log('no headers')
+			// tslint:disable-next-line: no-console
+			console.log('no headers');
 		}
 	} catch (error) {
 		if (isEqual(error.message, 'Network Error')) {
-			console.log('network error')
-		}
-		else {
+			// tslint:disable-next-line: no-console
+			console.log('network error');
+		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
-}
+};
 
 export const addDesignation = (values: any, memberId: string) => async (
 	dispatch: any,
@@ -336,7 +346,7 @@ export const addDesignation = (values: any, memberId: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DESIGNATION_LOADING });
-			let company = getState().companyReducer.currentCompany.name;
+			const company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.post(
 				`company/${company}/designations/${memberId}`,
 				values,
@@ -345,14 +355,16 @@ export const addDesignation = (values: any, memberId: string) => async (
 			dispatch({ type: ADD_DESIGNATION });
 			return response.status;
 		} else {
-			console.log("error in adding designation");
+			// tslint:disable-next-line: no-console
+			console.log('error in adding designation');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({ type: ADD_DESIGNATION_ERROR, payload: "Network error" });
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: ADD_DESIGNATION_ERROR, payload: 'Network error' });
 		} else if (error.response.status === 401) {
-			dispatch({ type: ADD_DESIGNATION_ERROR, payload: "Unauthorized user." });
+			dispatch({ type: ADD_DESIGNATION_ERROR, payload: 'Unauthorized user.' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 		return error.response.status;
@@ -367,7 +379,7 @@ export const editDesignation = (values: any, memberId: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DESIGNATION_LOADING });
-			let company = getState().companyReducer.currentCompany.name;
+			const company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.put(
 				`company/${company}/designations/${memberId}`,
 				values,
@@ -376,14 +388,16 @@ export const editDesignation = (values: any, memberId: string) => async (
 			dispatch({ type: EDIT_DESIGNATION });
 			return response.status;
 		} else {
-			console.log("error in adding designation");
+			// tslint:disable-next-line: no-console
+			console.log('error in adding designation');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({ type: EDIT_DESIGNATION_ERROR, payload: "Network error" });
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: EDIT_DESIGNATION_ERROR, payload: 'Network error' });
 		} else if (error.response.status === 401) {
-			dispatch({ type: EDIT_DESIGNATION_ERROR, payload: "Unauthorized user." });
+			dispatch({ type: EDIT_DESIGNATION_ERROR, payload: 'Unauthorized user.' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 		return error.response.status;
@@ -397,7 +411,7 @@ export const changeMemberRole = (values: { role: string }, memberId: string) => 
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			let company = getState().companyReducer.currentCompany.name;
+			const company = getState().companyReducer.currentCompany.name;
 			const response = await tigrowApi.put(
 				`/company/${company}/members/${memberId}/changeRole`,
 				values,
@@ -406,14 +420,16 @@ export const changeMemberRole = (values: { role: string }, memberId: string) => 
 			dispatch({ type: CHANGE_MEMBER_ROLE, payload: { memberId, role: values.role } });
 			return response.status;
 		} else {
-			console.log("error in changing member role");
+			// tslint:disable-next-line: no-console
+			console.log('error in changing member role');
 		}
 	} catch (error) {
-		if (isEqual(error.message, "Network Error")) {
-			dispatch({ type: CHANGE_MEMBER_ROLE_ERROR, payload: "Network error" });
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: CHANGE_MEMBER_ROLE_ERROR, payload: 'Network error' });
 		} else if (error.response.status === 401) {
-			dispatch({ type: CHANGE_MEMBER_ROLE_ERROR, payload: "Unauthorized user." });
+			dispatch({ type: CHANGE_MEMBER_ROLE_ERROR, payload: 'Unauthorized user.' });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 		return error.response.status;

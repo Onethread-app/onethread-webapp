@@ -18,41 +18,40 @@ export interface ICompanyByUser {
 	company: {
 		_id: string;
 		name: string;
-	}
+	};
 }
 export interface IProfilePhoto {
 	_id: string;
 	link: string;
 	s3key: string;
 	type: string;
-	imageSource: string;
 }
 export interface IExperience {
-	_id: string,
-	name: string,
-	qualification: string,
-	startYear: string,
-	endingYear: string,
-	currentStatus: boolean,
-	description: string
+	_id: string;
+	name: string;
+	qualification: string;
+	startYear: string;
+	endingYear: string;
+	currentStatus: boolean;
+	description: string;
 }
 export interface User {
-	_id: string,
-	email: string
-	firstName: string
+	_id: string;
+	email: string;
+	firstName: string;
 	lastName: string;
 	name: string;
-	accountVerified: boolean,
-	role: string,
-	contactNo: string,
-	gender: string,
-	secondaryEmail: string,
-	bloodGroup: string,
-	location: string,
-	about: string,
-	birthDate: Date,
-	companies: ICompanyByUser[],
-	timeline: string[],
+	accountVerified: boolean;
+	role: string;
+	contactNo: string;
+	gender: string;
+	secondaryEmail: string;
+	bloodGroup: string;
+	location: string;
+	about: string;
+	birthDate: Date;
+	companies: ICompanyByUser[];
+	timeline: string[];
 	skillArea: ItemEntityProps[];
 	profileImage: IProfilePhoto;
 	coverImage: IProfilePhoto;
@@ -61,20 +60,20 @@ export interface User {
 
 const InitialState = {
 	user: {
-		_id: "",
-		email: "",
-		firstName: "",
-		lastName: "",
-		name: "",
+		_id: '',
+		email: '',
+		firstName: '',
+		lastName: '',
+		name: '',
 		accountVerified: false,
-		role: "",
-		contactNo: "",
-		gender: "",
-		secondaryEmail: "",
-		bloodGroup: "",
-		location: "",
-		about: "",
-		birthDate: "",
+		role: '',
+		contactNo: '',
+		gender: '',
+		secondaryEmail: '',
+		bloodGroup: '',
+		location: '',
+		about: '',
+		birthDate: '',
 		companies: [],
 		friends: [],
 		pendingFriends: [],
@@ -86,7 +85,7 @@ const InitialState = {
 		position: ''
 	},
 	error: ''
-}
+};
 
 export const UserReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
@@ -94,7 +93,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				error: action.payload,
-			}
+			};
 		case BASIC_INFO:
 			return {
 				...state,
@@ -102,7 +101,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 					...state.user,
 					...action.payload
 				}
-			}
+			};
 		case EDIT_BASIC_INFO:
 			return {
 				...state,
@@ -110,7 +109,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 					...state.user,
 					...action.payload,
 				}
-			}
+			};
 		case ADD_SKILL:
 			return {
 				...state,
@@ -118,7 +117,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 					...state.user,
 					skillArea: [...action.payload]
 				}
-			}
+			};
 		case DELETE_SKILL:
 			return {
 				...state,
@@ -126,7 +125,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 					...state.user,
 					skillArea: [...action.payload]
 				}
-			}
+			};
 		case USER_COMPANIES_UPDATE:
 			return {
 				...state,
@@ -134,12 +133,12 @@ export const UserReducer = (state = InitialState, action: any) => {
 					...state.user,
 					companies: action.payload.companies
 				}
-			}
+			};
 		case FETCH_USER:
 			return {
 				...state,
 				user: action.payload,
-			}
+			};
 		case ADD_EXPERIENCE: {
 			return {
 				...state,
@@ -147,18 +146,18 @@ export const UserReducer = (state = InitialState, action: any) => {
 					...state.user,
 					timeline: action.payload
 				}
-			}
+			};
 		}
 		case EDIT_BASIC_INFO_ERROR: {
 			return {
 				...state,
 				error: action.payload,
-			}
+			};
 		}
 		case CLEAR_USER_REDUCER_STATE:
 			return {
 				...InitialState
-			}
+			};
 		case PROFILE_IMAGE_UPLOAD: {
 			return {
 				...state,

@@ -19,7 +19,7 @@ const ProfilePictureViewComponent = (props: IProfilePictureViewProps) => {
           onClick={() => setShowDialogPicture(true)}
           className=""
           style={{ objectFit: 'cover', width: '220px', height: '220px' }}
-          src={props.user.profileImage ? props.user.profileImage.imageSource : DefaultUserImage}
+          src={props.user.profileImage ? props.user.profileImage.link : DefaultUserImage}
         />
       </div>
       {showDialogPicture && (
