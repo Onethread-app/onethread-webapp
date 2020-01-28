@@ -119,7 +119,7 @@ export const logoutAction = (routeHistory: History) => async (dispatch: any) => 
 	}
 };
 
-export const resendMailForSignup = () => async (dispatch: any) => {
+export const resendMailForSignup = async () => {
 	try {
 		const requestData = {
 			email: JSON.parse(localStorage.getItem('email')!),
