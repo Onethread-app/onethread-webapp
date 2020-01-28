@@ -7,37 +7,51 @@ import { Link } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
 
 const EmailVerificationComponent = (props: RouteComponentProps) => {
-  const [accountVerified, setAccountVerified] = useState(false);
-
-  const getUserId = async (token: string) => {
-    try {
-      const response = await tigrowApi.get(`accounts/verify-account/${token}`, {
-        'Content-Type': 'application/json'
-      } as AxiosRequestConfig);
-      if (response.status === 200) {
-        setAccountVerified(true);
-      }
-    } catch (error) {
-      if (isEqual(error.message, 'Network Error')) {
-        // tslint:disable-next-line: no-console
-        console.log('network error');
-      } else {
-        // tslint:disable-next-line: no-console
-        console.log(error.response);
-      }
-    }
-  };
+  const [accountVerified, setAccountVerified] = useState({
+    status: undefined,
+    isAccountVerified: undefined,
+    message: ''
+  });
 
   useEffect(() => {
     const token = (props.match.params as any).token;
+
+    async function getUserId(userToken: string) {
+      let responsedata = accountVerified;
+      try {
+        const response: any = await tigrowApi.get(`accounts/verify-account/${userToken}`, {
+          'Content-Type': 'application/json'
+        } as AxiosRequestConfig);
+        responsedata = {
+          status: response.status,
+          isAccountVerified: response.data.isAccountVerified,
+          message: response.data.message
+        };
+      } catch (error) {
+        if (isEqual(error.message, 'Network Error')) {
+          setAccountVerified({
+            ...accountVerified,
+            message: 'Network Error'
+          });
+        } else {
+          responsedata = {
+            status: error.response.status,
+            isAccountVerified: error.response.data.isAccountVerified,
+            message: error.response.data.message
+          };
+        }
+      }
+      setAccountVerified(responsedata);
+    }
+
     getUserId(token);
   }, []);
 
   return (
-    <div>
-      {accountVerified ?
-        <div className="mt5">
-          <p className="tc f3 fw5">Account Verified Successfully</p>
+    <div className="mt5">
+      {isEqual(accountVerified.status, 200) === true && accountVerified.isAccountVerified === true ?
+        <>
+          <p className="tc f3 fw5">{accountVerified.message}</p>
           <p className="tc">
             <Link to={`/signin`}>
               <Button
@@ -45,8 +59,10 @@ const EmailVerificationComponent = (props: RouteComponentProps) => {
               />
             </Link>
           </p>
-        </div>
-        : <p className="tc f3 fw5 mt5 red">This link is expired.</p>}
+        </>
+        : isEqual(accountVerified.status, undefined) === false && accountVerified.isAccountVerified === false ?
+          <p className="tc f3 fw5 red">{accountVerified.message}</p>
+          : <p className="tc f3 fw5 blue">Your mail is verifing now....</p>}
     </div>
   );
 };

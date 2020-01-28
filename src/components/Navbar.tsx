@@ -79,7 +79,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
                   >
                     <div className="dtc w1 w2-ns">
                       <img
-                        src={props.user.profileImage ? props.user.profileImage.imageSource : user}
+                        src={props.user.profileImage ? props.user.profileImage.link : user}
                         className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10"
                       />
                     </div>
@@ -110,7 +110,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             }
             target={
               <img
-                src={props.user.profileImage ? props.user.profileImage.imageSource : user}
+                src={props.user.profileImage ? props.user.profileImage.link : user}
                 className="dim v-mid dib br-100 pointer"
                 style={{
                   width: '2rem',

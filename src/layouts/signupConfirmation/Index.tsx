@@ -1,23 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button, Toaster } from '@blueprintjs/core';
 import successfulEmailImage from './../../resources/images/successfulEmail.png';
-import { connect } from 'react-redux';
-import { resendMailForSignup } from 'stores/auth/Actions';
 import { isEqual } from 'lodash';
+import { resendMailForSignup } from 'stores/auth/Actions';
 
-const SignupConfirmationPageComponent = (props: {
-  resendMailForSignup: () => any;
-}) => {
+const SignupConfirmationPageComponent = () => {
+
+  const [loading, setLoading] = useState(false);
 
   const onSubmit = async () => {
-    const response = await props.resendMailForSignup();
+    setLoading(true);
+    const response = await resendMailForSignup();
     if (response.message === 200) {
       Toaster.create().show({message: 'Email has been send successfully'});
     }
     if (isEqual(response.message, 'Network Error')) {
       Toaster.create().show({message: 'Network Error'});
     }
+    setLoading(false);
   };
 
   return (
@@ -34,6 +35,8 @@ const SignupConfirmationPageComponent = (props: {
             className="br3 f5 f4-m f3-l fw6 mt3 ph4 pv3"
             text="Resend mail"
             onClick={onSubmit}
+            loading={loading}
+            disabled={loading}
           />
         </div>
       </div>
@@ -50,4 +53,4 @@ const SignupConfirmationPageComponent = (props: {
   );
 };
 
-export const SignupConfirmationPage = connect(null, { resendMailForSignup })(SignupConfirmationPageComponent);
+export const SignupConfirmationPage = SignupConfirmationPageComponent;

@@ -8,7 +8,7 @@ import {
 	PROFILE_IMAGE_UPLOAD,
 	COVER_IMAGE_UPLOAD
 } from './Types';
-import { tokenConfig, awsImageOption } from 'stores/UtilsActions';
+import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
 import tigrowApi from 'tigrowApi';
 import { User } from './Reducer';
@@ -47,12 +47,15 @@ export const addSkillAction = (skillSet: string[]) => async (dispatch: any, getS
 			const response = await tigrowApi.put(`skills/update-skill`, req, headers);
 			dispatch({ type: ADD_SKILL, payload: response.data.skillList });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('error in user fetching');
 		}
 	} catch (error) {
 		if (isEqual(error.message, 'Network Error')) {
+			// tslint:disable-next-line: no-console
 			console.log('Network error');
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
@@ -76,6 +79,7 @@ export const addJobExperienceAction = (jobExperienceInfo: any) => async (dispatc
 			);
 			dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('token error');
 		}
 		return errorMessgeHandler(response);
@@ -102,6 +106,7 @@ export const addEducationExperienceAction = (educationExperienceInfo: any) => as
 			);
 			dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('token error');
 		}
 		return errorMessgeHandler(response);
@@ -117,9 +122,11 @@ export const getAllCompaniesByUserId = (userId: string) => async (dispatch: any,
 			const response = await tigrowApi.get(`company/individual/${userId}`, headers);
 			dispatch({ type: USER_COMPANIES_UPDATE, payload: response.data });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('error in get company list by user');
 		}
 	} catch (error) {
+		// tslint:disable-next-line: no-console
 		console.log(error.response);
 	}
 };
@@ -130,18 +137,22 @@ export const deleteSkillAction = (skill: string) => async (dispatch: any, getSta
 			const response = await tigrowApi.delete(`skills/delete-skill?skillId=${skill}`, headers);
 			dispatch({ type: DELETE_SKILL, payload: response.data.skillArea });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('error in user fetching');
 		}
 	} catch (error) {
 		if (isEqual(error.message, 'Network Error')) {
+			// tslint:disable-next-line: no-console
 			console.log('Network error');
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}
 };
 
-export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid: any) => async (dispatch: any, getState: any) => {
+export const editJobExperienceAction = (
+	jobExperienceInfo: any, jobexperienceid: any) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig();
 		let response;
@@ -160,6 +171,7 @@ export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid:
 			);
 			dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('token error');
 		}
 		return errorMessgeHandler(response);
@@ -169,7 +181,8 @@ export const editJobExperienceAction = (jobExperienceInfo: any, jobexperienceid:
 	}
 };
 
-export const editEducationExperienceAction = (educationExperienceInfo: any, educationexperienceid: any) => async (dispatch: any, getState: any) => {
+export const editEducationExperienceAction = (
+	educationExperienceInfo: any, educationexperienceid: any) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig();
 		let response;
@@ -188,6 +201,7 @@ export const editEducationExperienceAction = (educationExperienceInfo: any, educ
 			);
 			dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('token error');
 		}
 		return errorMessgeHandler(response);
@@ -201,21 +215,22 @@ export const imageUploadAction = (imageSelected: any, type: string) => async (di
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`files/upload?imageType=${type}`, imageSelected, headers);
-			const awsOptions = awsImageOption(response.data);
-			const imgRes = await tigrowApi.get(`files/show-file`, awsOptions);
 			if (response.data.imageType === 'profilePic') {
-				dispatch({ type: PROFILE_IMAGE_UPLOAD, payload: { ...response.data, imageSource: imgRes.data } });
+				dispatch({ type: PROFILE_IMAGE_UPLOAD, payload: { ...response.data, link: response.data.link } });
 			} else if (response.data.imageType === 'coverPhoto') {
-				dispatch({ type: COVER_IMAGE_UPLOAD, payload: { ...response.data, imageSource: imgRes.data } });
+				dispatch({ type: COVER_IMAGE_UPLOAD, payload: { ...response.data, link: response.data.link } });
 			}
-			return imgRes.data;
+			return response.data;
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log('no headers');
 		}
 	} catch (error) {
 		if (isEqual(error.message, 'Network Error')) {
+			// tslint:disable-next-line: no-console
 			console.log('network error');
 		} else {
+			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
 	}

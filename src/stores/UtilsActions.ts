@@ -54,16 +54,6 @@ export const passwordValidation = (password: string) => {
   }
 };
 
-export const awsImageOption = (response: any) => {
-  const options = {
-    params: {
-      Key: response.s3Key,
-      ContentType: response.type
-    }
-  };
-  return options;
-};
-
 export const boardColor = [
   { code: 0, value: '#FA617F' },
   { code: 1, value: '#A8D16B' },
