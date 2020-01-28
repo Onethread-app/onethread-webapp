@@ -36,7 +36,12 @@ router
     // permit('user', 'admin'),
     SchemaValidator(joiSchema.updateSubTask),
     subTaskCtrl.update,
-  );
+  )
+  .delete(
+    authorization,
+    SchemaValidator(joiSchema.deleteSubtask),
+    subTaskCtrl.deleteSubtask
+  );  
 
 router.param('subTaskId', subTaskCtrl.load);
 
