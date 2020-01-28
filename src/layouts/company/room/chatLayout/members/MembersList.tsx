@@ -1,8 +1,9 @@
 import React from 'react';
 import { isEqual } from 'lodash';
-import { IRoomMember } from 'stores/room/Reducer';
+import { IRoomReducer } from 'stores/room/Reducer';
 interface MembersListProps {
-  users: IRoomMember[];
+  users: IRoomReducer['users'];
+  userStatus: IRoomReducer['userStatus'];
 }
 export const MembersList = (props: MembersListProps) => {
   return (
@@ -16,7 +17,7 @@ export const MembersList = (props: MembersListProps) => {
                 key={user._id}
                 className={`flex items-center w-100 pv1 ${i !== props.users.length - 1 ? 'bb' : ''} b--black-05`}>
                 <div
-                  className={`mr1 ${isEqual(user.presence, 'online') ?
+                  className={`mr1 ${isEqual(props.userStatus[user._id], 'online') ?
                     'br-100 bg-green' : 'br-100 ba'}`}
                   style={{ width: '7px', height: '7px' }}></div>
                 <h1 className="f7 black mv0">@{user.name}</h1>

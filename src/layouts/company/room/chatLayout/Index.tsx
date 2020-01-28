@@ -9,13 +9,14 @@ import { isEmpty } from 'lodash';
 import { showAddMember } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
 import { RightSidebar } from 'components/RightSidebar';
-import { IRoomMember } from 'stores/room/Reducer';
+import { IRoomReducer } from 'stores/room/Reducer';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
 	activeRoom: any;
 	companyRole: string;
-	users: IRoomMember[];
+	users: IRoomReducer['users'];
+	userStatus: IRoomReducer['userStatus'];
 }
 
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
@@ -65,18 +66,6 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					<p>General is a default room.</p>
 				</div>
 			}
-			{/* {showMemberFormDialog && (
-				<Dialog
-					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
-					isOpen={showMemberFormDialog}
-					style={{ background: '#fff' }}
-				>
-					<AddMemberForm
-						showDialog={showMemberFormDialog}
-						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
-					/>
-				</Dialog>
-			)} */}
 			{showMemberListDialog && (
 				<Dialog
 					onClose={() => setShowMemberListDialog(!showMemberListDialog)}
@@ -84,7 +73,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					style={{ background: '#fff' }}
 				>
 					<MembersList
-						users={props.users} />
+						users={props.users}
+						userStatus={props.userStatus} />
 				</Dialog>
 			)}
 
@@ -107,6 +97,7 @@ const mapStateToProps = (state: any) => {
 	return {
 		activeRoom: state.roomReducer.activeRoom,
 		users: state.roomReducer.users,
+		userStatus: state.roomReducer.userStatus,
 		companyRole: state.companyReducer.currentCompany.role,
 	};
 };
