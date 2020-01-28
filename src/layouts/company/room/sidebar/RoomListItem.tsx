@@ -26,7 +26,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 	return (
 		<li
 			id="roomListItem"
-			className={`pointer`}
+			className="pointer"
 			style={{
 				background: props.active ? 'rgb(63, 97, 197)' : '',
 				color: props.active ? '#FFFFFF' : ''
