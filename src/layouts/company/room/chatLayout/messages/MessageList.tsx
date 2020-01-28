@@ -17,10 +17,6 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const messages = useSelector((state: any) => state.roomReducer.messages);
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
-	const rooms = useSelector((state: any) => state.roomReducer.rooms);
-	// const typingUsers = useSelector(
-	// 	(state: any) => state.roomReducer.typing.users
-	// );
 
 	const scrollToBottom = () => {
 		// On new message, scroll to bottom
@@ -51,20 +47,18 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 			ref={messagesEndRef}
 		// style={{ height: "calc(100vh - 186px)" }}
 		>
-			{!props.chatkit.isLoading && rooms.length
-				? messages.length
-					? messages.map((message: IRoomMessage) => {
-						return (
-							<MessageItem
-								key={message._id}
-								img={UserIcon}
-								text={message.text}
-								createdAt={message.createdAt}
-								sender={message.account}
-							/>
-						);
-					})
-					: ''
+			{messages.length
+				? messages.map((message: IRoomMessage) => {
+					return (
+						<MessageItem
+							key={message._id}
+							img={UserIcon}
+							text={message.text}
+							createdAt={message.createdAt}
+							sender={message.account}
+						/>
+					);
+				})
 				: ''}
 		</div>
 	);

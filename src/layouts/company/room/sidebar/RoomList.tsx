@@ -160,16 +160,18 @@ export const RoomListComponent = withChatkit(
 		// 	}
 		// }, [companyId]);
 
+		const roomBgColor = ['#D8315B', '#744FC6', '#0FA3A3', '#456990', '#CDA2AB', '#FE5E41'];
+
 		return (
 			<>
 				<main
-					className="mw6"
+					className="mw6 nowrap"
 					id="roomList"
 				>
-					<ul className="list pa0">
+					<ul className="list pa0 mh2">
 						{props.chatkit.isLoading ? (
 							<Loading />
-						) : props.rooms.length && (props.rooms[0] as any).id !== undefined ? (
+						) : props.rooms.length ? (
 							props.rooms.map((room: IRoom, i: number, arr: any) => {
 								return (
 									<RoomListItem
@@ -179,14 +181,13 @@ export const RoomListComponent = withChatkit(
 										name={room.name}
 										unreadCount={room.unreadCount}
 										lastChild={isEqual(room.id, arr[props.rooms.length - 1].id)}
-										active={room.id === props.roomId ? 'bg-lightest-blue' : ''}
+										active={room.id === props.roomId}
 										subscribeToRoom={subscribeToRoom}
+										iconBgColor={roomBgColor[i % roomBgColor.length]}
 									/>
 								);
 							})
-						) : (
-									<Loading />
-								)}
+						) : (<p>No rooms</p>)}
 					</ul>
 				</main>
 			</>
