@@ -8,8 +8,8 @@ const TaskAssign = require('./taskAssign.model');
 
 const load = (req, res, next, id) => {
   Task.findById(id)
-    .populate('')
     .populate('account', '_id name')
+    .populate('columnId' , '_id name')
     .exec()
     .then(result => {
       if (result) {

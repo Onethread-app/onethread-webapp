@@ -6,9 +6,7 @@ const File = require('./file.model');
 const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
 const { Room } = require('../room/room.model');
-const { generateGetUrl, generatePutUrl } = require('../services/s3');
-
-const s3FileURL = `https://tigrow-file.s3-ap-southeast-1.amazonaws.com/`;
+const { generateGetUrl } = require('../services/s3');
 let s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
   secretAccessKey: config.awsSecretAccessKey,
@@ -31,13 +29,12 @@ const profilePicture = async (req, res, next) => {
     .then(async data => {
       logger.info(`File Successfully upload to S3`);
       const newFile = {
-        link: s3FileURL + params.Bucket,
-        s3Key: params.Key,
+        link: data.Location,
+        s3Key: data.Key,
         account: userID,
         type: params.ContentType,
         imageType: req.query.imageType,
       };
-
       const file = new File(newFile);
       file
         .save()
@@ -95,8 +92,8 @@ const companyLogo = async (req, res, next) => {
     .then(async data => {
       logger.info(`Company Logo Successfully upload to S3`);
       const newFile = {
-        link: s3FileURL + params.Bucket,
-        s3Key: params.Key,
+        link: data.Location,
+        s3Key: data.Key,
         company: companyID,
         type: params.ContentType,
         account: userID,
@@ -124,8 +121,6 @@ const companyLogo = async (req, res, next) => {
 };
 
 const fileInRooms = async (req, res, next) => {
-  console.log(req.body.text);
-
   const file = req.file;
   const roomID = req.query.roomID;
   const userID = req.user._id;

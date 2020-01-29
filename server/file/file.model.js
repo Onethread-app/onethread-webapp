@@ -14,6 +14,22 @@ const fileSchema = new mongoose.Schema(
     type: {
       type: String,
       required: true,
+      enum: [
+        'application/zip',
+        'application/pdf',
+        'application/msword',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.ms-excel',
+        'text/plain',
+        'text/csv',
+        'image/apng',
+        'image/png',
+        'image/bmp',
+        'image/gif',
+        'image/jpeg',
+        'image/jpg',
+        'image/svg',
+      ],
     },
     imageType: {
       type: String,
