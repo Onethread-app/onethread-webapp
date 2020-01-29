@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63" height="63" viewBox="0 0 63 63">
+  <g id="Assign_Task" data-name="Assign Task" transform="translate(-51 -419)">
+    <rect id="Rectangle_1185" data-name="Rectangle 1185" width="63" height="63" rx="31.5" transform="translate(51 419)" fill="#fa617f"/>
+    <g id="baseline-person_add-24px" transform="translate(68 434.529)">
+      <path id="Path_2205" data-name="Path 2205" d="M0,0H28.471V28.471H0Z" fill="none"/>
+      <path id="Path_2206" data-name="Path 2206" d="M17.608,13.49a4.745,4.745,0,1,0-4.745-4.745A4.744,4.744,0,0,0,17.608,13.49ZM6.931,11.118V7.559H4.559v3.559H1V13.49H4.559v3.559H6.931V13.49H10.49V11.118Zm10.677,4.745c-3.167,0-9.49,1.59-9.49,4.745V22.98H27.1V20.608C27.1,17.452,20.775,15.863,17.608,15.863Z" transform="translate(0.186 0.745)" fill="#fff"/>
+    </g>
+  </g>
+</svg>

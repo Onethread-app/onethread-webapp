@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { InputGroupField } from '../../components/fields/InputGroupField';
 import { Button, Icon, Spinner } from '@blueprintjs/core';
 import { isEmpty, isNumber, isEqual } from 'lodash';
 import tigrowApi from 'tigrowApi';
-import { AxiosRequestConfig } from 'axios';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 
@@ -13,7 +12,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
   const [values, setValues] = useState({
     password: "",
     confirmPassword: "",
-    userID: ""
+    token: ""
   });
   const [errors, setErrors] = useState({
     password: "",
@@ -29,7 +28,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
     try {
       await tigrowApi.put("accounts/reset-password", {
         password: values.password,
-        userID: values.userID
+        token: (props.match.params as any).token
       });
       setLoading(false);
       routeHistory.push("/signin");
@@ -78,30 +77,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
       return false;
     }
   }
-  const getUserId = async (token: string) => {
-    try {
-      const response = await tigrowApi.get(`accounts/forget-password/${token}`, {
-        "Content-Type": "application/json"
-      } as AxiosRequestConfig);
-      setValues({
-        ...values,
-        userID: response.data.user._id
-      })
-    }
-    catch (error) {
-      if (isEqual(error.message, 'Network Error')) {
-        console.log('network error')
-      }
-      else {
-        console.log(error.response);
-      }
-    }
-  }
 
-  useEffect(() => {
-    const token = (props.match.params as any).token;
-    getUserId(token);
-  }, [])
   return (
     <div className="dt w-100 vh-100">
       <div className="v-mid dtc">

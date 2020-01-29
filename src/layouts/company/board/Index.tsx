@@ -219,7 +219,7 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 
 const mapStateToProps = (state: any) => {
 	return {
-		boardList: state.boardReducer.boardList,
+		boardList: state.boardIndexReducer.boardReducer.boardList,
 		company: state.companyReducer.currentCompany
 	};
 };

@@ -2,11 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-import { SubTask } from './subTask/subtask';
-import { Activity } from './activity/activity';
+import { SubTaskView } from './subTask/subtaskView';
+import { ActivityView } from './activity/activityView';
 import { ITask, TaskBoard } from 'stores/board/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
-import { TaskDetails } from './taskDetails/taskdetails';
+import { TaskDetails } from './taskDetails';
 
 interface TaskInternalProps {
     currentTask: ITask;
@@ -15,7 +15,6 @@ interface TaskInternalProps {
 }
 
 const TaskPageComponent = (props: TaskInternalProps) => {
-
     return (
         <div className="cf pa3">
             <BreadCrumbs
@@ -30,12 +29,12 @@ const TaskPageComponent = (props: TaskInternalProps) => {
             />
             <div className="cf">
                 <div className="fl w-100 w-50-l pa2">
-                    <h1 className="fw6 lh-title black">{props.currentTask.name}</h1>
+                    {/* <h1 className="fw6 lh-title black">{props.currentTask.name}</h1> */}
                     <TaskDetails />
-                    <SubTask />
+                    <SubTaskView />
                 </div>
                 <div className="fl w-100 w-50-l pa2">
-                    <Activity />
+                    <ActivityView />
                 </div>
             </div>
         </div>
@@ -44,8 +43,8 @@ const TaskPageComponent = (props: TaskInternalProps) => {
 
 const mapStateToProps = (state: any) => {
     return {
-        currentTask: state.boardReducer.currentTask,
-        currentBoard: state.boardReducer.currentBoard,
+        currentTask: state.boardIndexReducer.boardReducer.currentTask,
+        currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
         company: state.companyReducer.currentCompany
     };
 };

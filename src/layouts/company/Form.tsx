@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { isEmpty, isEqual, pickBy } from 'lodash';
 import { HTMLSelect, Icon, Button, Spinner } from '@blueprintjs/core';
@@ -102,11 +102,6 @@ const CompanySignupFormComponent = (props: {
     }
   }
 
-  useEffect(() => {
-    props.errorCompany.message = "";
-    props.errorCompany.network = false;
-  });
-
   return (
     <form className="fl w-100 pa4" >
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Create Company</h1>
@@ -135,7 +130,7 @@ const CompanySignupFormComponent = (props: {
           />
         </div>
         {errors.name ? <small style={{ color: 'red' }}>{errors.name}</small> : ""}
-        {props.errorCompany.message ? <small style={{ color: 'red' }}>{props.errorCompany.message}</small> : ""}
+        {props.errorCompany ? <small style={{ color: 'red' }}>{props.errorCompany.message}</small> : ""}
       </div>
       <div className={` ${errors.address ? "mb3" : "mb4"}`}>
         <div className="flex">
@@ -276,6 +271,7 @@ const CompanySignupFormComponent = (props: {
           onClick={(e: any) => {
             e.preventDefault();
             props.setShowDialog(false);
+            props.errorCompany.message = '';
             setLoading(false);
           }}
         >

@@ -41,7 +41,7 @@ export const DropdownField = (props: DropdownFieldProps) => (
         outline: 'none'
       }}
     >
-      <option selected value="Please select a value"></option>
+      <option selected value="">Please select a value</option>
       {props.options.map(opt => (
         <option
           value={opt._id}

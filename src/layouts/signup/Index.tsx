@@ -17,6 +17,7 @@ import eyeIcon from './../../resources/images/eye.png';
 import questionIcon from './../../resources/images/question.png';
 import greyLockIcon from './../../resources/images/lock-grey.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
+
 import { SubmitError } from 'components/final-form/SubmitError';
 import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
@@ -192,29 +193,29 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                             </div>
                           </div>
                         </div>
-                        <div className="flex ">
+                        <div >
                           <div >
-                            <Icon
-                              icon="calendar"
-                              className="bw1 bb b--lightBlue pl2"
-                              style={{ color: '#0fa3a3', paddingBottom: '.97rem' }}
-                            />
-                          </div>
-                          <div className="flex-auto">
                             <Field<string>
                               name="birthDate"
                               validate={required}
                               render={({ input, meta }) =>
-                                <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                                <div className={`flex bw1 pb1 br0 bb b--lightBlue ${checkError(meta) ? 'mb3 b--red' : 'mb4 b--lightBlue'}`}>
+                                  <div >
+                                    <Icon
+                                      icon="calendar"
+                                      className="pl2"
+                                      style={{ color: '#0fa3a3' }}
+                                    />
+                                  </div>
                                   <DateInput
-                                    className={` bw1 pb2 br0 bb birthdatePicker ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}
+                                    className={`  birthdatePicker `}
                                     formatDate={(date: Date) => date.toLocaleDateString()}
                                     parseDate={(str: string) => new Date(str)}
                                     onChange={input.onChange}
                                     canClearSelection={false}
                                     value={input.value ? input.value : null}
                                     popoverProps={{
-                                      targetClassName: 'w-100 '
+                                      targetClassName: 'w-100'
                                     }}
                                     minDate={new Date('1800-01-01')}
                                     placeholder="Birth Date"

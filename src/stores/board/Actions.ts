@@ -2,10 +2,10 @@ import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
 import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, CREATE_COLUMN, 
   CREATE_COLUMN_ERROR, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, 
-  DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK 
+  DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK, UPDATE_TASK 
 } from './Types';
 import { isEqual } from 'lodash';
-import { TaskBoard } from './Reducer';
+import { TaskBoard, ITask } from './Reducer';
 
 export const createBoard = (board: TaskBoard) => async (dispatch: any, getState: any) => {
   try {
@@ -224,15 +224,23 @@ export const getSelectedTaskDetails = (taskId: string | undefined) => async (dis
     if ((headers as any).headers.Authorization && taskId) {
       // dispatch({ type: BOARD_LOADING });
       const res = await tigrowApi.get(`tasks/${taskId}`, headers);
-      // tslint:disable-next-line: no-console
-      console.log(res.data.name);
-      // dispatch({ type: SELECT_BOARD, payload: response.data });
-      // const response = await tigrowApi.get(`tasks/${task._id}`, headers);
+      
       const response = {
-        _id: taskId,
-        name: res.data.name,
-        description: 'something description'
+        _id : res.data._id ,
+        name : res.data.name,
+        createdAt : res.data.createdAt,
+        dueDate : res.data.dueDate,
+        createdBy : res.data.account.name,
+        description : res.data.description,
+        priority : res.data.priority,
+        currentColumnName : res.data.columnId.name
       };
+
+      // const responseData = {
+      //   _id: taskId,
+      //   name: res.data.name,
+      //   description: 'something description'
+      // };
       dispatch({ type: SELECT_TASK, payload: response });
       return response;
     } else {
@@ -248,5 +256,28 @@ export const getSelectedTaskDetails = (taskId: string | undefined) => async (dis
       console.log(error.response);
     }
     return error.response.status;
+  }
+};
+
+export const updateTask = (task: ITask) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    const taskId = getState().boardIndexReducer.boardReducer.currentTask._id;
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.put(`tasks/${taskId}`, task, headers);
+      dispatch({ type: UPDATE_TASK, payload: response.data });
+    }
+  } catch (error) {
+
+    console.log(error);
+    // if (isEqual(error.message, 'Network Error')) {
+    //   dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
+    // } else if (error.response.status === 401) {
+    //   dispatch({ type: CREATE_BOARD_ERROR,
+    //      payload: 'Unauthorized user. Please enter valid email and password.' });
+    // } else {
+    //   // tslint:disable-next-line: no-console
+    //   console.log(error.response);
+    // }
   }
 };
