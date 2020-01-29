@@ -152,7 +152,7 @@ export const dragAndDropTask = (
   async (dispatch: any, getState: any) => {
     try {
       const headers = tokenConfig();
-      const currentBoard: TaskBoard = getState().boardReducer.currentBoard;
+      const currentBoard: TaskBoard = getState().boardIndexReducer.boardReducer.currentBoard;
       if ((headers as any).headers.Authorization) {
         dispatch({ type: DRAG_AND_DROP_TASK_LOADING });
         const requestData = {
@@ -161,8 +161,8 @@ export const dragAndDropTask = (
           destinationColumnId,
           taskIndexOfDestinationColumn
         };
-        // console.log(`requestData: `, requestData);
         const response = await tigrowApi.post(`tasks/dragTask`, requestData, headers);
+
         const updatedColumns = response.data;
         currentBoard.columns!.map(column => {
           if (isEqual(updatedColumns.sourceColumn._id, column._id)) {
@@ -230,17 +230,12 @@ export const getSelectedTaskDetails = (taskId: string | undefined) => async (dis
         name : res.data.name,
         createdAt : res.data.createdAt,
         dueDate : res.data.dueDate,
-        createdBy : res.data.account.name,
+        createdBy : res.data.account.firstName + ' ' + res.data.account.lastName,
         description : res.data.description,
         priority : res.data.priority,
         currentColumnName : res.data.columnId.name
       };
 
-      // const responseData = {
-      //   _id: taskId,
-      //   name: res.data.name,
-      //   description: 'something description'
-      // };
       dispatch({ type: SELECT_TASK, payload: response });
       return response;
     } else {
@@ -264,8 +259,18 @@ export const updateTask = (task: ITask) => async (dispatch: any, getState: any) 
     const headers = tokenConfig();
     const taskId = getState().boardIndexReducer.boardReducer.currentTask._id;
     if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.put(`tasks/${taskId}`, task, headers);
-      dispatch({ type: UPDATE_TASK, payload: response.data });
+      const res = await tigrowApi.put(`tasks/${taskId}`, task, headers);
+      const response = {
+        _id : res.data._id ,
+        name : res.data.name,
+        createdAt : res.data.createdAt,
+        dueDate : res.data.dueDate,
+        createdBy : res.data.account.firstName + ' ' + res.data.account.lastName,
+        description : res.data.description,
+        priority : res.data.priority,
+        currentColumnName : res.data.columnId.name
+      };
+      dispatch({ type: UPDATE_TASK, payload: response });
     }
   } catch (error) {
 

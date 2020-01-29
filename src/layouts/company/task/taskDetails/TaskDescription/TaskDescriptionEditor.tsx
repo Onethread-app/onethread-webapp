@@ -1,38 +1,29 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { required, checkError } from 'components/final-form/utils';
-// import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { Button, Icon, EditableText } from '@blueprintjs/core';
 import { SubmitError } from 'components/final-form/SubmitError';
-// import { SubmitError } from 'components/final-form/SubmitError';
-// import { IconNames } from '@blueprintjs/icons';
+import { ITask } from 'stores/board/Reducer';
+import { connect } from 'react-redux';
+import { updateTask } from 'stores/board/Actions';
 
 interface ITaskDescriptionFormProps {
+  description: ITask['description'];
   setEditDescriptionDialog: (val: boolean) => void;
   editDescriptionDialog: boolean;
+  updateTask: (task: ITask) => void;
 }
 
-export const TaskDescriptionEditor = (props: ITaskDescriptionFormProps) => {
+export const TaskDescriptionEditorComponent = (props: ITaskDescriptionFormProps) => {
   const onSubmit = async (values: any) => {
-    console.log(values);
+    await props.updateTask(values);
     props.setEditDescriptionDialog(false);
-    // try {
-    //   const response = await tigrowApi.post('accounts/forget-password', values, {
-    //     'Content-Type': 'application/json'
-    //   } as AxiosRequestConfig);
-    //   if (response.status === 200) {
-    //     props.setEmailComponentView(true);
-    //   }
-    //   return true;
-    // } catch (error) {
-    //   const err = errorMessgeHandler(error);
-    //   return { [err.fieldName]: err.message };
-    // }
   };
   return (
     <div>
       <Form
         onSubmit={onSubmit}
+        initialValues={{ description: props.description }}
         render={({
           handleSubmit,
           form,
@@ -97,58 +88,13 @@ export const TaskDescriptionEditor = (props: ITaskDescriptionFormProps) => {
           )}
       />
     </div>
-    // <div>
-    //   <Form
-    //     onSubmit={onSubmit}
-    //     render={({ handleSubmit, submitting, pristine, submitError }) => (
-    //       <form className="w-25-l w-50-m center mt4-ns" onSubmit={handleSubmit}>
-    //         <SubmitError errorMessage={submitError} />
-    //         <div className="flex justify-end">
-    //           <Icon
-    //             icon={IconNames.DELETE}
-    //             iconSize={20}
-    //             className="grow pointer tigrow-lightBlue"
-    //             onClick={(e: any) => props.setEditDescriptionDialog(!props.editDescriptionDialog)}
-    //           />
-    //         </div>
-    //         <Field<string>
-    //           name="description"
-    //           validate={required}
-    //           render={({ input, meta }) =>
-    //             <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-    //               <EditableText
-    //                 className="mb4 bg-white black"
-    //                 multiline={true}
-    //                 minLines={3}
-    //                 maxLines={20}
-    //                 value={input.value}
-    //                 onChange={input.onChange}
-    //               />
-    //               {checkError(meta) &&
-    //                 <small className="mv3" style={{ color: 'red' }}>
-    //                   {meta.error || meta.submitError}
-    //                 </small>}
-    //             </div>
-    //           }
-    //         />
-    //         <Button
-    //           className="grow pointer white bp3-minimal w-100 mt3"
-    //           style={{
-    //             background: '#0fa3a3',
-    //             outline: 'none',
-    //             color: 'white',
-    //             height: '42px',
-    //             fontSize: '1rem'
-    //           }}
-    //           loading={submitting}
-    //           type="submit"
-    //           disabled={submitting || pristine}
-    //         >
-    //           Save
-    //         </Button>
-    //       </form>
-    //     )}
-    //   />
-    // </div>
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    description: state.boardIndexReducer.boardReducer.currentTask.description,
+  };
+};
+
+export const TaskDescriptionEditor = connect(mapStateToProps, { updateTask })(TaskDescriptionEditorComponent);

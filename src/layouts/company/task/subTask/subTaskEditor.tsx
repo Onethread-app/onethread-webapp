@@ -3,16 +3,19 @@ import { Button, EditableText, Icon, Popover } from '@blueprintjs/core';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { required, checkError } from 'components/final-form/utils';
-import { createSubTask } from 'stores/subtask/Actions';
+import { createSubTask, updateSubTaskTitile } from 'stores/subtask/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ISubTask } from 'stores/subtask/Reducer';
+import { isEmpty } from 'lodash';
 
 interface ITaskDescriptionCreateFormProps {
   setShowSubTaskForm: (val: boolean) => void;
   showSubtaskForm: boolean;
   createSubTask: (subTask: ISubTask) => void;
-
+  subtask?: ISubTask;
+  setsubtask: (subTask: ISubTask) => void;
+  updateSubTaskTitile: (subTask: ISubTask) => void;
 }
 interface ISubTaskDescriptionDeleteFormProps {
   subTask: ISubTask;
@@ -23,11 +26,21 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
 
   const onSubmit = async (values: any) => {
 
-    const subTaskData = {
-      name: values.subtaskTitle
-    };
 
-    await props.createSubTask(subTaskData);
+    if (isEmpty(props.subtask)) {
+      const subTaskData = {
+        name: values.subtaskTitle
+      };
+      await props.createSubTask(subTaskData);
+    } else {
+      const updateSubTaskData = {
+        _id: props.subtask!._id,
+        name: values.subtaskTitle
+      };
+      await props.updateSubTaskTitile(updateSubTaskData);
+    }
+
+    await props.setsubtask({});
     props.setShowSubTaskForm(false);
   }
 
@@ -35,6 +48,7 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
     <div>
       <Form
         onSubmit={onSubmit}
+        initialValues={{ subtaskTitle: props.subtask!.name }}
         render={({
           handleSubmit,
           form,
@@ -61,7 +75,7 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
                         maxLines={20}
                         value={input.value}
                         onChange={input.onChange}
-                        className="outline"
+                        className="ba br2"
                         placeholder=""
                       />
                       {checkError(meta) &&
@@ -77,7 +91,10 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
                     type="submit"
                     style={{ background: 'transparent' }}
                     icon="cross"
-                    onClick={() => props.setShowSubTaskForm(!props.showSubtaskForm)}
+                    onClick={async () => {
+                      await props.setsubtask({});
+                      props.setShowSubTaskForm(!props.showSubtaskForm);
+                    }}
                   />
                   <Button
                     type="submit"
@@ -102,7 +119,7 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
   );
 };
 
-export const SubTaskCreator = connect(null, { createSubTask })(withRouter(SubTaskCreatorComponent));
+export const SubTaskCreator = connect(null, { createSubTask, updateSubTaskTitile })(withRouter(SubTaskCreatorComponent));
 
 export const SubTaskDelete = (props: ISubTaskDescriptionDeleteFormProps) => {
 

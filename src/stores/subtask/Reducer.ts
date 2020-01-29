@@ -1,4 +1,4 @@
-import { GET_ALL_SUBTASK, CREATE_SUBTASK, COMPLETE_SUBTASK, DELETE_SUBTASK } from './Types';
+import { GET_ALL_SUBTASK, CREATE_SUBTASK, COMPLETE_SUBTASK, DELETE_SUBTASK, UPDATE_SUBTASK_TITLE } from './Types';
 import { isEqual } from 'lodash';
 export interface ISubTask {
 
@@ -51,6 +51,17 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
         ...state,
         subTaskList: state.subTaskList.filter((subTask: ISubTask) => (
           subTask._id !== action.payload
+        ))
+      };
+    case UPDATE_SUBTASK_TITLE:
+      return {
+        ...state,
+        subTaskList: state.subTaskList.map((subTask: ISubTask) => (
+          isEqual(subTask._id, action.payload._id) ?
+            {
+              ...subTask,
+              name: action.payload.name
+            } : subTask
         ))
       };
     default:

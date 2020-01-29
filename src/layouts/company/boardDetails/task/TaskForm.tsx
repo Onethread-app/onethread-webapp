@@ -108,7 +108,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentBoard: state.boardReducer.currentBoard
+    currentBoard: state.boardIndexReducer.boardReducer.currentBoard
   };
 };
 
