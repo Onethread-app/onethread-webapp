@@ -16,9 +16,9 @@ interface ISubTaskViewInternalProps {
 }
 
 export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & RouteComponentProps) => {
-
     const [showSubtaskForm, setShowSubTaskForm] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [subtask, setsubtask] = useState(Object);
 
     useEffect(() => {
 
@@ -67,6 +67,7 @@ export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & Rout
                                                         checked={list.done}
                                                         label={list.name}
                                                         large={true}
+                                                        style={{textDecoration: list.done ? 'line-through' : 'none'}}
                                                         onChange={(event: any) => {
                                                             const subtaskData = {
                                                                 _id: event.target.value,
@@ -81,7 +82,10 @@ export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & Rout
                                                                 className="fr mv3 tigrow-lightBlue pointer mr4 mv0"
                                                                 style={{ marginTop: 0 }}
                                                                 icon="edit"
-                                                                onClick={() => setShowSubTaskForm(true)}
+                                                                onClick={async () => {
+                                                                    await setsubtask(list);
+                                                                    setShowSubTaskForm(true);
+                                                                }}
                                                             />
                                                         </div>
 
@@ -102,6 +106,8 @@ export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & Rout
                         {showSubtaskForm &&
                             <SubTaskCreator
                                 showSubtaskForm={showSubtaskForm}
+                                subtask={subtask}
+                                setsubtask={setsubtask}
                                 setShowSubTaskForm={e => setShowSubTaskForm(!showSubtaskForm)}
                             />
                         }

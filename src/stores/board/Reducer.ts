@@ -27,6 +27,7 @@ export interface ITask {
   currentColumnName: string;
   createdAt: Date;
   createdBy: string;
+  status?: {};
   assignedMembers?: Object[];
   dueDate?: Date;
   priority?: number;

@@ -1,6 +1,6 @@
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi from 'tigrowApi';
-import { GET_ALL_SUBTASK, CREATE_SUBTASK, COMPLETE_SUBTASK, DELETE_SUBTASK} from './Types';
+import { GET_ALL_SUBTASK, CREATE_SUBTASK, COMPLETE_SUBTASK, DELETE_SUBTASK, UPDATE_SUBTASK_TITLE} from './Types';
 import { ISubTask } from './Reducer';
 
 export const getAllSubTask = () => async (dispatch: any, getState: any) => {
@@ -65,6 +65,31 @@ export const getAllSubTask = () => async (dispatch: any, getState: any) => {
         };
         const response = await tigrowApi.put(`subTasks/${subTask._id}`, reqBody, headers);
         dispatch({ type: COMPLETE_SUBTASK, payload: response.data });
+      }
+    } catch (error) {
+
+      console.log(error);
+      // if (isEqual(error.message, 'Network Error')) {
+      //   dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
+      // } else if (error.response.status === 401) {
+      //   dispatch({ type: CREATE_BOARD_ERROR,
+      //      payload: 'Unauthorized user. Please enter valid email and password.' });
+      // } else {
+      //   // tslint:disable-next-line: no-console
+      //   console.log(error.response);
+      // }
+    }
+  };
+
+  export const updateSubTaskTitile = (subTask: ISubTask) => async (dispatch: any, getState: any) => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const reqBody = {
+          name : subTask.name
+        };
+        const response = await tigrowApi.put(`subTasks/${subTask._id}`, reqBody, headers);
+        dispatch({ type: UPDATE_SUBTASK_TITLE, payload: response.data });
       }
     } catch (error) {
 

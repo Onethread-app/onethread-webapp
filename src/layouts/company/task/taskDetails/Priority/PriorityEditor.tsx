@@ -80,7 +80,7 @@ export const PriorityEditorComponent = (props: IPriorityEditorProps) => {
                                                                 </div>
                                                                 <div>
                                                                     <Icon
-                                                                        className="br2 pt1"
+                                                                        className="br2 pt1 pr1"
                                                                         style={{
                                                                             color: isEqual(color.code, labelColor) ?
                                                                                 '#53A634' : ''
@@ -119,7 +119,6 @@ export const PriorityEditorComponent = (props: IPriorityEditorProps) => {
             />
         </div>
     );
-}
-
+};
 
 export const PriorityEditor = connect(null, { updateTask })(PriorityEditorComponent);

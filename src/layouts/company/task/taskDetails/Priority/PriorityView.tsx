@@ -10,7 +10,9 @@ interface PriorityViewComponentInternalProps {
 export const PriorityViewComponent = (props: PriorityViewComponentInternalProps) => {
   return (
     <>
-      <h3>Priority</h3>
+      <div style={{ height: '20px' }}>
+        <h1 className="f6">Priority</h1>
+      </div>
       {
         props.priority! > -1 &&
         <p

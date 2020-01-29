@@ -26,16 +26,6 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
     props.setMembersPopover(false);
   };
 
-  // if (isEmpty(values.location)) {
-  //   values.location = '';
-  // }
-  // const response = await props.editInfoAction(values);
-  // if (response.message === 200) {
-  //   props.setShowDialog(false);
-  //   return true;
-  // }
-  // return { [response.fieldName]: response.message };
-
   const [teamMembers, setTeamMembers]: any = useState([]);
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ICompanyTeamMembers[]);
   const [username, setUsername] = useState('');

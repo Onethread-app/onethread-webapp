@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import { SubTaskReducer } from './subtask/Reducer';
 import { BoardReducer } from './board/Reducer';
+import { TaskMembersReducer } from './taskMembers/Reducer';
 
 export const BoardIndexReducer = combineReducers({
     boardReducer: BoardReducer,
-    subTaskReducer: SubTaskReducer
+    subTaskReducer: SubTaskReducer,
+    taskMembersReducer: TaskMembersReducer
 });
