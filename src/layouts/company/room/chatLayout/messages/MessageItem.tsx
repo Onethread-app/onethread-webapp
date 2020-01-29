@@ -2,11 +2,12 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { Tooltip } from '@blueprintjs/core';
-import { IRoomMessage } from 'stores/room/Reducer';
+import { IRoomMessage, IRoomFile } from 'stores/room/Reducer';
 
 interface MessageItemProps {
   img: string;
   text: string;
+  files: IRoomFile[];
   createdAt: string;
   sender: IRoomMessage['account'];
 }
@@ -48,6 +49,12 @@ export const MessageItem = (props: MessageItemProps) => {
             }}
           >{props.text}
           </h2>
+          {props.files.length ?
+            props.files.map(file =>
+              <p><a href={file.link} target="_blank">{file.s3Key.split('/')[1]}</a></p>
+            )
+            : null
+          }
           {/* <div className={`flex ${currentUser ? " flex-row-reverse" : ""}`}>
           <h6 className={`pa0 ma0 mt1 ${currentUser ? "ml5 white" : "mr5"}`}>
             {moment(props.createdAt).format('lll')}

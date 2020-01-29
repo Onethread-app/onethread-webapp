@@ -54,6 +54,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 							key={message._id}
 							img={UserIcon}
 							text={message.text}
+							files={message.files}
 							createdAt={message.createdAt}
 							sender={message.account}
 						/>

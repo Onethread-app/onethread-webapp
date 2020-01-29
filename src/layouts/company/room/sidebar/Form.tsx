@@ -43,7 +43,7 @@ const CreateFormComponent: React.FC<any> = withChatkit((props: ICreateFormIntern
 						<h1 className="f5 tigrow-lightBlue">Create Room</h1>
 						<Field<string>
 							name="name"
-							validate={composeValidators(required, maxValue(20))}
+							validate={composeValidators(required, maxValue(32))}
 							render={({ input, meta }) =>
 								<InputGroupFieldWithError
 									id={input.name}

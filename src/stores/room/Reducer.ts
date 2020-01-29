@@ -19,7 +19,7 @@ import {
 	UPDATE_ROOM,
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING,
-	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER
+	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER, FILE_UPLOAD, CLEAR_FILE_UPLOAD, DELETE_ONE_PENDING_FILE
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -42,9 +42,20 @@ export interface IRoomMember {
 	presence: string;
 }
 
+export interface IRoomFile {
+	_id: string;
+	link: string;
+	s3Key: string;
+	type: string;
+	account: string;
+	room: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
 export interface IRoomMessage {
 	type: string;
-	file: any[];
+	files: IRoomFile[];
 	removed: boolean;
 	_id: string;
 	text: string;
@@ -73,6 +84,7 @@ export interface IRoomReducer {
 	companyRooms: any[];
 	loading: boolean;
 	emojiPicker: boolean;
+	pendingFiles: IRoomFile[];
 	roomError: string;
 }
 const InitialState: IRoomReducer = {
@@ -89,6 +101,7 @@ const InitialState: IRoomReducer = {
 	rooms: [],
 	companyRooms: [],
 	emojiPicker: false,
+	pendingFiles: [],
 	loading: false,
 	roomError: '',
 };
@@ -123,6 +136,26 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				loading: true,
 				roomError: ''
 			};
+		case FILE_UPLOAD: {
+			return {
+				...state,
+				pendingFiles: [...state.pendingFiles, action.payload],
+			};
+		}
+		case DELETE_ONE_PENDING_FILE: {
+			return {
+				...state,
+				pendingFiles: state.pendingFiles.filter((file: IRoomFile) => {
+					return file._id !== action.payload;
+				}),
+			};
+		}
+		case CLEAR_FILE_UPLOAD: {
+			return {
+				...state,
+				pendingFiles: [],
+			};
+		}
 		case ON_USER_STARTED_TYPING:
 			return {
 				...state,
