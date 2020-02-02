@@ -1,13 +1,11 @@
 import React from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-import { isEmpty } from 'lodash';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { TaskBoard, ITask } from 'stores/board/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getSelectedTaskDetails } from 'stores/board/Actions';
 
-import attach from './../../../../resources/images/attach.png';
 import complete from './../../../../resources/images/complete.png';
 
 interface TaskItemProps {
@@ -54,9 +52,9 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                   height: '40px',
                   marginLeft: '-2px'
                 }}>
-                <h1 className="f6 ws-break pt2 pl2">{props.task.name}</h1>
+                <h1 className="f6 ws-break pt2 ph2">{props.task.name}</h1>
               </div>
-              {isEmpty(props.task.description) === false ?
+              {/* {isEmpty(props.task.description) === false ?
                 <div>
                   <p
                     className="ph2 pt2 ws-break"
@@ -64,10 +62,10 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                     {props.task.description}
                   </p>
                 </div>
-                : undefined}
-              <div className="flex justify-between pa2">
+                : undefined} */}
+              <div className="flex-ns justify-between pa2">
                 <div className="flex pt1">
-                  <div className="cf flex" style={{ height: '30px', width: '50px' }}>
+                  {/* <div className="cf flex" style={{ height: '30px', width: '50px' }}>
                     <img
                       style={{ height: '25px', width: '25px' }}
                       src={attach}
@@ -75,7 +73,7 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                     <div className="pt1">
                       <p className="f7 dib">3</p>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="cf flex" style={{ height: '30px', width: '50px' }}>
                     <img
                       style={{ height: '25px', width: '25px' }}

@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-import { SubTaskView } from './subTask/subtaskView';
-import { ActivityView } from './activity/activityView';
+import { SubTaskView } from './subTask/SubtaskView';
+import { ActivityView } from './activity/ActivityView';
 import { ITask, TaskBoard } from 'stores/board/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
 import { TaskDetails } from './taskDetails';

@@ -58,6 +58,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
                       }}
                       error={checkError(meta) && (meta.error || meta.submitError)}
                       label="Task Name"
+                      autoFocus={true}
                     />
                   </div>
                 }

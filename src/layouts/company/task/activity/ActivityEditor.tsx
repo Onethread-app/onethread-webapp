@@ -58,6 +58,8 @@ export const ActivityEditor = () => {
                         value={input.value}
                         onChange={input.onChange}
                         className="ba br2"
+                        placeHolder="Write comment"
+                        style={{height: '40px'}}
                         />
                       {checkError(meta) &&
                         <small className="mv3" style={{ color: 'red' }}>
@@ -66,7 +68,7 @@ export const ActivityEditor = () => {
                     </div>
                   }
                 />
-                <div className="w-20 pl2">
+                <div className="w-20 pl2 pt1">
                   <Button
                     type="submit"
                     className="w-100"

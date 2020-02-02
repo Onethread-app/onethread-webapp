@@ -41,12 +41,12 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               <p className="fw7 pt2">{props.currentTask!.currentColumnName}</p>
             </div>
             {
-              props.currentTask!.dueDate ? 
-              <p className="pt2 pl3 fw6">
-                {Math.ceil(moment(props.currentTask!.dueDate).diff(moment() , 'days' , true ))} days remaining</p>
-               : <p className="pt2 pl3 fw6">Days has not been set</p>
+              props.currentTask!.dueDate ?
+                <p className="pt2 pl3 fw6">
+                  {Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true))} days remaining</p>
+                : <p className="pt2 pl3 fw6">Days has not been set</p>
             }
-            
+
           </div>
           <div className="mt2">
             <AssignedMembersView />
@@ -54,11 +54,13 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
           <div>
             <TaskDescriptionView />
           </div>
-          <div className="fl w-100 w-50-ns">
-            <DueDateView />
-          </div>
-          <div className="fl w-100 w-50-ns">
-            <PriorityView />
+          <div className="mt3">
+            <div className="fl w-100 w-50-ns">
+              <DueDateView />
+            </div>
+            <div className="fl w-100 w-50-ns">
+              <PriorityView />
+            </div>
           </div>
           <div>
           </div>

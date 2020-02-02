@@ -131,8 +131,8 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 
 	return (
 		<div className="h-100">
-			<div className="br3 bg-white h-100 pa4 cf flex flex-column">
-				<div className="pl2 flex" style={{ justifyContent: 'space-between' }}>
+			<div className="br3 bg-white h-100 pa4-ns pa2 cf flex flex-column">
+				<div className="pl2 flex-ns justify-between">
 					<h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">Board</h3>
 					<div className="flex">
 						<p className="pr3 fw7" style={{ marginTop: '.8rem' }}>Filter By</p>
@@ -169,7 +169,7 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 						<div
 							style={{
 								display: 'grid',
-								gridTemplateColumns: 'repeat(auto-fit, minmax(270px, 270px))',
+								gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 270px))',
 								gridTemplateRows: 'repeat(2, 150px)'
 							}}>
 							{/* TODO make one */}

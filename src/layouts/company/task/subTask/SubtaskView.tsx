@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ProgressBar, Button, Icon, Checkbox } from '@blueprintjs/core';
-import { SubTaskCreator, SubTaskDelete } from './subTaskEditor';
+import { SubTaskCreator, SubTaskDelete } from './SubTaskEditor';
 import { ISubTask } from 'stores/subtask/Reducer';
 import { connect } from 'react-redux';
 import { getAllSubTask, createSubTask, updateSubTask, deleteSubTask } from 'stores/subtask/Actions';
@@ -111,7 +111,7 @@ export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & Rout
                                 setShowSubTaskForm={e => setShowSubTaskForm(!showSubtaskForm)}
                             />
                         }
-                        <div className="mt3">
+                        <div>
                             <Button
                                 type="submit"
                                 text="Add SubTask"
