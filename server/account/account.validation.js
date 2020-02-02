@@ -1,4 +1,4 @@
-// Reference: https://www.w3.org/International/questions/qa-personal-names
+// Reference: https://docs.google.com/document/d/1yGg5DUbqOrw1aCA5u1s2VCRL_dFu6LQOvbDLamgl9bM/edit#
 const Joi = require('@hapi/joi');
 module.exports = {
   register: Joi.object().keys({
@@ -7,7 +7,7 @@ module.exports = {
         .lowercase()
         .required()
         .min(2)
-        .max(30)
+        .max(32)
         .error(error => {
           return { success: false, message: `firstName Required` };
         }),
@@ -15,7 +15,7 @@ module.exports = {
         .required()
         .lowercase()
         .min(2)
-        .max(30)
+        .max(32)
         .error(error => {
           return { success: false, message: `lastName Required` };
         }),
@@ -91,12 +91,14 @@ module.exports = {
       contactNo: Joi.string().regex(/^(\+?(880)[0-9]{10})$/),
       birthDate: Joi.date(),
       bloodGroup: Joi.string(),
-      location: Joi.string().allow(''),
+      location: Joi.string()
+        .allow('')
+        .max(120),
       position: Joi.string()
         .allow('')
         .max(32),
       about: Joi.string()
-        .max(200)
+        .max(2000)
         .allow(''),
       gender: Joi.string().valid(['male', 'female', 'others']),
       secondaryEmail: Joi.string()
