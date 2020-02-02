@@ -54,7 +54,7 @@ export const RoomListComponent = withChatkit(
 
 								const formatMessage: IRoomMessage = {
 									type: content.message.type,
-									file: content.message.file,
+									files: content.files,
 									removed: content.message.removed,
 									_id: content.message._id,
 									text: content.message.text,
@@ -165,7 +165,7 @@ export const RoomListComponent = withChatkit(
 		return (
 			<>
 				<main
-					className="mw6 nowrap"
+					className="mw6"
 					id="roomList"
 				>
 					<ul className="list pa0 mh2">

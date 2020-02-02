@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
 	Button,
 	HTMLTable,
@@ -8,30 +8,30 @@ import {
 	Icon,
 	ButtonGroup,
 	Alignment
-} from "@blueprintjs/core";
-import { AddMemberForm } from "layouts/company/team/AddMemberForm";
-import { connect } from "react-redux";
+} from '@blueprintjs/core';
+import { AddMemberForm } from 'layouts/company/team/AddMemberForm';
+import { connect } from 'react-redux';
 import {
 	getCompanyMembers,
 	getAllDepartments,
 	addDesignation,
 	editDesignation,
 	changeMemberRole
-} from "stores/company/Actions";
-import { CompanyModel, ICompanyMembers } from "stores/company/Reducer";
-import { Loading } from "components/Loading";
-import { permit } from "stores/UtilsActions";
-import { AddDesignationForm } from "layouts/company/team/AddDesignationForm";
-import { EditDesignationForm } from "layouts/company/team/EditDesignationForm";
+} from 'stores/company/Actions';
+import { CompanyModel, ICompanyMembers } from 'stores/company/Reducer';
+import { Loading } from 'components/Loading';
+import { permit } from 'stores/UtilsActions';
+import { AddDesignationForm } from 'layouts/company/team/AddDesignationForm';
+import { EditDesignationForm } from 'layouts/company/team/EditDesignationForm';
 import { isEqual, upperFirst } from 'lodash';
 import { User } from 'stores/user/Reducer';
 
 const divisions = [
-	{ _id: "director", name: "Director" },
-	{ _id: "cxo", name: "CXO" },
-	{ _id: "seniorManager", name: "Senior Manager" },
-	{ _id: "middleManager", name: "Middle Manager" },
-	{ _id: "operationalEmployee", name: "Operational Employee" }
+	{ _id: 'director', name: 'Director' },
+	{ _id: 'cxo', name: 'CXO' },
+	{ _id: 'seniorManager', name: 'Senior Manager' },
+	{ _id: 'middleManager', name: 'Middle Manager' },
+	{ _id: 'operationalEmployee', name: 'Operational Employee' }
 ];
 
 interface TeamMember {
@@ -45,6 +45,7 @@ interface TeamMember {
 	companyLoading: boolean;
 }
 
+// tslint:disable-next-line: no-shadowed-variable
 const loadCompanyMember = async (getCompanyMembers: () => void) => {
 	await getCompanyMembers();
 };
@@ -59,10 +60,11 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 		loadCompanyMember(props.getCompanyMembers);
 	}, []);
 
+	// tslint:disable-next-line:no-shadowed-variable
 	const showDepartment = (member: ICompanyMembers) => {
 		if (
 			member.designations.length &&
-			["director", "cxo"].includes(member.designations[0].division) === false
+			['director', 'cxo'].includes(member.designations[0].division) === false
 		) {
 			// show department
 			if (
@@ -89,9 +91,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 							<Button
 								className="grow fr h2 pointer white bp3-minimal "
 								style={{
-									background: "#0fa3a3",
-									outline: "none",
-									color: "white"
+									background: '#0fa3a3',
+									outline: 'none',
+									color: 'white'
 								}}
 								onClick={() => setShowDialog(!showDialog)}
 							>
@@ -117,15 +119,16 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 							) : props.company &&
 								props.company.members &&
 								props.company.members.length > 0 ? (
+										// tslint:disable-next-line: no-shadowed-variable
 										props.company.members.map(member => (
 											<tr className="hide-child">
 												<td>
 													<small className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</small>
 													{permit(member.role) ? (
-														member.role === "superAdmin" ? (
+														member.role === 'superAdmin' ? (
 															<Icon
 																icon="star"
-																style={{ color: "rgb(228, 162, 0)" }}
+																style={{ color: 'rgb(228, 162, 0)' }}
 															/>
 														) : (
 																<Icon icon="star" />
@@ -157,21 +160,21 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																		className="bp3-minimal bp3-vertical bp3-fill"
 																	>
 																		{permit(props.company.role) &&
-																			isEqual(member.role, "superAdmin") === false ? (
-																				isEqual(member.role, "admin") === true ? (
+																			isEqual(member.role, 'superAdmin') === false ? (
+																				isEqual(member.role, 'admin') === true ? (
 																					<Button
 																						className="outline-0 bp3-large bp3-popover-dismiss"
 																						onClick={async () => {
 																							await props.changeMemberRole(
-																								{ role: "employee" },
+																								{ role: 'employee' },
 																								member._id
 																							);
 																						}}
 																					>
 																						<Icon
-																							icon="star"
+																							icon="build"
 																							className="pr4-l pr3-m pl2"
-																							style={{ color: "inherit" }}
+																							style={{ color: 'inherit' }}
 																						/>
 																						Make Employee
 																	</Button>
@@ -180,7 +183,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																							className="outline-0 bp3-large bp3-popover-dismiss"
 																							onClick={async () => {
 																								await props.changeMemberRole(
-																									{ role: "admin" },
+																									{ role: 'admin' },
 																									member._id
 																								);
 																							}}
@@ -188,7 +191,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																							<Icon
 																								icon="star"
 																								className="pr4-l pr3-m pl2"
-																								style={{ color: "inherit" }}
+																								style={{ color: 'inherit' }}
 																							/>
 																							Make Admin
 																	</Button>
@@ -209,7 +212,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																						<Icon
 																							icon="edit"
 																							className="pr4-l pr3-m pl2"
-																							style={{ color: "inherit" }}
+																							style={{ color: 'inherit' }}
 																						/>
 																						Edit Designation
 																	</Button>
@@ -227,7 +230,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																						<Icon
 																							icon="add"
 																							className="pr4-l pr3-m pl2"
-																							style={{ color: "inherit" }}
+																							style={{ color: 'inherit' }}
 																						/>
 																						Add Designation
 																	</Button>
@@ -263,7 +266,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 				<Dialog
 					onClose={() => setShowDialog(!showDialog)}
 					isOpen={showDialog}
-					style={{ background: "#fff" }}
+					style={{ background: '#fff' }}
 					canOutsideClickClose={false}
 				>
 					<AddMemberForm
@@ -276,7 +279,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 				<Dialog
 					onClose={() => setShowDialogAdd(!showDialogAdd)}
 					isOpen={showDialogAdd}
-					style={{ background: "#fff" }}
+					style={{ background: '#fff' }}
 				>
 					<AddDesignationForm
 						addDesignation={props.addDesignation}
@@ -292,7 +295,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 				<Dialog
 					onClose={() => setShowDialogEdit(!showDialogEdit)}
 					isOpen={showDialogEdit}
-					style={{ background: "#fff" }}
+					style={{ background: '#fff' }}
 				>
 					<EditDesignationForm
 						editDesignation={props.editDesignation}

@@ -1,30 +1,35 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, FileInput, Dialog } from '@blueprintjs/core';
+import { Button, Dialog, Icon } from '@blueprintjs/core';
 import { connect, useDispatch } from 'react-redux';
 import { trim, isEqual, isEmpty } from 'lodash';
 import { sendRoomMessage } from 'stores/room/Actions';
 import 'emoji-mart/css/emoji-mart.css';
-import { TOGGLE_EMOJI_PICKER } from 'stores/room/Types';
+import { TOGGLE_EMOJI_PICKER, CLEAR_FILE_UPLOAD, DELETE_ONE_PENDING_FILE } from 'stores/room/Types';
 import ReactDOM from 'react-dom';
 import { Picker } from 'emoji-mart';
 
 import SmileIcon from './../../../../../resources/images/smile-24px.svg';
+import { FileUpload } from './fileUpload';
+import { IRoomFile } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface SendMessageFormProps {
 	chatkit?: any;
-	sendRoomMessage: (data: { text: string, room: string, type?: string }) => void;
+	sendRoomMessage: (data: { text: string, room: string, files: any[], type?: string }) => void;
 	roomId: string;
 	profileImage: any;
 	emojiPicker: boolean;
+	pendingFiles: IRoomFile[];
 	typingUsers: Array<{ name: string, roomId: string; }>;
 }
 
 const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	const [text, setText] = useState('');
-	const [showDialog, setShowDialog] = useState(false);
+	const [showFileDialog, setShowFileDialog] = useState(false);
+	const [textError, setTextError] = useState('');
+	const messageLimit = 3500;
 
 	const inputMessageRef = useRef<HTMLTextAreaElement>(null);
 	const emojiRef = useRef<any>(null);
@@ -36,9 +41,23 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	}, [props.roomId]);
 
 	// tslint:disable-next-line: no-shadowed-variable
-	const sendMessage = async (text: string) => {
-		// TODO: Future feature
-		await props.sendRoomMessage({ text, room: props.roomId });
+	const sendMessage = async (text: string, type: string) => {
+		setText('');
+		setTextError('');
+
+		const files = props.pendingFiles && props.pendingFiles.length ?
+			props.pendingFiles.map(file => ({ _id: file._id, link: file.link, s3Key: file.s3Key }))
+			: [];
+
+		dispatch({ type: CLEAR_FILE_UPLOAD });
+		setText('');
+
+		await props.sendRoomMessage({
+			text,
+			room: props.roomId,
+			files,
+			type
+		});
 	};
 
 	// tslint:disable-next-line: no-shadowed-variable
@@ -56,42 +75,21 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 			.catch((error: any) => console.error('error on typing', error));
 	};
 
-	// function a(inputMessageRef: any) {
-	// 	return {
-	// 		clientHeight: (inputMessageRef.current as any).clientHeight,
-	// 		clientLeft: (inputMessageRef.current as any).clientLeft,
-	// 		clientTop: (inputMessageRef.current as any).clientTop,
-	// 		clientWidth: (inputMessageRef.current as any).clientWidth,
-	// 		cols: (inputMessageRef.current as any).cols,
-	// 		rows: (inputMessageRef.current as any).rows,
-	// 		defaultValue: (inputMessageRef.current as any).defaultValue,
-	// 		innerHTML: (inputMessageRef.current as any).innerHTML,
-	// 		offsetHeight: (inputMessageRef.current as any).offsetHeight,
-	// 		offsetLeft: (inputMessageRef.current as any).offsetLeft,
-	// 		offsetTop: (inputMessageRef.current as any).offsetTop,
-	// 		offsetWidth: (inputMessageRef.current as any).offsetWidth,
-	// 		scrollHeight: (inputMessageRef.current as any).scrollHeight,
-	// 		scrollLeft: (inputMessageRef.current as any).scrollLeft,
-	// 		scrollTop: (inputMessageRef.current as any).scrollTop,
-	// 		scrollWidth: (inputMessageRef.current as any).scrollWidth,
-	// 		value: (inputMessageRef.current as any).value
-	// 	};
-	// }
-	const handleKeyPress = (e: any) => {
-		// console.log("inputMessageRef", a(inputMessageRef));
+	const handleKeyPress = async (e: any) => {
 		const trimmedText = trim(text);
-		if (e.key === 'Enter' && e.shiftKey === false && isEmpty(trimmedText) === false) {
-			sendMessage(trimmedText);
-			setText('');
-			// e.target.value = "";
-			// (inputMessageRef.current as any).value = "";
-			// console.log("inputMessageRef", a(inputMessageRef));
+		if (e.key === 'Enter' && e.shiftKey === false) {
+			if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit && props.pendingFiles.length > 0) {
+				sendMessage(trimmedText, 'attachment');
+			} else if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit && props.pendingFiles.length === 0) {
+				sendMessage(trimmedText, 'text');
+			} else if (isEmpty(trimmedText) === true && props.pendingFiles.length > 0) {
+				sendMessage(trimmedText, 'file');
+			} else {
+				setTextError(`Message should be less then ${messageLimit} character`);
+				setText(trimmedText);
+			}
 		}
 	};
-
-	// useEffect(() => {
-	//   console.log("inputMessageRef", a(inputMessageRef));
-	// }, []);
 
 	const toggleEmojiPicker = () => {
 		dispatch({
@@ -125,6 +123,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 
 	return (
 		<>
+			{/* typing indicator */}
 			{props.typingUsers.length
 				? props.typingUsers.map(
 					(user: { name: string; roomId: string }, i: number) => {
@@ -142,6 +141,8 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					}
 				)
 				: ''}
+
+			{/* Emoji picker */}
 			{props.emojiPicker ? (
 				<Picker
 					set="twitter"
@@ -153,6 +154,41 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					ref={emojiRef}
 				/>
 			) : null
+			}
+
+			{/* pendingFiles */}
+			<div className="flex w-100 flex-wrap b--black-10 ba"
+			>
+				{
+					props.pendingFiles && props.pendingFiles.length ?
+						props.pendingFiles.map(file =>
+							(
+								<div className="bg-tigrowLightBlue flex pa3 ma1 br-pill justify-center items-center">
+									<p className="white ma0">
+										{file.s3Key.split('/')[1]}
+									</p>
+									<span
+										className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
+										style={{ backgroundColor: 'white', color: '#0fa3a3', borderRadius: '30px', paddingTop: '1px' }}
+										onClick={() => {
+											dispatch({
+												type: DELETE_ONE_PENDING_FILE,
+												payload: file._id
+											});
+										}}
+									></span>
+								</div>
+							))
+						: null
+				}
+			</div>
+
+			{/* message error */}
+			{
+				isEmpty(textError) === false ?
+					<h6 className="mv1 pl1 red">
+						{textError}
+					</h6> : ''
 			}
 			<div className="sendMessage shadow-3 flex w-100 justify-around">
 				{/* <div className="flex items-center mh1" style={{ width: "42px" }}>
@@ -214,38 +250,22 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 						/>
 					</span>
 				</Button>
-				{/* <Button
+				<Button
 					className="bp3-minimal outline-0 mh2 w2 mv3"
-					onClick={() => setShowDialog(true)}
+					onClick={() => setShowFileDialog(true)}
 				>
-					<Icon icon="link" className="tigrow-lightBlue" />
-				</Button> */}
+					<Icon icon="link" color="#0FA3A3" />
+				</Button>
 			</div>
 			{/* <div>{JSON.stringify({ text, length: text.length, sendStatus }, null, 2)}</div> */}
-			{showDialog && (
+			{showFileDialog && (
 				<Dialog
 					icon="briefcase"
-					onClose={() => setShowDialog(!showDialog)}
+					onClose={() => setShowFileDialog(!showFileDialog)}
 					isOpen
 					style={{ background: '#fff' }}
 				>
-					<div className="pa3 cf">
-						<h1 className="f5">Attach Files</h1>
-						<FileInput className="bp3-fill" text="Choose file..." />
-						<div>
-							<Button
-								type="submit"
-								text="Attach"
-								className="grow h2 pointer w-40 fr mt2"
-								style={{
-									background: '#0fa3a3',
-									outline: 'none',
-									color: 'white',
-									boxShadow: 'none'
-								}}
-							/>
-						</div>
-					</div>
+					<FileUpload setShowDialog={setShowFileDialog} roomID={props.roomId} />
 				</Dialog>
 			)}
 		</>
@@ -257,7 +277,8 @@ const mapStateToProps = (state: any) => {
 		profileImage: state.userReducer.user.profileImage,
 		roomId: state.roomReducer.roomId,
 		emojiPicker: state.roomReducer.emojiPicker,
-		typingUsers: state.roomReducer.typing.users
+		typingUsers: state.roomReducer.typing.users,
+		pendingFiles: state.roomReducer.pendingFiles
 	};
 };
 export const SendMessageForm = connect(mapStateToProps, { sendRoomMessage })(SendMessageFormComponent);

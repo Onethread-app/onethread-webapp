@@ -39,23 +39,9 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 						)}
 				</div>
 				<div className="flex-grow-1 overflow-y-auto">
-					<RoomList />
+					{props.isOpen ? <RoomList /> : null}
 				</div>
 			</div>
-			{/* {showDialog && (
-				<Dialog
-					onClose={() => {
-						props.clearRoomError();
-						setShowDialog(!showDialog);
-					}}
-					isOpen
-					style={{ background: "#fff" }}
-				>
-					<CreateForm
-						setShowDialog={setShowDialog}
-					/>
-				</Dialog>
-			)} */}
 			{showDialog &&
 				<RightSidebar
 					onClose={() => { setShowDialog(!showDialog); }}

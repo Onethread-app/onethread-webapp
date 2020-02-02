@@ -2,11 +2,12 @@ import * as React from 'react';
 import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { Tooltip } from '@blueprintjs/core';
-import { IRoomMessage } from 'stores/room/Reducer';
+import { IRoomMessage, IRoomFile } from 'stores/room/Reducer';
+import UserIcon from './../../../../../resources/images/profilePhoto.svg';
 
 interface MessageItemProps {
-  img: string;
   text: string;
+  files: IRoomFile[];
   createdAt: string;
   sender: IRoomMessage['account'];
 }
@@ -18,9 +19,18 @@ export const MessageItem = (props: MessageItemProps) => {
     <article
       className={`flex mb3 mh3 items-center flex ${currentUser ? ' flex-row-reverse' : ''}`}
     >
-      {currentUser ? undefined : <div className="" style={{ minWidth: '35px', maxWidth: '35px' }}>
-        <img src={props.img} className=" br3" />
-      </div>}
+      {currentUser ? undefined :
+        <img
+          src={props.sender.profileImage ?
+            props.sender.profileImage.link : UserIcon}
+          className="v-mid dib br-100"
+          alt="user"
+          style={{
+            width: '2rem',
+            height: '2rem',
+            objectFit: 'cover'
+          }}
+        />}
 
       <Tooltip
         // tslint:disable-next-line: max-line-length
@@ -48,6 +58,12 @@ export const MessageItem = (props: MessageItemProps) => {
             }}
           >{props.text}
           </h2>
+          {props.files.length ?
+            props.files.map(file =>
+              <p><a href={file.link} target="_blank">{file.s3Key.split('/')[1]}</a></p>
+            )
+            : null
+          }
           {/* <div className={`flex ${currentUser ? " flex-row-reverse" : ""}`}>
           <h6 className={`pa0 ma0 mt1 ${currentUser ? "ml5 white" : "mr5"}`}>
             {moment(props.createdAt).format('lll')}

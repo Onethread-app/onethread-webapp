@@ -62,8 +62,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					<SendMessageForm />
 				</div> :
 				<div className="absolute--center tc">
-					<h2>Please, select a room!!</h2>
-					<p>General is a default room.</p>
+					<h2>Please, select a room !!</h2>
 				</div>
 			}
 			{showMemberListDialog && (

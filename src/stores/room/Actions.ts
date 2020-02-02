@@ -15,7 +15,8 @@ import {
 	SEND_MESSAGE,
 	SEND_MESSAGE_ERROR,
 	GET_ROOM_MESSAGES,
-	GET_ROOM_MESSAGES_ERROR
+	GET_ROOM_MESSAGES_ERROR,
+	FILE_UPLOAD
 } from './Types';
 
 export const createRoomAction = (roomData: any) => async (
@@ -140,32 +141,30 @@ export const clearRoomError = () => async (dispatch: any) => {
 	dispatch({ type: CLEAR_ROOMS_ERROR });
 };
 
-export const sendRoomMessage = (data: { text: string, room: string, type?: string }) => async (
-	dispatch: any,
-	getState: any
-) => {
-	try {
-		const headers = tokenConfig();
-		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.post(`messages`, data, headers);
-			await dispatch({ type: SEND_MESSAGE });
-			return response.status;
-		} else {
-			// tslint:disable-next-line: no-console
-			console.log('error in sending a room message');
+export const sendRoomMessage = (data: { text: string, room: string, files: any[], type?: string }) =>
+	async (dispatch: any) => {
+		try {
+			const headers = tokenConfig();
+			if ((headers as any).headers.Authorization) {
+				const response = await tigrowApi.post(`messages`, data, headers);
+				await dispatch({ type: SEND_MESSAGE });
+				return response.status;
+			} else {
+				// tslint:disable-next-line: no-console
+				console.log('error in sending a room message');
+			}
+		} catch (error) {
+			if (error.response.status === 401) {
+				dispatch({ type: SEND_MESSAGE_ERROR, payload: 'Unauthorized user' });
+			} else if (isEqual(error.message, 'Network Error')) {
+				dispatch({ type: SEND_MESSAGE_ERROR, payload: 'Network error' });
+			} else {
+				// tslint:disable-next-line: no-console
+				console.log(error.response);
+			}
+			return error.response.status;
 		}
-	} catch (error) {
-		if (error.response.status === 401) {
-			dispatch({ type: SEND_MESSAGE_ERROR, payload: 'Unauthorized user' });
-		} else if (isEqual(error.message, 'Network Error')) {
-			dispatch({ type: SEND_MESSAGE_ERROR, payload: 'Network error' });
-		} else {
-			// tslint:disable-next-line: no-console
-			console.log(error.response);
-		}
-		return error.response.status;
-	}
-};
+	};
 
 export const getRoomMessages = (roomId: string, limit: number = 50, skip: number = 0) => async (
 	dispatch: any
@@ -192,5 +191,28 @@ export const getRoomMessages = (roomId: string, limit: number = 50, skip: number
 			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
+	}
+};
+
+export const fileUploadAction = (imageSelected: any, roomID: string) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.post(`files/file-upload-room?roomID=${roomID}`, imageSelected, headers);
+			dispatch({ type: FILE_UPLOAD, payload: response.data.newFile });
+			return response;
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('no headers');
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			// tslint:disable-next-line: no-console
+			console.log('network error');
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log(error.response);
+		}
+		return error.response;
 	}
 };
