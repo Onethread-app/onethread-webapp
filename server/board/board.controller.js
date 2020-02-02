@@ -23,7 +23,7 @@ const load = (req, res, next, id) => {
     });
 };
 
-const get = async (req, res) => {
+const get = async (req, res , next) => {
   const boardObj = await Board.findById(req.board._id)
     .populate('members', '_id name color')
     .exec()
@@ -54,7 +54,6 @@ const get = async (req, res) => {
 const create = async (req, res, next) => {
 
   try {
-    console.log(req.body);
     const board = new Board({
       name: req.body.name,
       department : req.body.department,

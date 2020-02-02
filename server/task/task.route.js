@@ -47,7 +47,13 @@ router
   )
   .post(
     authorization ,
+    SchemaValidator(joiSchema.addMember),
     taskCtrl.addMember
+  )
+  .delete(
+    authorization,
+    SchemaValidator(joiSchema.deleteMember),
+    taskCtrl.deleteMember
   )
 
 router.route('/dragTask').post(

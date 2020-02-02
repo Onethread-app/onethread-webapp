@@ -20,7 +20,6 @@ const taskSchema = {
   name: Joi.string(),
   description: Joi.string(),
   priority: Joi.number(),
-  assignedPersons: Joi.array().items(idSchema.id),
   account: idSchema.id,
   dueDate: Joi.date(),
   comments: Joi.array().items(idSchema.id),
@@ -57,6 +56,9 @@ module.exports = {
     body: Joi.object().keys({
       assignedPerson: idSchema.id.required()
     }),
+    params: taskId
+  }),
+  deleteMember: Joi.object().keys({
     params: taskId
   })
 };

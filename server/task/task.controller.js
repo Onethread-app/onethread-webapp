@@ -8,8 +8,8 @@ const TaskAssign = require('./taskAssign.model');
 
 const load = (req, res, next, id) => {
   Task.findById(id)
-    .populate('account', '_id name')
-    .populate('columnId' , '_id name')
+    .populate('account', '_id firstName lastName')
+    .populate('columnId', '_id name')
     .exec()
     .then(result => {
       if (result) {
@@ -50,8 +50,6 @@ const create = async (req, res, next) => {
       req.user,
     );
 
-    //TODO: add total sub task here
-
     const responseData = {
       _id: createdTask._id,
       name: createdTask.name,
@@ -73,66 +71,102 @@ const get = (req, res, next) => {
   return res.json(req.task);
 };
 
-
-const getMembers = async (req,res , next) => {
-  try {
+const getMembers = async (req, res, next) => {
     TaskAssign.find({
-      taskId : req.task._id
+      taskId: req.task._id,
     })
-    .exec()
-    .then((result)=>{
-      res.status(200).send(result)
+      .select('_id assignedPerson account')
+      .populate([
+        {
+          path: 'assignedPerson account',
+          select: '_id firstName lastName profileImage',
+          populate: [
+            {
+              path: 'profileImage',
+              select: 'link',
+            },
+          ],
+        },
+      ])
+      .exec()
+      .then(result => {
+        res.status(200).send(result);
+      })
+      .catch((error)=>{
+        next(error)
+      })
+};
+
+const addMember = async (req, res, next) => {
+
+    TaskAssign.findOne({
+      taskId: req.task._id,
+      assignedPerson: req.body.assignedPerson,
     })
+      .exec()
+      .then(result => {
+        if (result) {
+          res.status(400).send({
+            message: 'Member already exits',
+          });
+        } else {
+          const newTaskMember = new TaskAssign({
+            taskId: req.task._id,
+            account : req.user._id,
+            assignedPerson: req.body.assignedPerson,
+          });
+
+          newTaskMember.save().then(taskMember => {
+            TaskAssign.find({
+              taskId: req.task._id,
+            })
+              .select('_id assignedPerson account')
+              .populate([
+                {
+                  path: 'assignedPerson account',
+                  select: '_id firstName lastName profileImage',
+                  populate: [
+                    {
+                      path: 'profileImage',
+                      select: 'link',
+                    },
+                  ],
+                },
+              ])
+              .exec()
+              .then(result => {
+                res.status(201).send(result);
+              });
+          });
+        }
+      })
+      .catch((error)=>{
+        next(error)
+      })
+};
+
+const deleteMember = async (req, res, next) => {
+  try {
+    await TaskAssign.findByIdAndDelete(req.query.assignedMemberid);
+    res.status(200).json({ message: 'MEMBER DELETED' });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
-const addMember = async (req , res, next ) => {
-  try {
-
-    TaskAssign.findOne({
-      taskId : req.task._id,
-      assignedPerson : req.body.assignedPerson
-    })
-    .exec()
-    .then(async(result) => {
-
-      if(result){
-
-        res.status(400).send({
-          message: 'Member already exits'
-        })
-        
-      }else{
-        const newTaskMember = new TaskAssign({
-          taskId : req.task._id ,
-          assignedPerson : req.body.assignedPerson
-          });
-        const responseData = await newTaskMember.save();
-        res.status(201).send(responseData);
-      }
-
-    })
-  
-  } catch (error) {
-    next(error);
-  }
-}
-
 const update = async (req, res, next) => {
-
-  try {
-
-    const newTask = await Task.findByIdAndUpdate(
-      { _id: req.task._id },
-      req.body,
-      { new: true },
-    );
-    res.status(200).send(newTask);
-  } catch (error) {
-    next(error);
-  }
+  Task.findByIdAndUpdate({ _id: req.task._id }, req.body, {
+    new: true,
+  })
+    .populate('account', '_id firstName lastName')
+    .populate('columnId', '_id name')
+    .exec()
+    .then(result => {
+      res.status(200).send(result);
+    })
+    .catch(error => {
+      next(error);
+    });
 };
 
 const list = (req, res, next) => {};
@@ -197,4 +231,14 @@ const dragTask = async (req, res, next) => {
   }
 };
 
-module.exports = { create, get, update, list, load, dragTask , addMember , getMembers};
+module.exports = {
+  create,
+  get,
+  update,
+  list,
+  load,
+  dragTask,
+  addMember,
+  getMembers,
+  deleteMember,
+};

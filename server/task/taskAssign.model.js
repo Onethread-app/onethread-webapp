@@ -8,6 +8,10 @@ const TaskAssignSchema = new mongoose.Schema(
       type : Schema.Types.ObjectId ,
       ref: 'Task'
     },
+    account : {
+      type : Schema.Types.ObjectId ,
+      ref : 'Account'
+    },
     assignedPerson : {
         type: Schema.Types.ObjectId,
         ref: 'Account',
