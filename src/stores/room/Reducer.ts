@@ -40,6 +40,9 @@ export interface IRoomMember {
 	lastName: string;
 	name: string;
 	presence: string;
+	profileImage?: {
+		link: string;
+	};
 }
 
 export interface IRoomFile {

@@ -85,12 +85,12 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	// 		value: (inputMessageRef.current as any).value
 	// 	};
 	// }
-	const handleKeyPress = (e: any) => {
+	const handleKeyPress = async (e: any) => {
 		// console.log("inputMessageRef", a(inputMessageRef));
 		const trimmedText = trim(text);
-		if (e.key === 'Enter' && e.shiftKey === false && isEmpty(trimmedText) === false) {
-			if (trimmedText.length <= messageLimit) {
-				sendMessage(trimmedText);
+		if (e.key === 'Enter' && e.shiftKey === false) {
+			if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit) {
+				await sendMessage(trimmedText);
 				setText('');
 				setTextError('');
 			} else {

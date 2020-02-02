@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import { useSelector } from 'react-redux';
 
-import UserIcon from './../../../../../resources/images/profilePhoto.svg';
 import { IRoomMessage } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
@@ -52,7 +51,6 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 					return (
 						<MessageItem
 							key={message._id}
-							img={UserIcon}
 							text={message.text}
 							files={message.files}
 							createdAt={message.createdAt}

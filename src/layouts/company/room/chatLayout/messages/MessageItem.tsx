@@ -3,9 +3,9 @@ import { useSelector } from 'react-redux';
 import moment from 'moment';
 import { Tooltip } from '@blueprintjs/core';
 import { IRoomMessage, IRoomFile } from 'stores/room/Reducer';
+import UserIcon from './../../../../../resources/images/profilePhoto.svg';
 
 interface MessageItemProps {
-  img: string;
   text: string;
   files: IRoomFile[];
   createdAt: string;
@@ -19,9 +19,18 @@ export const MessageItem = (props: MessageItemProps) => {
     <article
       className={`flex mb3 mh3 items-center flex ${currentUser ? ' flex-row-reverse' : ''}`}
     >
-      {currentUser ? undefined : <div className="" style={{ minWidth: '35px', maxWidth: '35px' }}>
-        <img src={props.img} className=" br3" />
-      </div>}
+      {currentUser ? undefined :
+        <img
+          src={props.sender.profileImage ?
+            props.sender.profileImage.link : UserIcon}
+          className="v-mid dib br-100"
+          alt="user"
+          style={{
+            width: '2rem',
+            height: '2rem',
+            objectFit: 'cover'
+          }}
+        />}
 
       <Tooltip
         // tslint:disable-next-line: max-line-length

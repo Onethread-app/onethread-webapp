@@ -87,6 +87,7 @@ export const getRoomMembers = (roomId: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`rooms/members/${roomId}`, headers);
+			console.log('response.data.members', response.data.members);
 			dispatch({
 				type: GET_ROOM_MEMBERS,
 				payload: response.data.members
@@ -148,7 +149,6 @@ export const sendRoomMessage = (data: { text: string, room: string, type?: strin
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			console.log('data', data);
 			const response = await tigrowApi.post(`messages`, data, headers);
 			await dispatch({ type: SEND_MESSAGE });
 			return response.status;
@@ -203,7 +203,6 @@ export const fileUploadAction = (imageSelected: any, roomID: string) => async (d
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`files/file-upload-room?roomID=${roomID}`, imageSelected, headers);
 			dispatch({ type: FILE_UPLOAD, payload: response.data.newFile });
-			console.log('response', response);
 			return response;
 		} else {
 			// tslint:disable-next-line: no-console
