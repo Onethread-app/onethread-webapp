@@ -5,22 +5,25 @@ import { required, checkError } from 'components/final-form/utils';
 import { EditableText, Button, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
+import { updateTask } from 'stores/board/Actions';
 
 interface ITaskTitleFormProps {
   setNameEdit: (val: boolean) => void;
   nameEdit: boolean;
   currentTask?: ITask;
+  updateTask: (task: ITask) => void;
 }
 
  const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
   const onSubmit = async (values: any) => {
-    props.setNameEdit(false);
+    await props.updateTask(values);
+    await props.setNameEdit(false);
   }
   return (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{description: props.currentTask!.name}}
+        initialValues={{name: props.currentTask!.name}}
         render={({
           handleSubmit,
           form,
@@ -37,7 +40,7 @@ interface ITaskTitleFormProps {
               <SubmitError errorMessage={submitError} />
               <div className="ph2 pt2 w-100">
                 <Field<string>
-                  name="description"
+                  name="name"
                   validate={required}
                   render={({ input, meta }) =>
                     <div className={`${checkError(meta) ? 'mb3' : 'mb2'}`}>
@@ -93,4 +96,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const TaskTitleEditor = connect(mapStateToProps, null)(TaskTitleEditorComponent)
+export const TaskTitleEditor = connect(mapStateToProps, { updateTask })(TaskTitleEditorComponent);

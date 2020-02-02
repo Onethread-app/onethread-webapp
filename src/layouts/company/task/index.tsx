@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-import { SubTaskView } from './subTask/subtaskView';
-import { ActivityView } from './activity/activityView';
+import { SubTaskView } from './subTask/SubtaskView';
+import { ActivityView } from './activity/ActivityView';
 import { ITask, TaskBoard } from 'stores/board/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
 import { TaskDetails } from './taskDetails';
@@ -16,7 +16,7 @@ interface TaskInternalProps {
 
 const TaskPageComponent = (props: TaskInternalProps) => {
     return (
-        <div className="cf pa3">
+        <div className="cf ph3">
             <BreadCrumbs
                 items={[
                     { text: `Board`, href: `/company/${props.company.name}/board` },
@@ -27,13 +27,14 @@ const TaskPageComponent = (props: TaskInternalProps) => {
                     }
                 ]}
             />
-            <div className="cf">
-                <div className="fl w-100 w-50-l pa2">
+            <div className="cf flex h-100 flex-column flex-row-l">
+                <div className="w-100 w-50-l pa2">
                     {/* <h1 className="fw6 lh-title black">{props.currentTask.name}</h1> */}
                     <TaskDetails />
                     <SubTaskView />
                 </div>
-                <div className="fl w-100 w-50-l pa2">
+                <div className="w-100 w-50-l ph2" style={{
+                    height: 'calc(100vh - 100px)'}}>
                     <ActivityView />
                 </div>
             </div>

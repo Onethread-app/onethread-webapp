@@ -96,10 +96,10 @@ export const logoutAction = (routeHistory: History) => async (dispatch: any) => 
 	}
 };
 
-export const resendMailForSignup = async () => {
+export const resendMailForSignup = async (email?: string) => {
 	try {
 		const requestData = {
-			email: JSON.parse(localStorage.getItem('email')!),
+			email: email ? email : JSON.parse(localStorage.getItem('email')!),
 			resentType: 'verify-account'
 		};
 		const response = await tigrowApi.post('accounts/resend-email', requestData, {

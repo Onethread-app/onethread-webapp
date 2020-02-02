@@ -44,27 +44,41 @@ export const passwordValidation = (password: string) => {
 };
 
 export const errorMessgeHandler = (handlerResponse: any) => {
-  if (handlerResponse.status === 200 || handlerResponse.status === 201) {
-    return {
-      message: 200,
-      payload: handlerResponse
-    };
-  }
+
   if (isEqual(handlerResponse.message, 'Network Error')) {
     return {
       message: handlerResponse.message,
-      fieldName: FORM_ERROR
+      fieldName: FORM_ERROR,
+      status: handlerResponse.status,
+      type: ''
     };
   }
-  if (handlerResponse.response.status === 401) {
-    return {
-      message:  handlerResponse.response.data.errors[0].message,
-      fieldName: FORM_ERROR
-    };
+
+  switch (handlerResponse.status || handlerResponse.response.status) {
+    case 200:
+    case 201:
+      return {
+        message: 200,
+        payload: handlerResponse,
+        status: handlerResponse.status,
+        type: ''
+      };
+
+    case 401:
+      return {
+        message: handlerResponse.response.data.errors[0].message,
+        fieldName: FORM_ERROR,
+        status: handlerResponse.response.status,
+        type: handlerResponse.response.data.type
+      };
+
+    default:
+      return {
+        message: handlerResponse.response.data.errors[0].message,
+        fieldName: handlerResponse.response.data.errors[0].fieldName ?
+          handlerResponse.response.data.errors[0].fieldName : '',
+        status: handlerResponse.response.status,
+        type: handlerResponse.response.data.type
+      };
   }
-  return {
-    message: handlerResponse.response.data.errors[0].message,
-    fieldName: handlerResponse.response.data.errors[0].fieldName ?
-      handlerResponse.response.data.errors[0].fieldName : ''
-  };
 };

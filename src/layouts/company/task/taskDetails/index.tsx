@@ -28,11 +28,12 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   return (
     <div className="fl w-100">
       <div className="fl w-100">
-        <div className="fl w-100 pv2">
+        <div className="fl w-100">
           <TaskTitleView />
         </div>
       </div>
-      <p>Created by {props.currentTask!.createdBy} on  {moment(props.currentTask!.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
+      <p style={{ color: '#303030', fontSize: '12px' }}>Created by {props.currentTask!.createdBy} on
+        {moment(props.currentTask!.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
       <div className="fl w-70-ns w-100">
         <div className="fl w-100">
           <div className="flex">
@@ -40,20 +41,26 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               <p className="fw7 pt2">{props.currentTask!.currentColumnName}</p>
             </div>
             {
-              props.currentTask!.dueDate ? 
-              <p className="pt2 pl3 fw6">5 days remaining</p> : 'Days has not been set'
+              props.currentTask!.dueDate ?
+                <p className="pt2 pl3 fw6">
+                  {Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true))} days remaining</p>
+                : <p className="pt2 pl3 fw6">Days has not been set</p>
             }
-            
+
           </div>
           <div className="mt2">
             <AssignedMembersView />
           </div>
-          <TaskDescriptionView />
-          <div className="fl w-100 w-50-ns pa2">
-            <DueDateView />
+          <div>
+            <TaskDescriptionView />
           </div>
-          <div className="fl w-100 w-50-ns pa2">
-            <PriorityView />
+          <div className="mt3">
+            <div className="fl w-100 w-50-ns">
+              <DueDateView />
+            </div>
+            <div className="fl w-100 w-50-ns">
+              <PriorityView />
+            </div>
           </div>
           <div>
           </div>
@@ -70,7 +77,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                   </DueDateView>
                 </div> */}
         <div className="fl w-100">
-          <div>
+          <div className="fr-ns fl">
             <div>
               <Popover
                 isOpen={datePopover}
@@ -83,7 +90,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                 target={
                   <div
                     className="flex br2 mb2 pt2 ph3 pointer"
-                    style={{ background: '#C1DEDE', width: '140px' }}
+                    style={{ background: '#C1DEDE', width: '130px' }}
                     onClick={() => setDatePopover(true)}>
                     <img style={{ height: '15px' }} src={dueDate} />
                     <p className="pl3 f7">Due Date</p>
@@ -129,7 +136,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                 target={
                   <div
                     className="flex br2 mb2 pt2 ph3 pointer"
-                    style={{ background: '#C1DEDE', width: '140px' }}
+                    style={{ background: '#C1DEDE', width: '130px' }}
                     onClick={() => setMembersPopover(true)}
                   >
                     <img style={{ height: '15px' }} src={addMembers} />
@@ -149,7 +156,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                 target={
                   <div className="flex br2 mb2 pt2 ph3 pointer"
                     onClick={() => setPriorityPopover(true)}
-                    style={{ background: '#C1DEDE', width: '140px' }}>
+                    style={{ background: '#C1DEDE', width: '130px' }}>
                     <img style={{ height: '15px' }} src={priority} />
                     <p className="pl3 f7">Priority</p>
                   </div>

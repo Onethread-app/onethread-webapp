@@ -58,6 +58,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
                       }}
                       error={checkError(meta) && (meta.error || meta.submitError)}
                       label="Task Name"
+                      autoFocus={true}
                     />
                   </div>
                 }
@@ -108,7 +109,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    currentBoard: state.boardReducer.currentBoard
+    currentBoard: state.boardIndexReducer.boardReducer.currentBoard
   };
 };
 

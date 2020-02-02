@@ -6,21 +6,23 @@ interface DueDateViewComponentInternalProps {
   dueDate?: Date;
 }
 
-export const DueDateViewComponent = (props: DueDateViewComponentInternalProps ) => {
+export const DueDateViewComponent = (props: DueDateViewComponentInternalProps) => {
   return (
     <>
-    <h3>Due Date</h3>
-    {
-      props.dueDate &&
-      <p>{moment(props.dueDate).format('MMM Do YY') }</p>
-    }
+      <div style={{ height: '20px' }}>
+        <h1 className="f6">Due Date</h1>
+      </div>
+      {
+        props.dueDate &&
+        <p>{moment(props.dueDate).format('MMM Do YYYY')}</p>
+      }
     </>
   );
 };
 
 const mapStateToProps = (state: any) => {
   return {
-    dueDate : state.boardIndexReducer.boardReducer.currentTask.dueDate,
+    dueDate: state.boardIndexReducer.boardReducer.currentTask.dueDate,
   };
 };
 

@@ -72,6 +72,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                       }}
                       error={checkError(meta) && (meta.error || meta.submitError)}
                       label="Column Name"
+                      autoFocus={true}
                     />
                   </div>
                 }
