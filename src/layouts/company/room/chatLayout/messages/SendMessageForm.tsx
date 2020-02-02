@@ -17,7 +17,7 @@ const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface SendMessageFormProps {
 	chatkit?: any;
-	sendRoomMessage: (data: { text: string, room: string, type?: string, files: any }) => void;
+	sendRoomMessage: (data: { text: string, room: string, files: any[], type?: string }) => void;
 	roomId: string;
 	profileImage: any;
 	emojiPicker: boolean;
@@ -41,12 +41,23 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	}, [props.roomId]);
 
 	// tslint:disable-next-line: no-shadowed-variable
-	const sendMessage = async (text: string) => {
+	const sendMessage = async (text: string, type: string) => {
+		setText('');
+		setTextError('');
+
 		const files = props.pendingFiles && props.pendingFiles.length ?
 			props.pendingFiles.map(file => ({ _id: file._id, link: file.link, s3Key: file.s3Key }))
 			: [];
-		await props.sendRoomMessage({ text, room: props.roomId, files });
+
 		dispatch({ type: CLEAR_FILE_UPLOAD });
+		setText('');
+
+		await props.sendRoomMessage({
+			text,
+			room: props.roomId,
+			files,
+			type
+		});
 	};
 
 	// tslint:disable-next-line: no-shadowed-variable
@@ -64,48 +75,21 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 			.catch((error: any) => console.error('error on typing', error));
 	};
 
-	// function a(inputMessageRef: any) {
-	// 	return {
-	// 		clientHeight: (inputMessageRef.current as any).clientHeight,
-	// 		clientLeft: (inputMessageRef.current as any).clientLeft,
-	// 		clientTop: (inputMessageRef.current as any).clientTop,
-	// 		clientWidth: (inputMessageRef.current as any).clientWidth,
-	// 		cols: (inputMessageRef.current as any).cols,
-	// 		rows: (inputMessageRef.current as any).rows,
-	// 		defaultValue: (inputMessageRef.current as any).defaultValue,
-	// 		innerHTML: (inputMessageRef.current as any).innerHTML,
-	// 		offsetHeight: (inputMessageRef.current as any).offsetHeight,
-	// 		offsetLeft: (inputMessageRef.current as any).offsetLeft,
-	// 		offsetTop: (inputMessageRef.current as any).offsetTop,
-	// 		offsetWidth: (inputMessageRef.current as any).offsetWidth,
-	// 		scrollHeight: (inputMessageRef.current as any).scrollHeight,
-	// 		scrollLeft: (inputMessageRef.current as any).scrollLeft,
-	// 		scrollTop: (inputMessageRef.current as any).scrollTop,
-	// 		scrollWidth: (inputMessageRef.current as any).scrollWidth,
-	// 		value: (inputMessageRef.current as any).value
-	// 	};
-	// }
 	const handleKeyPress = async (e: any) => {
-		// console.log("inputMessageRef", a(inputMessageRef));
 		const trimmedText = trim(text);
 		if (e.key === 'Enter' && e.shiftKey === false) {
-			if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit) {
-				await sendMessage(trimmedText);
-				setText('');
-				setTextError('');
+			if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit && props.pendingFiles.length > 0) {
+				sendMessage(trimmedText, 'attachment');
+			} else if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit && props.pendingFiles.length === 0) {
+				sendMessage(trimmedText, 'text');
+			} else if (isEmpty(trimmedText) === true && props.pendingFiles.length > 0) {
+				sendMessage(trimmedText, 'file');
 			} else {
 				setTextError(`Message should be less then ${messageLimit} character`);
 				setText(trimmedText);
 			}
-			// e.target.value = "";
-			// (inputMessageRef.current as any).value = "";
-			// console.log("inputMessageRef", a(inputMessageRef));
 		}
 	};
-
-	// useEffect(() => {
-	//   console.log("inputMessageRef", a(inputMessageRef));
-	// }, []);
 
 	const toggleEmojiPicker = () => {
 		dispatch({
