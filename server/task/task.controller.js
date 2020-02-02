@@ -56,14 +56,15 @@ const create = async (req, res, next) => {
       description: createdTask.description,
       dueDate: createdTask.dueDate,
     };
+    logger.info(`Task column create`);
     res.status(201).send(responseData);
   } catch (error) {
-    logger.error(`Task column create: ${error}`);
-    const err = new BadRequestError(
-      'task data is invalid.',
-      httpStatus.BAD_REQUEST,
-    );
-    next(err);
+    logger.error(`Task: ${error}`);
+    // const err = new BadRequestError(
+    //   'task data is invalid.',
+    //   httpStatus.BAD_REQUEST,
+    // );
+    next(error);
   }
 };
 
@@ -72,77 +73,76 @@ const get = (req, res, next) => {
 };
 
 const getMembers = async (req, res, next) => {
-    TaskAssign.find({
-      taskId: req.task._id,
+  TaskAssign.find({
+    taskId: req.task._id,
+  })
+    .select('_id assignedPerson account')
+    .populate([
+      {
+        path: 'assignedPerson account',
+        select: '_id firstName lastName profileImage',
+        populate: [
+          {
+            path: 'profileImage',
+            select: 'link',
+          },
+        ],
+      },
+    ])
+    .exec()
+    .then(result => {
+      res.status(200).send(result);
     })
-      .select('_id assignedPerson account')
-      .populate([
-        {
-          path: 'assignedPerson account',
-          select: '_id firstName lastName profileImage',
-          populate: [
-            {
-              path: 'profileImage',
-              select: 'link',
-            },
-          ],
-        },
-      ])
-      .exec()
-      .then(result => {
-        res.status(200).send(result);
-      })
-      .catch((error)=>{
-        next(error)
-      })
+    .catch(error => {
+      next(error);
+    });
 };
 
 const addMember = async (req, res, next) => {
+  TaskAssign.findOne({
+    taskId: req.task._id,
+    assignedPerson: req.body.assignedPerson,
+  })
+    .exec()
+    .then(result => {
+      if (result) {
+        res.status(400).send({
+          message: 'Member already exits',
+        });
+      } else {
+        const newTaskMember = new TaskAssign({
+          taskId: req.task._id,
+          account: req.user._id,
+          assignedPerson: req.body.assignedPerson,
+        });
 
-    TaskAssign.findOne({
-      taskId: req.task._id,
-      assignedPerson: req.body.assignedPerson,
-    })
-      .exec()
-      .then(result => {
-        if (result) {
-          res.status(400).send({
-            message: 'Member already exits',
-          });
-        } else {
-          const newTaskMember = new TaskAssign({
+        newTaskMember.save().then(taskMember => {
+          TaskAssign.find({
             taskId: req.task._id,
-            account : req.user._id,
-            assignedPerson: req.body.assignedPerson,
-          });
-
-          newTaskMember.save().then(taskMember => {
-            TaskAssign.find({
-              taskId: req.task._id,
-            })
-              .select('_id assignedPerson account')
-              .populate([
-                {
-                  path: 'assignedPerson account',
-                  select: '_id firstName lastName profileImage',
-                  populate: [
-                    {
-                      path: 'profileImage',
-                      select: 'link',
-                    },
-                  ],
-                },
-              ])
-              .exec()
-              .then(result => {
-                res.status(201).send(result);
-              });
-          });
-        }
-      })
-      .catch((error)=>{
-        next(error)
-      })
+          })
+            .select('_id assignedPerson account')
+            .populate([
+              {
+                path: 'assignedPerson account',
+                select: '_id firstName lastName profileImage',
+                populate: [
+                  {
+                    path: 'profileImage',
+                    select: 'link',
+                  },
+                ],
+              },
+            ])
+            .exec()
+            .then(result => {
+              res.status(201).send(result);
+            });
+        });
+      }
+    })
+    .catch(error => {
+      next(error);
+    });
 };
 
 const deleteMember = async (req, res, next) => {

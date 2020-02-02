@@ -5,13 +5,13 @@ const { sendJSONresponse } = require('../helpers/jsonResponse');
 const File = require('./file.model');
 const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
+const { Room } = require('../room/room.model');
 const { generateGetUrl } = require('../services/s3');
 let s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
   secretAccessKey: config.awsSecretAccessKey,
   region: config.s3Region,
 });
-
 const profilePicture = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
@@ -93,7 +93,7 @@ const companyLogo = async (req, res, next) => {
       const newFile = {
         link: data.Location,
         s3Key: data.Key,
-        company: companyID,
+        // company: companyID,
         type: params.ContentType,
         account: userID,
       };
@@ -147,7 +147,15 @@ const fileInRooms = async (req, res, next) => {
         await newFile.save();
         logger.info('File Link successfully save to file collection');
 
-        return sendJSONresponse(res, 200, { newFile });
+        const room = await Room.findOne({ _id: roomID });
+        logger.info(room);
+
+        room.file.push(newFile._id);
+        await room.save();
+        logger.info('File ref successfully save to room collection');
+
+        logger.info(newFile);
+        return sendJSONresponse(res, 200, { data, newFile });
       } catch (error) {
         logger.error(`${error}`);
         next(error);

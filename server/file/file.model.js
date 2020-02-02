@@ -40,14 +40,6 @@ const fileSchema = new mongoose.Schema(
       ref: 'Account',
       required: true,
     },
-    company: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company',
-    },
-    room: {
-      type: Schema.ObjectId,
-      ref: 'Room',
-    },
     message: {
       type: Schema.ObjectId,
       ref: 'Message',

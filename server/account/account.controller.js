@@ -440,8 +440,8 @@ const changePassword = async (req, res, next) => {
     const { user } = req;
     const { oldPassword, newPassword } = req.body;
     if (oldPassword === newPassword) {
-      return sendJSONresponse(res, 400, {
-        message: `you can not use the same password`,
+      return sendErrorResponse(res, 400, 'ValidationError', {
+        message: `You can not use the same password`,
       });
     }
     await Account.findOne({ email: user.email }).exec((err, user) => {
@@ -459,9 +459,12 @@ const changePassword = async (req, res, next) => {
             message: 'Password changed successfully',
           });
         } else {
-          return sendJSONresponse(res, 401, {
-            message: `your previous password is wrong.`,
-          });
+          return sendErrorResponse(
+            res,
+            401,
+            'PasswordValidationError',
+            { message: `Your previous password is wrong` },
+          );
         }
       });
     });
