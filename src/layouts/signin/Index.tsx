@@ -3,10 +3,10 @@ import { Form, Field } from 'react-final-form';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { required, checkError, composeValidators, isEmail } from 'components/final-form/utils';
 import { Link, NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
-import { Button } from '@blueprintjs/core';
+import { Button, Toaster } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { loginAction, LoginModel } from '../../stores/auth/Actions';
-import { isEmpty } from 'lodash';
+import { loginAction, LoginModel, resendMailForSignup } from '../../stores/auth/Actions';
+import { isEmpty, isEqual } from 'lodash';
 import { SubmitError } from 'components/final-form/SubmitError';
 
 import logo from './../../resources/images/logo.png';
@@ -28,7 +28,30 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
       props.history.push(`/${response.payload.data.user.name}`);
       return true;
     }
-    return { [response.fieldName]: response.message };
+    switch (response.type) {
+      case 'VerificationError':
+        return {
+          [response.fieldName]: <>
+            {`${response.message}.`}
+            <a
+              className="link dim blue pl1"
+              onClick={async () => {
+                const res = await resendMailForSignup(values.email);
+                if (res.message === 200) {
+                  Toaster.create().show({ message: 'Email has been send successfully' });
+                }
+                if (isEqual(res.message, 'Network Error')) {
+                  Toaster.create().show({ message: 'Network Error' });
+                }
+              }}
+            >
+              Resend mail?
+            </a>
+          </>
+        };
+      default:
+        return { [response.fieldName]: response.message };
+    }
   };
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
