@@ -3,8 +3,12 @@ import { FORM_ERROR } from 'final-form';
 
 export const required = (value: any) => (value ? undefined : 'Required');
 
-export const maxValue = (max: number) => (value: any) =>
-  value.length <= max ? undefined : `Should be less than or equal ${max}`;
+export const maxValue = (max: number) => (value: any) => {
+  if (value === undefined || value.length <= max) {
+    return undefined;
+  }
+  return `Should be less than or equal ${max}`;
+}
 
 export const composeValidators = (...validators: any) => (value: any) =>
   validators.reduce((error: any, validator: any) =>

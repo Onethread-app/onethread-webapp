@@ -15,6 +15,8 @@ interface CompanyAboutEditInternalProps extends CompanyAboutEditComponentProps {
 
 const CompanyAboutEditorComponent = (props: CompanyAboutEditInternalProps) => {
   const [aboutInfo, setAboutInfo] = useState(props.company.about);
+  const [aboutInfoError, setAboutInfoError] = useState('');
+
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-copy dib tigrow-lightGray-1">About</h1>
@@ -24,8 +26,16 @@ const CompanyAboutEditorComponent = (props: CompanyAboutEditInternalProps) => {
         minLines={3}
         maxLines={20}
         value={aboutInfo}
-        onChange={(e) => setAboutInfo(e)}
+        onChange={(e) => {
+          setAboutInfo(e);
+          if (aboutInfo && aboutInfo.length > 2000) {
+            setAboutInfoError('About must be less than or equal 2000 character.');
+          } else {
+            setAboutInfoError('');
+          }
+        }}
       />
+      {aboutInfoError ? <small style={{ color: 'red' }}>{aboutInfoError}</small> : ''}
       <Divider />
       <div className="flex justify-end mt3">
         <Button className="w4 grow h2 pointer mr3"

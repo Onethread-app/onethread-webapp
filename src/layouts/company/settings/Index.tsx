@@ -19,4 +19,4 @@ const SettingsPageComponent = () => (
   </div>
 );
 
-export const SettingsPage = connect(null, null)(SettingsPageComponent)
+export const SettingsPage = connect(null, null)(SettingsPageComponent);

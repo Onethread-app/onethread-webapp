@@ -44,10 +44,14 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
                 }
               }}
             >
-              <div className={`mr1 br-100
+              <div
+                className="dtc w1 v-mid"
+              >
+                <div className={`db w1 h1 br-100 
                 ${props.currentCompany === c.company._id ? "bg-green" : "bg-red"}`}
-                style={{ width: "10px", height: "10px", marginTop: "12px" }}
-              ></div>
+                  style={{ width: '.7rem', height: '.7rem' }}
+                ></div>
+              </div>
               <div className="dtc v-mid pl3">
                 <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">{c.company.name} </h1>
                 <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>

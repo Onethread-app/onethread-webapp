@@ -122,6 +122,9 @@ const CompanySignupFormComponent = (props: {
               if (isEmpty(values.name)) {
                 const companyNameError = { ...errors, name: "Please enter company name" };
                 setErrors(companyNameError);
+              } else if (values.name.length > 32) {
+                const companyNameError = { ...errors, name: "Company name must be less than 32 character." };
+                setErrors(companyNameError);
               } else {
                 const companyNameError = { ...errors, name: "" }
                 setErrors(companyNameError);
@@ -147,7 +150,10 @@ const CompanySignupFormComponent = (props: {
             leftIconColor={`${errors.address ? 'red' : "#0fa3a3"}`}
             validationOnBlur={() => {
               if (isEmpty(values.address)) {
-                const companyAddressError = { ...errors, address: "Please enter company name" };
+                const companyAddressError = { ...errors, address: "Please enter company address" };
+                setErrors(companyAddressError);
+              } else if (values.address.length > 120) {
+                const companyAddressError = { ...errors, address: "Company address must be less than 120 character." };
                 setErrors(companyAddressError);
               } else {
                 const companyAddressError = { ...errors, address: "" }

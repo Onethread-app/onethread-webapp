@@ -10,7 +10,7 @@ import { ColumnForm } from './ColumnForm';
 import { permit } from 'stores/UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
 import { Field, Form } from 'react-final-form';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { createTask } from 'stores/board/Actions';
 import { RightSidebar } from 'components/RightSidebar';
@@ -53,20 +53,31 @@ const ColumnComponent = (props: ColumnInternalProps) => {
         className="dib h-100 w-23-l w-50-m"
         style={{minWidth: '270px'}}
       >
-        <div className="flex flex-column h-100 pr3">
-          <div>
-            <div className="flex pb1">
-              <h3
-                className="pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break"
-                style={{
-                  whiteSpace: 'nowrap',
-                  textOverflow: 'ellipsis'
-                }}
-              >
-                {props.column.name}
-              </h3>
+        <div className="flex flex-column h-100 pr3 w-100">
+          <div className="w-100">
+            <div className="flex pb1 w-100">
+              <Popover
+                interactionKind="hover-target"
+                popoverClassName="bp3-popover-content-sizing"
+                className="w-90"
+                content={
+                  <p>{props.column.name}</p>
+                }
+                target={
+                  <h3
+                    className="w-50 pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break pv1"
+                    style={{
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    {props.column.name}
+                  </h3>
+                }
+              />
               {props.company && permit(props.company.role) === true ?
                 <Popover
+                  className="w-10"
                   content={
                     <Menu>
                       <MenuItem
@@ -85,7 +96,6 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                       }}
                       icon="more"
                       minimal={true}
-                      small={true}
                     />
                   }
                 />
@@ -129,7 +139,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                           <div className="ph2 pt2" style={{ background: '#F6F6F6' }}>
                             <Field<string>
                               name="name"
-                              validate={required}
+                              validate={composeValidators(required, maxValue(60))}
                               render={({ input, meta }) =>
                                 <InputGroupFieldWithError
                                   id="name"
