@@ -6,8 +6,7 @@ module.exports = {
   createRoom: Joi.object().keys({
     body: Joi.object().keys({
       name: Joi.string()
-        .min(1)
-        .max(20)
+        .max(32)
         .required(),
       company: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)

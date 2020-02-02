@@ -81,7 +81,16 @@ const addUsers = async (req, res) => {
 
 const memberList = async (req, res, next) => {
   Room.findById(req.params.roomId)
-    .populate('members', 'name firstName lastName email')
+    .populate([
+      {
+        path: 'members',
+        select: 'name firstName lastName email profileImage',
+        populate: {
+          path: 'profileImage',
+          select: '-_id link',
+        },
+      },
+    ])
     .exec()
     .then(({ members }) => res.json({ members: members }))
     .catch(e => next(e));

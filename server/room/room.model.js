@@ -7,19 +7,13 @@ const RoomSchema = new mongoose.Schema(
       type: String,
       trim: true,
       unique: false,
-      maxlength: 20,
+      maxlength: 32,
       required: true,
     },
     members: [
       {
         type: Schema.ObjectId,
         ref: 'Account',
-      },
-    ],
-    file: [
-      {
-        type: Schema.ObjectId,
-        ref: 'File',
       },
     ],
     company: {

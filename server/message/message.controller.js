@@ -2,6 +2,7 @@ const { Message } = require('./message.model');
 const { Room } = require('./../room/room.model');
 const Account = require('./../account/account.model');
 const { chatkit } = require('../services/pusher.services');
+const File = require('./../file/file.model');
 
 const create = async (req, res, next) => {
   // Check for JSON
@@ -17,16 +18,22 @@ const create = async (req, res, next) => {
       });
     }
 
+    let files = req.body.files.map(file => file._id);
+
     const message = new Message({
       text: req.body.text,
       room: req.body.room,
       type: req.body.type,
+      files,
       account: req.user._id,
     });
 
-    const account = await Account.findById(req.user._id).select(
-      'name firstName lastName email',
-    );
+    const account = await Account.findById(req.user._id)
+      .select('name firstName lastName email')
+      .populate({
+        path: 'profileImage',
+        select: '-_id link',
+      });
 
     //send to chatkit-server
     let msg = await chatkit.sendMultipartMessage({
@@ -35,17 +42,12 @@ const create = async (req, res, next) => {
       parts: [
         {
           type: 'text/plain',
-          content: JSON.stringify({ message, account }),
+          content: JSON.stringify({
+            message,
+            account,
+            files: req.body.files,
+          }),
         },
-        // {
-        //   type: 'audio/ogg',
-        //   url: 'https://example.com/oink.ogg',
-        // },
-        // {
-        //   type: 'image/gif',
-        //   file: data,
-        //   customData: { foo: 'bar' },
-        // },
       ],
     });
     // save ref of chatkit
@@ -54,6 +56,12 @@ const create = async (req, res, next) => {
     }
 
     await message.save();
+
+    let fileUpdate = await File.update(
+      { _id: { $in: files } },
+      { message: message._id },
+      { multi: true },
+    );
 
     return res.status(201).json({
       message,
@@ -81,7 +89,21 @@ const getRoomMessages = async (req, res, next) => {
       removed: false,
     })
       .select('-__v')
-      .populate('account', 'name firstName lastName email')
+      .populate('files', '')
+      .populate([
+        {
+          path: 'account',
+          select: 'name firstName lastName email profileImage',
+          populate: {
+            path: 'profileImage',
+            select: '-_id link',
+          },
+        },
+        {
+          path: 'files',
+          select: 'link s3Key type',
+        },
+      ])
       .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit);

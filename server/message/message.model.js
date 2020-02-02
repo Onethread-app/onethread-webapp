@@ -8,14 +8,13 @@ const MessageSchema = new Schema(
     text: {
       type: String,
       trim: true,
-      required: true,
     },
     type: {
       type: String,
-      enum: ['text', 'url', 'file'],
+      enum: ['text', 'file', 'attachment'],
       default: 'text',
     },
-    file: [
+    files: [
       {
         type: Schema.ObjectId,
         ref: 'File',

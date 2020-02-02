@@ -19,7 +19,7 @@ const cname = Joi.object().keys({
 
 // joi schema
 const schema = {
-  name: Joi.string(),
+  name: Joi.string().max(32),
   type: Joi.string().valid([
     'Manufacturer',
     'Trading Company',
@@ -31,7 +31,8 @@ const schema = {
     'Business Service (Transportation, finance, travel, Ads, etc)',
     'Other',
   ]),
-  address: Joi.string(),
+  address: Joi.string().max(120),
+  about: Joi.string().max(2000),
   email: Joi.string()
     .email()
     .lowercase(),
@@ -80,7 +81,6 @@ const schema = {
     '1001 -2000 square meters',
     'above 2000 square meters',
   ]),
-  about: Joi.string().max(256),
 };
 
 module.exports = {

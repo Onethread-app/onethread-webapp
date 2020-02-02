@@ -28,7 +28,7 @@ router.post(
   fileCtrl.companyLogo,
 );
 router.post(
-  '/file-upload',
+  '/file-upload-room',
   upload.single('file'),
   authorization,
   fileCtrl.fileInRooms,
