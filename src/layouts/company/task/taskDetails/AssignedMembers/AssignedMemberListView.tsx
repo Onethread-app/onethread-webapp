@@ -28,7 +28,7 @@ export const AssignedMemberListViewComponent = (props: IAssignedMemberListViewCo
               style={{ borderBottom: '1px solid #EEEEEF' }}>
               <div>
                 <p className="b ma0">{list.name}</p>
-                {/* <p className="ma0">added by xxyy</p> */}
+                <p className="ma0">added by {list.account}</p>
               </div>
               <div>
 

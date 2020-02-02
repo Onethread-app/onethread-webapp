@@ -3,6 +3,7 @@ import { GET_ALL_MEMBER, DELETE_MEMBER } from './Types';
 export interface ITaskMember {
   _id?: string;
   name: string;
+  account: string;
   profileImage?: string;
 }
 

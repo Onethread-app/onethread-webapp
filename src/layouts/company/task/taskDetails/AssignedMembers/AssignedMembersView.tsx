@@ -18,12 +18,12 @@ export const AssignedMembersViewComponent =
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-      async function getAPI() {
+      async function getAllTaskMembers() {
         await props.getAllMembers();
         setLoading(false);
       }
-      getAPI();
-    }, [])
+      getAllTaskMembers();
+    }, []);
 
     return (
       <>
@@ -31,11 +31,11 @@ export const AssignedMembersViewComponent =
           loading === false ?
             <div className="flex">
               {
-                props.taskMemberList.slice( 0, 3).map((list) => (
+                props.taskMemberList.slice(0, 3).map((list) => (
 
                   <div className="pa1 dib">
                     <img
-                      src={list.profileImage ? list.profileImage : 'http://tachyons.io/img/logo.jpg' }
+                      src={list.profileImage ? list.profileImage : 'http://tachyons.io/img/logo.jpg'}
                       className="br2 h2 w2 pointer" alt="avatar"
                       onClick={() => setShowMemberList(true)}
                     />
@@ -55,10 +55,7 @@ export const AssignedMembersViewComponent =
                 </div>
 
               }
-
-
             </div> : <Loading />
-
         }
         {showMemberlist && (
           <Dialog
@@ -83,5 +80,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AssignedMembersView = connect(mapStateToProps, { getAllMembers })
-(withRouter(AssignedMembersViewComponent));
+export const AssignedMembersView = connect(mapStateToProps, {
+  getAllMembers
+})(withRouter(AssignedMembersViewComponent));
