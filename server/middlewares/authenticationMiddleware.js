@@ -4,7 +4,6 @@ module.exports.authentication = (req, res, next) => {
   passport.authenticate('local', { session: false }, function(
     err,
     user,
-    info,
   ) {
     if (err) {
       return next(err);
@@ -15,7 +14,7 @@ module.exports.authentication = (req, res, next) => {
       });
     }
     if (!user.isAccountVerified) {
-      return sendErrorResponse(res, 401, 'AuthError', {
+      return sendErrorResponse(res, 401, 'VerificationError', {
         message: 'Your account is not verified yet',
       });
     }
