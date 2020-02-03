@@ -52,6 +52,7 @@ const company = new Schema(
       type: String,
       unique: true,
       trim: true,
+      maxlength: 32,
       required: true,
     },
     type: {
@@ -71,7 +72,12 @@ const company = new Schema(
     },
     address: {
       type: String,
+      maxlength: 120,
       required: true,
+    },
+    about: {
+      type: String,
+      maxlength: 2000,
     },
     email: {
       type: String,
@@ -148,10 +154,6 @@ const company = new Schema(
         '1001 -2000 square meters',
         'above 2000 square meters',
       ],
-    },
-    about: {
-      type: String,
-      maxlength: 256,
     },
     removed: {
       type: Boolean,

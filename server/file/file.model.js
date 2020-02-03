@@ -44,9 +44,9 @@ const fileSchema = new mongoose.Schema(
       type: Schema.ObjectId,
       ref: 'Message',
     },
-    message: {
+    room: {
       type: Schema.ObjectId,
-      ref: 'Message',
+      ref: 'Room',
     },
   },
   { timestamps: true },

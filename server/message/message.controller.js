@@ -50,6 +50,7 @@ const create = async (req, res, next) => {
         },
       ],
     });
+
     // save ref of chatkit
     if (msg) {
       message.chatkitId = msg.message_id;
@@ -57,19 +58,19 @@ const create = async (req, res, next) => {
 
     await message.save();
 
-    let fileUpdate = await File.update(
+    await File.updateMany(
       { _id: { $in: files } },
-      { message: message._id },
-      { multi: true },
+      {
+        message: message._id,
+        room: message.room,
+      },
     );
 
     return res.status(201).json({
       message,
     });
   } catch (error) {
-    return res.status(400).json({
-      error,
-    });
+    next(error);
   }
 };
 
@@ -113,9 +114,7 @@ const getRoomMessages = async (req, res, next) => {
       messages,
     });
   } catch (error) {
-    return res.status(400).json({
-      error,
-    });
+    next(error);
   }
 };
 

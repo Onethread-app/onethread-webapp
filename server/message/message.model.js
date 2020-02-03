@@ -8,6 +8,7 @@ const MessageSchema = new Schema(
     text: {
       type: String,
       trim: true,
+      maxlength: 3500,
     },
     type: {
       type: String,
