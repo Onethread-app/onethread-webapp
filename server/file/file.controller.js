@@ -1,7 +1,10 @@
 const AWS = require('aws-sdk');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const File = require('./file.model');
 const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
@@ -119,7 +122,42 @@ const companyLogo = async (req, res, next) => {
 };
 
 const fileInRooms = async (req, res, next) => {
+  const checkMimetype = [
+    'application/zip',
+    'application/x-rar-compressed',
+    'application/x-7z-compressed',
+    'application/pdf',
+    'application/msword',
+    'application/json',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+    'text/plain',
+    'text/csv',
+    'image/webp',
+    'image/apng',
+    'image/png',
+    'image/bmp',
+    'image/gif',
+    'image/jpeg',
+    'image/jpg',
+    'image/svg',
+    'image/svg+xml',
+    'image/bmp',
+    'image/vnd.microsoft.icon',
+  ];
+
   const file = req.file;
+
+  if (!checkMimetype.includes(file.mimetype)) {
+    return sendErrorResponse(res, 400, '', {
+      message: 'This file format is not supported',
+      fieldName: 'file',
+    });
+  }
+
   const roomID = req.query.roomID;
   const userID = req.user._id;
   const params = {
