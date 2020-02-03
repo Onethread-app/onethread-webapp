@@ -34,7 +34,7 @@ export const MessageItem = (props: MessageItemProps) => {
 
       <Tooltip
         // tslint:disable-next-line: max-line-length
-        className={`shadow-4 ph3 pv1 br4 mw6 ${currentUser ? 'message-mine mr2 bg-tigrowLightBlue' : 'message-others ml2 bg-white'}`}
+        className={`shadow-4 ph3 pv1 br4 mw6 ${currentUser ? 'message-mine mr2 bg-tigrowNewDarkBlue' : 'message-others ml2 bg-white'}`}
         content={moment(props.createdAt).format('lll')}
         position="left"
       >
@@ -43,15 +43,16 @@ export const MessageItem = (props: MessageItemProps) => {
         // "message-mine mr2 bg-tigrowLightBlue" : "message-others ml2 bg-white"}`}
         // style={{ maxWidth: "65%" }}
         >
-          <h6 className="ma0"
-            style={{
-              textTransform: 'capitalize'
-            }}
-          >
-            {props.sender.firstName + ' ' + props.sender.lastName}
-          </h6>
+          {currentUser ? null :
+            <h6 className="ma0"
+              style={{
+                textTransform: 'capitalize'
+              }}
+            >
+              {props.sender.firstName + ' ' + props.sender.lastName}
+            </h6>}
           <h2
-            className={`f6 fw3 ma0 mt1 tj break-word`}
+            className={`f6 fw6 ma0 tj break-word`}
             style={{
               color: currentUser ? 'white' : 'rgb(74, 73, 73)',
               whiteSpace: 'pre-wrap'
@@ -60,7 +61,7 @@ export const MessageItem = (props: MessageItemProps) => {
           </h2>
           {props.files.length ?
             props.files.map(file =>
-              <p><a href={file.link} target="_blank">{file.s3Key.split('/')[1]}</a></p>
+              <p><a href={file.link} target="_blank" className="white">{file.s3Key.split('/')[1]}</a></p>
             )
             : null
           }
