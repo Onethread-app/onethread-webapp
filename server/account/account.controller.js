@@ -282,6 +282,7 @@ const resetPassword = async (req, res, next) => {
 
     if (!user)
       return sendJSONresponse(res, 400, {
+        isTokenExpire: true,
         message: 'token time expired',
       });
     user.resetPasswordToken = undefined;

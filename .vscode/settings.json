@@ -8,5 +8,8 @@
 					"jobexperienceid",
 					"loadtest",
 					"userskill"
-				]
+				],
+				"jshint.enable": false,
+				"standard.enable": false,
+				"tslint.enable": false
 }
