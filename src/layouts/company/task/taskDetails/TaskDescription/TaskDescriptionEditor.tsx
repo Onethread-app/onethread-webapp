@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { Button, Icon, EditableText } from '@blueprintjs/core';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { ITask } from 'stores/board/Reducer';
@@ -38,25 +38,25 @@ export const TaskDescriptionEditorComponent = (props: ITaskDescriptionFormProps)
               onSubmit={handleSubmit}
             >
               <SubmitError errorMessage={submitError} />
-              <div className="ph2 pt2">
+              <div className="pr2 pt2">
                 <Field<string>
                   name="description"
-                  validate={required}
+                  validate={composeValidators(required, maxValue(5000))}
                   render={({ input, meta }) =>
-                    <div className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}>
+                    <div>
                       <EditableText
                         multiline={true}
                         minLines={3}
-                        maxLines={20}
+                        maxLines={5}
                         value={input.value}
                         onChange={input.onChange}
                         className="outline"
                         placeholder=""
                       />
                       {checkError(meta) &&
-                        <small className="mv3" style={{ color: 'red' }}>
+                        <p className="mv2" style={{ color: 'red' }}>
                           {meta.error || meta.submitError}
-                        </small>}
+                        </p>}
                     </div>
                   }
                 />

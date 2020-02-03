@@ -24,7 +24,7 @@ const CompanyAboutEditorComponent = (props: CompanyAboutEditInternalProps) => {
         className="mb4"
         multiline={true}
         minLines={3}
-        maxLines={20}
+        maxLines={5}
         value={aboutInfo}
         onChange={(e) => {
           setAboutInfo(e);

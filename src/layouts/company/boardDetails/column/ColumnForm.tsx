@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import { createColumn, updateColumn } from 'stores/board/Actions';
 import { TaskBoard, IColumn } from 'stores/board/Reducer';
 import { Form, Field } from 'react-final-form';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 
 interface ColumnFormProps {
   setShowColumnFormDialog: (val: boolean) => void;
@@ -52,6 +52,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
       </div>
       <Form
         onSubmit={onSubmit}
+        initialValues={{ name: props.column ? props.column.name : undefined }}
         render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
           <form
             onSubmit={handleSubmit}
@@ -59,7 +60,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
             <div className="pv3 justify-content w-100">
               <Field<string>
                 name="name"
-                validate={required}
+                validate={composeValidators(required, maxValue(60))}
                 render={({ input, meta }) =>
                   <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
                     <InputGroupFieldWithLabel

@@ -143,7 +143,7 @@ export const CommentReply = (props: ICommentReplyFormProps) => {
                     <EditableText
                       multiline={true}
                       minLines={3}
-                      maxLines={20}
+                      maxLines={5}
                       value={input.value}
                       onChange={input.onChange}
                       className="ba br2"

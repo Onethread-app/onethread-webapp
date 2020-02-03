@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { TaskBoard, IColumn } from 'stores/board/Reducer';
 import { createTask } from 'stores/board/Actions';
 import { Form, Field } from 'react-final-form';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, maxValue, composeValidators } from 'components/final-form/utils';
 import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
 
 interface TaskFormProps {
@@ -45,7 +45,7 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
             <div className="pv3 justify-content w-100">
               <Field<string>
                 name="name"
-                validate={required}
+                validate={composeValidators(required, maxValue(60))}
                 render={({ input, meta }) =>
                   <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
                     <InputGroupFieldWithLabel

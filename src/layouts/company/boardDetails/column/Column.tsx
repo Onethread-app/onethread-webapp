@@ -61,14 +61,15 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 popoverClassName="bp3-popover-content-sizing"
                 className="w-90"
                 content={
-                  <p>{props.column.name}</p>
+                  <p className="ws-break">{props.column.name}</p>
                 }
                 target={
                   <h3
-                    className="w-50 pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break pv1"
+                    className="pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break pv1"
                     style={{
                       whiteSpace: 'nowrap',
-                      textOverflow: 'ellipsis'
+                      textOverflow: 'ellipsis',
+                      width: '220px'
                     }}
                   >
                     {props.column.name}
