@@ -5,7 +5,7 @@ import { createBoard } from 'stores/board/Actions';
 import { TaskBoard } from 'stores/board/Reducer';
 import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
-import { checkError, required } from 'components/final-form/utils';
+import { checkError, required, composeValidators, maxValue } from 'components/final-form/utils';
 import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
 import { boardColor } from 'stores/UtilsActions';
 // import { server } from 'tigrowApi';
@@ -61,7 +61,7 @@ const FormComponent = (props: {
             <div className="pa3 justify-content w-100">
               <Field<string>
                 name="name"
-                validate={required}
+                validate={composeValidators(required, maxValue(32))}
                 render={({ input, meta }) =>
                   <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
                     <InputGroupFieldWithLabel

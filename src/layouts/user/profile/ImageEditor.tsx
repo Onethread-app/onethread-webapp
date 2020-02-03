@@ -42,7 +42,7 @@ const ImageEditComponent = (props: IImageEditProps) => {
       <label className="bp3-file-input .modifier bp3-fill">
         <input
           type="file"
-          accept="image/*"
+          accept=".gif, .jpg, .apng, .jpeg, .bmp, .svg, .png"
           onChange={(e) => imageChangeHandler(e)}
         />
         <span className="bp3-file-upload-input">

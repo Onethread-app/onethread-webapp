@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { editUserInfoAction } from 'stores/user/Actions';
 import React from 'react';
 import { Form, Field } from 'react-final-form';
-import { checkError } from 'components/final-form/utils';
+import { checkError, maxValue } from 'components/final-form/utils';
 import { isEmpty } from 'lodash';
 import { SubmitError } from 'components/final-form/SubmitError';
 interface AboutEditComponentProps {
@@ -44,6 +44,7 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
           <h1 className="f5 lh-copy white">About</h1>
           <Field<string>
             name="about"
+            validate={maxValue(2000)}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <EditableText

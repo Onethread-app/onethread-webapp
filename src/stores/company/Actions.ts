@@ -32,6 +32,7 @@ import {
 	CHANGE_MEMBER_ROLE_ERROR
 } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
+import { errorMessgeHandler } from 'components/final-form/utils';
 
 export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
 	try {
@@ -154,35 +155,23 @@ export const addDepartment = (name: string) => async (
 ) => {
 	try {
 		const headers = tokenConfig();
+		let response;
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: ADD_DEPARTMENT_LOADING });
 			const company = getState().companyReducer.currentCompany.name;
-			const response = await tigrowApi.post(
+			response = await tigrowApi.post(
 				`company/${company}/departments`,
 				{ name },
 				headers
 			);
 			dispatch({ type: ADD_DEPARTMENT, payload: response.data });
-			return response.data;
 		} else {
 			// tslint:disable-next-line: no-console
 			console.log('error in adding department');
 		}
+		return errorMessgeHandler(response);
 	} catch (error) {
-		if (isEqual(error.message, 'Network Error')) {
-			// tslint:disable-next-line: no-console
-			console.log('Network error');
-		} else if (error.response.status === 401) {
-			dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Unauthorized user.' });
-		} else if (error.response.status === 409) {
-			dispatch({
-				type: ADD_DEPARTMENT_ERROR,
-				payload: 'Department already exists'
-			});
-		} else {
-			// tslint:disable-next-line: no-console
-			console.log(error.response);
-		}
+		return errorMessgeHandler(error);
 	}
 };
 

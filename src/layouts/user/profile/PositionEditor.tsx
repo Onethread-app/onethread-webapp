@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { editUserInfoAction } from 'stores/user/Actions';
 import React from 'react';
 import { Form, Field } from 'react-final-form';
-import { checkError } from 'components/final-form/utils';
+import { checkError, maxValue } from 'components/final-form/utils';
 import { isEmpty } from 'lodash';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
@@ -45,6 +45,7 @@ const PositionEditComponent = (props: IPositionEditInternalProps) => {
           <h1 className="f5 lh-copy white">Position</h1>
           <Field<string>
             name="position"
+            validate={maxValue(32)}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <InputGroupFieldWithError

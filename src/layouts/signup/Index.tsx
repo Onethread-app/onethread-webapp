@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Field } from 'react-final-form';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { required, checkError, composeValidators, isEmail, phoneNoValidation, passwordValidation } from 'components/final-form/utils';
+import { required, checkError, composeValidators, isEmail, phoneNoValidation, passwordValidation, maxValue } from 'components/final-form/utils';
 import { Link, NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
 import { Tooltip, Button, Position, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
@@ -75,7 +75,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                           <div>
                             <Field<string>
                               name="firstName"
-                              validate={composeValidators(required)}
+                              validate={composeValidators(required, maxValue(32))}
                               render={({ input, meta }) =>
                                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                                   <InputGroupFieldWithError
@@ -107,7 +107,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                           </div>
                           <Field<string>
                             name="lastName"
-                            validate={composeValidators(required)}
+                            validate={composeValidators(required, maxValue(32))}
                             render={({ input, meta }) =>
                               <div className="ml3">
                                 <div>

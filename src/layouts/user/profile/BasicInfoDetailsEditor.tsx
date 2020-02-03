@@ -8,7 +8,7 @@ import { DateInput } from '@blueprintjs/datetime';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { isEqual, isEmpty } from 'lodash';
 import { Form, Field } from 'react-final-form';
-import { required, checkError, isEmail } from 'components/final-form/utils';
+import { required, checkError, isEmail, maxValue } from 'components/final-form/utils';
 import { DropdownField } from 'components/fields/DropdownField';
 import { SubmitError } from 'components/final-form/SubmitError';
 interface IBasicInfoProps {
@@ -57,7 +57,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
         const errors = {} as any;
         if (isEqual(values.email, values.secondaryEmail)) {
           errors.secondaryEmail = 'You can\'t use same Primary Email and Secondary Email';
-        } else if (values.contactNo && values.contactNo.length !== 11) {
+        }
+        if (values.contactNo && values.contactNo.length !== 11) {
           errors.contactNo = 'Not more or less than 11 character';
         }
         return errors;
@@ -89,7 +90,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
           />
           <Field<string>
             name="secondaryEmail"
-            validate={isEmail}
+            validate={values.secondaryEmail ? isEmail : undefined}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>Secondary Email</label>
@@ -131,10 +132,11 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
           />
           <Field<string>
             name="location"
+            validate={maxValue(120)}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>Address</label>
-                <InputGroupField
+                <InputGroupFieldWithError
                   id="location"
                   value={input.value}
                   onChange={input.onChange}
@@ -142,6 +144,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                     boxShadow: 'none'
                   }}
                   className="mt1"
+                  error={checkError(meta) && (meta.error || meta.submitError)}
                 />
               </div>
             }
@@ -175,8 +178,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>Birth Date</label>
-                <DateInput 
-                 className="bg-white"
+                <DateInput
+                  className="bg-white"
                   formatDate={(date: Date) => date.toLocaleDateString()}
                   parseDate={(str: string) => new Date(str)}
                   onChange={input.onChange}

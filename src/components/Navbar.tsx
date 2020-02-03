@@ -31,7 +31,7 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
           borderRadius: '0.5rem 0.5rem 0px 0px'
         }}
       >
-        <div className="w-80">
+        <div >
           <NavLink
             exact
             to={`/company/${props.companyName}`}
