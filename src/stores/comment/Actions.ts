@@ -56,10 +56,7 @@ export const createComment = (text: Icomment['text']) => async (dispatch: any, g
   try {
     const headers = tokenConfig();
     const taskId = getState().boardIndexReducer.boardReducer.currentTask._id;
-    const firstName = getState().userReducer.user.firstName ;
-    const lastName = getState().userReducer.user.lastName ;
-    const profileImage = getState().userReducer.user.profileImage.link ;
-    const position = getState().userReducer.user.position ;
+    const currentUser = getState().userReducer.user ;
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         text,
@@ -68,9 +65,9 @@ export const createComment = (text: Icomment['text']) => async (dispatch: any, g
       const response = await tigrowApi.post(`comments`, reqBody, headers);
       const responseData = {
         _id: response.data._id,
-        name: firstName + ' ' + lastName,
-        profileImage: profileImage,
-        position: position,
+        name: currentUser.firstName + ' ' + currentUser.lastName,
+        profileImage: currentUser.profileImage && isEmpty(currentUser.profileImage.link) === false ? currentUser.profileImage.link : '',
+        position: currentUser.position,
         text: response.data.text,
         createdAt: response.data.createdAt
       }
