@@ -38,7 +38,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
         <div className="fl w-100">
           <div className="flex">
             <div className="white ph2 br2 h-100" style={{ background: '#FDB64E' }}>
-              <p className="fw7 pv2 overflow-hidden"
+              <p className="fw7 pt2 overflow-hidden"
                 style={{
                   whiteSpace: 'nowrap',
                   textOverflow: 'ellipsis',

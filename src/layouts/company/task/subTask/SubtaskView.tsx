@@ -69,8 +69,7 @@ export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & Rout
                                                         label={list.name}
                                                         large={true}
                                                         style={{
-                                                            textDecoration: list.done ? 'line-through' : 'none',
-                                                            fontSize: '14px'
+                                                            textDecoration: list.done ? 'line-through' : 'none'
                                                         }}
                                                         onChange={(event: any) => {
                                                             const subtaskData = {

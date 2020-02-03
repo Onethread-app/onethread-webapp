@@ -33,7 +33,7 @@ const CompanyInfoFormComponent = (props: {
 
   const emailValidation = (email: string) => {
     const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (email.match(regexForEmailValidation)) {
+    if (email && email.match(regexForEmailValidation)) {
       return true;
     } else {
       return false;
@@ -41,7 +41,10 @@ const CompanyInfoFormComponent = (props: {
   };
 
   const emptyErrorCheck = () => {
-    if (isEmpty(errors.legalOwnerMail) && isEmpty(errors.email)) {
+    if (isEmpty(errors.legalOwnerMail) &&
+      isEmpty(errors.email) &&
+      isEmpty(errors.address) &&
+      isEmpty(errors.legalOwnerName)) {
       return true;
     } else {
       return false;
@@ -93,6 +96,9 @@ const CompanyInfoFormComponent = (props: {
             if (isEmpty(values.address)) {
               const addressError = { ...errors, address: "Required" };
               setErrors(addressError);
+            } else if (values.address && values.address.length > 120) {
+              const addressError = { ...errors, address: "Company address must be less than 120 character." };
+              setErrors(addressError);
             } else {
               const addressError = { ...errors, address: "" };
               setErrors(addressError);
@@ -117,7 +123,7 @@ const CompanyInfoFormComponent = (props: {
             if (checkLegalOwnerMail() && !isEmpty(values.email)) {
               const companyEmailError = { ...errors, email: "Company email address and legal owner mail address must be different" };
               setErrors(companyEmailError);
-            } else if (!emailValidation(values.email)) {
+            } else if (!isEmpty(values.email) && !emailValidation(values.email)) {
               const emailError = { ...errors, email: "Invalid email address!" };
               setErrors(emailError);
             } else {
@@ -140,6 +146,15 @@ const CompanyInfoFormComponent = (props: {
           }}
           className={`br0 ${errors.legalOwnerName ? 'bb b--red' : 'bb b--lightBlue'}`}
           leftIconColor={`${errors.legalOwnerName ? 'red' : "#0fa3a3"}`}
+          validationOnBlur={() => {
+            if (values.legalOwnerName && values.legalOwnerName.length > 32) {
+              const legalOwnerNameError = { ...errors, legalOwnerName: "Legal Owner Name must be less than 32 character." };
+              setErrors(legalOwnerNameError);
+            } else {
+              const legalOwnerNameError = { ...errors, legalOwnerName: "" };
+              setErrors(legalOwnerNameError);
+            }
+          }}
         />
         {errors.legalOwnerName ? <small style={{ color: 'red' }}>{errors.legalOwnerName}</small> : ""}
       </div>
@@ -159,7 +174,7 @@ const CompanyInfoFormComponent = (props: {
             if (checkLegalOwnerMail() && !isEmpty(values.legalOwnerMail)) {
               const ownerEmailError = { ...errors, legalOwnerMail: "Company email address and legal owner mail address must be different" };
               setErrors(ownerEmailError);
-            } else if (!emailValidation(values.legalOwnerMail)) {
+            } else if (!isEmpty(values.legalOwnerMail) && !emailValidation(values.legalOwnerMail)) {
               const legalOwnerMailError = { ...errors, legalOwnerMail: "Invalid email address!" };
               setErrors(legalOwnerMailError);
             } else {

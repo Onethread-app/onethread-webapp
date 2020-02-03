@@ -194,12 +194,12 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                           </div>
                         </div>
                         <div >
-                          <div >
-                            <Field<string>
-                              name="birthDate"
-                              validate={required}
-                              render={({ input, meta }) =>
-                                <div className={`flex bw1 pb1 br0 bb b--lightBlue ${checkError(meta) ? 'mb3 b--red' : 'mb4 b--lightBlue'}`}>
+                          <Field<string>
+                            name="birthDate"
+                            validate={required}
+                            render={({ input, meta }) =>
+                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4 '}`}>
+                                <div className={`flex bw1 pb1 br0 bb ${checkError(meta) ? 'b--red' : 'b--lightBlue'}`}>
                                   <div >
                                     <Icon
                                       icon="calendar"
@@ -222,14 +222,14 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                     maxDate={moment(new Date()).subtract(13, 'years').toDate()}
 
                                   />
-                                  {checkError(meta) &&
-                                    <small className="mv3" style={{ color: 'red' }}>
-                                      {meta.error || meta.submitError}
-                                    </small>}
                                 </div>
-                              }
-                            />
-                          </div>
+                                {checkError(meta) &&
+                                  <small className="mv3" style={{ color: 'red' }}>
+                                    {meta.error || meta.submitError}
+                                  </small>}
+                              </div>
+                            }
+                          />
                         </div>
 
                         <div>

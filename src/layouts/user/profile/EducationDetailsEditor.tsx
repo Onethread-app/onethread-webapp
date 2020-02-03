@@ -4,7 +4,7 @@ import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { Checkbox, TextArea, Button } from '@blueprintjs/core';
 import { useSelector } from 'react-redux';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { Field, Form } from 'react-final-form';
 import { connect } from 'react-redux';
 import { addEducationExperienceAction, editEducationExperienceAction } from 'stores/user/Actions';
@@ -75,7 +75,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
           </div>
           <Field<string>
             name="degree"
-            validate={required}
+            validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>Degree</label>
@@ -94,7 +94,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
           />
           <Field<string>
             name="institutionName"
-            validate={required}
+            validate={composeValidators(required, maxValue(32))}
             render={({ input, meta }) =>
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                 <label>Institution Name</label>
