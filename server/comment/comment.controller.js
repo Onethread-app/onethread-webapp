@@ -1,9 +1,10 @@
 const Comment = require('./comment.model');
+const logger = require('../../config/winston');
 
 const load = (req, res, next, id) => {
   Comment.findById(id)
     .exec()
-    .then((result) => {
+    .then(result => {
       if (result) {
         req.comment = result;
         return next();
@@ -13,145 +14,56 @@ const load = (req, res, next, id) => {
         .json({ message: 'No valid entry found for provided ID' });
     })
     .catch(err => {
-      // console.log(err);
       next(err);
     });
-}
+};
 
-const get = (req, res) => res.json(req.comment)
-
-const create = (req, res, next) => {
+const create = async (req, res, next) => {
   const comment = new Comment({
     text: req.body.text,
-    postRef: req.body.postRef,
-    account: req.user
+    account: req.user._id,
+    taskId: req.body.taskId,
   });
 
-  comment
-    .save()
-    .then(result => res.send(result))
-    .catch(e => next(e));
-}
+  comment.save().then(result => {
+   res.status(201).send(result)
+  })
+  .catch((error)=>
+  next(error)
+  );
+};
 
-const list = (req, res) => {
+
+const list = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
-  Comment.find({ removed: false })
+  Comment.find({ taskId: req.query.taskId })
+    .select('_id text account createdAt')
+    .populate([
+      {
+        path: 'account',
+        select: '_id firstName lastName profileImage position',
+        populate: [
+          {
+            path: 'profileImage',
+            select: 'link',
+          },
+        ],
+      },
+    ])
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
-    .exec(function(err, result) {
-      if (err) {
-        return res.status(422).send({
-          message: err
-        });
-      } else {
-        res.json(result);
-      }
-    });
-}
-
-const tag = (req, res, next) => {
-  const id = req.params.commentId;
-
-  Comment.findByIdAndUpdate(
-    id,
-    { $push: { tag: '5cdb98cdab24ca4b10407752' } },
-    {
-      new: true
-    }
-  )
+    .exec()
     .then(result => {
-      if (result) {
-        res.json(result);
-      } else {
-        return res
-          .status(400)
-          .json({ message: 'No valid entry found for provided ID' });
-      }
+      res.status(200).send(result);
     })
-    .catch(err => {
-      // console.log(err);
-      next(err);
+    .catch(error => {
+      next(error);
     });
-}
-
-const like = (req, res, next) => {
-  const id = req.params.commentId;
-
-  Comment.findByIdAndUpdate(
-    id,
-    { $push: { like: '5cdb98cdab24ca4b10407752' } },
-    {
-      new: true
-    }
-  )
-    .then(result => {
-      if (result) {
-        res.json(result);
-      } else {
-        return res
-          .status(400)
-          .json({ message: 'No valid entry found for provided ID' });
-      }
-    })
-    .catch(err => {
-      // console.log(err);
-      next(err);
-    });
-}
-
-const update = (req, res, next) => {
-  const comment = req.comment;
-  comment.text = req.body.text;
-
-  comment
-    .save()
-    .then(result => res.json(result))
-    .catch(e => next(e));
-}
-
-const respect = (req, res, next) => {
-  const id = req.params.commentId;
-
-  Comment.findByIdAndUpdate(
-    id,
-    { $push: { respect: '5cdb98cdab24ca4b10407752' } },
-    {
-      new: true
-    }
-  )
-    .then(result => {
-      if (result) {
-        res.json(result);
-      } else {
-        return res
-          .status(400)
-          .json({ message: 'No valid entry found for provided ID' });
-      }
-    })
-    .catch(err => {
-      // console.log(err);
-      next(err);
-    });
-}
-
-const remove = (req, res, next) => {
-  const comment = req.comment;
-  comment.removed = true;
-  comment
-    .remove()
-    .then(result => res.json(result))
-    .catch(e => next(e));
-}
+};
 
 module.exports = {
   load,
   create,
-  get,
-  remove,
   list,
-  tag,
-  like,
-  respect,
-  update
 };
