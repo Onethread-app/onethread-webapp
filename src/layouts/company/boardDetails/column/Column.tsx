@@ -160,7 +160,6 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                             <div className="flex justify-end">
                               <Button
                                 className="mr2"
-                                type="submit"
                                 style={{ background: 'transparent' }}
                                 icon="cross"
                                 onClick={() => setShowTaskInput(!showTaskInput)}

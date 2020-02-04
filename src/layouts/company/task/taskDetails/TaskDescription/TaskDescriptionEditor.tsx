@@ -63,7 +63,6 @@ export const TaskDescriptionEditorComponent = (props: ITaskDescriptionFormProps)
                 <div className="flex justify-end mt2">
                   <Button
                     className="mr2"
-                    type="submit"
                     style={{ background: 'transparent' }}
                     icon="cross"
                     onClick={() => props.setEditDescriptionDialog(!props.editDescriptionDialog)}

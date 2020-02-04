@@ -12,12 +12,11 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Icomment } from 'stores/comment/Reducer';
 
 interface ICommentReplyInternalProps {
-  createComment: (text : Icomment['text'] ) => void;
+  createComment: (text: Icomment['text']) => void;
 }
-export const ActivityEditorPageComponent = (props : ICommentReplyInternalProps & RouteComponentProps ) => {
+export const ActivityEditorPageComponent = (props: ICommentReplyInternalProps & RouteComponentProps) => {
   const onSubmit = async (values: any) => {
     await props.createComment(values.text);
-    values.text = '' ;
   };
   return (
     <div className="w-100">
@@ -34,7 +33,9 @@ export const ActivityEditorPageComponent = (props : ICommentReplyInternalProps &
           ...rest
         }) => (
             <form
-              onSubmit={handleSubmit}
+              onSubmit={(event: any) => {
+                handleSubmit(event)!.then(form.reset);
+              }}
             >
               <SubmitError errorMessage={submitError} />
               <div className="pl4 pt2 w-100 flex">
@@ -50,8 +51,8 @@ export const ActivityEditorPageComponent = (props : ICommentReplyInternalProps &
                         onChange={input.onChange}
                         className="ba br2"
                         placeHolder="Write comment"
-                        style={{height: '40px'}}
-                        />
+                        style={{ height: '40px' }}
+                      />
                       {checkError(meta) &&
                         <small className="mv3" style={{ color: 'red' }}>
                           {meta.error || meta.submitError}
@@ -78,7 +79,7 @@ export const ActivityEditorPageComponent = (props : ICommentReplyInternalProps &
   );
 };
 
-export const ActivityEditor = connect( null ,  {createComment} )(withRouter(ActivityEditorPageComponent));
+export const ActivityEditor = connect(null, { createComment })(withRouter(ActivityEditorPageComponent));
 
 // export const CommentReply = () => {
 //   const onSubmit = async (values: any) => {

@@ -19,7 +19,7 @@ export const TaskTitleViewComponent = (props: TaskDetailsInternalProps) => {
         />
       )
         :
-        (<h3 className="f4 mb0 overflow-hidden w-100"
+        (<h3 className="f4 mb0 overflow-hidden w-100 mb1"
           style={{
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
