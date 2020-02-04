@@ -63,6 +63,10 @@ router.route('/dragTask').post(
   taskCtrl.dragTask,
 );
 
+router
+  .route('/:taskId/suggest-member')
+  .get(authorization, taskCtrl.suggestMember);
+
 router.param('taskId', taskCtrl.load);
 
 module.exports = router;

@@ -5,6 +5,9 @@ const ActivityCtrl = require('./../activity/activity.controller');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
 const TaskAssign = require('./taskAssign.model');
+const { Member } = require('../company/member/member.model');
+const Board = require('../board/board.model');
+var _ = require('lodash');
 
 const load = (req, res, next, id) => {
   Task.findById(id)
@@ -99,50 +102,130 @@ const getMembers = async (req, res, next) => {
 };
 
 const addMember = async (req, res, next) => {
-  TaskAssign.findOne({
-    taskId: req.task._id,
-    assignedPerson: req.body.assignedPerson,
-  })
-    .exec()
-    .then(result => {
-      if (result) {
-        res.status(400).send({
-          message: 'Member already exits',
-        });
-      } else {
-        const newTaskMember = new TaskAssign({
-          taskId: req.task._id,
-          account: req.user._id,
-          assignedPerson: req.body.assignedPerson,
-        });
+  const requestedMembers = req.body.assignmembers;
+  const boardID = req.task.boardId;
 
-        newTaskMember.save().then(taskMember => {
-          TaskAssign.find({
-            taskId: req.task._id,
-          })
-            .select('_id assignedPerson account')
-            .populate([
+
+  //get current task board to check members in board
+
+  const currentTaskBoard = await Board.findOne({
+    _id: boardID,
+  });
+
+  //convert current taskbaord members to check the difference between them
+
+  const Members = currentTaskBoard.members.map(member =>
+    member.toString(),
+  );
+
+  //new members who are  not in baord
+
+  const newBoardmember = _.difference(requestedMembers, Members);
+
+  //new members to add in task 
+
+  const newMembers = requestedMembers.map(memberId => {
+    return {
+      taskId: req.task._id,
+      account: req.user._id,
+      assignedPerson: memberId,
+    };
+  });
+
+  //check the difference's 
+  //if new member who is already in board , just add in task
+  //others add them in baord first
+
+  if (_.isEmpty(newBoardmember)) {
+    TaskAssign.insertMany(newMembers).then(taskMember => {
+      TaskAssign.find({
+        assignedPerson: {
+          $in: requestedMembers,
+        },
+      })
+        .select('_id assignedPerson account')
+        .populate([
+          {
+            path: 'assignedPerson account',
+            select: '_id firstName lastName profileImage',
+            populate: [
               {
-                path: 'assignedPerson account',
-                select: '_id firstName lastName profileImage',
-                populate: [
-                  {
-                    path: 'profileImage',
-                    select: 'link',
-                  },
-                ],
+                path: 'profileImage',
+                select: 'link',
               },
-            ])
-            .exec()
-            .then(result => {
-              res.status(201).send(result);
-            });
+            ],
+          },
+        ])
+        .exec()
+        .then(result => {
+          res.status(201).send(result);
         });
-      }
-    })
-    .catch(error => {
-      next(error);
     });
+  } else {
+    await Board.updateOne(
+      { _id: boardID },
+      { $addToSet: { members: newBoardmember } },
+      { safe: true, upsert: true, new: true },
+    );
+
+    TaskAssign.insertMany(newMembers).then(taskMember => {
+      TaskAssign.find({
+        assignedPerson: {
+          $in: requestedMembers,
+        },
+      })
+        .select('_id assignedPerson account')
+        .populate([
+          {
+            path: 'assignedPerson account',
+            select: '_id firstName lastName profileImage',
+            populate: [
+              {
+                path: 'profileImage',
+                select: 'link',
+              },
+            ],
+          },
+        ])
+        .exec()
+        .then(result => {
+          res.status(201).send(result);
+        });
+    });
+  }
+};
+
+const suggestMember = async (req, res, next) => {
+  try {
+    let taskMembers = await TaskAssign.find({
+      taskId: req.params.taskId,
+    })
+      .select('-_id assignedPerson')
+      .populate('assignedPerson', '_id name')
+      .exec();
+    let companyMembers = await Member.find({
+      company: req.query.companyId,
+    })
+      .select('-_id account')
+      .populate('account', '_id name')
+      .exec();
+
+    let members = companyMembers.filter(({ account }) => {
+      return !taskMembers.some(existingMember => {
+        return (
+          existingMember.assignedPerson._id.toString() ===
+          account._id.toString()
+        );
+      });
+    });
+
+    members = members.map(m => m.account);
+    return res.status(200).json({
+      members,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const deleteMember = async (req, res, next) => {
@@ -241,4 +324,5 @@ module.exports = {
   addMember,
   getMembers,
   deleteMember,
+  suggestMember,
 };
