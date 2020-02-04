@@ -8,7 +8,7 @@ export const maxValue = (max: number) => (value: any) => {
     return undefined;
   }
   return `Should be less than or equal ${max}`;
-}
+};
 
 export const composeValidators = (...validators: any) => (value: any) =>
   validators.reduce((error: any, validator: any) =>
@@ -82,7 +82,7 @@ export const errorMessgeHandler = (handlerResponse: any) => {
         fieldName: handlerResponse.response.data.errors[0].fieldName ?
           handlerResponse.response.data.errors[0].fieldName : '',
         status: handlerResponse.response.status,
-        type: handlerResponse.response.data.type
+        type: handlerResponse.response.data.type ? handlerResponse.response.data.type : ''
       };
   }
 };
