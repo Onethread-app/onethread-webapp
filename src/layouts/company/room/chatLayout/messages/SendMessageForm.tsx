@@ -190,7 +190,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 						{textError}
 					</h6> : ''
 			}
-			<div className="sendMessage shadow-3 flex w-100 justify-around">
+			<div className="sendMessage flex w-100 justify-around">
 				{/* <div className="flex items-center mh1" style={{ width: "42px" }}>
 					<img
 						src={props.profileImage ? props.profileImage.imageSource : UserIcon}
@@ -202,8 +202,13 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 				<textarea
 					autoFocus={true}
 					ref={inputMessageRef}
-					className="w-100 mv2 mh1"
-					style={{ resize: 'none' }}
+					className="w-100 mv2 mh1 br3 pl3 pt3"
+					style={{
+						backgroundColor: '#d4d4d47a',
+						borderColor: '#d4d4d4ad',
+						resize: 'none',
+						outline: 'none'
+					}}
 					value={isEqual(text.length, 1) && isEqual(text, '\n') ? resetMessage(text) : text}
 					onChange={onChange}
 					onKeyPress={handleKeyPress}

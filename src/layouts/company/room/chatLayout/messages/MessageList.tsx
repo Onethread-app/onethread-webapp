@@ -11,7 +11,7 @@ interface MessageListProps {
 	chatkit?: any;
 }
 
-export const MessageList = withChatkit((props: MessageListProps) => {
+export const MessageList = withChatkit((_props: MessageListProps) => {
 	const [first, setFirst] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 	const messages = useSelector((state: any) => state.roomReducer.messages);
@@ -39,6 +39,23 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 
 	useEffect(scrollToBottom, [messages]);
 
+	const checkGroup = (cm: IRoomMessage, currIndex: number, arr: IRoomMessage[]) => {
+		const obj = {
+			message: false,
+			showPicAndName: true
+		};
+
+		obj.message = currIndex !== arr.length - 1 && cm.account._id === arr[currIndex + 1].account._id;
+
+		if (currIndex > 0 && cm.account._id === arr[currIndex - 1].account._id) {
+			obj.showPicAndName = false;
+			return obj;
+		}
+
+		return obj;
+
+	};
+
 	return (
 		<div
 			// className="overflow-y-auto ph1 pt2"
@@ -47,7 +64,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 		// style={{ height: "calc(100vh - 186px)" }}
 		>
 			{messages.length
-				? messages.map((message: IRoomMessage) => {
+				? messages.map((message: IRoomMessage, _i: number, arr: IRoomMessage[]) => {
 					return (
 						<MessageItem
 							key={message._id}
@@ -55,6 +72,7 @@ export const MessageList = withChatkit((props: MessageListProps) => {
 							files={message.files}
 							createdAt={message.createdAt}
 							sender={message.account}
+							group={checkGroup(message, _i, arr)}
 						/>
 					);
 				})
