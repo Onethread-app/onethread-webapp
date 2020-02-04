@@ -52,7 +52,13 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                   height: '40px',
                   marginLeft: '-2px'
                 }}>
-                <h1 className="f6 ws-break pt2 ph2">{props.task.name}</h1>
+                <h1 className="f6 ws-break pt2 ph2 overflow-hidden "
+                  style={{
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    width: '220px'
+                  }}
+                >{props.task.name}</h1>
               </div>
               {/* {isEmpty(props.task.description) === false ?
                 <div>

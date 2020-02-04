@@ -51,7 +51,7 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
                   className="mb4 bg-white black"
                   multiline={true}
                   minLines={3}
-                  maxLines={20}
+                  maxLines={10}
                   value={input.value}
                   onChange={input.onChange}
                 />

@@ -63,11 +63,14 @@ export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & Rout
 
                                                 <div className="flex justify-between">
                                                     <Checkbox
+                                                        className="ws-break"
                                                         value={list._id}
                                                         checked={list.done}
                                                         label={list.name}
                                                         large={true}
-                                                        style={{textDecoration: list.done ? 'line-through' : 'none'}}
+                                                        style={{
+                                                            textDecoration: list.done ? 'line-through' : 'none'
+                                                        }}
                                                         onChange={(event: any) => {
                                                             const subtaskData = {
                                                                 _id: event.target.value,

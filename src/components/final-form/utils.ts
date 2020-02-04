@@ -8,7 +8,7 @@ export const maxValue = (max: number) => (value: any) => {
     return undefined;
   }
   return `Should be less than or equal ${max}`;
-}
+};
 
 export const composeValidators = (...validators: any) => (value: any) =>
   validators.reduce((error: any, validator: any) =>
@@ -25,7 +25,7 @@ export const checkError = (meta: any) => {
 export const isEmail = (email: string) => {
   // eslint-disable-next-line no-useless-escape
   const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (email && email.match(regexForEmailValidation)) {
+  if (email === undefined || email.match(regexForEmailValidation)) {
     return undefined;
   }
   return 'Please enter a valid email';
@@ -82,7 +82,7 @@ export const errorMessgeHandler = (handlerResponse: any) => {
         fieldName: handlerResponse.response.data.errors[0].fieldName ?
           handlerResponse.response.data.errors[0].fieldName : '',
         status: handlerResponse.response.status,
-        type: handlerResponse.response.data.type
+        type: handlerResponse.response.data.type ? handlerResponse.response.data.type : ''
       };
   }
 };

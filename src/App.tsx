@@ -10,7 +10,7 @@ import { BoardPage } from 'layouts/company/board/Index';
 import { TeamMembersPage } from 'layouts/company/team/Index';
 import { SettingsPage } from 'layouts/company/settings/Index';
 import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
-import { ResetPasswordPage } from 'layouts/resetPassword/ResetPasswordPage';
+import { ResetPasswordPage } from 'layouts/resetPassword/Index';
 import { EmailVerificationPage } from 'layouts/emailVerification/Index';
 import { BoardDetailsView } from 'layouts/company/boardDetails/Index';
 import { LandingPage } from 'layouts/user/profile/Index';

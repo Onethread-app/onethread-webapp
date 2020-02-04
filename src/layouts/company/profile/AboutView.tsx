@@ -20,7 +20,7 @@ export const CompanyAboutView = (props: {
               onClick={() => setShowDialogAbout(true)}
             /> : ""}
         </div>
-        <pre className="ws-break" style={{ whiteSpace: 'pre-line' }}>{props.company.about}</pre>
+        <p className="ws-break" style={{ whiteSpace: 'pre-line' }}>{props.company.about}</p>
       </div>
       {showDialogAbout && (
         <Dialog

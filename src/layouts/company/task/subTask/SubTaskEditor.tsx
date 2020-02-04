@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Button, EditableText, Icon, Popover } from '@blueprintjs/core';
+import { Button, Icon, Popover } from '@blueprintjs/core';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { createSubTask, updateSubTaskTitile } from 'stores/subtask/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ISubTask } from 'stores/subtask/Reducer';
 import { isEmpty } from 'lodash';
+import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 
 interface ITaskDescriptionCreateFormProps {
   setShowSubTaskForm: (val: boolean) => void;
@@ -25,8 +26,6 @@ interface ISubTaskDescriptionDeleteFormProps {
 export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps & RouteComponentProps) => {
 
   const onSubmit = async (values: any) => {
-
-
     if (isEmpty(props.subtask)) {
       const subTaskData = {
         name: values.subtaskTitle
@@ -39,16 +38,14 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
       };
       await props.updateSubTaskTitile(updateSubTaskData);
     }
-
     await props.setsubtask({});
-    props.setShowSubTaskForm(false);
   }
 
   return (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{ subtaskTitle: props.subtask!.name }}
+        initialValues={{ subtaskTitle: props.subtask ? props.subtask.name : '' }}
         render={({
           handleSubmit,
           form,
@@ -60,23 +57,22 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
           ...rest
         }) => (
             <form
-              onSubmit={handleSubmit}
+              onSubmit={(event: any) => {
+                handleSubmit(event)!.then(form.reset);
+              }}
             >
               <SubmitError errorMessage={submitError} />
               <div className="ph2 pt2">
                 <Field<string>
                   name="subtaskTitle"
-                  validate={required}
+                  validate={composeValidators(required, maxValue(60))}
                   render={({ input, meta }) =>
                     <div className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}>
-                      <EditableText
-                        multiline={true}
-                        minLines={3}
-                        maxLines={20}
+                      <InputGroupFieldWithError
+                        id="subtaskTitle"
                         value={input.value}
                         onChange={input.onChange}
                         className="ba br2"
-                        placeholder=""
                       />
                       {checkError(meta) &&
                         <small className="mv3" style={{ color: 'red' }}>
@@ -88,7 +84,6 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
                 <div className="flex justify-end mt2">
                   <Button
                     className="mr2"
-                    type="submit"
                     style={{ background: 'transparent' }}
                     icon="cross"
                     onClick={async () => {
@@ -119,7 +114,8 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
   );
 };
 
-export const SubTaskCreator = connect(null, { createSubTask, updateSubTaskTitile })(withRouter(SubTaskCreatorComponent));
+export const SubTaskCreator = connect(null, { createSubTask, updateSubTaskTitile })
+  (withRouter(SubTaskCreatorComponent));
 
 export const SubTaskDelete = (props: ISubTaskDescriptionDeleteFormProps) => {
 

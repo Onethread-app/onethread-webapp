@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, maxValue, composeValidators } from 'components/final-form/utils';
 import { EditableText, Button, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
@@ -41,13 +41,13 @@ interface ITaskTitleFormProps {
               <div className="ph2 pt2 w-100">
                 <Field<string>
                   name="name"
-                  validate={required}
+                  validate={composeValidators(required, maxValue(60))}
                   render={({ input, meta }) =>
                     <div className={`${checkError(meta) ? 'mb3' : 'mb2'}`}>
                       <EditableText
                         multiline={true}
                         minLines={3}
-                        maxLines={20}
+                        maxLines={5}
                         value={input.value}
                         onChange={input.onChange}
                         className="outline"
@@ -63,7 +63,6 @@ interface ITaskTitleFormProps {
                 <div className="flex justify-end mt2">
                   <Button
                     className="mr2"
-                    type="submit"
                     style={{ background: 'transparent' }}
                     icon="cross"
                     onClick={() => props.setNameEdit(!props.nameEdit)}

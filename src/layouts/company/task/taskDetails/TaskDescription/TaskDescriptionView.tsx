@@ -17,7 +17,7 @@ export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalP
           <h1 className="f6">Description</h1>
         </div>
         <div>
-          <Icon className="fr mv3 tigrow-lightBlue pointer mr4"
+          <Icon className="fr mv3 tigrow-lightBlue pointer mr2"
             icon="edit"
             onClick={() => setEditDescriptionDialog(true)}
           />
@@ -30,8 +30,8 @@ export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalP
         /> :
 
         props.description ?
-          <div className="pr2">{props.description}</div> :
-          <div className="pr2">Description has not been given yet</div>
+          <p className="pr2 ws-break">{props.description}</p> :
+          <p className="pr2">Description has not been given yet</p>
       }
     </>
   );

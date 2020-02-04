@@ -19,7 +19,12 @@ export const TaskTitleViewComponent = (props: TaskDetailsInternalProps) => {
         />
       )
         :
-        (<h3 className="f4 mb0" onClick={() => setNameEdit(true)}>{props.currentTask!.name}</h3>)
+        (<h3 className="f4 mb0 overflow-hidden w-100 mb1"
+          style={{
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+          }}
+          onClick={() => setNameEdit(true)}>{props.currentTask!.name}</h3>)
       }
     </>
   );

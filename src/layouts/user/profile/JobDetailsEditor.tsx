@@ -7,7 +7,7 @@ import moment from 'moment';
 import { addJobExperienceAction, editJobExperienceAction } from 'stores/user/Actions';
 import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { IExperience } from 'stores/user/Reducer';
 import { SubmitError } from 'components/final-form/SubmitError';
 interface IJobFormProps {
@@ -75,7 +75,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
             </div>
             <Field<string>
               name="companyName"
-              validate={required}
+              validate={composeValidators(required, maxValue(32))}
               render={({ input, meta }) =>
                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                   <label>Company Name</label>
@@ -94,7 +94,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
             />
             <Field<string>
               name="positionName"
-              validate={required}
+              validate={composeValidators(required, maxValue(32))}
               render={({ input, meta }) =>
                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                   <label>Position Name</label>

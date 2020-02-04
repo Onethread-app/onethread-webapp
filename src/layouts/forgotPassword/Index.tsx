@@ -9,6 +9,7 @@ import { errorMessgeHandler } from 'components/final-form/utils';
 import { SubmitError } from 'components/final-form/SubmitError';
 
 import forgotPass from './../../resources/images/forgotPassword.png';
+import { Link } from 'react-router-dom';
 interface ForgotPasswordProps {
   setEmailComponentView: (val: boolean) => void;
 }
@@ -21,6 +22,7 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
         'Content-Type': 'application/json'
       } as AxiosRequestConfig);
       if (response.status === 200) {
+        // localStorage.setItem('forgotPasswordMail', values.email);
         props.setEmailComponentView(true);
       }
       return true;
@@ -92,10 +94,25 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
 };
 
 const RouteToEmailConfirmation = () => (
-  <div className="dt cf w-100 vh-100">
-    <div className="v-mid dtc">
+  <div className="flex flex-column cf w-100 vh-100">
+    <div 
+      className="flex flex-column justify-center"
+      style={{height: '90vh'}}
+    >
       <h1 className="f3 lh-copy tc">We have sent you a mail.</h1>
-      <h1 className="f3 lh-copy tc">Please go to your mail to reset your password</h1>
+      <h1 className="f3 lh-copy tc ma0">Please go to your mail to reset your password</h1>
+    </div>
+    <div
+      className="pl3 w-100"
+      style={{ height: '10vh' }}
+    >
+      <Link to={`/signin`}>
+        <Button
+          text="Back to Sign In"
+          minimal={true}
+          icon="arrow-left"
+        />
+      </Link>
     </div>
   </div>
 );

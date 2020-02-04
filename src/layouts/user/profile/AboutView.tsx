@@ -29,9 +29,9 @@ const AboutViewComponent = (props: IAboutViewProps) => {
         />
       </div>
       <div>
-        <pre className="ws-break tj black-70 fw6" style={{ whiteSpace: 'pre-line', fontFamily: 'Open Sans' }}>
+        <p className="ws-break tj black-70 fw6" style={{ whiteSpace: 'pre-line' }}>
           {props.user.about}
-        </pre>
+        </p>
       </div>
       {showDialogAbout && (
         <RightSidebar

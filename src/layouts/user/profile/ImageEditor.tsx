@@ -14,21 +14,35 @@ const ImageEditComponent = (props: IImageEditProps) => {
   const [imageSelected, setImageSelected] = useState({}) as any;
   const [imageName, setImageName] = useState({}) as any;
   const [imageLoading, setImageLoading] = useState(false);
-  const [imageError, setImageError] = useState(false);
+  const [imageError, setImageError] = useState('');
+
+  const checkMimetype = [
+    'image/apng',
+    'image/png',
+    'image/bmp',
+    'image/gif',
+    'image/jpeg',
+    'image/jpg',
+    'image/svg'
+  ];
 
   const imageChangeHandler = (event: any) => {
     if (event.target.files) {
       if (event.target.files[0]) {
-        if (event.target.files[0].size / 1024 / 1024 > 1) {
+        if (!checkMimetype.includes(event.target.files[0].type)) {
           setImageName('');
-          setImageError(true);
+          setImageError('This file format is not supported');
+          return false;
+        } else if (event.target.files[0].size / 1024 / 1024 > 1) {
+          setImageName('');
+          setImageError(`File size can't be greater than 1 MB`);
           return false;
         } else {
           const data = new FormData();
           data.append('file', event.target.files[0], event.target.files[0].name);
           setImageName(event.target.files[0]);
           setImageSelected(data);
-          setImageError(false);
+          setImageError('');
           return data;
         }
       }
@@ -50,7 +64,7 @@ const ImageEditComponent = (props: IImageEditProps) => {
         </span>
       </label>
       {imageError &&
-        <small style={{ color: 'red' }}>Image size can't be greater than 1 MB</small>}
+      <small style={{ color: 'red' }}>{imageError}</small>}
       <div className="flex justify-end mt3">
         <Button className="w4 grow h2 pointer mr3"
           style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
@@ -59,7 +73,7 @@ const ImageEditComponent = (props: IImageEditProps) => {
             props.setShowDialog(false);
             setImageName({});
             setImageLoading(false);
-            setImageError(false);
+            setImageError('');
           }}
         >
           cancel
