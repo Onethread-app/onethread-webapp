@@ -26,14 +26,10 @@ export const Sidebar = (props: {
 			}}
 		>
 			<div
-				className={` ${props.leftOpen ? 'ml4' : 'ml3'}`}
-				style={{
-					marginTop: '4rem',
-					height: '5rem',
-					width: '5rem'
-				}}>
-				<NavLink to={`/${props.user.name}`}
-				>
+				className={`${props.leftOpen ? 'db ml4 mv3' : 'dn'} `}
+				style={{ width: '6rem' }}
+			>
+				<NavLink to={`/${props.user.name}`}>
 					{props.leftOpen ?
 						<img src={logo} />
 						:
@@ -41,12 +37,11 @@ export const Sidebar = (props: {
 					}
 				</NavLink>
 			</div>
-			<div
-			>
+			<div className={`${props.leftOpen ? 'pt4' : 'pt5'}`}>
 				{props.type === 'default' ? (
 					<NavLink
 						exact
-						className="mh1 hover-bg-white-20 mt5 flex items-center nowrap"
+						className="ma1 hover-bg-white-20 flex items-center nowrap"
 						style={{ color: 'white' }}
 						activeStyle={{ background: '#3F61C5' }}
 						to={`/${props.user.name}`}
@@ -59,7 +54,7 @@ export const Sidebar = (props: {
 								/>
 							</span> :
 							<Tooltip
-								content={<p>Individual Profile</p>}
+								content={<p className="mb0">Individual Profile</p>}
 								position="right"
 							>
 								<span className="pl3">
@@ -87,7 +82,7 @@ export const Sidebar = (props: {
 							<NavLink
 								exact
 								className="flex items-center nowrap ma1 hover-bg-white-20"
-								style={{ color: 'white', marginTop: '4rem' }}
+								style={{ color: 'white' }}
 								activeStyle={{ background: '#3F61C5' }}
 								to={`/company/${props.company.name}`}
 							>
@@ -99,7 +94,7 @@ export const Sidebar = (props: {
 										/>
 									</span> :
 									<Tooltip
-										content={<p>Company Profile</p>}
+										content={<p className="mb0">Company Profile</p>}
 										position="right"
 									>
 										<span className="pl3">
@@ -134,7 +129,7 @@ export const Sidebar = (props: {
 										/>
 									</span> :
 									<Tooltip
-										content={<p>Room</p>}
+										content={<p className="mb0">Room</p>}
 										position="right"
 									>
 										<span className="pl3">
@@ -169,7 +164,7 @@ export const Sidebar = (props: {
 										/>
 									</span> :
 									<Tooltip
-										content={<p>Board</p>}
+										content={<p className="mb0">Board</p>}
 										position="right"
 									>
 										<span className="pl3">
@@ -204,7 +199,7 @@ export const Sidebar = (props: {
 										/>
 									</span> :
 									<Tooltip
-										content={<p>Team</p>}
+										content={<p className="mb0">Team</p>}
 										position="right"
 									>
 										<span className="pl3">
@@ -239,7 +234,7 @@ export const Sidebar = (props: {
 										/>
 									</span> :
 									<Tooltip
-										content={<p>Settings</p>}
+										content={<p className="mb0">Settings</p>}
 										position="right"
 									>
 										<span className="pl3">

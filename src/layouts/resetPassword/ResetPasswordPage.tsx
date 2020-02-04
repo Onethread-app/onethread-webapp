@@ -4,41 +4,38 @@ import { Button, Icon, Spinner } from '@blueprintjs/core';
 import { isEmpty, isNumber, isEqual } from 'lodash';
 import tigrowApi from 'tigrowApi';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { History } from 'history';
-
 
 const ResetPasswordComponent = (props: RouteComponentProps) => {
   const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
-    password: "",
-    confirmPassword: "",
-    token: ""
+    password: '',
+    confirmPassword: '',
+    token: ''
   });
   const [errors, setErrors] = useState({
-    password: "",
-    confirmPassword: ""
+    password: '',
+    confirmPassword: ''
   });
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleResetPassword = async (
-    resetPasswordInfo: {},
-    routeHistory: History
-  ) => {
-    setLoading(true);
+  const handleResetPassword = async () => {
     try {
-      await tigrowApi.put("accounts/reset-password", {
+      setLoading(true);
+      await tigrowApi.put('accounts/reset-password', {
         password: values.password,
         token: (props.match.params as any).token
       });
-      setLoading(false);
-      routeHistory.push("/signin");
+      props.history.push('/signin');
     } catch (error) {
-      setLoading(false);
-      if (isEqual(error.message, "Network Error")) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
         console.log(error);
       } else {
+        // tslint:disable-next-line: no-console
         console.log(error.response);
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -49,11 +46,11 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
 
   const checkPassword = () => {
     if (isEqual(values.password, values.confirmPassword)) {
-      return true
+      return true;
     } else {
-      return false
+      return false;
     }
-  }
+  };
 
   const emptyErrorCheck = () => {
     if (isEmpty(errors.password) && isEmpty(errors.confirmPassword)) {
@@ -61,22 +58,22 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
     } else {
       return false;
     }
-  }
+  };
   const emptyValueCheck = () => {
     if (isEmpty(values.password) || isEmpty(values.confirmPassword)) {
       let e = errors;
       if (isEmpty(values.password)) {
-        e = { ...e, password: "Required" };
+        e = { ...e, password: 'Required' };
       }
       if (isEmpty(values.confirmPassword)) {
-        e = { ...e, confirmPassword: "Required" };
+        e = { ...e, confirmPassword: 'Required' };
       }
       setErrors(e);
       return true;
     } else {
       return false;
     }
-  }
+  };
 
   return (
     <div className="dt w-100 vh-100">
@@ -84,13 +81,13 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
         <div className="cf shadow-4 w-34 center br3 ph4">
           <h1 className="f4 lh-copy mb4 mt4">Reset Password</h1>
           <h1 className="f6">New Password</h1>
-          <div className={` ${errors.password ? "mb3" : "mb4"}`}>
+          <div className={` ${errors.password ? 'mb3' : 'mb4'}`}>
             <div className="flex">
               <InputGroupField
                 id="password"
                 type={`${showPassword ? 'text' : 'password'}`}
                 value={values.password}
-                onChange={handleChange("password")}
+                onChange={handleChange('password')}
                 placeHolder="password"
                 leftIcon="lock"
                 rightElement={
@@ -102,39 +99,39 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                   />
                 }
                 className={`br0 ${errors.password ? 'bb b--red' : 'bb b--lightBlue'}`}
-                leftIconColor={`${errors.password ? 'red' : "#0fa3a3"}`}
+                leftIconColor={`${errors.password ? 'red' : '#0fa3a3'}`}
                 style={{
                   boxShadow: 'none',
                   fontSize: '18px'
                 }}
                 validationOnBlur={() => {
                   if (isEmpty(values.password)) {
-                    const passwordError = { ...errors, password: "Required" };
+                    const passwordError = { ...errors, password: 'Required' };
                     setErrors(passwordError);
                   } else {
                     const regex = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
                     if (!(values.password.match(regex))) {
-                      const passwordError = { ...errors, password: "Should contain uppercase, lowercase, special character and min 8 chanracter long" };
+                      const passwordError = { ...errors, password: 'Should contain uppercase, lowercase, special character and min 8 chanracter long' };
                       setErrors(passwordError);
                     } else {
-                      const passwordError = { ...errors, password: "" };
+                      const passwordError = { ...errors, password: '' };
                       setErrors(passwordError);
                     }
                   }
                 }}
               />
             </div>
-            {errors.password ? <small className="red">{errors.password}</small> : ""}
+            {errors.password ? <small className="red">{errors.password}</small> : ''}
 
           </div>
           <h1 className="f6">Confirm Password</h1>
-          <div className={`${errors.confirmPassword ? "mb3" : "mb4"}`}>
+          <div className={`${errors.confirmPassword ? 'mb3' : 'mb4'}`}>
             <div className="flex">
               <InputGroupField
                 id="confirmPassword"
                 type={`${showPassword ? 'text' : 'password'}`}
                 value={values.confirmPassword}
-                onChange={handleChange("confirmPassword")}
+                onChange={handleChange('confirmPassword')}
                 placeHolder="confirm password"
                 leftIcon="lock"
                 rightElement={
@@ -146,38 +143,36 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                   />
                 }
                 className={`br0 ${errors.confirmPassword ? 'bb b--red' : 'bb b--lightBlue'}`}
-                leftIconColor={`${errors.confirmPassword ? 'red' : "#0fa3a3"}`}
+                leftIconColor={`${errors.confirmPassword ? 'red' : '#0fa3a3'}`}
                 style={{
                   boxShadow: 'none',
                   fontSize: '18px'
                 }}
                 validationOnBlur={() => {
                   if (isEmpty(values.confirmPassword)) {
-                    const confirmPasswordError = { ...errors, confirmPassword: "Please re-enter your password" };
+                    const confirmPasswordError = { ...errors, confirmPassword: 'Please re-enter your password' };
                     setErrors(confirmPasswordError);
-                  }
-                  else if (!checkPassword()) {
-                    const confirmPasswordError = { ...errors, confirmPassword: "Mismatch Password" };
+                  } else if (!checkPassword()) {
+                    const confirmPasswordError = { ...errors, confirmPassword: 'Mismatch Password' };
                     setErrors(confirmPasswordError);
-                  }
-                  else {
-                    const confirmPasswordError = { ...errors, confirmPassword: "" };
+                  } else {
+                    const confirmPasswordError = { ...errors, confirmPassword: '' };
                     setErrors(confirmPasswordError);
                   }
                 }}
               />
             </div>
-            {errors.confirmPassword ? <small className="red">{errors.confirmPassword}</small> : ""}
+            {errors.confirmPassword ? <small className="red">{errors.confirmPassword}</small> : ''}
           </div>
 
           <div className="w-30 center mt4 mb5 h2">
             <Button className=" b--none w-100 br3 fr grow h2 ph5 pointer pv2 white mb3"
               type="submit"
-              style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+              style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
               onClick={(e: any) => {
                 e.preventDefault();
                 if (!emptyValueCheck() && emptyErrorCheck()) {
-                  handleResetPassword(values, props.history);
+                  handleResetPassword();
                 }
               }}
               disabled={loading}
@@ -188,7 +183,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
         </div>
       </div>
     </div >
-  )
-}
+  );
+};
 
-export const ResetPasswordPage = withRouter(ResetPasswordComponent)
+export const ResetPasswordPage = withRouter(ResetPasswordComponent);
