@@ -123,7 +123,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 										props.company.members.map(member => (
 											<tr className="hide-child">
 												<td>
-													<small className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</small>
+													<small className="mr2 f6">
+														{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}
+													</small>
 													{permit(member.role) ? (
 														member.role === 'superAdmin' ? (
 															<Icon
@@ -136,14 +138,22 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 													) : null}
 												</td>
 												<td>
-													{member.designations.length
-														? member.designations[0].division
+													{member.designations.length ?
+														<small className="f6">
+															{member.designations[0].division}
+														</small>
 														: null}
 												</td>
-												<td>{showDepartment(member)}</td>
 												<td>
-													{member.designations.length
-														? member.designations[0].position
+													<small className="f6">
+														{showDepartment(member)}
+													</small>
+												</td>
+												<td>
+													{member.designations.length ?
+														<small className="f6">
+															{member.designations[0].position}
+														</small>
 														: null}
 												</td>
 												{/* Popover starts */}

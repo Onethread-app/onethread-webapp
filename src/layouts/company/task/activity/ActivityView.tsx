@@ -12,14 +12,11 @@ interface IActivityViewInternalProps {
     getAllComments: () => void;
 }
 
-
 export const ActivityViewPageComponent = (props: IActivityViewInternalProps & RouteComponentProps) => {
 
     const [loading, setLoading] = useState(true);
 
-
     useEffect(() => {
-
         async function getCommentsApi() {
             await props.getAllComments();
             setLoading(false);
@@ -28,20 +25,14 @@ export const ActivityViewPageComponent = (props: IActivityViewInternalProps & Ro
 
     }, []);
 
-
-
-
     return (
-
         <div className="flex flex-column h-100 pl2">
             <div className="pl3">
                 <h1 className="f5 fw7 lh-title black">Activity</h1>
             </div>
 
             <div className="flex flex-column flex-grow-1 overflow-y-auto pt2 bl b--tigrowLightGray-1 pl3">
-
                 {
-
                     loading === false ?
                         props.commentList.map((comment) => (
                             <div className="flex justify-between">
@@ -55,7 +46,7 @@ export const ActivityViewPageComponent = (props: IActivityViewInternalProps & Ro
                                         <h1 className="f6 fw6 lh-title black mv0">{comment.name}</h1>
                                         <h1 className="f7 fw6 lh-title silver mv1">{comment.position}</h1>
                                         <p
-                                            className="pa2 br3 mt2"
+                                            className="pa2 br3 mt2 ws-break"
                                             style={{
                                                 backgroundColor: '#F4FBFB'
                                             }}
@@ -74,12 +65,8 @@ export const ActivityViewPageComponent = (props: IActivityViewInternalProps & Ro
                             </div>
                         ))
                         : <Loading />
-
                 }
-
-
             </div>
-
             <ActivityEditor />
         </div>
     );
