@@ -64,7 +64,11 @@ export const MessageItem = (props: MessageItemProps) => {
         position="left"
       > */}
         <div
-          className={`shadow-4 ph3 pv1 br4 mw6 ${currentUser ? 'message-mine mr2 bg-tigrowNewDarkBlue' : 'message-others ml2 bg-white'}`}
+          className={`ph3 pv1 br4 mw6 ${currentUser ? 'message-mine mr2' : 'message-others ml2'}`}
+          style={{
+            backgroundColor: currentUser ?
+              '#3b5998' : '#d4d4d47a'
+          }}
         >
           <p
             className={`mv0 tj break-word`}
@@ -93,7 +97,11 @@ export const MessageItem = (props: MessageItemProps) => {
             }}
           >
             <div
-              className={`shadow-4 ph3 pv2 br3 mw6 ${currentUser ? 'mr2 bg-tigrowNewDarkBlue' : 'ml2 bg-white'} flex justify-center items-center`}
+              className={`ph3 pv2 br3 mw6 ${currentUser ? 'mr2' : 'ml2'} flex justify-center items-center`}
+              style={{
+                backgroundColor: currentUser ?
+                  '#3b5998' : '#d4d4d47a'
+              }}
             >
               <h4
                 className="mv0 flex justify-center items-center"
