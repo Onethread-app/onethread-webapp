@@ -49,9 +49,6 @@ const FileUploadComponent = (props: IFileUploadProps) => {
         if (event.target.files) {
             const file = event.target.files[0];
             if (file) {
-                console.log('file', file);
-                console.log('type', file.type);
-                console.log('size', file.size / 1024 / 1024);
                 if (!checkMimetype.includes(file.type)) {
                     setImageName('');
                     setImageError('This file format is not supported');
@@ -118,7 +115,6 @@ const FileUploadComponent = (props: IFileUploadProps) => {
                         e.preventDefault();
                         setImageLoading(true);
                         const response = await props.fileUploadAction(imageSelected, props.roomID);
-                        console.log(response);
                         if (response) {
                             props.setShowDialog(false);
                             setImageName({});
