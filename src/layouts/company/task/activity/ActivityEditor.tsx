@@ -49,9 +49,9 @@ export const ActivityEditorPageComponent = (props: ICommentReplyInternalProps & 
                         id="text"
                         value={input.value}
                         onChange={input.onChange}
-                        className="ba br2"
+                        className="br2"
                         placeHolder="Write comment"
-                        style={{ height: '40px' }}
+                        style={{ height: '40px', background: '#D4D4D47A' }}
                       />
                       {checkError(meta) &&
                         <small className="mv3" style={{ color: 'red' }}>
@@ -60,11 +60,11 @@ export const ActivityEditorPageComponent = (props: ICommentReplyInternalProps & 
                     </div>
                   }
                 />
-                <div className="w-20 pl2 pt1">
+                <div className="w-20 pl2">
                   <Button
                     type="submit"
                     className="w-100"
-                    style={{ background: '#0FA3A3', color: '#ffffff' }}
+                    style={{ background: '#0FA3A3', color: '#ffffff', height: '40px' }}
                     loading={submitting}
                     text="Send"
                     disabled={submitting || pristine}

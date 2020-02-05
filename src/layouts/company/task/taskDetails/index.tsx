@@ -36,9 +36,9 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
         {moment(props.currentTask!.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
       <div className="fl w-70-ns w-100">
         <div className="fl w-100">
-          <div className="flex">
+          <div className="flex-ns">
             <div className="white ph2 br2 h-100" style={{ background: '#FDB64E' }}>
-              <p className="fw7 pt2 overflow-hidden"
+              <p className="fw7 pt2-ns overflow-hidden"
                 style={{
                   whiteSpace: 'nowrap',
                   textOverflow: 'ellipsis',
@@ -47,12 +47,19 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               >{props.currentTask!.currentColumnName}</p>
             </div>
             {
-              props.currentTask!.dueDate ?
-                <p className="pt2 pl3 fw6">
-                  {Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true))} days remaining</p>
-                : <p className="pt2 pl3 fw6">Days has not been set</p>
+              props.currentTask!.dueDate && (
+                <>
+                  {Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true)) === 0 ?
+                    <p className="pt2 pl3 fw6 red">Deadline ends today</p> :
+                    Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true)) < 0 ?
+                      <p className="pt2 pl3 fw6 red">Expired</p> :
+                      <p className="pt2 pl3 fw6">
+                        {Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true))} days remaining
+                    </p>
+                  }
+                </>
+              )
             }
-
           </div>
           <div className="mt2">
             <AssignedMembersView />

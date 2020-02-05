@@ -148,10 +148,16 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 														? getDivisionName[member.designations[0].division]
 														: null}
 												</td>
-												<td>{showDepartment(member)}</td>
 												<td>
-													{member.designations.length
-														? member.designations[0].position
+													<small className="f6">
+														{showDepartment(member)}
+													</small>
+												</td>
+												<td>
+													{member.designations.length ?
+														<small className="f6">
+															{member.designations[0].position}
+														</small>
 														: null}
 												</td>
 												{/* Popover starts */}

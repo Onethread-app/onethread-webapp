@@ -13,8 +13,9 @@ export const DueDateViewComponent = (props: DueDateViewComponentInternalProps) =
         <h1 className="f6">Due Date</h1>
       </div>
       {
-        props.dueDate &&
-        <p>{moment(props.dueDate).format('MMM Do YYYY')}</p>
+        props.dueDate ?
+          <p>{moment(props.dueDate).format('MMM Do YYYY')}</p> :
+          <p>Days has not been set</p>
       }
     </>
   );

@@ -5,16 +5,20 @@ import { checkError } from 'components/final-form/utils';
 import { SuggestField } from 'components/fields/SuggestField';
 import { Tag, Button, Icon } from '@blueprintjs/core';
 import { tokenConfig } from 'stores/UtilsActions';
-import { server } from 'tigrowApi';
+import tigrowApi from 'tigrowApi';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import { CompanyModel } from 'stores/company/Reducer';
 import { IconNames } from '@blueprintjs/icons';
+import { ITask } from 'stores/board/Reducer';
+import { addTaskMember } from 'stores/taskMembers/Action';
 
 interface IMembersFormProps {
-    setMembersPopover: (val: boolean) => void;
+  setMembersPopover: (val: boolean) => void;
   company?: CompanyModel;
+  currentTask?: ITask;
+  addTaskMember: (members: string[]) => void;
 }
 
 interface ICompanyTeamMembers {
@@ -23,6 +27,7 @@ interface ICompanyTeamMembers {
 }
 export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
   const onSubmit = async (values: any) => {
+    await props.addTaskMember(values.member);
     props.setMembersPopover(false);
   };
 
@@ -30,12 +35,13 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ICompanyTeamMembers[]);
   const [username, setUsername] = useState('');
 
-  const userRequestFactory = (userName: string): Promise<any> => {
+  const userRequestFactory = async (userName: string) => {
+
     const headers = tokenConfig();
-    return fetch(`${server}company/${props.company!.name}/members/search?name=${userName}`, headers)
-      .then((res) => res.json())
-      .then((res) => res.employees.data)
-      .catch((err) => []);
+    const response = await tigrowApi.get(
+      `tasks/${props.currentTask!._id}/suggest-member?companyId=${props.company!._id}`,
+      headers);
+    return response.data.members;
   };
 
   let result: any = [];
@@ -55,13 +61,13 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
         >
           <SubmitError errorMessage={submitError} />
           <div className="flex justify-end">
-						<Icon
-							icon={IconNames.CROSS}
-							iconSize={20}
-							className="grow pointer"
-							onClick={(e: any) => props.setMembersPopover(false)}
-						/>
-					</div>
+            <Icon
+              icon={IconNames.CROSS}
+              iconSize={20}
+              className="grow pointer"
+              onClick={(e: any) => props.setMembersPopover(false)}
+            />
+          </div>
           <Field<string>
             name="member"
             render={({ input, meta }) =>
@@ -147,8 +153,9 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
+    currentTask: state.boardIndexReducer.boardReducer.currentTask
   };
 };
 
-export const AssignedMembersEditor = connect(mapStateToProps, null)(AssignedMembersEditorComponent);
+export const AssignedMembersEditor = connect(mapStateToProps, { addTaskMember })(AssignedMembersEditorComponent);
