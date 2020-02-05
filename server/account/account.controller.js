@@ -281,8 +281,8 @@ const resetPassword = async (req, res, next) => {
     }).select('-password');
 
     if (!user)
-      return sendErrorResponse(res, 401, 'VerificationError', {
-        message: 'This Link is expired',
+      return sendErrorResponse(res, 401, 'TokenExpireError', {
+        message: 'Time is expired',
       });
     user.resetPasswordToken = undefined;
     user.resetPasswordTokenExpiration = undefined;
@@ -360,15 +360,14 @@ const searchAccount = async (req, res, next) => {
 const tokenRefresh = async (req, res, next) => {
   const refreshToken = req.body.refresh_token;
   if (refreshToken) {
-    client.exists(refreshToken, function (err, exists) {
+    client.exists(refreshToken, function(err, exists) {
       if (exists) {
         let refreshTokenPayload;
-        jwt.verify(refreshToken, config.refreshTokenSecret, function (
+        jwt.verify(refreshToken, config.refreshTokenSecret, function(
           err,
           user,
         ) {
           if (err) {
-            console.log(err);
             return res.status(401).json({
               statusCode: 401,
               error: 'Unauthorized',
@@ -414,7 +413,7 @@ const tokenRefresh = async (req, res, next) => {
 const tokenRevoke = async (req, res, next) => {
   const refreshToken = req.body.refresh_token;
   if (refreshToken) {
-    client.exists(refreshToken, function (err, exists) {
+    client.exists(refreshToken, function(err, exists) {
       if (exists) {
         removeRefreshTokenfromList(refreshToken);
         res.sendStatus(204);
