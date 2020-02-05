@@ -36,7 +36,7 @@ const get = async (req, res , next) => {
     removed: false,
   })
     .select('_id name tasks positionInBoard')
-    .populate('tasks', '_id name color description')
+    .populate('tasks', '_id name color description dueDate')
     .exec()
     .then(colResult => {
       const responseResult = {
