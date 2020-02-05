@@ -19,7 +19,7 @@ export const MessageItem = (props: MessageItemProps) => {
     <>
       {props.group.showPicAndName ?
         <article
-          key={props.message.text}
+          key={props.message._id}
           className={`db flex ml3 items-center mb1 
         ${currentUser ? ' flex-row-reverse' : ''}`}
         >

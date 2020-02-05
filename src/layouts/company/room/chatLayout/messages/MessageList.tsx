@@ -64,12 +64,12 @@ export const MessageList = withChatkit((_props: MessageListProps) => {
 		// style={{ height: "calc(100vh - 186px)" }}
 		>
 			{messages.length
-				? messages.map((message: IRoomMessage, _i: number, arr: IRoomMessage[]) => {
+				? messages.map((message: IRoomMessage, index: number, arr: IRoomMessage[]) => {
 					return (
 						<MessageItem
-							key={_i}
+							key={index}
 							message={message}
-							group={checkGroup(message, _i, arr)}
+							group={checkGroup(message, index, arr)}
 						/>
 					);
 				})
