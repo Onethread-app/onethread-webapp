@@ -21,6 +21,7 @@ const FileUploadComponent = (props: IFileUploadProps) => {
         'application/zip',
         'application/x-rar-compressed',
         'application/x-7z-compressed',
+        'application/x-zip-compressed',
         'application/pdf',
         'application/msword',
         'application/json',

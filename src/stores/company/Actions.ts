@@ -64,6 +64,7 @@ export const createCompanyAction = (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`company`, companyData, headers);
+			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
 			dispatch({ type: CREATE_COMPANY, payload: response.data });
 			routeHistory.push(`/company/${response.data.company.name}`);
 			return response.data;

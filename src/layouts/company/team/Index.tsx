@@ -26,14 +26,6 @@ import { EditDesignationForm } from 'layouts/company/team/EditDesignationForm';
 import { isEqual, upperFirst } from 'lodash';
 import { User } from 'stores/user/Reducer';
 
-const divisions = [
-	{ _id: 'director', name: 'Director' },
-	{ _id: 'cxo', name: 'CXO' },
-	{ _id: 'seniorManager', name: 'Senior Manager' },
-	{ _id: 'middleManager', name: 'Middle Manager' },
-	{ _id: 'operationalEmployee', name: 'Operational Employee' }
-];
-
 interface TeamMember {
 	company: CompanyModel;
 	user: User;
@@ -56,9 +48,21 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 	const [showDialogEdit, setShowDialogEdit] = useState(false);
 	const [member, setMember] = useState<ICompanyMembers | undefined>(undefined);
 
-	useEffect(() => {
-		loadCompanyMember(props.getCompanyMembers);
-	}, []);
+	const divisions = [
+		{ _id: 'director', name: 'Director' },
+		{ _id: 'cxo', name: 'CXO' },
+		{ _id: 'seniorManager', name: 'Senior Manager' },
+		{ _id: 'middleManager', name: 'Middle Manager' },
+		{ _id: 'operationalEmployee', name: 'Operational Employee' }
+	];
+
+	const getDivisionName = {
+		director: 'Director',
+		cxo: 'CXO',
+		seniorManager: 'Senior Manager',
+		middleManager: 'Middle Manager',
+		operationalEmployee: 'Operational Employee'
+	};
 
 	// tslint:disable-next-line:no-shadowed-variable
 	const showDepartment = (member: ICompanyMembers) => {
@@ -79,6 +83,10 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 			return null;
 		}
 	};
+
+	useEffect(() => {
+		loadCompanyMember(props.getCompanyMembers);
+	}, []);
 
 	return (
 		<>
@@ -121,11 +129,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								props.company.members.length > 0 ? (
 										// tslint:disable-next-line: no-shadowed-variable
 										props.company.members.map(member => (
-											<tr className="hide-child">
+											<tr className="hide-child" key={member._id}>
 												<td>
-													<small className="mr2 f6">
-														{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}
-													</small>
+													<span className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</span>
 													{permit(member.role) ? (
 														member.role === 'superAdmin' ? (
 															<Icon
@@ -138,10 +144,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 													) : null}
 												</td>
 												<td>
-													{member.designations.length ?
-														<small className="f6">
-															{member.designations[0].division}
-														</small>
+													{member.designations.length
+														? getDivisionName[member.designations[0].division]
 														: null}
 												</td>
 												<td>

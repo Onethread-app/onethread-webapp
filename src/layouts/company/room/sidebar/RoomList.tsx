@@ -160,7 +160,7 @@ export const RoomListComponent = withChatkit(
 		// 	}
 		// }, [companyId]);
 
-		const roomBgColor = ['#D8315B', '#744FC6', '#0FA3A3', '#456990', '#CDA2AB', '#FE5E41'];
+		const roomBgColor = ['#D8315B', '#9F7DE8', '#0FA3A3', '#456990', '#CDA2AB', '#FE5E41'];
 
 		return (
 			<>

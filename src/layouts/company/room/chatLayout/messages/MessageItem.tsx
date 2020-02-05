@@ -1,95 +1,97 @@
 import * as React from 'react';
 import { useSelector } from 'react-redux';
-import { IRoomMessage, IRoomFile } from 'stores/room/Reducer';
+import { IRoomMessage } from 'stores/room/Reducer';
 import UserIcon from './../../../../../resources/images/profilePhoto.svg';
 import DownloadIcon from './../../../../../resources/images/Download.svg';
 
 interface MessageItemProps {
-  text: string;
-  files: IRoomFile[];
-  createdAt: string;
+  message: IRoomMessage;
   group: {
     message: boolean;
     showPicAndName: boolean;
   };
-  sender: IRoomMessage['account'];
 }
 
 export const MessageItem = (props: MessageItemProps) => {
   const user = useSelector((state: any) => state.userReducer.user);
-  const currentUser = user._id === props.sender._id;
+  const currentUser = user._id === props.message.account._id;
   return (
     <>
-      {props.group.showPicAndName ? <article
-        className={`db flex ml3 items-center mb1 
+      {props.group.showPicAndName ?
+        <article
+          key={props.message._id}
+          className={`db flex ml3 items-center mb1 
         ${currentUser ? ' flex-row-reverse' : ''}`}
-      >
-        {currentUser ? undefined :
-          <>
-            <img
-              src={props.sender.profileImage ?
-                props.sender.profileImage.link : UserIcon}
-              className="v-mid dib br-100"
-              alt="user"
-              style={{
-                width: '32px',
-                height: '32px',
-                objectFit: 'cover'
-              }}
-            />
-            <h5 className="mv0 ml2"
-              style={{
-                textTransform: 'capitalize'
-              }}
-            >
-              {props.sender.firstName + ' ' + props.sender.lastName}
-            </h5>
-          </>
-        }
-      </article> : null}
+        >
+          {currentUser ? undefined :
+            <>
+              <img
+                src={props.message.account.profileImage ?
+                  props.message.account.profileImage.link : UserIcon}
+                className="v-mid dib br-100"
+                alt="user"
+                style={{
+                  width: '32px',
+                  height: '32px',
+                  objectFit: 'cover'
+                }}
+              />
+              <h5 className="mv0 ml2"
+                style={{
+                  textTransform: 'capitalize'
+                }}
+              >
+                {props.message.account.firstName + ' ' + props.message.account.lastName}
+              </h5>
+            </>
+          }
+        </article> : null}
 
-      {props.text ? <article
-        className={`db flex items-center flex 
+      {props.message.text ?
+        <article
+          key={props.message.createdAt}
+          className={`db flex items-center flex 
         ${currentUser ? ' flex-row-reverse' : ''} 
         ${props.group.message ? 'mb1' : 'mb3'}`}
-        style={{
-          marginLeft: '48px'
-        }}
-      >
-        {/* <Tooltip
+          style={{
+            marginLeft: '48px'
+          }}
+        >
+          {/* <Tooltip
         // tslint:disable-next-line: max-line-length
         className={`shadow-4 ph3 pv1 br4 mw6 ${currentUser ? 
           'message-mine mr2 bg-tigrowNewDarkBlue' : 'message-others ml2 bg-white'}`}
         content={moment(props.createdAt).format('lll')}
         position="left"
       > */}
-        <div
-          className={`ph3 pv1 br4 mw6 ${currentUser ? 'message-mine mr2' : 'message-others ml2'}`}
-          style={{
-            backgroundColor: currentUser ?
-              '#3b5998' : '#d4d4d47a'
-          }}
-        >
-          <p
-            className={`mv0 tj break-word`}
+          <div
+            className={`ph3 pv1 br4 mw6 ${currentUser ? 'message-mine mr2' : 'message-others ml2'}`}
             style={{
-              color: currentUser ? 'white' : 'rgb(74, 73, 73)',
-              whiteSpace: 'pre-wrap'
+              backgroundColor: currentUser ?
+                '#3b5998' : '#d4d4d47a'
             }}
-          >{props.text}
-          </p>
-          {/* <div className={`flex ${currentUser ? " flex-row-reverse" : ""}`}>
+          >
+            <p
+              className={`mv0 tj break-word`}
+              style={{
+                color: currentUser ? 'white' : 'rgb(74, 73, 73)',
+                whiteSpace: 'pre-wrap'
+              }}
+            >{props.message.text}
+            </p>
+            {/* <div className={`flex ${currentUser ? " flex-row-reverse" : ""}`}>
           <h6 className={`pa0 ma0 mt1 ${currentUser ? "ml5 white" : "mr5"}`}>
             {moment(props.createdAt).format('lll')}
           </h6>
         </div> */}
-        </div>
-        {/* </Tooltip> */}
-      </article> : null}
+          </div>
+          {/* </Tooltip> */}
+        </article> : null}
 
-      {props.files.length ?
-        props.files.map(file =>
+      {props.message.files.length ?
+        props.message.files.map(file =>
           <article
+            key={file._id}
             className={`db flex items-center flex ${currentUser ? ' flex-row-reverse' : ''}
             ${props.group.message ? 'mb1' : 'mb3'}`}
             style={{
