@@ -32,7 +32,9 @@ const schema = {
     'Other',
   ]),
   address: Joi.string().max(120),
-  about: Joi.string().max(2000),
+  about: Joi.string()
+    .allow('')
+    .max(2000),
   email: Joi.string()
     .email()
     .lowercase(),
