@@ -22,7 +22,6 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
         'Content-Type': 'application/json'
       } as AxiosRequestConfig);
       if (response.status === 200) {
-        // localStorage.setItem('forgotPasswordMail', values.email);
         props.setEmailComponentView(true);
       }
       return true;

@@ -10,6 +10,7 @@ import { errorMessgeHandler, composeValidators, required, checkError, passwordVa
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
 import questionIcon from './../../resources/images/question.png';
+import { Link } from 'react-router-dom';
 
 const ResetPasswordComponent = (props: RouteComponentProps) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,33 +22,16 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
         password: values.password,
         token: (props.match.params as any).token
       });
-      // if (localStorage.getItem('forgotPasswordMail')) {
-      //   localStorage.removeItem('forgotPasswordMail');
-      // }
       props.history.push('/signin');
       return true;
     } catch (error) {
       const response = errorMessgeHandler(error);
-      return { [response.fieldName]: response.message };
-      // return {
-      //   [response.fieldName]: <>
-      //       {`${response.message}.`}
-      //       <a
-      //         className="link dim blue pl1"
-      //         onClick={async () => {
-      //           const res = await resendMailForSignup(localStorage.getItem('forgotPasswordMail')!);
-      //           if (res.message === 200) {
-      //             Toaster.create().show({ message: 'Email has been send successfully' });
-      //           }
-      //           if (isEqual(res.message, 'Network Error')) {
-      //             Toaster.create().show({ message: 'Network Error' });
-      //           }
-      //         }}
-      //       >
-      //         Resend mail?
-      //       </a>
-      //     </>
-      // };
+      return {
+        [response.fieldName]: <>
+            {`${response.message}.`}
+            <Link to="/forgot-password">Resend mail?</Link>
+          </>
+      };
     }
   };
 
