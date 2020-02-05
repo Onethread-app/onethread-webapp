@@ -1,4 +1,4 @@
-import { GET_ALL_MEMBER, DELETE_MEMBER } from './Types';
+import { GET_ALL_MEMBER, DELETE_MEMBER, ASSIGN_MEMBER } from './Types';
 
 export interface ITaskMember {
   _id?: string;
@@ -19,11 +19,19 @@ export const TaskMembersReducer = (state = InitialState, action: any) => {
 
   switch (action.type) {
 
-    case GET_ALL_MEMBER:
-    return {
+    case ASSIGN_MEMBER:
+      return {
         ...state,
-        taskMemberList : action.payload
-    };
+        taskMemberList: [
+          ...action.payload,
+          ...state.taskMemberList
+        ]
+      };
+    case GET_ALL_MEMBER:
+      return {
+        ...state,
+        taskMemberList: action.payload
+      };
     case DELETE_MEMBER:
       return {
         ...state,
