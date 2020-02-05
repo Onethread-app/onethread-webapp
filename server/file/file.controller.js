@@ -14,12 +14,16 @@ let s3bucket = new AWS.S3({
   secretAccessKey: config.awsSecretAccessKey,
   region: config.s3Region,
 });
+const fileName = (userID, name) => {
+  return userID + '_' + Date.now() + '_' + name;
+};
 const profilePicture = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
+  const fileRename = fileName(userID, file.originalname);
   const params = {
     Bucket: 'tigrow-file',
-    Key: `${userID}/${file.originalname}`,
+    Key: `${userID}/${fileRename}`,
     Body: file.buffer,
     ContentType: file.mimetype,
     ACL: 'public-read',
@@ -80,9 +84,10 @@ const companyLogo = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
   const companyID = req.query.cid;
+  const fileRename = fileName(companyID, file.originalname);
   const params = {
     Bucket: 'tigrow-file',
-    Key: `${companyID}/${file.originalname}`,
+    Key: `${companyID}/${fileRename}`,
     Body: file.buffer,
     ContentType: file.mimetype,
     ACL: 'public-read',
@@ -95,7 +100,6 @@ const companyLogo = async (req, res, next) => {
       const newFile = {
         link: data.Location,
         s3Key: data.Key,
-        // company: companyID,
         type: params.ContentType,
         account: userID,
       };
