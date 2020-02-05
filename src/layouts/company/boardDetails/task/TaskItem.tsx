@@ -5,8 +5,7 @@ import { connect } from 'react-redux';
 import { TaskBoard, ITask } from 'stores/board/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
 import { getSelectedTaskDetails } from 'stores/board/Actions';
-
-import complete from './../../../../resources/images/complete.png';
+import moment from 'moment';
 
 interface TaskItemProps {
   key: string;
@@ -80,7 +79,7 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                       <p className="f7 dib">3</p>
                     </div>
                   </div> */}
-                  <div className="cf flex" style={{ height: '30px', width: '50px' }}>
+                  {/* <div className="cf flex" style={{ height: '30px', width: '50px' }}>
                     <img
                       style={{ height: '25px', width: '25px' }}
                       src={complete}
@@ -88,13 +87,27 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                     <div className="pt1">
                       <p className="f7 dib">3</p>
                     </div>
+                  </div> */}
+                </div>
+                {props.task.dueDate &&
+                  <div className="mr0 pt1">
+                    {Math.ceil(moment(props.task.dueDate).diff(moment(), 'days', true)) === 0 ?
+                      <p className="bg-washed-red ph2 pv1 red br2 mv1"
+                        style={{
+                          fontSize: '12px'
+                        }}>Deadline ends today</p> :
+                      Math.ceil(moment(props.task.dueDate).diff(moment(), 'days', true)) < 0 ?
+                        <p className="ph2 pv1 br2 mv1"
+                          style={{ color: '#3a844a', background: '#c2eacb', fontSize: '12px' }}
+                        >Expired</p> :
+                        <p className="ph2 pv1 br2 mv1" style={{
+                          color: '#3a844a', background: '#c2eacb', fontSize: '12px'
+                        }}>
+                          {Math.ceil(moment(props.task.dueDate).diff(moment(), 'days', true))} days remaining
+                        </p>
+                    }
                   </div>
-                </div>
-                <div className="mr0 pt1">
-                  <p className="bg-washed-red ph2 pv1 red br2 mv1"
-                    style={{ fontSize: '.8rem' }}
-                  >10 days left</p>
-                </div>
+                }
               </div>
             </div>
           );

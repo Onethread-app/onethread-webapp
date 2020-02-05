@@ -37,9 +37,10 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
         name: values.subtaskTitle
       };
       await props.updateSubTaskTitile(updateSubTaskData);
+      values.subtaskTitle = '';
     }
     await props.setsubtask({});
-  }
+  };
 
   return (
     <div>
@@ -57,9 +58,7 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
           ...rest
         }) => (
             <form
-              onSubmit={(event: any) => {
-                handleSubmit(event)!.then(form.reset);
-              }}
+              onSubmit={handleSubmit}
             >
               <SubmitError errorMessage={submitError} />
               <div className="ph2 pt2">
@@ -164,7 +163,7 @@ export const SubTaskDelete = (props: ISubTaskDescriptionDeleteFormProps) => {
       target={
         <Icon
           className="fr mv3 tigrow-lightBlue pointer mr4"
-          style={{ marginTop: 0 }}
+          style={{ marginTop: 0, color: 'lightsteelblue' }}
           icon="trash"
           onClick={() => setDeletePopover(true)}
         />

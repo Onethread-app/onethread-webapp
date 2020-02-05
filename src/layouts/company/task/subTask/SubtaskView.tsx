@@ -82,8 +82,8 @@ export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & Rout
                                                     <div className="flex">
                                                         <div>
                                                             <Icon
-                                                                className="fr mv3 tigrow-lightBlue pointer mr4 mv0"
-                                                                style={{ marginTop: 0 }}
+                                                                className="fr mv3 pointer mr4 mv0"
+                                                                style={{ marginTop: 0, color: 'lightsteelblue' }}
                                                                 icon="edit"
                                                                 onClick={async () => {
                                                                     await setsubtask(list);
@@ -124,14 +124,13 @@ export const SubTaskViewPageComponent = (props: ISubTaskViewInternalProps & Rout
                                     color: 'white', borderRadius: '0px', boxShadow: 'none'
                                 }}
                                 onClick={() => setShowSubTaskForm(true)}
+                                disabled={showSubtaskForm}
                             />
                         </div>
                     </div>
                     : <div style={{ bottom: 0, position: 'absolute', left: '150px' }}>
-
                         <Loading />
                     </div>
-
             }
         </>
 
