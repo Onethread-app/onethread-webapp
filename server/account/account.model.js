@@ -41,6 +41,8 @@ const accountsSchema = new mongoose.Schema({
     type: String,
     unique: true,
     required: true,
+    lowercase: true,
+    trim: true,
   },
   birthDate: {
     type: Date,

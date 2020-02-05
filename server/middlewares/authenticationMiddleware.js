@@ -4,6 +4,7 @@ module.exports.authentication = (req, res, next) => {
   passport.authenticate('local', { session: false }, function(
     err,
     user,
+    info,
   ) {
     if (err) {
       return next(err);
