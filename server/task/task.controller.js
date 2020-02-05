@@ -139,6 +139,7 @@ const addMember = async (req, res, next) => {
   if (_.isEmpty(newBoardmember)) {
     TaskAssign.insertMany(newMembers).then(taskMember => {
       TaskAssign.find({
+        taskId: req.task._id,
         assignedPerson: {
           $in: requestedMembers,
         },
@@ -170,6 +171,7 @@ const addMember = async (req, res, next) => {
 
     TaskAssign.insertMany(newMembers).then(taskMember => {
       TaskAssign.find({
+        taskId: req.task._id,
         assignedPerson: {
           $in: requestedMembers,
         },
