@@ -67,11 +67,8 @@ export const MessageList = withChatkit((_props: MessageListProps) => {
 				? messages.map((message: IRoomMessage, _i: number, arr: IRoomMessage[]) => {
 					return (
 						<MessageItem
-							key={message._id}
-							text={message.text}
-							files={message.files}
-							createdAt={message.createdAt}
-							sender={message.account}
+							key={_i}
+							message={message}
 							group={checkGroup(message, _i, arr)}
 						/>
 					);

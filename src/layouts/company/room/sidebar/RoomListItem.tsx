@@ -19,14 +19,11 @@ interface RoomListItemProps {
 
 export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 	const activeRoom = useSelector((state: any) => state.roomReducer.activeRoom);
-	// const generateColor = () => {
-	// 	return "#" + ((1 << 24) * Math.random() | 0).toString(16);
-	// }
 
 	return (
 		<li
 			id="roomListItem"
-			className="pointer"
+			className="pointer br1"
 			style={{
 				background: props.active ? 'rgb(63, 97, 197)' : '',
 				color: props.active ? '#FFFFFF' : ''

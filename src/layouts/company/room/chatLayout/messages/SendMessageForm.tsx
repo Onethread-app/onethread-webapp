@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Button, Dialog, Icon } from '@blueprintjs/core';
+import { Button, Dialog } from '@blueprintjs/core';
 import { connect, useDispatch } from 'react-redux';
 import { trim, isEqual, isEmpty } from 'lodash';
 import { sendRoomMessage } from 'stores/room/Actions';
@@ -7,10 +7,11 @@ import 'emoji-mart/css/emoji-mart.css';
 import { TOGGLE_EMOJI_PICKER, CLEAR_FILE_UPLOAD, DELETE_ONE_PENDING_FILE } from 'stores/room/Types';
 import ReactDOM from 'react-dom';
 import { Picker } from 'emoji-mart';
-
-import SmileIcon from './../../../../../resources/images/smile-24px.svg';
 import { FileUpload } from './fileUpload';
 import { IRoomFile } from 'stores/room/Reducer';
+import SmileIcon from './../../../../../resources/images/Emoji.svg';
+import SendIcon from './../../../../../resources/images/Send.svg';
+import AttachmentIcon from './../../../../../resources/images/attachment.svg';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -41,26 +42,6 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	}, [props.roomId]);
 
 	// tslint:disable-next-line: no-shadowed-variable
-	const sendMessage = async (text: string, type: string) => {
-		setText('');
-		setTextError('');
-
-		const files = props.pendingFiles && props.pendingFiles.length ?
-			props.pendingFiles.map(file => ({ _id: file._id, link: file.link, s3Key: file.s3Key }))
-			: [];
-
-		dispatch({ type: CLEAR_FILE_UPLOAD });
-		setText('');
-
-		await props.sendRoomMessage({
-			text,
-			room: props.roomId,
-			files,
-			type
-		});
-	};
-
-	// tslint:disable-next-line: no-shadowed-variable
 	const resetMessage = (text: string) => {
 		const resetText = text.replace(/(\r\n|\n|\r)/gm, '');
 		setText(resetText);
@@ -75,19 +56,46 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 			.catch((error: any) => console.error('error on typing', error));
 	};
 
-	const handleKeyPress = async (e: any) => {
+	const sendMessage = async (_text: string, type: string) => {
+		setText('');
+		setTextError('');
+
+		const files = props.pendingFiles && props.pendingFiles.length ?
+			props.pendingFiles.map(file => ({
+				_id: file._id,
+				link: file.link,
+				s3Key: file.s3Key,
+			}))
+			: [];
+
+		dispatch({ type: CLEAR_FILE_UPLOAD });
+		setText('');
+
+		await props.sendRoomMessage({
+			text: _text,
+			room: props.roomId,
+			files,
+			type
+		});
+	};
+
+	const handleMessageSend = () => {
 		const trimmedText = trim(text);
+		if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit && props.pendingFiles.length > 0) {
+			sendMessage(trimmedText, 'attachment');
+		} else if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit && props.pendingFiles.length === 0) {
+			sendMessage(trimmedText, 'text');
+		} else if (isEmpty(trimmedText) === true && props.pendingFiles.length > 0) {
+			sendMessage(trimmedText, 'file');
+		} else {
+			setTextError(`Message should be less then ${messageLimit} character`);
+			setText(trimmedText);
+		}
+	};
+
+	const handleKeyPress = async (e: any) => {
 		if (e.key === 'Enter' && e.shiftKey === false) {
-			if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit && props.pendingFiles.length > 0) {
-				sendMessage(trimmedText, 'attachment');
-			} else if (isEmpty(trimmedText) === false && trimmedText.length <= messageLimit && props.pendingFiles.length === 0) {
-				sendMessage(trimmedText, 'text');
-			} else if (isEmpty(trimmedText) === true && props.pendingFiles.length > 0) {
-				sendMessage(trimmedText, 'file');
-			} else {
-				setTextError(`Message should be less then ${messageLimit} character`);
-				setText(trimmedText);
-			}
+			handleMessageSend();
 		}
 	};
 
@@ -186,7 +194,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 			{/* message error */}
 			{
 				isEmpty(textError) === false ?
-					<h6 className="mv1 pl1 red">
+					<h6 className="mv0 pl1 red">
 						{textError}
 					</h6> : ''
 			}
@@ -199,21 +207,42 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 						alt="user"
 					/>
 				</div> */}
-				<textarea
-					autoFocus={true}
-					ref={inputMessageRef}
-					className="w-100 mv2 mh1 br3 pl3 pt3"
+				<div
+					className="w-100 mv2 mh1 br3 flex"
 					style={{
 						backgroundColor: '#d4d4d47a',
-						borderColor: '#d4d4d4ad',
-						resize: 'none',
-						outline: 'none'
+						borderColor: '#d4d4d4ad'
 					}}
-					value={isEqual(text.length, 1) && isEqual(text, '\n') ? resetMessage(text) : text}
-					onChange={onChange}
-					onKeyPress={handleKeyPress}
-					placeholder="Type your message and hit ENTER to send"
-				></textarea>
+				>
+					<textarea
+						autoFocus={true}
+						ref={inputMessageRef}
+						className="w-100 pl3 pt3"
+						style={{
+							resize: 'none',
+							outline: 'none',
+							border: 'none',
+							backgroundColor: 'rgb(232, 232, 232)'
+						}}
+						value={isEqual(text.length, 1) && isEqual(text, '\n') ? resetMessage(text) : text}
+						onChange={onChange}
+						onKeyPress={handleKeyPress}
+						placeholder="Type your message and hit ENTER to send"
+					></textarea>
+					<Button
+						className="bp3-minimal outline-0 toggle-emoji"
+						onClick={toggleEmojiPicker}
+					>
+						<span className="bp3-icon">
+							<img
+								src={SmileIcon}
+								width="30px"
+								height="30px"
+								color="#0FA3A3"
+							/>
+						</span>
+					</Button>
+				</div>
 				{/* TODO onKeyPress has not found yet */}
 				{/* <ReactTextareaAutocomplete
 					className="message-input my-textarea"
@@ -243,12 +272,12 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					}}
 				/> */}
 				<Button
-					className="bp3-minimal outline-0 toggle-emoji"
-					onClick={toggleEmojiPicker}
+					className="bp3-minimal outline-0"
+					onClick={handleMessageSend}
 				>
-					<span className="bp3-icon" style={{ paddingRight: '5px' }}>
+					<span className="bp3-icon">
 						<img
-							src={SmileIcon}
+							src={SendIcon}
 							width="30px"
 							height="30px"
 							color="#0FA3A3"
@@ -256,10 +285,17 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					</span>
 				</Button>
 				<Button
-					className="bp3-minimal outline-0 mh2 w2 mv3"
+					className="bp3-minimal outline-0"
 					onClick={() => setShowFileDialog(true)}
 				>
-					<Icon icon="link" color="#0FA3A3" />
+					<span className="bp3-icon">
+						<img
+							src={AttachmentIcon}
+							width="30px"
+							height="30px"
+							color="#0FA3A3"
+						/>
+					</span>
 				</Button>
 			</div>
 			{/* <div>{JSON.stringify({ text, length: text.length, sendStatus }, null, 2)}</div> */}
