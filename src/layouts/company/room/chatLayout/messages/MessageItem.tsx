@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { IRoomMessage } from 'stores/room/Reducer';
 import UserIcon from './../../../../../resources/images/profilePhoto.svg';
 import DownloadIcon from './../../../../../resources/images/Download.svg';
+import moment from 'moment';
 
 interface MessageItemProps {
   message: IRoomMessage;
@@ -17,6 +18,13 @@ export const MessageItem = (props: MessageItemProps) => {
   const currentUser = user._id === props.message.account._id;
   return (
     <>
+      {
+        props.group.showPicAndName ?
+          <div className="flex justify-center items-center pv2">
+            <small className="tigrow-darkGray">{moment(props.message.createdAt).format('lll')}</small>
+          </div>
+          : undefined
+      }
       {props.group.showPicAndName ?
         <article
           key={props.message._id}
@@ -50,7 +58,7 @@ export const MessageItem = (props: MessageItemProps) => {
       {props.message.text ?
         <article
           key={props.message.createdAt}
-          className={`db flex items-center flex 
+          className={`db flex items-center 
         ${currentUser ? ' flex-row-reverse' : ''} 
         ${props.group.message ? 'mb1' : 'mb3'}`}
           style={{
@@ -92,7 +100,7 @@ export const MessageItem = (props: MessageItemProps) => {
         props.message.files.map(file =>
           <article
             key={file._id}
-            className={`db flex items-center flex ${currentUser ? ' flex-row-reverse' : ''}
+            className={`db flex items-center ${currentUser ? ' flex-row-reverse' : ''}
             ${props.group.message ? 'mb1' : 'mb3'}`}
             style={{
               marginLeft: '48px'
