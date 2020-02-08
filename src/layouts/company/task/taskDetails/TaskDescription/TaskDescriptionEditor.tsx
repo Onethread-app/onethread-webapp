@@ -11,13 +11,17 @@ interface ITaskDescriptionFormProps {
   description: ITask['description'];
   setEditDescriptionDialog: (val: boolean) => void;
   editDescriptionDialog: boolean;
-  updateTask: (task: ITask) => void;
+  updateTask: (task: ITask) => Promise<any>;
 }
 
 export const TaskDescriptionEditorComponent = (props: ITaskDescriptionFormProps) => {
   const onSubmit = async (values: any) => {
-    await props.updateTask(values);
-    props.setEditDescriptionDialog(false);
+    const response = await props.updateTask(values);
+    if (response.message === 200) {
+      props.setEditDescriptionDialog(false);
+      return true;
+    }
+    return { [response.fieldName]: response.message };
   };
   return (
     <div>
@@ -37,7 +41,9 @@ export const TaskDescriptionEditorComponent = (props: ITaskDescriptionFormProps)
             <form
               onSubmit={handleSubmit}
             >
-              <SubmitError errorMessage={submitError} />
+              <div className="pr2">
+                <SubmitError errorMessage={submitError} />
+              </div>
               <div className="pr2 pt2">
                 <Field<string>
                   name="description"

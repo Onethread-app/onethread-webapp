@@ -6,6 +6,7 @@ import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, CREATE_
 } from './Types';
 import { isEqual } from 'lodash';
 import { TaskBoard, ITask } from './Reducer';
+import { errorMessgeHandler } from 'components/final-form/utils';
 
 export const createBoard = (board: TaskBoard) => async (dispatch: any, getState: any) => {
   try {
@@ -224,7 +225,6 @@ export const getSelectedTaskDetails = (taskId: string | undefined) => async (dis
     if ((headers as any).headers.Authorization && taskId) {
       // dispatch({ type: BOARD_LOADING });
       const res = await tigrowApi.get(`tasks/${taskId}`, headers);
-      
       const response = {
         _id : res.data._id ,
         name : res.data.name,
@@ -257,9 +257,10 @@ export const getSelectedTaskDetails = (taskId: string | undefined) => async (dis
 export const updateTask = (task: ITask) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
+    let res;
     const taskId = getState().boardIndexReducer.boardReducer.currentTask._id;
     if ((headers as any).headers.Authorization) {
-      const res = await tigrowApi.put(`tasks/${taskId}`, task, headers);
+      res = await tigrowApi.put(`tasks/${taskId}`, task, headers);
       const response = {
         _id : res.data._id ,
         name : res.data.name,
@@ -268,13 +269,14 @@ export const updateTask = (task: ITask) => async (dispatch: any, getState: any) 
         createdBy : res.data.account.firstName + ' ' + res.data.account.lastName,
         description : res.data.description,
         priority : res.data.priority,
-        currentColumnName : res.data.columnId.name
+        currentColumnName : res.data.columnId.name,
+        columnId: res.data.columnId
       };
       dispatch({ type: UPDATE_TASK, payload: response });
     }
+    return errorMessgeHandler(res);
   } catch (error) {
-
-    console.log(error);
+    return errorMessgeHandler(error);
     // if (isEqual(error.message, 'Network Error')) {
     //   dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
     // } else if (error.response.status === 401) {

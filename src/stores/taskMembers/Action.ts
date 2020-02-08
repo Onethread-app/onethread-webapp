@@ -3,55 +3,40 @@ import tigrowApi from 'tigrowApi';
 import { GET_ALL_MEMBER, DELETE_MEMBER, ASSIGN_MEMBER } from './Types';
 import { ITaskMember } from './Reducer';
 import { isEmpty } from 'lodash';
-
+import { errorMessgeHandler } from 'components/final-form/utils';
 
 export const addTaskMember = (members: string[]) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
+    let response;
     const taskId = getState().boardIndexReducer.boardReducer.currentTask._id;
     if ((headers as any).headers.Authorization) {
-
-      const reqBody = { assignmembers : members };
-      const response = await tigrowApi.post(`tasks/member/${taskId}`, reqBody , headers);
-
+      const reqBody = { assignmembers: members };
+      response = await tigrowApi.post(`tasks/member/${taskId}`, reqBody, headers);
       const responseData = response.data.map((assigned: any) => {
         if (isEmpty(assigned.assignedPerson.profileImage)) {
           return {
             _id: assigned._id,
             name: assigned.assignedPerson.firstName + ' ' + assigned.assignedPerson.lastName,
-            account : assigned.account.firstName + ' ' + assigned.account.lastName,
+            account: assigned.account.firstName + ' ' + assigned.account.lastName,
             profileImage: ''
           };
-
         } else {
           return {
             _id: assigned._id,
             name: assigned.assignedPerson.firstName + ' ' + assigned.assignedPerson.lastName,
-            account : assigned.account.firstName + ' ' + assigned.account.lastName,
+            account: assigned.account.firstName + ' ' + assigned.account.lastName,
             profileImage: assigned.assignedPerson.profileImage.link
           };
         }
-
       });
-
-      dispatch({ type: ASSIGN_MEMBER , payload: responseData });
+      dispatch({ type: ASSIGN_MEMBER, payload: responseData });
     }
+    return errorMessgeHandler(response);
   } catch (error) {
-
-    // tslint:disable-next-line: no-console
-    console.log(error);
-    // if (isEqual(error.message, 'Network Error')) {
-    //   // dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
-    // } else if (error.response.status === 401) {
-    //   dispatch({ type: CREATE_BOARD_ERROR,
-    //      payload: 'Unauthorized user. Please enter valid email and password.' });
-    // } else {
-    //   // tslint:disable-next-line: no-console
-    //   console.log(error.response);
-    // }
+    return errorMessgeHandler(error);
   }
 };
-
 
 export const getAllMembers = () => async (dispatch: any, getState: any) => {
   try {
@@ -65,7 +50,7 @@ export const getAllMembers = () => async (dispatch: any, getState: any) => {
           return {
             _id: assigned._id,
             name: assigned.assignedPerson.firstName + ' ' + assigned.assignedPerson.lastName,
-            account : assigned.account.firstName + ' ' + assigned.account.lastName,
+            account: assigned.account.firstName + ' ' + assigned.account.lastName,
             profileImage: ''
           };
 
@@ -73,17 +58,14 @@ export const getAllMembers = () => async (dispatch: any, getState: any) => {
           return {
             _id: assigned._id,
             name: assigned.assignedPerson.firstName + ' ' + assigned.assignedPerson.lastName,
-            account : assigned.account.firstName + ' ' + assigned.account.lastName,
+            account: assigned.account.firstName + ' ' + assigned.account.lastName,
             profileImage: assigned.assignedPerson.profileImage.link
           };
         }
-
       });
-
       dispatch({ type: GET_ALL_MEMBER, payload: responseData });
     }
   } catch (error) {
-
     // tslint:disable-next-line: no-console
     console.log(error);
     // if (isEqual(error.message, 'Network Error')) {
@@ -107,7 +89,6 @@ export const deleteMember = (memberId: ITaskMember['_id']) => async (dispatch: a
       dispatch({ type: DELETE_MEMBER, payload: memberId });
     }
   } catch (error) {
-
     // tslint:disable-next-line: no-console
     console.log(error);
     // if (isEqual(error.message, 'Network Error')) {

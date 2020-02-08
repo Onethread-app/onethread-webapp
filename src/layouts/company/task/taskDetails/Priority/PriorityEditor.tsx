@@ -11,14 +11,18 @@ import { ITask } from 'stores/board/Reducer';
 
 interface IPriorityEditorProps {
     setPriorityPopover: (val: boolean) => void;
-    updateTask: (task: ITask) => void;
+    updateTask: (task: ITask) => Promise<any>;
 }
 
 export const PriorityEditorComponent = (props: IPriorityEditorProps) => {
     const onSubmit = async (values: any) => {
-        await props.updateTask(values);
-        await props.setPriorityPopover(false);
-    }
+        const response = await props.updateTask(values);
+        if (response.message === 200) {
+            props.setPriorityPopover(false);
+            return true;
+        }
+        return { [response.fieldName]: response.message };
+    };
 
     const [labelColor, setLabelColor] = useState(null as any);
 
@@ -39,7 +43,6 @@ export const PriorityEditorComponent = (props: IPriorityEditorProps) => {
                         <form
                             onSubmit={handleSubmit}
                         >
-                            <SubmitError errorMessage={submitError} />
                             <div className="flex justify-end">
                                 <Icon
                                     icon={IconNames.CROSS}
@@ -47,6 +50,9 @@ export const PriorityEditorComponent = (props: IPriorityEditorProps) => {
                                     className="grow pointer"
                                     onClick={(e: any) => props.setPriorityPopover(false)}
                                 />
+                            </div>
+                            <div>
+                                <SubmitError errorMessage={submitError} />
                             </div>
                             <div className="ph2 pt2 w-100">
                                 <Field<string>
