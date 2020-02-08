@@ -182,8 +182,25 @@ export const BoardReducer = (state = InitialState, action: any) => {
     case UPDATE_TASK:
       return {
         ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          columns: (state.currentBoard.columns as any).map((column: IColumn) => (
+            isEqual(column._id, action.payload.columnId._id) ?
+              {
+                ...column,
+                tasks: column.tasks && column.tasks.length > 0 ? column.tasks!.map((task: ITask) => (
+                  isEqual(task._id, action.payload._id) ? 
+                  {
+                    ...task,
+                    name: action.payload.name,
+                    dueDate: action.payload.dueDate
+                  } : task
+                )) : []
+              } : column
+          ))
+        },
         currentTask: action.payload
-      }
+      };
     default:
       return state;
   }

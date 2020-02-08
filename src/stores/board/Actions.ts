@@ -269,7 +269,8 @@ export const updateTask = (task: ITask) => async (dispatch: any, getState: any) 
         createdBy : res.data.account.firstName + ' ' + res.data.account.lastName,
         description : res.data.description,
         priority : res.data.priority,
-        currentColumnName : res.data.columnId.name
+        currentColumnName : res.data.columnId.name,
+        columnId: res.data.columnId
       };
       dispatch({ type: UPDATE_TASK, payload: response });
     }
