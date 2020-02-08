@@ -160,8 +160,6 @@ const searchSkillSet = async (req, res, next) => {
       ],
     })
       .select('-accountId')
-      .skip(+skip)
-      .limit(+limit)
       .then(data => {
         if (data.length < 1) {
           const err = new SearchNotMatchError(
