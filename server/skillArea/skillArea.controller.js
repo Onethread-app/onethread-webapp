@@ -142,7 +142,6 @@ const skillLoad = async (req, res, next, id) => {
 const searchSkillSet = async (req, res, next) => {
   try {
     const name = req.query.name;
-    const { limit = 50, skip = 0 } = req.query;
     const userId = req.user._id;
     const userSkill = await Account.findOne({ _id: userId });
     const userskillId = userSkill.skillArea;
@@ -161,8 +160,6 @@ const searchSkillSet = async (req, res, next) => {
       ],
     })
       .select('-accountId')
-      .skip(+skip)
-      .limit(+limit)
       .then(data => {
         if (data.length < 1) {
           const err = new SearchNotMatchError(
@@ -171,7 +168,6 @@ const searchSkillSet = async (req, res, next) => {
             true,
           );
           logger.error(`Query Error: ${err}`);
-          return sendJSONresponse(res, 200, data);
         } else {
           logger.info(`Search complete ${name}`);
           return sendJSONresponse(res, 200, {
