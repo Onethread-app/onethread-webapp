@@ -83,14 +83,14 @@ const BoardCard = withRouter((props: IBoardCardComponent & RouteComponentProps) 
 						/> */}
 					</div>
 					<div className="flex pt3 pr3" style={{ justifyContent: 'space-between', paddingLeft: '20px' }}>
-						<div>
+						{/* <div>
 							<p className="mb0 ws-break" style={{ fontSize: '0.7rem' }}>
 								Total task
 							</p>
 							<p className="fw8">
 								0
 							</p>
-						</div>
+						</div> */}
 						<div>
 							<p className="mb0 ws-break" style={{ fontSize: '0.7rem' }}>
 								Total Members

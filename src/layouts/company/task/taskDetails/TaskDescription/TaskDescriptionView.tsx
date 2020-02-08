@@ -12,7 +12,7 @@ export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalP
   const [editDescriptionDialog, setEditDescriptionDialog] = useState(false);
   return (
     <>
-      <div className="flex justify-between"  style={{ height: '30px' }}>
+      <div className="flex justify-between" style={{ height: '30px' }}>
         <div>
           <h1 className="f6">Description</h1>
         </div>
@@ -30,7 +30,9 @@ export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalP
         /> :
 
         props.description ?
-          <p className="pr2 ws-break">{props.description}</p> :
+          <p className="pr2 ws-break"
+            style={{ whiteSpace: 'pre-line' }}
+          >{props.description}</p> :
           <p className="pr2">Description has not been given yet</p>
       }
     </>
