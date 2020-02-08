@@ -66,6 +66,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           <Tag
             key={item._id}
             className="ma1 pa2"
+            intent="primary"
             interactive={true}
             onRemove={(e) => {
               const filteredItems = selectedRoomMember.filter((selectedItem) => (
