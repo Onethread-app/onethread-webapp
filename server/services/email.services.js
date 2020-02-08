@@ -18,6 +18,11 @@ if (config.env !== 'production') {
 if (config.env === 'test') {
   host = `http://test.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
 }
+
+if (config.env === 'production') {
+  host = `http://tigrow.co`;
+}
+
 module.exports.sendEmailForResetPassword = async (
   firstName,
   lastName,
