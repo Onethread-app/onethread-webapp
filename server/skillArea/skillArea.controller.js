@@ -168,7 +168,6 @@ const searchSkillSet = async (req, res, next) => {
             true,
           );
           logger.error(`Query Error: ${err}`);
-          return sendJSONresponse(res, 200, data);
         } else {
           logger.info(`Search complete ${name}`);
           return sendJSONresponse(res, 200, {
