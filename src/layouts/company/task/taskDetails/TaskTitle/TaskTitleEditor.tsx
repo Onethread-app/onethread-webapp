@@ -11,19 +11,24 @@ interface ITaskTitleFormProps {
   setNameEdit: (val: boolean) => void;
   nameEdit: boolean;
   currentTask?: ITask;
-  updateTask: (task: ITask) => void;
+  updateTask: (task: ITask) => Promise<any>;
 }
 
- const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
+const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
   const onSubmit = async (values: any) => {
-    await props.updateTask(values);
-    await props.setNameEdit(false);
-  }
+    const response = await props.updateTask(values);
+    if (response.message === 200) {
+      props.setNameEdit(false);
+      return true;
+    }
+    return { [response.fieldName]: response.message };
+  };
+
   return (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{name: props.currentTask!.name}}
+        initialValues={{ name: props.currentTask!.name }}
         render={({
           handleSubmit,
           form,
@@ -37,7 +42,9 @@ interface ITaskTitleFormProps {
             <form
               onSubmit={handleSubmit}
             >
-              <SubmitError errorMessage={submitError} />
+              <div className="ph2">
+                <SubmitError errorMessage={submitError} />
+              </div>
               <div className="ph2 pt2 w-100">
                 <Field<string>
                   name="name"

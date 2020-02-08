@@ -12,11 +12,16 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Icomment } from 'stores/comment/Reducer';
 
 interface ICommentReplyInternalProps {
-  createComment: (text: Icomment['text']) => void;
+  createComment: (text: Icomment['text']) => Promise<any>;
 }
 export const ActivityEditorPageComponent = (props: ICommentReplyInternalProps & RouteComponentProps) => {
   const onSubmit = async (values: any) => {
-    await props.createComment(values.text);
+    const response = await props.createComment(values.text);
+    if (response.message === 200) {
+      values.text = '';
+      return true;
+    }
+    return { [response.fieldName]: response.message };
   };
   return (
     <div className="w-100">
@@ -33,11 +38,11 @@ export const ActivityEditorPageComponent = (props: ICommentReplyInternalProps & 
           ...rest
         }) => (
             <form
-              onSubmit={(event: any) => {
-                handleSubmit(event)!.then(form.reset);
-              }}
+              onSubmit={handleSubmit}
             >
-              <SubmitError errorMessage={submitError} />
+              <div className="pl4">
+                <SubmitError errorMessage={submitError} />
+              </div>
               <div className="pl4 pt2 w-100 flex">
                 <Field<string>
                   name="text"

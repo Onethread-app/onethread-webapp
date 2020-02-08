@@ -13,10 +13,10 @@ import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 interface ITaskDescriptionCreateFormProps {
   setShowSubTaskForm: (val: boolean) => void;
   showSubtaskForm: boolean;
-  createSubTask: (subTask: ISubTask) => void;
+  createSubTask: (subTask: ISubTask) => Promise<any>;
   subtask?: ISubTask;
   setsubtask: (subTask: ISubTask) => void;
-  updateSubTaskTitile: (subTask: ISubTask) => void;
+  updateSubTaskTitile: (subTask: ISubTask) => Promise<any>;
 }
 interface ISubTaskDescriptionDeleteFormProps {
   subTask: ISubTask;
@@ -30,16 +30,24 @@ export const SubTaskCreatorComponent = (props: ITaskDescriptionCreateFormProps &
       const subTaskData = {
         name: values.subtaskTitle
       };
-      await props.createSubTask(subTaskData);
+      const response = await props.createSubTask(subTaskData);
+      if (response.message === 200) {
+        values.subtaskTitle = '';
+        return true;
+      }
+      return { [response.fieldName]: response.message };
     } else {
       const updateSubTaskData = {
         _id: props.subtask!._id,
         name: values.subtaskTitle
       };
-      await props.updateSubTaskTitile(updateSubTaskData);
-      values.subtaskTitle = '';
+      const response = await props.updateSubTaskTitile(updateSubTaskData);
+      if (response.message === 200) {
+        values.subtaskTitle = '';
+        return true;
+      }
+      return { [response.fieldName]: response.message };
     }
-    await props.setsubtask({});
   };
 
   return (

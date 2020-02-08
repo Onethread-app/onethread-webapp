@@ -17,13 +17,11 @@ export const AssignedMemberListViewComponent = (props: IAssignedMemberListViewCo
       maxHeight: '550px',
       overflowY: 'auto',
     }}>
-
       {
-      
         props.taskMemberList.map((list) => (
-          <div className="flex">
-            <img className="h3" src={list.profileImage ? 
-            list.profileImage : 'https://robohash.org/VLSI'} />
+          <div className="flex mb1">
+            <img className="h3 w3" src={list.profileImage ?
+              list.profileImage : 'https://robohash.org/VLSI'} />
             <div className="flex w-100 justify-between pt4 bb pr3 ml3"
               style={{ borderBottom: '1px solid #EEEEEF' }}>
               <div>
@@ -31,11 +29,9 @@ export const AssignedMemberListViewComponent = (props: IAssignedMemberListViewCo
                 <p className="ma0">added by {list.account}</p>
               </div>
               <div>
-
                 <AssignedMemeberListEditor
-                assignMemberId={list._id}
+                  assignMemberId={list._id}
                 />
-
               </div>
             </div>
           </div>

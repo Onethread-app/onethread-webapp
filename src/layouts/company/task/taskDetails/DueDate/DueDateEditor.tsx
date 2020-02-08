@@ -11,14 +11,17 @@ import { ITask } from 'stores/board/Reducer';
 
 interface IDueDateFormProps {
   setDatePopover: (val: boolean) => void;
-  updateTask: (task: ITask) => void;
+  updateTask: (task: ITask) => Promise<any>;
 }
 
 export const DueDateEditorComponent = (props: IDueDateFormProps) => {
-
   const onSubmit = async (values: any) => {
-    await props.updateTask(values);
-    await props.setDatePopover(false);
+    const response = await props.updateTask(values);
+    if (response.message === 200) {
+      await props.setDatePopover(false);
+      return true;
+    }
+    return { [response.fieldName]: response.message };
   };
 
   return (
@@ -29,7 +32,6 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
           className="fl w-100 ph2 pt2"
           onSubmit={handleSubmit}
         >
-          <SubmitError errorMessage={submitError} />
           <div className="flex justify-end">
             <Icon
               icon={IconNames.CROSS}
@@ -37,6 +39,9 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
               className="grow pointer"
               onClick={(e: any) => props.setDatePopover(false)}
             />
+          </div>
+          <div>
+            <SubmitError errorMessage={submitError} />
           </div>
           <Field<string>
             name="dueDate"

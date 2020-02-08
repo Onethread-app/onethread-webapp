@@ -18,7 +18,7 @@ interface IMembersFormProps {
   setMembersPopover: (val: boolean) => void;
   company?: CompanyModel;
   currentTask?: ITask;
-  addTaskMember: (members: string[]) => void;
+  addTaskMember: (members: string[]) => Promise<any>;
 }
 
 interface ICompanyTeamMembers {
@@ -27,8 +27,12 @@ interface ICompanyTeamMembers {
 }
 export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
   const onSubmit = async (values: any) => {
-    await props.addTaskMember(values.member);
-    props.setMembersPopover(false);
+    const response = await props.addTaskMember(values.member);
+    if (response.message === 200) {
+      props.setMembersPopover(false);
+      return true;
+    }
+    return { [response.fieldName]: response.message };
   };
 
   const [teamMembers, setTeamMembers]: any = useState([]);
@@ -36,7 +40,6 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
   const [username, setUsername] = useState('');
 
   const userRequestFactory = async (userName: string) => {
-
     const headers = tokenConfig();
     const response = await tigrowApi.get(
       `tasks/${props.currentTask!._id}/suggest-member?companyId=${props.company!._id}`,
@@ -59,7 +62,6 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
           className="fl w-100 ph2 pt2"
           onSubmit={handleSubmit}
         >
-          <SubmitError errorMessage={submitError} />
           <div className="flex justify-end">
             <Icon
               icon={IconNames.CROSS}
@@ -67,6 +69,9 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
               className="grow pointer"
               onClick={(e: any) => props.setMembersPopover(false)}
             />
+          </div>
+          <div>
+            <SubmitError errorMessage={submitError} />
           </div>
           <Field<string>
             name="member"

@@ -32,8 +32,9 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
           <TaskTitleView />
         </div>
       </div>
-      <p style={{ color: '#303030', fontSize: '12px' }}>Created by {props.currentTask!.createdBy} on
-        {moment(props.currentTask!.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</p>
+      <p style={{ color: '#303030', fontSize: '12px' }}>
+        Created by {props.currentTask!.createdBy} on {moment(props.currentTask!.createdAt).format('MMMM Do YYYY, h:mm:ss a')}
+      </p>
       <div className="fl w-70-ns w-100">
         <div className="fl w-100">
           <div className="flex-ns">
@@ -42,7 +43,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                 style={{
                   whiteSpace: 'nowrap',
                   textOverflow: 'ellipsis',
-                  width: '200px'
+                  maxWidth: '200px'
                 }}
               >{props.currentTask!.currentColumnName}</p>
             </div>

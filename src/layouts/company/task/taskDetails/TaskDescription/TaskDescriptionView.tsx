@@ -16,8 +16,8 @@ export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalP
         <div>
           <h1 className="f6">Description</h1>
         </div>
-        <div>
-          <Icon className="fr mv3 tigrow-lightBlue pointer mr2"
+        <div className="pr2" style={{paddingTop: '10px'}}>
+          <Icon className="fr tigrow-lightBlue pointer"
             icon="edit"
             onClick={() => setEditDescriptionDialog(true)}
           />
