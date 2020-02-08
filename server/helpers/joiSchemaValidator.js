@@ -1,4 +1,8 @@
 const _ = require('lodash');
+const {
+  sendErrorResponse,
+  sendJSONresponse,
+} = require('../helpers/jsonResponse');
 
 module.exports = (_schema, useJoiError = true) => {
   const _useJoiError = _.isBoolean(useJoiError) && useJoiError;
@@ -7,7 +11,7 @@ module.exports = (_schema, useJoiError = true) => {
   const _validationOptions = {
     abortEarly: false, // abort after the last validation error
     allowUnknown: true, // allow unknown keys that will be ignored
-    stripUnknown: true // remove unknown keys from the validated data
+    stripUnknown: true, // remove unknown keys from the validated data
   };
 
   // return the validation middleware
@@ -20,25 +24,32 @@ module.exports = (_schema, useJoiError = true) => {
         return null;
       })
       .catch(validationError => {
-        // Joi Error
         const JoiError = {
-          status: 'failed',
-          error: {
-            details: validationError.details.map(d => {
-              return {
-                message: d.message.replace(/['"]/g, ''),
-                path: d.path
-              };
-            })
-          }
+          type: 'ValidationError',
+          status: 400,
+          errors: validationError.details.map(d => {
+            return {
+              message: d.message.replace(/['"]/g, ''),
+              fieldName: d.path[1],
+            };
+          }),
         };
-        // Custom Error
-        const CustomError = {
-          status: 'failed',
-          error: 'Invalid request data. Please review request and try again.'
+        const customError = {
+          error:
+            'Invalid request data. Please review request and try again.',
         };
-
-        res.status(400).send(_useJoiError ? JoiError : CustomError);
+        return sendJSONresponse(
+          res,
+          400,
+          _useJoiError ? JoiError : customError,
+        );
+        // res.status(400).send(_useJoiError ? JoiError : customError);
+        // return sendErrorResponse(
+        //   res,
+        //   400,
+        //   'ValidationError',
+        //   JoiError,
+        // );
       });
   };
 };

@@ -2,16 +2,25 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const MessageSchema = new Schema(
   {
+    chatkitId: {
+      type: Number,
+    },
     text: {
       type: String,
       trim: true,
-      required: true,
+      maxlength: 3500,
     },
     type: {
       type: String,
-      enum: ['text', 'url', 'file'],
+      enum: ['text', 'file', 'attachment'],
       default: 'text',
     },
+    files: [
+      {
+        type: Schema.ObjectId,
+        ref: 'File',
+      },
+    ],
     account: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',

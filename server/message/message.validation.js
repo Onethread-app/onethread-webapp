@@ -15,18 +15,20 @@ const idSchema = {
 const schema = {
   account: idSchema.id,
   room: idSchema.id,
-  text: Joi.string(),
+  text: Joi.string().max(3500),
   type: Joi.string()
-    .valid(['text', 'url', 'file'])
+    .valid(['text', 'file', 'attachment'])
     .default('text'),
+  files: Joi.array(),
 };
 
 module.exports = {
   create: Joi.object().keys({
     body: Joi.object().keys({
-      text: schema.text.required(),
-      type: schema.type,
+      text: schema.text.allow(''),
       room: schema.room.required(),
+      type: schema.type,
+      files: schema.files,
     }),
   }),
   getRoomMessages: Joi.object().keys({

@@ -2,7 +2,6 @@ const { Room } = require('./room.model');
 const { Member } = require('../company/member/member.model');
 const { Company } = require('../company/company.model');
 const { chatkit } = require('../services/pusher.services');
-const mongoose = require('mongoose');
 
 const create = async (req, res, next) => {
   try {
@@ -13,15 +12,14 @@ const create = async (req, res, next) => {
     });
     if (duplicate) {
       return res.status(409).json({
-        status: false,
         message: `Room already exists`,
       });
     }
     const room = new Room({
       name: req.body.name,
       company: req.body.company,
-      members: [req.user.id],
-      account: req.user.id,
+      members: [req.user._id],
+      account: req.user._id,
     });
     await room.save();
     //will remove future
@@ -73,9 +71,7 @@ const addUsers = async (req, res) => {
           message: 'new members added into room',
         });
       } else {
-        res
-          .status(404)
-          .json({ status: false, message: 'No room found' });
+        res.status(404).json({ message: 'No room found' });
       }
     })
     .catch(err => {
@@ -85,7 +81,16 @@ const addUsers = async (req, res) => {
 
 const memberList = async (req, res, next) => {
   Room.findById(req.params.roomId)
-    .populate('members', 'name')
+    .populate([
+      {
+        path: 'members',
+        select: 'name firstName lastName email profileImage',
+        populate: {
+          path: 'profileImage',
+          select: '-_id link',
+        },
+      },
+    ])
     .exec()
     .then(({ members }) => res.json({ members: members }))
     .catch(e => next(e));
@@ -103,9 +108,8 @@ const suggestMember = async (req, res, next) => {
       company: req.params.companyId,
     })
       .select('-_id account')
-      .populate('account', '_id name')
+      .populate('account', '_id name firstName lastName email')
       .exec();
-
     let members = companyMembers.filter(({ account }) => {
       return !roomMembers.members.some(existingMember => {
         return (

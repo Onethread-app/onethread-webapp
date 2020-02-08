@@ -21,7 +21,6 @@ const load = (to, from, entity, Model, modelEntity) => {
         return next();
       } else {
         return res.status(404).json({
-          status: false,
           message: 'No valid entry found',
         });
       }

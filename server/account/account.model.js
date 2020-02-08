@@ -12,9 +12,11 @@ const accountsSchema = new mongoose.Schema({
   profileImage: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'File',
-    currentlyActive: { type: Boolean, default: true },
   },
-
+  coverImage: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'File',
+  },
   name: {
     type: String,
     trim: true,
@@ -30,13 +32,21 @@ const accountsSchema = new mongoose.Schema({
     trim: true,
     required: true,
   },
+  position: {
+    type: String,
+    trim: true,
+    max: 32,
+  },
   email: {
     type: String,
     unique: true,
     required: true,
+    lowercase: true,
+    trim: true,
   },
   birthDate: {
     type: Date,
+    required: true,
   },
   hash: String,
   salt: String,
@@ -54,10 +64,6 @@ const accountsSchema = new mongoose.Schema({
     enum: ['premium', 'normal'],
     default: 'normal',
   },
-  accountVerified: {
-    type: Boolean,
-    default: false,
-  },
   contactNo: {
     type: String,
     required: false,
@@ -68,8 +74,13 @@ const accountsSchema = new mongoose.Schema({
     description: 'can be male,female & others',
     enum: ['male', 'female', 'others'],
   },
+  // it must be empty
+  // if null, it will create an duplicateError
   secondaryEmail: {
     type: String,
+    lowercase: true,
+    unique: false,
+    trim: true,
   },
   bloodGroup: {
     type: String,
@@ -108,6 +119,9 @@ const accountsSchema = new mongoose.Schema({
   verifyAccountToken: {
     type: String,
   },
+  verifyAccountTokenExpiration: {
+    type: String,
+  },
   isAccountVerified: {
     type: Boolean,
     default: false,
@@ -125,7 +139,10 @@ const accountsSchema = new mongoose.Schema({
     },
   ],
 });
-
+accountsSchema.index(
+  { email: 1, secondaryEmail: 1 },
+  { unique: true },
+);
 accountsSchema.pre('save', function(next) {
   const account = this;
 
@@ -148,7 +165,6 @@ accountsSchema.pre('save', function(next) {
         if (err) {
           return reject(err);
         }
-
         // Hash generated successfully!
         account.password = hash;
         return resolve(hash);

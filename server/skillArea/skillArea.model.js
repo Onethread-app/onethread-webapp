@@ -3,6 +3,9 @@ const { Schema } = mongoose;
 const skillAreaSchema = mongoose.Schema({
   name: {
     type: String,
+    unique: true,
+    trim: true,
+    lowercase: true,
   },
   accountId: [
     {

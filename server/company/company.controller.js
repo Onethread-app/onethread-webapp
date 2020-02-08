@@ -3,6 +3,7 @@ const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
+const { sendErrorResponse } = require('../helpers/jsonResponse');
 
 // create a company profile
 const changeName = async (req, res, next) => {
@@ -12,21 +13,32 @@ const changeName = async (req, res, next) => {
   }
 
   try {
+    // check member & role: superAdmin/admin
+    const member = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    });
+
+    if (!member || !['superAdmin', 'admin'].includes(member.role)) {
+      return res.status(403).json({
+        message: `Restricted`,
+      });
+    }
+
     // check duplicate company name
     const duplicate = await Company.findOne({
       name: req.body.name,
     });
     if (duplicate) {
       return res.status(409).json({
-        status: false,
         message: `Name already exist`,
       });
     }
+
     req.company.name = req.body.name;
     await req.company.save();
 
     return res.status(200).json({
-      status: true,
       message: `Company's name updated`,
     });
   } catch (error) {
@@ -48,7 +60,6 @@ const createCompany = async (req, res, next) => {
     });
     if (duplicate) {
       return res.status(409).json({
-        status: false,
         message: `Duplicate company name`,
       });
     }
@@ -57,12 +68,12 @@ const createCompany = async (req, res, next) => {
     const newCompany = new Company(req.body);
 
     // create a default room
-    const newRoom = new Room({
-      name: 'General',
-      company: newCompany._id,
-      members: [req.user._id],
-      account: req.user._id,
-    });
+    // const newRoom = new Room({
+    //   name: 'General',
+    //   company: newCompany._id,
+    //   members: [req.user._id],
+    //   account: req.user._id,
+    // });
 
     // create a default member
     const newMember = new Member({
@@ -73,27 +84,26 @@ const createCompany = async (req, res, next) => {
 
     // add ref[member,room] in company
     newCompany.members.push(newMember._id);
-    newCompany.rooms.push(newRoom._id);
+    // newCompany.rooms.push(newRoom._id);
 
     // company creation
     const company = await newCompany.save();
-    const room = await newRoom.save();
-    await chatkit.createRoom({
-      id: room._id,
-      creatorId: req.user._id,
-      name: room.name,
-      customData: {
-        company: company._id,
-      },
-    });
+    // const room = await newRoom.save();
+    // await chatkit.createRoom({
+    //   id: room._id,
+    //   creatorId: req.user._id,
+    //   name: room.name,
+    //   customData: {
+    //     company: company._id,
+    //   },
+    // });
     await newMember.save();
 
-    // add company ref in user
-    req.user.companies.push(newCompany._id);
-    await req.user.save();
+    // // add company ref in user
+    // req.user.companies.push(newCompany._id);
+    // await req.user.save();
 
     return res.status(201).json({
-      status: true,
       message: 'New company created',
       company: {
         _id: company._id,
@@ -136,7 +146,6 @@ const getCompanyIndividual = async (req, res, next) => {
       .populate(options);
 
     return res.status(200).json({
-      status: true,
       companies,
     });
   } catch (error) {
@@ -155,17 +164,24 @@ const getCompany = async (req, res, next) => {
         '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
       )
       .populate('logo', 'link s3Key type');
+
     // role info
     let member = await Member.findOne({
       account: req.user._id,
       company: req.company._id,
     }).select('-_id role');
 
+    if (!member) {
+      return res.status(401).json({
+        message: "You're not authorized with this company",
+      });
+    }
+
     return res.status(200).json({
-      status: true,
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
+    console.log('getCompany', error);
     next(error);
   }
 };
@@ -188,7 +204,6 @@ const updateBasicInfo = async (req, res, next) => {
     await req.company.save();
 
     return res.status(200).json({
-      status: true,
       message: `Company's basic information updated`,
     });
   } catch (error) {
@@ -209,7 +224,6 @@ const updateAbout = async (req, res, next) => {
     await req.company.save();
 
     return res.status(200).json({
-      status: true,
       message: `Company's about updated`,
     });
   } catch (error) {
@@ -229,7 +243,6 @@ const getCompanyLoad = async (req, res, next) => {
       return next();
     } else {
       return res.status(404).json({
-        status: false,
         message: 'No valid entry found for provided Company Name',
       });
     }
@@ -256,7 +269,6 @@ const deleteCompany = async (req, res, next) => {
           .exec()
           .then(data => {
             res.status(200).json({
-              status: true,
               message: 'Company deleted',
             });
           })
@@ -266,9 +278,7 @@ const deleteCompany = async (req, res, next) => {
             });
           });
       } else {
-        res
-          .status(404)
-          .json({ status: false, message: 'No company found' });
+        res.status(404);
       }
     })
     .catch(err => {

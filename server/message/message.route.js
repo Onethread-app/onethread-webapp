@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 
-const requireAuth = passport.authenticate('jwt', { session: false });
+// const authorization = passport.authenticate('jwt', { session: false });
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
 const joiSchema = require('./message.validation');
 const messageCtrl = require('./message.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
@@ -10,7 +13,7 @@ const SchemaValidator = require('./../helpers/joiSchemaValidator');
 router
   .route('/')
   .post(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.create),
     messageCtrl.create,
   );
@@ -18,7 +21,7 @@ router
 router
   .route('/room/:roomId')
   .get(
-    requireAuth,
+    authorization,
     SchemaValidator(joiSchema.getRoomMessages),
     messageCtrl.getRoomMessages,
   );

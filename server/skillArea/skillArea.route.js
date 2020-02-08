@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', { session: false });
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
 const skillCtrl = require('./skillArea.controller');
 const paramValidation = require('./skillArea.validation');
 const schemaValidator = require('../helpers/joiSchemaValidator');
@@ -9,20 +11,20 @@ const schemaValidator = require('../helpers/joiSchemaValidator');
 router
   .route('/')
   .post(
-    requireAuth,
+    authorization,
     schemaValidator(paramValidation.create),
     skillCtrl.createSkill,
   );
 
 router
   .route('/update-skill')
-  .put(requireAuth, skillCtrl.updateUserSkillInfo);
-router.route('/').get(requireAuth, skillCtrl.getAllSkill);
+  .put(authorization, skillCtrl.updateUserSkillInfo);
+router.route('/').get(authorization, skillCtrl.getAllSkill);
 router
   .route('/delete-skill')
-  .delete(requireAuth, skillCtrl.deleteSkillInfoFromAccount);
-router.route('/').get(requireAuth, skillCtrl.getAllSkill);
-router.route('/search').get(requireAuth, skillCtrl.searchSkillSet);
+  .delete(authorization, skillCtrl.deleteSkillInfoFromAccount);
+router.route('/').get(authorization, skillCtrl.getAllSkill);
+router.route('/search').get(authorization, skillCtrl.searchSkillSet);
 router.param('id', skillCtrl.skillLoad);
 
 module.exports = router;

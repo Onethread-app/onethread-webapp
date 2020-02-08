@@ -4,7 +4,10 @@ const passport = require('passport');
 const joiSchema = require('./board.validation');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
-const requireAuth = passport.authenticate('jwt', { session: false });
+// const authorization = passport.authenticate('jwt', { session: false });
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
 const { permit, authSelf } = require('./../helpers/permission');
 
 const router = express.Router();
@@ -12,10 +15,14 @@ const router = express.Router();
 // get borad list
 router
   .route('/')
-  .get(requireAuth, permit('user', 'admin'), boardCtrl.list)
+  .get(
+    authorization,
+    // permit('user', 'admin'),
+    boardCtrl.list,
+  )
   .post(
-    requireAuth,
-    permit('user', 'admin'),
+    authorization,
+    // permit('user', 'admin'),
     SchemaValidator(joiSchema.createBoard),
     boardCtrl.create,
   );
@@ -23,20 +30,28 @@ router
 // get specific board details
 router
   .route('/:boardId')
-  .get(requireAuth, permit('user', 'admin'), boardCtrl.get)
-  .put(requireAuth, permit('user', 'admin'), boardCtrl.update);
+  .get(
+    authorization,
+    // permit('user', 'admin'),
+    boardCtrl.get,
+  )
+  .put(
+    authorization,
+    // permit('user', 'admin'),
+    boardCtrl.update,
+  );
 
 router
   .route('/:boardId/members')
-  .put(requireAuth, boardCtrl.addBoardMembers);
+  .put(authorization, boardCtrl.addBoardMembers);
 
 router
   .route('/:boardId/columns')
-  .put(requireAuth, boardCtrl.addBoardColumn);
+  .put(authorization, boardCtrl.addBoardColumn);
 
 router
   .route('/:boardId/suggest-member')
-  .get(requireAuth, boardCtrl.suggestMember);
+  .get(authorization, boardCtrl.suggestMember);
 
 router.param('boardId', boardCtrl.load);
 

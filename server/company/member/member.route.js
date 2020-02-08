@@ -1,48 +1,41 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const requireAuth = passport.authenticate('jwt', { session: false });
+const {
+  authorization,
+} = require('../../middlewares/authorizationMiddleware');
 const joiSchema = require('./member.validation');
 const memberCtrl = require('./member.controller');
 
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
-router.route('/search').get(requireAuth, memberCtrl.searchMember);
-router
-	.route('/')
-	.post(
-		requireAuth,
-		// TODO: member validations
-		// SchemaValidator(joiSchema.newMember),
-		memberCtrl.addMember,
-	)
-	.get(requireAuth, memberCtrl.list);
+router.route('/search').get(authorization, memberCtrl.searchMember);
 
 router
-	.route('/:memberId')
-	.get(
-		requireAuth,
-		SchemaValidator(joiSchema.getMember),
-		memberCtrl.getMember,
-	);
+  .route('/')
+  .post(
+    authorization,
+    // TODO: member validations
+    // SchemaValidator(joiSchema.newMember),
+    memberCtrl.addMember,
+  )
+  .get(authorization, memberCtrl.list);
 
-//   .put(
-//     requireAuth,
-//     // SchemaValidator(joiSchema.updateCompany),
-//     companyCtrl.updateCompany,
-//   )
-//   .delete(
-//     requireAuth,
-//     // SchemaValidator(joiSchema.deleteCompany),
-//     companyCtrl.deleteCompany,
-//   );
+router
+  .route('/:memberId')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.getMember),
+    memberCtrl.getMember,
+  );
 
-// router.route('/:cname/employees').put(
-//   requireAuth,
-//   // SchemaValidator(joiSchema.getCompany),
-//   companyCtrl.addEmployees,
-// );
+router
+  .route('/:memberId/changeRole')
+  .put(
+    authorization,
+    SchemaValidator(joiSchema.changeRole),
+    memberCtrl.changeRole,
+  );
 
-router.param('memberId', requireAuth, memberCtrl.getMemberLoad);
+router.param('memberId', memberCtrl.getMemberLoad);
 
 module.exports = router;

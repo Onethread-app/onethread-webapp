@@ -7,6 +7,7 @@ const RoomSchema = new mongoose.Schema(
       type: String,
       trim: true,
       unique: false,
+      maxlength: 32,
       required: true,
     },
     members: [

@@ -5,10 +5,33 @@ const { Room } = require('./../../room/room.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
-const {
-  BadRequestError,
-  SearchNotMatchError,
-} = require('../../helpers/APIError.js');
+
+const changeRole = async (req, res, next) => {
+  try {
+    // check role: superAdmin/admin
+    const member = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    });
+
+    if (!['superAdmin', 'admin'].includes(member.role)) {
+      return res.status(403).json({
+        message: `Restricted`,
+      });
+    }
+
+    req.member.role = req.body.role;
+
+    await req.member.save();
+
+    return res.status(201).json({
+      message: `Role updated to ${req.body.role}`,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
 
 // add team member
 const addMember = async (req, res, next) => {
@@ -21,7 +44,6 @@ const addMember = async (req, res, next) => {
     const members = await Member.create(req.body.members);
     if (!members.length) {
       return res.status(400).json({
-        status: false,
         message: `No members created`,
       });
     }
@@ -53,11 +75,11 @@ const addMember = async (req, res, next) => {
     }
 
     return res.status(201).json({
-      status: true,
       message: 'New member created',
       members,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -84,10 +106,10 @@ const list = async (req, res, next) => {
         },
       ]);
     return res.status(200).json({
-      status: true,
       members,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -95,7 +117,6 @@ const list = async (req, res, next) => {
 // get a member
 const getMember = (req, res, next) => {
   return res.status(200).json({
-    status: true,
     member: req.member,
   });
 };
@@ -104,19 +125,19 @@ const getMember = (req, res, next) => {
 const getMemberLoad = async (req, res, next) => {
   try {
     const member = await Member.findById(req.params.memberId)
-      .populate('account', '_id name email firstName lastName')
-      .populate('company', '_id name email address');
+      .populate('account', 'name email firstName lastName')
+      .populate('company', 'name');
 
     if (member) {
       req.member = member;
       return next();
     } else {
       return res.status(404).json({
-        status: false,
         message: 'No valid entry found for provided Member ID',
       });
     }
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -140,7 +161,7 @@ const searchMember = async (req, res, next) => {
         { _id: { $nin: memberListId } },
       ],
     }).select('_id email name firstName lastName');
-
+    // TODO: pore ami change korbo query onusaree
     return sendJSONresponse(res, 200, {
       employees: {
         message: `Search complete ${name}`,
@@ -159,4 +180,5 @@ module.exports = {
   getMember,
   getMemberLoad,
   searchMember,
+  changeRole,
 };

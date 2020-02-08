@@ -27,10 +27,8 @@ function generateGetUrl(Key) {
     // Note operation in this case is getObject
     s3.getSignedUrl('getObject', params, (err, url) => {
       if (err) {
-        console.log(err);
         reject(err);
       } else {
-        console.log(url);
         // If there is no errors we will send back the pre-signed GET URL
         resolve(url);
       }

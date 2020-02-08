@@ -1,26 +1,29 @@
 const AWS = require('aws-sdk');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const File = require('./file.model');
 const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
-const { Room } = require('../room/room.model');
-const { generateGetUrl, generatePutUrl } = require('../services/s3');
-
-const s3FileURL = `https://tigrow-file.s3-ap-southeast-1.amazonaws.com/`;
+const { generateGetUrl } = require('../services/s3');
 let s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
   secretAccessKey: config.awsSecretAccessKey,
   region: config.s3Region,
 });
-
+const fileName = (userID, name) => {
+  return userID + '_' + Date.now() + '_' + name;
+};
 const profilePicture = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
+  const fileRename = fileName(userID, file.originalname);
   const params = {
     Bucket: 'tigrow-file',
-    Key: `${userID}/${file.originalname}`,
+    Key: `${userID}/${fileRename}`,
     Body: file.buffer,
     ContentType: file.mimetype,
     ACL: 'public-read',
@@ -31,10 +34,11 @@ const profilePicture = async (req, res, next) => {
     .then(async data => {
       logger.info(`File Successfully upload to S3`);
       const newFile = {
-        link: s3FileURL + params.Bucket,
-        s3Key: params.Key,
+        link: data.Location,
+        s3Key: data.Key,
         account: userID,
         type: params.ContentType,
+        imageType: req.query.imageType,
       };
       const file = new File(newFile);
       file
@@ -44,8 +48,13 @@ const profilePicture = async (req, res, next) => {
           if (userID) {
             const account = await Account.findOne({
               _id: userID,
-            }).select('profileImage');
-            account.profileImage = data._id;
+            }).select('profileImage coverImage');
+            if (data.imageType === 'profilePic') {
+              account.profileImage = data._id;
+            }
+            if (data.imageType === 'coverPhoto') {
+              account.coverImage = data._id;
+            }
             await account.save();
             return sendJSONresponse(res, 200, data);
           }
@@ -75,9 +84,10 @@ const companyLogo = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
   const companyID = req.query.cid;
+  const fileRename = fileName(companyID, file.originalname);
   const params = {
     Bucket: 'tigrow-file',
-    Key: `${companyID}/${file.originalname}`,
+    Key: `${companyID}/${fileRename}`,
     Body: file.buffer,
     ContentType: file.mimetype,
     ACL: 'public-read',
@@ -88,9 +98,8 @@ const companyLogo = async (req, res, next) => {
     .then(async data => {
       logger.info(`Company Logo Successfully upload to S3`);
       const newFile = {
-        link: s3FileURL + params.Bucket,
-        s3Key: params.Key,
-        company: companyID,
+        link: data.Location,
+        s3Key: data.Key,
         type: params.ContentType,
         account: userID,
       };
@@ -117,6 +126,43 @@ const companyLogo = async (req, res, next) => {
 };
 
 const fileInRooms = async (req, res, next) => {
+  const checkMimetype = [
+    'application/zip',
+    'application/x-rar-compressed',
+    'application/x-7z-compressed',
+    'application/x-zip-compressed',
+    'application/pdf',
+    'application/msword',
+    'application/json',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+    'text/plain',
+    'text/csv',
+    'image/webp',
+    'image/apng',
+    'image/png',
+    'image/bmp',
+    'image/gif',
+    'image/jpeg',
+    'image/jpg',
+    'image/svg',
+    'image/svg+xml',
+    'image/bmp',
+    'image/vnd.microsoft.icon',
+  ];
+
+  const file = req.file;
+
+  if (!checkMimetype.includes(file.mimetype)) {
+    return sendErrorResponse(res, 400, '', {
+      message: 'This file format is not supported',
+      fieldName: 'file',
+    });
+  }
+
   const roomID = req.query.roomID;
   const userID = req.user._id;
   const params = {
@@ -130,31 +176,24 @@ const fileInRooms = async (req, res, next) => {
     .upload(params)
     .promise()
     .then(async data => {
-      logger.info(`File in rooms Successfully upload to S3`);
-      const newFile = {
-        link: s3FileURL + params.Bucket,
-        s3Key: params.Key,
-        company: companyID,
-        type: params.ContentType,
-        account: userID,
-        room: roomID,
-      };
-      const file = new File(newFile);
-      file
-        .save()
-        .then(async data => {
-          logger.info('File Link successfully save to Database');
-          const room = await Room.findOne({
-            _id: roomID,
-          }).select('files');
-          room.files.push(data._id);
-          await room.save();
-          return sendJSONresponse(res, 200, data);
-        })
-        .catch(error => {
-          logger.error(`${error}`);
-          next(error);
+      logger.info(data);
+      try {
+        logger.info(`File in rooms Successfully upload to S3`);
+        const newFile = new File({
+          link: data.Location,
+          s3Key: params.Key,
+          type: params.ContentType,
+          account: userID,
+          room: roomID,
         });
+        await newFile.save();
+        logger.info('File Link successfully save to file collection');
+
+        return sendJSONresponse(res, 200, { newFile });
+      } catch (error) {
+        logger.error(`${error}`);
+        next(error);
+      }
     })
     .catch(err => {
       next(err);

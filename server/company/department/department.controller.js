@@ -1,6 +1,9 @@
 const Department = require('./department.model');
 const logger = require('../../../config/winston.js');
-const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../../helpers/jsonResponse');
 
 const create = async (req, res) => {
   if (!req.is('application/json')) {
@@ -15,9 +18,9 @@ const create = async (req, res) => {
     });
     if (duplicate) {
       logger.info(`Department already exist`);
-      return res.status(409).json({
-        status: false,
-        message: `Department already exists`,
+      return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+        message: 'Department already exists',
+        fieldName: 'name',
       });
     }
 
@@ -29,18 +32,17 @@ const create = async (req, res) => {
     req.company.departments.push(department._id);
     await req.company.save();
 
-    const { _id, name } = department;
-
     return sendJSONresponse(res, 201, {
-      success: true,
-      department: { _id, name },
+      department: {
+        _id: department._id,
+        name: department.name,
+      },
     });
   } catch (err) {
     logger.error(` process:${process.pid} Bad request : ${err}`);
-    return sendJSONresponse(res, 400, {
-      success: false,
-      message: 'could not create',
-      reason: err,
+    return sendErrorResponse(res, 400, '', {
+      message: 'Failed to create new department',
+      fieldName: 'name',
     });
   }
 };
@@ -54,13 +56,11 @@ const list = async (req, res) => {
 
     if (departments) {
       return sendJSONresponse(res, 200, {
-        success: true,
         departments,
       });
     }
 
     return res.status(404).json({
-      status: false,
       message: 'No departments found.',
     });
   } catch (error) {

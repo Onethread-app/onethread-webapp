@@ -11,20 +11,26 @@ const transporter = nodemailer.createTransport({
 });
 
 const { port } = config;
-const host = `http://tigrow.co/`;
-
+let host = ``;
+if (config.env !== 'production') {
+  host = `http://localhost:3000`;
+}
+if (config.env === 'test') {
+  host = `http://test.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
+}
 module.exports.sendEmailForResetPassword = async (
-  name,
+  firstName,
+  lastName,
   emailID,
   token,
-  next,
 ) => {
   const link = `${host}/reset-password/${token}`;
+  const fullName = firstName + ' ' + lastName;
   const mailOptions = {
     to: emailID,
     subject: 'Generated Token For Reset Password',
     html: `
-      <h1> Hi ${name}, </h1>
+      <h1> Hi ${fullName}, </h1>
       <h2> Please Reset Your password from following <a href="${link}"> Link </a> </h2>
   
     `,
@@ -40,16 +46,18 @@ module.exports.sendEmailForResetPassword = async (
 };
 
 module.exports.sendEmailForVerifyAccount = async (
-  username,
+  firstName,
+  lastName,
   emailID,
   token,
 ) => {
   const link = `${host}/verify-account/` + token;
+  const fullName = firstName + ' ' + lastName;
   const mailOptions = {
     to: emailID,
     subject: 'Please confirm your Email account',
     html:
-      `Hello ${emailID}, <br> Please Click on the link to verify your email.<br><a href=` +
+      `Hello ${fullName}, <br> Please Click on the link to verify your email.<br><a href=` +
       link +
       '>Click here to verify</a>',
   };
@@ -58,7 +66,7 @@ module.exports.sendEmailForVerifyAccount = async (
     if (err) {
       logger.error(' Message send to failed ' + err);
     } else {
-      logger.info('Message send to user successfully');
+      logger.info(`send confirmation mail to user successfully`);
     }
   });
 };

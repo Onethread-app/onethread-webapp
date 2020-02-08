@@ -11,9 +11,11 @@ const idSchema = {
     }),
 };
 
+
 const schema = {
   name: Joi.string(),
-  description: Joi.string(),
+  department: idSchema.id,
+  color: Joi.number(),
   company: idSchema.id,
   columns: Joi.array().items(idSchema.id),
   members: Joi.array().items(idSchema.id),
@@ -25,8 +27,9 @@ module.exports = {
   createBoard: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      description: schema.description.allow(''),
-      companyId: schema.company
+      department: schema.department,
+      companyId: schema.company ,
+      color : schema.color
     }),
   })
 };

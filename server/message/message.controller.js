@@ -1,6 +1,8 @@
 const { Message } = require('./message.model');
 const { Room } = require('./../room/room.model');
+const Account = require('./../account/account.model');
 const { chatkit } = require('../services/pusher.services');
+const File = require('./../file/file.model');
 
 const create = async (req, res, next) => {
   // Check for JSON
@@ -12,35 +14,63 @@ const create = async (req, res, next) => {
     const room = await Room.findById(req.body.room);
     if (!room) {
       return res.status(404).json({
-        status: false,
         message: `No room exists`,
       });
     }
+
+    let files = req.body.files.map(file => file._id);
 
     const message = new Message({
       text: req.body.text,
       room: req.body.room,
       type: req.body.type,
-      account: req.user.id,
+      files,
+      account: req.user._id,
     });
-    await message.save();
+
+    const account = await Account.findById(req.user._id)
+      .select('name firstName lastName email')
+      .populate({
+        path: 'profileImage',
+        select: '-_id link',
+      });
 
     //send to chatkit-server
-    await chatkit.sendSimpleMessage({
+    let msg = await chatkit.sendMultipartMessage({
       userId: message.account,
       roomId: message.room,
-      text: message.text,
+      parts: [
+        {
+          type: 'text/plain',
+          content: JSON.stringify({
+            message,
+            account,
+            files: req.body.files,
+          }),
+        },
+      ],
     });
 
+    // save ref of chatkit
+    if (msg) {
+      message.chatkitId = msg.message_id;
+    }
+
+    await message.save();
+
+    await File.updateMany(
+      { _id: { $in: files } },
+      {
+        message: message._id,
+        room: message.room,
+      },
+    );
+
     return res.status(201).json({
-      status: true,
       message,
     });
   } catch (error) {
-    return res.status(400).json({
-      status: false,
-      error,
-    });
+    next(error);
   }
 };
 
@@ -49,7 +79,6 @@ const getRoomMessages = async (req, res, next) => {
     const room = await Room.findById(req.params.roomId);
     if (!room) {
       return res.status(404).json({
-        status: false,
         message: `No room exists`,
       });
     }
@@ -60,32 +89,32 @@ const getRoomMessages = async (req, res, next) => {
       room: req.params.roomId,
       removed: false,
     })
+      .select('-__v')
+      .populate('files', '')
+      .populate([
+        {
+          path: 'account',
+          select: 'name firstName lastName email profileImage',
+          populate: {
+            path: 'profileImage',
+            select: '-_id link',
+          },
+        },
+        {
+          path: 'files',
+          select: 'link s3Key type',
+        },
+      ])
       .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit);
-    // .select('-__v -company -createdAt -updatedAt')
-    // .populate([
-    //   { path: 'account', select: '_id name firstName lastName' },
-    //   {
-    //     path: 'designations',
-    //     select: 'division department position',
-    //     populate: [{ path: 'department', select: 'name' }],
-    //   },
-    // ]);
+
     return res.status(200).json({
-      status: true,
+      count: messages.length,
       messages,
     });
-
-    return res.status(201).json({
-      status: true,
-      message,
-    });
   } catch (error) {
-    return res.status(400).json({
-      status: false,
-      error,
-    });
+    next(error);
   }
 };
 
