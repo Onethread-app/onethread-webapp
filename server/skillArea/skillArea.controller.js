@@ -142,7 +142,6 @@ const skillLoad = async (req, res, next, id) => {
 const searchSkillSet = async (req, res, next) => {
   try {
     const name = req.query.name;
-    const { limit = 50, skip = 0 } = req.query;
     const userId = req.user._id;
     const userSkill = await Account.findOne({ _id: userId });
     const userskillId = userSkill.skillArea;
