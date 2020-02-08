@@ -5,6 +5,8 @@ module.exports = {
       name: Joi.string()
         .required()
         .lowercase()
+        .min(1)
+        .max(80)
         .error(error => {
           return { success: false, message: `recheck` };
         }),
