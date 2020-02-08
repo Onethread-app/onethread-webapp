@@ -95,17 +95,17 @@ const login = async (req, res, next) => {
       { email: req.user.email, _id: req.user._id },
       config.jwtSecret,
       {
-        expiresIn: 60 * 60 * 60 * 24,
+        expiresIn: config.jwtExpire,
       },
     );
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
-      expiresIn: '45m',
+      expiresIn: config.jwtExpire,
     });
     const refreshToken = jwt.sign(
       payLoad,
       config.refreshTokenSecret,
       {
-        expiresIn: '48h',
+        expiresIn: config.jwtRefreshExpire,
       },
     );
 
@@ -358,7 +358,7 @@ const searchAccount = async (req, res, next) => {
 };
 
 const tokenRefresh = async (req, res, next) => {
-  const refreshToken = req.body.refresh_token;
+  const refreshToken = req.body.refreshToken;
   if (refreshToken) {
     client.exists(refreshToken, function(err, exists) {
       if (exists) {
@@ -382,20 +382,26 @@ const tokenRefresh = async (req, res, next) => {
         const accessToken = jwt.sign(
           payload,
           config.accessTokenSecret,
-          { expiresIn: '1d' },
+          { expiresIn: '45m' },
+        );
+        const refreshToken1 = jwt.sign(
+          payload,
+          config.refreshTokenSecret,
+          {
+            expiresIn: '48h',
+          },
         );
         const response = {
-          access_token: accessToken,
-          expires_in: '1d',
-          token_type: 'Bearer',
+          accessToken: accessToken,
+          tokenType: 'Bearer',
+          refreshToken: refreshToken1,
         };
-        updateRefreshTokenfromList(refreshToken, accessToken);
+        updateRefreshTokenfromList(refreshToken1, accessToken);
         return sendJSONresponse(res, 200, response);
       } else {
         logger.error('The refresh token does not exist');
         return sendJSONresponse(res, 401, {
-          error: 'Unauthorized',
-          message: 'The refresh token does not exist',
+          message: 'Refresh token does not exist',
         });
       }
     });
