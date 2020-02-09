@@ -3,7 +3,9 @@ const config = require('../../config/config');
 const logger = require('../../config/winston');
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.zoho.com',
+  post: 465,
+  secure: true,
   auth: {
     user: config.emailAddress,
     pass: config.emailPassword,
@@ -18,6 +20,10 @@ if (config.env !== 'production') {
 if (config.env === 'test') {
   host = `http://test.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
 }
+if (config.env === 'production') {
+  host = `https://www.tigrow.co`;
+}
+
 module.exports.sendEmailForResetPassword = async (
   firstName,
   lastName,
@@ -27,6 +33,7 @@ module.exports.sendEmailForResetPassword = async (
   const link = `${host}/reset-password/${token}`;
   const fullName = firstName + ' ' + lastName;
   const mailOptions = {
+    from: config.emailAddress,
     to: emailID,
     subject: 'Generated Token For Reset Password',
     html: `
@@ -54,6 +61,7 @@ module.exports.sendEmailForVerifyAccount = async (
   const link = `${host}/verify-account/` + token;
   const fullName = firstName + ' ' + lastName;
   const mailOptions = {
+    from: config.emailAddress,
     to: emailID,
     subject: 'Please confirm your Email account',
     html:

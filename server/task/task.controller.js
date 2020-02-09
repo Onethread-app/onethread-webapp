@@ -268,7 +268,7 @@ const dragTask = async (req, res, next) => {
       { $pull: { tasks: req.body.taskId } },
       { new: true },
     )
-      .populate('tasks', '_id name description')
+      .populate('tasks', '_id name description dueDate')
       .exec();
 
     // TODO: avoid task population
@@ -284,7 +284,7 @@ const dragTask = async (req, res, next) => {
       },
       { new: true },
     )
-      .populate('tasks', '_id name description')
+      .populate('tasks', '_id name description dueDate')
       .exec();
 
     await ActivityCtrl.create(
