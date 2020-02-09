@@ -54,6 +54,7 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
                   maxLines={10}
                   value={input.value}
                   onChange={input.onChange}
+                  isEditing={true}
                 />
                 {checkError(meta) &&
                   <small className="mv3" style={{ color: 'red' }}>
