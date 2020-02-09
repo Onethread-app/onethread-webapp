@@ -39,9 +39,12 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
               className={`dt w-100 hover-bg-black-10 pa2 ${props.currentCompany === c.company._id ? "bg-black-10" : ""} mt2 pointer bp3-popover-dismiss`}
               onClick={async () => {
                 const response = await props.getCompanyDetails(c.company.name, props.history) as any;
-                if (response) {
-                  props.history.push(`/company/${(response as any).company.name}`)
-                }
+                if (response.status === 200) {
+                  props.history.push(`/company/${(response as any).data.company.name}`);
+                } 
+                // else{
+                //   props.history.push(`/notFound`);
+                // }
               }}
             >
               <div

@@ -65,25 +65,25 @@ const ExperienceViewComponent = (props: IExperienceViewProps) => {
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center">
-                        <div style={{ minWidth: '35px' }}>
-                          <img style={{ width: '35px' }} src={experience.companyName ? JobIcon : EducationIcon} />
+                        <div style={{ minWidth: '30px' }}>
+                          <img style={{ width: '30px' }} src={experience.companyName ? JobIcon : EducationIcon} />
                         </div>
                         <div className="ml2">
                           <h1
-                            className="f5 fw7 mt0 mb0 black-70"
+                            className="f5 fw7 mt0 mb0 black-70 ws-break"
                           >{experience.companyName ? experience.companyName : experience.degree}
                           </h1>
                           <h1
-                            className="f5 fw2 mv1"
+                            className="f5 fw2 mv1 ws-break"
                           >
                             {experience.positionName ? experience.positionName : experience.institutionName}
                           </h1>
                         </div>
                       </div>
-                      <div className="mh1 pointer" style={{ minWidth: '35px' }}>
+                      <div className="mh1 pointer" style={{ minWidth: '30px' }}>
                         <img
                           className="tigrow-lightBlue pointer"
-                          style={{ width: '35px' }}
+                          style={{ width: '30px' }}
                           src={editIcon}
                           onClick={() => {
                             if (experience.companyName) {

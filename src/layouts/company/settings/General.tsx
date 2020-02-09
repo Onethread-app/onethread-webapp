@@ -62,6 +62,8 @@ const GeneralViewComponent = (props: DetailsViewProps & RouteComponentProps) => 
                     validationOnBlur={() => {
                       if (isEmpty(companyName)) {
                         setErrors('Required');
+                      } else if (companyName.length > 32) {
+                        setErrors('Company name must be less than 32 character.');
                       } else {
                         setErrors('');
                       }

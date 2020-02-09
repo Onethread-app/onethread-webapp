@@ -3,7 +3,7 @@ import { ItemEntityProps, SuggestField } from 'components/fields/SuggestField';
 import { tokenConfig } from 'stores/UtilsActions';
 import tigrowApi, { server } from 'tigrowApi';
 import { Tag, Button } from '@blueprintjs/core';
-import { isEqual, isEmpty } from 'lodash';
+import { isEqual, isEmpty, lowerCase } from 'lodash';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { useSelector } from 'react-redux';
 interface SkillEditProps {
@@ -72,7 +72,7 @@ export const SkillEdit = (props: SkillEditProps) => {
               username === item.name)))
               &&
               isEmpty(userSkills.filter((item: ItemEntityProps) => (
-                username === item.name
+                lowerCase(username) === item.name
               )))
               ? true : false
           }

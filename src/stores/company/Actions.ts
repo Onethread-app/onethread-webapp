@@ -41,17 +41,21 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
 			const response = await tigrowApi.get(`company/${name}`, headers);
 			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
 			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
-			return response.data;
+			return response;
 		} else {
 			// tslint:disable-next-line: no-console
-			console.log('error in slection of company fetching');
+			console.log('error in selection of company fetching');
 		}
 	} catch (error) {
 		if (isEqual(error.message, 'Network Error')) {
 			dispatch({ type: CREATE_COMPANY_ERROR, payload: 'Network error' });
+			// tslint:disable-next-line: no-console
+			console.log('network error');
 		} else {
 			// tslint:disable-next-line: no-console
 			console.log(error.response);
+			return error.response;
+
 		}
 	}
 };
