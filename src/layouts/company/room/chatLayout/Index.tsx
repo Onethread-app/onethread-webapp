@@ -13,6 +13,8 @@ import { IRoomReducer } from 'stores/room/Reducer';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
+	roomId: IRoomReducer['roomId'];
+	roomName: IRoomReducer['roomName'];
 	activeRoom: any;
 	companyRole: string;
 	users: IRoomReducer['users'];
@@ -31,7 +33,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 
 	return (
 		<>
-			{isEmpty(props.activeRoom) === false ?
+			{isEmpty(props.roomName) === false && isEmpty(props.roomId) === false ?
 				<div
 					className="flex flex-column h-100"
 				// style={{ height: "calc(100vh - 50px)" }}
@@ -39,12 +41,12 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					{/* chat heading starts */}
 					<div className="flex justify-between items-center ph4 pv2 bb b--tigrowLightGray-1">
 						<div>
-							<p className="f4 fw7 mv2">{props.activeRoom.name}</p>
+							<p className="f4 fw7 mv2">{props.roomName}</p>
 							<h5
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
 								className="ma0 pointer dim">Members: {props.users.length}</h5>
 						</div>
-						{showAddMember(props.activeRoom.name, props.companyRole) ?
+						{showAddMember(props.roomName, props.companyRole) ?
 							<Button
 								onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}
 								className="bp3-minimal outline-0 grow"
@@ -60,8 +62,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					{/* chat heading ends */}
 					<MessageList />
 					<SendMessageForm />
-				</div> :
-				<div className="absolute--center tc">
+				</div>
+				: <div className="absolute--center tc">
 					<h2>Please, select a room !!</h2>
 				</div>
 			}
@@ -94,6 +96,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 
 const mapStateToProps = (state: any) => {
 	return {
+		roomId: state.roomReducer.roomId,
+		roomName: state.roomReducer.roomName,
 		activeRoom: state.roomReducer.activeRoom,
 		users: state.roomReducer.users,
 		userStatus: state.roomReducer.userStatus,

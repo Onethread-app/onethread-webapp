@@ -1,21 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
-import { useSelector } from 'react-redux';
-
-import { IRoomMessage } from 'stores/room/Reducer';
+import { connect, useDispatch } from 'react-redux';
+import { getRoomMessages } from '../../../../../stores/room/Actions';
+import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
+import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface MessageListProps {
 	chatkit?: any;
+	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
+	messages: IRoomReducer['messages'];
+	roomId: IRoomReducer['roomId'];
+	allMessages: boolean;
 }
 
-export const MessageList = withChatkit((_props: MessageListProps) => {
+export const MessageListComponent = withChatkit((props: MessageListProps) => {
 	const [first, setFirst] = useState(false);
+	const [limit, setLimit] = useState(15);
+	const [skip, setSkip] = useState(0);
+
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const messages = useSelector((state: any) => state.roomReducer.messages);
-	const roomId = useSelector((state: any) => state.roomReducer.roomId);
+
+	const dispatch = useDispatch();
+
+	// const messages = useSelector((state: any) => state.roomReducer.messages);
+	// const roomId = useSelector((state: any) => state.roomReducer.roomId);
 
 	const scrollToBottom = () => {
 		// On new message, scroll to bottom
@@ -33,11 +44,37 @@ export const MessageList = withChatkit((_props: MessageListProps) => {
 			setFirst(true);
 		}
 	};
+
+	const handleScroll = async () => {
+		if (messagesEndRef &&
+			messagesEndRef.current && messagesEndRef.current.scrollTop === 0 && props.allMessages === false) {
+			const n = skip + limit;
+			setSkip(n);
+			await props.getRoomMessages(props.roomId, limit, n);
+
+		}
+	};
+
+	useEffect(() => {
+		const a = document.getElementById('message-container');
+		if (a) {
+			a.addEventListener('scroll', handleScroll);
+		}
+		return () => {
+			if (a) {
+				a.removeEventListener('scroll', handleScroll);
+			}
+		};
+	});
+
 	useEffect(() => {
 		setFirst(false);
-	}, [roomId]);
+		setLimit(15);
+		setSkip(0);
+		dispatch({ type: ALL_MESSAGE_RECEIVED, payload: false });
+	}, [props.roomId]);
 
-	useEffect(scrollToBottom, [messages]);
+	useEffect(scrollToBottom, [props.messages]);
 
 	const checkGroup = (cm: IRoomMessage, currIndex: number, arr: IRoomMessage[]) => {
 		const obj = {
@@ -59,12 +96,13 @@ export const MessageList = withChatkit((_props: MessageListProps) => {
 	return (
 		<div
 			// className="overflow-y-auto ph1 pt2"
+			id="message-container"
 			className="flex flex-column flex-grow-1 overflow-y-auto ph1 pt2"
 			ref={messagesEndRef}
 		// style={{ height: "calc(100vh - 186px)" }}
 		>
-			{messages.length
-				? messages.map((message: IRoomMessage, index: number, arr: IRoomMessage[]) => {
+			{props.messages.length
+				? props.messages.map((message: IRoomMessage, index: number, arr: IRoomMessage[]) => {
 					return (
 						<MessageItem
 							key={index}
@@ -77,3 +115,15 @@ export const MessageList = withChatkit((_props: MessageListProps) => {
 		</div>
 	);
 });
+
+const mapStateToProps = (state: any) => {
+	return {
+		roomId: state.roomReducer.roomId,
+		messages: state.roomReducer.messages,
+		allMessages: state.roomReducer.allMessages,
+	};
+};
+
+export const MessageList = connect(mapStateToProps, { getRoomMessages })(
+	MessageListComponent
+);

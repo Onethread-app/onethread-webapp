@@ -19,7 +19,13 @@ import {
 	UPDATE_ROOM,
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING,
-	CLEAR_ROOMS_ERROR, REFRESH_MEMBER, TOGGLE_EMOJI_PICKER, FILE_UPLOAD, CLEAR_FILE_UPLOAD, DELETE_ONE_PENDING_FILE
+	CLEAR_ROOMS_ERROR,
+	REFRESH_MEMBER,
+	TOGGLE_EMOJI_PICKER,
+	FILE_UPLOAD,
+	CLEAR_FILE_UPLOAD,
+	DELETE_ONE_PENDING_FILE,
+	ALL_MESSAGE_RECEIVED
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -73,6 +79,7 @@ export interface IRoomReducer {
 	activeRoom: {};
 	roomId: string;
 	roomName: string;
+	allMessages: boolean;
 	messages: IRoomMessage[];
 	typing: {
 		users: Array<{
@@ -89,11 +96,13 @@ export interface IRoomReducer {
 	emojiPicker: boolean;
 	pendingFiles: IRoomFile[];
 	roomError: string;
+
 }
 const InitialState: IRoomReducer = {
 	activeRoom: {},
 	roomId: '',
 	roomName: '',
+	allMessages: false,
 	messages: [],
 	typing: {
 		users: []
@@ -261,8 +270,13 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case GET_ROOM_MESSAGES:
 			return {
 				...state,
-				messages: action.payload,
+				messages: [...action.payload, ...state.messages],
 				loading: false
+			};
+		case ALL_MESSAGE_RECEIVED:
+			return {
+				...state,
+				allMessages: action.payload
 			};
 		case CLEAR_ROOM_MESSAGES:
 			return {
