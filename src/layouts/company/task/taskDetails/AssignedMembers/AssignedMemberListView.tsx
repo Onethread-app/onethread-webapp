@@ -22,8 +22,8 @@ export const AssignedMemberListViewComponent = (props: IAssignedMemberListViewCo
           <div className="flex mb1">
             <img className="h3 w3" src={list.profileImage ?
               list.profileImage : 'https://robohash.org/VLSI'} />
-            <div className="flex w-100 justify-between pt4 bb pr3 ml3"
-              style={{ borderBottom: '1px solid #EEEEEF' }}>
+            <div className="flex w-100 justify-between bb pr3 ml3"
+              style={{ borderBottom: '1px solid #EEEEEF', paddingTop: '20px' }}>
               <div>
                 <p className="b ma0">{list.name}</p>
                 <p className="ma0">added by {list.account}</p>

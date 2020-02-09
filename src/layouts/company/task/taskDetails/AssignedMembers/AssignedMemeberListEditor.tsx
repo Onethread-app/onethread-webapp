@@ -11,7 +11,7 @@ interface IAssignedMemeberListEditorComponentProps {
 }
 
 export const AssignedMemeberListEditorComponent = (props: IAssignedMemeberListEditorComponentProps
-	 & RouteComponentProps ) => {
+	& RouteComponentProps) => {
 
 	const [deletePopover, setDeletePopover] = useState(false);
 	return (
@@ -19,7 +19,7 @@ export const AssignedMemeberListEditorComponent = (props: IAssignedMemeberListEd
 			isOpen={deletePopover}
 			content={
 				<div className="pa3 cf bg-white" style={{ width: '350px' }}>
-                  <h1 className="f5">Delete</h1>
+					<h1 className="f5">Delete</h1>
 					<p>Are you sure want to permanently remove </p>
 					<div className="flex justify-end mt4">
 						<Button
@@ -43,8 +43,8 @@ export const AssignedMemeberListEditorComponent = (props: IAssignedMemeberListEd
 							}}
 							type="submit"
 							onClick={async () => {
-							await props.deleteMember(props.assignMemberId);
-							setDeletePopover(false);
+								await props.deleteMember(props.assignMemberId);
+								setDeletePopover(false);
 							}}
 						>
 							Remove
@@ -55,6 +55,7 @@ export const AssignedMemeberListEditorComponent = (props: IAssignedMemeberListEd
 			}
 			target={
 				<Icon
+					className="pt3 pointer"
 					icon="trash"
 					onClick={() => setDeletePopover(true)}
 				/>
@@ -62,6 +63,6 @@ export const AssignedMemeberListEditorComponent = (props: IAssignedMemeberListEd
 		/>
 	);
 };
-  
-export const AssignedMemeberListEditor = connect(null, 
+
+export const AssignedMemeberListEditor = connect(null,
 	{ deleteMember })(withRouter(AssignedMemeberListEditorComponent));

@@ -12,6 +12,7 @@ import { ITask } from 'stores/board/Reducer';
 interface IDueDateFormProps {
   setDatePopover: (val: boolean) => void;
   updateTask: (task: ITask) => Promise<any>;
+  dueDate: Date;
 }
 
 export const DueDateEditorComponent = (props: IDueDateFormProps) => {
@@ -27,6 +28,9 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
   return (
     <Form
       onSubmit={onSubmit}
+      initialValues={{
+        dueDate: props.dueDate ? new Date(props.dueDate) : null
+      }}
       render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
         <form
           className="fl w-100 ph2 pt2"
@@ -58,7 +62,6 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                     targetClassName: 'w-100'
                   }}
                   minDate={new Date()}
-                // maxDate={maxBirthDate()}
                 />
                 {checkError(meta) &&
                   <small className="mv3" style={{ color: 'red' }}>
@@ -88,4 +91,10 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
   );
 };
 
-export const DueDateEditor = connect(null, { updateTask })(DueDateEditorComponent);
+const mapStateToProps = (state: any) => {
+  return {
+    dueDate: state.boardIndexReducer.boardReducer.currentTask.dueDate,
+  };
+};
+
+export const DueDateEditor = connect(mapStateToProps, { updateTask })(DueDateEditorComponent);
