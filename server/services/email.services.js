@@ -3,9 +3,7 @@ const config = require('../../config/config');
 const logger = require('../../config/winston');
 
 const transporter = nodemailer.createTransport({
-  host: 'smtp.zoho.com',
-  post: 465,
-  secure: true,
+  service: 'gmail',
   auth: {
     user: config.emailAddress,
     pass: config.emailPassword,
@@ -33,7 +31,6 @@ module.exports.sendEmailForResetPassword = async (
   const link = `${host}/reset-password/${token}`;
   const fullName = firstName + ' ' + lastName;
   const mailOptions = {
-    from: config.emailAddress,
     to: emailID,
     subject: 'Generated Token For Reset Password',
     html: `
@@ -61,7 +58,6 @@ module.exports.sendEmailForVerifyAccount = async (
   const link = `${host}/verify-account/` + token;
   const fullName = firstName + ' ' + lastName;
   const mailOptions = {
-    from: config.emailAddress,
     to: emailID,
     subject: 'Please confirm your Email account',
     html:
