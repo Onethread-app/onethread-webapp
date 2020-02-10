@@ -42,6 +42,8 @@ const Demo = () => (<div></div>);
 
 const NoMatch = () => (<div>This page is not available</div>);
 
+// const NotFound = () => (<div>404 Not Found</div>);
+
 export const App = () => (
 	<BrowserRouter>
 		<Switch>
@@ -91,6 +93,12 @@ export const App = () => (
 					localStorage.getItem('email') ? <SignupConfirmationPage /> : <Redirect to="/signin" />
 				}
 			/>
+			{/* <Route
+				path="/notFound"
+				render={() =>
+					isAuthenticate() ? <Redirect to="/" /> : <NotFound />
+				}
+			/> */}
 			<PrivateRoute
 				exact
 				path="/"

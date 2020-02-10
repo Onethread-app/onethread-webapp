@@ -50,8 +50,8 @@ export const HomePage = () => {
         </Navbar>
       </div>
       <div className="ph5-l ph4 pt6 pb4">
-        <div className="flex-ns items-center ph6-ns">
-          <div className="w-50-ns w-100">
+        <div className="flex-ns items-center ph5-ns">
+          <div className="w-60-ns w-100">
             <h1
               className="f2-ns black"
             >An Enterprise Connectivity Platform</h1>
@@ -79,7 +79,7 @@ export const HomePage = () => {
               </a>
             </div>
           </div>
-          <div className="w-50-ns w-100">
+          <div className="w-40-ns w-100">
             <img
               src={landingPic1}
             />
@@ -95,14 +95,14 @@ export const HomePage = () => {
         <div className="w-50-ns w-100 tc mb4 mb0-ns">
           <h1 className="white f2-ns mt0"
           >Workplace</h1>
-          <p className="white-90 f4"
+          <p className="white-90 f4 mb4"
             style={{ lineHeight: '2.5rem' }}
           >A Team Collaboration Tool
             <br />The easiest way to manage team
             <br />projects and tasks</p>
           <a
             href="/signup"
-            className="grow ph4 pointer f5 fw7 mt4 pv3"
+            className="grow ph4 pointer f5 fw7 pv3"
             style={{
               background: 'white',
               outline: 'none',
@@ -117,14 +117,14 @@ export const HomePage = () => {
         <div className="w-50-ns w-100 tc">
           <h1 className="white f2-ns mt0"
           >Tribe</h1>
-          <p className="white-90 f4"
+          <p className="white-90 f4 mb4"
             style={{ lineHeight: '2.5rem' }}
           >Business Lead Generation was never this simple
             <br />Showcase your product/service in the largest
             <br />enterprise network in the world</p>
           <a
             href="/signup"
-            className="grow ph4 pointer f5 fw7 mt4 pv3"
+            className="grow ph4 pointer f5 fw7 pv3"
             style={{
               background: 'white',
               outline: 'none',

@@ -54,8 +54,12 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                     <p className="pt2 pl3 fw6 red">Deadline ends today</p> :
                     Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true)) < 0 ?
                       <p className="pt2 pl3 fw6 red">Expired</p> :
-                      <p className="pt2 pl3 fw6">
-                        {Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true))} days remaining
+                      Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true)) === 1 ?
+                        <p className="pt2 pl3 fw6">
+                          {Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true))} day remaining
+                        </p> :
+                        <p className="pt2 pl3 fw6">
+                          {Math.ceil(moment(props.currentTask!.dueDate).diff(moment(), 'days', true))} days remaining
                     </p>
                   }
                 </>

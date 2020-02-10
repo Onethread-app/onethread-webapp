@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { ActivityEditor} from './ActivityEditor';
+import { ActivityEditor } from './ActivityEditor';
 import userIcon from './../../../../resources/images/profilePhoto.svg';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { getAllComments } from 'stores/comment/Actions';
 import { Loading } from 'components/Loading';
 import { Icomment } from 'stores/comment/Reducer';
+import moment from 'moment';
 
 interface IActivityViewInternalProps {
     commentList: Icomment[];
@@ -43,8 +44,14 @@ export const ActivityViewPageComponent = (props: IActivityViewInternalProps & Ro
                                             className="ba b--black-10 db br-100 w2 h2" />
                                     </div>
                                     <div className="dtc v-mid pl3">
-                                        <h1 className="f6 fw6 lh-title black mv0">{comment.name}</h1>
-                                        <h1 className="f7 fw6 lh-title silver mv1">{comment.position}</h1>
+                                        <div className="flex">
+                                            <h1 className="f6 fw6 lh-title black mv0">{comment.name}</h1>
+                                            <p className="f7 fw6 lh-title silver mv0 pl2 i"
+                                                style={{ paddingTop: '2px' }}>{comment.position}</p>
+                                        </div>
+                                        <p className="pt1" style={{ fontSize: '9px' }}>
+                                            {moment(comment.createdAt).format('lll')}
+                                        </p>
                                         <p
                                             className="pa2 br3 mt2 ws-break"
                                             style={{

@@ -100,10 +100,14 @@ const TaskItemComponent = (props: TaskItemInternalProps & RouteComponentProps) =
                         <p className="ph2 pv1 br2 mv1"
                           style={{ color: '#3a844a', background: '#c2eacb', fontSize: '12px' }}
                         >Expired</p> :
-                        <p className="ph2 pv1 br2 mv1" style={{
-                          color: '#3a844a', background: '#c2eacb', fontSize: '12px'
-                        }}>
-                          {Math.ceil(moment(props.task.dueDate).diff(moment(), 'days', true))} days remaining
+                        Math.ceil(moment(props.task.dueDate).diff(moment(), 'days', true)) === 1 ?
+                          <p className="ph2 pv1 br2 mv1"
+                            style={{ color: '#3a844a', background: '#c2eacb', fontSize: '12px' }}
+                          >{Math.ceil(moment(props.task.dueDate).diff(moment(), 'days', true))} day remaining</p> :
+                          <p className="ph2 pv1 br2 mv1" style={{
+                            color: '#3a844a', background: '#c2eacb', fontSize: '12px'
+                          }}>
+                            {Math.ceil(moment(props.task.dueDate).diff(moment(), 'days', true))} days remaining
                         </p>
                     }
                   </div>
