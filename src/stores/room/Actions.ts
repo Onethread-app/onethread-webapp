@@ -174,10 +174,9 @@ export const getRoomMessages = (roomId: string, limit: number = 15, skip: number
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`messages/room/${roomId}?limit=${limit}&skip=${skip}`, headers);
-			if (response.data.count === 0) {
+			if (response.data.count < limit) {
 				dispatch({ type: ALL_MESSAGE_RECEIVED, payload: true });
 			}
-
 			dispatch({
 				type: GET_ROOM_MESSAGES,
 				payload: response.data.messages.reverse()

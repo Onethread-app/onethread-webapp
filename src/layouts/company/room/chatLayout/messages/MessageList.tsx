@@ -25,47 +25,31 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 
 	const dispatch = useDispatch();
 
-	// const messages = useSelector((state: any) => state.roomReducer.messages);
-	// const roomId = useSelector((state: any) => state.roomReducer.roomId);
-
 	const scrollToBottom = () => {
-		// On new message, scroll to bottom
 		if (
 			messagesEndRef &&
 			messagesEndRef.current &&
 			messagesEndRef.current.scrollTop +
 			messagesEndRef.current.clientHeight +
-			66 * 4 >=
+			60 >=
 			messagesEndRef.current.scrollHeight
 		) {
+			// On new message, scroll to bottom
 			messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
 		} else if (messagesEndRef && messagesEndRef.current && !first) {
+			// On enter the room, scroll to bottom
 			messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
 			setFirst(true);
 		}
 	};
 
-	const handleScroll = async () => {
-		if (messagesEndRef &&
-			messagesEndRef.current && messagesEndRef.current.scrollTop === 0 && props.allMessages === false) {
+	const loadMoreMessages = async () => {
+		if (props.allMessages === false) {
 			const n = skip + limit;
 			setSkip(n);
 			await props.getRoomMessages(props.roomId, limit, n);
-
 		}
 	};
-
-	useEffect(() => {
-		const a = document.getElementById('message-container');
-		if (a) {
-			a.addEventListener('scroll', handleScroll);
-		}
-		return () => {
-			if (a) {
-				a.removeEventListener('scroll', handleScroll);
-			}
-		};
-	});
 
 	useEffect(() => {
 		setFirst(false);
@@ -101,6 +85,20 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 			ref={messagesEndRef}
 		// style={{ height: "calc(100vh - 186px)" }}
 		>
+			{props.allMessages === false ?
+				<div
+					className="flex justify-center items-center pointer"
+					onClick={loadMoreMessages}
+				>
+					<h6
+						className="pv1 ph2 mv0 white br2"
+						style={{
+							backgroundColor: '#3b5998'
+						}}
+					>load more</h6>
+				</div>
+				: undefined
+			}
 			{props.messages.length
 				? props.messages.map((message: IRoomMessage, index: number, arr: IRoomMessage[]) => {
 					return (
