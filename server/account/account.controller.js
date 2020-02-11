@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const httpStatus = require('http-status');
+const slug = require('slug');
 const Account = require('./account.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
@@ -18,7 +19,6 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-const { capitalizeName } = require('../helpers/capitalizeLetter');
 const {
   APIError,
   BadRequestError,
@@ -39,14 +39,22 @@ const register = async (req, res, next) => {
   })
     .exec()
     .then(result => {
-      let firstName = data.firstName.replace(
-        /[-\/\\^$*+?.()|[\]{}\s]/g,
-        '',
-      );
-      let lastName = data.lastName.replace(
-        /[-\/\\^$*+?.()|[\]{}\s]/g,
-        '',
-      );
+      let firstName = slug(data.firstName, {
+        replacement: '-',
+        symbols: true,
+        remove: /[.]/g,
+        lower: false,
+        charmap: slug.charmap,
+        multicharmap: slug.multicharmap,
+      });
+      let lastName = slug(data.lastName, {
+        replacement: '-',
+        symbols: true,
+        remove: /[.]/g,
+        lower: false,
+        charmap: slug.charmap,
+        multicharmap: slug.multicharmap,
+      });
       let uniqueId = result + 1;
       name = firstName + '-' + lastName + '-' + uniqueId;
     });
@@ -74,8 +82,8 @@ const register = async (req, res, next) => {
         name: user.name,
       });
       sendEmailForVerifyAccount(
-        capitalizeName(user.firstName),
-        capitalizeName(user.lastName),
+        user.firstName,
+        user.lastName,
         user.email,
         verifyToken,
       );
