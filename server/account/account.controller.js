@@ -18,6 +18,7 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
+const { capitalizeName } = require('../helpers/capitalizeLetter');
 const {
   APIError,
   BadRequestError,
@@ -38,8 +39,16 @@ const register = async (req, res, next) => {
   })
     .exec()
     .then(result => {
+      let firstName = data.firstName.replace(
+        /[-\/\\^$*+?.()|[\]{}\s]/g,
+        '',
+      );
+      let lastName = data.lastName.replace(
+        /[-\/\\^$*+?.()|[\]{}\s]/g,
+        '',
+      );
       let uniqueId = result + 1;
-      name = data.firstName + '.' + data.lastName + '.' + uniqueId;
+      name = firstName + '-' + lastName + '-' + uniqueId;
     });
   let account = new Account({
     email: data.email,
@@ -65,8 +74,8 @@ const register = async (req, res, next) => {
         name: user.name,
       });
       sendEmailForVerifyAccount(
-        user.firstName,
-        user.lastName,
+        capitalizeName(user.firstName),
+        capitalizeName(user.lastName),
         user.email,
         verifyToken,
       );
