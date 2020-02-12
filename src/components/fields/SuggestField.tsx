@@ -106,7 +106,7 @@ export const SuggestField = (props: SuggestFieldProps) => {
           />
           : !props.isCreatable === true && props.items.length === 0 ?
             <MenuItem
-              text="You have already added this skill"
+              text="No result found"
               icon="blank"
               intent={Intent.WARNING}
               onClick={async (e: any) => {

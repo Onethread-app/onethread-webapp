@@ -3,7 +3,6 @@ import { User } from 'stores/user/Reducer';
 import { Dialog, Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ProfilePictureView } from './ProfilePictureView';
-import { upperFirst } from 'lodash';
 import { PositionEditor } from './PositionEditor';
 import { RightSidebar } from 'components/RightSidebar';
 
@@ -45,11 +44,11 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
             style={{ marginTop: '9rem' }}
           >
             <h1
-              className="f3-l f4 ma0 ws-break">
-              {upperFirst(props.user.firstName)} {upperFirst(props.user.lastName)}
+              className="f3-l f4 ma0 ws-break ttc">
+              {props.user.firstName} {props.user.lastName}
             </h1>
             <div className="cf ">
-              <h1 className="f5 dib ws-break black-70">
+              <h1 className="f5 dib ws-break black-70 ttc">
                 {props.user.position ? props.user.position : 'No designation'}
               </h1>
               <img
