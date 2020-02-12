@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { Tag, Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
@@ -16,7 +16,7 @@ interface AddTeamMemberFormProps {
 
 interface AddTeamMemberFormInternalProps extends AddTeamMemberFormProps {
   company?: CompanyModel;
-  addTeamMembersIntoBoard: (memberId: (string | undefined)[], name: string | undefined) => void;
+  addTeamMembersIntoBoard: (memberId: Array<string | undefined>, name: string | undefined) => void;
 }
 
 const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
@@ -37,23 +37,25 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
           setTeamMembers(response.data.members);
         }
       } else {
-        console.log('no headers')
+        // tslint:disable-next-line: no-console
+        console.log('no headers');
       }
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
-        console.log('network error')
-      }
-      else {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
         console.log(error.response);
       }
     }
-  }
+  };
 
   return (
     <div className="pa3 bg-white cf">
       <div className="fl w-100 pv2">
         <SuggestField
-          onChange={(query: string) => { fetchTeamMembersByUsername(query) }}
+          onChange={(query: string) => { fetchTeamMembersByUsername(query); }}
           items={teamMembers}
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
@@ -73,7 +75,7 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
               ));
               setSelectedItems([
                 ...filteredItems
-              ])
+              ]);
             }}
             large={true}
           >
@@ -90,7 +92,7 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
                 props.setShowAddMemberFormDialog(false);
               }
             }}
-            style={{ background: "#fff", outline: "none", border: "2px solid #0fa3a3", color: "#0fa3a3" }}
+            style={{ background: '#fff', outline: 'none', border: '2px solid #0fa3a3', color: '#0fa3a3' }}
           >
             cancel
             </Button>
@@ -112,12 +114,12 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
             loading={loading}
             style={selectedItems.length < 1 === false ?
               {
-                background: "#0fa3a3",
-                outline: "none",
+                background: '#0fa3a3',
+                outline: 'none',
                 color: 'white'
               } : {
                 background: '#011b1b2e',
-                outline: "none",
+                outline: 'none',
                 color: 'white'
               }
             }
@@ -129,13 +131,13 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
       </div>
 
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany
-  }
-}
+  };
+};
 
-export const AddTeamMemberForm = connect(mapStateToProps, { addTeamMembersIntoBoard })(AddTeamMemberFormComponent)
+export const AddTeamMemberForm = connect(mapStateToProps, { addTeamMembersIntoBoard })(AddTeamMemberFormComponent);

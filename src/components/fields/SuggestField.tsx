@@ -65,26 +65,6 @@ export const SuggestField = (props: SuggestFieldProps) => {
           }
         />
       }
-      // noResults={
-      //   props.isCreatable ?
-      //     <MenuItem
-      //       text={`Add this name`}
-      //       icon="new-object"
-      //       intent={Intent.PRIMARY}
-      //       onClick={async (e: any) => {
-      //         console.log(`new item create button clicked`, e);
-      //         // const newItem = {name: e};
-      //         // if (props.isCreatableAPI) {
-      //         //   const response = await props.isCreatableAPI(newItem);
-      //         //   props.selectedItems.push(response);
-      //         // }
-      //       }}
-      //     /> :
-      //     <MenuItem
-      //       text={`No Result Found`}
-      //       intent={Intent.WARNING}
-      //     />
-      // }
       createNewItemFromQuery={(query: string) => {
         return {
           _id: undefined,

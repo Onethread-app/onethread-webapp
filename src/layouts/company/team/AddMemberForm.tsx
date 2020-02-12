@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { CompanyModel } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
@@ -15,7 +15,7 @@ interface TeamMembersViewProps {
 
 interface TeamMembersViewInternalProps extends TeamMembersViewProps {
   company: CompanyModel;
-  addTeamMembers: (members: { account: string | undefined, company: string }[], name: string) => void;
+  addTeamMembers: (members: Array<{ account: string | undefined, company: string }>, name: string) => void;
   getCompanyMembers: () => void;
 }
 
@@ -34,15 +34,14 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
       .then(res => res.json())
       .then(res => res.employees.data)
       .catch(err => []);
-  }
+  };
 
   let result: any = [];
   result = useLiveSearch(username, userRequestFactory, 800);
 
   useEffect(() => {
-    setTeamMembers(result)
-  }, [result])
-
+    setTeamMembers(result);
+  }, [result]);
 
   return (
     <div className="pa3">
@@ -72,7 +71,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
               ));
               setSelectedTeamMember([
                 ...filteredItems
-              ])
+              ]);
             }}
             large={true}
             intent="primary"
@@ -84,7 +83,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
 
       <div className="flex justify-end mt4">
         <Button className="grow h2 pointer white bp3-minimal w4 mr3"
-          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+          style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
           Cancel
@@ -92,12 +91,12 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
         <Button className="grow h2 pointer white bp3-minimal w4"
           style={selectedTeamMember.length < 1 === false ?
             {
-              background: "#0fa3a3",
-              outline: "none",
+              background: '#0fa3a3',
+              outline: 'none',
               color: 'white'
             } : {
               background: '#011b1b2e',
-              outline: "none",
+              outline: 'none',
               color: 'white'
             }
           }
@@ -107,8 +106,8 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
               return {
                 account: selected._id,
                 company: props.company._id
-              }
-            })
+              };
+            });
             if (userIdWithCompany) {
               await props.addTeamMembers(userIdWithCompany, props.company.name);
             }
@@ -121,13 +120,13 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           </Button>
       </div>
     </div>
-  )
-}
+  );
+};
 
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany
-  }
-}
+  };
+};
 
-export const AddMemberForm = connect(mapStateToProps, { addTeamMembers, getCompanyMembers })(AddMemberFormComponent)
+export const AddMemberForm = connect(mapStateToProps, { addTeamMembers, getCompanyMembers })(AddMemberFormComponent);
