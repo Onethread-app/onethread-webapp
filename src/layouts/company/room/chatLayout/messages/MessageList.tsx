@@ -4,6 +4,7 @@ import { connect, useDispatch } from 'react-redux';
 import { getRoomMessages } from '../../../../../stores/room/Actions';
 import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
+import { Icon } from '@blueprintjs/core';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -87,15 +88,21 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 		>
 			{props.allMessages === false ?
 				<div
-					className="flex justify-center items-center pointer"
+					className="flex justify-center items-center"
 					onClick={loadMoreMessages}
 				>
 					<h6
-						className="pv1 ph2 mv0 white br2"
+						className="pv1 ph2 mv0 white br2 pointer flex justify-center items-center"
 						style={{
-							backgroundColor: '#3b5998'
+							backgroundColor: 'rgb(92, 108, 142)'
 						}}
-					>load more</h6>
+					>
+						<Icon icon="upload" iconSize={18} />
+						<span style={{
+							fontSize: '11px',
+							marginLeft: '6px'
+						}}>load more</span>
+					</h6>
 				</div>
 				: undefined
 			}
