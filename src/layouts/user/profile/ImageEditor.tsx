@@ -33,9 +33,9 @@ const ImageEditComponent = (props: IImageEditProps) => {
           setImageName('');
           setImageError('This file format is not supported');
           return false;
-        } else if (event.target.files[0].size / 1024 / 1024 > 1) {
+        } else if (event.target.files[0].size / 1024 / 1024 > 5) {
           setImageName('');
-          setImageError(`File size can't be greater than 1 MB`);
+          setImageError(`Image size can't be greater than 5 MB`);
           return false;
         } else {
           const data = new FormData();
