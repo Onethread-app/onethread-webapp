@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const httpStatus = require('http-status');
+const slug = require('slug');
 const Account = require('./account.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
@@ -38,8 +39,24 @@ const register = async (req, res, next) => {
   })
     .exec()
     .then(result => {
+      let firstName = slug(data.firstName, {
+        replacement: '-',
+        symbols: true,
+        remove: /[.]/g,
+        lower: false,
+        charmap: slug.charmap,
+        multicharmap: slug.multicharmap,
+      });
+      let lastName = slug(data.lastName, {
+        replacement: '-',
+        symbols: true,
+        remove: /[.]/g,
+        lower: false,
+        charmap: slug.charmap,
+        multicharmap: slug.multicharmap,
+      });
       let uniqueId = result + 1;
-      name = data.firstName + '.' + data.lastName + '.' + uniqueId;
+      name = firstName + '-' + lastName + '-' + uniqueId;
     });
   let account = new Account({
     email: data.email,
@@ -260,8 +277,8 @@ const sendEmailForForgetPassword = async (req, res, next) => {
     user.resetPasswordTokenExpiration = Date.now() + 86400; // 1 day
     user.save();
     sendEmailForResetPassword(
-      user.firstName,
-      user.lastName,
+      capitalizeName(user.firstName),
+      capitalizeName(user.lastName),
       user.email,
       verifyToken,
     );
