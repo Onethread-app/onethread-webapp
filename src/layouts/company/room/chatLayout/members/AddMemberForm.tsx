@@ -24,6 +24,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
   // const store = useStore();
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
   const [selectedRoomMember, setSelectedRoomMember] = useState([] as ItemEntityProps[]);
+  const [error, setError] = useState('');
 
   const getSuggestionsForRoomMembers = async () => {
     try {
@@ -52,6 +53,12 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (selectedRoomMember.length > 10) {
+      setError('Could not add more than 10 members at time');
+    }
+  }, [selectedRoomMember.length]);
+
   return (
     <div className="pa3">
       <div className=" w-100">
@@ -62,6 +69,9 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           setSelectedItems={setSelectedRoomMember}
           multipleItemSelect={true}
         />
+        <small className={`${error ? 'red' : 'white'}`}>
+          {error ? error : 'Max user at time : 10'}
+        </small>
       </div>
 
       <div className="w-100 mb2">
@@ -96,15 +106,23 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
         </Button>
         <Button className="grow h2 pointer white bp3-minimal w4"
           style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
+          disabled={selectedRoomMember.length > 10}
           onClick={async () => {
             if (selectedRoomMember.length) {
-              const members = {
+              const data = {
                 room: props.roomId,
                 members: selectedRoomMember.map((m) => m._id)
               };
-              await props.addRoomMembers(members, selectedRoomMember);
+              const response: any = await props.addRoomMembers(data, selectedRoomMember);
+
+              if (response.status === 201) {
+                props.setShowDialog(!props.showDialog);
+              } else if (response.status === 400) {
+                setError('Could not add more than 10 members at time');
+              } else {
+                setError('Network Error');
+              }
             }
-            props.setShowDialog(!props.showDialog);
           }
           }
         >
