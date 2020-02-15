@@ -28,7 +28,13 @@ router
   .get(authorization, roomCtrl.memberList);
 
 // add user into a company's room
-router.route('/addUser').post(authorization, roomCtrl.addUsers);
+router
+  .route('/addUser')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.addMembers),
+    roomCtrl.addMembers,
+  );
 
 // get suggestions for adding members
 router
