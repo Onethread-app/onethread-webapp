@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Dialog, Popover } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core';
 import { TaskManagementLayout } from './TaskManagementLayout';
 import { connect } from 'react-redux';
 import { TaskBoard } from 'stores/board/Reducer';
-import { ColumnForm } from './column/ColumnForm';
-import { TaskForm } from './task/TaskForm';
 import { AddTeamMemberForm } from './members/AddTeamMemberForm';
 import { permit } from 'stores/UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
-import { RightSidebar } from 'components/RightSidebar';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-
-import addIcon from 'resources/images/addIcon.png';
-import taskIcon from 'resources/images/taskIcon.png';
-import columnIcon from 'resources/images/columnIcon.png';
-// import settingIcon from 'resources/images/settingIcon.png';
 import addMemberIcon from 'resources/images/addMemberIcon.png';
 
 interface BoardDetailsViewInternalProps {
@@ -24,8 +16,6 @@ interface BoardDetailsViewInternalProps {
 
 const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
 
-  const [showColumnFormDialog, setShowColumnFormDialog] = useState(false);
-  const [showTaskFormDialog, setShowTaskFormDialog] = useState(false);
   const [showAddMemberFormDialog, setShowAddMemberFormDialog] = useState(false);
   const [showMemberListDialog, setShowMemberListDialog] = useState(false);
 
@@ -69,85 +59,13 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
             : undefined}
         </div>
       </div>
-      {permit(props.company.role) === true ?
-        <div
-          className="fixed"
-          style={{
-            bottom: '10rem',
-            right: '8rem',
-          }}
-        >
-          <Popover
-            minimal={true}
-            content={
-              <div className={`pa3 ${showTaskFormDialog || showColumnFormDialog ? 'dn' : 'db'}`}>
-                <div className="mb2">
-                  <Button
-                    className="grow h2 pointer white bp3-minimal flex outline-0"
-                    text={<span className="fw8">Add Task</span>}
-                    icon={
-                      <img
-                        style={{ height: '25px', paddingRight: '1rem' }}
-                        src={taskIcon}
-                      />
-                    }
-                    disabled={props.currentBoard!.columns!.length > 0 ? false : true}
-                    onClick={() => setShowTaskFormDialog(!showTaskFormDialog)}
-                  />
-                </div>
-                <div>
-                  <Button
-                    className="grow h2 pointer white bp3-minimal flex outline-0"
-                    text={<span className="fw8" >Add Column</span>}
-                    icon={
-                      <img
-                        style={{ height: '25px', paddingRight: '1rem' }}
-                        src={columnIcon}
-                      />
-                    }
-                    onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
-                  />
-                </div>
-              </div>
-            }
-            target={
-              <div className={`${showTaskFormDialog || showColumnFormDialog ? 'dn' : 'db'}`}>
-                <img
-                  src={addIcon}
-                  className="fixed pointer"
-                  style={{
-                    bottom: '5rem',
-                    right: '7rem',
-                    width: '5rem',
-                    boxShadow: '0px 6px 6px #00000029',
-                    borderRadius: '50%'
-                  }}
-                />
-              </div>
-            }
-          />
-        </div> : undefined}
       <div className="flex-auto">
-        <div className="fl h-100 w-100">
+        <div className="fl h-100">
           <TaskManagementLayout
             columns={props.currentBoard!.columns!}
           />
         </div>
       </div>
-      {showColumnFormDialog && (
-        <RightSidebar
-          onClose={() => setShowColumnFormDialog(!showColumnFormDialog)}
-        >
-          <ColumnForm setShowColumnFormDialog={setShowColumnFormDialog} />
-        </RightSidebar>
-      )}
-      {showTaskFormDialog && (
-        <RightSidebar
-          onClose={() => setShowTaskFormDialog(!showTaskFormDialog)}
-        >
-          <TaskForm setShowTaskFormDialog={setShowTaskFormDialog} />
-        </RightSidebar>
-      )}
       {showAddMemberFormDialog && (
         <Dialog
           onClose={() => setShowAddMemberFormDialog(!showAddMemberFormDialog)}

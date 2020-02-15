@@ -1,20 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { DragDropContext, Droppable, DropResult } from 'react-beautiful-dnd';
 import { Column } from './column/Column';
 import { IColumn } from 'stores/board/Reducer';
 import { connect } from 'react-redux';
 import { dragAndDropTask } from 'stores/board/Actions';
+import { Button } from '@blueprintjs/core';
+import { RightSidebar } from 'components/RightSidebar';
+import { ColumnForm } from './column/ColumnForm';
 
 interface TaskManagementLayoutProps {
   columns: IColumn[];
 }
 
 interface TaskManagementLayoutInternalProps extends TaskManagementLayoutProps {
-  dragAndDropTask: (taskId: string, sourceColumnId: string, destinationColumnId: string, 
+  dragAndDropTask: (taskId: string, sourceColumnId: string, destinationColumnId: string,
     taskIndexOfDestinationColumn: number) => void;
 }
 
 const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps) => {
+
+  const [showColumnFormDialog, setShowColumnFormDialog] = useState(false);
 
   const dragEnd = async (result: DropResult) => {
     // console.log(result);
@@ -26,7 +31,7 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
       return;
     }
 
-    await props.dragAndDropTask(result.draggableId, result.source.droppableId, 
+    await props.dragAndDropTask(result.draggableId, result.source.droppableId,
       result.destination.droppableId, result.destination.index);
 
     // if (result.type === "column") {
@@ -84,40 +89,65 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
   };
 
   return (
-    <div className="h-100">
-      <DragDropContext
-        onDragEnd={(result) => dragEnd(result)}
-      >
-        <Droppable
-          droppableId="all-columns"
-          type="column"
-          direction="horizontal"
+    <>
+      <div className="h-100">
+        <DragDropContext
+          onDragEnd={(result) => dragEnd(result)}
         >
-          {(provided) => {
-            const allowedProps = { ref: provided.innerRef };
-            return (
-              <div
-                className="flex h-100"
-                {...provided.droppableProps}
-                {...allowedProps}
-              >
-                <div className="fl nowrap w-100 overflow-y-hidden">
-                  {props.columns && props.columns.length > 0 ? props.columns.map((colmun, index) => (
-                    <Column
-                      key={colmun._id ? colmun._id : `col${index}`}
-                      column={colmun}
-                      index={index}
-                    />
-                  ))
-                    : <h5 className="tc fw5 f3">No Columns</h5>}
-                  {provided.placeholder}
+          <Droppable
+            droppableId="all-columns"
+            type="column"
+            direction="horizontal"
+          >
+            {(provided) => {
+              const allowedProps = { ref: provided.innerRef };
+              return (
+                <div
+                  className="flex h-100"
+                  {...provided.droppableProps}
+                  {...allowedProps}
+                >
+                  <div className="fl nowrap w-100">
+                    {props.columns && props.columns.length > 0 ? props.columns.map((colmun, index) => (
+                      <Column
+                        key={colmun._id ? colmun._id : `col${index}`}
+                        column={colmun}
+                        index={index}
+                      />
+                    ))
+                      : <h5 className="tc fw5 f3">No Columns</h5>}
+                    {provided.placeholder}
+                    <div className="dib mh2">
+                      <Button
+                        className="grow pointer bp3-minimal"
+                        style={{
+                          background: '#0FA3A3',
+                          outline: 'none',
+                          color: 'white',
+                          height: '45px',
+                          fontWeight: 'bold'
+                        }}
+                        type="submit"
+                        onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
+                      >
+                        Add Column
+                        </Button>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            );
-          }}
-        </Droppable>
-      </DragDropContext>
-    </div>
+              );
+            }}
+          </Droppable>
+        </DragDropContext>
+      </div>
+      {showColumnFormDialog && (
+        <RightSidebar
+          onClose={() => setShowColumnFormDialog(!showColumnFormDialog)}
+        >
+          <ColumnForm setShowColumnFormDialog={setShowColumnFormDialog} />
+        </RightSidebar>
+      )}
+    </>
   );
 };
 
