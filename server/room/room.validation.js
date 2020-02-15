@@ -18,10 +18,20 @@ module.exports = {
         }),
     }),
   }),
-  addMember: {
-    body: {
-      room: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
-      member: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
-    },
-  },
+  addMembers: Joi.object().keys({
+    body: Joi.object().keys({
+      room: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
+      members: Joi.array()
+        .min(1)
+        .max(10)
+        .items(
+          Joi.string()
+            .regex(/^[0-9a-fA-F]{24}$/)
+            .required(),
+        )
+        .required(),
+    }),
+  }),
 };

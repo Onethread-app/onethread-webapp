@@ -51,7 +51,7 @@ const create = async (req, res, next) => {
   }
 };
 
-const addUsers = async (req, res) => {
+const addMembers = async (req, res) => {
   Room.updateOne(
     { _id: req.body.room },
     {
@@ -61,15 +61,19 @@ const addUsers = async (req, res) => {
     },
   )
     .exec()
-    .then(async result => {
+    .then(result => {
       if (result) {
-        await chatkit.addUsersToRoom({
-          roomId: req.body.room,
-          userIds: req.body.members,
-        });
-        res.status(201).json({
-          message: 'new members added into room',
-        });
+        chatkit
+          .addUsersToRoom({
+            roomId: req.body.room,
+            userIds: req.body.members,
+          })
+          .then(() =>
+            res.status(201).json({
+              message: 'new members added into room',
+            }),
+          )
+          .catch(err => res.status(500).json({ error: err }));
       } else {
         res.status(404).json({ message: 'No room found' });
       }
@@ -149,7 +153,7 @@ const list = async (req, res) => {
 module.exports = {
   create,
   list,
-  addUsers,
+  addMembers,
   suggestMember,
   memberList,
 };
