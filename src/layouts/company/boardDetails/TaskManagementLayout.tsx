@@ -107,7 +107,7 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
                   {...provided.droppableProps}
                   {...allowedProps}
                 >
-                  <div className="fl nowrap w-100">
+                  <div className="fl nowrap w-100 overflow-y-hidden">
                     {props.columns && props.columns.length > 0 ? props.columns.map((colmun, index) => (
                       <Column
                         key={colmun._id ? colmun._id : `col${index}`}
@@ -117,21 +117,24 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
                     ))
                       : <h5 className="tc fw5 f3">No Columns</h5>}
                     {provided.placeholder}
-                    <div className="dib mh2">
+                    <div
+                      className={`${props.columns && props.columns.length > 0 ? 'dib' : 'tc'} pr2  w-23-l w-50-m br3`}
+                      style={{ margin: '0 auto' }}
+                    >
                       <Button
-                        className="grow pointer bp3-minimal"
+                        className="pointer bp3-minimal w-100 ba b--dashed"
                         style={{
-                          background: '#0FA3A3',
                           outline: 'none',
-                          color: 'white',
-                          height: '45px',
+                          color: 'black',
+                          height: '80px',
                           fontWeight: 'bold'
                         }}
                         type="submit"
                         onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
+                        icon="add"
                       >
                         Add Column
-                        </Button>
+                      </Button>
                     </div>
                   </div>
                 </div>
