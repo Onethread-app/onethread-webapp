@@ -55,7 +55,9 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
 
   useEffect(() => {
     if (selectedRoomMember.length > 10) {
-      setError('Could not add more than 10 members at time');
+      setError('Could not add more than 10 members at a time');
+    } else {
+      setError('');
     }
   }, [selectedRoomMember.length]);
 
@@ -70,7 +72,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           multipleItemSelect={true}
         />
         <small className={`${error ? 'red' : 'white'}`}>
-          {error ? error : 'Max user at time : 10'}
+          {error ? error : 'Max user at a time : 10'}
         </small>
       </div>
 
