@@ -1,12 +1,12 @@
-import React from "react";
-import { required, composeValidators, isEmail } from "components/final-form/utils";
+import React from 'react';
+import { required, composeValidators, isEmail } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
 import { Form, Field } from 'react-final-form';
-import tigrowApi from 'tigrowApi';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { Button } from "@blueprintjs/core";
-import { isEqual } from "lodash";
+import { Button } from '@blueprintjs/core';
+import { isEqual } from 'lodash';
+import { tigrowApi } from 'config';
 
 const EmailVerificationFormComponent = ((props: RouteComponentProps) => {
 
@@ -14,16 +14,16 @@ const EmailVerificationFormComponent = ((props: RouteComponentProps) => {
     try {
       const response = await tigrowApi.post('/utils/email-checker', values);
       if (response.status === 200) {
-          props.history.push("/signup?email=" + values.email);
+          props.history.push('/signup?email=' + values.email);
         }
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
-        console.log('Network error')
-      }
-      else if(error.response.status=== 409){
-        props.history.push("/signin?email=" + values.email);
-      }
-      else {
+        // tslint:disable-next-line: no-console
+        console.log('Network error');
+      } else if (error.response.status === 409) {
+        props.history.push('/signin?email=' + values.email);
+      } else {
+        // tslint:disable-next-line: no-console
         console.log(error.response);
       }
     }
@@ -44,7 +44,7 @@ const EmailVerificationFormComponent = ((props: RouteComponentProps) => {
                   placeHolder="Enter your mail address"
                   value={input.value}
                   onChange={input.onChange}
-                  style={{ boxShadow: "none", borderRadius: '25px', height: '46px', paddingLeft: '30px' }}
+                  style={{ boxShadow: 'none', borderRadius: '25px', height: '46px', paddingLeft: '30px' }}
                   error={checkError(meta) && (meta.error || meta.submitError)}
                 />
               }
@@ -53,9 +53,9 @@ const EmailVerificationFormComponent = ((props: RouteComponentProps) => {
           <Button
             className="grow h2 pointer white bp3-minimal w5-ns w-100"
             style={{
-              background: "#0fa3a3",
-              outline: "none",
-              color: "white",
+              background: '#0fa3a3',
+              outline: 'none',
+              color: 'white',
               borderRadius: '25px',
               height: '46px'
             }}
@@ -70,4 +70,4 @@ const EmailVerificationFormComponent = ((props: RouteComponentProps) => {
     />
   );
 });
-export const EmailVerificationForm = withRouter(EmailVerificationFormComponent)
+export const EmailVerificationForm = withRouter(EmailVerificationFormComponent);

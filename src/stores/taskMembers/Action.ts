@@ -1,9 +1,9 @@
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
 import { GET_ALL_MEMBER, DELETE_MEMBER, ASSIGN_MEMBER } from './Types';
 import { ITaskMember } from './Reducer';
 import { isEmpty } from 'lodash';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { tigrowApi } from 'config';
 
 export const addTaskMember = (members: string[]) => async (dispatch: any, getState: any) => {
   try {

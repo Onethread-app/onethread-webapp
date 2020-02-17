@@ -60,7 +60,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
         </div>
       </div>
       <div className="flex-auto">
-        <div className="fl h-100">
+        <div className="fl h-100 w-100">
           <TaskManagementLayout
             columns={props.currentBoard!.columns!}
           />
