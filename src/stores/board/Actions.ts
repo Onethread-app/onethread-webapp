@@ -1,5 +1,4 @@
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
 import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, CREATE_COLUMN, 
   CREATE_COLUMN_ERROR, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, 
   DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK, UPDATE_TASK 
@@ -7,6 +6,7 @@ import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, CREATE_
 import { isEqual } from 'lodash';
 import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { tigrowApi } from 'config';
 
 export const createBoard = (board: TaskBoard) => async (dispatch: any, getState: any) => {
   try {

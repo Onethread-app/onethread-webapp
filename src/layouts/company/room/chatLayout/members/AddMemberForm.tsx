@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
 import { isEqual, isEmpty } from 'lodash';
 import { Button, Tag } from '@blueprintjs/core';
 import { addRoomMembers } from 'stores/room/Actions';
+import { tigrowApi } from 'config';
 
 interface RoomMembersViewProps {
   showDialog: boolean;
@@ -69,8 +69,10 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           setSelectedItems={setSelectedRoomMember}
           multipleItemSelect={true}
         />
-        <small className={`${error ? 'red' : 'white'}`}>
-          {error ? error : 'Max user at time : 10'}
+        <small className={`${error || selectedRoomMember.length > 10 ? 'red' : 'white'}`}>
+          {error ?
+            error : selectedRoomMember.length > 10 ?
+              'Could not add more than 10 members at a time' : 'Max user at a time : 10'}
         </small>
       </div>
 
@@ -107,8 +109,8 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
         <Button className="grow h2 pointer white bp3-minimal w4"
           style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
           disabled={selectedRoomMember.length > 10}
-          onClick={async () => {
-            if (selectedRoomMember.length) {
+          onClick={
+            async () => {
               const data = {
                 room: props.roomId,
                 members: selectedRoomMember.map((m) => m._id)
@@ -123,7 +125,6 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
                 setError('Network Error');
               }
             }
-          }
           }
         >
           Add

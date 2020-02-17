@@ -3,9 +3,12 @@ import { TaskDescriptionEditor } from './TaskDescriptionEditor';
 import { Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
+import { permit } from 'stores/UtilsActions';
+import { CompanyModel } from 'stores/company/Reducer';
 
 interface TaskDescriptionViewInternalProps {
   description?: ITask['description'];
+  company?: CompanyModel;
 }
 
 export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalProps) => {
@@ -16,11 +19,15 @@ export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalP
         <div>
           <h1 className="f6">Description</h1>
         </div>
-        <div className="pr2" style={{paddingTop: '10px'}}>
-          <Icon className="fr tigrow-lightBlue pointer"
-            icon="edit"
-            onClick={() => setEditDescriptionDialog(true)}
-          />
+        <div className="pr2" style={{ paddingTop: '10px' }}>
+          {props.company && permit(props.company.role) ?
+            <Icon className="fr tigrow-lightBlue pointer"
+              icon="edit"
+              onClick={() => {
+                setEditDescriptionDialog(true);
+              }}
+            />
+            : undefined}
         </div>
       </div>
       {editDescriptionDialog ?
@@ -42,6 +49,7 @@ export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalP
 const mapStateToProps = (state: any) => {
   return {
     description: state.boardIndexReducer.boardReducer.currentTask.description,
+    company: state.companyReducer.currentCompany
   };
 };
 

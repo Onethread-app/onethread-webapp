@@ -1,9 +1,9 @@
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
 import { GET_ALL_COMMENT, CREATE_COMMENT } from './Types';
 import { isEmpty } from 'lodash';
 import { Icomment } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { tigrowApi } from 'config';
 
 export const getAllComments = () => async (dispatch: any, getState: any) => {
   try {
@@ -73,7 +73,7 @@ export const createComment = (text: Icomment['text']) => async (dispatch: any, g
         position: currentUser.position,
         text: response.data.text,
         createdAt: response.data.createdAt
-      }
+      };
       dispatch({ type: CREATE_COMMENT, payload: responseData });
     }
     return errorMessgeHandler(response);

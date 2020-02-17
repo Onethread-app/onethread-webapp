@@ -5,7 +5,6 @@ import { checkError } from 'components/final-form/utils';
 import { SuggestField } from 'components/fields/SuggestField';
 import { Tag, Button, Icon } from '@blueprintjs/core';
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
@@ -13,6 +12,7 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { IconNames } from '@blueprintjs/icons';
 import { ITask } from 'stores/board/Reducer';
 import { addTaskMember } from 'stores/taskMembers/Action';
+import { tigrowApi } from 'config';
 
 interface IMembersFormProps {
   setMembersPopover: (val: boolean) => void;

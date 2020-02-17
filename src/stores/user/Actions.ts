@@ -10,9 +10,9 @@ import {
 } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
-import tigrowApi from 'tigrowApi';
 import { User } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { tigrowApi } from 'config';
 
 export const editUserInfoAction = (basicInfo: User) => async (dispatch: any, getState: any) => {
 	try {

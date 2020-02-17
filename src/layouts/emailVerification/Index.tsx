@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { isEqual } from 'lodash';
-import tigrowApi from 'tigrowApi';
 import { AxiosRequestConfig } from 'axios';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { Link } from 'react-router-dom';
 import { Button } from '@blueprintjs/core';
+import { tigrowApi } from 'config';
 
 const EmailVerificationComponent = (props: RouteComponentProps) => {
   const [accountVerified, setAccountVerified] = useState({

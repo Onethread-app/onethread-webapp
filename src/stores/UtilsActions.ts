@@ -35,16 +35,6 @@ export const permit = (companyRole: string): boolean => {
   }
 };
 
-export const showAddMember = (roomName: string, companyRole: string): boolean => {
-  if (isEqual(roomName, 'General')) {
-    return false;
-  } else if (permit(companyRole)) {
-    return true;
-  } else {
-    return false;
-  }
-};
-
 export const passwordValidation = (password: string) => {
   const regex = /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/;
   if (password.match(regex)) {
