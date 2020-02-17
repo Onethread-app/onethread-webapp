@@ -53,14 +53,6 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (selectedRoomMember.length > 10) {
-      setError('Could not add more than 10 members at a time');
-    } else {
-      setError('');
-    }
-  }, [selectedRoomMember.length]);
-
   return (
     <div className="pa3">
       <div className=" w-100">
@@ -71,8 +63,10 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           setSelectedItems={setSelectedRoomMember}
           multipleItemSelect={true}
         />
-        <small className={`${error ? 'red' : 'white'}`}>
-          {error ? error : 'Max user at a time : 10'}
+        <small className={`${error || selectedRoomMember.length > 10 ? 'red' : 'white'}`}>
+          {error ?
+            error : selectedRoomMember.length > 10 ?
+              'Could not add more than 10 members at a time' : 'Max user at a time : 10'}
         </small>
       </div>
 
@@ -109,8 +103,8 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
         <Button className="grow h2 pointer white bp3-minimal w4"
           style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
           disabled={selectedRoomMember.length > 10}
-          onClick={async () => {
-            if (selectedRoomMember.length) {
+          onClick={
+            async () => {
               const data = {
                 room: props.roomId,
                 members: selectedRoomMember.map((m) => m._id)
@@ -125,7 +119,6 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
                 setError('Network Error');
               }
             }
-          }
           }
         >
           Add

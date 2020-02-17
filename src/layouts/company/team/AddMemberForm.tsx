@@ -89,13 +89,13 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           Cancel
           </Button>
         <Button className="grow h2 pointer white bp3-minimal w4"
-          style={selectedTeamMember.length < 1 === false ?
+          style={selectedTeamMember.length < 1 ?
             {
-              background: '#0fa3a3',
+              background: '#011b1b2e',
               outline: 'none',
               color: 'white'
             } : {
-              background: '#011b1b2e',
+              background: '#0fa3a3',
               outline: 'none',
               color: 'white'
             }
