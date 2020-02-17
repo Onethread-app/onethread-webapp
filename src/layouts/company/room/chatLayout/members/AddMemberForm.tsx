@@ -53,12 +53,6 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
     }
   }, []);
 
-  useEffect(() => {
-    if (selectedRoomMember.length > 10) {
-      setError('Could not add more than 10 members at time');
-    }
-  }, [selectedRoomMember.length]);
-
   return (
     <div className="pa3">
       <div className=" w-100">
