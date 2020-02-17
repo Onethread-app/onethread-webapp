@@ -9,6 +9,7 @@ const {
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
+const client = require('../../index.elasticsearch');
 
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -153,6 +154,34 @@ const searchSkillSet = async (req, res, next) => {
       );
       logger.error(`Query Error: ${err}`);
     }
+    
+    // let body = {
+    //   size: 200,
+    //   from: 0,
+    //   query: {
+    //     bool: {
+    //       should: [
+    //         {
+    //           match: {
+    //             name : req.query.name
+    //           }
+    //         }
+    //       ]
+    //     }
+    //   }
+    // };
+
+    // client
+    // .search({ index: "skills", body: body, type: "_doc" })
+    // .then(results => {
+    //         console.log( JSON.stringify (results.hits.hits) );
+    //         res.send(results.hits.hits);
+    // })
+    // .catch(err => {
+    //         console.log(err);
+    //         res.send([]);
+    // });
+
     SkillArea.find({
       $and: [
         { name: { $regex: new RegExp(name), $options: 'i' } },
