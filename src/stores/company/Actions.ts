@@ -1,4 +1,3 @@
-import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
 import { History } from 'history';
 import { tokenConfig } from '../UtilsActions';
@@ -33,6 +32,7 @@ import {
 } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { tigrowApi } from 'config';
 
 export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
 	try {

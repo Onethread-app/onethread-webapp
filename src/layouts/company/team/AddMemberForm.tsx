@@ -3,10 +3,10 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import { server } from 'tigrowApi';
 import { Button, Tag } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 import { useLiveSearch } from 'components/useLiveSearch';
+import { server } from 'config';
 
 interface TeamMembersViewProps {
   showDialog: boolean;

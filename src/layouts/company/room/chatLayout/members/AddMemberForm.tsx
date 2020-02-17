@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
 import { isEqual, isEmpty } from 'lodash';
 import { Button, Tag } from '@blueprintjs/core';
 import { addRoomMembers } from 'stores/room/Actions';
+import { tigrowApi } from 'config';
 
 interface RoomMembersViewProps {
   showDialog: boolean;

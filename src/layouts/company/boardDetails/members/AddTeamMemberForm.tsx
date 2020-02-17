@@ -4,10 +4,10 @@ import { Tag, Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEmpty, isEqual } from 'lodash';
-import tigrowApi from 'tigrowApi';
 import { TaskBoard } from 'stores/board/Reducer';
 import { CompanyModel } from 'stores/company/Reducer';
 import { addTeamMembersIntoBoard } from 'stores/board/Actions';
+import { tigrowApi } from 'config';
 
 interface AddTeamMemberFormProps {
   setShowAddMemberFormDialog?: (val: boolean) => void;

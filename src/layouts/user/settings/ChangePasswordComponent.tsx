@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { InputGroupFieldWithError } from '../../../components/fields/InputGroupField';
 import { Button, Icon } from '@blueprintjs/core';
 import { isEqual } from 'lodash';
-import tigrowApi from 'tigrowApi';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { tokenConfig } from 'stores/UtilsActions';
 import { connect } from 'react-redux';
@@ -11,6 +10,7 @@ import { History } from 'history';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError, required, passwordValidation, composeValidators, errorMessgeHandler } from 'components/final-form/utils';
+import { tigrowApi } from 'config';
 
 const ChangePasswordComponentView = (props: {
   setShowDialog: (val: boolean) => void
@@ -29,6 +29,7 @@ const ChangePasswordComponentView = (props: {
       if ((headers as any).headers.Authorization) {
         response = await tigrowApi.put('accounts/change-password', changePasswordInfo, headers);
       } else {
+        // tslint:disable-next-line: no-console
         console.log('error in user fetching');
       }
       return errorMessgeHandler(response);

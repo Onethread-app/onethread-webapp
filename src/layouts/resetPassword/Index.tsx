@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { InputGroupFieldWithError } from '../../components/fields/InputGroupField';
 import { Button, Tooltip, Position } from '@blueprintjs/core';
-import tigrowApi from 'tigrowApi';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
@@ -11,6 +10,7 @@ import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
 import questionIcon from './../../resources/images/question.png';
 import { Link } from 'react-router-dom';
+import { tigrowApi } from 'config';
 
 const ResetPasswordComponent = (props: RouteComponentProps) => {
   const [showPassword, setShowPassword] = useState(false);

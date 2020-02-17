@@ -1,4 +1,3 @@
-import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
 import { tokenConfig } from '../UtilsActions';
 import {
@@ -18,6 +17,7 @@ import {
 	GET_ROOM_MESSAGES_ERROR,
 	FILE_UPLOAD
 } from './Types';
+import { tigrowApi } from 'config';
 
 export const createRoomAction = (roomData: any) => async (
 	dispatch: any,

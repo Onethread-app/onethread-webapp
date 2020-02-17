@@ -1,4 +1,3 @@
-import tigrowApi from 'tigrowApi';
 import { AxiosRequestConfig } from 'axios';
 import { History } from 'history';
 import { isEqual } from 'lodash';
@@ -7,6 +6,7 @@ import { FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE } from 'stores/u
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { tigrowApi } from 'config';
 
 export interface UserModel {
 	firstName: string;

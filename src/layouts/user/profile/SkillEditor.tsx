@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { ItemEntityProps, SuggestField } from 'components/fields/SuggestField';
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi, { server } from 'tigrowApi';
 import { Tag, Button } from '@blueprintjs/core';
 import { isEqual, isEmpty, lowerCase } from 'lodash';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { useSelector } from 'react-redux';
+import { tigrowApi, server } from 'config';
 interface SkillEditProps {
   addSkillAction: (skillSet: string[]) => void;
   setShowDialog: (val: boolean) => void;
