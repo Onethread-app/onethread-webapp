@@ -22,7 +22,7 @@ export const SkillViewComponent = (props: SkillViewComponentProps) => {
         {props.user.skillArea.length > 0 ? props.user.skillArea.map((skill: ItemEntityProps) => {
           return (
             <div className="mv1 fl">
-              <span className="bp3-tag ma1 pv2 ph3"
+              <span className="bp3-tag ma1 pv2 ph3 ws-break"
                 style={{ backgroundColor: '#0fa3a3', color: 'white', fontSize: '15px' }}>
                 {skill.name}
                 <span
