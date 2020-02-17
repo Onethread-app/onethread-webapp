@@ -2,7 +2,10 @@ const SkillArea = require('./skillArea.model');
 const Account = require('../account/account.model');
 const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const {
   APIError,
   EmailIdExistError,
@@ -141,77 +144,69 @@ const skillLoad = async (req, res, next, id) => {
     });
 };
 const searchSkillSet = async (req, res, next) => {
-  try {
-    const name = req.query.name;
-    const userId = req.user._id;
-    const userSkill = await Account.findOne({ _id: userId });
-    const userskillId = userSkill.skillArea;
-    if (name === '') {
-      const err = new BadRequestError(
-        'Nothing Submitted',
-        httpStatus.BAD_REQUEST,
-        true,
-      );
-      logger.error(`Query Error: ${err}`);
-    }
-    
-    // let body = {
-    //   size: 200,
-    //   from: 0,
-    //   query: {
-    //     bool: {
-    //       should: [
-    //         {
-    //           match: {
-    //             name : req.query.name
-    //           }
-    //         }
-    //       ]
-    //     }
-    //   }
-    // };
+  const name = req.query.name;
+  const userId = req.user._id;
+  const userSkill = await Account.findOne({ _id: userId });
+  const userskillId = userSkill.skillArea;
+  if (name) {
 
-    // client
-    // .search({ index: "skills", body: body, type: "_doc" })
-    // .then(results => {
-    //         console.log( JSON.stringify (results.hits.hits) );
-    //         res.send(results.hits.hits);
-    // })
-    // .catch(err => {
-    //         console.log(err);
-    //         res.send([]);
-    // });
-
-    SkillArea.find({
-      $and: [
-        { name: { $regex: new RegExp(name), $options: 'i' } },
-        { _id: { $nin: userskillId } },
-      ],
-    })
-      .select('-accountId')
-      .then(data => {
-        if (data.length < 1) {
-          const err = new SearchNotMatchError(
-            'Query does not found',
-            httpStatus.BAD_REQUEST,
-            true,
-          );
-          logger.error(`Query Error: ${err}`);
-        } else {
-          logger.info(`Search complete ${name}`);
-          return sendJSONresponse(res, 200, {
-            success: true,
-            message: `Search complete for ${name}`,
-            data,
-          });
+    let body = {
+      size: 200,
+      from: 0,
+      query: {
+        bool: {
+          should: [
+            {
+              match: {
+                name : req.query.name
+              }
+            }
+          ]
         }
+      }
+    };
+
+    client
+      .search({ index: 'skillarea', body: body, type: '_doc' })
+      .then(results => {
+        // console.log(JSON.stringify(results.hits.hits));
+        res.send(results.hits.hits);
       })
       .catch(err => {
-        logger.error(`${err}`);
-        return next(err);
+        console.log(err);
+        // res.send([]);
       });
-  } catch (error) {
-    next(error);
+
+    // await SkillArea.find({
+    //   $and: [
+    //     { name: { $regex: new RegExp(name), $options: 'i' } },
+    //     { _id: { $nin: userskillId } },
+    //   ],
+    // })
+    //   .select('-accountId')
+    //   .then(data => {
+    //     if (data.length < 1) {
+    //       logger.error(`search not match for ${name}`);
+    //       return sendErrorResponse(res, 404, 'SearchNotMatchError', {
+    //         message: 'no skill found',
+    //       });
+    //     } else {
+    //       logger.info(`Search complete ${name}`);
+    //       return sendJSONresponse(res, 200, {
+    //         success: true,
+    //         message: `Search complete for ${name}`,
+    //         data,
+    //       });
+    //     }
+    //   })
+    //   .catch(err => {
+    //     logger.error(`${err}`);
+    //     return next(err);
+    //   });
+  } else {
+    return sendErrorResponse(res, 400, 'EmptySearchError', {
+      message: `query error`,
+    });
   }
 };
 
