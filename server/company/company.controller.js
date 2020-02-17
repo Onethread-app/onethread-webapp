@@ -286,7 +286,27 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
+const authorizeAdmin = async (req, res, role, next)=> {
+
+  
+  const member = await Member.findOne({
+    account: req.user._id,
+    company: req.company._id,
+  });
+
+  if (!member || !['superAdmin', 'admin'].includes(member.role) || ![role].includes(req.company.optionalRole)) {
+    return res.status(403).json({
+      message: `Restricted`,
+    });
+  }
+
+  next();
+
+}
+
+
 module.exports = {
+  authorizeAdmin,
   createCompany,
   getCompany,
   updateBasicInfo,
