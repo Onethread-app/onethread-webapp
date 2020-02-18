@@ -43,5 +43,10 @@ module.exports.authorization = async (req, res, next) => {
         next();
       });
     }
+  } else {
+    return sendErrorResponse(res, 401, 'AuthError', {
+      message: 'No token provided',
+      fieldName: 'headers',
+    });
   }
 };
