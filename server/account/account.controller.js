@@ -11,10 +11,7 @@ const {
   sendEmailForResetPassword,
 } = require('../services/email.services');
 const { chatkit } = require('../services/pusher.services');
-const {
-  updateRefreshTokenfromList,
-  removeRefreshTokenfromList,
-} = require('../services/redis.services');
+const { addTokenToBlackList } = require('../services/redis.services');
 const {
   sendJSONresponse,
   sendErrorResponse,
@@ -112,20 +109,19 @@ const login = async (req, res, next) => {
       { email: req.user.email, _id: req.user._id },
       config.jwtSecret,
       {
-        expiresIn: config.jwtExpire,
+        expiresIn: config.accessTokenExpire,
       },
     );
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
-      expiresIn: config.jwtExpire,
+      expiresIn: config.accessTokenExpire,
     });
     const refreshToken = jwt.sign(
       payLoad,
       config.refreshTokenSecret,
       {
-        expiresIn: config.jwtRefreshExpire,
+        expiresIn: config.refreshTokenExpire,
       },
     );
-
     const userObj = req.user.toObject();
     const timeline = [
       ...req.user.jobExperience,
@@ -249,13 +245,46 @@ const accountUpdate = async (req, res, next) => {
       return next(err);
     });
 };
-const logout = async (req, res) => {
-  req.logout();
-  logger.info('Account successfully Logout');
-  return sendJSONresponse(res, 200, {
-    success: true,
-    message: 'Successfully logout',
-  });
+const logout = async (req, res, next) => {
+  try {
+    let refreshToken = req.body.refreshToken;
+    let accessToken = req.headers.authorization;
+    let accessTokenExpire =
+      req.user.exp * 1000 +
+      new Date(req.user.exp * 1000).getTimezoneOffset() * 60 * 1000 -
+      (Date.now() +
+        new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+    if (refreshToken) {
+      await jwt.verify(
+        refreshToken,
+        config.refreshTokenSecret,
+        (err, user) => {
+          if (err) {
+            return sendErrorResponse(res, 401, 'AuthError', {
+              message: err.message,
+              fieldName: 'headers',
+            });
+          }
+          let refreshTokenExpire =
+            user.exp * 1000 +
+            new Date(user.exp * 1000).getTimezoneOffset() *
+              60 *
+              1000 -
+            (Date.now() +
+              new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+          addTokenToBlackList(accessToken, accessTokenExpire);
+          addTokenToBlackList(refreshToken, refreshTokenExpire);
+          logger.info('Account successfully Logout');
+          return sendJSONresponse(res, 200, {
+            success: true,
+            message: 'Successfully logout',
+          });
+        },
+      );
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 const sendEmailForForgetPassword = async (req, res, next) => {
@@ -375,61 +404,129 @@ const searchAccount = async (req, res, next) => {
 };
 
 const tokenRefresh = async (req, res, next) => {
-  const refreshToken = req.body.refreshToken;
-  if (refreshToken) {
-    client.exists(refreshToken, function(err, exists) {
-      if (exists) {
-        let refreshTokenPayload;
-        jwt.verify(refreshToken, config.refreshTokenSecret, function(
-          err,
-          user,
-        ) {
+  try {
+    const refreshToken = req.body.refreshToken;
+    // check if a refresh token exist in blacklist
+    let isBlackListed;
+    await client
+      .multi()
+      .GET(`BlackList:${refreshToken}`)
+      .execAsync()
+      .then(data => {
+        // if data object is null token is not blacklisted
+        if (data[0] === null) {
+          isBlackListed = false;
+        } else {
+          isBlackListed = true;
+        }
+      })
+      .catch(err => {
+        next(err);
+      });
+
+    if (isBlackListed) {
+      return sendErrorResponse(res, 401, 'AuthError', {
+        message: 'invalid token',
+      });
+    } else {
+      await jwt.verify(
+        refreshToken,
+        config.refreshTokenSecret,
+        async function(err, user) {
           if (err) {
-            return res.status(401).json({
-              statusCode: 401,
-              error: 'Unauthorized',
+            return sendErrorResponse(res, 401, 'AuthError', {
               message: err.message,
             });
           }
-          refreshTokenPayload = user;
-        });
-        const payload = {
-          email: refreshTokenPayload.email,
-        };
-        const accessToken = jwt.sign(
-          payload,
-          config.accessTokenSecret,
-          { expiresIn: '45m' },
-        );
-        const refreshToken1 = jwt.sign(
-          payload,
-          config.refreshTokenSecret,
-          {
-            expiresIn: '48h',
-          },
-        );
-        const response = {
-          accessToken: accessToken,
-          tokenType: 'Bearer',
-          refreshToken: refreshToken1,
-        };
-        updateRefreshTokenfromList(refreshToken1, accessToken);
-        return sendJSONresponse(res, 200, response);
-      } else {
-        logger.error('The refresh token does not exist');
-        return sendJSONresponse(res, 401, {
-          message: 'Refresh token does not exist',
-        });
-      }
-    });
-  } else {
-    logger.error(
-      `The required parameters were not sent in the request`,
-    );
-    return sendJSONresponse(res, 401, {
-      error: 'Bad Request',
-      message: 'The required parameters were not sent in the request',
-    });
+          const payLoad = {
+            email: user.email,
+            _id: user._id,
+          };
+          // convert to msec
+          // add local time zone offset
+          // get UTC time in msec
+          // create new Date object for different city
+          const refreshTokenExpire =
+            user.exp * 1000 +
+            new Date(user.exp * 1000).getTimezoneOffset() *
+              60 *
+              1000 -
+            (Date.now() +
+              new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+          const oldAccessToken = req.body.accessToken;
+          await jwt.verify(
+            oldAccessToken,
+            config.accessTokenSecret,
+            (err, verified) => {
+              // if access token expired
+              // add refresh token in blacklist
+              // make new access and refresh token
+              if (err) {
+                addTokenToBlackList(refreshToken, refreshTokenExpire);
+                const accessToken = jwt.sign(
+                  payLoad,
+                  config.accessTokenSecret,
+                  {
+                    expiresIn: config.accessTokenExpire,
+                  },
+                );
+                const newRefreshToken = jwt.sign(
+                  payLoad,
+                  config.refreshTokenSecret,
+                  {
+                    expiresIn: config.refreshTokenExpire,
+                  },
+                );
+                const response = {
+                  accessToken: accessToken,
+                  token_type: 'Bearer',
+                  refreshToken: newRefreshToken,
+                };
+                return sendJSONresponse(res, 200, response);
+              } else {
+                let oldAccessTokenExpire =
+                  verified.exp * 1000 +
+                  new Date(verified.exp * 1000).getTimezoneOffset() *
+                    60 *
+                    1000 -
+                  (Date.now() +
+                    new Date(Date.now()).getTimezoneOffset() *
+                      60 *
+                      1000);
+                addTokenToBlackList(
+                  oldAccessToken,
+                  oldAccessTokenExpire,
+                );
+                addTokenToBlackList(refreshToken, refreshTokenExpire);
+                const accessToken = jwt.sign(
+                  payLoad,
+                  config.accessTokenSecret,
+                  {
+                    expiresIn: config.accessTokenExpire,
+                  },
+                );
+                const newRefreshToken = jwt.sign(
+                  payLoad,
+                  config.refreshTokenSecret,
+                  {
+                    expiresIn: config.refreshTokenExpire,
+                  },
+                );
+                const response = {
+                  accessToken: accessToken,
+                  token_type: 'Bearer',
+                  refreshToken: newRefreshToken,
+                };
+                return sendJSONresponse(res, 200, response);
+              }
+            },
+          );
+        },
+      );
+    }
+  } catch (err) {
+    console.log(err);
+    next(err);
   }
 };
 

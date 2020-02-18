@@ -17,7 +17,6 @@ mongoose.Promise = Promise;
 
 // connect to mongo db
 const mongoUri = config.mongo.host;
-mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useUnifiedTopology', true);
@@ -75,14 +74,6 @@ if (!module.parent) {
     );
   });
 }
-
-process.on('unhandledRejection', async (err, promise) => {
-  logger.error(err, {
-    dispatcher: loggerDispatcher,
-    from: 'unhandledRejection event',
-    promise,
-  });
-});
 
 process.on('unhandledRejection', async (err, promise) => {
   logger.error(err, {

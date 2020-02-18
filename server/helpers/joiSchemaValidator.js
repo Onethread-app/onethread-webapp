@@ -43,13 +43,6 @@ module.exports = (_schema, useJoiError = true) => {
           400,
           _useJoiError ? JoiError : customError,
         );
-        // res.status(400).send(_useJoiError ? JoiError : customError);
-        // return sendErrorResponse(
-        //   res,
-        //   400,
-        //   'ValidationError',
-        //   JoiError,
-        // );
       });
   };
 };
