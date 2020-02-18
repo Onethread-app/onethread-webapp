@@ -12,8 +12,8 @@ const {
 } = require('../services/email.services');
 const { chatkit } = require('../services/pusher.services');
 const {
-  updateRefreshTokenfromList,
-  removeRefreshTokenfromList,
+  addTokenToBlackList,
+  accountVerificationToken,
 } = require('../services/redis.services');
 const {
   sendJSONresponse,
@@ -67,13 +67,6 @@ const register = async (req, res, next) => {
     password: data.password,
     birthDate: data.birthDate,
   });
-  const token = crypto.randomBytes(20).toString('hex');
-  const verifyToken = crypto
-    .createHash('sha256')
-    .update(token)
-    .digest('hex');
-  account.verifyAccountToken = verifyToken;
-  account.verifyAccountTokenExpiration = Date.now() + 604800;
   await account
     .save()
     .then(async user => {
@@ -81,11 +74,22 @@ const register = async (req, res, next) => {
         id: user._id,
         name: user.name,
       });
+      let token = crypto.randomBytes(20).toString('hex');
+      let verifyToken = crypto
+        .createHash('sha256')
+        .update(token)
+        .digest('hex');
+      let verifyAccountTokenExpiration = Date.now() + 604800;
       sendEmailForVerifyAccount(
         user.firstName,
         user.lastName,
         user.email,
         verifyToken,
+      );
+      accountVerificationToken(
+        `verifyAccountToken:${verifyToken}`,
+        user._id,
+        verifyAccountTokenExpiration,
       );
       return sendJSONresponse(res, 201, { message: 'User created' });
     })
@@ -112,20 +116,19 @@ const login = async (req, res, next) => {
       { email: req.user.email, _id: req.user._id },
       config.jwtSecret,
       {
-        expiresIn: config.jwtExpire,
+        expiresIn: config.accessTokenExpire,
       },
     );
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
-      expiresIn: config.jwtExpire,
+      expiresIn: config.accessTokenExpire,
     });
     const refreshToken = jwt.sign(
       payLoad,
       config.refreshTokenSecret,
       {
-        expiresIn: config.jwtRefreshExpire,
+        expiresIn: config.refreshTokenExpire,
       },
     );
-
     const userObj = req.user.toObject();
     const timeline = [
       ...req.user.jobExperience,
@@ -180,39 +183,33 @@ const getAccount = async (req, res, next) => {
 // token verification for mail
 const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
-    const { token } = req.params;
-    const isUserExist = await Account.findOne({
-      verifyAccountToken: token,
-    });
-    if (!isUserExist)
-      return sendJSONresponse(res, 404, {
-        isAccountVerified: false,
-        message: 'User is not exist',
+    let userID = '';
+    await client
+      .multi()
+      .get(`verifyAccountToken:${req.params.token}`)
+      .execAsync()
+      .then(data => {
+        userID = JSON.parse(data[0]);
+      })
+      .catch(err => {
+        next(err);
       });
-    const isTimeLimit = await Account.findOne({
-      verifyAccountTokenExpiration: { $gt: Date.now() },
-    });
-    if (!isTimeLimit)
-      return sendJSONresponse(res, 400, {
+    if (!userID)
+      return sendErrorResponse(res, 400, 'TokenExpireError', {
         isAccountVerified: false,
         message: 'Link is expired',
       });
-    if (isUserExist && isTimeLimit) {
-      await Account.findOneAndUpdate(
-        { verifyAccountToken: token },
-        {
-          $set: {
-            verifyAccountToken: undefined,
-            isAccountVerified: true,
-          },
-        },
-        { safe: true, upsert: true, new: true },
-      );
-      return sendJSONresponse(res, 200, {
-        isAccountVerified: true,
-        message: 'Account Verified Successfully',
-      });
-    }
+    await Account.findByIdAndUpdate(
+      { _id: userID },
+      { $set: { isAccountVerified: true } },
+      { safe: true, upsert: true, new: true },
+    );
+
+    await client.del(`verifyAccountToken:${req.params.token}`);
+    return sendJSONresponse(res, 200, {
+      isAccountVerified: true,
+      message: 'Account Verified Successfully',
+    });
   } catch (err) {
     next(err);
   }
@@ -249,13 +246,46 @@ const accountUpdate = async (req, res, next) => {
       return next(err);
     });
 };
-const logout = async (req, res) => {
-  req.logout();
-  logger.info('Account successfully Logout');
-  return sendJSONresponse(res, 200, {
-    success: true,
-    message: 'Successfully logout',
-  });
+const logout = async (req, res, next) => {
+  try {
+    let refreshToken = req.body.refreshToken;
+    let accessToken = req.headers.authorization;
+    let accessTokenExpire =
+      req.user.exp * 1000 +
+      new Date(req.user.exp * 1000).getTimezoneOffset() * 60 * 1000 -
+      (Date.now() +
+        new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+    if (refreshToken) {
+      await jwt.verify(
+        refreshToken,
+        config.refreshTokenSecret,
+        (err, user) => {
+          if (err) {
+            return sendErrorResponse(res, 401, 'AuthError', {
+              message: err.message,
+              fieldName: 'headers',
+            });
+          }
+          let refreshTokenExpire =
+            user.exp * 1000 +
+            new Date(user.exp * 1000).getTimezoneOffset() *
+              60 *
+              1000 -
+            (Date.now() +
+              new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+          addTokenToBlackList(accessToken, accessTokenExpire);
+          addTokenToBlackList(refreshToken, refreshTokenExpire);
+          logger.info('Account successfully Logout');
+          return sendJSONresponse(res, 200, {
+            success: true,
+            message: 'Successfully logout',
+          });
+        },
+      );
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 const sendEmailForForgetPassword = async (req, res, next) => {
@@ -269,21 +299,26 @@ const sendEmailForForgetPassword = async (req, res, next) => {
       email: req.body.email,
     });
     if (!user)
-      return sendErrorResponse(res, 404, '', {
+      return sendErrorResponse(res, 404, 'UserNotFoundError', {
         message: 'no user found',
         fieldName: 'email',
       });
-    user.resetPasswordToken = verifyToken;
-    user.resetPasswordTokenExpiration = Date.now() + 86400; // 1 day
-    user.save();
     sendEmailForResetPassword(
-      capitalizeName(user.firstName),
-      capitalizeName(user.lastName),
+      user.firstName,
+      user.lastName,
       user.email,
       verifyToken,
     );
+    let resetPasswordTokenExpiration = Date.now() + 86400; // 1 day
+    accountVerificationToken(
+      `resetPasswordToken:${verifyToken}`,
+      user._id,
+      resetPasswordTokenExpiration,
+    );
     logger.info(`send reset password mail to user successfully`);
-    return sendJSONresponse(res, 200);
+    return sendJSONresponse(res, 200, {
+      message: 'Mail send successfully',
+    });
   } catch (error) {
     next(error);
   }
@@ -292,20 +327,28 @@ const sendEmailForForgetPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   try {
     const { password, token } = req.body;
-    const user = await Account.findOne({
-      resetPasswordToken: token,
-      resetPasswordTokenExpiration: { $gt: Date.now() },
-    }).select('-password');
+    let userID = '';
+    await client
+      .multi()
+      .get(`resetPasswordToken:${token}`)
+      .execAsync()
+      .then(data => {
+        userID = JSON.parse(data[0]);
+      })
+      .catch(err => {
+        next(err);
+      });
 
-    if (!user)
+    if (!userID)
       return sendErrorResponse(res, 401, 'TokenExpireError', {
         message: 'Time is expired',
       });
-    user.resetPasswordToken = undefined;
-    user.resetPasswordTokenExpiration = undefined;
+    const user = await Account.findById({ _id: userID });
     user.password = password;
     await user.save();
     logger.info(`password successfully change`);
+    await client.del(`resetPasswordToken:${token}`);
+    logger.info(`delete reset password token from tokenList`);
     return sendJSONresponse(res, 200, {
       message: 'Password Changed',
     });
@@ -315,121 +358,129 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-const accountLoad = async (req, res, next, id) => {
-  Account.findById(id)
-    .select('-password')
-    .exec()
-    .then(result => {
-      if (result) {
-        logger.info(`${result} account successfully load`);
-        req.account = result;
-        next();
-      } else {
-        logger.warn(`No valid entry for provided id`);
-        return sendJSONresponse(res, 400, {
-          message: `no valid entry found for id`,
-        });
-      }
-    })
-    .catch(err => {
-      return next(err);
-    });
-};
-
-const searchAccount = async (req, res, next) => {
-  const name = req.query.name;
-  if (name === '') {
-    const err = new BadRequestError(
-      'Nothing Submitted',
-      httpStatus.BAD_REQUEST,
-      true,
-    );
-    logger.error(`Query Error: ${err}`);
-    return next(err);
-  }
-  Account.find({ name: { $regex: new RegExp(name) } })
-    .select('email name _id')
-    .then(data => {
-      if (data.length < 1) {
-        const err = new SearchNotMatchError(
-          'Query does not found',
-          httpStatus.BAD_REQUEST,
-          true,
-        );
-        logger.error(`Query Error: ${err}`);
-        return next(err);
-      } else {
-        logger.info(`Search complete ${name}`);
-        return sendJSONresponse(res, 200, {
-          employees: {
-            success: true,
-            message: `Search complete ${name}`,
-            data,
-          },
-        });
-      }
-    })
-    .catch(err => {
-      return next(err);
-    });
-};
-
 const tokenRefresh = async (req, res, next) => {
-  const refreshToken = req.body.refreshToken;
-  if (refreshToken) {
-    client.exists(refreshToken, function(err, exists) {
-      if (exists) {
-        let refreshTokenPayload;
-        jwt.verify(refreshToken, config.refreshTokenSecret, function(
-          err,
-          user,
-        ) {
+  try {
+    const refreshToken = req.body.refreshToken;
+    // check if a refresh token exist in blacklist
+    let isBlackListed;
+    await client
+      .multi()
+      .GET(`BlackList:${refreshToken}`)
+      .execAsync()
+      .then(data => {
+        // if data object is null token is not blacklisted
+        if (data[0] === null) {
+          isBlackListed = false;
+        } else {
+          isBlackListed = true;
+        }
+      })
+      .catch(err => {
+        next(err);
+      });
+
+    if (isBlackListed) {
+      return sendErrorResponse(res, 401, 'AuthError', {
+        message: 'invalid token',
+      });
+    } else {
+      await jwt.verify(
+        refreshToken,
+        config.refreshTokenSecret,
+        async function(err, user) {
           if (err) {
-            return res.status(401).json({
-              statusCode: 401,
-              error: 'Unauthorized',
+            return sendErrorResponse(res, 401, 'AuthError', {
               message: err.message,
             });
           }
-          refreshTokenPayload = user;
-        });
-        const payload = {
-          email: refreshTokenPayload.email,
-        };
-        const accessToken = jwt.sign(
-          payload,
-          config.accessTokenSecret,
-          { expiresIn: '45m' },
-        );
-        const refreshToken1 = jwt.sign(
-          payload,
-          config.refreshTokenSecret,
-          {
-            expiresIn: '48h',
-          },
-        );
-        const response = {
-          accessToken: accessToken,
-          tokenType: 'Bearer',
-          refreshToken: refreshToken1,
-        };
-        updateRefreshTokenfromList(refreshToken1, accessToken);
-        return sendJSONresponse(res, 200, response);
-      } else {
-        logger.error('The refresh token does not exist');
-        return sendJSONresponse(res, 401, {
-          message: 'Refresh token does not exist',
-        });
-      }
-    });
-  } else {
-    logger.error(
-      `The required parameters were not sent in the request`,
-    );
-    return sendJSONresponse(res, 401, {
-      error: 'Bad Request',
-      message: 'The required parameters were not sent in the request',
-    });
+          const payLoad = {
+            email: user.email,
+            _id: user._id,
+          };
+          // convert to msec
+          // add local time zone offset
+          // get UTC time in msec
+          // create new Date object for different city
+          const refreshTokenExpire =
+            user.exp * 1000 +
+            new Date(user.exp * 1000).getTimezoneOffset() *
+              60 *
+              1000 -
+            (Date.now() +
+              new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+          const oldAccessToken = req.body.accessToken;
+          await jwt.verify(
+            oldAccessToken,
+            config.accessTokenSecret,
+            (err, verified) => {
+              // if access token expired
+              // add refresh token in blacklist
+              // make new access and refresh token
+              if (err) {
+                addTokenToBlackList(refreshToken, refreshTokenExpire);
+                const accessToken = jwt.sign(
+                  payLoad,
+                  config.accessTokenSecret,
+                  {
+                    expiresIn: config.accessTokenExpire,
+                  },
+                );
+                const newRefreshToken = jwt.sign(
+                  payLoad,
+                  config.refreshTokenSecret,
+                  {
+                    expiresIn: config.refreshTokenExpire,
+                  },
+                );
+                const response = {
+                  accessToken: accessToken,
+                  token_type: 'Bearer',
+                  refreshToken: newRefreshToken,
+                };
+                return sendJSONresponse(res, 200, response);
+              } else {
+                let oldAccessTokenExpire =
+                  verified.exp * 1000 +
+                  new Date(verified.exp * 1000).getTimezoneOffset() *
+                    60 *
+                    1000 -
+                  (Date.now() +
+                    new Date(Date.now()).getTimezoneOffset() *
+                      60 *
+                      1000);
+                addTokenToBlackList(
+                  oldAccessToken,
+                  oldAccessTokenExpire,
+                );
+                addTokenToBlackList(refreshToken, refreshTokenExpire);
+                const accessToken = jwt.sign(
+                  payLoad,
+                  config.accessTokenSecret,
+                  {
+                    expiresIn: config.accessTokenExpire,
+                  },
+                );
+                const newRefreshToken = jwt.sign(
+                  payLoad,
+                  config.refreshTokenSecret,
+                  {
+                    expiresIn: config.refreshTokenExpire,
+                  },
+                );
+                const response = {
+                  accessToken: accessToken,
+                  token_type: 'Bearer',
+                  refreshToken: newRefreshToken,
+                };
+                return sendJSONresponse(res, 200, response);
+              }
+            },
+          );
+        },
+      );
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -504,7 +555,7 @@ const resendEmail = async (req, res, next) => {
       .createHash('sha256')
       .update(token)
       .digest('hex');
-    const account = await Account.findOne({
+    const user = await Account.findOne({
       email: email,
     });
     if (!resentType) {
@@ -513,22 +564,17 @@ const resendEmail = async (req, res, next) => {
       });
     }
     if (resentType === 'verify-account') {
-      account.verifyAccountToken = verifyToken;
-      account.verifyAccountTokenExpiration = Date.now() + 604800;
-      await sendEmailForVerifyAccount(
-        account.firstName,
-        account.lastName,
-        account.email,
+      let verifyAccountTokenExpiration = Date.now() + 604800;
+      sendEmailForVerifyAccount(
+        user.firstName,
+        user.lastName,
+        user.email,
         verifyToken,
       );
-    }
-    if (resentType === 'reset-password-mail') {
-      account.resetPasswordToken = verifyToken;
-      account.resetPasswordTokenExpiration = Date.now() + 86400;
-      await sendEmailForResetPassword(
-        account.name,
-        account.email,
+      accountVerificationToken(
         verifyToken,
+        user._id,
+        verifyAccountTokenExpiration,
       );
     }
     await account.save();
@@ -546,9 +592,7 @@ module.exports = {
   logout,
   getAccessTokenForVerifyAccount,
   getAccount,
-  accountLoad,
   accountUpdate,
-  searchAccount,
   tokenRefresh,
   // tokenRevoke,
   sendEmailForForgetPassword,

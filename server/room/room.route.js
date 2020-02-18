@@ -19,8 +19,14 @@ router
     roomCtrl.create,
   );
 
-// get rooms for a company
-router.route('/:company').get(authorization, roomCtrl.list);
+// recheck mongodb room users with chatkit room users
+router
+  .route('/hot-fix')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.recheckMembersWithChatkit),
+    roomCtrl.recheckMembersWithChatkit,
+  );
 
 // get members for a room
 router
@@ -40,5 +46,8 @@ router
 router
   .route('/suggest-member/:roomId/:companyId')
   .get(authorization, roomCtrl.suggestMember);
+
+// get rooms for a company
+router.route('/:company').get(authorization, roomCtrl.list);
 
 module.exports = router;

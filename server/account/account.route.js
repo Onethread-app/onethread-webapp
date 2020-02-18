@@ -44,7 +44,7 @@ router
     schemaValidator(paramValidation.update),
     accountCtrl.accountUpdate,
   );
-router.route('/logout').get(authorization, accountCtrl.logout);
+router.route('/logout').post(authorization, accountCtrl.logout);
 router
   .route('/forget-password')
   .post(accountCtrl.sendEmailForForgetPassword);
@@ -61,11 +61,10 @@ router
     schemaValidator(paramValidation.changePassword),
     accountCtrl.changePassword,
   );
+router.route('/refresh').post(accountCtrl.tokenRefresh);
 // for admin
 // router
 //   .route('/admin')
 //   .post(requireLogin, permit('admin'), accountCtrl.login);
-
-router.param('account-id', accountCtrl.accountLoad);
 
 module.exports = router;

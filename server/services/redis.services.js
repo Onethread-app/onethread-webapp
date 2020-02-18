@@ -1,69 +1,15 @@
 const redis = require('redis');
 const logger = require('../../config/winston');
 const client = redis.createClient();
-module.exports.addRefreshTokenToList = async (
-  refreshToken,
-  data,
-  accessToken,
-  exp,
+module.exports.addTokenToBlackList = async (token, tokenExpire) => {
+  await client.SET(`BlackList:${token}`, token, 'PX', tokenExpire);
+  logger.info(`access and refresh token add to blacklist`);
+};
+module.exports.accountVerificationToken = async (
+  token,
+  userID,
+  tokenExpire,
 ) => {
-  data = data.toString();
-  client.HMSET(
-    refreshToken,
-    {
-      data,
-      accessToken,
-    },
-    (err, replies) => {
-      if (err) {
-        logger.debug(`redis error while save in database ${err}`);
-      } else {
-        logger.info(`successfully set to  data`);
-        return replies;
-      }
-    },
-  );
-  client.expire(refreshToken, exp);
-};
-
-module.exports.updateRefreshTokenfromList = function(
-  refreshToken,
-  accessToken,
-) {
-  client.hset(refreshToken, 'accessToken', accessToken, redis.print);
-  logger.info(`successfully update refresh token for the user`);
-};
-
-module.exports.removeRefreshTokenfromList = function(refreshToken) {
-  client.del(refreshToken, redis.print);
-  logger.info(`remove refresh token for the user`);
-};
-
-module.exports.addAccessTokenToBlackList = function(accessToken) {
-  client.LPUSH('blackListToken', accessToken);
-};
-module.exports.addAccessTokenToHashList = function(
-  blackList,
-  user,
-  accessToken,
-  exp,
-) {
-  client.HMSET(
-    blackList,
-    user,
-    accessToken,
-
-    (err, replies) => {
-      if (err) {
-        logger.debug(`redis error while save in database ${err}`);
-      } else {
-        logger.info(`successfully set to  data`);
-        return replies;
-      }
-    },
-  );
-  client.expire(user, exp);
-};
-module.exports.addAccessTokenToSet = function(email, accessToken) {
-  client.SET(`userID:${email}`, accessToken);
+  await client.set(token, JSON.stringify(userID), 'PX', tokenExpire);
+  logger.info(`token add into token verification key`);
 };
