@@ -286,21 +286,32 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeAdmin = async (req, res, role, next)=> {
-
+const authorizeAdmin = (role )=> {
   
-  const member = await Member.findOne({
-    account: req.user._id,
-    company: req.company._id,
-  });
-
-  if (!member || !['superAdmin', 'admin'].includes(member.role) || ![role].includes(req.company.optionalRole)) {
-    return res.status(403).json({
-      message: `Restricted`,
+  
+  
+  return function(req, res, next) {
+    try {
+    
+  
+    const member =  Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
     });
-  }
 
-  next();
+    if (!member || !['superAdmin', 'admin'].includes(member.role) || ![role].includes(req.company.optionalRole)) {
+      return res.status(403).json({
+        message: `Restricted`,
+      });
+    }
+
+    next();
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+}
+
 
 }
 

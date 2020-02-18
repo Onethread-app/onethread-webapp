@@ -18,6 +18,7 @@ const create = async (req, res, next) => {
       project,
     });
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 };
