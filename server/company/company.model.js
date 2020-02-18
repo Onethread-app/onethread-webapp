@@ -73,9 +73,9 @@ const company = new Schema(
     optionalRole: {
       type: String,
       enum: [
+        'all',
         'editProfile',
         'projectCD',  //create delete
-        
       ],
       default: 'all',
       required: true,
