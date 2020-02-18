@@ -249,7 +249,7 @@ const accountUpdate = async (req, res, next) => {
 const logout = async (req, res, next) => {
   try {
     let refreshToken = req.body.refreshToken;
-    let accessToken = req.headers.authorization;
+    let accessToken = req.headers.authorization.split(' ')[1];
     let accessTokenExpire =
       req.user.exp * 1000 +
       new Date(req.user.exp * 1000).getTimezoneOffset() * 60 * 1000 -
