@@ -21,6 +21,7 @@ const taskRoutes = require('./server/task/task.route');
 const subTasks = require('./server/task/subtask/subtask.route');
 const utilsRoutes = require('./server/utils/utils.route');
 const chatkitRoutes = require('./server/chatkit/chatkit.route');
+const projectRoutes = require('./server/project/project.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -49,5 +50,6 @@ router.use('/tasks', taskRoutes);
 router.use('/subTasks', subTasks);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
+router.use('/projects', projectRoutes);
 
 module.exports = router;
