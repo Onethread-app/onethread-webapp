@@ -1,8 +1,8 @@
 const redis = require('redis');
-
+const bluebird = require('bluebird');
+bluebird.promisifyAll(redis);
 const config = require('./config/config');
 const logger = require('./config/winston');
-
 const client = redis.createClient({
   retry_strategy: function(options) {
     console.log(options.error);
