@@ -67,6 +67,4 @@ router.route('/refresh').post(accountCtrl.tokenRefresh);
 //   .route('/admin')
 //   .post(requireLogin, permit('admin'), accountCtrl.login);
 
-router.param('account-id', accountCtrl.accountLoad);
-
 module.exports = router;

@@ -107,21 +107,21 @@ const accountsSchema = new mongoose.Schema({
       ref: 'Company',
     },
   ],
-  token: {
-    type: String,
-  },
-  resetPasswordToken: {
-    type: String,
-  },
-  resetPasswordTokenExpiration: {
-    type: String,
-  },
-  verifyAccountToken: {
-    type: String,
-  },
-  verifyAccountTokenExpiration: {
-    type: String,
-  },
+  // token: {
+  //   type: String,
+  // },
+  // resetPasswordToken: {
+  //   type: String,
+  // },
+  // resetPasswordTokenExpiration: {
+  //   type: String,
+  // },
+  // verifyAccountToken: {
+  //   type: String,
+  // },
+  // verifyAccountTokenExpiration: {
+  //   type: String,
+  // },
   isAccountVerified: {
     type: Boolean,
     default: false,
