@@ -163,14 +163,18 @@ const searchSkillSet = async (req, res, next) => {
             }
           ]
         }
-      }
+      },
+      "_source": ["mongo_id" ,"name" ]
     };
 
     client
-      .search({ index: 'skillarea', body: body, type: '_doc' })
+      .search({ index: 'skillarea', body: body, type: '_doc' , filter_path: ['hits.hits._source , hits.hits._id , hits.hits._score'] })
       .then(results => {
-        // console.log(JSON.stringify(results.hits.hits));
-        res.send(results.hits.hits);
+        return sendJSONresponse(res, 200 , {
+          success : true,
+          message: `Search complete for ${name}`,
+          data: results.hits.hits
+        })
       })
       .catch(err => {
         console.log(err);
@@ -203,6 +207,8 @@ const searchSkillSet = async (req, res, next) => {
     //     logger.error(`${err}`);
     //     return next(err);
     //   });
+
+      
   } else {
     return sendErrorResponse(res, 400, 'EmptySearchError', {
       message: `query error`,
