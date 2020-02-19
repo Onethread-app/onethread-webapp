@@ -12,6 +12,7 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard, getSelectedTaskDetails } from 'stores/board/Actions';
+import { History } from 'history'; 
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -24,13 +25,19 @@ const tokenProvider = new TokenProvider({ url: TokenUrlServer });
 const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
-  getCompanyInformation: (companyName: string) => void,
+  getCompanyInformation: (companyName: string) => any,
   getSelectedBoardDetails: (boardId: string) => void,
-  getSelectedTask: (taskId: string) => void
+  getSelectedTask: (taskId: string) => void,
+  history: History
 ) => {
+
   await fetchUser();
   if (isEmpty((reactRouterMatch.params as any).cname) === false) {
-    await getCompanyInformation((reactRouterMatch.params as any).cname);
+    const response = await getCompanyInformation((reactRouterMatch.params as any).cname);
+    // TODO: should be in useEffect load promise
+    if (response.status === 404) {
+      history.push(`/notFound`);
+    }
   }
   if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
     await getSelectedBoardDetails((reactRouterMatch.params as any).boardId);
@@ -48,7 +55,7 @@ interface LayoutProps {
 interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   user: User;
   fetchUserAction: () => void;
-  getCompanyDetails: (companyName: string) => void;
+  getCompanyDetails: (companyName: string) => any;
   getSelectedBoard: (boardId: string) => void;
   getSelectedTaskDetails: (taskId: string) => void;
   company: CompanyModel;
@@ -74,7 +81,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         props.fetchUserAction,
         props.getCompanyDetails,
         props.getSelectedBoard,
-        props.getSelectedTaskDetails
+        props.getSelectedTaskDetails,
+        props.history
       ).then(() =>
         setLoading(false)
       );
