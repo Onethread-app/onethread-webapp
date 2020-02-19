@@ -28,6 +28,8 @@ module.exports.search = (index_name,index_type,body,filter_path) => {
     return client.search({
         index: index_name,
         type: index_type,
+        body: body,
+        filter_path: filter_path 
     })
 
 }

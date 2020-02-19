@@ -162,7 +162,6 @@ const searchSkillSet = async (req, res, next) => {
               }
             }
           ]
-        }
       },
       "_source": ["mongo_id" ,"name" ]
     };
