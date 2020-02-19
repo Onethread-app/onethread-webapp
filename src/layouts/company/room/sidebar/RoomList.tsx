@@ -28,7 +28,7 @@ interface IRoomListComponentProps extends RouteComponentProps {
 	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
 	activeRoom: any;
 	roomId: string;
-	rooms: [IRoom];
+	rooms: IRoom[];
 	companyId: string;
 }
 
@@ -66,10 +66,6 @@ export const RoomListComponent = withChatkit(
 								};
 
 								dispatch({ type: NEW_MESSAGE, payload: formatMessage });
-								return props.chatkit.currentUser.setReadCursor({
-									roomId,
-									position: newMessage.id
-								});
 							},
 							onPresenceChanged: (state: any, user: any) => {
 								dispatch({ type: ON_PRESENCE_CHANGE });
