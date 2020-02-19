@@ -1,17 +1,26 @@
 import { isEqual } from 'lodash';
+import { createBrowserHistory } from 'history';
+import { Toaster } from '@blueprintjs/core';
 
+const History = createBrowserHistory();
 export interface Entity {
   _id?: string;
   name: string;
 }
-
 export const tokenConfig = () => {
-  const token = typeof window !== undefined && localStorage.getItem('token') ?
-    JSON.parse(localStorage.getItem('token')!) : null;
+  const token = typeof window !== undefined && localStorage.getItem('tigrow_acc_id') ?
+    JSON.parse(localStorage.getItem('tigrow_acc_id')!) : null;
+  if (!localStorage.getItem('tigrow_acc_id') || !localStorage.getItem('tigrow_real_id')) {
+    localStorage.removeItem('tigrow_acc_id');
+    localStorage.removeItem('tigrow_real_id');
+    Toaster.create().show({ message: 'Token is invalid. Please sign in.', intent: 'danger' });
+    History.push('/signin');
+    window.location.reload(false);
+  }
   return {
     headers: {
       'Content-type': 'application/json',
-      'Authorization': token
+      'Authorization': `Bearer ${token}`
     }
   };
 };
@@ -20,8 +29,8 @@ export const isAuthenticate = () => {
   if (typeof window === undefined) {
     return false;
   }
-  if (localStorage.getItem('token')) {
-    return JSON.parse(localStorage.getItem('token')!);
+  if (localStorage.getItem('tigrow_acc_id') && localStorage.getItem('tigrow_real_id')) {
+    return JSON.parse(localStorage.getItem('tigrow_acc_id')!);
   } else {
     return false;
   }
@@ -61,3 +70,13 @@ export const priorityColor = [
   { code: 3, name: 'Low', value: '#5387AF', container: '#ECF2F6' },
   { code: 4, name: 'Lowest', value: '#093F68', container: '#E4EAEE' },
 ];
+
+export const parseJwt = (token: any) => {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
+    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  }).join(''));
+  const json = (JSON.parse(jsonPayload));
+  return json.exp;
+};

@@ -98,7 +98,10 @@ const LayoutComponent = (props: LayoutInternalProps) => {
               <Link
               className="fw9 dt center tigrow-lightBlue pt4"
               to="/signin"
-              onClick={() => localStorage.removeItem('token')}
+              onClick={() => {
+                localStorage.removeItem('tigrow_acc_id');
+                localStorage.removeItem('tigrow_real_id');
+              }}
             >
               Sign in
               </Link>
