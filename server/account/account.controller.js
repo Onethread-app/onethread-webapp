@@ -14,6 +14,7 @@ const { chatkit } = require('../services/pusher.services');
 const {
   addTokenToBlackList,
   accountVerificationToken,
+  addUserDataIntoCache,
 } = require('../services/redis.services');
 const {
   sendJSONresponse,
@@ -129,17 +130,9 @@ const login = async (req, res, next) => {
         expiresIn: config.refreshTokenExpire,
       },
     );
-    const userObj = req.user.toObject();
-    const timeline = [
-      ...req.user.jobExperience,
-      ...req.user.education,
-    ];
-    const timelineHistory = timeline.sort((a, b) =>
-      a.startYear < b.startYear ? 1 : -1,
-    );
-    userObj.timeline = timelineHistory;
-    delete userObj.password;
-    delete userObj.companies;
+    let userObj = {};
+    userObj.name = req.user.name;
+    addUserDataIntoCache(req.user.email, req.user);
     return sendJSONresponse(res, 200, {
       success: true,
       token: token,
@@ -153,33 +146,47 @@ const login = async (req, res, next) => {
 };
 
 const getAccount = async (req, res, next) => {
+  client
+    .multi()
+    .get(`userID:${req.user.email}`)
+    .execAsync()
+    .then(result => {
+      let user = JSON.parse(result);
+      return sendJSONresponse(res, 200, {
+        success: true,
+        user: user,
+      });
+    })
+    .catch(err => {
+      next(err);
+    });
+};
+
+// create a timeline for user
+const timeline = async (req, res, next) => {
   try {
     const user = await Account.findOne({
       email: req.user.email,
     })
       .select('-password')
       .populate(
-        'companies skillArea jobExperience education profileImage coverImage',
-        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name link s3Key fileType imageType',
+        'jobExperience education',
+        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy',
       );
     const timeline = [...user.jobExperience, ...user.education];
     const timelineHistory = timeline.sort((a, b) =>
       a.startYear < b.startYear ? 1 : -1,
     );
-    const userInfo = { ...user._doc };
+    const userInfo = {};
     userInfo.timeline = timelineHistory;
-    delete userInfo.password;
-    delete userInfo.companies;
-    logger.info('userInfo successfully fetched');
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,
     });
   } catch (error) {
-    return next(error);
+    next(error);
   }
 };
-
 // token verification for mail
 const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
@@ -592,6 +599,7 @@ module.exports = {
   logout,
   getAccessTokenForVerifyAccount,
   getAccount,
+  timeline,
   accountUpdate,
   tokenRefresh,
   // tokenRevoke,

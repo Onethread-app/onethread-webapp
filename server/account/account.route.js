@@ -37,6 +37,7 @@ router
   );
 
 router.route('/').get(authorization, accountCtrl.getAccount);
+router.route('/timeline').get(authorization, accountCtrl.timeline);
 router
   .route('/update')
   .put(
