@@ -11,13 +11,20 @@ interface MessageListProps {
 	chatkit?: any;
 }
 
-export const MessageList = withChatkit((_props: MessageListProps) => {
+export const MessageList = withChatkit((props: MessageListProps) => {
 	const [first, setFirst] = useState(false);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-	const messages = useSelector((state: any) => state.roomReducer.messages);
+	const messages: IRoomMessage[] = useSelector((state: any) => state.roomReducer.messages);
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
 
 	const scrollToBottom = () => {
+		if (messages.length) {
+			props.chatkit.currentUser.setReadCursor({
+				roomId,
+				position: messages[messages.length - 1].chatkitId
+			});
+		}
+
 		// On new message, scroll to bottom
 		if (
 			messagesEndRef &&
@@ -33,6 +40,7 @@ export const MessageList = withChatkit((_props: MessageListProps) => {
 			setFirst(true);
 		}
 	};
+
 	useEffect(() => {
 		setFirst(false);
 	}, [roomId]);

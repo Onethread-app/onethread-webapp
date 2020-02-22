@@ -111,16 +111,19 @@ const InitialState: IRoomReducer = {
 
 export const sortRooms = (a: IRoom, b: IRoom) => {
 	// tslint:disable-next-line: one-variable-per-declaration
-	const unreadCountA = a.unreadCount,
-		unreadCountB = b.unreadCount,
-		createdAtA = Date.parse(a.createdAt),
-		createdAtB = Date.parse(b.createdAt);
+	// const unreadCountA = a.unreadCount;
+	// const unreadCountB = b.unreadCount;
+	const createdAtA = Date.parse(a.createdAt);
+	const createdAtB = Date.parse(b.createdAt);
 
-	return unreadCountA > unreadCountB ?
-		-1 : unreadCountA < unreadCountB ?
-			1 : createdAtA > createdAtB ?
-				1 : createdAtA < createdAtB ?
-					-1 : 0;
+	// return unreadCountA > unreadCountB ?
+	// 	-1 : unreadCountA < unreadCountB ?
+	// 		1 : createdAtA > createdAtB ?
+	// 			1 : createdAtA < createdAtB ?
+	// 				-1 : 0;
+	return createdAtA > createdAtB ?
+		1 : createdAtA < createdAtB ?
+			-1 : 0;
 };
 
 const userStatus = (arr: any) => {
