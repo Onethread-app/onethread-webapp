@@ -17,7 +17,7 @@ export const SkillEdit = (props: SkillEditProps) => {
   const userSkills = useSelector((state: any) => state.userReducer.user.skillArea);
   const [skills, setSkills] = useState([] as ItemEntityProps[]);
   const [selectedSkills, setSelectedSkills] = useState([] as ItemEntityProps[]);
-  const [username, setUsername] = useState('');
+  const [searchName, setSearchName] = useState('');
 
   const addNewSkill = async (newSkill: {}) => {
     try {
@@ -50,7 +50,7 @@ export const SkillEdit = (props: SkillEditProps) => {
   };
 
   let result: any = [];
-  result = useLiveSearch(username, userRequestFactory, 800);
+  result = useLiveSearch(searchName, userRequestFactory, 800);
 
   useEffect(() => {
     setSkills(result);
@@ -62,17 +62,17 @@ export const SkillEdit = (props: SkillEditProps) => {
       <div className="fl w-100 pv2">
         <SuggestField
           onChange={(query: string) => {
-            setUsername(query);
+            setSearchName(query);
           }}
           items={skills}
           selectedItems={selectedSkills}
           setSelectedItems={setSelectedSkills}
           isCreatable={
             isEmpty(skills.filter((item) => (
-              username === item.name)))
+              searchName === item.name)))
               &&
               isEmpty(userSkills.filter((item: ItemEntityProps) => (
-                lowerCase(username) === item.name
+                lowerCase(searchName) === item.name
               )))
               ? true : false
           }
