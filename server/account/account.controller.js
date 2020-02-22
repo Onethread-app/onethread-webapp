@@ -277,8 +277,8 @@ const sendEmailForForgetPassword = async (req, res, next) => {
     user.resetPasswordTokenExpiration = Date.now() + 86400; // 1 day
     user.save();
     sendEmailForResetPassword(
-      capitalizeName(user.firstName),
-      capitalizeName(user.lastName),
+      user.firstName,
+      user.lastName,
       user.email,
       verifyToken,
     );
