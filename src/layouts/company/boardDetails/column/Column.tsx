@@ -58,10 +58,10 @@ const ColumnComponent = (props: ColumnInternalProps) => {
             <div className="flex pb1 w-100">
               <Popover
                 interactionKind="hover-target"
-                popoverClassName="bp3-popover-content-sizing"
-                className="w-90"
+                popoverClassName="bg-white"
+                className="w-90 bg-white"
                 content={
-                  <p className="ws-break">{props.column.name}</p>
+                  <p className="ws-break ma2">{props.column.name}</p>
                 }
                 target={
                   <h3

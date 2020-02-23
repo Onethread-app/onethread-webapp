@@ -15,9 +15,12 @@ import priority from 'resources/images/priority.png';
 import { PriorityView } from './Priority/PriorityView';
 import { PriorityEditor } from './Priority/PriorityEditor';
 import moment from 'moment';
+import { CompanyModel } from 'stores/company/Reducer';
+import { permit } from 'stores/UtilsActions';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
+  company?: CompanyModel;
 }
 
 const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
@@ -97,24 +100,25 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
         <div className="fl w-100">
           <div className="fr-ns fl">
             <div>
-              <Popover
-                isOpen={datePopover}
-                content={
-                  <div className="pa3 cf bg-white">
-                    {/* <h1 className="f5">Due Date</h1> */}
-                    <DueDateEditor setDatePopover={setDatePopover} />
-                  </div>
-                }
-                target={
-                  <div
-                    className="flex br2 mb2 pt2 ph3 pointer"
-                    style={{ background: '#C1DEDE', width: '130px' }}
-                    onClick={() => setDatePopover(true)}>
-                    <img style={{ height: '15px' }} src={dueDate} />
-                    <p className="pl3 f7">Due Date</p>
-                  </div>
-                }
-              />
+              {props.company && permit(props.company.role) ?
+                <Popover
+                  isOpen={datePopover}
+                  content={
+                    <div className="pa3 cf bg-white">
+                      {/* <h1 className="f5">Due Date</h1> */}
+                      <DueDateEditor setDatePopover={setDatePopover} />
+                    </div>
+                  }
+                  target={
+                    <div
+                      className="flex br2 mb2 pt2 ph3 pointer"
+                      style={{ background: '#C1DEDE', width: '130px' }}
+                      onClick={() => setDatePopover(true)}>
+                      <img style={{ height: '15px' }} src={dueDate} />
+                      <p className="pl3 f7">Due Date</p>
+                    </div>
+                  }
+                /> : undefined}
             </div>
             {/* <div>
               <Popover
@@ -141,45 +145,48 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               />
             </div> */}
             <div>
-              <Popover
-                isOpen={membersPopover}
-                content={
-                  <div className="pa3 cf bg-white">
-                    {/* <h1 className="f5">Members</h1> */}
-                    <div>
-                      <AssignedMembersEditor setMembersPopover={setMembersPopover} />
+              {props.company && permit(props.company.role) ?
+                <Popover
+                  isOpen={membersPopover}
+                  content={
+                    <div className="pa3 cf bg-white">
+                      {/* <h1 className="f5">Members</h1> */}
+                      <div>
+                        <AssignedMembersEditor setMembersPopover={setMembersPopover} />
+                      </div>
                     </div>
-                  </div>
-                }
-                target={
-                  <div
-                    className="flex br2 mb2 pt2 ph3 pointer"
-                    style={{ background: '#C1DEDE', width: '130px' }}
-                    onClick={() => setMembersPopover(true)}
-                  >
-                    <img style={{ height: '15px' }} src={addMembers} />
-                    <p className="pl3 f7">Members</p>
-                  </div>
-                }
-              />
+                  }
+                  target={
+                    <div
+                      className="flex br2 mb2 pt2 ph3 pointer"
+                      style={{ background: '#C1DEDE', width: '130px' }}
+                      onClick={() => setMembersPopover(true)}
+                    >
+                      <img style={{ height: '15px' }} src={addMembers} />
+                      <p className="pl3 f7">Members</p>
+                    </div>
+                  }
+                /> : undefined}
             </div>
             <div>
-              <Popover
-                isOpen={priorityPopover}
-                content={
-                  <div className="pa4 cf bg-white" style={{ width: '300px' }}>
-                    <PriorityEditor setPriorityPopover={setPriorityPopover} />
-                  </div>
-                }
-                target={
-                  <div className="flex br2 mb2 pt2 ph3 pointer"
-                    onClick={() => setPriorityPopover(true)}
-                    style={{ background: '#C1DEDE', width: '130px' }}>
-                    <img style={{ height: '15px' }} src={priority} />
-                    <p className="pl3 f7">Priority</p>
-                  </div>
-                }
-              />
+              {props.company && permit(props.company.role) ?
+                <Popover
+                  isOpen={priorityPopover}
+                  content={
+                    <div className="pa4 cf bg-white" style={{ width: '300px' }}>
+                      <PriorityEditor setPriorityPopover={setPriorityPopover} />
+                    </div>
+                  }
+                  target={
+                    <div className="flex br2 mb2 pt2 ph3 pointer"
+                      onClick={() => setPriorityPopover(true)}
+                      style={{ background: '#C1DEDE', width: '130px' }}>
+                      <img style={{ height: '15px' }} src={priority} />
+                      <p className="pl3 f7">Priority</p>
+                    </div>
+                  }
+                />
+                : undefined}
             </div>
           </div>
         </div>
@@ -191,6 +198,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     currentTask: state.boardIndexReducer.boardReducer.currentTask,
+    company: state.companyReducer.currentCompany
   };
 };
 

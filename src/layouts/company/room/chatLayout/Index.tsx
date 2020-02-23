@@ -6,7 +6,7 @@ import { Button, Icon, Dialog } from '@blueprintjs/core';
 import { AddMemberForm } from './members/AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
 import { isEmpty } from 'lodash';
-import { showAddMember } from 'stores/UtilsActions';
+import { permit } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
 import { RightSidebar } from 'components/RightSidebar';
 import { IRoomReducer } from 'stores/room/Reducer';
@@ -46,7 +46,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
 								className="ma0 pointer dim">Members: {props.users.length}</h5>
 						</div>
-						{showAddMember(props.roomName, props.companyRole) ?
+						{permit(props.companyRole) ?
 							<Button
 								onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}
 								className="bp3-minimal outline-0 grow"

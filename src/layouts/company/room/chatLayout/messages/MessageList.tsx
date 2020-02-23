@@ -23,10 +23,23 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 	const [skip, setSkip] = useState(0);
 
 	const messagesEndRef = useRef<HTMLDivElement>(null);
-
 	const dispatch = useDispatch();
 
 	const scrollToBottom = () => {
+		if (props.messages.length) {
+			props.chatkit.currentUser.setReadCursor({
+				roomId: props.roomId,
+				position: props.messages[props.messages.length - 1].chatkitId
+			})
+				.then(() => {
+					console.log('Success!');
+				})
+				.catch((err: any) => {
+					console.log(`Error setting cursor: ${err}`);
+				});
+		}
+
+		// On new message, scroll to bottom
 		if (
 			messagesEndRef &&
 			messagesEndRef.current &&

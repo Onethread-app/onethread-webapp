@@ -21,7 +21,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
   const imageChangeHandler = (event: any) => {
     if (event.target.files) {
       if (event.target.files[0]) {
-        if (event.target.files[0].size / 1024 / 1024 > 1) {
+        if (event.target.files[0].size / 1024 / 1024 > 5) {
           setImageName('');
           setImageError(true);
           return false;
@@ -125,7 +125,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
               </span>
             </label>
             {imageError &&
-              <small style={{ color: 'red' }}>Image size can't be greater than 1 MB</small>}
+              <small style={{ color: 'red' }}>Image size can't be greater than 5 MB</small>}
             <div className="flex justify-end mt3">
               <Button className="w4 grow h2 pointer mr3"
                 style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}

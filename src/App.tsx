@@ -40,9 +40,21 @@ const PrivateRoute = (props: {
 
 const Demo = () => (<div></div>);
 
-const NoMatch = () => (<div>This page is not available</div>);
+const NoMatch = () => (
+	<article className="vh-100 dt w-100">
+		<div className="dtc v-mid tc white ph3 ph4-l">
+			<h1 className="tc black">THIS PAGE IS NOT AVAILABLE</h1>
+		</div>
+	</article>);
 
-// const NotFound = () => (<div>404 Not Found</div>);
+const NotFound = () => (
+	<article className="vh-100 dt w-100">
+		<div className="dtc v-mid tc white ph3 ph4-l">
+			<h1 className="f6 f2-m f-subheadline-l fw7 tc black">404</h1>
+			<h1 className="tc black">WE ARE SORRY, BUT THE PAGE YOU REQUESTED WAS <br /> NOT FOUND</h1>
+		</div>
+	</article>
+);
 
 export const App = () => (
 	<BrowserRouter>
@@ -93,12 +105,12 @@ export const App = () => (
 					localStorage.getItem('email') ? <SignupConfirmationPage /> : <Redirect to="/signin" />
 				}
 			/>
-			{/* <Route
+			<Route
 				path="/notFound"
 				render={() =>
-					isAuthenticate() ? <Redirect to="/" /> : <NotFound />
+					isAuthenticate() ? <NotFound /> : <Redirect to="/" />
 				}
-			/> */}
+			/>
 			<PrivateRoute
 				exact
 				path="/"

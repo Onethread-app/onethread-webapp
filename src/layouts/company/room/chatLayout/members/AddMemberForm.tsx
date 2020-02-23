@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
 import { isEqual, isEmpty } from 'lodash';
 import { Button, Tag } from '@blueprintjs/core';
 import { addRoomMembers } from 'stores/room/Actions';
+import { tigrowApi } from 'config';
 
 interface RoomMembersViewProps {
   showDialog: boolean;
@@ -24,6 +24,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
   // const store = useStore();
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
   const [selectedRoomMember, setSelectedRoomMember] = useState([] as ItemEntityProps[]);
+  const [error, setError] = useState('');
 
   const getSuggestionsForRoomMembers = async () => {
     try {
@@ -32,12 +33,15 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
         const response = await tigrowApi.get(`/rooms/suggest-member/${props.roomId}/${props.companyId}`, headers);
         setSuggestedMembers(response.data.members);
       } else {
+        // tslint:disable-next-line: no-console
         console.log('no headers');
       }
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
         console.log('network error');
       } else {
+        // tslint:disable-next-line: no-console
         console.log(error.response);
       }
     }
@@ -59,6 +63,11 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           setSelectedItems={setSelectedRoomMember}
           multipleItemSelect={true}
         />
+        <small className={`${error || selectedRoomMember.length > 10 ? 'red' : 'white'}`}>
+          {error ?
+            error : selectedRoomMember.length > 10 ?
+              'Could not add more than 10 members at a time' : 'Max user at a time : 10'}
+        </small>
       </div>
 
       <div className="w-100 mb2">
@@ -93,16 +102,23 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
         </Button>
         <Button className="grow h2 pointer white bp3-minimal w4"
           style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
-          onClick={async () => {
-            if (selectedRoomMember.length) {
-              const members = {
+          disabled={selectedRoomMember.length > 10}
+          onClick={
+            async () => {
+              const data = {
                 room: props.roomId,
                 members: selectedRoomMember.map((m) => m._id)
               };
-              await props.addRoomMembers(members, selectedRoomMember);
+              const response: any = await props.addRoomMembers(data, selectedRoomMember);
+
+              if (response.status === 201) {
+                props.setShowDialog(!props.showDialog);
+              } else if (response.status === 400) {
+                setError('Could not add more than 10 members at time');
+              } else {
+                setError('Network Error');
+              }
             }
-            props.setShowDialog(!props.showDialog);
-          }
           }
         >
           Add

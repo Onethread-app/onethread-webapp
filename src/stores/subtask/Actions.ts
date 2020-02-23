@@ -1,8 +1,8 @@
 import { tokenConfig } from 'stores/UtilsActions';
-import tigrowApi from 'tigrowApi';
 import { GET_ALL_SUBTASK, CREATE_SUBTASK, COMPLETE_SUBTASK, DELETE_SUBTASK, UPDATE_SUBTASK_TITLE } from './Types';
 import { ISubTask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { tigrowApi } from 'config';
 
 export const getAllSubTask = () => async (dispatch: any, getState: any) => {
   try {

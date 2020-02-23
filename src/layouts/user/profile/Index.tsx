@@ -30,6 +30,7 @@ export const LandingPage = (props: { user: User }) => {
             >
               <Tabs
                 id="TabsExample"
+                className="w-85"
               >
                 <Tab
                   id="Experience"

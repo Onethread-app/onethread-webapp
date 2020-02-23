@@ -1,4 +1,3 @@
-import tigrowApi from 'tigrowApi';
 import { isEqual } from 'lodash';
 import { tokenConfig } from '../UtilsActions';
 import {
@@ -19,6 +18,7 @@ import {
 	FILE_UPLOAD,
 	ALL_MESSAGE_RECEIVED
 } from './Types';
+import { tigrowApi } from 'config';
 
 export const createRoomAction = (roomData: any) => async (
 	dispatch: any,
@@ -114,16 +114,19 @@ export const getRoomMembers = (roomId: string) => async (
 	}
 };
 
-export const addRoomMembers = (members: any, selectedRoomMember: any) => async (
-	dispatch: any,
-	getState: any
-) => {
+export const addRoomMembers = (data: {
+	room: string;
+	members: Array<(string | undefined)>;
+}, selectedRoomMember: any) => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: LOADING_ROOM });
-			await tigrowApi.post(`rooms/addUser`, members, headers);
-			dispatch({ type: ADD_MEMBER_IN_ROOM, payload: selectedRoomMember });
+			const response = await tigrowApi.post(`rooms/addUser`, data, headers);
+			if (response.status === 201) {
+				dispatch({ type: ADD_MEMBER_IN_ROOM, payload: selectedRoomMember });
+			}
+			return response;
 		} else {
 			// tslint:disable-next-line: no-console
 			console.log('error in adding members in a room');
@@ -135,6 +138,7 @@ export const addRoomMembers = (members: any, selectedRoomMember: any) => async (
 			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
+		return error.response;
 	}
 };
 

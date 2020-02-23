@@ -61,7 +61,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                   popoverProps={{
                     targetClassName: 'w-100'
                   }}
-                  minDate={new Date()}
+                  minDate={new Date() > new Date(props.dueDate) ? new Date(props.dueDate) : new Date()}
                 />
                 {checkError(meta) &&
                   <small className="mv3" style={{ color: 'red' }}>

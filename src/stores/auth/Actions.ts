@@ -1,12 +1,14 @@
-import tigrowApi from 'tigrowApi';
 import { AxiosRequestConfig } from 'axios';
 import { History } from 'history';
 import { isEqual } from 'lodash';
-import { tokenConfig } from '../UtilsActions';
+import { tokenConfig, parseJwt } from '../UtilsActions';
 import { FETCH_USER, USER_FETCH_ERROR, CLEAR_USER_REDUCER_STATE } from 'stores/user/Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
+import { createBrowserHistory } from 'history';
+import { tigrowApi } from 'config';
+import { Toaster } from '@blueprintjs/core';
 
 export interface UserModel {
 	firstName: string;
@@ -22,6 +24,41 @@ export interface LoginModel {
 	password: string;
 }
 
+const RouteHistory = createBrowserHistory();
+
+const resfreshApiAction = async () => {
+	let accessToken = typeof window !== undefined && localStorage.getItem('tigrow_acc_id') ?
+		JSON.parse(localStorage.getItem('tigrow_acc_id')!) : null;
+	const refreshToken = typeof window !== undefined && localStorage.getItem('tigrow_real_id') ?
+		JSON.parse(localStorage.getItem('tigrow_real_id')!) : null;
+	if (localStorage.getItem('tigrow_acc_id') && localStorage.getItem('tigrow_real_id')) {
+		try {
+			const response = await tigrowApi.post('accounts/refresh', {
+				accessToken,
+				refreshToken,
+			});
+			if (response.status === 200) {
+				localStorage.setItem('tigrow_acc_id', JSON.stringify(response.data.accessToken));
+				localStorage.setItem('tigrow_real_id', JSON.stringify(response.data.refreshToken));
+				accessToken = localStorage.getItem('tigrow_acc_id');
+				const accessTokenExpiredTime = (parseJwt(accessToken) * 1000) - 1000;
+				const accessTokenRemainingTime = accessTokenExpiredTime - Date.now();
+				setTimeout(resfreshApiAction, accessTokenRemainingTime);
+			}
+			return errorMessgeHandler(response);
+		} catch (error) {
+			return errorMessgeHandler(error);
+		}
+	} else {
+		localStorage.removeItem('tigrow_acc_id');
+		localStorage.removeItem('tigrow_real_id');
+		Toaster.create().show({ message: 'Token is invalid. Please sign in.', intent: 'danger' });
+		RouteHistory.push('/signin');
+		window.location.reload(false);
+		return;
+	}
+};
+
 export const userSignupAction = (
 	newUser: UserModel
 ) => async (dispatch: any) => {
@@ -34,7 +71,7 @@ export const userSignupAction = (
 			'Content-Type': 'application/json'
 		} as AxiosRequestConfig);
 		if (response.status === 201) {
-			await localStorage.setItem('email', JSON.stringify(newUser.email));
+			localStorage.setItem('email', JSON.stringify(newUser.email));
 		}
 		return errorMessgeHandler(response);
 	} catch (error) {
@@ -48,9 +85,10 @@ export const loginAction = (loginUser: LoginModel) => async (dispatch: any) => {
 			'Content-Type': 'application/json'
 		} as AxiosRequestConfig);
 		if (response.status === 200) {
-			await localStorage.setItem('token', JSON.stringify(response.data.token));
+			localStorage.setItem('tigrow_acc_id', JSON.stringify(response.data.accessToken));
+			localStorage.setItem('tigrow_real_id', JSON.stringify(response.data.refreshToken));
 			if (localStorage.getItem('email')) {
-				await localStorage.removeItem('email');
+				localStorage.removeItem('email');
 			}
 		}
 		return errorMessgeHandler(response);
@@ -60,10 +98,26 @@ export const loginAction = (loginUser: LoginModel) => async (dispatch: any) => {
 };
 
 export const fetchUserAction = () => async (dispatch: any) => {
+	let accessToken = localStorage.getItem('tigrow_acc_id');
+	let accessTokenExpiredTime = (parseJwt(accessToken) * 1000) - 1000;
+	const refreshToken = localStorage.getItem('tigrow_real_id');
+	const refreshTokenExpiredTime = (parseJwt(refreshToken) * 1000);
+	// when refresh token is expired
+	if (refreshTokenExpiredTime < Date.now()) {
+		localStorage.removeItem('tigrow_acc_id');
+		localStorage.removeItem('tigrow_real_id');
+	} else if (accessTokenExpiredTime < Date.now()) {
+		// when access token is expired
+		await resfreshApiAction();
+	}
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`accounts`, headers);
+			accessToken = localStorage.getItem('tigrow_acc_id');
+			accessTokenExpiredTime = (parseJwt(accessToken) * 1000) - 1000;
+			const accessTokenRemainingTime = accessTokenExpiredTime - Date.now();
+			setTimeout(resfreshApiAction, accessTokenRemainingTime);
 			dispatch({ type: FETCH_USER, payload: response.data.user });
 		} else {
 			dispatch({ type: USER_FETCH_ERROR, payload: 'error in user fetching' });
@@ -78,9 +132,14 @@ export const logoutAction = (routeHistory: History) => async (dispatch: any) => 
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.get(`accounts/logout`, headers);
+			const refreshToken = typeof window !== undefined && localStorage.getItem('tigrow_real_id') ?
+				JSON.parse(localStorage.getItem('tigrow_real_id')!) : null;
+			const response = await tigrowApi.post(`accounts/logout`, {
+				refreshToken
+			}, headers);
 			if (isEqual(response.status, 200)) {
-				await localStorage.removeItem('token');
+				localStorage.removeItem('tigrow_acc_id');
+				localStorage.removeItem('tigrow_real_id');
 				await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
 				await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
 				await dispatch({ type: CLEAR_USER_REDUCER_STATE });
