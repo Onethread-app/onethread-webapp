@@ -31,9 +31,7 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 				roomId: props.roomId,
 				position: props.messages[props.messages.length - 1].chatkitId
 			})
-				.then(() => {
-					console.log('Success!');
-				})
+				.then()
 				.catch((err: any) => {
 					console.log(`Error setting cursor: ${err}`);
 				});
