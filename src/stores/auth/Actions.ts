@@ -60,14 +60,14 @@ const resfreshApiAction = async () => {
 };
 
 export const userSignupAction = (
-	newUser: UserModel
+	newUser: UserModel, company?: string
 ) => async (dispatch: any) => {
 	try {
 		const user = {
 			...newUser,
 			contactNo: `+88${newUser.contactNo}`
 		};
-		const response = await tigrowApi.post('accounts/signup', user, {
+		const response = await tigrowApi.post(`accounts/signup?company=${company}`, user, {
 			'Content-Type': 'application/json'
 		} as AxiosRequestConfig);
 		if (response.status === 201) {
@@ -115,15 +115,15 @@ export const fetchUserAction = () => async (dispatch: any) => {
 		if ((headers as any).headers.Authorization) {
 			let response;
 			let timeline;
-			 response = await tigrowApi.get(`accounts`, headers);
-				try {
-					timeline = await tigrowApi.get(`accounts/timeline`, headers);
-					timeline = timeline.data.user.timeline;
-				} catch (error) {
-					// tslint:disable-next-line: no-console
-					console.log(error);
-				}
-			response = {...response.data.user, timeline };
+			response = await tigrowApi.get(`accounts`, headers);
+			try {
+				timeline = await tigrowApi.get(`accounts/timeline`, headers);
+				timeline = timeline.data.user.timeline;
+			} catch (error) {
+				// tslint:disable-next-line: no-console
+				console.log(error);
+			}
+			response = { ...response.data.user, timeline };
 			accessToken = localStorage.getItem('tigrow_acc_id');
 			accessTokenExpiredTime = (parseJwt(accessToken) * 1000) - 1000;
 			const accessTokenRemainingTime = accessTokenExpiredTime - Date.now();
