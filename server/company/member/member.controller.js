@@ -5,6 +5,7 @@ const { Room } = require('./../../room/room.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const {sendInviteColleague} = require('../../services/email.services');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -23,6 +24,7 @@ const changeRole = async (req, res, next) => {
     req.member.role = req.body.role;
 
     await req.member.save();
+    
 
     return res.status(201).json({
       message: `Role updated to ${req.body.role}`,
@@ -41,38 +43,29 @@ const addMember = async (req, res, next) => {
   }
 
   try {
-    const members = await Member.create(req.body.members);
-    if (!members.length) {
+    if (!req.body.members.length) {
       return res.status(400).json({
-        message: `No members created`,
+        message: `No members found`,
       });
     }
+    const members = await Member.create(req.body.members);
+    
 
-    let membersId = members.map(m => {
-      return m._id;
-    });
+    // let membersId = members.map(m => {
+    //   return m._id;
+    // });
 
-    let accountsId = req.body.members.map(m => {
-      return m.account;
-    });
+    // let accountsId = req.body.members.map(m => {
+    //   return m.account;
+    // });
 
     // save ref in company
-    req.company.members.addToSet(...membersId);
-    await req.company.save();
-
-    // add members into General room
-    const room = await Room.findOne({
-      name: 'General',
-      company: req.company._id,
-    });
-    if (room) {
-      room.members.addToSet(...accountsId);
-      await room.save();
-      await chatkit.addUsersToRoom({
-        roomId: room._id,
-        userIds: accountsId,
-      });
-    }
+    //req.company.members.addToSet(...membersId);
+    //await req.company.save();
+    sendInviteColleague(
+      req.company.name,
+      req.body.membersToInvite,
+    );
 
     return res.status(201).json({
       message: 'New member created',
