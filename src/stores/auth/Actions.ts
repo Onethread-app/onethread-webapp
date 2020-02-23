@@ -113,12 +113,22 @@ export const fetchUserAction = () => async (dispatch: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const response = await tigrowApi.get(`accounts`, headers);
+			let response;
+			let timeline;
+			 response = await tigrowApi.get(`accounts`, headers);
+				try {
+					timeline = await tigrowApi.get(`accounts/timeline`, headers);
+					timeline = timeline.data.user.timeline;
+				} catch (error) {
+					// tslint:disable-next-line: no-console
+					console.log(error);
+				}
+			response = {...response.data.user, timeline };
 			accessToken = localStorage.getItem('tigrow_acc_id');
 			accessTokenExpiredTime = (parseJwt(accessToken) * 1000) - 1000;
 			const accessTokenRemainingTime = accessTokenExpiredTime - Date.now();
 			setTimeout(resfreshApiAction, accessTokenRemainingTime);
-			dispatch({ type: FETCH_USER, payload: response.data.user });
+			dispatch({ type: FETCH_USER, payload: response });
 		} else {
 			dispatch({ type: USER_FETCH_ERROR, payload: 'error in user fetching' });
 		}
