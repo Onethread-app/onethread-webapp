@@ -44,9 +44,9 @@ const addMember = async (req, res, next) => {
   }
 
   try {
-    if (!req.body.members.length) {
+    if (!req.body.members.length && !req.body.newTeamMembers) {
       return res.status(400).json({
-        message: `No members found`,
+        message: `No members or newMembers found`,
       });
     }
     const members = await Member.create(req.body.members);
@@ -62,10 +62,11 @@ const addMember = async (req, res, next) => {
     // save ref in company
     //req.company.members.addToSet(...membersId);
     //await req.company.save();
-    sendInviteColleague(req.company.name, req.body.membersToInvite);
+    
+    sendInviteColleague(req.user.email, req.company, req.body.newTeamMembers);
 
     return res.status(201).json({
-      message: 'New member created',
+      message: 'New member created and invitation send',
       members,
     });
   } catch (error) {
@@ -157,7 +158,7 @@ const searchMember = async (req, res, next) => {
     // TODO: pore ami change korbo query onusaree
     return sendJSONresponse(res, 200, {
       employees: {
-        message: `Search complete ${name}`,
+        message: `Search complete ${email}`,
         data,
       },
     });

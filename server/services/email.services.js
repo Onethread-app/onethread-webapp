@@ -79,18 +79,19 @@ module.exports.sendEmailForVerifyAccount = async (
 };
 
 module.exports.sendInviteColleague = async (
-  companyName,
+  userEmail,
+  company,
   emailList,
 ) => {
-  const link = `${host}/signup/company`;
-  let name = req.user.firstName + ' ' + req.user.lastName;
-  const fullName = capitalizeName(name);
+  
+  const link = `${host}/signup?company=${company._id}`;
+  
   const mailOptions = {
     to: emailList,
     subject: 'Generated Token For Reset Password',
     html: `
-      <h1> Join ${companyName} on TiGrow, </h1>
-      <h2> ${req.user.email} has invited you to join the company ${companyName}. join now to start collaborating!  <a href="${link}"> Link </a> </h2>
+      <h1> Join ${company.name} on TiGrow, </h1>
+      <h2> ${userEmail} has invited you to join the company ${company.name}. join now to start collaborating!  <a href="${link}"> Link </a> </h2>
   
     `,
   };
