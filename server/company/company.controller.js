@@ -117,6 +117,7 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.log(error);
     return next(error);
   }
 };
@@ -288,12 +289,9 @@ const deleteCompany = async (req, res, next) => {
 
 const authorizeAdmin = (role )=> {
   
-  
-  
   return function(req, res, next) {
     try {
     
-  
     const member =  Member.findOne({
       account: req.user._id,
       company: req.company._id,
@@ -305,15 +303,13 @@ const authorizeAdmin = (role )=> {
       });
     }
 
-    next();
-  } catch (error) {
-    console.log(error);
-    next(error);
+      next();
+    } catch (error) {
+      console.log(error);
+      next(error);
+    }
   }
-}
-
-
-}
+};
 
 
 module.exports = {

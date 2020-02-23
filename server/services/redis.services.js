@@ -13,3 +13,7 @@ module.exports.accountVerificationToken = async (
   await client.set(token, JSON.stringify(userID), 'PX', tokenExpire);
   logger.info(`token add into token verification key`);
 };
+module.exports.addUserDataIntoCache = async (userId, userData) => {
+  await client.set(`userID:${userId}`, JSON.stringify(userData));
+  logger.info(`User data add into refreshToken`);
+};
