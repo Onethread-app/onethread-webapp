@@ -33,6 +33,7 @@ import {
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
+import { ItemEntityProps } from 'components/fields/SuggestField';
 
 export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
 	try {
@@ -125,34 +126,37 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 	}
 };
 
-export const addTeamMembers = (members: any, companyName: string) => async (
-	dispatch: any,
-	getState: any
-) => {
-	try {
-		const headers = tokenConfig();
-		if ((headers as any).headers.Authorization) {
-			dispatch({ type: COMPANY_REDUCER_LOADING });
-			await tigrowApi.post(
-				`company/${companyName}/members`,
-				{ members },
-				headers
-			);
-			dispatch({ type: COMPANY_REDUCER_LOADING_FALSE });
-			// dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
-		} else {
-			// tslint:disable-next-line: no-console
-			console.log('error in selection of company fetching');
+export const addTeamMembers =
+	(members: any, newTeamMembers: string[], companyName: string) => async (
+		dispatch: any,
+		getState: any
+	) => {
+		try {
+			const headers = tokenConfig();
+			if ((headers as any).headers.Authorization) {
+				dispatch({ type: COMPANY_REDUCER_LOADING });
+				console.log('req', { members, newTeamMembers });
+				const response = await tigrowApi.post(
+					`company/${companyName}/members`,
+					{ members, newTeamMembers },
+					headers
+				);
+				console.log('response', response);
+				dispatch({ type: COMPANY_REDUCER_LOADING_FALSE });
+				// dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
+			} else {
+				// tslint:disable-next-line: no-console
+				console.log('error in selection of company fetching');
+			}
+		} catch (error) {
+			if (isEqual(error.message, 'Network Error')) {
+				dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: 'Network error' });
+			} else {
+				// tslint:disable-next-line: no-console
+				console.log(error.response);
+			}
 		}
-	} catch (error) {
-		if (isEqual(error.message, 'Network Error')) {
-			dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: 'Network error' });
-		} else {
-			// tslint:disable-next-line: no-console
-			console.log(error.response);
-		}
-	}
-};
+	};
 
 export const addDepartment = (name: string) => async (
 	dispatch: any,

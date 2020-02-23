@@ -5,6 +5,7 @@ import { includes, lowerCase, isEqual, findIndex } from 'lodash';
 import { useState } from 'react';
 export interface ItemEntityProps {
   _id?: string;
+  email?: string;
   name: string | null;
 }
 
@@ -53,7 +54,13 @@ export const SuggestField = (props: SuggestFieldProps) => {
               setCurrentQuery(item);
             }
           }}
-          text={item.name}
+          text={
+            item.email ?
+              <div className="flex justify-center items-center">
+                <h5 className="ma0 mr1">{item.email}</h5>
+                <small>({item.name})</small>
+              </div> : item.name
+          }
           intent={props.multipleItemSelect === true ?
             (props.selectedItems as any).filter((si: any) =>
               isEqual(item.name, si.name)).length > 0 ? Intent.PRIMARY : Intent.NONE

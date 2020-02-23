@@ -21,6 +21,7 @@ export const SkillEdit = (props: SkillEditProps) => {
 
   const addNewSkill = async (newSkill: {}) => {
     try {
+      console.log('newSkill', newSkill);
       let response;
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
@@ -67,6 +68,7 @@ export const SkillEdit = (props: SkillEditProps) => {
           items={skills}
           selectedItems={selectedSkills}
           setSelectedItems={setSelectedSkills}
+          multipleItemSelect={true}
           isCreatable={
             isEmpty(skills.filter((item) => (
               searchName === item.name)))
@@ -76,7 +78,6 @@ export const SkillEdit = (props: SkillEditProps) => {
               )))
               ? true : false
           }
-          multipleItemSelect={true}
           isCreatableAPI={addNewSkill}
         />
         <div className="fl w-100 mb2">

@@ -7,6 +7,7 @@ import { Button, Tag } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { server } from 'config';
+import { isEmpty, lowerCase } from 'lodash';
 
 interface TeamMembersViewProps {
   showDialog: boolean;
@@ -15,24 +16,31 @@ interface TeamMembersViewProps {
 
 interface TeamMembersViewInternalProps extends TeamMembersViewProps {
   company: CompanyModel;
-  addTeamMembers: (members: Array<{ account: string | undefined, company: string }>, name: string) => void;
+  addTeamMembers: (members: Array<{ account: string | undefined, company: string }>,
+    newTeamMembers: string[], name: string) => void;
   getCompanyMembers: () => void;
 }
 
 const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
 
-  const [teamMembers, setTeamMembers]: any = useState([]);
+  const [teamMembers, setTeamMembers]: any = useState([] as ItemEntityProps[]);
 
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
+
+  const [selectedNewTeamMember, setSelectedNewTeamMember] = useState([] as string[]);
+
   const [username, setUsername] = useState('');
 
   // const store = useStore();
 
   const userRequestFactory = (userName: string): Promise<any> => {
     const headers = tokenConfig();
-    return fetch(`${server}company/${props.company.name}/members/search?name=${userName}`, headers)
+    return fetch(`${server}company/${props.company.name}/members/search?email=${userName}`, headers)
       .then(res => res.json())
-      .then(res => res.employees.data)
+      .then(res => {
+        console.log('res.employees.data', res.employees.data);
+        return res.employees.data;
+      })
       .catch(err => []);
   };
 
@@ -42,6 +50,11 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
   useEffect(() => {
     setTeamMembers(result);
   }, [result]);
+
+  const addNewUser = async (newUser: ItemEntityProps) => {
+    console.log('newUser', newUser);
+    setSelectedNewTeamMember([...selectedNewTeamMember, newUser.name!]);
+  };
 
   return (
     <div className="pa3">
@@ -56,6 +69,11 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           selectedItems={selectedTeamMember}
           setSelectedItems={setSelectedTeamMember}
           multipleItemSelect={true}
+          isCreatable={
+            isEmpty(teamMembers)
+              ? true : false
+          }
+          isCreatableAPI={addNewUser}
         />
       </div>
 
@@ -80,6 +98,36 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           </Tag>
         ))}
       </div>
+      {selectedNewTeamMember.length ?
+        <small>Invited Members:</small> : undefined
+      }
+      <div className="w-100">
+        {selectedNewTeamMember.map((item, index) => (
+          <Tag
+            key={index}
+            className="ma1 pa2"
+            interactive={true}
+            onRemove={e => {
+              const filteredItems = selectedNewTeamMember.filter(selectedItem => (
+                item !== selectedItem
+              ));
+              setSelectedNewTeamMember([
+                ...filteredItems
+              ]);
+            }}
+            large={true}
+            intent="primary"
+          >
+            {item}
+          </Tag>
+        ))}
+      </div>
+
+      {
+        selectedTeamMember.length + selectedNewTeamMember.length > 20 ?
+          <small className="red">Could not add more than 20 members at a time.</small>
+          : undefined
+      }
 
       <div className="flex justify-end mt4">
         <Button className="grow h2 pointer white bp3-minimal w4 mr3"
@@ -89,18 +137,20 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           Cancel
           </Button>
         <Button className="grow h2 pointer white bp3-minimal w4"
-          style={selectedTeamMember.length < 1 ?
+          style={selectedTeamMember.length + selectedNewTeamMember.length > 0 &&
+            selectedTeamMember.length + selectedNewTeamMember.length <= 20 ?
             {
-              background: '#011b1b2e',
+              background: '#0fa3a3',
               outline: 'none',
               color: 'white'
             } : {
-              background: '#0fa3a3',
+              background: '#011b1b2e',
               outline: 'none',
               color: 'white'
             }
           }
-          disabled={selectedTeamMember.length < 1}
+          disabled={selectedTeamMember.length + selectedNewTeamMember.length > 0 &&
+            selectedTeamMember.length + selectedNewTeamMember.length <= 20 ? false : true}
           onClick={async () => {
             const userIdWithCompany = selectedTeamMember.map(selected => {
               return {
@@ -108,8 +158,8 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
                 company: props.company._id
               };
             });
-            if (userIdWithCompany) {
-              await props.addTeamMembers(userIdWithCompany, props.company.name);
+            if (userIdWithCompany || selectedNewTeamMember) {
+              await props.addTeamMembers(userIdWithCompany, selectedNewTeamMember, props.company.name);
             }
             await props.getCompanyMembers();
             props.setShowDialog(!props.showDialog);
