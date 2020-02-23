@@ -5,7 +5,9 @@ const { Room } = require('./../../room/room.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
-const {sendInviteColleague} = require('../../services/email.services');
+const {
+  sendInviteColleague,
+} = require('../../services/email.services');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -24,7 +26,6 @@ const changeRole = async (req, res, next) => {
     req.member.role = req.body.role;
 
     await req.member.save();
-    
 
     return res.status(201).json({
       message: `Role updated to ${req.body.role}`,
@@ -49,7 +50,6 @@ const addMember = async (req, res, next) => {
       });
     }
     const members = await Member.create(req.body.members);
-    
 
     // let membersId = members.map(m => {
     //   return m._id;
@@ -62,10 +62,7 @@ const addMember = async (req, res, next) => {
     // save ref in company
     //req.company.members.addToSet(...membersId);
     //await req.company.save();
-    sendInviteColleague(
-      req.company.name,
-      req.body.membersToInvite,
-    );
+    sendInviteColleague(req.company.name, req.body.membersToInvite);
 
     return res.status(201).json({
       message: 'New member created',
@@ -141,7 +138,7 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchMember = async (req, res, next) => {
   try {
-    const name = req.query.name;
+    const email = req.query.email;
     const companyID = req.company._id;
     const company = await Company.findById({
       _id: companyID,
@@ -150,10 +147,13 @@ const searchMember = async (req, res, next) => {
     memberListId = memberListId.map(member => member.account);
     let data = await Account.find({
       $and: [
-        { name: { $regex: new RegExp(name) } },
+        { email: { $regex: new RegExp(email) } },
         { _id: { $nin: memberListId } },
       ],
-    }).select('_id email name firstName lastName');
+    })
+      .skip(0)
+      .limit(+10)
+      .select('_id email name firstName lastName');
     // TODO: pore ami change korbo query onusaree
     return sendJSONresponse(res, 200, {
       employees: {
