@@ -48,7 +48,7 @@ const ExperienceViewComponent = (props: IExperienceViewProps) => {
 
   return (
     <>
-      {props.user.timeline.length > 0 ?
+      {props.user.timeline.length > 0  ?
         <VerticalTimeline >
           {props.user.timeline.map((experience: any) => {
             return (
