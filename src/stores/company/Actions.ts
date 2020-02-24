@@ -28,7 +28,9 @@ import {
 	EDIT_DESIGNATION_ERROR,
 	LOGO_UPLOAD,
 	CHANGE_MEMBER_ROLE,
-	CHANGE_MEMBER_ROLE_ERROR
+	CHANGE_MEMBER_ROLE_ERROR,
+	GET_ALL_COMPANY_PENDING_MEMBERS,
+	UPDATE_ALL_COMPANY_PENDING_MEMBERS
 } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -128,20 +130,18 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 
 export const addTeamMembers =
 	(members: any, newTeamMembers: string[], companyName: string) => async (
-		dispatch: any,
-		getState: any
+		dispatch: any
 	) => {
 		try {
 			const headers = tokenConfig();
 			if ((headers as any).headers.Authorization) {
 				dispatch({ type: COMPANY_REDUCER_LOADING });
-				console.log('req', { members, newTeamMembers });
 				const response = await tigrowApi.post(
 					`company/${companyName}/members`,
 					{ members, newTeamMembers },
 					headers
 				);
-				console.log('response', response);
+				dispatch({ type: UPDATE_ALL_COMPANY_PENDING_MEMBERS, payload: response.data.membersToAdd });
 				dispatch({ type: COMPANY_REDUCER_LOADING_FALSE });
 				// dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
 			} else {
@@ -433,3 +433,24 @@ export const changeMemberRole = (values: { role: string }, memberId: string) => 
 		return error.response.status;
 	}
 };
+
+export const getCompanyPendingMembers =
+	(limit: number = 100, skip: number = 0) => async (dispatch: any, getState: any) => {
+		try {
+			const headers = tokenConfig();
+			if ((headers as any).headers.Authorization) {
+				const companyName = getState().companyReducer.currentCompany.name;
+				const response = await tigrowApi.get(
+					`company/${companyName}/members/pending?limit=${limit}&skip=${skip}`,
+					headers
+				);
+				dispatch({ type: GET_ALL_COMPANY_PENDING_MEMBERS, payload: response.data.pendingMember });
+			} else {
+				// tslint:disable-next-line: no-console
+				console.log('error in selection of company fetching');
+			}
+		} catch (error) {
+			// tslint:disable-next-line: no-console
+			console.log(error);
+		}
+	};

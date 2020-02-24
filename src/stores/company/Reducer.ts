@@ -23,10 +23,13 @@ import {
 	EDIT_DESIGNATION,
 	EDIT_DESIGNATION_ERROR,
 	LOGO_UPLOAD,
-	CHANGE_MEMBER_ROLE
+	CHANGE_MEMBER_ROLE,
+	GET_ALL_COMPANY_PENDING_MEMBERS,
+	UPDATE_ALL_COMPANY_PENDING_MEMBERS
 } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
+import { concat } from 'lodash';
 
 // tslint:disable-next-line: interface-name
 export interface IDesignations {
@@ -49,10 +52,16 @@ export interface ICompanyMembers {
 }
 
 export interface ICompanyTeamMembers {
-		_id: string;
-		name: string;
-		firstName: string;
-		lastName: string;
+	_id: string;
+	name: string;
+	firstName: string;
+	lastName: string;
+}
+
+export interface ICompanyPendingMembers {
+	_id: string;
+	email: string;
+	removed: boolean;
 }
 
 export interface CompanyModel {
@@ -66,7 +75,8 @@ export interface CompanyModel {
 	employees: User[];
 	divisions: Entity[];
 	departments: Entity[];
-	members: [ICompanyMembers];
+	members: ICompanyMembers[];
+	pendingMembers: ICompanyPendingMembers[];
 	role: string;
 	about: string;
 	skill: [{}];
@@ -83,6 +93,7 @@ const InitialState = {
 		legalOwnerName: '',
 		legalOwnerMail: '',
 		members: [],
+		pendingMembers: [],
 		divisions: [{}],
 		departments: [{}],
 		role: '',
@@ -142,6 +153,24 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 				currentCompany: {
 					...state.currentCompany,
 					members: action.payload.members
+				},
+				loading: false
+			};
+		case GET_ALL_COMPANY_PENDING_MEMBERS:
+			return {
+				...state,
+				currentCompany: {
+					...state.currentCompany,
+					pendingMembers: action.payload
+				},
+				loading: false
+			};
+		case UPDATE_ALL_COMPANY_PENDING_MEMBERS:
+			return {
+				...state,
+				currentCompany: {
+					...state.currentCompany,
+					pendingMembers: state.currentCompany.pendingMembers.concat(action.payload)
 				},
 				loading: false
 			};

@@ -37,10 +37,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
     const headers = tokenConfig();
     return fetch(`${server}company/${props.company.name}/members/search?email=${userName}`, headers)
       .then(res => res.json())
-      .then(res => {
-        console.log('res.employees.data', res.employees.data);
-        return res.employees.data;
-      })
+      .then(res => res.employees.data)
       .catch(err => []);
   };
 
@@ -52,7 +49,6 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
   }, [result]);
 
   const addNewUser = async (newUser: ItemEntityProps) => {
-    console.log('newUser', newUser);
     setSelectedNewTeamMember([...selectedNewTeamMember, newUser.name!]);
   };
 
