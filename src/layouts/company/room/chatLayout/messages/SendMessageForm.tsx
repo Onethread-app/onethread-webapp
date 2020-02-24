@@ -39,6 +39,9 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 
 	useEffect(() => {
 		setText('');
+		setTextError('');
+		setShowFileDialog(false);
+		dispatch({ type: CLEAR_FILE_UPLOAD });
 	}, [props.roomId]);
 
 	// tslint:disable-next-line: no-shadowed-variable
@@ -87,8 +90,11 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 			sendMessage(trimmedText, 'text');
 		} else if (isEmpty(trimmedText) === true && props.pendingFiles.length > 0) {
 			sendMessage(trimmedText, 'file');
+		} else if (isEmpty(trimmedText) === true) {
+			setTextError('');
+			setText(trimmedText);
 		} else {
-			setTextError(`Message should be less then ${messageLimit} character`);
+			setTextError(`Message should be less than ${messageLimit} character`);
 			setText(trimmedText);
 		}
 	};
