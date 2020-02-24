@@ -143,6 +143,7 @@ const skillLoad = async (req, res, next, id) => {
       return next(err);
     });
 };
+
 const searchSkillSet = async (req, res, next) => {
   const name = req.query.name;
   const userId = req.user._id;
@@ -155,19 +156,31 @@ const searchSkillSet = async (req, res, next) => {
       from: 0,
       query: {
         bool: {
-          should: [
+          must: [
             {
               match: {
-                name : req.query.name
+                "name" : req.query.name
               }
+            }
+          ],
+          must_not: [
+            {
+              "terms" : {
+                "mongo_id" : userskillId
+              }
+
             }
           ]
       },
-      "_source": ["mongo_id" ,"name" ]
-    };
+    }
+  };
+
+  //filter_path: ['hits.hits._source , hits.hits._id , hits.hits._score']
+
+  //"_source": ["mongo_id" ,"name" ]
 
     client
-      .search({ index: 'skillarea', body: body, type: '_doc' , filter_path: ['hits.hits._source , hits.hits._id , hits.hits._score'] })
+      .search({ index: 'skillarea', body: body, type: '_doc' })
       .then(results => {
         return sendJSONresponse(res, 200 , {
           success : true,
