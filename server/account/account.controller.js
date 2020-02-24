@@ -4,6 +4,7 @@ const httpStatus = require('http-status');
 const slug = require('slug');
 const Account = require('./account.model');
 const {Member} = require('../company/member/member.model');
+const {PendingMember} = require('../company/member/pendingMember.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
@@ -86,9 +87,23 @@ const register = async (req, res, next) => {
 
       console.log(req.query);
 
-      if('company' in req.query)        
-          if (req.query.company)
-            await Member.create({account: account._id, company: req.query.company });
+      if('company' in req.query){
+        try{
+
+        let pendingMember = await PendingMember.find({
+          company: req.query.company,
+          //email: account.email,
+        }).select('-__v -company -createdAt -updatedAt');
+
+        if (pendingMember.length > 0){
+          await Member.create({account: account._id, company: req.query.company });
+          pendingMember[0].remove();
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      }        
+            
         
     
       sendEmailForVerifyAccount(

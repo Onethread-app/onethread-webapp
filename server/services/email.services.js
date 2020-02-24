@@ -88,7 +88,7 @@ module.exports.sendInviteColleague = async (
   
   const mailOptions = {
     to: emailList,
-    subject: 'Generated Token For Reset Password',
+    subject: 'Invitation to join company',
     html: `
       <h1> Join ${company.name} on TiGrow, </h1>
       <h2> ${userEmail} has invited you to join the company ${company.name}. join now to start collaborating!  <a href="${link}"> Link </a> </h2>

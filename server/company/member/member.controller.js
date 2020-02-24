@@ -1,5 +1,6 @@
 const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
+const { PendingMember } = require('./pendingMember.model');
 const { Company } = require('../company.model');
 const { Room } = require('./../../room/room.model');
 const { chatkit } = require('../../services/pusher.services');
@@ -51,23 +52,17 @@ const addMember = async (req, res, next) => {
     }
     const members = await Member.create(req.body.members);
 
-    // let membersId = members.map(m => {
-    //   return m._id;
-    // });
-
-    // let accountsId = req.body.members.map(m => {
-    //   return m.account;
-    // });
-
-    // save ref in company
-    //req.company.members.addToSet(...membersId);
-    //await req.company.save();
+    let pendingMember = req.body.newTeamMembers.map(m => {
+      return {email: m, company:req.company._id};
+    });
+    const membersToAdd = await PendingMember.create(pendingMember);
     
     sendInviteColleague(req.user.email, req.company, req.body.newTeamMembers);
 
     return res.status(201).json({
       message: 'New member created and invitation send',
       members,
+      membersToAdd,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -98,6 +93,27 @@ const list = async (req, res, next) => {
       ]);
     return res.status(200).json({
       members,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
+const pendingList = async (req, res, next) => {
+  try {
+    const { limit = 50, skip = 0 } = req.query;
+
+    const pendingMember = await PendingMember.find({
+      company: req.company._id,
+      removed: false,
+    })
+      .sort({ createdAt: 1 })
+      .skip(+skip)
+      .limit(+limit)
+      .select('-__v -company -createdAt -updatedAt');
+    return res.status(200).json({
+      pendingMember,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -171,6 +187,7 @@ const searchMember = async (req, res, next) => {
 module.exports = {
   addMember,
   list,
+  pendingList,
   getMember,
   getMemberLoad,
   searchMember,
