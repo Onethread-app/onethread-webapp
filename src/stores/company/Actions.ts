@@ -35,7 +35,6 @@ import {
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
-import { ItemEntityProps } from 'components/fields/SuggestField';
 
 export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
 	try {

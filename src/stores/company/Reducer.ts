@@ -29,7 +29,6 @@ import {
 } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
-import { concat } from 'lodash';
 
 // tslint:disable-next-line: interface-name
 export interface IDesignations {

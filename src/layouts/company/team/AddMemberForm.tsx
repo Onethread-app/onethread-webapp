@@ -7,7 +7,7 @@ import { Button, Tag } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { server } from 'config';
-import { isEmpty, lowerCase } from 'lodash';
+import { isEmpty } from 'lodash';
 
 interface TeamMembersViewProps {
   showDialog: boolean;
