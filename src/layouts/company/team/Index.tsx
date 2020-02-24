@@ -88,193 +88,198 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 		loadCompanyMember(props.getCompanyMembers);
 	}, []);
 
+	useEffect(() => {
+		// if (props.company &&
+		// 	props.company.members &&
+		// 	props.company.members.length > 0) {
+
+		// }
+	}, [props.company.members]);
+
 	return (
 		<>
-			<div>
-				<h1 className="f4 tigrow-lightGray-1 ml4 mb0 mt5">Team</h1>
-				<div className="cf bg-white mh4 mv3 br3 pa4 shadow-4 w-90">
-					<div>
-						<h1 className="f5 lh-title tigrow-lightGray-1 dib">Team Members</h1>
-						{permit(props.company.role) ? (
-							<Button
-								className="grow fr h2 pointer white bp3-minimal "
-								style={{
-									background: '#0fa3a3',
-									outline: 'none',
-									color: 'white'
-								}}
-								onClick={() => setShowDialog(!showDialog)}
-							>
-								Add Team Members
+			<div className="ph5">
+				<div className="flex justify-between items-center">
+					<h1 className="tigrow-lightGray-1">Colleagues</h1>
+					{permit(props.company.role) ? (
+						<Button
+							className="grow fr h2 pointer white bp3-minimal "
+							style={{
+								background: '#0fa3a3',
+								outline: 'none',
+								color: 'white'
+							}}
+							onClick={() => setShowDialog(!showDialog)}
+						>
+							Add Colleagues
 							</Button>
-						) : (
-								undefined
-							)}
-					</div>
-					<HTMLTable className="w-100 mt4" striped={true}>
-						<thead>
-							<tr>
-								<th>Name</th>
-								<th>Division</th>
-								<th>Department</th>
-								<th>Position</th>
-								<th></th>
-							</tr>
-						</thead>
-						<tbody>
-							{props.companyLoading ? (
-								<Loading />
-							) : props.company &&
-								props.company.members &&
-								props.company.members.length > 0 ? (
-										// tslint:disable-next-line: no-shadowed-variable
-										props.company.members.map(member => (
-											<tr className="hide-child" key={member._id}>
-												<td>
-													<span className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</span>
-													{permit(member.role) ? (
-														member.role === 'superAdmin' ? (
-															<Icon
-																icon="star"
-																style={{ color: 'rgb(228, 162, 0)' }}
-															/>
-														) : (
-																<Icon icon="star" />
-															)
-													) : null}
-												</td>
-												<td>
-													{member.designations.length
-														? getDivisionName[member.designations[0].division]
-														: null}
-												</td>
-												<td>
+					) : (
+							undefined
+						)}
+				</div>
+				<HTMLTable className="w-100 mt4" striped={true}>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Division</th>
+							<th>Department</th>
+							<th>Position</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{props.companyLoading ? (
+							<Loading />
+						) : props.company &&
+							props.company.members &&
+							props.company.members.length > 0 ? (
+									// tslint:disable-next-line: no-shadowed-variable
+									props.company.members.map(member => (
+										<tr className="hide-child" key={member._id}>
+											<td>
+												<span className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</span>
+												{permit(member.role) ? (
+													member.role === 'superAdmin' ? (
+														<Icon
+															icon="star"
+															style={{ color: 'rgb(228, 162, 0)' }}
+														/>
+													) : (
+															<Icon icon="star" />
+														)
+												) : null}
+											</td>
+											<td>
+												{member.designations.length
+													? getDivisionName[member.designations[0].division]
+													: null}
+											</td>
+											<td>
+												<small className="f6">
+													{showDepartment(member)}
+												</small>
+											</td>
+											<td>
+												{member.designations.length ?
 													<small className="f6">
-														{showDepartment(member)}
+														{member.designations[0].position}
 													</small>
-												</td>
-												<td>
-													{member.designations.length ?
-														<small className="f6">
-															{member.designations[0].position}
-														</small>
-														: null}
-												</td>
-												{/* Popover starts */}
-												<td>
-													{permit(props.company.role) ||
-														isEqual(member.account._id, props.user._id) ? (
-															<Popover
-																className="fr"
-																position={Position.BOTTOM}
-																popoverClassName="bp3-popover-content-sizing bg-white"
-																content={
-																	<ButtonGroup
-																		alignText={Alignment.LEFT}
-																		className="bp3-minimal bp3-vertical bp3-fill"
-																	>
-																		{permit(props.company.role) &&
-																			isEqual(member.role, 'superAdmin') === false ? (
-																				isEqual(member.role, 'admin') === true ? (
+													: null}
+											</td>
+											{/* Popover starts */}
+											<td>
+												{permit(props.company.role) ||
+													isEqual(member.account._id, props.user._id) ? (
+														<Popover
+															className="fr"
+															position={Position.BOTTOM}
+															popoverClassName="bp3-popover-content-sizing bg-white"
+															content={
+																<ButtonGroup
+																	alignText={Alignment.LEFT}
+																	className="bp3-minimal bp3-vertical bp3-fill"
+																>
+																	{permit(props.company.role) &&
+																		isEqual(member.role, 'superAdmin') === false ? (
+																			isEqual(member.role, 'admin') === true ? (
+																				<Button
+																					className="outline-0 bp3-large bp3-popover-dismiss"
+																					onClick={async () => {
+																						await props.changeMemberRole(
+																							{ role: 'employee' },
+																							member._id
+																						);
+																					}}
+																				>
+																					<Icon
+																						icon="build"
+																						className="pr4-l pr3-m pl2"
+																						style={{ color: 'inherit' }}
+																					/>
+																					Make Employee
+																	</Button>
+																			) : (
 																					<Button
 																						className="outline-0 bp3-large bp3-popover-dismiss"
 																						onClick={async () => {
 																							await props.changeMemberRole(
-																								{ role: 'employee' },
+																								{ role: 'admin' },
 																								member._id
 																							);
 																						}}
 																					>
 																						<Icon
-																							icon="build"
+																							icon="star"
 																							className="pr4-l pr3-m pl2"
 																							style={{ color: 'inherit' }}
 																						/>
-																						Make Employee
+																						Make Admin
 																	</Button>
-																				) : (
-																						<Button
-																							className="outline-0 bp3-large bp3-popover-dismiss"
-																							onClick={async () => {
-																								await props.changeMemberRole(
-																									{ role: 'admin' },
-																									member._id
-																								);
-																							}}
-																						>
-																							<Icon
-																								icon="star"
-																								className="pr4-l pr3-m pl2"
-																								style={{ color: 'inherit' }}
-																							/>
-																							Make Admin
-																	</Button>
-																					)
-																			) : null}
+																				)
+																		) : null}
 
-																		{member.designations &&
-																			member.designations.length ? (
-																				<>
-																					<Button
-																						className="outline-0 bp3-large bp3-popover-dismiss"
-																						onClick={async () => {
-																							setMember(member);
-																							await props.getAllDepartments();
-																							setShowDialogEdit(!showDialogEdit);
-																						}}
-																					>
-																						<Icon
-																							icon="edit"
-																							className="pr4-l pr3-m pl2"
-																							style={{ color: 'inherit' }}
-																						/>
-																						Edit Designation
+																	{member.designations &&
+																		member.designations.length ? (
+																			<>
+																				<Button
+																					className="outline-0 bp3-large bp3-popover-dismiss"
+																					onClick={async () => {
+																						setMember(member);
+																						await props.getAllDepartments();
+																						setShowDialogEdit(!showDialogEdit);
+																					}}
+																				>
+																					<Icon
+																						icon="edit"
+																						className="pr4-l pr3-m pl2"
+																						style={{ color: 'inherit' }}
+																					/>
+																					Edit Designation
 																	</Button>
-																				</>
-																			) : (
-																				<>
-																					<Button
-																						className="outline-0 bp3-large bp3-popover-dismiss"
-																						onClick={async () => {
-																							setMember(member);
-																							await props.getAllDepartments();
-																							setShowDialogAdd(!showDialogAdd);
-																						}}
-																					>
-																						<Icon
-																							icon="add"
-																							className="pr4-l pr3-m pl2"
-																							style={{ color: 'inherit' }}
-																						/>
-																						Add Designation
+																			</>
+																		) : (
+																			<>
+																				<Button
+																					className="outline-0 bp3-large bp3-popover-dismiss"
+																					onClick={async () => {
+																						setMember(member);
+																						await props.getAllDepartments();
+																						setShowDialogAdd(!showDialogAdd);
+																					}}
+																				>
+																					<Icon
+																						icon="add"
+																						className="pr4-l pr3-m pl2"
+																						style={{ color: 'inherit' }}
+																					/>
+																					Add Designation
 																	</Button>
-																				</>
-																			)}
-																	</ButtonGroup>
-																}
-																target={
-																	<Icon
-																		className=" pointer"
-																		icon="drag-handle-vertical"
-																	/>
-																}
-															/>
-														) : (
-															undefined
-														)}
+																			</>
+																		)}
+																</ButtonGroup>
+															}
+															target={
+																<Icon
+																	className=" pointer"
+																	icon="drag-handle-vertical"
+																/>
+															}
+														/>
+													) : (
+														undefined
+													)}
 
-													{/* Popover ends */}
-												</td>
-											</tr>
-										))
-									) : (
-										<tr>
-											<td colSpan={3}>No members</td>
+												{/* Popover ends */}
+											</td>
 										</tr>
-									)}
-						</tbody>
-					</HTMLTable>
-				</div>
+									))
+								) : (
+									<tr>
+										<td colSpan={3}>No members</td>
+									</tr>
+								)}
+					</tbody>
+				</HTMLTable>
 			</div>
 			{showDialog && (
 				<Dialog
