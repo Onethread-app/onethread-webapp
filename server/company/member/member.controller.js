@@ -5,6 +5,7 @@ const { Room } = require('./../../room/room.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const client = require('../../../index.elasticsearch');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -155,23 +156,78 @@ const searchMember = async (req, res, next) => {
     }).populate('members', 'account');
     let memberListId = company.members;
     memberListId = memberListId.map(member => member.account);
-    let data = await Account.find({
-      $and: [
-        { name: { $regex: new RegExp(name) } },
-        { _id: { $nin: memberListId } },
-      ],
-    }).select('_id email name firstName lastName');
-    // TODO: pore ami change korbo query onusaree
-    return sendJSONresponse(res, 200, {
-      employees: {
-        message: `Search complete ${name}`,
-        data,
-      },
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-    next(error);
+
+    if(name){
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool:{
+            must: [
+              {
+                match: {
+                  "name": req.query.name
+                }
+              }
+            ],
+            must_not: [
+              {
+                "terms" : {
+                  "mongo_id": memberListId 
+                }
+              }
+            ]
+          }
+        }
+      }
+
+      client
+        .search({ index: 'accounts' , body: body , type: '_doc'})
+        .then(res =>{
+          return sendJSONresponse(res, 200 , {
+            success: true,
+            message: `Search complete for ${name}`,
+            data: res.hits.hits
+          })
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }else{
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
+      });
+    }
   }
+  catch (error) {
+        logger.error(`${error}`);
+        next(error);
+      }
+
+
+
+
+
+
+
+
+  //   let data = await Account.find({
+  //     $and: [
+  //       { name: { $regex: new RegExp(name) } },
+  //       { _id: { $nin: memberListId } },
+  //     ],
+  //   }).select('_id email name firstName lastName');
+  //   // TODO: pore ami change korbo query onusaree
+  //   return sendJSONresponse(res, 200, {
+  //     employees: {
+  //       message: `Search complete ${name}`,
+  //       data,
+  //     },
+  //   });
+  // } catch (error) {
+  //   logger.error(`${error}`);
+  //   next(error);
+  // }
 };
 
 module.exports = {

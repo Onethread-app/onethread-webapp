@@ -40,16 +40,16 @@ if (config.mongooseDebug) {
   });
 }
 
-var apm = require('elastic-apm-node').start({
-  // Override service name from package.json
-  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-  serviceName: 'tigrowkibana',
+// var apm = require('elastic-apm-node').start({
+//   // Override service name from package.json
+//   // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+//   serviceName: 'tigrowkibana',
 
-  // Use if APM Server requires a token
-  secretToken: 'false',
+//   // Use if APM Server requires a token
+//   secretToken: 'false',
 
-  serverUrl: 'http://localhost:8200'
-});
+//   serverUrl: 'http://localhost:8200'
+// });
 
 if (!module.parent) {
   // Event listener for HTTP server "error" event.
