@@ -70,6 +70,16 @@ const company = new Schema(
       ],
       required: true,
     },
+    optionalRole: {
+      type: String,
+      enum: [
+        'all',
+        'editProfile',
+        'projectCD',  //create delete
+      ],
+      default: 'all',
+      required: true,
+    },
     address: {
       type: String,
       maxlength: 120,

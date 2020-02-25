@@ -2,6 +2,8 @@ const { Room } = require('./room.model');
 const { Member } = require('../company/member/member.model');
 const { Company } = require('../company/company.model');
 const { chatkit } = require('../services/pusher.services');
+const logger = require('../../config/winston');
+const _ = require('lodash');
 
 const create = async (req, res, next) => {
   try {
@@ -150,10 +152,51 @@ const list = async (req, res) => {
     .catch(e => next(e));
 };
 
+const recheckMembersWithChatkit = async (req, res) => {
+  let rooms = await Room.find({
+    company: req.body.company,
+    removed: false,
+  });
+
+  if (!rooms) {
+    return res.status(400).json({
+      message: 'No rooms found',
+    });
+  }
+
+  logger.info(`Company : ${req.body.company}`);
+
+  rooms.forEach(room => {
+    let chunkMembers = _.chunk(room.members, 10);
+    chunkMembers.forEach(members => {
+      chatkit
+        .addUsersToRoom({
+          roomId: room._id,
+          userIds: members,
+        })
+        .then(() =>
+          logger.info(
+            `${members.length} Chunk members added in Room: ${room.name}`,
+          ),
+        )
+        .catch(err =>
+          logger.error(
+            `Failed to add members in chatkit for ${members.length} Chunk members while added in Room: ${room.name}`,
+          ),
+        );
+    });
+  });
+
+  return res.status(200).json({
+    rooms,
+  });
+};
+
 module.exports = {
   create,
   list,
   addMembers,
   suggestMember,
   memberList,
+  recheckMembersWithChatkit,
 };

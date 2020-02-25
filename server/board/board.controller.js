@@ -4,22 +4,20 @@ const BoardColumn = require('./../boardColumn/boardColumn.model');
 const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {sendErrorResponse} = require('../helpers/jsonResponse');
 
 const load = (req, res, next, id) => {
   Board.findById(id)
     .exec()
     .then(result => {
-      if (result) {
         req.board = result;
         return next();
-      }
-      return res.status(400).json({
-        message: 'No valid entry found for provided Board ID',
-      });
     })
     .catch(err => {
-      next(err);
+      return sendErrorResponse(res,404,'Idisnotexits',{
+        success: false,
+        message: 'No valid entry found for provided Board ID',
+      })
     });
 };
 

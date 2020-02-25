@@ -34,4 +34,16 @@ module.exports = {
         .required(),
     }),
   }),
+  recheckMembersWithChatkit: Joi.object().keys({
+    body: Joi.object().keys({
+      company: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .error(errors => {
+          return {
+            message: 'Invalid Company ID',
+          };
+        }),
+    }),
+  }),
 };
