@@ -21,7 +21,6 @@ export const SkillEdit = (props: SkillEditProps) => {
 
   const addNewSkill = async (newSkill: {}) => {
     try {
-      console.log('newSkill', newSkill);
       let response;
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
