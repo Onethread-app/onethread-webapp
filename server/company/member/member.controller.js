@@ -158,6 +158,8 @@ const searchMember = async (req, res, next) => {
     memberListId = memberListId.map(member => member.account);
 
     if(name){
+
+
       let body = {
         size: 200,
         from: 0,
@@ -166,7 +168,7 @@ const searchMember = async (req, res, next) => {
             must: [
               {
                 match: {
-                  "name": req.query.name
+                  "email": req.query.name
                 }
               }
             ],
@@ -182,12 +184,12 @@ const searchMember = async (req, res, next) => {
       }
 
       client
-        .search({ index: 'accounts' , body: body , type: '_doc'})
-        .then(res =>{
+        .search({ index: 'accounts' , body: body , type: 'doc'})
+        .then(response =>{
           return sendJSONresponse(res, 200 , {
             success: true,
             message: `Search complete for ${name}`,
-            data: res.hits.hits
+            data: response.hits.hits
           })
         })
         .catch(err => {
