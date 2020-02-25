@@ -3,7 +3,10 @@ const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
-const { sendErrorResponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 // create a company profile
 const changeName = async (req, res, next) => {
@@ -287,31 +290,50 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeAdmin = (role )=> {
-  
+const authorizeAdmin = role => {
   return function(req, res, next) {
     try {
-    
-    const member =  Member.findOne({
-      account: req.user._id,
-      company: req.company._id,
-    });
-
-    if (!member || !['superAdmin', 'admin'].includes(member.role) || ![role].includes(req.company.optionalRole)) {
-      return res.status(403).json({
-        message: `Restricted`,
+      const member = Member.findOne({
+        account: req.user._id,
+        company: req.company._id,
       });
-    }
+
+      if (
+        !member ||
+        !['superAdmin', 'admin'].includes(member.role) ||
+        ![role].includes(req.company.optionalRole)
+      ) {
+        return res.status(403).json({
+          message: `Restricted`,
+        });
+      }
 
       next();
     } catch (error) {
       console.log(error);
       next(error);
     }
-  }
+  };
 };
 
-
+const searchCompany = async (req, res, next) => {
+  try {
+    const name = req.query.name;
+    await Company.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+    })
+      .select(name)
+      .then(data => {
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: `Search complete for ${name}`,
+          data,
+        });
+      });
+  } catch (error) {
+    next(error);
+  }
+};
 module.exports = {
   authorizeAdmin,
   createCompany,
@@ -322,4 +344,5 @@ module.exports = {
   changeName,
   deleteCompany,
   getCompanyLoad,
+  searchCompany,
 };

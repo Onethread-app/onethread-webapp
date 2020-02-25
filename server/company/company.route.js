@@ -70,6 +70,7 @@ router
   .route('/individual/:account')
   .get(authorization, companyCtrl.getCompanyIndividual);
 
+router.route('/search').get(authorization, companyCtrl.searchCompany);
 // redirect to member
 router.use('/:cname/members', memberRoutes);
 // redirect to department
