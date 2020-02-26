@@ -167,20 +167,21 @@ const searchMember = async (req, res, next) => {
           bool:{
             must: [
               {
-                match: {
+                match_phrase_prefix: {
                   "email": req.query.name
                 }
               }
             ],
-            must_not: [
+             must_not: [
               {
-                "terms" : {
+               "terms" : {
                   "mongo_id": memberListId 
                 }
               }
-            ]
+           ]
           }
-        }
+        },
+        "_source": ["mongo_id" ,"name" , "email" ,"firstName" , "lastName"]
       }
 
       client
