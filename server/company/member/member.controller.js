@@ -1,11 +1,12 @@
 const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
-const { Company } = require('../company.model');
 const { Room } = require('./../../room/room.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
-const client = require('../../../index.elasticsearch');
+const ElasticsearchService = require('../../../index.elasticsearch');
+const elasticService = new ElasticsearchService('accounts',Account);
+elasticService.create();
 
 const changeRole = async (req, res, next) => {
   try {
@@ -160,42 +161,44 @@ const searchMember = async (req, res, next) => {
     if(name){
 
 
-      let body = {
-        size: 200,
-        from: 0,
-        query: {
-          bool:{
-            must: [
-              {
-                match_phrase_prefix: {
-                  "email": req.query.name
-                }
-              }
-            ],
-             must_not: [
-              {
-               "terms" : {
-                  "mongo_id": memberListId 
-                }
-              }
-           ]
-          }
-        },
-        "_source": ["mongo_id" ,"name" , "email" ,"firstName" , "lastName"]
-      }
 
-      client
-        .search({ index: 'accounts' , body: body , type: 'doc'})
-        .then(response =>{
-          return sendJSONresponse(res, 200 , {
-            success: true,
-            message: `Search complete for ${name}`,
-            data: response.hits.hits
-          })
-        })
-        .catch(err => {
-          console.log(err);
-        })
+
+      // let body = {
+      //   size: 200,
+      //   from: 0,
+      //   query: {
+      //     bool:{
+      //       must: [
+      //         {
+      //           match_phrase_prefix: {
+      //             "email": req.query.name
+      //           }
+      //         }
+      //       ],
+      //        must_not: [
+      //         {
+      //          "terms" : {
+      //             "mongo_id": memberListId 
+      //           }
+      //         }
+      //      ]
+      //     }
+      //   },
+      //   "_source": ["mongo_id" ,"name" , "email" ,"firstName" , "lastName"]
+      // }
+
+      // client
+      //   .search({ index: 'accounts' , body: body , type: 'doc'})
+      //   .then(response =>{
+      //     return sendJSONresponse(res, 200 , {
+      //       success: true,
+      //       message: `Search complete for ${name}`,
+      //       data: response.hits.hits
+      //     })
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   })
     }else{
       return sendErrorResponse(res, 400, 'EmptySearchError', {
         message: `query error`,
