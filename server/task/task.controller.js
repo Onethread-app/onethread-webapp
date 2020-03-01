@@ -8,6 +8,7 @@ const TaskAssign = require('./taskAssign.model');
 const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
 var _ = require('lodash');
+const {sendErrorResponse} = require('../helpers/jsonResponse');
 
 const load = (req, res, next, id) => {
   Task.findById(id)
@@ -15,16 +16,14 @@ const load = (req, res, next, id) => {
     .populate('columnId', '_id name')
     .exec()
     .then(result => {
-      if (result) {
         req.task = result;
         return next();
-      }
-      return res.status(400).json({
-        message: 'No valid entry found for provided Task ID',
-      });
     })
     .catch(err => {
-      next(err);
+      return sendErrorResponse(res,404,'Idisnotexits',{
+        success: false,
+        message: 'No valid entry found for provided Task ID',
+      })
     });
 };
 
