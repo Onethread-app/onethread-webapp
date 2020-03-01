@@ -8,10 +8,10 @@ const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 
 const get = async (req, res , next) => {
-  console.log(1);
+  cancelAnimationFrame
   
   await Associate.findOne({
-    _id: req.params.boardId,
+    _id: req.params.associteId,
     removed: false,
   })
     .select('_id company associateWith createdAt')

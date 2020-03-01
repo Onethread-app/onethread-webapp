@@ -26,7 +26,7 @@ router
   );
 
   router
-  .route('/:boardId')
+  .route('/:associteId')
   .get(
     authorization,
     associateCtrl.get,
