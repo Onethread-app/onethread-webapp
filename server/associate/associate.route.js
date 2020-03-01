@@ -25,6 +25,13 @@ router
     associateCtrl.create,
   );
 
+  router
+  .route('/:boardId')
+  .get(
+    authorization,
+    associateCtrl.get,
+  )
+
 //router.param('boardId', boardCtrl.load);
 
 module.exports = router;

@@ -8,29 +8,18 @@ const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 
 const get = async (req, res , next) => {
-  const boardObj = await Board.findById(req.board._id)
-    .populate('members', '_id name color')
-    .exec()
-    .then(result => result)
-    .catch(err => {
-      next(err);
-    });
-  await BoardColumn.find({
-    boardId: req.board._id,
+  console.log(1);
+  
+  await Associate.findOne({
+    _id: req.params.boardId,
     removed: false,
   })
-    .select('_id name tasks positionInBoard')
-    .populate('tasks', '_id name color description dueDate')
+    .select('_id company associateWith createdAt')
+    .populate('associateWith', '_id name type')
+    .populate('company', '_id name type')
     .exec()
     .then(colResult => {
-      const responseResult = {
-        _id: boardObj._id,
-        name: boardObj.name,
-        description: boardObj.description,
-        members: boardObj.members,
-        columns: colResult,
-      };
-      res.json(responseResult);
+      res.json(colResult);
     })
     .catch(e => next(e));
 };
@@ -45,7 +34,7 @@ const create = async (req, res, next) => {
     await associate
       .save();
       //await Associate.populate(associate, { path: 'associateWith', select: 'name '});
-      //await associate.populate('associateWith', 'name').execPopulate;
+      await associate.populate('associateWith', '_id name type').execPopulate;
       return res.status(201).json(associate);
   } catch (error) {
     logger.error(`Board create: ${error}`);
@@ -66,9 +55,9 @@ const list = async (req, res, next) => {
   await Associate.find({
     company: companyId,
   })
-    .select('_id company associateWith')
-    .populate('company', '_id name type createdAt')
-    .populate('associateWith', '_id name type createdAt')
+    .select('_id company associateWith createdAt')
+    .populate('company', '_id name type ')
+    .populate('associateWith', '_id name type ')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
