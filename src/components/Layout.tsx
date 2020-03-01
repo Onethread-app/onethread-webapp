@@ -12,7 +12,6 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard, getSelectedTaskDetails } from 'stores/board/Actions';
-import { History } from 'history'; 
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -26,24 +25,31 @@ const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => any,
-  getSelectedBoardDetails: (boardId: string) => void,
-  getSelectedTask: (taskId: string) => void,
-  history: History
+  getSelectedBoardDetails: (boardId: string) => any,
+  getSelectedTask: (taskId: string) => any
 ) => {
 
   await fetchUser();
   if (isEmpty((reactRouterMatch.params as any).cname) === false) {
     const response = await getCompanyInformation((reactRouterMatch.params as any).cname);
-    // TODO: should be in useEffect load promise
+    // only handled for 404 error status
     if (response.status === 404) {
-      history.push(`/notFound`);
+      return response.status;
     }
   }
   if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
-    await getSelectedBoardDetails((reactRouterMatch.params as any).boardId);
+    const responseStatus = await getSelectedBoardDetails((reactRouterMatch.params as any).boardId);
+    // only handled for 404 error status
+    if (responseStatus === 404) {
+      return responseStatus;
+    }
   }
   if (isEmpty((reactRouterMatch.params as any).taskId) === false) {
-    await getSelectedTask((reactRouterMatch.params as any).taskId);
+    const responseStatus = await getSelectedTask((reactRouterMatch.params as any).taskId);
+    // only handled for 404 error status
+    if (responseStatus === 404) {
+      return responseStatus;
+    }
   }
   return Promise.resolve({});
 };
@@ -56,8 +62,8 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   user: User;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => any;
-  getSelectedBoard: (boardId: string) => void;
-  getSelectedTaskDetails: (taskId: string) => void;
+  getSelectedBoard: (boardId: string) => any;
+  getSelectedTaskDetails: (taskId: string) => any;
   company: CompanyModel;
   rightSidebarOpen: boolean;
 }
@@ -67,12 +73,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (props.match.url === '/' && props.user) {
+    if (props.match.url === '/' && isEmpty(props.user._id) === false) {
       props.history.push(`/${props.user.name}`);
+      setLoading(false);
     }
     if ((props.match.params as any).username && props.user && props.user.name
       && isEqual((props.match.params as any).username, props.user.name) === false) {
-      props.history.push(`/unavailable/profile`);
+      setLoading(false);
+      props.history.push(`/notFound`);
     }
     if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false
       && isEmpty(props.company._id) === true)) {
@@ -81,11 +89,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         props.fetchUserAction,
         props.getCompanyDetails,
         props.getSelectedBoard,
-        props.getSelectedTaskDetails,
-        props.history
-      ).then(() =>
-        setLoading(false)
-      );
+        props.getSelectedTaskDetails
+      )
+        .then((response) => {
+          setLoading(false);
+          if (response === 404) {
+            props.history.push(`/notFound`);
+          }
+        });
     }
   }, [loading]);
 

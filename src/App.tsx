@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Redirect, Link } from 'react-router-dom';
 import { SignUpPage } from './layouts/signup/Index';
 import { SignInPage } from 'layouts/signin/Index';
 import { isAuthenticate } from 'stores/UtilsActions';
@@ -52,6 +52,7 @@ const NotFound = () => (
 		<div className="dtc v-mid tc white ph3 ph4-l">
 			<h1 className="f6 f2-m f-subheadline-l fw7 tc black">404</h1>
 			<h1 className="tc black">WE ARE SORRY, BUT THE PAGE YOU REQUESTED WAS <br /> NOT FOUND</h1>
+			<Link className="fw6 f4" to="/home">Back to Profile</Link>
 		</div>
 	</article>
 );
