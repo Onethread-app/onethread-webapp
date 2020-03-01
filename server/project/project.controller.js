@@ -53,7 +53,7 @@ const listProjectsFromCompany = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then(result => {
-      logger.info(`${result}`);
+      logger.info(`all projects for company:${companyId}`);
       return sendJSONresponse(res, 200, result);
     })
     .catch(e => next(e));
