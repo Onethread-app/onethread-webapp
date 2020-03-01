@@ -24,6 +24,10 @@ router
   .route('/pending')
   .get(authorization, memberCtrl.pendingList);
 
+  router
+  .route('/pending-check')
+  .get(authorization, memberCtrl.pendingCheck);
+
 router
   .route('/:memberId')
   .get(

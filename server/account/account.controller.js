@@ -88,8 +88,7 @@ const register = async (req, res, next) => {
       console.log(req.query);
 
       if('company' in req.query){
-        try{
-
+      
         let pendingMember = await PendingMember.find({
           company: req.query.company,
           //email: account.email,
@@ -99,9 +98,7 @@ const register = async (req, res, next) => {
           await Member.create({account: account._id, company: req.query.company });
           pendingMember[0].remove();
         }
-      } catch (error) {
-        console.log(error);
-      }
+      
       }        
             
         

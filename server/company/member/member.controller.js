@@ -121,6 +121,25 @@ const pendingList = async (req, res, next) => {
   }
 };
 
+const pendingCheck = async (req, res, next) => {
+  try {
+    const { limit = 50, skip = 0, email } = req.query;
+
+    const pendingMember = await PendingMember.count({
+      company: req.company._id,
+      email: email,
+      removed: false,
+    });
+    let status = (pendingMember > 0) ? 409: 200;
+    return res.status(status).json({
+      pendingMember ,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
 // get a member
 const getMember = (req, res, next) => {
   return res.status(200).json({
@@ -188,6 +207,7 @@ module.exports = {
   addMember,
   list,
   pendingList,
+  pendingCheck,
   getMember,
   getMemberLoad,
   searchMember,

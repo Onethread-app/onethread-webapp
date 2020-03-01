@@ -42,12 +42,11 @@ const create = async (req, res, next) => {
         associateWith : req.body.associateWith,
         account: req.user._id,
     });
-    associate
-      .save()
-      .then(createdAssociate => {
-        return res.status(201).json(createdAssociate);
-      })
-      .catch(e => next(e));
+    await associate
+      .save();
+      //await Associate.populate(associate, { path: 'associateWith', select: 'name '});
+      //await associate.populate('associateWith', 'name').execPopulate;
+      return res.status(201).json(associate);
   } catch (error) {
     logger.error(`Board create: ${error}`);
     const err = new BadRequestError(
@@ -68,8 +67,8 @@ const list = async (req, res, next) => {
     company: companyId,
   })
     .select('_id company associateWith')
-    .populate('company', '_id name')
-    .populate('associateWith', '_id name')
+    .populate('company', '_id name type createdAt')
+    .populate('associateWith', '_id name type createdAt')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)

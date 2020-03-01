@@ -52,9 +52,9 @@ const changeName = async (req, res, next) => {
 // create a company profile
 const createCompany = async (req, res, next) => {
   // Check for JSON
-  if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
-  }
+  // if (!req.is('application/json')) {
+  //   return res.send("Expects 'application/json'");
+  // }
 
   try {
     // check duplicate company name
@@ -235,6 +235,39 @@ const updateAbout = async (req, res, next) => {
   }
 };
 
+// update a company role
+const updateRole = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+  
+  try {
+    //Company.deleteMany({}, function(err, result) {
+      
+    //});
+    //req.company.optionalRole = req.body.optionalRole;
+    const company = await Company.findOneAndUpdate(
+      { _id: req.company._id },
+      { $set: { optionalRole: req.body.optionalRole } },
+      {
+        safe: true,
+        upsert: true,
+      },
+    ).exec();
+
+    //await req.company.save();
+
+    return res.status(200).json({
+      message: `Company's role updated`,
+      data: company.optionalRole,
+    });
+  } catch (error) {
+    
+    next(error);
+  }
+};
+
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
@@ -318,12 +351,15 @@ const authorizeAdmin = role => {
 
 const searchCompany = async (req, res, next) => {
   try {
-    const name = req.query.name;
+    const { limit = 50, skip = 0 , name} = req.query;
     await Company.find({
       name: { $regex: new RegExp(name), $options: 'i' },
     })
-      .select(name)
+      .select('name')
+      .skip(+skip)
+      .limit(+limit)
       .then(data => {
+        console.log(data);
         return sendJSONresponse(res, 200, {
           success: true,
           message: `Search complete for ${name}`,
@@ -334,11 +370,13 @@ const searchCompany = async (req, res, next) => {
     next(error);
   }
 };
+
 module.exports = {
   authorizeAdmin,
   createCompany,
   getCompany,
   updateBasicInfo,
+  updateRole,
   updateAbout,
   getCompanyIndividual,
   changeName,

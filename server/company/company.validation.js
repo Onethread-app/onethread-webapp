@@ -16,6 +16,10 @@ const id = Joi.object().keys({
 const cname = Joi.object().keys({
   cname: Joi.string().required(),
 });
+const sname = Joi.object().keys({
+  name: Joi.string().min(1),
+});
+
 
 // joi schema
 const schema = {
@@ -46,6 +50,10 @@ const schema = {
     .min(1)
     .max(5)
     .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  optionalRole: Joi.array()
+    .min(1)
+    .max(5)
+    .items(Joi.string()),
   location: Joi.string(),
   websites: Joi.array()
     .max(3)
@@ -114,6 +122,12 @@ module.exports = {
     }),
     params: cname,
   }),
+  changeRole: Joi.object().keys({
+    body: Joi.object().keys({
+      optionalRole: schema.optionalRole.required(),
+    }),
+    params: cname,
+  }),
   changeName: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
@@ -122,5 +136,8 @@ module.exports = {
   }),
   deleteCompany: Joi.object().keys({
     params: cname,
+  }),
+  search: Joi.object().keys({
+    query: sname,
   }),
 };
