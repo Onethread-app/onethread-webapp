@@ -3,6 +3,7 @@ const accountRoutes = require('./server/account/account.route');
 const companyRoutes = require('./server/company/company.route');
 const categoryRoutes = require('./server/category/category.route');
 const postRoutes = require('./server/post/post.route');
+const projectRoutes = require('./server/project/project.route');
 const reactRoutes = require('./server/react/react.route');
 const saveRoutes = require('./server/save/save.route');
 const commentRoutes = require('./server/comment/comment.route');
@@ -49,5 +50,6 @@ router.use('/tasks', taskRoutes);
 router.use('/subTasks', subTasks);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
+router.use('/projects', projectRoutes);
 
 module.exports = router;

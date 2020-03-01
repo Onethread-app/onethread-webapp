@@ -1,0 +1,54 @@
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+// company schema
+const projectSchema = new Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+      maxlength: 32,
+      required: true,
+    },
+    type: {
+      type: String,
+      enum: ['sd', 'md', 'associates'],
+      required: true,
+    },
+    color: {
+      type: Number,
+      enum: [0, 1, 2, 3, 4, 5, 6],
+      default: 0,
+    },
+    concernedAdmin:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+      required: true,
+    },
+
+    departments: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department',
+      },
+    ],
+    associates:[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Associates',
+    }],
+    company:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+      required: true,
+    }
+  },
+  {
+    timestamps: true,
+  },
+);
+
+let Project = mongoose.model('Project', projectSchema);
+
+module.exports = {
+  Project,
+};
