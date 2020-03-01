@@ -3,8 +3,10 @@ const crypto = require('crypto');
 const httpStatus = require('http-status');
 const slug = require('slug');
 const Account = require('./account.model');
-const {Member} = require('../company/member/member.model');
-const {PendingMember} = require('../company/member/pendingMember.model');
+const { Member } = require('../company/member/member.model');
+const {
+  PendingMember,
+} = require('../company/member/pendingMember.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
@@ -29,7 +31,6 @@ const {
 } = require('../helpers/APIError');
 // create a new account for individual users
 const register = async (req, res, next) => {
-  
   const data = req.body;
   if (!data.email || !data.password) {
     return sendJSONresponse(res, 400, {
@@ -88,7 +89,7 @@ const register = async (req, res, next) => {
       console.log(req.query);
       //future it required
       // if('company' in req.query){
-        
+
       //   let pendingMember = await PendingMember.find({
       //     company: req.query.company,
       //     //email: account.email,
@@ -98,24 +99,22 @@ const register = async (req, res, next) => {
       //     await Member.create({account: account._id, company: req.query.company });
       //     pendingMember[0].remove();
       //   }
-      
-      // }     
-      
-        let pendingMember = await PendingMember.find({
-          email: account.email,
-        }).select('-__v -company -createdAt -updatedAt');
-        
-        if (pendingMember.length > 0){
-          let pendingMemberToMember = pendingMember.map(m => {
-            return { account: account._id, company: req.company._id };
-          });
 
-          await Member.create(pendingMemberToMember);
-          PendingMember.remove({email: account.email,});
-        }
-            
-        
-    
+      // }
+
+      let pendingMember = await PendingMember.find({
+        email: account.email,
+      }).select('-__v -company -createdAt -updatedAt');
+
+      if (pendingMember.length > 0) {
+        let pendingMemberToMember = pendingMember.map(m => {
+          return { account: account._id, company: req.company._id };
+        });
+
+        await Member.create(pendingMemberToMember);
+        PendingMember.remove({ email: account.email });
+      }
+
       sendEmailForVerifyAccount(
         user.firstName,
         user.lastName,
@@ -130,7 +129,6 @@ const register = async (req, res, next) => {
       return sendJSONresponse(res, 201, { message: 'User created' });
     })
     .catch(err => {
-      
       next(err);
     });
 };
