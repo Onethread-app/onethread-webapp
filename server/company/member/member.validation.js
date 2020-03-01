@@ -50,6 +50,23 @@ module.exports = {
     }),
     params: memberId,
   }),
+  checkInvitedMemberStatus: Joi.object().keys({
+    query: Joi.object().keys({
+      email: Joi.string()
+        .regex(
+          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+        )
+        .lowercase()
+        .min(3)
+        .max(62)
+        .required()
+        .error(error => {
+          return {
+            message: 'Invalid email format',
+          };
+        }),
+    }),
+  }),
   // updateCompany: Joi.object().keys({
   //   body: Joi.object().keys({
   //     address: schema.address.required(),

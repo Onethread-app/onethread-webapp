@@ -20,9 +20,15 @@ router
   )
   .get(authorization, memberCtrl.list);
 
-  router
-  .route('/pending')
-  .get(authorization, memberCtrl.pendingList);
+router.route('/pending').get(authorization, memberCtrl.pendingList);
+
+router
+  .route('/pending/status')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.checkInvitedMemberStatus),
+    memberCtrl.checkInvitedMemberStatus,
+  );
 
 router
   .route('/:memberId')

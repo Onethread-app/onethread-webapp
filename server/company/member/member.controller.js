@@ -1,9 +1,6 @@
 const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
 const { PendingMember } = require('./pendingMember.model');
-const { Company } = require('../company.model');
-const { Room } = require('./../../room/room.model');
-const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const {
@@ -45,24 +42,32 @@ const addMember = async (req, res, next) => {
   }
 
   try {
-    if (!req.body.members.length && !req.body.newTeamMembers) {
+    if (!req.body.members.length && !req.body.pendingTeamMembers) {
       return res.status(400).json({
         message: `No members or newMembers found`,
       });
     }
     const members = await Member.create(req.body.members);
 
-    let pendingMember = req.body.newTeamMembers.map(m => {
-      return {email: m, company:req.company._id};
-    });
-    const membersToAdd = await PendingMember.create(pendingMember);
-    
-    sendInviteColleague(req.user.email, req.company, req.body.newTeamMembers);
+    let pendingMembers = [];
+
+    if (req.body.pendingTeamMembers.length) {
+      let pendingMembersInfo = req.body.pendingTeamMembers.map(m => {
+        return { email: m, company: req.company._id };
+      });
+      pendingMembers = await PendingMember.create(pendingMembersInfo);
+
+      sendInviteColleague(
+        req.user.email,
+        req.company,
+        req.body.pendingTeamMembers,
+      );
+    }
 
     return res.status(201).json({
       message: 'New member created and invitation send',
       members,
-      membersToAdd,
+      pendingMembers,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -121,6 +126,23 @@ const pendingList = async (req, res, next) => {
   }
 };
 
+const checkInvitedMemberStatus = async (req, res, next) => {
+  try {
+    const pendingMember = await PendingMember.findOne({
+      email: req.query.email,
+      company: req.company._id,
+      removed: false,
+    }).select('-__v -company -createdAt -updatedAt');
+
+    return res.status(200).json({
+      status: !pendingMember ? true : false,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
 // get a member
 const getMember = (req, res, next) => {
   return res.status(200).json({
@@ -157,11 +179,14 @@ const searchMember = async (req, res, next) => {
   try {
     const email = req.query.email;
     const companyID = req.company._id;
-    const company = await Company.findById({
-      _id: companyID,
-    }).populate('members', 'account');
-    let memberListId = company.members;
-    memberListId = memberListId.map(member => member.account);
+
+    const members = await Member.find({
+      company: companyID,
+      removed: false,
+    });
+
+    let memberListId = members.map(member => member.account);
+
     let data = await Account.find({
       $and: [
         { email: { $regex: new RegExp(email) } },
@@ -171,7 +196,7 @@ const searchMember = async (req, res, next) => {
       .skip(0)
       .limit(+10)
       .select('_id email name firstName lastName');
-    // TODO: pore ami change korbo query onusaree
+
     return sendJSONresponse(res, 200, {
       employees: {
         message: `Search complete ${email}`,
@@ -192,4 +217,5 @@ module.exports = {
   getMemberLoad,
   searchMember,
   changeRole,
+  checkInvitedMemberStatus,
 };
