@@ -11,10 +11,11 @@ const {
 router
   .route('/create-project')
   .post(
+    authorization,
     schemaValidator(paramValidation.createProject),
     projectCtrl.createNewProject,
   );
-
+router.route('/list-project').get(authorization, projectCtrl.listProjectsFromCompany);
 // for admin
 // router
 //   .route('/admin')

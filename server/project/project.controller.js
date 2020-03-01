@@ -41,4 +41,21 @@ const createNewProject = async (req, res, next) => {
     });
   }
 };
-module.exports = { createNewProject };
+
+const listProjectsFromCompany = async (req, res, next) => {
+  const { limit = 50, skip = 0, companyId } = req.query;
+  const allProjects = await Project.find({
+    company: companyId,
+  })
+    .select('name color departments')
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
+    .exec()
+    .then(result => {
+      logger.info(`${result}`);
+      return sendJSONresponse(res, 200, result);
+    })
+    .catch(e => next(e));
+};
+module.exports = { createNewProject, listProjectsFromCompany };
