@@ -15,6 +15,9 @@ const idSchema = {
 const schema = {
   name: Joi.string(),
   type: Joi.string(),
+  pid: idSchema.id,
+  description: Joi.string().max(2500),
+  outline: Joi.string().max(5000),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
   color: Joi.number(),
@@ -33,5 +36,12 @@ module.exports = {
       departments: schema.departments.required(),
       color : schema.color
     }),
+  }),
+  updatePreface : Joi.object().keys({
+      body: Joi.object().keys({
+          pid: schema.pid,
+          description: schema.description,
+          outline: schema.outline,
+      })
   })
 };

@@ -15,12 +15,20 @@ const projectSchema = new Schema(
       enum: ['sd', 'md', 'associates'],
       required: true,
     },
+    description: {
+      type: String,
+      maxlength: 2500,
+    },
+    outline: {
+      type: String,
+      maxlength: 5000,
+    },
     color: {
       type: Number,
       enum: [0, 1, 2, 3, 4, 5, 6],
       default: 0,
     },
-    concernedAdmin:{
+    concernedAdmin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
       required: true,
@@ -32,15 +40,29 @@ const projectSchema = new Schema(
         ref: 'Department',
       },
     ],
-    associates:[{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Associates',
-    }],
-    company:{
+    files: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'File',
+      },
+    ],
+    members: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Account',
+      },
+    ],
+    associates: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Associates',
+      },
+    ],
+    company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
       required: true,
-    }
+    },
   },
   {
     timestamps: true,

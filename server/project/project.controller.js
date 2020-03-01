@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const { Member } = require('../company/member/member.model');
 const { Project } = require('./project.model');
 const logger = require('../../config/winston');
-const { APIError, BadRequestError } = require('../helpers/APIError');
 const {
   sendErrorResponse,
   sendJSONresponse,
@@ -58,4 +57,66 @@ const listProjectsFromCompany = async (req, res, next) => {
     })
     .catch(e => next(e));
 };
-module.exports = { createNewProject, listProjectsFromCompany };
+
+const prefaceUpdate = async (req, res, next) => {
+  await Project.findByIdAndUpdate(
+    { _id: req.params.pid },
+    {
+      $set: {
+        outline: req.body.outline,
+        description: req.body.description,
+      },
+    },
+    { safe: true, upsert: true, new: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`preface addeed for ${req.body.pid}`);
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: 'Preface updated',
+      });
+    })
+    .cactch(err => {
+      logger.error(`${err}`);
+      next(err);
+    });
+};
+
+const getProjectDetails = async (req, res, next) => {
+  try {
+    let project = await Project.findOne({
+      _id: req.params.pid,
+    });
+    return sendJSONresponse(res, 200, project);
+  } catch (error) {
+    next(error);
+  }
+};
+const getProjectLoad = async (req, res, next) => {
+  try {
+    const project = await Project.findOne({
+      name: req.params.pid,
+    });
+
+    if (project) {
+      req.project = project;
+      return next();
+    } else {
+      logger.error(`project id not found`);
+      return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+        message: 'Project id not found for company',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  createNewProject,
+  listProjectsFromCompany,
+  prefaceUpdate,
+  getProjectLoad,
+  getProjectDetails,
+};
