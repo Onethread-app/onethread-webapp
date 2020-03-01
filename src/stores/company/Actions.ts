@@ -128,7 +128,7 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 };
 
 export const addTeamMembers =
-	(members: any, newTeamMembers: string[], companyName: string) => async (
+	(members: any, pendingTeamMembers: string[], companyName: string) => async (
 		dispatch: any
 	) => {
 		try {
@@ -137,10 +137,12 @@ export const addTeamMembers =
 				dispatch({ type: COMPANY_REDUCER_LOADING });
 				const response = await tigrowApi.post(
 					`company/${companyName}/members`,
-					{ members, newTeamMembers },
+					{ members, pendingTeamMembers },
 					headers
 				);
-				dispatch({ type: UPDATE_ALL_COMPANY_PENDING_MEMBERS, payload: response.data.membersToAdd });
+				if (response.data.pendingMembers.length > 0) {
+					dispatch({ type: UPDATE_ALL_COMPANY_PENDING_MEMBERS, payload: response.data.pendingMembers });
+				}
 				dispatch({ type: COMPANY_REDUCER_LOADING_FALSE });
 				// dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
 			} else {
@@ -446,7 +448,7 @@ export const getCompanyPendingMembers =
 				dispatch({ type: GET_ALL_COMPANY_PENDING_MEMBERS, payload: response.data.pendingMember });
 			} else {
 				// tslint:disable-next-line: no-console
-				console.log('error in selection of company fetching');
+				console.log('error in getting of pending members');
 			}
 		} catch (error) {
 			// tslint:disable-next-line: no-console

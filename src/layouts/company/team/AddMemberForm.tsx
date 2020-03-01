@@ -3,10 +3,10 @@ import { CompanyModel } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import { Button, Tag } from '@blueprintjs/core';
+import { Button, Tag, Toaster, Position } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 import { useLiveSearch } from 'components/useLiveSearch';
-import { server } from 'config';
+import { server, tigrowApi } from 'config';
 import { isEmpty } from 'lodash';
 
 interface TeamMembersViewProps {
@@ -17,7 +17,7 @@ interface TeamMembersViewProps {
 interface TeamMembersViewInternalProps extends TeamMembersViewProps {
   company: CompanyModel;
   addTeamMembers: (members: Array<{ account: string | undefined, company: string }>,
-    newTeamMembers: string[], name: string) => void;
+    pendingTeamMembers: string[], name: string) => void;
   getCompanyMembers: () => void;
 }
 
@@ -27,29 +27,67 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
 
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
 
-  const [selectedNewTeamMember, setSelectedNewTeamMember] = useState([] as string[]);
+  const [pendingTeamMembers, setPendingTeamMembers] = useState([] as string[]);
 
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
 
-  // const store = useStore();
-
-  const userRequestFactory = (userName: string): Promise<any> => {
+  const userRequestFactory = (_email: string): Promise<any> => {
     const headers = tokenConfig();
-    return fetch(`${server}company/${props.company.name}/members/search?email=${userName}`, headers)
+    return fetch(`${server}company/${props.company.name}/members/search?email=${_email}`, headers)
       .then(res => res.json())
       .then(res => res.employees.data)
       .catch(err => []);
   };
 
   let result: any = [];
-  result = useLiveSearch(username, userRequestFactory, 800);
+  result = useLiveSearch(email, userRequestFactory, 800);
 
   useEffect(() => {
     setTeamMembers(result);
   }, [result]);
 
+  const isEmail = (_email: string) => {
+    const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (email.match(regexForEmailValidation)) {
+      return true;
+    }
+    return false;
+  };
+
+  const checkPendingMemberStatus = async (_email: string) => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const response = await tigrowApi.get(
+          `company/${props.company.name}/members/pending/status?email=${_email}`,
+          headers
+        );
+        return response.data.status;
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log('error in checking of pending member status');
+        return false;
+      }
+    } catch (error) {
+      // tslint:disable-next-line: no-console
+      console.log(error);
+      return false;
+    }
+  };
+
   const addNewUser = async (newUser: ItemEntityProps) => {
-    setSelectedNewTeamMember([...selectedNewTeamMember, newUser.name!]);
+    const status = await checkPendingMemberStatus(email);
+    if (status) {
+      setPendingTeamMembers([...pendingTeamMembers, newUser.name!]);
+    } else {
+      Toaster
+        .create({
+          position: Position.TOP
+        })
+        .show({
+          message: `${newUser.name!} has already invited.`
+        });
+    }
   };
 
   return (
@@ -57,18 +95,12 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
       <div className=" w-100">
         <h1 className="f5 tigrow-lightBlue">Add members</h1>
         <SuggestField
-          onChange={(query: string) => {
-            setUsername(query);
-            // fetchTeamMembersByUsername(query) 
-          }}
+          onChange={(query: string) => { setEmail(query); }}
           items={teamMembers}
           selectedItems={selectedTeamMember}
           setSelectedItems={setSelectedTeamMember}
           multipleItemSelect={true}
-          isCreatable={
-            isEmpty(teamMembers)
-              ? true : false
-          }
+          isCreatable={isEmpty(teamMembers) && isEmail(email) ? true : false}
           isCreatableAPI={addNewUser}
         />
       </div>
@@ -94,20 +126,20 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           </Tag>
         ))}
       </div>
-      {selectedNewTeamMember.length ?
+      {pendingTeamMembers.length ?
         <small>Invited Members:</small> : undefined
       }
       <div className="w-100">
-        {selectedNewTeamMember.map((item, index) => (
+        {pendingTeamMembers.map((item, index) => (
           <Tag
             key={index}
             className="ma1 pa2"
             interactive={true}
             onRemove={e => {
-              const filteredItems = selectedNewTeamMember.filter(selectedItem => (
+              const filteredItems = pendingTeamMembers.filter(selectedItem => (
                 item !== selectedItem
               ));
-              setSelectedNewTeamMember([
+              setPendingTeamMembers([
                 ...filteredItems
               ]);
             }}
@@ -120,7 +152,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
       </div>
 
       {
-        selectedTeamMember.length + selectedNewTeamMember.length > 20 ?
+        selectedTeamMember.length + pendingTeamMembers.length > 20 ?
           <small className="red">Could not add more than 20 members at a time.</small>
           : undefined
       }
@@ -131,10 +163,10 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
           Cancel
-          </Button>
+        </Button>
         <Button className="grow h2 pointer white bp3-minimal w4"
-          style={selectedTeamMember.length + selectedNewTeamMember.length > 0 &&
-            selectedTeamMember.length + selectedNewTeamMember.length <= 20 ?
+          style={selectedTeamMember.length + pendingTeamMembers.length > 0 &&
+            selectedTeamMember.length + pendingTeamMembers.length <= 20 ?
             {
               background: '#0fa3a3',
               outline: 'none',
@@ -145,8 +177,8 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
               color: 'white'
             }
           }
-          disabled={selectedTeamMember.length + selectedNewTeamMember.length > 0 &&
-            selectedTeamMember.length + selectedNewTeamMember.length <= 20 ? false : true}
+          disabled={selectedTeamMember.length + pendingTeamMembers.length > 0 &&
+            selectedTeamMember.length + pendingTeamMembers.length <= 20 ? false : true}
           onClick={async () => {
             const userIdWithCompany = selectedTeamMember.map(selected => {
               return {
@@ -154,8 +186,8 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
                 company: props.company._id
               };
             });
-            if (userIdWithCompany || selectedNewTeamMember) {
-              await props.addTeamMembers(userIdWithCompany, selectedNewTeamMember, props.company.name);
+            if (userIdWithCompany || pendingTeamMembers) {
+              await props.addTeamMembers(userIdWithCompany, pendingTeamMembers, props.company.name);
             }
             await props.getCompanyMembers();
             props.setShowDialog(!props.showDialog);
@@ -163,7 +195,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           }
         >
           Add
-          </Button>
+        </Button>
       </div>
     </div>
   );
