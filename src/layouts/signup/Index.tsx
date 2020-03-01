@@ -23,16 +23,15 @@ import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
 
 interface SignUpPageInternalProps {
-  userSignupAction: (user: UserModel, company?: string) => any;
+  userSignupAction: (user: UserModel) => any;
 }
 
 export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteComponentProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [company, setCompany] = useState('');
 
   const onSubmit = async (values: any) => {
-    const response = await props.userSignupAction(values, company);
+    const response = await props.userSignupAction(values);
     if (response.message === 200) {
       props.history.push(`/signup-confirmation`);
       return true;
@@ -46,7 +45,6 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
     const search = props.location.search;
     const params = new URLSearchParams(search);
     setEmail(params.get('email') ? params.get('email')! : '');
-    setCompany(params.get('company') ? params.get('company')! : '');
   }, [props.location.search]);
 
   return (

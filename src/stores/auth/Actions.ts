@@ -67,8 +67,7 @@ export const userSignupAction = (
 			...newUser,
 			contactNo: `+88${newUser.contactNo}`
 		};
-		const url = company ? `accounts/signup?company=${company}` : 'accounts/signup';
-		const response = await tigrowApi.post(url, user, {
+		const response = await tigrowApi.post('accounts/signup', user, {
 			'Content-Type': 'application/json'
 		} as AxiosRequestConfig);
 		if (response.status === 201) {
