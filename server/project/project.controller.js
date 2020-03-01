@@ -85,10 +85,7 @@ const updateProjectPreface = async (req, res, next) => {
 
 const getProjectDetails = async (req, res, next) => {
   try {
-    let project = await Project.findOne({
-      _id: req.params.pid,
-    });
-    return sendJSONresponse(res, 200, project);
+    return sendJSONresponse(res, 200, req.project);
   } catch (error) {
     next(error);
   }
@@ -97,7 +94,7 @@ const getProjectLoad = async (req, res, next) => {
   try {
     const project = await Project.findOne({
       _id: req.params.pid,
-    });
+    }).populate('files link s3key');
     if (project) {
       req.project = project;
       return next();

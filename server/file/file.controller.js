@@ -8,6 +8,7 @@ const {
 const File = require('./file.model');
 const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
+const { Project } = require('../project/project.model');
 const { generateGetUrl } = require('../services/s3');
 let s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
@@ -221,7 +222,7 @@ const fileInProject = async (req, res, next) => {
     .then(async data => {
       logger.info(data);
       try {
-        logger.info(`File in rooms Successfully upload to S3`);
+        logger.info(`File in project Successfully upload to S3`);
         const newFile = new File({
           link: data.Location,
           s3Key: params.Key,
@@ -231,7 +232,11 @@ const fileInProject = async (req, res, next) => {
         });
         await newFile.save();
         logger.info('File Link successfully save to file collection');
-
+        await Project.findByIdAndUpdate(
+          { _id: pid },
+          { $set: { files: newFile._id } },
+          { safe: true, upsert: true, new: true },
+        );
         return sendJSONresponse(res, 200, { newFile });
       } catch (error) {
         logger.error(`${error}`);
