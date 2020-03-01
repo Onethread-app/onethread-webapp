@@ -86,23 +86,33 @@ const register = async (req, res, next) => {
       let verifyAccountTokenExpiration = Date.now() + 604800;
 
       console.log(req.query);
+      //future it required
+      // if('company' in req.query){
+        
+      //   let pendingMember = await PendingMember.find({
+      //     company: req.query.company,
+      //     //email: account.email,
+      //   }).select('-__v -company -createdAt -updatedAt');
 
-      if('company' in req.query){
-        try{
-
+      //   if (pendingMember.length > 0){
+      //     await Member.create({account: account._id, company: req.query.company });
+      //     pendingMember[0].remove();
+      //   }
+      
+      // }     
+      
         let pendingMember = await PendingMember.find({
-          company: req.query.company,
-          //email: account.email,
+          email: account.email,
         }).select('-__v -company -createdAt -updatedAt');
-
+        
         if (pendingMember.length > 0){
-          await Member.create({account: account._id, company: req.query.company });
-          pendingMember[0].remove();
+          let pendingMemberToMember = pendingMember.map(m => {
+            return { account: account._id, company: req.company._id };
+          });
+
+          await Member.create(pendingMemberToMember);
+          PendingMember.remove({email: account.email,});
         }
-      } catch (error) {
-        console.log(error);
-      }
-      }        
             
         
     
