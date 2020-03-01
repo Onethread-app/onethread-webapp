@@ -11,7 +11,10 @@ const idSchema = {
     }),
 };
 
-
+// project id
+const pid = Joi.object().keys({
+  pid: idSchema.id,
+});
 const schema = {
   name: Joi.string(),
   type: Joi.string(),
@@ -23,25 +26,27 @@ const schema = {
   color: Joi.number(),
   company: idSchema.id,
   associates: Joi.array().items(idSchema.id),
-}
-
+};
 
 module.exports = {
-  createProject: Joi.object().keys({
+  createNewProjectForCompany: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       type: schema.type.required(),
       concernedAdmin: schema.type.required(),
       companyId: schema.company.required(),
       departments: schema.departments.required(),
-      color : schema.color
+      color: schema.color,
     }),
   }),
-  updatePreface : Joi.object().keys({
-      body: Joi.object().keys({
-          pid: schema.pid,
-          description: schema.description,
-          outline: schema.outline,
-      })
-  })
+  updateProjectPreface: Joi.object().keys({
+    body: Joi.object().keys({
+      pid: schema.pid,
+      description: schema.description,
+      outline: schema.outline,
+    }),
+  }),
+  getProject: Joi.object().keys({
+    params: pid.required(),
+  }),
 };

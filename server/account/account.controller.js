@@ -20,11 +20,7 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-const {
-  APIError,
-  BadRequestError,
-  SearchNotMatchError,
-} = require('../helpers/APIError');
+const { APIError } = require('../helpers/APIError');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -113,13 +109,6 @@ const login = async (req, res, next) => {
       email: req.user.email,
       _id: req.user._id,
     };
-    const token = jwt.sign(
-      { email: req.user.email, _id: req.user._id },
-      config.jwtSecret,
-      {
-        expiresIn: config.accessTokenExpire,
-      },
-    );
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
       expiresIn: config.accessTokenExpire,
     });
@@ -135,12 +124,12 @@ const login = async (req, res, next) => {
     addUserDataIntoCache(req.user.email, req.user);
     return sendJSONresponse(res, 200, {
       success: true,
-      token: token,
       accessToken: accessToken,
       refreshToken: refreshToken,
       user: userObj,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };

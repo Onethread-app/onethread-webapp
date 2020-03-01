@@ -9,22 +9,30 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 // authentication
 router
-  .route('/create-project')
+  .route('/create')
   .post(
     authorization,
-    schemaValidator(paramValidation.createProject),
-    projectCtrl.createNewProject,
+    schemaValidator(paramValidation.createNewProjectForCompany),
+    projectCtrl.createNewProjectForCompany,
   );
-router.route('/list-project').get(authorization, projectCtrl.listProjectsFromCompany);
+router
+  .route('/lists')
+  .get(authorization, projectCtrl.showAllProjectsForCompany);
 
-// for admin
-// router
-//   .route('/admin')
-//   .post(requireLogin, permit('admin'), accountCtrl.login);
+router
+  .route('/update')
+  .put(
+    authorization,
+    schemaValidator(paramValidation.updateProjectPreface),
+    projectCtrl.updateProjectPreface,
+  );
 
 router.param('pid', projectCtrl.getProjectLoad);
-router.route('/:pid/update-preface').put(authorization, schemaValidator(paramValidation.updatePreface), projectCtrl.prefaceUpdate);
-router.route('/:pid').get(authorization, schemaValidator(paramValidation.getProject), projectCtrl.getProjectDetails);
-
-
+router
+  .route('/:pid')
+  .get(
+    authorization,
+    schemaValidator(paramValidation.getProject),
+    projectCtrl.getProjectDetails,
+  );
 module.exports = router;

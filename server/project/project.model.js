@@ -63,6 +63,10 @@ const projectSchema = new Schema(
       ref: 'Company',
       required: true,
     },
+    version: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

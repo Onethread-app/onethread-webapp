@@ -7,7 +7,7 @@ const {
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
 
-const createNewProject = async (req, res, next) => {
+const createNewProjectForCompany = async (req, res, next) => {
   const userExist = await Member.findOne({
     account: req.body.concernedAdmin,
   });
@@ -41,7 +41,7 @@ const createNewProject = async (req, res, next) => {
   }
 };
 
-const listProjectsFromCompany = async (req, res, next) => {
+const showAllProjectsForCompany = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
   const allProjects = await Project.find({
     company: companyId,
@@ -58,9 +58,9 @@ const listProjectsFromCompany = async (req, res, next) => {
     .catch(e => next(e));
 };
 
-const prefaceUpdate = async (req, res, next) => {
+const updateProjectPreface = async (req, res, next) => {
   await Project.findByIdAndUpdate(
-    { _id: req.params.pid },
+    { _id: req.body.pid },
     {
       $set: {
         outline: req.body.outline,
@@ -96,9 +96,8 @@ const getProjectDetails = async (req, res, next) => {
 const getProjectLoad = async (req, res, next) => {
   try {
     const project = await Project.findOne({
-      name: req.params.pid,
+      _id: req.params.pid,
     });
-
     if (project) {
       req.project = project;
       return next();
@@ -114,9 +113,9 @@ const getProjectLoad = async (req, res, next) => {
 };
 
 module.exports = {
-  createNewProject,
-  listProjectsFromCompany,
-  prefaceUpdate,
+  createNewProjectForCompany,
+  showAllProjectsForCompany,
+  updateProjectPreface,
   getProjectLoad,
   getProjectDetails,
 };
