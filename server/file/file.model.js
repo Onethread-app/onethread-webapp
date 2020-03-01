@@ -59,6 +59,10 @@ const fileSchema = new mongoose.Schema(
       type: Schema.ObjectId,
       ref: 'Room',
     },
+    project: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project',
+    },
   },
   { timestamps: true },
 );

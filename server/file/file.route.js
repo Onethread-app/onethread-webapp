@@ -33,4 +33,10 @@ router.post(
   authorization,
   fileCtrl.fileInRooms,
 );
+router.post(
+  '/file-upload-project',
+  upload.single('file'),
+  authorization,
+  fileCtrl.fileInProject,
+);
 module.exports = router;
