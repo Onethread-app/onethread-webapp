@@ -45,8 +45,10 @@ const validateUrl = [
 const company = new Schema(
   {
     logo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'File',
+      type: String,
+      unique: true,
+      trim: true,
+     
     },
     name: {
       type: String,

@@ -159,6 +159,8 @@ const getCompanyIndividual = async (req, res, next) => {
 
 // get a company profile
 const getCompany = async (req, res, next) => {
+
+  console.log(1);
   try {
     // company details
     let company = await Company.findOne({

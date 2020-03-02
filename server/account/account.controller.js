@@ -207,6 +207,7 @@ const timeline = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };

@@ -5,20 +5,30 @@ const Associate = require('./associate.model');
 const logger = require('../../config/winston');
 const {  BadRequestError } = require('../helpers/APIError');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
+const { log } = require('debug');
+
 
 
 const get = async (req, res , next) => {
-  cancelAnimationFrame
+  
   
   await Associate.findOne({
     _id: req.params.associteId,
     removed: false,
   })
-    .select('_id company associateWith createdAt')
-    .populate('associateWith', '_id name type')
-    .populate('company', '_id name type')
+    .select('_id company associateWith createdAt account')
+    .populate('associateWith', '_id name type address email legalOwnerName legalOwnerMail')
+    .populate('company', '_id name type address email legalOwnerName legalOwnerMail')
+    .populate('account', 'firstName lastName')
     .exec()
     .then(colResult => {
+      if(req.params.companyId === colResult.company._id.toString()){
+        colResult.company = colResult.associateWith;
+        delete colResult.associateWith;
+      }else{
+        delete colResult.associateWith;
+      }
+      console.log(colResult);
       res.json(colResult);
     })
     .catch(e => next(e));
@@ -33,8 +43,9 @@ const create = async (req, res, next) => {
     });
     await associate
       .save();
-      //await Associate.populate(associate, { path: 'associateWith', select: 'name '});
-      await associate.populate('associateWith', '_id name type').execPopulate;
+      await Associate.populate(associate, { path: 'associateWith', select: '_id name type'});
+      //await associate.populate('associateWith', '_id name type').execPopulate;
+      
       return res.status(201).json(associate);
   } catch (error) {
     logger.error(`Board create: ${error}`);
@@ -63,6 +74,7 @@ const list = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then(result => {
+      
       logger.info(`${result}`);
       return sendJSONresponse(res, 200, result);
     })

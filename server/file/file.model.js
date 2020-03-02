@@ -44,7 +44,7 @@ const fileSchema = new mongoose.Schema(
     },
     imageType: {
       type: String,
-      enum: ['profilePic', 'coverPhoto'],
+      enum: ['profilePic', 'coverPhoto', 'companyLogo'],
     },
     account: {
       type: mongoose.Schema.Types.ObjectId,
