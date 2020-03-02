@@ -185,7 +185,7 @@ const searchMember = async (req, res, next) => {
         }
       }
 
-      const response = await elasticService.search('accounts','account',body);
+      const response = await elasticService.search('accounts','_doc',body);
 
       return sendJSONresponse(res,200,{
         success: true,

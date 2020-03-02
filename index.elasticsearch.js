@@ -7,8 +7,8 @@ class ElasticsearchService {
     this.index = index;
     this.model = model;
     this.client = new elasticsearch.Client({
-      //host: 'https://search-testtigrow-2a67nuu3pc3clgioybdg6qlwxy.ap-southeast-1.es.amazonaws.com',
-      host: 'http://localhost:9200',
+      host: 'https://search-testtigrow-2a67nuu3pc3clgioybdg6qlwxy.ap-southeast-1.es.amazonaws.com',
+      //host: 'http://localhost:9200',
       auth: {
         username: 'elastic',
         password: 'changeme',
@@ -48,7 +48,7 @@ class ElasticsearchService {
 
           dataset.forEach(data => {
             bulk.push({
-              index: { _index: this.index, _type: 'account' }
+              index: { _index: this.index }
             });
             bulk.push({
               mongo_id: data._id.toString(),

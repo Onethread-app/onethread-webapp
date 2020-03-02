@@ -47,7 +47,6 @@ module.exports.accountMapping = {
     }
   },
   "mappings": {
-    "account": {
       "properties": {
         "mongo_id": { "type": "text" },
         "name": { "type": "text" },
@@ -55,6 +54,5 @@ module.exports.accountMapping = {
         "firstName": { "type": "text" },
         "lastName": { "type": "text" }
       }
-    }
   }
 }
