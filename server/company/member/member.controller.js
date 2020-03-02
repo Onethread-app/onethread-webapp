@@ -1,6 +1,7 @@
 const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
 const { Room } = require('./../../room/room.model');
+const { Company } = require('../../company/company.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
@@ -161,45 +162,37 @@ const searchMember = async (req, res, next) => {
 
     if(name){
 
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool:{
+            must: [
+              {
+                match_phrase_prefix: {
+                  "email": req.query.name
+                }
+              }
+            ],
+             must_not: [
+              {
+               "terms" : {
+                  "mongo_id": memberListId 
+                }
+              }
+           ]
+          }
+        }
+      }
 
+      const response = await elasticService.search('accounts','_doc',body);
 
+      return sendJSONresponse(res,200,{
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits
+      })
 
-      // let body = {
-      //   size: 200,
-      //   from: 0,
-      //   query: {
-      //     bool:{
-      //       must: [
-      //         {
-      //           match_phrase_prefix: {
-      //             "email": req.query.name
-      //           }
-      //         }
-      //       ],
-      //        must_not: [
-      //         {
-      //          "terms" : {
-      //             "mongo_id": memberListId 
-      //           }
-      //         }
-      //      ]
-      //     }
-      //   },
-      //   "_source": ["mongo_id" ,"name" , "email" ,"firstName" , "lastName"]
-      // }
-
-      // client
-      //   .search({ index: 'accounts' , body: body , type: 'doc'})
-      //   .then(response =>{
-      //     return sendJSONresponse(res, 200 , {
-      //       success: true,
-      //       message: `Search complete for ${name}`,
-      //       data: response.hits.hits
-      //     })
-      //   })
-      //   .catch(err => {
-      //     console.log(err);
-      //   })
     }else{
       return sendErrorResponse(res, 400, 'EmptySearchError', {
         message: `query error`,
@@ -211,30 +204,6 @@ const searchMember = async (req, res, next) => {
         next(error);
       }
 
-
-
-
-
-
-
-
-  //   let data = await Account.find({
-  //     $and: [
-  //       { name: { $regex: new RegExp(name) } },
-  //       { _id: { $nin: memberListId } },
-  //     ],
-  //   }).select('_id email name firstName lastName');
-  //   // TODO: pore ami change korbo query onusaree
-  //   return sendJSONresponse(res, 200, {
-  //     employees: {
-  //       message: `Search complete ${name}`,
-  //       data,
-  //     },
-  //   });
-  // } catch (error) {
-  //   logger.error(`${error}`);
-  //   next(error);
-  // }
 };
 
 module.exports = {

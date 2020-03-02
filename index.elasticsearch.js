@@ -1,12 +1,14 @@
 var elasticsearch = require('elasticsearch');
 const logger = require('./config/winston');
+const chalk = require('chalk');
 
 class ElasticsearchService {
   constructor(index, model) {
     this.index = index;
     this.model = model;
     this.client = new elasticsearch.Client({
-      host: 'https://search-testtigrow-2a67nuu3pc3clgioybdg6qlwxy.ap-southeast-1.es.amazonaws.com',
+      //host: 'https://search-testtigrow-2a67nuu3pc3clgioybdg6qlwxy.ap-southeast-1.es.amazonaws.com',
+      host: 'http://localhost:9200',
       auth: {
         username: 'elastic',
         password: 'changeme',
@@ -20,7 +22,7 @@ class ElasticsearchService {
       .catch(error => logger.error('Elasticsearch cluster is down!' + error));
 
     this.client.cluster.health()
-      .then(res => logger.info('cluster health is ' + res.status))
+      .then(res => logger.info(chalk.keyword(res.status)(`Elasticsearch cluster health is ${res.status}`) ))
       .catch(err => logger.error(err));
   }
 
@@ -43,9 +45,10 @@ class ElasticsearchService {
 
           const dataset = await this.model.find({});
 
+
           dataset.forEach(data => {
             bulk.push({
-              index: { _index : this.index }
+              index: { _index: this.index }
             });
             bulk.push({
               mongo_id: data._id.toString(),
@@ -56,32 +59,34 @@ class ElasticsearchService {
             });
           });
 
-          console.log(bulk);
+          await this.client.bulk({ body: bulk });
 
-          const { body: bulkResponse } = await this.client.bulk({ body: bulk });
-
-          console.log(bulkResponse);
-
-          logger.info(`successfully created index ${createdIndex.index}`)
+          logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
 
         }
 
         else {
 
-          logger.error("index creation failed")
+          logger.error(` Elasticsearchindex ${this.index}  creation failed`)
 
         }
-        //create an index with mapping
-        //bulk insert the data
-        //logger message
-
-        console.log('not exits');
+      
       } else {
-        console.log('index already exits');
+        logger.info(` ✔ ️Elasticsearch index ${this.index} exits`);
       }
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      logger.error(error)
     }
+  }
+
+  search(indexName,indexType,body){
+
+    return this.client.search({
+      index: indexName,
+      type: indexType,
+      body
+    })
+
   }
 }
 
