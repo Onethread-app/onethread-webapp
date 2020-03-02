@@ -36,6 +36,11 @@ router
     authorization,
     SchemaValidator(joiSchema.getMember),
     memberCtrl.getMember,
+  )
+  .delete(
+    authorization,
+    SchemaValidator(joiSchema.deleteMember),
+    memberCtrl.deleteMember,
   );
 
 router

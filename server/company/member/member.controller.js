@@ -156,6 +156,34 @@ const getMember = (req, res, next) => {
   });
 };
 
+// delete a member
+const deleteMember = async (req, res, next) => {
+  try {
+    // check role: superAdmin/admin
+    const member = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    });
+
+    if (!['superAdmin', 'admin'].includes(member.role)) {
+      return res.status(403).json({
+        message: `Restricted`,
+      });
+    }
+
+    req.member.removed = true;
+
+    await req.member.save();
+
+    return res.status(200).json({
+      message: 'member deleted successfully',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
 // member will be found on req.member
 const getMemberLoad = async (req, res, next) => {
   try {
@@ -220,6 +248,7 @@ module.exports = {
   list,
   pendingList,
   getMember,
+  deleteMember,
   getMemberLoad,
   searchMember,
   changeRole,

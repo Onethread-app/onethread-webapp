@@ -44,6 +44,9 @@ module.exports = {
   getMember: Joi.object().keys({
     params: memberId,
   }),
+  deleteMember: Joi.object().keys({
+    params: memberId,
+  }),
   changeRole: Joi.object().keys({
     body: Joi.object().keys({
       role: schema.role.required(),
