@@ -89,7 +89,10 @@ const list = async (req, res, next) => {
       .limit(+limit)
       .select('-__v -company -createdAt -updatedAt')
       .populate([
-        { path: 'account', select: '_id name firstName lastName' },
+        {
+          path: 'account',
+          select: '_id name firstName lastName email',
+        },
         {
           path: 'designations',
           select: 'division department position',
@@ -136,6 +139,9 @@ const checkInvitedMemberStatus = async (req, res, next) => {
 
     return res.status(200).json({
       status: !pendingMember ? true : false,
+      message: !pendingMember
+        ? `${req.query.email} can be invited.`
+        : `${req.query.email} has already been invited.`,
     });
   } catch (error) {
     logger.error(`${error}`);
