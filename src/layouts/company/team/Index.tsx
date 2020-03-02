@@ -472,30 +472,36 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 				</HTMLTable>
 				{/* members list ends */}
 				{/* pending list starts */}
-				<h1 className="f4 tigrow-lightGray-1">Pending request</h1>
-				<HTMLTable className="w-100 mv3" striped={true}>
-					<tbody>
-						{props.companyLoading ? (
-							<Loading />
-						) :
-							pendingList.length ? (
-								// tslint:disable-next-line: no-shadowed-variable
-								pendingList.map((chunkMembers, i1) => (
-									<tr className="hide-child" key={i1}>
-										{chunkMembers.map(member =>
-											(<td>
-												<span className="mr2">{member.email}</span>
-											</td>)
+				{permit(props.company.role) ? (
+					<>
+						<h1 className="f4 tigrow-lightGray-1">Pending request</h1>
+						<HTMLTable className="w-100 mv3" striped={true}>
+							<tbody>
+								{props.companyLoading ? (
+									<Loading />
+								) :
+									pendingList.length ? (
+										// tslint:disable-next-line: no-shadowed-variable
+										pendingList.map((chunkMembers, i1) => (
+											<tr className="hide-child" key={i1}>
+												{chunkMembers.map(member =>
+													(<td>
+														<span className="mr2">{member.email}</span>
+													</td>)
+												)}
+											</tr>
+										))
+									) : (
+											<tr>
+												<td colSpan={3}>No pending request</td>
+											</tr>
 										)}
-									</tr>
-								))
-							) : (
-									<tr>
-										<td colSpan={3}>No pending request</td>
-									</tr>
-								)}
-					</tbody>
-				</HTMLTable>
+							</tbody>
+						</HTMLTable>
+					</>
+				) : (
+						undefined
+					)}
 				{/* pending list ends */}
 			</div>
 
