@@ -16,7 +16,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       name: req.body.name,
       type: req.body.type,
       concernedAdmin: req.body.concernedAdmin,
-      department: [req.body.departments],
+      departments: [req.body.departments],
       color: req.body.color,
       company: req.body.companyId,
     });
@@ -85,6 +85,7 @@ const updateProjectPreface = async (req, res, next) => {
 
 const getProjectDetails = async (req, res, next) => {
   try {
+    console.log(req.project);
     return sendJSONresponse(res, 200, req.project);
   } catch (error) {
     next(error);
@@ -94,7 +95,7 @@ const getProjectLoad = async (req, res, next) => {
   try {
     const project = await Project.findOne({
       _id: req.params.pid,
-    }).populate('files link s3key');
+    }).populate('files', 'link s3key');
     if (project) {
       req.project = project;
       return next();
@@ -109,10 +110,28 @@ const getProjectLoad = async (req, res, next) => {
   }
 };
 
+const changeTitleProject = async (req, res, next) => {
+  await Project.findByIdAndUpdate(
+    { _id: req.body.pid },
+    { $set: { name: req.body.name } },
+    { safe: true, upsert: true, new: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`project name change successfully`);
+      return sendJSONresponse(res, 200, {message: 'Project Name changed'});
+    })
+    .catch(err => {
+      logger.error(`${err}`);
+      next(err);
+    });
+};
+
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
   updateProjectPreface,
   getProjectLoad,
   getProjectDetails,
+  changeTitleProject,
 };

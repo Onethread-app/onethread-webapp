@@ -18,7 +18,7 @@ router
 router
   .route('/lists')
   .get(authorization, projectCtrl.showAllProjectsForCompany);
-
+router.route('/change-title').put(authorization, projectCtrl.changeTitleProject);
 router.param('pid', projectCtrl.getProjectLoad);
 router
   .route('/:pid')
