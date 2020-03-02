@@ -26,7 +26,7 @@ const {
   SearchNotMatchError,
 } = require('../helpers/APIError');
 const ElasticsearchService = require('../../index.elasticsearch');
-const elasticService = new ElasticsearchService('accounts',Account);
+const elasticService = new ElasticsearchService();
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -216,7 +216,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 
     await client.del(`verifyAccountToken:${req.params.token}`);
 
-   const response  =  await elasticService.addDocument('accounts','_doc',{
+   const response  =  await elasticService.set('accounts','_doc',{
       mongo_id : user._id,
       name: user.name,
       email: user.email,

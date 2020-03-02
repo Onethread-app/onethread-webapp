@@ -7,8 +7,9 @@ const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const { accountMapping } = require('../../services/elastic.services');
 const ElasticsearchService = require('../../../index.elasticsearch');
-const elasticService = new ElasticsearchService('accounts',Account);
-elasticService.create(accountMapping);
+const elasticService = new ElasticsearchService();
+elasticService.checkHealth();
+elasticService.create('accounts', Account , accountMapping);
 
 const changeRole = async (req, res, next) => {
   try {

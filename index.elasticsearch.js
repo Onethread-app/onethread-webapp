@@ -1,19 +1,20 @@
 var elasticsearch = require('elasticsearch');
 const logger = require('./config/winston');
 const chalk = require('chalk');
+require('dotenv').config();
 
 class ElasticsearchService {
-  constructor(index, model) {
-    this.index = index;
-    this.model = model;
+  constructor() {
     this.client = new elasticsearch.Client({
-      host: 'https://search-testtigrow-2a67nuu3pc3clgioybdg6qlwxy.ap-southeast-1.es.amazonaws.com',
-      //host: 'http://localhost:9200',
+      host: process.env.ELASTIC_SEARCH_ADDRESS,
       auth: {
         username: 'elastic',
         password: 'changeme',
       },
-    });
+    }); 
+  }
+
+  checkHealth(){
 
     this.client.ping({
       requestTimeout: 30000,
@@ -24,18 +25,19 @@ class ElasticsearchService {
     this.client.cluster.health()
       .then(res => logger.info(chalk.keyword(res.status)(`Elasticsearch cluster health is ${res.status}`)))
       .catch(err => logger.error(err));
+
   }
 
-  async create(mapping) {
+  async create(index,model,mapping) {
     try {
       const res = await this.client.indices.exists({
-        index: this.index,
+        index: index,
       });
 
       if (!res) {
 
         const createdIndex = await this.client.indices.create({
-          index: this.index,
+          index: index,
           body: mapping
         });
 
@@ -43,12 +45,12 @@ class ElasticsearchService {
 
           const bulk = [];
 
-          const dataset = await this.model.find({});
+          const dataset = await model.find({});
 
 
           dataset.forEach(data => {
             bulk.push({
-              index: { _index: this.index }
+              index: { _index: index }
             });
             bulk.push({
               mongo_id: data._id.toString(),
@@ -67,12 +69,12 @@ class ElasticsearchService {
 
         else {
 
-          logger.error(` Elasticsearchindex ${this.index}  creation failed`)
+          logger.error(` Elasticsearchindex ${index}  creation failed`)
 
         }
 
       } else {
-        logger.info(` ✔ ️Elasticsearch index ${this.index} exits`);
+        logger.info(` ✔ ️Elasticsearch index ${index} exits`);
       }
     } catch (error) {
       logger.error(error)
@@ -89,7 +91,7 @@ class ElasticsearchService {
 
   }
 
-  addDocument(indexName, indexType, document) {
+  set(indexName, indexType, document) {
 
     return this.client.index({
       index: indexName,
