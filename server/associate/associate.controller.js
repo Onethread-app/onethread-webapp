@@ -63,9 +63,10 @@ const create = async (req, res, next) => {
 const list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
-  await Associate.find({
-    company: companyId,
-  })
+  await Associate.find(
+    { $or:[ {company: companyId}, {associateWith: companyId}]}
+    
+  )
     .select('_id company associateWith createdAt')
     .populate('company', '_id name type ')
     .populate('associateWith', '_id name type ')
