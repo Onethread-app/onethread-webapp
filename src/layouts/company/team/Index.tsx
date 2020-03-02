@@ -17,7 +17,8 @@ import {
 	addDesignation,
 	editDesignation,
 	changeMemberRole,
-	getCompanyPendingMembers
+	getCompanyPendingMembers,
+	deleteCompanyMember
 } from 'stores/company/Actions';
 import { CompanyModel, ICompanyMembers, ICompanyPendingMembers } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
@@ -36,6 +37,7 @@ interface TeamMember {
 	addDesignation: (values: any, memberId: string) => void;
 	editDesignation: (values: any, memberId: string) => void;
 	changeMemberRole: (values: { role: string }, memberId: string) => void;
+	deleteCompanyMember: (memberId: string) => void;
 	companyLoading: boolean;
 }
 
@@ -206,6 +208,26 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																alignText={Alignment.LEFT}
 																className="bp3-minimal bp3-vertical bp3-fill"
 															>
+																{member.designations &&
+																	member.designations.length ? (
+																		<Button
+																			className="outline-0 bp3-large bp3-popover-dismiss"
+																			onClick={async () => {
+																				setEditMember(member);
+																				await props.getAllDepartments();
+																				setShowDialogEdit(!showDialogEdit);
+																			}}
+																		><span>Edit Designation</span></Button>
+																	) : (
+																		<Button
+																			className="outline-0 bp3-large bp3-popover-dismiss"
+																			onClick={async () => {
+																				setEditMember(member);
+																				await props.getAllDepartments();
+																				setShowDialogAdd(!showDialogAdd);
+																			}}
+																		><span>Add Designation</span></Button>
+																	)}
 																{permit(props.company.role) &&
 																	isEqual(member.role, 'superAdmin') === false ? (
 																		isEqual(member.role, 'admin') === true ? (
@@ -217,14 +239,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																						member._id
 																					);
 																				}}
-																			>
-																				<Icon
-																					icon="build"
-																					className="pr4-l pr3-m pl2"
-																					style={{ color: 'inherit' }}
-																				/>
-																				Make Employee
-																	</Button>
+																			><span className="red">Remove from Admin</span></Button>
 																		) : (
 																				<Button
 																					className="outline-0 bp3-large bp3-popover-dismiss"
@@ -234,55 +249,9 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																							member._id
 																						);
 																					}}
-																				>
-																					<Icon
-																						icon="star"
-																						className="pr4-l pr3-m pl2"
-																						style={{ color: 'inherit' }}
-																					/>
-																					Make Admin
-																	</Button>
+																				><span>Make Admin</span></Button>
 																			)
 																	) : null}
-
-																{member.designations &&
-																	member.designations.length ? (
-																		<>
-																			<Button
-																				className="outline-0 bp3-large bp3-popover-dismiss"
-																				onClick={async () => {
-																					setEditMember(member);
-																					await props.getAllDepartments();
-																					setShowDialogEdit(!showDialogEdit);
-																				}}
-																			>
-																				<Icon
-																					icon="edit"
-																					className="pr4-l pr3-m pl2"
-																					style={{ color: 'inherit' }}
-																				/>
-																				Edit Designation
-																	</Button>
-																		</>
-																	) : (
-																		<>
-																			<Button
-																				className="outline-0 bp3-large bp3-popover-dismiss"
-																				onClick={async () => {
-																					setEditMember(member);
-																					await props.getAllDepartments();
-																					setShowDialogAdd(!showDialogAdd);
-																				}}
-																			>
-																				<Icon
-																					icon="add"
-																					className="pr4-l pr3-m pl2"
-																					style={{ color: 'inherit' }}
-																				/>
-																				Add Designation
-																	</Button>
-																		</>
-																	)}
 															</ButtonGroup>
 														}
 														target={
@@ -301,7 +270,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								))
 							) : (
 									<tr>
-										<td colSpan={3}>No admins</td>
+										<td colSpan={5}>No admins</td>
 									</tr>
 								)}
 					</tbody>
@@ -370,6 +339,26 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																alignText={Alignment.LEFT}
 																className="bp3-minimal bp3-vertical bp3-fill"
 															>
+																{member.designations &&
+																	member.designations.length ? (
+																		<Button
+																			className="outline-0 bp3-large bp3-popover-dismiss"
+																			onClick={async () => {
+																				setEditMember(member);
+																				await props.getAllDepartments();
+																				setShowDialogEdit(!showDialogEdit);
+																			}}
+																		><span>Edit Designation</span></Button>
+																	) : (
+																		<Button
+																			className="outline-0 bp3-large bp3-popover-dismiss"
+																			onClick={async () => {
+																				setEditMember(member);
+																				await props.getAllDepartments();
+																				setShowDialogAdd(!showDialogAdd);
+																			}}
+																		><span>Add Designation</span></Button>
+																	)}
 																{permit(props.company.role) &&
 																	isEqual(member.role, 'superAdmin') === false ? (
 																		isEqual(member.role, 'admin') === true ? (
@@ -381,14 +370,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																						member._id
 																					);
 																				}}
-																			>
-																				<Icon
-																					icon="build"
-																					className="pr4-l pr3-m pl2"
-																					style={{ color: 'inherit' }}
-																				/>
-																				Make Employee
-																	</Button>
+																			><span className="red">Remove from Admin</span></Button>
 																		) : (
 																				<Button
 																					className="outline-0 bp3-large bp3-popover-dismiss"
@@ -398,55 +380,15 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																							member._id
 																						);
 																					}}
-																				>
-																					<Icon
-																						icon="star"
-																						className="pr4-l pr3-m pl2"
-																						style={{ color: 'inherit' }}
-																					/>
-																					Make Admin
-																	</Button>
+																				><span>Make Admin</span></Button>
 																			)
 																	) : null}
-
-																{member.designations &&
-																	member.designations.length ? (
-																		<>
-																			<Button
-																				className="outline-0 bp3-large bp3-popover-dismiss"
-																				onClick={async () => {
-																					setEditMember(member);
-																					await props.getAllDepartments();
-																					setShowDialogEdit(!showDialogEdit);
-																				}}
-																			>
-																				<Icon
-																					icon="edit"
-																					className="pr4-l pr3-m pl2"
-																					style={{ color: 'inherit' }}
-																				/>
-																				Edit Designation
-																	</Button>
-																		</>
-																	) : (
-																		<>
-																			<Button
-																				className="outline-0 bp3-large bp3-popover-dismiss"
-																				onClick={async () => {
-																					setEditMember(member);
-																					await props.getAllDepartments();
-																					setShowDialogAdd(!showDialogAdd);
-																				}}
-																			>
-																				<Icon
-																					icon="add"
-																					className="pr4-l pr3-m pl2"
-																					style={{ color: 'inherit' }}
-																				/>
-																				Add Designation
-																	</Button>
-																		</>
-																	)}
+																{permit(props.company.role) ? (<Button
+																	className="outline-0 bp3-large bp3-popover-dismiss"
+																	onClick={async () => {
+																		await props.deleteCompanyMember(member._id);
+																	}}
+																><span className="red">Remove from company</span></Button>) : null}
 															</ButtonGroup>
 														}
 														target={
@@ -465,7 +407,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 								))
 							) : (
 									<tr>
-										<td colSpan={3}>No members</td>
+										<td colSpan={5}>No members</td>
 									</tr>
 								)}
 					</tbody>
@@ -568,5 +510,6 @@ export const TeamMembersPage = connect(mapStateToProps, {
 	addDesignation,
 	editDesignation,
 	changeMemberRole,
-	getCompanyPendingMembers
+	getCompanyPendingMembers,
+	deleteCompanyMember
 })(TeamMembersPageComponent);

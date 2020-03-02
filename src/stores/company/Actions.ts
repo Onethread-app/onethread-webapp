@@ -30,7 +30,9 @@ import {
 	CHANGE_MEMBER_ROLE,
 	CHANGE_MEMBER_ROLE_ERROR,
 	GET_ALL_COMPANY_PENDING_MEMBERS,
-	UPDATE_ALL_COMPANY_PENDING_MEMBERS
+	UPDATE_ALL_COMPANY_PENDING_MEMBERS,
+	DELETE_TEAM_MEMBER,
+	DELETE_TEAM_MEMBER_ERROR
 } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -158,6 +160,31 @@ export const addTeamMembers =
 			}
 		}
 	};
+
+export const deleteCompanyMember = (memberId: string) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			const companyName = getState().companyReducer.currentCompany.name;
+			await tigrowApi.delete(
+				`company/${companyName}/members/${memberId}`,
+				headers
+			);
+			dispatch({ type: DELETE_TEAM_MEMBER, payload: memberId });
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in selection of company fetching');
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: DELETE_TEAM_MEMBER_ERROR, payload: 'Network error' });
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log(error.response);
+		}
+	}
+};
+
 
 export const addDepartment = (name: string) => async (
 	dispatch: any,

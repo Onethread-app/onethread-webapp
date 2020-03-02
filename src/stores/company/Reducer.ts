@@ -25,7 +25,8 @@ import {
 	LOGO_UPLOAD,
 	CHANGE_MEMBER_ROLE,
 	GET_ALL_COMPANY_PENDING_MEMBERS,
-	UPDATE_ALL_COMPANY_PENDING_MEMBERS
+	UPDATE_ALL_COMPANY_PENDING_MEMBERS,
+	DELETE_TEAM_MEMBER
 } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
@@ -153,6 +154,15 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 				currentCompany: {
 					...state.currentCompany,
 					members: action.payload.members
+				},
+				loading: false
+			};
+		case DELETE_TEAM_MEMBER:
+			return {
+				...state,
+				currentCompany: {
+					...state.currentCompany,
+					members: state.currentCompany.members.filter((member: ICompanyMembers) => member._id !== action.payload)
 				},
 				loading: false
 			};
