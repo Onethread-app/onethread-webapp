@@ -25,6 +25,8 @@ const {
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
+const ElasticsearchService = require('../../index.elasticsearch');
+const elasticService = new ElasticsearchService('accounts',Account);
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -206,13 +208,25 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
         isAccountVerified: false,
         message: 'Link is expired',
       });
-    await Account.findByIdAndUpdate(
+    const user = await Account.findByIdAndUpdate(
       { _id: userID },
       { $set: { isAccountVerified: true } },
       { safe: true, upsert: true, new: true },
     );
 
     await client.del(`verifyAccountToken:${req.params.token}`);
+
+   const response  =  await elasticService.addDocument('accounts','_doc',{
+      mongo_id : user._id,
+      name: user.name,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName
+    })
+
+    logger.info(` ✔ ️Elasticsearch document ${response.result}`);
+
+
     return sendJSONresponse(res, 200, {
       isAccountVerified: true,
       message: 'Account Verified Successfully',

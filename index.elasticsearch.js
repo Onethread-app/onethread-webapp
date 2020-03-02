@@ -22,7 +22,7 @@ class ElasticsearchService {
       .catch(error => logger.error('Elasticsearch cluster is down!' + error));
 
     this.client.cluster.health()
-      .then(res => logger.info(chalk.keyword(res.status)(`Elasticsearch cluster health is ${res.status}`) ))
+      .then(res => logger.info(chalk.keyword(res.status)(`Elasticsearch cluster health is ${res.status}`)))
       .catch(err => logger.error(err));
   }
 
@@ -48,7 +48,7 @@ class ElasticsearchService {
 
           dataset.forEach(data => {
             bulk.push({
-              index: { _index: this.index }
+              index: { _index: this.index, _type: 'account' }
             });
             bulk.push({
               mongo_id: data._id.toString(),
@@ -70,7 +70,7 @@ class ElasticsearchService {
           logger.error(` Elasticsearchindex ${this.index}  creation failed`)
 
         }
-      
+
       } else {
         logger.info(` ✔ ️Elasticsearch index ${this.index} exits`);
       }
@@ -79,7 +79,7 @@ class ElasticsearchService {
     }
   }
 
-  search(indexName,indexType,body){
+  search(indexName, indexType, body) {
 
     return this.client.search({
       index: indexName,
@@ -88,6 +88,20 @@ class ElasticsearchService {
     })
 
   }
+
+  addDocument(indexName, indexType, document) {
+
+    return this.client.index({
+      index: indexName,
+      type: indexType,
+      body: document,
+      refresh: "true"
+    })
+  }
+
+
+
+
 }
 
 module.exports = ElasticsearchService;

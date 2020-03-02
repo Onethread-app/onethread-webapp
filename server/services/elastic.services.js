@@ -35,13 +35,26 @@
 // }
 
 module.exports.accountMapping = {
-    "mappings": {
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "my_email_analyzer": {
+          "type": "custom",
+          "tokenizer": "uax_url_email",
+          "filter": ["lowercase", "stop"]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "account": {
       "properties": {
-        "mongo_id" : {"type" : "text"},
-        "name" : { "type": "text"},
-        "email" : { "type": "text"},
-        "firstName" : { "type": "text"},
-        "lastName" : { "type": "text"}
+        "mongo_id": { "type": "text" },
+        "name": { "type": "text" },
+        "email": { "type": "text", "analyzer": "my_email_analyzer" },
+        "firstName": { "type": "text" },
+        "lastName": { "type": "text" }
       }
     }
   }
+}
