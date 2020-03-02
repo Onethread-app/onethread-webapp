@@ -19,14 +19,6 @@ router
   .route('/lists')
   .get(authorization, projectCtrl.showAllProjectsForCompany);
 
-router
-  .route('/update')
-  .put(
-    authorization,
-    schemaValidator(paramValidation.updateProjectPreface),
-    projectCtrl.updateProjectPreface,
-  );
-
 router.param('pid', projectCtrl.getProjectLoad);
 router
   .route('/:pid')
@@ -34,5 +26,12 @@ router
     authorization,
     schemaValidator(paramValidation.getProject),
     projectCtrl.getProjectDetails,
+  );
+router
+  .route('/:pid/update')
+  .put(
+    authorization,
+    schemaValidator(paramValidation.updateProjectPreface),
+    projectCtrl.updateProjectPreface,
   );
 module.exports = router;

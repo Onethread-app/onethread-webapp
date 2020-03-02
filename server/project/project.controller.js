@@ -60,7 +60,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
 
 const updateProjectPreface = async (req, res, next) => {
   await Project.findByIdAndUpdate(
-    { _id: req.body.pid },
+    { _id: req.params.pid },
     {
       $set: {
         outline: req.body.outline,
@@ -77,7 +77,7 @@ const updateProjectPreface = async (req, res, next) => {
         message: 'Preface updated',
       });
     })
-    .cactch(err => {
+    .catch(err => {
       logger.error(`${err}`);
       next(err);
     });
