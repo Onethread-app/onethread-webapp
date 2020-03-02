@@ -46,9 +46,7 @@ const company = new Schema(
   {
     logo: {
       type: String,
-      unique: true,
       trim: true,
-     
     },
     name: {
       type: String,

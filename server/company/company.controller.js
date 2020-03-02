@@ -1,4 +1,5 @@
 const Account = require('../account/account.model');
+const mongoose = require('mongoose');
 const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
@@ -160,7 +161,7 @@ const getCompanyIndividual = async (req, res, next) => {
 // get a company profile
 const getCompany = async (req, res, next) => {
 
-  console.log(1);
+  
   try {
     // company details
     let company = await Company.findOne({
@@ -198,7 +199,7 @@ const updateBasicInfo = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-
+  const mongoose = require(mongoose);
   try {
     // updating new values
     for (const key in req.body) {
@@ -345,7 +346,7 @@ const authorizeAdmin = role => {
 
       next();
     } catch (error) {
-      console.log(error);
+      
       next(error);
     }
   };
@@ -353,9 +354,10 @@ const authorizeAdmin = role => {
 
 const searchCompany = async (req, res, next) => {
   try {
-    const { limit = 50, skip = 0 , name} = req.query;
+    const { limit = 50, skip = 0 , name, cname} = req.query;
     await Company.find({
       name: { $regex: new RegExp(name), $options: 'i' },
+      _id: { $ne: mongoose.Types.ObjectId(cname)}
     })
       .select('name')
       .skip(+skip)
@@ -369,6 +371,7 @@ const searchCompany = async (req, res, next) => {
         });
       });
   } catch (error) {
+    
     next(error);
   }
 };

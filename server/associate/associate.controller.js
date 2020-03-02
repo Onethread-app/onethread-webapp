@@ -24,9 +24,9 @@ const get = async (req, res , next) => {
     .then(colResult => {
       if(req.params.companyId === colResult.company._id.toString()){
         colResult.company = colResult.associateWith;
-        delete colResult.associateWith;
+         colResult.associateWith = undefined;
       }else{
-        delete colResult.associateWith;
+        colResult.associateWith = undefined;
       }
       console.log(colResult);
       res.json(colResult);
