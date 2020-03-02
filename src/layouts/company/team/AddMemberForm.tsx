@@ -7,7 +7,7 @@ import { Button, Tag, Toaster, Position } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { server, tigrowApi } from 'config';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 
 interface TeamMembersViewProps {
   showDialog: boolean;
@@ -62,31 +62,53 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           `company/${props.company.name}/members/pending/status?email=${_email}`,
           headers
         );
-        return response.data.status;
+        return response.data;
       } else {
         // tslint:disable-next-line: no-console
         console.log('error in checking of pending member status');
-        return false;
+        return { status: false, message: 'Authorization Error' };
       }
     } catch (error) {
       // tslint:disable-next-line: no-console
       console.log(error);
-      return false;
+      return { status: false, message: isEqual(error.message, 'Network Error') ? 'Network Error' : 'Server Error' };
     }
   };
 
+  const isExistInCompany = (_email: string) => {
+    if (props.company.members.length > 0) {
+      for (const member of props.company.members) {
+        if (isEqual(member.account.email, _email)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  };
+
   const addNewUser = async (newUser: ItemEntityProps) => {
-    const status = await checkPendingMemberStatus(email);
-    if (status) {
-      setPendingTeamMembers([...pendingTeamMembers, newUser.name!]);
-    } else {
+
+    if (isExistInCompany(email)) {
       Toaster
         .create({
           position: Position.TOP
         })
         .show({
-          message: `${newUser.name!} has already invited.`
+          message: `Already exist in this company.`
         });
+    } else {
+      const res = await checkPendingMemberStatus(email);
+      if (res.status) {
+        setPendingTeamMembers([...pendingTeamMembers, newUser.name!]);
+      } else {
+        Toaster
+          .create({
+            position: Position.TOP
+          })
+          .show({
+            message: res.message
+          });
+      }
     }
   };
 

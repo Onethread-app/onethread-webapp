@@ -45,6 +45,7 @@ export interface ICompanyMembers {
 		name: string;
 		firstName: string;
 		lastName: string;
+		email: string;
 	};
 	role: string;
 	designations: [IDesignations];
