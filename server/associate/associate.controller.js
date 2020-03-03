@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const Associate = require('./associate.model');
+const { Associate }  = require('./associate.model');
 
 
 const logger = require('../../config/winston');
