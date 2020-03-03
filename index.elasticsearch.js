@@ -1,6 +1,7 @@
 var elasticsearch = require('elasticsearch');
 const logger = require('./config/winston');
 const chalk = require('chalk');
+const { isEmpty } = require('lodash');
 require('dotenv').config();
 
 class ElasticsearchService {
@@ -47,17 +48,20 @@ class ElasticsearchService {
 
           const dataset = await model.find({});
 
+          if(!isEmpty(dataset)){
 
-          dataset.forEach(data => {
-            bulk.push({
-              index: { _index: index }
+            dataset.forEach(data => {
+              bulk.push({
+                index: { _index: index }
+              });
+              bulk.push(structure(data));
             });
-            bulk.push(structure(data));
-          });
+            await this.client.bulk({ body: bulk });
+            logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index} with bulk`)
 
-          await this.client.bulk({ body: bulk });
-
-          logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
+          }else{
+            logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
+          }
 
         }
 
