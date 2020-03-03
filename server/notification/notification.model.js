@@ -13,6 +13,7 @@ const notificationSchema = new Schema({
       'associate',
       'announcement',
       'profile',
+      'companyProfile',
       'project',
       'preface',
       'room',
@@ -24,6 +25,30 @@ const notificationSchema = new Schema({
     ],
     default: 'others',
     required: true,
+  },
+  associate: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Associate',
+  },
+  project: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Project',
+  },
+  room: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Room',
+  },
+  board: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Board',
+  },
+  task: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Task',
+  },
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
   },
   account: {
     type: mongoose.Schema.Types.ObjectId,
