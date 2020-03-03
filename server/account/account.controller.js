@@ -85,7 +85,7 @@ const register = async (req, res, next) => {
         .digest('hex');
       let verifyAccountTokenExpiration = Date.now() + 604800;
 
-      console.log(req.query);
+     
 
       if('company' in req.query){
       
