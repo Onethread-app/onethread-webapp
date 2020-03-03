@@ -16,7 +16,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       name: req.body.name,
       type: req.body.type,
       concernedAdmin: req.body.concernedAdmin,
-      departments: [req.body.departments],
+      departments: req.body.departments,
       color: req.body.color,
       company: req.body.companyId,
     });
