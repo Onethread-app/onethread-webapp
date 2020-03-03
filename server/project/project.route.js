@@ -34,4 +34,5 @@ router
     schemaValidator(paramValidation.updateProjectPreface),
     projectCtrl.updateProjectPreface,
   );
+router.route('/:pid/delete').delete(authorization, schemaValidator(paramValidation.getProject), projectCtrl.archieveProject);
 module.exports = router;

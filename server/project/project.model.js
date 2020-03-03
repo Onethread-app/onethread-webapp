@@ -67,6 +67,10 @@ const projectSchema = new Schema(
       type: Number,
       default: 0,
     },
+    removed: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

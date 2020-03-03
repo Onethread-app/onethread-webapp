@@ -45,6 +45,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
   const allProjects = await Project.find({
     company: companyId,
+    removed: false,
   })
     .select('name color departments')
     .sort({ createdAt: -1 })
@@ -85,7 +86,6 @@ const updateProjectPreface = async (req, res, next) => {
 
 const getProjectDetails = async (req, res, next) => {
   try {
-    console.log(req.project);
     return sendJSONresponse(res, 200, req.project);
   } catch (error) {
     next(error);
@@ -119,7 +119,9 @@ const changeTitleProject = async (req, res, next) => {
     .exec()
     .then(result => {
       logger.info(`project name change successfully`);
-      return sendJSONresponse(res, 200, {message: 'Project Name changed'});
+      return sendJSONresponse(res, 200, {
+        message: 'Project Name changed',
+      });
     })
     .catch(err => {
       logger.error(`${err}`);
@@ -127,6 +129,24 @@ const changeTitleProject = async (req, res, next) => {
     });
 };
 
+const archieveProject = async (req, res, next) => {
+  await Project.findByIdAndUpdate(
+    { _id: req.params.pid },
+    { $set: { removed: true } },
+    { safe: true, upsert: true, new: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`Archieve a project`)
+      return sendJSONresponse(res, 200, {
+        message: `Archieve a project`,
+      });
+    })
+    .catch(err => {
+      logger.error(`${err}`)
+      next(err);
+    });
+};
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
@@ -134,4 +154,5 @@ module.exports = {
   getProjectLoad,
   getProjectDetails,
   changeTitleProject,
+  archieveProject,
 };

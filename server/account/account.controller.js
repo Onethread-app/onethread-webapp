@@ -121,7 +121,6 @@ const login = async (req, res, next) => {
     );
     let userObj = {};
     userObj.name = req.user.name;
-    userObj._id = req.user._id;
     addUserDataIntoCache(req.user.email, req.user);
     return sendJSONresponse(res, 200, {
       success: true,

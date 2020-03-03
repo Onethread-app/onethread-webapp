@@ -16,7 +16,7 @@ const pid = Joi.object().keys({
   pid: idSchema.id,
 });
 const schema = {
-  name: Joi.string(),
+  name: Joi.string().max(50).alphanum(),
   type: Joi.string(),
   pid: idSchema.id,
   description: Joi.string().max(2500),
