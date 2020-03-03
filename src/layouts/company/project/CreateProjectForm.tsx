@@ -32,7 +32,11 @@ const FormComponent = (props: {
 
   const [labelColor, setLabelColor] = useState(null as any);
   const [departments, setDepartments]: any = useState([]);
-  const [selectedDepartment, setSelectedDepartment] = useState([] as ICompanyTeamMembers[]);
+  const [selectedDepartment, setSelectedDepartment] = useState([] as Entity[]);
+  const [associates, setAssociates]: any = useState([]);
+  const [selectedAssociates, setSelectedAssociates] = useState([] as Entity[]);
+  const [admins, setAdmins]: any = useState([]);
+  const [selectedAdmins, setSelectedAdmins] = useState([] as Entity[]);
   const [search, setSearch] = useState('');
 
   const userRequestFactory = async (userName: string) => {
@@ -40,7 +44,7 @@ const FormComponent = (props: {
     // const response = await tigrowApi.get(
     //   `tasks/${props.currentTask!._id}/suggest-member?companyId=${props.company!._id}`,
     //   headers);
-    // return response.data.members;
+    // return response.data;
   };
 
   let result: any = [];
@@ -48,7 +52,16 @@ const FormComponent = (props: {
 
   useEffect(() => {
     setDepartments(result);
+    setAssociates(result);
+    setAdmins(result);
   }, [result]);
+
+  const associateNo = [
+    { _id: 'oneToFive', name: '1-5' },
+    { _id: 'sixToTen', name: '6-10' },
+    { _id: 'elevenToFifteen', name: '11-15' }
+  ];
+
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
@@ -122,6 +135,7 @@ const FormComponent = (props: {
                         leftIcon="comparison"
                         label="Department Name"
                         error={checkError(meta) && (meta.error || meta.submitError)}
+                        className="bn"
                       />
                     }
                   />
@@ -218,10 +232,10 @@ const FormComponent = (props: {
                           onChange={(query: string) => {
                             setSearch(query);
                           }}
-                          items={departments}
-                          selectedItems={selectedDepartment}
+                          items={associates}
+                          selectedItems={selectedAssociates}
                           setSelectedItems={(item) => {
-                            setSelectedDepartment(item);
+                            setSelectedAssociates(item);
                             input.onChange(item.map((associates: any) => associates._id));
                           }}
                           multipleItemSelect={true}
@@ -237,168 +251,169 @@ const FormComponent = (props: {
                             // key={item._id}
                             className="pa1"
                             interactive={true}
-                            style={{ background: '#707070' }}
-                            onRemove={(e) => {
-                              // const filteredItems = selectedDepartment.filter((selectedItem) => (
-                              //             item.name !== selectedItem.name
-                              //           ));
-                              // setSelectedDepartment([
-                              //   ...filteredItems
-                              // ]);
-                              // input.onChange(
-                              //   isEmpty(filteredItems) ?
-                              //     undefined :
-                              //     filteredItems.map((member: ICompanyTeamMembers) => member._id));
-                            }}
+                            // onRemove={(e) => {
+                            //   const filteredItems = selectedAssociates.filter((selectedItem) => (
+                            //               item.name !== selectedItem.name
+                            //             ));
+                            //   setSelectedAssociates([
+                            //     ...filteredItems
+                            //   ]);
+                            //   input.onChange(
+                            //     isEmpty(filteredItems) ?
+                            //       undefined :
+                            //       filteredItems.map((associate: ICompanyTeamMembers) => associate._id));
+                            // }}
                             large={true}
                             intent="primary"
                           >
                             ami
-                      </Tag>
+                          </Tag>
                           <Field<string>
-                            name="department"
+                            name="associateNo"
                             validate={required}
                             render={({ input, meta }) =>
                               <DropdownFieldWithError
                                 id={input.name}
                                 selectedValue={input.value}
-                                options={
-                                  []
-                                }
                                 onChange={input.onChange}
+                                options={
+                                  associateNo
+                                }
                                 error={checkError(meta) && (meta.error || meta.submitError)}
+                                className="bn"
                               />
                             }
                           />
                         </div>
-                        <div>
-                          <Field<string>
-                            name="department"
-                            render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                                <div className="fl w-100 pb2">
-                                  <div className="mb1">
-                                    <p className="fw5" style={{ fontSize: '.8rem' }}>Concerned Admin</p>
-                                  </div>
-                                  <SuggestField
-                                    onChange={(query: string) => {
-                                      setSearch(query);
-                                    }}
-                                    items={departments}
-                                    selectedItems={selectedDepartment}
-                                    setSelectedItems={(item) => {
-                                      setSelectedDepartment(item);
-                                      input.onChange(item.map((member: ICompanyTeamMembers) => member._id));
-                                    }}
-                                    multipleItemSelect={true}
-                                  />
+                      </div>
+                      <div>
+                        <Field<string>
+                          name="admin"
+                          render={({ input, meta }) =>
+                            <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                              <div className="fl w-100 pb2">
+                                <div className="mb1">
+                                  <p className="fw5" style={{ fontSize: '.8rem' }}>Concerned Admin</p>
                                 </div>
-                                {selectedDepartment.length > 0 &&
-                                  <div className="w-100">
-                                    <div
-                                      className="overflow-auto br2"
-                                      style={{
-                                        border: '1px solid #707070',
-                                        maxHeight: '120px',
-                                        background: '#707070'
-                                      }}>
-                                      {selectedDepartment.map((item) => (
-                                        <div>
-                                          <Tag
-                                            key={item._id}
-                                            className="pa1"
-                                            interactive={true}
-                                            style={{ background: '#707070' }}
-                                            onRemove={(e) => {
-                                              const filteredItems = selectedDepartment.filter((selectedItem) => (
-                                                item.name !== selectedItem.name
-                                              ));
-                                              setSelectedDepartment([
-                                                ...filteredItems
-                                              ]);
-                                              input.onChange(
-                                                isEmpty(filteredItems) ?
-                                                  undefined :
-                                                  filteredItems.map((member: ICompanyTeamMembers) => member._id));
-                                            }}
-                                            large={true}
-                                            intent="primary"
-                                          >
-                                            {item.name}
-                                          </Tag>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                }
+                                <SuggestField
+                                  onChange={(query: string) => {
+                                    setSearch(query);
+                                  }}
+                                  items={admins}
+                                  selectedItems={selectedAdmins}
+                                  setSelectedItems={(item) => {
+                                    setSelectedAdmins(item);
+                                    input.onChange(item.map((admins: ICompanyTeamMembers) => admins._id));
+                                  }}
+                                  multipleItemSelect={true}
+                                />
                               </div>
-                            }
-                          />
-                        </div>
-                        <div>
-                          <Field<string>
-                            name="department"
-                            render={({ input, meta }) =>
-                              <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                                <div className="fl w-100 pb2">
-                                  <div className="mb1">
-                                    <p className="fw5" style={{ fontSize: '.8rem' }}>Select Departments</p>
+                              {selectedAdmins.length > 0 &&
+                                <div className="w-100">
+                                  <div
+                                    className="overflow-auto br2"
+                                    style={{
+                                      border: '1px solid #707070',
+                                      maxHeight: '120px',
+                                      background: '#707070'
+                                    }}>
+                                    {selectedAdmins.map((item) => (
+                                      <div>
+                                        <Tag
+                                          key={item._id}
+                                          className="pa1"
+                                          interactive={true}
+                                          style={{ background: '#707070' }}
+                                          onRemove={(e) => {
+                                            const filteredItems = selectedAdmins.filter((selectedItem) => (
+                                              item.name !== selectedItem.name
+                                            ));
+                                            setSelectedAdmins([
+                                              ...filteredItems
+                                            ]);
+                                            input.onChange(
+                                              isEmpty(filteredItems) ?
+                                                undefined :
+                                                filteredItems.map((admins: Entity) => admins._id));
+                                          }}
+                                          large={true}
+                                          intent="primary"
+                                        >
+                                          {/* {item.name} */}
+                                          asdfg
+                                        </Tag>
+                                      </div>
+                                    ))}
                                   </div>
-                                  <SuggestField
-                                    onChange={(query: string) => {
-                                      setSearch(query);
-                                    }}
-                                    items={departments}
-                                    selectedItems={selectedDepartment}
-                                    setSelectedItems={(item) => {
-                                      setSelectedDepartment(item);
-                                      input.onChange(item.map((member: ICompanyTeamMembers) => member._id));
-                                    }}
-                                    multipleItemSelect={true}
-                                  />
                                 </div>
-                                {selectedDepartment.length > 0 &&
-                                  <div className="w-100">
-                                    <div
-                                      className="overflow-auto br2"
-                                      style={{
-                                        border: '1px solid #707070',
-                                        maxHeight: '120px',
-                                        background: '#707070'
-                                      }}>
-                                      {selectedDepartment.map((item) => (
-                                        <div>
-                                          <Tag
-                                            key={item._id}
-                                            className="pa1"
-                                            interactive={true}
-                                            style={{ background: '#707070' }}
-                                            onRemove={(e) => {
-                                              const filteredItems = selectedDepartment.filter((selectedItem) => (
-                                                item.name !== selectedItem.name
-                                              ));
-                                              setSelectedDepartment([
-                                                ...filteredItems
-                                              ]);
-                                              input.onChange(
-                                                isEmpty(filteredItems) ?
-                                                  undefined :
-                                                  filteredItems.map((member: ICompanyTeamMembers) => member._id));
-                                            }}
-                                            large={true}
-                                            intent="primary"
-                                          >
-                                            {item.name}
-                                          </Tag>
-                                        </div>
-                                      ))}
-                                    </div>
-                                  </div>
-                                }
+                              }
+                            </div>
+                          }
+                        />
+                      </div>
+                      <div>
+                        <Field<string>
+                          name="department"
+                          render={({ input, meta }) =>
+                            <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                              <div className="fl w-100 pb2">
+                                <div className="mb1">
+                                  <p className="fw5" style={{ fontSize: '.8rem' }}>Select Departments</p>
+                                </div>
+                                <SuggestField
+                                  onChange={(query: string) => {
+                                    setSearch(query);
+                                  }}
+                                  items={departments}
+                                  selectedItems={selectedDepartment}
+                                  setSelectedItems={(item) => {
+                                    setSelectedDepartment(item);
+                                    input.onChange(item.map((dept: ICompanyTeamMembers) => dept._id));
+                                  }}
+                                  multipleItemSelect={true}
+                                />
                               </div>
-                            }
-                          />
-                        </div>
+                              {selectedDepartment.length > 0 &&
+                                <div className="w-100">
+                                  <div
+                                    className="overflow-auto br2"
+                                    style={{
+                                      border: '1px solid #707070',
+                                      maxHeight: '120px',
+                                      background: '#707070'
+                                    }}>
+                                    {selectedDepartment.map((item) => (
+                                      <div>
+                                        <Tag
+                                          key={item._id}
+                                          className="pa1"
+                                          interactive={true}
+                                          style={{ background: '#707070' }}
+                                          onRemove={(e) => {
+                                            const filteredItems = selectedDepartment.filter((selectedItem) => (
+                                              item.name !== selectedItem.name
+                                            ));
+                                            setSelectedDepartment([
+                                              ...filteredItems
+                                            ]);
+                                            input.onChange(
+                                              isEmpty(filteredItems) ?
+                                                undefined :
+                                                filteredItems.map((dept: Entity) => dept._id));
+                                          }}
+                                          large={true}
+                                          intent="primary"
+                                        >
+                                          {item.name}
+                                        </Tag>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              }
+                            </div>
+                          }
+                        />
                       </div>
                       {selectedDepartment.length > 0 &&
                         <div className="w-100">
@@ -426,7 +441,7 @@ const FormComponent = (props: {
                                     input.onChange(
                                       isEmpty(filteredItems) ?
                                         undefined :
-                                        filteredItems.map((member: ICompanyTeamMembers) => member._id));
+                                        filteredItems.map((member: Entity) => member._id));
                                   }}
                                   large={true}
                                   intent="primary"
