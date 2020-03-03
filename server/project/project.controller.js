@@ -1,6 +1,6 @@
-const httpStatus = require('http-status');
 const { Member } = require('../company/member/member.model');
 const { Project } = require('./project.model');
+const File = require('../file/file.model');
 const logger = require('../../config/winston');
 const {
   sendErrorResponse,
@@ -95,7 +95,8 @@ const getProjectLoad = async (req, res, next) => {
   try {
     const project = await Project.findOne({
       _id: req.params.pid,
-    }).populate('files', 'link s3key');
+    });
+  
     if (project) {
       req.project = project;
       return next();
@@ -106,6 +107,7 @@ const getProjectLoad = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
@@ -129,7 +131,7 @@ const changeTitleProject = async (req, res, next) => {
     });
 };
 
-const archieveProject = async (req, res, next) => {
+const archiveProject = async (req, res, next) => {
   await Project.findByIdAndUpdate(
     { _id: req.params.pid },
     { $set: { removed: true } },
@@ -137,16 +139,36 @@ const archieveProject = async (req, res, next) => {
   )
     .exec()
     .then(result => {
-      logger.info(`Archieve a project`)
+      logger.info(`Archieve a project`);
       return sendJSONresponse(res, 200, {
         message: `Archieve a project`,
       });
     })
     .catch(err => {
-      logger.error(`${err}`)
+      logger.error(`${err}`);
       next(err);
     });
 };
+
+const showAllFilesForProject = async (req, res, next) => {
+  const { limit = 10, skip = 0 } = req.query;
+  await File.find({ project: req.params.pid })
+    .select('link s3Key')
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
+    .exec()
+    .then(result => {
+      logger.info(`get all files from project ${req.params.pid}`)
+      return sendJSONresponse(res, 200, {success: true, result})
+    })
+    .catch(err => {
+      logger.error(`${err}`);
+      next(err);
+    });
+};
+
+
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
@@ -154,5 +176,6 @@ module.exports = {
   getProjectLoad,
   getProjectDetails,
   changeTitleProject,
-  archieveProject,
+  archiveProject,
+  showAllFilesForProject,
 };

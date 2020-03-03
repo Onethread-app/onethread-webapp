@@ -3,7 +3,7 @@ const Joi = require('joi');
 // id
 const idSchema = {
   id: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
+    .regex(/^[a-fA-F0-9]{24}$/)
     .error(errors => {
       return {
         message: 'Invalid ID',
@@ -47,7 +47,7 @@ module.exports = {
     }),
   }),
   getProject: Joi.object().keys({
-    params: pid.required(),
+    params:pid.required(),
   }),
   changeTitleProject: Joi.object().keys({
     body: Joi.object().keys({
@@ -59,5 +59,8 @@ module.exports = {
     query: Joi.object().keys({
       companyId: schema.company.required(),
     })
+  }),
+  archiveProject: Joi.object().keys({
+    params: pid.required(),
   })
 };

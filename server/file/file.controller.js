@@ -201,6 +201,7 @@ const fileInRooms = async (req, res, next) => {
 };
 const fileInProject = async (req, res, next) => {
   const file = req.file;
+  const userID = req.user._id;
   if (!checkMimetype.includes(file.mimetype)) {
     return sendErrorResponse(res, 400, '', {
       message: 'This file format is not supported',
@@ -208,15 +209,16 @@ const fileInProject = async (req, res, next) => {
     });
   }
   const pid = req.query.pid;
-  const userID = req.user._id;
-  const params = {
-    Bucket: 'tigrow-file',
-    Key: `${pid}/${file.originalname}`,
-    Body: file.buffer,
-    ContentType: file.mimetype,
-    ACL: 'public-read',
-  };
-  await s3bucket
+  const pidExist = await Project.findOne({_id: pid});
+  if(pidExist){
+    const params = {
+      Bucket: 'tigrow-file',
+      Key: `${pid}/${file.originalname}`,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+      ACL: 'public-read',
+    };
+    await s3bucket
     .upload(params)
     .promise()
     .then(async data => {
@@ -232,12 +234,8 @@ const fileInProject = async (req, res, next) => {
         });
         await newFile.save();
         logger.info('File Link successfully save to file collection');
-        await Project.findByIdAndUpdate(
-          { _id: pid },
-          { $set: { files: newFile._id } },
-          { safe: true, upsert: true, new: true },
-        );
         return sendJSONresponse(res, 200, { newFile });
+  
       } catch (error) {
         logger.error(`${error}`);
         next(error);
@@ -246,6 +244,12 @@ const fileInProject = async (req, res, next) => {
     .catch(err => {
       next(err);
     });
+
+  }else{
+    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {message: 'project id is not exist'})
+  }
+
+ 
 };
 module.exports = {
   profilePicture,

@@ -1,5 +1,5 @@
 const express = require('express');
-const paramValidation = require('./project.validation');
+const projectValidation = require('./project.validation');
 const router = express.Router();
 
 const schemaValidator = require('../helpers/joiSchemaValidator');
@@ -12,27 +12,50 @@ router
   .route('/create')
   .post(
     authorization,
-    schemaValidator(paramValidation.createNewProjectForCompany),
+    schemaValidator(projectValidation.createNewProjectForCompany),
     projectCtrl.createNewProjectForCompany,
   );
 router
   .route('/lists')
-  .get(authorization, schemaValidator(paramValidation.showProjectList), projectCtrl.showAllProjectsForCompany);
-router.route('/change-title').put(authorization, schemaValidator(paramValidation.changeTitleProject), projectCtrl.changeTitleProject);
-router.param('pid', projectCtrl.getProjectLoad);
+  .get(
+    authorization,
+    schemaValidator(projectValidation.showProjectList),
+    projectCtrl.showAllProjectsForCompany,
+  );
+router
+  .route('/change-title')
+  .put(
+    authorization,
+    schemaValidator(projectValidation.changeTitleProject),
+    projectCtrl.changeTitleProject,
+  );
+router.param('pid', authorization, schemaValidator(projectValidation.getProject), projectCtrl.getProjectLoad);
 router
   .route('/:pid')
   .get(
     authorization,
-    schemaValidator(paramValidation.getProject),
+    schemaValidator(projectValidation.getProject),
     projectCtrl.getProjectDetails,
   );
 router
   .route('/:pid/update')
   .put(
     authorization,
-    schemaValidator(paramValidation.updateProjectPreface),
+    schemaValidator(projectValidation.updateProjectPreface),
     projectCtrl.updateProjectPreface,
   );
-router.route('/:pid/delete').delete(authorization, schemaValidator(paramValidation.getProject), projectCtrl.archieveProject);
+router
+  .route('/:pid/show-files')
+  .get(
+    authorization,
+    schemaValidator(projectValidation.getProject),
+    projectCtrl.showAllFilesForProject,
+  );
+router
+  .route('/:pid/archive')
+  .put(
+    authorization,
+    schemaValidator(projectValidation.archiveProject),
+    projectCtrl.archiveProject,
+  );
 module.exports = router;
