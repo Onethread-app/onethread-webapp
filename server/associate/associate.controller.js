@@ -50,11 +50,8 @@ const create = async (req, res, next) => {
       return res.status(201).json(associate);
   } catch (error) {
     logger.error(`Board create: ${error}`);
-    const err = new BadRequestError(
-      'board data is invalid.',
-      httpStatus.BAD_REQUEST,
-    );
-    next(err);
+    
+    next(error);
   }
 };
 
