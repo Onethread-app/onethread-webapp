@@ -5,9 +5,10 @@ export const prod = 'https://betaback.tigrow.co/api/v1/';
 export const test1 = 'http://52.221.186.32:4044/api/v1/';
 export const test2 = 'http://52.221.186.32:4046/api/v1/';
 export const test3 = 'http://52.221.186.32:4047/api/v1/';
-export const test4 = 'http://52.221.186.32:4048/api/v1/';
+export const test4 = 'http://52.221.186.32:5001/api/v1/';
+// export const stage4 = 'http://test4.tigrow.co.s3-website-ap-southeast-1.amazonaws.com';
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
-export const server = test;
+export const server = test4;
 
 export const TokenUrlServer = `${server}chatkit/authenticate`;
 

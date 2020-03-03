@@ -12,18 +12,22 @@ import { Condition } from 'components/final-form/Condition';
 import { SuggestField } from 'components/fields/SuggestField';
 import { ICompanyTeamMembers } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
+import { createProject } from '../../../stores/project/Actions';
 
 const FormComponent = (props: {
   setShowProjectDialog: (val: boolean) => void;
   projectType: Entity[];
+  departments: [];
+  createProject: any;
+  company: any
   // createProject: (project: any) => void;
   // departments: [],
   // company: CompanyModel;
 }) => {
 
   const onSubmit = async (values: any) => {
-    window.alert(JSON.stringify(values, undefined, 2));
-    // await props.createProject(values);
+    // window.alert(JSON.stringify(values, undefined, 2));
+    await props.createProject(values);
     if (props.setShowProjectDialog) {
       props.setShowProjectDialog(false);
     }
@@ -35,7 +39,7 @@ const FormComponent = (props: {
   const [selectedDepartment, setSelectedDepartment] = useState([] as Entity[]);
   const [associates, setAssociates]: any = useState([]);
   const [selectedAssociates, setSelectedAssociates] = useState([] as Entity[]);
-  const [admins, setAdmins]: any = useState([]);
+  // const [admins, setAdmins]: any = useState([]);
   const [selectedAdmins, setSelectedAdmins] = useState([] as Entity[]);
   const [search, setSearch] = useState('');
 
@@ -53,7 +57,7 @@ const FormComponent = (props: {
   useEffect(() => {
     setDepartments(result);
     setAssociates(result);
-    setAdmins(result);
+    // setAdmins(result);
   }, [result]);
 
   const associateNo = [
@@ -65,6 +69,7 @@ const FormComponent = (props: {
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
+        {console.log(props)}
         <h3>Create Project</h3>
       </div>
       <Form
@@ -112,6 +117,71 @@ const FormComponent = (props: {
                   </div>
                 }
               />
+              <div>
+                <Field<string>
+                  name="admin"
+                  render={({ input, meta }) =>
+                    <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
+                      <div className="w-100 pb2">
+                        <div className="mb1">
+                          <p className="fw5" style={{ fontSize: '.8rem' }}>Concerned Admin</p>
+                        </div>
+                        <SuggestField
+                          onChange={(query: string) => {
+                            setSearch(query);
+                          }}
+                          items={props.company.members}
+                          selectedItems={selectedAdmins}
+                          setSelectedItems={(item) => {
+                            setSelectedAdmins(item);
+                            input.onChange(item.map((admins: ICompanyTeamMembers) => admins._id));
+                          }}
+                          multipleItemSelect={true}
+                        />
+                      </div>
+                      {selectedAdmins.length > 0 &&
+                        <div className="w-100">
+                          <div
+                            className="overflow-auto br2"
+                            style={{
+                              border: '1px solid #707070',
+                              maxHeight: '120px',
+                              background: '#707070'
+                            }}>
+                            {selectedAdmins.map((item) => (
+                              <div>
+                                <Tag
+                                  key={item._id}
+                                  className="pa1"
+                                  interactive={true}
+                                  style={{ background: '#707070' }}
+                                  onRemove={(e) => {
+                                    const filteredItems = selectedAdmins.filter((selectedItem) => (
+                                      item.name !== selectedItem.name
+                                    ));
+                                    setSelectedAdmins([
+                                      ...filteredItems
+                                    ]);
+                                    input.onChange(
+                                      isEmpty(filteredItems) ?
+                                        undefined :
+                                        filteredItems.map((admins: Entity) => admins._id));
+                                  }}
+                                  large={true}
+                                  intent="primary"
+                                >
+                                  {/* {item.name} */}
+                                  asdfg
+                                        </Tag>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                />
+              </div>
               <Condition
                 when="projectType"
                 validate={(value => {
@@ -122,14 +192,15 @@ const FormComponent = (props: {
               >
                 <div className="mb4">
                   <Field<string>
-                    name="department"
+                    name="departments"
                     validate={required}
                     render={({ input, meta }) =>
                       <DropdownFieldErrorWithLabel
                         id={input.name}
                         selectedValue={input.value}
                         options={
-                          []
+                          props.departments && props.departments.length > 0 ?
+                            props.departments : [] as any
                         }
                         onChange={input.onChange}
                         leftIcon="comparison"
@@ -285,71 +356,6 @@ const FormComponent = (props: {
                             }
                           />
                         </div>
-                      </div>
-                      <div>
-                        <Field<string>
-                          name="admin"
-                          render={({ input, meta }) =>
-                            <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                              <div className="fl w-100 pb2">
-                                <div className="mb1">
-                                  <p className="fw5" style={{ fontSize: '.8rem' }}>Concerned Admin</p>
-                                </div>
-                                <SuggestField
-                                  onChange={(query: string) => {
-                                    setSearch(query);
-                                  }}
-                                  items={admins}
-                                  selectedItems={selectedAdmins}
-                                  setSelectedItems={(item) => {
-                                    setSelectedAdmins(item);
-                                    input.onChange(item.map((admins: ICompanyTeamMembers) => admins._id));
-                                  }}
-                                  multipleItemSelect={true}
-                                />
-                              </div>
-                              {selectedAdmins.length > 0 &&
-                                <div className="w-100">
-                                  <div
-                                    className="overflow-auto br2"
-                                    style={{
-                                      border: '1px solid #707070',
-                                      maxHeight: '120px',
-                                      background: '#707070'
-                                    }}>
-                                    {selectedAdmins.map((item) => (
-                                      <div>
-                                        <Tag
-                                          key={item._id}
-                                          className="pa1"
-                                          interactive={true}
-                                          style={{ background: '#707070' }}
-                                          onRemove={(e) => {
-                                            const filteredItems = selectedAdmins.filter((selectedItem) => (
-                                              item.name !== selectedItem.name
-                                            ));
-                                            setSelectedAdmins([
-                                              ...filteredItems
-                                            ]);
-                                            input.onChange(
-                                              isEmpty(filteredItems) ?
-                                                undefined :
-                                                filteredItems.map((admins: Entity) => admins._id));
-                                          }}
-                                          large={true}
-                                          intent="primary"
-                                        >
-                                          {/* {item.name} */}
-                                          asdfg
-                                        </Tag>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              }
-                            </div>
-                          }
-                        />
                       </div>
                       <div>
                         <Field<string>
@@ -522,4 +528,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const FormProject = connect(mapStateToProps, { createBoard })(FormComponent);
+export const FormProject = connect(mapStateToProps, { createBoard, createProject })(FormComponent);
