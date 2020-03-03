@@ -28,7 +28,7 @@ class ElasticsearchService {
 
   }
 
-  async create(index,model,mapping) {
+  async create(index,model,mapping, structure) {
     try {
       const res = await this.client.indices.exists({
         index: index,
@@ -52,13 +52,7 @@ class ElasticsearchService {
             bulk.push({
               index: { _index: index }
             });
-            bulk.push({
-              mongo_id: data._id.toString(),
-              name: data.name,
-              email: data.email,
-              firstName: data.firstName,
-              lastName: data.lastName
-            });
+            bulk.push(structure(data));
           });
 
           await this.client.bulk({ body: bulk });

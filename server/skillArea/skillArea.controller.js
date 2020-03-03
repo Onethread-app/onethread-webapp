@@ -2,6 +2,7 @@ const SkillArea = require('./skillArea.model');
 const Account = require('../account/account.model');
 const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
+const { skillMapping , skillStructure } = require('../services/elastic.services');
 const {
   sendJSONresponse,
   sendErrorResponse,
@@ -12,7 +13,9 @@ const {
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
-const client = require('../../index.elasticsearch');
+const ElasticsearchService = require('../../index.elasticsearch');
+const elasticService = new ElasticsearchService();
+elasticService.create('skillsarea', SkillArea , skillMapping , skillStructure);
 
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -168,16 +171,11 @@ const searchSkillSet = async (req, res, next) => {
               "terms" : {
                 "mongo_id" : userskillId
               }
-
             }
           ]
       },
     }
   };
-
-  //filter_path: ['hits.hits._source , hits.hits._id , hits.hits._score']
-
-  //"_source": ["mongo_id" ,"name" ]
 
     client
       .search({ index: 'skillarea', body: body, type: '_doc' })

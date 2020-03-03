@@ -5,11 +5,11 @@ const { Company } = require('../../company/company.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
-const { accountMapping } = require('../../services/elastic.services');
+const { accountMapping , accountStructure } = require('../../services/elastic.services');
 const ElasticsearchService = require('../../../index.elasticsearch');
 const elasticService = new ElasticsearchService();
 elasticService.checkHealth();
-elasticService.create('accounts', Account , accountMapping);
+elasticService.create('accounts', Account , accountMapping , accountStructure);
 
 const changeRole = async (req, res, next) => {
   try {
