@@ -170,7 +170,7 @@ export const sendRoomMessage = (data: { text: string, room: string, files: any[]
 		}
 	};
 
-export const getRoomMessages = (roomId: string, limit: number = 50, skip: number = 0) => async (
+export const getRoomMessages = (roomId: string, limit: number = 1000, skip: number = 0) => async (
 	dispatch: any
 ) => {
 	try {
