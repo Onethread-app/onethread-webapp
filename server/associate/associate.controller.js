@@ -16,19 +16,20 @@ const get = async (req, res , next) => {
     _id: req.params.associteId,
     removed: false,
   })
-    .select('_id company associateWith createdAt account')
-    .populate('associateWith', '_id name type address email legalOwnerName legalOwnerMail')
+    .select('_id company associateCompany createdAt account')
+    .populate('associateCompany', '_id name type address email legalOwnerName legalOwnerMail')
     .populate('company', '_id name type address email legalOwnerName legalOwnerMail')
     .populate('account', 'firstName lastName')
     .exec()
     .then(colResult => {
       if(req.params.companyId === colResult.company._id.toString()){
-        colResult.company = colResult.associateWith;
-         colResult.associateWith = undefined;
+        
+         colResult.company = undefined;
       }else{
-        colResult.associateWith = undefined;
+        colResult.associateCompany = colResult.company;
+        colResult.company = undefined;
       }
-      console.log(colResult);
+      
       res.json(colResult);
     })
     .catch(e => next(e));
@@ -38,13 +39,13 @@ const create = async (req, res, next) => {
   try {
     const associate = new Associate({
         company: req.body.companyId,
-        associateWith : req.body.associateWith,
+        associateCompany : req.body.associateCompany,
         account: req.user._id,
     });
     await associate
       .save();
-      await Associate.populate(associate, { path: 'associateWith', select: '_id name type'});
-      //await associate.populate('associateWith', '_id name type').execPopulate;
+      await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
+      //await associate.populate('associateCompany', '_id name type').execPopulate;
       
       return res.status(201).json(associate);
   } catch (error) {
@@ -64,12 +65,12 @@ const list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
   await Associate.find(
-    { $or:[ {company: companyId}, {associateWith: companyId}]}
+    { $or:[ {company: companyId}, {associateCompany: companyId}]}
     
   )
-    .select('_id company associateWith createdAt')
+    .select('_id company associateCompany createdAt')
     .populate('company', '_id name type ')
-    .populate('associateWith', '_id name type ')
+    .populate('associateCompany', '_id name type ')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)

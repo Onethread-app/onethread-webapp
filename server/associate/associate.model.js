@@ -4,20 +4,18 @@ const { Schema } = mongoose;
 
 const AssociateSchema = new mongoose.Schema(
   {
-    
     company: {
       type: Schema.Types.ObjectId,
       ref: 'Company',
       unique: false,
       required: true,
     },
-    associateWith: {
+    associateCompany: {
         type: Schema.Types.ObjectId,
         ref: 'Company',
         unique: false,
       required: true,
     },
-    
     removed: {
       type: Boolean,
       default: false,

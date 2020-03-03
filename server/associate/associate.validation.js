@@ -21,9 +21,9 @@ const schema = {
 
 module.exports = {
   createAssociate: Joi.object().keys({
-    body: Joi.object().keys({
+        body: Joi.object().keys({
         companyId: schema.company ,
-        associateWith: schema.company ,
+        associateCompany: schema.company ,
     }),
   })
 };

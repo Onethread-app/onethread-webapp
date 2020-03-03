@@ -121,7 +121,7 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error);
+    
     return next(error);
   }
 };
@@ -188,7 +188,7 @@ const getCompany = async (req, res, next) => {
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
-    console.log('getCompany', error);
+    
     next(error);
   }
 };
@@ -363,7 +363,7 @@ const searchCompany = async (req, res, next) => {
       .skip(+skip)
       .limit(+limit)
       .then(data => {
-        console.log(data);
+        
         return sendJSONresponse(res, 200, {
           success: true,
           message: `Search complete for ${name}`,
