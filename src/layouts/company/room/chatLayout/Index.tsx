@@ -11,6 +11,8 @@ import { MembersList } from './members/MembersList';
 import { RightSidebar } from 'components/RightSidebar';
 import { IRoomReducer } from 'stores/room/Reducer';
 
+import memberListIcon from './../../../../resources/images/member-list.svg';
+
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
 	activeRoom: any;
@@ -40,9 +42,20 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					<div className="flex justify-between items-center ph4 pv2 bb b--tigrowLightGray-1">
 						<div>
 							<p className="f4 fw7 mv2">{props.activeRoom.name}</p>
-							<h5
+							<div
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
-								className="ma0 pointer dim">Members: {props.users.length}</h5>
+								className="ma0 pointer dim flex justify-between">
+								<img
+									className=""
+									src={memberListIcon}
+									width="20px"
+									height="20px"
+									style={{
+									}}
+									color="#0FA3A3"
+								/>
+								<span className="f5">{props.users.length}</span>
+							</div>
 						</div>
 						{permit(props.companyRole) ?
 							<Button
