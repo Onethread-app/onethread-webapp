@@ -33,6 +33,6 @@ const AssociateSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-AssociateSchema.index({ associateWith: 1, company: 1 }, { unique: true });
+AssociateSchema.index({ associateCompany: 1, company: 1 }, { unique: true });
 
 module.exports = mongoose.model('Associate', AssociateSchema);
