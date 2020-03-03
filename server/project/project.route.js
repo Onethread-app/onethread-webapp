@@ -29,6 +29,7 @@ router
     schemaValidator(projectValidation.changeTitleProject),
     projectCtrl.changeTitleProject,
   );
+router.route('/search').get(authorization, projectCtrl.suggestConcernAdmin,);
 router.param('pid', authorization, schemaValidator(projectValidation.getProject), projectCtrl.getProjectLoad);
 router
   .route('/:pid')

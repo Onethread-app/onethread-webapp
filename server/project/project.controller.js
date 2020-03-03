@@ -168,7 +168,13 @@ const showAllFilesForProject = async (req, res, next) => {
     });
 };
 
-
+const suggestConcernAdmin = async( req, res, next)=>{
+  try {
+    
+  } catch (error) {
+    next(error)
+  }
+}
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
@@ -178,4 +184,5 @@ module.exports = {
   changeTitleProject,
   archiveProject,
   showAllFilesForProject,
+  suggestConcernAdmin,
 };
