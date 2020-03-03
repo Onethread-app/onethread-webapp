@@ -17,7 +17,7 @@ router
   );
 router
   .route('/lists')
-  .get(authorization, projectCtrl.showAllProjectsForCompany);
+  .get(authorization, schemaValidator(paramValidation.showProjectList), projectCtrl.showAllProjectsForCompany);
 router.route('/change-title').put(authorization, projectCtrl.changeTitleProject);
 router.param('pid', projectCtrl.getProjectLoad);
 router

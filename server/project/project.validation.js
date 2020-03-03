@@ -53,5 +53,10 @@ module.exports = {
     body: Joi.object().keys({
       name: schema.name.required(),
     })
+  }),
+  showProjectList: Joi.object().keys({
+    query: Joi.object().keys({
+      companyId: schema.company.required(),
+    })
   })
 };
