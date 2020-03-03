@@ -52,6 +52,7 @@ module.exports = {
   changeTitleProject: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
+      pid: schema.pid.required(),
     })
   }),
   showProjectList: Joi.object().keys({
