@@ -184,7 +184,9 @@ const suggestConcernAdmin = async (req, res, next) => {
   }
 };
 const archiveProjectList = async (req, res, next) => {
-  await Project.find({ company: req.query.companyId,removed: true  }).select('name')
+  await Project.find({ company: req.query.companyId, removed: true })
+  .populate('departments', 'name _id')  
+  .select('name members')
     .exec()
     .then(result => {
       return sendJSONresponse(res, 200, result);
