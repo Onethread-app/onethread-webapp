@@ -5,7 +5,6 @@ import { Button, Popover, Menu, MenuItem, Dialog, Icon } from '@blueprintjs/core
 import { IColumn, TaskBoard } from 'stores/board/Reducer';
 import { TaskForm } from '../task/TaskForm';
 import { connect } from 'react-redux';
-import { Loading } from 'components/Loading';
 import { ColumnForm } from './ColumnForm';
 import { permit } from 'stores/UtilsActions';
 import { CompanyModel } from 'stores/company/Reducer';
@@ -22,7 +21,6 @@ interface ColumnProps {
 }
 
 interface ColumnInternalProps extends ColumnProps {
-  loading?: boolean;
   company?: CompanyModel;
   createTask: (task: any) => void;
   currentBoard?: TaskBoard;
@@ -51,7 +49,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
     <>
       <div
         className="dib h-100 w-23-l w-50-m"
-        style={{minWidth: '270px'}}
+        style={{ minWidth: '270px' }}
       >
         <div className="flex flex-column h-100 pr3 w-100">
           <div className="w-100">
@@ -195,43 +193,40 @@ const ColumnComponent = (props: ColumnInternalProps) => {
             }}
           >
             <div className="flex-grow-1 flex flex-column h-100">
-              {props.loading ? <Loading />
-                :
-                <Droppable
-                  droppableId={props.column._id!}
-                  type="task"
-                >
-                  {(provided, snapshot) => {
-                    const allowedProps = { ref: provided.innerRef };
-                    return (
-                      <div
-                        className={`pa2 flex-grow-1 flex
+              <Droppable
+                droppableId={props.column._id!}
+                type="task"
+              >
+                {(provided, snapshot) => {
+                  const allowedProps = { ref: provided.innerRef };
+                  return (
+                    <div
+                      className={`pa2 flex-grow-1 flex
                           flex-column overflow-auto 
                           ${snapshot.isDraggingOver ? 'bg-lightest-blue' : ''}`
-                        }
-                        style={{
-                          transition: 'background-color 0.2s ease',
-                          minHeight: '100px',
-                          whiteSpace: 'normal'
-                        }}
-                        {...provided.droppableProps}
-                        {...allowedProps}
-                      >
-                        <div className="flex-grow-1">
-                          {props.column.tasks!.map((task, index) =>
-                            <TaskItem
-                              key={task._id!}
-                              task={task}
-                              index={index}
-                            />
-                          )}
-                        </div>
-                        {provided.placeholder}
+                      }
+                      style={{
+                        transition: 'background-color 0.2s ease',
+                        minHeight: '100px',
+                        whiteSpace: 'normal'
+                      }}
+                      {...provided.droppableProps}
+                      {...allowedProps}
+                    >
+                      <div className="flex-grow-1">
+                        {props.column.tasks!.map((task, index) =>
+                          <TaskItem
+                            key={task._id!}
+                            task={task}
+                            index={index}
+                          />
+                        )}
                       </div>
-                    );
-                  }}
-                </Droppable>
-              }
+                      {provided.placeholder}
+                    </div>
+                  );
+                }}
+              </Droppable>
             </div>
           </div>
         </div>
@@ -266,7 +261,6 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    loading: state.boardIndexReducer.boardReducer.dragTaskLoading,
     company: state.companyReducer.currentCompany,
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard
   };

@@ -1,7 +1,6 @@
 import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, 
   CREATE_COLUMN_ERROR, CREATE_COLUMN, CREATE_TASK, CREATE_TASK_ERROR, 
-  DRAG_AND_DROP_TASK_LOADING, DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, 
-  UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK, UPDATE_TASK } from './Types';
+  DRAG_AND_DROP_TASK, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK, UPDATE_TASK } from './Types';
 import { isEqual } from 'lodash';
 
 export interface IColumn {
@@ -42,8 +41,6 @@ export interface IBoard {
   boardError: string;
   boardColumnError: string;
   boardTaskError: string;
-  dragTaskLoading: boolean;
-  dragTaskError: string;
 }
 
 const InitialState = {
@@ -59,8 +56,6 @@ const InitialState = {
   boardError: '',
   boardColumnError: '',
   boardTaskError: '',
-  dragTaskLoading: false,
-  dragTaskError: ''
 };
 
 export const BoardReducer = (state = InitialState, action: any) => {
@@ -154,11 +149,6 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ...state,
         boardTaskError: action.payload,
       };
-    case DRAG_AND_DROP_TASK_LOADING:
-      return {
-        ...state,
-        dragTaskLoading: true,
-      };
     case DRAG_AND_DROP_TASK:
       return {
         ...state,
@@ -166,13 +156,6 @@ export const BoardReducer = (state = InitialState, action: any) => {
           ...state.currentBoard,
           columns: action.payload
         },
-        dragTaskLoading: false,
-      };
-    case DRAG_AND_DROP_TASK_ERROR:
-      return {
-        ...state,
-        dragTaskError: action.payload,
-        dragTaskLoading: false
       };
     case SELECT_TASK:
       return {

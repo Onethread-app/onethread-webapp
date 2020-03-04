@@ -1,12 +1,14 @@
 import { tokenConfig } from 'stores/UtilsActions';
-import { CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, CREATE_COLUMN, 
-  CREATE_COLUMN_ERROR, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK_LOADING, 
-  DRAG_AND_DROP_TASK, DRAG_AND_DROP_TASK_ERROR, UPDATE_COLUMN, ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK, UPDATE_TASK 
+import {
+  CREATE_BOARD, CREATE_BOARD_ERROR, GET_ALL_BOARDS, SELECT_BOARD, CREATE_COLUMN,
+  CREATE_COLUMN_ERROR, CREATE_TASK_ERROR, CREATE_TASK, DRAG_AND_DROP_TASK, UPDATE_COLUMN,
+  ADD_TEAM_MEMBER_IN_BOARD, SELECT_TASK, UPDATE_TASK
 } from './Types';
 import { isEqual } from 'lodash';
 import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
+import { Toaster } from '@blueprintjs/core';
 
 export const createBoard = (board: TaskBoard) => async (dispatch: any, getState: any) => {
   try {
@@ -155,39 +157,55 @@ export const dragAndDropTask = (
       const headers = tokenConfig();
       const currentBoard: TaskBoard = getState().boardIndexReducer.boardReducer.currentBoard;
       if ((headers as any).headers.Authorization) {
-        dispatch({ type: DRAG_AND_DROP_TASK_LOADING });
         const requestData = {
           taskId,
           sourceColumnId,
           destinationColumnId,
           taskIndexOfDestinationColumn
         };
-        const response = await tigrowApi.post(`tasks/dragTask`, requestData, headers);
+        const allColumns = currentBoard.columns!;
+        let addedTask: ITask = {} as any;
+        let destCol = 0;
 
-        const updatedColumns = response.data;
-        currentBoard.columns!.map(column => {
-          if (isEqual(updatedColumns.sourceColumn._id, column._id)) {
-            column.tasks = updatedColumns.sourceColumn.tasks;
+        // find the dragged task, removed from source and save destination column index 
+        allColumns.forEach((column, i) => {
+          if (isEqual(sourceColumnId, column._id)) {
+            const index = column.tasks!.findIndex(task => task._id === taskId);
+            addedTask = column.tasks!.slice(index, index + 1)[0];
+            column.tasks!.splice(index, 1);
           }
-          if (isEqual(updatedColumns.destinationColumn._id, column._id)) {
-            column.tasks = updatedColumns.destinationColumn.tasks;
+          if (isEqual(destinationColumnId, column._id)) {
+            destCol = i;
           }
-          return column;
         });
-        dispatch({ type: DRAG_AND_DROP_TASK, payload: currentBoard.columns });
+        allColumns[destCol].tasks!.splice(taskIndexOfDestinationColumn, 0, addedTask);
+        dispatch({ type: DRAG_AND_DROP_TASK, payload: allColumns });
+        const response = await tigrowApi.post(`tasks/dragTask`, requestData, headers);
+        if (response.status === 200) {
+          Toaster
+            .create()
+            .show({
+              message: 'Dragged successfully',
+              timeout: 3000,
+              intent: 'success'
+            });
+        }
       }
     } catch (error) {
-      if (isEqual(error.message, 'Network Error')) {
-        dispatch({ type: DRAG_AND_DROP_TASK_ERROR, payload: 'Network error' });
-      } else if (error.response.status && error.response.status === 401) {
-        dispatch({ 
-          type: DRAG_AND_DROP_TASK_ERROR, 
-          payload: 'Unauthorized user. Please enter valid email and password.' 
+      Toaster
+        .create()
+        .show({
+          message: 'Operation Unsuccessful',
+          action: {
+            icon: 'refresh',
+            className: 'bp3-intent-warning b',
+            onClick: () => {
+              window.location.reload(false);
+            },
+            text: 'Reload',
+          },
+          timeout: 300000,
         });
-      } else {
-        // tslint:disable-next-line: no-console
-        console.log(error.response);
-      }
     }
   };
 
@@ -226,14 +244,14 @@ export const getSelectedTaskDetails = (taskId: string | undefined) => async (dis
       // dispatch({ type: BOARD_LOADING });
       const res = await tigrowApi.get(`tasks/${taskId}`, headers);
       const response = {
-        _id : res.data._id ,
-        name : res.data.name,
-        createdAt : res.data.createdAt,
-        dueDate : res.data.dueDate,
-        createdBy : res.data.account.firstName + ' ' + res.data.account.lastName,
-        description : res.data.description,
-        priority : res.data.priority,
-        currentColumnName : res.data.columnId.name
+        _id: res.data._id,
+        name: res.data.name,
+        createdAt: res.data.createdAt,
+        dueDate: res.data.dueDate,
+        createdBy: res.data.account.firstName + ' ' + res.data.account.lastName,
+        description: res.data.description,
+        priority: res.data.priority,
+        currentColumnName: res.data.columnId.name
       };
 
       dispatch({ type: SELECT_TASK, payload: response });
@@ -262,14 +280,14 @@ export const updateTask = (task: ITask) => async (dispatch: any, getState: any) 
     if ((headers as any).headers.Authorization) {
       res = await tigrowApi.put(`tasks/${taskId}`, task, headers);
       const response = {
-        _id : res.data._id ,
-        name : res.data.name,
-        createdAt : res.data.createdAt,
-        dueDate : res.data.dueDate,
-        createdBy : res.data.account.firstName + ' ' + res.data.account.lastName,
-        description : res.data.description,
-        priority : res.data.priority,
-        currentColumnName : res.data.columnId.name,
+        _id: res.data._id,
+        name: res.data.name,
+        createdAt: res.data.createdAt,
+        dueDate: res.data.dueDate,
+        createdBy: res.data.account.firstName + ' ' + res.data.account.lastName,
+        description: res.data.description,
+        priority: res.data.priority,
+        currentColumnName: res.data.columnId.name,
         columnId: res.data.columnId
       };
       dispatch({ type: UPDATE_TASK, payload: response });
