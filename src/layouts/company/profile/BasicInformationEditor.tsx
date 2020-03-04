@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import { Button } from '@blueprintjs/core';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { editCompanyInfoAction } from 'stores/company/Actions';
 
 
 interface CompanyInfoProps {
-  companyInfo: CompanyModel;
+  companyInfo: ICompany;
 }
 
 const CompanyInfoFormComponent = (props: {

@@ -8,7 +8,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { IconNames } from '@blueprintjs/icons';
 import { ITask } from 'stores/board/Reducer';
 import { addTaskMember } from 'stores/taskMembers/Action';
@@ -16,7 +16,7 @@ import { tigrowApi } from 'config';
 
 interface IMembersFormProps {
   setMembersPopover: (val: boolean) => void;
-  company?: CompanyModel;
+  company?: ICompany;
   currentTask?: ITask;
   addTaskMember: (members: string[]) => Promise<any>;
 }

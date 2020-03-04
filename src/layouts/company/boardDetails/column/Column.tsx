@@ -7,7 +7,7 @@ import { TaskForm } from '../task/TaskForm';
 import { connect } from 'react-redux';
 import { ColumnForm } from './ColumnForm';
 import { permit } from 'stores/UtilsActions';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { Field, Form } from 'react-final-form';
 import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
@@ -21,7 +21,8 @@ interface ColumnProps {
 }
 
 interface ColumnInternalProps extends ColumnProps {
-  company?: CompanyModel;
+  loading?: boolean;
+  company?: ICompany;
   createTask: (task: any) => void;
   currentBoard?: TaskBoard;
 }

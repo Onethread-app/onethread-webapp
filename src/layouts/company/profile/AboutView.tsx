@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { useState } from 'react';
 import { permit } from 'stores/UtilsActions';
 import { Icon, Dialog } from '@blueprintjs/core';
 import { CompanyAboutEditor } from './AboutEditor';
 
 export const CompanyAboutView = (props: {
-  company: CompanyModel
+  company: ICompany
 }) => {
   const [showDialogAbout, setShowDialogAbout] = useState(false);
   return (

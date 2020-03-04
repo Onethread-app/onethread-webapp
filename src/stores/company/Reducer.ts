@@ -55,7 +55,7 @@ export interface ICompanyTeamMembers {
 		lastName: string;
 }
 
-export interface CompanyModel {
+export interface ICompany {
 	_id: string;
 	name: string;
 	type: string;

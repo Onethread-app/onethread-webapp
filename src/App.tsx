@@ -19,6 +19,8 @@ import { FeedPage } from 'layouts/company/feed/Index';
 import { HomePage } from 'layouts/landing/Index';
 import { TaskPage } from 'layouts/company/task';
 import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
+import { AssociatesPage } from 'layouts/company/associates/Index';
+import { AssociatesDetailsView } from 'layouts/company/associateDetails/Index';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -166,6 +168,16 @@ export const App = () => (
 				path="/company/:cname/settings"
 				exact={true}
 				component={SettingsPage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/associates"
+				exact={true}
+				component={AssociatesPage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/associate/:associateId"
+				exact={true}
+				component={AssociatesDetailsView}
 			/>
 			<Route component={NoMatch} />
 

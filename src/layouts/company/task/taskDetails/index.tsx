@@ -15,12 +15,12 @@ import priority from 'resources/images/priority.png';
 import { PriorityView } from './Priority/PriorityView';
 import { PriorityEditor } from './Priority/PriorityEditor';
 import moment from 'moment';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { permit } from 'stores/UtilsActions';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
-  company?: CompanyModel;
+  company?: ICompany;
 }
 
 const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {

@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { History } from 'history';
 import { tokenConfig } from '../UtilsActions';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import {
 	CREATE_COMPANY,
 	CREATE_COMPANY_ERROR,
@@ -54,14 +54,14 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
 		} else {
 			// tslint:disable-next-line: no-console
 			console.log(error.response);
-			return error.response;
+			return error.response.status;
 
 		}
 	}
 };
 
 export const createCompanyAction = (
-	companyData: CompanyModel,
+	companyData: ICompany,
 	routeHistory: History
 ) => async (dispatch: any, getState: any) => {
 	try {
@@ -211,7 +211,7 @@ export const getAllDepartments = () => async (dispatch: any, getState: any) => {
 	}
 };
 
-export const editCompanyInfoAction = (companyInfo: CompanyModel) => async (
+export const editCompanyInfoAction = (companyInfo: ICompany) => async (
 	dispatch: any,
 	getState: any
 ) => {
