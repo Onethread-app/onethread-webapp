@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { TaskBoard } from 'stores/board/Reducer';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { permit, boardColor } from 'stores/UtilsActions';
 import { Card, Elevation, HTMLSelect } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
@@ -16,7 +16,7 @@ import addIcon from '../../../resources/images/addIcon.png';
 
 interface IBoardCardComponent {
 	boardList: TaskBoard[];
-	company: CompanyModel;
+	company: ICompany;
 	getSelectedBoard: (boardId: string | undefined) => Promise<number>;
 }
 
@@ -109,7 +109,7 @@ const BoardCard = withRouter((props: IBoardCardComponent & RouteComponentProps) 
 
 interface IBoardListViewInternalProps {
 	boardList: TaskBoard[];
-	company: CompanyModel;
+	company: ICompany;
 	getAllBoards: () => void;
 	getAllDepartments: () => void;
 	getSelectedBoard: (boardId: string | undefined) => Promise<number>;

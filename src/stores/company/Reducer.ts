@@ -65,7 +65,7 @@ export interface ICompanyPendingMembers {
 	removed: boolean;
 }
 
-export interface CompanyModel {
+export interface ICompany {
 	_id: string;
 	name: string;
 	type: string;

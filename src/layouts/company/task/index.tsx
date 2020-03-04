@@ -5,13 +5,13 @@ import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import { SubTaskView } from './subTask/SubtaskView';
 import { ActivityView } from './activity/ActivityView';
 import { ITask, TaskBoard } from 'stores/board/Reducer';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { TaskDetails } from './taskDetails';
 
 interface TaskInternalProps {
     currentTask: ITask;
     currentBoard?: TaskBoard;
-    company: CompanyModel;
+    company: ICompany;
 }
 
 const TaskPageComponent = (props: TaskInternalProps) => {

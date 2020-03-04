@@ -22,7 +22,6 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
   const [showColumnFormDialog, setShowColumnFormDialog] = useState(false);
 
   const dragEnd = async (result: DropResult) => {
-    // console.log(result);
     if (!result.destination) {
       return;
     }
@@ -30,7 +29,6 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
       && result.source.index === result.destination.index) {
       return;
     }
-
     await props.dragAndDropTask(result.draggableId, result.source.droppableId,
       result.destination.droppableId, result.destination.index);
 

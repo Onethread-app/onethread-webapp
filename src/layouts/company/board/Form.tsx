@@ -9,7 +9,7 @@ import { checkError, required, composeValidators, maxValue } from 'components/fi
 import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
 import { boardColor } from 'stores/UtilsActions';
 // import { server } from 'tigrowApi';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 // import { useLiveSearch } from 'components/useLiveSearch';
 import { isEqual } from 'lodash';
 
@@ -17,7 +17,7 @@ const FormComponent = (props: {
   setShowTaskBoardDialog?: (val: boolean) => void;
   createBoard: (board: TaskBoard) => void;
   departments: [],
-  company: CompanyModel;
+  company: ICompany;
 }) => {
   const onSubmit = async (values: any) => {
     await props.createBoard(values);

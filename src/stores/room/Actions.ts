@@ -15,7 +15,8 @@ import {
 	SEND_MESSAGE_ERROR,
 	GET_ROOM_MESSAGES,
 	GET_ROOM_MESSAGES_ERROR,
-	FILE_UPLOAD
+	FILE_UPLOAD,
+	ALL_MESSAGE_RECEIVED
 } from './Types';
 import { tigrowApi } from 'config';
 
@@ -170,16 +171,19 @@ export const sendRoomMessage = (data: { text: string, room: string, files: any[]
 		}
 	};
 
-export const getRoomMessages = (roomId: string, limit: number = 50, skip: number = 0) => async (
+export const getRoomMessages = (roomId: string, limit: number = 15, skip: number = 0) => async (
 	dispatch: any
 ) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`messages/room/${roomId}?limit=${limit}&skip=${skip}`, headers);
+			if (response.data.count < limit) {
+				dispatch({ type: ALL_MESSAGE_RECEIVED, payload: true });
+			}
 			dispatch({
 				type: GET_ROOM_MESSAGES,
-				payload: response.data.messages
+				payload: response.data.messages.reverse()
 			});
 		} else {
 			// tslint:disable-next-line: no-console

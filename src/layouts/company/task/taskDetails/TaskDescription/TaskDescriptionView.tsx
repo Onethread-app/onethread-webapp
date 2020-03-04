@@ -4,11 +4,11 @@ import { Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
 import { permit } from 'stores/UtilsActions';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 
 interface TaskDescriptionViewInternalProps {
   description?: ITask['description'];
-  company?: CompanyModel;
+  company?: ICompany;
 }
 
 export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalProps) => {

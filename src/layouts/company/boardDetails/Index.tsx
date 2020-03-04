@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import { TaskBoard } from 'stores/board/Reducer';
 import { AddTeamMemberForm } from './members/AddTeamMemberForm';
 import { permit } from 'stores/UtilsActions';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import addMemberIcon from 'resources/images/addMemberIcon.png';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
-  company: CompanyModel;
+  company: ICompany;
 }
 
 const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {

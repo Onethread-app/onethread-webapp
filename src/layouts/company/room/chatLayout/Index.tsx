@@ -15,6 +15,8 @@ import memberListIcon from './../../../../resources/images/member-list.svg';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
+	roomId: IRoomReducer['roomId'];
+	roomName: IRoomReducer['roomName'];
 	activeRoom: any;
 	companyRole: string;
 	users: IRoomReducer['users'];
@@ -33,7 +35,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 
 	return (
 		<>
-			{isEmpty(props.activeRoom) === false ?
+			{isEmpty(props.roomName) === false && isEmpty(props.roomId) === false ?
 				<div
 					className="flex flex-column h-100"
 				// style={{ height: "calc(100vh - 50px)" }}
@@ -41,10 +43,10 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					{/* chat heading starts */}
 					<div className="flex justify-between items-center ph4 pv2 bb b--tigrowLightGray-1">
 						<div>
-							<p className="f4 fw7 mv2">{props.activeRoom.name}</p>
+							<p className="f4 fw7 mv2">{props.roomName}</p>
 							<div
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
-								className="ma0 pointer dim flex justify-between">
+								className="ma0 pointer dim flex items-center">
 								<img
 									className=""
 									src={memberListIcon}
@@ -54,7 +56,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 									}}
 									color="#0FA3A3"
 								/>
-								<span className="f5">{props.users.length}</span>
+								<span className="f5 ml2 fw7">{props.users.length}</span>
 							</div>
 						</div>
 						{permit(props.companyRole) ?
@@ -73,8 +75,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 					{/* chat heading ends */}
 					<MessageList />
 					<SendMessageForm />
-				</div> :
-				<div className="absolute--center tc">
+				</div>
+				: <div className="absolute--center tc">
 					<h2>Please, select a room !!</h2>
 				</div>
 			}
@@ -107,6 +109,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 
 const mapStateToProps = (state: any) => {
 	return {
+		roomId: state.roomReducer.roomId,
+		roomName: state.roomReducer.roomName,
 		activeRoom: state.roomReducer.activeRoom,
 		users: state.roomReducer.users,
 		userStatus: state.roomReducer.userStatus,
