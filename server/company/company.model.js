@@ -74,7 +74,6 @@ const company = new Schema(
       type: [{
         type: String,
         enum: [
-          'all',
           'editProfile',
           'cRUDAnnouncement',
           'archiveProject',
@@ -84,7 +83,7 @@ const company = new Schema(
           'acceptRejectProjectFromAssociate',
         ]
       }],
-      default: ['all'],
+      default: ['editProfile'],
       required: true
     },
     
