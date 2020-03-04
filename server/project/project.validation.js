@@ -60,6 +60,6 @@ module.exports = {
     })
   }),
   archiveProject: Joi.object().keys({
-    params: pid.required(),
+    params: schema.pid.required(),
   })
 };

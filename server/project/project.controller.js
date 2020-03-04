@@ -97,7 +97,7 @@ const getProjectLoad = async (req, res, next) => {
     const project = await Project.findOne({
       _id: req.params.pid,
     });
-
+    console.log(project)
     if (project) {
       req.project = project;
       return next();
