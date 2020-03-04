@@ -7,7 +7,7 @@ const projectSchema = new Schema(
     name: {
       type: String,
       trim: true,
-      maxlength: 32,
+      maxlength: 50,
       required: true,
     },
     type: {

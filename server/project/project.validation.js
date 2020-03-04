@@ -16,11 +16,11 @@ const pid = Joi.object().keys({
   pid: idSchema.id,
 });
 const schema = {
-  name: Joi.string().max(50).alphanum(),
+  name: Joi.string().max(50).regex(/^[a-z0-9]+$/),
   type: Joi.string(),
   pid: idSchema.id,
-  description: Joi.string().max(2500),
-  outline: Joi.string().max(5000),
+  description: Joi.string().max(2500).regex(/^[a-z0-9]+$/),
+  outline: Joi.string().max(5000).regex(/^[a-z0-9]+$/),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
   color: Joi.number(),
@@ -49,7 +49,7 @@ module.exports = {
   getProject: Joi.object().keys({
     params:pid.required(),
   }),
-  changeTitleProject: Joi.object().keys({
+  changenameProject: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       pid: schema.pid.required(),
