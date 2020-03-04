@@ -48,7 +48,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
     removed: false,
   })
     .populate('departments', 'name _id')
-    .select('-_id -type -__v -associates -files -version ')
+    .select('-type -__v -associates -files -version ')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -97,7 +97,7 @@ const getProjectLoad = async (req, res, next) => {
     const project = await Project.findOne({
       _id: req.params.pid,
     });
-  
+
     if (project) {
       req.project = project;
       return next();
@@ -108,7 +108,6 @@ const getProjectLoad = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error)
     next(error);
   }
 };
@@ -160,8 +159,8 @@ const showAllFilesForProject = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then(result => {
-      logger.info(`get all files from project ${req.params.pid}`)
-      return sendJSONresponse(res, 200, {success: true, result})
+      logger.info(`get all files from project ${req.params.pid}`);
+      return sendJSONresponse(res, 200, { success: true, result });
     })
     .catch(err => {
       logger.error(`${err}`);
@@ -169,13 +168,31 @@ const showAllFilesForProject = async (req, res, next) => {
     });
 };
 
-const suggestConcernAdmin = async( req, res, next)=>{
+const suggestConcernAdmin = async (req, res, next) => {
   try {
-    
+    await Member.find({
+      company: req.params.companyId,
+    })
+      .select('-_id account')
+      .populate('account', '_id name firstName lastName email')
+      .exec()
+      .then(result => {
+        return sendJSONresponse(res, 200, result);
+      });
   } catch (error) {
-    next(error)
+    next(error);
   }
-}
+};
+const archiveProjectList = async (req, res, next) => {
+  await Project.find({ _id: req.params.pid }, { removed: true })
+    .exec()
+    .then(result => {
+      return sendJSONresponse(res, 200, result);
+    })
+    .catch(err => {
+      next(err);
+    });
+};
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
@@ -186,4 +203,5 @@ module.exports = {
   archiveProject,
   showAllFilesForProject,
   suggestConcernAdmin,
+  archiveProjectList,
 };

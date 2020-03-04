@@ -29,8 +29,15 @@ router
     schemaValidator(projectValidation.changeTitleProject),
     projectCtrl.changeTitleProject,
   );
-router.route('/search').get(authorization, projectCtrl.suggestConcernAdmin,);
-router.param('pid', authorization, schemaValidator(projectValidation.getProject), projectCtrl.getProjectLoad);
+router
+  .route('/search')
+  .get(authorization, projectCtrl.suggestConcernAdmin);
+router.param(
+  'pid',
+  authorization,
+  schemaValidator(projectValidation.getProject),
+  projectCtrl.getProjectLoad,
+);
 router
   .route('/:pid')
   .get(
@@ -58,5 +65,12 @@ router
     authorization,
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
+  );
+router
+  .route('/:pid/archive-list')
+  .get(
+    authorization,
+    schemaValidator(projectValidation.archiveProject),
+    projectCtrl.archiveProjectList,
   );
 module.exports = router;
