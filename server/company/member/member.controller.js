@@ -168,10 +168,11 @@ const searchMember = async (req, res, next) => {
         from: 0,
         query: {
           bool:{
-            must: [
+            "must": [
               {
-                match_phrase_prefix: {
-                  "email": req.query.name
+                "multi_match": {
+                  "query": req.query.name ,
+                  "fields": ["email" , "firstName" , "lastName"]
                 }
               }
             ],
