@@ -41,7 +41,6 @@ module.exports = {
   }),
   updateProjectPreface: Joi.object().keys({
     body: Joi.object().keys({
-      pid: schema.pid,
       description: schema.description,
       outline: schema.outline,
     }),
@@ -49,7 +48,7 @@ module.exports = {
   getProject: Joi.object().keys({
     params:pid.required(),
   }),
-  changenameProject: Joi.object().keys({
+  changeNameProject: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       pid: schema.pid.required(),

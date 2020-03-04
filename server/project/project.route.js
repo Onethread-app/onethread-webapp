@@ -26,12 +26,12 @@ router
   .route('/change-title')
   .put(
     authorization,
-    schemaValidator(projectValidation.changeTitleProject),
+    schemaValidator(projectValidation.changeNameProject),
     projectCtrl.changeTitleProject,
   );
 router
-  .route('/search')
-  .get(authorization, projectCtrl.suggestConcernAdmin);
+  .route('/concern-admin-search')
+  .get(authorization, schemaValidator(projectValidation.showProjectList), projectCtrl.suggestConcernAdmin);
 router
   .route('/archive-list')
   .get(

@@ -171,10 +171,10 @@ const showAllFilesForProject = async (req, res, next) => {
 const suggestConcernAdmin = async (req, res, next) => {
   try {
     await Member.find({
-      company: req.params.companyId,
+      company: req.query.companyId,
     })
       .select('-_id account')
-      .populate('account', '_id name firstName lastName email')
+      .populate('account', '_id name firstName lastName email profileImage')
       .exec()
       .then(result => {
         return sendJSONresponse(res, 200, result);
