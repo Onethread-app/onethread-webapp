@@ -4,11 +4,13 @@ import { CompanyReducer } from './company/Reducer';
 import { RoomReducer } from './room/Reducer';
 import { LayoutReducer } from './layout/Reducer';
 import { BoardIndexReducer } from './boardIndexReducer';
+import { ProjectReducer } from './project/Reducer';
 
 export const RootReducer = combineReducers({
 	layoutReducer: LayoutReducer,
 	roomReducer: RoomReducer,
 	userReducer: UserReducer,
 	companyReducer: CompanyReducer,
-	boardIndexReducer: BoardIndexReducer
+	boardIndexReducer: BoardIndexReducer,
+	projectReducer: ProjectReducer
 });

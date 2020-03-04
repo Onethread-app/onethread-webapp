@@ -1,10 +1,7 @@
 import { PROJECT } from './Types';
 
 const initialState = {
-  name: '',
-  id: '',
-  departments: [],
-  color: 0
+  allProjects: []
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -12,10 +9,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case PROJECT.PROJECT_GET_ALL_PROJECTS:
       return {
         ...state,
-        name: action.payload.name,
-        id: action.payload._id,
-        departments: action.payload.departments,
-        color: action.payload.color
+        allProjects: action.payload
       };
     default:
       return state;

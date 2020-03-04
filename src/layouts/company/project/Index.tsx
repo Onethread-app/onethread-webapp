@@ -1,12 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Card, Popover, Button, Menu, MenuItem } from '@blueprintjs/core';
 import addIcon from '../../../resources/images/addIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormProject } from './CreateProjectForm';
 import { ChangeName } from './ChangeProjectName';
+import { getAllProjects } from '../../../stores/project/Actions';
+import { find } from 'lodash';
+import { boardColor } from 'stores/UtilsActions';
 
-const ProjectPageComponent = () => {
+const ProjectPageComponent = (props: any) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(false);
 
@@ -15,6 +18,10 @@ const ProjectPageComponent = () => {
     { _id: 'md', name: 'Multiple Department' },
     { _id: 'associates', name: 'Associates' }
   ];
+
+  useEffect(() => {
+    props.getAllProjects();
+  }, []);
   return (
     <>
       <div >
@@ -29,94 +36,97 @@ const ProjectPageComponent = () => {
               gridTemplateRows: 'repeat(2, 135px)',
               gridGap: '10px 10px'
             }}>
-            <Card
+            {props.projects.map((project: any) =>
+              <Card
+              key={project._id}
               className="h-100"
               interactive={true}
               onClick={async (e) => {
                 e.preventDefault();
                 // const currentBoard: any = await props.getSelectedBoard(board._id);
                 // if (currentBoard._id) {
-                // 	props.history.push(`/company/${props.company.name}/board/${currentBoard._id}`);
-                // }
-              }}
-              style={{ paddingLeft: '0px', paddingBottom: '0px' }}
-            >
-              <div
-                className=""
-                style={{
-                  // borderLeft: `5px solid 
-                  // ${find(boardColor, ['code', board.color]) ?
-                  // 		find(boardColor, ['code', board.color])!.value : 'white'
-                  // 	}`, // TODO use dictionary
-                  borderLeft: '5px solid red',
-                  paddingLeft: '20px',
-                  marginLeft: '-2px',
-                  borderRadius: '3px'
+                  // 	props.history.push(`/company/${props.company.name}/board/${currentBoard._id}`);
+                  // }
                 }}
-              >
-                <div className="flex">
-                  <h3 className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
+                style={{ paddingLeft: '0px', paddingBottom: '0px' }}
+                >
+                <div
+                  className=""
+                  style={{
+                    borderLeft: `5px solid 
+                    ${find(boardColor, ['code', project.color]) ?
+                    		find(boardColor, ['code', project.color])!.value : 'white'
+                    	}`, // TODO use dictionary
+                    // borderLeft: '5px solid',
+                    paddingLeft: '20px',
+                    marginLeft: '-2px',
+                    borderRadius: '3px'
+                  }}
+                >
+                  <div className="flex">
+                    <h3 className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
+                      style={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                      }}>
+                      {/* {board.name} */}
+                      {project.name}
+						        </h3>
+                    <Popover
+                      className="w-10"
+                      content={
+                        <Menu className="pa2">
+                          <MenuItem
+                            className="pa1"
+                            text="Update Project Name"
+                            onClick={(e: any) => setShowUpdateNameDialog(true)}
+                          />
+                          <MenuItem
+                            className="pa1 red"
+                            text="Archive Project"
+                          // onClick={(e: any) => setShowColumnFormDialog(true)}
+                          />
+                        </Menu>
+                      }
+                      target={
+                        <Button
+                          style={{
+                            transform: 'rotate(90deg)',
+                            OTransform: 'rotate(90deg)',
+                            msTransform: 'rotate(90deg)',
+                            WebkitTransform: 'rotate(90deg)'
+                          }}
+                          icon="more"
+                          minimal={true}
+                          className="outline-0"
+                        />
+                      }
+                    />
+                  </div>
+                  <h3 className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
                     style={{
                       display: '-webkit-box',
                       WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical',
                     }}>
                     {/* {board.name} */}
-                    Labiba
-						        </h3>
-                  <Popover
-                    className="w-10"
-                    content={
-                      <Menu className="pa2">
-                        <MenuItem
-                          className="pa1"
-                          text="Update Project Name"
-                          onClick={(e: any) => setShowUpdateNameDialog(true)}
-                        />
-                        <MenuItem
-                          className="pa1 red"
-                          text="Archive Project"
-                        // onClick={(e: any) => setShowColumnFormDialog(true)}
-                        />
-                      </Menu>
-                    }
-                    target={
-                      <Button
-                        style={{
-                          transform: 'rotate(90deg)',
-                          OTransform: 'rotate(90deg)',
-                          msTransform: 'rotate(90deg)',
-                          WebkitTransform: 'rotate(90deg)'
-                        }}
-                        icon="more"
-                        minimal={true}
-                        className="outline-0"
-                      />
-                    }
-                  />
-                </div>
-                <h3 className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
-                  style={{
-                    display: '-webkit-box',
-                    WebkitLineClamp: 2,
-                    WebkitBoxOrient: 'vertical',
-                  }}>
-                  {/* {board.name} */}
-                  By Labiba
+                    By Labiba
 						</h3>
-              </div>
-              <div className="flex pt3 pr3" style={{ justifyContent: 'space-between', paddingLeft: '20px' }}>
-                <div>
-                  <p className="mb0 ws-break" style={{ fontSize: '0.7rem' }}>
-                    Assigned Members
-							</p>
-                  <p className="fw8">
-                    {/* {board.members ? board.members.length : 0} */}
-                    15
-							</p>
                 </div>
-              </div>
-            </Card>
+                <div className="flex pt3 pr3" style={{ justifyContent: 'space-between', paddingLeft: '20px' }}>
+                  <div>
+                    <p className="mb0 ws-break" style={{ fontSize: '0.7rem' }}>
+                      Assigned Members
+							</p>
+                    <p className="fw8">
+                      {/* {board.members ? board.members.length : 0} */}
+                      15
+							</p>
+                  </div>
+                </div>
+              </Card>
+            )}
           </div>
           <div>
             <h3 className="f3">
@@ -247,11 +257,15 @@ const ProjectPageComponent = () => {
         <RightSidebar
           onClose={() => setShowUpdateNameDialog(!showUpdateNameDialog)}
         >
-          <ChangeName setShowDialog={setShowUpdateNameDialog}/>
+          <ChangeName setShowDialog={setShowUpdateNameDialog} />
         </RightSidebar>
       )}
     </>
   );
 };
 
-export const ProjectPage = connect(null, null)(ProjectPageComponent);
+const mapStateToProps = (state: any) => ({
+  projects: state.projectReducer.allProjects
+});
+
+export const ProjectPage = connect(mapStateToProps, { getAllProjects })(ProjectPageComponent);
