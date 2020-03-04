@@ -5,13 +5,20 @@ import { Form, Field } from 'react-final-form';
 import { checkError, maxValue, composeValidators, required } from 'components/final-form/utils';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
+import { updateProjectName } from '../../../stores/project/Actions';
+
 interface ChangeNameComponentProps {
   setShowDialog: (val: boolean) => void;
+  pid: string;
+  updateProjectName: any;
 }
 
 const ChangeNameComponent = (props: ChangeNameComponentProps) => {
 
   const onSubmit = async (values: any) => {
+
+    console.log(values)
+    props.updateProjectName(values, props.pid)
     // if (isEmpty(values.about)) {
     //   values.about = '';
     // }
@@ -81,4 +88,4 @@ const ChangeNameComponent = (props: ChangeNameComponentProps) => {
   );
 };
 
-export const ChangeName = connect(null, null)(ChangeNameComponent);
+export const ChangeName = connect(null, { updateProjectName })(ChangeNameComponent);

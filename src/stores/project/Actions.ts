@@ -40,3 +40,53 @@ export const createProject: any = (payload: any) => async (dispatch: any, getSta
   }
 };
 
+export const archiveProject: any = (pid: string) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      
+      const response = await tigrowApi.put(`projects/${pid}/archive`, null, headers);
+      await dispatch({ type: PROJECT.PROJECT_ARCHIVE, payload: response.data });
+      // dispatch({ type: PROJECT.PROJECT_GET_ALL_PROJECTS });
+      dispatch(getAllProjects());
+      return response.data;
+    }
+  } catch (error) {
+    // console.log(error); 
+  }
+};
+
+export const getProjectArchive: any = () => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    const companyId = getState().companyReducer.currentCompany._id;
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.get(`projects/archive-list?companyId=${companyId}`, headers);
+      dispatch({ type: PROJECT.PROJECT_GET_ALL_ARCHIVE, payload: response.data });
+      return response.data;
+    }
+  } catch (error) {
+    //
+  }
+};
+
+export const updateProjectName: any = (payload: any, pid: string) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const reqBody = {
+        name: payload.name,
+        pid
+      };
+      const response = await tigrowApi.put(`projects/change-title`, reqBody, headers);
+      await dispatch({ type: PROJECT.PROJECT_ARCHIVE, payload: response.data });
+      // dispatch({ type: PROJECT.PROJECT_GET_ALL_PROJECTS });
+      dispatch(getAllProjects());
+      return response.data;
+    }
+  } catch (error) {
+    // console.log(error); 
+  }
+};
+
+// export const uodateProject: any = ()

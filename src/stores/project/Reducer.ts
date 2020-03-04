@@ -1,7 +1,8 @@
 import { PROJECT } from './Types';
 
 const initialState = {
-  allProjects: []
+  allProjects: [],
+  allArchive: []
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -11,6 +12,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         allProjects: action.payload
       };
+    case PROJECT.PROJECT_GET_ALL_ARCHIVE:
+      return {
+        ...state,
+        allArchive: action.payload
+      }
     default:
       return state;
   }
