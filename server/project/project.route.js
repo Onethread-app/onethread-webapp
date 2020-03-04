@@ -32,6 +32,13 @@ router
 router
   .route('/search')
   .get(authorization, projectCtrl.suggestConcernAdmin);
+router
+  .route('/archive-list')
+  .get(
+    authorization,
+    schemaValidator(projectValidation.showProjectList),
+    projectCtrl.archiveProjectList,
+  );
 router.param(
   'pid',
   authorization,
@@ -66,11 +73,5 @@ router
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
-router
-  .route('/:pid/archive-list')
-  .get(
-    authorization,
-    schemaValidator(projectValidation.archiveProject),
-    projectCtrl.archiveProjectList,
-  );
+
 module.exports = router;
