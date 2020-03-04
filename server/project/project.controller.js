@@ -47,7 +47,8 @@ const showAllProjectsForCompany = async (req, res, next) => {
     company: companyId,
     removed: false,
   })
-    .select('name color departments')
+    .populate('departments', 'name _id')
+    .select('-_id -type -__v -associates -files -version ')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)

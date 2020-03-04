@@ -16,7 +16,7 @@ const pid = Joi.object().keys({
   pid: idSchema.id,
 });
 const schema = {
-  name: Joi.string().max(50).regex(/^[a-z0-9]+$/),
+  name: Joi.string().max(50),
   type: Joi.string(),
   pid: idSchema.id,
   description: Joi.string().max(2500).regex(/^[a-z0-9]+$/),
