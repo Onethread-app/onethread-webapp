@@ -8,7 +8,7 @@ import { User } from 'stores/user/Reducer';
 import { isEmpty, isEqual } from 'lodash';
 import { withRouter, RouteComponentProps, match, Link } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard, getSelectedTaskDetails } from 'stores/board/Actions';
@@ -64,7 +64,7 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   getCompanyDetails: (companyName: string) => any;
   getSelectedBoard: (boardId: string) => any;
   getSelectedTaskDetails: (taskId: string) => any;
-  company: CompanyModel;
+  company: ICompany;
   rightSidebarOpen: boolean;
 }
 

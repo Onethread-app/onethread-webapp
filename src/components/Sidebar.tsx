@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { User } from 'stores/user/Reducer';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 
 import logo from '../resources/images/logo.png';
 import tigrowLogo from '../resources/images/tigrowLogo.png';
@@ -12,12 +12,13 @@ import board from '../resources/images/sideBarBoard.svg';
 import team from '../resources/images/sidebarTeam.svg';
 import settings from '../resources/images/sidebarSettings.svg';
 import projects from '../resources/images/ProjectsIcon.svg';
+import associates from '../resources/images/sideBarAssociates.svg';
 
 import { Tooltip } from '@blueprintjs/core';
 
 export const Sidebar = (props: {
 	user: User;
-	company: CompanyModel;
+	company: ICompany;
 	type: string;
 	leftOpen: boolean;
 }) => {
@@ -288,6 +289,41 @@ export const Sidebar = (props: {
 										style={{ color: 'inherit' }}
 									>
 										Project
+								</span>
+								}
+							</NavLink>
+							<NavLink
+								exact
+								className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+								style={{ color: 'white' }}
+								activeStyle={{ background: '#3F61C5' }}
+								to={`/company/${props.company.name}/associates`}
+							>
+								{props.leftOpen ?
+									<span className="pl4">
+										<img
+											src={associates}
+											className="w2 pt1"
+										/>
+									</span> :
+									<Tooltip
+										content={<p className="mb0">Associates</p>}
+										position="right"
+									>
+										<span className="pl3">
+											<img
+												src={associates}
+												className="w2 pt1"
+											/>
+										</span>
+									</Tooltip>
+								}
+								{props.leftOpen &&
+									<span
+										className="outline-0 bp3-large pl4"
+										style={{ color: 'inherit' }}
+									>
+										Associates
 								</span>
 								}
 							</NavLink>

@@ -3,13 +3,13 @@ import { Button, Dialog } from '@blueprintjs/core';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { connect } from 'react-redux';
 import { changeCompanyName, clearChangeCompanyNameError } from '../../../stores/company/Actions';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { isEqual, isEmpty } from 'lodash';
 import { History } from 'history';
 
 interface DetailsViewProps {
-  company: CompanyModel;
+  company: ICompany;
   changeCompanyName: (name: string) => void;
   clearChangeCompanyNameError: () => void;
   errorCompanyName: string;

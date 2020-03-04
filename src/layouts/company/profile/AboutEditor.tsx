@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { useState } from 'react';
 import { Divider, Button, TextArea } from '@blueprintjs/core';
 import { connect } from 'react-redux';
@@ -8,7 +8,7 @@ import { isEmpty } from 'lodash';
 
 interface CompanyAboutEditComponentProps {
   setShowDialog: (val: boolean) => void;
-  company: CompanyModel;
+  company: ICompany;
 }
 interface CompanyAboutEditInternalProps extends CompanyAboutEditComponentProps {
   editInfoAction: (val: string) => void;

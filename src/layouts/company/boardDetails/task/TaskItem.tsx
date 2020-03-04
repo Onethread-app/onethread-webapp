@@ -3,7 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { TaskBoard, ITask } from 'stores/board/Reducer';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { getSelectedTaskDetails } from 'stores/board/Actions';
 import moment from 'moment';
 
@@ -15,7 +15,7 @@ interface TaskItemProps {
 
 interface TaskItemInternalProps extends TaskItemProps {
   currentBoard?: TaskBoard;
-  company?: CompanyModel;
+  company?: ICompany;
   getSelectedTaskDetails: (task: string | undefined) => Promise<any>;
 }
 
