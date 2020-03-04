@@ -14,7 +14,7 @@ router
   .route('/:cname')
   .post(
     authorization, 
-    companyCtrl.authorizeAdmin('projectCD'),
+    companyCtrl.authorizeUser('projectCD'),
     SchemaValidator(joiSchema.create),
     projectCtrl.create,
   );

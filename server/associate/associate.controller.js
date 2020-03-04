@@ -36,7 +36,9 @@ const get = async (req, res , next) => {
 };
 
 const create = async (req, res, next) => {
+  
   try {
+
     const associate = new Associate({
         company: req.body.companyId,
         associateCompany : req.body.associateCompany,
@@ -49,12 +51,10 @@ const create = async (req, res, next) => {
       
       return res.status(201).json(associate);
   } catch (error) {
+    console.log(error);
     logger.error(`Board create: ${error}`);
-    const err = new BadRequestError(
-      'board data is invalid.',
-      httpStatus.BAD_REQUEST,
-    );
-    next(err);
+    
+    next(error);
   }
 };
 
