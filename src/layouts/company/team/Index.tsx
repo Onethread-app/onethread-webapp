@@ -20,7 +20,7 @@ import {
 	getCompanyPendingMembers,
 	deleteCompanyMember
 } from 'stores/company/Actions';
-import { CompanyModel, ICompanyMembers, ICompanyPendingMembers } from 'stores/company/Reducer';
+import { ICompany, ICompanyMembers, ICompanyPendingMembers } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
 import { permit } from 'stores/UtilsActions';
 import { AddDesignationForm } from 'layouts/company/team/AddDesignationForm';
@@ -29,7 +29,7 @@ import { isEqual, upperFirst, chunk } from 'lodash';
 import { User } from 'stores/user/Reducer';
 
 interface TeamMember {
-	company: CompanyModel;
+	company: ICompany;
 	user: User;
 	getCompanyMembers: () => void;
 	getCompanyPendingMembers: (limit?: number, skip?: number) => void;

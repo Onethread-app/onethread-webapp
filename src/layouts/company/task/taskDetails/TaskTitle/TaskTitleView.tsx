@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
 import { TaskTitleEditor } from './TaskTitleEditor';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { permit } from 'stores/UtilsActions';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
-  company?: CompanyModel;
+  company?: ICompany;
 }
 
 export const TaskTitleViewComponent = (props: TaskDetailsInternalProps) => {

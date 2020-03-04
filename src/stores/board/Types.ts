@@ -19,6 +19,4 @@ export const UPDATE_TASK = 'UPDATE_TASK';
 
 // Drag and drop task
 
-export const DRAG_AND_DROP_TASK_LOADING = 'DRAG_AND_DROP_TASK_LOADING';
 export const DRAG_AND_DROP_TASK = 'DRAG_AND_DROP_TASK';
-export const DRAG_AND_DROP_TASK_ERROR = 'DRAG_AND_DROP_TASK_ERROR';

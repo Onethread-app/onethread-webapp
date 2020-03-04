@@ -6,12 +6,12 @@ import {
   getAllDepartments,
   clearAddDepartmentError
 } from '../../../stores/company/Actions';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
 import { DepartmentEditor } from './FieldsEditor';
 
 interface DepartmentViewProps {
-  company: CompanyModel;
+  company: ICompany;
   loading: boolean;
   addDepartment: (name: string) => void;
   getAllDepartments: () => void;

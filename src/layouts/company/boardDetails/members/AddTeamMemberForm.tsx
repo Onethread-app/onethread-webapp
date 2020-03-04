@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEmpty, isEqual } from 'lodash';
 import { TaskBoard } from 'stores/board/Reducer';
-import { CompanyModel } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { addTeamMembersIntoBoard } from 'stores/board/Actions';
 import { tigrowApi } from 'config';
 
@@ -15,7 +15,7 @@ interface AddTeamMemberFormProps {
 }
 
 interface AddTeamMemberFormInternalProps extends AddTeamMemberFormProps {
-  company?: CompanyModel;
+  company?: ICompany;
   addTeamMembersIntoBoard: (memberId: Array<string | undefined>, name: string | undefined) => void;
 }
 
