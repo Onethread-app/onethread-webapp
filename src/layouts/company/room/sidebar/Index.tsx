@@ -31,7 +31,8 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 				<div className="flex justify-between items-center ph3">
 					<h3 className="tigrow-darkGray">Rooms</h3>
 					{props.companyRole && permit(props.companyRole) ? (
-						<span className="bp3-icon">
+						<span className="bp3-icon grow pointer"
+							onClick={() => setShowDialog(!showDialog)}>
 							<img
 								src={createIcon}
 								width="30px"

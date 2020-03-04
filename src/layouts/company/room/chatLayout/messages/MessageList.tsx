@@ -97,7 +97,7 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 			ref={messagesEndRef}
 		// style={{ height: "calc(100vh - 186px)" }}
 		>
-			{props.allMessages === false ?
+			{props.allMessages === false && props.messages.length > 0 ?
 				<div
 					className="flex justify-center items-center"
 					onClick={loadMoreMessages}

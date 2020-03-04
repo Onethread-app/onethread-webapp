@@ -46,7 +46,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 							<p className="f4 fw7 mv2">{props.roomName}</p>
 							<div
 								onClick={() => setShowMemberListDialog(!showMemberListDialog)}
-								className="ma0 pointer dim flex justify-between">
+								className="ma0 pointer dim flex items-center">
 								<img
 									className=""
 									src={memberListIcon}
@@ -56,7 +56,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 									}}
 									color="#0FA3A3"
 								/>
-								<span className="f5">{props.users.length}</span>
+								<span className="f5 ml2 fw7">{props.users.length}</span>
 							</div>
 						</div>
 						{permit(props.companyRole) ?
