@@ -8,12 +8,10 @@ const projectSchema = new Schema(
       type: String,
       trim: true,
       maxlength: 50,
-      required: true,
     },
     type: {
       type: String,
       enum: ['sd', 'md', 'associates'],
-      required: true,
     },
     description: {
       type: String,
@@ -31,7 +29,6 @@ const projectSchema = new Schema(
     concernedAdmin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
-      required: true,
     },
 
     departments: [
@@ -61,7 +58,6 @@ const projectSchema = new Schema(
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
-      required: true,
     },
     version: {
       type: Number,

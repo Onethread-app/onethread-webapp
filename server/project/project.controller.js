@@ -60,28 +60,23 @@ const showAllProjectsForCompany = async (req, res, next) => {
     .catch(e => next(e));
 };
 
-const updateProjectPreface = async (req, res, next) => {
-  await Project.findByIdAndUpdate(
-    { _id: req.params.pid },
-    {
-      $set: {
-        outline: req.body.outline,
-        description: req.body.description,
-      },
-    },
-    { safe: true, upsert: true, new: true },
-  )
-    .exec()
-    .then(result => {
-      logger.info(`preface addeed for ${req.body.pid}`);
-      return sendJSONresponse(res, 200, {
-        success: true,
-        message: 'Preface updated',
+const updateProjectPreface = async (req, res, next) => {  
+    const project = await Project.findOne({_id: req.params.pid});
+    project.description = req.body.description;
+    project.outline = req.body.outline;
+    await project
+    .save()
+    .then(project => {
+      logger.info(`new project created`);
+      return sendJSONresponse(res, 201, {
+        sucees: true,
+        message: 'New project created',
+        project,
       });
     })
-    .catch(err => {
-      logger.error(`${err}`);
-      next(err);
+    .catch(error => {
+      logger.error(`${error}`);
+      next(error);
     });
 };
 
