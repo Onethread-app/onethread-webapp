@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { ICompany } from 'stores/company/Reducer';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
-import { tokenConfig } from 'stores/UtilsActions';
+import { tokenConfig, isEmail } from 'stores/UtilsActions';
 import { Button, Tag, Toaster, Position } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 import { useLiveSearch } from 'components/useLiveSearch';
@@ -46,14 +46,6 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
     setTeamMembers(result);
   }, [result]);
 
-  const isEmail = (_email: string) => {
-    const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    if (email.match(regexForEmailValidation)) {
-      return true;
-    }
-    return false;
-  };
-
   const checkPendingMemberStatus = async (_email: string) => {
     try {
       const headers = tokenConfig();
@@ -75,26 +67,16 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
     }
   };
 
-  const isExistInCompany = (_email: string) => {
-    if (props.company.members.length > 0) {
-      for (const member of props.company.members) {
-        if (isEqual(member.account.email, _email)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
-
   const addNewUser = async (newUser: ItemEntityProps) => {
 
-    if (isExistInCompany(email)) {
+    if (props.company.members.some(member => member.account.email === email)) {
       Toaster
         .create({
           position: Position.TOP
         })
         .show({
-          message: `Already exist in this company.`
+          message: `Already exist in this company.`,
+          intent: 'danger'
         });
     } else {
       const res = await checkPendingMemberStatus(email);
@@ -106,7 +88,8 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
             position: Position.TOP
           })
           .show({
-            message: res.message
+            message: res.message,
+            intent: 'danger'
           });
       }
     }

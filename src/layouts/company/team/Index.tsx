@@ -20,7 +20,7 @@ import {
 	getCompanyPendingMembers,
 	deleteCompanyMember
 } from 'stores/company/Actions';
-import { ICompany, ICompanyMembers, ICompanyPendingMembers } from 'stores/company/Reducer';
+import { ICompanyMembers, ICompanyPendingMembers, ICompany } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
 import { permit } from 'stores/UtilsActions';
 import { AddDesignationForm } from 'layouts/company/team/AddDesignationForm';
@@ -295,6 +295,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 							membersList.length ? (
 								// tslint:disable-next-line: no-shadowed-variable
 								membersList.map(member => (
+									// TODO Separate this <tr> into a component
 									<tr className="hide-child" key={member._id}>
 										<td>
 											<span className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</span>
