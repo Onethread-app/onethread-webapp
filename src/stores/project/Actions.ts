@@ -1,6 +1,7 @@
 import { PROJECT } from './Types';
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
+// import { isEqual } from 'lodash';
 
 export const getAllProjects: any = () => async (dispatch: any, getState: any) => {
   try {
@@ -88,5 +89,26 @@ export const updateProjectName: any = (payload: any, pid: string) => async (disp
     // console.log(error); 
   }
 };
+
+// Utility Search Action
+// export const getSuggestionsForAdmins: any = async () => {
+//   try {
+//     const headers = tokenConfig();
+//     if ((headers as any).headers.Authorization) {
+//       const response = await tigrowApi.get(`projects/concern-admin-search`, headers);
+//       console.log(response);
+//       // setSuggestedMembers(response.data.members);
+//       return response;
+//     } 
+//   } catch (error) {
+//     if (isEqual(error.message, 'Network Error')) {
+//       // tslint:disable-next-line: no-console
+//       console.log('network error');
+//     } else {
+//       // tslint:disable-next-line: no-console
+//       console.log(error.response);
+//     }
+//   }
+// };
 
 // export const uodateProject: any = ()

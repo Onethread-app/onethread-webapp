@@ -31,6 +31,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(`/rooms/suggest-member/${props.roomId}/${props.companyId}`, headers);
+        console.log(response.data.members);
         setSuggestedMembers(response.data.members);
       } else {
         // tslint:disable-next-line: no-console
