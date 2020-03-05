@@ -2,7 +2,15 @@ import { PROJECT } from './Types';
 
 const initialState = {
   allProjects: [],
-  allArchive: []
+  allArchive: [],
+  projectDetails: {
+    color: 0,
+    files: [],
+    _id: '',
+    name: '',
+    description: '',
+    outline: ''
+  }
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -16,6 +24,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         allArchive: action.payload
+      };
+    case PROJECT.PROJECT_SINGLE_VIEW:
+      return {
+         ...state,
+         projectDetails: action.payload 
       }
     default:
       return state;

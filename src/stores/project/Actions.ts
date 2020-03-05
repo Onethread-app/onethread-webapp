@@ -90,6 +90,36 @@ export const updateProjectName: any = (payload: any, pid: string) => async (disp
   }
 };
 
+export const getSingleProject: any = (pid: string) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.get(`projects/${pid}`, headers);
+      dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
+      return response.data;
+    }
+  } catch (error) {
+    //
+  }
+};
+
+export const projectPrefaceDescriptionUpdate: any = 
+(pid: string, description: string) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const reqBody = {
+        description 
+      };
+      const response = await tigrowApi.put(`projects/${pid}/update`, reqBody, headers);
+      dispatch({ type: PROJECT.PROJECT_PREFACE_DES_UP });
+      return response.data;
+    }
+  } catch (error) {
+    //
+  }
+};
+
 // Utility Search Action
 // export const getSuggestionsForAdmins: any = async () => {
 //   try {

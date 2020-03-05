@@ -5,19 +5,23 @@ import { Button, Dialog } from '@blueprintjs/core';
 import user from '../../../resources/images/profilePhoto.svg';
 import { useState } from 'react';
 import { FileUpload } from './fileUpload';
+import { connect } from 'react-redux';
+import { ProjectOutlineView } from './ProjectOutlineView'
+// import { connect } from 'http2';
 
-export const ProjectPrefaceView = () => {
+export const ProjectPrefaceViewComponent = (props: any) => {
 
   const [showFileDialog, setShowFileDialog] = useState(false);
 
   return (
     <>
       <h1 className="f3 ph5-ns">Preface</h1>
+      {console.log(props)}
       <div className="flex w-100 ph4-ns">
         <div className="h-auto w-70 pa4">
           <div className="w-90">
-            <ProjectDescriptionView headline={'Project Description'} />
-            <ProjectDescriptionView headline={'Project Outline'} />
+            <ProjectDescriptionView projectDescription={props.projectDesription} headline={'Project Description'} />
+            <ProjectOutlineView projectOutline={props.projectOutline} headline={'Project Outline'} />
           </div>
         </div>
         <div className="w-30 pa4">
@@ -125,3 +129,10 @@ export const ProjectPrefaceView = () => {
     </>
   );
 };
+
+const mapStateToProps = (state: any) => ({
+  projectDescription: state.projectReducer.projectDetails.description,
+  projectOutline: state.projectReducer.projectDetails.outline
+});
+
+export const ProjectPrefaceView = connect(mapStateToProps, null)(ProjectPrefaceViewComponent);

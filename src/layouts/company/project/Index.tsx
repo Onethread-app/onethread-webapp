@@ -5,12 +5,13 @@ import addIcon from '../../../resources/images/addIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormProject } from './CreateProjectForm';
 import { ChangeName } from './ChangeProjectName';
-import { getAllProjects, archiveProject, getProjectArchive } from '../../../stores/project/Actions';
 import { getAllDepartments } from '../../../stores/company/Actions';
 import { find } from 'lodash';
 import { boardColor } from 'stores/UtilsActions';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { getAllProjects, archiveProject, getProjectArchive, getSingleProject } from '../../../stores/project/Actions';
 
-const ProjectPageComponent = (props: any) => {
+const ProjectPageComponent = (props: any & RouteComponentProps) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(false);
 
@@ -24,6 +25,13 @@ const ProjectPageComponent = (props: any) => {
     await props.archiveProject(pid);
     props.getAllProjects();
     props.getProjectArchive();
+  };
+
+  const singleProjectOnClick = async (pid: string) => {
+    // const currentBoard: any = await props.getSelectedBoard(board._id);
+    // if (currentBoard._id) {
+    await props.getSingleProject(pid);
+    props.history.push(`/company/${props.company.name}/project/${pid}`);
   };
 
   useEffect(() => {
@@ -51,13 +59,9 @@ const ProjectPageComponent = (props: any) => {
                   key={project._id}
                   className="h-100"
                   interactive={true}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    // const currentBoard: any = await props.getSelectedBoard(board._id);
-                    // if (currentBoard._id) {
-                    // 	props.history.push(`/company/${props.company.name}/board/${currentBoard._id}`);
-                    // }
-                  }}
+                  onClick={(e) => { 
+                    singleProjectOnClick(project._id); 
+                    e.preventDefault(); }}
                   style={{ paddingLeft: '0px', paddingBottom: '0px' }}
                 >
                   {console.log(project)}
@@ -283,9 +287,10 @@ const ProjectPageComponent = (props: any) => {
 
 const mapStateToProps = (state: any) => ({
   projects: state.projectReducer.allProjects,
-  archiveProjectList: state.projectReducer.allArchive
+  archiveProjectList: state.projectReducer.allArchive,
+  company: state.companyReducer.currentCompany
 });
 
 export const ProjectPage = connect(mapStateToProps,
-  { getAllProjects, getAllDepartments, archiveProject, getProjectArchive })
-  (ProjectPageComponent);
+  { getAllProjects, getAllDepartments, archiveProject, getProjectArchive, getSingleProject })
+  (withRouter(ProjectPageComponent));

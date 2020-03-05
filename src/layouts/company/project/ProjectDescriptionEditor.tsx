@@ -8,11 +8,14 @@ import { connect } from 'react-redux';
 interface IProjectDescriptionFormProps {
   setEditDescriptionDialog: (val: boolean) => void;
   editDescriptionDialog: boolean;
+  projectPrefaceDescriptionUpdate?: any;
 }
 
 export const ProjectDescriptionEditorComponent = (props: IProjectDescriptionFormProps) => {
 
   const onSubmit = async (values: any) => {
+    props.projectPrefaceDescriptionUpdate();
+    // console.log(values)
     // const response = await props.updateTask(values);
     // if (response.message === 200) {
     //   props.setEditDescriptionDialog(false);
