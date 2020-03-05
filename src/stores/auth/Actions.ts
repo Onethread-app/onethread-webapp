@@ -115,15 +115,15 @@ export const fetchUserAction = () => async (dispatch: any) => {
 		if ((headers as any).headers.Authorization) {
 			let response;
 			let timeline;
-			 response = await tigrowApi.get(`accounts`, headers);
-				try {
-					timeline = await tigrowApi.get(`accounts/timeline`, headers);
-					timeline = timeline.data.user.timeline;
-				} catch (error) {
-					// tslint:disable-next-line: no-console
-					console.log(error);
-				}
-			response = {...response.data.user, timeline };
+			response = await tigrowApi.get(`accounts`, headers);
+			try {
+				timeline = await tigrowApi.get(`accounts/timeline`, headers);
+				timeline = timeline.data.user.timeline;
+			} catch (error) {
+				// tslint:disable-next-line: no-console
+				console.log(error);
+			}
+			response = { ...response.data.user, timeline };
 			accessToken = localStorage.getItem('tigrow_acc_id');
 			accessTokenExpiredTime = (parseJwt(accessToken) * 1000) - 1000;
 			const accessTokenRemainingTime = accessTokenExpiredTime - Date.now();

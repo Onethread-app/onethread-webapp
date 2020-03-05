@@ -5,6 +5,7 @@ import { includes, lowerCase, isEqual, findIndex } from 'lodash';
 import { useState } from 'react';
 export interface ItemEntityProps {
   _id?: string;
+  email?: string;
   name: string | null;
 }
 
@@ -29,7 +30,9 @@ export const SuggestField = (props: SuggestFieldProps) => {
       initialContent={null}
       onQueryChange={props.onChange}
       items={props.items}
-      itemListPredicate={(item) => props.items.filter(s => includes(lowerCase(s.name!), lowerCase(item)))}
+      itemListPredicate={(item) => props.items.filter(s => s.email ? includes(lowerCase(s.email!), lowerCase(item))
+        : includes(lowerCase(s.name!), lowerCase(item))
+      )}
       itemRenderer={(item) =>
         <MenuItem
           key={item._id}
@@ -53,7 +56,13 @@ export const SuggestField = (props: SuggestFieldProps) => {
               setCurrentQuery(item);
             }
           }}
-          text={item.name}
+          text={
+            item.email ?
+              <div className="flex justify-start items-center">
+                <h5 className="ma0 mr1">{item.email}</h5>
+                <small>({item.name})</small>
+              </div> : item.name
+          }
           intent={props.multipleItemSelect === true ?
             (props.selectedItems as any).filter((si: any) =>
               isEqual(item.name, si.name)).length > 0 ? Intent.PRIMARY : Intent.NONE
