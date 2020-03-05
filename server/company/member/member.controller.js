@@ -48,41 +48,45 @@ const addMember = async (req, res, next) => {
       });
     }
 
-    let newMembers = req.body.members;
-
-    let accounts = req.body.members.map(member => member.account);
-
-    // find previous members
-    let prevMembers = await Member.find({
-      account: { $in: accounts },
-      company: req.company._id,
-      removed: true,
-    }).select('account');
-
-    prevMembers = prevMembers.map(member => member.account);
-
-    // filter new members
-    newMembers = newMembers.filter(newMember => {
-      return !prevMembers.some(prevMemberAccount => {
-        return (
-          prevMemberAccount.toString() ===
-          newMember.account.toString()
-        );
-      });
-    });
-
-    // re-add previous members in company
-    await Member.updateMany(
-      { account: { $in: prevMembers }, company: req.company._id },
-      {
-        removed: false,
-      },
-    );
-
-    // add new members in company
-    const members = await Member.create(newMembers);
+    let members = [];
 
     let pendingMembers = [];
+
+    if (req.body.members.length) {
+      let newMembers = req.body.members;
+
+      let accounts = newMembers.map(member => member.account);
+
+      // find previous members
+      let prevMembers = await Member.find({
+        account: { $in: accounts },
+        company: req.company._id,
+        removed: true,
+      }).select('account');
+
+      prevMembers = prevMembers.map(member => member.account);
+
+      // filter new members
+      newMembers = newMembers.filter(newMember => {
+        return !prevMembers.some(prevMemberAccount => {
+          return (
+            prevMemberAccount.toString() ===
+            newMember.account.toString()
+          );
+        });
+      });
+
+      // re-add previous members in company
+      await Member.updateMany(
+        { account: { $in: prevMembers }, company: req.company._id },
+        {
+          removed: false,
+        },
+      );
+
+      // add new members in company
+      members = await Member.create(newMembers);
+    }
 
     // invite new members in company
     if (req.body.pendingTeamMembers.length) {
