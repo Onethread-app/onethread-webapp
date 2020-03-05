@@ -87,6 +87,7 @@ const updateProjectPreface = async (req, res, next) => {
 
 const getProjectDetails = async (req, res, next) => {
   try {
+    console.log(req.project)
     return sendJSONresponse(res, 200, req.project);
   } catch (error) {
     next(error);
