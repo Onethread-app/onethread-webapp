@@ -45,7 +45,7 @@ export const archiveProject: any = (pid: string) => async (dispatch: any, getSta
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      
+      console.log(pid)
       const response = await tigrowApi.put(`projects/${pid}/archive`, null, headers);
       await dispatch({ type: PROJECT.PROJECT_ARCHIVE, payload: response.data });
       // dispatch({ type: PROJECT.PROJECT_GET_ALL_PROJECTS });
@@ -83,7 +83,7 @@ export const updateProjectName: any = (payload: any, pid: string) => async (disp
       await dispatch({ type: PROJECT.PROJECT_ARCHIVE, payload: response.data });
       // dispatch({ type: PROJECT.PROJECT_GET_ALL_PROJECTS });
       dispatch(getAllProjects());
-      return response.data;
+      return response.status || response.data;
     }
   } catch (error) {
     // console.log(error); 

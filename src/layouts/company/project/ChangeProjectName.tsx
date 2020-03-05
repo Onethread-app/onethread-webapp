@@ -17,17 +17,15 @@ const ChangeNameComponent = (props: ChangeNameComponentProps) => {
 
   const onSubmit = async (values: any) => {
 
-    console.log(values)
-    props.updateProjectName(values, props.pid)
-    // if (isEmpty(values.about)) {
-    //   values.about = '';
-    // }
-    // const response = await props.editInfoAction(values);
-    // if (response.message === 200) {
-    //   props.setShowDialog(false);
-    //   return true;
-    // }
-    // return { [response.fieldName]: response.message };
+     props.updateProjectName(values, props.pid);
+
+    const response = await  props.updateProjectName(values, props.pid);
+    console.log(response)
+    if (response === 200) {
+      props.setShowDialog(false);
+      return true;
+    }
+    return {};
   };
 
   return (

@@ -23,6 +23,7 @@ const ProjectPageComponent = (props: any) => {
   const projectArchive = async (pid: string) => {
     await props.archiveProject(pid);
     props.getAllProjects();
+    props.getProjectArchive();
   };
 
   useEffect(() => {
@@ -97,7 +98,7 @@ const ProjectPageComponent = (props: any) => {
                               text="Archive Project"
                               onClick={(e: any) => projectArchive(project._id)}
                             />
-                            {/* {console.log(project._id)} */}
+                            {console.log(project._id)}
                           </Menu>
                         }
                         target={
