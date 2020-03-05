@@ -143,7 +143,8 @@ export const RoomListComponent = withChatkit(
 
 				dispatch({ type: GET_ROOMS, payload: rooms });
 
-				// load(props.getRooms);
+				// TODO store only the user presences into a separate Object like userStatus
+				load(props.getRooms);
 
 			}
 		}, [props.chatkit]);
