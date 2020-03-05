@@ -87,31 +87,36 @@ const updateProjectPreface = async (req, res, next) => {
 
 const getProjectDetails = async (req, res, next) => {
   try {
-    console.log(req.project)
-    return sendJSONresponse(res, 200, req.project);
-  } catch (error) {
-    next(error);
-  }
-};
-const getProjectLoad = async (req, res, next) => {
-  try {
-    const project = await Project.findOne({
+    const project=await Project.findOne({
       _id: req.params.pid,
-    });
-    console.log(project)
-    if (project) {
-      req.project = project;
-      return next();
-    } else {
-      logger.error(`project id not found`);
-      return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
-        message: 'Project id not found for company',
-      });
-    }
+    }).select('outline description color name').populate('files', 'link');
+    // console.log(req.project)
+    return sendJSONresponse(res, 200, project);
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };
+// const getProjectLoad = async (req, res, next) => {
+//   console.log('ami',req)
+//   try {
+//     Project.findOne({
+//       _id: ObjectID("5e60cc3caa10921ba1d07c8a"),
+//     });
+//     // console.log(project)
+//     if (project) {
+//       req.project = project;
+//       return next();
+//     } else {
+//       logger.error(`project id not found`);
+//       return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+//         message: 'Project id not found for company',
+//       });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const changeTitleProject = async (req, res, next) => {
   await Project.findByIdAndUpdate(
@@ -200,7 +205,7 @@ module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
   updateProjectPreface,
-  getProjectLoad,
+  // getProjectLoad,
   getProjectDetails,
   changeTitleProject,
   archiveProject,

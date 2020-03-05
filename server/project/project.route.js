@@ -42,14 +42,13 @@ router
 router.param(
   'pid',
   authorization,
-  schemaValidator(projectValidation.getProject),
+  // schemaValidator(projectValidation.getProject),
   projectCtrl.getProjectLoad,
 );
 router
   .route('/:pid')
   .get(
     authorization,
-    schemaValidator(projectValidation.getProject),
     projectCtrl.getProjectDetails,
   );
 router
