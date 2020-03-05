@@ -54,7 +54,7 @@ export const createRoomAction = (roomData: any) => async (
 	}
 };
 
-export const getRoomsAction = () => async (dispatch: any, getState: any) => {
+export const getRooms = () => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
@@ -63,6 +63,7 @@ export const getRoomsAction = () => async (dispatch: any, getState: any) => {
 				`rooms/${getState().companyReducer.currentCompany._id}`,
 				headers
 			);
+			console.log('rooms', response.data.rooms);
 			dispatch({ type: GET_ROOMS_FROM_SERVER, payload: response.data.rooms });
 		} else {
 			// tslint:disable-next-line: no-console

@@ -34,9 +34,10 @@ export interface IRoom {
 	name: string;
 	unreadCount: number;
 	company: string;
-	createdByUserId: string;
+	account: string;
 	createdAt: string;
 	updatedAt: string;
+	archive: boolean;
 }
 
 export interface IRoomMember {
@@ -298,9 +299,10 @@ export const RoomReducer = (state = InitialState, action: any) => {
 								name: action.payload.name,
 								unreadCount: action.payload.unreadCount,
 								company: action.payload.customData.company,
-								createdByUserId: action.payload.createdByUserId,
+								account: action.payload.createdByUserId,
 								createdAt: action.payload.createdAt,
-								updatedAt: action.payload.updatedAt
+								updatedAt: action.payload.updatedAt,
+								archive: room.archive
 							};
 						} else {
 							return room;
@@ -324,7 +326,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 					name: action.payload.name,
 					unreadCount: 0,
 					company: action.payload.company,
-					createdByUserId: action.payload.account,
+					account: action.payload.account,
 					createdAt: action.payload.createdAt,
 					updatedAt: action.payload.updatedAt
 				}],

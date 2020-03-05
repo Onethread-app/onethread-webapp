@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { SendMessageForm } from './messages/SendMessageForm';
 import { MessageList } from './messages/MessageList';
 import { connect } from 'react-redux';
-import { Button, Icon, Dialog } from '@blueprintjs/core';
+import { Button, Icon, Dialog, Position, Popover } from '@blueprintjs/core';
 import { AddMemberForm } from './members/AddMemberForm';
 import { getRoomMembers } from 'stores/room/Actions';
 import { isEmpty } from 'lodash';
@@ -12,6 +12,8 @@ import { RightSidebar } from 'components/RightSidebar';
 import { IRoomReducer } from 'stores/room/Reducer';
 
 import memberListIcon from './../../../../resources/images/member-list.svg';
+import addMemberIcon from './../../../../resources/images/addMemberIcon.png';
+import settingsIcon from './../../../../resources/images/settings.svg';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
@@ -59,18 +61,58 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 								<span className="f5 ml2 fw7">{props.users.length}</span>
 							</div>
 						</div>
-						{permit(props.companyRole) ?
-							<Button
-								onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}
-								className="bp3-minimal outline-0 grow"
-								style={{ background: '#F55B7F' }}
-							>
-								<Icon
-									icon="new-person"
-									style={{ background: '#F55B7F', color: 'white' }}
+						<div>
+							<Popover
+								className="mr2"
+								minimal={true}
+								position={Position.BOTTOM}
+								popoverClassName="bg-white pa3"
+								content={
+									<div>
+										<h5 className="gray ma0 mb2 pointer"
+											onClick={() => { console.log('mute'); }}
+										>Mute Conversation</h5>
+										<h5 className="red ma0 pointer"
+											onClick={() => { console.log('Archive'); }}
+										>Archive Room</h5>
+									</div>
+								}
+								target={
+									<div>
+										<img
+											className="grow"
+											src={settingsIcon}
+											width="30px"
+											height="30px"
+										/>
+									</div>
+								}
+							/>
+							{permit(props.companyRole) ?
+								<Popover
+									className=""
+									minimal={true}
+									position={Position.BOTTOM}
+									popoverClassName="bp3-popover-content-sizing bg-white"
+									content={
+										<AddMemberForm
+											showDialog={showMemberFormDialog}
+											setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
+										/>
+									}
+									target={
+										<div>
+											<img
+												className="grow"
+												src={addMemberIcon}
+												width="30px"
+												height="30px"
+											/>
+										</div>
+									}
 								/>
-							</Button>
-							: null}
+								: null}
+						</div>
 					</div>
 					{/* chat heading ends */}
 					<MessageList />
@@ -92,7 +134,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 				</Dialog>
 			)}
 
-			{showMemberFormDialog &&
+			{/* {showMemberFormDialog &&
 				<RightSidebar
 					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
 				>
@@ -101,7 +143,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
 					/>
 				</RightSidebar>
-			}
+			} */}
 
 		</>
 	);

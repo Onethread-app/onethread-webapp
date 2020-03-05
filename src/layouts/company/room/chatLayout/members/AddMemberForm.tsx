@@ -54,16 +54,16 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
   }, []);
 
   return (
-    <div className="pa3">
-      <div className=" w-100">
-        <h1 className="f5 tigrow-lightBlue">Add members</h1>
+    <div className="">
+      <div className="w-100">
+        <h1 className="f5 tigrow-darkBlue">Add Members</h1>
         <SuggestField
           items={suggestedMembers}
           selectedItems={selectedRoomMember}
           setSelectedItems={setSelectedRoomMember}
           multipleItemSelect={true}
         />
-        <small className={`${error || selectedRoomMember.length > 10 ? 'red' : 'white'}`}>
+        <small className={`${error || selectedRoomMember.length > 10 ? 'red' : 'black'}`}>
           {error ?
             error : selectedRoomMember.length > 10 ?
               'Could not add more than 10 members at a time' : 'Max user at a time : 10'}
@@ -93,15 +93,15 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
       </div>
 
       <div className="flex justify-end mt3">
-        <Button
+        {/* <Button
           className="grow h2 pointer white bp3-minimal w4 mr3"
           style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
           Cancel
-        </Button>
-        <Button className="grow h2 pointer white bp3-minimal w4"
-          style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
+        </Button> */}
+        <Button className="grow h2 pointer white bp3-minimal w4 outline-0"
+          style={{ backgroundColor: '#3b5998', color: 'white' }}
           disabled={selectedRoomMember.length > 10}
           onClick={
             async () => {

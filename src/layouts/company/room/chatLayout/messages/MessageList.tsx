@@ -38,17 +38,19 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 		}
 
 		// On new message, scroll to bottom
-		if (
-			messagesEndRef &&
-			messagesEndRef.current &&
-			messagesEndRef.current.scrollTop +
-			messagesEndRef.current.clientHeight +
-			60 >=
-			messagesEndRef.current.scrollHeight
-		) {
-			// On new message, scroll to bottom
-			messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-		} else if (messagesEndRef && messagesEndRef.current && !first) {
+		// if (
+		// 	messagesEndRef &&
+		// 	messagesEndRef.current &&
+		// 	messagesEndRef.current.scrollTop +
+		// 	messagesEndRef.current.clientHeight +
+		// 	60 >=
+		// 	messagesEndRef.current.scrollHeight
+		// ) {
+		// 	// On new message, scroll to bottom
+		// 	messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+		// }
+
+		if (messagesEndRef && messagesEndRef.current && !first) {
 			// On enter the room, scroll to bottom
 			messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
 			setFirst(true);

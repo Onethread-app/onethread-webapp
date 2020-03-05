@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, connect } from 'react-redux';
-import { getRoomMembers, getRoomMessages } from '../../../../stores/room/Actions';
+import { getRoomMembers, getRoomMessages, getRooms } from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
@@ -26,6 +26,7 @@ interface IRoomListComponentProps extends RouteComponentProps {
 	chatkit?: any;
 	getRoomMembers: (roomId: string) => void;
 	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
+	getRooms: () => void;
 	activeRoom: any;
 	roomId: string;
 	rooms: IRoom[];
@@ -118,6 +119,10 @@ export const RoomListComponent = withChatkit(
 			}
 		};
 
+		const load = async (_getRooms: any) => {
+			await _getRooms();
+		};
+
 		useEffect(() => {
 			if (!props.chatkit.isLoading && props.companyId) {
 				connectChatManager();
@@ -131,12 +136,14 @@ export const RoomListComponent = withChatkit(
 						name: room.name,
 						unreadCount: room.unreadCount,
 						company: room.customData.company,
-						createdByUserId: room.createdByUserId,
+						account: room.createdByUserId,
 						createdAt: room.createdAt,
 						updatedAt: room.updatedAt
 					}));
 
 				dispatch({ type: GET_ROOMS, payload: rooms });
+
+				// load(props.getRooms);
 
 			}
 		}, [props.chatkit]);
@@ -199,6 +206,6 @@ const mapStateToProps = (state: any) => {
 	};
 };
 
-export const RoomList = connect(mapStateToProps, { getRoomMembers, getRoomMessages })(
+export const RoomList = connect(mapStateToProps, { getRoomMembers, getRoomMessages, getRooms })(
 	withRouter(RoomListComponent)
 );
