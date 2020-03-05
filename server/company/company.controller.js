@@ -326,18 +326,28 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeUser= (functionalRole, ...userRoles )=> {
-  return function(req, res, next) {
+const authorizeUser=  (functionalRole, ...userRoles )=> {
+  return async function  (req, res, next) {
     try {
-      const member = Member.findOne({
-        account: req.user._id,
-        company: req.company._id, //need to auery param company first
-      });
 
+      const company =  await Company.findOne({
+        _id: req.query.companyId,
+      }).select('_id optionalRole').exec();
+
+      const member = await Member.findOne({
+        account: req.user._id,
+        company: req.query.companyId, //need to query param company first
+      }).exec();
+
+      // if (
+      //   !member ||
+      //   !userRoles.includes(member.role) ||
+      //   !company.optionalRole.includes(functionalRole)
+      // )
+      
       if (
         !member ||
-        !userRoles.includes(member.role) ||
-        ![functionalRole].includes(req.company.optionalRole)
+        !userRoles.includes(member.role)  
       ) {
         return res.status(403).json({
           message: `Restricted`,
@@ -346,7 +356,7 @@ const authorizeUser= (functionalRole, ...userRoles )=> {
 
       next();
     } catch (error) {
-      
+      console.log(error);
       next(error);
     }
   };

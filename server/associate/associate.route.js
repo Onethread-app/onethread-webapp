@@ -1,5 +1,6 @@
 const express = require('express');
 const associateCtrl = require('./associate.controller');
+const companyCtrl = require('../company/company.controller');
 const passport = require('passport');
 const joiSchema = require('./associate.validation');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
@@ -17,6 +18,7 @@ router
   .route('/')
   .get(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'employee'),
     associateCtrl.list,
   )
   .post(
