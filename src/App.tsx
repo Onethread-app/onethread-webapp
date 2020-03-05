@@ -22,6 +22,7 @@ import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
 import { ProjectPage } from 'layouts/company/project/Index';
 import { AssociatesPage } from 'layouts/company/associates/Index';
 import { AssociatesDetailsView } from 'layouts/company/associateDetails/Index';
+import { ProjectPrefaceView } from 'layouts/company/project/ProjectPrefaceView';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -174,6 +175,11 @@ export const App = () => (
 				path="/company/:cname/project"
 				exact={true}
 				component={ProjectPage}
+			/>
+			<PrivateRoute
+				path="/company/:cname/project/:projectId"
+				exact={true}
+				component={ProjectPrefaceView}
 			/>
 			<PrivateRoute
 				path="/company/:cname/associates"
