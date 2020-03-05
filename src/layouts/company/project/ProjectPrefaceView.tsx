@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { CompanyModel } from 'stores/company/Reducer';
 import { ProjectDescriptionView } from './ProjectDescriptionView';
 import DownloadIcon from './../../../resources/images/Download.svg';
 import { Button, Dialog } from '@blueprintjs/core';
@@ -7,9 +6,7 @@ import user from '../../../resources/images/profilePhoto.svg';
 import { useState } from 'react';
 import { FileUpload } from './fileUpload';
 
-export const ProjectPrefaceView = (props: {
-  company: CompanyModel
-}) => {
+export const ProjectPrefaceView = () => {
 
   const [showFileDialog, setShowFileDialog] = useState(false);
 

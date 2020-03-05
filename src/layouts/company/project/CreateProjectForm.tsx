@@ -39,7 +39,7 @@ const FormComponent = (props: {
   const [selectedDepartment, setSelectedDepartment] = useState([] as Entity[]);
   const [associates, setAssociates]: any = useState([]);
   const [selectedAssociates, setSelectedAssociates] = useState([] as Entity[]);
-  // const [admins, setAdmins]: any = useState([]);
+  const [admins, setAdmins]: any = useState([]);
   const [selectedAdmins, setSelectedAdmins] = useState([] as Entity[]);
   const [search, setSearch] = useState('');
 
@@ -57,7 +57,7 @@ const FormComponent = (props: {
   useEffect(() => {
     setDepartments(result);
     setAssociates(result);
-    // setAdmins(result);
+    setAdmins(result);
   }, [result]);
 
   const associateNo = [
@@ -69,7 +69,6 @@ const FormComponent = (props: {
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
-        {console.log(props)}
         <h3>Create Project</h3>
       </div>
       <Form
@@ -130,7 +129,7 @@ const FormComponent = (props: {
                           onChange={(query: string) => {
                             setSearch(query);
                           }}
-                          items={props.company.members}
+                          items={admins}
                           selectedItems={selectedAdmins}
                           setSelectedItems={(item) => {
                             setSelectedAdmins(item);
@@ -186,7 +185,7 @@ const FormComponent = (props: {
                 when="projectType"
                 validate={(value => {
                   return [
-                    'singleDepartment'
+                    'sd'
                   ].includes(value);
                 })}
               >
@@ -216,7 +215,7 @@ const FormComponent = (props: {
                 when="projectType"
                 validate={(value => {
                   return [
-                    'multipleDepartment'
+                    'md'
                   ].includes(value);
                 })}
               >
