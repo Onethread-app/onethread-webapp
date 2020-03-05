@@ -9,8 +9,9 @@ import { getAllProjects, archiveProject, getProjectArchive } from '../../../stor
 import { getAllDepartments } from '../../../stores/company/Actions';
 import { find } from 'lodash';
 import { boardColor } from 'stores/UtilsActions';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
-const ProjectPageComponent = (props: any) => {
+const ProjectPageComponent = (props: any & RouteComponentProps) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(false);
 
@@ -54,7 +55,7 @@ const ProjectPageComponent = (props: any) => {
                     e.preventDefault();
                     // const currentBoard: any = await props.getSelectedBoard(board._id);
                     // if (currentBoard._id) {
-                    // 	props.history.push(`/company/${props.company.name}/board/${currentBoard._id}`);
+                    	props.history.push(`/company/${props.company.name}/project/${project._id}`);
                     // }
                   }}
                   style={{ paddingLeft: '0px', paddingBottom: '0px' }}
@@ -282,9 +283,10 @@ const ProjectPageComponent = (props: any) => {
 
 const mapStateToProps = (state: any) => ({
   projects: state.projectReducer.allProjects,
-  archiveProjectList: state.projectReducer.allArchive
+  archiveProjectList: state.projectReducer.allArchive,
+  company: state.companyReducer.currentCompany
 });
 
 export const ProjectPage = connect(mapStateToProps,
   { getAllProjects, getAllDepartments, archiveProject, getProjectArchive })
-  (ProjectPageComponent);
+  (withRouter(ProjectPageComponent));
