@@ -60,7 +60,7 @@ const resfreshApiAction = async () => {
 };
 
 export const userSignupAction = (
-	newUser: UserModel, company?: string
+	newUser: UserModel
 ) => async (dispatch: any) => {
 	try {
 		const user = {
