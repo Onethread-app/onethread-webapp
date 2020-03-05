@@ -32,7 +32,10 @@ const get = async (req, res , next) => {
       
       res.json(colResult);
     })
-    .catch(e => next(e));
+    .catch(e => {
+      logger.error(`Board create: ${e}`);
+      next(e)
+    });
 };
 
 const create = async (req, res, next) => {
