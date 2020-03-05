@@ -19,6 +19,8 @@ const createNewProjectForCompany = async (req, res, next) => {
       departments: req.body.departments,
       color: req.body.color,
       company: req.body.companyId,
+      description: '',
+      outline: ''
     });
     await project
       .save()
@@ -60,23 +62,28 @@ const showAllProjectsForCompany = async (req, res, next) => {
     .catch(e => next(e));
 };
 
-const updateProjectPreface = async (req, res, next) => {  
-    const project = await Project.findOne({_id: req.params.pid});
-    project.description = req.body.description;
-    project.outline = req.body.outline;
-    await project
-    .save()
-    .then(project => {
-      logger.info(`new project created`);
-      return sendJSONresponse(res, 201, {
-        sucees: true,
-        message: 'New project created',
-        project,
+const updateProjectPreface = async (req, res, next) => {
+  await Project.findByIdAndUpdate(
+    { _id: req.params.pid },
+    {
+      $set: {
+        outline: req.body.outline,
+        description: req.body.description,
+      },
+    },
+    { safe: true, upsert: true, new: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`preface addeed for ${req.body.pid}`);
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: 'Preface updated',
       });
     })
-    .catch(error => {
-      logger.error(`${error}`);
-      next(error);
+    .catch(err => {
+      logger.error(`${err}`);
+      next(err);
     });
 };
 
@@ -84,7 +91,7 @@ const getProjectDetails = async (req, res, next) => {
   try {
     const project=await Project.findOne({
       _id: req.params.pid,
-    }).select('outline description color name').populate('files', 'link');
+    }).select('outline description color name').populate('files', '');
     // console.log(req.project)
     return sendJSONresponse(res, 200, project);
   } catch (error) {
@@ -92,26 +99,26 @@ const getProjectDetails = async (req, res, next) => {
     next(error);
   }
 };
-// const getProjectLoad = async (req, res, next) => {
-//   console.log('ami',req)
-//   try {
-//     Project.findOne({
-//       _id: ObjectID("5e60cc3caa10921ba1d07c8a"),
-//     });
-//     // console.log(project)
-//     if (project) {
-//       req.project = project;
-//       return next();
-//     } else {
-//       logger.error(`project id not found`);
-//       return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
-//         message: 'Project id not found for company',
-//       });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
+const getProjectLoad = async (req, res, next) => {
+  console.log('ami',req)
+  try {
+    Project.findOne({
+      _id: ObjectID("5e60cc3caa10921ba1d07c8a"),
+    });
+    // console.log(project)
+    if (project) {
+      req.project = project;
+      return next();
+    } else {
+      logger.error(`project id not found`);
+      return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+        message: 'Project id not found for company',
+      });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 const changeTitleProject = async (req, res, next) => {
   await Project.findByIdAndUpdate(
@@ -200,7 +207,7 @@ module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
   updateProjectPreface,
-  // getProjectLoad,
+  getProjectLoad,
   getProjectDetails,
   changeTitleProject,
   archiveProject,
