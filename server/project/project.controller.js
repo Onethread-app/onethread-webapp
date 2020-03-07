@@ -20,7 +20,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       color: req.body.color,
       company: req.body.companyId,
       description: '',
-      outline: ''
+      outline: '',
     });
     await project
       .save()
@@ -89,36 +89,38 @@ const updateProjectPreface = async (req, res, next) => {
 
 const getProjectDetails = async (req, res, next) => {
   try {
-    const project=await Project.findOne({
+    const project = await Project.findOne({
       _id: req.params.pid,
-    }).select('outline description color name').populate('files', '');
+    })
+      .select('outline description color name')
+      .populate('files', '');
     // console.log(req.project)
     return sendJSONresponse(res, 200, project);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     next(error);
   }
 };
-const getProjectLoad = async (req, res, next) => {
-  console.log('ami',req)
-  try {
-    Project.findOne({
-      _id: ObjectID("5e60cc3caa10921ba1d07c8a"),
-    });
-    // console.log(project)
-    if (project) {
-      req.project = project;
-      return next();
-    } else {
-      logger.error(`project id not found`);
-      return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
-        message: 'Project id not found for company',
-      });
-    }
-  } catch (error) {
-    next(error);
-  }
-};
+// const getProjectLoad = async (req, res, next) => {
+//   console.log('ami',req)
+//   try {
+//     Project.findOne({
+//       _id: ObjectID("5e60cc3caa10921ba1d07c8a"),
+//     });
+//     // console.log(project)
+//     if (project) {
+//       req.project = project;
+//       return next();
+//     } else {
+//       logger.error(`project id not found`);
+//       return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+//         message: 'Project id not found for company',
+//       });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
 
 const changeTitleProject = async (req, res, next) => {
   await Project.findByIdAndUpdate(
@@ -140,22 +142,31 @@ const changeTitleProject = async (req, res, next) => {
 };
 
 const archiveProject = async (req, res, next) => {
-  await Project.findByIdAndUpdate(
-    { _id: req.params.pid },
-    { $set: { removed: true } },
-    { safe: true, upsert: true, new: true },
-  )
-    .exec()
-    .then(result => {
-      logger.info(`Archieve a project`);
-      return sendJSONresponse(res, 200, {
-        message: `Archieve a project`,
-      });
-    })
-    .catch(err => {
-      logger.error(`${err}`);
-      next(err);
+  try {
+    const projectExist = await Project.findOne({
+      _id: req.params.pid,
+      removed: false,
     });
+    if (projectExist) {
+      await Project.updateOne(
+        { _id: req.params.pid },
+        { $set: { removed: true } },
+        { safe: true, upsert: true, new: true },
+      );
+      logger.info(`Archive a project  ${req.params.pid}`);
+      return sendJSONresponse(res, 200, {
+        message: `Archive a project`,
+      });
+    } else {
+      logger.error(`project id not found`);
+      return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+        message: 'Project id not found for company',
+      });
+    }
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
 };
 
 const showAllFilesForProject = async (req, res, next) => {
@@ -182,7 +193,10 @@ const suggestConcernAdmin = async (req, res, next) => {
       company: req.query.companyId,
     })
       .select('-_id account')
-      .populate('account', '_id name firstName lastName email profileImage')
+      .populate(
+        'account',
+        '_id name firstName lastName email profileImage',
+      )
       .exec()
       .then(result => {
         return sendJSONresponse(res, 200, result);
@@ -193,8 +207,8 @@ const suggestConcernAdmin = async (req, res, next) => {
 };
 const archiveProjectList = async (req, res, next) => {
   await Project.find({ company: req.query.companyId, removed: true })
-  .populate('departments', 'name _id')  
-  .select('name members')
+    .populate('departments', 'name _id')
+    .select('name members')
     .exec()
     .then(result => {
       return sendJSONresponse(res, 200, result);
@@ -207,7 +221,7 @@ module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
   updateProjectPreface,
-  getProjectLoad,
+  // getProjectLoad,
   getProjectDetails,
   changeTitleProject,
   archiveProject,

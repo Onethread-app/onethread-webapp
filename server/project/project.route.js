@@ -31,7 +31,11 @@ router
   );
 router
   .route('/concern-admin-search')
-  .get(authorization, schemaValidator(projectValidation.showProjectList), projectCtrl.suggestConcernAdmin);
+  .get(
+    authorization,
+    schemaValidator(projectValidation.showProjectList),
+    projectCtrl.suggestConcernAdmin,
+  );
 router
   .route('/archive-list')
   .get(
@@ -39,18 +43,15 @@ router
     schemaValidator(projectValidation.showProjectList),
     projectCtrl.archiveProjectList,
   );
-router.param(
-  'pid',
-  authorization,
-  // schemaValidator(projectValidation.getProject),
-  projectCtrl.getProjectLoad,
-);
+// router.param(
+//   'pid',
+//   authorization,
+//   // schemaValidator(projectValidation.getProject),
+//   projectCtrl.getProjectLoad,
+// );
 router
   .route('/:pid')
-  .get(
-    authorization,
-    projectCtrl.getProjectDetails,
-  );
+  .get(authorization, projectCtrl.getProjectDetails);
 router
   .route('/:pid/update')
   .put(
