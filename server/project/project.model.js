@@ -8,10 +8,12 @@ const projectSchema = new Schema(
       type: String,
       trim: true,
       maxlength: 50,
+      required: true,
     },
     type: {
       type: String,
-      enum: ['sd', 'md', 'associates'],
+      enum: ['sd', 'md', 'associates'], // sd = single department, md = multiple departments
+      required: true,
     },
     description: {
       type: String,
@@ -29,12 +31,14 @@ const projectSchema = new Schema(
     concernedAdmin: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
+      required: true,
     },
 
     departments: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Department',
+        required: true,
       },
     ],
     files: [
