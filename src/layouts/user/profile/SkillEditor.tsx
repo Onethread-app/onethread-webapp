@@ -67,6 +67,7 @@ export const SkillEdit = (props: SkillEditProps) => {
           items={skills}
           selectedItems={selectedSkills}
           setSelectedItems={setSelectedSkills}
+          multipleItemSelect={true}
           isCreatable={
             isEmpty(skills.filter((item) => (
               searchName === item.name)))
@@ -76,7 +77,6 @@ export const SkillEdit = (props: SkillEditProps) => {
               )))
               ? true : false
           }
-          multipleItemSelect={true}
           isCreatableAPI={addNewSkill}
         />
         <div className="fl w-100 mb2">
