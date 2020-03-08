@@ -1,17 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const member = new Schema(
+const teamMember = new Schema(
   {
-    account: {
+    member: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Account',
+      ref: 'Member',
       unique: false,
       required: true,
     },
-    company: {
+    project: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company',
+      ref: 'Project',
       unique: false,
       required: true,
     },
@@ -49,9 +49,9 @@ const member = new Schema(
   },
 );
 
-member.index({ account: 1, company: 1 }, { unique: true });
+teamMember.index({ member: 1, project: 1 }, { unique: true });
 
-let Team = mongoose.model('Team', member);
+let Team = mongoose.model('Team', teamMember);
 
 module.exports = {
   Team,

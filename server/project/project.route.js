@@ -7,7 +7,7 @@ const projectCtrl = require('./project.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-const companyCtrl= require('../company/company.controller');
+// const companyCtrl= require('../company/company.controller');
 // authentication
 router
   .route('/create')
