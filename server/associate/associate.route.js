@@ -26,7 +26,7 @@ router
   );
 
   router
-  .route('/:associteId/:companyId')
+  .route('/:associateId/:companyId')
   .get(
     authorization,
     associateCtrl.get,
