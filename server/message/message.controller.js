@@ -104,7 +104,7 @@ const getRoomMessages = async (req, res, next) => {
       });
     }
 
-    const { limit = 50, skip = 0 } = req.query;
+    const { limit = 15, skip = 0 } = req.query;
 
     const messages = await Message.find({
       room: req.params.roomId,
@@ -126,7 +126,7 @@ const getRoomMessages = async (req, res, next) => {
           select: 'link s3Key type',
         },
       ])
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit);
 
