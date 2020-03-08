@@ -20,13 +20,15 @@ router
   )
   .get(authorization, memberCtrl.list);
 
-  router
-  .route('/pending')
-  .get(authorization, memberCtrl.pendingList);
+router.route('/pending').get(authorization, memberCtrl.pendingList);
 
-  router
-  .route('/pending-check')
-  .get(authorization, memberCtrl.pendingCheck);
+router
+  .route('/pending/status')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.checkInvitedMemberStatus),
+    memberCtrl.checkInvitedMemberStatus,
+  );
 
 router
   .route('/:memberId')
@@ -34,6 +36,11 @@ router
     authorization,
     SchemaValidator(joiSchema.getMember),
     memberCtrl.getMember,
+  )
+  .delete(
+    authorization,
+    SchemaValidator(joiSchema.deleteMember),
+    memberCtrl.deleteMember,
   );
 
 router
