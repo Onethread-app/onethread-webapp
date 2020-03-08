@@ -1,10 +1,15 @@
 const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
-const { Company } = require('../company.model');
 const { Room } = require('./../../room/room.model');
+const { Company } = require('../../company/company.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const { accountMapping , accountStructure } = require('../../services/elastic.services');
+const ElasticsearchService = require('../../../index.elasticsearch');
+const elasticService = new ElasticsearchService();
+elasticService.checkHealth();
+elasticService.create('accounts', Account , accountMapping , accountStructure);
 
 const changeRole = async (req, res, next) => {
   try {
@@ -155,23 +160,52 @@ const searchMember = async (req, res, next) => {
     }).populate('members', 'account');
     let memberListId = company.members;
     memberListId = memberListId.map(member => member.account);
-    let data = await Account.find({
-      $and: [
-        { name: { $regex: new RegExp(name) } },
-        { _id: { $nin: memberListId } },
-      ],
-    }).select('_id email name firstName lastName');
-    // TODO: pore ami change korbo query onusaree
-    return sendJSONresponse(res, 200, {
-      employees: {
-        message: `Search complete ${name}`,
-        data,
-      },
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-    next(error);
+
+    if(name){
+
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool:{
+            "must": [
+              {
+                "multi_match": {
+                  "query": req.query.name ,
+                  "fields": ["email" , "firstName" , "lastName"]
+                }
+              }
+            ],
+             must_not: [
+              {
+               "terms" : {
+                  "mongo_id": memberListId 
+                }
+              }
+           ]
+          }
+        }
+      }
+
+      const response = await elasticService.search('accounts','_doc',body);
+
+      return sendJSONresponse(res,200,{
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits
+      })
+
+    }else{
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
+      });
+    }
   }
+  catch (error) {
+        logger.error(`${error}`);
+        next(error);
+      }
+
 };
 
 module.exports = {

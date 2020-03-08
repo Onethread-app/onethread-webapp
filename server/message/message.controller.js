@@ -3,6 +3,13 @@ const { Room } = require('./../room/room.model');
 const Account = require('./../account/account.model');
 const { chatkit } = require('../services/pusher.services');
 const File = require('./../file/file.model');
+const ElasticsearchService  = require('../../index.elasticsearch');
+const { messageMapping , messageStructure } = require('../services/elastic.services');
+const elasticService = new ElasticsearchService();
+elasticService.createMessages('messages', Message , messageMapping , messageStructure);
+const logger = require('../../config/winston');
+const { sendJSONresponse , sendErrorResponse } = require('../helpers/jsonResponse');
+
 
 const create = async (req, res, next) => {
   // Check for JSON
@@ -17,6 +24,8 @@ const create = async (req, res, next) => {
         message: `No room exists`,
       });
     }
+
+    console.log(req.body.files);
 
     let files = req.body.files.map(file => file._id);
 
@@ -56,7 +65,7 @@ const create = async (req, res, next) => {
       message.chatkitId = msg.message_id;
     }
 
-    await message.save();
+    const mes =  await message.save();
 
     await File.updateMany(
       { _id: { $in: files } },
@@ -65,6 +74,18 @@ const create = async (req, res, next) => {
         room: message.room,
       },
     );
+
+    const response =  await elasticService.set('messages' ,'_doc' , {
+      mongo_id: message._id.toString(),
+      room: message.room,
+      account: message.account,
+      chatkitId: message.chatkitId,
+      text: message.text,
+      type: message.type,
+      files: req.body.files
+    });
+
+    logger.info(` ✔ ️Elasticsearch document ${response.result}`);
 
     return res.status(201).json({
       message,
@@ -118,7 +139,63 @@ const getRoomMessages = async (req, res, next) => {
   }
 };
 
+
+const searchMessage = async (req, res, next) => {
+  try {
+
+    console.log(req.query);
+    const name = req.query.name;
+    const roomId = req.params.roomId;
+
+    if(name){
+
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool:{
+            must: [
+              {
+                term : {
+                  "room": {
+                    "value": roomId
+                  }
+                }
+              },
+              {
+                multi_match: {
+                  "query": name ,
+                  "fields": ["text", "files.s3Key"]
+                }
+              }
+            ]
+          }
+        }
+      }
+
+      const response = await elasticService.search('messages','_doc',body);
+
+      return sendJSONresponse(res,200,{
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits
+      })
+
+    }else{
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
+      });
+    }
+  }
+  catch (error) {
+        logger.error(`${error}`);
+        next(error);
+      }
+
+};
+
 module.exports = {
   create,
   getRoomMessages,
+  searchMessage
 };
