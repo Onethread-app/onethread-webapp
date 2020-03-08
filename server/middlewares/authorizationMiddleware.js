@@ -7,15 +7,9 @@ const client = require('../../index.redis');
 bluebird.promisifyAll(redis);
 
 module.exports.authorization = async (req, res, next) => {
-  let parts =
+  const parts =
     req.headers['x-access-token'] ||
-    req.headers.authorization;
-    if (parts.startsWith('Bearer ')) {
-      // Remove Bearer from string
-      parts = parts.slice(7, parts.length);
-    }else{
-      return sendErrorResponse(res, 403, 'AuthError', {message: 'Invalid header'})
-    }
+    req.headers.authorization.split(' ')[1];
   if (parts) {
     let isBlackListed;
     await client
