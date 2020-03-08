@@ -240,7 +240,7 @@ const fileInProject = async (req, res, next) => {
         logger.info('File Link successfully save to file collection');
         pidExist.files.push(newFile._id);
         await pidExist.save()
-        return sendJSONresponse(res, 200, { pidExist });
+        return sendJSONresponse(res, 200, { newFile });
   
       } catch (error) {
         logger.error(`${error}`);
