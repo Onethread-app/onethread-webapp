@@ -35,35 +35,39 @@ router
 
 // update basic info
 router
-  .route('/:cname/basic')
+  .route('/:companyId/basic')
   .put(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateBasicInfo),
     companyCtrl.updateBasicInfo,
   );
 
 // update about
 router
-  .route('/:cname/about')
+  .route('/:companyId/about')
   .put(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
   );
 
 // update about
 router
-  .route('/:cname/changeName')
+  .route('/:companyId/changeName')
   .put(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeName),
     companyCtrl.changeName,
   );
 
 router
-  .route('/:cname/role')
+  .route('/:companyId/role')
   .put(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeRole),
     companyCtrl.updateRole,
   );
@@ -81,12 +85,12 @@ router
 
 
 // redirect to member
-router.use('/:cname/members', memberRoutes);
+router.use('/:companyId/members', memberRoutes);
 // redirect to department
-router.use('/:cname/departments', deptRoutes);
+router.use('/:companyId/departments', deptRoutes);
 // redirect to designation
-router.use('/:cname/designations', designationRoutes);
+router.use('/:companyId/designations', designationRoutes);
 
-router.param('cname', companyCtrl.getCompanyLoad);
+router.param('companyId', companyCtrl.getCompanyLoad);
 
 module.exports = router;

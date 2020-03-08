@@ -175,14 +175,14 @@ const getCompany = async (req, res, next) => {
     // role info
     let member = await Member.findOne({
       account: req.user._id,
-      company: req.company._id,
+      company: company._id,
     }).select('-_id role');
 
-    if (!member) {
-      return res.status(401).json({
-        message: "You're not authorized with this company",
-      });
-    }
+    // if (!member) {
+    //   return res.status(401).json({
+    //     message: "You're not authorized with this company",
+    //   });
+    // }
 
     return res.status(200).json({
       company: { ...company._doc, role: member.role },
@@ -274,8 +274,9 @@ const updateRole = async (req, res, next) => {
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
+    console.log(req.params.companyId);
     const company = await Company.findOne({
-      name: req.params.cname,
+      _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');
 
     if (company) {
@@ -330,13 +331,14 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
   return async function  (req, res, next) {
     try {
 
-      const company =  await Company.findOne({
-        _id: req.query.companyId,
-      }).select('_id optionalRole').exec();
+      // const company =  await Company.findOne({
+      //   _id: req.params.companyId,
+      // }).select('_id optionalRole').exec();
+      
 
       const member = await Member.findOne({
         account: req.user._id,
-        company: req.query.companyId, //need to query param company first
+        "company" : req.params.companyId, //apatoto pore name or id hobe
       }).exec();
 
       // if (
@@ -344,7 +346,7 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
       //   !userRoles.includes(member.role) ||
       //   !company.optionalRole.includes(functionalRole)
       // )
-      
+      console.log(member, userRoles);
       if (
         !member ||
         !userRoles.includes(member.role)  

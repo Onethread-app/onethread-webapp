@@ -18,19 +18,21 @@ router
   .route('/')
   .get(
     authorization,
-    companyCtrl.authorizeUser('all', 'admin', 'employee'),
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     associateCtrl.list,
   )
   .post(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.createAssociate),
     associateCtrl.create,
   );
 
   router
-  .route('/:associteId/:companyId')
+  .route('/:associateId/:companyId')
   .get(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     associateCtrl.get,
   )
 

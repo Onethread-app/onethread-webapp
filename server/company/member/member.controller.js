@@ -18,9 +18,9 @@ const changeRole = async (req, res, next) => {
       company: req.company._id,
     });
 
-    if (!['superAdmin', 'admin'].includes(member.role)) {
+    if ( req.body.role ==='admin' && member.role !== 'superAdmin' ) {
       return res.status(403).json({
-        message: `Restricted`,
+        message: `only super admin can do that`,
       });
     }
 
@@ -51,6 +51,7 @@ const addMember = async (req, res, next) => {
       });
     }
     const members = await Member.create(req.body.members);
+    //TODO role wise delete admin, supreadmin
 
     let pendingMember = req.body.newTeamMembers.map(m => {
       return {email: m, company:req.company._id};

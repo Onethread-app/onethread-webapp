@@ -13,7 +13,7 @@ const get = async (req, res , next) => {
   
   
   await Associate.findOne({
-    _id: req.params.associteId,
+    _id: req.params.associateId,
     removed: false,
   })
     .select('_id company associateCompany createdAt account')
