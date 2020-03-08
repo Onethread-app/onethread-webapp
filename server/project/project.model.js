@@ -71,6 +71,10 @@ const projectSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    activate:{
+      type: Boolean,
+      deafult: true,
+    },
   },
   {
     timestamps: true,
