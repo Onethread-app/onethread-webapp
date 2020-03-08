@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import { connect, useDispatch } from 'react-redux';
 import { getRoomMessages } from '../../../../../stores/room/Actions';
-import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
+import { IRoomMessage, IRoomReducer, IRoom } from 'stores/room/Reducer';
 import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
 import { Icon } from '@blueprintjs/core';
 
@@ -13,7 +13,7 @@ interface MessageListProps {
 	chatkit?: any;
 	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
 	messages: IRoomReducer['messages'];
-	roomId: IRoomReducer['roomId'];
+	currentRoom: IRoomReducer['currentRoom'];
 	allMessages: boolean;
 }
 
@@ -28,7 +28,7 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 	const scrollToBottom = () => {
 		if (props.messages.length) {
 			props.chatkit.currentUser.setReadCursor({
-				roomId: props.roomId,
+				roomId: props.currentRoom._id,
 				position: props.messages[props.messages.length - 1].chatkitId
 			})
 				.then()
@@ -58,10 +58,10 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 	};
 
 	const loadMoreMessages = async () => {
-		if (props.allMessages === false) {
+		if (props.allMessages === false && props.currentRoom) {
 			const n = skip + limit;
 			setSkip(n);
-			await props.getRoomMessages(props.roomId, limit, n);
+			await props.getRoomMessages(props.currentRoom._id, limit, n);
 		}
 	};
 
@@ -70,7 +70,7 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 		setLimit(15);
 		setSkip(0);
 		dispatch({ type: ALL_MESSAGE_RECEIVED, payload: false });
-	}, [props.roomId]);
+	}, [props.currentRoom._id]);
 
 	useEffect(scrollToBottom, [props.messages]);
 
@@ -136,7 +136,7 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 
 const mapStateToProps = (state: any) => {
 	return {
-		roomId: state.roomReducer.roomId,
+		currentRoom: state.roomReducer.currentRoom,
 		messages: state.roomReducer.messages,
 		allMessages: state.roomReducer.allMessages,
 	};

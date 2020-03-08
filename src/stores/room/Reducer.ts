@@ -8,7 +8,6 @@ import {
 	CLEAR_ROOMS_REDUCER_STATE,
 	CREATE_ROOM_FROM_SERVER,
 	CREATE_ROOM_ERROR,
-	GET_ROOMS_FROM_SERVER,
 	GET_ROOM_ERROR,
 	GET_ROOM_MEMBERS,
 	GET_ROOM_MEMBERS_ERROR,
@@ -79,8 +78,7 @@ export interface IRoomMessage {
 
 export interface IRoomReducer {
 	activeRoom: {};
-	roomId: string;
-	roomName: string;
+	currentRoom: IRoom;
 	allMessages: boolean;
 	messages: IRoomMessage[];
 	typing: {
@@ -102,8 +100,16 @@ export interface IRoomReducer {
 }
 const InitialState: IRoomReducer = {
 	activeRoom: {},
-	roomId: '',
-	roomName: '',
+	currentRoom: {
+		_id: '',
+		name: '',
+		account: '',
+		company: '',
+		archive: false,
+		removed: false,
+		createdAt: '',
+		updatedAt: ''
+	},
 	allMessages: false,
 	messages: [],
 	typing: {
@@ -231,8 +237,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case CURRENT_ROOM:
 			return {
 				...state,
-				roomId: action.payload.roomId,
-				roomName: action.payload.name,
+				currentRoom: action.payload,
 				loading: false
 			};
 		case NEW_MESSAGE:

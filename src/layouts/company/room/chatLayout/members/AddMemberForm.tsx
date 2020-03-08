@@ -6,6 +6,7 @@ import { isEqual, isEmpty } from 'lodash';
 import { Button, Tag } from '@blueprintjs/core';
 import { addRoomMembers } from 'stores/room/Actions';
 import { tigrowApi } from 'config';
+import { IRoomReducer } from 'stores/room/Reducer';
 
 interface RoomMembersViewProps {
   showDialog: boolean;
@@ -15,7 +16,7 @@ interface RoomMembersViewProps {
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
   // tslint:disable-next-line: max-line-length
   addRoomMembers: (members: { room: string, members: Array<string | undefined> }, selectedRoomMember: ItemEntityProps[]) => void;
-  roomId: string;
+  currentRoom: IRoomReducer['currentRoom'];
   companyId: string;
 }
 
@@ -30,7 +31,8 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
     try {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
-        const response = await tigrowApi.get(`/rooms/suggest-member/${props.roomId}/${props.companyId}`, headers);
+        // tslint:disable-next-line:max-line-length
+        const response = await tigrowApi.get(`/rooms/suggest-member/${props.currentRoom._id}/${props.companyId}`, headers);
         setSuggestedMembers(response.data.members);
       } else {
         // tslint:disable-next-line: no-console
@@ -48,7 +50,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
   };
 
   useEffect(() => {
-    if (isEmpty(props.roomId) === false && isEmpty(props.companyId) === false) {
+    if (isEmpty(props.currentRoom._id) === false && isEmpty(props.companyId) === false) {
       getSuggestionsForRoomMembers();
     }
   }, []);
@@ -110,7 +112,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           onClick={
             async () => {
               const data = {
-                room: props.roomId,
+                room: props.currentRoom._id,
                 members: selectedRoomMember.map((m) => m._id)
               };
               const response: any = await props.addRoomMembers(data, selectedRoomMember);
@@ -134,7 +136,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    roomId: state.roomReducer.roomId,
+    currentRoom: state.roomReducer.currentRoom,
     companyId: state.companyReducer.currentCompany._id
   };
 };
