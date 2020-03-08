@@ -3,7 +3,6 @@ const projectValidation = require('./project.validation');
 const router = express.Router();
 
 const schemaValidator = require('../helpers/joiSchemaValidator');
-const memberRoutes = require('./team-member/member.route');
 const projectCtrl = require('./project.controller');
 const {
   authorization,
