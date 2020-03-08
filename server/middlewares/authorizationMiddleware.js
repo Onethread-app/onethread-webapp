@@ -13,8 +13,9 @@ module.exports.authorization = async (req, res, next) => {
     if (parts.startsWith('Bearer ')) {
       // Remove Bearer from string
       parts = parts.slice(7, parts.length);
+    }else{
+      return sendErrorResponse(res, 403, 'AuthError', {message: 'Invalid header'})
     }
-    console.log(parts)
   if (parts) {
     let isBlackListed;
     await client

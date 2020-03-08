@@ -3,6 +3,8 @@ const crypto = require('crypto');
 const httpStatus = require('http-status');
 const slug = require('slug');
 const Account = require('./account.model');
+const {Member} = require('../company/member/member.model');
+const {PendingMember} = require('../company/member/pendingMember.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
@@ -23,6 +25,7 @@ const {
 const { APIError } = require('../helpers/APIError');
 // create a new account for individual users
 const register = async (req, res, next) => {
+  
   const data = req.body;
   if (!data.email || !data.password) {
     return sendJSONresponse(res, 400, {
@@ -77,6 +80,25 @@ const register = async (req, res, next) => {
         .update(token)
         .digest('hex');
       let verifyAccountTokenExpiration = Date.now() + 604800;
+
+     
+
+      if('company' in req.query){
+      
+        let pendingMember = await PendingMember.find({
+          company: req.query.company,
+          //email: account.email,
+        }).select('-__v -company -createdAt -updatedAt');
+
+        if (pendingMember.length > 0){
+          await Member.create({account: account._id, company: req.query.company });
+          pendingMember[0].remove();
+        }
+      
+      }        
+            
+        
+    
       sendEmailForVerifyAccount(
         user.firstName,
         user.lastName,
@@ -91,6 +113,7 @@ const register = async (req, res, next) => {
       return sendJSONresponse(res, 201, { message: 'User created' });
     })
     .catch(err => {
+      
       next(err);
     });
 };
@@ -104,6 +127,7 @@ const register = async (req, res, next) => {
 
 // account holder can login their account
 const login = async (req, res, next) => {
+  
   try {
     const payLoad = {
       email: req.user.email,
@@ -173,6 +197,7 @@ const timeline = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
+    console.log(error)
     next(error);
   }
 };

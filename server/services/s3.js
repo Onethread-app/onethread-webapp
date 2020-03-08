@@ -42,7 +42,7 @@ function generatePutUrl(Key, ContentType) {
     // Note Bucket is retrieved from the env variable above.
     const params = { Bucket, Key, ContentType };
     // Note operation in this case is putObject
-    console.log(params);
+    
     s3.getSignedUrl('putObject', params, function(err, url) {
       if (err) {
         reject(err);

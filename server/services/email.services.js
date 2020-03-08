@@ -77,3 +77,30 @@ module.exports.sendEmailForVerifyAccount = async (
     }
   });
 };
+
+module.exports.sendInviteColleague = async (
+  userEmail,
+  company,
+  emailList,
+) => {
+  
+  const link = `${host}/signup?company=${company._id}`;
+  
+  const mailOptions = {
+    to: emailList,
+    subject: 'Invitation to join company',
+    html: `
+      <h1> Join ${company.name} on TiGrow, </h1>
+      <h2> ${userEmail} has invited you to join the company ${company.name}. join now to start collaborating!  <a href="${link}"> Link </a> </h2>
+  
+    `,
+  };
+
+  return transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      return next(err);
+    }
+    logger.info(`send company invitation mail to users successfully`);
+    return info;
+  });
+};

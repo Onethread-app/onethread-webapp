@@ -141,7 +141,8 @@ const companyLogo = async (req, res, next) => {
           const company = await Company.findOne({
             _id: companyID,
           });
-          company.logo = data._id;
+          company.logo = data.link;
+          company.imageType = 'companyLogo';
           company.save();
           return sendJSONresponse(res, 200, data);
         })
@@ -237,9 +238,9 @@ const fileInProject = async (req, res, next) => {
         });
         await newFile.save();
         logger.info('File Link successfully save to file collection');
-        pidExist.files = newFile._id;
+        pidExist.files.push(newFile._id);
         await pidExist.save()
-        return sendJSONresponse(res, 200, { newFile });
+        return sendJSONresponse(res, 200, { pidExist });
   
       } catch (error) {
         logger.error(`${error}`);

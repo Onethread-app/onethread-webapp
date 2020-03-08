@@ -1,9 +1,13 @@
 const Account = require('../account/account.model');
+const mongoose = require('mongoose');
 const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
-const { sendErrorResponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 // create a company profile
 const changeName = async (req, res, next) => {
@@ -117,7 +121,7 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error);
+    
     return next(error);
   }
 };
@@ -156,6 +160,8 @@ const getCompanyIndividual = async (req, res, next) => {
 
 // get a company profile
 const getCompany = async (req, res, next) => {
+
+  
   try {
     // company details
     let company = await Company.findOne({
@@ -182,7 +188,7 @@ const getCompany = async (req, res, next) => {
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
-    console.log('getCompany', error);
+    
     next(error);
   }
 };
@@ -193,7 +199,7 @@ const updateBasicInfo = async (req, res, next) => {
   if (!req.is('application/json')) {
     return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
-
+  const mongoose = require(mongoose);
   try {
     // updating new values
     for (const key in req.body) {
@@ -228,6 +234,39 @@ const updateAbout = async (req, res, next) => {
       message: `Company's about updated`,
     });
   } catch (error) {
+    next(error);
+  }
+};
+
+// update a company role
+const updateRole = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+  
+  try {
+    //Company.deleteMany({}, function(err, result) {
+      
+    //});
+    //req.company.optionalRole = req.body.optionalRole;
+    const company = await Company.findOneAndUpdate(
+      { _id: req.company._id },
+      { $set: { optionalRole: req.body.optionalRole } },
+      {
+        safe: true,
+        upsert: true,
+      },
+    ).exec();
+
+    //await req.company.save();
+
+    return res.status(200).json({
+      message: `Company's role updated`,
+      data: company.optionalRole,
+    });
+  } catch (error) {
+    
     next(error);
   }
 };
@@ -287,33 +326,75 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeAdmin = async (req, res, role, next) => {
-  const member = await Member.findOne({
-    account: req.user._id,
-    company: req.company._id,
-  });
+const authorizeUser=  (functionalRole, ...userRoles )=> {
+  return async function  (req, res, next) {
+    try {
 
-  if (
-    !member ||
-    !['superAdmin', 'admin'].includes(member.role) ||
-    ![role].includes(req.company.optionalRole)
-  ) {
-    return res.status(403).json({
-      message: `Restricted`,
-    });
+      const company =  await Company.findOne({
+        _id: req.query.companyId,
+      }).select('_id optionalRole').exec();
+
+      const member = await Member.findOne({
+        account: req.user._id,
+        company: req.query.companyId, //need to query param company first
+      }).exec();
+
+      // if (
+      //   !member ||
+      //   !userRoles.includes(member.role) ||
+      //   !company.optionalRole.includes(functionalRole)
+      // )
+      
+      if (
+        !member ||
+        !userRoles.includes(member.role)  
+      ) {
+        return res.status(403).json({
+          message: `Restricted`,
+        });
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
+const searchCompany = async (req, res, next) => {
+  try {
+    const { limit = 50, skip = 0 , name, cname} = req.query;
+    await Company.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+      _id: { $ne: mongoose.Types.ObjectId(cname)}
+    })
+      .select('name')
+      .skip(+skip)
+      .limit(+limit)
+      .then(data => {
+        
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: `Search complete for ${name}`,
+          data,
+        });
+      });
+  } catch (error) {
+    
+    next(error);
   }
-
-  next();
 };
 
 module.exports = {
-  authorizeAdmin,
+  authorizeUser,
   createCompany,
   getCompany,
   updateBasicInfo,
+  updateRole,
   updateAbout,
   getCompanyIndividual,
   changeName,
   deleteCompany,
   getCompanyLoad,
+  searchCompany,
 };

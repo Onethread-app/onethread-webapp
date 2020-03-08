@@ -50,7 +50,7 @@ const projectSchema = new Schema(
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
+        ref: 'ProjectMember',
       },
     ],
     associates: [

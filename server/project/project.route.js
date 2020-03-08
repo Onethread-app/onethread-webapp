@@ -8,11 +8,13 @@ const projectCtrl = require('./project.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
+const companyCtrl= require('../company/company.controller');
 // authentication
 router
   .route('/create')
   .post(
     authorization,
+    // companyCtrl.authorizeUser('projectCD'),
     schemaValidator(projectValidation.createNewProjectForCompany),
     projectCtrl.createNewProjectForCompany,
   );

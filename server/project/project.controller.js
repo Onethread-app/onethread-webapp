@@ -257,7 +257,7 @@ const searchMemberFromMyCompany = async(req, res, next) =>{
     }).select('_id email name firstName lastName');
     // TODO: pore ami change korbo query onusaree
     return sendJSONresponse(res, 200, {
-      employees: {
+      projectMember: {
         message: `Search complete ${name}`,
         data,
       },
