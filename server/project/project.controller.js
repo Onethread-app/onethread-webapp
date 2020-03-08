@@ -115,7 +115,7 @@ const getProjectDetails = async (req, res, next) => {
     const project = await Project.findOne({
       _id: req.params.pid,
     })
-    .populate('files', 'link')
+    .populate('files', 'link s3Key')
       .select('outline description color name');
     // console.log(req.project)
     return sendJSONresponse(res, 200, project);
