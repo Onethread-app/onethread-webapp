@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import { connect, useDispatch } from 'react-redux';
 import { getRoomMessages } from '../../../../../stores/room/Actions';
-import { IRoomMessage, IRoomReducer, IRoom } from 'stores/room/Reducer';
+import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
 import { Icon } from '@blueprintjs/core';
 

@@ -1,5 +1,4 @@
 import { useSelector } from 'react-redux';
-import { isEqual } from 'lodash';
 import React from 'react';
 import { IRoom } from 'stores/room/Reducer';
 

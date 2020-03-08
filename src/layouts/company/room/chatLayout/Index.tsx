@@ -2,13 +2,12 @@ import React, { useState } from 'react';
 import { SendMessageForm } from './messages/SendMessageForm';
 import { MessageList } from './messages/MessageList';
 import { connect } from 'react-redux';
-import { Button, Icon, Dialog, Position, Popover } from '@blueprintjs/core';
+import { Dialog, Position, Popover } from '@blueprintjs/core';
 import { AddMemberForm } from './members/AddMemberForm';
-import { getRoomMembers } from 'stores/room/Actions';
+import { getRoomMembers, archiveRoom } from 'stores/room/Actions';
 import { isEmpty } from 'lodash';
 import { permit } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
-import { RightSidebar } from 'components/RightSidebar';
 import { IRoomReducer } from 'stores/room/Reducer';
 
 import memberListIcon from './../../../../resources/images/member-list.svg';
@@ -17,6 +16,7 @@ import settingsIcon from './../../../../resources/images/settings.svg';
 
 interface ChatLayoutComponentProps {
 	getRoomMembers: (roomId: string) => void;
+	archiveRoom: (data: { archive: boolean }, roomId: string) => void;
 	currentRoom: IRoomReducer['currentRoom'];
 	activeRoom: any;
 	companyRole: string;
@@ -68,12 +68,29 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 								popoverClassName="bg-white pa3"
 								content={
 									<div>
-										<h5 className="gray ma0 mb2 pointer"
-											onClick={() => { console.log('mute'); }}
-										>Mute Conversation</h5>
-										<h5 className="red ma0 pointer"
-											onClick={() => { console.log('Archive'); }}
-										>Archive Room</h5>
+										{props.currentRoom.archive ?
+											<>
+												<h5 className="ma0 pointer"
+													onClick={async () => {
+														await props.archiveRoom({
+															archive: false
+														}, props.currentRoom._id);
+													}}
+												>Activate Room</h5>
+											</> :
+											<>
+												<h5 className="gray ma0 mb2 pointer"
+													onClick={() => { console.log('mute'); }}
+												>Mute Conversation</h5>
+												<h5 className="red ma0 pointer"
+													onClick={async () => {
+														await props.archiveRoom({
+															archive: true
+														}, props.currentRoom._id);
+													}}
+												>Archive Room</h5>
+											</>
+										}
 									</div>
 								}
 								target={
@@ -163,4 +180,4 @@ const mapStateToProps = (state: any) => {
 	};
 };
 
-export const ChatLayout = connect(mapStateToProps, { getRoomMembers })(ChatLayoutComponent);
+export const ChatLayout = connect(mapStateToProps, { getRoomMembers, archiveRoom })(ChatLayoutComponent);

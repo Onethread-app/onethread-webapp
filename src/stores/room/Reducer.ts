@@ -25,7 +25,8 @@ import {
 	CLEAR_FILE_UPLOAD,
 	DELETE_ONE_PENDING_FILE,
 	ALL_MESSAGE_RECEIVED,
-	UNREAD_COUNT_ROOMS
+	UNREAD_COUNT_ROOMS,
+	ARCHIVE_ROOM
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -290,6 +291,23 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				// 		}
 				// 	}).sort(sortRooms),
 				roomsUnreadCount: updateUnreadCount(state.roomsUnreadCount, action.payload),
+				loading: false
+			};
+		case ARCHIVE_ROOM:
+			return {
+				...state,
+				currentRoom: { ...state.currentRoom, archive: action.payload.archive },
+				rooms: state.rooms
+					.map((room: IRoom) => {
+						if (room._id === action.payload.roomId) {
+							return {
+								...room,
+								archive: action.payload.archive
+							};
+						} else {
+							return room;
+						}
+					}),
 				loading: false
 			};
 		case GET_ROOMS:

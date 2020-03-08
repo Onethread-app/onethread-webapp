@@ -6,7 +6,6 @@ import { getRoomMembers, getRoomMessages, getRooms } from '../../../../stores/ro
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
-	GET_ROOMS,
 	CLEAR_ROOM_MESSAGES,
 	ACTIVE_ROOM,
 	ON_PRESENCE_CHANGE,
@@ -42,7 +41,6 @@ export const RoomListComponent = withChatkit(
 		// tslint:disable-next-line: no-shadowed-variable
 		const subscribeToRoom = async (room: IRoom) => {
 			if (!props.chatkit.isLoading) {
-				console.log('room', room);
 				dispatch({ type: CLEAR_ROOM_MESSAGES });
 				dispatch({ type: CURRENT_ROOM, payload: room });
 

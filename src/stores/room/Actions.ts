@@ -16,7 +16,9 @@ import {
 	GET_ROOM_MESSAGES_ERROR,
 	FILE_UPLOAD,
 	ALL_MESSAGE_RECEIVED,
-	GET_ROOMS
+	GET_ROOMS,
+	ARCHIVE_ROOM_ERROR,
+	ARCHIVE_ROOM
 } from './Types';
 import { tigrowApi } from 'config';
 
@@ -222,5 +224,37 @@ export const fileUploadAction = (imageSelected: any, roomID: string) => async (d
 			console.log(error.response);
 		}
 		return error.response;
+	}
+};
+
+export const archiveRoom = (data: { archive: boolean }, roomId: string) => async (
+	dispatch: any,
+) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.put(`rooms/${roomId}/archive`, data, headers);
+			await dispatch({
+				type: ARCHIVE_ROOM,
+				payload: {
+					roomId,
+					archive: data.archive
+				}
+			});
+			return response.status;
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in creation of company');
+		}
+	} catch (error) {
+		if (error.response.status === 401) {
+			dispatch({ type: ARCHIVE_ROOM_ERROR, payload: 'Unauthorized user' });
+		} else if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: ARCHIVE_ROOM_ERROR, payload: 'Network error' });
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log(error.response);
+		}
+		return error.response.status;
 	}
 };
