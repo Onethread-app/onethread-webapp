@@ -54,7 +54,11 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
   }, []);
 
   return (
-    <div className="">
+    <div
+      style={{
+        width: '300px'
+      }}
+    >
       <div className="w-100">
         <h1 className="f5 tigrow-darkBlue">Add Members</h1>
         <SuggestField

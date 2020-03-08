@@ -25,19 +25,20 @@ import {
 	FILE_UPLOAD,
 	CLEAR_FILE_UPLOAD,
 	DELETE_ONE_PENDING_FILE,
-	ALL_MESSAGE_RECEIVED
+	ALL_MESSAGE_RECEIVED,
+	UNREAD_COUNT_ROOMS
 } from './Types';
 import { isEmpty } from 'lodash';
 
 export interface IRoom {
-	id: string;
+	_id: string;
 	name: string;
-	unreadCount: number;
 	company: string;
 	account: string;
 	createdAt: string;
 	updatedAt: string;
 	archive: boolean;
+	removed: boolean;
 }
 
 export interface IRoomMember {
@@ -92,7 +93,7 @@ export interface IRoomReducer {
 	userStatus: any;
 	roomMembers: any[];
 	rooms: IRoom[];
-	companyRooms: any[];
+	roomsUnreadCount: any;
 	loading: boolean;
 	emojiPicker: boolean;
 	pendingFiles: IRoomFile[];
@@ -112,7 +113,7 @@ const InitialState: IRoomReducer = {
 	userStatus: {},
 	roomMembers: [],
 	rooms: [],
-	companyRooms: [],
+	roomsUnreadCount: {},
 	emojiPicker: false,
 	pendingFiles: [],
 	loading: false,
@@ -137,11 +138,16 @@ export const sortRooms = (a: IRoom, b: IRoom) => {
 };
 
 const userStatus = (arr: any) => {
-	const c = {};
+	const obj = {};
 	arr.forEach((e: any) => {
-		c[e.id] = e.presence.state;
+		obj[e.id] = e.presence.state;
 	});
-	return c;
+	return obj;
+};
+
+const updateUnreadCount = (roomsUnreadCount: any, updatedRoom: any) => {
+	roomsUnreadCount[updatedRoom.id] = updatedRoom.unreadCount;
+	return roomsUnreadCount;
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
@@ -156,6 +162,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				pendingFiles: [...state.pendingFiles, action.payload],
+			};
+		}
+		case UNREAD_COUNT_ROOMS: {
+			return {
+				...state,
+				roomsUnreadCount: action.payload,
 			};
 		}
 		case DELETE_ONE_PENDING_FILE: {
@@ -206,48 +218,13 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				activeRoom: action.payload,
-				// users: action.payload.users
-				// 	.map(
-				// 		(user: {
-				// 			id: string;
-				// 			name: string;
-				// 			presence: { state: string };
-				// 		}) => ({
-				// 			id: user.id,
-				// 			name: user.name,
-				// 			presence: user.presence.state
-				// 		})
-				// 	),
 				userStatus: userStatus(action.payload.users),
-				// .sort((user: any) => {
-				// 	if (user.presence === 'online') { return -1; }
-				// 	return 1;
-				// }),
 				loading: false
 			};
 		case REFRESH_MEMBER:
 		case ON_PRESENCE_CHANGE:
 			return {
 				...state,
-				// users:
-				// 	!isEmpty(state.activeRoom) ?
-				// 		(state.activeRoom as any).users
-				// 			.map(
-				// 				(user: {
-				// 					id: string;
-				// 					name: string;
-				// 					presence: { state: string };
-				// 				}) => ({
-				// 					id: user.id,
-				// 					name: user.name,
-				// 					presence: user.presence.state
-				// 				})
-				// 			)
-				// 		// .sort((user: any) => {
-				// 		// 	if (user.presence === 'online') { return -1; }
-				// 		// 	return 1;
-				// 		// }) 
-				// 		: [...state.users],
 				userStatus: !isEmpty(state.activeRoom) ? userStatus((state.activeRoom as any).users) : state.userStatus,
 				loading: false
 			};
@@ -291,24 +268,23 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case UPDATE_ROOM:
 			return {
 				...state,
-				rooms: state.rooms
-					.map((room: IRoom) => {
-						if (room.id === action.payload.id) {
-							return {
-								id: action.payload.id,
-								name: action.payload.name,
-								unreadCount: action.payload.unreadCount,
-								company: action.payload.customData.company,
-								account: action.payload.createdByUserId,
-								createdAt: action.payload.createdAt,
-								updatedAt: action.payload.updatedAt,
-								archive: room.archive
-							};
-						} else {
-							return room;
-						}
-					}).sort(sortRooms)
-				,
+				// rooms: state.rooms
+				// 	.map((room: IRoom) => {
+				// 		if (room.id === action.payload.id) {
+				// 			return {
+				// 				id: action.payload.id,
+				// 				name: action.payload.name,
+				// 				unreadCount: action.payload.unreadCount,
+				// 				company: action.payload.customData.company,
+				// 				account: action.payload.createdByUserId,
+				// 				createdAt: action.payload.createdAt,
+				// 				updatedAt: action.payload.updatedAt,
+				// 			};
+				// 		} else {
+				// 			return room;
+				// 		}
+				// 	}).sort(sortRooms),
+				roomsUnreadCount: updateUnreadCount(state.roomsUnreadCount, action.payload),
 				loading: false
 			};
 		case GET_ROOMS:
@@ -320,25 +296,20 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case CREATE_ROOM_FROM_SERVER:
 			return {
 				...state,
-				companyRooms: [...state.companyRooms, action.payload],
 				rooms: [...state.rooms, {
-					id: action.payload._id,
+					_id: action.payload._id,
 					name: action.payload.name,
-					unreadCount: 0,
 					company: action.payload.company,
 					account: action.payload.account,
 					createdAt: action.payload.createdAt,
-					updatedAt: action.payload.updatedAt
+					updatedAt: action.payload.updatedAt,
+					archive: action.payload.archive,
+					removed: action.payload.removed
 				}],
 				roomError: '',
 				loading: false
 			};
-		case GET_ROOMS_FROM_SERVER:
-			return {
-				...state,
-				companyRooms: action.payload,
-				loading: false
-			};
+
 		case TOGGLE_EMOJI_PICKER:
 			return {
 				...state,

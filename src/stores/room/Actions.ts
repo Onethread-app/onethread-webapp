@@ -3,7 +3,6 @@ import { tokenConfig } from '../UtilsActions';
 import {
 	CREATE_ROOM_FROM_SERVER,
 	CREATE_ROOM_ERROR,
-	GET_ROOMS_FROM_SERVER,
 	GET_ROOM_ERROR,
 	LOADING_ROOM,
 	ADD_MEMBER_IN_ROOM_ERROR,
@@ -16,7 +15,8 @@ import {
 	GET_ROOM_MESSAGES,
 	GET_ROOM_MESSAGES_ERROR,
 	FILE_UPLOAD,
-	ALL_MESSAGE_RECEIVED
+	ALL_MESSAGE_RECEIVED,
+	GET_ROOMS
 } from './Types';
 import { tigrowApi } from 'config';
 
@@ -63,8 +63,7 @@ export const getRooms = () => async (dispatch: any, getState: any) => {
 				`rooms/${getState().companyReducer.currentCompany._id}`,
 				headers
 			);
-			console.log('rooms', response.data.rooms);
-			dispatch({ type: GET_ROOMS_FROM_SERVER, payload: response.data.rooms });
+			dispatch({ type: GET_ROOMS, payload: response.data.rooms });
 		} else {
 			// tslint:disable-next-line: no-console
 			console.log('error in rooms fetching');

@@ -14,6 +14,7 @@ import {
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING,
 	REFRESH_MEMBER,
+	UNREAD_COUNT_ROOMS,
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
@@ -30,6 +31,8 @@ interface IRoomListComponentProps extends RouteComponentProps {
 	activeRoom: any;
 	roomId: string;
 	rooms: IRoom[];
+	companyRooms: IRoom[];
+	roomsUnreadCount: any;
 	companyId: string;
 }
 
@@ -127,42 +130,18 @@ export const RoomListComponent = withChatkit(
 			if (!props.chatkit.isLoading && props.companyId) {
 				connectChatManager();
 
-				// filteredRooms
-				// tslint:disable-next-line: no-shadowed-variable
-				const rooms = props.chatkit.currentUser.rooms
-					.filter((room: any) => room.customData.company === props.companyId)
-					.map((room: any) => ({
-						id: room.id,
-						name: room.name,
-						unreadCount: room.unreadCount,
-						company: room.customData.company,
-						account: room.createdByUserId,
-						createdAt: room.createdAt,
-						updatedAt: room.updatedAt
-					}));
-
-				dispatch({ type: GET_ROOMS, payload: rooms });
-
-				// TODO store only the user presences into a separate Object like userStatus
 				load(props.getRooms);
 
+				const roomsUnreadCount = {};
+				props.chatkit.currentUser.rooms
+					.filter((room: any) => room.customData.company === props.companyId)
+					.forEach((room: any) => {
+						roomsUnreadCount[room.id] = room.unreadCount;
+					});
+
+				dispatch({ type: UNREAD_COUNT_ROOMS, payload: roomsUnreadCount });
 			}
 		}, [props.chatkit]);
-
-		// TODO [TEST-1] I have to test typing indicator by removing this block
-		// useEffect(() => {
-		// 	if (!props.chatkit.isLoading) {
-		// 		for (const roomId in props.chatkit.currentUser.roomSubscriptions) {
-		// 			if (
-		// 				props.chatkit.currentUser.roomSubscriptions.hasOwnProperty(roomId)
-		// 			) {
-		// 				const room = props.chatkit.currentUser.roomSubscriptions[roomId];
-		// 				room.cancel();
-		// 				room.connected = false;
-		// 			}
-		// 		}
-		// 	}
-		// }, [companyId]);
 
 		const roomBgColor = ['#D8315B', '#9F7DE8', '#0FA3A3', '#456990', '#CDA2AB', '#FE5E41'];
 
@@ -179,13 +158,12 @@ export const RoomListComponent = withChatkit(
 							props.rooms.map((room: IRoom, i: number, arr: any) => {
 								return (
 									<RoomListItem
-										key={room.id}
-										roomId={room.id}
+										key={room._id}
+										id={room._id}
 										img={room.name[0]}
 										name={room.name}
-										unreadCount={room.unreadCount}
-										lastChild={isEqual(room.id, arr[props.rooms.length - 1].id)}
-										active={room.id === props.roomId}
+										lastChild={isEqual(room._id, arr[props.rooms.length - 1].id)}
+										active={room._id === props.roomId}
 										subscribeToRoom={subscribeToRoom}
 										iconBgColor={roomBgColor[i % roomBgColor.length]}
 									/>
@@ -203,6 +181,8 @@ const mapStateToProps = (state: any) => {
 	return {
 		roomId: state.roomReducer.roomId,
 		rooms: state.roomReducer.rooms,
+		companyRooms: state.roomReducer.companyRooms,
+		roomsUnreadCount: state.roomReducer.roomsUnreadCount,
 		companyId: state.companyReducer.currentCompany._id
 	};
 };

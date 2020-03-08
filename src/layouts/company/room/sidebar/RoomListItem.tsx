@@ -6,12 +6,11 @@ import React from 'react';
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface RoomListItemProps {
-	roomId: string;
+	id: string;
 	name: string;
 	img: string;
 	lastChild: boolean;
 	active: boolean;
-	unreadCount: number;
 	subscribeToRoom: (roomId: string, name: string) => void;
 	chatkit?: any;
 	iconBgColor: string;
@@ -19,6 +18,7 @@ interface RoomListItemProps {
 
 export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 	const roomId = useSelector((state: any) => state.roomReducer.roomId);
+	const roomsUnreadCount = useSelector((state: any) => state.roomReducer.roomsUnreadCount[props.id]);
 
 	return (
 		<li
@@ -31,13 +31,8 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 		>
 			<article
 				onClick={() => {
-					if (!props.chatkit.isLoading && !isEqual(props.roomId, roomId)) {
-						// TODO [TEST-2] I have to test typing indicator by removing this block
-						// if (!isEmpty(activeRoom)) {
-						// 	props.chatkit.currentUser.roomSubscriptions[activeRoom.id].cancel();
-						// 	props.chatkit.currentUser.roomSubscriptions[activeRoom.id].connected = false;
-						// }
-						props.subscribeToRoom(props.roomId, props.name);
+					if (!props.chatkit.isLoading && !isEqual(props.id, roomId)) {
+						props.subscribeToRoom(props.id, props.name);
 					}
 				}}
 				className={`flex items-center ph2 pv2 bb b--black-10 ${props.lastChild ? 'bn' : ''}`}
@@ -55,7 +50,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 				</div>
 				<div className="flex justify-around items-center">
 					<h1 className="f6-ns fw4 mv0 break-word">{props.name}</h1>
-					{props.unreadCount > 0 ? (
+					{roomsUnreadCount > 0 ? (
 						<h6
 							className="bg-tigrowLightBlue white fw8 ma0 ml1"
 							style={{
@@ -63,7 +58,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 								borderRadius: '50%'
 							}}
 						>
-							{props.unreadCount}
+							{roomsUnreadCount}
 						</h6>
 					) : null}
 				</div>
