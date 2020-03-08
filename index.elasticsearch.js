@@ -30,6 +30,59 @@ class ElasticsearchService {
   }
 
 
+  async createMembers(index,model,mapping, structure){
+
+    try {
+      const res = await this.client.indices.exists({
+        index: index,
+      });
+
+      if (!res) {
+
+        const createdIndex = await this.client.indices.create({
+          index: index,
+          body: mapping
+        });
+
+        if (createdIndex.acknowledged) {
+
+          const bulk = [];
+
+          const dataset = await model.find({}).populate({
+            path: 'account' ,
+            select: '_id email firstName lastName'
+          });
+
+
+          dataset.forEach(data => {
+            bulk.push({
+              index: { _index: index }
+            });
+            bulk.push(structure(data));
+          });
+
+          await this.client.bulk({ body: bulk });
+
+          logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
+
+        }
+
+        else {
+
+          logger.error(` Elasticsearchindex ${index}  creation failed`)
+
+        }
+
+      } else {
+        logger.info(` ✔ ️Elasticsearch index ${index} exits`);
+      }
+    } catch (error) {
+      logger.error(error)
+    }
+
+  }
+
+
   async createMessages(index,model,mapping, structure){
 
     try {

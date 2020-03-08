@@ -5,13 +5,14 @@ const { Company } = require('../../company/company.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
-const { accountMapping , accountStructure } = require('../../services/elastic.services');
+const { accountMapping , accountStructure , memberMapping , memberStructure} = require('../../services/elastic.services');
 const ElasticsearchService = require('../../../index.elasticsearch');
 const elasticService = new ElasticsearchService();
 elasticService.checkHealth();
+elasticService.createMembers('members',Member,memberMapping,memberStructure );
 elasticService.create('accounts', Account , accountMapping , accountStructure);
 
-const changeRole = async (req, res, next) => {
+const changeRole = async (req, res, next) => {  
   try {
     // check role: superAdmin/admin
     const member = await Member.findOne({
@@ -78,6 +79,8 @@ const addMember = async (req, res, next) => {
         userIds: accountsId,
       });
     }
+
+    console.log(members);
 
     return res.status(201).json({
       message: 'New member created',
