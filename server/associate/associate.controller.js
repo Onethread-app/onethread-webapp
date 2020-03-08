@@ -1,5 +1,5 @@
 const httpStatus = require('http-status');
-const Associate = require('./associate.model');
+const {Associate} = require('./associate.model');
 
 
 const logger = require('../../config/winston');
@@ -32,7 +32,9 @@ const get = async (req, res , next) => {
       
       res.json(colResult);
     })
-    .catch(e => next(e));
+    .catch(e => {
+      console.log(e);
+      next(e)});
 };
 
 const create = async (req, res, next) => {
