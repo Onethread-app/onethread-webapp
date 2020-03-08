@@ -3,6 +3,7 @@ const projectValidation = require('./project.validation');
 const router = express.Router();
 
 const schemaValidator = require('../helpers/joiSchemaValidator');
+const memberRoutes = require('./team-member/member.route');
 const projectCtrl = require('./project.controller');
 const {
   authorization,
@@ -43,12 +44,7 @@ router
     schemaValidator(projectValidation.showProjectList),
     projectCtrl.archiveProjectList,
   );
-// router.param(
-//   'pid',
-//   authorization,
-//   // schemaValidator(projectValidation.getProject),
-//   projectCtrl.getProjectLoad,
-// );
+
 router
   .route('/:pid')
   .get(authorization, projectCtrl.getProjectDetails);
@@ -81,5 +77,11 @@ router
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
-
+// router.use('/:pid/team-members', memberRoutes);
+// router.param(
+//    'pid',
+//    authorization,
+//    // schemaValidator(projectValidation.getProject),
+//    projectCtrl.getProjectLoad,
+//  );
 module.exports = router;

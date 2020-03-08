@@ -9,7 +9,7 @@ const { sendErrorResponse } = require('../helpers/jsonResponse');
 const changeName = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {
@@ -50,7 +50,7 @@ const changeName = async (req, res, next) => {
 const createCompany = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {
@@ -191,7 +191,7 @@ const getCompany = async (req, res, next) => {
 const updateBasicInfo = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {
@@ -216,7 +216,7 @@ const updateBasicInfo = async (req, res, next) => {
 const updateAbout = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {

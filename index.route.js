@@ -40,7 +40,7 @@ router.use('/posts', postRoutes);
 router.use('/reacts', reactRoutes);
 router.use('/reports', reportRoutes);
 router.use('/reviews', reviewRoutes);
-router.use('/rooms', roomRoutes);
+// router.use('/rooms', roomRoutes);
 router.use('/saves', saveRoutes);
 router.use('/skills', skillRoutes);
 router.use('/files', fileRoutes);

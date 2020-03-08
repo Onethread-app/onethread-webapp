@@ -74,7 +74,7 @@ const updateProjectDescription = async (req, res, next) => {
   )
     .exec()
     .then(result => {
-      logger.info(`preface addeed for ${req.body.pid}`);
+      logger.info(`Description addeed for ${req.parms.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
         message: 'Description updated',
@@ -98,7 +98,7 @@ const updateProjectOutline = async(req, res, next) =>{
   )
     .exec()
     .then(result => {
-      logger.info(`preface addeed for ${req.body.pid}`);
+      logger.info(`Outline addeed for ${req.params.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
         message: 'Outline updated',
@@ -241,10 +241,85 @@ const archiveProjectList = async (req, res, next) => {
 };
 
 const searchMemberFromMyCompany = async(req, res, next) =>{
+  try {
+    const name = req.query.name;
+    const companyID = req.company._id;
+    const company = await Company.findById({
+      _id: companyID,
+    }).populate('members', 'account');
+    let memberListId = company.members;
+    memberListId = memberListId.map(member => member.account);
+    let data = await Account.find({
+      $and: [
+        { name: { $regex: new RegExp(name) } },
+        { _id: { $nin: memberListId } },
+      ],
+    }).select('_id email name firstName lastName');
+    // TODO: pore ami change korbo query onusaree
+    return sendJSONresponse(res, 200, {
+      employees: {
+        message: `Search complete ${name}`,
+        data,
+      },
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
 
 }
 
 const searchMemberFromAssociates = async()=>{
+
+};
+
+const addTeamMember = async(req, res, next) =>{
+  if (!req.is('application/json')) {
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+  }
+
+  try {
+    const members = await Member.create(req.body.members);
+    if (!members.length) {
+      return res.status(400).json({
+        message: `No members created`,
+      });
+    }
+
+    let membersId = members.map(m => {
+      return m._id;
+    });
+
+    let accountsId = req.body.members.map(m => {
+      return m.account;
+    });
+
+    // save ref in company
+    req.company.members.addToSet(...membersId);
+    await req.company.save();
+
+    // add members into General room
+    const room = await Room.findOne({
+      name: 'General',
+      company: req.company._id,
+    });
+    if (room) {
+      room.members.addToSet(...accountsId);
+      await room.save();
+      await chatkit.addUsersToRoom({
+        roomId: room._id,
+        userIds: accountsId,
+      });
+    }
+
+    return res.status(201).json({
+      message: 'New member created',
+      members,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
 
 }
 module.exports = {
@@ -259,4 +334,5 @@ module.exports = {
   showAllFilesForProject,
   suggestConcernAdmin,
   archiveProjectList,
+  addTeamMember,
 };
