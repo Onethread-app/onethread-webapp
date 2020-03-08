@@ -237,6 +237,8 @@ const fileInProject = async (req, res, next) => {
         });
         await newFile.save();
         logger.info('File Link successfully save to file collection');
+        pidExist.files = newFile._id;
+        await pidExist.save()
         return sendJSONresponse(res, 200, { newFile });
   
       } catch (error) {

@@ -62,12 +62,11 @@ const showAllProjectsForCompany = async (req, res, next) => {
     .catch(e => next(e));
 };
 
-const updateProjectPreface = async (req, res, next) => {
+const updateProjectDescription = async (req, res, next) => {
   await Project.findByIdAndUpdate(
     { _id: req.params.pid },
     {
       $set: {
-        outline: req.body.outline,
         description: req.body.description,
       },
     },
@@ -78,7 +77,7 @@ const updateProjectPreface = async (req, res, next) => {
       logger.info(`preface addeed for ${req.body.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
-        message: 'Preface updated',
+        message: 'Description updated',
       });
     })
     .catch(err => {
@@ -87,17 +86,40 @@ const updateProjectPreface = async (req, res, next) => {
     });
 };
 
+const updateProjectOutline = async(req, res, next) =>{
+  await Project.findByIdAndUpdate(
+    { _id: req.params.pid },
+    {
+      $set: {
+        outline: req.body.outline,
+      },
+    },
+    { safe: true, upsert: true, new: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`preface addeed for ${req.body.pid}`);
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: 'Outline updated',
+      });
+    })
+    .catch(err => {
+      logger.error(`${err}`);
+      next(err);
+    });
+}
+
 const getProjectDetails = async (req, res, next) => {
   try {
     const project = await Project.findOne({
       _id: req.params.pid,
     })
-      .select('outline description color name')
-      .populate('files', '');
+    .populate('files', 'link')
+      .select('outline description color name');
     // console.log(req.project)
     return sendJSONresponse(res, 200, project);
   } catch (error) {
-    console.log(error);
     next(error);
   }
 };
@@ -217,10 +239,19 @@ const archiveProjectList = async (req, res, next) => {
       next(err);
     });
 };
+
+const searchMemberFromMyCompany = async(req, res, next) =>{
+
+}
+
+const searchMemberFromAssociates = async()=>{
+
+}
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
-  updateProjectPreface,
+  updateProjectDescription,
+  updateProjectOutline,
   // getProjectLoad,
   getProjectDetails,
   changeTitleProject,

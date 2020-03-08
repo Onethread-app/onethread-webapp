@@ -53,11 +53,19 @@ router
   .route('/:pid')
   .get(authorization, projectCtrl.getProjectDetails);
 router
-  .route('/:pid/update')
+  .route('/:pid/outline')
   .put(
     authorization,
-    schemaValidator(projectValidation.updateProjectPreface),
-    projectCtrl.updateProjectPreface,
+    schemaValidator(projectValidation.updateProjectOutline),
+    projectCtrl.updateProjectOutline,
+  );
+
+  router
+  .route('/:pid/description')
+  .put(
+    authorization,
+    schemaValidator(projectValidation.updateProjectDescription),
+    projectCtrl.updateProjectDescription,
   );
 router
   .route('/:pid/show-files')
