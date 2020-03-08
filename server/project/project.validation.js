@@ -55,7 +55,7 @@ module.exports = {
     })
   }),
   showProjectList: Joi.object().keys({
-    query: Joi.object().keys({
+    params: Joi.object().keys({
       companyId: schema.company.required(),
     })
   }),

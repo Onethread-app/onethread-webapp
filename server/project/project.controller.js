@@ -2,6 +2,8 @@ const { Member } = require('../company/member/member.model');
 const { Project } = require('./project.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
+const ElasticsearchService = require('../../index.elasticsearch');
+const elasticService = new ElasticsearchService();
 const {
   sendErrorResponse,
   sendJSONresponse,
@@ -189,22 +191,59 @@ const showAllFilesForProject = async (req, res, next) => {
 
 const suggestConcernAdmin = async (req, res, next) => {
   try {
-    await Member.find({
-      company: req.query.companyId,
-    })
-      .select('-_id account')
-      .populate(
-        'account',
-        '_id name firstName lastName email profileImage',
-      )
-      .exec()
-      .then(result => {
-        return sendJSONresponse(res, 200, result);
+
+    const name = req.query.name;
+    const companyId = req.params.companyId;
+
+    if (name) {
+
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  "company": {
+                    "value": companyId
+                  }
+                }
+              },
+              {
+                multi_match: {
+                  "query": name,
+                  "type": "phrase_prefix",
+                  "fields": ["account.email", "account.firstName", "account.lastName", "account.name"]
+                }
+              }
+            ]
+          }
+        }
+      }
+
+      const response = await elasticService.search('members', '_doc', body);
+
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits
+      })
+
+    } else {
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
       });
-  } catch (error) {
+    }
+  }
+  catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
+
 };
+
+
 const archiveProjectList = async (req, res, next) => {
   await Project.find({ company: req.query.companyId, removed: true })
     .populate('departments', 'name _id')

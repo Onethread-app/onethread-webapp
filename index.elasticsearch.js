@@ -50,7 +50,7 @@ class ElasticsearchService {
 
           const dataset = await model.find({}).populate({
             path: 'account' ,
-            select: '_id email firstName lastName'
+            select: '_id email firstName lastName name profileImage'
           });
 
 

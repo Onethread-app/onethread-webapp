@@ -1,20 +1,16 @@
 module.exports.memberMapping = {
   "mappings": {
     "properties": {
-      "mongo_id" : {"type": "text"},
       "account" : {"type": "nested" , "include_in_parent": true },
-      "company" : { "type": "text"},
-      "role" : { "type": "text"}
+      "company" : { "type": "text"}
     }
   }
 }
 
 module.exports.memberStructure = (data) => {
   return {
-    mongo_id: data._id.toString(),
     account: data.account,
     company: data.company,
-    role: data.role
   }
 }
 
