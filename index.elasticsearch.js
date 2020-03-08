@@ -12,10 +12,10 @@ class ElasticsearchService {
         username: 'elastic',
         password: 'changeme',
       },
-    }); 
+    });
   }
 
-  checkHealth(){
+  checkHealth() {
 
     this.client.ping({
       requestTimeout: 30000,
@@ -30,7 +30,7 @@ class ElasticsearchService {
   }
 
 
-  async createMembers(index,model,mapping, structure){
+  async createMembers(index, model, mapping, structure) {
 
     try {
       const res = await this.client.indices.exists({
@@ -49,21 +49,24 @@ class ElasticsearchService {
           const bulk = [];
 
           const dataset = await model.find({}).populate({
-            path: 'account' ,
+            path: 'account',
             select: '_id email firstName lastName name profileImage'
           });
 
+          if (!isEmpty(dataset)) {
 
-          dataset.forEach(data => {
-            bulk.push({
-              index: { _index: index }
+            dataset.forEach(data => {
+              bulk.push({
+                index: { _index: index }
+              });
+              bulk.push(structure(data));
             });
-            bulk.push(structure(data));
-          });
+            await this.client.bulk({ body: bulk });
+            logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index} with bulk`)
 
-          await this.client.bulk({ body: bulk });
-
-          logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
+          } else {
+            logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
+          }
 
         }
 
@@ -83,7 +86,7 @@ class ElasticsearchService {
   }
 
 
-  async createMessages(index,model,mapping, structure){
+  async createMessages(index, model, mapping, structure) {
 
     try {
       const res = await this.client.indices.exists({
@@ -102,21 +105,25 @@ class ElasticsearchService {
           const bulk = [];
 
           const dataset = await model.find({}).populate({
-            path: 'files' ,
+            path: 'files',
             select: '_id link s3Key'
           });
 
 
-          dataset.forEach(data => {
-            bulk.push({
-              index: { _index: index }
+          if (!isEmpty(dataset)) {
+
+            dataset.forEach(data => {
+              bulk.push({
+                index: { _index: index }
+              });
+              bulk.push(structure(data));
             });
-            bulk.push(structure(data));
-          });
+            await this.client.bulk({ body: bulk });
+            logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index} with bulk`)
 
-          await this.client.bulk({ body: bulk });
-
-          logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
+          } else {
+            logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
+          }
 
         }
 
@@ -133,9 +140,10 @@ class ElasticsearchService {
       logger.error(error)
     }
 
+
   }
 
-  async create(index,model,mapping, structure) {
+  async create(index, model, mapping, structure) {
     try {
       const res = await this.client.indices.exists({
         index: index,
@@ -154,7 +162,7 @@ class ElasticsearchService {
 
           const dataset = await model.find({});
 
-          if(!isEmpty(dataset)){
+          if (!isEmpty(dataset)) {
 
             dataset.forEach(data => {
               bulk.push({
@@ -165,7 +173,7 @@ class ElasticsearchService {
             await this.client.bulk({ body: bulk });
             logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index} with bulk`)
 
-          }else{
+          } else {
             logger.info(` ✔ ️ successfully created Elasticsearch index ${createdIndex.index}`)
           }
 
@@ -203,6 +211,18 @@ class ElasticsearchService {
       body: document,
       refresh: "true"
     })
+  }
+
+  bulkInsert(indexName,dataset,structure){
+
+    let bulk = [];
+    dataset.forEach(data => {
+      bulk.push({
+        index: { _index: indexName }
+      });
+      bulk.push(structure(data));
+    });
+    return this.client.bulk({ body : bulk })
   }
 
 

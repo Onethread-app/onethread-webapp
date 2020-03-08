@@ -1,6 +1,7 @@
 module.exports.memberMapping = {
   "mappings": {
     "properties": {
+      "mongo_id" : { "type": "text"},
       "account" : {"type": "nested" , "include_in_parent": true },
       "company" : { "type": "text"}
     }
@@ -9,6 +10,7 @@ module.exports.memberMapping = {
 
 module.exports.memberStructure = (data) => {
   return {
+    mongo_id: data._id.toString(),
     account: data.account,
     company: data.company,
   }
@@ -44,25 +46,25 @@ module.exports.messageStructure = (data) => {
 
 
 module.exports.accountMapping = {
+  
   "settings": {
     "analysis": {
       "analyzer": {
-        "my_email_analyzer": {
-          "type": "custom",
-          "tokenizer": "uax_url_email",
-          "filter": ["lowercase", "stop"]
+        "email_analyzer" : {
+          "tokenizer" : "uax_url_email" ,
+          "filter": "lowercase"
         }
       }
     }
-  },
+  }, 
   "mappings": {
-      "properties": {
-        "mongo_id": { "type": "text" },
-        "name": { "type": "text" },
-        "email": { "type": "text", "analyzer": "my_email_analyzer" },
-        "firstName": { "type": "text" },
-        "lastName": { "type": "text" }
-      }
+    "properties": {
+      "mongo_id" : { "type": "text"},
+      "name" : { "type": "text" },
+      "email" : {"type": "text" , "analyzer": "email_analyzer"},
+      "firstName" : {"type": "text" },
+      "lastName" : { "type": "text" }
+    }
   }
 }
 

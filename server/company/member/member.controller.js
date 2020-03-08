@@ -4,7 +4,7 @@ const { Room } = require('./../../room/room.model');
 const { Company } = require('../../company/company.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
-const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const { sendJSONresponse , sendErrorResponse} = require('../../helpers/jsonResponse');
 const { accountMapping , accountStructure , memberMapping , memberStructure} = require('../../services/elastic.services');
 const ElasticsearchService = require('../../../index.elasticsearch');
 const elasticService = new ElasticsearchService();
@@ -43,7 +43,6 @@ const changeRole = async (req, res, next) => {
   }
 };
 
-// add team member
 const addMember = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
@@ -59,12 +58,14 @@ const addMember = async (req, res, next) => {
 
     let members = [];
 
+    let accounts = [];
+
     let pendingMembers = [];
 
     if (req.body.members.length) {
       let newMembers = req.body.members;
 
-      let accounts = newMembers.map(member => member.account);
+      accounts = newMembers.map(member => member.account);
 
       // find previous members
       let prevMembers = await Member.find({
@@ -111,7 +112,14 @@ const addMember = async (req, res, next) => {
       );
     }
 
-    console.log(members);
+   const elasticMembers = await Member.find({
+      account: { $in : accounts },
+      company:  req.company._id,
+    }).populate({ path: 'account', select: '_id name firstName lastName email' })
+
+
+     await elasticService.bulkInsert('members' ,elasticMembers ,memberStructure );
+     logger.info(` ✔ ️ successfully Elasticsearch documented with bulk`)
 
     return res.status(201).json({
       message: 'New member created and invitation send',
@@ -119,6 +127,7 @@ const addMember = async (req, res, next) => {
       pendingMembers,
     });
   } catch (error) {
+    logger.error(error)
     next(error);
   }
 };
@@ -259,7 +268,7 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchMember = async (req, res, next) => {
   try {
-    const email = req.query.email;
+    const name = req.query.name;
     const companyID = req.company._id;
     const company = await Company.findById({
       _id: companyID,
@@ -278,6 +287,7 @@ const searchMember = async (req, res, next) => {
               {
                 "multi_match": {
                   "query": req.query.name ,
+                  "type": "phrase_prefix",
                   "fields": ["email" , "firstName" , "lastName"]
                 }
               }
