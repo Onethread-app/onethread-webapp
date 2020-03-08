@@ -1,3 +1,30 @@
+module.exports.messageMapping = {
+  "mappings": {
+    "properties": {
+      "mongo_id" : {"type": "text"},
+      "room" : { "type": "text"},
+      "account" : { "type": "text"},
+      "chatkitId" :  { "type": "text"},
+      "text" : {"type": "text"},
+      "files" : {"type": "nested" , "include_in_parent": true },
+      "type" : {"type": "text"}
+    }
+  }
+}
+
+module.exports.messageStructure = (data) => {
+  return {
+    mongo_id: data._id.toString(),
+    room: data.room,
+    account: data.account,
+    chatkitId: data.chatkitId,
+    text: data.text,
+    type: data.type,
+    files: data.files
+  }
+}
+
+
 module.exports.accountMapping = {
   "settings": {
     "analysis": {
