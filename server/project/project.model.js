@@ -53,10 +53,10 @@ const projectSchema = new Schema(
         ref: 'ProjectMember',
       },
     ],
-    associates: [
-      {
+    projectRequest: [
+      { 
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Associates',
+        ref: 'ProjectRequest',
       },
     ],
     rooms: [
@@ -65,7 +65,7 @@ const projectSchema = new Schema(
         ref: 'Room',
       },
     ],
-    company: {
+    company: { // which company create the project
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
     },
@@ -83,7 +83,7 @@ const projectSchema = new Schema(
     },
     teamsize:{
       type: Number,
-      default: 0,
+      default: 1,
     }
   },
   {
