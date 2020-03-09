@@ -35,7 +35,7 @@ router
   .route('/concern-admin-search/:companyId')
   .get(
     authorization,
-    schemaValidator(projectValidation.showProjectList),
+    // schemaValidator(projectValidation.showProjectList),
     projectCtrl.suggestConcernAdmin,
   );
 router
