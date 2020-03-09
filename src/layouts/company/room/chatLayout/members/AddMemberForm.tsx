@@ -56,11 +56,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
   }, []);
 
   return (
-    <div
-      style={{
-        width: '300px'
-      }}
-    >
+    <div className="pa3">
       <div className="w-100">
         <h1 className="f5 tigrow-darkBlue">Add Members</h1>
         <SuggestField
@@ -81,7 +77,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
           <Tag
             key={item._id}
             className="ma1 pa2"
-            intent="primary"
+            style={{ backgroundColor: '#3b5998', color: 'white' }}
             interactive={true}
             onRemove={(e) => {
               const filteredItems = selectedRoomMember.filter((selectedItem) => (
@@ -99,16 +95,16 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
       </div>
 
       <div className="flex justify-end mt3">
-        {/* <Button
+        <Button
           className="grow h2 pointer white bp3-minimal w4 mr3"
-          style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
+          style={{ background: '#fff', outline: 'none', border: '1px solid #3b5998', color: '#3b5998' }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
           Cancel
-        </Button> */}
+        </Button>
         <Button className="grow h2 pointer white bp3-minimal w4 outline-0"
           style={{ backgroundColor: '#3b5998', color: 'white' }}
-          disabled={selectedRoomMember.length > 10}
+          disabled={selectedRoomMember.length === 0 || selectedRoomMember.length > 10}
           onClick={
             async () => {
               const data = {

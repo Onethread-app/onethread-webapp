@@ -27,12 +27,6 @@ interface ChatLayoutComponentProps {
 export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 	const [showMemberFormDialog, setShowMemberFormDialog] = useState(false);
 	const [showMemberListDialog, setShowMemberListDialog] = useState(false);
-	// TODO: future works
-	// useEffect(() => {
-	// 	if (!isEmpty(props.activeRoom)) {
-	// 		props.getRoomMembers(props.activeRoom.id);
-	// 	}
-	// }, [props.activeRoom]);
 
 	return (
 		<>
@@ -60,74 +54,64 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 								<span className="f5 ml2 fw7">{props.users.length}</span>
 							</div>
 						</div>
-						<div>
-							<Popover
-								className=""
-								minimal={true}
-								position={Position.BOTTOM}
-								popoverClassName="bg-white pa3"
-								content={
-									<div>
-										{props.currentRoom.archive ?
-											<>
-												<h5 className="ma0 pointer"
-													onClick={async () => {
-														await props.archiveRoom({
-															archive: false
-														}, props.currentRoom._id);
-													}}
-												>Activate Room</h5>
-											</> :
-											<>
-												<h5 className="gray ma0 mb2 pointer"
-													onClick={() => { console.log('mute'); }}
-												>Mute Conversation</h5>
-												<h5 className="red ma0 pointer"
-													onClick={async () => {
-														await props.archiveRoom({
-															archive: true
-														}, props.currentRoom._id);
-													}}
-												>Archive Room</h5>
-											</>
-										}
-									</div>
-								}
-								target={
-									<div>
-										<img
-											className="grow"
-											src={settingsIcon}
-											width="30px"
-											height="30px"
-										/>
-									</div>
-								}
-							/>
-							{permit(props.companyRole) && props.currentRoom.archive === false ?
+						<div className="flex">
+							<div>
 								<Popover
-									className="ml2"
 									minimal={true}
+									// isOpen={true}
 									position={Position.BOTTOM}
-									popoverClassName="bp3-popover-content-sizing bg-white"
+									popoverClassName="bg-white pa3"
 									content={
-										<AddMemberForm
-											showDialog={showMemberFormDialog}
-											setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
-										/>
+										<div>
+											{props.currentRoom.archive ?
+												<>
+													{permit(props.companyRole) ?
+														<h5 className="ma0 pointer bp3-popover-dismiss"
+															onClick={async () => {
+																await props.archiveRoom({
+																	archive: false
+																}, props.currentRoom._id);
+															}}
+														>Activate Room</h5> :
+														<h5 className="ma0 pointer bp3-popover-dismiss gray">No settings</h5>
+													}
+												</> :
+												<>
+													<h5 className="gray ma0 mb2 pointer bp3-popover-dismiss"
+														onClick={() => { console.log('mute'); }}
+													>Mute Conversation</h5>
+													{permit(props.companyRole) && <h5 className="red ma0 pointer bp3-popover-dismiss"
+														onClick={async () => {
+															await props.archiveRoom({
+																archive: true
+															}, props.currentRoom._id);
+														}}
+													>Archive Room</h5>}
+												</>
+											}
+										</div>
 									}
 									target={
 										<div>
 											<img
 												className="grow"
-												src={addMemberIcon}
+												src={settingsIcon}
 												width="30px"
 												height="30px"
 											/>
 										</div>
 									}
 								/>
-								: null}
+							</div>
+							{permit(props.companyRole) && props.currentRoom.archive === false ?
+								<div className="ml2" onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}>
+									<img
+										className="grow"
+										src={addMemberIcon}
+										width="30px"
+										height="30px"
+									/>
+								</div> : null}
 						</div>
 					</div>
 					{/* chat heading ends */}
@@ -155,16 +139,18 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 				</Dialog>
 			)}
 
-			{/* {showMemberFormDialog &&
-				<RightSidebar
+			{showMemberFormDialog &&
+				<Dialog
 					onClose={() => setShowMemberFormDialog(!showMemberFormDialog)}
+					isOpen={showMemberFormDialog}
+					style={{ background: '#fff' }}
 				>
 					<AddMemberForm
 						showDialog={showMemberFormDialog}
 						setShowDialog={() => setShowMemberFormDialog(!showMemberFormDialog)}
 					/>
-				</RightSidebar>
-			} */}
+				</Dialog>
+			}
 
 		</>
 	);
