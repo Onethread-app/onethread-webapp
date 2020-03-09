@@ -134,12 +134,12 @@ const getCompanyIndividual = async (req, res, next) => {
       {
         path: 'company',
         select: '_id name',
-        populate: [
-          {
-            path: 'logo',
-            select: 'link s3Key type',
-          },
-        ],
+        // populate: [
+        //   {
+        //     path: 'logo',
+        //     select: 'link s3Key type',
+        //   },
+        // ],
       },
     ];
 
@@ -169,8 +169,7 @@ const getCompany = async (req, res, next) => {
     })
       .select(
         '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
-      )
-      .populate('logo', 'link s3Key type');
+      );
 
     // role info
     let member = await Member.findOne({
@@ -199,8 +198,9 @@ const updateBasicInfo = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-  const mongoose = require(mongoose);
+  
   try {
+    
     // updating new values
     for (const key in req.body) {
       if (req.body.hasOwnProperty(key)) {
@@ -214,6 +214,7 @@ const updateBasicInfo = async (req, res, next) => {
       message: `Company's basic information updated`,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -224,9 +225,11 @@ const updateAbout = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-
+  console.log(req.company.about, 1,req.body.about);
   try {
+    
     req.company.about = req.body.about;
+
 
     await req.company.save();
 
@@ -234,6 +237,7 @@ const updateAbout = async (req, res, next) => {
       message: `Company's about updated`,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -328,7 +332,9 @@ const deleteCompany = async (req, res, next) => {
 };
 
 const authorizeUser=  (functionalRole, ...userRoles )=> {
+
   return async function  (req, res, next) {
+    
     try {
 
       // const company =  await Company.findOne({
@@ -346,10 +352,12 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
       //   !userRoles.includes(member.role) ||
       //   !company.optionalRole.includes(functionalRole)
       // )
-      console.log(member, userRoles);
-      if (
-        !member ||
+     
+
+      if ( !member   || (
+        functionalRole === 'all' &&
         !userRoles.includes(member.role)  
+      ) 
       ) {
         return res.status(403).json({
           message: `Restricted`,
