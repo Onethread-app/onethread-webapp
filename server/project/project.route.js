@@ -7,11 +7,13 @@ const projectCtrl = require('./project.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
+// const companyCtrl= require('../company/company.controller');
 // authentication
 router
   .route('/create')
   .post(
     authorization,
+    // companyCtrl.authorizeUser('projectCD'),
     schemaValidator(projectValidation.createNewProjectForCompany),
     projectCtrl.createNewProjectForCompany,
   );
@@ -43,21 +45,24 @@ router
     schemaValidator(projectValidation.showProjectList),
     projectCtrl.archiveProjectList,
   );
-// router.param(
-//   'pid',
-//   authorization,
-//   // schemaValidator(projectValidation.getProject),
-//   projectCtrl.getProjectLoad,
-// );
+
 router
   .route('/:pid')
   .get(authorization, projectCtrl.getProjectDetails);
 router
-  .route('/:pid/update')
+  .route('/:pid/outline')
   .put(
     authorization,
-    schemaValidator(projectValidation.updateProjectPreface),
-    projectCtrl.updateProjectPreface,
+    schemaValidator(projectValidation.updateProjectOutline),
+    projectCtrl.updateProjectOutline,
+  );
+
+  router
+  .route('/:pid/description')
+  .put(
+    authorization,
+    schemaValidator(projectValidation.updateProjectDescription),
+    projectCtrl.updateProjectDescription,
   );
 router
   .route('/:pid/show-files')
@@ -73,5 +78,11 @@ router
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
-
+// router.use('/:pid/team-members', memberRoutes);
+// router.param(
+//    'pid',
+//    authorization,
+//    // schemaValidator(projectValidation.getProject),
+//    projectCtrl.getProjectLoad,
+//  );
 module.exports = router;

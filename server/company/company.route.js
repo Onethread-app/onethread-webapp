@@ -23,6 +23,7 @@ router
     companyCtrl.createCompany,
   );
 
+router.route('/search').get(authorization, SchemaValidator(joiSchema.search), companyCtrl.searchCompany);
 // get company
 router
   .route('/:cname')
@@ -59,6 +60,14 @@ router
     companyCtrl.changeName,
   );
 
+router
+  .route('/:cname/role')
+  .put(
+    authorization,
+    SchemaValidator(joiSchema.changeRole),
+    companyCtrl.updateRole,
+  );
+
 // .delete(
 //   auth,
 //   // SchemaValidator(joiSchema.deleteCompany),
@@ -69,6 +78,7 @@ router
 router
   .route('/individual/:account')
   .get(authorization, companyCtrl.getCompanyIndividual);
+
 
 // redirect to member
 router.use('/:cname/members', memberRoutes);

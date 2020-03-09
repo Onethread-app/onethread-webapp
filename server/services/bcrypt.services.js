@@ -10,7 +10,7 @@ const bcryptService = () => {
   };
 
   const comparePassword = (pw, hash) => (
-    console.log(pw, hash)
+    
 
   );
 

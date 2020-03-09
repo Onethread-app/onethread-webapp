@@ -19,8 +19,8 @@ const schema = {
   name: Joi.string().max(50),
   type: Joi.string(),
   pid: idSchema.id,
-  description: Joi.string().max(2500),
-  outline: Joi.string().max(5000),
+  description: Joi.string().max(2500).allow(''),
+  outline: Joi.string().max(5000).allow(''),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
   color: Joi.number(),
@@ -39,10 +39,14 @@ module.exports = {
       color: schema.color,
     }),
   }),
-  updateProjectPreface: Joi.object().keys({
+  updateProjectOutline: Joi.object().keys({
+    body: Joi.object().keys({
+      outline: schema.outline,
+    }),
+  }),
+  updateProjectDescription: Joi.object().keys({
     body: Joi.object().keys({
       description: schema.description,
-      outline: schema.outline,
     }),
   }),
   getProject: Joi.object().keys({

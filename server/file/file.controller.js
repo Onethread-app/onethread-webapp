@@ -141,7 +141,8 @@ const companyLogo = async (req, res, next) => {
           const company = await Company.findOne({
             _id: companyID,
           });
-          company.logo = data._id;
+          company.logo = data.link;
+          company.imageType = 'companyLogo';
           company.save();
           return sendJSONresponse(res, 200, data);
         })
@@ -202,7 +203,7 @@ const fileInRooms = async (req, res, next) => {
 const fileInProject = async (req, res, next) => {
   const file = req.file;
   if(!file){
-    return sendErrorResponse(res, 400, 'ValidationError', {message:'Please provide the required filed'});
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/x-www-form-urlencoded'"})
   }
   const userID = req.user._id;
   if (!checkMimetype.includes(file.mimetype)) {
@@ -237,6 +238,8 @@ const fileInProject = async (req, res, next) => {
         });
         await newFile.save();
         logger.info('File Link successfully save to file collection');
+        pidExist.files.push(newFile._id);
+        await pidExist.save()
         return sendJSONresponse(res, 200, { newFile });
   
       } catch (error) {

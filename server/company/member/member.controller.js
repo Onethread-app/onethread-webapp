@@ -46,7 +46,7 @@ const changeRole = async (req, res, next) => {
 const addMember = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {
@@ -282,7 +282,7 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchMember = async (req, res, next) => {
   try {
-    const name = req.query.name;
+    const email = req.query.email;
     const companyID = req.company._id;
     const company = await Company.findById({
       _id: companyID,

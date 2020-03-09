@@ -45,8 +45,8 @@ const validateUrl = [
 const company = new Schema(
   {
     logo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'File',
+      type: String,
+      trim: true,
     },
     name: {
       type: String,
@@ -71,15 +71,22 @@ const company = new Schema(
       required: true,
     },
     optionalRole: {
-      type: String,
-      enum: [
-        'all',
-        'editProfile',
-        'projectCD',  //create delete
-      ],
-      default: 'all',
-      required: true,
+      type: [{
+        type: String,
+        enum: [
+          'editProfile',
+          'cRUDAnnouncement',
+          'archiveProject',
+          'addRemoveModerator',
+          'messageAssociate',
+          'addAcceptRejectAssociate',
+          'acceptRejectProjectFromAssociate',
+        ]
+      }],
+      default: ['editProfile'],
+      required: true
     },
+    
     address: {
       type: String,
       maxlength: 120,

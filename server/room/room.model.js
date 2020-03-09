@@ -16,10 +16,10 @@ const RoomSchema = new mongoose.Schema(
         ref: 'Account',
       },
     ],
-    company: {
+    project: {
       type: Schema.ObjectId,
       unique: false,
-      ref: 'Company',
+      ref: 'Project',
     },
     account: {
       type: Schema.ObjectId,
@@ -33,7 +33,7 @@ const RoomSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-RoomSchema.index({ name: 1, company: 1 }, { unique: true });
+RoomSchema.index({ name: 1, project: 1 }, { unique: true });
 
 let Room = mongoose.model('Room', RoomSchema);
 

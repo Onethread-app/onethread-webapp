@@ -19,7 +19,7 @@ elasticService.create('skillsarea', SkillArea , skillMapping , skillStructure);
 
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   const skill = req.body.name;
@@ -49,15 +49,15 @@ const createSkill = async (req, res, next) => {
 };
 
 const getSkillInfo = async (req, res) => {
-  console.log(req);
+  
   const skill = req.params.id;
-  console.log(skill);
+  
   SkillArea.findOne({ _id: skill })
     .populate('accountId')
     .exec()
     .then(result => {
       if (result) {
-        console.log(result);
+       
 
         return sendJSONresponse(res, 200, {
           success: true,
@@ -103,7 +103,7 @@ const getAllSkill = async (req, res) => {
 
 const updateSkillInfo = async (req, res) => {
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   SkillArea.findOneAndUpdate({ _id: req.params.skill })
