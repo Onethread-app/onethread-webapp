@@ -353,7 +353,7 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
       //   !company.optionalRole.includes(functionalRole)
       // )
      
-
+console.log(member, userRoles, functionalRole);
       if ( !member   || (
         functionalRole === 'all' &&
         !userRoles.includes(member.role)  
