@@ -31,6 +31,7 @@ const {
 } = require('../helpers/APIError');
 const ElasticsearchService = require('../../index.elasticsearch');
 const elasticService = new ElasticsearchService();
+const { memberStructure } = require('../services/elastic.services');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -97,7 +98,19 @@ const register = async (req, res, next) => {
           return { account: account._id, company: m.company };
         });
 
+        let pendingMembersCompany = pendingMember.map(Member => Member.company);
+
         await Member.create(pendingMemberToMember);
+
+
+   const elasticMembers = await Member.find({
+    company: { $in : pendingMembersCompany },
+    account:  account._id,
+  }).populate({ path: 'account', select: '_id name firstName lastName email' })
+
+
+   await elasticService.bulkInsert('members' ,elasticMembers ,memberStructure );
+   logger.info(` ✔ ️ successfully Elasticsearch documented with bulk`)
 
         await PendingMember.updateMany(
           { email: account.email },

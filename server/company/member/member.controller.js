@@ -230,7 +230,21 @@ const deleteMember = async (req, res, next) => {
 
     req.member.removed = true;
 
-    await req.member.save();
+  const deletedMember =  await req.member.save();
+
+  const body = {
+    query : {
+      term : {
+        "mongo_id" : deleteMember._id
+      }
+    }
+  }
+
+  await elasticService.delete('members','_doc' , body);
+
+  logger.info(` ✔ ️ successfully deleted Elasticsearch document`)
+
+    //delete the member by account and company id here 
 
     return res.status(200).json({
       message: 'member deleted successfully',
