@@ -1,13 +1,22 @@
 const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
-const { PendingMember } = require('./pendingMember.model');
+const { Room } = require('./../../room/room.model');
+const { Company } = require('../../company/company.model');
+const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
-const { sendJSONresponse } = require('../../helpers/jsonResponse');
+const { sendJSONresponse , sendErrorResponse} = require('../../helpers/jsonResponse');
+const { accountMapping , accountStructure , memberMapping , memberStructure} = require('../../services/elastic.services');
+const ElasticsearchService = require('../../../index.elasticsearch');
+const elasticService = new ElasticsearchService();
+elasticService.checkHealth();
+elasticService.createMembers('members',Member,memberMapping,memberStructure );
+elasticService.create('accounts', Account , accountMapping , accountStructure);
+const { PendingMember } = require('./pendingMember.model');
 const {
   sendInviteColleague,
 } = require('../../services/email.services');
 
-const changeRole = async (req, res, next) => {
+const changeRole = async (req, res, next) => {  
   try {
     // check role: superAdmin/admin
     const member = await Member.findOne({
@@ -34,7 +43,6 @@ const changeRole = async (req, res, next) => {
   }
 };
 
-// add team member
 const addMember = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
@@ -50,12 +58,14 @@ const addMember = async (req, res, next) => {
 
     let members = [];
 
+    let accounts = [];
+
     let pendingMembers = [];
 
     if (req.body.members.length) {
       let newMembers = req.body.members;
 
-      let accounts = newMembers.map(member => member.account);
+      accounts = newMembers.map(member => member.account);
 
       // find previous members
       let prevMembers = await Member.find({
@@ -102,12 +112,22 @@ const addMember = async (req, res, next) => {
       );
     }
 
+   const elasticMembers = await Member.find({
+      account: { $in : accounts },
+      company:  req.company._id,
+    }).populate({ path: 'account', select: '_id name firstName lastName email' })
+
+
+     await elasticService.bulkInsert('members' ,elasticMembers ,memberStructure );
+     logger.info(` ✔ ️ successfully Elasticsearch documented with bulk`)
+
     return res.status(201).json({
       message: 'New member created and invitation send',
       members,
       pendingMembers,
     });
   } catch (error) {
+    logger.error(error)
     next(error);
   }
 };
@@ -250,34 +270,58 @@ const searchMember = async (req, res, next) => {
   try {
     const email = req.query.email;
     const companyID = req.company._id;
+    const company = await Company.findById({
+      _id: companyID,
+    }).populate('members', 'account');
+    let memberListId = company.members;
+    memberListId = memberListId.map(member => member.account);
 
-    const members = await Member.find({
-      company: companyID,
-      removed: false,
-    });
+    if(name){
 
-    let memberListId = members.map(member => member.account);
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool:{
+            "must": [
+              {
+                "multi_match": {
+                  "query": req.query.name ,
+                  "type": "phrase_prefix",
+                  "fields": ["email" , "firstName" , "lastName"]
+                }
+              }
+            ],
+             must_not: [
+              {
+               "terms" : {
+                  "mongo_id": memberListId 
+                }
+              }
+           ]
+          }
+        }
+      }
 
-    let data = await Account.find({
-      $and: [
-        { email: { $regex: new RegExp(email) } },
-        { _id: { $nin: memberListId } },
-      ],
-    })
-      .skip(0)
-      .limit(+10)
-      .select('_id email name firstName lastName');
+      const response = await elasticService.search('accounts','_doc',body);
 
-    return sendJSONresponse(res, 200, {
-      employees: {
-        message: `Search complete ${email}`,
-        data,
-      },
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-    next(error);
+      return sendJSONresponse(res,200,{
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits
+      })
+
+    }else{
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
+      });
+    }
   }
+  catch (error) {
+        logger.error(`${error}`);
+        next(error);
+      }
+
 };
 
 module.exports = {

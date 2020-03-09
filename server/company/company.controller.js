@@ -4,10 +4,10 @@ const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
-const {
-  sendJSONresponse,
-  sendErrorResponse,
-} = require('../helpers/jsonResponse');
+const { sendErrorResponse } = require('../helpers/jsonResponse');
+const ElasticsearchService = require('../../index.elasticsearch');
+const elasticService = new ElasticsearchService();
+const logger = require('../../config/winston');
 
 // create a company profile
 const changeName = async (req, res, next) => {
@@ -84,7 +84,12 @@ const createCompany = async (req, res, next) => {
       account: req.user._id,
       company: newCompany._id,
       role: 'superAdmin',
+    }).populate({
+      path : 'account' ,
+      select: '_id name'
     });
+
+    console.log(newMember);
 
     // add ref[member,room] in company
     newCompany.members.push(newMember._id);
@@ -101,7 +106,21 @@ const createCompany = async (req, res, next) => {
     //     company: company._id,
     //   },
     // });
-    await newMember.save();
+    const elasticMember = await newMember.save();
+
+  const elasticMemberPopulated =  Member.find({
+    
+  }elasticMember._id).populate({ path: 'account', select: '_id name firstName lastName email' });
+   
+  const response =  await elasticService.set('members','_doc' , {
+      mongo_id: elasticMemberPopulated._id,
+      account: elasticMemberPopulated.account,
+      company: elasticMemberPopulated.company
+    });
+
+    console.log(elasticMemberPopulated)
+
+    logger.info(` ✔ ️Elasticsearch document ${response.result}`);
 
     // // add company ref in user
     // req.user.companies.push(newCompany._id);
@@ -384,6 +403,7 @@ const searchCompany = async (req, res, next) => {
     next(error);
   }
 };
+
 
 module.exports = {
   authorizeUser,

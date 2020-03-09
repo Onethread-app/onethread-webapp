@@ -24,7 +24,7 @@ router
   .route('/delete-skill')
   .delete(authorization, skillCtrl.deleteSkillInfoFromAccount);
 router.route('/').get(authorization, skillCtrl.getAllSkill);
-router.route('/search').get(authorization, skillCtrl.searchSkillSet);
+router.route('/search').get(authorization, schemaValidator(paramValidation.search), skillCtrl.searchSkillSet);
 router.param('id', skillCtrl.skillLoad);
 
 module.exports = router;

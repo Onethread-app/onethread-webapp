@@ -2,13 +2,20 @@ const SkillArea = require('./skillArea.model');
 const Account = require('../account/account.model');
 const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const { skillMapping , skillStructure } = require('../services/elastic.services');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const {
   APIError,
   EmailIdExistError,
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
+const ElasticsearchService = require('../../index.elasticsearch');
+const elasticService = new ElasticsearchService();
+elasticService.create('skillsarea', SkillArea , skillMapping , skillStructure);
 
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -139,50 +146,83 @@ const skillLoad = async (req, res, next, id) => {
       return next(err);
     });
 };
+
 const searchSkillSet = async (req, res, next) => {
-  try {
-    const name = req.query.name;
-    const userId = req.user._id;
-    const userSkill = await Account.findOne({ _id: userId });
-    const userskillId = userSkill.skillArea;
-    if (name === '') {
-      const err = new BadRequestError(
-        'Nothing Submitted',
-        httpStatus.BAD_REQUEST,
-        true,
-      );
-      logger.error(`Query Error: ${err}`);
+  const name = req.query.name;
+  const userId = req.user._id;
+  const userSkill = await Account.findOne({ _id: userId });
+  const userskillId = userSkill.skillArea;
+  if (name) {
+
+    let body = {
+      size: 200,
+      from: 0,
+      query: {
+        bool: {
+          must: [
+            {
+              match: {
+                "name" : req.query.name
+              }
+            }
+          ],
+          must_not: [
+            {
+              "terms" : {
+                "mongo_id" : userskillId
+              }
+            }
+          ]
+      },
     }
-    SkillArea.find({
-      $and: [
-        { name: { $regex: new RegExp(name), $options: 'i' } },
-        { _id: { $nin: userskillId } },
-      ],
-    })
-      .select('-accountId')
-      .then(data => {
-        if (data.length < 1) {
-          const err = new SearchNotMatchError(
-            'Query does not found',
-            httpStatus.BAD_REQUEST,
-            true,
-          );
-          logger.error(`Query Error: ${err}`);
-        } else {
-          logger.info(`Search complete ${name}`);
-          return sendJSONresponse(res, 200, {
-            success: true,
-            message: `Search complete for ${name}`,
-            data,
-          });
-        }
+  };
+
+    client
+      .search({ index: 'skillarea', body: body, type: '_doc' })
+      .then(results => {
+        return sendJSONresponse(res, 200 , {
+          success : true,
+          message: `Search complete for ${name}`,
+          data: results.hits.hits
+        })
       })
       .catch(err => {
-        logger.error(`${err}`);
-        return next(err);
+        console.log(err);
+        // res.send([]);
       });
-  } catch (error) {
-    next(error);
+
+    // await SkillArea.find({
+    //   $and: [
+    //     { name: { $regex: new RegExp(name), $options: 'i' } },
+    //     { _id: { $nin: userskillId } },
+    //   ],
+    // })
+    //   .select('-accountId')
+    //   .then(data => {
+    //     if (data.length < 1) {
+    //       logger.error(`search not match for ${name}`);
+    //       return sendErrorResponse(res, 404, 'SearchNotMatchError', {
+    //         message: 'no skill found',
+    //       });
+    //     } else {
+    //       logger.info(`Search complete ${name}`);
+    //       return sendJSONresponse(res, 200, {
+    //         success: true,
+    //         message: `Search complete for ${name}`,
+    //         data,
+    //       });
+    //     }
+    //   })
+    //   .catch(err => {
+    //     logger.error(`${err}`);
+    //     return next(err);
+    //   });
+
+      
+  } else {
+    return sendErrorResponse(res, 400, 'EmptySearchError', {
+      message: `query error`,
+    });
   }
 };
 

@@ -32,7 +32,7 @@ router
     projectCtrl.changeTitleProject,
   );
 router
-  .route('/concern-admin-search')
+  .route('/concern-admin-search/:companyId')
   .get(
     authorization,
     schemaValidator(projectValidation.showProjectList),
