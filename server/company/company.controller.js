@@ -135,12 +135,12 @@ const getCompanyIndividual = async (req, res, next) => {
       {
         path: 'company',
         select: '_id name',
-        populate: [
-          {
-            path: 'logo',
-            select: 'link s3Key type',
-          },
-        ],
+        // populate: [
+        //   {
+        //     path: 'logo',
+        //     select: 'link s3Key type',
+        //   },
+        // ],
       },
     ];
 
@@ -170,20 +170,19 @@ const getCompany = async (req, res, next) => {
     })
       .select(
         '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
-      )
-      .populate('logo', 'link s3Key type');
+      );
 
     // role info
     let member = await Member.findOne({
       account: req.user._id,
-      company: req.company._id,
+      company: company._id,
     }).select('-_id role');
 
-    if (!member) {
-      return res.status(401).json({
-        message: "You're not authorized with this company",
-      });
-    }
+    // if (!member) {
+    //   return res.status(401).json({
+    //     message: "You're not authorized with this company",
+    //   });
+    // }
 
     return res.status(200).json({
       company: { ...company._doc, role: member.role },
@@ -200,8 +199,9 @@ const updateBasicInfo = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-  const mongoose = require(mongoose);
+  
   try {
+    
     // updating new values
     for (const key in req.body) {
       if (req.body.hasOwnProperty(key)) {
@@ -215,6 +215,7 @@ const updateBasicInfo = async (req, res, next) => {
       message: `Company's basic information updated`,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -225,9 +226,11 @@ const updateAbout = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-
+  console.log(req.company.about, 1,req.body.about);
   try {
+    
     req.company.about = req.body.about;
+
 
     await req.company.save();
 
@@ -235,6 +238,7 @@ const updateAbout = async (req, res, next) => {
       message: `Company's about updated`,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -275,8 +279,9 @@ const updateRole = async (req, res, next) => {
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
+    console.log(req.params.companyId);
     const company = await Company.findOne({
-      name: req.params.cname,
+      _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');
 
     if (company) {
@@ -327,18 +332,33 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeAdmin = role => {
-  return function(req, res, next) {
-    try {
-      const member = Member.findOne({
-        account: req.user._id,
-        company: req.company._id,
-      });
+const authorizeUser=  (functionalRole, ...userRoles )=> {
 
-      if (
-        !member ||
-        !['superAdmin', 'admin'].includes(member.role) ||
-        ![role].includes(req.company.optionalRole)
+  return async function  (req, res, next) {
+    
+    try {
+
+      // const company =  await Company.findOne({
+      //   _id: req.params.companyId,
+      // }).select('_id optionalRole').exec();
+      
+
+      const member = await Member.findOne({
+        account: req.user._id,
+        "company" : req.params.companyId, //apatoto pore name or id hobe
+      }).exec();
+
+      // if (
+      //   !member ||
+      //   !userRoles.includes(member.role) ||
+      //   !company.optionalRole.includes(functionalRole)
+      // )
+     
+console.log(member, userRoles, functionalRole);
+      if ( !member   || (
+        functionalRole === 'all' &&
+        !userRoles.includes(member.role)  
+      ) 
       ) {
         return res.status(403).json({
           message: `Restricted`,
@@ -347,7 +367,7 @@ const authorizeAdmin = role => {
 
       next();
     } catch (error) {
-      
+      console.log(error);
       next(error);
     }
   };
@@ -391,7 +411,7 @@ const searchCompany = async (req, res, next) => {
 };
 
 module.exports = {
-  authorizeAdmin,
+  authorizeUser,
   createCompany,
   getCompany,
   updateBasicInfo,

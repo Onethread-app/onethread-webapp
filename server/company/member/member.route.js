@@ -1,9 +1,10 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({mergeParams: true});
 const {
   authorization,
 } = require('../../middlewares/authorizationMiddleware');
 const joiSchema = require('./member.validation');
+const companyCtrl = require('../company.controller');
 const memberCtrl = require('./member.controller');
 
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
@@ -16,6 +17,7 @@ router
     authorization,
     // TODO: member validations
     // SchemaValidator(joiSchema.newMember),
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     memberCtrl.addMember,
   )
   .get(authorization, memberCtrl.list);
@@ -40,6 +42,7 @@ router
   .route('/:memberId/changeRole')
   .put(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeRole),
     memberCtrl.changeRole,
   );

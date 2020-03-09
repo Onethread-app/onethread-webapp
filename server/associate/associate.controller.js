@@ -13,7 +13,7 @@ const get = async (req, res , next) => {
   
   
   await Associate.findOne({
-    _id: req.params.associteId,
+    _id: req.params.associateId,
     removed: false,
   })
     .select('_id company associateCompany createdAt account')
@@ -33,17 +33,19 @@ const get = async (req, res , next) => {
       res.json(colResult);
     })
     .catch(e => {
-      console.log(e);
-      next(e)});
+      logger.error(`Associate create: ${e}`);
+      next(e)
+    });
 };
 
-const create = async (req, res, next) => {
+const createPending = async (req, res, next) => {
   
   try {
 
     const associate = new Associate({
         company: req.body.companyId,
         associateCompany : req.body.associateCompany,
+        isAccepted: false,
         account: req.user._id,
     });
     await associate
@@ -54,7 +56,48 @@ const create = async (req, res, next) => {
       return res.status(201).json(associate);
   } catch (error) {
     console.log(error);
-    logger.error(`Board create: ${error}`);
+    logger.error(`Associate pending: ${error}`);
+    
+    next(error);
+  }
+};
+
+const acceptPending = async (req, res, next) => {
+  
+  try {
+    
+    let associate = await Associate.findOneAndUpdate(
+      { _id: req.body.associateId },
+      {   isAccepted: true  },
+      { safe: true, upsert: true, new: true },
+    ).exec();
+      
+    associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
+      
+      return res.status(200).json(associate);
+  } catch (error) {
+    console.log(error);
+    logger.error(`Associate accept: ${error}`);
+    
+    next(error);
+  }
+};
+
+const rejectPending = async (req, res, next) => {
+  try {
+    //console.log();
+    let associate = await Associate.findOneAndUpdate(
+      { _id: req.body.associateId },
+        { removed: true  },
+      { safe: true, upsert: true, new: true },
+    ).exec();
+     console.log(associate); 
+    associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
+      
+    return res.status(200).json({   remove: true  });
+  } catch (error) {
+    console.log(error);
+    logger.error(`Associate accept: ${error}`);
     
     next(error);
   }
@@ -63,12 +106,15 @@ const create = async (req, res, next) => {
 
 
 
+
 const list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
   await Associate.find(
-    { $or:[ {company: companyId}, {associateCompany: companyId}]}
-    
+    { 
+      $or:[ {company: req.params.companyId}, {associateCompany: req.params.companyId}],
+      isAccepted: true , removed:false
+    }
   )
     .select('_id company associateCompany createdAt')
     .populate('company', '_id name type ')
@@ -85,8 +131,39 @@ const list = async (req, res, next) => {
     .catch(e => next(e));
 };
 
+const listPending = async (req, res, next) => {
+  console.log(req.params.companyId);
+  const { limit = 50, skip = 0 } = req.query;
+
+  await Associate.find(
+    { 
+      $or:[  {associateCompany: req.params.companyId}],
+      isAccepted: false , removed:false
+    }
+  )
+    .select('_id company associateCompany createdAt')
+    .populate('company', '_id name type ')
+    .populate('associateCompany', '_id name type ')
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
+    .exec()
+    .then(result => {
+      
+      logger.info(`${result}`);
+      return sendJSONresponse(res, 200, result);
+    })
+    .catch(e => {
+      
+      next(e)}
+    );
+};
+
 module.exports = {
   list,
   get,
-  create,
+  listPending,
+  createPending,
+  acceptPending,
+  rejectPending,
 };

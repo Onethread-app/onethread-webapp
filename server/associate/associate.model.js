@@ -20,6 +20,10 @@ const AssociateSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isAccepted: {
+      type: Boolean,
+      default: false,
+    },
     account: {
         type: Schema.Types.ObjectId,
         ref: 'Account',

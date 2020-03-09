@@ -18,9 +18,9 @@ const changeRole = async (req, res, next) => {
       company: req.company._id,
     });
 
-    if (!['superAdmin', 'admin'].includes(member.role)) {
+    if ( req.body.role ==='admin' && member.role !== 'superAdmin' ) {
       return res.status(403).json({
-        message: `Restricted`,
+        message: `only super admin can do that`,
       });
     }
 
@@ -39,6 +39,7 @@ const changeRole = async (req, res, next) => {
 
 // add team member
 const addMember = async (req, res, next) => {
+  let membersToAdd = [];
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
@@ -51,13 +52,16 @@ const addMember = async (req, res, next) => {
       });
     }
     const members = await Member.create(req.body.members);
-
-    let pendingMember = req.body.newTeamMembers.map(m => {
-      return {email: m, company:req.company._id};
-    });
-    const membersToAdd = await PendingMember.create(pendingMember);
+    //TODO role wise delete admin, supreadmin
+    if('newTeamMembers' in req.body){
+      let pendingMember = req.body.newTeamMembers.map(m => {
+        return {email: m, company:req.company._id};
+      });
+     membersToAdd = await PendingMember.create(pendingMember);
     
-    sendInviteColleague(req.user.email, req.company, req.body.newTeamMembers);
+     sendInviteColleague(req.user.email, req.company, req.body.newTeamMembers);
+    }
+    
 
     return res.status(201).json({
       message: 'New member created and invitation send',
@@ -175,6 +179,7 @@ const getMemberLoad = async (req, res, next) => {
 const searchMember = async (req, res, next) => {
   try {
     const email = req.query.email;
+    
     const companyID = req.company._id;
     const company = await Company.findById({
       _id: companyID,
@@ -198,6 +203,7 @@ const searchMember = async (req, res, next) => {
       },
     });
   } catch (error) {
+    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
