@@ -14,7 +14,8 @@ import settingsProject from '../resources/images/sidebarProjectSettings.svg';
 import projects from '../resources/images/ProjectsIcon.svg';
 import associates from '../resources/images/sideBarAssociates.svg';
 import preface from '../resources/images/sideBarPreface.svg';
-import settings from '../resources/images/sideBarSettings.svg';
+import settings from '../resources/images/sidebarSettings.svg';
+import teamProject from '../resources/images/sidebarProjectTeam.svg';
 
 import { Tooltip, Divider } from '@blueprintjs/core';
 
@@ -372,6 +373,43 @@ export const Sidebar = (props: {
 											style={{ color: 'inherit' }}
 										>
 											Preface
+								</span>
+									}
+								</NavLink>
+								<NavLink
+									exact
+									className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+									style={{ color: 'white' }}
+									activeStyle={{ background: '#3F61C5' }}
+									to={`/company/${props.company.name}/project/${props.project._id}/team`}
+								>
+									{props.leftOpen ?
+										<span className="pl4">
+											<img
+												src={teamProject}
+												className="pt1"
+												style={{ width: '25px' }}
+											/>
+										</span> :
+										<Tooltip
+											content={<p className="mb0">Team</p>}
+											position="right"
+										>
+											<span className="pl3">
+												<img
+													src={teamProject}
+													className="pt1"
+													style={{ width: '25px' }}
+												/>
+											</span>
+										</Tooltip>
+									}
+									{props.leftOpen &&
+										<span
+											className="outline-0 bp3-large pl4"
+											style={{ color: 'inherit' }}
+										>
+											Team
 								</span>
 									}
 								</NavLink>
