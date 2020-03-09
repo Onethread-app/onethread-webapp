@@ -41,7 +41,9 @@ router
     schemaValidator(projectValidation.showProjectList),
     projectCtrl.archiveProjectList,
   );
-
+router
+  .route('/pending-requests')
+  .get(authorization, projectCtrl.projectPendingRequest);
 router
   .route('/:pid')
   .get(authorization, projectCtrl.getProjectDetails);
@@ -74,10 +76,6 @@ router
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
-
-router
-  .route('/pending-requests')
-  .get(authorization, projectCtrl.projectPendingRequest);
 
 // router.route('/:')
 // router.use('/:pid/team-members', memberRoutes);

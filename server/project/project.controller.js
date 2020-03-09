@@ -76,18 +76,20 @@ const createNewProjectForCompany = async (req, res, next) => {
 };
 
 const projectPendingRequest = async (req, res, next) => {
-  const { limit = 10, skip = 0 } = req.query;
+  const { limit = 10, skip = 0, companyId } = req.query;
   await ProjectRequest.find({
-    'associates.company': req.query.companyId,
+    isAccepted: false,
   })
+    .populate({
+      path: 'Associates',
+      match: { company: companyId },
+    })
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
     .exec()
     .then(result => {
-      logger.info(
-        `pending project list for:${req.query.associateId}`,
-      );
+      logger.info(`pending project list for:${companyId}`);
       return sendJSONresponse(res, 200, result);
     })
     .catch(e => {
@@ -102,7 +104,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
     company: companyId,
     removed: false,
   })
-    .populate('departments projectRequest', 'name _id assosiates')
+    .populate('departments', 'name _id ')
     .select('-type -__v  -files -version ')
     .sort({ createdAt: -1 })
     .skip(+skip)
