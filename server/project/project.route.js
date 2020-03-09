@@ -9,14 +9,12 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 // const companyCtrl= require('../company/company.controller');
 // authentication
-router
-  .route('/create')
-  .post(
-    authorization,
-    // companyCtrl.authorizeUser('projectCD'),
-    // schemaValidator(projectValidation.createNewProjectForCompany),
-    projectCtrl.createNewProjectForCompany,
-  );
+router.route('/create').post(
+  authorization,
+  // companyCtrl.authorizeUser('projectCD'),
+  schemaValidator(projectValidation.createNewProjectForCompany),
+  projectCtrl.createNewProjectForCompany,
+);
 router
   .route('/lists')
   .get(
@@ -31,13 +29,11 @@ router
     schemaValidator(projectValidation.changeNameProject),
     projectCtrl.changeTitleProject,
   );
-router
-  .route('/concern-admin-search/:companyId')
-  .get(
-    authorization,
-    // schemaValidator(projectValidation.showProjectList),
-    projectCtrl.suggestConcernAdmin,
-  );
+router.route('/concern-admin-search/:companyId').get(
+  authorization,
+  // schemaValidator(projectValidation.showProjectList),
+  projectCtrl.suggestConcernAdmin,
+);
 router
   .route('/archive-list')
   .get(
@@ -57,7 +53,7 @@ router
     projectCtrl.updateProjectOutline,
   );
 
-  router
+router
   .route('/:pid/description')
   .put(
     authorization,
@@ -79,7 +75,9 @@ router
     projectCtrl.archiveProject,
   );
 
-router.route('/pending-requests').get(authorization, projectCtrl.projectPendingRequest);
+router
+  .route('/pending-requests')
+  .get(authorization, projectCtrl.projectPendingRequest);
 
 // router.route('/:')
 // router.use('/:pid/team-members', memberRoutes);

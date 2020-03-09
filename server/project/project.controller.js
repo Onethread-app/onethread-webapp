@@ -28,22 +28,19 @@ const createNewProjectForCompany = async (req, res, next) => {
       });
       await project.save();
       // need to be refactored as soon as possible
-      let associates = [req.body.associates];
-      let associate = associates.find(asso => {
+      let associates = req.body.associates;
+      associates.map(async asso => {
         const createProjectReq = new ProjectRequest({
           associates: asso._id,
           size: asso.size,
           isAccepted: false,
           project: project._id,
         });
-        createProjectReq.save();
-        project.projectRequest.push(createProjectReq._id);
-        project.save();
+        await createProjectReq.save();
       });
       return sendJSONresponse(res, 201, {
         sucees: true,
-        message: 'New project created for assosiate',
-        associate,
+        message: 'New project created for associate',
       });
     } else {
       const project = new Project({
@@ -80,16 +77,22 @@ const createNewProjectForCompany = async (req, res, next) => {
 
 const projectPendingRequest = async (req, res, next) => {
   const { limit = 10, skip = 0 } = req.query;
-  await ProjectRequest.findById({ associates: req.query.associateId })
+  await ProjectRequest.find({
+    'associates.company': req.query.companyId,
+  })
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
-    .exec().then(result=>{
-      logger.info(`pending project list for:${req.query.associateId}`);
+    .exec()
+    .then(result => {
+      logger.info(
+        `pending project list for:${req.query.associateId}`,
+      );
       return sendJSONresponse(res, 200, result);
-    }).catch(e=>{
-      logger.error(`${e}`)
-      next(e)
+    })
+    .catch(e => {
+      logger.error(`${e}`);
+      next(e);
     });
 };
 
@@ -263,12 +266,10 @@ const showAllFilesForProject = async (req, res, next) => {
 
 const suggestConcernAdmin = async (req, res, next) => {
   try {
-
     const name = req.query.name;
     const companyId = req.params.companyId;
 
     if (name) {
-
       let body = {
         size: 200,
         from: 0,
@@ -277,44 +278,49 @@ const suggestConcernAdmin = async (req, res, next) => {
             must: [
               {
                 term: {
-                  "company": {
-                    "value": companyId
-                  }
-                }
+                  company: {
+                    value: companyId,
+                  },
+                },
               },
               {
                 multi_match: {
-                  "query": name,
-                  "type": "phrase_prefix",
-                  "fields": ["account.email", "account.firstName", "account.lastName", "account.name"]
-                }
-              }
-            ]
-          }
-        }
-      }
+                  query: name,
+                  type: 'phrase_prefix',
+                  fields: [
+                    'account.email',
+                    'account.firstName',
+                    'account.lastName',
+                    'account.name',
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      };
 
-      const response = await elasticService.search('members', '_doc', body);
+      const response = await elasticService.search(
+        'members',
+        '_doc',
+        body,
+      );
 
       return sendJSONresponse(res, 200, {
         success: true,
         message: `Search complete for ${name}`,
-        data: response.hits.hits
-      })
-
+        data: response.hits.hits,
+      });
     } else {
       return sendErrorResponse(res, 400, 'EmptySearchError', {
         message: `query error`,
       });
     }
-  }
-  catch (error) {
+  } catch (error) {
     logger.error(`${error}`);
     next(error);
   }
-
 };
-
 
 const archiveProjectList = async (req, res, next) => {
   await Project.find({ company: req.query.companyId, removed: true })
@@ -422,5 +428,5 @@ module.exports = {
   suggestConcernAdmin,
   archiveProjectList,
   addTeamMember,
-  projectPendingRequest
+  projectPendingRequest,
 };
