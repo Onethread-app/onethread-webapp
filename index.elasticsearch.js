@@ -225,14 +225,6 @@ class ElasticsearchService {
     return this.client.bulk({ body : bulk })
   }
 
-  delete(indexName,indexType,body){
-    return this.client.deleteByQuery({
-      index: indexName,
-      type: indexType,
-      body
-    })
-  }
-
 
 
 
