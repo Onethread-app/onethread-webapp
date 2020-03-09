@@ -109,8 +109,8 @@ const createCompany = async (req, res, next) => {
     const elasticMember = await newMember.save();
 
   const elasticMemberPopulated =  Member.find({
-    
-  }elasticMember._id).populate({ path: 'account', select: '_id name firstName lastName email' });
+    _id:elasticMember._id
+  }).populate({ path: 'account', select: '_id name firstName lastName email' });
    
   const response =  await elasticService.set('members','_doc' , {
       mongo_id: elasticMemberPopulated._id,
