@@ -136,6 +136,9 @@ a:hover {
 .left--12 {
 	left: -12px;
 }
+.right--12 {
+	right: -12px;
+}
 .w6 {
 	width: 6rem;
 }

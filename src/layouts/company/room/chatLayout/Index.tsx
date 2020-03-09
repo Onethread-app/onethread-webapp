@@ -32,7 +32,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 		<>
 			{isEmpty(props.currentRoom.name) === false && isEmpty(props.currentRoom._id) === false ?
 				<div
-					className="flex flex-column h-100"
+					className="flex flex-column h-100 w-100"
 				// style={{ height: "calc(100vh - 50px)" }}
 				>
 					{/* chat heading starts */}
@@ -123,9 +123,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 						</div>
 					}
 				</div>
-				: <div className="absolute--center tc">
-					<h2>Please, select a room !!</h2>
-				</div>
+				:
+				<h2>Please, select a room !!</h2>
 			}
 			{showMemberListDialog && (
 				<Dialog
