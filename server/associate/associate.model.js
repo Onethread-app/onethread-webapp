@@ -34,5 +34,9 @@ const AssociateSchema = new mongoose.Schema(
 );
 
 AssociateSchema.index({ associateCompany: 1, company: 1 }, { unique: true });
+let Associate =  mongoose.model('Associate', AssociateSchema);
 
-module.exports = mongoose.model('Associate', AssociateSchema);
+module.exports = {
+  Associate,
+};
+

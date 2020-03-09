@@ -1,5 +1,6 @@
 const Account = require('../account/account.model');
 const mongoose = require('mongoose');
+const { Associate } = require('../associate/associate.model');
 const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
@@ -373,11 +374,24 @@ console.log(member, userRoles, functionalRole);
 };
 
 const searchCompany = async (req, res, next) => {
+  
   try {
-    const { limit = 50, skip = 0 , name, cname} = req.query;
+    const { limit = 50, skip = 0 , name, companyId} = req.query;
+    const associate = await Associate.find({
+       $or:[ {company: companyId}, {associateCompany: companyId}]
+      }).exec();
+
+      let associateCompanyId = associate.map(m => {
+      if(m.company.toString() === companyId){
+        return m.associateCompany;
+      }
+      return m.company;
+    });
+
+     associateCompanyId.push(companyId);
     await Company.find({
       name: { $regex: new RegExp(name), $options: 'i' },
-      _id: { $ne: mongoose.Types.ObjectId(cname)}
+      _id: { $nin: associateCompanyId}
     })
       .select('name')
       .skip(+skip)
