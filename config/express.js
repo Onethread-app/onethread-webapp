@@ -20,7 +20,6 @@ const {
   EmailIdExistError,
 } = require('../server/helpers/APIError');
 const {
-  
   sendErrorResponse,
 } = require('../server/helpers/jsonResponse');
 
@@ -130,8 +129,9 @@ app.use((err, req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  
-  return sendErrorResponse(res, 404, {message: 'API not found'})
+  return sendErrorResponse(res, 404, 'MethodNotFoundError', {
+    message: 'API not found',
+  });
 });
 
 // log error in winston transports except when executing test suite

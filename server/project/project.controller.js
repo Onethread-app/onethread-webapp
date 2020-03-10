@@ -1,7 +1,7 @@
 const { Member } = require('../company/member/member.model');
 const { Project } = require('./project.model');
 const { ProjectRequest } = require('../request/request.model');
-const Associate = require('../associate/associate.model');
+const { Associate } = require('../associate/associate.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
 const ElasticsearchService = require('../../index.elasticsearch');
@@ -38,6 +38,9 @@ const createNewProjectForCompany = async (req, res, next) => {
           project: project._id,
         });
         await createProjectReq.save();
+        logger.info(
+          `${req.body.companyId} company send a project request to its associate`,
+        );
       });
       return sendJSONresponse(res, 201, {
         sucees: true,
@@ -81,7 +84,7 @@ const projectPendingRequest = async (req, res, next) => {
   const associateId = await Associate.findOne({ company: companyId });
   await ProjectRequest.find({
     isAccepted: false,
-    associate: associateId._id,
+    associate: associateId.associateCompany,
   })
     .sort({ createdAt: -1 })
     .skip(+skip)
@@ -98,45 +101,66 @@ const projectPendingRequest = async (req, res, next) => {
 };
 
 const acceptProjectRequest = async (req, res, next) => {
-  await ProjectRequest.findByIdAndUpdate(
-    { project: req.body.pid },
-    {
-      $set: {
-        isAccepted: true,
-        isRejected: false,
+  try {
+    await ProjectRequest.updateOne(
+      { project: req.query.pid },
+      {
+        $set: {
+          isAccepted: true,
+          isRejected: false,
+        },
       },
-    },
-    { safe: true, new: true, upsert: true },
-  )
-    .exec()
-    .then(result => {
-      logger.info(`project request accept for ${req.body.pid}`)
-      return sendJSONresponse(res, 200, {message: `Project request accept for id:${req.body.pid}`})
-    }).catch(e=>{
-      logger.error(`${e}`)
-      next(e);
+      { safe: true, new: true, upsert: true },
+    );
+    logger.info(`project request accept for ${req.query.pid}`);
+    await Associate.updateOne(
+      {
+        company: req.query.companyId,
+      },
+      {
+        $push: { project: req.query.pid },
+      },
+      { safe: true, upsert: true },
+    );
+    // logger.info(
+    //   `${req.query.companyId} create a project`,
+    // );
+    await Project.updateOne(
+      { _id: req.query.pid },
+      {
+        $push: { associate: req.query.companyId },
+      },
+      { safe: true, upsert: true },
+    );
+    return sendJSONresponse(res, 200, {
+      message: `${req.query.pid} accepted by ${req.query.companyId}`,
     });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
 };
 
 const rejectProjectRequest = async (req, res, next) => {
-  await ProjectRequest.findByIdAndUpdate(
-    { project: req.body.pid },
-    {
-      $set: {
-        isAccepted: false,
-        isRejected: true,
+  try {
+    await ProjectRequest.updateOne(
+      { project: req.query.pid },
+      {
+        $set: {
+          isAccepted: false,
+          isRejected: true,
+        },
       },
-    },
-    { safe: true, new: true, upsert: true },
-  )
-    .exec()
-    .then(result => {
-      logger.info(`project request accept for ${req.body.pid}`)
-      return sendJSONresponse(res, 200, {message: `Project request accept for id:${req.body.pid}`})
-    }).catch(e=>{
-      logger.error(`${e}`)
-      next(e);
+      { safe: true, new: true, upsert: true },
+    );
+    logger.info(`project id: ${req.query.pid} rejected by company`);
+    return sendJSONresponse(res, 200, {
+      message: `${req.query.pid} rejected by ${req.query.companyId}`,
     });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
 };
 
 const showAllProjectsForCompany = async (req, res, next) => {

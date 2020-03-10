@@ -15,24 +15,17 @@ const teamMember = new Schema(
       unique: false,
       required: true,
     },
-    role:{
+    specialMember: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Member',
+      unique: false,
+    },
+    role: {
       type: String,
-      enum: ['pm', 'sm', 'm'], // pm = project-moderator, sm = Special Member from Associate, m = Member
-      default: 'm',
+      enum: ['admin', 'projectModerator', 'member', 'specialMember'],
+      default: 'member',
       required: true,
     },
-    // role: {
-    //   type: String,
-    //   enum: [
-    //     'superAdmin',
-    //     'admin',
-    //     'manager',
-    //     'moderator',
-    //     'employee',
-    //   ],
-    //   default: 'employee',
-    //   required: true,
-    // },
     // designations: [
     //   {
     //     type: mongoose.Schema.Types.ObjectId,
