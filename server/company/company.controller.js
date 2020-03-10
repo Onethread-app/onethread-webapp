@@ -88,7 +88,7 @@ const createCompany = async (req, res, next) => {
     });
 
     // add ref[member,room] in company
-    
+    //newCompany.members.push(newMember._id);
     // newCompany.rooms.push(newRoom._id);
 
     // company creation
@@ -169,7 +169,7 @@ const getCompany = async (req, res, next) => {
       name: req.params.cname,
     })
       .select(
-        '-account -websites -rooms -products -departments -divisions -createdAt -updatedAt -__v',
+        '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
       );
 
     // role info
