@@ -4,9 +4,9 @@ const Schema = mongoose.Schema;
 // company schema
 const projectRequestSchema = new Schema(
   {
-    associates: {
+    associate: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Associates',
+      ref: 'Associate',
     },
     size: {
       type: Number,
@@ -20,6 +20,10 @@ const projectRequestSchema = new Schema(
     isAccepted: {
       type: Boolean,
       default: false,
+    },
+    isRejected: {
+        type: Boolean,
+        default: true,
     },
     project: {
       type: mongoose.Schema.Types.ObjectId,

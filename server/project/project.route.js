@@ -44,6 +44,12 @@ router
 router
   .route('/pending-requests')
   .get(authorization, projectCtrl.projectPendingRequest);
+  router
+  .route('/accept-request')
+  .post(authorization, projectCtrl.acceptProjectRequest);
+  router
+  .route('/reject-request')
+  .post(authorization, projectCtrl.rejectProjectRequest);
 router
   .route('/:pid')
   .get(authorization, projectCtrl.getProjectDetails);

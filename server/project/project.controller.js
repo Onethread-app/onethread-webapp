@@ -1,6 +1,7 @@
 const { Member } = require('../company/member/member.model');
 const { Project } = require('./project.model');
 const { ProjectRequest } = require('../request/request.model');
+const Associate = require('../associate/associate.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
 const ElasticsearchService = require('../../index.elasticsearch');
@@ -31,7 +32,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       let associates = req.body.associates;
       associates.map(async asso => {
         const createProjectReq = new ProjectRequest({
-          associates: asso._id,
+          associate: asso._id,
           size: asso.size,
           isAccepted: false,
           project: project._id,
@@ -77,24 +78,63 @@ const createNewProjectForCompany = async (req, res, next) => {
 
 const projectPendingRequest = async (req, res, next) => {
   const { limit = 10, skip = 0, companyId } = req.query;
+  const associateId = await Associate.findOne({ company: companyId });
   await ProjectRequest.find({
     isAccepted: false,
-    'Associate.company': companyId,
+    associate: associateId._id,
   })
-    // .populate({
-    //   path: 'Associates',
-    //   match: { company: companyId },
-    // })
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
     .exec()
     .then(result => {
-      logger.info(`pending project list for:${companyId}`);
+      logger.info(`pending project list for company:${companyId}`);
       return sendJSONresponse(res, 200, result);
     })
     .catch(e => {
       logger.error(`${e}`);
+      next(e);
+    });
+};
+
+const acceptProjectRequest = async (req, res, next) => {
+  await ProjectRequest.findByIdAndUpdate(
+    { project: req.body.pid },
+    {
+      $set: {
+        isAccepted: true,
+        isRejected: false,
+      },
+    },
+    { safe: true, new: true, upsert: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`project request accept for ${req.body.pid}`)
+      return sendJSONresponse(res, 200, {message: `Project request accept for id:${req.body.pid}`})
+    }).catch(e=>{
+      logger.error(`${e}`)
+      next(e);
+    });
+};
+
+const rejectProjectRequest = async (req, res, next) => {
+  await ProjectRequest.findByIdAndUpdate(
+    { project: req.body.pid },
+    {
+      $set: {
+        isAccepted: false,
+        isRejected: true,
+      },
+    },
+    { safe: true, new: true, upsert: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`project request accept for ${req.body.pid}`)
+      return sendJSONresponse(res, 200, {message: `Project request accept for id:${req.body.pid}`})
+    }).catch(e=>{
+      logger.error(`${e}`)
       next(e);
     });
 };
@@ -432,4 +472,6 @@ module.exports = {
   archiveProjectList,
   addTeamMember,
   projectPendingRequest,
+  acceptProjectRequest,
+  rejectProjectRequest,
 };
