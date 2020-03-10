@@ -6,6 +6,7 @@ const logger = require('../../config/winston');
 const {  BadRequestError } = require('../helpers/APIError');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 const { log } = require('debug');
+const _ = require('lodash');
 
 
 
@@ -41,13 +42,27 @@ const get = async (req, res , next) => {
 const createPending = async (req, res, next) => {
   
   try {
-
-    const associate = new Associate({
+    let associate = await Associate.findOne(
+      { 
         company: req.body.companyId,
         associateCompany : req.body.associateCompany,
         isAccepted: false,
-        account: req.user._id,
-    });
+        isRejected:true,
+      },
+    ).exec();
+    
+    if(_.isEmpty(associate)) {
+      associate = new Associate({
+          company: req.body.companyId,
+          associateCompany : req.body.associateCompany,
+          isAccepted: false,
+          isRejected: false,
+          account: req.user._id,
+      });
+      
+    }else{
+      associate.isRejected = false;
+    }
     await associate
       .save();
       await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
@@ -68,11 +83,11 @@ const acceptPending = async (req, res, next) => {
     
     let associate = await Associate.findOneAndUpdate(
       { _id: req.body.associateId },
-      {   isAccepted: true  },
+      {   isAccepted: true, isRejected: false  },
       { safe: true, upsert: true, new: true },
     ).exec();
       
-    associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
+    associate = await Associate.populate(associate, { path: 'company', select: '_id name type'});
       
       return res.status(200).json(associate);
   } catch (error) {
@@ -86,13 +101,13 @@ const acceptPending = async (req, res, next) => {
 const rejectPending = async (req, res, next) => {
   try {
     //console.log();
-    let associate = await Associate.findOneAndUpdate(
+    await Associate.findOneAndUpdate(
       { _id: req.body.associateId },
-        { removed: true  },
+        { isRejected: true  },
       { safe: true, upsert: true, new: true },
     ).exec();
-     console.log(associate); 
-    associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
+    
+    
       
     return res.status(200).json({   remove: true  });
   } catch (error) {
@@ -113,7 +128,7 @@ const list = async (req, res, next) => {
   await Associate.find(
     { 
       $or:[ {company: req.params.companyId}, {associateCompany: req.params.companyId}],
-      isAccepted: true , removed:false
+      isAccepted: true , removed:false, isRejected:false
     }
   )
     .select('_id company associateCompany createdAt')
@@ -132,18 +147,18 @@ const list = async (req, res, next) => {
 };
 
 const listPending = async (req, res, next) => {
-  console.log(req.params.companyId);
+  
   const { limit = 50, skip = 0 } = req.query;
 
   await Associate.find(
     { 
       $or:[  {associateCompany: req.params.companyId}],
-      isAccepted: false , removed:false
+      isAccepted: false , removed:false, isRejected: false
     }
   )
     .select('_id company associateCompany createdAt')
-    .populate('company', '_id name type ')
-    .populate('associateCompany', '_id name type ')
+    .populate('company', '_id name type about')
+    .populate('associateCompany', '_id name type about')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)

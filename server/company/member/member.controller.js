@@ -109,7 +109,7 @@ const pendingList = async (req, res, next) => {
     const { limit = 50, skip = 0 } = req.query;
 
     const pendingMember = await PendingMember.find({
-      company: req.company._id,
+      company: req.params._id,
       removed: false,
     })
       .sort({ createdAt: 1 })

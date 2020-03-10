@@ -354,7 +354,7 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
       //   !company.optionalRole.includes(functionalRole)
       // )
      
-console.log(member, userRoles, functionalRole);
+console.log(member, userRoles, functionalRole, 'a');
       if ( !member   || (
         functionalRole === 'all' &&
         !userRoles.includes(member.role)  
@@ -378,17 +378,19 @@ const searchCompany = async (req, res, next) => {
   try {
     const { limit = 50, skip = 0 , name, companyId} = req.query;
     const associate = await Associate.find({
-       $or:[ {company: companyId}, {associateCompany: companyId}]
+       $or:[ {company: companyId}, {associateCompany: companyId} ],
+       isRejected:false,
+
       }).exec();
 
-      let associateCompanyId = associate.map(m => {
+    let associateCompanyId = associate.map(m => {
       if(m.company.toString() === companyId){
         return m.associateCompany;
       }
       return m.company;
     });
 
-     associateCompanyId.push(companyId);
+    associateCompanyId.push(companyId);
     await Company.find({
       name: { $regex: new RegExp(name), $options: 'i' },
       _id: { $nin: associateCompanyId}
