@@ -96,6 +96,15 @@ const addMember = async (req, res, next) => {
 
       // add new members in company
       members = await Member.create(newMembers);
+
+      const elasticMembers = await Member.find({
+        account: { $in : accounts },
+        company:  req.company._id,
+      }).populate({ path: 'account', select: '_id name firstName lastName email' })
+  
+  
+       await elasticService.bulkInsert('members' ,elasticMembers ,memberStructure );
+       logger.info(` ✔ ️ successfully Elasticsearch documented with bulk`)
     }
 
     // invite new members in company
@@ -111,15 +120,6 @@ const addMember = async (req, res, next) => {
         req.body.pendingTeamMembers,
       );
     }
-
-   const elasticMembers = await Member.find({
-      account: { $in : accounts },
-      company:  req.company._id,
-    }).populate({ path: 'account', select: '_id name firstName lastName email' })
-
-
-     await elasticService.bulkInsert('members' ,elasticMembers ,memberStructure );
-     logger.info(` ✔ ️ successfully Elasticsearch documented with bulk`)
 
     return res.status(201).json({
       message: 'New member created and invitation send',
@@ -232,6 +232,18 @@ const deleteMember = async (req, res, next) => {
 
     await req.member.save();
 
+    const body = {
+      query: {
+        term: {
+          "mongo_id": req.member._id
+        }
+      }
+    }
+
+    await elasticService.delete('members','_doc',body);
+
+    logger.info(` ✔ ️ successfully deleted Elasticsearch document`);
+
     return res.status(200).json({
       message: 'member deleted successfully',
     });
@@ -270,11 +282,13 @@ const searchMember = async (req, res, next) => {
   try {
     const name = req.query.name;
     const companyID = req.company._id;
-    const company = await Company.findById({
-      _id: companyID,
-    }).populate('members', 'account');
-    let memberListId = company.members;
-    memberListId = memberListId.map(member => member.account);
+
+    const existingMembers =  await Member.find({
+      company: companyID ,
+      removed: false
+    }).select('account');
+
+    const existingMembersAccounts = existingMembers.map((member)=>  member.account );
 
     if(name){
 
@@ -292,10 +306,10 @@ const searchMember = async (req, res, next) => {
                 }
               }
             ],
-             must_not: [
+             "must_not": [
               {
                "terms" : {
-                  "mongo_id": memberListId 
+                  "mongo_id": existingMembersAccounts 
                 }
               }
            ]

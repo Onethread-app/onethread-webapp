@@ -99,6 +99,16 @@ const register = async (req, res, next) => {
 
         await Member.create(pendingMemberToMember);
 
+        const elasticMembers = await Member.find({
+          account: { $in : pendingMemberToMember.accounts },
+          company:  {$in : pendingMemberToMember.company }
+        }).populate({ path: 'account', select: '_id name firstName lastName email' })
+    
+    
+         await elasticService.bulkInsert('members' ,elasticMembers ,memberStructure );
+         logger.info(` ✔ ️ successfully Elasticsearch documented with bulk`)
+
+
         await PendingMember.updateMany(
           { email: account.email },
           {
