@@ -5,10 +5,10 @@ const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
-const { sendErrorResponse } = require('../helpers/jsonResponse');
-const ElasticsearchService = require('../../index.elasticsearch');
-const elasticService = new ElasticsearchService();
-const logger = require('../../config/winston');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 // create a company profile
 const changeName = async (req, res, next) => {
@@ -54,9 +54,9 @@ const changeName = async (req, res, next) => {
 // create a company profile
 const createCompany = async (req, res, next) => {
   // Check for JSON
-  if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
-  }
+  // if (!req.is('application/json')) {
+  //   return res.send("Expects 'application/json'");
+  // }
 
   try {
     // check duplicate company name
@@ -373,7 +373,7 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
       //   !company.optionalRole.includes(functionalRole)
       // )
      
-console.log(member, userRoles, functionalRole, 'a');
+//console.log(member, userRoles, functionalRole, 'a');
       if ( !member   || (
         functionalRole === 'all' &&
         !userRoles.includes(member.role)  
@@ -385,7 +385,8 @@ console.log(member, userRoles, functionalRole, 'a');
       }
 
       next();
-    } catch (error) {      
+    } catch (error) {
+      
       next(error);
     }
   };
