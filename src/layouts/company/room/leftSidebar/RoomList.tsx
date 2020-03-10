@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, connect } from 'react-redux';
-import { getRoomMembers, getRoomMessages, getRooms } from '../../../../stores/room/Actions';
+import { getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles } from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
@@ -27,11 +27,13 @@ interface IRoomListComponentProps extends RouteComponentProps {
 	getRoomMembers: (roomId: string) => void;
 	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
 	getRooms: () => void;
+	getRoomSharedFiles: (roomId: string, limit?: number, skip?: number) => void;
 	activeRoom: any;
 	currentRoom: IRoomReducer['currentRoom'];
 	rooms: IRoom[];
 	roomsUnreadCount: any;
 	companyId: string;
+	sharedFileMessages: IRoomReducer['sharedFileMessages'];
 }
 
 export const RoomListComponent = withChatkit(
@@ -46,6 +48,7 @@ export const RoomListComponent = withChatkit(
 
 				await props.getRoomMessages(room._id);
 				await props.getRoomMembers(room._id);
+				await props.getRoomSharedFiles(room._id);
 
 				props.chatkit.currentUser
 					.subscribeToRoomMultipart({
@@ -178,10 +181,11 @@ const mapStateToProps = (state: any) => {
 		currentRoom: state.roomReducer.currentRoom,
 		rooms: state.roomReducer.rooms,
 		roomsUnreadCount: state.roomReducer.roomsUnreadCount,
-		companyId: state.companyReducer.currentCompany._id
+		companyId: state.companyReducer.currentCompany._id,
+		sharedFiles: state.roomReducer.sharedFiles,
 	};
 };
 
-export const RoomList = connect(mapStateToProps, { getRoomMembers, getRoomMessages, getRooms })(
+export const RoomList = connect(mapStateToProps, { getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles })(
 	withRouter(RoomListComponent)
 );

@@ -26,7 +26,9 @@ import {
 	DELETE_ONE_PENDING_FILE,
 	ALL_MESSAGE_RECEIVED,
 	UNREAD_COUNT_ROOMS,
-	ARCHIVE_ROOM
+	ARCHIVE_ROOM,
+	GET_ROOM_SHARED_FILES_ERROR,
+	GET_ROOM_SHARED_FILES
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -53,7 +55,7 @@ export interface IRoomMember {
 	};
 }
 
-export interface IRoomFile {
+export interface IRoomPendingFile {
 	_id: string;
 	link: string;
 	s3Key: string;
@@ -62,6 +64,13 @@ export interface IRoomFile {
 	room: string;
 	createdAt: string;
 	updatedAt: string;
+}
+
+export interface IRoomFile {
+	_id: string;
+	link: string;
+	s3Key: string;
+	type: string;
 }
 
 export interface IRoomMessage {
@@ -91,11 +100,16 @@ export interface IRoomReducer {
 	users: IRoomMember[];
 	userStatus: any;
 	roomMembers: any[];
+	discussions: Array<{
+		_id: string,
+		text: string
+	}>;
+	sharedFileMessages: IRoomMessage[];
 	rooms: IRoom[];
 	roomsUnreadCount: any;
 	loading: boolean;
 	emojiPicker: boolean;
-	pendingFiles: IRoomFile[];
+	pendingFiles: IRoomPendingFile[];
 	roomError: string;
 
 }
@@ -119,6 +133,89 @@ const InitialState: IRoomReducer = {
 	users: [],
 	userStatus: {},
 	roomMembers: [],
+	discussions: [
+		{
+			_id: '1',
+			text: 'text 1'
+		},
+		{
+			_id: '2',
+			text: 'text 2'
+		},
+		{
+			_id: '3',
+			text: 'text 3'
+		},
+		{
+			_id: '4',
+			text: 'text 4'
+		},
+		{
+			_id: '1',
+			text: 'text 1'
+		},
+		{
+			_id: '2',
+			text: 'text 2'
+		},
+		{
+			_id: '3',
+			text: 'text 3'
+		},
+		{
+			_id: '4',
+			text: 'text 4'
+		},
+		{
+			_id: '1',
+			text: 'text 1'
+		},
+		{
+			_id: '2',
+			text: 'text 2'
+		},
+		{
+			_id: '3',
+			text: 'text 3'
+		},
+		{
+			_id: '4',
+			text: 'text 4'
+		},
+		{
+			_id: '1',
+			text: 'text 1'
+		},
+		{
+			_id: '2',
+			text: 'text 2'
+		},
+		{
+			_id: '3',
+			text: 'text 3'
+		},
+		{
+			_id: '4',
+			text: 'text 4'
+		},
+		{
+			_id: '1',
+			text: 'text 1'
+		},
+		{
+			_id: '2',
+			text: 'text 2'
+		},
+		{
+			_id: '3',
+			text: 'text 3'
+		},
+		{
+			_id: '4',
+			text: 'text 4'
+		},
+	],
+	sharedFileMessages: [],
 	rooms: [],
 	roomsUnreadCount: {},
 	emojiPicker: false,
@@ -180,7 +277,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case DELETE_ONE_PENDING_FILE: {
 			return {
 				...state,
-				pendingFiles: state.pendingFiles.filter((file: IRoomFile) => {
+				pendingFiles: state.pendingFiles.filter((file: IRoomPendingFile) => {
 					return file._id !== action.payload;
 				}),
 			};
@@ -252,6 +349,14 @@ export const RoomReducer = (state = InitialState, action: any) => {
 							? [...state.messages, action.payload]
 							: [...state.messages]
 						: [...state.messages],
+				sharedFileMessages:
+					action.payload.room === (state.activeRoom as any).id
+						? state.messages.length === 0 ||
+							(state.messages[state.messages.length - 1] as IRoomMessage)._id !==
+							action.payload._id
+							? [...state.sharedFileMessages, action.payload]
+							: [...state.sharedFileMessages]
+						: [...state.sharedFileMessages],
 				loading: false
 			};
 		case GET_ROOM_MESSAGES:
@@ -338,6 +443,13 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				...state,
 				emojiPicker: action.payload
 			};
+		case GET_ROOM_SHARED_FILES:
+			return {
+				...state,
+				sharedFileMessages: [...state.sharedFileMessages, ...action.payload],
+				loading: false
+			};
+		case GET_ROOM_SHARED_FILES_ERROR:
 		case ADD_MEMBER_IN_ROOM_ERROR:
 		case GET_ROOM_MEMBERS_ERROR:
 		case CREATE_ROOM_ERROR:

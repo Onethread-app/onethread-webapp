@@ -8,7 +8,7 @@ import { TOGGLE_EMOJI_PICKER, CLEAR_FILE_UPLOAD, DELETE_ONE_PENDING_FILE } from 
 import ReactDOM from 'react-dom';
 import { Picker } from 'emoji-mart';
 import { FileUpload } from './fileUpload';
-import { IRoomFile, IRoomReducer } from 'stores/room/Reducer';
+import { IRoomPendingFile, IRoomReducer } from 'stores/room/Reducer';
 import SmileIcon from './../../../../../resources/images/Emoji.svg';
 import SendIcon from './../../../../../resources/images/Send.svg';
 import AttachmentIcon from './../../../../../resources/images/attachment.svg';
@@ -22,7 +22,7 @@ interface SendMessageFormProps {
 	currentRoom: IRoomReducer['currentRoom'];
 	profileImage: any;
 	emojiPicker: boolean;
-	pendingFiles: IRoomFile[];
+	pendingFiles: IRoomPendingFile[];
 	typingUsers: Array<{ name: string, roomId: string; }>;
 }
 

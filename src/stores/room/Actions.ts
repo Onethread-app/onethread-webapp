@@ -18,7 +18,9 @@ import {
 	ALL_MESSAGE_RECEIVED,
 	GET_ROOMS,
 	ARCHIVE_ROOM_ERROR,
-	ARCHIVE_ROOM
+	ARCHIVE_ROOM,
+	GET_ROOM_SHARED_FILES,
+	GET_ROOM_SHARED_FILES_ERROR
 } from './Types';
 import { tigrowApi } from 'config';
 
@@ -256,5 +258,36 @@ export const archiveRoom = (data: { archive: boolean }, roomId: string) => async
 			console.log(error.response);
 		}
 		return error.response.status;
+	}
+};
+
+export const getRoomSharedFiles = (roomId: string, limit: number = 1000, skip: number = 0) => async (
+	dispatch: any
+) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.get(`messages/room/${roomId}/files?limit=${limit}&skip=${skip}`, headers);
+			// if (response.data.count < limit) {
+			// 	dispatch({ type: ALL_MESSAGE_RECEIVED, payload: true });
+			// }
+			dispatch({
+				type: GET_ROOM_SHARED_FILES,
+				payload: response.data.files
+			});
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in room\'s message fetching');
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({
+				type: GET_ROOM_SHARED_FILES_ERROR,
+				payload: 'Network error'
+			});
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log(error.response);
+		}
 	}
 };

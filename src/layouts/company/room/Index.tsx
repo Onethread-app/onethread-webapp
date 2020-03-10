@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Icon } from '@blueprintjs/core';
-import { RoomSideBar } from 'layouts/company/room/sidebar/Index';
+import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
 import { connect } from 'react-redux';
 import { IRoomReducer } from 'stores/room/Reducer';
 import { isEmpty } from 'lodash';
+import { RoomRightSidebar } from './rightSIdebar/Index';
 
 interface RoomPageComponentProps {
 	currentRoom: IRoomReducer['currentRoom'];
@@ -39,11 +40,13 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
 					icon={isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'}
 					iconSize={17}
 					onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)} />
-				<Icon
-					className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
-					icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
-					iconSize={17}
-					onClick={() => setIsOpenRightSidebar(!isOpenRightSidebar)} />
+				{isEmpty(props.currentRoom.name) === false &&
+					isEmpty(props.currentRoom._id) === false &&
+					<Icon
+						className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
+						icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
+						iconSize={17}
+						onClick={() => setIsOpenRightSidebar(!isOpenRightSidebar)} />}
 				<ChatLayout />
 			</div>
 			{isEmpty(props.currentRoom.name) === false && isEmpty(props.currentRoom._id) === false && (
@@ -54,7 +57,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
 						width: isOpenRightSidebar ? '400px' : '16px'
 					}}
 				>
-					<div className="">Right sidebar</div>
+					<RoomRightSidebar isOpen={isOpenRightSidebar} />
 				</div>
 			)}
 
