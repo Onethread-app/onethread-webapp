@@ -70,7 +70,7 @@ const createPending = async (req, res, next) => {
       
       return res.status(201).json(associate);
   } catch (error) {
-    console.log(error);
+    
     logger.error(`Associate pending: ${error}`);
     
     next(error);
@@ -91,7 +91,7 @@ const acceptPending = async (req, res, next) => {
       
       return res.status(200).json(associate);
   } catch (error) {
-    console.log(error);
+    
     logger.error(`Associate accept: ${error}`);
     
     next(error);
@@ -111,7 +111,7 @@ const rejectPending = async (req, res, next) => {
       
     return res.status(200).json({   remove: true  });
   } catch (error) {
-    console.log(error);
+    
     logger.error(`Associate accept: ${error}`);
     
     next(error);

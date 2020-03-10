@@ -55,8 +55,8 @@ const schema = {
     .max(5)
     .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   optionalRole: Joi.array()
-    .min(1)
-    .max(5)
+    .min(0)
+    .max(7)
     .items(Joi.string()),
   location: Joi.string(),
   websites: Joi.array()

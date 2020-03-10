@@ -88,7 +88,7 @@ const createCompany = async (req, res, next) => {
     });
 
     // add ref[member,room] in company
-    newCompany.members.push(newMember._id);
+    
     // newCompany.rooms.push(newRoom._id);
 
     // company creation
@@ -169,7 +169,7 @@ const getCompany = async (req, res, next) => {
       name: req.params.cname,
     })
       .select(
-        '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
+        '-account -websites -rooms -products -departments -divisions -createdAt -updatedAt -__v',
       );
 
     // role info
@@ -215,7 +215,7 @@ const updateBasicInfo = async (req, res, next) => {
       message: `Company's basic information updated`,
     });
   } catch (error) {
-    console.log(error);
+    
     next(error);
   }
 };
@@ -226,7 +226,7 @@ const updateAbout = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-  console.log(req.company.about, 1,req.body.about);
+  
   try {
     
     req.company.about = req.body.about;
@@ -238,7 +238,7 @@ const updateAbout = async (req, res, next) => {
       message: `Company's about updated`,
     });
   } catch (error) {
-    console.log(error);
+    
     next(error);
   }
 };
@@ -279,7 +279,7 @@ const updateRole = async (req, res, next) => {
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
-    console.log(req.params.companyId);
+    
     const company = await Company.findOne({
       _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');
@@ -367,7 +367,7 @@ console.log(member, userRoles, functionalRole, 'a');
 
       next();
     } catch (error) {
-      console.log(error);
+      
       next(error);
     }
   };

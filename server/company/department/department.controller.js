@@ -48,7 +48,7 @@ const create = async (req, res) => {
 };
 
 const list = async (req, res, next) => {
-  console.log(req);
+  
   try {
     const departments = await Department.find({
       company: req.params.companyId,
@@ -65,7 +65,7 @@ const list = async (req, res, next) => {
       message: 'No departments found.',
     });
   } catch (error) {
-    console.log(error)
+   
     next(error)
   }
 };

@@ -116,12 +116,7 @@ const company = new Schema(
       ref: 'Account',
       required: true,
     },
-    members: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
-      },
-    ],
+    
     rooms: [
       {
         type: mongoose.Schema.Types.ObjectId,
