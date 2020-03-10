@@ -2,10 +2,14 @@ const Account = require('../account/account.model');
 const { Team } = require('./team.model');
 const { Project } = require('../project/project.model');
 const { Company } = require('../company/company.model');
+const { ProjectRequest } = require('../request/request.model');
 const { Room } = require('../room/room.model');
 const { chatkit } = require('../services/pusher.services');
 const logger = require('../../config/winston');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 // const changeRole = async (req, res, next) => {
 //   try {
@@ -44,45 +48,79 @@ const addTeamMember = async (req, res, next) => {
   }
 
   try {
-    const members = await Team.create(req.body.members);
-    console.log(members);
-    if (!members.length) {
-      return sendErrorResponse(res, 400, 'MemberCreatedError', {
-        message: 'No members created',
+    // check if this company is own the project
+    const projectOwner = await Project.findOne({
+      _id: req.query.pid,
+    });
+    if (projectOwner.company.toString() === req.body.companyId) {
+      let members = req.body.members;
+      members.forEach(async account => {
+        await Team.insertMany({
+          account: account.account,
+          project: account.pid,
+          role: 'member',
+        });
       });
-    }
-
-    let membersId = members.map(m => {
-      return m._id;
-    });
-
-    // let accountsId = req.body.members.map(m => {
-    //   return m.account;
-    // });
-
-    // save ref in company
-    // req.project.members.addToSet(...membersId);
-    // await req.project.save();
-
-    // add members into General room
-    const room = await Room.findOne({
-      name: 'General',
-      project: req.project._id,
-    });
-    if (room) {
-      // room.members.addToSet(...accountsId);
-      await room.save();
-      await chatkit.addUsersToRoom({
-        roomId: room._id,
-        // userIds: accountsId,
+      return sendJSONresponse(res, 201, {
+        message: 'New Team created',
       });
+    } else {
+      const memberAllowNumber = await ProjectRequest.findOne({
+        project: req.query.pid,
+      }).select('size');
+      if (memberAllowNumber.size >= req.body.members.length) {
+        // need to insertMany method later
+        let members = req.body.members;
+        members.forEach(async account => {
+          await Team.insertMany({
+            account: account.account,
+            project: account.pid,
+            role: 'specialMember',
+          });
+        });
+        return sendJSONresponse(res, 200, {
+          message: 'special member add to project',
+        });
+      } else {
+        return sendErrorResponse(res, 400, 'LimitExceedError', {
+          message: `you are not allow more than ${memberAllowNumber.size}`,
+        });
+      }
     }
-
-    return res.status(201).json({
-      message: 'New member created',
-      members,
-    });
   } catch (error) {
+    // const members = await Team.create(req.body.members);
+    // console.log(members);
+    // if (!members.length) {
+    //   return sendErrorResponse(res, 400, 'MemberCreatedError', {
+    //     message: 'No members created',
+    //   });
+    // }
+    // let membersId = members.map(m => {
+    //   return m._id;
+    // });
+    // // let accountsId = req.body.members.map(m => {
+    // //   return m.account;
+    // // });
+    // // save ref in company
+    // // req.project.members.addToSet(...membersId);
+    // // await req.project.save();
+    // // add members into General room
+    // const room = await Room.findOne({
+    //   name: 'General',
+    //   project: req.project._id,
+    // });
+    // if (room) {
+    //   // room.members.addToSet(...accountsId);
+    //   await room.save();
+    //   await chatkit.addUsersToRoom({
+    //     roomId: room._id,
+    //     // userIds: accountsId,
+    //   });
+    // }
+    // return res.status(201).json({
+    //   message: 'New member created',
+    //   members,
+    // });
     logger.error(`${error}`);
     next(error);
   }
@@ -159,7 +197,7 @@ const searchTeamMember = async (req, res, next) => {
       companyID,
       holder,
     } = req.query;
-    if(holder === 'projectOwner'){
+    if (holder === 'projectOwner') {
       const company = await Company.findById({
         _id: companyID,
       }).populate('members', 'account');
@@ -182,8 +220,7 @@ const searchTeamMember = async (req, res, next) => {
           data,
         },
       });
-    }else{
-      
+    } else {
       return sendJSONresponse(res, 200, {
         employees: {
           message: `Search complete ${name}`,
@@ -191,7 +228,6 @@ const searchTeamMember = async (req, res, next) => {
         },
       });
     }
-   
   } catch (error) {
     logger.error(`${error}`);
     next(error);

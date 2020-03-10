@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 const teamMember = new Schema(
   {
-    member: {
+    account: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Member',
+      ref: 'Account',
       unique: false,
       required: true,
     },
@@ -15,23 +15,12 @@ const teamMember = new Schema(
       unique: false,
       required: true,
     },
-    specialMember: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Member',
-      unique: false,
-    },
     role: {
       type: String,
       enum: ['admin', 'projectModerator', 'member', 'specialMember'],
       default: 'member',
       required: true,
     },
-    // designations: [
-    //   {
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Designation',
-    //   },
-    // ],
     removed: {
       type: Boolean,
       default: false,
