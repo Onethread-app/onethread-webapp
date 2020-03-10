@@ -119,7 +119,7 @@ const register = async (req, res, next) => {
       return sendJSONresponse(res, 201, { message: 'User created' });
     })
     .catch(err => {
-      console.log(err);
+      
       next(err);
     });
 };
@@ -133,6 +133,7 @@ const register = async (req, res, next) => {
 
 // account holder can login their account
 const login = async (req, res, next) => {
+  
   try {
     const payLoad = {
       email: req.user.email,
@@ -209,6 +210,7 @@ const timeline = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
+    
     next(error);
   }
 };

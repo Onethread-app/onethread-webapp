@@ -42,15 +42,15 @@ const createSkill = async (req, res, next) => {
 };
 
 const getSkillInfo = async (req, res) => {
-  console.log(req);
+  
   const skill = req.params.id;
-  console.log(skill);
+  
   SkillArea.findOne({ _id: skill })
     .populate('accountId')
     .exec()
     .then(result => {
       if (result) {
-        console.log(result);
+       
 
         return sendJSONresponse(res, 200, {
           success: true,

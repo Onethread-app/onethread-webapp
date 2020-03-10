@@ -26,7 +26,7 @@ const create = async (name, type, reference, user, next) => {
       account: user._id
     });
     await activity.save().then(createdActivity => {
-      console.log(`Activity created successfully: `, createdActivity);
+      
     }).catch(e => next(e));
   } catch (error) {
     logger.error(`Activity create: ${error}`);
