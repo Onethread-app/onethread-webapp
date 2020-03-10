@@ -268,7 +268,7 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchMember = async (req, res, next) => {
   try {
-    const email = req.query.email;
+    const name = req.query.name;
     const companyID = req.company._id;
     const company = await Company.findById({
       _id: companyID,
