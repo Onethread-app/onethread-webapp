@@ -1,9 +1,6 @@
 const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
 const { PendingMember } = require('./pendingMember.model');
-const { Company } = require('../company.model');
-const { Room } = require('./../../room/room.model');
-const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const {
@@ -46,30 +43,72 @@ const addMember = async (req, res, next) => {
   }
 
   try {
-    if (!req.body.members.length && !req.body.newTeamMembers) {
+    if (!req.body.members.length && !req.body.pendingTeamMembers) {
       return res.status(400).json({
         message: `No members or newMembers found`,
       });
     }
-    const members = await Member.create(req.body.members);
-    //TODO role wise delete admin, supreadmin
-    if('newTeamMembers' in req.body){
-      let pendingMember = req.body.newTeamMembers.map(m => {
-        return {email: m, company:req.company._id};
+
+    let members = [];
+
+    let pendingMembers = [];
+
+    if (req.body.members.length) {
+      let newMembers = req.body.members;
+
+      let accounts = newMembers.map(member => member.account);
+
+      // find previous members
+      let prevMembers = await Member.find({
+        account: { $in: accounts },
+        company: req.company._id,
+        removed: true,
+      }).select('account');
+
+      prevMembers = prevMembers.map(member => member.account);
+
+      // filter new members
+      newMembers = newMembers.filter(newMember => {
+        return !prevMembers.some(prevMemberAccount => {
+          return (
+            prevMemberAccount.toString() ===
+            newMember.account.toString()
+          );
+        });
       });
-     membersToAdd = await PendingMember.create(pendingMember);
-    
-     sendInviteColleague(req.user.email, req.company, req.body.newTeamMembers);
+
+      // re-add previous members in company
+      await Member.updateMany(
+        { account: { $in: prevMembers }, company: req.company._id },
+        {
+          removed: false,
+        },
+      );
+
+      // add new members in company
+      members = await Member.create(newMembers);
     }
-    
+
+    // invite new members in company
+    if (req.body.pendingTeamMembers.length) {
+      let pendingMembersInfo = req.body.pendingTeamMembers.map(m => {
+        return { email: m, company: req.company._id };
+      });
+      pendingMembers = await PendingMember.create(pendingMembersInfo);
+
+      sendInviteColleague(
+        req.user.email,
+        req.company,
+        req.body.pendingTeamMembers,
+      );
+    }
 
     return res.status(201).json({
       message: 'New member created and invitation send',
       members,
-      membersToAdd,
+      pendingMembers,
     });
   } catch (error) {
-    logger.error(`${error}`);
     next(error);
   }
 };
@@ -88,7 +127,10 @@ const list = async (req, res, next) => {
       .limit(+limit)
       .select('-__v -company -createdAt -updatedAt')
       .populate([
-        { path: 'account', select: '_id name firstName lastName' },
+        {
+          path: 'account',
+          select: '_id name firstName lastName email',
+        },
         {
           path: 'designations',
           select: 'division department position',
@@ -125,18 +167,19 @@ const pendingList = async (req, res, next) => {
   }
 };
 
-const pendingCheck = async (req, res, next) => {
+const checkInvitedMemberStatus = async (req, res, next) => {
   try {
-    const { limit = 50, skip = 0, email } = req.query;
-
-    const pendingMember = await PendingMember.count({
+    const pendingMember = await PendingMember.findOne({
+      email: req.query.email,
       company: req.company._id,
-      email: email,
       removed: false,
-    });
-    let status = (pendingMember > 0) ? 409: 200;
-    return res.status(status).json({
-      pendingMember ,
+    }).select('-__v -company -createdAt -updatedAt');
+
+    return res.status(200).json({
+      status: !pendingMember ? true : false,
+      message: !pendingMember
+        ? `${req.query.email} can be invited.`
+        : `${req.query.email} has already been invited.`,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -149,6 +192,34 @@ const getMember = (req, res, next) => {
   return res.status(200).json({
     member: req.member,
   });
+};
+
+// delete a member
+const deleteMember = async (req, res, next) => {
+  try {
+    // check role: superAdmin/admin
+    const member = await Member.findOne({
+      account: req.user._id,
+      company: req.company._id,
+    });
+
+    if (!['superAdmin', 'admin'].includes(member.role)) {
+      return res.status(403).json({
+        message: `Restricted`,
+      });
+    }
+
+    req.member.removed = true;
+
+    await req.member.save();
+
+    return res.status(200).json({
+      message: 'member deleted successfully',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
 };
 
 // member will be found on req.member
@@ -181,11 +252,14 @@ const searchMember = async (req, res, next) => {
     const email = req.query.email;
     
     const companyID = req.company._id;
-    const company = await Company.findById({
-      _id: companyID,
-    }).populate('members', 'account');
-    let memberListId = company.members;
-    memberListId = memberListId.map(member => member.account);
+
+    const members = await Member.find({
+      company: companyID,
+      removed: false,
+    });
+
+    let memberListId = members.map(member => member.account);
+
     let data = await Account.find({
       $and: [
         { email: { $regex: new RegExp(email) } },
@@ -195,7 +269,7 @@ const searchMember = async (req, res, next) => {
       .skip(0)
       .limit(+10)
       .select('_id email name firstName lastName');
-    // TODO: pore ami change korbo query onusaree
+
     return sendJSONresponse(res, 200, {
       employees: {
         message: `Search complete ${email}`,
@@ -213,9 +287,11 @@ module.exports = {
   addMember,
   list,
   pendingList,
-  pendingCheck,
+  
   getMember,
+  deleteMember,
   getMemberLoad,
   searchMember,
   changeRole,
+  checkInvitedMemberStatus,
 };
