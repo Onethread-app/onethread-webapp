@@ -79,11 +79,12 @@ const projectPendingRequest = async (req, res, next) => {
   const { limit = 10, skip = 0, companyId } = req.query;
   await ProjectRequest.find({
     isAccepted: false,
+    'Associate.company': companyId,
   })
-    .populate({
-      path: 'Associates',
-      match: { company: companyId },
-    })
+    // .populate({
+    //   path: 'Associates',
+    //   match: { company: companyId },
+    // })
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
