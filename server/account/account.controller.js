@@ -135,7 +135,7 @@ const register = async (req, res, next) => {
       return sendJSONresponse(res, 201, { message: 'User created' });
     })
     .catch(err => {
-      console.log(err);
+      
       next(err);
     });
 };
@@ -219,7 +219,7 @@ const timeline = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
-    console.log(error)
+    
     next(error);
   }
 };

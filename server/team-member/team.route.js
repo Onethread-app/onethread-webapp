@@ -8,7 +8,7 @@ const teamCtrl = require('./team.controller');
 
 const SchemaValidator = require('../helpers/joiSchemaValidator');
 
-router.route('/search').get(authorization, teamCtrl.searchMember);
+router.route('/search').get(authorization, teamCtrl.searchTeamMember);
 
 router
   .route('/')

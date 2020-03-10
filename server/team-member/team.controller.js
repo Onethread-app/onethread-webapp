@@ -1,6 +1,7 @@
 const Account = require('../account/account.model');
 const { Team } = require('./team.model');
 const { Project } = require('../project/project.model');
+const { Company } = require('../company/company.model');
 const { Room } = require('../room/room.model');
 const { chatkit } = require('../services/pusher.services');
 const logger = require('../../config/winston');
@@ -37,26 +38,31 @@ const { sendJSONresponse } = require('../helpers/jsonResponse');
 const addTeamMember = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
 
   try {
     const members = await Team.create(req.body.members);
+    console.log(members);
     if (!members.length) {
-      return sendErrorResponse(res, 400, 'MemberCreatedError', {message:'No members created'})
+      return sendErrorResponse(res, 400, 'MemberCreatedError', {
+        message: 'No members created',
+      });
     }
 
     let membersId = members.map(m => {
       return m._id;
     });
 
-    let accountsId = req.body.members.map(m => {
-      return m.account;
-    });
+    // let accountsId = req.body.members.map(m => {
+    //   return m.account;
+    // });
 
     // save ref in company
-    req.project.members.addToSet(...membersId);
-    await req.project.save();
+    // req.project.members.addToSet(...membersId);
+    // await req.project.save();
 
     // add members into General room
     const room = await Room.findOne({
@@ -64,11 +70,11 @@ const addTeamMember = async (req, res, next) => {
       project: req.project._id,
     });
     if (room) {
-      room.members.addToSet(...accountsId);
+      // room.members.addToSet(...accountsId);
       await room.save();
       await chatkit.addUsersToRoom({
         roomId: room._id,
-        userIds: accountsId,
+        // userIds: accountsId,
       });
     }
 
@@ -143,29 +149,49 @@ const getMemberLoad = async (req, res, next) => {
 // 1st step: Find member list from company.
 // 2nd step: Create a list of employee
 // 3rd step: Exclude them from the Team Search
-
-const searchMember = async (req, res, next) => {
+// cid = companyID
+const searchTeamMember = async (req, res, next) => {
   try {
-    const name = req.query.name;
-    const companyID = req.company._id;
-    const company = await Company.findById({
-      _id: companyID,
-    }).populate('members', 'account');
-    let memberListId = company.members;
-    memberListId = memberListId.map(member => member.account);
-    let data = await Account.find({
-      $and: [
-        { name: { $regex: new RegExp(name) } },
-        { _id: { $nin: memberListId } },
-      ],
-    }).select('_id email name firstName lastName');
-    // TODO: pore ami change korbo query onusaree
-    return sendJSONresponse(res, 200, {
-      employees: {
-        message: `Search complete ${name}`,
-        data,
-      },
-    });
+    const {
+      limit = 50,
+      skip = 0,
+      name,
+      companyID,
+      holder,
+    } = req.query;
+    if(holder === 'projectOwner'){
+      const company = await Company.findById({
+        _id: companyID,
+      }).populate('members', 'account');
+      let memberListId = company.members;
+      memberListId = memberListId.map(member => member.account);
+      let data = await Account.find({
+        $and: [
+          { name: { $regex: new RegExp(name) } },
+          { _id: { $nin: memberListId } },
+        ],
+      })
+        .select('_id email name firstName lastName')
+        .sort({ createdAt: -1 })
+        .skip(+skip)
+        .limit(+limit);
+      // TODO: pore ami change korbo query onusaree
+      return sendJSONresponse(res, 200, {
+        employees: {
+          message: `Search complete ${name}`,
+          data,
+        },
+      });
+    }else{
+      
+      return sendJSONresponse(res, 200, {
+        employees: {
+          message: `Search complete ${name}`,
+          data,
+        },
+      });
+    }
+   
   } catch (error) {
     logger.error(`${error}`);
     next(error);
@@ -177,6 +203,6 @@ module.exports = {
   list,
   getMember,
   getMemberLoad,
-  searchMember,
+  searchTeamMember,
   // changeRole,
 };

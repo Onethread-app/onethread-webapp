@@ -24,9 +24,9 @@ const changeRole = async (req, res, next) => {
       company: req.company._id,
     });
 
-    if (!['superAdmin', 'admin'].includes(member.role)) {
+    if ( req.body.role ==='admin' && member.role !== 'superAdmin' ) {
       return res.status(403).json({
-        message: `Restricted`,
+        message: `only super admin can do that`,
       });
     }
 
@@ -44,6 +44,7 @@ const changeRole = async (req, res, next) => {
 };
 
 const addMember = async (req, res, next) => {
+  let membersToAdd = [];
   // Check for JSON
   if (!req.is('application/json')) {
     return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
@@ -170,7 +171,7 @@ const pendingList = async (req, res, next) => {
     const { limit = 50, skip = 0 } = req.query;
 
     const pendingMember = await PendingMember.find({
-      company: req.company._id,
+      company: req.params._id,
       removed: false,
     })
       .sort({ createdAt: 1 })
@@ -335,7 +336,6 @@ const searchMember = async (req, res, next) => {
         logger.error(`${error}`);
         next(error);
       }
-
 };
 
 module.exports = {

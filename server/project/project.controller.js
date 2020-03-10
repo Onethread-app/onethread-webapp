@@ -1,5 +1,7 @@
 const { Member } = require('../company/member/member.model');
 const { Project } = require('./project.model');
+const { ProjectRequest } = require('../request/request.model');
+const Associate = require('../associate/associate.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
 const ElasticsearchService = require('../../index.elasticsearch');
@@ -14,35 +16,127 @@ const createNewProjectForCompany = async (req, res, next) => {
     account: req.body.concernedAdmin,
   });
   if (userExist) {
-    const project = new Project({
-      name: req.body.name,
-      type: req.body.type,
-      concernedAdmin: req.body.concernedAdmin,
-      departments: req.body.departments,
-      color: req.body.color,
-      company: req.body.companyId,
-      description: '',
-      outline: '',
-    });
-    await project
-      .save()
-      .then(project => {
-        logger.info(`new project created`);
-        return sendJSONresponse(res, 201, {
-          sucees: true,
-          message: 'New project created',
-          project,
-        });
-      })
-      .catch(error => {
-        logger.error(`${error}`);
-        next(error);
+    if (req.body.type === 'associates') {
+      const project = new Project({
+        name: req.body.name,
+        type: req.body.type,
+        concernedAdmin: req.body.concernedAdmin,
+        departments: req.body.departments,
+        color: req.body.color,
+        company: req.body.companyId,
+        description: '',
+        outline: '',
       });
+      await project.save();
+      // need to be refactored as soon as possible
+      let associates = req.body.associates;
+      associates.map(async asso => {
+        const createProjectReq = new ProjectRequest({
+          associate: asso._id,
+          size: asso.size,
+          isAccepted: false,
+          project: project._id,
+        });
+        await createProjectReq.save();
+      });
+      return sendJSONresponse(res, 201, {
+        sucees: true,
+        message: 'New project created for associate',
+      });
+    } else {
+      const project = new Project({
+        name: req.body.name,
+        type: req.body.type,
+        concernedAdmin: req.body.concernedAdmin,
+        departments: req.body.departments,
+        color: req.body.color,
+        company: req.body.companyId,
+        description: '',
+        outline: '',
+      });
+      await project
+        .save()
+        .then(project => {
+          logger.info(`new project created`);
+          return sendJSONresponse(res, 201, {
+            sucees: true,
+            message: 'New project created',
+            project,
+          });
+        })
+        .catch(error => {
+          logger.error(`${error}`);
+          next(error);
+        });
+    }
   } else {
     return sendErrorResponse(res, 404, 'MemberNotFoundError', {
       message: 'concernAdmin not added in company',
     });
   }
+};
+
+const projectPendingRequest = async (req, res, next) => {
+  const { limit = 10, skip = 0, companyId } = req.query;
+  const associateId = await Associate.findOne({ company: companyId });
+  await ProjectRequest.find({
+    isAccepted: false,
+    associate: associateId._id,
+  })
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
+    .exec()
+    .then(result => {
+      logger.info(`pending project list for company:${companyId}`);
+      return sendJSONresponse(res, 200, result);
+    })
+    .catch(e => {
+      logger.error(`${e}`);
+      next(e);
+    });
+};
+
+const acceptProjectRequest = async (req, res, next) => {
+  await ProjectRequest.findByIdAndUpdate(
+    { project: req.body.pid },
+    {
+      $set: {
+        isAccepted: true,
+        isRejected: false,
+      },
+    },
+    { safe: true, new: true, upsert: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`project request accept for ${req.body.pid}`)
+      return sendJSONresponse(res, 200, {message: `Project request accept for id:${req.body.pid}`})
+    }).catch(e=>{
+      logger.error(`${e}`)
+      next(e);
+    });
+};
+
+const rejectProjectRequest = async (req, res, next) => {
+  await ProjectRequest.findByIdAndUpdate(
+    { project: req.body.pid },
+    {
+      $set: {
+        isAccepted: false,
+        isRejected: true,
+      },
+    },
+    { safe: true, new: true, upsert: true },
+  )
+    .exec()
+    .then(result => {
+      logger.info(`project request accept for ${req.body.pid}`)
+      return sendJSONresponse(res, 200, {message: `Project request accept for id:${req.body.pid}`})
+    }).catch(e=>{
+      logger.error(`${e}`)
+      next(e);
+    });
 };
 
 const showAllProjectsForCompany = async (req, res, next) => {
@@ -51,8 +145,8 @@ const showAllProjectsForCompany = async (req, res, next) => {
     company: companyId,
     removed: false,
   })
-    .populate('departments', 'name _id')
-    .select('-type -__v -associates -files -version ')
+    .populate('departments', 'name _id ')
+    .select('-type -__v  -files -version ')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -88,7 +182,7 @@ const updateProjectDescription = async (req, res, next) => {
     });
 };
 
-const updateProjectOutline = async(req, res, next) =>{
+const updateProjectOutline = async (req, res, next) => {
   await Project.findByIdAndUpdate(
     { _id: req.params.pid },
     {
@@ -110,14 +204,14 @@ const updateProjectOutline = async(req, res, next) =>{
       logger.error(`${err}`);
       next(err);
     });
-}
+};
 
 const getProjectDetails = async (req, res, next) => {
   try {
     const project = await Project.findOne({
       _id: req.params.pid,
     })
-    .populate('files', 'link s3Key')
+      .populate('files', 'link s3Key')
       .select('outline description color name');
     // console.log(req.project)
     return sendJSONresponse(res, 200, project);
@@ -184,12 +278,14 @@ const archiveProject = async (req, res, next) => {
     } else {
       logger.error(`project id not found`);
       return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
-        message: 'Project id not found for company',
+        message: 'Already Archived',
       });
     }
   } catch (error) {
     logger.error(`${error}`);
-    next(error);
+    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+      message: 'Project id is not found',
+    });
   }
 };
 
@@ -213,12 +309,10 @@ const showAllFilesForProject = async (req, res, next) => {
 
 const suggestConcernAdmin = async (req, res, next) => {
   try {
-
     const name = req.query.name;
     const companyId = req.params.companyId;
 
     if (name) {
-
       let body = {
         size: 200,
         from: 0,
@@ -227,44 +321,49 @@ const suggestConcernAdmin = async (req, res, next) => {
             must: [
               {
                 term: {
-                  "company": {
-                    "value": companyId
-                  }
-                }
+                  company: {
+                    value: companyId,
+                  },
+                },
               },
               {
                 multi_match: {
-                  "query": name,
-                  "type": "phrase_prefix",
-                  "fields": ["account.email", "account.firstName", "account.lastName", "account.name"]
-                }
-              }
-            ]
-          }
-        }
-      }
+                  query: name,
+                  type: 'phrase_prefix',
+                  fields: [
+                    'account.email',
+                    'account.firstName',
+                    'account.lastName',
+                    'account.name',
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      };
 
-      const response = await elasticService.search('members', '_doc', body);
+      const response = await elasticService.search(
+        'members',
+        '_doc',
+        body,
+      );
 
       return sendJSONresponse(res, 200, {
         success: true,
         message: `Search complete for ${name}`,
-        data: response.hits.hits
-      })
-
+        data: response.hits.hits,
+      });
     } else {
       return sendErrorResponse(res, 400, 'EmptySearchError', {
         message: `query error`,
       });
     }
-  }
-  catch (error) {
+  } catch (error) {
     logger.error(`${error}`);
     next(error);
   }
-
 };
-
 
 const archiveProjectList = async (req, res, next) => {
   await Project.find({ company: req.query.companyId, removed: true })
@@ -279,7 +378,7 @@ const archiveProjectList = async (req, res, next) => {
     });
 };
 
-const searchMemberFromMyCompany = async(req, res, next) =>{
+const searchMemberFromMyCompany = async (req, res, next) => {
   try {
     const name = req.query.name;
     const companyID = req.company._id;
@@ -305,16 +404,15 @@ const searchMemberFromMyCompany = async(req, res, next) =>{
     logger.error(`${error}`);
     next(error);
   }
-
-}
-
-const searchMemberFromAssociates = async()=>{
-
 };
 
-const addTeamMember = async(req, res, next) =>{
+const searchMemberFromAssociates = async () => {};
+
+const addTeamMember = async (req, res, next) => {
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
 
   try {
@@ -359,8 +457,7 @@ const addTeamMember = async(req, res, next) =>{
     logger.error(`${error}`);
     next(error);
   }
-
-}
+};
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
@@ -374,4 +471,7 @@ module.exports = {
   suggestConcernAdmin,
   archiveProjectList,
   addTeamMember,
+  projectPendingRequest,
+  acceptProjectRequest,
+  rejectProjectRequest,
 };
