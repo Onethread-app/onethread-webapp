@@ -31,6 +31,7 @@ const {
 } = require('../helpers/APIError');
 const ElasticsearchService = require('../../index.elasticsearch');
 const elasticService = new ElasticsearchService();
+const { memberStructure } = require('../services/elastic.services');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -97,11 +98,14 @@ const register = async (req, res, next) => {
           return { account: account._id, company: m.company };
         });
 
+        const pendingMemberToMemberAccounts = pendingMemberToMember.map((member)=> member.account);
+        const pendingMemberToMemberCompany = pendingMemberToMember.map((member)=> member.company);
+
         await Member.create(pendingMemberToMember);
 
         const elasticMembers = await Member.find({
-          account: { $in : pendingMemberToMember.accounts },
-          company:  {$in : pendingMemberToMember.company }
+          account: { $in : pendingMemberToMemberAccounts },
+          company:  {$in : pendingMemberToMemberCompany }
         }).populate({ path: 'account', select: '_id name firstName lastName email' })
     
     

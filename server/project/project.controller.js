@@ -246,8 +246,6 @@ const suggestConcernAdmin = async (req, res, next) => {
 
       const response = await elasticService.search('members', '_doc', body);
 
-      console.log(response.hits.hits);
-
       return sendJSONresponse(res, 200, {
         success: true,
         message: `Search complete for ${name}`,

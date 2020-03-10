@@ -108,7 +108,7 @@ const createCompany = async (req, res, next) => {
     // });
     const elasticMember = await newMember.save();
 
-  const elasticMemberPopulated =  Member.find({
+  const elasticMemberPopulated = await Member.find({
     _id:elasticMember._id
   }).populate({ path: 'account', select: '_id name firstName lastName email' });
    
@@ -117,8 +117,6 @@ const createCompany = async (req, res, next) => {
       account: elasticMemberPopulated.account,
       company: elasticMemberPopulated.company
     });
-
-    console.log(elasticMemberPopulated)
 
     logger.info(` ✔ ️Elasticsearch document ${response.result}`);
 
