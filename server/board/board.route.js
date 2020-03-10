@@ -15,17 +15,21 @@ const router = express.Router();
 // get borad list
 router
   .route('/')
-  .get(
-    authorization,
-    // permit('user', 'admin'),
-    boardCtrl.list,
-  )
+  
   .post(
     authorization,
     // permit('user', 'admin'),
     SchemaValidator(joiSchema.createBoard),
     boardCtrl.create,
   );
+
+  router
+  .route('/company/:companyId')
+  .get(
+    authorization,
+    // permit('user', 'admin'),
+    boardCtrl.list,
+  )
 
 // get specific board details
 router

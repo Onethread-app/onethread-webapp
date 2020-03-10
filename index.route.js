@@ -54,6 +54,5 @@ router.use('/subTasks', subTasks);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
 router.use('/projects', projectRoutes);
-
 router.use('/teams', teamRoutes);
 module.exports = router;
