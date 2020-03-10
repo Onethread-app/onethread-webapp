@@ -44,10 +44,10 @@ router
 router
   .route('/pending-requests')
   .get(authorization, projectCtrl.projectPendingRequest);
-  router
+router
   .route('/accept-request')
   .post(authorization, projectCtrl.acceptProjectRequest);
-  router
+router
   .route('/reject-request')
   .post(authorization, projectCtrl.rejectProjectRequest);
 router
