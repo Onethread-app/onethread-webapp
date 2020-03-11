@@ -3,7 +3,7 @@ import { Dialog, Divider, Button, Icon, Spinner } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { CompanyInfoForm } from './BasicInformationEditor';
 import { companyLogoUploadAction } from 'stores/company/Actions';
-import { permit } from 'stores/UtilsActions';
+import { companyPermit } from 'stores/UtilsActions';
 import { isEmpty } from 'lodash';
 import { CompanyAboutView } from './AboutView';
 
@@ -48,7 +48,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
                 style={{ width: '112px', height: '112px' }}
                 src={props.company.logo ? props.company.logo.link : UserImage}
               />
-              {permit(props.company.role) ?
+              {companyPermit(props.company.role, 'editProfile') ?
                 <div className="absolute bg-tigrowLightBlue br-100 pointer"
                   onClick={() => setShowDialogPicture(true)}
                   style={{ top: '4.5rem', right: '3px', width: '33px', height: '33px', paddingTop: '7px' }}
@@ -68,7 +68,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
               <h1 className="f5 lh-copy dib tigrow-lightGray-1">Basic Information</h1>
               <Icon
                 className="fr mv3 tigrow-lightBlue pointer"
-                icon={permit(props.company.role) ? 'edit' : 'blank'}
+                icon={companyPermit(props.company.role, 'editProfile') ? 'edit' : 'blank'}
                 onClick={() => setShowDialog(true)}
               />
             </div>

@@ -3,7 +3,7 @@ import { TaskDescriptionEditor } from './TaskDescriptionEditor';
 import { Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
-import { permit } from 'stores/UtilsActions';
+import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
 
 interface TaskDescriptionViewInternalProps {
@@ -20,7 +20,7 @@ export const TaskDescriptionViewComponent = (props: TaskDescriptionViewInternalP
           <h1 className="f6">Description</h1>
         </div>
         <div className="pr2" style={{ paddingTop: '10px' }}>
-          {props.company && permit(props.company.role) ?
+          {props.company && projectPermit(props.company.role) ?
             <Icon className="fr tigrow-lightBlue pointer"
               icon="edit"
               onClick={() => {

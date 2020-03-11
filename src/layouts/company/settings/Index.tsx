@@ -1,22 +1,40 @@
 import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { CompanySettingsView } from 'layouts/company/settings/CompanySettings';
+import { GeneralView } from './companyName/General';
+import { DepartmentView } from './department/View';
+import { AdminRoleView } from './adminRole/View';
 
-const SettingsPageComponent = () => (
-  <div className="bg-white mh4 mv5 br3 pa4 shadow-4 w-90">
+export const SettingsPage = () => (
+  <div className="fl w-100 pl4 pr2 pb4">
+    <div className="fl w-100">
+      <h3 className="f3 b">Settings</h3>
+    </div>
     <Tabs
       id="TabsExample"
+      className="fl w-100 min-vh-75"
       vertical={true}
     >
       <Tab
-        id="company_settings"
-        title="Company Settings"
-        panel={<CompanySettingsView />}
+        id="General"
+        panelClassName="b--black-05 bl bw1 ml3 w-100"
+        title="General"
+        panel={<GeneralView />}
+        className="outline-0"
+      />
+      <Tab
+        id="admin_role_permissions"
+        panelClassName="b--black-05 bl bw1 ml3 w-100"
+        title="Role Permissions"
+        panel={<AdminRoleView />}
         className="outline-0 w-100"
+      />
+      <Tab
+        id="department"
+        panelClassName="b--black-05 bl bw1 ml3 w-100"
+        title="Department"
+        panel={<DepartmentView />}
+        className="outline-0"
       />
     </Tabs>
   </div>
 );
-
-export const SettingsPage = connect(null, null)(SettingsPageComponent);

@@ -6,7 +6,7 @@ import { IColumn, TaskBoard } from 'stores/board/Reducer';
 import { TaskForm } from '../task/TaskForm';
 import { connect } from 'react-redux';
 import { ColumnForm } from './ColumnForm';
-import { permit } from 'stores/UtilsActions';
+import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
 import { Field, Form } from 'react-final-form';
 import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
@@ -75,7 +75,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   </h3>
                 }
               />
-              {props.company && permit(props.company.role) === true ?
+              {props.company && projectPermit(props.company.role) === true ?
                 <Popover
                   className="w-10"
                   content={
@@ -101,7 +101,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 />
                 : undefined}
             </div>
-            {props.company && permit(props.company.role) === true ?
+            {props.company && projectPermit(props.company.role) === true ?
               <div
                 className="overflow-hidden ph2 pt2"
                 style={{ background: '#F6F6F6', borderRadius: '5px 5px 0 0' }}>

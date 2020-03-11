@@ -14,6 +14,7 @@ import settings from '../resources/images/sidebarSettings.svg';
 import associates from '../resources/images/sideBarAssociates.svg';
 
 import { Tooltip } from '@blueprintjs/core';
+import { companyPermit } from 'stores/UtilsActions';
 
 export const Sidebar = (props: {
 	user: User;
@@ -221,76 +222,78 @@ export const Sidebar = (props: {
 								</span>
 								}
 							</NavLink>
-							<NavLink
-								exact
-								className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
-								style={{ color: 'white' }}
-								activeStyle={{ background: '#3F61C5' }}
-								to={`/company/${props.company.name}/settings`}
-							>
-								{props.leftOpen ?
-									<span className="pl4">
-										<img
-											src={settings}
-											className="w2 pt1"
-										/>
-									</span> :
-									<Tooltip
-										content={<p className="mb0">Settings</p>}
-										position="right"
-									>
-										<span className="pl3">
+							{companyPermit(props.company.role) &&
+								<NavLink
+									exact
+									className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+									style={{ color: 'white' }}
+									activeStyle={{ background: '#3F61C5' }}
+									to={`/company/${props.company.name}/settings`}
+								>
+									{props.leftOpen ?
+										<span className="pl4">
 											<img
 												src={settings}
 												className="w2 pt1"
 											/>
-										</span>
-									</Tooltip>
-								}
-								{props.leftOpen &&
-									<span
-										className="outline-0 bp3-large pl4"
-										style={{ color: 'inherit' }}
-									>
-										Settings
+										</span> :
+										<Tooltip
+											content={<p className="mb0">Settings</p>}
+											position="right"
+										>
+											<span className="pl3">
+												<img
+													src={settings}
+													className="w2 pt1"
+												/>
+											</span>
+										</Tooltip>
+									}
+									{props.leftOpen &&
+										<span
+											className="outline-0 bp3-large pl4"
+											style={{ color: 'inherit' }}
+										>
+											Settings
 								</span>
-								}
-							</NavLink>
-							<NavLink
-								exact
-								className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
-								style={{ color: 'white' }}
-								activeStyle={{ background: '#3F61C5' }}
-								to={`/company/${props.company.name}/associates`}
-							>
-								{props.leftOpen ?
-									<span className="pl4">
-										<img
-											src={associates}
-											className="w2 pt1"
-										/>
-									</span> :
-									<Tooltip
-										content={<p className="mb0">Associates</p>}
-										position="right"
-									>
-										<span className="pl3">
+									}
+								</NavLink>}
+							{companyPermit(props.company.role) &&
+								<NavLink
+									exact
+									className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+									style={{ color: 'white' }}
+									activeStyle={{ background: '#3F61C5' }}
+									to={`/company/${props.company.name}/associates`}
+								>
+									{props.leftOpen ?
+										<span className="pl4">
 											<img
-												src={settings}
+												src={associates}
 												className="w2 pt1"
 											/>
-										</span>
-									</Tooltip>
-								}
-								{props.leftOpen &&
-									<span
-										className="outline-0 bp3-large pl4"
-										style={{ color: 'inherit' }}
-									>
-										Associates
+										</span> :
+										<Tooltip
+											content={<p className="mb0">Associates</p>}
+											position="right"
+										>
+											<span className="pl3">
+												<img
+													src={settings}
+													className="w2 pt1"
+												/>
+											</span>
+										</Tooltip>
+									}
+									{props.leftOpen &&
+										<span
+											className="outline-0 bp3-large pl4"
+											style={{ color: 'inherit' }}
+										>
+											Associates
 								</span>
-								}
-							</NavLink>
+									}
+								</NavLink>}
 						</>
 					)}
 			</div>

@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Button, Dialog } from '@blueprintjs/core';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { connect } from 'react-redux';
-import { changeCompanyName, clearChangeCompanyNameError } from '../../../stores/company/Actions';
+import { changeCompanyName, clearChangeCompanyNameError } from '../../../../stores/company/Actions';
 import { ICompany } from 'stores/company/Reducer';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { isEqual, isEmpty } from 'lodash';
 import { History } from 'history';
+import { companyPermit } from 'stores/UtilsActions';
 
 interface DetailsViewProps {
   company: ICompany;
@@ -23,15 +24,25 @@ const GeneralViewComponent = (props: DetailsViewProps & RouteComponentProps) => 
 
   const [showDialog, setShowDialog] = useState(false);
   return (
-    <div>
-      <Button
-        type="submit"
-        className="grow pointer outline-0 shadow-0 h2"
-        style={{ background: '#0fa3a3', color: 'white', fontSize: '16px' }}
-        onClick={() => setShowDialog(true)}
-      >
-        Change CompanyName
-      </Button>
+    <div className="fl w-100">
+      <div className="fl w-100 pr3">
+        <div className="fl w-100 w-50-m w-60-l">
+          <p className="b">Company Name</p>
+          <p className="mb0 f4 fw3">{props.company.name}</p>
+        </div>
+        {companyPermit(props.company.role) && isEqual(props.company.role, 'superAdmin') &&
+          <div className="fl w-100 w-50-m w-40-l">
+            <Button
+              type="submit"
+              className="grow pointer outline-0 shadow-0 h2"
+              text="Change CompanyName"
+              style={{ background: '#0fa3a3', color: 'white', fontSize: '16px' }}
+              onClick={() => setShowDialog(true)}
+            />
+          </div>
+        }
+      </div>
+
       {showDialog && (
         <Dialog
           onClose={() => setShowDialog(!showDialog)}
