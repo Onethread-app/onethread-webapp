@@ -138,6 +138,10 @@ const accountsSchema = new mongoose.Schema({
       ref: 'Education',
     },
   ],
+  version: {
+    type: Number,
+    default: 0,
+  },
 });
 accountsSchema.index(
   { email: 1, secondaryEmail: 1 },
