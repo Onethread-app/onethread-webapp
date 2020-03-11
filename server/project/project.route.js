@@ -16,7 +16,7 @@ router
     projectCtrl.createNewProjectForCompany,
   );
 router
-  .route('/lists')
+  .route('/:cname/lists')
   .get(
     authorization,
     schemaValidator(projectValidation.showProjectList),
@@ -37,7 +37,7 @@ router
     projectCtrl.suggestConcernAdmin,
   );
 router
-  .route('/archive-list')
+  .route('/:cname/archive-list')
   .get(
     authorization,
     schemaValidator(projectValidation.showProjectList),

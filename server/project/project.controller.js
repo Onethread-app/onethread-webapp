@@ -44,7 +44,8 @@ const createNewProjectForCompany = async (req, res, next) => {
 };
 
 const showAllProjectsForCompany = async (req, res, next) => {
-  const { limit = 50, skip = 0, companyId } = req.query;
+  const { limit = 50, skip = 0} = req.query;
+  let companyId = req.params.cname;
   const allProjects = await Project.find({
     company: companyId,
     removed: false,
@@ -228,7 +229,7 @@ const suggestConcernAdmin = async (req, res, next) => {
   }
 };
 const archiveProjectList = async (req, res, next) => {
-  await Project.find({ company: req.query.companyId, removed: true })
+  await Project.find({ company: req.params.cname, removed: true })
     .populate('departments', 'name _id')
     .select('name members')
     .exec()

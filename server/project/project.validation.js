@@ -59,11 +59,15 @@ module.exports = {
     })
   }),
   showProjectList: Joi.object().keys({
-    query: Joi.object().keys({
-      companyId: schema.company.required(),
+    params: Joi.object().keys({
+      cname: schema.company.required(),
     })
   }),
   archiveProject: Joi.object().keys({
-    params: pid.required(),
+    params: Joi.object().keys({
+      pid:pid.required(),
+      cname: schema.company.required(),
+    })
+
   })
 };
