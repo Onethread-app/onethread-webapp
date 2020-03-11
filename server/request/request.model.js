@@ -22,8 +22,8 @@ const projectRequestSchema = new Schema(
       default: false,
     },
     isRejected: {
-        type: Boolean,
-        default: true,
+      type: Boolean,
+      default: true,
     },
     project: {
       type: mongoose.Schema.Types.ObjectId,
