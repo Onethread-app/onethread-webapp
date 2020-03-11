@@ -13,10 +13,6 @@ const id = Joi.object().keys({
 });
 
 // company-name
-const companyId = Joi.object().keys({
-  companyId: Joi.string().required(),
-});
-
 const cname = Joi.object().keys({
   cname: Joi.string().required(),
 });
@@ -55,7 +51,7 @@ const schema = {
     .max(5)
     .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
   optionalRole: Joi.array()
-    .min(0)
+    .min(1)
     .max(7)
     .items(Joi.string()),
   location: Joi.string(),
@@ -118,28 +114,28 @@ module.exports = {
       legalOwnerName: schema.legalOwnerName,
       legalOwnerMail: schema.legalOwnerMail,
     }),
-    params: companyId,
+    params: cname,
   }),
   updateAbout: Joi.object().keys({
     body: Joi.object().keys({
       about: schema.about,
     }),
-    params: companyId,
+    params: cname,
   }),
   changeRole: Joi.object().keys({
     body: Joi.object().keys({
       optionalRole: schema.optionalRole.required(),
     }),
-    params: companyId,
+    params: cname,
   }),
   changeName: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
     }),
-    params: companyId,
+    params: cname,
   }),
   deleteCompany: Joi.object().keys({
-    params: companyId,
+    params: cname,
   }),
   search: Joi.object().keys({
     query: sname,

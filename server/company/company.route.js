@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router({mergeParams: true});
+const router = express.Router();
 const passport = require('passport');
 
 // const auth = passport.authenticate('jwt', { session: false });
@@ -35,39 +35,35 @@ router
 
 // update basic info
 router
-  .route('/:companyId/basic')
+  .route('/:cname/basic')
   .put(
     authorization,
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateBasicInfo),
     companyCtrl.updateBasicInfo,
   );
 
 // update about
 router
-  .route('/:companyId/about')
+  .route('/:cname/about')
   .put(
     authorization,
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
   );
 
 // update about
 router
-  .route('/:companyId/changeName')
+  .route('/:cname/changeName')
   .put(
     authorization,
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeName),
     companyCtrl.changeName,
   );
 
 router
-  .route('/:companyId/role')
+  .route('/:cname/role')
   .put(
     authorization,
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeRole),
     companyCtrl.updateRole,
   );
@@ -85,12 +81,12 @@ router
 
 
 // redirect to member
-router.use('/:companyId/members', memberRoutes);
+router.use('/:cname/members', memberRoutes);
 // redirect to department
-router.use('/:companyId/departments', deptRoutes);
+router.use('/:cname/departments', deptRoutes);
 // redirect to designation
-router.use('/:companyId/designations', designationRoutes);
+router.use('/:cname/designations', designationRoutes);
 
-router.param('companyId', companyCtrl.getCompanyLoad);
+router.param('cname', companyCtrl.getCompanyLoad);
 
 module.exports = router;

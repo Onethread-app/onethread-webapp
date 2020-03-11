@@ -1,22 +1,19 @@
 const Account = require('../account/account.model');
 const mongoose = require('mongoose');
-const { Associate } = require('../associate/associate.model');
 const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
-const {
-  sendJSONresponse,
-  sendErrorResponse,
-} = require('../helpers/jsonResponse');
+const { sendErrorResponse } = require('../helpers/jsonResponse');
+const ElasticsearchService = require('../../index.elasticsearch');
+const elasticService = new ElasticsearchService();
+const logger = require('../../config/winston');
 
 // create a company profile
 const changeName = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {
-      message: "Expects 'application/json'",
-    });
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {
@@ -57,9 +54,7 @@ const changeName = async (req, res, next) => {
 const createCompany = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {
-      message: "Expects 'application/json'",
-    });
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {
@@ -90,14 +85,14 @@ const createCompany = async (req, res, next) => {
       company: newCompany._id,
       role: 'superAdmin',
     }).populate({
-      path: 'account',
-      select: '_id name',
+      path : 'account' ,
+      select: '_id name'
     });
 
     console.log(newMember);
 
     // add ref[member,room] in company
-    //newCompany.members.push(newMember._id);
+    newCompany.members.push(newMember._id);
     // newCompany.rooms.push(newRoom._id);
 
     // company creation
@@ -120,10 +115,10 @@ const createCompany = async (req, res, next) => {
   const response =  await elasticService.set('members','_doc' , {
       mongo_id: elasticMemberPopulated._id,
       account: elasticMemberPopulated.account,
-      company: elasticMemberPopulated.company,
+      company: elasticMemberPopulated.company
     });
 
-    logger.info(`Elasticsearch document ${response.result}`);
+    logger.info(` ✔ ️Elasticsearch document ${response.result}`);
 
     // // add company ref in user
     // req.user.companies.push(newCompany._id);
@@ -143,6 +138,7 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
+    
     return next(error);
   }
 };
@@ -155,12 +151,12 @@ const getCompanyIndividual = async (req, res, next) => {
       {
         path: 'company',
         select: '_id name',
-        // populate: [
-        //   {
-        //     path: 'logo',
-        //     select: 'link s3Key type',
-        //   },
-        // ],
+        populate: [
+          {
+            path: 'logo',
+            select: 'link s3Key type',
+          },
+        ],
       },
     ];
 
@@ -181,30 +177,35 @@ const getCompanyIndividual = async (req, res, next) => {
 
 // get a company profile
 const getCompany = async (req, res, next) => {
+
+  
   try {
     // company details
     let company = await Company.findOne({
       name: req.params.cname,
-    }).select(
-      '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
-    );
+    })
+      .select(
+        '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
+      )
+      .populate('logo', 'link s3Key type');
 
     // role info
     let member = await Member.findOne({
       account: req.user._id,
-      company: company._id,
+      company: req.company._id,
     }).select('-_id role');
 
-    // if (!member) {
-    //   return res.status(401).json({
-    //     message: "You're not authorized with this company",
-    //   });
-    // }
+    if (!member) {
+      return res.status(401).json({
+        message: "You're not authorized with this company",
+      });
+    }
 
     return res.status(200).json({
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
+    
     next(error);
   }
 };
@@ -213,11 +214,9 @@ const getCompany = async (req, res, next) => {
 const updateBasicInfo = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {
-      message: "Expects 'application/json'",
-    });
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
-
+  const mongoose = require(mongoose);
   try {
     // updating new values
     for (const key in req.body) {
@@ -240,9 +239,7 @@ const updateBasicInfo = async (req, res, next) => {
 const updateAbout = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {
-      message: "Expects 'application/json'",
-    });
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {
@@ -264,10 +261,10 @@ const updateRole = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-
+  
   try {
     //Company.deleteMany({}, function(err, result) {
-
+      
     //});
     //req.company.optionalRole = req.body.optionalRole;
     const company = await Company.findOneAndUpdate(
@@ -286,6 +283,7 @@ const updateRole = async (req, res, next) => {
       data: company.optionalRole,
     });
   } catch (error) {
+    
     next(error);
   }
 };
@@ -294,7 +292,7 @@ const updateRole = async (req, res, next) => {
 const getCompanyLoad = async (req, res, next) => {
   try {
     const company = await Company.findOne({
-      _id: req.params.companyId,
+      name: req.params.cname,
     }).populate('account', '_id firstName lastName email contactNo');
 
     if (company) {
@@ -345,16 +343,17 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeUser = (functionalRole, ...userRoles) => {
-  return async function(req, res, next) {
+const authorizeUser=  (functionalRole, ...userRoles )=> {
+  return async function  (req, res, next) {
     try {
-      // const company =  await Company.findOne({
-      //   _id: req.params.companyId,
-      // }).select('_id optionalRole').exec();
+
+      const company =  await Company.findOne({
+        _id: req.query.companyId,
+      }).select('_id optionalRole').exec();
 
       const member = await Member.findOne({
         account: req.user._id,
-        company: req.params.companyId, //apatoto pore name or id hobe
+        company: req.query.companyId, //need to query param company first
       }).exec();
 
       // if (
@@ -362,11 +361,10 @@ const authorizeUser = (functionalRole, ...userRoles) => {
       //   !userRoles.includes(member.role) ||
       //   !company.optionalRole.includes(functionalRole)
       // )
-
-      //console.log(member, userRoles, functionalRole, 'a');
+      
       if (
         !member ||
-        (functionalRole === 'all' && !userRoles.includes(member.role))
+        !userRoles.includes(member.role)  
       ) {
         return res.status(403).json({
           message: `Restricted`,
@@ -382,28 +380,16 @@ const authorizeUser = (functionalRole, ...userRoles) => {
 
 const searchCompany = async (req, res, next) => {
   try {
-    const { limit = 50, skip = 0, name, companyId } = req.query;
-    const associate = await Associate.find({
-      $or: [{ company: companyId }, { associateCompany: companyId }],
-      isRejected: false,
-    }).exec();
-
-    let associateCompanyId = associate.map(m => {
-      if (m.company.toString() === companyId) {
-        return m.associateCompany;
-      }
-      return m.company;
-    });
-
-    associateCompanyId.push(companyId);
+    const { limit = 50, skip = 0 , name, cname} = req.query;
     await Company.find({
       name: { $regex: new RegExp(name), $options: 'i' },
-      _id: { $nin: associateCompanyId },
+      _id: { $ne: mongoose.Types.ObjectId(cname)}
     })
       .select('name')
       .skip(+skip)
       .limit(+limit)
       .then(data => {
+        
         return sendJSONresponse(res, 200, {
           success: true,
           message: `Search complete for ${name}`,
@@ -411,9 +397,11 @@ const searchCompany = async (req, res, next) => {
         });
       });
   } catch (error) {
+    
     next(error);
   }
 };
+
 
 module.exports = {
   authorizeUser,
