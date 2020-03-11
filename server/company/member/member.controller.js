@@ -306,6 +306,7 @@ module.exports = {
   addMember,
   list,
   pendingList,
+  
   getMember,
   deleteMember,
   getMemberLoad,

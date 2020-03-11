@@ -5,16 +5,18 @@ const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
-const { sendErrorResponse } = require('../helpers/jsonResponse');
-const ElasticsearchService = require('../../index.elasticsearch');
-const elasticService = new ElasticsearchService();
-const logger = require('../../config/winston');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 // create a company profile
 const changeName = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
 
   try {
@@ -55,7 +57,9 @@ const changeName = async (req, res, next) => {
 const createCompany = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
 
   try {
@@ -86,8 +90,8 @@ const createCompany = async (req, res, next) => {
       company: newCompany._id,
       role: 'superAdmin',
     }).populate({
-      path : 'account' ,
-      select: '_id name'
+      path: 'account',
+      select: '_id name',
     });
 
     console.log(newMember);
@@ -109,17 +113,20 @@ const createCompany = async (req, res, next) => {
     // });
     const elasticMember = await newMember.save();
 
-  const elasticMemberPopulated =  Member.find({
-    _id:elasticMember._id
-  }).populate({ path: 'account', select: '_id name firstName lastName email' });
-   
-  const response =  await elasticService.set('members','_doc' , {
-      mongo_id: elasticMemberPopulated._id,
-      account: elasticMemberPopulated.account,
-      company: elasticMemberPopulated.company
+    const elasticMemberPopulated = Member.find({
+      _id: elasticMember._id,
+    }).populate({
+      path: 'account',
+      select: '_id name firstName lastName email',
     });
 
-    console.log(elasticMemberPopulated)
+    const response = await elasticService.set('members', '_doc', {
+      mongo_id: elasticMemberPopulated._id,
+      account: elasticMemberPopulated.account,
+      company: elasticMemberPopulated.company,
+    });
+
+    console.log(elasticMemberPopulated);
 
     logger.info(` ✔ ️Elasticsearch document ${response.result}`);
 
@@ -141,7 +148,6 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
-    
     return next(error);
   }
 };
@@ -180,16 +186,13 @@ const getCompanyIndividual = async (req, res, next) => {
 
 // get a company profile
 const getCompany = async (req, res, next) => {
-
-  
   try {
     // company details
     let company = await Company.findOne({
       name: req.params.cname,
-    })
-      .select(
-        '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
-      );
+    }).select(
+      '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
+    );
 
     // role info
     let member = await Member.findOne({
@@ -207,7 +210,6 @@ const getCompany = async (req, res, next) => {
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
-    
     next(error);
   }
 };
@@ -216,11 +218,12 @@ const getCompany = async (req, res, next) => {
 const updateBasicInfo = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
-  
+
   try {
-    
     // updating new values
     for (const key in req.body) {
       if (req.body.hasOwnProperty(key)) {
@@ -234,7 +237,6 @@ const updateBasicInfo = async (req, res, next) => {
       message: `Company's basic information updated`,
     });
   } catch (error) {
-    
     next(error);
   }
 };
@@ -243,13 +245,13 @@ const updateBasicInfo = async (req, res, next) => {
 const updateAbout = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
-  
-  try {
-    
-    req.company.about = req.body.about;
 
+  try {
+    req.company.about = req.body.about;
 
     await req.company.save();
 
@@ -257,7 +259,6 @@ const updateAbout = async (req, res, next) => {
       message: `Company's about updated`,
     });
   } catch (error) {
-    
     next(error);
   }
 };
@@ -268,10 +269,10 @@ const updateRole = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-  
+
   try {
     //Company.deleteMany({}, function(err, result) {
-      
+
     //});
     //req.company.optionalRole = req.body.optionalRole;
     const company = await Company.findOneAndUpdate(
@@ -290,7 +291,6 @@ const updateRole = async (req, res, next) => {
       data: company.optionalRole,
     });
   } catch (error) {
-    
     next(error);
   }
 };
@@ -298,7 +298,6 @@ const updateRole = async (req, res, next) => {
 // company will be found on req.company
 const getCompanyLoad = async (req, res, next) => {
   try {
-    
     const company = await Company.findOne({
       _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');
@@ -351,20 +350,16 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeUser=  (functionalRole, ...userRoles )=> {
-
-  return async function  (req, res, next) {
-    
+const authorizeUser = (functionalRole, ...userRoles) => {
+  return async function(req, res, next) {
     try {
-
       // const company =  await Company.findOne({
       //   _id: req.params.companyId,
       // }).select('_id optionalRole').exec();
-      
 
       const member = await Member.findOne({
         account: req.user._id,
-        "company" : req.params.companyId, //apatoto pore name or id hobe
+        company: req.params.companyId, //apatoto pore name or id hobe
       }).exec();
 
       // if (
@@ -372,12 +367,11 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
       //   !userRoles.includes(member.role) ||
       //   !company.optionalRole.includes(functionalRole)
       // )
-     
-console.log(member, userRoles, functionalRole, 'a');
-      if ( !member   || (
-        functionalRole === 'all' &&
-        !userRoles.includes(member.role)  
-      ) 
+
+      //console.log(member, userRoles, functionalRole, 'a');
+      if (
+        !member ||
+        (functionalRole === 'all' && !userRoles.includes(member.role))
       ) {
         return res.status(403).json({
           message: `Restricted`,
@@ -385,24 +379,22 @@ console.log(member, userRoles, functionalRole, 'a');
       }
 
       next();
-    } catch (error) {      
+    } catch (error) {
       next(error);
     }
   };
 };
 
 const searchCompany = async (req, res, next) => {
-  
   try {
-    const { limit = 50, skip = 0 , name, companyId} = req.query;
+    const { limit = 50, skip = 0, name, companyId } = req.query;
     const associate = await Associate.find({
-       $or:[ {company: companyId}, {associateCompany: companyId} ],
-       isRejected:false,
-
-      }).exec();
+      $or: [{ company: companyId }, { associateCompany: companyId }],
+      isRejected: false,
+    }).exec();
 
     let associateCompanyId = associate.map(m => {
-      if(m.company.toString() === companyId){
+      if (m.company.toString() === companyId) {
         return m.associateCompany;
       }
       return m.company;
@@ -411,13 +403,12 @@ const searchCompany = async (req, res, next) => {
     associateCompanyId.push(companyId);
     await Company.find({
       name: { $regex: new RegExp(name), $options: 'i' },
-      _id: { $nin: associateCompanyId}
+      _id: { $nin: associateCompanyId },
     })
       .select('name')
       .skip(+skip)
       .limit(+limit)
       .then(data => {
-        
         return sendJSONresponse(res, 200, {
           success: true,
           message: `Search complete for ${name}`,
@@ -425,11 +416,9 @@ const searchCompany = async (req, res, next) => {
         });
       });
   } catch (error) {
-    
     next(error);
   }
 };
-
 
 module.exports = {
   authorizeUser,
