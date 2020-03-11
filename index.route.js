@@ -52,7 +52,7 @@ router.use('/tasks', taskRoutes);
 router.use('/subTasks', subTasks);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
-//router.use('/projects', projectRoutes);
+router.use('/projects', projectRoutes);
 router.use('/associate', associateRoutes);
 
 module.exports = router;
