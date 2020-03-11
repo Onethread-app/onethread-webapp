@@ -4,7 +4,7 @@ import { TaskManagementLayout } from './TaskManagementLayout';
 import { connect } from 'react-redux';
 import { TaskBoard } from 'stores/board/Reducer';
 import { AddTeamMemberForm } from './members/AddTeamMemberForm';
-import { permit } from 'stores/UtilsActions';
+import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import addMemberIcon from 'resources/images/addMemberIcon.png';
@@ -40,7 +40,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
           {props.currentBoard!.name}
         </h3>
         <div className="flex mh3">
-          {permit(props.company.role) === true ?
+          {projectPermit(props.company.role) === true ?
             <>
               {/* <img
                 className="mr3 br2 pointer"

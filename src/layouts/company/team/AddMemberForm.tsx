@@ -17,7 +17,7 @@ interface TeamMembersViewProps {
 interface TeamMembersViewInternalProps extends TeamMembersViewProps {
   company: ICompany;
   addTeamMembers: (members: Array<{ account: string | undefined, company: string }>,
-    pendingTeamMembers: string[], name: string) => void;
+    pendingTeamMembers: string[], companyId: string) => void;
   getCompanyMembers: () => void;
 }
 
@@ -33,7 +33,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
 
   const userRequestFactory = (_email: string): Promise<any> => {
     const headers = tokenConfig();
-    return fetch(`${server}company/${props.company.name}/members/search?email=${_email}`, headers)
+    return fetch(`${server}company/${props.company._id}/members/search?email=${_email}`, headers)
       .then(res => res.json())
       .then(res => res.employees.data)
       .catch(err => []);
@@ -192,7 +192,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
               };
             });
             if (userIdWithCompany || pendingTeamMembers) {
-              await props.addTeamMembers(userIdWithCompany, pendingTeamMembers, props.company.name);
+              await props.addTeamMembers(userIdWithCompany, pendingTeamMembers, props.company._id);
             }
             await props.getCompanyMembers();
             props.setShowDialog(!props.showDialog);

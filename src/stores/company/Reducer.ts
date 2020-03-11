@@ -24,9 +24,10 @@ import {
 	EDIT_DESIGNATION_ERROR,
 	LOGO_UPLOAD,
 	CHANGE_MEMBER_ROLE,
-	GET_ALL_COMPANY_PENDING_MEMBERS,
+	COMPANY_ROLE,
 	UPDATE_ALL_COMPANY_PENDING_MEMBERS,
-	DELETE_TEAM_MEMBER
+	DELETE_TEAM_MEMBER,
+	GET_ALL_COMPANY_PENDING_MEMBERS
 } from './Types';
 import { User } from 'stores/user/Reducer';
 import { Entity } from 'stores/UtilsActions';
@@ -328,6 +329,14 @@ export const CompanyReducer = (state = InitialState, action: any) => {
 								}
 							}
 						)
+				},
+			};
+		case COMPANY_ROLE:
+			return {
+				...state,
+				currentCompany: {
+					...state.currentCompany,
+					optionalRole: action.payload
 				},
 			};
 		default:
