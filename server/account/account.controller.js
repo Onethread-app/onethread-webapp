@@ -3,6 +3,10 @@ const crypto = require('crypto');
 const httpStatus = require('http-status');
 const slug = require('slug');
 const Account = require('./account.model');
+const { Member } = require('../company/member/member.model');
+const {
+  PendingMember,
+} = require('../company/member/pendingMember.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
@@ -81,6 +85,26 @@ const register = async (req, res, next) => {
         .update(token)
         .digest('hex');
       let verifyAccountTokenExpiration = Date.now() + 604800;
+
+      let pendingMember = await PendingMember.find({
+        email: account.email,
+      }).select('-__v -createdAt -updatedAt');
+
+      if (pendingMember.length > 0) {
+        let pendingMemberToMember = pendingMember.map(m => {
+          return { account: account._id, company: m.company };
+        });
+
+        await Member.create(pendingMemberToMember);
+
+        await PendingMember.updateMany(
+          { email: account.email },
+          {
+            removed: true,
+          },
+        );
+      }
+
       sendEmailForVerifyAccount(
         user.firstName,
         user.lastName,
@@ -95,6 +119,7 @@ const register = async (req, res, next) => {
       return sendJSONresponse(res, 201, { message: 'User created' });
     })
     .catch(err => {
+      
       next(err);
     });
 };
@@ -108,6 +133,7 @@ const register = async (req, res, next) => {
 
 // account holder can login their account
 const login = async (req, res, next) => {
+  
   try {
     const payLoad = {
       email: req.user.email,
@@ -184,6 +210,7 @@ const timeline = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
+    
     next(error);
   }
 };
