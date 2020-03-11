@@ -1,9 +1,13 @@
 import * as React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, connect } from 'react-redux';
+import moment from 'moment';
 import { IRoomMessage } from 'stores/room/Reducer';
+import { toggleDiscussionRoom } from 'stores/room/Actions';
+
 import UserIcon from './../../../../../resources/images/profilePhoto.svg';
 import DownloadIcon from './../../../../../resources/images/Download.svg';
-import moment from 'moment';
+import starIcon from './../../../../../resources/images/colorful-star.svg';
+import muteStarIcon from './../../../../../resources/images/mute-star.svg';
 
 interface MessageItemProps {
   message: IRoomMessage;
@@ -11,13 +15,15 @@ interface MessageItemProps {
     message: boolean;
     showPicAndName: boolean;
   };
+  toggleDiscussionRoom: (data: { discussion: boolean }, messageId: string) => void;
 }
 
-export const MessageItem = (props: MessageItemProps) => {
+const MessageItemComponent = (props: MessageItemProps) => {
   const user = useSelector((state: any) => state.userReducer.user);
   const currentUser = user._id === props.message.account._id;
   return (
     <>
+      {/* date & time */}
       {
         props.group.showPicAndName ?
           <div className="flex justify-center items-center pv2">
@@ -25,6 +31,8 @@ export const MessageItem = (props: MessageItemProps) => {
           </div>
           : undefined
       }
+
+      {/* user info */}
       {props.group.showPicAndName ?
         <article
           key={props.message._id}
@@ -55,23 +63,15 @@ export const MessageItem = (props: MessageItemProps) => {
           }
         </article> : null}
 
+      {/* text */}
       {props.message.text ?
         <article
           key={props.message.createdAt}
-          className={`db flex items-center 
-        ${currentUser ? ' flex-row-reverse' : ''} 
-        ${props.group.message ? 'mb1' : 'mb3'}`}
+          className={`message-text db flex items-center ${currentUser ? 'flex-row-reverse' : ''} ${props.group.message ? 'mb1' : 'mb3'}`}
           style={{
             marginLeft: '48px'
           }}
         >
-          {/* <Tooltip
-        // tslint:disable-next-line: max-line-length
-        className={`shadow-4 ph3 pv1 br4 mw6 ${currentUser ? 
-          'message-mine mr2 bg-tigrowNewDarkBlue' : 'message-others ml2 bg-white'}`}
-        content={moment(props.createdAt).format('lll')}
-        position="left"
-      > */}
           <div
             className={`ph3 pv1 br4 mw6 ${currentUser ? 'message-mine mr2' : 'message-others ml2'}`}
             style={{
@@ -87,15 +87,26 @@ export const MessageItem = (props: MessageItemProps) => {
               }}
             >{props.message.text}
             </p>
-            {/* <div className={`flex ${currentUser ? " flex-row-reverse" : ""}`}>
-          <h6 className={`pa0 ma0 mt1 ${currentUser ? "ml5 white" : "mr5"}`}>
-            {moment(props.createdAt).format('lll')}
-          </h6>
-        </div> */}
           </div>
-          {/* </Tooltip> */}
+          <span
+            className={`highlighted-icon ph3 ${props.message.discussion ? 'flex' : 'dn'}`}
+          >
+            <img
+              className="pointer"
+              onClick={async () => {
+                await props.toggleDiscussionRoom({ discussion: !props.message.discussion }, props.message._id);
+              }}
+              src={props.message.discussion ? starIcon : muteStarIcon}
+              alt="highlighted-discussion icon"
+              style={{
+                width: '23px',
+                height: '23px'
+              }}
+            />
+          </span>
         </article> : null}
 
+      {/* file */}
       {props.message.files.length ?
         props.message.files.map(file =>
           <article
@@ -146,3 +157,6 @@ export const MessageItem = (props: MessageItemProps) => {
     </>
   );
 };
+export const MessageItem = connect(null, { toggleDiscussionRoom })(
+  MessageItemComponent
+);

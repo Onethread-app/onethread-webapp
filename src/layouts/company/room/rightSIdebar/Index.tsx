@@ -10,7 +10,7 @@ interface RoomRightSidebarComponentProps {
 const RoomRightSidebarComponent = (props: RoomRightSidebarComponentProps) => {
 
     return (
-        <div className="ph3 h-100">
+        <div className="pl3 h-100">
             <Discussion />
             <SharedFile />
         </div>

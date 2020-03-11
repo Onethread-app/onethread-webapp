@@ -2,7 +2,7 @@ import {
 	LOADING_ROOM,
 	GET_ROOM_MESSAGES,
 	GET_ROOMS,
-	CLEAR_ROOM_MESSAGES,
+	CHANGE_ROOM,
 	CURRENT_ROOM,
 	NEW_MESSAGE,
 	CLEAR_ROOMS_REDUCER_STATE,
@@ -28,7 +28,12 @@ import {
 	UNREAD_COUNT_ROOMS,
 	ARCHIVE_ROOM,
 	GET_ROOM_SHARED_FILES_ERROR,
-	GET_ROOM_SHARED_FILES
+	GET_ROOM_SHARED_FILES,
+	GET_ROOM_DISCUSSIONS,
+	GET_ROOM_DISCUSSIONS_ERROR,
+	SET_ROOM_DISCUSSIONS,
+	TOGGLE_ROOM_DISCUSSIONS_ERROR,
+	REMOVE_ROOM_DISCUSSIONS
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -76,12 +81,22 @@ export interface IRoomFile {
 export interface IRoomMessage {
 	type: string;
 	files: IRoomFile[];
+	discussion: boolean;
 	removed: boolean;
 	_id: string;
 	text: string;
 	room: string;
 	chatkitId: number;
 	account: IRoomMember;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface IRoomDiscussion {
+	_id: string;
+	text: string;
+	room: string;
+	chatkitId: number;
 	createdAt: string;
 	updatedAt: string;
 }
@@ -100,10 +115,7 @@ export interface IRoomReducer {
 	users: IRoomMember[];
 	userStatus: any;
 	roomMembers: any[];
-	discussions: Array<{
-		_id: string,
-		text: string
-	}>;
+	discussions: IRoomDiscussion[];
 	sharedFileMessages: IRoomMessage[];
 	rooms: IRoom[];
 	roomsUnreadCount: any;
@@ -133,88 +145,7 @@ const InitialState: IRoomReducer = {
 	users: [],
 	userStatus: {},
 	roomMembers: [],
-	discussions: [
-		{
-			_id: '1',
-			text: 'text 1'
-		},
-		{
-			_id: '2',
-			text: 'text 2'
-		},
-		{
-			_id: '3',
-			text: 'text 3'
-		},
-		{
-			_id: '4',
-			text: 'text 4'
-		},
-		{
-			_id: '1',
-			text: 'text 1'
-		},
-		{
-			_id: '2',
-			text: 'text 2'
-		},
-		{
-			_id: '3',
-			text: 'text 3'
-		},
-		{
-			_id: '4',
-			text: 'text 4'
-		},
-		{
-			_id: '1',
-			text: 'text 1'
-		},
-		{
-			_id: '2',
-			text: 'text 2'
-		},
-		{
-			_id: '3',
-			text: 'text 3'
-		},
-		{
-			_id: '4',
-			text: 'text 4'
-		},
-		{
-			_id: '1',
-			text: 'text 1'
-		},
-		{
-			_id: '2',
-			text: 'text 2'
-		},
-		{
-			_id: '3',
-			text: 'text 3'
-		},
-		{
-			_id: '4',
-			text: 'text 4'
-		},
-		{
-			_id: '1',
-			text: 'text 1'
-		},
-		{
-			_id: '2',
-			text: 'text 2'
-		},
-		{
-			_id: '3',
-			text: 'text 3'
-		},
-		{
-			_id: '4',
-			text: 'text 4'
-		},
-	],
+	discussions: [],
 	sharedFileMessages: [],
 	rooms: [],
 	roomsUnreadCount: {},
@@ -370,10 +301,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				...state,
 				allMessages: action.payload
 			};
-		case CLEAR_ROOM_MESSAGES:
+		case CHANGE_ROOM:
 			return {
 				...state,
 				messages: [],
+				discussions: [],
+				sharedFileMessages: [],
 				loading: false
 			};
 		case UPDATE_ROOM:
@@ -449,6 +382,50 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				sharedFileMessages: [...state.sharedFileMessages, ...action.payload],
 				loading: false
 			};
+		case GET_ROOM_DISCUSSIONS:
+			return {
+				...state,
+				discussions: [...state.discussions, ...action.payload],
+				loading: false
+			};
+		case SET_ROOM_DISCUSSIONS:
+			return {
+				...state,
+				messages: state.messages
+					.map((message: IRoomMessage) => {
+						if (message._id === action.payload.data._id) {
+							return {
+								...message,
+								discussion: action.payload.discussion
+							};
+						} else {
+							return message;
+						}
+					}),
+				discussions: [...state.discussions, action.payload.data],
+				loading: false
+			};
+		case REMOVE_ROOM_DISCUSSIONS:
+			return {
+				...state,
+				messages: state.messages
+					.map((message: IRoomMessage) => {
+						if (message._id === action.payload.data._id) {
+							return {
+								...message,
+								discussion: action.payload.discussion
+							};
+						} else {
+							return message;
+						}
+					}),
+				discussions: state.discussions.filter((discussion: IRoomDiscussion) => {
+					return discussion._id !== action.payload.data._id;
+				}),
+				loading: false
+			};
+		case TOGGLE_ROOM_DISCUSSIONS_ERROR:
+		case GET_ROOM_DISCUSSIONS_ERROR:
 		case GET_ROOM_SHARED_FILES_ERROR:
 		case ADD_MEMBER_IN_ROOM_ERROR:
 		case GET_ROOM_MEMBERS_ERROR:

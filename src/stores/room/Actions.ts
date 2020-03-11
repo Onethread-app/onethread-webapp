@@ -20,7 +20,12 @@ import {
 	ARCHIVE_ROOM_ERROR,
 	ARCHIVE_ROOM,
 	GET_ROOM_SHARED_FILES,
-	GET_ROOM_SHARED_FILES_ERROR
+	GET_ROOM_SHARED_FILES_ERROR,
+	GET_ROOM_DISCUSSIONS,
+	GET_ROOM_DISCUSSIONS_ERROR,
+	SET_ROOM_DISCUSSIONS,
+	TOGGLE_ROOM_DISCUSSIONS_ERROR,
+	REMOVE_ROOM_DISCUSSIONS
 } from './Types';
 import { tigrowApi } from 'config';
 
@@ -277,7 +282,7 @@ export const getRoomSharedFiles = (roomId: string, limit: number = 1000, skip: n
 			});
 		} else {
 			// tslint:disable-next-line: no-console
-			console.log('error in room\'s message fetching');
+			console.log('error in room\'s file fetching');
 		}
 	} catch (error) {
 		if (isEqual(error.message, 'Network Error')) {
@@ -289,5 +294,74 @@ export const getRoomSharedFiles = (roomId: string, limit: number = 1000, skip: n
 			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
+	}
+};
+
+export const getRoomDiscussions = (roomId: string, limit: number = 1000, skip: number = 0) => async (dispatch: any) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.get(`messages/room/${roomId}/discussion?limit=${limit}&skip=${skip}`, headers);
+			// if (response.data.count < limit) {
+			// 	dispatch({ type: ALL_MESSAGE_RECEIVED, payload: true });
+			// }
+			dispatch({
+				type: GET_ROOM_DISCUSSIONS,
+				payload: response.data.discussion
+			});
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in room\'s discussion fetching');
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({
+				type: GET_ROOM_DISCUSSIONS_ERROR,
+				payload: 'Network error'
+			});
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log(error.response);
+		}
+	}
+};
+
+export const toggleDiscussionRoom = (data: { discussion: boolean }, messageId: string) => async (
+	dispatch: any,
+) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.put(`messages/${messageId}/discussion`, data, headers);
+			await dispatch({
+				type: response.data.discussion.discussion ?
+					SET_ROOM_DISCUSSIONS : REMOVE_ROOM_DISCUSSIONS,
+				payload: {
+					data: {
+						_id: response.data.discussion._id,
+						text: response.data.discussion.text,
+						room: response.data.discussion.room,
+						chatkitId: response.data.discussion.chatkitId,
+						createdAt: response.data.discussion.createdAt,
+						updatedAt: response.data.discussion.updatedAt
+					},
+					discussion: response.data.discussion.discussion
+				}
+			});
+			return response.status;
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in creation of company');
+		}
+	} catch (error) {
+		if (error.response.status === 401) {
+			dispatch({ type: TOGGLE_ROOM_DISCUSSIONS_ERROR, payload: 'Unauthorized user' });
+		} else if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: TOGGLE_ROOM_DISCUSSIONS_ERROR, payload: 'Network error' });
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log(error.response);
+		}
+		return error.response.status;
 	}
 };

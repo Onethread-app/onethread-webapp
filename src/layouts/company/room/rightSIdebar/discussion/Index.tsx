@@ -17,11 +17,15 @@ const DiscussionComponent = (props: DiscussionComponentProps) => {
         >
             <h3 className="mv2">Highlighted Discussions</h3>
             <div className="overflow-y-auto flex-grow-1 pr3">
-                {props.discussions ?
+                {props.discussions && props.discussions.length > 0 ?
                     props.discussions.map((d) => (
-                        <p className="bg-black-10 br-pill pv1 ph2" key={d._id}>{d.text}</p>
+                        <p
+                            key={d._id}
+                            className="bg-black-05 pv2 ph3"
+                            style={{ borderRadius: '8px' }}
+                        >{d.text}</p>
                     )) :
-                    <h4 className="mv0 gray">No files.</h4>
+                    <h4 className="mv0 gray">No discussions.</h4>
                 }
             </div>
         </div>

@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, connect } from 'react-redux';
-import { getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles } from '../../../../stores/room/Actions';
+import { getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions } from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
-	CLEAR_ROOM_MESSAGES,
+	CHANGE_ROOM,
 	ACTIVE_ROOM,
 	ON_PRESENCE_CHANGE,
 	UPDATE_ROOM,
@@ -22,12 +21,13 @@ import { IRoom, IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
-interface IRoomListComponentProps extends RouteComponentProps {
+interface IRoomListComponentProps {
 	chatkit?: any;
 	getRoomMembers: (roomId: string) => void;
 	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
 	getRooms: () => void;
 	getRoomSharedFiles: (roomId: string, limit?: number, skip?: number) => void;
+	getRoomDiscussions: (roomId: string, limit?: number, skip?: number) => void;
 	activeRoom: any;
 	currentRoom: IRoomReducer['currentRoom'];
 	rooms: IRoom[];
@@ -43,12 +43,13 @@ export const RoomListComponent = withChatkit(
 		// tslint:disable-next-line: no-shadowed-variable
 		const subscribeToRoom = async (room: IRoom) => {
 			if (!props.chatkit.isLoading) {
-				dispatch({ type: CLEAR_ROOM_MESSAGES });
+				dispatch({ type: CHANGE_ROOM });
 				dispatch({ type: CURRENT_ROOM, payload: room });
 
 				await props.getRoomMessages(room._id);
 				await props.getRoomMembers(room._id);
 				await props.getRoomSharedFiles(room._id);
+				await props.getRoomDiscussions(room._id);
 
 				props.chatkit.currentUser
 					.subscribeToRoomMultipart({
@@ -64,6 +65,7 @@ export const RoomListComponent = withChatkit(
 									_id: content.message._id,
 									text: content.message.text,
 									room: content.message.room,
+									discussion: content.message.discussion,
 									account: content.account,
 									chatkitId: newMessage.id,
 									createdAt: newMessage.createdAt,
@@ -186,6 +188,5 @@ const mapStateToProps = (state: any) => {
 	};
 };
 
-export const RoomList = connect(mapStateToProps, { getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles })(
-	withRouter(RoomListComponent)
-);
+export const RoomList = connect(mapStateToProps,
+	{ getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions })(RoomListComponent);
