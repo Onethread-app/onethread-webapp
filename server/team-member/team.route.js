@@ -10,15 +10,13 @@ const SchemaValidator = require('../helpers/joiSchemaValidator');
 
 router.route('/search').get(authorization, teamCtrl.searchTeamMember);
 
-router
-  .route('/')
-  .post(
-    authorization,
-    // TODO: member validations
-    // SchemaValidator(joiSchema.newMember),
-    teamCtrl.addTeamMember,
-  )
-  .get(authorization, teamCtrl.list);
+router.route('/add-team-member').post(
+  authorization,
+  // TODO: member validations
+  // SchemaValidator(joiSchema.newMember),
+  teamCtrl.addTeamMember,
+);
+// .get(authorization, teamCtrl.list);
 
 router
   .route('/:memberId')

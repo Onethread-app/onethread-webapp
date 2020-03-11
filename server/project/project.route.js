@@ -48,7 +48,7 @@ router
   .get(authorization, projectCtrl.projectPendingRequest);
 router
   .route('/accept-request')
-  .post(authorization, projectCtrl.acceptProjectRequest);
+  .put(authorization, projectCtrl.acceptProjectRequest);
 router
   .route('/reject-request')
   .post(authorization, projectCtrl.rejectProjectRequest);
