@@ -24,7 +24,18 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-const { APIError } = require('../helpers/APIError');
+const {
+  APIError,
+  BadRequestError,
+  SearchNotMatchError,
+} = require('../helpers/APIError');
+const {
+  setDocument,
+  accountIndex,
+  bulkInsert,
+  memberIndex,
+} = require('../services/elastic.services');
+const chalk = require('chalk');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -91,7 +102,41 @@ const register = async (req, res, next) => {
           return { account: account._id, company: m.company };
         });
 
+        const pendingMemberToMemberAccounts = pendingMemberToMember.map(
+          member => member.account,
+        );
+        const pendingMemberToMemberCompany = pendingMemberToMember.map(
+          member => member.company,
+        );
+
         await Member.create(pendingMemberToMember);
+
+        const elasticIndexedMembers = await Member.find({
+          account: { $in: pendingMemberToMemberAccounts },
+          company: { $in: pendingMemberToMemberCompany },
+        }).populate({
+          path: 'account',
+          select: '_id name firstName lastName email',
+        });
+
+        const memberStructure = data => {
+          return {
+            mongo_id: data.mongo_id,
+            account: data.account,
+            company: data.company,
+          };
+        };
+
+        await bulkInsert(
+          memberIndex,
+          elasticIndexedMembers,
+          memberStructure,
+        );
+        logger.info(
+          chalk.blueBright(
+            `ElasticSearch successfully documented with bulk on ${memberIndex}`,
+          ),
+        );
 
         await PendingMember.updateMany(
           { email: account.email },
@@ -115,7 +160,6 @@ const register = async (req, res, next) => {
       return sendJSONresponse(res, 201, { message: 'User created' });
     })
     .catch(err => {
-      
       next(err);
     });
 };
@@ -129,7 +173,6 @@ const register = async (req, res, next) => {
 
 // account holder can login their account
 const login = async (req, res, next) => {
-  
   try {
     const payLoad = {
       email: req.user.email,
@@ -199,7 +242,6 @@ const timeline = async (req, res, next) => {
       user: userInfo,
     });
   } catch (error) {
-    
     next(error);
   }
 };
@@ -222,18 +264,44 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
         isAccountVerified: false,
         message: 'Link is expired',
       });
-    await Account.findByIdAndUpdate(
+    const user = await Account.findByIdAndUpdate(
       { _id: userID },
       { $set: { isAccountVerified: true } },
       { safe: true, upsert: true, new: true },
     );
 
     await client.del(`verifyAccountToken:${req.params.token}`);
+
+    await setDocument(accountIndex, '_doc', {
+      mongo_id: user._id,
+      name: user.name,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+
+    logger.info(
+      chalk.blueBright(
+        `ElasticSearch document added on ${accountIndex}`,
+      ),
+    );
+
+    //  const response  =  await elasticService.set('accounts','_doc',{
+    //     mongo_id : user._id,
+    //     name: user.name,
+    //     email: user.email,
+    //     firstName: user.firstName,
+    //     lastName: user.lastName
+    //   })
+
+    //   logger.info(` ✔ ️Elasticsearch document ${response.result}`);
+
     return sendJSONresponse(res, 200, {
       isAccountVerified: true,
       message: 'Account Verified Successfully',
     });
   } catch (err) {
+    logger.error(err);
     next(err);
   }
 };

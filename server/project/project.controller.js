@@ -3,6 +3,10 @@ const { Project } = require('./project.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
 const {
+  search,
+  memberIndex,
+} = require('../services/elastic.services');
+const {
   sendErrorResponse,
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
@@ -44,7 +48,7 @@ const createNewProjectForCompany = async (req, res, next) => {
 };
 
 const showAllProjectsForCompany = async (req, res, next) => {
-  const { limit = 50, skip = 0} = req.query;
+  const { limit = 50, skip = 0 } = req.query;
   let companyId = req.params.cname;
   const allProjects = await Project.find({
     company: companyId,
@@ -87,7 +91,7 @@ const updateProjectDescription = async (req, res, next) => {
     });
 };
 
-const updateProjectOutline = async(req, res, next) =>{
+const updateProjectOutline = async (req, res, next) => {
   await Project.findByIdAndUpdate(
     { _id: req.params.pid },
     {
@@ -109,14 +113,14 @@ const updateProjectOutline = async(req, res, next) =>{
       logger.error(`${err}`);
       next(err);
     });
-}
+};
 
 const getProjectDetails = async (req, res, next) => {
   try {
     const project = await Project.findOne({
       _id: req.params.pid,
     })
-    .populate('files', 'link')
+      .populate('files', 'link')
       .select('outline description color name');
     // console.log(req.project)
     return sendJSONresponse(res, 200, project);
@@ -212,19 +216,56 @@ const showAllFilesForProject = async (req, res, next) => {
 
 const suggestConcernAdmin = async (req, res, next) => {
   try {
-    await Member.find({
-      company: req.query.companyId,
-    })
-      .select('-_id account')
-      .populate(
-        'account',
-        '_id name firstName lastName email profileImage',
-      )
-      .exec()
-      .then(result => {
-        return sendJSONresponse(res, 200, result);
+    const name = req.query.name;
+    const companyId = req.params.cname;
+
+    console.log(companyId)
+
+    if (name) {
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool: {
+            must: [
+              {
+                term: {
+                  company: {
+                    value: companyId,
+                  },
+                },
+              },
+              {
+                multi_match: {
+                  query: name,
+                  type: 'phrase_prefix',
+                  fields: [
+                    'account.email',
+                    'account.firstName',
+                    'account.lastName',
+                    'account.name',
+                  ],
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const response = await search(memberIndex, '_doc', body);
+
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits,
       });
+    } else {
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
+      });
+    }
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -241,13 +282,9 @@ const archiveProjectList = async (req, res, next) => {
     });
 };
 
-const searchMemberFromMyCompany = async(req, res, next) =>{
+const searchMemberFromMyCompany = async (req, res, next) => {};
 
-}
-
-const searchMemberFromAssociates = async()=>{
-
-}
+const searchMemberFromAssociates = async () => {};
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,

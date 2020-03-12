@@ -30,10 +30,10 @@ router
     projectCtrl.changeTitleProject,
   );
 router
-  .route('/concern-admin-search')
+  .route('/concern-admin-search/:cname')
   .get(
     authorization,
-    schemaValidator(projectValidation.showProjectList),
+    schemaValidator(projectValidation.searchConcernAdmin),
     projectCtrl.suggestConcernAdmin,
   );
 router
