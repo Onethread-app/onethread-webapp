@@ -17,8 +17,9 @@ const createNewProjectForCompany = async (req, res, next) => {
   const userExist = await Member.findOne({
     account: req.body.concernedAdmin,
   });
+  let associates = req.body.associates;
   if (userExist) {
-    if (req.body.type === 'associates') {
+    if (req.body.type === 'associates' && req.body.associates.length>0) {
       const project = new Project({
         name: req.body.name,
         type: req.body.type,
@@ -31,7 +32,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       });
       await project.save();
       // need to be refactored as soon as possible
-      let associates = req.body.associates;
+
       associates.map(async asso => {
         const createProjectReq = new ProjectRequest({
           associate: asso._id,
@@ -341,10 +342,7 @@ const showAllFilesForProject = async (req, res, next) => {
 const suggestConcernAdmin = async (req, res, next) => {
   try {
     const name = req.query.name;
-    const companyId = req.params.cname;
-
-    console.log(companyId)
-
+    const companyId = req.params.companyId;
     if (name) {
       let body = {
         size: 200,

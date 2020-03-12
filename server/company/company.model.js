@@ -41,6 +41,22 @@ const validateUrl = [
   },
 ];
 
+const certificate = new Schema(
+  {
+    name: {
+      type: String,
+      trim: true,
+    },
+    description:{
+      type: String,
+      trim: true
+    },
+    company:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company'
+    }
+  }
+)
 // company schema
 const company = new Schema(
   {
@@ -172,6 +188,7 @@ const company = new Schema(
         'above 2000 square meters',
       ],
     },
+    parentCom :[],
     removed: {
       type: Boolean,
       default: false,
@@ -183,7 +200,9 @@ const company = new Schema(
 );
 
 let Company = mongoose.model('Company', company);
+let Certificate = mongoose.model('Certificate', certificate);
 
 module.exports = {
   Company,
+  Certificate
 };

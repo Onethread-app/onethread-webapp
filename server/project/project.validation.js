@@ -68,9 +68,6 @@ module.exports = {
     })
   }),
   showProjectList: Joi.object().keys({
-    // params: Joi.object().keys({
-    //   companyId: companyId.required(),
-    // })
     params:companyId.required(),
   }),
   archiveProject: Joi.object().keys({
@@ -78,8 +75,6 @@ module.exports = {
 
   }),
   searchConcernAdmin: Joi.object().keys({
-    params: Joi.object().keys({
-      cname: schema.company.required(),
-    })
+    params:companyId.required(), 
   }),
 };
