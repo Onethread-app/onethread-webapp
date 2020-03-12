@@ -7,16 +7,16 @@ const projectCtrl = require('./project.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-// const companyCtrl= require('../company/company.controller');
 // authentication
-router.route('/create').post(
-  authorization,
-  // companyCtrl.authorizeUser('projectCD'),
-  schemaValidator(projectValidation.createNewProjectForCompany),
-  projectCtrl.createNewProjectForCompany,
-);
 router
-  .route('/lists')
+  .route('/create')
+  .post(
+    authorization,
+    schemaValidator(projectValidation.createNewProjectForCompany),
+    projectCtrl.createNewProjectForCompany,
+  );
+router
+  .route('/:cname/lists')
   .get(
     authorization,
     schemaValidator(projectValidation.showProjectList),
@@ -84,13 +84,4 @@ router
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
-
-// router.route('/:')
-// router.use('/:pid/team-members', memberRoutes);
-// router.param(
-//    'pid',
-//    authorization,
-//    // schemaValidator(projectValidation.getProject),
-//    projectCtrl.getProjectLoad,
-//  );
 module.exports = router;

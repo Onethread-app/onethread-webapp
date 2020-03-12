@@ -24,14 +24,7 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-const {
-  APIError,
-  BadRequestError,
-  SearchNotMatchError,
-} = require('../helpers/APIError');
-const ElasticsearchService = require('../../index.elasticsearch');
-const elasticService = new ElasticsearchService();
-const { memberStructure } = require('../services/elastic.services');
+const { APIError } = require('../helpers/APIError');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;

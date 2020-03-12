@@ -29,7 +29,7 @@ const schema = {
   concernedAdmin: idSchema.id,
   color: Joi.number(),
   company: idSchema.id,
-  associates: Joi.array(),
+  associates: Joi.array().items(idSchema.id),
 };
 
 module.exports = {
@@ -41,7 +41,6 @@ module.exports = {
       companyId: schema.company.required(),
       departments: schema.departments.required(),
       color: schema.color,
-      associates: schema.associates,
     }),
   }),
   updateProjectOutline: Joi.object().keys({
@@ -55,25 +54,24 @@ module.exports = {
     }),
   }),
   getProject: Joi.object().keys({
-    params: pid.required(),
+    params:pid.required(),
   }),
   changeNameProject: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       pid: schema.pid.required(),
-    }),
+    })
   }),
   showProjectList: Joi.object().keys({
-    query: Joi.object().keys({
-      companyId: schema.company.required(),
-    }),
+    params: Joi.object().keys({
+      cname: schema.company.required(),
+    })
   }),
   archiveProject: Joi.object().keys({
-    params: pid.required(),
-  }),
-  suggestConcernAdmin: Joi.object().keys({
-    params:Joi.object().keys({
-        companyId:schema.company.required(),
+    params: Joi.object().keys({
+      pid:pid.required(),
+      cname: schema.company.required(),
     })
+
   })
 };
