@@ -86,7 +86,7 @@ const projectPendingRequest = async (req, res, next) => {
   const companyId = req.params.companyId;
   const associateId = await Associate.findOne({ company: companyId });
   if(!associateId){
-    return sendErrorResponse(res, 400, 'AssosiateNotFoundError', {message: 'this company is not assoisiate'});
+    return sendErrorResponse(res, 400, 'AssociateNotFoundError', {message: 'this company is not assoisiate'});
   }
   await ProjectRequest.find({
    $and:[ {isAccepted: false},
