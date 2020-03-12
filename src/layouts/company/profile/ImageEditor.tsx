@@ -2,12 +2,11 @@ import React, { useState } from 'react';
 import { Button, Spinner } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
-import { imageUploadAction } from 'stores/user/Actions';
+import { companyLogoUploadAction } from 'stores/company/Actions';
 
 interface IImageEditProps {
+  companyLogoUploadAction: (imageSelected: any) => any;
   setShowDialog: (val: boolean) => void;
-  imageUploadAction: (val: any, type: string) => any;
-  type: string;
 }
 const ImageEditComponent = (props: IImageEditProps) => {
 
@@ -64,7 +63,7 @@ const ImageEditComponent = (props: IImageEditProps) => {
         </span>
       </label>
       {imageError &&
-      <small style={{ color: 'red' }}>{imageError}</small>}
+        <small style={{ color: 'red' }}>{imageError}</small>}
       <div className="flex justify-end mt3">
         <Button className="w4 grow h2 pointer mr3"
           style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
@@ -95,7 +94,7 @@ const ImageEditComponent = (props: IImageEditProps) => {
           onClick={async (e: any) => {
             e.preventDefault();
             setImageLoading(true);
-            const response = await props.imageUploadAction(imageSelected, props.type);
+            const response = await props.companyLogoUploadAction(imageSelected);
             if (response) {
               props.setShowDialog(false);
               setImageName({});
@@ -112,4 +111,4 @@ const ImageEditComponent = (props: IImageEditProps) => {
   );
 };
 
-export const ImageEdit = connect(null, { imageUploadAction })(ImageEditComponent);
+export const ImageEdit = connect(null, { companyLogoUploadAction })(ImageEditComponent);
