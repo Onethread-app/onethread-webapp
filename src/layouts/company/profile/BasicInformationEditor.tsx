@@ -7,7 +7,6 @@ import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { ICompany } from 'stores/company/Reducer';
 import { editCompanyInfoAction } from 'stores/company/Actions';
 
-
 interface CompanyInfoProps {
   companyInfo: ICompany;
 }
@@ -18,6 +17,8 @@ const CompanyInfoFormComponent = (props: {
   setShowDialog: (val: boolean) => void
 } & CompanyInfoProps) => {
   const [values, setValues] = useState({
+    name: props.companyInfo.name,
+    type: props.companyInfo.type,
     address: props.companyInfo.address,
     email: props.companyInfo.email,
     legalOwnerName: props.companyInfo.legalOwnerName,
@@ -25,10 +26,12 @@ const CompanyInfoFormComponent = (props: {
   });
 
   const [errors, setErrors] = useState({
-    address: "",
-    email: "",
-    legalOwnerName: "",
-    legalOwnerMail: ""
+    name: '',
+    type: '',
+    address: '',
+    email: '',
+    legalOwnerName: '',
+    legalOwnerMail: ''
   });
 
   const emailValidation = (email: string) => {
@@ -55,7 +58,7 @@ const CompanyInfoFormComponent = (props: {
     if (isEmpty(values.address)) {
       let e = errors;
       if (isEmpty(values.address)) {
-        e = { ...e, address: "Required" };
+        e = { ...e, address: 'Required' };
       }
       setErrors(e);
       return true;
@@ -80,114 +83,168 @@ const CompanyInfoFormComponent = (props: {
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Basic Information</h1>
-      <div className={` ${errors.address ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
+        <InputGroupField
+          id="name"
+          value={values.name}
+          onChange={handleChange('name')}
+          placeHolder="Company Name"
+          leftIcon="user"
+          style={{
+            boxShadow: 'none'
+          }}
+          className={`br0 ${errors.name ? 'bb b--red' : 'bb b--lightBlue'}`}
+          leftIconColor={`${errors.name ? 'red' : '#0fa3a3'}`}
+          validationOnBlur={() => {
+            if (isEmpty(values.name)) {
+              const nameError = { ...errors, name: 'Required' };
+              setErrors(nameError);
+            } else if (values.name && values.name.length > 120) {
+              const nameError = { ...errors, name: 'Company name must be less than 32 character.' };
+              setErrors(nameError);
+            } else {
+              const nameError = { ...errors, name: '' };
+              setErrors(nameError);
+            }
+          }}
+        />
+        {errors.name ? <small style={{ color: 'red' }}>{errors.name}</small> : ''}
+      </div>
+      <div className={` ${errors.type ? 'mb3' : 'mb4'}`}>
+        <InputGroupField
+          id="type"
+          value={values.type}
+          onChange={handleChange('type')}
+          placeHolder="Company Type"
+          leftIcon="user"
+          style={{
+            boxShadow: 'none'
+          }}
+          className={`br0 ${errors.type ? 'bb b--red' : 'bb b--lightBlue'}`}
+          leftIconColor={`${errors.type ? 'red' : '#0fa3a3'}`}
+          validationOnBlur={() => {
+            if (isEmpty(values.type)) {
+              const typeError = { ...errors, type: 'Required' };
+              setErrors(typeError);
+            } else if (values.type && values.type.length > 120) {
+              const typeError = { ...errors, type: 'Company type must be less than 32 character.' };
+              setErrors(typeError);
+            } else {
+              const typeError = { ...errors, type: '' };
+              setErrors(typeError);
+            }
+          }}
+        />
+        {errors.name ? <small style={{ color: 'red' }}>{errors.name}</small> : ''}
+      </div>
+      <div className={` ${errors.address ? 'mb3' : 'mb4'}`}>
         <InputGroupField
           id="address"
           value={values.address}
-          onChange={handleChange("address")}
+          onChange={handleChange('address')}
           placeHolder="Company Address"
           leftIcon="map-marker"
           style={{
             boxShadow: 'none'
           }}
           className={`br0 ${errors.address ? 'bb b--red' : 'bb b--lightBlue'}`}
-          leftIconColor={`${errors.address ? 'red' : "#0fa3a3"}`}
+          leftIconColor={`${errors.address ? 'red' : '#0fa3a3'}`}
           validationOnBlur={() => {
             if (isEmpty(values.address)) {
-              const addressError = { ...errors, address: "Required" };
+              const addressError = { ...errors, address: 'Required' };
               setErrors(addressError);
             } else if (values.address && values.address.length > 120) {
-              const addressError = { ...errors, address: "Company address must be less than 120 character." };
+              const addressError = { ...errors, address: 'Company address must be less than 120 character.' };
               setErrors(addressError);
             } else {
-              const addressError = { ...errors, address: "" };
+              const addressError = { ...errors, address: '' };
               setErrors(addressError);
             }
           }}
         />
-        {errors.address ? <small style={{ color: 'red' }}>{errors.address}</small> : ""}
+        {errors.address ? <small style={{ color: 'red' }}>{errors.address}</small> : ''}
       </div>
-      <div className={` ${errors.email ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.email ? 'mb3' : 'mb4'}`}>
         <InputGroupField
           id="email"
           value={values.email}
-          onChange={handleChange("email")}
+          onChange={handleChange('email')}
           placeHolder="Company email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none'
           }}
           className={`br0 ${errors.email ? 'bb b--red' : 'bb b--lightBlue'}`}
-          leftIconColor={`${errors.email ? 'red' : "#0fa3a3"}`}
+          leftIconColor={`${errors.email ? 'red' : '#0fa3a3'}`}
           validationOnBlur={() => {
             if (checkLegalOwnerMail() && !isEmpty(values.email)) {
-              const companyEmailError = { ...errors, email: "Company email address and legal owner mail address must be different" };
+              const companyEmailError = { ...errors, email: 'Company email address and legal owner mail address must be different' };
               setErrors(companyEmailError);
             } else if (!isEmpty(values.email) && !emailValidation(values.email)) {
-              const emailError = { ...errors, email: "Invalid email address!" };
+              const emailError = { ...errors, email: 'Invalid email address!' };
               setErrors(emailError);
             } else {
-              const emailError = { ...errors, email: "" };
+              const emailError = { ...errors, email: '' };
               setErrors(emailError);
             }
           }}
         />
-        {errors.email ? <small style={{ color: 'red' }}>{errors.email}</small> : ""}
+        {errors.email ? <small style={{ color: 'red' }}>{errors.email}</small> : ''}
       </div>
-      <div className={` ${errors.legalOwnerName ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.legalOwnerName ? 'mb3' : 'mb4'}`}>
         <InputGroupField
           id="legalOwnerName"
           value={values.legalOwnerName}
-          onChange={handleChange("legalOwnerName")}
+          onChange={handleChange('legalOwnerName')}
           placeHolder="Legal Owner Name"
           leftIcon="mugshot"
           style={{
             boxShadow: 'none'
           }}
           className={`br0 ${errors.legalOwnerName ? 'bb b--red' : 'bb b--lightBlue'}`}
-          leftIconColor={`${errors.legalOwnerName ? 'red' : "#0fa3a3"}`}
+          leftIconColor={`${errors.legalOwnerName ? 'red' : '#0fa3a3'}`}
           validationOnBlur={() => {
             if (values.legalOwnerName && values.legalOwnerName.length > 32) {
-              const legalOwnerNameError = { ...errors, legalOwnerName: "Legal Owner Name must be less than 32 character." };
+              const legalOwnerNameError = { ...errors, legalOwnerName: 'Legal Owner Name must be less than 32 character.' };
               setErrors(legalOwnerNameError);
             } else {
-              const legalOwnerNameError = { ...errors, legalOwnerName: "" };
+              const legalOwnerNameError = { ...errors, legalOwnerName: '' };
               setErrors(legalOwnerNameError);
             }
           }}
         />
-        {errors.legalOwnerName ? <small style={{ color: 'red' }}>{errors.legalOwnerName}</small> : ""}
+        {errors.legalOwnerName ? <small style={{ color: 'red' }}>{errors.legalOwnerName}</small> : ''}
       </div>
-      <div className={` ${errors.legalOwnerMail ? "mb3" : "mb4"}`}>
+      <div className={` ${errors.legalOwnerMail ? 'mb3' : 'mb4'}`}>
         <InputGroupField
           id="legalOwnerMail"
           value={values.legalOwnerMail}
-          onChange={handleChange("legalOwnerMail")}
+          onChange={handleChange('legalOwnerMail')}
           placeHolder="Leagl Owner email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none'
           }}
           className={`br0 ${errors.legalOwnerMail ? 'bb b--red' : 'bb b--lightBlue'}`}
-          leftIconColor={`${errors.legalOwnerMail ? 'red' : "#0fa3a3"}`}
+          leftIconColor={`${errors.legalOwnerMail ? 'red' : '#0fa3a3'}`}
           validationOnBlur={() => {
             if (checkLegalOwnerMail() && !isEmpty(values.legalOwnerMail)) {
-              const ownerEmailError = { ...errors, legalOwnerMail: "Company email address and legal owner mail address must be different" };
+              const ownerEmailError = { ...errors, legalOwnerMail: 'Company email address and legal owner mail address must be different' };
               setErrors(ownerEmailError);
             } else if (!isEmpty(values.legalOwnerMail) && !emailValidation(values.legalOwnerMail)) {
-              const legalOwnerMailError = { ...errors, legalOwnerMail: "Invalid email address!" };
+              const legalOwnerMailError = { ...errors, legalOwnerMail: 'Invalid email address!' };
               setErrors(legalOwnerMailError);
             } else {
-              const legalOwnerMailError = { ...errors, legalOwnerMail: "" };
+              const legalOwnerMailError = { ...errors, legalOwnerMail: '' };
               setErrors(legalOwnerMailError);
             }
           }}
         />
-        {errors.legalOwnerMail ? <small style={{ color: 'red' }}>{errors.legalOwnerMail}</small> : ""}
+        {errors.legalOwnerMail ? <small style={{ color: 'red' }}>{errors.legalOwnerMail}</small> : ''}
       </div>
       <div className="flex justify-end">
         <Button className="w4 grow h2 pointer mr3"
-          style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+          style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
           onClick={(e: any) => {
             e.preventDefault();
             props.setShowDialog(false);
@@ -198,7 +255,7 @@ const CompanyInfoFormComponent = (props: {
         <Button
           type="submit"
           className="w4 grow h2 pointer"
-          style={{ background: "#0fa3a3", outline: "none", color: 'white' }}
+          style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
           onClick={(e: any) => {
             e.preventDefault();
             if (!emptyValueCheck() && emptyErrorCheck()) {
