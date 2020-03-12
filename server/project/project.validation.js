@@ -74,9 +74,7 @@ module.exports = {
     params:companyId.required(),
   }),
   archiveProject: Joi.object().keys({
-    params: Joi.object().keys({
-      pid:pid.required(),
-    })
+    params: pid.required(),
 
   }),
   searchConcernAdmin: Joi.object().keys({
