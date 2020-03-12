@@ -96,7 +96,7 @@ const CompanyCoverPhotoComponent = (props: IImageUploadViewProps) => {
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
         >
-          <ImageEdit setShowDialog={setShowDialogPicture} type="coverPhoto" />
+          <ImageEdit setShowDialog={setShowDialogPicture} />
         </Dialog>
       )}
 
