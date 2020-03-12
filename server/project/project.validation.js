@@ -15,6 +15,11 @@ const idSchema = {
 const pid = Joi.object().keys({
   pid: idSchema.id,
 });
+// company-name
+const companyId = Joi.object().keys({
+  companyId: idSchema.id,
+});
+
 const schema = {
   name: Joi.string().max(50),
   type: Joi.string(),
@@ -63,14 +68,14 @@ module.exports = {
     })
   }),
   showProjectList: Joi.object().keys({
-    params: Joi.object().keys({
-      cname: schema.company.required(),
-    })
+    // params: Joi.object().keys({
+    //   companyId: companyId.required(),
+    // })
+    params:companyId.required(),
   }),
   archiveProject: Joi.object().keys({
     params: Joi.object().keys({
       pid:pid.required(),
-      cname: schema.company.required(),
     })
 
   }),

@@ -16,7 +16,7 @@ router
     projectCtrl.createNewProjectForCompany,
   );
 router
-  .route('/:cname/lists')
+  .route('/:compnayId/lists')
   .get(
     authorization,
     schemaValidator(projectValidation.showProjectList),
@@ -30,14 +30,14 @@ router
     projectCtrl.changeTitleProject,
   );
 router
-  .route('/concern-admin-search/:cname')
+  .route('/concern-admin-search/:compnayId')
   .get(
     authorization,
     schemaValidator(projectValidation.searchConcernAdmin),
     projectCtrl.suggestConcernAdmin,
   );
 router
-  .route('/archive-list')
+  .route('/:compnayId/archive-list')
   .get(
     authorization,
     schemaValidator(projectValidation.showProjectList),

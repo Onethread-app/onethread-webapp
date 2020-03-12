@@ -1,5 +1,6 @@
 const Account = require('../account/account.model');
 const mongoose = require('mongoose');
+const { Associate } = require('../associate/associate.model');
 const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
@@ -18,7 +19,7 @@ const logger = require('../../config/winston');
 const changeName = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return res.send("Expects 'application/json'");
   }
 
   try {
@@ -58,9 +59,9 @@ const changeName = async (req, res, next) => {
 // create a company profile
 const createCompany = async (req, res, next) => {
   // Check for JSON
-  if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
-  }
+  // if (!req.is('application/json')) {
+  //   return res.send("Expects 'application/json'");
+  // }
 
   try {
     // check duplicate company name
@@ -89,15 +90,10 @@ const createCompany = async (req, res, next) => {
       account: req.user._id,
       company: newCompany._id,
       role: 'superAdmin',
-    }).populate({
-      path : 'account' ,
-      select: '_id name'
     });
 
-    console.log(newMember);
-
     // add ref[member,room] in company
-    newCompany.members.push(newMember._id);
+    //newCompany.members.push(newMember._id);
     // newCompany.rooms.push(newRoom._id);
 
     // company creation
@@ -163,12 +159,12 @@ const getCompanyIndividual = async (req, res, next) => {
       {
         path: 'company',
         select: '_id name',
-        populate: [
-          {
-            path: 'logo',
-            select: 'link s3Key type',
-          },
-        ],
+        // populate: [
+        //   {
+        //     path: 'logo',
+        //     select: 'link s3Key type',
+        //   },
+        // ],
       },
     ];
 
@@ -200,14 +196,14 @@ const getCompany = async (req, res, next) => {
     // role info
     let member = await Member.findOne({
       account: req.user._id,
-      company: req.company._id,
+      company: company._id,
     }).select('-_id role');
 
-    if (!member) {
-      return res.status(401).json({
-        message: "You're not authorized with this company",
-      });
-    }
+    // if (!member) {
+    //   return res.status(401).json({
+    //     message: "You're not authorized with this company",
+    //   });
+    // }
 
     return res.status(200).json({
       company: { ...company._doc, role: member.role },
@@ -221,8 +217,9 @@ const getCompany = async (req, res, next) => {
 const updateBasicInfo = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return res.send("Expects 'application/json'");
   }
+
   try {
     // updating new values
     for (const key in req.body) {
@@ -245,7 +242,7 @@ const updateBasicInfo = async (req, res, next) => {
 const updateAbout = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return res.send("Expects 'application/json'");
   }
 
   try {
@@ -297,7 +294,7 @@ const updateRole = async (req, res, next) => {
 const getCompanyLoad = async (req, res, next) => {
   try {
     const company = await Company.findOne({
-      name: req.params.cname,
+      _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');
 
     if (company) {
