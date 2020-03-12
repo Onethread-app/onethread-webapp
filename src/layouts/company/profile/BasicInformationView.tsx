@@ -12,7 +12,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
   return (
     <>
       <div className="relative">
-        <div className="flex justify-between w-100">
+        <div className="flex justify-between w-100 mb5">
           <div className="w-50 pr4">
             <div className="bg-white h-auto">
               <h1 className="f6 lh-copy">Company Name</h1>

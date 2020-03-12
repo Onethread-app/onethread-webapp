@@ -3,8 +3,8 @@ import { NavLink } from 'react-router-dom';
 import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 
-import logo from '../resources/images/logo.png';
-import tigrowLogo from '../resources/images/tigrowLogo.png';
+import logo from '../resources/images/TiGrowLogoFinal.png';
+import tigrowLogo from '../resources/images/TiGrowLogoFinal.png';
 import individualProfile from '../resources/images/sidebarIndividualProfile.svg';
 import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
 import room from '../resources/images/sidebarRoom.svg';

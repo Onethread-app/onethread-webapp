@@ -53,7 +53,6 @@ const AdvancedInfoComponent = () => {
             <div>
               <h1 className="f5 fw6 ma0">StartUp of the Year</h1>
               <h1 className="f6 silver fw6">When every question has countless different answers</h1>
-              <h1 className="f6 blue fw6 ma0">Startup.png</h1>
             </div>
             <div>
               <img

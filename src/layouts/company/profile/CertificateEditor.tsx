@@ -1,6 +1,6 @@
-import { Button, TextArea, Spinner } from '@blueprintjs/core';
+import { Button, TextArea } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import React, { useState } from 'react';
+import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { checkError, maxValue } from 'components/final-form/utils';
 import { isEmpty } from 'lodash';
@@ -15,11 +15,11 @@ interface ICertificateEditProps {
 
 const CertificateEditComponent = (props: ICertificateEditProps) => {
 
-  const [imageSelected, setImageSelected] = useState({}) as any;
-  const [imageName, setImageName] = useState({}) as any;
-  const [imageLoading, setImageLoading] = useState(false);
-  const [imageError, setImageError] = useState('');
-  const sizeLimit = 25;
+  // const [imageSelected, setImageSelected] = useState({}) as any;
+  // const [imageName, setImageName] = useState({}) as any;
+  // const [imageLoading, setImageLoading] = useState(false);
+  // const [imageError, setImageError] = useState('');
+  // const sizeLimit = 25;
 
   const onSubmit = async (values: any) => {
     window.alert(JSON.stringify(values, null, 2));
@@ -34,58 +34,58 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
     // return { [response.fieldName]: response.message };
   };
 
-  const checkMimetype = [
-    'application/zip',
-    'application/x-rar-compressed',
-    'application/x-7z-compressed',
-    'application/x-zip-compressed',
-    'application/pdf',
-    'application/msword',
-    'application/json',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.ms-excel',
-    'text/plain',
-    'text/csv',
-    'image/webp',
-    'image/apng',
-    'image/png',
-    'image/bmp',
-    'image/gif',
-    'image/jpeg',
-    'image/jpg',
-    'image/svg',
-    'image/svg+xml',
-    'image/bmp',
-    'image/vnd.microsoft.icon',
-  ];
+  // const checkMimetype = [
+  //   'application/zip',
+  //   'application/x-rar-compressed',
+  //   'application/x-7z-compressed',
+  //   'application/x-zip-compressed',
+  //   'application/pdf',
+  //   'application/msword',
+  //   'application/json',
+  //   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  //   'application/vnd.ms-powerpoint',
+  //   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  //   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  //   'application/vnd.ms-excel',
+  //   'text/plain',
+  //   'text/csv',
+  //   'image/webp',
+  //   'image/apng',
+  //   'image/png',
+  //   'image/bmp',
+  //   'image/gif',
+  //   'image/jpeg',
+  //   'image/jpg',
+  //   'image/svg',
+  //   'image/svg+xml',
+  //   'image/bmp',
+  //   'image/vnd.microsoft.icon',
+  // ];
 
-  const imageChangeHandler = (event: any) => {
-    if (event.target.files) {
-      const file = event.target.files[0];
-      if (file) {
-        if (!checkMimetype.includes(file.type)) {
-          setImageName('');
-          setImageError('This file format is not supported');
-          return false;
-        } else if (file.size / 1024 / 1024 > sizeLimit) {
-          setImageName('');
-          setImageError(`File size can't be greater than ${sizeLimit} MB`);
-          return false;
-        } else {
-          const data = new FormData();
-          data.append('file', file, file.name);
-          setImageName(file);
-          setImageSelected(data);
-          setImageError('');
-          return data;
-        }
-      }
-    }
-    return false;
-  };
+  // const imageChangeHandler = (event: any) => {
+  //   if (event.target.files) {
+  //     const file = event.target.files[0];
+  //     if (file) {
+  //       if (!checkMimetype.includes(file.type)) {
+  //         setImageName('');
+  //         setImageError('This file format is not supported');
+  //         return false;
+  //       } else if (file.size / 1024 / 1024 > sizeLimit) {
+  //         setImageName('');
+  //         setImageError(`File size can't be greater than ${sizeLimit} MB`);
+  //         return false;
+  //       } else {
+  //         const data = new FormData();
+  //         data.append('file', file, file.name);
+  //         setImageName(file);
+  //         setImageSelected(data);
+  //         setImageError('');
+  //         return data;
+  //       }
+  //     }
+  //   }
+  //   return false;
+  // };
 
   return (
     <>
@@ -141,7 +141,7 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
                 </div>
               }
             />
-            <Field<string>
+            {/* <Field<string>
               name="file"
               validate={maxValue(32)}
               render={({ input, meta }) =>
@@ -162,16 +162,16 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
                     <small style={{ color: 'red' }}>{imageError}</small>}
                 </div>
               }
-            />
+            /> */}
             <div className="flex justify-end">
               <Button className="w4 grow h2 pointer mr3"
                 style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
                 onClick={(e: any) => {
                   e.preventDefault();
                   props.setShowDialog(false);
-                  setImageName({});
-                  setImageLoading(false);
-                  setImageError('');
+                  // setImageName({});
+                  // setImageLoading(false);
+                  // setImageError('');
                 }}
               >
                 cancel
@@ -183,17 +183,19 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
                 type="submit"
                 onClick={async (e: any) => {
                   e.preventDefault();
-                  setImageLoading(true);
-                  const response = await props.fileUploadAction(imageSelected, '1');
-                  if (response) {
-                    props.setShowDialog(false);
-                    setImageName({});
-                  }
-                  setImageLoading(false);
+                  // setImageLoading(true);
+                  // const response = await props.fileUploadAction(imageSelected, '1');
+                  // if (response) {
+                  //   props.setShowDialog(false);
+                  //   setImageName({});
+                  // }
+                  // setImageLoading(false);
                 }}
-                disabled={submitting || pristine || imageLoading === true || isEmpty(imageName.name) ? true : false}
+                disabled={submitting || pristine
+                  // || imageLoading === true || isEmpty(imageName.name) ? true : false
+                }
               >
-                {imageLoading ? <Spinner size={15} /> : 'Save'}
+                Save
               </Button>
             </div>
           </form>
