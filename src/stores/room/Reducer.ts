@@ -41,6 +41,7 @@ export interface IRoom {
 	_id: string;
 	name: string;
 	company: string;
+	project: string;
 	account: string;
 	createdAt: string;
 	updatedAt: string;
@@ -132,6 +133,7 @@ const InitialState: IRoomReducer = {
 		name: '',
 		account: '',
 		company: '',
+		project: '',
 		archive: false,
 		removed: false,
 		createdAt: '',
@@ -361,6 +363,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 					_id: action.payload._id,
 					name: action.payload.name,
 					company: action.payload.company,
+					project: action.payload.project,
 					account: action.payload.account,
 					createdAt: action.payload.createdAt,
 					updatedAt: action.payload.updatedAt,

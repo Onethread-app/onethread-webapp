@@ -37,6 +37,7 @@ export const createRoomAction = (roomData: any) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			roomData.company = getState().companyReducer.currentCompany._id;
+			roomData.project = getState().projectReducer.projectDetails._id;
 			dispatch({ type: LOADING_ROOM });
 			const response = await tigrowApi.post(`rooms`, roomData, headers);
 			await dispatch({
@@ -69,7 +70,7 @@ export const getRooms = () => async (dispatch: any, getState: any) => {
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: LOADING_ROOM });
 			const response = await tigrowApi.get(
-				`rooms/${getState().companyReducer.currentCompany._id}`,
+				`rooms/${getState().companyReducer.currentCompany._id}/${getState().projectReducer.projectDetails._id}`,
 				headers
 			);
 			dispatch({ type: GET_ROOMS, payload: response.data.rooms });
