@@ -44,7 +44,7 @@ router
     projectCtrl.archiveProjectList,
   );
 router
-  .route('/pending-requests')
+  .route('/:companyId/pending-requests')
   .get(authorization, projectCtrl.projectPendingRequest);
 router
   .route('/accept-request')

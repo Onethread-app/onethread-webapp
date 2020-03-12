@@ -82,7 +82,8 @@ const createNewProjectForCompany = async (req, res, next) => {
 };
 
 const projectPendingRequest = async (req, res, next) => {
-  const { limit = 10, skip = 0, companyId } = req.query;
+  const { limit = 10, skip = 0 } = req.query;
+  const companyId = req.params.companyId;
   const associateId = await Associate.findOne({ company: companyId });
   await ProjectRequest.find({
     isAccepted: false,
