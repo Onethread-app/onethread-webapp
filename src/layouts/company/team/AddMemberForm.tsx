@@ -51,7 +51,7 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(
-          `company/${props.company.name}/members/pending/status?name=${name}`,
+          `company/${props.company._id}/members/pending/status?name=${name}`,
           headers
         );
         return response.data;

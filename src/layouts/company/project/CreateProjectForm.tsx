@@ -132,6 +132,7 @@ const FormComponent = (props: {
                           items={admins}
                           selectedItems={selectedAdmins}
                           setSelectedItems={(item) => {
+                            input.onChange(item);
                             setSelectedAdmins(item);
                           }}
                           multipleItemSelect={false}
@@ -234,6 +235,7 @@ const FormComponent = (props: {
                           items={props.departments}
                           selectedItems={selectedDepartment}
                           setSelectedItems={(item) => {
+                            input.onChange(item);
                             setSelectedDepartment(item);
                             input.onChange(item.map((department: any) => department._id));
                           }}
@@ -307,6 +309,7 @@ const FormComponent = (props: {
                           items={associates}
                           selectedItems={selectedAssociates}
                           setSelectedItems={(item) => {
+                            input.onChange(item);
                             setSelectedAssociates(item);
                             input.onChange(item.map((associate: Associate) => associate._id));
                           }}
@@ -376,6 +379,7 @@ const FormComponent = (props: {
                                   items={departments}
                                   selectedItems={selectedDepartment}
                                   setSelectedItems={(item) => {
+                                    input.onChange(item);
                                     setSelectedDepartment(item);
                                     input.onChange(item.map((dept: ICompanyTeamMembers) => dept._id));
                                   }}
