@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const notificationSchema = new Schema({
   text: {
     type: String,
-    required: true,
+  
   },
   type: {
     type: String,
@@ -49,6 +49,18 @@ const notificationSchema = new Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
+  },
+  fromColum: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'BoardColumn',
+  },
+  toColum: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'BoardColumn',
+  },
+  registerUser: {//assign user in task
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account',
   },
   account: {
     type: mongoose.Schema.Types.ObjectId,

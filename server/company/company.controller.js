@@ -1,8 +1,13 @@
 const Account = require('../account/account.model');
+
 const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
-const { Room } = require('./../room/room.model');
+const  Notification  = require('./../notification/notification.model');
+const  UserNotification  = require('./../notification/userNotifiacation.model');
 const { chatkit } = require('../services/pusher.services');
+const {
+  sendCompanyNotification
+} = require('../services/notification.services');
 const { sendErrorResponse } = require('../helpers/jsonResponse');
 
 // create a company profile
@@ -14,16 +19,17 @@ const changeName = async (req, res, next) => {
 
   try {
     // check member & role: superAdmin/admin
-    const member = await Member.findOne({
-      account: req.user._id,
+    const members = await Member.findOne({
+      $or:[ {role: 'superAdmin'}, {role: 'admin'}],
       company: req.company._id,
     });
 
-    if (!member || !['superAdmin', 'admin'].includes(member.role)) {
-      return res.status(403).json({
-        message: `Restricted`,
-      });
-    }
+    //middleware added
+    // if (!member || !['superAdmin', 'admin'].includes(member.role)) {
+    //   return res.status(403).json({
+    //     message: `Restricted`,
+    //   });
+    // }
 
     // check duplicate company name
     const duplicate = await Company.findOne({
@@ -37,6 +43,31 @@ const changeName = async (req, res, next) => {
 
     req.company.name = req.body.name;
     await req.company.save();
+
+    //notification
+
+    sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
+
+    const notification = new Notification({
+      type: 'companyProfile',
+      account: req.user._id,
+      company: req.company._id,
+    });
+
+    // const userNotification = new UserNotification({
+    //   notification: notification._id,
+    //   company: req.company._id,
+    // });
+    let usersNotification = members.map(m => {
+      return {
+        notification: notification._id,
+        account: m.account,
+      };
+    });
+
+    await notification.save();
+    await UserNotification.create(usersNotification);
+
 
     return res.status(200).json({
       message: `Company's name updated`,
@@ -204,6 +235,8 @@ const updateBasicInfo = async (req, res, next) => {
 
     await req.company.save();
 
+
+
     return res.status(200).json({
       message: `Company's basic information updated`,
     });
@@ -214,20 +247,50 @@ const updateBasicInfo = async (req, res, next) => {
 
 // update a company basic info
 const updateAbout = async (req, res, next) => {
+  console.log(1);
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
 
   try {
+    const members = await Member.find({
+      $or:[ {role: 'superAdmin'}, {role: 'admin'}],
+      company: req.company._id,
+    });
+
     req.company.about = req.body.about;
 
     await req.company.save();
+
+    sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
+
+    let notification = new Notification({
+      type: 'companyProfile',
+      account: req.user._id,
+      company: req.company._id,
+    });
+
+    // const userNotification = new UserNotification({
+    //   notification: notification._id,
+    //   company: req.company._id,
+    // });
+    
+    let usersNotification = members.map(m => {
+      return {
+        notification: notification._id,
+        account: m.account,
+      };
+    });
+
+    await notification.save();
+    await UserNotification.create(usersNotification);
 
     return res.status(200).json({
       message: `Company's about updated`,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
