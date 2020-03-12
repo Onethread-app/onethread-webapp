@@ -40,7 +40,7 @@ export const getAllBoards = () => async (dispatch: any, getState: any) => {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
     if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(`boards?companyId=${companyId}`, headers);
+      const response = await tigrowApi.get(`boards/company/${companyId}`, headers);
       dispatch({ type: GET_ALL_BOARDS, payload: response.data });
       // return response.data;
     }
@@ -82,9 +82,9 @@ export const getSelectedBoard = (boardId: string | undefined) => async (dispatch
 export const createColumn = (columnName: any) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
-    const companyName = getState().companyReducer.currentCompany.name;
+    const companyId = getState().companyReducer.currentCompany._id;
     if ((headers as any).headers.Authorization) {
-      if (companyName) {
+      if (companyId) {
         const response = await tigrowApi.post(`boardColumns`, columnName, headers);
         dispatch({ type: CREATE_COLUMN, payload: response.data });
         return response.data;
@@ -105,9 +105,9 @@ export const createColumn = (columnName: any) => async (dispatch: any, getState:
 export const updateColumn = (columnInfo: any) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
-    const companyName = getState().companyReducer.currentCompany.name;
+    const companyId = getState().companyReducer.currentCompany._id;
     if ((headers as any).headers.Authorization) {
-      if (companyName) {
+      if (companyId) {
         const response = await tigrowApi.put(`boardColumns/${columnInfo._id}`, columnInfo, headers);
         dispatch({ type: UPDATE_COLUMN, payload: response.data });
         return response.data;

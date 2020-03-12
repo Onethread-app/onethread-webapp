@@ -11,9 +11,11 @@ import room from '../resources/images/sidebarRoom.svg';
 import board from '../resources/images/sideBarBoard.svg';
 import team from '../resources/images/sidebarTeam.svg';
 import settings from '../resources/images/sidebarSettings.svg';
+import projects from '../resources/images/ProjectsIcon.svg';
 import associates from '../resources/images/sideBarAssociates.svg';
 
 import { Tooltip } from '@blueprintjs/core';
+import { companyPermit } from 'stores/UtilsActions';
 
 export const Sidebar = (props: {
 	user: User;
@@ -201,7 +203,7 @@ export const Sidebar = (props: {
 										/>
 									</span> :
 									<Tooltip
-										content={<p className="mb0">Team</p>}
+										content={<p className="mb0">Colleague</p>}
 										position="right"
 									>
 										<span className="pl3">
@@ -217,31 +219,67 @@ export const Sidebar = (props: {
 										className="outline-0 bp3-large pl4"
 										style={{ color: 'inherit' }}
 									>
-										Team
+										Colleague
 								</span>
 								}
 							</NavLink>
+							{companyPermit(props.company.role) &&
+								<NavLink
+									exact
+									className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+									style={{ color: 'white' }}
+									activeStyle={{ background: '#3F61C5' }}
+									to={`/company/${props.company.name}/settings`}
+								>
+									{props.leftOpen ?
+										<span className="pl4">
+											<img
+												src={settings}
+												className="w2 pt1"
+											/>
+										</span> :
+										<Tooltip
+											content={<p className="mb0">Settings</p>}
+											position="right"
+										>
+											<span className="pl3">
+												<img
+													src={settings}
+													className="w2 pt1"
+												/>
+											</span>
+										</Tooltip>
+									}
+									{props.leftOpen &&
+										<span
+											className="outline-0 bp3-large pl4"
+											style={{ color: 'inherit' }}
+										>
+											Settings
+								</span>
+									}
+								</NavLink>}
 							<NavLink
 								exact
 								className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
 								style={{ color: 'white' }}
 								activeStyle={{ background: '#3F61C5' }}
-								to={`/company/${props.company.name}/settings`}
+								to={`/company/${props.company.name}/project`}
 							>
 								{props.leftOpen ?
 									<span className="pl4">
 										<img
-											src={settings}
+											src={projects}
 											className="w2 pt1"
 										/>
 									</span> :
 									<Tooltip
-										content={<p className="mb0">Settings</p>}
+										content={<p className="mb0">Project</p>}
 										position="right"
 									>
 										<span className="pl3">
 											<img
-												src={settings}
+												src={projects}
 												className="w2 pt1"
 											/>
 										</span>
@@ -252,45 +290,46 @@ export const Sidebar = (props: {
 										className="outline-0 bp3-large pl4"
 										style={{ color: 'inherit' }}
 									>
-										Settings
+										Project
 								</span>
 								}
 							</NavLink>
-							<NavLink
-								exact
-								className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
-								style={{ color: 'white' }}
-								activeStyle={{ background: '#3F61C5' }}
-								to={`/company/${props.company.name}/associates`}
-							>
-								{props.leftOpen ?
-									<span className="pl4">
-										<img
-											src={associates}
-											className="w2 pt1"
-										/>
-									</span> :
-									<Tooltip
-										content={<p className="mb0">Associates</p>}
-										position="right"
-									>
-										<span className="pl3">
+							{companyPermit(props.company.role) &&
+								<NavLink
+									exact
+									className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+									style={{ color: 'white' }}
+									activeStyle={{ background: '#3F61C5' }}
+									to={`/company/${props.company.name}/associates`}
+								>
+									{props.leftOpen ?
+										<span className="pl4">
 											<img
-												src={settings}
+												src={associates}
 												className="w2 pt1"
 											/>
-										</span>
-									</Tooltip>
-								}
-								{props.leftOpen &&
-									<span
-										className="outline-0 bp3-large pl4"
-										style={{ color: 'inherit' }}
-									>
-										Associates
+										</span> :
+										<Tooltip
+											content={<p className="mb0">Associates</p>}
+											position="right"
+										>
+											<span className="pl3">
+												<img
+													src={settings}
+													className="w2 pt1"
+												/>
+											</span>
+										</Tooltip>
+									}
+									{props.leftOpen &&
+										<span
+											className="outline-0 bp3-large pl4"
+											style={{ color: 'inherit' }}
+										>
+											Associates
 								</span>
-								}
-							</NavLink>
+									}
+								</NavLink>}
 						</>
 					)}
 			</div>

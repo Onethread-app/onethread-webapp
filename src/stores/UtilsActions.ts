@@ -1,6 +1,8 @@
 import { isEqual } from 'lodash';
 import { createBrowserHistory } from 'history';
 import { Toaster } from '@blueprintjs/core';
+import { store } from 'Store';
+import { includes } from 'lodash';
 
 const History = createBrowserHistory();
 export interface Entity {
@@ -25,6 +27,24 @@ export const tokenConfig = () => {
   };
 };
 
+export const tokenConfigFIleUpload = () => {
+  const token = typeof window !== undefined && localStorage.getItem('tigrow_acc_id') ?
+    JSON.parse(localStorage.getItem('tigrow_acc_id')!) : null;
+  if (!localStorage.getItem('tigrow_acc_id') || !localStorage.getItem('tigrow_real_id')) {
+    localStorage.removeItem('tigrow_acc_id');
+    localStorage.removeItem('tigrow_real_id');
+    Toaster.create().show({ message: 'Token is invalid. Please sign in.', intent: 'danger' });
+    History.push('/signin');
+    window.location.reload(false);
+  }
+  return {
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded',
+      'Authorization': `Bearer ${token}`
+    }
+  };
+};
+
 export const isAuthenticate = () => {
   if (typeof window === undefined) {
     return false;
@@ -36,12 +56,39 @@ export const isAuthenticate = () => {
   }
 };
 
-export const permit = (companyRole: string): boolean => {
+export const projectPermit = (companyRole: string): boolean => {
   if (isEqual(companyRole, 'superAdmin') || isEqual(companyRole, 'admin')) {
     return true;
   } else {
     return false;
   }
+};
+
+type AdminOptionalPermissioRoles = 'cRUDAnnoucment' | 'editProfile' | 'archiveProject' | 'addRemoveModerator' | 
+  'messageAssociate' | 'addAcceptRejectAssociate' | 'acceptRejectProjectFromAssociate';
+
+export const companyPermit = (companyRole: string, optionalPermissions?: AdminOptionalPermissioRoles): boolean => {
+  const adminPermissions = store.getState().companyReducer.currentCompany.optionalRole;
+  let permitStatus = false;
+  switch (companyRole) {
+    case 'superAdmin':
+      permitStatus = true;
+      break;
+    case 'admin':
+      if (optionalPermissions) {
+        if (includes(adminPermissions, optionalPermissions)) {
+          permitStatus = true;
+        } else {
+          permitStatus = false;
+        }
+      } else {
+        permitStatus = true;
+      }
+      break;
+    default:
+      permitStatus = false;
+  }
+  return permitStatus;
 };
 
 export const passwordValidation = (password: string) => {

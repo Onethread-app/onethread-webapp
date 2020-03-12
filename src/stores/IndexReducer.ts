@@ -5,6 +5,7 @@ import { RoomReducer } from './room/Reducer';
 import { LayoutReducer } from './layout/Reducer';
 import { BoardIndexReducer } from './boardIndexReducer';
 import { AssociateReducer } from './associate/Reducer';
+import { ProjectReducer } from './project/Reducer';
 
 export const RootReducer = combineReducers({
 	layoutReducer: LayoutReducer,
@@ -12,5 +13,6 @@ export const RootReducer = combineReducers({
 	userReducer: UserReducer,
 	companyReducer: CompanyReducer,
 	boardIndexReducer: BoardIndexReducer,
-	associateReducer: AssociateReducer
+	associateReducer: AssociateReducer,
+	projectReducer: ProjectReducer
 });

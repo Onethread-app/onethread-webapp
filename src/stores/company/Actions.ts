@@ -29,6 +29,7 @@ import {
 	LOGO_UPLOAD,
 	CHANGE_MEMBER_ROLE,
 	CHANGE_MEMBER_ROLE_ERROR,
+	COMPANY_ROLE,
 	GET_ALL_COMPANY_PENDING_MEMBERS,
 	UPDATE_ALL_COMPANY_PENDING_MEMBERS,
 	DELETE_TEAM_MEMBER,
@@ -37,6 +38,7 @@ import {
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
+import { Toaster } from '@blueprintjs/core';
 
 export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
 	try {
@@ -108,10 +110,10 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const companyName = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			dispatch({ type: COMPANY_REDUCER_LOADING });
 			const response = await tigrowApi.get(
-				`company/${companyName}/members?limit=100`,
+				`company/${companyId}/members?limit=100`,
 				headers
 			);
 			dispatch({ type: GET_ALL_COMPANY_MEMBERS, payload: response.data });
@@ -131,7 +133,7 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 
 export const addTeamMembers =
 	(members: Array<{ account: string | undefined, company: string }>,
-		pendingTeamMembers: string[], companyName: string) => async (
+		pendingTeamMembers: string[], companyId: string) => async (
 			dispatch: any
 		) => {
 			try {
@@ -139,7 +141,7 @@ export const addTeamMembers =
 				if ((headers as any).headers.Authorization) {
 					dispatch({ type: COMPANY_REDUCER_LOADING });
 					const response = await tigrowApi.post(
-						`company/${companyName}/members`,
+						`company/${companyId}/members`,
 						{ members, pendingTeamMembers },
 						headers
 					);
@@ -166,9 +168,9 @@ export const deleteCompanyMember = (memberId: string) => async (dispatch: any, g
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const companyName = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			await tigrowApi.delete(
-				`company/${companyName}/members/${memberId}`,
+				`company/${companyId}/members/${memberId}`,
 				headers
 			);
 			dispatch({ type: DELETE_TEAM_MEMBER, payload: memberId });
@@ -186,7 +188,6 @@ export const deleteCompanyMember = (memberId: string) => async (dispatch: any, g
 	}
 };
 
-
 export const addDepartment = (name: string) => async (
 	dispatch: any,
 	getState: any
@@ -196,9 +197,9 @@ export const addDepartment = (name: string) => async (
 		let response;
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: ADD_DEPARTMENT_LOADING });
-			const company = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			response = await tigrowApi.post(
-				`company/${company}/departments`,
+				`company/${companyId}/departments`,
 				{ name },
 				headers
 			);
@@ -222,9 +223,9 @@ export const getAllDepartments = () => async (dispatch: any, getState: any) => {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DEPARTMENT_LOADING });
-			const company = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			const response = await tigrowApi.get(
-				`company/${company}/departments`,
+				`company/${companyId}/departments`,
 				headers
 			);
 			dispatch({ type: GET_ALL_DEPARTMENT, payload: response.data });
@@ -251,8 +252,8 @@ export const editCompanyInfoAction = (companyInfo: ICompany) => async (
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const company = getState().companyReducer.currentCompany.name;
-			await tigrowApi.put(`company/${company}/basic`, companyInfo, headers);
+			const companyId = getState().companyReducer.currentCompany._id;
+			await tigrowApi.put(`company/${companyId}/basic`, companyInfo, headers);
 			dispatch({ type: EDIT_COMPANY_INFO, payload: companyInfo });
 		} else {
 			// tslint:disable-next-line: no-console
@@ -278,9 +279,9 @@ export const editCompanyAboutAction = (companyAbout: string) => async (
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const company = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			await tigrowApi.put(
-				`company/${company}/about`,
+				`company/${companyId}/about`,
 				{ about: companyAbout },
 				headers
 			);
@@ -308,9 +309,9 @@ export const changeCompanyName = (companyName: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: CHANGE_COMPANY_NAME_LOADING });
-			const company = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			const response = await tigrowApi.put(
-				`company/${company}/changeName`,
+				`company/${companyId}/changeName`,
 				{ name: companyName },
 				headers
 			);
@@ -373,9 +374,9 @@ export const addDesignation = (values: any, memberId: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DESIGNATION_LOADING });
-			const company = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			const response = await tigrowApi.post(
-				`company/${company}/designations/${memberId}`,
+				`company/${companyId}/designations/${memberId}`,
 				values,
 				headers
 			);
@@ -406,9 +407,9 @@ export const editDesignation = (values: any, memberId: string) => async (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			dispatch({ type: COMPANY_DESIGNATION_LOADING });
-			const company = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			const response = await tigrowApi.put(
-				`company/${company}/designations/${memberId}`,
+				`company/${companyId}/designations/${memberId}`,
 				values,
 				headers
 			);
@@ -438,9 +439,9 @@ export const changeMemberRole = (values: { role: string }, memberId: string) => 
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			const company = getState().companyReducer.currentCompany.name;
+			const companyId = getState().companyReducer.currentCompany._id;
 			const response = await tigrowApi.put(
-				`/company/${company}/members/${memberId}/changeRole`,
+				`/company/${companyId}/members/${memberId}/changeRole`,
 				values,
 				headers
 			);
@@ -463,14 +464,61 @@ export const changeMemberRole = (values: { role: string }, memberId: string) => 
 	}
 };
 
+export const companyOptionalRole = (values: { optionalRole: string[] }) => async (
+	dispatch: any,
+	getState: any
+) => {
+	try {
+		const headers = tokenConfig();
+		const companyId = getState().companyReducer.currentCompany._id;
+		if ((headers as any).headers.Authorization) {
+			const response = await tigrowApi.put(`company/${companyId}/role`, values, headers);
+			if (response.status === 200) {
+				dispatch({ type: COMPANY_ROLE, payload: values.optionalRole });
+				Toaster
+					.create()
+					.show({
+						message: 'Company admin role updated successfully',
+						timeout: 3000,
+						intent: 'success'
+					});
+			}
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			Toaster
+				.create()
+				.show({
+					message: 'Network is disconnected.',
+					action: {
+						icon: 'refresh',
+						className: 'bp3-intent-warning b',
+						onClick: () => {
+							window.location.reload(false);
+						},
+						text: 'Reload',
+					},
+					timeout: 300000,
+				});
+		} else {
+			Toaster
+        .create()
+        .show({
+          message: error.response.data.errors[0].message,
+          intent: 'danger',
+          timeout: 300000,
+        });
+		}
+	}
+};
 export const getCompanyPendingMembers =
 	(limit: number = 100, skip: number = 0) => async (dispatch: any, getState: any) => {
 		try {
 			const headers = tokenConfig();
 			if ((headers as any).headers.Authorization) {
-				const companyName = getState().companyReducer.currentCompany.name;
+				const companyId = getState().companyReducer.currentCompany._id;
 				const response = await tigrowApi.get(
-					`company/${companyName}/members/pending?limit=${limit}&skip=${skip}`,
+					`company/${companyId}/members/pending?limit=${limit}&skip=${skip}`,
 					headers
 				);
 				dispatch({ type: GET_ALL_COMPANY_PENDING_MEMBERS, payload: response.data.pendingMember });

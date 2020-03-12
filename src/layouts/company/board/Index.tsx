@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { TaskBoard } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { permit, boardColor } from 'stores/UtilsActions';
+import { projectPermit, boardColor } from 'stores/UtilsActions';
 import { Card, Elevation, HTMLSelect } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 import { connect } from 'react-redux';
@@ -189,7 +189,7 @@ const TaskPageComponent = (props: IBoardListViewInternalProps & RouteComponentPr
 						</div>
 						: <p>No boards</p> : <Loading />}
 					<div>
-						{permit(props.company.role) ?
+						{projectPermit(props.company.role) ?
 							<img
 								onClick={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
 								src={addIcon}

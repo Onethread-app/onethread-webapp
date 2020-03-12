@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
 import { TaskTitleEditor } from './TaskTitleEditor';
 import { ICompany } from 'stores/company/Reducer';
-import { permit } from 'stores/UtilsActions';
+import { projectPermit } from 'stores/UtilsActions';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
@@ -29,7 +29,7 @@ export const TaskTitleViewComponent = (props: TaskDetailsInternalProps) => {
             cursor: 'text'
           }}
           onClick={() => {
-            props.company && permit(props.company.role) ?
+            props.company && projectPermit(props.company.role) ?
               setNameEdit(true)
               : setNameEdit(false);
           }}>

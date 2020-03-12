@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Icon } from '@blueprintjs/core';
 import { CreateForm } from './Form';
-import { permit } from 'stores/UtilsActions';
+import { projectPermit } from 'stores/UtilsActions';
 import { clearRoomError } from 'stores/room/Actions';
 import { IconNames } from '@blueprintjs/icons';
 import { RightSidebar } from 'components/RightSidebar';
@@ -27,7 +27,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 			<div className={`flex flex-column h-100 t-25-a ${props.isOpen ? 'db' : 'dn'}`}>
 				<div className="flex justify-between items-center ph3">
 					<h3 className="tigrow-darkGray">Rooms</h3>
-					{props.companyRole && permit(props.companyRole) ? (
+					{props.companyRole && projectPermit(props.companyRole) ? (
 						<Icon
 							icon={IconNames.ADD}
 							iconSize={20}

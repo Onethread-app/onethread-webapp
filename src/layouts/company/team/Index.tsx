@@ -22,7 +22,7 @@ import {
 } from 'stores/company/Actions';
 import { ICompanyMembers, ICompanyPendingMembers, ICompany } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
-import { permit } from 'stores/UtilsActions';
+import { companyPermit } from 'stores/UtilsActions';
 import { AddDesignationForm } from 'layouts/company/team/AddDesignationForm';
 import { EditDesignationForm } from 'layouts/company/team/EditDesignationForm';
 import { isEqual, upperFirst, chunk } from 'lodash';
@@ -105,7 +105,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 			const a: ICompanyMembers[] = [];
 			const b: ICompanyMembers[] = [];
 			props.company.members.forEach(m => {
-				if (permit(m.role)) {
+				if (companyPermit(m.role)) {
 					a.push(m);
 				} else {
 					b.push(m);
@@ -129,7 +129,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 			<div className="ph5">
 				<div className="flex justify-between items-center">
 					<h1 className="tigrow-lightGray-1">Colleagues</h1>
-					{permit(props.company.role) ? (
+					{companyPermit(props.company.role) ? (
 						<Button
 							className="grow fr h2 pointer white bp3-minimal "
 							style={{
@@ -167,7 +167,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 									<tr className="hide-child" key={member._id}>
 										<td>
 											<span className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</span>
-											{permit(member.role) ? (
+											{companyPermit(member.role) ? (
 												member.role === 'superAdmin' ? (
 													<Icon
 														icon="star"
@@ -197,7 +197,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 										</td>
 										{/* Popover starts */}
 										<td>
-											{permit(props.company.role) ||
+											{companyPermit(props.company.role) ||
 												isEqual(member.account._id, props.user._id) ? (
 													<Popover
 														className="fr"
@@ -228,7 +228,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																			}}
 																		><span>Add Designation</span></Button>
 																	)}
-																{permit(props.company.role) &&
+																{companyPermit(props.company.role) &&
 																	isEqual(member.role, 'superAdmin') === false ? (
 																		isEqual(member.role, 'admin') === true ? (
 																			<Button
@@ -299,7 +299,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 									<tr className="hide-child" key={member._id}>
 										<td>
 											<span className="mr2">{upperFirst(member.account.firstName)} {upperFirst(member.account.lastName)}</span>
-											{permit(member.role) ? (
+											{companyPermit(member.role) ? (
 												member.role === 'superAdmin' ? (
 													<Icon
 														icon="star"
@@ -329,7 +329,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 										</td>
 										{/* Popover starts */}
 										<td>
-											{permit(props.company.role) ||
+											{companyPermit(props.company.role) ||
 												isEqual(member.account._id, props.user._id) ? (
 													<Popover
 														className="fr"
@@ -360,7 +360,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																			}}
 																		><span>Add Designation</span></Button>
 																	)}
-																{permit(props.company.role) &&
+																{companyPermit(props.company.role) &&
 																	isEqual(member.role, 'superAdmin') === false ? (
 																		isEqual(member.role, 'admin') === true ? (
 																			<Button
@@ -384,7 +384,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 																				><span>Make Admin</span></Button>
 																			)
 																	) : null}
-																{permit(props.company.role) ? (<Button
+																{companyPermit(props.company.role) ? (<Button
 																	className="outline-0 bp3-large bp3-popover-dismiss"
 																	onClick={async () => {
 																		await props.deleteCompanyMember(member._id);
@@ -415,7 +415,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 				</HTMLTable>
 				{/* members list ends */}
 				{/* pending list starts */}
-				{permit(props.company.role) ? (
+				{companyPermit(props.company.role) ? (
 					<>
 						<h1 className="f4 tigrow-lightGray-1">Pending request</h1>
 						<HTMLTable className="w-100 mv3" striped={true}>
