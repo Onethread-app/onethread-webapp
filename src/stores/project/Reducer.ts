@@ -1,5 +1,6 @@
 import { PROJECT } from './Types';
 import { Entity } from 'stores/UtilsActions';
+import { User } from 'stores/user/Reducer';
 
 export interface Project {
   _id: string;
@@ -10,6 +11,7 @@ export interface Project {
   files: any;
   departments: Entity[];
   totalMember: number;
+  concernAdmin: User;
 }
 
 const initialState = {

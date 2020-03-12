@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from '@blueprintjs/core';
-import { MyProjectPage } from './MyProjects';
-import { ProjectRequest } from './request/Index';
+import { MyProject } from './MyProjects';
+import { PendingProjectRequest } from './request/Index';
 
 export const ProjectPage = () => (
   <div className="ph5">
@@ -12,13 +12,13 @@ export const ProjectPage = () => (
       <Tab
         id="MyProjects"
         title="My Projects"
-        panel={<MyProjectPage />}
+        panel={<MyProject />}
         className="outline-0 mt4"
       />
       <Tab
         id="PendingProject"
         title="Pending Projects"
-        panel={<ProjectRequest />}
+        panel={<PendingProjectRequest />}
         className="outline-0 mt4"
       />
     </Tabs>

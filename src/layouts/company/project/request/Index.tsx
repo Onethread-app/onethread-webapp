@@ -1,8 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Button, Divider } from '@blueprintjs/core';
 
 const ProjectRequestComponent = () => {
+
+  useEffect(() => {
+    // get all pending projects
+
+    // async function loadAssociates(getPendingAssociates: () => void) {
+    //   setLoading(true);
+    //   await getPendingAssociates();
+    //   setLoading(false);
+    // }
+    // loadAssociates(props.getAllPendingAssociates);
+  }, []);
 
   return (
     <main className="">
@@ -50,4 +61,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const ProjectRequest = connect(mapStateToProps)(ProjectRequestComponent);
+export const PendingProjectRequest = connect(mapStateToProps)(ProjectRequestComponent);
