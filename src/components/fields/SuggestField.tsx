@@ -17,6 +17,7 @@ interface SuggestFieldProps {
   isCreatable?: boolean;
   isCreatableAPI?: (obj: { name: string }) => void;
   multipleItemSelect?: boolean;
+  error?: string;
 }
 
 const SuggestInput = Suggest.ofType<ItemEntityProps>();
@@ -120,3 +121,14 @@ export const SuggestField = (props: SuggestFieldProps) => {
     />
   );
 };
+
+export const SuggestFieldWithError = (props: SuggestFieldProps) => (
+  <>
+    <SuggestField {...props} />
+    {props.error &&
+      <small style={{ color: 'red' }}>
+        {props.error}
+      </small>
+    }
+  </>
+);

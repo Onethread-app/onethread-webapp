@@ -7,7 +7,7 @@ import { Button, Tag, Toaster, Position } from '@blueprintjs/core';
 import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { server, tigrowApi } from 'config';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty, isEqual, map } from 'lodash';
 
 interface TeamMembersViewProps {
   showDialog: boolean;
@@ -31,27 +31,27 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
 
   const [email, setEmail] = useState('');
 
-  const userRequestFactory = (_email: string): Promise<any> => {
+  const userRequestFactory = (name: string): Promise<any> => {
     const headers = tokenConfig();
-    return fetch(`${server}company/${props.company._id}/members/search?email=${_email}`, headers)
+    return fetch(`${server}company/${props.company._id}/members/search?name=${name}`, headers)
       .then(res => res.json())
-      .then(res => res.employees.data)
+      .then(res => map(res.data, '_source'))
       .catch(err => []);
   };
 
   let result: any = [];
-  result = useLiveSearch(email, userRequestFactory, 800);
+  result = useLiveSearch(email, userRequestFactory, 0);
 
   useEffect(() => {
     setTeamMembers(result);
   }, [result]);
 
-  const checkPendingMemberStatus = async (_email: string) => {
+  const checkPendingMemberStatus = async (name: string) => {
     try {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(
-          `company/${props.company.name}/members/pending/status?email=${_email}`,
+          `company/${props.company.name}/members/pending/status?name=${name}`,
           headers
         );
         return response.data;
@@ -109,7 +109,6 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           isCreatableAPI={addNewUser}
         />
       </div>
-
       <div className="w-100">
         {selectedTeamMember.map(item => (
           <Tag
@@ -185,12 +184,13 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           disabled={selectedTeamMember.length + pendingTeamMembers.length > 0 &&
             selectedTeamMember.length + pendingTeamMembers.length <= 20 ? false : true}
           onClick={async () => {
-            const userIdWithCompany = selectedTeamMember.map(selected => {
+            const userIdWithCompany = selectedTeamMember.map((selected: any) => {
               return {
-                account: selected._id,
+                account: selected.mongo_id,
                 company: props.company._id
               };
             });
+            
             if (userIdWithCompany || pendingTeamMembers) {
               await props.addTeamMembers(userIdWithCompany, pendingTeamMembers, props.company._id);
             }
