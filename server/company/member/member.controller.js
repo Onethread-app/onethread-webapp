@@ -4,13 +4,19 @@ const { Room } = require('./../../room/room.model');
 const { Company } = require('../../company/company.model');
 const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
-const { sendJSONresponse , sendErrorResponse} = require('../../helpers/jsonResponse');
-const { accountMapping , accountStructure , memberMapping , memberStructure} = require('../../services/elastic.services');
-const ElasticsearchService = require('../../../index.elasticsearch');
-const elasticService = new ElasticsearchService();
-elasticService.checkHealth();
-elasticService.createMembers('members',Member,memberMapping,memberStructure );
-elasticService.create('accounts', Account , accountMapping , accountStructure);
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../../helpers/jsonResponse');
+const {
+  search,
+  bulkInsert,
+  accountIndex,
+  memberIndex,
+  deleteDocument,
+} = require('../../services/elastic.services');
+const chalk = require('chalk');
+
 const { PendingMember } = require('./pendingMember.model');
 const {
   sendInviteColleague,
@@ -24,7 +30,7 @@ const changeRole = async (req, res, next) => {
       company: req.company._id,
     });
 
-    if (!['superAdmin', 'admin'].includes(member.role)) {
+    if (req.body.role === 'admin' && member.role !== 'superAdmin') {
       return res.status(403).json({
         message: `Restricted`,
       });
@@ -97,14 +103,32 @@ const addMember = async (req, res, next) => {
       // add new members in company
       members = await Member.create(newMembers);
 
-      const elasticMembers = await Member.find({
-        account: { $in : accounts },
-        company:  req.company._id,
-      }).populate({ path: 'account', select: '_id name firstName lastName email' })
-  
-  
-       await elasticService.bulkInsert('members' ,elasticMembers ,memberStructure );
-       logger.info(` ✔ ️ successfully Elasticsearch documented with bulk`)
+      const elasticSearchIndexedMembers = await Member.find({
+        account: { $in: accounts },
+        company: req.company._id,
+      }).populate({
+        path: 'account',
+        select: '_id name firstName lastName email',
+      });
+
+      const memberStructure = data => {
+        return {
+          mongo_id: data._id,
+          account: data.account,
+          company: data.company,
+        };
+      };
+
+      await bulkInsert(
+        memberIndex,
+        elasticSearchIndexedMembers,
+        memberStructure,
+      );
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch successfully Elasticsearch documented with bulk on ${memberIndex}`,
+        ),
+      );
     }
 
     // invite new members in company
@@ -127,7 +151,7 @@ const addMember = async (req, res, next) => {
       pendingMembers,
     });
   } catch (error) {
-    logger.error(error)
+    logger.error(error);
     next(error);
   }
 };
@@ -235,14 +259,18 @@ const deleteMember = async (req, res, next) => {
     const body = {
       query: {
         term: {
-          "mongo_id": req.member._id
-        }
-      }
-    }
+          mongo_id: req.member._id,
+        },
+      },
+    };
 
-    await elasticService.delete('members','_doc',body);
+    await deleteDocument(memberIndex, '_doc', body);
 
-    logger.info(` ✔ ️ successfully deleted Elasticsearch document`);
+    logger.info(
+      chalk.blueBright(
+        `ElasticSearch successfully deleted  document on ${memberIndex}`,
+      ),
+    );
 
     return res.status(200).json({
       message: 'member deleted successfully',
@@ -283,59 +311,57 @@ const searchMember = async (req, res, next) => {
     const name = req.query.name;
     const companyID = req.company._id;
 
-    const existingMembers =  await Member.find({
-      company: companyID ,
-      removed: false
+    const existingMembers = await Member.find({
+      company: companyID,
+      removed: false,
     }).select('account');
 
-    const existingMembersAccounts = existingMembers.map((member)=>  member.account );
+    const existingMembersAccounts = existingMembers.map(
+      member => member.account,
+    );
 
-    if(name){
-
+    if (name) {
       let body = {
         size: 200,
         from: 0,
         query: {
-          bool:{
-            "must": [
+          bool: {
+            must: [
               {
-                "multi_match": {
-                  "query": req.query.name ,
-                  "type": "phrase_prefix",
-                  "fields": ["email" , "firstName" , "lastName"]
-                }
-              }
+                multi_match: {
+                  query: req.query.name,
+                  type: 'phrase_prefix',
+                  fields: ['email', 'firstName', 'lastName'],
+                },
+              },
             ],
-             "must_not": [
+            must_not: [
               {
-               "terms" : {
-                  "mongo_id": existingMembersAccounts 
-                }
-              }
-           ]
-          }
-        }
-      }
+                terms: {
+                  mongo_id: existingMembersAccounts,
+                },
+              },
+            ],
+          },
+        },
+      };
 
-      const response = await elasticService.search('accounts','_doc',body);
+      const response = await search(accountIndex, '_doc', body);
 
-      return sendJSONresponse(res,200,{
+      return sendJSONresponse(res, 200, {
         success: true,
         message: `Search complete for ${name}`,
-        data: response.hits.hits
-      })
-
-    }else{
+        data: response.hits.hits,
+      });
+    } else {
       return sendErrorResponse(res, 400, 'EmptySearchError', {
         message: `query error`,
       });
     }
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
   }
-  catch (error) {
-        logger.error(`${error}`);
-        next(error);
-      }
-
 };
 
 module.exports = {

@@ -4,8 +4,10 @@ const { ProjectRequest } = require('../request/request.model');
 const { Associate } = require('../associate/associate.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
-const ElasticsearchService = require('../../index.elasticsearch');
-const elasticService = new ElasticsearchService();
+const {
+  search,
+  memberIndex,
+} = require('../services/elastic.services');
 const {
   sendErrorResponse,
   sendJSONresponse,
@@ -164,7 +166,8 @@ const rejectProjectRequest = async (req, res, next) => {
 };
 
 const showAllProjectsForCompany = async (req, res, next) => {
-  const { limit = 50, skip = 0, companyId } = req.query;
+  const { limit = 50, skip = 0 } = req.query;
+  let companyId = req.params.cname;
   const allProjects = await Project.find({
     company: companyId,
     removed: false,
@@ -334,7 +337,9 @@ const showAllFilesForProject = async (req, res, next) => {
 const suggestConcernAdmin = async (req, res, next) => {
   try {
     const name = req.query.name;
-    const companyId = req.params.companyId;
+    const companyId = req.params.cname;
+
+    console.log(companyId)
 
     if (name) {
       let body = {
@@ -367,11 +372,7 @@ const suggestConcernAdmin = async (req, res, next) => {
         },
       };
 
-      const response = await elasticService.search(
-        'members',
-        '_doc',
-        body,
-      );
+      const response = await search(memberIndex, '_doc', body);
 
       return sendJSONresponse(res, 200, {
         success: true,

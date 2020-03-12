@@ -9,6 +9,7 @@ const config = require('./config/config');
 //const client = require('./index.redis');
 const app = require('./config/express');
 const logger = require('./config/winston');
+const { IndexElasticSearch } = require('./index.elasticsearch');
 
 const { webhook } = require('./server/services/slack.services.js');
 
@@ -23,6 +24,7 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUri, () => {});
 logger.info('MongoDB is connected');
+IndexElasticSearch();
 mongoose.connection.on('error', () => {
   // webhook('unable to connect database');
   logger.error(`unable to connect to database: ${mongoUri}`);

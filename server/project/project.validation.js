@@ -73,5 +73,10 @@ module.exports = {
       cname: schema.company.required(),
     })
 
-  })
+  }),
+  searchConcernAdmin: Joi.object().keys({
+    params: Joi.object().keys({
+      cname: schema.company.required(),
+    })
+  }),
 };

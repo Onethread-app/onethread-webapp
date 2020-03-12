@@ -4,11 +4,16 @@ const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
-const { sendErrorResponse } = require('../helpers/jsonResponse');
-const ElasticsearchService = require('../../index.elasticsearch');
-const elasticService = new ElasticsearchService();
+const {
+  setDocument,
+  memberIndex,
+} = require('../services/elastic.services');
+const chalk = require('chalk');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const logger = require('../../config/winston');
-
 // create a company profile
 const changeName = async (req, res, next) => {
   // Check for JSON
@@ -108,17 +113,24 @@ const createCompany = async (req, res, next) => {
     // });
     const elasticMember = await newMember.save();
 
-  const elasticMemberPopulated = await Member.find({
-    _id:elasticMember._id
-  }).populate({ path: 'account', select: '_id name firstName lastName email' });
-   
-  const response =  await elasticService.set('members','_doc' , {
-      mongo_id: elasticMemberPopulated._id,
-      account: elasticMemberPopulated.account,
-      company: elasticMemberPopulated.company
+    const elasticMemberPopulated = await Member.findOne({
+      _id: elasticMember._id,
+    }).populate({
+      path: 'account',
+      select: '_id name firstName lastName email',
     });
 
-    logger.info(` ✔ ️Elasticsearch document ${response.result}`);
+    await setDocument(memberIndex, '_doc', {
+      mongo_id: elasticMemberPopulated._id,
+      account: elasticMemberPopulated.account,
+      company: elasticMemberPopulated.company,
+    });
+
+    logger.info(
+      chalk.blueBright(
+        `Elasticsearch document added on ${memberIndex}`,
+      ),
+    );
 
     // // add company ref in user
     // req.user.companies.push(newCompany._id);
@@ -138,7 +150,7 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
-    
+    logger.error(`${error}`);
     return next(error);
   }
 };
@@ -177,17 +189,13 @@ const getCompanyIndividual = async (req, res, next) => {
 
 // get a company profile
 const getCompany = async (req, res, next) => {
-
-  
   try {
     // company details
     let company = await Company.findOne({
       name: req.params.cname,
-    })
-      .select(
-        '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
-      )
-      .populate('logo', 'link s3Key type');
+    }).select(
+      '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
+    );
 
     // role info
     let member = await Member.findOne({
@@ -205,7 +213,6 @@ const getCompany = async (req, res, next) => {
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
-    
     next(error);
   }
 };
@@ -216,7 +223,6 @@ const updateBasicInfo = async (req, res, next) => {
   if (!req.is('application/json')) {
     return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
-  const mongoose = require(mongoose);
   try {
     // updating new values
     for (const key in req.body) {
@@ -261,10 +267,10 @@ const updateRole = async (req, res, next) => {
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
-  
+
   try {
     //Company.deleteMany({}, function(err, result) {
-      
+
     //});
     //req.company.optionalRole = req.body.optionalRole;
     const company = await Company.findOneAndUpdate(
@@ -283,7 +289,6 @@ const updateRole = async (req, res, next) => {
       data: company.optionalRole,
     });
   } catch (error) {
-    
     next(error);
   }
 };
@@ -343,17 +348,16 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeUser=  (functionalRole, ...userRoles )=> {
-  return async function  (req, res, next) {
+const authorizeUser = (functionalRole, ...userRoles) => {
+  return async function(req, res, next) {
     try {
-
-      const company =  await Company.findOne({
-        _id: req.query.companyId,
-      }).select('_id optionalRole').exec();
+      // const company =  await Company.findOne({
+      //   _id: req.params.companyId,
+      // }).select('_id optionalRole').exec();
 
       const member = await Member.findOne({
         account: req.user._id,
-        company: req.query.companyId, //need to query param company first
+        company: req.params.companyId, //apatoto pore name or id hobe
       }).exec();
 
       // if (
@@ -361,10 +365,11 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
       //   !userRoles.includes(member.role) ||
       //   !company.optionalRole.includes(functionalRole)
       // )
-      
+
+      //console.log(member, userRoles, functionalRole, 'a');
       if (
         !member ||
-        !userRoles.includes(member.role)  
+        (functionalRole === 'all' && !userRoles.includes(member.role))
       ) {
         return res.status(403).json({
           message: `Restricted`,
@@ -380,16 +385,28 @@ const authorizeUser=  (functionalRole, ...userRoles )=> {
 
 const searchCompany = async (req, res, next) => {
   try {
-    const { limit = 50, skip = 0 , name, cname} = req.query;
+    const { limit = 50, skip = 0, name, companyId } = req.query;
+    const associate = await Associate.find({
+      $or: [{ company: companyId }, { associateCompany: companyId }],
+      isRejected: false,
+    }).exec();
+
+    let associateCompanyId = associate.map(m => {
+      if (m.company.toString() === companyId) {
+        return m.associateCompany;
+      }
+      return m.company;
+    });
+
+    associateCompanyId.push(companyId);
     await Company.find({
       name: { $regex: new RegExp(name), $options: 'i' },
-      _id: { $ne: mongoose.Types.ObjectId(cname)}
+      _id: { $nin: associateCompanyId },
     })
       .select('name')
       .skip(+skip)
       .limit(+limit)
       .then(data => {
-        
         return sendJSONresponse(res, 200, {
           success: true,
           message: `Search complete for ${name}`,
@@ -397,11 +414,9 @@ const searchCompany = async (req, res, next) => {
         });
       });
   } catch (error) {
-    
     next(error);
   }
 };
-
 
 module.exports = {
   authorizeUser,

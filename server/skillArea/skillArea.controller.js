@@ -2,7 +2,7 @@ const SkillArea = require('./skillArea.model');
 const Account = require('../account/account.model');
 const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
-const { skillMapping , skillStructure } = require('../services/elastic.services');
+const chalk = require('chalk');
 const {
   sendJSONresponse,
   sendErrorResponse,
@@ -13,9 +13,7 @@ const {
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
-const ElasticsearchService = require('../../index.elasticsearch');
-const elasticService = new ElasticsearchService();
-elasticService.create('skillsarea', SkillArea , skillMapping , skillStructure);
+const {setDocument, skillIndex , search} = require('../services/elastic.services');
 
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -32,10 +30,24 @@ const createSkill = async (req, res, next) => {
   newSkill.accountId.push(req.user._id);
   newSkill
     .save()
-    .then(skill => {
+    .then( async skill => {
       const skillInfo = {};
       skillInfo._id = skill._id;
       skillInfo.name = skill.name;
+
+      await setDocument(skillIndex,'_doc', {
+        mongo_id: skillInfo._id,
+        name: skillInfo.name,
+        accountId: skillInfo.accountId
+      })
+
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch successfully added document  on ${skillIndex}`,
+        ),
+      );
+
+
       return sendJSONresponse(res, 201, {
         success: true,
         message: 'new skill created',
@@ -177,19 +189,14 @@ const searchSkillSet = async (req, res, next) => {
     }
   };
 
-    client
-      .search({ index: 'skillarea', body: body, type: '_doc' })
-      .then(results => {
+  const result = await search(skillIndex,'_doc', body);
+
+
         return sendJSONresponse(res, 200 , {
           success : true,
           message: `Search complete for ${name}`,
           data: results.hits.hits
-        })
-      })
-      .catch(err => {
-        console.log(err);
-        // res.send([]);
-      });
+        });
 
     // await SkillArea.find({
     //   $and: [

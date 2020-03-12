@@ -3,10 +3,10 @@ const { Room } = require('./../room/room.model');
 const Account = require('./../account/account.model');
 const { chatkit } = require('../services/pusher.services');
 const File = require('./../file/file.model');
-const ElasticsearchService  = require('../../index.elasticsearch');
-const { messageMapping , messageStructure } = require('../services/elastic.services');
-const elasticService = new ElasticsearchService();
-elasticService.createMessages('messages', Message , messageMapping , messageStructure);
+// const ElasticsearchService  = require('../../index.elasticsearch');
+// const { messageMapping , messageStructure } = require('../services/elastic.services');
+// const elasticService = new ElasticsearchService();
+// elasticService.createMessages('messages', Message , messageMapping , messageStructure);
 const logger = require('../../config/winston');
 const { sendJSONresponse , sendErrorResponse } = require('../helpers/jsonResponse');
 
@@ -75,17 +75,17 @@ const create = async (req, res, next) => {
       },
     );
 
-    const response =  await elasticService.set('messages' ,'_doc' , {
-      mongo_id: message._id.toString(),
-      room: message.room,
-      account: message.account,
-      chatkitId: message.chatkitId,
-      text: message.text,
-      type: message.type,
-      files: req.body.files
-    });
+    // const response =  await elasticService.set('messages' ,'_doc' , {
+    //   mongo_id: message._id.toString(),
+    //   room: message.room,
+    //   account: message.account,
+    //   chatkitId: message.chatkitId,
+    //   text: message.text,
+    //   type: message.type,
+    //   files: req.body.files
+    // });
 
-    logger.info(` ✔ ️Elasticsearch document ${response.result}`);
+    // logger.info(` ✔ ️Elasticsearch document ${response.result}`);
 
     return res.status(201).json({
       message,
@@ -173,7 +173,7 @@ const searchMessage = async (req, res, next) => {
         }
       }
 
-      const response = await elasticService.search('messages','_doc',body);
+      // const response = await elasticService.search('messages','_doc',body);
 
       return sendJSONresponse(res,200,{
         success: true,
