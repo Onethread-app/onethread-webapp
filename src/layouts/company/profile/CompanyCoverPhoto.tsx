@@ -4,7 +4,6 @@ import { Dialog, Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { CompanyProfilePicture } from './CompanyProfilePicture';
 
-import editIcon from '../../../resources/images/editIcon.png';
 import coverPic from 'resources/images/coverPhoto.png';
 import { ImageEdit } from './ImageEditor';
 interface IImageUploadViewProps {
@@ -28,7 +27,7 @@ const CompanyCoverPhotoComponent = (props: IImageUploadViewProps) => {
       >
         <div
           className="absolute flex"
-          style={{ left: '40px', top: '63%' }}
+          style={{ left: '40px', top: '63%', width: '97%' }}
         >
           <div
             className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray"
@@ -36,26 +35,52 @@ const CompanyCoverPhotoComponent = (props: IImageUploadViewProps) => {
           >
             <CompanyProfilePicture />
           </div>
-          <div
-            className="ml5-tigrow-l ml1-m"
-            style={{ marginTop: '9rem' }}
-          >
-            <h1
-              className="f3-l f4 ma0 ws-break ttc">
-              {props.user.firstName} {props.user.lastName}
+          <div className="flex flex-grow-1 justify-between">
+            <div className="flex">
+              <div
+                className="ml5 ml1-m"
+                style={{ marginTop: '9rem' }}
+              >
+                <h1
+                  className="f6 ma0 ws-break ttc">
+                  Total Employee
             </h1>
-            <div className="cf ">
-              <h1 className="f5 dib ws-break black-70 ttc">
-                {props.user.position ? props.user.position : 'No designation'}
-              </h1>
-              <img
-                src={editIcon}
-                width="30"
-                height="30"
-                className="br2 pointer fr mv1"
-                // onClick={() => setShowDialogPosition(true)}
-              />
+                <h1 className="f3-l f4 fw4 ma0 ws-break">125</h1>
+              </div>
+              <div
+                className="ml4 ml1-m"
+                style={{ marginTop: '9rem' }}
+              >
+                <h1
+                  className="f6 ma0 ws-break ttc">
+                  Associates
+            </h1>
+                <h1 className="f3-l f4 fw4 ma0 ws-break">18</h1>
+              </div>
             </div>
+            <Button
+              className="pa2 bp3-minimal"
+              style={{
+                color: 'white',
+                backgroundColor: '#3F61C5',
+                marginTop: '9rem',
+                height: '40px',
+                width: '200px'
+              }}
+              text="Add as Associates"
+            />
+            {/* <Button
+              className="pa2 bp3-minimal"
+              style={{
+                color: 'white',
+                backgroundColor: '#3F61C5',
+                marginTop: '9rem',
+                height: '40px',
+                width: '200px'
+              }}
+              icon="tick"
+              text="Request Sent"
+            /> */}
           </div>
         </div>
         <Button
