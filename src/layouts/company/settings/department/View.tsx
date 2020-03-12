@@ -5,10 +5,10 @@ import {
   addDepartment,
   getAllDepartments,
   clearAddDepartmentError
-} from '../../../stores/company/Actions';
+} from '../../../../stores/company/Actions';
 import { ICompany } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
-import { DepartmentEditor } from './FieldsEditor';
+import { DepartmentEditor } from './Editor';
 
 interface DepartmentViewProps {
   company: ICompany;
@@ -30,14 +30,14 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
     <>
       <div>
         <div className="flex justify-between">
-          <h1 className="f6 lh-copy">Department</h1>
+          <h1 className="f6 lh-copy">Departments</h1>
           <Button
             type="submit"
             className="grow pointer w-15"
             style={{ background: '#0fa3a3', outline: 'none', color: 'white', fontSize: '16px' }}
             onClick={() => setShowDialogDepartment(true)}
           >
-            Add
+            Add Department
         </Button>
         </div>
         <div className="mt4">

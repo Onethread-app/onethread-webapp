@@ -103,6 +103,9 @@ a:hover {
 .w-85 {
 	width: 85%;
 }
+.not-allowed {
+	cursor: not-allowed;
+}
 
 .ws-break {
 	-webkit-word-break: break-word;
@@ -145,6 +148,10 @@ a:hover {
 .w11 {
 	width: 11rem;
 }
+.min-vh-75 {
+	min-height: 75vh;
+}
+
 .pl6 {
 	padding-left: 6rem;
 }
@@ -193,8 +200,14 @@ a:hover {
 	.w-85-ns {
 		width: 85%;
 	}
+	.not-allowed-ns {
+		cursor: not-allowed;
+	}
 	.w6-ns {
 		width: 6rem;
+	}
+	.min-vh-75-ns {
+		min-height: 75vh;
 	}
 	.w11-ns {
 		width: 11rem;
@@ -222,11 +235,17 @@ a:hover {
 	.w-85-m {
 		width: 85%;
 	}
+	.not-allowed-m {
+		cursor: not-allowed;
+	}
 	.w6-m {
 		width: 6rem;
 	}
 	.w11-m {
 		width: 11rem;
+	}
+	.min-vh-75-m {
+		min-height: 75vh;
 	}
 	.pl6-m {
 		padding-left: 6rem;
@@ -250,6 +269,12 @@ a:hover {
 	}
 	.w-85-l {
 		width: 85%;
+	}
+	.not-allowed-l {
+		cursor: not-allowed;
+	}
+	.min-vh-75-l {
+		min-height: 75vh;
 	}
 	.w6-l {
 		width: 6rem;

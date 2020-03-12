@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import { Button } from '@blueprintjs/core';
+import { Button, Toaster } from '@blueprintjs/core';
 import { addAssociate } from 'stores/associate/Actions';
 import { server } from 'config';
 import { useLiveSearch } from 'components/useLiveSearch';
@@ -86,6 +86,13 @@ const AssociateFormEditorComponent = (props: AddAssociateEditorInternalProps) =>
                 setError(response.data.error);
               } else {
                 props.setShowDialog(!props.showDialog);
+                Toaster
+                  .create()
+                  .show({
+                    message: 'Request send successfully',
+                    timeout: 3000,
+                    intent: 'success'
+                  });
               }
             }
           }

@@ -1,5 +1,5 @@
 import {
-  GET_ALL_ASSOCIATE, SELECT_ASSOCIATE, ADD_ASSOCIATE
+  GET_ALL_ASSOCIATE, SELECT_ASSOCIATE, ADD_ASSOCIATE, GET_ALL_PENDING_ASSOCIATE
 } from './Types';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
@@ -14,10 +14,12 @@ export interface Associate {
 export interface AssociateModel {
   currentAssociate: Associate;
   associatesList: Associate[];
+  pendingAssociates: Associate[];
 }
 
 const InitialState = {
   associatesList: [],
+  pendingAssociates: [],
   currentAssociate: {
     _id: '',
     associateCompany: {
@@ -46,6 +48,11 @@ export const AssociateReducer = (state = InitialState, action: any) => {
         ...state,
         associatesList: action.payload
       };
+    case GET_ALL_PENDING_ASSOCIATE:
+      return {
+        ...state,
+        pendingAssociates: action.payload
+      };
     case ADD_ASSOCIATE:
       return {
         ...state,
@@ -54,6 +61,14 @@ export const AssociateReducer = (state = InitialState, action: any) => {
           action.payload
         ]
       };
+    // case ADD_ASSOCIATE_IN_PENDING_LIST:
+    //   return {
+    //     ...state,
+    //     pendingAssociates: [
+    //       ...state.pendingAssociates,
+    //       action.payload
+    //     ]
+    //   };
     case SELECT_ASSOCIATE:
       return {
         ...state,

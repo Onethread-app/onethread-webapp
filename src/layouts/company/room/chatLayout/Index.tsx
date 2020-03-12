@@ -6,7 +6,7 @@ import { Dialog, Position, Popover } from '@blueprintjs/core';
 import { AddMemberForm } from './members/AddMemberForm';
 import { getRoomMembers, archiveRoom } from 'stores/room/Actions';
 import { isEmpty } from 'lodash';
-import { permit } from 'stores/UtilsActions';
+import { projectPermit } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
 import { IRoomReducer } from 'stores/room/Reducer';
 
@@ -65,7 +65,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 										<div>
 											{props.currentRoom.archive ?
 												<>
-													{permit(props.companyRole) ?
+													{projectPermit(props.companyRole) ?
 														<h5 className="ma0 pointer bp3-popover-dismiss"
 															onClick={async () => {
 																await props.archiveRoom({
@@ -77,10 +77,8 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 													}
 												</> :
 												<>
-													<h5 className="gray ma0 mb2 pointer bp3-popover-dismiss"
-														onClick={() => { console.log('mute'); }}
-													>Mute Conversation</h5>
-													{permit(props.companyRole) && <h5 className="red ma0 pointer bp3-popover-dismiss"
+													<h5 className="gray ma0 mb2 pointer bp3-popover-dismiss">Mute Conversation</h5>
+													{projectPermit(props.companyRole) && <h5 className="red ma0 pointer bp3-popover-dismiss"
 														onClick={async () => {
 															await props.archiveRoom({
 																archive: true
@@ -103,7 +101,7 @@ export const ChatLayoutComponent = (props: ChatLayoutComponentProps) => {
 									}
 								/>
 							</div>
-							{permit(props.companyRole) && props.currentRoom.archive === false ?
+							{projectPermit(props.companyRole) && props.currentRoom.archive === false ?
 								<div className="ml2" onClick={() => setShowMemberFormDialog(!showMemberFormDialog)}>
 									<img
 										className="grow"

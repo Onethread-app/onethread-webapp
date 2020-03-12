@@ -26,7 +26,7 @@ const load = async (
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => any,
   getSelectedBoardDetails: (boardId: string) => any,
-  getSelectedTask: (taskId: string) => any
+  getSelectedTask: (taskId: string) => any,
 ) => {
 
   await fetchUser();
@@ -66,6 +66,7 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   getSelectedTaskDetails: (taskId: string) => any;
   company: ICompany;
   rightSidebarOpen: boolean;
+  project: any;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -147,6 +148,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     company={props.company}
                     type={(props.match.params as any).cname ? 'company' : 'default'}
                     leftOpen={leftOpen}
+                    project={props.project}
                   />
                 </div>
               </div>
@@ -211,7 +213,8 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     company: state.companyReducer.currentCompany,
-    rightSidebarOpen: state.layoutReducer.rightSidebar.open
+    rightSidebarOpen: state.layoutReducer.rightSidebar.open,
+    project: state.projectReducer.projectDetails,
   };
 };
 

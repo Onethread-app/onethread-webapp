@@ -3,7 +3,7 @@ import { RoomList } from './RoomList';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { CreateForm } from './Form';
-import { permit } from 'stores/UtilsActions';
+import { projectPermit } from 'stores/UtilsActions';
 import { clearRoomError } from 'stores/room/Actions';
 import { RightSidebar } from 'components/RightSidebar';
 import { InputGroupField } from 'components/fields/InputGroupField';
@@ -30,7 +30,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 			<div className={`flex flex-column h-100 t-25-a pt4 ${props.isOpen ? 'db' : 'dn overflow-hidden'}`}>
 				<div className="flex justify-between items-center ph3">
 					<h3 className="tigrow-darkGray">Rooms</h3>
-					{props.companyRole && permit(props.companyRole) ? (
+					{props.companyRole && projectPermit(props.companyRole) ? (
 						<span className="bp3-icon grow pointer"
 							onClick={() => setShowDialog(!showDialog)}>
 							<img
