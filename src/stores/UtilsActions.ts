@@ -27,6 +27,24 @@ export const tokenConfig = () => {
   };
 };
 
+export const tokenConfigFIleUpload = () => {
+  const token = typeof window !== undefined && localStorage.getItem('tigrow_acc_id') ?
+    JSON.parse(localStorage.getItem('tigrow_acc_id')!) : null;
+  if (!localStorage.getItem('tigrow_acc_id') || !localStorage.getItem('tigrow_real_id')) {
+    localStorage.removeItem('tigrow_acc_id');
+    localStorage.removeItem('tigrow_real_id');
+    Toaster.create().show({ message: 'Token is invalid. Please sign in.', intent: 'danger' });
+    History.push('/signin');
+    window.location.reload(false);
+  }
+  return {
+    headers: {
+      'Content-type': 'application/x-www-form-urlencoded',
+      'Authorization': `Bearer ${token}`
+    }
+  };
+};
+
 export const isAuthenticate = () => {
   if (typeof window === undefined) {
     return false;
