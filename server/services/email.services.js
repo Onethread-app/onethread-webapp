@@ -19,8 +19,8 @@ if (config.env === 'production') {
   host = `http://test.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
 } else if (config.env === 'test4') {
   host = `http://test4.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
-}else{
-  host = `http//localhost:3000`;
+} else {
+  host = `localhost:3000`;
 }
 
 module.exports.sendEmailForResetPassword = async (
