@@ -13,6 +13,8 @@ import team from '../resources/images/sidebarTeam.svg';
 import settings from '../resources/images/sidebarSettings.svg';
 import projects from '../resources/images/ProjectsIcon.svg';
 import associates from '../resources/images/sideBarAssociates.svg';
+import dashboard from '../resources/images/sideBarDashboard.svg';
+
 
 import { Tooltip } from '@blueprintjs/core';
 import { companyPermit } from 'stores/UtilsActions';
@@ -83,6 +85,41 @@ export const Sidebar = (props: {
 					</NavLink>
 				) : (
 						<>
+							<NavLink
+								exact
+								className="flex items-center nowrap ma1 hover-bg-white-20"
+								style={{ color: 'white' }}
+								activeStyle={{ background: '#3F61C5' }}
+								to={`/company/${props.company.name}/dashboard`}
+							>
+								{props.leftOpen ?
+									<span className="pl4">
+										<img
+											src={dashboard}
+											className="w2 pt1"
+										/>
+									</span> :
+									<Tooltip
+										content={<p className="mb0">Dashboard</p>}
+										position="right"
+									>
+										<span className="pl3">
+											<img
+												src={dashboard}
+												className="w2 pt1"
+											/>
+										</span>
+									</Tooltip>
+								}
+								{props.leftOpen &&
+									<span
+										className="outline-0 bp3-large pl4"
+										style={{ color: 'inherit' }}
+									>
+										Dashboard
+								</span>
+								}
+							</NavLink>
 							<NavLink
 								exact
 								className="flex items-center nowrap ma1 hover-bg-white-20"
