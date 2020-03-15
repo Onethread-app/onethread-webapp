@@ -10,6 +10,12 @@ import { User } from 'stores/user/Reducer';
 import { CompanyListView } from '../layouts/company/ListView';
 import { CompanySignupForm } from '../layouts/company/Form';
 import { Icon } from '@blueprintjs/core';
+// import projects from '../resources/images/ProjectsIcon.svg';
+import { tokenConfig } from 'stores/UtilsActions';
+import { tigrowApi } from 'config';
+import Notification from '../layouts/company/notification'
+// import { AxiosResponse } from 'axios';
+
 // import { Notification } from "@blueprintjs/icons";
 
 interface NavbarTopInternalProps {
@@ -18,10 +24,22 @@ interface NavbarTopInternalProps {
   scrollTop: number;
   companyName: string;
   type: string;
+  // data: AxiosResponse< []| undefined> ;
+  // notification: any;
 }
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = React.useState(false);
+  // const [notifications, setNotifications] = React.useState([] as any);
+  const getNotificatrion = async () => {
+    const headers = tokenConfig();
+    const data = await tigrowApi.get(`notifications`, headers);
+    // setNotifications(data);
+    console.log(data);
+  }
+  React.useEffect(() => {
+    getNotificatrion();
+  }, []);
 
   return (
     <>
@@ -54,26 +72,9 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             popoverClassName="bp3-popover-content-sizing bg-white"
             position={Position.BOTTOM}
             content={
-            <main className="mw6 center">
-              <article className="dt w-100 bb b--black-05 pb2 mt2">
-                <div className="dtc w2 w3-ns v-mid">
-                  <img src="http://mrmrs.github.io/photos/p/2.jpg" className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns" />
-                </div>
-                <div className="dtc v-mid pl3">
-                  <h1 className="f6 f5-ns fw6 lh-title black mv0">Young Gatchell </h1>
-                  <h2 className="f6 fw4 mt0 mb0 black-60">@yg</h2>
-                </div>
-              </article>
-              <article className="dt w-100 bb b--black-05 pb2 mt2">
-                <div className="dtc w2 w3-ns v-mid">
-                  <img src="http://mrmrs.github.io/photos/p/2.jpg" className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns" />
-                </div>
-                <div className="dtc v-mid pl3">
-                  <h1 className="f6 f5-ns fw6 lh-title black mv0">Young Gatchell </h1>
-                  <h2 className="f6 fw4 mt0 mb0 black-60">@yg</h2>
-                </div>
-              </article>
-            </main>} target={<Icon icon="notifications" iconSize={25} className="mr3 mr4-l" />} />
+              <Notification type="associates" />
+
+            } target={<Icon icon="notifications" iconSize={25} className="mr3 mr4-l" />} />
           <Popover
             popoverClassName="bp3-popover-content-sizing bg-white"
             position={Position.BOTTOM}
