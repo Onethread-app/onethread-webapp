@@ -7,6 +7,7 @@ import { SubmitError } from 'components/final-form/SubmitError';
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 import { updateProjectName } from '../../../stores/project/Actions';
 
+<<<<<<< HEAD
 interface ChangeNameProps {
   setShowDialog: (val: boolean) => void;
   projectId: string;
@@ -25,6 +26,29 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
       return true;
     }
     return {};
+=======
+interface ChangeNameComponentProps {
+  setShowDialog: (val: boolean) => void;
+  pid: string;
+  updateProjectName: any;
+}
+
+const ChangeNameComponent = (props: ChangeNameComponentProps) => {
+
+  const onSubmit = async (values: any) => {
+
+    console.log(values)
+    props.updateProjectName(values, props.pid)
+    // if (isEmpty(values.about)) {
+    //   values.about = '';
+    // }
+    // const response = await props.editInfoAction(values);
+    // if (response.message === 200) {
+    //   props.setShowDialog(false);
+    //   return true;
+    // }
+    // return { [response.fieldName]: response.message };
+>>>>>>> 1d671409ddb8203ec3a0227306aae35b9ee1a031
   };
 
   return (
