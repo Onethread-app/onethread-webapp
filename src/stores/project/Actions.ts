@@ -27,17 +27,23 @@ export const getAllProjects = () => async (dispatch: any, getState: any) => {
 export const createProject = (payload: any, admin: {_id: ''}) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
-    const companyId = getState().companyReducer.currentCompany._id;
+    // const companyId = getState().companyReducer.currentCompany._id;
+
+    console.log("hiiiiii")
+
+    console.log(headers);
     if ((headers as any).headers.Authorization) {
-      const reqBody = {
-        name: payload.name,
-        type: payload.projectType,
-        departments: typeof payload.departments === 'string' ? [payload.departments] : [...payload.departments] ,
-        companyId,
-        color: payload.color,
-        concernedAdmin: admin._id
-      };
-      const response = await tigrowApi.post(`projects/create`, reqBody, headers);
+      // const reqBody = {
+      //   name: payload.name,
+      //   type: payload.projectType,
+      //   departments: typeof payload.departments === 'string' ? [payload.departments] : [...payload.departments] ,
+      //   companyId,
+      //   color: payload.color,
+      //   concernedAdmin: admin._id
+      // };
+
+      console.log(payload);
+      const response = await tigrowApi.post(`projects/create`, [], headers);
       await dispatch({ type: PROJECT.PROJECT_CREATE, payload: response.data });
       // dispatch({ type: PROJECT.PROJECT_GET_ALL_PROJECTS });
       dispatch(getAllProjects());
