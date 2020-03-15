@@ -19,7 +19,7 @@ interface ChangeNameInternalProps extends ChangeNameProps {
 const ChangeNameComponent = (props: ChangeNameInternalProps) => {
 
   const onSubmit = async (values: any) => {
-    const responseStatus = await  props.updateProjectName(values.name, props.projectId);
+    const responseStatus = await props.updateProjectName(values.name, props.projectId);
     if (responseStatus === 200) {
       props.setShowDialog(false);
       return true;

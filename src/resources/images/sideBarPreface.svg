@@ -1,17 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="75" height="75" viewBox="0 0 75 75">
-
-    <g id="Group_1187" data-name="Group 1187" transform="translate(-392 -219)">
-
-        <rect id="Rectangle_1187" data-name="Rectangle 1187" width="75" height="75" rx="3" transform="translate(392 219)" fill="#fdb64e"/>
-
-        <g id="baseline-poll-24px" transform="translate(409.524 236.944)">
-
-            <path id="Path_2211" data-name="Path 2211" d="M32.2,3H6.651A3.661,3.661,0,0,0,3,6.651V32.2a3.661,3.661,0,0,0,3.651,3.651H32.2A3.661,3.661,0,0,0,35.855,32.2V6.651A3.661,3.661,0,0,0,32.2,3ZM13.952,28.554H10.3V15.777h3.651Zm7.3,0H17.6V10.3h3.651Zm7.3,0H24.9v-7.3h3.651Z" transform="translate(2.476 2.476)" fill="#fff"/>
-
-            <path id="Path_2212" data-name="Path 2212" d="M0,0H43.807V43.807H0Z" fill="none"/>
-
-        </g>
-
+  <g id="Group_1187" data-name="Group 1187" transform="translate(-392 -219)">
+    <rect id="Rectangle_1187" data-name="Rectangle 1187" width="75" height="75" rx="3" transform="translate(392 219)" fill="#fdb64e"/>
+    <g id="baseline-poll-24px" transform="translate(409.524 236.944)">
+      <path id="Path_2211" data-name="Path 2211" d="M32.2,3H6.651A3.661,3.661,0,0,0,3,6.651V32.2a3.661,3.661,0,0,0,3.651,3.651H32.2A3.661,3.661,0,0,0,35.855,32.2V6.651A3.661,3.661,0,0,0,32.2,3ZM13.952,28.554H10.3V15.777h3.651Zm7.3,0H17.6V10.3h3.651Zm7.3,0H24.9v-7.3h3.651Z" transform="translate(2.476 2.476)" fill="#fff"/>
+      <path id="Path_2212" data-name="Path 2212" d="M0,0H43.807V43.807H0Z" fill="none"/>
     </g>
-
+  </g>
 </svg>
