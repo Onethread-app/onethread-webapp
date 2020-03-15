@@ -3,89 +3,24 @@ import { connect } from 'react-redux';
 import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { checkError, maxValue } from 'components/final-form/utils';
-import { isEmpty } from 'lodash';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { fileUploadAction } from 'stores/room/Actions';
+import { addCertificate } from 'stores/company/Actions';
 
 interface ICertificateEditProps {
   setShowDialog: (val: boolean) => void;
-  fileUploadAction: (imageSelected: any, roomID: string) => any;
+  addCertificate: (certificate: {}) => any;
 }
 
 const CertificateEditComponent = (props: ICertificateEditProps) => {
 
-  // const [imageSelected, setImageSelected] = useState({}) as any;
-  // const [imageName, setImageName] = useState({}) as any;
-  // const [imageLoading, setImageLoading] = useState(false);
-  // const [imageError, setImageError] = useState('');
-  // const sizeLimit = 25;
-
   const onSubmit = async (values: any) => {
     window.alert(JSON.stringify(values, null, 2));
-    if (isEmpty(values.name)) {
-      values.name = '';
+    const res = await props.addCertificate(values);
+    if (res === 201) {
+      props.setShowDialog(false);
     }
-    // const response = await props.editInfoAction(values);
-    // if (response.message === 200) {
-    //   props.setShowDialog(false);
-    //   return true;
-    // }
-    // return { [response.fieldName]: response.message };
   };
-
-  // const checkMimetype = [
-  //   'application/zip',
-  //   'application/x-rar-compressed',
-  //   'application/x-7z-compressed',
-  //   'application/x-zip-compressed',
-  //   'application/pdf',
-  //   'application/msword',
-  //   'application/json',
-  //   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-  //   'application/vnd.ms-powerpoint',
-  //   'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-  //   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  //   'application/vnd.ms-excel',
-  //   'text/plain',
-  //   'text/csv',
-  //   'image/webp',
-  //   'image/apng',
-  //   'image/png',
-  //   'image/bmp',
-  //   'image/gif',
-  //   'image/jpeg',
-  //   'image/jpg',
-  //   'image/svg',
-  //   'image/svg+xml',
-  //   'image/bmp',
-  //   'image/vnd.microsoft.icon',
-  // ];
-
-  // const imageChangeHandler = (event: any) => {
-  //   if (event.target.files) {
-  //     const file = event.target.files[0];
-  //     if (file) {
-  //       if (!checkMimetype.includes(file.type)) {
-  //         setImageName('');
-  //         setImageError('This file format is not supported');
-  //         return false;
-  //       } else if (file.size / 1024 / 1024 > sizeLimit) {
-  //         setImageName('');
-  //         setImageError(`File size can't be greater than ${sizeLimit} MB`);
-  //         return false;
-  //       } else {
-  //         const data = new FormData();
-  //         data.append('file', file, file.name);
-  //         setImageName(file);
-  //         setImageSelected(data);
-  //         setImageError('');
-  //         return data;
-  //       }
-  //     }
-  //   }
-  //   return false;
-  // };
 
   return (
     <>
@@ -141,37 +76,12 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
                 </div>
               }
             />
-            {/* <Field<string>
-              name="file"
-              validate={maxValue(32)}
-              render={({ input, meta }) =>
-                <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                  <label>Attach Files</label>
-                  <label className="bp3-file-input .modifier bp3-fill mv1">
-                    <input
-                      type="file"
-                      accept=".gif, .jpg, .apng, .jpeg, .bmp, .svg, .png"
-                      value={input.value}
-                      onChange={(e) => imageChangeHandler(e)}
-                    />
-                    <span className="bp3-file-upload-input">
-                      {imageName.name ? imageName.name : <p>choose your file...</p>}
-                    </span>
-                  </label>
-                  {imageError &&
-                    <small style={{ color: 'red' }}>{imageError}</small>}
-                </div>
-              }
-            /> */}
             <div className="flex justify-end">
               <Button className="w4 grow h2 pointer mr3"
                 style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
                 onClick={(e: any) => {
                   e.preventDefault();
                   props.setShowDialog(false);
-                  // setImageName({});
-                  // setImageLoading(false);
-                  // setImageError('');
                 }}
               >
                 cancel
@@ -181,19 +91,7 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
                 style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
                 loading={submitting}
                 type="submit"
-                onClick={async (e: any) => {
-                  e.preventDefault();
-                  // setImageLoading(true);
-                  // const response = await props.fileUploadAction(imageSelected, '1');
-                  // if (response) {
-                  //   props.setShowDialog(false);
-                  //   setImageName({});
-                  // }
-                  // setImageLoading(false);
-                }}
-                disabled={submitting || pristine
-                  // || imageLoading === true || isEmpty(imageName.name) ? true : false
-                }
+                disabled={submitting || pristine}
               >
                 Save
               </Button>
@@ -204,10 +102,6 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
     </>
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user
-  };
-};
 
-export const CertificateEdit = connect(mapStateToProps, { fileUploadAction })(CertificateEditComponent);
+
+export const CertificateEdit = connect(null, { addCertificate })(CertificateEditComponent);
