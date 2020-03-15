@@ -26,6 +26,9 @@ body {
 .bg-tigrowLightBlue {
 	background-color: #0fa3a3;
 }
+.bg-tigrow-darkBlue {
+	background-color: #3b5998;
+}
 .bg-tigrowNewDarkBlue {
 	background-color: #3b5998;
 }
@@ -36,7 +39,7 @@ body {
 	background-color: #f5f6fa;
 }
 .bg-tigrowDarkBlue {
-	background-color: #10496e;
+	background-color: #3b5998;
 }
 .bg-tigrow {
 	background-color: #f5f6fa;
@@ -45,9 +48,16 @@ body {
 .b--lightBlue {
 	border-color: #0fa3a3;
 }
+.b--tigrow-darkBlue {
+	border-color: #3b5998;
+}
 
 .b--tigrowLightGray-1 {
 	border-color: #d8d8d8;
+}
+
+.tigrow-darkBlue {
+	color: #3b5998;
 }
 
 .tigrow-lightBlue {
@@ -128,6 +138,9 @@ a:hover {
 }
 .left--12 {
 	left: -12px;
+}
+.right--12 {
+	right: -12px;
 }
 .w6 {
 	width: 6rem;

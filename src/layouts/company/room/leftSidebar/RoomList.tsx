@@ -1,35 +1,39 @@
 import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { useDispatch, connect } from 'react-redux';
-import { getRoomMembers, getRoomMessages } from '../../../../stores/room/Actions';
+import { getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions } from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
-	GET_ROOMS,
-	CLEAR_ROOM_MESSAGES,
+	CHANGE_ROOM,
 	ACTIVE_ROOM,
 	ON_PRESENCE_CHANGE,
 	UPDATE_ROOM,
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING,
 	REFRESH_MEMBER,
+	UNREAD_COUNT_ROOMS,
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
-import { IRoom, IRoomMessage } from 'stores/room/Reducer';
+import { IRoom, IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
-interface IRoomListComponentProps extends RouteComponentProps {
+interface IRoomListComponentProps {
 	chatkit?: any;
 	getRoomMembers: (roomId: string) => void;
 	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
+	getRooms: () => void;
+	getRoomSharedFiles: (roomId: string, limit?: number, skip?: number) => void;
+	getRoomDiscussions: (roomId: string, limit?: number, skip?: number) => void;
 	activeRoom: any;
-	roomId: string;
+	currentRoom: IRoomReducer['currentRoom'];
 	rooms: IRoom[];
+	roomsUnreadCount: any;
 	companyId: string;
+	sharedFileMessages: IRoomReducer['sharedFileMessages'];
 }
 
 export const RoomListComponent = withChatkit(
@@ -37,17 +41,19 @@ export const RoomListComponent = withChatkit(
 		const dispatch = useDispatch();
 
 		// tslint:disable-next-line: no-shadowed-variable
-		const subscribeToRoom = async (roomId: string, name: string) => {
+		const subscribeToRoom = async (room: IRoom) => {
 			if (!props.chatkit.isLoading) {
-				dispatch({ type: CLEAR_ROOM_MESSAGES });
-				dispatch({ type: CURRENT_ROOM, payload: { roomId, name } });
+				dispatch({ type: CHANGE_ROOM });
+				dispatch({ type: CURRENT_ROOM, payload: room });
 
-				await props.getRoomMessages(roomId);
-				await props.getRoomMembers(roomId);
+				await props.getRoomMessages(room._id);
+				await props.getRoomMembers(room._id);
+				await props.getRoomSharedFiles(room._id);
+				await props.getRoomDiscussions(room._id);
 
 				props.chatkit.currentUser
 					.subscribeToRoomMultipart({
-						roomId: roomId.toString(),
+						roomId: room._id.toString(),
 						hooks: {
 							onMessage: (newMessage: any) => {
 								const content = JSON.parse(newMessage.parts[0].payload.content);
@@ -59,6 +65,7 @@ export const RoomListComponent = withChatkit(
 									_id: content.message._id,
 									text: content.message.text,
 									room: content.message.room,
+									discussion: content.message.discussion,
 									account: content.account,
 									chatkitId: newMessage.id,
 									createdAt: newMessage.createdAt,
@@ -73,13 +80,13 @@ export const RoomListComponent = withChatkit(
 							onUserStartedTyping: (user: any) => {
 								dispatch({
 									type: ON_USER_STARTED_TYPING,
-									payload: { name: user.name, roomId }
+									payload: { name: user.name, roomId: room._id }
 								});
 							},
 							onUserStoppedTyping: (user: any) => {
 								dispatch({
 									type: ON_USER_STOPPED_TYPING,
-									payload: { name: user.name, roomId }
+									payload: { name: user.name, roomId: room._id }
 								});
 							},
 							onUserJoined: (user: any) => {
@@ -92,11 +99,11 @@ export const RoomListComponent = withChatkit(
 						},
 						messageLimit: 1
 					})
-					.then((room: any) => {
-						dispatch({ type: ACTIVE_ROOM, payload: room });
+					.then((pusherRoom: any) => {
+						dispatch({ type: ACTIVE_ROOM, payload: pusherRoom });
 					})
 					.catch((err: any) => {
-						subscribeToRoom(roomId, name);
+						subscribeToRoom(room);
 					});
 			}
 		};
@@ -118,43 +125,26 @@ export const RoomListComponent = withChatkit(
 			}
 		};
 
+		const load = async (_getRooms: any) => {
+			await _getRooms();
+		};
+
 		useEffect(() => {
 			if (!props.chatkit.isLoading && props.companyId) {
 				connectChatManager();
 
-				// filteredRooms
-				// tslint:disable-next-line: no-shadowed-variable
-				const rooms = props.chatkit.currentUser.rooms
+				load(props.getRooms);
+
+				const roomsUnreadCount = {};
+				props.chatkit.currentUser.rooms
 					.filter((room: any) => room.customData.company === props.companyId)
-					.map((room: any) => ({
-						id: room.id,
-						name: room.name,
-						unreadCount: room.unreadCount,
-						company: room.customData.company,
-						createdByUserId: room.createdByUserId,
-						createdAt: room.createdAt,
-						updatedAt: room.updatedAt
-					}));
+					.forEach((room: any) => {
+						roomsUnreadCount[room.id] = room.unreadCount;
+					});
 
-				dispatch({ type: GET_ROOMS, payload: rooms });
-
+				dispatch({ type: UNREAD_COUNT_ROOMS, payload: roomsUnreadCount });
 			}
 		}, [props.chatkit]);
-
-		// TODO [TEST-1] I have to test typing indicator by removing this block
-		// useEffect(() => {
-		// 	if (!props.chatkit.isLoading) {
-		// 		for (const roomId in props.chatkit.currentUser.roomSubscriptions) {
-		// 			if (
-		// 				props.chatkit.currentUser.roomSubscriptions.hasOwnProperty(roomId)
-		// 			) {
-		// 				const room = props.chatkit.currentUser.roomSubscriptions[roomId];
-		// 				room.cancel();
-		// 				room.connected = false;
-		// 			}
-		// 		}
-		// 	}
-		// }, [companyId]);
 
 		const roomBgColor = ['#D8315B', '#9F7DE8', '#0FA3A3', '#456990', '#CDA2AB', '#FE5E41'];
 
@@ -171,13 +161,10 @@ export const RoomListComponent = withChatkit(
 							props.rooms.map((room: IRoom, i: number, arr: any) => {
 								return (
 									<RoomListItem
-										key={room.id}
-										roomId={room.id}
-										img={room.name[0]}
-										name={room.name}
-										unreadCount={room.unreadCount}
-										lastChild={isEqual(room.id, arr[props.rooms.length - 1].id)}
-										active={room.id === props.roomId}
+										key={room._id}
+										room={room}
+										lastChild={isEqual(room._id, arr[props.rooms.length - 1].id)}
+										active={room._id === props.currentRoom._id}
 										subscribeToRoom={subscribeToRoom}
 										iconBgColor={roomBgColor[i % roomBgColor.length]}
 									/>
@@ -193,12 +180,13 @@ export const RoomListComponent = withChatkit(
 
 const mapStateToProps = (state: any) => {
 	return {
-		roomId: state.roomReducer.roomId,
+		currentRoom: state.roomReducer.currentRoom,
 		rooms: state.roomReducer.rooms,
-		companyId: state.companyReducer.currentCompany._id
+		roomsUnreadCount: state.roomReducer.roomsUnreadCount,
+		companyId: state.companyReducer.currentCompany._id,
+		sharedFiles: state.roomReducer.sharedFiles,
 	};
 };
 
-export const RoomList = connect(mapStateToProps, { getRoomMembers, getRoomMessages })(
-	withRouter(RoomListComponent)
-);
+export const RoomList = connect(mapStateToProps,
+	{ getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions })(RoomListComponent);
