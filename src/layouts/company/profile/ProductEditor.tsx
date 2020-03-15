@@ -1,92 +1,139 @@
-import { Button } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import React from 'react';
-import { Form, Field } from 'react-final-form';
-import { checkError, maxValue } from 'components/final-form/utils';
-import { isEmpty } from 'lodash';
-import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
-import { SubmitError } from 'components/final-form/SubmitError';
-interface IProductEditProps {
+import React, { useState, useEffect } from 'react';
+import { ItemEntityProps, SuggestField } from 'components/fields/SuggestField';
+import { tokenConfig } from 'stores/UtilsActions';
+import { Tag, Button } from '@blueprintjs/core';
+import { isEqual, isEmpty, lowerCase } from 'lodash';
+import { useLiveSearch } from 'components/useLiveSearch';
+import { useSelector, connect } from 'react-redux';
+import { tigrowApi, server } from 'config';
+interface ProductEditProps {
+  // addProductAction: (productSet: string[]) => void;
   setShowDialog: (val: boolean) => void;
+  showDialog: boolean;
 }
 
-const ProductEditComponent = (props: IProductEditProps) => {
+export const ProductEditComponent = (props: ProductEditProps) => {
 
-  const onSubmit = async (values: any) => {
-    if (isEmpty(values.product)) {
-      values.product = '';
+  const userSkills = useSelector((state: any) => state.userReducer.user.skillArea);
+  const [skills, setSkills] = useState([] as ItemEntityProps[]);
+  const [selectedSkills, setSelectedSkills] = useState([] as ItemEntityProps[]);
+  const [searchName, setSearchName] = useState('');
+
+  const addNewSkill = async (newSkill: {}) => {
+    try {
+      let response;
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        response = await tigrowApi.post('/skills', newSkill, headers);
+        setSelectedSkills([...selectedSkills, response.data.skillInfo]);
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log('no headers');
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log(error.response);
+      }
     }
-    // const response = await props.editInfoAction(values);
-    // if (response.message === 200) {
-    //   props.setShowDialog(false);
-    //   return true;
-    // }
-    // return { [response.fieldName]: response.message };
   };
+
+  const userRequestFactory = (userName: string): Promise<any> => {
+    const headers = tokenConfig();
+    return fetch(`${server}skills/search?name=${userName}`, headers)
+      .then((res) => res.json())
+      .then((res) => res.data)
+      .catch((err) => []);
+  };
+
+  let result: any = [];
+  result = useLiveSearch(searchName, userRequestFactory, 800);
+
+  useEffect(() => {
+    setSkills(result);
+  }, [result]);
 
   return (
-    <>
-      <Form
-        onSubmit={onSubmit}
-        initialValues={{
-          product: ''
-        }}
-        render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
-          <form
-            className="ph4 pt6"
-            onSubmit={handleSubmit}
-          >
-            <SubmitError errorMessage={submitError} />
-            <h1 className="f5 lh-copy white pb4">Add Products/Services</h1>
-            <Field<string>
-              name="product"
-              validate={maxValue(32)}
-              render={({ input, meta }) =>
-                <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                  <label>Project/Service Name</label>
-                  <InputGroupFieldWithError
-                    id="product"
-                    className="mt1 ba"
-                    value={input.value}
-                    onChange={input.onChange}
-                    style={{
-                      boxShadow: 'none'
-                    }}
-                    error={checkError(meta) && (meta.error || meta.submitError)}
-                  />
-                </div>
-              }
-            />
-            <div className="flex justify-end">
-              <Button className="w4 grow h2 pointer mr3"
-                style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
-                onClick={(e: any) => {
-                  e.preventDefault();
-                  props.setShowDialog(false);
-                }}
-              >
-                cancel
-              </Button>
-              <Button
-                className="w4 grow h2 pointer"
-                style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
-                loading={submitting}
-                type="submit"
-                disabled={submitting || pristine}
-              >
-                Save
-          </Button>
-            </div>
-          </form>
-        )}
-      />
-    </>
+    <div className="ph4 pt6">
+      <h1 className="f5 lh-copy">Add Products/Services</h1>
+      <div className="fl w-100 pv2">
+        <SuggestField
+          onChange={(query: string) => {
+            setSearchName(query);
+          }}
+          items={skills}
+          selectedItems={selectedSkills}
+          setSelectedItems={setSelectedSkills}
+          multipleItemSelect={true}
+          isCreatable={
+            isEmpty(skills.filter((item) => (
+              searchName === item.name)))
+              &&
+              isEmpty(userSkills.filter((item: ItemEntityProps) => (
+                lowerCase(searchName) === item.name
+              )))
+              ? true : false
+          }
+          isCreatableAPI={addNewSkill}
+        />
+        <div className="fl w-100 mb2">
+          {selectedSkills.map((item) => (
+            <Tag
+              key={item._id}
+              className="ma1 pa2"
+              interactive={true}
+              intent="primary"
+              onRemove={(e) => {
+                const filteredSkills = selectedSkills.filter((selectedItem) => (
+                  item.name !== selectedItem.name
+                ));
+                setSelectedSkills([
+                  ...filteredSkills
+                ]);
+              }}
+              large={true}
+            >
+              {item.name}
+            </Tag>
+          ))}
+        </div>
+        <div className="fl w-100 mt4">
+          <div className="flex justify-end">
+            <Button className="w4 grow h2 pointer mr3"
+              onClick={(e: any) => {
+                e.preventDefault();
+                props.setShowDialog(false);
+              }}
+              style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
+            >
+              cancel
+            </Button>
+            <Button
+              type="submit"
+              onClick={async (e: any) => {
+                e.preventDefault();
+                const skillSet: string[] = [];
+                selectedSkills.map((selected) => {
+                  skillSet.push(selected._id!);
+                });
+                if (skillSet.length > 0) {
+                  // await props.addProductAction(skillSet);
+                  props.setShowDialog(!props.showDialog);
+                }
+              }}
+              className="w4 grow h2 pointer"
+              style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
+            >
+              Save
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user
-  };
-};
 
-export const ProductEdit = connect(mapStateToProps, null)(ProductEditComponent);
+export const ProductEdit = connect(null, null)(ProductEditComponent);
