@@ -8,8 +8,12 @@ import { Divider } from '@blueprintjs/core';
 import { ProductEdit } from './ProductEditor';
 import { CertificateEdit } from './CertificateEditor';
 import { OrganizationEdit } from './ParentOrganizationEditor';
+import { ICompany } from 'stores/company/Reducer';
 
-const AdvancedInfoComponent = () => {
+interface AdvancedInfoInternalProps {
+  company?: ICompany;
+}
+const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
 
   const [showProductDialog, setShowProductDialog] = useState(false);
   const [showCertificateDialog, setShowCertificateDialog] = useState(false);
@@ -53,6 +57,13 @@ const AdvancedInfoComponent = () => {
             <div>
               <h1 className="f5 fw6 ma0">StartUp of the Year</h1>
               <h1 className="f6 silver fw6">When every question has countless different answers</h1>
+              {props.company && props.company.certificate && props.company.certificate.length > 0 ?
+                props.company.certificate.map((certificate: any) => (
+                  <div>
+                    <h1 className="f5 fw6 ma0">{certificate.name}</h1>
+                    <h1 className="f6 silver fw6">{certificate.description}</h1>
+                  </div>
+                )) : <h1>No certificates</h1>}
             </div>
             <div>
               <img
@@ -89,41 +100,53 @@ const AdvancedInfoComponent = () => {
           <div
             className="outline-0"
           >
-            <h1 className="f5 fw6">
-              child
-			    </h1>
+            {props.company && props.company.parentOrg && props.company.parentOrg.length > 0 ?
+              props.company.parentOrg.map((parentOrg: any) => (
+                <h1 key={parentOrg._id} className="f5 fw6">{parentOrg.name}</h1>)) : <h1>No organizations</h1>}
           </div>
         </div>
       </div>
-      {showProductDialog && (
-        <RightSidebar
-          onClose={() => setShowProductDialog(!showProductDialog)}
-        >
-          <div>
-            <ProductEdit setShowDialog={setShowProductDialog} showDialog={showProductDialog}/>
-          </div>
-        </RightSidebar>
-      )}
-      {showCertificateDialog && (
-        <RightSidebar
-          onClose={() => setShowCertificateDialog(!showCertificateDialog)}
-        >
-          <div>
-            <CertificateEdit setShowDialog={setShowCertificateDialog}  />
-          </div>
-        </RightSidebar>
-      )}
-      {showOrganizationDialog && (
-        <RightSidebar
-          onClose={() => setShowOrganizationDialog(!showOrganizationDialog)}
-        >
-          <div>
-            <OrganizationEdit setShowDialog={setShowOrganizationDialog} />
-          </div>
-        </RightSidebar>
-      )}
+      {
+        showProductDialog && (
+          <RightSidebar
+            onClose={() => setShowProductDialog(!showProductDialog)}
+          >
+            <div>
+              <ProductEdit setShowDialog={setShowProductDialog} showDialog={showProductDialog} />
+            </div>
+          </RightSidebar>
+        )
+      }
+      {
+        showCertificateDialog && (
+          <RightSidebar
+            onClose={() => setShowCertificateDialog(!showCertificateDialog)}
+          >
+            <div>
+              <CertificateEdit setShowDialog={setShowCertificateDialog} />
+            </div>
+          </RightSidebar>
+        )
+      }
+      {
+        showOrganizationDialog && (
+          <RightSidebar
+            onClose={() => setShowOrganizationDialog(!showOrganizationDialog)}
+          >
+            <div>
+              <OrganizationEdit setShowDialog={setShowOrganizationDialog} />
+            </div>
+          </RightSidebar>
+        )
+      }
     </>
   );
 };
 
-export const AdvancedInfo = connect(null, null)(AdvancedInfoComponent);
+const mapStateToProps = (state: any) => {
+  return {
+    company: state.companyReducer.currentCompany
+  };
+};
+
+export const AdvancedInfo = connect(mapStateToProps, null)(AdvancedInfoComponent);
