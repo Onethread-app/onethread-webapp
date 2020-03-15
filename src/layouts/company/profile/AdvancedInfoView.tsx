@@ -87,21 +87,11 @@ const AdvancedInfoComponent = () => {
           </div>
           <Divider />
           <div
-            className="bp3-minimal outline-0 bp3-popover-dismiss"
+            className="outline-0"
           >
-            <div className="dtc w2 w3-ns">
-              <h1 className="db w2 w3-ns h2 h3-ns br-100 ba b--black-10 bg-blue white tc f3 pt3">
-                a
-              </h1>
-            </div>
-            <div className="dtc v-mid pl3">
-              <h1 className="f5 lh-title black mv0">
-                tigrow
-              </h1>
-              <h1 className="f7 f6-ns lh-title silver">
-                Business Type
-              </h1>
-            </div>
+            <h1 className="f5 fw6">
+              child
+			    </h1>
           </div>
         </div>
       </div>
@@ -110,7 +100,7 @@ const AdvancedInfoComponent = () => {
           onClose={() => setShowProductDialog(!showProductDialog)}
         >
           <div>
-            <ProductEdit setShowDialog={setShowProductDialog} />
+            <ProductEdit setShowDialog={setShowProductDialog} showDialog={showProductDialog}/>
           </div>
         </RightSidebar>
       )}
@@ -119,7 +109,7 @@ const AdvancedInfoComponent = () => {
           onClose={() => setShowCertificateDialog(!showCertificateDialog)}
         >
           <div>
-            <CertificateEdit setShowDialog={setShowCertificateDialog} />
+            <CertificateEdit setShowDialog={setShowCertificateDialog}  />
           </div>
         </RightSidebar>
       )}
