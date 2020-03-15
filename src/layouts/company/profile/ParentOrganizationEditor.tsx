@@ -1,38 +1,41 @@
 import { Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, Field } from 'react-final-form';
 import { checkError, maxValue } from 'components/final-form/utils';
-import { isEmpty } from 'lodash';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
+import { addOrganization, getCompanyDetails } from 'stores/company/Actions';
+import { ICompany } from 'stores/company/Reducer';
 
 interface IOrganizationEditProps {
   setShowDialog: (val: boolean) => void;
+  addOrganization: (parentcom: {}) => any;
+  getCompanyDetails: (companyName: string) => void;
+  company: ICompany;
 }
 
 const OrganizationEditComponent = (props: IOrganizationEditProps) => {
 
+  useEffect(() => {
+    async function loadOrganization(getCompanyDetails: (companyName: string) => void) {
+      await getCompanyDetails(props.company.name);
+    }
+    loadOrganization(props.getCompanyDetails);
+  }, []);
+
   const onSubmit = async (values: any) => {
     window.alert(JSON.stringify(values, null, 2));
-    if (isEmpty(values.product)) {
-      values.product = '';
+    const response = await props.addOrganization(values);
+    if (response === 201) {
+      props.setShowDialog(false);
     }
-    // const response = await props.editInfoAction(values);
-    // if (response.message === 200) {
-    //   props.setShowDialog(false);
-    //   return true;
-    // }
-    // return { [response.fieldName]: response.message };
   };
 
   return (
     <>
       <Form
         onSubmit={onSubmit}
-        initialValues={{
-          organization: ''
-        }}
         render={({ handleSubmit, form, submitting, pristine, values, submitError, hasValidationErrors, ...rest }) => (
           <form
             className="ph4 pt6"
@@ -41,13 +44,13 @@ const OrganizationEditComponent = (props: IOrganizationEditProps) => {
             <SubmitError errorMessage={submitError} />
             <h1 className="f5 lh-copy white pb4">Parent Organizations</h1>
             <Field<string>
-              name="organization"
+              name="parentcom"
               validate={maxValue(32)}
               render={({ input, meta }) =>
                 <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                   <label>Company Name</label>
                   <InputGroupFieldWithError
-                    id="organization"
+                    id="parentcom"
                     className="mt1 ba"
                     value={input.value}
                     onChange={input.onChange}
@@ -87,8 +90,10 @@ const OrganizationEditComponent = (props: IOrganizationEditProps) => {
 };
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user
+    company: state.companyReducer.currentCompany
   };
 };
 
-export const OrganizationEdit = connect(mapStateToProps, null)(OrganizationEditComponent);
+export const OrganizationEdit = connect(mapStateToProps, {
+  addOrganization, getCompanyDetails
+})(OrganizationEditComponent);
