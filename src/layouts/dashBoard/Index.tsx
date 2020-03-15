@@ -15,7 +15,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
 
   return (
     <>
-      <div className="flex justify-around">
+      <div className="flex justify-around mh4">
         <Card className="w-25 ma2">
           <h1 className="f6 fw6">Total running project</h1>
           <h1 className="mv0">10</h1>
@@ -33,7 +33,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           <h1 className="mv0">10</h1>
         </Card>
       </div>
-      <Card className="w-50 ma2">
+      <Card className="w-50 ma2"
+        style={{ margin: '10px 40px' }}
+      >
         <h1 className="f5">Company Announcement</h1>
         <div className="flex items-center">
           <div className="w2 h2 bg-red br3"></div>
