@@ -33,7 +33,9 @@ import {
 	GET_ALL_COMPANY_PENDING_MEMBERS,
 	UPDATE_ALL_COMPANY_PENDING_MEMBERS,
 	DELETE_TEAM_MEMBER,
-	DELETE_TEAM_MEMBER_ERROR
+	DELETE_TEAM_MEMBER_ERROR,
+	ADD_CERTIFICATE,
+	ADD_ORGANIZATION
 } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -45,6 +47,7 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`company/${name}`, headers);
+			console.log(response);
 			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
 			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
 			return response;
@@ -502,12 +505,12 @@ export const companyOptionalRole = (values: { optionalRole: string[] }) => async
 				});
 		} else {
 			Toaster
-        .create()
-        .show({
-          message: error.response.data.errors[0].message,
-          intent: 'danger',
-          timeout: 300000,
-        });
+				.create()
+				.show({
+					message: error.response.data.errors[0].message,
+					intent: 'danger',
+					timeout: 300000,
+				});
 		}
 	}
 };
@@ -531,3 +534,55 @@ export const getCompanyPendingMembers =
 			console.log(error);
 		}
 	};
+
+export const addCertificate = (certificate: any) => async (
+	dispatch: any,
+	getState: any
+) => {
+	try {
+		const headers = tokenConfig();
+		let response;
+		if ((headers as any).headers.Authorization) {
+			const companyId = getState().companyReducer.currentCompany._id;
+			response = await tigrowApi.post(
+				`company/${companyId}/certification`,
+				certificate,
+				headers
+			);
+			dispatch({ type: ADD_CERTIFICATE, payload: certificate });
+			return response.status;
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in adding certificate');
+		}
+		return;
+	} catch (error) {
+		return false;
+	}
+};
+
+export const addOrganization = (organization: any) => async (
+	dispatch: any,
+	getState: any
+) => {
+	try {
+		const headers = tokenConfig();
+		let response;
+		if ((headers as any).headers.Authorization) {
+			const companyId = getState().companyReducer.currentCompany._id;
+			response = await tigrowApi.post(
+				`company/${companyId}/parentorg`,
+				organization,
+				headers
+			);
+			dispatch({ type: ADD_ORGANIZATION, payload: organization });
+			return response.status;
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in adding organization');
+		}
+		return;
+	} catch (error) {
+		return false;
+	}
+};
