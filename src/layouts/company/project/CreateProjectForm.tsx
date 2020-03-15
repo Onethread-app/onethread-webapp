@@ -10,7 +10,7 @@ import { boardColor, Entity } from 'stores/UtilsActions';
 import { isEqual, isEmpty, map } from 'lodash';
 import { Condition } from 'components/final-form/Condition';
 import { SuggestFieldWithError } from 'components/fields/SuggestField';
-import { ICompanyTeamMembers, ICompany } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { createProject } from '../../../stores/project/Actions';
 import { getAllDepartments } from '../../../stores/company/Actions';
@@ -18,29 +18,38 @@ import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 import { Associate } from 'stores/associate/Reducer';
 
+const projectType = [
+  { _id: 'associates', name: 'Associates' }
+];
+
+const associateNo = [
+  { _id: 'oneToFive', name: '1-5' },
+  { _id: 'sixToTen', name: '6-10' },
+  { _id: 'elevenToFifteen', name: '11-15' }
+];
+
 const FormComponent = (props: {
   setShowProjectDialog: (val: boolean) => void;
-  projectType: Entity[];
   departments: [];
   createProject: any;
   company: ICompany;
+  associates: Associate[];
 }) => {
-  
+
   const [labelColor, setLabelColor] = useState(null as any);
-  const [departments, setDepartments]: any = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState([] as Entity[]);
-  const [associates, setAssociates]: any = useState([]);
   const [selectedAssociates, setSelectedAssociates] = useState([] as Entity[]);
-  const [admins, setAdmins]: any = useState([]);
+  const [admins, setAdmins] = useState([]);
   const [selectedAdmins, setSelectedAdmins] = useState([] as Entity[]);
   const [search, setSearch] = useState('');
-  
+
   const onSubmit = async (values: any) => {
-    await props.createProject(values, selectedAdmins);
-    if (props.setShowProjectDialog) {
-      props.setShowProjectDialog(false);
-    }
-    return {};
+    console.log(`values: `, values);
+    // await props.createProject(values, selectedAdmins);
+    // if (props.setShowProjectDialog) {
+    //   props.setShowProjectDialog(false);
+    // }
+    // return {};
   };
 
   const userRequestFactory = async (userName: string) => {
@@ -53,16 +62,8 @@ const FormComponent = (props: {
   result = useLiveSearch(search, userRequestFactory, 0);
 
   useEffect(() => {
-    setDepartments(result);
-    setAssociates(result);
     setAdmins(result);
   }, [result]);
-
-  const associateNo = [
-    { _id: 'oneToFive', name: '1-5' },
-    { _id: 'sixToTen', name: '6-10' },
-    { _id: 'elevenToFifteen', name: '11-15' }
-  ];
 
   return (
     <>
@@ -97,16 +98,13 @@ const FormComponent = (props: {
               />
               <Field<string>
                 name="projectType"
-                validate={required}
+                // validate={required}
                 render={({ input, meta }) =>
                   <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
                     <DropdownFieldErrorWithLabel
                       id={input.name}
                       selectedValue={input.value}
-                      options={
-                        props.projectType && props.projectType.length > 0 ?
-                          props.projectType : [] as any
-                      }
+                      options={projectType}
                       onChange={input.onChange}
                       error={checkError(meta) && (meta.error || meta.submitError)}
                       label="ProjectType"
@@ -115,6 +113,90 @@ const FormComponent = (props: {
                   </div>
                 }
               />
+              <Condition
+                when="projectType"
+                validate={(value => {
+                  return [
+                    'associates'
+                  ].includes(value);
+                })}
+              >
+                <Field<string>
+                  name="associate"
+                  // validate={required}
+                  render={({ input, meta }) =>
+                    <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
+                      <div className="w-100 pb2">
+                        <div className="mb1">
+                          <p className="fw5" style={{ fontSize: '.8rem' }}>Select Your Associate Companies</p>
+                        </div>
+                        <SuggestFieldWithError
+                          onChange={(query: string) => {
+                            setSearch(query);
+                          }}
+                          // items={associates}
+                          items={props.associates.map(associate => associate.associateCompany)}
+                          selectedItems={selectedAssociates}
+                          setSelectedItems={(item) => {
+                            input.onChange(item);
+                            setSelectedAssociates(item);
+                            // input.onChange(item.map((associate: Associate) => associate._id));
+                          }}
+                          multipleItemSelect={true}
+                          error={checkError(meta) && (meta.error || meta.submitError)}
+                        />
+                      </div>
+                      {selectedAssociates.map(associate => (
+                        <div>
+                          <div className="flex justify-between pt2">
+                            <p className="f7">Name</p>
+                            <p className="f7">*Number of Associates</p>
+                          </div>
+                          <div className="flex flex-column justify-between pt2">
+                            {/* {selectedAssociates.map(associate => ( */}
+                            <div className="flex">
+                              <Tag
+                                key={associate._id}
+                                className="pa1"
+                                interactive={true}
+                                onRemove={(e) => {
+                                  const filteredAssociates = selectedAssociates.filter((selectedItem: any) => (
+                                    associate.name !== selectedItem.name
+                                  ));
+                                  setSelectedAssociates([
+                                    ...filteredAssociates
+                                  ]);
+                                }}
+                                large={true}
+                                intent="primary"
+                              >
+                                {associate.name}
+                              </Tag>
+                              <Field<string>
+                                name="associateNo"
+                                // validate={required}
+                                render={() =>
+                                  <DropdownFieldWithError
+                                    id={input.name}
+                                    selectedValue={input.value}
+                                    onChange={input.onChange}
+                                    options={
+                                      associateNo
+                                    }
+                                    error={checkError(meta) && (meta.error || meta.submitError)}
+                                    className="bn"
+                                  />
+                                }
+                              />
+                            </div>
+
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  }
+                />
+              </Condition>
               <div>
                 <Field<string>
                   name="admin"
@@ -181,52 +263,15 @@ const FormComponent = (props: {
                   }
                 />
               </div>
-              <Condition
-                when="projectType"
-                validate={(value => {
-                  return [
-                    'sd'
-                  ].includes(value);
-                })}
-              >
-                <div className="mb4">
-                  <Field<string>
-                    name="departments"
-                    validate={required}
-                    render={({ input, meta }) =>
-                      <DropdownFieldErrorWithLabel
-                        id={input.name}
-                        selectedValue={input.value}
-                        options={
-                          props.departments && props.departments.length > 0 ?
-                            props.departments : [] as any
-                        }
-                        onChange={input.onChange}
-                        leftIcon="comparison"
-                        label="Department Name"
-                        error={checkError(meta) && (meta.error || meta.submitError)}
-                        className="bn"
-                      />
-                    }
-                  />
-                </div>
-              </Condition>
-              <Condition
-                when="projectType"
-                validate={(value => {
-                  return [
-                    'md'
-                  ].includes(value);
-                })}
-              >
+              <div>
                 <Field<string>
-                  name="departments"
+                  name="department"
                   validate={required}
-                  render={({ input, meta }) =>
+                  render={({ meta, input }) =>
                     <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
                       <div className="fl w-100 pb2">
                         <div className="mb1">
-                          <p className="fw5" style={{ fontSize: '.8rem' }}>Department Name</p>
+                          <p className="fw5" style={{ fontSize: '.8rem' }}>Select Departments</p>
                         </div>
                         <SuggestFieldWithError
                           onChange={(query: string) => {
@@ -237,7 +282,7 @@ const FormComponent = (props: {
                           setSelectedItems={(item) => {
                             input.onChange(item);
                             setSelectedDepartment(item);
-                            input.onChange(item.map((department: any) => department._id));
+                            // input.onChange(item.map((dept: ICompanyTeamMembers) => dept._id));
                           }}
                           multipleItemSelect={true}
                           error={checkError(meta) && (meta.error || meta.submitError)}
@@ -269,7 +314,7 @@ const FormComponent = (props: {
                                     input.onChange(
                                       isEmpty(filteredItems) ?
                                         undefined :
-                                        filteredItems.map((department: any) => department._id));
+                                        filteredItems.map((dept: Entity) => dept._id));
                                   }}
                                   large={true}
                                   intent="primary"
@@ -284,193 +329,7 @@ const FormComponent = (props: {
                     </div>
                   }
                 />
-              </Condition>
-              <Condition
-                when="projectType"
-                validate={(value => {
-                  return [
-                    'associates'
-                  ].includes(value);
-                })}
-              >
-                <Field<string>
-                  name="associate"
-                  validate={required}
-                  render={({ input, meta }) =>
-                    <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                      <div className="w-100 pb2">
-                        <div className="mb1">
-                          <p className="fw5" style={{ fontSize: '.8rem' }}>Select Your Associate Companies</p>
-                        </div>
-                        <SuggestFieldWithError
-                          onChange={(query: string) => {
-                            setSearch(query);
-                          }}
-                          items={associates}
-                          selectedItems={selectedAssociates}
-                          setSelectedItems={(item) => {
-                            input.onChange(item);
-                            setSelectedAssociates(item);
-                            input.onChange(item.map((associate: Associate) => associate._id));
-                          }}
-                          multipleItemSelect={true}
-                          error={checkError(meta) && (meta.error || meta.submitError)}
-                        />
-                      </div>
-                      <div >
-                        <div className="flex justify-between pt2">
-                          <p className="f7">Name</p>
-                          <p className="f7">*Number of Associates</p>
-                        </div>
-                        <div className="flex justify-between pt2">
-                          <Tag
-                            // key={item._id}
-                            className="pa1"
-                            interactive={true}
-                            // onRemove={(e) => {
-                            //   const filteredItems = selectedAssociates.filter((selectedItem) => (
-                            //               item.name !== selectedItem.name
-                            //             ));
-                            //   setSelectedAssociates([
-                            //     ...filteredItems
-                            //   ]);
-                            //   input.onChange(
-                            //     isEmpty(filteredItems) ?
-                            //       undefined :
-                            //       filteredItems.map((associate: ICompanyTeamMembers) => associate._id));
-                            // }}
-                            large={true}
-                            intent="primary"
-                          >
-                            ami
-                          </Tag>
-                          <Field<string>
-                            name="associateNo"
-                            validate={required}
-                            render={() =>
-                              <DropdownFieldWithError
-                                id={input.name}
-                                selectedValue={input.value}
-                                onChange={input.onChange}
-                                options={
-                                  associateNo
-                                }
-                                error={checkError(meta) && (meta.error || meta.submitError)}
-                                className="bn"
-                              />
-                            }
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <Field<string>
-                          name="department"
-                          validate={required}
-                          render={() =>
-                            <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                              <div className="fl w-100 pb2">
-                                <div className="mb1">
-                                  <p className="fw5" style={{ fontSize: '.8rem' }}>Select Departments</p>
-                                </div>
-                                <SuggestFieldWithError
-                                  onChange={(query: string) => {
-                                    setSearch(query);
-                                  }}
-                                  items={departments}
-                                  selectedItems={selectedDepartment}
-                                  setSelectedItems={(item) => {
-                                    input.onChange(item);
-                                    setSelectedDepartment(item);
-                                    input.onChange(item.map((dept: ICompanyTeamMembers) => dept._id));
-                                  }}
-                                  multipleItemSelect={true}
-                                  error={checkError(meta) && (meta.error || meta.submitError)}
-                                />
-                              </div>
-                              {selectedDepartment.length > 0 &&
-                                <div className="w-100">
-                                  <div
-                                    className="overflow-auto br2"
-                                    style={{
-                                      border: '1px solid #707070',
-                                      maxHeight: '120px',
-                                      background: '#707070'
-                                    }}>
-                                    {selectedDepartment.map((item) => (
-                                      <div>
-                                        <Tag
-                                          key={item._id}
-                                          className="pa1"
-                                          interactive={true}
-                                          style={{ background: '#707070' }}
-                                          onRemove={(e) => {
-                                            const filteredItems = selectedDepartment.filter((selectedItem) => (
-                                              item.name !== selectedItem.name
-                                            ));
-                                            setSelectedDepartment([
-                                              ...filteredItems
-                                            ]);
-                                            input.onChange(
-                                              isEmpty(filteredItems) ?
-                                                undefined :
-                                                filteredItems.map((dept: Entity) => dept._id));
-                                          }}
-                                          large={true}
-                                          intent="primary"
-                                        >
-                                          {item.name}
-                                        </Tag>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
-                              }
-                            </div>
-                          }
-                        />
-                      </div>
-                      {selectedDepartment.length > 0 &&
-                        <div className="w-100">
-                          <div
-                            className="overflow-auto br2"
-                            style={{
-                              border: '1px solid #707070',
-                              maxHeight: '120px',
-                              background: '#707070'
-                            }}>
-                            {selectedDepartment.map((item) => (
-                              <div>
-                                <Tag
-                                  key={item._id}
-                                  className="pa1"
-                                  interactive={true}
-                                  style={{ background: '#707070' }}
-                                  onRemove={(e) => {
-                                    const filteredItems = selectedDepartment.filter((selectedItem) => (
-                                      item.name !== selectedItem.name
-                                    ));
-                                    setSelectedDepartment([
-                                      ...filteredItems
-                                    ]);
-                                    input.onChange(
-                                      isEmpty(filteredItems) ?
-                                        undefined :
-                                        filteredItems.map((member: Entity) => member._id));
-                                  }}
-                                  large={true}
-                                  intent="primary"
-                                >
-                                  {item.name}
-                                </Tag>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      }
-                    </div>
-                  }
-                />
-              </Condition>
+              </div>
               <Field<string>
                 name="color"
                 render={({ input, meta }) =>
@@ -507,23 +366,20 @@ const FormComponent = (props: {
                     e.preventDefault();
                     props.setShowProjectDialog(false);
                   }}
-                >
-                  cancel
-                  </Button>
+                  text="Cancel"
+                />
                 <Button
                   className="w4 grow h2 pointer br0"
                   style={{ background: '#0fa3a3', outline: 'none', color: 'white' }}
                   loading={submitting}
                   type="submit"
                   disabled={submitting || pristine}
-                >
-                  create
-          </Button>
+                  text="Create"
+                />
               </div>
             </div>
           </form>
-        )
-        }
+        )}
       />
     </>
   );
@@ -532,7 +388,8 @@ const FormComponent = (props: {
 const mapStateToProps = (state: any) => {
   return {
     departments: state.companyReducer.currentCompany.departments,
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
+    associates: state.associateReducer.associatesList
   };
 };
 
