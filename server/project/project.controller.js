@@ -20,7 +20,7 @@ try {
   });
   let associates = req.body.associates;
   if (userExist) {
-    if (req.body.type === 'associates') {
+    if (req.body.type === 'associates' ) {
       const project = new Project({
         name: req.body.name,
         type: req.body.type,
@@ -36,12 +36,19 @@ try {
 
       associates.map(async asso => {
         const createProjectReq = new ProjectRequest({
+          company: req.params.compnayId,
           associate: asso._id,
           size: asso.size,
           isAccepted: false,
           project: project._id,
         });
         await createProjectReq.save();
+        const newTeam = new addTeamMember({
+          account: req.user._id,
+          project: project._id,
+          role: 'admin'
+        });
+        await newTeam.save(); 
         logger.info(
           `${req.body.companyId} company send a project request to its associate`,
         );
@@ -91,14 +98,13 @@ try {
 const projectPendingRequest = async (req, res, next) => {
   const { limit = 10, skip = 0 } = req.query;
   const companyId = req.params.companyId;
-  const associateId = await Associate.findOne({ company: companyId });
-  if(!associateId){
-    return sendErrorResponse(res, 400, 'AssociateNotFoundError', {message: 'this company is not assoisiate'});
-  }
-  await ProjectRequest.find({
+
+  ProjectRequest.find({
    $and:[ {isAccepted: false},
-    {associate: associateId.associateCompany}]
+    {associate: companyId}]
   })
+  .select('company project')
+    .populate('company project')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -128,7 +134,7 @@ const acceptProjectRequest = async (req, res, next) => {
     logger.info(`project request accept for ${req.query.pid}`);
     await Associate.updateOne(
       {
-        company: req.query.companyId,
+        company: req.params.companyId,
       },
       {
         $push: { project: req.query.pid },
@@ -141,12 +147,12 @@ const acceptProjectRequest = async (req, res, next) => {
     await Project.updateOne(
       { _id: req.query.pid },
       {
-        $push: { associate: req.query.companyId },
+        $push: { associate: req.params.companyId },
       },
       { safe: true, upsert: true },
     );
     return sendJSONresponse(res, 200, {
-      message: `${req.query.pid} accepted by ${req.query.companyId}`,
+      message: `${req.query.pid} accepted by ${req.params.companyId}`,
     });
   } catch (error) {
     logger.error(`${error}`);

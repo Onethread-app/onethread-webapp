@@ -4,6 +4,10 @@ const Schema = mongoose.Schema;
 // company schema
 const projectRequestSchema = new Schema(
   {
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company'
+    },
     associate: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Associate',

@@ -9,7 +9,7 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 // authentication
 router
-  .route('/create')
+  .route('/:compnayId/create')
   .post(
     authorization,
     // schemaValidator(projectValidation.createNewProjectForCompany),
@@ -47,11 +47,11 @@ router
   .route('/:companyId/pending-requests')
   .get(authorization, projectCtrl.projectPendingRequest);
 router
-  .route('/accept-request')
+  .route('/:companyId/accept-request')
   .put(authorization, projectCtrl.acceptProjectRequest);
 router
-  .route('/reject-request')
-  .post(authorization, projectCtrl.rejectProjectRequest);
+  .route('/:companyId/reject-request')
+  .put(authorization, projectCtrl.rejectProjectRequest);
 router
   .route('/:pid')
   .get(authorization, projectCtrl.getProjectDetails);

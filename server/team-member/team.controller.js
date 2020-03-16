@@ -98,39 +98,6 @@ const addTeamMember = async (req, res, next) => {
       }
     }
   } catch (error) {
-    // const members = await Team.create(req.body.members);
-    // console.log(members);
-    // if (!members.length) {
-    //   return sendErrorResponse(res, 400, 'MemberCreatedError', {
-    //     message: 'No members created',
-    //   });
-    // }
-    // let membersId = members.map(m => {
-    //   return m._id;
-    // });
-    // // let accountsId = req.body.members.map(m => {
-    // //   return m.account;
-    // // });
-    // // save ref in company
-    // // req.project.members.addToSet(...membersId);
-    // // await req.project.save();
-    // // add members into General room
-    // const room = await Room.findOne({
-    //   name: 'General',
-    //   project: req.project._id,
-    // });
-    // if (room) {
-    //   // room.members.addToSet(...accountsId);
-    //   await room.save();
-    //   await chatkit.addUsersToRoom({
-    //     roomId: room._id,
-    //     // userIds: accountsId,
-    //   });
-    // }
-    // return res.status(201).json({
-    //   message: 'New member created',
-    //   members,
-    // });
     logger.error(`${error}`);
     next(error);
   }
