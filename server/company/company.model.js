@@ -56,7 +56,18 @@ const certificate = new Schema(
       ref: 'Company'
     }
   }
-)
+);
+
+const parentCom = new Schema({
+  name:{
+    type: String,
+    trim: true
+  },
+  company:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company'
+  },
+})
 // company schema
 const company = new Schema(
   {
@@ -188,7 +199,10 @@ const company = new Schema(
         'above 2000 square meters',
       ],
     },
-    parentCom :[],
+    parentcom :[{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Parentcom'
+    }],
     removed: {
       type: Boolean,
       default: false,
@@ -201,8 +215,10 @@ const company = new Schema(
 
 let Company = mongoose.model('Company', company);
 let Certificate = mongoose.model('Certificate', certificate);
+let Parentcom = mongoose.model('Parentcom', parentCom);
 
 module.exports = {
   Company,
-  Certificate
+  Certificate,
+  Parentcom,
 };

@@ -14,12 +14,13 @@ const {
 } = require('../helpers/jsonResponse');
 
 const createNewProjectForCompany = async (req, res, next) => {
+try {
   const userExist = await Member.findOne({
     account: req.body.concernedAdmin,
   });
   let associates = req.body.associates;
   if (userExist) {
-    if (req.body.type === 'associates' && req.body.associates.length>0) {
+    if (req.body.type === 'associates') {
       const project = new Project({
         name: req.body.name,
         type: req.body.type,
@@ -80,6 +81,11 @@ const createNewProjectForCompany = async (req, res, next) => {
       message: 'concernAdmin not added in company',
     });
   }
+} catch (error) {
+  console.log(error)
+  next(error)
+  
+}
 };
 
 const projectPendingRequest = async (req, res, next) => {

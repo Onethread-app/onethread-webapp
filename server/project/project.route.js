@@ -12,7 +12,7 @@ router
   .route('/create')
   .post(
     authorization,
-    schemaValidator(projectValidation.createNewProjectForCompany),
+    // schemaValidator(projectValidation.createNewProjectForCompany),
     projectCtrl.createNewProjectForCompany,
   );
 router
