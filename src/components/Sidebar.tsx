@@ -299,7 +299,6 @@ export const Sidebar = (props: {
 								}
 							</NavLink>
 							{/*  */}
-							{console.log(props)}
 							{isEmpty(props.project._id) === false &&
 
 								<div className="bg-white-10">

@@ -143,7 +143,7 @@ export const App = () => (
 				component={FeedPage}
 			/>
 			<PrivateRoute
-				path="/company/:cname/room"
+				path="/company/:cname/project/:projectId/room"
 				exact={true}
 				component={RoomPage}
 			/>

@@ -8,7 +8,7 @@ import { TOGGLE_EMOJI_PICKER, CLEAR_FILE_UPLOAD, DELETE_ONE_PENDING_FILE } from 
 import ReactDOM from 'react-dom';
 import { Picker } from 'emoji-mart';
 import { FileUpload } from './fileUpload';
-import { IRoomFile } from 'stores/room/Reducer';
+import { IRoomPendingFile, IRoomReducer } from 'stores/room/Reducer';
 import SmileIcon from './../../../../../resources/images/Emoji.svg';
 import SendIcon from './../../../../../resources/images/Send.svg';
 import AttachmentIcon from './../../../../../resources/images/attachment.svg';
@@ -19,10 +19,10 @@ const { withChatkit } = require('@pusher/chatkit-client-react');
 interface SendMessageFormProps {
 	chatkit?: any;
 	sendRoomMessage: (data: { text: string, room: string, files: any[], type?: string }) => void;
-	roomId: string;
+	currentRoom: IRoomReducer['currentRoom'];
 	profileImage: any;
 	emojiPicker: boolean;
-	pendingFiles: IRoomFile[];
+	pendingFiles: IRoomPendingFile[];
 	typingUsers: Array<{ name: string, roomId: string; }>;
 }
 
@@ -42,7 +42,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 		setTextError('');
 		setShowFileDialog(false);
 		dispatch({ type: CLEAR_FILE_UPLOAD });
-	}, [props.roomId]);
+	}, [props.currentRoom._id]);
 
 	// tslint:disable-next-line: no-shadowed-variable
 	const resetMessage = (text: string) => {
@@ -54,7 +54,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 	const onChange = (e: any) => {
 		setText(e.target.value);
 		props.chatkit.currentUser
-			.isTypingIn({ roomId: props.roomId })
+			.isTypingIn({ roomId: props.currentRoom._id })
 			// tslint:disable-next-line: no-console
 			.catch((error: any) => console.error('error on typing', error));
 	};
@@ -76,7 +76,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 
 		await props.sendRoomMessage({
 			text: _text,
-			room: props.roomId,
+			room: props.currentRoom._id,
 			files,
 			type
 		});
@@ -142,8 +142,8 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 				? props.typingUsers.map(
 					(user: { name: string; roomId: string }, i: number) => {
 						if (
-							isEmpty(props.roomId) === false &&
-							isEqual(props.roomId, user.roomId) === true
+							isEmpty(props.currentRoom._id) === false &&
+							isEqual(props.currentRoom._id, user.roomId) === true
 						) {
 							return (
 								<h6 key={i} className="mv1 pl1">
@@ -312,7 +312,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 					isOpen
 					style={{ background: '#fff' }}
 				>
-					<FileUpload setShowDialog={setShowFileDialog} roomID={props.roomId} />
+					<FileUpload setShowDialog={setShowFileDialog} roomID={props.currentRoom._id} />
 				</Dialog>
 			)}
 		</>
@@ -322,7 +322,7 @@ const SendMessageFormComponent = withChatkit((props: SendMessageFormProps) => {
 const mapStateToProps = (state: any) => {
 	return {
 		profileImage: state.userReducer.user.profileImage,
-		roomId: state.roomReducer.roomId,
+		currentRoom: state.roomReducer.currentRoom,
 		emojiPicker: state.roomReducer.emojiPicker,
 		typingUsers: state.roomReducer.typing.users,
 		pendingFiles: state.roomReducer.pendingFiles
