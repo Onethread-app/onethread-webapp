@@ -12,15 +12,15 @@ let channels_client = new Pusher({
 module.exports.sendCompanyNotification = async (
   company,//fromHeader
   adminUser,
+  userNoti,
 ) => {
-  const userNotification = { notification: {
-    account: adminUser,
-    type: 'companyProfile',
-  }
-};
-  
+  let userNotification = userNoti;
+
+  userNotification = { notification: userNotification
+  };
+  console.log(1,company);
   channels_client.trigger(
-    'hello', 
+    company.toString(), 
     `${company}-superAdmin`,
      userNotification
      );

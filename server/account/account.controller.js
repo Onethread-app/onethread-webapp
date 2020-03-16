@@ -3,6 +3,10 @@ const crypto = require('crypto');
 const httpStatus = require('http-status');
 const slug = require('slug');
 const Account = require('./account.model');
+const { Member } = require('../company/member/member.model');
+const {
+  PendingMember,
+} = require('../company/member/pendingMember.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
@@ -25,6 +29,13 @@ const {
   BadRequestError,
   SearchNotMatchError,
 } = require('../helpers/APIError');
+const {
+  setDocument,
+  accountIndex,
+  bulkInsert,
+  memberIndex,
+} = require('../services/elastic.services');
+const chalk = require('chalk');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -81,6 +92,60 @@ const register = async (req, res, next) => {
         .update(token)
         .digest('hex');
       let verifyAccountTokenExpiration = Date.now() + 604800;
+
+      let pendingMember = await PendingMember.find({
+        email: account.email,
+      }).select('-__v -createdAt -updatedAt');
+
+      if (pendingMember.length > 0) {
+        let pendingMemberToMember = pendingMember.map(m => {
+          return { account: account._id, company: m.company };
+        });
+
+        const pendingMemberToMemberAccounts = pendingMemberToMember.map(
+          member => member.account,
+        );
+        const pendingMemberToMemberCompany = pendingMemberToMember.map(
+          member => member.company,
+        );
+
+        await Member.create(pendingMemberToMember);
+
+        const elasticIndexedMembers = await Member.find({
+          account: { $in: pendingMemberToMemberAccounts },
+          company: { $in: pendingMemberToMemberCompany },
+        }).populate({
+          path: 'account',
+          select: '_id name firstName lastName email',
+        });
+
+        const memberStructure = data => {
+          return {
+            mongo_id: data.mongo_id,
+            account: data.account,
+            company: data.company,
+          };
+        };
+
+        await bulkInsert(
+          memberIndex,
+          elasticIndexedMembers,
+          memberStructure,
+        );
+        logger.info(
+          chalk.blueBright(
+            `ElasticSearch successfully documented with bulk on ${memberIndex}`,
+          ),
+        );
+
+        await PendingMember.updateMany(
+          { email: account.email },
+          {
+            removed: true,
+          },
+        );
+      }
+
       sendEmailForVerifyAccount(
         user.firstName,
         user.lastName,
@@ -113,13 +178,6 @@ const login = async (req, res, next) => {
       email: req.user.email,
       _id: req.user._id,
     };
-    const token = jwt.sign(
-      { email: req.user.email, _id: req.user._id },
-      config.jwtSecret,
-      {
-        expiresIn: config.accessTokenExpire,
-      },
-    );
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
       expiresIn: config.accessTokenExpire,
     });
@@ -135,12 +193,12 @@ const login = async (req, res, next) => {
     addUserDataIntoCache(req.user.email, req.user);
     return sendJSONresponse(res, 200, {
       success: true,
-      token: token,
       accessToken: accessToken,
       refreshToken: refreshToken,
       user: userObj,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -206,18 +264,44 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
         isAccountVerified: false,
         message: 'Link is expired',
       });
-    await Account.findByIdAndUpdate(
+    const user = await Account.findByIdAndUpdate(
       { _id: userID },
       { $set: { isAccountVerified: true } },
       { safe: true, upsert: true, new: true },
     );
 
     await client.del(`verifyAccountToken:${req.params.token}`);
+
+    await setDocument(accountIndex, '_doc', {
+      mongo_id: user._id,
+      name: user.name,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
+
+    logger.info(
+      chalk.blueBright(
+        `ElasticSearch document added on ${accountIndex}`,
+      ),
+    );
+
+    //  const response  =  await elasticService.set('accounts','_doc',{
+    //     mongo_id : user._id,
+    //     name: user.name,
+    //     email: user.email,
+    //     firstName: user.firstName,
+    //     lastName: user.lastName
+    //   })
+
+    //   logger.info(` ✔ ️Elasticsearch document ${response.result}`);
+
     return sendJSONresponse(res, 200, {
       isAccountVerified: true,
       message: 'Account Verified Successfully',
     });
   } catch (err) {
+    logger.error(err);
     next(err);
   }
 };

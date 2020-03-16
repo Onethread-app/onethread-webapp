@@ -7,6 +7,10 @@ const userNotificationSchema = new Schema({
     type: Boolean,
     default: false,
   },
+  seen: {
+    type: Boolean,
+    default: false,
+  },
   notification: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Notification',
@@ -16,5 +20,8 @@ const userNotificationSchema = new Schema({
     ref: 'Account',
     required: true,
   },
+},
+{
+  timestamps: true,
 });
 module.exports = mongoose.model('UserNotification', userNotificationSchema);

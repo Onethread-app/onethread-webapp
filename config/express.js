@@ -19,6 +19,10 @@ const {
   SearchNotMatchError,
   EmailIdExistError,
 } = require('../server/helpers/APIError');
+const {
+  
+  sendErrorResponse,
+} = require('../server/helpers/jsonResponse');
 
 const mongoErrorHandler = require('../server/helpers/mongoErrorFormat');
 const app = express();
@@ -63,7 +67,7 @@ app.use(cors());
 // });
 // TODO: cors customize
 // enable detailed API logging in dev env
-if (config.env === 'development' || config.env === 'production') {
+if (config.env === 'development' || config.env === 'test') {
   console.log(config.env);
   expressWinston.requestWhitelist.push('body');
   expressWinston.responseWhitelist.push('body');
@@ -126,8 +130,8 @@ app.use((err, req, res, next) => {
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new APIError('API not found', httpStatus.NOT_FOUND);
-  return next(err);
+  
+  return sendErrorResponse(res, 404, {message: 'API not found'})
 });
 
 // log error in winston transports except when executing test suite

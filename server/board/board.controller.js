@@ -4,7 +4,7 @@ const BoardColumn = require('./../boardColumn/boardColumn.model');
 const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
-const {sendErrorResponse} = require('../helpers/jsonResponse');
+const {sendErrorResponse, sendJSONresponse} = require('../helpers/jsonResponse');
 
 const load = (req, res, next, id) => {
   Board.findById(id)
@@ -104,7 +104,7 @@ const list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
   await Board.find({
-    company: companyId,
+    company: req.params.companyId,
     members: req.user._id,
   })
     .select('_id name color department members')
@@ -116,7 +116,10 @@ const list = async (req, res, next) => {
       logger.info(`${result}`);
       return sendJSONresponse(res, 200, result);
     })
-    .catch(e => next(e));
+    .catch(e => {
+      
+      next(e)}
+    );
 };
 
 const remove = (req, res, next) => {

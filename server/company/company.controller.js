@@ -1,15 +1,26 @@
 const Account = require('../account/account.model');
-
+const mongoose = require('mongoose');
+const { Associate } = require('../associate/associate.model');
 const { Company } = require('./company.model');
 const { Member } = require('./member/member.model');
-const  Notification  = require('./../notification/notification.model');
-const  UserNotification  = require('./../notification/userNotifiacation.model');
 const { chatkit } = require('../services/pusher.services');
 const {
   sendCompanyNotification
 } = require('../services/notification.services');
-const { sendErrorResponse } = require('../helpers/jsonResponse');
+const {
+  createCompanyNotification
+} = require('../notification/notification.controller');
 
+
+ const { setDocument,
+  memberIndex,
+} = require('../services/elastic.services');
+const chalk = require('chalk');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
+const logger = require('../../config/winston');
 // create a company profile
 const changeName = async (req, res, next) => {
   // Check for JSON
@@ -80,9 +91,9 @@ const changeName = async (req, res, next) => {
 // create a company profile
 const createCompany = async (req, res, next) => {
   // Check for JSON
-  if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
-  }
+  // if (!req.is('application/json')) {
+  //   return res.send("Expects 'application/json'");
+  // }
 
   try {
     // check duplicate company name
@@ -114,7 +125,7 @@ const createCompany = async (req, res, next) => {
     });
 
     // add ref[member,room] in company
-    newCompany.members.push(newMember._id);
+    //newCompany.members.push(newMember._id);
     // newCompany.rooms.push(newRoom._id);
 
     // company creation
@@ -128,7 +139,26 @@ const createCompany = async (req, res, next) => {
     //     company: company._id,
     //   },
     // });
-    await newMember.save();
+    const elasticMember = await newMember.save();
+
+    const elasticMemberPopulated = await Member.findOne({
+      _id: elasticMember._id,
+    }).populate({
+      path: 'account',
+      select: '_id name firstName lastName email',
+    });
+
+    await setDocument(memberIndex, '_doc', {
+      mongo_id: elasticMemberPopulated._id,
+      account: elasticMemberPopulated.account,
+      company: elasticMemberPopulated.company,
+    });
+
+    logger.info(
+      chalk.blueBright(
+        `Elasticsearch document added on ${memberIndex}`,
+      ),
+    );
 
     // // add company ref in user
     // req.user.companies.push(newCompany._id);
@@ -148,7 +178,7 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`);
     return next(error);
   }
 };
@@ -161,12 +191,12 @@ const getCompanyIndividual = async (req, res, next) => {
       {
         path: 'company',
         select: '_id name',
-        populate: [
-          {
-            path: 'logo',
-            select: 'link s3Key type',
-          },
-        ],
+        // populate: [
+        //   {
+        //     path: 'logo',
+        //     select: 'link s3Key type',
+        //   },
+        // ],
       },
     ];
 
@@ -191,29 +221,26 @@ const getCompany = async (req, res, next) => {
     // company details
     let company = await Company.findOne({
       name: req.params.cname,
-    })
-      .select(
-        '-account -websites -rooms -products -members -departments -divisions -createdAt -updatedAt -__v',
-      )
-      .populate('logo', 'link s3Key type');
+    }).select(
+      '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
+    );
 
     // role info
     let member = await Member.findOne({
       account: req.user._id,
-      company: req.company._id,
+      company: company._id,
     }).select('-_id role');
 
-    if (!member) {
-      return res.status(401).json({
-        message: "You're not authorized with this company",
-      });
-    }
+    // if (!member) {
+    //   return res.status(401).json({
+    //     message: "You're not authorized with this company",
+    //   });
+    // }
 
     return res.status(200).json({
       company: { ...company._doc, role: member.role },
     });
   } catch (error) {
-    console.log('getCompany', error);
     next(error);
   }
 };
@@ -235,8 +262,8 @@ const updateBasicInfo = async (req, res, next) => {
 
     await req.company.save();
 
-
-
+    
+    createCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name} );
     return res.status(200).json({
       message: `Company's basic information updated`,
     });
@@ -247,50 +274,61 @@ const updateBasicInfo = async (req, res, next) => {
 
 // update a company basic info
 const updateAbout = async (req, res, next) => {
-  console.log(1);
+  
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
 
   try {
-    const members = await Member.find({
-      $or:[ {role: 'superAdmin'}, {role: 'admin'}],
-      company: req.company._id,
-    });
-
+    
     req.company.about = req.body.about;
 
-    await req.company.save();
+    await Company.findOneAndUpdate(
+      { _id: req.company._id },
+      {about : req.body.about},
+      { safe: true, upsert: true, new: true },
+    ).exec();
 
-    sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
-
-    let notification = new Notification({
-      type: 'companyProfile',
-      account: req.user._id,
-      company: req.company._id,
-    });
-
-    // const userNotification = new UserNotification({
-    //   notification: notification._id,
-    //   company: req.company._id,
-    // });
+    //sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
+    createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
     
-    let usersNotification = members.map(m => {
-      return {
-        notification: notification._id,
-        account: m.account,
-      };
-    });
-
-    await notification.save();
-    await UserNotification.create(usersNotification);
-
     return res.status(200).json({
       message: `Company's about updated`,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
+  }
+};
+
+// update a company role
+const updateRole = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
+
+  try {
+    //Company.deleteMany({}, function(err, result) {
+
+    //});
+    //req.company.optionalRole = req.body.optionalRole;
+    const company = await Company.findOneAndUpdate(
+      { _id: req.company._id },
+      { $set: { optionalRole: req.body.optionalRole } },
+      {
+        safe: true,
+        upsert: true,
+      },
+    ).exec();
+
+    //await req.company.save();
+
+    return res.status(200).json({
+      message: `Company's role updated`,
+      data: company.optionalRole,
+    });
+  } catch (error) {
     next(error);
   }
 };
@@ -299,7 +337,7 @@ const updateAbout = async (req, res, next) => {
 const getCompanyLoad = async (req, res, next) => {
   try {
     const company = await Company.findOne({
-      name: req.params.cname,
+      _id: req.params.companyId,
     }).populate('account', '_id firstName lastName email contactNo');
 
     if (company) {
@@ -350,33 +388,86 @@ const deleteCompany = async (req, res, next) => {
     });
 };
 
-const authorizeAdmin = async (req, res, role, next) => {
-  const member = await Member.findOne({
-    account: req.user._id,
-    company: req.company._id,
-  });
+const authorizeUser = (functionalRole, ...userRoles) => {
+  return async function(req, res, next) {
+    try {
+      // const company =  await Company.findOne({
+      //   _id: req.params.companyId,
+      // }).select('_id optionalRole').exec();
 
-  if (
-    !member ||
-    !['superAdmin', 'admin'].includes(member.role) ||
-    ![role].includes(req.company.optionalRole)
-  ) {
-    return res.status(403).json({
-      message: `Restricted`,
+      const member = await Member.findOne({
+        account: req.user._id,
+        company: req.params.companyId, //apatoto pore name or id hobe
+      }).exec();
+
+      // if (
+      //   !member ||
+      //   !userRoles.includes(member.role) ||
+      //   !company.optionalRole.includes(functionalRole)
+      // )
+
+      //console.log(member, userRoles, functionalRole, 'a');
+      if (
+        !member ||
+        (functionalRole === 'all' && !userRoles.includes(member.role))
+      ) {
+        return res.status(403).json({
+          message: `Restricted`,
+        });
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};
+
+const searchCompany = async (req, res, next) => {
+  try {
+    const { limit = 50, skip = 0, name, companyId } = req.query;
+    const associate = await Associate.find({
+      $or: [{ company: companyId }, { associateCompany: companyId }],
+      isRejected: false,
+    }).exec();
+
+    let associateCompanyId = associate.map(m => {
+      if (m.company.toString() === companyId) {
+        return m.associateCompany;
+      }
+      return m.company;
     });
-  }
 
-  next();
+    associateCompanyId.push(companyId);
+    await Company.find({
+      name: { $regex: new RegExp(name), $options: 'i' },
+      _id: { $nin: associateCompanyId },
+    })
+      .select('name')
+      .skip(+skip)
+      .limit(+limit)
+      .then(data => {
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: `Search complete for ${name}`,
+          data,
+        });
+      });
+  } catch (error) {
+    next(error);
+  }
 };
 
 module.exports = {
-  authorizeAdmin,
+  authorizeUser,
   createCompany,
   getCompany,
   updateBasicInfo,
+  updateRole,
   updateAbout,
   getCompanyIndividual,
   changeName,
   deleteCompany,
   getCompanyLoad,
+  searchCompany,
 };

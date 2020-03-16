@@ -8,6 +8,7 @@ const {
 const File = require('./file.model');
 const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
+const { Project } = require('../project/project.model');
 const { generateGetUrl } = require('../services/s3');
 let s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
@@ -17,6 +18,35 @@ let s3bucket = new AWS.S3({
 const fileName = (userID, name) => {
   return userID + '_' + Date.now() + '_' + name;
 };
+
+const checkMimetype = [
+  'application/zip',
+  'application/x-rar-compressed',
+  'application/x-7z-compressed',
+  'application/x-zip-compressed',
+  'application/pdf',
+  'application/msword',
+  'application/json',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+  'application/vnd.ms-powerpoint',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  'application/vnd.ms-excel',
+  'text/plain',
+  'text/csv',
+  'image/webp',
+  'image/apng',
+  'image/png',
+  'image/bmp',
+  'image/gif',
+  'image/jpeg',
+  'image/jpg',
+  'image/svg',
+  'image/svg+xml',
+  'image/bmp',
+  'image/vnd.microsoft.icon',
+];
+
 const profilePicture = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
@@ -111,7 +141,8 @@ const companyLogo = async (req, res, next) => {
           const company = await Company.findOne({
             _id: companyID,
           });
-          company.logo = data._id;
+          company.logo = data.link;
+          company.imageType = 'companyLogo';
           company.save();
           return sendJSONresponse(res, 200, data);
         })
@@ -126,43 +157,13 @@ const companyLogo = async (req, res, next) => {
 };
 
 const fileInRooms = async (req, res, next) => {
-  const checkMimetype = [
-    'application/zip',
-    'application/x-rar-compressed',
-    'application/x-7z-compressed',
-    'application/x-zip-compressed',
-    'application/pdf',
-    'application/msword',
-    'application/json',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.ms-excel',
-    'text/plain',
-    'text/csv',
-    'image/webp',
-    'image/apng',
-    'image/png',
-    'image/bmp',
-    'image/gif',
-    'image/jpeg',
-    'image/jpg',
-    'image/svg',
-    'image/svg+xml',
-    'image/bmp',
-    'image/vnd.microsoft.icon',
-  ];
-
   const file = req.file;
-
   if (!checkMimetype.includes(file.mimetype)) {
     return sendErrorResponse(res, 400, '', {
       message: 'This file format is not supported',
       fieldName: 'file',
     });
   }
-
   const roomID = req.query.roomID;
   const userID = req.user._id;
   const params = {
@@ -199,9 +200,67 @@ const fileInRooms = async (req, res, next) => {
       next(err);
     });
 };
+const fileInProject = async (req, res, next) => {
+  const file = req.file;
+  if(!file){
+    return sendErrorResponse(res, 400, 'ValidationError', {message:'Please provide the required filed'});
+  }
+  const userID = req.user._id;
+  if (!checkMimetype.includes(file.mimetype)) {
+    return sendErrorResponse(res, 400, '', {
+      message: 'This file format is not supported',
+      fieldName: 'file',
+    });
+  }
+  const pid = req.query.pid;
+  const pidExist = await Project.findOne({_id: pid});
+  if(pidExist){
+    const params = {
+      Bucket: 'tigrow-file',
+      Key: `${pid}/${file.originalname}`,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+      ACL: 'public-read',
+    };
+    await s3bucket
+    .upload(params)
+    .promise()
+    .then(async data => {
+      logger.info(data);
+      try {
+        logger.info(`File in project Successfully upload to S3`);
+        const newFile = new File({
+          link: data.Location,
+          s3Key: params.Key,
+          type: params.ContentType,
+          account: userID,
+          project: pid,
+        });
+        await newFile.save();
+        logger.info('File Link successfully save to file collection');
+        pidExist.files.push(newFile._id);
+        await pidExist.save()
+        return sendJSONresponse(res, 200, { newFile });
+  
+      } catch (error) {
+        logger.error(`${error}`);
+        next(error);
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
+
+  }else{
+    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {message: 'project id is not exist'})
+  }
+
+ 
+};
 module.exports = {
   profilePicture,
   displayProPic,
   companyLogo,
   fileInRooms,
+  fileInProject,
 };

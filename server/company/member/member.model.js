@@ -20,9 +20,7 @@ const member = new Schema(
       enum: [
         'superAdmin',
         'admin',
-        'manager',
-        'moderator',
-        'employee',
+        'employee', //employee is member
       ],
       default: 'employee',
       required: true,

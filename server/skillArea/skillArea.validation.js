@@ -20,5 +20,7 @@ module.exports = {
       }),
     }),
   }),
-  search: Joi.string().min(1),
+  search:Joi.object().keys({
+    name: Joi.string().min(1).max(80).error(err=>{ return {message: 'please check the query parameter'}})
+})
 };

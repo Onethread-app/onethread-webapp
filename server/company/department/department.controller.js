@@ -47,10 +47,11 @@ const create = async (req, res) => {
   }
 };
 
-const list = async (req, res) => {
+const list = async (req, res, next) => {
+  
   try {
     const departments = await Department.find({
-      company: req.company._id,
+      company: req.params.companyId,
       removed: false,
     }).select('_id name');
 
@@ -64,9 +65,8 @@ const list = async (req, res) => {
       message: 'No departments found.',
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error,
-    });
+   
+    next(error)
   }
 };
 

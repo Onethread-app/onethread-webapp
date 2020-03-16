@@ -3,6 +3,7 @@ const accountRoutes = require('./server/account/account.route');
 const companyRoutes = require('./server/company/company.route');
 const categoryRoutes = require('./server/category/category.route');
 const postRoutes = require('./server/post/post.route');
+const projectRoutes = require('./server/project/project.route');
 const reactRoutes = require('./server/react/react.route');
 const saveRoutes = require('./server/save/save.route');
 const commentRoutes = require('./server/comment/comment.route');
@@ -13,6 +14,7 @@ const roomRoutes = require('./server/room/room.route');
 const skillRoutes = require('./server/skillArea/skillArea.route');
 const fileRoutes = require('./server/file/file.route');
 const messageRoutes = require('./server/message/message.route');
+const notificationRoutes = require('./server/notification/notification.route');
 const jobRoutes = require('./server/job/job.route');
 const educationRoutes = require('./server/education/education.route');
 const boardRoutes = require('./server/board/board.route');
@@ -21,6 +23,8 @@ const taskRoutes = require('./server/task/task.route');
 const subTasks = require('./server/task/subtask/subtask.route');
 const utilsRoutes = require('./server/utils/utils.route');
 const chatkitRoutes = require('./server/chatkit/chatkit.route');
+//const projectRoutes = require('./server/project/project.route');
+const associateRoutes = require('./server/associate/associate.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -49,5 +53,8 @@ router.use('/tasks', taskRoutes);
 router.use('/subTasks', subTasks);
 router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
+router.use('/projects', projectRoutes);
+router.use('/associate', associateRoutes);
+router.use('/notifications', notificationRoutes);
 
 module.exports = router;

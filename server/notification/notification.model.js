@@ -5,7 +5,6 @@ const Schema = mongoose.Schema;
 const notificationSchema = new Schema({
   text: {
     type: String,
-  
   },
   type: {
     type: String,
@@ -67,5 +66,8 @@ const notificationSchema = new Schema({
     ref: 'Account',
     required: true,
   },
+},
+{
+  timestamps: true,
 });
 module.exports = mongoose.model('Notification', notificationSchema);
