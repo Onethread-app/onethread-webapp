@@ -132,7 +132,7 @@ const acceptProjectRequest = async (req, res, next) => {
     // logger.info(
     //   `${req.query.companyId} create a project`,
     // );
-    await Project.updateOne(
+      await Project.updateOne(
       { _id: req.query.pid },
       {
         $push: { associate: req.params.companyId },
@@ -162,7 +162,7 @@ const rejectProjectRequest = async (req, res, next) => {
     );
     logger.info(`project id: ${req.query.pid} rejected by company`);
     return sendJSONresponse(res, 200, {
-      message: `${req.query.pid} rejected by ${req.query.companyId}`,
+      message: `${req.query.pid} rejected by ${req.params.companyId}`,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -173,9 +173,10 @@ const rejectProjectRequest = async (req, res, next) => {
 const showAllProjectsForCompany = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   let companyId = req.params.compnayId;
-  const allProjects = await Project.find({
-    company: companyId,
-    removed: false,
+
+
+  await Project.find({
+    $or: [{company: companyId , removed: false}, {associate: { $in : [companyId]} , removed: false } ]
   })
     .populate('departments', 'name _id ')
     .select('-type -__v  -files -version ')
