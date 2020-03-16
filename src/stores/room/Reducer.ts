@@ -33,7 +33,8 @@ import {
 	GET_ROOM_DISCUSSIONS_ERROR,
 	SET_ROOM_DISCUSSIONS,
 	TOGGLE_ROOM_DISCUSSIONS_ERROR,
-	REMOVE_ROOM_DISCUSSIONS
+	REMOVE_ROOM_DISCUSSIONS,
+	GET_COMPANY_ROOMS
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -102,6 +103,14 @@ export interface IRoomDiscussion {
 	updatedAt: string;
 }
 
+export interface ICompanyRoom {
+	_id: string;
+	name: string;
+	company: string;
+	project: string;
+	unreadCount: number;
+}
+
 export interface IRoomReducer {
 	activeRoom: {};
 	currentRoom: IRoom;
@@ -123,6 +132,7 @@ export interface IRoomReducer {
 	loading: boolean;
 	emojiPicker: boolean;
 	pendingFiles: IRoomPendingFile[];
+	companyRooms: ICompanyRoom[];
 	roomError: string;
 
 }
@@ -153,6 +163,7 @@ const InitialState: IRoomReducer = {
 	roomsUnreadCount: {},
 	emojiPicker: false,
 	pendingFiles: [],
+	companyRooms: [],
 	loading: false,
 	roomError: '',
 };
@@ -187,6 +198,18 @@ const updateUnreadCount = (roomsUnreadCount: any, updatedRoom: any) => {
 	return roomsUnreadCount;
 };
 
+const updateCompanyRooms = (companyRooms: ICompanyRoom[], updatedRoom: any) => {
+	return companyRooms.map((room: ICompanyRoom) => {
+		if (room._id === updatedRoom.id) {
+			return {
+				...room,
+				unreadCount: updatedRoom.unreadCount
+			};
+		}
+		return room;
+	});
+};
+
 export const RoomReducer = (state = InitialState, action: any) => {
 	switch (action.type) {
 		case LOADING_ROOM:
@@ -199,6 +222,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				pendingFiles: [...state.pendingFiles, action.payload],
+			};
+		}
+		case GET_COMPANY_ROOMS: {
+			return {
+				...state,
+				companyRooms: action.payload,
 			};
 		}
 		case UNREAD_COUNT_ROOMS: {
@@ -331,6 +360,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				// 		}
 				// 	}).sort(sortRooms),
 				roomsUnreadCount: updateUnreadCount(state.roomsUnreadCount, action.payload),
+				companyRooms: updateCompanyRooms(state.companyRooms, action.payload),
 				loading: false
 			};
 		case ARCHIVE_ROOM:

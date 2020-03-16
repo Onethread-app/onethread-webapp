@@ -16,6 +16,7 @@ import { getSingleProject } from 'stores/project/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
+import { ICompanyRoom } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
@@ -75,6 +76,7 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   getSelectedTaskDetails: (taskId: string) => any;
   getSingleProject: (pid: string) => any;
   company: ICompany;
+  companyRooms: ICompanyRoom[];
   rightSidebarOpen: boolean;
   project: any;
 }
@@ -160,6 +162,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     type={(props.match.params as any).cname ? 'company' : 'default'}
                     leftOpen={leftOpen}
                     project={props.project}
+                    companyRooms={props.companyRooms}
                   />
                 </div>
               </div>
@@ -226,6 +229,7 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     rightSidebarOpen: state.layoutReducer.rightSidebar.open,
     project: state.projectReducer.projectDetails,
+    companyRooms: state.roomReducer.companyRooms,
   };
 };
 

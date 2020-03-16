@@ -13,6 +13,7 @@ import {
 	ON_USER_STOPPED_TYPING,
 	REFRESH_MEMBER,
 	UNREAD_COUNT_ROOMS,
+	GET_COMPANY_ROOMS,
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
@@ -136,13 +137,22 @@ export const RoomListComponent = withChatkit(
 				load(props.getRooms);
 
 				const roomsUnreadCount = {};
+				const companyRooms: any[] = [];
 				props.chatkit.currentUser.rooms
 					.filter((room: any) => room.customData.company === props.companyId)
 					.forEach((room: any) => {
 						roomsUnreadCount[room.id] = room.unreadCount;
+						companyRooms.push({
+							_id: room._id,
+							name: room.name,
+							company: room.customData.company,
+							project: room.customData.project,
+							unreadCount: room.unreadCount,
+						});
 					});
 
 				dispatch({ type: UNREAD_COUNT_ROOMS, payload: roomsUnreadCount });
+				dispatch({ type: GET_COMPANY_ROOMS, payload: companyRooms });
 			}
 		}, [props.chatkit]);
 

@@ -17,8 +17,9 @@ import preface from '../resources/images/sideBarPreface.svg';
 import settingsProject from '../resources/images/sidebarProjectSettings.svg';
 
 import { Tooltip, Divider } from '@blueprintjs/core';
-import { companyPermit } from 'stores/UtilsActions';
+import { companyPermit, unreadMessageNotification } from 'stores/UtilsActions';
 import { isEmpty } from 'lodash';
+import { ICompanyRoom } from 'stores/room/Reducer';
 
 export const Sidebar = (props: {
 	user: User;
@@ -26,6 +27,7 @@ export const Sidebar = (props: {
 	type: string;
 	leftOpen: boolean;
 	project: any;
+	companyRooms: ICompanyRoom[];
 }) => {
 	return (
 		<div
@@ -122,41 +124,6 @@ export const Sidebar = (props: {
 								</span>
 								}
 							</NavLink>
-							{/* <NavLink
-								exact
-								className="flex items-center nowrap ma1 hover-bg-white-20"
-								style={{ color: 'white' }}
-								activeStyle={{ background: '#3F61C5' }}
-								to={`/company/${props.company.name}/room`}
-							>
-								{props.leftOpen ?
-									<span className="pl4">
-										<img
-											src={room}
-											className="w2 pt1"
-										/>
-									</span> :
-									<Tooltip
-										content={<p className="mb0">Room</p>}
-										position="right"
-									>
-										<span className="pl3">
-											<img
-												src={room}
-												className="w2 pt1"
-											/>
-										</span>
-									</Tooltip>
-								}
-								{props.leftOpen &&
-									<span
-										className="outline-0 bp3-large pl4"
-										style={{ color: 'inherit' }}
-									>
-										Room
-								</span>
-								}
-							</NavLink> */}
 							<NavLink
 								exact
 								className="flex items-center nowrap ma1 hover-bg-white-20"
@@ -290,12 +257,15 @@ export const Sidebar = (props: {
 									</Tooltip>
 								}
 								{props.leftOpen &&
-									<span
-										className="outline-0 bp3-large pl4"
-										style={{ color: 'inherit' }}
-									>
-										Project
-								</span>
+									<>
+										<span
+											className="outline-0 bp3-large pl4"
+											style={{ color: 'inherit' }}
+										>Project</span>
+										{props.companyRooms && unreadMessageNotification(props.companyRooms, 'company', props.company._id) ?
+											<span className="ml1 br-100 bg-red" style={{ width: '7px', height: '7px' }}></span>
+											: null}
+									</>
 								}
 							</NavLink>
 							{/*  */}
