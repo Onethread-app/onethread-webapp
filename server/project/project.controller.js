@@ -35,7 +35,7 @@ const createNewProjectForCompany = async (req, res, next) => {
 
       associates.map(async asso => {
         const createProjectReq = new ProjectRequest({
-          company: req.params.company,
+          company: req.params.compnayId,
           associate: asso._id,
           size: asso.size,
           isAccepted: false,
@@ -91,8 +91,8 @@ const projectPendingRequest = async (req, res, next) => {
    $and:[ {isAccepted: false},
     {associate: companyId}]
   })
-  .select('project')
-    .populate('project')
+  .select('company project')
+    .populate('company project')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
