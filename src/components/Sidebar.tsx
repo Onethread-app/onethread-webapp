@@ -13,15 +13,19 @@ import team from '../resources/images/sidebarTeam.svg';
 import settings from '../resources/images/sidebarSettings.svg';
 import projects from '../resources/images/ProjectsIcon.svg';
 import associates from '../resources/images/sideBarAssociates.svg';
+import preface from '../resources/images/sideBarPreface.svg';
+import settingsProject from '../resources/images/sidebarProjectSettings.svg';
 
-import { Tooltip } from '@blueprintjs/core';
+import { Tooltip, Divider } from '@blueprintjs/core';
 import { companyPermit } from 'stores/UtilsActions';
+import { isEmpty } from 'lodash';
 
 export const Sidebar = (props: {
 	user: User;
 	company: ICompany;
 	type: string;
 	leftOpen: boolean;
+	project: any;
 }) => {
 	return (
 		<div
@@ -118,7 +122,7 @@ export const Sidebar = (props: {
 								</span>
 								}
 							</NavLink>
-							<NavLink
+							{/* <NavLink
 								exact
 								className="flex items-center nowrap ma1 hover-bg-white-20"
 								style={{ color: 'white' }}
@@ -152,7 +156,7 @@ export const Sidebar = (props: {
 										Room
 								</span>
 								}
-							</NavLink>
+							</NavLink> */}
 							<NavLink
 								exact
 								className="flex items-center nowrap ma1 hover-bg-white-20"
@@ -294,6 +298,133 @@ export const Sidebar = (props: {
 								</span>
 								}
 							</NavLink>
+							{/*  */}
+							{console.log(props)}
+							{isEmpty(props.project._id) === false &&
+
+								<div className="bg-white-10">
+									<h1 className="f7 fw4 white pl4 pv2">Tigrow Project</h1>
+									<Divider
+										style={{
+											borderRight: '1px groove darkgray',
+											borderBottom: '1px groove darkgray'
+										}}
+									/>
+									<NavLink
+										exact
+										className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+										style={{ color: 'white' }}
+										activeStyle={{ background: '#3F61C5' }}
+										to={`/company/${props.company.name}/project/${props.project._id}`}
+									>
+										{props.leftOpen ?
+											<span className="pl4">
+												<img
+													src={preface}
+													className="pt1"
+													style={{ width: '25px' }}
+												/>
+											</span> :
+											<Tooltip
+												content={<p className="mb0">Preface</p>}
+												position="right"
+											>
+												<span className="pl3">
+													<img
+														src={preface}
+														className="pt1"
+														style={{ width: '25px' }}
+													/>
+												</span>
+											</Tooltip>
+										}
+										{props.leftOpen &&
+											<span
+												className="outline-0 bp3-large pl4"
+												style={{ color: 'inherit' }}
+											>
+												Preface
+								</span>
+										}
+									</NavLink>
+									<NavLink
+										exact
+										className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+										style={{ color: 'white' }}
+										activeStyle={{ background: '#3F61C5' }}
+										to={`/company/${props.company.name}/project/${props.project._id}/room`}
+									>
+										{props.leftOpen ?
+											<span className="pl4">
+												<img
+													src={room}
+													className="pt1"
+													style={{ width: '25px' }}
+												/>
+											</span> :
+											<Tooltip
+												content={<p className="mb0">Room</p>}
+												position="right"
+											>
+												<span className="pl3">
+													<img
+														src={room}
+														className="pt1"
+														style={{ width: '25px' }}
+													/>
+												</span>
+											</Tooltip>
+										}
+										{props.leftOpen &&
+											<span
+												className="outline-0 bp3-large pl4"
+												style={{ color: 'inherit' }}
+											>
+												Room
+								</span>
+										}
+									</NavLink>
+									<NavLink
+										exact
+										className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+										style={{ color: 'white' }}
+										activeStyle={{ background: '#3F61C5' }}
+										to={`/company/${props.company.name}/project/${props.project._id}/settings`}
+									>
+										{props.leftOpen ?
+											<span className="pl4">
+												<img
+													src={settingsProject}
+													className="pt1"
+													style={{ width: '25px' }}
+												/>
+											</span> :
+											<Tooltip
+												content={<p className="mb0">Settings</p>}
+												position="right"
+											>
+												<span className="pl3">
+													<img
+														src={settingsProject}
+														className="pt1"
+														style={{ width: '25px' }}
+													/>
+												</span>
+											</Tooltip>
+										}
+										{props.leftOpen &&
+											<span
+												className="outline-0 bp3-large pl4"
+												style={{ color: 'inherit' }}
+											>
+												Settings
+								</span>
+										}
+									</NavLink>
+
+								</div>
+							}
+							{/*  */}
 							{companyPermit(props.company.role) &&
 								<NavLink
 									exact
