@@ -1,4 +1,4 @@
-import { PROJECT } from './Types';
+import { PROJECT, CLEAR_PROJECT_REDUCER_STATE } from './Types';
 import { Entity } from 'stores/UtilsActions';
 
 export interface Project {
@@ -40,13 +40,17 @@ export const ProjectReducer = (state = initialState, action: any) => {
       };
     case PROJECT.PROJECT_SINGLE_VIEW:
       return {
-         ...state,
-         projectDetails: action.payload 
+        ...state,
+        projectDetails: action.payload
       };
     case PROJECT.PROJECT_PROJECT_ID:
       return {
         ...state,
         pid: action.payload
+      };
+    case CLEAR_PROJECT_REDUCER_STATE:
+      return {
+        ...initialState
       };
     default:
       return state;

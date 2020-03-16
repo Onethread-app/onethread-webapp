@@ -39,6 +39,7 @@ import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 import { Toaster } from '@blueprintjs/core';
+import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 
 export const getCompanyDetails = (name: string) => async (dispatch: any, getState: any) => {
 	try {
@@ -47,6 +48,7 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
 			const response = await tigrowApi.get(`company/${name}`, headers);
 			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
 			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
+			dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
 			return response;
 		} else {
 			// tslint:disable-next-line: no-console
@@ -74,6 +76,7 @@ export const createCompanyAction = (
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`company`, companyData, headers);
+			dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
 			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
 			dispatch({ type: CREATE_COMPANY, payload: response.data });
 			routeHistory.push(`/company/${response.data.company.name}`);
@@ -502,12 +505,12 @@ export const companyOptionalRole = (values: { optionalRole: string[] }) => async
 				});
 		} else {
 			Toaster
-        .create()
-        .show({
-          message: error.response.data.errors[0].message,
-          intent: 'danger',
-          timeout: 300000,
-        });
+				.create()
+				.show({
+					message: error.response.data.errors[0].message,
+					intent: 'danger',
+					timeout: 300000,
+				});
 		}
 	}
 };
