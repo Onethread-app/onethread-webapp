@@ -9,17 +9,7 @@ export default function index(props: any ) {
           <img src={notificationType[props.type].img} className=" h2" />
         </div>
         <div className="dtc v-mid p10 pl2">
-          <h2 className="f6 f5-ns fw6 lh-title black mv0">Young Gatche </h2>
-          <h3 className="f6 fw4 mt0 mb0 black-60">@yg</h3>
-        </div>
-      </article>
-      <article className="dt w-100 pb2 mt2">
-        <div className="">
-          <img src="" className=" h2" />
-        </div>
-        <div className="dtc v-mid p8 pl2">
-          <h2 className="f6 f5-ns fw6 lh-title black mv0">Young Gatchell </h2>
-          <h3 className="f6 fw4 mt0 mb0 black-60">@yg</h3>
+          <h6 className="f4 mv0">{props.text} </h6>
         </div>
       </article>
     </main>

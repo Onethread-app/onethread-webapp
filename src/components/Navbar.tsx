@@ -16,8 +16,6 @@ import { tigrowApi } from 'config';
 import Notification from '../layouts/company/notification'
 // import { AxiosResponse } from 'axios';
 
-// import { Notification } from "@blueprintjs/icons";
-
 interface NavbarTopInternalProps {
   user: User;
   logoutAction: (history: History) => void;
@@ -30,12 +28,13 @@ interface NavbarTopInternalProps {
 
 const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps) => {
   const [showDialog, setShowDialog] = React.useState(false);
-  // const [notifications, setNotifications] = React.useState([] as any);
+  const [notifications, setNotifications] = React.useState([] as any);
   const getNotificatrion = async () => {
     const headers = tokenConfig();
-    const data = await tigrowApi.get(`notifications`, headers);
-    // setNotifications(data);
-    console.log(data);
+    let data = [] as any;
+     data = await tigrowApi.get(`notifications`, headers);
+    // const noData = [1, 2 ] as any;
+    setNotifications(data.data);
   }
   React.useEffect(() => {
     getNotificatrion();
@@ -66,14 +65,18 @@ const NavbarTopComponent = (props: NavbarTopInternalProps & RouteComponentProps)
             </div>
           </NavLink>
         </div>
+          {console.log(notifications)}
         <div className="flex items-center">
 
           <Popover
             popoverClassName="bp3-popover-content-sizing bg-white"
             position={Position.BOTTOM}
             content={
-              <Notification type="associates" />
-
+              notifications.length > 0 && notifications.map((sNotification: any) =>  
+              <Notification type="associates" text={sNotification.notification.text} />
+              
+              )
+              
             } target={<Icon icon="notifications" iconSize={25} className="mr3 mr4-l" />} />
           <Popover
             popoverClassName="bp3-popover-content-sizing bg-white"
