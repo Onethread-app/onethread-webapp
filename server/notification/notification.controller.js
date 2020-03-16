@@ -42,7 +42,7 @@ module.exports.createCompanyNotification = async (
 };
 
 module.exports.createAssociateNotification = async (
-  company, adminUser,
+  company, adminUser,text
 ) => {
 
   //sendCompanyNotification(company, adminUser, usersNotification);
@@ -54,7 +54,7 @@ module.exports.createAssociateNotification = async (
 
   let notification = new Notification({
     type: 'associate',
-    text: `${company.name} wants to add you as their associate`,
+    text: text,
     account: adminUser._id,
     company: company,
   });
