@@ -20,16 +20,6 @@ import { Associate } from 'stores/associate/Reducer';
 import arrayMutators from "final-form-arrays";
 import { FieldArray } from "react-final-form-arrays";
 
-// const projectType = [
-//   { _id: 'associates', name: 'Associates' }
-// ];
-
-// const associateNo = [
-//   { _id: 'oneToFive', name: '1-5' },
-//   { _id: 'sixToTen', name: '6-10' },
-//   { _id: 'elevenToFifteen', name: '11-15' }
-// ];
-
 const FormComponent = (props: {
   setShowProjectDialog: (val: boolean) => void;
   departments: [];
@@ -246,7 +236,9 @@ const FormComponent = (props: {
                         id={input.name}
                         selectedValue={input.value}
                         options={[
-                          { _id: 'associates', name: 'Associates' }
+                          { _id: 'associates', name: 'Associates' },
+                          {_id: 'sd' , name: 'Single Department'},
+                          {_id: 'md' , name: 'Multiple Department'}
                         ]}
                         onChange={input.onChange}
                         error={checkError(meta) && (meta.error || meta.submitError)}
@@ -305,11 +297,9 @@ const FormComponent = (props: {
                               component="select"
                               placeholder="size"
                             >
-
-                              <option />
-                              <option value="#ff0000">4</option>
-                              <option value="#00ff00">6</option>
-                              <option value="#0000ff">5</option>
+                              <option value="5">1-5</option>
+                              <option value="10">6-10</option>
+                              <option value="15">11-15</option>
 
                             </Field>
 
