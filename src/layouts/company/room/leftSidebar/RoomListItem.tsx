@@ -1,24 +1,21 @@
 import { useSelector } from 'react-redux';
-import { isEqual } from 'lodash';
 import React from 'react';
+import { IRoom } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
 interface RoomListItemProps {
-	roomId: string;
-	name: string;
-	img: string;
+	room: IRoom;
 	lastChild: boolean;
 	active: boolean;
-	unreadCount: number;
-	subscribeToRoom: (roomId: string, name: string) => void;
+	subscribeToRoom: (room: IRoom) => void;
 	chatkit?: any;
 	iconBgColor: string;
 }
 
 export const RoomListItem = withChatkit((props: RoomListItemProps) => {
-	const activeRoom = useSelector((state: any) => state.roomReducer.activeRoom);
+	const unreadCount = useSelector((state: any) => state.roomReducer.roomsUnreadCount[props.room._id]);
 
 	return (
 		<li
@@ -31,13 +28,8 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 		>
 			<article
 				onClick={() => {
-					if (!props.chatkit.isLoading && !isEqual(props.roomId, activeRoom.id)) {
-						// TODO [TEST-2] I have to test typing indicator by removing this block
-						// if (!isEmpty(activeRoom)) {
-						// 	props.chatkit.currentUser.roomSubscriptions[activeRoom.id].cancel();
-						// 	props.chatkit.currentUser.roomSubscriptions[activeRoom.id].connected = false;
-						// }
-						props.subscribeToRoom(props.roomId, props.name);
+					if (!props.chatkit.isLoading && !props.active) {
+						props.subscribeToRoom(props.room);
 					}
 				}}
 				className={`flex items-center ph2 pv2 bb b--black-10 ${props.lastChild ? 'bn' : ''}`}
@@ -46,16 +38,21 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 					<span
 						className="ttc ba b--black-10 db w1 w2-ns h1 h2-ns br3 tc lh-2 bg-light-gray"
 						style={{
-							backgroundColor: props.iconBgColor,
+							backgroundColor: props.room.archive ? 'rgb(215, 215, 215)' : props.iconBgColor,
 							color: '#FFFFFF'
 						}}
 					>
-						{props.img}
+						{props.room.name[0]}
 					</span>
 				</div>
 				<div className="flex justify-around items-center">
-					<h1 className="f6-ns fw4 mv0 break-word">{props.name}</h1>
-					{props.unreadCount > 0 ? (
+					<h1
+						className="f6-ns fw4 mv0 break-word"
+						style={{
+							color: props.room.archive ? 'rgb(141, 141, 141)' : 'black'
+						}}
+					>{props.room.name}</h1>
+					{unreadCount > 0 ? (
 						<h6
 							className="bg-tigrowLightBlue white fw8 ma0 ml1"
 							style={{
@@ -63,7 +60,7 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 								borderRadius: '50%'
 							}}
 						>
-							{props.unreadCount}
+							{unreadCount}
 						</h6>
 					) : null}
 				</div>

@@ -12,6 +12,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard, getSelectedTaskDetails } from 'stores/board/Actions';
+import { getSingleProject } from 'stores/project/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -26,7 +27,8 @@ const load = async (
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => any,
   getSelectedBoardDetails: (boardId: string) => any,
-  getSelectedTask: (taskId: string) => any
+  getSelectedTask: (taskId: string) => any,
+  getSingleProject: (pid: string) => any
 ) => {
 
   await fetchUser();
@@ -35,6 +37,13 @@ const load = async (
     // only handled for 404 error status
     if (response.status === 404) {
       return response.status;
+    }
+  }
+  if (isEmpty((reactRouterMatch.params as any).projectId) === false) {
+    const responseStatus = await getSingleProject((reactRouterMatch.params as any).projectId);
+    // only handled for 404 error status
+    if (responseStatus === 404) {
+      return responseStatus;
     }
   }
   if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
@@ -64,8 +73,10 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   getCompanyDetails: (companyName: string) => any;
   getSelectedBoard: (boardId: string) => any;
   getSelectedTaskDetails: (taskId: string) => any;
+  getSingleProject: (pid: string) => any;
   company: ICompany;
   rightSidebarOpen: boolean;
+  project: any;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -89,7 +100,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         props.fetchUserAction,
         props.getCompanyDetails,
         props.getSelectedBoard,
-        props.getSelectedTaskDetails
+        props.getSelectedTaskDetails,
+        props.getSingleProject
       )
         .then((response) => {
           setLoading(false);
@@ -147,6 +159,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     company={props.company}
                     type={(props.match.params as any).cname ? 'company' : 'default'}
                     leftOpen={leftOpen}
+                    project={props.project}
                   />
                 </div>
               </div>
@@ -211,9 +224,11 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     company: state.companyReducer.currentCompany,
-    rightSidebarOpen: state.layoutReducer.rightSidebar.open
+    rightSidebarOpen: state.layoutReducer.rightSidebar.open,
+    project: state.projectReducer.projectDetails,
   };
 };
 
 export const Layout = connect(mapStateToProps,
-  { fetchUserAction, getCompanyDetails, getSelectedBoard, getSelectedTaskDetails })(withRouter(LayoutComponent));
+  // tslint:disable-next-line:max-line-length
+  { fetchUserAction, getCompanyDetails, getSelectedBoard, getSelectedTaskDetails, getSingleProject })(withRouter(LayoutComponent));
