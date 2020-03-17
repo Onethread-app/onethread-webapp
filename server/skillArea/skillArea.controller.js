@@ -17,7 +17,7 @@ const {setDocument, skillIndex , search} = require('../services/elastic.services
 
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   const skill = req.body.name;
@@ -115,7 +115,7 @@ const getAllSkill = async (req, res) => {
 
 const updateSkillInfo = async (req, res) => {
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   SkillArea.findOneAndUpdate({ _id: req.params.skill })

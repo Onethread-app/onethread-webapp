@@ -15,12 +15,21 @@ const idSchema = {
 const pid = Joi.object().keys({
   pid: idSchema.id,
 });
+// company-name
+const companyId = Joi.object().keys({
+  companyId: idSchema.id,
+});
+
 const schema = {
   name: Joi.string().max(50),
   type: Joi.string(),
   pid: idSchema.id,
-  description: Joi.string().max(2500).allow(''),
-  outline: Joi.string().max(5000).allow(''),
+  description: Joi.string()
+    .max(2500)
+    .allow(''),
+  outline: Joi.string()
+    .max(5000)
+    .allow(''),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
   color: Joi.number(),
@@ -59,20 +68,13 @@ module.exports = {
     })
   }),
   showProjectList: Joi.object().keys({
-    params: Joi.object().keys({
-      cname: schema.company.required(),
-    })
+    params:companyId.required(),
   }),
   archiveProject: Joi.object().keys({
-    params: Joi.object().keys({
-      pid:pid.required(),
-      cname: schema.company.required(),
-    })
+    params: pid.required(),
 
   }),
   searchConcernAdmin: Joi.object().keys({
-    params: Joi.object().keys({
-      cname: schema.company.required(),
-    })
+    params:companyId.required(), 
   }),
 };

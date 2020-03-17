@@ -1,5 +1,4 @@
 const express = require('express');
-const passport = require('passport');
 // const authorization = passport.authenticate('jwt', { session: false });
 const {
   authorization,

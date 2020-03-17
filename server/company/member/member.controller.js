@@ -22,7 +22,7 @@ const {
   sendInviteColleague,
 } = require('../../services/email.services');
 
-const changeRole = async (req, res, next) => {
+const changeRole = async (req, res, next) => {  
   try {
     // check role: superAdmin/admin
     const member = await Member.findOne({
@@ -32,7 +32,7 @@ const changeRole = async (req, res, next) => {
 
     if (req.body.role === 'admin' && member.role !== 'superAdmin') {
       return res.status(403).json({
-        message: `only super admin can do that`,
+        message: `Restricted`,
       });
     }
 
@@ -49,12 +49,10 @@ const changeRole = async (req, res, next) => {
   }
 };
 
-// add team member
 const addMember = async (req, res, next) => {
-  let membersToAdd = [];
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
 
   try {
@@ -66,12 +64,14 @@ const addMember = async (req, res, next) => {
 
     let members = [];
 
+    let accounts = [];
+
     let pendingMembers = [];
 
     if (req.body.members.length) {
       let newMembers = req.body.members;
 
-      let accounts = newMembers.map(member => member.account);
+      accounts = newMembers.map(member => member.account);
 
       // find previous members
       let prevMembers = await Member.find({
@@ -368,7 +368,6 @@ module.exports = {
   addMember,
   list,
   pendingList,
-
   getMember,
   deleteMember,
   getMemberLoad,

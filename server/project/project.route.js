@@ -9,14 +9,14 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 // authentication
 router
-  .route('/create')
+  .route('/:compnayId/create')
   .post(
     authorization,
-    schemaValidator(projectValidation.createNewProjectForCompany),
+    // schemaValidator(projectValidation.createNewProjectForCompany),
     projectCtrl.createNewProjectForCompany,
   );
 router
-  .route('/:cname/lists')
+  .route('/:compnayId/lists')
   .get(
     authorization,
     schemaValidator(projectValidation.showProjectList),
@@ -30,25 +30,28 @@ router
     projectCtrl.changeTitleProject,
   );
 router
-  .route('/concern-admin-search/:cname')
+  .route('/concern-admin-search/:companyId')
   .get(
     authorization,
     schemaValidator(projectValidation.searchConcernAdmin),
     projectCtrl.suggestConcernAdmin,
   );
 router
-  .route('/:cname/archive-list')
+  .route('/:companyId/archive-list')
   .get(
     authorization,
     schemaValidator(projectValidation.showProjectList),
     projectCtrl.archiveProjectList,
   );
-// router.param(
-//   'pid',
-//   authorization,
-//   // schemaValidator(projectValidation.getProject),
-//   projectCtrl.getProjectLoad,
-// );
+router
+  .route('/:companyId/pending-requests')
+  .get(authorization, projectCtrl.projectPendingRequest);
+router
+  .route('/:companyId/accept-request')
+  .put(authorization, projectCtrl.acceptProjectRequest);
+router
+  .route('/:companyId/reject-request')
+  .put(authorization, projectCtrl.rejectProjectRequest);
 router
   .route('/:pid')
   .get(authorization, projectCtrl.getProjectDetails);
@@ -60,7 +63,7 @@ router
     projectCtrl.updateProjectOutline,
   );
 
-  router
+router
   .route('/:pid/description')
   .put(
     authorization,
@@ -81,5 +84,4 @@ router
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
-
 module.exports = router;
