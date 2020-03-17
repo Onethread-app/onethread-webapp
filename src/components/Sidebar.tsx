@@ -272,7 +272,7 @@ export const Sidebar = (props: {
 							{isEmpty(props.project._id) === false &&
 
 								<div className="bg-white-10">
-									<h1 className="f7 fw4 white pl4 pv2">Tigrow Project</h1>
+									<h1 className="f7 fw4 white pl4 pv2">{props.project.name}</h1>
 									<Divider
 										style={{
 											borderRight: '1px groove darkgray',
@@ -345,12 +345,15 @@ export const Sidebar = (props: {
 											</Tooltip>
 										}
 										{props.leftOpen &&
-											<span
-												className="outline-0 bp3-large pl4"
-												style={{ color: 'inherit' }}
-											>
-												Room
-								</span>
+											<>
+												<span
+													className="outline-0 bp3-large pl4"
+													style={{ color: 'inherit' }}
+												>Room</span>
+												{props.companyRooms && unreadMessageNotification(props.companyRooms, 'project', props.project._id) ?
+													<span className="ml1 br-100 bg-red" style={{ width: '7px', height: '7px' }}></span>
+													: null}
+											</>
 										}
 									</NavLink>
 									<NavLink

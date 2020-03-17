@@ -202,7 +202,10 @@ const updateCompanyRooms = (companyRooms: ICompanyRoom[], updatedRoom: any) => {
 	return companyRooms.map((room: ICompanyRoom) => {
 		if (room._id === updatedRoom.id) {
 			return {
-				...room,
+				_id: room._id,
+				name: room.name,
+				company: room.company,
+				project: room.project,
 				unreadCount: updatedRoom.unreadCount
 			};
 		}

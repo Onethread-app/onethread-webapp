@@ -17,6 +17,7 @@ import { getSingleProject } from 'stores/project/Actions';
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
 import { ICompanyRoom } from 'stores/room/Reducer';
+import { SecondaryLayout } from './SecondaryLayout';
 
 // tslint:disable-next-line: no-var-requires
 const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
@@ -195,7 +196,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     ref={scrollRef}
                     className="flex-grow-1 overflow-y-auto bg-white"
                     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
-                    <props.Component />
+                    <SecondaryLayout Component={props.Component} />
                   </div>
                 </div>
               </div>

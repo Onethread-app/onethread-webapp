@@ -18,6 +18,7 @@ export interface ICompanyByUser {
 	company: {
 		_id: string;
 		name: string;
+		logo?: string;
 	};
 }
 export interface IProfilePhoto {

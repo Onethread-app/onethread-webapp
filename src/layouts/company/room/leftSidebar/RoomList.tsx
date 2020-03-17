@@ -143,7 +143,7 @@ export const RoomListComponent = withChatkit(
 					.forEach((room: any) => {
 						roomsUnreadCount[room.id] = room.unreadCount;
 						companyRooms.push({
-							_id: room._id,
+							_id: room.id,
 							name: room.name,
 							company: room.customData.company,
 							project: room.customData.project,

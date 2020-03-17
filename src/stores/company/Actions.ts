@@ -46,9 +46,9 @@ export const getCompanyDetails = (name: string) => async (dispatch: any, getStat
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.get(`company/${name}`, headers);
-			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
 			dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
 			dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+			dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
 			return response;
 		} else {
 			// tslint:disable-next-line: no-console
