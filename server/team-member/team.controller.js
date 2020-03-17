@@ -1,5 +1,6 @@
 const Account = require('../account/account.model');
 const { Team } = require('./team.model');
+const { Member } = require('../company/member/member.model');
 const { Project } = require('../project/project.model');
 const { Company } = require('../company/company.model');
 const { ProjectRequest } = require('../request/request.model');
@@ -52,10 +53,9 @@ const addTeamMember = async (req, res, next) => {
     const projectOwner = await Project.findOne({
       _id: req.query.pid,
     });
+    let members = req.body.members;
     if (projectOwner.company.toString() === req.params.companyId) {
-      let members = req.body.members;
-
-      accounts = newMembers.map(member => member.account);
+      accounts = members.map(member => member.account);
 
       // find previous members
       let prevMembers = await Team.find({
@@ -65,14 +65,19 @@ const addTeamMember = async (req, res, next) => {
       }).select('account');
       prevMembers = prevMembers.map(member => member.account);
       // filter new members
-      newMembers = newMembers.filter(newMember => {
+      members = members.filter(member => {
         return !prevMembers.some(prevMemberAccount => {
           return (
-            prevMemberAccount.toString() ===
-            newMember.account.toString()
+            prevMemberAccount.toString() === member.account.toString()
           );
         });
       });
+      await Team.updateMany(
+        { account: { $in: prevMembers }, project: req.query.pid },
+        {
+          removed: false,
+        },
+      );
       members.forEach(async account => {
         await Team.insertMany({
           account: account.account,
@@ -87,6 +92,29 @@ const addTeamMember = async (req, res, next) => {
       const memberAllowNumber = await ProjectRequest.findOne({
         project: req.query.pid,
       }).select('size');
+      accounts = members.map(member => member.account);
+      // find previous members
+      let prevMembers = await Team.find({
+        account: { $in: accounts },
+        project: req.query.pid,
+        removed: true,
+      }).select('account');
+      prevMembers = prevMembers.map(member => member.account);
+      // filter new members
+      members = members.filter(member => {
+        return !prevMembers.some(prevMemberAccount => {
+          return (
+            prevMemberAccount.toString() === member.account.toString()
+          );
+        });
+      });
+      await Team.updateMany(
+        { account: { $in: prevMembers }, project: req.query.pid },
+        {
+          removed: false,
+        },
+      );
+
       if (memberAllowNumber.size >= req.body.members.length) {
         // need to insertMany method later
         let members = req.body.members;
@@ -170,77 +198,41 @@ const getMember = (req, res, next) => {
 //   }
 // };
 
-// 1st step: Find member list from company.
-// 2nd step: Create a list of employee
-// 3rd step: Exclude them from the Team Search
-// cid = companyID
 const searchTeamMember = async (req, res, next) => {
   try {
     const { limit = 50, skip = 0, pid } = req.query;
-    const existingMembers = await Team.find({
-      _id: pid,
-      removed: false
-    }).sort({ createdAt: 1 })
-      .skip(+skip)
-      .limit(+limit)
-      .select('account role')
+    let projectMembers = await Project.findById(pid)
+      .select('-_id members')
+      .populate('members', '_id name')
+      .exec();
+    let companyMembers = await Member.find({
+      company: req.params.companyId,
+    })
+      .select('-_id account')
+      .populate('account', '_id name firstName lastName email')
+      .exec();
+    let members = companyMembers.filter(({ account }) => {
+      return !projectMembers.members.some(existingMember => {
+        return (
+          existingMember._id.toString() === account._id.toString()
+        );
+      });
+    });
+    members = members.map(m => m.account);
+    // console.log(members);
 
-    return sendJSONresponse(res, 200, existingMembers)
-
+    return sendJSONresponse(res, 200, { members });
   } catch (error) {
-    logger.error(`${error}`)
-    next(error)
+    logger.error(`${error}`);
+    next(error);
   }
-  // try {
-  //   const {
-  //     limit = 50,
-  //     skip = 0,
-  //     name,
-  //     companyID,
-  //     holder,
-  //   } = req.query;
-  //   if (holder === 'projectOwner') {
-  //     const company = await Company.findById({
-  //       _id: companyID,
-  //     }).populate('members', 'account');
-  //     let memberListId = company.members;
-  //     memberListId = memberListId.map(member => member.account);
-  //     let data = await Account.find({
-  //       $and: [
-  //         { name: { $regex: new RegExp(name) } },
-  //         { _id: { $nin: memberListId } },
-  //       ],
-  //     })
-  //       .select('_id email name firstName lastName')
-  //       .sort({ createdAt: -1 })
-  //       .skip(+skip)
-  //       .limit(+limit);
-  //     // TODO: pore ami change korbo query onusaree
-  //     return sendJSONresponse(res, 200, {
-  //       employees: {
-  //         message: `Search complete ${name}`,
-  //         data,
-  //       },
-  //     });
-  //   } else {
-  //     return sendJSONresponse(res, 200, {
-  //       employees: {
-  //         message: `Search complete ${name}`,
-  //         data,
-  //       },
-  //     });
-  //   }
-  // } catch (error) {
-  //   logger.error(`${error}`);
-  //   next(error);
-  // }
 };
 
 module.exports = {
   addTeamMember,
   list,
   getMember,
-  getMemberLoad,
+  // getMemberLoad,
   searchTeamMember,
   changeRole,
 };
