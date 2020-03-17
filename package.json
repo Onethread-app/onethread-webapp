@@ -37,6 +37,7 @@
     "react-transition-group": "^4.3.0",
     "react-vertical-timeline-component": "^2.5.0",
     "redux": "^4.0.4",
+    "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "tachyons": "4.10.0",
     "tslib": "^1.10.0",

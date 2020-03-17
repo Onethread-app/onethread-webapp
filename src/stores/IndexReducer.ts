@@ -7,12 +7,12 @@ import { BoardIndexReducer } from './boardIndexReducer';
 import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 
-export const RootReducer = combineReducers({
-	layoutReducer: LayoutReducer,
-	roomReducer: RoomReducer,
-	userReducer: UserReducer,
-	companyReducer: CompanyReducer,
-	boardIndexReducer: BoardIndexReducer,
-	associateReducer: AssociateReducer,
-	projectReducer: ProjectReducer
+export const rootReducer = combineReducers({
+  layoutReducer: LayoutReducer,
+  roomReducer: RoomReducer,
+  userReducer: UserReducer,
+  companyReducer: CompanyReducer,
+  boardIndexReducer: BoardIndexReducer,
+  associateReducer: AssociateReducer,
+  projectReducer: ProjectReducer
 });

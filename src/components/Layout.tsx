@@ -12,13 +12,16 @@ import { ICompany } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard, getSelectedTaskDetails } from 'stores/board/Actions';
-import { getSingleProject } from 'stores/project/Actions';
+// import { getSingleProject } from 'stores/project/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
 
 // tslint:disable-next-line: no-var-requires
-const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
+const {
+  ChatkitProvider,
+  TokenProvider
+} = require('@pusher/chatkit-client-react');
 
 const tokenProvider = new TokenProvider({ url: TokenUrlServer });
 
@@ -27,34 +30,39 @@ const load = async (
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => any,
   getSelectedBoardDetails: (boardId: string) => any,
-  getSelectedTask: (taskId: string) => any,
-  getSingleProject: (pid: string) => any
+  getSelectedTask: (taskId: string) => any
+  // getSingleProject: (pid: string) => any
 ) => {
-
   await fetchUser();
   if (isEmpty((reactRouterMatch.params as any).cname) === false) {
-    const response = await getCompanyInformation((reactRouterMatch.params as any).cname);
+    const response = await getCompanyInformation(
+      (reactRouterMatch.params as any).cname
+    );
     // only handled for 404 error status
     if (response.status === 404) {
       return response.status;
     }
   }
-  if (isEmpty((reactRouterMatch.params as any).projectId) === false) {
-    const responseStatus = await getSingleProject((reactRouterMatch.params as any).projectId);
-    // only handled for 404 error status
-    if (responseStatus === 404) {
-      return responseStatus;
-    }
-  }
+  // if (isEmpty((reactRouterMatch.params as any).projectId) === false) {
+  //   const responseStatus = await getSingleProject((reactRouterMatch.params as any).projectId);
+  //   // only handled for 404 error status
+  //   if (responseStatus === 404) {
+  //     return responseStatus;
+  //   }
+  // }
   if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
-    const responseStatus = await getSelectedBoardDetails((reactRouterMatch.params as any).boardId);
+    const responseStatus = await getSelectedBoardDetails(
+      (reactRouterMatch.params as any).boardId
+    );
     // only handled for 404 error status
     if (responseStatus === 404) {
       return responseStatus;
     }
   }
   if (isEmpty((reactRouterMatch.params as any).taskId) === false) {
-    const responseStatus = await getSelectedTask((reactRouterMatch.params as any).taskId);
+    const responseStatus = await getSelectedTask(
+      (reactRouterMatch.params as any).taskId
+    );
     // only handled for 404 error status
     if (responseStatus === 404) {
       return responseStatus;
@@ -73,14 +81,13 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
   getCompanyDetails: (companyName: string) => any;
   getSelectedBoard: (boardId: string) => any;
   getSelectedTaskDetails: (taskId: string) => any;
-  getSingleProject: (pid: string) => any;
+  // getSingleProject: (pid: string) => any;
   company: ICompany;
   rightSidebarOpen: boolean;
   project: any;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -88,27 +95,33 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       props.history.push(`/${props.user.name}`);
       setLoading(false);
     }
-    if ((props.match.params as any).username && props.user && props.user.name
-      && isEqual((props.match.params as any).username, props.user.name) === false) {
+    if (
+      (props.match.params as any).username &&
+      props.user &&
+      props.user.name &&
+      isEqual((props.match.params as any).username, props.user.name) === false
+    ) {
       setLoading(false);
       props.history.push(`/notFound`);
     }
-    if (isEmpty(props.user._id) === true || (isEmpty((props.match.params as any).cname) === false
-      && isEmpty(props.company._id) === true)) {
+    if (
+      isEmpty(props.user._id) === true ||
+      (isEmpty((props.match.params as any).cname) === false &&
+        isEmpty(props.company._id) === true)
+    ) {
       load(
         props.match,
         props.fetchUserAction,
         props.getCompanyDetails,
         props.getSelectedBoard,
-        props.getSelectedTaskDetails,
-        props.getSingleProject
-      )
-        .then((response) => {
-          setLoading(false);
-          if (response === 404) {
-            props.history.push(`/notFound`);
-          }
-        });
+        props.getSelectedTaskDetails
+        // props.getSingleProject
+      ).then(response => {
+        setLoading(false);
+        if (response === 404) {
+          props.history.push(`/notFound`);
+        }
+      });
     }
   }, [loading]);
 
@@ -118,104 +131,120 @@ const LayoutComponent = (props: LayoutInternalProps) => {
 
   return (
     <div
-      className="cf vh-100"
+      className='cf vh-100'
       style={{ background: '#060517' }}
-      onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
+      onScroll={() =>
+        scrollRef &&
+        scrollRef.current &&
+        setScrollTop(scrollRef.current.scrollTop)
+      }
     >
-      {loading === true ? <Loading />
-        : isEmpty(props.user._id) === true ?
-          <p className="f3 tc fw5 pt4 white">
-            Your Session is expired. Please
-              <Link
-              className="fw9 dt center tigrow-lightBlue pt4"
-              to="/signin"
-              onClick={() => {
-                localStorage.removeItem('tigrow_acc_id');
-                localStorage.removeItem('tigrow_real_id');
-              }}
-            >
-              Sign in
-              </Link>
-          </p>
-          :
-          <ChatkitProvider
-            instanceLocator={InstanceLocator}
-            tokenProvider={tokenProvider}
-            userId={props.user._id}
+      {loading === true ? (
+        <Loading />
+      ) : isEmpty(props.user._id) === true ? (
+        <p className='f3 tc fw5 pt4 white'>
+          Your Session is expired. Please
+          <Link
+            className='fw9 dt center tigrow-lightBlue pt4'
+            to='/signin'
+            onClick={() => {
+              localStorage.removeItem('tigrow_acc_id');
+              localStorage.removeItem('tigrow_real_id');
+            }}
+          >
+            Sign in
+          </Link>
+        </p>
+      ) : (
+        <ChatkitProvider
+          instanceLocator={InstanceLocator}
+          tokenProvider={tokenProvider}
+          userId={props.user._id}
+        >
+          <div
+            id='main-layout'
+            className={`flex relative h-100 ${props.rightSidebarOpen &&
+              'main-layout-overlay'}`}
           >
             <div
-              id="main-layout"
-              className={`flex relative h-100 ${props.rightSidebarOpen && 'main-layout-overlay'}`}
+              className={`relative`}
+              style={{
+                transition: 'width 0.4s',
+                width: leftOpen ? '15%' : '4%'
+              }}
             >
-              <div
-                className={`relative`}
-                style={{
-                  transition: 'width 0.4s',
-                  width: leftOpen ? '15%' : '4%'
-                }}>
-                <div>
-                  <Sidebar
-                    user={props.user}
-                    company={props.company}
-                    type={(props.match.params as any).cname ? 'company' : 'default'}
-                    leftOpen={leftOpen}
-                    project={props.project}
-                  />
-                </div>
+              <div>
+                <Sidebar
+                  user={props.user}
+                  company={props.company}
+                  type={
+                    (props.match.params as any).cname ? 'company' : 'default'
+                  }
+                  leftOpen={leftOpen}
+                  project={props.project}
+                />
               </div>
+            </div>
 
-              <div
-                className="relative br3 pv1"
-                style={{
-                  transition: 'width 0.4s',
-                  width: leftOpen ? props.rightSidebarOpen ? '55%' : '85%' : props.rightSidebarOpen ? '66%' : '96%'
-                }}>
-                <span
-                  className="pointer absolute bp3-icon z-3 top-1 left--1"
-                  onClick={() => setLeftOpen(!leftOpen)}
-                >
-                  <img
-                    src={leftOpen ? arrowLeft : arrowRight}
-                    className="br2 w2"
-                    color="#0FA3A3"
-                  />
-                </span>
+            <div
+              className='relative br3 pv1'
+              style={{
+                transition: 'width 0.4s',
+                width: leftOpen
+                  ? props.rightSidebarOpen
+                    ? '55%'
+                    : '85%'
+                  : props.rightSidebarOpen
+                  ? '66%'
+                  : '96%'
+              }}
+            >
+              <span
+                className='pointer absolute bp3-icon z-3 top-1 left--1'
+                onClick={() => setLeftOpen(!leftOpen)}
+              >
+                <img
+                  src={leftOpen ? arrowLeft : arrowRight}
+                  className='br2 w2'
+                  color='#0FA3A3'
+                />
+              </span>
+              <div className='flex flex-column h-100'>
+                <NavbarTop
+                  scrollTop={scrollTop}
+                  type={
+                    (props.match.params as any).cname ? 'company' : 'default'
+                  }
+                />
                 <div
-                  className="flex flex-column h-100"
+                  ref={scrollRef}
+                  className='flex-grow-1 overflow-y-auto bg-white'
+                  style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}
                 >
-                  <NavbarTop
-                    scrollTop={scrollTop}
-                    type={(props.match.params as any).cname ? 'company' : 'default'}
-
-                  />
-                  <div
-                    ref={scrollRef}
-                    className="flex-grow-1 overflow-y-auto bg-white"
-                    style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
-                    <props.Component />
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className="relative h-100"
-                style={{
-                  transition: 'width 0.4s',
-                  width: props.rightSidebarOpen ? '30%' : '0%',
-                  zIndex: 5
-                }}>
-                <div
-                  id="rightSidebar"
-                  className="h-100 c-tigrowWhite"
-                  style={{
-                    background: 'rgb(6, 5, 23)'
-                  }}
-                >
+                  <props.Component />
                 </div>
               </div>
             </div>
-          </ChatkitProvider>
-      }
+
+            <div
+              className='relative h-100'
+              style={{
+                transition: 'width 0.4s',
+                width: props.rightSidebarOpen ? '30%' : '0%',
+                zIndex: 5
+              }}
+            >
+              <div
+                id='rightSidebar'
+                className='h-100 c-tigrowWhite'
+                style={{
+                  background: 'rgb(6, 5, 23)'
+                }}
+              ></div>
+            </div>
+          </div>
+        </ChatkitProvider>
+      )}
     </div>
   );
 };
@@ -225,10 +254,18 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     company: state.companyReducer.currentCompany,
     rightSidebarOpen: state.layoutReducer.rightSidebar.open,
-    project: state.projectReducer.projectDetails,
+    project: state.projectReducer.projectDetails
   };
 };
 
-export const Layout = connect(mapStateToProps,
+export const Layout = connect(
+  mapStateToProps,
   // tslint:disable-next-line:max-line-length
-  { fetchUserAction, getCompanyDetails, getSelectedBoard, getSelectedTaskDetails, getSingleProject })(withRouter(LayoutComponent));
+  {
+    fetchUserAction,
+    getCompanyDetails,
+    getSelectedBoard,
+    getSelectedTaskDetails
+    // getSingleProject
+  }
+)(withRouter(LayoutComponent));
