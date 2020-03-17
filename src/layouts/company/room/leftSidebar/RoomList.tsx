@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
 import { useDispatch, connect } from 'react-redux';
-import { getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions } from '../../../../stores/room/Actions';
+import {
+	getRoomMembers,
+	getRoomMessages,
+	getRooms,
+	getRoomSharedFiles,
+	getRoomDiscussions
+} from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
@@ -17,7 +23,7 @@ import {
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
-import { IRoom, IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
+import { IRoom, IRoomMessage, IRoomReducer, ICompanyRoom } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -137,7 +143,7 @@ export const RoomListComponent = withChatkit(
 				load(props.getRooms);
 
 				const roomsUnreadCount = {};
-				const companyRooms: any[] = [];
+				const companyRooms: ICompanyRoom[] = [];
 				props.chatkit.currentUser.rooms
 					.filter((room: any) => room.customData.company === props.companyId)
 					.forEach((room: any) => {

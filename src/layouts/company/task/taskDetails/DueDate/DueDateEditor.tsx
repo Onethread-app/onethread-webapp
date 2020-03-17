@@ -57,7 +57,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
                   parseDate={(str: string) => new Date(str)}
                   onChange={input.onChange}
                   canClearSelection={false}
-                  value={input.value ? input.value : null}
+                  value={input.value ? new Date(input.value) : null}
                   popoverProps={{
                     targetClassName: 'w-100'
                   }}

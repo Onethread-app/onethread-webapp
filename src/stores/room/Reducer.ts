@@ -34,7 +34,8 @@ import {
 	SET_ROOM_DISCUSSIONS,
 	TOGGLE_ROOM_DISCUSSIONS_ERROR,
 	REMOVE_ROOM_DISCUSSIONS,
-	GET_COMPANY_ROOMS
+	GET_COMPANY_ROOMS,
+	CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -480,6 +481,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
 		case CLEAR_ROOMS_REDUCER_STATE:
 			return {
 				...InitialState
+			};
+		case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT:
+			return {
+				...InitialState,
+				companyRooms: state.companyRooms
 			};
 		default:
 			return state;

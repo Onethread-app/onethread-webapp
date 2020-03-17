@@ -16,16 +16,11 @@ import {
   getSingleProject,
   setCurrentProjectId
 } from '../../../stores/project/Actions';
+import { getAllAssociates } from 'stores/associate/Actions';
 
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(false);
-
-  const projectType = [
-    { _id: 'sd', name: 'Single Department' },
-    { _id: 'md', name: 'Multiple Department' },
-    { _id: 'associates', name: 'Associates' }
-  ];
 
   const projectArchive = async (pid: string) => {
     await props.archiveProject(pid);
@@ -43,6 +38,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     props.getAllProjects();
     props.getAllDepartments();
     props.getProjectArchive();
+    props.getAllAssociates();
   }, []);
   return (
     <>  <div className="flex justify-end">
@@ -298,8 +294,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
         <RightSidebar
           onClose={() => setShowProjectDialog(!showProjectDialog)}
         >
-          <FormProject setShowProjectDialog={setShowProjectDialog}
-            projectType={projectType} />
+          <FormProject
+            setShowProjectDialog={setShowProjectDialog}
+          />
         </RightSidebar>
       )}
 
@@ -314,6 +311,9 @@ const mapStateToProps = (state: any) => ({
   companyRooms: state.roomReducer.companyRooms,
 });
 
-export const MyProjectPage = connect(mapStateToProps,
-  { getAllProjects, getAllDepartments, archiveProject, getProjectArchive, getSingleProject, setCurrentProjectId })
+export const MyProject = connect(mapStateToProps,
+  {
+    getAllProjects, getAllDepartments, archiveProject, getProjectArchive, getSingleProject,
+    setCurrentProjectId, getAllAssociates
+  })
   (withRouter(MyProjectPageComponent));
