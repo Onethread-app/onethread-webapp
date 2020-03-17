@@ -358,8 +358,6 @@ const authorizeUser = (functionalRole, ...userRoles) => {
       //   !userRoles.includes(member.role) ||
       //   !company.optionalRole.includes(functionalRole)
       // )
-
-      //console.log(member, userRoles, functionalRole, 'a');
       if (
         !member ||
         (functionalRole === 'all' && !userRoles.includes(member.role))
@@ -371,6 +369,7 @@ const authorizeUser = (functionalRole, ...userRoles) => {
 
       next();
     } catch (error) {
+      console.log('1',error)
       next(error);
     }
   };

@@ -2,6 +2,7 @@ const { Member } = require('../company/member/member.model');
 const { Project } = require('./project.model');
 const { ProjectRequest } = require('../request/request.model');
 const { Associate } = require('../associate/associate.model');
+const { Team } = require('../team-member/team.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
 const {
@@ -13,21 +14,21 @@ const {
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
 
-const createNewProjectForCompany = async (req, res, next) => {
-try {
+const createNewProjectForCompany = async (req, res, next) =>{ 
+  try {
   const userExist = await Member.findOne({
     account: req.body.concernedAdmin,
   });
   let associates = req.body.associates;
   if (userExist) {
-    if (req.body.type === 'associates' ) {
+    if (req.body.type === 'associates') {
       const project = new Project({
         name: req.body.name,
         type: req.body.type,
         concernedAdmin: req.body.concernedAdmin,
         departments: req.body.departments,
         color: req.body.color,
-        company: req.body.companyId,
+        company: req.params.companyId,
         description: '',
         outline: '',
       });
@@ -43,12 +44,12 @@ try {
           project: project._id,
         });
         await createProjectReq.save();
-        const newTeam = new addTeamMember({
+        const newTeam = await team({
           account: req.user._id,
           project: project._id,
-          role: 'admin'
-        });
-        await newTeam.save(); 
+          role: 'admin',
+        })
+        await newTeam.save();
         logger.info(
           `${req.body.companyId} company send a project request to its associate`,
         );
@@ -89,21 +90,45 @@ try {
     });
   }
 } catch (error) {
-  console.log(error)
   next(error)
-  
 }
 };
+// update a company role
+const updateRole = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
 
+  try {
+    const project = await Project.findOneAndUpdate(
+      { _id: req.query.pid },
+      { $set: { optionalRole: req.body.optionalRole } },
+      {
+        safe: true,
+        upsert: true,
+      },
+    ).exec();
+
+    //await req.company.save();
+    return sendJSONresponse(res, 200, {
+      message: `Project's role updated`,
+      data: project.optionalRole,
+    })
+  } catch (error) {
+    logger.error(`${error}`)
+    next(error);
+  }
+};
 const projectPendingRequest = async (req, res, next) => {
   const { limit = 10, skip = 0 } = req.query;
   const companyId = req.params.companyId;
 
   ProjectRequest.find({
-   $and:[ {isAccepted: false},
-    {associate: companyId}]
+    $and: [{ isAccepted: false },
+    { associate: companyId }]
   })
-  .select('company project')
+    .select('company project')
     .populate('company project')
     .sort({ createdAt: -1 })
     .skip(+skip)
@@ -174,7 +199,7 @@ const rejectProjectRequest = async (req, res, next) => {
     );
     logger.info(`project id: ${req.query.pid} rejected by company`);
     return sendJSONresponse(res, 200, {
-      message: `${req.query.pid} rejected by ${req.query.companyId}`,
+      message: `${req.query.pid} rejected by ${req.params.companyId}`,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -185,9 +210,10 @@ const rejectProjectRequest = async (req, res, next) => {
 const showAllProjectsForCompany = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   let companyId = req.params.compnayId;
-  const allProjects = await Project.find({
-    company: companyId,
-    removed: false,
+
+
+  await Project.find({
+    $or: [{ company: companyId, removed: false }, { associate: { $in: [companyId] }, removed: false }]
   })
     .populate('departments', 'name _id ')
     .select('-type -__v  -files -version ')
@@ -445,7 +471,7 @@ const searchMemberFromMyCompany = async (req, res, next) => {
   }
 };
 
-const searchMemberFromAssociates = async () => {};
+const searchMemberFromAssociates = async () => { };
 
 const addTeamMember = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -497,6 +523,35 @@ const addTeamMember = async (req, res, next) => {
     next(error);
   }
 };
+
+const authorizeProjectRole = (functionalRole, ...userRoles) => {
+  return async function (req, res, next) {
+    try {
+      // const company =  await Company.findOne({
+      //   _id: req.params.companyId,
+      // }).select('_id optionalRole').exec();
+
+      const team = await Team.findOne({
+        account: req.user._id,
+        project: req.query.pid,
+      }).exec();
+
+      if (
+        !team ||
+        (functionalRole === 'all' && !userRoles.includes(team.role))
+      ) {
+        return res.status(403).json({
+          message: `Restricted`,
+        });
+      }
+
+      next();
+    } catch (error) {
+      console.log(error)
+      next(error);
+    }
+  };
+};
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
@@ -513,4 +568,6 @@ module.exports = {
   projectPendingRequest,
   acceptProjectRequest,
   rejectProjectRequest,
+  authorizeProjectRole,
+  updateRole,
 };

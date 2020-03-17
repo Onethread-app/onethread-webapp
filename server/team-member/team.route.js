@@ -5,15 +5,18 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 const teamValidation = require('./team.validation');
 const teamCtrl = require('./team.controller');
-
+const projectCtrl = require('../project/project.controller');
 const SchemaValidator = require('../helpers/joiSchemaValidator');
 
-router.route('/search').get(authorization, teamCtrl.searchTeamMember);
+router
+  .route('/:companyId/search')
+  .get(authorization, teamCtrl.searchTeamMember);
 
-router.route('/add-team-member').post(
+router.route('/:companyId/add-team-member').post(
   authorization,
   // TODO: member validations
-  // SchemaValidator(joiSchema.newMember),
+  projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator', 'member'),
+  // SchemaValidator(joiSchema.newMember),  
   teamCtrl.addTeamMember,
 );
 // .get(authorization, teamCtrl.list);
@@ -22,18 +25,19 @@ router
   .route('/:memberId')
   .get(
     authorization,
-    SchemaValidator(teamValidation.getMember),
+    // SchemaValidator(teamValidation.getMember),
     teamCtrl.getMember,
   );
 
-// router
-//   .route('/:memberId/changeRole')
-//   .put(
-//     authorization,
-//     SchemaValidator(teamValidation.changeRole),
-//     memberCtrl.changeRole,
-//   );
+router
+  .route('/:memberId/changeRole')
+  .put(
+    authorization,
+    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
+    // SchemaValidator(teamValidation.changeRole),
+    teamCtrl.changeRole,
+  );
 
-// router.param('memberId', memberCtrl.getMemberLoad);
+router.param('memberId', teamCtrl.getMemberLoad);
 
 module.exports = router;
