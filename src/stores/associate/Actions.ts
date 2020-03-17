@@ -75,9 +75,12 @@ export const getAllAssociates = () => async (dispatch: any, getState: any) => {
 export const getAllPendingAssociates = () => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
+
     if ((headers as any).headers.Authorization) {
       const companyId = getState().companyReducer.currentCompany._id;
       const response = await tigrowApi.get(`associate/pending/${companyId}`, headers);
+
+    
       const associates = response.data.map((associate: any) => (
         isEqual(companyId, associate.company._id) === true ?
           {
