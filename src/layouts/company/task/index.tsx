@@ -7,20 +7,26 @@ import { ActivityView } from './activity/ActivityView';
 import { ITask, TaskBoard } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { TaskDetails } from './taskDetails';
+import { IProject } from 'stores/project/Reducer';
 
 interface TaskInternalProps {
     currentTask: ITask;
     currentBoard?: TaskBoard;
     company: ICompany;
+    currentProject: IProject;
 }
 
 const TaskPageComponent = (props: TaskInternalProps) => {
-    return (
+    return ( 
         <div className="cf ph3">
             <BreadCrumbs
                 items={[
-                    { text: `Board`, href: `/company/${props.company.name}/board` },
-                    { text: `${props.currentBoard!.name}`, href: `/company/${props.company.name}/board/${props.currentBoard!._id}` },
+                    { text: `Board`,
+                     href: `/company/${props.company.name}/project/${props.currentProject!._id}/board`
+                     },
+                    { text: `${props.currentBoard!.name}`,
+                     href: `/company/${props.company.name}/board/${props.currentBoard!._id}` 
+                    },
                     {
                         text: `${props.currentTask!.name}`,
                         href: `/company/${props.company.name}/board/${props.currentBoard!._id}/task/${props.currentTask._id}`
@@ -46,6 +52,7 @@ const mapStateToProps = (state: any) => {
     return {
         currentTask: state.boardIndexReducer.boardReducer.currentTask,
         currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+        currentProject: state.projectReducer.projectDetails,
         company: state.companyReducer.currentCompany
     };
 };

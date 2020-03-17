@@ -148,7 +148,7 @@ export const App = () => (
 				component={RoomPage}
 			/>
 			<PrivateRoute
-				path="/company/:cname/board"
+				path="/company/:cname/project/:projectId/board"
 				exact={true}
 				component={BoardPage}
 			/>
