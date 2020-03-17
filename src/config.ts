@@ -12,7 +12,7 @@ export const arif = 'http://52.221.186.32:1727/api/v1/';
 export const nizam = 'http://52.221.186.32:4000/api/v1/';
 export const omer = 'http://192.168.8.67:4044/api/v1/';
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
-export const server = local;
+export const server = arif;
 
 export const TokenUrlServer = `${server}chatkit/authenticate`;
 
