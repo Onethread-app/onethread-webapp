@@ -1,7 +1,8 @@
 import { PROJECT } from './Types';
 import { Entity } from 'stores/UtilsActions';
+import { User } from 'stores/user/Reducer';
 
-export interface Project {
+export interface IProject {
   _id: string;
   name: string;
   color: number;
@@ -10,11 +11,26 @@ export interface Project {
   files: any;
   departments: Entity[];
   totalMember: number;
+  concernAdmin: User;
 }
+
+export interface IPendingProject {
+  _id: string;
+  project: IProject
+}
+
+export interface ProjectModel {
+  pendingProjects: IProject[];
+  allProjects: IProject[];
+  allArchive: IProject[];
+  projectDetails: IProject
+}
+
 
 const initialState = {
   allProjects: [],
   allArchive: [],
+  pendingProjects: [],
   projectDetails: {
     color: 0,
     files: [],
@@ -33,6 +49,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         allProjects: action.payload
       };
+      case PROJECT.PROJECT_GET_ALL_PENDING_PROJECT:
+      return {
+        ...state,
+        pendingProjects: action.payload
+      };
     case PROJECT.PROJECT_GET_ALL_ARCHIVE:
       return {
         ...state,
@@ -48,6 +69,14 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         pid: action.payload
       };
+    case PROJECT.PROJECT_ADD_PROJECT:
+        return {
+          ...state,
+          allProjects: [
+            ...state.allProjects,
+            action.payload
+          ]
+        };
     default:
       return state;
   }

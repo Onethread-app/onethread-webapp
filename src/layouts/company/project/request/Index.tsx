@@ -1,24 +1,53 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Button, Divider } from '@blueprintjs/core';
+import { Loading } from 'components/Loading';
+import { getAllPendingProjects, acceptPendingProject, rejectPendingProject } from 'stores/project/Actions';
+import {  IPendingProject , IProject } from 'stores/project/Reducer';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-const ProjectRequestComponent = () => {
+interface IProjectRequestComponent {
+
+  PendingProjects: IPendingProject[];
+  getAllPendingProjects: () => void;
+  acceptPendingProject: (project : IProject) => void;
+  rejectPendingProject: (projectId : string) => void;
+}
+
+ const ProjectRequestComponent = (props: IProjectRequestComponent & RouteComponentProps) => {
+
+  useEffect(() => {
+    // get all pending projects
+
+    async function loadPendingProjects(getAllPendingProjects: () => void) {
+      setLoading(true);
+      await getAllPendingProjects();
+      setLoading(false);
+    }
+    loadPendingProjects(props.getAllPendingProjects);
+  }, []);
+
+  const [loading, setLoading] = useState(true);
+  const [acceptLoading, setAcceptLoading] = useState(false);
+  const [rejectLoading, setRejectLoading] = useState(false);
 
   return (
-    <main className="">
+
+    <div>
+    {
+      loading === false ?
+
+      props.PendingProjects.map((pending)=> (
+
+        <main className="">
       <article className="dt w-100 pv4 mt2" >
         <div className="dtc w2 w3-ns v-mid">
           <img src="http://mrmrs.github.io/photos/p/2.jpg" className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns" />
         </div>
         <div className="dtc v-mid pl3 mw6">
           <h1 className="f5 black mv0">Pratidin</h1>
-          <h1 className="f6 f5-ns fw6 lh-title black mt3 mb0">500 pieces silky clothes</h1>
-          <h2 className="f6 fw4 mt0 mb0 black-60">it is a long established fact that
-          it is a long established fact that
-          it is a long established fact that
-          it is a long established fact that
-          it is a long established fact that
-            </h2>
+          <h1 className="f6 f5-ns fw6 lh-title black mt3 mb0">{pending.project.name}</h1>
+          <h2 className="f6 fw4 mt0 mb0 black-60">{pending.project.description}</h2>
         </div>
         <div className="dtc v-mid">
           <form className="w-100 tr">
@@ -26,6 +55,12 @@ const ProjectRequestComponent = () => {
               className="w4 grow h2 pointer bp3-minimal mr4"
               style={{ border: '1px solid silver', outline: 'none' }}
               type="submit"
+              loading={rejectLoading}
+              onClick={async () => {
+                setRejectLoading(true);
+                await props.rejectPendingProject(pending.project._id);
+                setRejectLoading(false);
+              }}
             >
               Reject
               </Button>
@@ -33,6 +68,12 @@ const ProjectRequestComponent = () => {
               className="w4 grow h2 pointer"
               style={{ background: '#0fa3a3', outline: 'none', color: 'white', border: 'none' }}
               type="submit"
+              loading={acceptLoading}
+              onClick={async () => {
+                setAcceptLoading(true);
+                await props.acceptPendingProject(pending.project);
+                setAcceptLoading(false);
+              }}
             >
               Accept
           </Button>
@@ -41,13 +82,21 @@ const ProjectRequestComponent = () => {
       </article>
       <Divider />
     </main>
+
+      ))
+
+       : <Loading />
+
+    }
+    </div>
+    
   );
 };
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user
+    PendingProjects: state.projectReducer.pendingProjects
   };
 };
 
-export const ProjectRequest = connect(mapStateToProps)(ProjectRequestComponent);
+export const PendingProjectRequest = connect(mapStateToProps , {getAllPendingProjects , acceptPendingProject , rejectPendingProject}  )(withRouter(ProjectRequestComponent));
