@@ -2,6 +2,7 @@ import { PROJECT } from './Types';
 import { tigrowApi } from 'config';
 import { tokenConfig, tokenConfigFIleUpload } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
+import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
 
 export const getAllProjects = () => async (dispatch: any, getState: any) => {
   try {
@@ -24,7 +25,7 @@ export const getAllProjects = () => async (dispatch: any, getState: any) => {
   }
 };
 
-export const createProject = (payload: any, admin: {_id: ''}) => async (dispatch: any, getState: any) => {
+export const createProject = (payload: any, admin: { _id: '' }) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
@@ -32,7 +33,7 @@ export const createProject = (payload: any, admin: {_id: ''}) => async (dispatch
       const reqBody = {
         name: payload.name,
         type: payload.projectType,
-        departments: typeof payload.departments === 'string' ? [payload.departments] : [...payload.departments] ,
+        departments: typeof payload.departments === 'string' ? [payload.departments] : [...payload.departments],
         companyId,
         color: payload.color,
         concernedAdmin: admin._id
@@ -130,6 +131,7 @@ export const getSingleProject = (pid: string) => async (dispatch: any) => {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`projects/${pid}`, headers);
+      await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
       dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
       return response.data;
     }
@@ -145,56 +147,56 @@ export const getSingleProject = (pid: string) => async (dispatch: any) => {
   }
 };
 
-export const projectPrefaceDescriptionUpdate = 
-(pid: string, description: string) => async (dispatch: any, getState: any) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const reqBody = {
-        description 
-      };
-      const response = await tigrowApi.put(`projects/${pid}/description`, reqBody, headers);
-      dispatch({ type: PROJECT.PROJECT_PREFACE_DES_UP });
-      return response.data;
+export const projectPrefaceDescriptionUpdate =
+  (pid: string, description: string) => async (dispatch: any, getState: any) => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const reqBody = {
+          description
+        };
+        const response = await tigrowApi.put(`projects/${pid}/description`, reqBody, headers);
+        dispatch({ type: PROJECT.PROJECT_PREFACE_DES_UP });
+        return response.data;
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log(error.response);
+        // return error.response;
+      }
     }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-      // return error.response;
-    }
-  }
-};
+  };
 
-export const projectPrefaceOutlineUpdate = 
-(pid: string, outline: string) => async (dispatch: any, getState: any) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const reqBody = {
-        outline 
-      };
-      const response = await tigrowApi.put(`projects/${pid}/outline`, reqBody, headers);
-      dispatch({ type: PROJECT.PROJECT_PREFACE_OUT_UP });
-      return response.data;
+export const projectPrefaceOutlineUpdate =
+  (pid: string, outline: string) => async (dispatch: any, getState: any) => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const reqBody = {
+          outline
+        };
+        const response = await tigrowApi.put(`projects/${pid}/outline`, reqBody, headers);
+        dispatch({ type: PROJECT.PROJECT_PREFACE_OUT_UP });
+        return response.data;
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log(error.response);
+        // return error.response;
+      }
     }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-      // return error.response;
-    }
-  }
-};
+  };
 
 export const setCurrentProjectId = (pid: string) => async (dispatch: any) => {
-  dispatch({type: PROJECT.PROJECT_PROJECT_ID, payload: pid});
+  dispatch({ type: PROJECT.PROJECT_PROJECT_ID, payload: pid });
 };
 
 export const projectFileUpload: any = (file: any, pid: string) => async (dispatch: any) => {

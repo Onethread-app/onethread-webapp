@@ -352,7 +352,7 @@ export const companyLogoUploadAction = (imageSelected: any) => async (dispatch: 
 		const companyId = getState().companyReducer.currentCompany._id;
 		if ((headers as any).headers.Authorization) {
 			const response = await tigrowApi.post(`files/company-logo?cid=${companyId}`, imageSelected, headers);
-			dispatch({ type: LOGO_UPLOAD, payload: { ...response.data, link: response.data.link } });
+			dispatch({ type: LOGO_UPLOAD, payload: response.data.link });
 			return response.data;
 		} else {
 			// tslint:disable-next-line: no-console
