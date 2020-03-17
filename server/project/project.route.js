@@ -12,7 +12,7 @@ const {
 router.route('/:companyId/create').post(
   authorization,
   companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
- // schemaValidator(projectValidation.createNewProjectForCompany),
+  // schemaValidator(projectValidation.createNewProjectForCompany),
   projectCtrl.createNewProjectForCompany,
 );
 router
@@ -31,7 +31,7 @@ router
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
-      'rojectModerator',
+      'projectModerator',
     ),
     schemaValidator(projectValidation.changeNameProject),
     projectCtrl.changeTitleProject,
@@ -75,12 +75,25 @@ router
   );
 router
   .route('/:pid')
-  .get(authorization, projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator', 'member'), projectCtrl.getProjectDetails);
+  .get(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    projectCtrl.getProjectDetails,
+  );
 router
   .route('/:pid/outline')
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     schemaValidator(projectValidation.updateProjectOutline),
     projectCtrl.updateProjectOutline,
   );
@@ -89,7 +102,11 @@ router
   .route('/:pid/description')
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     schemaValidator(projectValidation.updateProjectDescription),
     projectCtrl.updateProjectDescription,
   );
@@ -97,7 +114,12 @@ router
   .route('/:pid/show-files')
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator', 'member'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     schemaValidator(projectValidation.getProject),
     projectCtrl.showAllFilesForProject,
   );
@@ -105,7 +127,11 @@ router
   .route('/:pid/archive')
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
@@ -116,4 +142,7 @@ router
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     projectCtrl.updateRole,
   );
+router
+  .route('/individual/:account')
+  .get(authorization, projectCtrl.getProjectIndividual);
 module.exports = router;
