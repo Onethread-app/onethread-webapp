@@ -14,84 +14,90 @@ const {
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
 
-const createNewProjectForCompany = async (req, res, next) =>{ 
+const createNewProjectForCompany = async (req, res, next) => {
   try {
-  const userExist = await Member.findOne({
-    account: req.body.concernedAdmin,
-  });
-  let associates = req.body.associates;
-  if (userExist) {
-    if (req.body.type === 'associates') {
-      const project = new Project({
-        name: req.body.name,
-        type: req.body.type,
-        concernedAdmin: req.body.concernedAdmin,
-        departments: req.body.departments,
-        color: req.body.color,
-        company: req.params.companyId,
-        description: '',
-        outline: '',
-      });
-      await project.save();
-      // need to be refactored as soon as possible
-
-      associates.map(async asso => {
-        const createProjectReq = new ProjectRequest({
-          company: req.params.compnayId,
-          associate: asso._id,
-          size: asso.size,
-          isAccepted: false,
-          project: project._id,
-        });
-        await createProjectReq.save();
-        const newTeam = await team({
-          account: req.user._id,
-          project: project._id,
-          role: 'admin',
-        })
-        await newTeam.save();
-        logger.info(
-          `${req.body.companyId} company send a project request to its associate`,
-        );
-      });
-      return sendJSONresponse(res, 201, {
-        sucees: true,
-        message: 'New project created for associate',
-      });
-    } else {
-      const project = new Project({
-        name: req.body.name,
-        type: req.body.type,
-        concernedAdmin: req.body.concernedAdmin,
-        departments: req.body.departments,
-        color: req.body.color,
-        company: req.body.companyId,
-        description: '',
-        outline: '',
-      });
-      await project
-        .save()
-        .then(project => {
-          logger.info(`new project created`);
-          return sendJSONresponse(res, 201, {
-            sucees: true,
-            message: 'New project created',
-            project,
-          });
-        })
-        .catch(error => {
-          logger.error(`${error}`);
-          next(error);
-        });
-    }
-  } else {
-    return sendErrorResponse(res, 404, 'MemberNotFoundError', {
-      message: 'concernAdmin not added in company',
+    const userExist = await Member.findOne({
+      account: req.body.concernedAdmin,
     });
+    let associates = req.body.associates;
+    if (userExist) {
+      if (req.body.type === 'associates') {
+        const project = new Project({
+          name: req.body.name,
+          type: req.body.type,
+          concernedAdmin: req.body.concernedAdmin,
+          departments: req.body.departments,
+          color: req.body.color,
+          company: req.params.companyId,
+          description: '',
+          outline: '',
+        });
+        await project.save();
+        // need to be refactored as soon as possible
+
+        associates.map(async asso => {
+          const createProjectReq = new ProjectRequest({
+            company: req.params.companyId,
+            associate: asso._id,
+            size: asso.size,
+            isAccepted: false,
+            project: project._id,
+          });
+          await createProjectReq.save();
+          let newTeam = await Team({
+            account: req.user._id,
+            project: project._id,
+            role: 'member',
+          });
+          await newTeam.save();
+          let team = await Team({
+            account: req.body.concernedAdmin,
+            project: project._id,
+            role: 'admin',
+          });
+          await team.save();
+          logger.info(
+            `${req.body.companyId} company send a project request to its associate`,
+          );
+        });
+        return sendJSONresponse(res, 201, {
+          sucees: true,
+          message: 'New project created for associate',
+        });
+      } else {
+        const project = new Project({
+          name: req.body.name,
+          type: req.body.type,
+          concernedAdmin: req.body.concernedAdmin,
+          departments: req.body.departments,
+          color: req.body.color,
+          company: req.body.companyId,
+          description: '',
+          outline: '',
+        });
+        await project
+          .save()
+          .then(project => {
+            logger.info(`new project created`);
+            return sendJSONresponse(res, 201, {
+              sucees: true,
+              message: 'New project created',
+              project,
+            });
+          })
+          .catch(error => {
+            logger.error(`${error}`);
+            next(error);
+          });
+      }
+    } else {
+      return sendErrorResponse(res, 404, 'MemberNotFoundError', {
+        message: 'concernAdmin not added in company',
+      });
+    }
+  } catch (error) {
+    next(error);
   }
-} catch (error) {
-  next(error)
-}
 };
 // update a company role
 const updateRole = async (req, res, next) => {
@@ -114,9 +120,9 @@ const updateRole = async (req, res, next) => {
     return sendJSONresponse(res, 200, {
       message: `Project's role updated`,
       data: project.optionalRole,
-    })
+    });
   } catch (error) {
-    logger.error(`${error}`)
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -125,8 +131,7 @@ const projectPendingRequest = async (req, res, next) => {
   const companyId = req.params.companyId;
 
   ProjectRequest.find({
-    $and: [{ isAccepted: false },
-    { associate: companyId }]
+    $and: [{ isAccepted: false }, { associate: companyId }],
   })
     .select('company project')
     .populate('company project')
@@ -211,9 +216,11 @@ const showAllProjectsForCompany = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   let companyId = req.params.compnayId;
 
-
   await Project.find({
-    $or: [{ company: companyId, removed: false }, { associate: { $in: [companyId] }, removed: false }]
+    $or: [
+      { company: companyId, removed: false },
+      { associate: { $in: [companyId] }, removed: false },
+    ],
   })
     .populate('departments', 'name _id ')
     .select('-type -__v  -files -version ')
@@ -471,7 +478,7 @@ const searchMemberFromMyCompany = async (req, res, next) => {
   }
 };
 
-const searchMemberFromAssociates = async () => { };
+const searchMemberFromAssociates = async () => {};
 
 const addTeamMember = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -525,7 +532,7 @@ const addTeamMember = async (req, res, next) => {
 };
 
 const authorizeProjectRole = (functionalRole, ...userRoles) => {
-  return async function (req, res, next) {
+  return async function(req, res, next) {
     try {
       // const company =  await Company.findOne({
       //   _id: req.params.companyId,
@@ -547,7 +554,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
 
       next();
     } catch (error) {
-      console.log(error)
+      console.log(error);
       next(error);
     }
   };
