@@ -84,4 +84,11 @@ router
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
+  router
+  .route('/role')
+  .put(
+    authorization,
+    projectCtrl.authorizeProjectRole('all', 'admin', 'superAdmin'),
+    projectCtrl.updateRole,
+  );
 module.exports = router;

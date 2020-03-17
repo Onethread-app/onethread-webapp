@@ -19,7 +19,7 @@ const createNewProjectForCompany = async (req, res, next) => {
   });
   let associates = req.body.associates;
   if (userExist) {
-    if (req.body.type === 'associates' ) {
+    if (req.body.type === 'associates') {
       const project = new Project({
         name: req.body.name,
         type: req.body.type,
@@ -42,6 +42,12 @@ const createNewProjectForCompany = async (req, res, next) => {
           project: project._id,
         });
         await createProjectReq.save();
+        const newTeam = await team({
+          account: req.user._id,
+          project: project._id,
+          role: 'admin',
+        })
+        await newTeam.save();
         logger.info(
           `${req.body.companyId} company send a project request to its associate`,
         );
@@ -82,16 +88,42 @@ const createNewProjectForCompany = async (req, res, next) => {
     });
   }
 };
+// update a company role
+const updateRole = async (req, res, next) => {
+  // Check for JSON
+  if (!req.is('application/json')) {
+    return res.send("Expects 'application/json'");
+  }
 
+  try {
+    const project = await Project.findOneAndUpdate(
+      { _id: req.query.pid },
+      { $set: { optionalRole: req.body.optionalRole } },
+      {
+        safe: true,
+        upsert: true,
+      },
+    ).exec();
+
+    //await req.company.save();
+    return sendJSONresponse(res, 200, {
+      message: `Project's role updated`,
+      data: project.optionalRole,
+    })
+  } catch (error) {
+    logger.error(`${error}`)
+    next(error);
+  }
+};
 const projectPendingRequest = async (req, res, next) => {
   const { limit = 10, skip = 0 } = req.query;
   const companyId = req.params.companyId;
 
   ProjectRequest.find({
-   $and:[ {isAccepted: false},
-    {associate: companyId}]
+    $and: [{ isAccepted: false },
+    { associate: companyId }]
   })
-  .select('company project')
+    .select('company project')
     .populate('company project')
     .sort({ createdAt: -1 })
     .skip(+skip)
@@ -132,7 +164,7 @@ const acceptProjectRequest = async (req, res, next) => {
     // logger.info(
     //   `${req.query.companyId} create a project`,
     // );
-      await Project.updateOne(
+    await Project.updateOne(
       { _id: req.query.pid },
       {
         $push: { associate: req.params.companyId },
@@ -176,7 +208,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
 
 
   await Project.find({
-    $or: [{company: companyId , removed: false}, {associate: { $in : [companyId]} , removed: false } ]
+    $or: [{ company: companyId, removed: false }, { associate: { $in: [companyId] }, removed: false }]
   })
     .populate('departments', 'name _id ')
     .select('-type -__v  -files -version ')
@@ -434,7 +466,7 @@ const searchMemberFromMyCompany = async (req, res, next) => {
   }
 };
 
-const searchMemberFromAssociates = async () => {};
+const searchMemberFromAssociates = async () => { };
 
 const addTeamMember = async (req, res, next) => {
   if (!req.is('application/json')) {
@@ -486,6 +518,34 @@ const addTeamMember = async (req, res, next) => {
     next(error);
   }
 };
+
+const authorizeProjectRole = (functionalRole, ...userRoles) => {
+  return async function (req, res, next) {
+    try {
+      // const company =  await Company.findOne({
+      //   _id: req.params.companyId,
+      // }).select('_id optionalRole').exec();
+
+      const team = await Team.findOne({
+        account: req.user._id,
+        project: req.query.pid,
+      }).exec();
+
+      if (
+        !team ||
+        (functionalRole === 'all' && !userRoles.includes(team.role))
+      ) {
+        return res.status(403).json({
+          message: `Restricted`,
+        });
+      }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  };
+};
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,
@@ -502,4 +562,6 @@ module.exports = {
   projectPendingRequest,
   acceptProjectRequest,
   rejectProjectRequest,
+  authorizeProjectRole,
+  updateRole,
 };

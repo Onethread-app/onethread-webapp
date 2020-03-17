@@ -11,32 +11,32 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 
-// const changeRole = async (req, res, next) => {
-//   try {
-//     // check role: superAdmin/admin
-//     const member = await Member.findOne({
-//       account: req.user._id,
-//       company: req.company._id,
-//     });
+const changeRole = async (req, res, next) => {
+  try {
+    // check role: superAdmin/admin
+    const member = await Team.findOne({
+      account: req.user._id,
+      company: req.query.pid,
+    });
 
-//     if (!['superAdmin', 'admin'].includes(member.role)) {
-//       return res.status(403).json({
-//         message: `Restricted`,
-//       });
-//     }
+    if (req.body.role !== 'admin' || member.role !== 'admin') {
+      return res.status(403).json({
+        message: `Restricted`,
+      });
+    }
 
-//     req.member.role = req.body.role;
+    req.member.role = req.body.role;
 
-//     await req.member.save();
+    await req.member.save();
 
-//     return res.status(201).json({
-//       message: `Role updated to ${req.body.role}`,
-//     });
-//   } catch (error) {
-//     logger.error(`${error}`);
-//     next(error);
-//   }
-// };
+    return res.status(201).json({
+      message: `Role updated to ${req.body.role}`,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
 
 // add team member
 const addTeamMember = async (req, res, next) => {
@@ -52,7 +52,7 @@ const addTeamMember = async (req, res, next) => {
     const projectOwner = await Project.findOne({
       _id: req.query.pid,
     });
-    if (projectOwner.company.toString() === req.body.companyId) {
+    if (projectOwner.company.toString() === req.params.companyId) {
       let members = req.body.members;
 
       accounts = newMembers.map(member => member.account);
@@ -63,7 +63,16 @@ const addTeamMember = async (req, res, next) => {
         project: req.query.pid,
         removed: true,
       }).select('account');
-
+      prevMembers = prevMembers.map(member => member.account);
+      // filter new members
+      newMembers = newMembers.filter(newMember => {
+        return !prevMembers.some(prevMemberAccount => {
+          return (
+            prevMemberAccount.toString() ===
+            newMember.account.toString()
+          );
+        });
+      });
       members.forEach(async account => {
         await Team.insertMany({
           account: account.account,
@@ -98,57 +107,24 @@ const addTeamMember = async (req, res, next) => {
       }
     }
   } catch (error) {
-    // const members = await Team.create(req.body.members);
-    // console.log(members);
-    // if (!members.length) {
-    //   return sendErrorResponse(res, 400, 'MemberCreatedError', {
-    //     message: 'No members created',
-    //   });
-    // }
-    // let membersId = members.map(m => {
-    //   return m._id;
-    // });
-    // // let accountsId = req.body.members.map(m => {
-    // //   return m.account;
-    // // });
-    // // save ref in company
-    // // req.project.members.addToSet(...membersId);
-    // // await req.project.save();
-    // // add members into General room
-    // const room = await Room.findOne({
-    //   name: 'General',
-    //   project: req.project._id,
-    // });
-    // if (room) {
-    //   // room.members.addToSet(...accountsId);
-    //   await room.save();
-    //   await chatkit.addUsersToRoom({
-    //     roomId: room._id,
-    //     // userIds: accountsId,
-    //   });
-    // }
-    // return res.status(201).json({
-    //   message: 'New member created',
-    //   members,
-    // });
     logger.error(`${error}`);
     next(error);
   }
 };
 
-// get all members for a company
+// get all members in a project
 const list = async (req, res, next) => {
   try {
     const { limit = 50, skip = 0 } = req.query;
 
-    const members = await Member.find({
-      company: req.company._id,
+    const members = await Team.find({
+      company: req.query.pid,
       removed: false,
     })
       .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit)
-      .select('-__v -company -createdAt -updatedAt')
+      .select('role')
       .populate([
         { path: 'account', select: '_id name firstName lastName' },
         {
@@ -174,25 +150,25 @@ const getMember = (req, res, next) => {
 };
 
 // member will be found on req.member
-const getMemberLoad = async (req, res, next) => {
-  try {
-    const member = await Member.findById(req.params.memberId)
-      .populate('account', 'name email firstName lastName')
-      .populate('company', 'name');
+// const getMemberLoad = async (req, res, next) => {
+//   try {
+//     const member = await Team.findById(req.params.memberId)
+//       .populate('account', 'name email firstName lastName')
+//       .populate('company', 'name');
 
-    if (member) {
-      req.member = member;
-      return next();
-    } else {
-      return res.status(404).json({
-        message: 'No valid entry found for provided Member ID',
-      });
-    }
-  } catch (error) {
-    logger.error(`${error}`);
-    next(error);
-  }
-};
+//     if (member) {
+//       req.member = member;
+//       return next();
+//     } else {
+//       return res.status(404).json({
+//         message: 'No valid entry found for provided Member ID',
+//       });
+//     }
+//   } catch (error) {
+//     logger.error(`${error}`);
+//     next(error);
+//   }
+// };
 
 // 1st step: Find member list from company.
 // 2nd step: Create a list of employee
@@ -200,48 +176,64 @@ const getMemberLoad = async (req, res, next) => {
 // cid = companyID
 const searchTeamMember = async (req, res, next) => {
   try {
-    const {
-      limit = 50,
-      skip = 0,
-      name,
-      companyID,
-      holder,
-    } = req.query;
-    if (holder === 'projectOwner') {
-      const company = await Company.findById({
-        _id: companyID,
-      }).populate('members', 'account');
-      let memberListId = company.members;
-      memberListId = memberListId.map(member => member.account);
-      let data = await Account.find({
-        $and: [
-          { name: { $regex: new RegExp(name) } },
-          { _id: { $nin: memberListId } },
-        ],
-      })
-        .select('_id email name firstName lastName')
-        .sort({ createdAt: -1 })
-        .skip(+skip)
-        .limit(+limit);
-      // TODO: pore ami change korbo query onusaree
-      return sendJSONresponse(res, 200, {
-        employees: {
-          message: `Search complete ${name}`,
-          data,
-        },
-      });
-    } else {
-      return sendJSONresponse(res, 200, {
-        employees: {
-          message: `Search complete ${name}`,
-          data,
-        },
-      });
-    }
+    const { limit = 50, skip = 0, pid } = req.query;
+    const existingMembers = await Team.find({
+      _id: pid,
+      removed: false
+    }).sort({ createdAt: 1 })
+      .skip(+skip)
+      .limit(+limit)
+      .select('account role')
+
+    return sendJSONresponse(res, 200, existingMembers)
+
   } catch (error) {
-    logger.error(`${error}`);
-    next(error);
+    logger.error(`${error}`)
+    next(error)
   }
+  // try {
+  //   const {
+  //     limit = 50,
+  //     skip = 0,
+  //     name,
+  //     companyID,
+  //     holder,
+  //   } = req.query;
+  //   if (holder === 'projectOwner') {
+  //     const company = await Company.findById({
+  //       _id: companyID,
+  //     }).populate('members', 'account');
+  //     let memberListId = company.members;
+  //     memberListId = memberListId.map(member => member.account);
+  //     let data = await Account.find({
+  //       $and: [
+  //         { name: { $regex: new RegExp(name) } },
+  //         { _id: { $nin: memberListId } },
+  //       ],
+  //     })
+  //       .select('_id email name firstName lastName')
+  //       .sort({ createdAt: -1 })
+  //       .skip(+skip)
+  //       .limit(+limit);
+  //     // TODO: pore ami change korbo query onusaree
+  //     return sendJSONresponse(res, 200, {
+  //       employees: {
+  //         message: `Search complete ${name}`,
+  //         data,
+  //       },
+  //     });
+  //   } else {
+  //     return sendJSONresponse(res, 200, {
+  //       employees: {
+  //         message: `Search complete ${name}`,
+  //         data,
+  //       },
+  //     });
+  //   }
+  // } catch (error) {
+  //   logger.error(`${error}`);
+  //   next(error);
+  // }
 };
 
 module.exports = {
@@ -250,5 +242,5 @@ module.exports = {
   getMember,
   getMemberLoad,
   searchTeamMember,
-  // changeRole,
+  changeRole,
 };
