@@ -668,7 +668,6 @@ const resendEmail = async (req, res, next) => {
         verifyAccountTokenExpiration,
       );
     }
-    await account.save();
     return sendJSONresponse(res, 200, {
       message: 'resend email successfully',
     });
