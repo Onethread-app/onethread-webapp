@@ -515,7 +515,7 @@ const getProjectIndividual = async (req, res, next) => {
     let options = [
       {
         path: 'project',
-        select: '_id name',
+        select: '_id name optionalRole',
       },
     ];
     let projects = await Team.findOne({
@@ -529,6 +529,7 @@ const getProjectIndividual = async (req, res, next) => {
     })
       .select('-_id project role')
       .populate(options);
+    console.log(projects)
     return res.status(200).json({
       projects,
     });
