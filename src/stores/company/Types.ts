@@ -50,3 +50,9 @@ export const UPDATE_ALL_COMPANY_PENDING_MEMBERS = 'UPDATE_ALL_COMPANY_PENDING_ME
 
 // Company Role
 export const COMPANY_ROLE = 'COMPANY_ROLE';
+
+// Certificate
+export const ADD_CERTIFICATE = 'ADD_CERTIFICATE';
+
+// Organization
+export const ADD_ORGANIZATION = 'ADD_ORGANIZATION';
