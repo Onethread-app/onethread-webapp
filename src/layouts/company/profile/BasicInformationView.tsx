@@ -46,7 +46,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
               <img
                 className="db br-100 ba b--black-10"
                 style={{ width: '112px', height: '112px' }}
-                src={props.company.logo ? props.company.logo.link : UserImage}
+                src={props.company.logo ? props.company.logo : UserImage}
               />
               {companyPermit(props.company.role, 'editProfile') ?
                 <div className="absolute bg-tigrowLightBlue br-100 pointer"
@@ -182,5 +182,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const BasicInfoDetailsView = connect(mapStateToProps, { 
-  companyLogoUploadAction })(BasicInfoDetailsViewComponent);
+export const BasicInfoDetailsView = connect(mapStateToProps, {
+  companyLogoUploadAction
+})(BasicInfoDetailsViewComponent);

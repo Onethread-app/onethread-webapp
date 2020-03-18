@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
 import { isEqual } from 'lodash';
 import { useDispatch, connect } from 'react-redux';
-import { getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions } from '../../../../stores/room/Actions';
+import {
+	getRoomMembers,
+	getRoomMessages,
+	getRooms,
+	getRoomSharedFiles,
+	getRoomDiscussions
+} from '../../../../stores/room/Actions';
 import {
 	CURRENT_ROOM,
 	NEW_MESSAGE,
@@ -13,10 +19,11 @@ import {
 	ON_USER_STOPPED_TYPING,
 	REFRESH_MEMBER,
 	UNREAD_COUNT_ROOMS,
+	GET_COMPANY_ROOMS,
 } from 'stores/room/Types';
 import { Loading } from 'components/Loading';
 import { RoomListItem } from './RoomListItem';
-import { IRoom, IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
+import { IRoom, IRoomMessage, IRoomReducer, ICompanyRoom } from 'stores/room/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -136,13 +143,22 @@ export const RoomListComponent = withChatkit(
 				load(props.getRooms);
 
 				const roomsUnreadCount = {};
+				const companyRooms: ICompanyRoom[] = [];
 				props.chatkit.currentUser.rooms
 					.filter((room: any) => room.customData.company === props.companyId)
 					.forEach((room: any) => {
 						roomsUnreadCount[room.id] = room.unreadCount;
+						companyRooms.push({
+							_id: room.id,
+							name: room.name,
+							company: room.customData.company,
+							project: room.customData.project,
+							unreadCount: room.unreadCount,
+						});
 					});
 
 				dispatch({ type: UNREAD_COUNT_ROOMS, payload: roomsUnreadCount });
+				dispatch({ type: GET_COMPANY_ROOMS, payload: companyRooms });
 			}
 		}, [props.chatkit]);
 

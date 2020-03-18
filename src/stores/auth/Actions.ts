@@ -9,6 +9,7 @@ import { errorMessgeHandler } from 'components/final-form/utils';
 import { createBrowserHistory } from 'history';
 import { tigrowApi } from 'config';
 import { Toaster } from '@blueprintjs/core';
+import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 
 export interface UserModel {
 	firstName: string;
@@ -152,6 +153,7 @@ export const logoutAction = (routeHistory: History) => async (dispatch: any) => 
 				localStorage.removeItem('tigrow_real_id');
 				await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
 				await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
+				await dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
 				await dispatch({ type: CLEAR_USER_REDUCER_STATE });
 				routeHistory.push('/signin');
 			}
