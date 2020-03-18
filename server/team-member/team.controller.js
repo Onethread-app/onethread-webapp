@@ -146,7 +146,7 @@ const list = async (req, res, next) => {
     const { limit = 50, skip = 0 } = req.query;
 
     const members = await Team.find({
-      company: req.query.pid,
+      project: req.query.pid,
       removed: false,
     })
       .sort({ createdAt: 1 })
@@ -155,11 +155,11 @@ const list = async (req, res, next) => {
       .select('role')
       .populate([
         { path: 'account', select: '_id name firstName lastName' },
-        {
-          path: 'designations',
-          select: 'division department position',
-          populate: [{ path: 'department', select: 'name' }],
-        },
+        // {
+        //   path: 'designations',
+        //   select: 'division department position',
+        //   populate: [{ path: 'department', select: 'name' }],
+        // },
       ]);
     return res.status(200).json({
       members,

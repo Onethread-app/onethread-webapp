@@ -529,7 +529,6 @@ const getProjectIndividual = async (req, res, next) => {
     })
       .select('-_id project role')
       .populate(options);
-    console.log(projects)
     return res.status(200).json({
       projects,
     });

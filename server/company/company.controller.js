@@ -369,7 +369,6 @@ const authorizeUser = (functionalRole, ...userRoles) => {
 
       next();
     } catch (error) {
-      console.log('1',error)
       next(error);
     }
   };

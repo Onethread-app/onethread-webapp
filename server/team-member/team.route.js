@@ -28,7 +28,7 @@ router
     // SchemaValidator(teamValidation.getMember),
     teamCtrl.getMember,
   );
-
+router.route('/member-list').get(authorization, teamCtrl.list);
 router
   .route('/:memberId/changeRole')
   .put(
