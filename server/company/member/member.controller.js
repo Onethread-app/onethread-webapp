@@ -16,7 +16,10 @@ const {
   deleteDocument,
 } = require('../../services/elastic.services');
 const chalk = require('chalk');
-
+const {
+  createMemberAddNotification
+} = require('../../notification/notification.controller');
+createMemberAddNotification
 const { PendingMember } = require('./pendingMember.model');
 const {
   sendInviteColleague,

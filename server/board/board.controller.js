@@ -5,6 +5,10 @@ const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
 const {sendErrorResponse, sendJSONresponse} = require('../helpers/jsonResponse');
+const { Project } = require('../project/project.model');
+const {
+  createBoardNotification
+} = require('../notification/notification.controller');
 
 const load = (req, res, next, id) => {
   Board.findById(id)
@@ -60,12 +64,20 @@ const create = async (req, res, next) => {
       project: req.body.projectId,
       members: [req.user._id],
     });
-    board
+
+    const project = await Project.findOne({
+      _id: req.body.projectId,
+    }).select('_id name company')
+    .populate('company', 'name');
+    //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
+    const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
+    createBoardNotification(project, {_id:req.user._id, name: req.user.name}, text );
+   const createdBoard = board
       .save()
-      .then(createdBoard => {
-        return res.status(201).json(createdBoard);
-      })
-      .catch(e => next(e));
+      
+    return res.status(201).json(createdBoard);
+      
+      
   } catch (error) {
     logger.error(`Board create: ${error}`);
     const err = new BadRequestError(

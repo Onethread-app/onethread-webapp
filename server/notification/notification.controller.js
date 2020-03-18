@@ -128,6 +128,40 @@ module.exports.createAssociateNotification = async (
   await UserNotification.create(usersNotification);
 };
 
+module.exports.createBoardNotification = async (
+  project, adminUser,text
+) => {
+
+  //sendCompanyNotification(company, adminUser, usersNotification);
+
+  const members = await Member.find({
+    $or:[ {role: 'superAdmin'}, {role: 'admin'}],
+    company: project.company,
+  });
+
+  let notification = new Notification({
+    type: 'associate',
+    text: text,
+    account: adminUser._id,
+    company: company,
+  });
+
+  
+  let usersNotification = members.map(m => {
+    return {
+      notification: notification._id,
+      account: m.account,
+    };
+  });
+
+  //project role wise notification incomplete
+
+  sendCompanyNotification(company._id, adminUser, notification);
+
+  await notification.save();
+  await UserNotification.create(usersNotification);
+};
+
 module.exports.list   = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
