@@ -239,7 +239,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
 
 const updateProjectDescription = async (req, res, next) => {
   await Project.findByIdAndUpdate(
-    { _id: req.params.pid },
+    { _id: req.query.pid },
     {
       $set: {
         description: req.body.description,
@@ -263,7 +263,7 @@ const updateProjectDescription = async (req, res, next) => {
 
 const updateProjectOutline = async (req, res, next) => {
   await Project.findByIdAndUpdate(
-    { _id: req.params.pid },
+    { _id: req.query.pid },
     {
       $set: {
         outline: req.body.outline,
@@ -273,7 +273,7 @@ const updateProjectOutline = async (req, res, next) => {
   )
     .exec()
     .then(result => {
-      logger.info(`Outline addeed for ${req.params.pid}`);
+      logger.info(`Outline addeed for ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
         message: 'Outline updated',
@@ -321,12 +321,12 @@ const changeTitleProject = async (req, res, next) => {
 const archiveProject = async (req, res, next) => {
   try {
     const projectExist = await Project.findOne({
-      _id: req.params.pid,
+      _id: req.query.pid,
       removed: false,
     });
     if (projectExist) {
       await Project.updateOne(
-        { _id: req.params.pid },
+        { _id: req.query.pid },
         { $set: { removed: true } },
         { safe: true, upsert: true, new: true },
       );
@@ -350,7 +350,7 @@ const archiveProject = async (req, res, next) => {
 
 const showAllFilesForProject = async (req, res, next) => {
   const { limit = 10, skip = 0 } = req.query;
-  await File.find({ project: req.params.pid })
+  await File.find({ project: req.query.pid })
     .select('link s3Key')
     .sort({ createdAt: -1 })
     .skip(+skip)
@@ -502,7 +502,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
 
       next();
     } catch (error) {
-      console.log(error);
+      logger.error(`${error}`);
       next(error);
     }
   };

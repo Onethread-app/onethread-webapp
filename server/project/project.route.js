@@ -86,7 +86,7 @@ router
     projectCtrl.getProjectDetails,
   );
 router
-  .route('/:pid/outline')
+  .route('/outline')
   .put(
     authorization,
     projectCtrl.authorizeProjectRole(
@@ -99,7 +99,7 @@ router
   );
 
 router
-  .route('/:pid/description')
+  .route('/description')
   .put(
     authorization,
     projectCtrl.authorizeProjectRole(
@@ -111,7 +111,7 @@ router
     projectCtrl.updateProjectDescription,
   );
 router
-  .route('/:pid/show-files')
+  .route('/show-files')
   .get(
     authorization,
     projectCtrl.authorizeProjectRole(
@@ -124,7 +124,7 @@ router
     projectCtrl.showAllFilesForProject,
   );
 router
-  .route('/:pid/archive')
+  .route('/archive')
   .put(
     authorization,
     projectCtrl.authorizeProjectRole(
