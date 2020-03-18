@@ -57,7 +57,7 @@ const create = async (req, res, next) => {
       department : req.body.department,
       color : req.body.color,
       account: req.user._id,
-      company: req.body.companyId,
+      project: req.body.projectId,
       members: [req.user._id],
     });
     board
@@ -101,10 +101,10 @@ const addBoardMembers = async (req, res, next) => {
 const addBoardColumn = (req, res, next) => {};
 
 const list = async (req, res, next) => {
-  const { limit = 50, skip = 0, companyId } = req.query;
+  const { limit = 50, skip = 0 } = req.query;
 
   await Board.find({
-    company: req.params.companyId,
+    project: req.params.projectId,
     members: req.user._id,
   })
     .select('_id name color department members')
@@ -117,7 +117,7 @@ const list = async (req, res, next) => {
       return sendJSONresponse(res, 200, result);
     })
     .catch(e => {
-      
+      logger.error(e);
       next(e)}
     );
 };

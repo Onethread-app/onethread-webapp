@@ -298,26 +298,6 @@ const getProjectDetails = async (req, res, next) => {
     next(error);
   }
 };
-// const getProjectLoad = async (req, res, next) => {
-//   console.log('ami',req)
-//   try {
-//     Project.findOne({
-//       _id: ObjectID("5e60cc3caa10921ba1d07c8a"),
-//     });
-//     // console.log(project)
-//     if (project) {
-//       req.project = project;
-//       return next();
-//     } else {
-//       logger.error(`project id not found`);
-//       return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
-//         message: 'Project id not found for company',
-//       });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 const changeTitleProject = async (req, res, next) => {
   await Project.findByIdAndUpdate(
@@ -451,36 +431,6 @@ const archiveProjectList = async (req, res, next) => {
       next(err);
     });
 };
-
-const searchMemberFromMyCompany = async (req, res, next) => {
-  try {
-    const name = req.query.name;
-    const companyID = req.company._id;
-    const company = await Company.findById({
-      _id: companyID,
-    }).populate('members', 'account');
-    let memberListId = company.members;
-    memberListId = memberListId.map(member => member.account);
-    let data = await Account.find({
-      $and: [
-        { name: { $regex: new RegExp(name) } },
-        { _id: { $nin: memberListId } },
-      ],
-    }).select('_id email name firstName lastName');
-    // TODO: pore ami change korbo query onusaree
-    return sendJSONresponse(res, 200, {
-      projectMember: {
-        message: `Search complete ${name}`,
-        data,
-      },
-    });
-  } catch (error) {
-    logger.error(`${error}`);
-    next(error);
-  }
-};
-
-const searchMemberFromAssociates = async () => {};
 
 const addTeamMember = async (req, res, next) => {
   if (!req.is('application/json')) {

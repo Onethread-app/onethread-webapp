@@ -24,7 +24,7 @@ router
   );
 
   router
-  .route('/company/:companyId')
+  .route('/boardProject/:projectId')
   .get(
     authorization,
     // permit('user', 'admin'),

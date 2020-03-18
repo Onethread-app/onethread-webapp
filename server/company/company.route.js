@@ -43,6 +43,7 @@ router
     companyCtrl.updateBasicInfo,
   );
 
+
 // update about
 router
   .route('/:companyId/about')
