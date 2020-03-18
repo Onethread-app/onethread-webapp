@@ -13,7 +13,7 @@ export const nizam =
   'https://felt-inch-performing-equally.trycloudflare.com/api/v1/';
 export const omer = 'http://192.168.8.67:4044/api/v1/';
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
-export const server = prod;
+export const server = test4;
 
 export const TokenUrlServer = `${server}chatkit/authenticate`;
 
