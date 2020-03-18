@@ -116,17 +116,19 @@ const addMember = async (req, res, next) => {
         select: '_id name firstName lastName email',
       });
       
-      //notification need account info
-      newMembersForNotification = elasticSearchIndexedMembers.filter(newMember => {
-        return !prevMembers.some(prevMemberAccount => {
-          return (
-            prevMemberAccount.toString() ===
-            newMember.account._id.toString()
-          );
-        });
-      });
+      // console.log(elasticSearchIndexedMembers);
+      // //notification need account info
+      // newMembersForNotification = await elasticSearchIndexedMembers.filter(newMember => {
+      //   return !prevMembers.some(prevMemberAccount => {
+      //     return (
+      //       prevMemberAccount.toString() ===
+      //       newMember.account._id.toString()
+      //     );
+      //   });
+      // });
+      // console.log(newMembersForNotification);
 
-      createMemberAddNotification(req.company._id, newMembersForNotification, {_id:req.user._id, name: req.user.name} );
+      createMemberAddNotification(req.company._id, elasticSearchIndexedMembers, {_id:req.user._id, name: req.user.name} );
 
       const memberStructure = data => {
         return {

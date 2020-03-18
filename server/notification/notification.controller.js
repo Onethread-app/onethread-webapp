@@ -4,6 +4,7 @@ const { Member } = require('../company/member/member.model');
 const  Notification  = require('./notification.model');
 const  UserNotification  = require('./userNotification.model');
 const {
+  sendMultipleNotification,
   sendCompanyNotification
 } = require('../services/notification.services');
 const logger = require('../../config/winston');
@@ -44,56 +45,65 @@ module.exports.createCompanyNotification = async (
 module.exports.createMemberAddNotification = async (
   company,//fromHeader
   newMembers,
-  adminUser,
-) => {
-
-  const membersToSendNotification = await Member.find({
-    $or:[ {role: 'superAdmin'}, {role: 'admin'}],
-    company: company,
-  });
+  adminUser
   
-
-  // let notification = new Notification({
-  //   type: 'companyProfile',
-  //   text: `company profile has been updated by ${adminUser.name}`,
-  //   account: adminUser._id,
-  //   company: company,
-  // });
-
-  let notifications = newMembers.map(m => {
-    return {
-      type: 'companyProfile',
-      text: `GA has added ${m.account.name}`,
-      account: adminUser._id,
+) => {
+  try{
+    const membersToSendNotification = await Member.find({
+      $or:[ {role: 'superAdmin'}, {role: 'admin'}],
       company: company,
-    };
-  });
+    });
+    
 
-  const promises = [];
-
-  for (let i = 0; i <= notifications.length ; i += 1) {
-    let usersNotifications = membersToSendNotification.map(m => {
+    // let notification = new Notification({
+    //   type: 'companyProfile',
+    //   text: `company profile has been updated by ${adminUser.name}`,
+    //   account: adminUser._id,
+    //   company: company,
+    // });
+    
+    let notifications = newMembers.map(m => {
       return {
-        notification: notification._id,
-        account: m.account,
+        type: 'colleague',
+        text: `GA has added ${m.account.name}`,
+        account: adminUser._id,
+        company: company,
       };
     });
-    promises.push(usersNotifications);
+
+    
+    // let usersNotifications = membersToSendNotification.map(m => {
+    //   return {
+    //     notification: notification._id,
+    //     account: m.account,
+    //   };
+    // });
+    
+    sendMultipleNotification(company, adminUser, notifications);
+    
+    notifications = await Notification.create(notifications);
+    
+    const promises = [];
+
+    for (let i = 0; i < notifications.length ; i += 1) {
+      console.log(12,notifications);
+      let usersNotifications = await membersToSendNotification.map(m => {
+        return {
+          notification: notifications[i]._id,
+          account: m.account,
+        };
+      });
+      
+      UserNotification.create(usersNotifications);
+     
+    }
+    
+  } catch (error) {
+    console.log(error);
+    logger.error(`${error}`);
+    //next(error);
   }
 
-  const usersNotificationsAll= await Promise.all(promises);
-  
-  // let usersNotifications = membersToSendNotification.map(m => {
-  //   return {
-  //     notification: notification._id,
-  //     account: m.account,
-  //   };
-  // });
-  
-  sendMultipleNotification(company, adminUser, notifications);
-  
-  await Notification.create(notifications);
-  await UserNotification.create(usersNotificationsAll);
 };
 
 module.exports.createAssociateNotification = async (
