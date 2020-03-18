@@ -13,11 +13,12 @@ import { Toaster } from '@blueprintjs/core';
 export const createBoard = (board: TaskBoard) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
-    const companyId = getState().companyReducer.currentCompany._id;
+    // const companyId = getState().companyReducer.currentCompany._id;
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         ...board,
-        companyId
+        projectId
       };
       const response = await tigrowApi.post(`boards`, reqBody, headers);
       dispatch({ type: CREATE_BOARD, payload: response.data });
@@ -38,9 +39,9 @@ export const createBoard = (board: TaskBoard) => async (dispatch: any, getState:
 export const getAllBoards = () => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
-    const companyId = getState().companyReducer.currentCompany._id;
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(`boards/company/${companyId}`, headers);
+      const response = await tigrowApi.get(`boards/boardProject/${projectId}`, headers);
       dispatch({ type: GET_ALL_BOARDS, payload: response.data });
       // return response.data;
     }
