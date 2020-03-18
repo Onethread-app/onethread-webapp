@@ -1,15 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
-import { Form, Field } from 'react-final-form';
-import { SubmitError } from 'components/final-form/SubmitError';
-import { Button } from '@blueprintjs/core';
+// import { isEqual } from 'lodash';
+// import { Form, Field } from 'react-final-form';
+// import { SubmitError } from 'components/final-form/SubmitError';
+// import { Button } from '@blueprintjs/core';
 
 const GeneralPageComponent = (props: any) => {
   const [archiveProjectCheck] = React.useState(false);
-  const [disabled] = React.useState(
-    isEqual(props.companyRole, 'superAdmin') === false
-  );
+  // const [disabled] = React.useState(
+  //   isEqual(props.companyRole, 'superAdmin') === false
+  // );
   return (
     <div className='bl b--black-05 bw1 pl5 ml5 h5'>
       {console.log(archiveProjectCheck)}

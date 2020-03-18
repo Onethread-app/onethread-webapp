@@ -75,10 +75,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case PROJECT.PROJECT_ADD_PROJECT:
       return {
         ...state,
-        allProjects: [
-          ...state.allProjects,
-          action.payload
-        ]
+        allProjects: [...state.allProjects, action.payload]
       };
     default:
       return state;

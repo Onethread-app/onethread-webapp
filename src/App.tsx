@@ -25,6 +25,7 @@ import { AssociatesDetailsView } from 'layouts/company/associateDetails/Index';
 import { ProjectPrefaceView } from 'layouts/company/project/ProjectPrefaceView';
 import { DashboardView } from 'layouts/dashBoard/Index';
 import { ProjectSettingsPage } from 'layouts/company/project/settings/Index';
+import { ProjectTeamPage } from 'layouts/company/project/team/Index';
 
 const PrivateRoute = (props: {
 	component: any;
@@ -187,6 +188,11 @@ export const App = () => (
 				path="/company/:cname/project/:projectId"
 				exact={true}
 				component={ProjectPrefaceView}
+			/>
+			<PrivateRoute
+				path="/company/:cname/project/:projectId/team"
+				exact={true}
+				component={ProjectTeamPage}
 			/>
 			<PrivateRoute
 				path="/company/:cname/project/:projectId/settings"
