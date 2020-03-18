@@ -20,7 +20,7 @@ router
   .get(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-    projectCtrl.authorizeProjectRole('all', 'admin'),
+    // projectCtrl.authorizeProjectRole('all', 'admin'),
     schemaValidator(projectValidation.showProjectList),
     projectCtrl.showAllProjectsForCompany,
   );
