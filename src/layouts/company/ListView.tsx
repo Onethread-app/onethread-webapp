@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { History } from 'history';
@@ -8,6 +8,7 @@ import { User, ICompanyByUser } from 'stores/user/Reducer';
 import { Loading } from 'components/Loading';
 
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
+import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -24,6 +25,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
 export const ListViewComponent = (props: CompanyListViewInternalProps & RouteComponentProps) => {
 
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (loading === true) {
@@ -43,6 +45,7 @@ export const ListViewComponent = (props: CompanyListViewInternalProps & RouteCom
               onClick={async () => {
                 const response = await props.getCompanyDetails(c.company.name, props.history) as any;
                 if (response.status === 200) {
+                  dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                   props.history.push(`/company/${(response as any).data.company.name}`);
                 }
                 // else{
