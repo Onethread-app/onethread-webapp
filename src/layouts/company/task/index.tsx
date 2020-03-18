@@ -13,7 +13,7 @@ interface TaskInternalProps {
     currentTask: ITask;
     currentBoard?: TaskBoard;
     company: ICompany;
-    currentProject: IProject;
+    currentProject?: IProject;
 }
 
 const TaskPageComponent = (props: TaskInternalProps) => {
@@ -52,8 +52,9 @@ const mapStateToProps = (state: any) => {
     return {
         currentTask: state.boardIndexReducer.boardReducer.currentTask,
         currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+        company: state.companyReducer.currentCompany,
         currentProject: state.projectReducer.projectDetails,
-        company: state.companyReducer.currentCompany
+        
     };
 };
 

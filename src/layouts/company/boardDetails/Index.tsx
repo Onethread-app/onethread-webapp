@@ -8,10 +8,12 @@ import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import addMemberIcon from 'resources/images/addMemberIcon.png';
+import { IProject } from 'stores/project/Reducer';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
   company: ICompany;
+  currentProject?: IProject;
 }
 
 const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
@@ -27,7 +29,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
       <div className="flex">
         <BreadCrumbs
           items={[
-            { text: `Board`, href: `/company/${props.company.name}/board` },
+            { text: `Board`, href: `/company/${props.company.name}/project/${props.currentProject!._id}/board` },
             { text: `${props.currentBoard!.name}`, href: `/company/${props.company.name}/board/${props.currentBoard!._id}` }
           ]}
         />
@@ -110,7 +112,8 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
+    currentProject: state.projectReducer.projectDetails
   };
 };
 
