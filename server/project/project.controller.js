@@ -182,7 +182,7 @@ const acceptProjectRequest = async (req, res, next) => {
     // logger.info(
     //   `${req.query.companyId} create a project`,
     // );
-    await Project.updateOne(
+      await Project.updateOne(
       { _id: req.query.pid },
       {
         $push: { associate: req.params.companyId },

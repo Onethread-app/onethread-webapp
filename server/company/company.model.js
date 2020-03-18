@@ -110,7 +110,7 @@ const company = new Schema(
           'acceptRejectProjectFromAssociate',
         ]
       }],
-      default: ['editProfile']
+      default: ['editProfile', 'cRUDAnnouncement']
     },
     
     address: {

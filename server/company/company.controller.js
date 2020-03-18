@@ -343,6 +343,9 @@ const deleteCompany = async (req, res, next) => {
 
 const authorizeUser = (functionalRole, ...userRoles) => {
   return async function(req, res, next) {
+    // console.log(functionalRole)
+    // console.log(req)
+    // console.log(...userRoles)
     try {
       // const company =  await Company.findOne({
       //   _id: req.params.companyId,
