@@ -216,7 +216,7 @@ const rejectProjectRequest = async (req, res, next) => {
 
 const showAllProjectsForCompany = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
-  let companyId = req.params.compnayId;
+  let companyId = req.params.companyId;
 
   await Project.find({
     $or: [
