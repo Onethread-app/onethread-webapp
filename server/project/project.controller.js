@@ -288,7 +288,7 @@ const updateProjectOutline = async (req, res, next) => {
 const getProjectDetails = async (req, res, next) => {
   try {
     const project = await Project.findOne({
-      _id: req.params.pid,
+      _id: req.query.pid,
     })
       .populate('files', 'link s3Key')
       .select('outline description color name');

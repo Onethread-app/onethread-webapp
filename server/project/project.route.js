@@ -74,7 +74,7 @@ router
     projectCtrl.rejectProjectRequest,
   );
 router
-  .route('/:pid')
+  .route('/')
   .get(
     authorization,
     projectCtrl.authorizeProjectRole(
