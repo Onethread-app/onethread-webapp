@@ -152,7 +152,7 @@ const list = async (req, res, next) => {
       .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit)
-      .select('role')
+      .select('role company')
       .populate([
         { path: 'account', select: '_id name firstName lastName' },
         // {
@@ -202,7 +202,7 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchTeamMember = async (req, res, next) => {
   try {
-    let projectMembers = await Project.findById(pid)
+    let projectMembers = await Project.findById(req.query.pid)
       .select('-_id members')
       .populate('members', '_id name')
       .exec();
