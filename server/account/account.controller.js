@@ -190,7 +190,7 @@ const login = async (req, res, next) => {
     );
     let userObj = {};
     userObj.name = req.user.name;
-    addUserDataIntoCache(req.user.email, req.user);
+    addUserDataIntoCache(req.user.email, JSON.stringify(req.user));
     return sendJSONresponse(res, 200, {
       success: true,
       accessToken: accessToken,
