@@ -162,41 +162,6 @@ export const Sidebar = (props: {
 								className="flex items-center nowrap ma1 hover-bg-white-20"
 								style={{ color: 'white' }}
 								activeStyle={{ background: '#3F61C5' }}
-								to={`/company/${props.company.name}/board`}
-							>
-								{props.leftOpen ?
-									<span className="pl4">
-										<img
-											src={board}
-											className="w2 pt1"
-										/>
-									</span> :
-									<Tooltip
-										content={<p className="mb0">Board</p>}
-										position="right"
-									>
-										<span className="pl3">
-											<img
-												src={board}
-												className="w2 pt1"
-											/>
-										</span>
-									</Tooltip>
-								}
-								{props.leftOpen &&
-									<span
-										className="outline-0 bp3-large pl4"
-										style={{ color: 'inherit' }}
-									>
-										Board
-								</span>
-								}
-							</NavLink>
-							<NavLink
-								exact
-								className="flex items-center nowrap ma1 hover-bg-white-20"
-								style={{ color: 'white' }}
-								activeStyle={{ background: '#3F61C5' }}
 								to={`/company/${props.company.name}/team`}
 							>
 								{props.leftOpen ?
@@ -383,6 +348,42 @@ export const Sidebar = (props: {
 								</span>
 										}
 									</NavLink>
+
+									<NavLink
+								exact
+								className="flex items-center nowrap ma1 hover-bg-white-20"
+								style={{ color: 'white' }}
+								activeStyle={{ background: '#3F61C5' }}
+								to={`/company/${props.company.name}/project/${props.project._id}/board`}
+							>
+								{props.leftOpen ?
+									<span className="pl4">
+										<img
+											src={board}
+											className="w2 pt1"
+										/>
+									</span> :
+									<Tooltip
+										content={<p className="mb0">Board</p>}
+										position="right"
+									>
+										<span className="pl3">
+											<img
+												src={board}
+												className="w2 pt1"
+											/>
+										</span>
+									</Tooltip>
+								}
+								{props.leftOpen &&
+									<span
+										className="outline-0 bp3-large pl4"
+										style={{ color: 'inherit' }}
+									>
+										Board
+								</span>
+								}
+							</NavLink>
 									<NavLink
 										exact
 										className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
