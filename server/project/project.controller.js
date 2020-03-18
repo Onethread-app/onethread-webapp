@@ -58,11 +58,17 @@ const createNewProjectForCompany = async (req, res, next) => {
         logger.info(
           `${req.params.companyId} company send a project request to its associate`,
         );
-        teamCreate(req.user._id, project._id, 'member');
-        logger.info(`project creator add as a member here`);
-        teamCreate(req.body.concernedAdmin, project._id, 'admin');
-        logger.info(`concern admin add as an admin here`);
+        if(req.user._id === req.body.concernedAdmin){
+          teamCreate(req.body.concernedAdmin, project._id, 'admin');
+        }else{
+          teamCreate(req.user._id, project._id, 'admin');
+          logger.info(`project creator add as a member here`);
+          teamCreate(req.body.concernedAdmin, project._id, 'admin');
+          logger.info(`concern admin add as an admin here`);
+        }
+
       });
+      console.log(project);
       return sendJSONresponse(res, 201, {
         sucees: true,
         message: 'New project created for associate',
@@ -486,11 +492,12 @@ const addTeamMember = async (req, res, next) => {
 const authorizeProjectRole = (functionalRole, ...userRoles) => {
   return async function(req, res, next) {
     try {
+      console.log(req)
       const team = await Team.findOne({
         account: req.user._id,
         project: req.query.pid,
       }).exec();
-
+      console.log(team)
       if (
         !team ||
         (functionalRole === 'all' && !userRoles.includes(team.role))
