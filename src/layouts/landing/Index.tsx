@@ -13,7 +13,7 @@ import growTribeIcon from './../../resources/images/GrowYourTribes.svg';
 import connectTribeIcon from './../../resources/images/ConnectWithTribes.svg';
 import attractiveCompanyIcon from './../../resources/images/AttractiveCompanyProfile.svg';
 import verificationIcon from './../../resources/images/GetVerified.svg';
-import tigrowLogo from './../../resources/images/LandingPageLogo.png';
+import tigrowLogo from './../../resources/images/TiGrowLogoFinal.png';
 
 export const HomePage = () => {
 

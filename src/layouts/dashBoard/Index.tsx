@@ -1,0 +1,81 @@
+import { User } from 'stores/user/Reducer';
+import React, { useState } from 'react';
+import { connect } from 'react-redux';
+import { Card, Dialog } from '@blueprintjs/core';
+import addIcon from '../../resources/images/addIcon.png';
+import { AnnouncementEditor } from './announcementEditor';
+
+interface DashBoardViewProps {
+  user: User;
+}
+
+const DashboardViewComponent = (props: DashBoardViewProps) => {
+
+  const [showAnnouncementDialog, setShowAnnouncementDialog] = useState(false);
+
+  return (
+    <>
+      <div className="flex justify-around mh4">
+        <Card className="w-25 ma2">
+          <h1 className="f6 fw6">Total running project</h1>
+          <h1 className="mv0">10</h1>
+        </Card>
+        <Card className="w-25 ma2">
+          <h1 className="f6 fw6">Completed project</h1>
+          <h1 className="mv0">10</h1>
+        </Card>
+        <Card className="w-25 ma2">
+          <h1 className="f6 fw6">Total Employee</h1>
+          <h1 className="mv0">10</h1>
+        </Card>
+        <Card className="w-25 ma2">
+          <h1 className="f6 fw6">Total Associates</h1>
+          <h1 className="mv0">10</h1>
+        </Card>
+      </div>
+      <Card className="w-50 ma2"
+        style={{ margin: '10px 40px' }}
+      >
+        <h1 className="f5">Company Announcement</h1>
+        <div className="flex items-center">
+          <div className="w2 h2 bg-red br3"></div>
+          <h1 className="f5 fw4 mh3">Anthony has joined the company</h1>
+        </div>
+      </Card>
+      <div>
+        <img
+          onClick={() => setShowAnnouncementDialog(!showAnnouncementDialog)}
+          src={addIcon}
+          className={`fixed pointer`}
+          style={{
+            bottom: '5rem',
+            right: '7rem',
+            width: '5rem',
+            boxShadow: '0px 6px 6px #00000029',
+            borderRadius: '50%'
+          }}
+        />
+      </div>
+      {showAnnouncementDialog && (
+        <Dialog
+          onClose={() => setShowAnnouncementDialog(!showAnnouncementDialog)}
+          isOpen={showAnnouncementDialog}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+        >
+          <div>
+            <AnnouncementEditor setShowDialog={setShowAnnouncementDialog} />
+          </div>
+        </Dialog>
+      )}
+    </>
+  );
+};
+
+const mapStateToProps = (state: any) => {
+  return {
+    user: state.userReducer.user
+  };
+};
+
+export const DashboardView = connect(mapStateToProps)(DashboardViewComponent);

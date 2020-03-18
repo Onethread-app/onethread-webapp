@@ -9,7 +9,7 @@ import { loginAction, LoginModel, resendMailForSignup } from '../../stores/auth/
 import { isEmpty, isEqual } from 'lodash';
 import { SubmitError } from 'components/final-form/SubmitError';
 
-import logo from './../../resources/images/logo.png';
+import logo from './../../resources/images/TiGrowLogoFinal.png';
 import emailIcon from './../../resources/images/email.png';
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
@@ -73,8 +73,7 @@ export const SignInPageComponent = (props: SignInPageInternalProps & RouteCompon
         <div className="v-mid dtc">
           <div className="w-50 center">
             <Link to="/home">
-              <img width="150px"
-                height="70px"
+              <img width="200px"
                 src={logo} />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
