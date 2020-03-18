@@ -14,7 +14,7 @@ const GeneralPageComponent = (props: any) => {
     <div className='bl b--black-05 bw1 pl5 ml5 h5'>
       {console.log(archiveProjectCheck)}
       <p>general</p>
-      <Form
+      {/* <Form
         onSubmit={props.onSubmit}
         initialValues={{ optionalRole: props.optionalRole }}
         render={({
@@ -202,7 +202,7 @@ const GeneralPageComponent = (props: any) => {
             )}
           </form>
         )}
-      />
+      /> */}
     </div>
   );
 };
