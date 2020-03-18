@@ -6,10 +6,16 @@ import { RightSidebar } from 'components/RightSidebar';
 import { FormProject } from './CreateProjectForm';
 import { ChangeName } from './ChangeProjectName';
 import { find } from 'lodash';
-import { boardColor } from 'stores/UtilsActions';
+import { boardColor, unreadMessageNotification } from 'stores/UtilsActions';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { getAllDepartments } from '../../../stores/company/Actions';
-import { getAllProjects, archiveProject, getProjectArchive, getSingleProject, setCurrentProjectId } from '../../../stores/project/Actions';
+import {
+  getAllProjects,
+  archiveProject,
+  getProjectArchive,
+  getSingleProject,
+  setCurrentProjectId
+} from '../../../stores/project/Actions';
 import { getAllAssociates } from 'stores/associate/Actions';
 
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
@@ -82,8 +88,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       borderLeft: `5px solid 
                     ${find(boardColor, ['code', project.color]) ?
                           find(boardColor, ['code', project.color])!.value : 'white'
-                        }`, 
-                        // TODO use dictionary
+                        }`,
+                      // TODO use dictionary
                       // borderLeft: '5px solid',
                       paddingLeft: '20px',
                       marginLeft: '-2px',
@@ -132,6 +138,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           />
                         }
                       />
+                      {props.companyRooms &&
+                        unreadMessageNotification(props.companyRooms, 'project', project._id) ?
+                        <span className="ml1 br-100 bg-red" style={{ width: '7px', height: '7px' }}></span>
+                        : null}
                     </div>
                     <h3 className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
                       style={{
@@ -193,8 +203,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       borderLeft: `5px solid 
                       ${find(boardColor, ['code', archProject.color]) ?
                           find(boardColor, ['code', archProject.color])!.value : 'red'
-                        }`, 
-                        // TODO use dictionary
+                        }`,
+                      // TODO use dictionary
                       // borderLeft: '5px solid red',
                       paddingLeft: '20px',
                       marginLeft: '-2px',
@@ -284,7 +294,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
         <RightSidebar
           onClose={() => setShowProjectDialog(!showProjectDialog)}
         >
-          <FormProject 
+          <FormProject
             setShowProjectDialog={setShowProjectDialog}
           />
         </RightSidebar>
@@ -297,10 +307,13 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
 const mapStateToProps = (state: any) => ({
   projects: state.projectReducer.allProjects,
   archiveProjectList: state.projectReducer.allArchive,
-  company: state.companyReducer.currentCompany
+  company: state.companyReducer.currentCompany,
+  companyRooms: state.roomReducer.companyRooms,
 });
 
 export const MyProject = connect(mapStateToProps,
-  { getAllProjects, getAllDepartments, archiveProject, getProjectArchive, getSingleProject, 
-    setCurrentProjectId, getAllAssociates })
+  {
+    getAllProjects, getAllDepartments, archiveProject, getProjectArchive, getSingleProject,
+    setCurrentProjectId, getAllAssociates
+  })
   (withRouter(MyProjectPageComponent));

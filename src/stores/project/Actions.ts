@@ -2,9 +2,9 @@ import { PROJECT } from './Types';
 import { tigrowApi } from 'config';
 import { tokenConfig, tokenConfigFIleUpload } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
-import { IPendingProject , IProject } from './Reducer';
+import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
+import { IPendingProject, IProject } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
-
 
 export const getAllProjects = () => async (dispatch: any, getState: any) => {
   try {
@@ -27,7 +27,7 @@ export const getAllProjects = () => async (dispatch: any, getState: any) => {
   }
 };
 
-export const createProject = (payload: any, admin: {_id: ''}) => async (dispatch: any, getState: any) => {
+export const createProject = (payload: any, admin: { _id: '' }) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
@@ -49,13 +49,12 @@ export const createProject = (payload: any, admin: {_id: ''}) => async (dispatch
         companyId,
         departments: payload.department,
         associates: payload.associates
-      }
+      };
 
-      console.log(reqBody);
-      const response = await tigrowApi.post(`projects/${companyId}/create`, reqBody , headers);
+      const response = await tigrowApi.post(`projects/${companyId}/create`, reqBody, headers);
       await dispatch({ type: PROJECT.PROJECT_CREATE, payload: response.data });
       // dispatch({ type: PROJECT.PROJECT_GET_ALL_PROJECTS });
-      dispatch(getAllProjects());   
+      dispatch(getAllProjects());
       return response.data;
     }
   } catch (error) {
@@ -145,6 +144,7 @@ export const getSingleProject = (pid: string) => async (dispatch: any) => {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`projects/${pid}`, headers);
+      await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT });
       dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
       return response.data;
     }
@@ -160,56 +160,56 @@ export const getSingleProject = (pid: string) => async (dispatch: any) => {
   }
 };
 
-export const projectPrefaceDescriptionUpdate = 
-(pid: string, description: string) => async (dispatch: any, getState: any) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const reqBody = {
-        description 
-      };
-      const response = await tigrowApi.put(`projects/${pid}/description`, reqBody, headers);
-      dispatch({ type: PROJECT.PROJECT_PREFACE_DES_UP });
-      return response.data;
+export const projectPrefaceDescriptionUpdate =
+  (pid: string, description: string) => async (dispatch: any, getState: any) => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const reqBody = {
+          description
+        };
+        const response = await tigrowApi.put(`projects/${pid}/description`, reqBody, headers);
+        dispatch({ type: PROJECT.PROJECT_PREFACE_DES_UP });
+        return response.data;
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log(error.response);
+        // return error.response;
+      }
     }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-      // return error.response;
-    }
-  }
-};
+  };
 
-export const projectPrefaceOutlineUpdate = 
-(pid: string, outline: string) => async (dispatch: any, getState: any) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const reqBody = {
-        outline 
-      };
-      const response = await tigrowApi.put(`projects/${pid}/outline`, reqBody, headers);
-      dispatch({ type: PROJECT.PROJECT_PREFACE_OUT_UP });
-      return response.data;
+export const projectPrefaceOutlineUpdate =
+  (pid: string, outline: string) => async (dispatch: any, getState: any) => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const reqBody = {
+          outline
+        };
+        const response = await tigrowApi.put(`projects/${pid}/outline`, reqBody, headers);
+        dispatch({ type: PROJECT.PROJECT_PREFACE_OUT_UP });
+        return response.data;
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log(error.response);
+        // return error.response;
+      }
     }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-      // return error.response;
-    }
-  }
-};
+  };
 
 export const setCurrentProjectId = (pid: string) => async (dispatch: any) => {
-  dispatch({type: PROJECT.PROJECT_PROJECT_ID, payload: pid});
+  dispatch({ type: PROJECT.PROJECT_PROJECT_ID, payload: pid });
 };
 
 export const projectFileUpload: any = (file: any, pid: string) => async (dispatch: any) => {
@@ -242,7 +242,7 @@ export const getAllPendingProjects = () => async (dispatch: any, getState: any) 
       const companyId = getState().companyReducer.currentCompany._id;
       const response = await tigrowApi.get(`projects/${companyId}/pending-requests`, headers);
 
-      dispatch({ type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT , payload: response.data });
+      dispatch({ type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT, payload: response.data });
     } else {
       // tslint:disable-next-line: no-console
       console.log('error in selection of company fetching');
@@ -259,20 +259,19 @@ export const getAllPendingProjects = () => async (dispatch: any, getState: any) 
   }
 };
 
-
 export const acceptPendingProject = (project: IProject) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization && project._id) {
       const companyID = getState().companyReducer.currentCompany._id;
       const pendingProjects = getState().projectReducer.pendingProjects;
-      const response = await tigrowApi.put(`projects/${companyID}/accept-request?pid=${project._id}`,null, headers );
+      const response = await tigrowApi.put(`projects/${companyID}/accept-request?pid=${project._id}`, null, headers);
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter((pending: IPendingProject) =>
           isEqual(pending.project._id, project._id) === false);
         dispatch({ type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT, payload: currentPendingProjects });
-        dispatch({ type: PROJECT.PROJECT_ADD_PROJECT , payload: project });
+        dispatch({ type: PROJECT.PROJECT_ADD_PROJECT, payload: project });
         Toaster
           .create()
           .show({
@@ -297,7 +296,6 @@ export const acceptPendingProject = (project: IProject) => async (dispatch: any,
   }
 };
 
-
 export const rejectPendingProject = (projectId: string) => async (dispatch: any, getState: any) => {
 
   try {
@@ -305,10 +303,7 @@ export const rejectPendingProject = (projectId: string) => async (dispatch: any,
     if ((headers as any).headers.Authorization && projectId) {
       const companyID = getState().companyReducer.currentCompany._id;
       const pendingProjects = getState().projectReducer.pendingProjects;
-          const response = await tigrowApi.put(`projects/${companyID}/reject-request?pid=${projectId}`,null,headers);
-
-      console.log(response);
-
+      const response = await tigrowApi.put(`projects/${companyID}/reject-request?pid=${projectId}`, null, headers);
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter((pending: IPendingProject) =>

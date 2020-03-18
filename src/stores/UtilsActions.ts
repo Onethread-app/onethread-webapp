@@ -3,6 +3,7 @@ import { createBrowserHistory } from 'history';
 import { Toaster } from '@blueprintjs/core';
 import { store } from 'Store';
 import { includes } from 'lodash';
+import { ICompanyRoom } from './room/Reducer';
 
 const History = createBrowserHistory();
 export interface Entity {
@@ -64,7 +65,7 @@ export const projectPermit = (companyRole: string): boolean => {
   }
 };
 
-type AdminOptionalPermissioRoles = 'cRUDAnnoucment' | 'editProfile' | 'archiveProject' | 'addRemoveModerator' | 
+type AdminOptionalPermissioRoles = 'cRUDAnnoucment' | 'editProfile' | 'archiveProject' | 'addRemoveModerator' |
   'messageAssociate' | 'addAcceptRejectAssociate' | 'acceptRejectProjectFromAssociate';
 
 export const companyPermit = (companyRole: string, optionalPermissions?: AdminOptionalPermissioRoles): boolean => {
@@ -134,4 +135,18 @@ export const isEmail = (email: string) => {
     return true;
   }
   return false;
+};
+
+export const unreadMessageNotification = (companyRooms: ICompanyRoom[], key: string, id: string)
+  : boolean => {
+  let unread = false;
+  if (companyRooms.length > 0) {
+    for (const room of companyRooms) {
+      if (room[key] === id && room.unreadCount > 0) {
+        unread = true;
+        break;
+      }
+    }
+  }
+  return unread;
 };

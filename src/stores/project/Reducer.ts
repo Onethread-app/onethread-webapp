@@ -1,4 +1,4 @@
-import { PROJECT } from './Types';
+import { PROJECT, CLEAR_PROJECT_REDUCER_STATE } from './Types';
 import { Entity } from 'stores/UtilsActions';
 import { User } from 'stores/user/Reducer';
 
@@ -16,16 +16,15 @@ export interface IProject {
 
 export interface IPendingProject {
   _id: string;
-  project: IProject
+  project: IProject;
 }
 
 export interface ProjectModel {
   pendingProjects: IProject[];
   allProjects: IProject[];
   allArchive: IProject[];
-  projectDetails: IProject
+  projectDetails: IProject;
 }
-
 
 const initialState = {
   allProjects: [],
@@ -49,7 +48,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         allProjects: action.payload
       };
-      case PROJECT.PROJECT_GET_ALL_PENDING_PROJECT:
+    case PROJECT.PROJECT_GET_ALL_PENDING_PROJECT:
       return {
         ...state,
         pendingProjects: action.payload
@@ -61,22 +60,26 @@ export const ProjectReducer = (state = initialState, action: any) => {
       };
     case PROJECT.PROJECT_SINGLE_VIEW:
       return {
-         ...state,
-         projectDetails: action.payload 
+        ...state,
+        projectDetails: action.payload
       };
     case PROJECT.PROJECT_PROJECT_ID:
       return {
         ...state,
         pid: action.payload
       };
+    case CLEAR_PROJECT_REDUCER_STATE:
+      return {
+        ...initialState
+      };
     case PROJECT.PROJECT_ADD_PROJECT:
-        return {
-          ...state,
-          allProjects: [
-            ...state.allProjects,
-            action.payload
-          ]
-        };
+      return {
+        ...state,
+        allProjects: [
+          ...state.allProjects,
+          action.payload
+        ]
+      };
     default:
       return state;
   }
