@@ -41,6 +41,61 @@ module.exports.createCompanyNotification = async (
   await UserNotification.create(usersNotifications);
 };
 
+module.exports.createMemberAddNotification = async (
+  company,//fromHeader
+  newMembers,
+  adminUser,
+) => {
+
+  const membersToSendNotification = await Member.find({
+    $or:[ {role: 'superAdmin'}, {role: 'admin'}],
+    company: company,
+  });
+  
+
+  // let notification = new Notification({
+  //   type: 'companyProfile',
+  //   text: `company profile has been updated by ${adminUser.name}`,
+  //   account: adminUser._id,
+  //   company: company,
+  // });
+
+  let notifications = newMembers.map(m => {
+    return {
+      type: 'companyProfile',
+      text: `GA has added ${m.account.name}`,
+      account: adminUser._id,
+      company: company,
+    };
+  });
+
+  const promises = [];
+
+  for (let i = 0; i <= notifications.length ; i += 1) {
+    let usersNotifications = membersToSendNotification.map(m => {
+      return {
+        notification: notification._id,
+        account: m.account,
+      };
+    });
+    promises.push(usersNotifications);
+  }
+
+  const usersNotificationsAll= await Promise.all(promises);
+  
+  // let usersNotifications = membersToSendNotification.map(m => {
+  //   return {
+  //     notification: notification._id,
+  //     account: m.account,
+  //   };
+  // });
+  
+  sendMultipleNotification(company, adminUser, notifications);
+  
+  await Notification.create(notifications);
+  await UserNotification.create(usersNotificationsAll);
+};
+
 module.exports.createAssociateNotification = async (
   company, adminUser,text
 ) => {

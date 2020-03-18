@@ -128,7 +128,6 @@ const rejectPending = async (req, res, next) => {
   }
 };
 
-
 const list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 

@@ -203,7 +203,7 @@ const fileInRooms = async (req, res, next) => {
 const fileInProject = async (req, res, next) => {
   const file = req.file;
   if(!file){
-    return sendErrorResponse(res, 400, 'ValidationError', {message:'Please provide the required filed'});
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/x-www-form-urlencoded'"})
   }
   const userID = req.user._id;
   if (!checkMimetype.includes(file.mimetype)) {

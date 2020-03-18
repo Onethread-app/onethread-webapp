@@ -27,3 +27,21 @@ module.exports.sendCompanyNotification = async (
 
 };
 
+module.exports.sendMultipleNotification = async (
+  company,//fromHeader
+  adminUser,
+  userNoties,
+) => {
+  let userNotifications = userNoties;
+
+  // userNotification = { notification: userNotification
+  // };
+  console.log(1,company);
+  channels_client.trigger(
+    company.toString(), 
+    `${company}-superAdmin`,
+    userNotifications//ARRAY
+     );
+
+};
+

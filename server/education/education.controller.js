@@ -34,7 +34,7 @@ const addEducation = async (req, res, next) => {
 const updateEducation = async (req, res, next) => {
   try {
     if (!req.is('application/json')) {
-      return res.send("Expects 'application/json'");
+      return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
     }
     const updateEdu = await Education.findByIdAndUpdate(
       {

@@ -11,9 +11,9 @@ const AssociateSchema = new mongoose.Schema(
       required: true,
     },
     associateCompany: {
-        type: Schema.Types.ObjectId,
-        ref: 'Company',
-        unique: false,
+      type: Schema.Types.ObjectId,
+      ref: 'Company',
+      unique: false,
       required: true,
     },
     removed: {
@@ -29,22 +29,30 @@ const AssociateSchema = new mongoose.Schema(
       default: false,
     },
     account: {
+      type: Schema.Types.ObjectId,
+      ref: 'Account',
+      required: true,
+    },
+    project: [
+      {
         type: Schema.Types.ObjectId,
-        ref: 'Account',
-        required: true,
+        ref: 'Project',
       },
-    version : {
-      type : Number,
-      default : 0
-    }
+    ],
+    version: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );
 
-AssociateSchema.index({ associateCompany: 1, company: 1 }, { unique: true });
-let Associate =  mongoose.model('Associate', AssociateSchema);
+AssociateSchema.index(
+  { associateCompany: 1, company: 1 },
+  { unique: true },
+);
+let Associate = mongoose.model('Associate', AssociateSchema);
 
 module.exports = {
   Associate,
 };
-

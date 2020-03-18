@@ -1,32 +1,32 @@
 const { Room } = require('./room.model');
 const { Member } = require('../company/member/member.model');
-const { Company } = require('../company/company.model');
+// const { Company } = require('../company/company.model');
+const { Project } = require('../project/project.model');
 const { chatkit } = require('../services/pusher.services');
 const logger = require('../../config/winston');
 const _ = require('lodash');
-
+const { sendJSONresponse, sendErrorResponse} = require('../helpers/jsonResponse');
 const create = async (req, res, next) => {
   try {
     // check room already exists with same company
     const duplicate = await Room.findOne({
       name: req.body.name,
-      company: req.body.company,
+      company: req.body.pid,
     });
-    if (duplicate) {
-      return res.status(409).json({
-        message: `Room already exists`,
-      });
+    if (duplicate) { 
+      return sendErrorResponse(res, 409, 'DuplicateRoomError', {message: `Room already exists`})
     }
     const room = new Room({
       name: req.body.name,
-      company: req.body.company,
+      // company: req.body.company,
+      pid: req.body.pid,
       members: [req.user._id],
       account: req.user._id,
     });
     await room.save();
     //will remove future
-    await Company.findByIdAndUpdate(
-      req.body.company,
+    await Project.findByIdAndUpdate(
+      req.body.pid,
       {
         $addToSet: {
           rooms: { $each: [room._id] },
@@ -41,13 +41,10 @@ const create = async (req, res, next) => {
       name: room.name,
       isPrivate: true,
       customData: {
-        company: req.body.company,
+        pid: req.body.pid,
       },
     });
-
-    return res.status(201).json({
-      room,
-    });
+    return sendJSONresponse(res, 201, room);
   } catch (e) {
     next(e);
   }

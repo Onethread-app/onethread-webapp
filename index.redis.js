@@ -21,7 +21,7 @@ const client = redis.createClient({
     return Math.min(options.attempt * 100, 3000);
   },
   port: 6379,
-  host: `127.0.0.1`,
+  host: '127.0.0.1',
 });
 
 client.auth(config.redis.password, function(err, response) {

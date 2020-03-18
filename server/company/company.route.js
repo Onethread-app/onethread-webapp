@@ -43,6 +43,7 @@ router
     companyCtrl.updateBasicInfo,
   );
 
+
 // update about
 router
   .route('/:companyId/about')
@@ -52,7 +53,28 @@ router
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
   );
-
+router
+  .route('/:companyId/add-product')
+  .put(
+    authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    // SchemaValidator(joiSchema.updateAbout),
+    companyCtrl.addProduct,
+  );
+router
+  .route('/:companyId/certification')
+  .post(
+    authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyCtrl.createCertifications,
+  );
+  router
+  .route('/:companyId/parentorg')
+  .put(
+    authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyCtrl.parentOrg,
+  );
 // update about
 router
   .route('/:companyId/changeName')

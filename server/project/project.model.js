@@ -50,16 +50,23 @@ const projectSchema = new Schema(
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
+        ref: 'ProjectMember',
       },
     ],
-    associates: [
+    projectRequest: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Associates',
+        ref: 'ProjectRequest',
+      },
+    ],
+    rooms: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Room',
       },
     ],
     company: {
+      // which company create the project // project owner
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
     },
@@ -71,10 +78,20 @@ const projectSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    activate:{
+    activate: {
       type: Boolean,
       deafult: true,
     },
+    teamsize: {
+      type: Number,
+      default: 1,
+    },
+    associate: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Associate',
+      },
+    ],
   },
   {
     timestamps: true,

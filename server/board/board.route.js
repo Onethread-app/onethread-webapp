@@ -12,7 +12,7 @@ const { permit, authSelf } = require('./../helpers/permission');
 
 const router = express.Router();
 
-// get borad list
+
 router
   .route('/')
   
@@ -24,7 +24,7 @@ router
   );
 
   router
-  .route('/company/:companyId')
+  .route('/boardProject/:projectId')
   .get(
     authorization,
     // permit('user', 'admin'),

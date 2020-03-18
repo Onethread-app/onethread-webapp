@@ -1,7 +1,7 @@
 const Account = require('../account/account.model');
 const mongoose = require('mongoose');
 const { Associate } = require('../associate/associate.model');
-const { Company } = require('./company.model');
+const { Company, Certificate } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { chatkit } = require('../services/pusher.services');
 const {
@@ -457,12 +457,63 @@ const searchCompany = async (req, res, next) => {
     next(error);
   }
 };
-
+// const updateCertifications = async(req, res, next)=>{
+//   const certificationName = req.body.certificationName;
+//   const certificationDescription = req.body.
+// }
+const addProduct = async (req, res, next) => {
+  try {
+    await Company.findByIdAndUpdate(
+      { _id: req.params.companyId },
+      { $addToSet: { products: products } },
+      { safe: true, upsert: true, new: true },
+    );
+    return sendJSONresponse(res, 200, {
+      message: 'product/service add',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+const createCertifications = async (req, res, next) => {
+  try {
+  //   const certification = req.body.name;
+  //   const description = req.body.description;
+  // await Certificate.findByIdAndUpdate({_id: req.params.companyId}),{
+  //   $set:{ certification: req.body.certi }
+  // },{new: true, safe: true, upsert: true}
+  // return sendJSONresponse(res, 200, {message: 'parentorg update'})
+  const certificate = new Certificate({
+    name: req.body.name,
+    description: req.body.description,
+    company: req.params.companyId,
+  })
+  await certificate.save();
+  await Certificate.findByIdAndUpdate({_id: req.params.companyId}),{
+      $set:{ certificates: req.body.certi }
+    },{new: true, safe: true, upsert: true}
+  return sendJSONresponse(res, 200, {})
+  } catch (error) {
+    next(error)
+  }
+};
+const parentOrg = async (req, res, next) =>{
+  try {
+    const parentcom = req.body.parentcom;
+  await Company.findByIdAndUpdate({_id: req.params.companyId}),{
+    $set:{parentcom:parentcom }
+  },{new: true, safe: true, upsert: true}
+  return sendJSONresponse(res, 200, {message: 'parentorg update'})
+  } catch (error) {
+    next(error)
+  }
+}
 module.exports = {
   authorizeUser,
   createCompany,
   getCompany,
   updateBasicInfo,
+  createCertifications,
   updateRole,
   updateAbout,
   getCompanyIndividual,
@@ -470,4 +521,6 @@ module.exports = {
   deleteCompany,
   getCompanyLoad,
   searchCompany,
+  addProduct,
+  parentOrg
 };
