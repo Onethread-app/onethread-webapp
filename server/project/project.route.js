@@ -102,11 +102,11 @@ router
   .route('/description')
   .put(
     authorization,
-    // projectCtrl.authorizeProjectRole(
-    //   'all',
-    //   'admin',
-    //   'projectModerator',
-    // ),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     schemaValidator(projectValidation.updateProjectDescription),
     projectCtrl.updateProjectDescription,
   );
