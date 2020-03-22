@@ -3,9 +3,9 @@ const Schema = mongoose.Schema;
 
 const teamMember = new Schema(
   {
-    account: {
+    member: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Account',
+      ref: 'Member',
       unique: false,
       required: true,
     },
@@ -17,10 +17,16 @@ const teamMember = new Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'projectModerator', 'member'], 
+      enum: ['admin', 'projectModerator', 'member'],
       default: 'member',
       required: true,
     },
+    designations: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Designation',
+      },
+    ],
     removed: {
       type: Boolean,
       default: false,
@@ -31,7 +37,7 @@ const teamMember = new Schema(
   },
 );
 
-teamMember.index({ account: 1, project: 1 }, { unique: true });
+teamMember.index({ member: 1, project: 1 }, { unique: true });
 
 let Team = mongoose.model('Team', teamMember);
 

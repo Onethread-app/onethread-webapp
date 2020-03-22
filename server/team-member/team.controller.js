@@ -16,7 +16,7 @@ const changeRole = async (req, res, next) => {
   try {
     // check role: superAdmin/admin
     const member = await Team.findOne({
-      account: req.user._id,
+      member: req.user._id,
       company: req.query.pid,
     });
 
@@ -63,6 +63,7 @@ const addTeamMember = async (req, res, next) => {
         project: req.query.pid,
         removed: true,
       }).select('account');
+      console.log(prevMembers);
       prevMembers = prevMembers.map(member => member.account);
       // filter new members
       members = members.filter(member => {
@@ -142,29 +143,35 @@ const addTeamMember = async (req, res, next) => {
 
 // get all members in a project
 const list = async (req, res, next) => {
+  console.log(req);
   try {
-    const { limit = 50, skip = 0 } = req.query;
-
-    const members = await Team.find({
-      project: req.query.pid,
-      removed: false,
+    const { limit = 50, skip = 0, pid } = req.query;
+    console.log(req);
+    const members = await Team.findOne({
+      $and: [{ project: pid }, { removed: false }],
     })
       .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit)
       .select('role company')
       .populate([
-        { path: 'account', select: '_id name firstName lastName' },
-        // {
-        //   path: 'designations',
-        //   select: 'division department position',
-        //   populate: [{ path: 'department', select: 'name' }],
-        // },
+        { path: 'member', select: '_id account designations' },
+        {
+          path: 'designations',
+          select: 'division department position',
+          populate: [{ path: 'department', select: 'name' }],
+        },
+        {
+          path: 'account',
+          select: 'firstName lastName',
+        },
       ]);
+
     return res.status(200).json({
       members,
     });
   } catch (error) {
+    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
@@ -177,7 +184,7 @@ const getMember = (req, res, next) => {
       member: req.member,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -192,7 +199,9 @@ const getMemberLoad = async (req, res, next) => {
       req.member = member;
       return next();
     } else {
-      return sendErrorResponse(res, 404, 'MemberIdNotFoundError', { message: 'No valid entry found for provided Member ID',})
+      return sendErrorResponse(res, 404, 'MemberIdNotFoundError', {
+        message: 'No valid entry found for provided Member ID',
+      });
     }
   } catch (error) {
     logger.error(`${error}`);
