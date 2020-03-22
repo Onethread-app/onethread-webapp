@@ -10,6 +10,7 @@ module.exports.authorization = async (req, res, next) => {
   const parts =
     req.headers['x-access-token'] ||
     req.headers.authorization.split(' ')[1];
+  
   if (parts) {
     let isBlackListed;
     await client

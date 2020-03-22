@@ -17,7 +17,7 @@ const teamMember = new Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'projectModerator', 'member', 'specialMember'],
+      enum: ['admin', 'projectModerator', 'member'], 
       default: 'member',
       required: true,
     },

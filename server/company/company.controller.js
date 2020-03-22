@@ -1,7 +1,7 @@
 const Account = require('../account/account.model');
 const mongoose = require('mongoose');
 const { Associate } = require('../associate/associate.model');
-const { Company, Certificate } = require('./company.model');
+const { Company, Certificate, Parentcom } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { chatkit } = require('../services/pusher.services');
 const {
@@ -190,7 +190,7 @@ const getCompanyIndividual = async (req, res, next) => {
     let options = [
       {
         path: 'company',
-        select: '_id name',
+        select: '_id name logo',
         // populate: [
         //   {
         //     path: 'logo',
@@ -224,21 +224,17 @@ const getCompany = async (req, res, next) => {
     }).select(
       '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
     );
-
+    
     // role info
     let member = await Member.findOne({
       account: req.user._id,
       company: company._id,
     }).select('-_id role');
-
-    // if (!member) {
-    //   return res.status(401).json({
-    //     message: "You're not authorized with this company",
-    //   });
-    // }
-
+    let parentCom = await Parentcom.find({company: company._id}).select('-__v -company');
+    let certificate = await Certificate.find({ company: company._id }).select('-__v');
+    let memberCount = await Member.find({company: company._id}).countDocuments();
     return res.status(200).json({
-      company: { ...company._doc, role: member.role },
+      company: { ...company._doc, role: member.role, parentOrg: parentCom, certificate: certificate, totalMember: memberCount },
     });
   } catch (error) {
     next(error);
@@ -390,6 +386,9 @@ const deleteCompany = async (req, res, next) => {
 
 const authorizeUser = (functionalRole, ...userRoles) => {
   return async function(req, res, next) {
+    // console.log(functionalRole)
+    // console.log(req)
+    // console.log(...userRoles)
     try {
       // const company =  await Company.findOne({
       //   _id: req.params.companyId,
@@ -405,8 +404,6 @@ const authorizeUser = (functionalRole, ...userRoles) => {
       //   !userRoles.includes(member.role) ||
       //   !company.optionalRole.includes(functionalRole)
       // )
-
-      //console.log(member, userRoles, functionalRole, 'a');
       if (
         !member ||
         (functionalRole === 'all' && !userRoles.includes(member.role))
@@ -457,63 +454,41 @@ const searchCompany = async (req, res, next) => {
     next(error);
   }
 };
-// const updateCertifications = async(req, res, next)=>{
-//   const certificationName = req.body.certificationName;
-//   const certificationDescription = req.body.
-// }
-const addProduct = async (req, res, next) => {
+
+const addCertifications = async (req, res, next) => {
   try {
-    await Company.findByIdAndUpdate(
-      { _id: req.params.companyId },
-      { $addToSet: { products: products } },
-      { safe: true, upsert: true, new: true },
-    );
-    return sendJSONresponse(res, 200, {
-      message: 'product/service add',
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-const createCertifications = async (req, res, next) => {
-  try {
-  //   const certification = req.body.name;
-  //   const description = req.body.description;
-  // await Certificate.findByIdAndUpdate({_id: req.params.companyId}),{
-  //   $set:{ certification: req.body.certi }
-  // },{new: true, safe: true, upsert: true}
-  // return sendJSONresponse(res, 200, {message: 'parentorg update'})
   const certificate = new Certificate({
     name: req.body.name,
     description: req.body.description,
     company: req.params.companyId,
   })
   await certificate.save();
-  await Certificate.findByIdAndUpdate({_id: req.params.companyId}),{
-      $set:{ certificates: req.body.certi }
-    },{new: true, safe: true, upsert: true}
-  return sendJSONresponse(res, 200, {})
+  return sendJSONresponse(res, 201, { message: 'Certification add'})
   } catch (error) {
     next(error)
   }
 };
+
 const parentOrg = async (req, res, next) =>{
   try {
     const parentcom = req.body.parentcom;
-  await Company.findByIdAndUpdate({_id: req.params.companyId}),{
-    $set:{parentcom:parentcom }
-  },{new: true, safe: true, upsert: true}
-  return sendJSONresponse(res, 200, {message: 'parentorg update'})
+ const parentCom = new Parentcom({
+   name: parentcom,
+   company: req.params.companyId,
+ })
+ await parentCom.save();
+//  await Company.findOneAndUpdate({_id: req.params.companyId}, {$push:{parentcom: parentCom._id}},{safe: true, new: true, upsert: true})
+ return sendJSONresponse(res, 201, {message: 'parentorg add'})
   } catch (error) {
     next(error)
   }
-}
+};
+
 module.exports = {
   authorizeUser,
   createCompany,
   getCompany,
   updateBasicInfo,
-  createCertifications,
   updateRole,
   updateAbout,
   getCompanyIndividual,
@@ -521,6 +496,6 @@ module.exports = {
   deleteCompany,
   getCompanyLoad,
   searchCompany,
-  addProduct,
-  parentOrg
+  parentOrg,
+  addCertifications,
 };

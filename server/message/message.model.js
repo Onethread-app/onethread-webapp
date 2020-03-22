@@ -35,6 +35,10 @@ const MessageSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    discussion: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

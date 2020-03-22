@@ -52,30 +52,24 @@ router
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
-  );
-router
-  .route('/:companyId/add-product')
-  .put(
-    authorization,
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-    // SchemaValidator(joiSchema.updateAbout),
-    companyCtrl.addProduct,
-  );
-router
+  )
+  router
   .route('/:companyId/certification')
   .post(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-    companyCtrl.createCertifications,
+    companyCtrl.addCertifications,
   );
   router
   .route('/:companyId/parentorg')
-  .put(
+  .post(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    // SchemaValidator(joiSchema.parentOrg),
     companyCtrl.parentOrg,
   );
-// update about
+
+// change name
 router
   .route('/:companyId/changeName')
   .put(

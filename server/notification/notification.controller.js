@@ -1,6 +1,7 @@
 
 const { Company } = require('../company/company.model');
 const { Member } = require('../company/member/member.model');
+const { TeamMember } = require('../team-member/team.model');
 const  Notification  = require('./notification.model');
 const  UserNotification  = require('./userNotification.model');
 const {
@@ -117,6 +118,8 @@ module.exports.createAssociateNotification = async (
     company: company,
   });
 
+
+
   let notification = new Notification({
     type: 'associate',
     text: text,
@@ -149,6 +152,11 @@ module.exports.createBoardNotification = async (
     company: project.company,
   });
 
+  const teamMembers = await TeamMember.find({
+    $or:[ {role: 'projectModerator'}, {role: 'admin'}],
+    company: company,
+  });
+
   let notification = new Notification({
     type: 'board',
     text: text,
@@ -157,19 +165,28 @@ module.exports.createBoardNotification = async (
   });
 
   
-  let usersNotification = members.map(m => {
+  let usersNotificationCollegue = members.map(m => {
     return {
       notification: notification._id,
       account: m.account,
     };
   });
 
+  let usersNotificationTeam = members.map(m => {
+    return {
+      notification: notification._id,
+      account: m.account,
+    };
+  });
+
+
+
   //project role wise notification incomplete
 
   sendCompanyNotification(company._id, adminUser, notification);
 
   await notification.save();
-  await UserNotification.create(usersNotification);
+  await UserNotification.create(_.union(usersNotificationCollegue, usersNotificationTeam));
 };
 
 module.exports.list   = async (req, res, next) => {

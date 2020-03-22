@@ -33,6 +33,22 @@ const projectSchema = new Schema(
       ref: 'Account',
       required: true,
     },
+    optionalRole: {
+      type: [{
+        type: String,
+        enum: [
+          'updateArchiveProject',
+          'updateProjectPreface',
+          'addFileProject',
+          'addRemoveMemberRoom',
+          'createUpdateRoom',
+          'archiveRoom',
+          'createUpdateBoard',
+          'createUpdateColumn',
+          'assignDeleteMemberBoard'
+        ]
+      }],
+    },
 
     departments: [
       {
@@ -50,7 +66,7 @@ const projectSchema = new Schema(
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProjectMember',
+        ref: 'Team',
       },
     ],
     projectRequest: [
