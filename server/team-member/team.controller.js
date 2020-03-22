@@ -209,28 +209,27 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchTeamMember = async (req, res, next) => {
   try {
-    let projectMembers = await Project.findById(req.query.pid)
-      .select('-_id members')
-      .populate('members', '_id name')
+    let projectMembers = await Team.find({ project: req.query.pid })
+      .select('-_id member')
+      .populate('member', '_id name')
       .exec();
     let companyMembers = await Member.find({
       company: req.params.companyId,
     })
-      .select('-_id account')
+      .select('_id account')
       .populate('account', '_id name firstName lastName email')
       .exec();
-    let members = companyMembers.filter(({ account }) => {
-      return !projectMembers.members.some(existingMember => {
-        return (
-          existingMember._id.toString() === account._id.toString()
-        );
+    let memberList = [];
+    let members = projectMembers.filter(({ member }) => {
+      return !companyMembers.some(existingMember => {
+        if (existingMember._id.toString() !== member._id) {
+          memberList.push(existingMember);
+        }
       });
     });
-    members = members.map(m => m.account);
-    // console.log(members);
-
-    return sendJSONresponse(res, 200, { members });
+    return sendJSONresponse(res, 200, memberList);
   } catch (error) {
+    console.log(error);
     logger.error(`${error}`);
     next(error);
   }

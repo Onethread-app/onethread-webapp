@@ -10,7 +10,16 @@ const SchemaValidator = require('../helpers/joiSchemaValidator');
 
 router
   .route('/:companyId/search')
-  .get(authorization, teamCtrl.searchTeamMember);
+  .get(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    teamCtrl.searchTeamMember,
+  );
 
 router.route('/:companyId/add-team-member').post(
   authorization,
