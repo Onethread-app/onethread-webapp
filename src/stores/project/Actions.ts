@@ -33,7 +33,7 @@ export const getAllProjects = () => async (dispatch: any, getState: any) => {
   }
 };
 
-export const createProject = (payload: any, admin: { _id: '' }) => async (
+export const createProject = (payload: any, admin: { _id: ''; }) => async (
   dispatch: any,
   getState: any
 ) => {
@@ -175,7 +175,7 @@ export const getSingleProject = (pid: string) => async (dispatch: any) => {
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`projects?pid=${pid}`, headers);
       await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT });
-      dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
+      await dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
       return response.data;
     }
   } catch (error) {
@@ -462,3 +462,24 @@ export const getRoleForProject = (projectId: string) => async (
     }
   }
 };
+
+// export const getSingleProject = (pid: string) => async (dispatch: any) => {
+//   try {
+//     const headers = tokenConfig();
+//     if ((headers as any).headers.Authorization) {
+//       const response = await tigrowApi.get(`projects?pid=${pid}`, headers);
+//       await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT });
+//       await dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
+//       return response.data;
+//     }
+//   } catch (error) {
+//     if (isEqual(error.message, 'Network Error')) {
+//       // tslint:disable-next-line: no-console
+//       console.log('network error');
+//     } else {
+//       // tslint:disable-next-line: no-console
+//       console.log(error.response);
+//       // return error.response;
+//     }
+//   }
+// };

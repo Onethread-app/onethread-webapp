@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   HTMLTable,
@@ -6,7 +6,8 @@ import {
   Position,
   Icon,
   ButtonGroup,
-  HTMLSelect
+  HTMLSelect,
+  Dialog
 } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ICompany } from 'stores/company/Reducer';
@@ -22,14 +23,24 @@ interface TeamMember {
   getAllDepartments: () => void;
   addDesignation: (values: any, memberId: string) => void;
   editDesignation: (values: any, memberId: string) => void;
-  changeMemberRole: (values: { role: string }, memberId: string) => void;
+  changeMemberRole: (values: { role: string; }, memberId: string) => void;
   deleteCompanyMember: (memberId: string) => void;
   companyLoading: boolean;
 }
 
+const load = async (_getCompanyMembers: () => void) => {
+  await _getCompanyMembers();
+};
+
 const ProjectTeamPageComponent = (props: TeamMember) => {
   const [showDialog, setShowDialog] = useState(false);
+  const [adminsList, setAdminsList] = useState<any[]>([]);
+  const [pendingList, setPendingList] = useState<any[]>([]);
+  const [membersList, setMembersList] = useState<any[]>([]);
 
+  // useEffect(() => {
+  //   load(props.getCompanyMembers);
+  // }, []);
   return (
     <>
       <div className="ph5">
@@ -88,6 +99,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </tr>
           </tbody>
         </HTMLTable>
+        {/* Admins list ends */}
+
         {/* Project Moderators list starts */}
         <h1 className="f4 mt4">Project Moderators</h1>
         <HTMLTable className="w-100 mv3" striped={true}>
@@ -129,8 +142,10 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </tr>
           </tbody>
         </HTMLTable>
+        {/* Project Moderators list ends */}
+
         {/* Associates list starts */}
-        <h1 className="f4 mt4">Representatives from Associates</h1>
+        {/* <h1 className="f4 mt4">Representatives from Associates</h1>
         <h1 className="f5">AssociatesName1</h1>
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
@@ -170,8 +185,10 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               </td>
             </tr>
           </tbody>
-        </HTMLTable>
-        {/* Project Moderators list starts */}
+        </HTMLTable> */}
+        {/* Associates list ends */}
+
+        {/* Project Teammates list starts */}
         <div className="flex items-center justify-between mt4">
           <h1 className="f4">Project Teammates</h1>
           <div className="flex">
@@ -244,7 +261,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         </HTMLTable>
       </div>
 
-      {/* {
+      {
         showDialog && (
           <Dialog
             onClose={() => setShowDialog(!showDialog)}
@@ -258,21 +275,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             />
           </Dialog>
         )
-      } */}
-
-      {showDialog && (
-        <RightSidebar
-          onClose={() => setShowDialog(!showDialog)}
-        >
-          <div>
-            <AddProjectMemberForm
-              showDialog={showDialog}
-              setShowDialog={e => setShowDialog(!showDialog)}
-            />
-          </div>
-        </RightSidebar>
-      )}
-
+      }
     </>
   );
 };

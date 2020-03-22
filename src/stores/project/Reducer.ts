@@ -38,6 +38,7 @@ const initialState = {
     description: '',
     outline: ''
   },
+  teams: [],
   pid: ''
 };
 
@@ -61,7 +62,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case PROJECT.PROJECT_SINGLE_VIEW:
       return {
         ...state,
-        projectDetails: action.payload
+        projectDetails: { ...state.projectDetails, ...action.payload }
       };
     case PROJECT.PROJECT_PROJECT_ID:
       return {
@@ -76,6 +77,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         allProjects: [...state.allProjects, action.payload]
+      };
+    case PROJECT.PROJECT_GET_TEAMS:
+      return {
+        ...state,
+        teams: action.payload
       };
     default:
       return state;
