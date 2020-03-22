@@ -8,6 +8,19 @@ const companyCtrl = require('../company/company.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
+
+router
+  .route('/change-title')
+  .put(
+    authorization,
+    schemaValidator(projectValidation.changeNameProject),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
+    projectCtrl.changeTitleProject,
+  );
 // authentication
 router.route('/:companyId/create').post(
   authorization,
@@ -27,18 +40,7 @@ router.route('/:companyId/lists').get(
   schemaValidator(projectValidation.showProjectList),
   projectCtrl.showAllProjectsForCompany,
 );
-router
-  .route('/change-title')
-  .put(
-    authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
-    schemaValidator(projectValidation.changeNameProject),
-    projectCtrl.changeTitleProject,
-  );
+
 router
   .route('/concern-admin-search/:companyId')
   .get(

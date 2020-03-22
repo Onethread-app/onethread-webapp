@@ -15,28 +15,33 @@ router
 router.route('/:companyId/add-team-member').post(
   authorization,
   // TODO: member validations
-  projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator', 'member'),
-  // SchemaValidator(joiSchema.newMember),  
+  projectCtrl.authorizeProjectRole(
+    'all',
+    'admin',
+    'projectModerator',
+    'member',
+  ),
+  // SchemaValidator(joiSchema.newMember),
   teamCtrl.addTeamMember,
 );
 // .get(authorization, teamCtrl.list);
-
-router
-  .route('/:memberId')
-  .get(
-    authorization,
-    // SchemaValidator(teamValidation.getMember),
-    teamCtrl.getMember,
-  );
 router.route('/member-list').get(authorization, teamCtrl.list);
-router
-  .route('/:memberId/changeRole')
-  .put(
-    authorization,
-    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
-    // SchemaValidator(teamValidation.changeRole),
-    teamCtrl.changeRole,
-  );
+router.route('/:memberId').get(
+  authorization,
+  // SchemaValidator(teamValidation.getMember),
+  teamCtrl.getMember,
+);
+
+router.route('/:memberId/changeRole').put(
+  authorization,
+  projectCtrl.authorizeProjectRole(
+    'all',
+    'admin',
+    'projectModerator',
+  ),
+  // SchemaValidator(teamValidation.changeRole),
+  teamCtrl.changeRole,
+);
 
 router.param('memberId', teamCtrl.getMemberLoad);
 

@@ -21,12 +21,6 @@ const teamMember = new Schema(
       default: 'member',
       required: true,
     },
-    designations: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Designation',
-      },
-    ],
     removed: {
       type: Boolean,
       default: false,

@@ -56,7 +56,6 @@ const addMember = async (req, res, next) => {
       message: "Expects 'application/json'",
     });
   }
-  console.log(req.company._id);
   try {
     if (!req.body.members.length && !req.body.pendingTeamMembers) {
       return res.status(400).json({
@@ -104,7 +103,6 @@ const addMember = async (req, res, next) => {
           removed: false,
         },
       );
-
       // add new members in company
       members = await Member.create(newMembers);
 
