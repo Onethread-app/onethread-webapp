@@ -36,4 +36,22 @@ module.exports = {
       roomId: schema.room.required(),
     }),
   }),
+  getRoomFiles: Joi.object().keys({
+    params: Joi.object().keys({
+      roomId: schema.room.required(),
+    }),
+  }),
+  getRoomDiscussion: Joi.object().keys({
+    params: Joi.object().keys({
+      roomId: schema.room.required(),
+    }),
+  }),
+  toggleDiscussion: Joi.object().keys({
+    params: Joi.object().keys({
+      messageId: idSchema.id.required(),
+    }),
+    body: Joi.object().keys({
+      discussion: Joi.boolean().required(),
+    }),
+  }),
 };
