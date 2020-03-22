@@ -1,20 +1,18 @@
 import React from 'react';
 import { connect } from 'react-redux';
 // import { isEqual } from 'lodash';
-// import { Form, Field } from 'react-final-form';
-// import { SubmitError } from 'components/final-form/SubmitError';
-// import { Button } from '@blueprintjs/core';
+import { Form, Field } from 'react-final-form';
+import { SubmitError } from 'components/final-form/SubmitError';
+import { Button } from '@blueprintjs/core';
 
 const GeneralPageComponent = (props: any) => {
   const [archiveProjectCheck] = React.useState(false);
-  // const [disabled] = React.useState(
-  //   isEqual(props.companyRole, 'superAdmin') === false
-  // );
+  const [disabled] = React.useState(false);
   return (
     <div className='bl b--black-05 bw1 pl5 ml5 h5'>
       {console.log(archiveProjectCheck)}
       <p>general</p>
-      {/* <Form
+      <Form
         onSubmit={props.onSubmit}
         initialValues={{ optionalRole: props.optionalRole }}
         render={({
@@ -47,136 +45,10 @@ const GeneralPageComponent = (props: any) => {
                       className='mr2'
                       component='input'
                       type='checkbox'
-                      value='cRUDAnnoucment'
+                      value='updateArchiveProject'
                       disabled={disabled}
                     />
-                    Create/Update/Delete Company Announcement
-                  </label>
-                )}
-              />
-              <Field<string>
-                name='optionalRole'
-                type='checkbox'
-                render={({ input, meta }) => (
-                  <label
-                    className={`flex items-center mb2 ${
-                      disabled ? 'not-allowed' : 'pointer'
-                    }`}
-                  >
-                    <Field
-                      name='optionalRole'
-                      className='mr2'
-                      component='input'
-                      type='checkbox'
-                      value='editProfile'
-                      disabled={disabled}
-                    />
-                    Edit Basic/Advanced Information of Profile
-                  </label>
-                )}
-              />
-              <Field<string>
-                name='optionalRole'
-                type='checkbox'
-                render={({ input, meta }) => (
-                  <label
-                    className={`flex items-center mb2 ${
-                      disabled ? 'not-allowed' : 'pointer'
-                    }`}
-                  >
-                    <Field
-                      name='optionalRole'
-                      className='mr2'
-                      component='input'
-                      type='checkbox'
-                      value='archiveProject'
-                      disabled={disabled}
-                    />
-                    Archive Projects
-                  </label>
-                )}
-              />
-              <Field<string>
-                name='optionalRole'
-                type='checkbox'
-                render={({ input, meta }) => (
-                  <label
-                    className={`flex items-center mb2 ${
-                      disabled ? 'not-allowed' : 'pointer'
-                    }`}
-                  >
-                    <Field
-                      name='optionalRole'
-                      className='mr2'
-                      component='input'
-                      type='checkbox'
-                      value='addRemoveModerator'
-                      disabled={disabled}
-                    />
-                    Add/Delete Project Moderator
-                  </label>
-                )}
-              />
-              <Field<string>
-                name='optionalRole'
-                type='checkbox'
-                render={({ input, meta }) => (
-                  <label
-                    className={`flex items-center mb2 ${
-                      disabled ? 'not-allowed' : 'pointer'
-                    }`}
-                  >
-                    <Field
-                      name='optionalRole'
-                      className='mr2'
-                      component='input'
-                      type='checkbox'
-                      value='messageAssociate'
-                      disabled={disabled}
-                    />
-                    Message Associates
-                  </label>
-                )}
-              />
-              <Field<string>
-                name='optionalRole'
-                type='checkbox'
-                render={({ input, meta }) => (
-                  <label
-                    className={`flex items-center mb2 ${
-                      disabled ? 'not-allowed' : 'pointer'
-                    }`}
-                  >
-                    <Field
-                      name='optionalRole'
-                      className='mr2'
-                      component='input'
-                      type='checkbox'
-                      value='addAcceptRejectAssociate'
-                      disabled={disabled}
-                    />
-                    Add/Accept/Reject Requests from Companies to be Associates
-                  </label>
-                )}
-              />
-              <Field<string>
-                name='optionalRole'
-                type='checkbox'
-                render={({ input, meta }) => (
-                  <label
-                    className={`flex items-center mb2 ${
-                      disabled ? 'not-allowed' : 'pointer'
-                    }`}
-                  >
-                    <Field
-                      name='optionalRole'
-                      className='mr2'
-                      component='input'
-                      type='checkbox'
-                      value='acceptRejectProjectFromAssociate'
-                      disabled={disabled}
-                    />
-                    Accept/Reject Project Request from Associates
+                    Update Archive Project
                   </label>
                 )}
               />
@@ -202,7 +74,7 @@ const GeneralPageComponent = (props: any) => {
             )}
           </form>
         )}
-      /> */}
+      />
     </div>
   );
 };

@@ -10,9 +10,9 @@ export const test4 = 'http://52.221.186.32:5002/api/v1/';
 export const test5 = 'http://52.221.186.32:4001/api/v1/';
 export const arif = 'http://52.221.186.32:1727/api/v1/';
 export const nizam =
-  'https://felt-inch-performing-equally.trycloudflare.com/api/v1/';
+  'https://universities-scored-year-lime.trycloudflare.com/api/v1/';
 export const omer = 'http://192.168.8.67:4044/api/v1/';
-export const orvi = 'https://21b7b9ce.ngrok.io/api/v1/';
+export const orvi = 'https://b34ae23a.ngrok.io/api/v1/';
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
 export const server = orvi;
 
