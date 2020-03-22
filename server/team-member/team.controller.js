@@ -164,6 +164,13 @@ const list = async (req, res, next) => {
           path: 'account',
           select: 'name firstName lastName email',
         },
+        {
+          path: 'project',
+          select: 'company associate',
+          populate: [
+            { path: 'asspciate', select: 'associateCompany' },
+          ],
+        },
       ]);
 
     return res.status(200).json({
