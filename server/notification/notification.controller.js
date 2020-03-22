@@ -150,7 +150,7 @@ module.exports.createBoardNotification = async (
   });
 
   let notification = new Notification({
-    type: 'associate',
+    type: 'board',
     text: text,
     account: adminUser._id,
     company: company,
