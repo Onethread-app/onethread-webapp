@@ -12,7 +12,7 @@ export const arif = 'http://52.221.186.32:1727/api/v1/';
 export const nizam =
   'https://universities-scored-year-lime.trycloudflare.com/api/v1/';
 export const omer = 'http://192.168.8.67:4044/api/v1/';
-export const orvi = 'https://b34ae23a.ngrok.io/api/v1/';
+export const orvi = 'https://2b353c03.ngrok.io/api/v1/';
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
 export const server = orvi;
 

@@ -5,13 +5,18 @@ import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { Button } from '@blueprintjs/core';
 
-const GeneralPageComponent = (props: any) => {
+interface IProjectRole {
+  onSubmit: (values: any) => Promise<void>;
+  optionalRole?: [];
+}
+
+const GeneralPageComponent = (props: IProjectRole) => {
   const [archiveProjectCheck] = React.useState(false);
   const [disabled] = React.useState(false);
   return (
     <div className='bl b--black-05 bw1 pl5 ml5 h5'>
       {console.log(archiveProjectCheck)}
-      <p>general</p>
+      {/* <p>general</p> */}
       <Form
         onSubmit={props.onSubmit}
         initialValues={{ optionalRole: props.optionalRole }}
@@ -29,8 +34,8 @@ const GeneralPageComponent = (props: any) => {
             <div className='mb3'>
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className='b f5 mb3'>Admins</p>
-            <div className='mb3'>
+            <p className='b f5 mb3'>General</p>
+            <div className='mb3 ml2'>
               <Field<string>
                 name='optionalRole'
                 type='checkbox'
@@ -49,6 +54,183 @@ const GeneralPageComponent = (props: any) => {
                       disabled={disabled}
                     />
                     Update Archive Project
+                  </label>
+                )}
+              />
+            </div>
+            <p className='b f5 mb3'>Project Preface</p>
+            <div className='mb3 ml2'>
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='updateProjectPreface'
+                      disabled={disabled}
+                    />
+                    Update info's in Project Preface
+                  </label>
+                )}
+              />
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='addFileProject'
+                      disabled={disabled}
+                    />
+                    Add files in Project Preface
+                  </label>
+                )}
+              />
+            </div>
+            <p className='b f5 mb3'>Rooms</p>
+            <div className='mb3 ml2'>
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='addRemoveMemberRoom'
+                      disabled={disabled}
+                    />
+                    Add/Remove Members in Room
+                  </label>
+                )}
+              />
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateRoom'
+                      disabled={disabled}
+                    />
+                    Create/Update Room
+                  </label>
+                )}
+              />
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='archiveRoom'
+                      disabled={disabled}
+                    />
+                    Archive Room
+                  </label>
+                )}
+              />
+            </div>
+            <p className='b f5 mb3'>Board</p>
+            <div className='mb3 ml2'>
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateBoard'
+                      disabled={disabled}
+                    />
+                    Create/Update Board
+                  </label>
+                )}
+              />
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateColumn'
+                      disabled={disabled}
+                    />
+                    Create/Update Column
+                  </label>
+                )}
+              />
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='assignDeleteMemberBoard'
+                      disabled={disabled}
+                    />
+                    Assign/Delete Board Members
                   </label>
                 )}
               />
@@ -78,4 +260,9 @@ const GeneralPageComponent = (props: any) => {
     </div>
   );
 };
-export const GeneralPage = connect(null, null)(GeneralPageComponent);
+
+const mapStateToProps = (state: any) => ({
+  role: state.projectReducer.projectRole.projects.role,
+  optionalRole: state.projectReducer.projectRole.projects.project.optionalRole
+});
+export const GeneralPage = connect(mapStateToProps, null)(GeneralPageComponent);
