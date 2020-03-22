@@ -53,8 +53,8 @@ export interface User {
 	companies: ICompanyByUser[];
 	timeline: string[];
 	skillArea: ItemEntityProps[];
-	profileImage: IProfilePhoto;
-	coverImage: IProfilePhoto;
+	profileImage: string;
+	coverImage: string;
 	position: string;
 }
 
@@ -80,8 +80,8 @@ const InitialState = {
 		sendingFriendList: [],
 		timeline: [],
 		skillArea: [],
-		profileImage: {},
-		coverImage: {},
+		profileImage: '',
+		coverImage: '',
 		position: ''
 	},
 	error: ''
@@ -163,7 +163,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 				...state,
 				user: {
 					...state.user,
-					profileImage: action.payload
+					profileImage: action.payload.link
 				},
 			};
 		}
@@ -172,7 +172,7 @@ export const UserReducer = (state = InitialState, action: any) => {
 				...state,
 				user: {
 					...state.user,
-					coverImage: action.payload
+					coverImage: action.payload.link
 				},
 			};
 		}
