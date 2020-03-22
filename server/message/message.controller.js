@@ -8,8 +8,10 @@ const File = require('./../file/file.model');
 // const elasticService = new ElasticsearchService();
 // elasticService.createMessages('messages', Message , messageMapping , messageStructure);
 const logger = require('../../config/winston');
-const { sendJSONresponse , sendErrorResponse } = require('../helpers/jsonResponse');
-
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 const create = async (req, res, next) => {
   // Check for JSON
@@ -65,7 +67,7 @@ const create = async (req, res, next) => {
       message.chatkitId = msg.message_id;
     }
 
-    const mes =  await message.save();
+    const mes = await message.save();
 
     await File.updateMany(
       { _id: { $in: files } },
@@ -139,63 +141,167 @@ const getRoomMessages = async (req, res, next) => {
   }
 };
 
+const getRoomFiles = async (req, res, next) => {
+  try {
+    const room = await Room.findById(req.params.roomId);
+    if (!room) {
+      return res.status(404).json({
+        message: `No room exists`,
+      });
+    }
+
+    const { limit = 25, skip = 0 } = req.query;
+
+    const files = await Message.find({
+      room: req.params.roomId,
+      type: { $in: ['file', 'attachment'] },
+      removed: false,
+    })
+      .select('-__v')
+      .populate('files', '')
+      .populate([
+        {
+          path: 'account',
+          select: 'name firstName lastName email profileImage',
+          populate: {
+            path: 'profileImage',
+            select: '-_id link',
+          },
+        },
+        {
+          path: 'files',
+          select: 'link s3Key type',
+        },
+      ])
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit);
+
+    return res.status(200).json({
+      count: files.length,
+      files,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getRoomDiscussion = async (req, res, next) => {
+  try {
+    const room = await Room.findById(req.params.roomId);
+    if (!room) {
+      return res.status(404).json({
+        message: `No room exists`,
+      });
+    }
+
+    const { limit = 15, skip = 0 } = req.query;
+
+    const discussion = await Message.find({
+      room: req.params.roomId,
+      type: { $in: ['text', 'attachment'] },
+      discussion: true,
+      removed: false,
+    })
+      .select('text room chatkitId createdAt updatedAt')
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit);
+
+    return res.status(200).json({
+      count: discussion.length,
+      discussion,
+    });
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+};
+
+const toggleDiscussion = async (req, res, next) => {
+  try {
+    const discussion = await Message.findOneAndUpdate(
+      {
+        _id: req.params.messageId,
+      },
+      {
+        discussion: req.body.discussion,
+      },
+      { new: true },
+    );
+
+    if (!discussion) {
+      return res.status(404).json({
+        message: 'No message exists.',
+      });
+    }
+
+    return res.status(200).json({
+      message: `Message ${
+        req.body.discussion
+          ? 'highlighted'
+          : 'removed from highlighted'
+      }.`,
+      discussion,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const searchMessage = async (req, res, next) => {
   try {
-
     console.log(req.query);
     const name = req.query.name;
     const roomId = req.params.roomId;
 
-    if(name){
-
+    if (name) {
       let body = {
         size: 200,
         from: 0,
         query: {
-          bool:{
+          bool: {
             must: [
               {
-                term : {
-                  "room": {
-                    "value": roomId
-                  }
-                }
+                term: {
+                  room: {
+                    value: roomId,
+                  },
+                },
               },
               {
                 multi_match: {
-                  "query": name ,
-                  "fields": ["text", "files.s3Key"]
-                }
-              }
-            ]
-          }
-        }
-      }
+                  query: name,
+                  fields: ['text', 'files.s3Key'],
+                },
+              },
+            ],
+          },
+        },
+      };
 
       // const response = await elasticService.search('messages','_doc',body);
 
-      return sendJSONresponse(res,200,{
+      return sendJSONresponse(res, 200, {
         success: true,
         message: `Search complete for ${name}`,
-        data: response.hits.hits
-      })
-
-    }else{
+        data: response.hits.hits,
+      });
+    } else {
       return sendErrorResponse(res, 400, 'EmptySearchError', {
         message: `query error`,
       });
     }
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
   }
-  catch (error) {
-        logger.error(`${error}`);
-        next(error);
-      }
-
 };
-
 module.exports = {
   create,
   getRoomMessages,
-  searchMessage
+  getRoomFiles,
+  getRoomDiscussion,
+  toggleDiscussion,
+  searchMessage,
 };

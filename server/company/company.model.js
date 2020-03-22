@@ -41,33 +41,31 @@ const validateUrl = [
   },
 ];
 
-const certificate = new Schema(
-  {
-    name: {
-      type: String,
-      trim: true,
-    },
-    description:{
-      type: String,
-      trim: true
-    },
-    company:{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company'
-    }
-  }
-);
+const certificate = new Schema({
+  name: {
+    type: String,
+    trim: true,
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+  },
+});
 
 const parentCom = new Schema({
-  name:{
+  name: {
     type: String,
-    trim: true
+    trim: true,
   },
-  company:{
+  company: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Company'
+    ref: 'Company',
   },
-})
+});
 // company schema
 const company = new Schema(
   {
@@ -98,21 +96,23 @@ const company = new Schema(
       required: true,
     },
     optionalRole: {
-      type: [{
-        type: String,
-        enum: [
-          'editProfile',
-          'cRUDAnnouncement',
-          'archiveProject',
-          'addRemoveModerator',
-          'messageAssociate',
-          'addAcceptRejectAssociate',
-          'acceptRejectProjectFromAssociate',
-        ]
-      }],
-      default: ['editProfile', 'cRUDAnnouncement']
+      type: [
+        {
+          type: String,
+          enum: [
+            'editProfile',
+            'cRUDAnnouncement',
+            'archiveProject',
+            'addRemoveModerator',
+            'messageAssociate',
+            'addAcceptRejectAssociate',
+            'acceptRejectProjectFromAssociate',
+          ],
+        },
+      ],
+      default: ['editProfile', 'cRUDAnnouncement'],
     },
-    
+
     address: {
       type: String,
       maxlength: 120,
@@ -142,18 +142,6 @@ const company = new Schema(
       ref: 'Account',
       required: true,
     },
-    members: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
-      },
-    ],
-    rooms: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Room',
-      },
-    ],
     location: {
       type: String,
     },
@@ -198,10 +186,12 @@ const company = new Schema(
         'above 2000 square meters',
       ],
     },
-    parentcom :[{
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Parentcom'
-    }],
+    parentcom: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Parentcom',
+      },
+    ],
     removed: {
       type: Boolean,
       default: false,

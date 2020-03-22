@@ -17,6 +17,8 @@ if (config.env === 'production') {
   host = `https://www.tigrow.co`;
 } else if (config.env === 'test') {
   host = `http://test.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
+} else if (config.env === 'test3') {
+  host = `http://test3.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
 } else if (config.env === 'test4') {
   host = `http://test4.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
 } else if (config.env === 'local') {

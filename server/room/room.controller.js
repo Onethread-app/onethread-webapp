@@ -5,35 +5,31 @@ const { Project } = require('../project/project.model');
 const { chatkit } = require('../services/pusher.services');
 const logger = require('../../config/winston');
 const _ = require('lodash');
-const { sendJSONresponse, sendErrorResponse} = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 const create = async (req, res, next) => {
   try {
     // check room already exists with same company
     const duplicate = await Room.findOne({
       name: req.body.name,
-      company: req.body.pid,
+      company: req.body.company,
+      project: req.body.project,
     });
-    if (duplicate) { 
-      return sendErrorResponse(res, 409, 'DuplicateRoomError', {message: `Room already exists`})
+    if (duplicate) {
+      return sendErrorResponse(res, 409, 'DuplicateRoomError', {
+        message: `Room already exists`,
+      });
     }
     const room = new Room({
       name: req.body.name,
-      // company: req.body.company,
-      pid: req.body.pid,
+      company: req.body.company,
+      project: req.body.project,
       members: [req.user._id],
       account: req.user._id,
     });
     await room.save();
-    //will remove future
-    await Project.findByIdAndUpdate(
-      req.body.pid,
-      {
-        $addToSet: {
-          rooms: { $each: [room._id] },
-        },
-      },
-      { new: true },
-    );
 
     await chatkit.createRoom({
       id: room._id,
@@ -41,10 +37,11 @@ const create = async (req, res, next) => {
       name: room.name,
       isPrivate: true,
       customData: {
-        pid: req.body.pid,
+        company: req.body.company,
+        project: req.body.project,
       },
     });
-    return sendJSONresponse(res, 201, room);
+    return sendJSONresponse(res, 201, { room });
   } catch (e) {
     next(e);
   }
@@ -134,8 +131,12 @@ const suggestMember = async (req, res, next) => {
 
 const list = async (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
-
-  Room.find({ company: req.params.company, removed: false })
+  Room.find({
+    members: req.user._id,
+    company: req.params.company,
+    project: req.params.project,
+    removed: false,
+  })
     .sort({ created: 1 })
     .skip(+skip)
     .limit(+limit)
@@ -147,6 +148,31 @@ const list = async (req, res) => {
       }),
     )
     .catch(e => next(e));
+};
+
+const archiveRoom = async (req, res, next) => {
+  try {
+    const room = await Room.findOneAndUpdate(
+      {
+        _id: req.params.roomId,
+      },
+      {
+        archive: req.body.archive,
+      },
+    );
+
+    if (!room) {
+      return res.status(404).json({
+        message: 'No room found',
+      });
+    }
+
+    return res.status(200).json({
+      message: `Room ${req.body.archive ? 'archived' : 'activated'}.`,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const recheckMembersWithChatkit = async (req, res) => {
@@ -196,4 +222,5 @@ module.exports = {
   suggestMember,
   memberList,
   recheckMembersWithChatkit,
+  archiveRoom,
 };

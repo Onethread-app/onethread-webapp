@@ -158,7 +158,7 @@ const getCompanyIndividual = async (req, res, next) => {
     let options = [
       {
         path: 'company',
-        select: '_id name',
+        select: '_id name logo',
         // populate: [
         //   {
         //     path: 'logo',
