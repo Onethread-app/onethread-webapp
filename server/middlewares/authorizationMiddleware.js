@@ -8,48 +8,45 @@ bluebird.promisifyAll(redis);
 
 module.exports.authorization = async (req, res, next) => {
   const parts =
-    req.headers['x-access-token'] ||
-    req.headers.authorization.split(' ')[1];
-  
-  if (parts) {
-    let isBlackListed;
-    await client
-      .multi()
-      .GET(`BlackList:${parts}`)
-      .execAsync()
-      .then(data => {
-        // if data object is null token is not blacklisted
-        if (data[0] === null) {
-          isBlackListed = false;
-        } else {
-          isBlackListed = true;
-        }
-      })
-      .catch(err => {
-        next(err);
-      });
-    if (isBlackListed) {
-      return sendErrorResponse(res, 401, 'AuthError', {
-        message: 'invalid token',
-      });
-    } else {
-      jwt.verify(parts, config.accessTokenSecret, function(
-        err,
-        decoded,
-      ) {
-        if (err) {
-          return sendErrorResponse(res, 401, 'AuthError', {
-            message: err.message,
-          });
-        }
-        req.user = decoded;
-        next();
-      });
-    }
-  } else {
+    req.headers['x-access-token'] || req.headers.authorization;
+  console.log(parts);
+  if (!parts) {
     return sendErrorResponse(res, 401, 'AuthError', {
-      message: 'No token provided',
-      fieldName: 'headers',
+      message: 'Invalid header',
     });
   }
+  let isBlackListed;
+  let bearerToken = parts.split(' ')[1];
+  await client
+    .multi()
+    .GET(`BlackList:${bearerToken}`)
+    .execAsync()
+    .then(data => {
+      // if data object is null token is not blacklisted
+      if (data[0] === null) {
+        isBlackListed = false;
+      } else {
+        isBlackListed = true;
+      }
+    })
+    .catch(err => {
+      next(err);
+    });
+  if (isBlackListed) {
+    return sendErrorResponse(res, 401, 'AuthError', {
+      message: 'invalid token',
+    });
+  }
+  jwt.verify(bearerToken, config.accessTokenSecret, function(
+    err,
+    decoded,
+  ) {
+    if (err) {
+      return sendErrorResponse(res, 401, 'AuthError', {
+        message: err.message,
+      });
+    }
+    req.user = decoded;
+    next();
+  });
 };
