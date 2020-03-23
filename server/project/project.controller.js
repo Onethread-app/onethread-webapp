@@ -13,32 +13,35 @@ const {
   sendErrorResponse,
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
-const teamCreate = (account, project, role) => {
+const teamCreate = (account, member, project, role) => {
   let newTeam = new Team({
-    member: account,
-    project: project,
-    role: role,
+    account,
+    member,
+    project,
+    role,
   });
   newTeam.save();
 };
 const createNewProjectForCompany = async (req, res, next) => {
   try {
-    let concernAdmin = req.body.concernedAdmin;
     let associates = req.body.associates;
-    let memberId = req.body.memberId;
-    const userExist = await Member.findOne({
-      _id: memberId,
+    let concernedAdmin = req.body.concernedAdmin;
+
+    const member = await Member.findOne({
+      account: req.user._id,
     });
-    if (!userExist) {
+
+    if (!member) {
       return sendErrorResponse(res, 404, 'MemberNotFoundError', {
         message: 'concernAdmin not added in company',
       });
     }
+
     if (req.body.type === 'associates') {
       const project = new Project({
         name: req.body.name,
         type: req.body.type,
-        concernedAdmin: concernAdmin,
+        concernedAdmin: concernedAdmin.accountId,
         departments: req.body.departments,
         associate: req.body.associates,
         color: req.body.color,
@@ -72,17 +75,27 @@ const createNewProjectForCompany = async (req, res, next) => {
         next(error);
       }
       // build a team for this project
-      if (req.user._id === req.body.concernedAdmin) {
-        teamCreate(req.body.concernedAdmin, project._id, 'admin');
+      if (req.user._id === concernedAdmin.accountId) {
+        teamCreate(
+          concernedAdmin.accountId,
+          concernedAdmin.memberId,
+          project._id,
+          'admin',
+        );
         logger.info(`project creator is the admin`);
       } else {
-        teamCreate(memberId, project._id, 'admin');
+        teamCreate(member.account, member._id, project._id, 'admin');
         logger.info(`project creator add as a member here`);
-        teamCreate(req.body.concernedAdmin, project._id, 'admin');
+        teamCreate(
+          concernedAdmin.accountId,
+          concernedAdmin.memberId,
+          project._id,
+          'admin',
+        );
         logger.info(`concern admin add as an admin here`);
       }
       return sendJSONresponse(res, 201, {
-        sucees: true,
+        success: true,
         message: 'New project created for associate',
         project,
       });
@@ -90,7 +103,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       const project = new Project({
         name: req.body.name,
         type: req.body.type,
-        concernedAdmin: req.body.concernedAdmin,
+        concernedAdmin: concernedAdmin.accountId,
         departments: req.body.departments,
         color: req.body.color,
         company: req.body.companyId,
@@ -102,15 +115,30 @@ const createNewProjectForCompany = async (req, res, next) => {
         .then(project => {
           logger.info(`new project created`);
           if (req.user._id === req.body.concernedAdmin) {
-            teamCreate(req.body.concernedAdmin, project._id, 'admin');
+            teamCreate(
+              concernedAdmin.accountId,
+              concernedAdmin.memberId,
+              project._id,
+              'admin',
+            );
           } else {
-            teamCreate(memberId, project._id, 'admin');
-            logger.info(`project creator add as a member here`);
-            teamCreate(req.body.concernedAdmin, project._id, 'admin');
+            teamCreate(
+              member.account,
+              member._id,
+              project._id,
+              'admin',
+            );
+            logger.info(`project creator add as a admin here`);
+            teamCreate(
+              concernedAdmin.accountId,
+              concernedAdmin.memberId,
+              project._id,
+              'admin',
+            );
             logger.info(`concern admin add as an admin here`);
           }
           return sendJSONresponse(res, 201, {
-            sucees: true,
+            success: true,
             message: 'New project created',
             project,
           });
@@ -462,7 +490,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
     try {
       const team = await Team.findOne({
         $and: [
-          { member: req.query.memberId },
+          { account: req.user._id },
           { project: req.query.pid },
           { removed: false },
         ],

@@ -154,21 +154,26 @@ const list = async (req, res, next) => {
       .limit(+limit)
       .select('role')
       .populate([
-        { path: 'member', select: '_id account designations' },
         {
-          path: 'designations',
-          select: 'division department position',
-          populate: [{ path: 'department', select: 'name' }],
-        },
-        {
-          path: 'account',
-          select: 'name firstName lastName email',
+          path: 'member',
+          select: '_id account designations',
+          populate: [
+            {
+              path: 'account',
+              select: '_id name firstName lastName email',
+            },
+            {
+              path: 'designations',
+              select: 'division department position',
+              populate: [{ path: 'department', select: 'name' }],
+            },
+          ],
         },
         {
           path: 'project',
           select: 'company associate',
           populate: [
-            { path: 'asspciate', select: 'associateCompany' },
+            { path: 'associate', select: 'associateCompany' },
           ],
         },
       ]);

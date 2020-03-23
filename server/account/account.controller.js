@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const httpStatus = require('http-status');
 const slug = require('slug');
 const Account = require('./account.model');
 const { Member } = require('../company/member/member.model');
@@ -24,11 +23,6 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-const {
-  APIError,
-  BadRequestError,
-  SearchNotMatchError,
-} = require('../helpers/APIError');
 const {
   setDocument,
   accountIndex,
@@ -259,7 +253,22 @@ const getAccount = async (req, res, next) => {
       console.log(err);
       next(err);
     });
-};
+  } 
+  // client
+  //   .multi()
+  //   .get(`userID:${req.user.email}`)
+  //   .execAsync()
+  //   .then(result => {
+  //     let user = JSON.parse(result);
+  //     return sendJSONresponse(res, 200, {
+  //       success: true,
+  //       user: user,
+  //     });
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     next(err);
+  //   });
 
 // create a timeline for user
 const timeline = async (req, res, next) => {
