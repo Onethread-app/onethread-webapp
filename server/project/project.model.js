@@ -34,20 +34,22 @@ const projectSchema = new Schema(
       required: true,
     },
     optionalRole: {
-      type: [{
-        type: String,
-        enum: [
-          'updateArchiveProject',
-          'updateProjectPreface',
-          'addFileProject',
-          'addRemoveMemberRoom',
-          'createUpdateRoom',
-          'archiveRoom',
-          'createUpdateBoard',
-          'createUpdateColumn',
-          'assignDeleteMemberBoard'
-        ]
-      }],
+      type: [
+        {
+          type: String,
+          enum: [
+            'updateArchiveProject',
+            'updateProjectPreface',
+            'addFileProject',
+            'addRemoveMemberRoom',
+            'createUpdateRoom',
+            'archiveRoom',
+            'createUpdateBoard',
+            'createUpdateColumn',
+            'assignDeleteMemberBoard',
+          ],
+        },
+      ],
     },
 
     departments: [

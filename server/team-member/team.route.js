@@ -51,7 +51,6 @@ router.route('/:memberId/changeRole').put(
   // SchemaValidator(teamValidation.changeRole),
   teamCtrl.changeRole,
 );
-
 router.param('memberId', teamCtrl.getMemberLoad);
 
 module.exports = router;

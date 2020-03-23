@@ -30,12 +30,7 @@ router.route('/:companyId/create').post(
 );
 router.route('/:companyId/lists').get(
   authorization,
-  companyCtrl.authorizeUser(
-    'all',
-    'admin',
-    'superAdmin',
-    'empoloyee',
-  ),
+  companyCtrl.authorizeUser('all', 'admin', 'superAdmin', 'employee'),
   // projectCtrl.authorizeProjectRole('all', 'admin'),
   schemaValidator(projectValidation.showProjectList),
   projectCtrl.showAllProjectsForCompany,

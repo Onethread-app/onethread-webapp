@@ -9,6 +9,12 @@ const teamMember = new Schema(
       unique: false,
       required: true,
     },
+    account: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+      unique: false,
+      required: true,
+    },
     project: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Project',
@@ -31,7 +37,10 @@ const teamMember = new Schema(
   },
 );
 
-teamMember.index({ member: 1, project: 1 }, { unique: true });
+teamMember.index(
+  { member: 1, account: 1, project: 1 },
+  { unique: true },
+);
 
 let Team = mongoose.model('Team', teamMember);
 
