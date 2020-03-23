@@ -33,28 +33,24 @@ export const getAllProjects = () => async (dispatch: any, getState: any) => {
   }
 };
 
-export const createProject = (payload: any, admin: { _id: ''; }) => async (
+export const createProject = (payload: any, admin: any) => async (
   dispatch: any,
   getState: any
 ) => {
   try {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
+    const userId = getState().userReducer.user._id;
 
     if ((headers as any).headers.Authorization) {
-      // const reqBody = {
-      //   name: payload.name,
-      //   type: payload.projectType,
-      //   departments: typeof payload.departments === 'string' ? [payload.departments] : [...payload.departments] ,
-      //   companyId,
-      //   color: payload.color,
-      //   concernedAdmin: admin._id
-      // };
-
       const reqBody = {
         name: payload.name,
         type: payload.projectType,
-        concernedAdmin: admin._id,
+        account: userId,
+        concernedAdmin: {
+          memberId: admin.memberId,
+          accountId: admin._id,
+        },
         companyId,
         departments: payload.department,
         associates: payload.associates,
@@ -67,7 +63,6 @@ export const createProject = (payload: any, admin: { _id: ''; }) => async (
         headers
       );
       await dispatch({ type: PROJECT.PROJECT_CREATE, payload: response.data });
-      // dispatch({ type: PROJECT.PROJECT_GET_ALL_PROJECTS });
       dispatch(getAllProjects());
       return response.data;
     }
@@ -169,10 +164,11 @@ export const updateProjectName = (
   }
 };
 
-export const getSingleProject = (pid: string) => async (dispatch: any) => {
+export const getSingleProject = (pid: string) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
+      const accountId = getState().userReducer.user._id;
       const response = await tigrowApi.get(`projects?pid=${pid}`, headers);
       await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT });
       await dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
@@ -463,23 +459,23 @@ export const getRoleForProject = (projectId: string) => async (
   }
 };
 
-// export const getSingleProject = (pid: string) => async (dispatch: any) => {
-//   try {
-//     const headers = tokenConfig();
-//     if ((headers as any).headers.Authorization) {
-//       const response = await tigrowApi.get(`projects?pid=${pid}`, headers);
-//       await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT });
-//       await dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
-//       return response.data;
-//     }
-//   } catch (error) {
-//     if (isEqual(error.message, 'Network Error')) {
-//       // tslint:disable-next-line: no-console
-//       console.log('network error');
-//     } else {
-//       // tslint:disable-next-line: no-console
-//       console.log(error.response);
-//       // return error.response;
-//     }
-//   }
-// };
+export const getProjectTeams = () => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const pid = getState().projectReducer.pid;
+      const response = await tigrowApi.get(`/teams/member-list?pid=${pid}`, headers);
+      await dispatch({ type: PROJECT.PROJECT_GET_TEAMS, payload: response.data.memberList });
+      return response.data;
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      // return error.response;
+    }
+  }
+};

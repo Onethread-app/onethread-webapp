@@ -53,8 +53,13 @@ const FormComponent = (props: {
       `projects/concern-admin-search/${props.company!._id}?name=${search}`,
       headers
     );
-    console.log('response.data.data', response.data.data);
-    return map(response.data.data, '_source.account');
+
+    return response.data.data.map((e: any) => {
+      return {
+        ...e._source.account,
+        memberId: e._source.mongo_id
+      };
+    });
   };
 
   let result: any = [];
@@ -66,7 +71,7 @@ const FormComponent = (props: {
 
   return (
     <>
-      <div className='pl3' style={{ marginTop: '6rem' }}>
+      <div className="pl3" style={{ marginTop: '6rem' }}>
         <h3>Create Project</h3>
       </div>
       <Form
@@ -88,14 +93,14 @@ const FormComponent = (props: {
           ...rest
         }) => (
             <form onSubmit={handleSubmit}>
-              <div className='pa3 justify-content w-100'>
+              <div className="pa3 justify-content w-100">
                 <Field<string>
-                  name='name'
+                  name="name"
                   validate={composeValidators(required, maxValue(32))}
                   render={({ input, meta }) => (
                     <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
                       <InputGroupFieldWithLabel
-                        id='name'
+                        id="name"
                         value={input.value}
                         onChange={input.onChange}
                         style={{
@@ -105,20 +110,20 @@ const FormComponent = (props: {
                         error={
                           checkError(meta) && (meta.error || meta.submitError)
                         }
-                        label='Project Name*'
+                        label="Project Name*"
                       />
                     </div>
                   )}
                 />
                 <div>
                   <Field<string>
-                    name='admin'
+                    name="admin"
                     validate={required}
                     render={({ input, meta }) => (
                       <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
-                        <div className='w-100 pb2'>
-                          <div className='mb1'>
-                            <p className='fw5' style={{ fontSize: '.8rem' }}>
+                        <div className="w-100 pb2">
+                          <div className="mb1">
+                            <p className="fw5" style={{ fontSize: '.8rem' }}>
                               Concerned Admin
                           </p>
                           </div>
@@ -139,9 +144,9 @@ const FormComponent = (props: {
                           />
                         </div>
                         {selectedAdmins.length > 0 && (
-                          <div className='w-100'>
+                          <div className="w-100">
                             <div
-                              className='overflow-auto br2'
+                              className="overflow-auto br2"
                               style={{
                                 border: '1px solid #707070',
                                 maxHeight: '120px',
@@ -152,7 +157,7 @@ const FormComponent = (props: {
                                 <div>
                                   <Tag
                                     key={item._id}
-                                    className='pa1'
+                                    className="pa1"
                                     interactive={true}
                                     style={{ background: '#707070' }}
                                     onRemove={e => {
@@ -170,7 +175,7 @@ const FormComponent = (props: {
                                       );
                                     }}
                                     large={true}
-                                    intent='primary'
+                                    intent="primary"
                                   >
                                     {item.name}
                                   </Tag>
@@ -183,21 +188,21 @@ const FormComponent = (props: {
                     )}
                   />
                 </div>
-                <div className='flex flex-column'>
+                <div className="flex flex-column">
                   <Field<string>
-                    name='department'
+                    name="department"
                     validate={required}
                     render={({ meta, input }) => (
                       <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                        <div className='fl w-100 pb2'>
-                          <div className='mb1'>
-                            <p className='fw5' style={{ fontSize: '.8rem' }}>
+                        <div className="fl w-100 pb2">
+                          <div className="mb1">
+                            <p className="fw5" style={{ fontSize: '.8rem' }}>
                               Select Departments
                           </p>
                           </div>
                           <SuggestFieldWithError
                             onChange={(query: string) => {
-                              setSearch(query);
+                              // setSearch(query);
                             }}
                             items={props.departments}
                             selectedItems={selectedDepartment}
@@ -213,9 +218,9 @@ const FormComponent = (props: {
                           />
                         </div>
                         {selectedDepartment.length > 0 && (
-                          <div className='w-100'>
+                          <div className="w-100">
                             <div
-                              className='overflow-auto br2'
+                              className="overflow-auto br2"
                               style={{
                                 border: '1px solid #707070',
                                 maxHeight: '120px',
@@ -226,7 +231,7 @@ const FormComponent = (props: {
                                 <div>
                                   <Tag
                                     key={item._id}
-                                    className='pa1'
+                                    className="pa1"
                                     interactive={true}
                                     style={{ background: '#707070' }}
                                     onRemove={e => {
@@ -244,7 +249,7 @@ const FormComponent = (props: {
                                       );
                                     }}
                                     large={true}
-                                    intent='primary'
+                                    intent="primary"
                                   >
                                     {item.name}
                                   </Tag>
@@ -257,7 +262,7 @@ const FormComponent = (props: {
                     )}
                   />
                   <Field<string>
-                    name='projectType'
+                    name="projectType"
                     // validate={required}
                     render={({ input, meta }) => (
                       <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
@@ -273,8 +278,8 @@ const FormComponent = (props: {
                           error={
                             checkError(meta) && (meta.error || meta.submitError)
                           }
-                          label='ProjectType'
-                          className='bn'
+                          label="ProjectType"
+                          className="bn"
                         />
                       </div>
                     )}
@@ -282,13 +287,13 @@ const FormComponent = (props: {
                 </div>
 
                 <Condition
-                  when='projectType'
+                  when="projectType"
                   validate={value => {
                     return ['associates'].includes(value);
                   }}
                 >
                   <div>
-                    <p className='fw5' style={{ fontSize: '.8rem' }}>
+                    <p className="fw5" style={{ fontSize: '.8rem' }}>
                       Select Your Associate Companies
                   </p>
                     <SuggestFieldWithError
@@ -301,8 +306,6 @@ const FormComponent = (props: {
                       selectedItems={selectedAssociates}
                       setSelectedItems={item => {
                         const c = item.pop();
-
-                        console.log(c);
                         push('associates', {
                           _id: c._id
                         });
@@ -310,19 +313,18 @@ const FormComponent = (props: {
                       }}
                       multipleItemSelect={true}
                     />
-
-                    <FieldArray name='associates'>
+                    <FieldArray name="associates">
                       {({ fields }) =>
                         fields.map((name, index) => (
                           <div>
                             <Field<string>
                               name={`${name}.size`}
-                              component='select'
-                              placeholder='size'
+                              component="select"
+                              placeholder="size"
                             >
-                              <option value='5'>1-5</option>
-                              <option value='10'>6-10</option>
-                              <option value='15'>11-15</option>
+                              <option value="5">1-5</option>
+                              <option value="10">6-10</option>
+                              <option value="15">11-15</option>
                             </Field>
 
                             <span
@@ -338,17 +340,17 @@ const FormComponent = (props: {
                   </div>
                 </Condition>
                 <Field<string>
-                  name='color'
+                  name="color"
                   render={({ input, meta }) => (
-                    <div className='mb3'>
-                      <p className='fw5 mb3' style={{ fontSize: '.8rem' }}>
+                    <div className="mb3">
+                      <p className="fw5 mb3" style={{ fontSize: '.8rem' }}>
                         Label
                     </p>
-                      <div className='flex'>
+                      <div className="flex">
                         {boardColor.map(color => (
-                          <div className='pr2' key={color.code}>
+                          <div className="pr2" key={color.code}>
                             <Icon
-                              className='br2'
+                              className="br2"
                               icon={
                                 isEqual(color.code, labelColor) === true
                                   ? 'tick'
@@ -375,9 +377,9 @@ const FormComponent = (props: {
                     </div>
                   )}
                 />
-                <div className='flex justify-end mt4'>
+                <div className="flex justify-end mt4">
                   <Button
-                    className='w4 grow h2 pointer mr3'
+                    className="w4 grow h2 pointer mr3"
                     style={{
                       background: '#060517',
                       outline: 'none',
@@ -387,19 +389,19 @@ const FormComponent = (props: {
                       e.preventDefault();
                       props.setShowProjectDialog(false);
                     }}
-                    text='Cancel'
+                    text="Cancel"
                   />
                   <Button
-                    className='w4 grow h2 pointer br0'
+                    className="w4 grow h2 pointer br0"
                     style={{
                       background: '#0fa3a3',
                       outline: 'none',
                       color: 'white'
                     }}
                     loading={submitting}
-                    type='submit'
+                    type="submit"
                     disabled={submitting || pristine}
-                    text='Create'
+                    text="Create"
                   />
                 </div>
               </div>

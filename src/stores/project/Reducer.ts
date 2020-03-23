@@ -1,6 +1,7 @@
 import { PROJECT, CLEAR_PROJECT_REDUCER_STATE } from './Types';
 import { Entity } from 'stores/UtilsActions';
 import { User } from 'stores/user/Reducer';
+import { IDesignations } from 'stores/company/Reducer';
 
 export interface IProject {
   _id: string;
@@ -24,6 +25,27 @@ export interface ProjectModel {
   allProjects: IProject[];
   allArchive: IProject[];
   projectDetails: IProject;
+}
+
+export interface IProjectTeam {
+  _id: string;
+  role: string;
+  member: {
+    _id: string;
+    account: {
+      _id: string;
+      name: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+    };
+    designations: [IDesignations];
+  };
+  project: {
+    _id: string;
+    company: string;
+    associate: any[];
+  };
 }
 
 const initialState = {

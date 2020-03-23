@@ -13,34 +13,51 @@ import { connect } from 'react-redux';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 import { AddProjectMemberForm } from './AddProjectMemberForm';
-import { RightSidebar } from 'components/RightSidebar';
+import { getProjectTeams } from 'stores/project/Actions';
+import { IProjectTeam } from 'stores/project/Reducer';
+import { getDivisionName, showDepartment } from 'layouts/company/team/Index';
 
 interface TeamMember {
   company: ICompany;
   user: User;
-  getCompanyMembers: () => void;
-  getCompanyPendingMembers: (limit?: number, skip?: number) => void;
-  getAllDepartments: () => void;
-  addDesignation: (values: any, memberId: string) => void;
-  editDesignation: (values: any, memberId: string) => void;
-  changeMemberRole: (values: { role: string; }, memberId: string) => void;
-  deleteCompanyMember: (memberId: string) => void;
-  companyLoading: boolean;
+  teams: IProjectTeam[];
+  getProjectTeams: () => void;
 }
 
-const load = async (_getCompanyMembers: () => void) => {
-  await _getCompanyMembers();
+const load = async (_getProjectTeams: () => void) => {
+  await _getProjectTeams();
 };
 
 const ProjectTeamPageComponent = (props: TeamMember) => {
   const [showDialog, setShowDialog] = useState(false);
-  const [adminsList, setAdminsList] = useState<any[]>([]);
-  const [pendingList, setPendingList] = useState<any[]>([]);
-  const [membersList, setMembersList] = useState<any[]>([]);
+  const [adminList, setAdminList] = useState<IProjectTeam[]>([]);
+  const [moderatorList, setModeratorList] = useState<IProjectTeam[]>([]);
+  const [teamList, setTeamList] = useState<IProjectTeam[]>([]);
 
-  // useEffect(() => {
-  //   load(props.getCompanyMembers);
-  // }, []);
+  useEffect(() => {
+    load(props.getProjectTeams);
+  }, []);
+
+  useEffect(() => {
+    if (props.teams.length) {
+      const a: IProjectTeam[] = [];
+      const m: IProjectTeam[] = [];
+      const t: IProjectTeam[] = [];
+      props.teams.forEach(e => {
+        if (e.role === 'admin') {
+          a.push(e);
+        } else if (e.role === 'projectModerator') {
+          m.push(e);
+        } else if (e.role === 'member') {
+          t.push(e);
+        }
+      });
+      setAdminList(a);
+      setModeratorList(m);
+      setTeamList(t);
+    }
+  }, [props.teams]);
+
   return (
     <>
       <div className="ph5">
@@ -71,32 +88,48 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style={{ width: '24%' }}>labiba</td>
-              <td style={{ width: '24%' }}>frontend</td>
-              <td style={{ width: '24%' }}>frontend</td>
-              <td style={{ width: '24%' }}>junior</td>
-              <td style={{ width: '4%' }}>
-                <Popover
-                  className="fr"
-                  position={Position.BOTTOM}
-                  popoverClassName="bp3-popover-content-sizing bg-white"
-                  content={
-                    <Button
-                      className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                      style={{ color: 'red' }}
-                    ><span>Remove from Admin</span>
-                    </Button>
-                  }
-                  target={
-                    <Icon
-                      className=" pointer"
-                      icon="drag-handle-vertical"
+            {adminList.length ?
+              adminList.map(({ _id, member }) => (
+                <tr key={_id}>
+                  <td style={{ width: '24%' }}>{member.account.name}</td>
+                  <td style={{ width: '24%' }}>
+                    {member.designations.length
+                      ? getDivisionName[member.designations[0].division]
+                      : null}
+                  </td>
+                  <td style={{ width: '24%' }}>
+                    {showDepartment(member)}
+                  </td>
+                  <td style={{ width: '24%' }}>
+                    {member.designations.length
+                      ? member.designations[0].position
+                      : null}
+                  </td>
+                  <td style={{ width: '4%' }}>
+                    <Popover
+                      className="fr"
+                      position={Position.BOTTOM}
+                      popoverClassName="bp3-popover-content-sizing bg-white"
+                      content={
+                        <Button
+                          className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
+                          style={{ color: 'red' }}
+                        ><span>Remove from Admin</span>
+                        </Button>
+                      }
+                      target={
+                        <Icon
+                          className=" pointer"
+                          icon="drag-handle-vertical"
+                        />
+                      }
                     />
-                  }
-                />
-              </td>
-            </tr>
+                  </td>
+                </tr>
+              )) :
+              <tr>
+                <td colSpan={5}>No admins</td>
+              </tr>}
           </tbody>
         </HTMLTable>
         {/* Admins list ends */}
@@ -114,32 +147,48 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style={{ width: '24%' }}>labiba</td>
-              <td style={{ width: '24%' }}>frontend</td>
-              <td style={{ width: '24%' }}>frontend</td>
-              <td style={{ width: '24%' }}>junior</td>
-              <td style={{ width: '4%' }}>
-                <Popover
-                  className="fr"
-                  position={Position.BOTTOM}
-                  popoverClassName="bp3-popover-content-sizing bg-white"
-                  content={
-                    <Button
-                      className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                      style={{ color: 'red' }}
-                    ><span>Remove from Project Moderator</span>
-                    </Button>
-                  }
-                  target={
-                    <Icon
-                      className=" pointer"
-                      icon="drag-handle-vertical"
+            {moderatorList.length ?
+              moderatorList.map(({ _id, member }) => (
+                <tr key={_id}>
+                  <td style={{ width: '24%' }}>{member.account.name}</td>
+                  <td style={{ width: '24%' }}>
+                    {member.designations.length
+                      ? getDivisionName[member.designations[0].division]
+                      : null}
+                  </td>
+                  <td style={{ width: '24%' }}>
+                    {showDepartment(member)}
+                  </td>
+                  <td style={{ width: '24%' }}>
+                    {member.designations.length
+                      ? member.designations[0].position
+                      : null}
+                  </td>
+                  <td style={{ width: '4%' }}>
+                    <Popover
+                      className="fr"
+                      position={Position.BOTTOM}
+                      popoverClassName="bp3-popover-content-sizing bg-white"
+                      content={
+                        <Button
+                          className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
+                          style={{ color: 'red' }}
+                        ><span>Remove from Moderator</span>
+                        </Button>
+                      }
+                      target={
+                        <Icon
+                          className=" pointer"
+                          icon="drag-handle-vertical"
+                        />
+                      }
                     />
-                  }
-                />
-              </td>
-            </tr>
+                  </td>
+                </tr>
+              )) :
+              <tr>
+                <td colSpan={5}>No Moderators</td>
+              </tr>}
           </tbody>
         </HTMLTable>
         {/* Project Moderators list ends */}
@@ -222,41 +271,48 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td style={{ width: '24%' }}>labiba</td>
-              <td style={{ width: '24%' }}>frontend</td>
-              <td style={{ width: '24%' }}>frontend</td>
-              <td style={{ width: '24%' }}>junior</td>
-              <td style={{ width: '4%' }}>
-                <Popover
-                  className="fr"
-                  position={Position.BOTTOM}
-                  popoverClassName="bp3-popover-content-sizing bg-white"
-                  content={
-                    <ButtonGroup
-                      vertical={true}
-                      alignText="left"
-                    >
-                      <Button
-                        className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                      ><span>Make Project Moderator</span>
-                      </Button>
-                      <Button
-                        className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                        style={{ color: 'red' }}
-                      ><span>Remove</span>
-                      </Button>
-                    </ButtonGroup>
-                  }
-                  target={
-                    <Icon
-                      className=" pointer"
-                      icon="drag-handle-vertical"
+            {teamList.length ?
+              teamList.map(({ _id, member }) => (
+                <tr key={_id}>
+                  <td style={{ width: '24%' }}>{member.account.name}</td>
+                  <td style={{ width: '24%' }}>
+                    {member.designations.length
+                      ? getDivisionName[member.designations[0].division]
+                      : null}
+                  </td>
+                  <td style={{ width: '24%' }}>
+                    {showDepartment(member)}
+                  </td>
+                  <td style={{ width: '24%' }}>
+                    {member.designations.length
+                      ? member.designations[0].position
+                      : null}
+                  </td>
+                  <td style={{ width: '4%' }}>
+                    <Popover
+                      className="fr"
+                      position={Position.BOTTOM}
+                      popoverClassName="bp3-popover-content-sizing bg-white"
+                      content={
+                        <Button
+                          className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
+                          style={{ color: 'red' }}
+                        ><span>Remove from Teammate</span>
+                        </Button>
+                      }
+                      target={
+                        <Icon
+                          className=" pointer"
+                          icon="drag-handle-vertical"
+                        />
+                      }
                     />
-                  }
-                />
-              </td>
-            </tr>
+                  </td>
+                </tr>
+              )) :
+              <tr>
+                <td colSpan={5}>No Teammates</td>
+              </tr>}
           </tbody>
         </HTMLTable>
       </div>
@@ -280,4 +336,13 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   );
 };
 
-export const ProjectTeamPage = connect(null, null)(ProjectTeamPageComponent);
+const mapStateToProps = (state: any) => {
+  return {
+    user: state.userReducer.user,
+    teams: state.projectReducer.teams,
+  };
+};
+
+export const ProjectTeamPage = connect(mapStateToProps, {
+  getProjectTeams
+})(ProjectTeamPageComponent);
