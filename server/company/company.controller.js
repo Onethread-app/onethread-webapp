@@ -440,14 +440,26 @@ const addCertifications = async (req, res, next) => {
 
 const parentOrg = async (req, res, next) => {
   try {
-    const parentcom = req.body.parentcom;
-    const parentCom = new Parentcom({
-      name: parentcom,
-      company: req.params.companyId,
-    });
-    await parentCom.save();
+    const parentCom = req.body.parentcom;
+    let user = await Company.findByIdAndUpdate(
+      {
+        _id: req.params.companyId,
+      },
+      {
+        $set: { parentcom: parentCom },
+      },
+      {
+        new: true,
+        safe: true,
+        upsert: true,
+      },
+    );
+    console.log(user);
     //  await Company.findOneAndUpdate({_id: req.params.companyId}, {$push:{parentcom: parentCom._id}},{safe: true, new: true, upsert: true})
-    return sendJSONresponse(res, 201, { message: 'parentorg add' });
+    return sendJSONresponse(res, 200, {
+      success: true,
+      message: `parentOrg updated`,
+    });
   } catch (error) {
     next(error);
   }

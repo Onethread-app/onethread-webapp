@@ -36,10 +36,13 @@ module.exports.addUserDataIntoCache = async (userId, userData) => {
     userData.birthDate,
     'contactNo',
     userData.contactNo,
-    'skillArea',
-    JSON.stringify(userData.skillArea),
     '_id',
     userData._id,
   );
   logger.info(`User data add into cache server`);
+};
+
+module.exports.addSkillIntoCache = async (userId, skillObject) => {
+  await client.hmset(`userID: ${userId}`, 'skillArea', skillObject);
+  logger.info(`create multiple skills for user`);
 };

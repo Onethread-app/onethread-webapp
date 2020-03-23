@@ -186,12 +186,7 @@ const company = new Schema(
         'above 2000 square meters',
       ],
     },
-    parentcom: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Parentcom',
-      },
-    ],
+    parentcom: [String],
     removed: {
       type: Boolean,
       default: false,

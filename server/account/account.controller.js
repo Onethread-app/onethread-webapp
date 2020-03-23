@@ -213,7 +213,7 @@ const getAccount = async (req, res, next) => {
         }).select('-password');
       } else {
         userInfo = user;
-        userInfo.skillArea = JSON.parse(user.skillArea);
+        // userInfo.skillArea = JSON.parse(user.skillArea);
         // userInfo.skillArea = [];
         // userInfo = await Account.findOne({
         //   _id: req.user._id,

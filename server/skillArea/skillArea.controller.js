@@ -1,20 +1,15 @@
 const SkillArea = require('./skillArea.model');
 const Account = require('../account/account.model');
-const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
 const chalk = require('chalk');
 const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-const {
-  APIError,
-  EmailIdExistError,
-  BadRequestError,
-  SearchNotMatchError,
-} = require('../helpers/APIError');
-const {setDocument, skillIndex , search} = require('../services/elastic.services');
 
+// all services
+const {setDocument, skillIndex , search} = require('../services/elastic.services');
+const { addSkillIntoCache } = require('../services/redis.services');
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
     return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
@@ -39,8 +34,7 @@ const createSkill = async (req, res, next) => {
         mongo_id: skillInfo._id,
         name: skillInfo.name,
         accountId: skillInfo.accountId
-      })
-
+      });
       logger.info(
         chalk.blueBright(
           `ElasticSearch successfully added document  on ${skillIndex}`,
@@ -247,7 +241,8 @@ const updateUserSkillInfo = async (req, res, next) => {
     const skillList = userSkill.skillArea;
     return sendJSONresponse(res, 200, { skillList });
   } catch (error) {
-    return sendJSONresponse(res, 400, { error });
+    logger.error(`${error}`);
+    next(error);
   }
 };
 

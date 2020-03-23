@@ -9,7 +9,6 @@ bluebird.promisifyAll(redis);
 module.exports.authorization = async (req, res, next) => {
   const parts =
     req.headers['x-access-token'] || req.headers.authorization;
-  console.log(parts);
   if (!parts) {
     return sendErrorResponse(res, 401, 'AuthError', {
       message: 'Invalid header',
