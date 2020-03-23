@@ -37,7 +37,9 @@ module.exports.addUserDataIntoCache = async (userId, userData) => {
     'contactNo',
     userData.contactNo,
     'skillArea',
-    `skillArea:${userId}`,
+    JSON.stringify(userData.skillArea),
+    '_id',
+    userData._id,
   );
   logger.info(`User data add into cache server`);
 };
