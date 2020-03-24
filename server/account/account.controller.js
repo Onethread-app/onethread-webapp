@@ -210,28 +210,14 @@ const getAccount = async (req, res, next) => {
       if (user === null) {
         userInfo = await Account.findOne({
           _id: req.user._id,
-        })
-          .select('-password')
-          .populate('skillArea');
+        }).select('-password');
       } else {
         userInfo = user;
-        if ('skillArea' in user) {
-          client
-            .multi()
-            .smembers(`skillArea:${req.user._id}`)
-            .execAsync()
-            .then(result => {
-              userInfo.skillArea = result[0];
-            });
-          console.log(userInfo);
-        }
         // userInfo.skillArea = JSON.parse(user.skillArea);
         // userInfo.skillArea = [];
-        userInfo = await Account.findOne({
-          _id: req.user._id,
-        })
-          .select('-password')
-          .populate('skillArea', '_id name');
+        // userInfo = await Account.findOne({
+        //   _id: req.user._id,
+        // }).select('-password');
         // // userInfo = await Account.findOne({
         // //   _id: req.user._id,
         // // }).select('-password');
@@ -243,6 +229,7 @@ const getAccount = async (req, res, next) => {
         //     userInfo.skillArea = result[0];
         //   });
       }
+      console.log(userInfo);
       return sendJSONresponse(res, 200, {
         success: true,
         user: userInfo,
