@@ -158,6 +158,7 @@ const companyLogo = async (req, res, next) => {
 
 const fileInRooms = async (req, res, next) => {
   const file = req.file;
+  console.log(file);
   if (!checkMimetype.includes(file.mimetype)) {
     return sendErrorResponse(res, 400, '', {
       message: 'This file format is not supported',
@@ -202,8 +203,11 @@ const fileInRooms = async (req, res, next) => {
 };
 const fileInProject = async (req, res, next) => {
   const file = req.file;
-  if(!file){
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/x-www-form-urlencoded'"})
+  if (!checkMimetype.includes(file.mimetype)) {
+    return sendErrorResponse(res, 400, '', {
+      message: 'This file format is not supported',
+      fieldName: 'file',
+    });
   }
   const userID = req.user._id;
   if (!checkMimetype.includes(file.mimetype)) {
@@ -213,8 +217,8 @@ const fileInProject = async (req, res, next) => {
     });
   }
   const pid = req.query.pid;
-  const pidExist = await Project.findOne({_id: pid});
-  if(pidExist){
+  const pidExist = await Project.findOne({ _id: pid });
+  if (pidExist) {
     const params = {
       Bucket: 'tigrow-file',
       Key: `${pid}/${file.originalname}`,
@@ -223,39 +227,39 @@ const fileInProject = async (req, res, next) => {
       ACL: 'public-read',
     };
     await s3bucket
-    .upload(params)
-    .promise()
-    .then(async data => {
-      logger.info(data);
-      try {
-        logger.info(`File in project Successfully upload to S3`);
-        const newFile = new File({
-          link: data.Location,
-          s3Key: params.Key,
-          type: params.ContentType,
-          account: userID,
-          project: pid,
-        });
-        await newFile.save();
-        logger.info('File Link successfully save to file collection');
-        pidExist.files.push(newFile._id);
-        await pidExist.save()
-        return sendJSONresponse(res, 200, { newFile });
-  
-      } catch (error) {
-        logger.error(`${error}`);
-        next(error);
-      }
-    })
-    .catch(err => {
-      next(err);
+      .upload(params)
+      .promise()
+      .then(async data => {
+        logger.info(data);
+        try {
+          logger.info(`File in project Successfully upload to S3`);
+          const newFile = new File({
+            link: data.Location,
+            s3Key: params.Key,
+            type: params.ContentType,
+            account: userID,
+            project: pid,
+          });
+          await newFile.save();
+          logger.info(
+            'File Link successfully save to file collection',
+          );
+          pidExist.files.push(newFile._id);
+          await pidExist.save();
+          return sendJSONresponse(res, 200, { newFile });
+        } catch (error) {
+          logger.error(`${error}`);
+          next(error);
+        }
+      })
+      .catch(err => {
+        next(err);
+      });
+  } else {
+    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+      message: 'project id is not exist',
     });
-
-  }else{
-    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {message: 'project id is not exist'})
   }
-
- 
 };
 module.exports = {
   profilePicture,

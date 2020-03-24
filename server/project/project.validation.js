@@ -24,6 +24,7 @@ const schema = {
   name: Joi.string().max(50),
   type: Joi.string(),
   pid: idSchema.id,
+  memberId: idSchema.id,
   description: Joi.string()
     .max(2500)
     .allow(''),
@@ -59,22 +60,24 @@ module.exports = {
     }),
   }),
   getProject: Joi.object().keys({
-    params:pid.required(),
+    params: pid.required(),
   }),
   changeNameProject: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
+    }),
+    query: Joi.object().keys({
       pid: schema.pid.required(),
-    })
+      memberId: schema.memberId.required(),
+    }),
   }),
   showProjectList: Joi.object().keys({
-    params:companyId.required(),
+    params: companyId.required(),
   }),
   archiveProject: Joi.object().keys({
     params: pid.required(),
-
   }),
   searchConcernAdmin: Joi.object().keys({
-    params:companyId.required(), 
+    params: companyId.required(),
   }),
 };

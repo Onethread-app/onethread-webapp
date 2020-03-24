@@ -55,6 +55,7 @@ const certificate = new Schema({
     ref: 'Company',
   },
 });
+
 // company schema
 const company = new Schema(
   {
@@ -99,8 +100,7 @@ const company = new Schema(
           ],
         },
       ],
-      default: ['editProfile'],
-      required: true,
+      default: ['editProfile', 'cRUDAnnouncement'],
     },
 
     address: {
@@ -176,6 +176,7 @@ const company = new Schema(
         'above 2000 square meters',
       ],
     },
+    parentcom: [String],
     removed: {
       type: Boolean,
       default: false,

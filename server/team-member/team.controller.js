@@ -1,5 +1,6 @@
 const Account = require('../account/account.model');
 const { Team } = require('./team.model');
+const { Member } = require('../company/member/member.model');
 const { Project } = require('../project/project.model');
 const { Company } = require('../company/company.model');
 const { ProjectRequest } = require('../request/request.model');
@@ -11,32 +12,32 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 
-// const changeRole = async (req, res, next) => {
-//   try {
-//     // check role: superAdmin/admin
-//     const member = await Member.findOne({
-//       account: req.user._id,
-//       company: req.company._id,
-//     });
+const changeRole = async (req, res, next) => {
+  try {
+    // check role: superAdmin/admin
+    const member = await Team.findOne({
+      member: req.user._id,
+      company: req.query.pid,
+    });
 
-//     if (!['superAdmin', 'admin'].includes(member.role)) {
-//       return res.status(403).json({
-//         message: `Restricted`,
-//       });
-//     }
+    if (req.body.role !== 'admin' || member.role !== 'admin') {
+      return res.status(403).json({
+        message: `Restricted`,
+      });
+    }
 
-//     req.member.role = req.body.role;
+    req.member.role = req.body.role;
 
-//     await req.member.save();
+    await req.member.save();
 
-//     return res.status(201).json({
-//       message: `Role updated to ${req.body.role}`,
-//     });
-//   } catch (error) {
-//     logger.error(`${error}`);
-//     next(error);
-//   }
-// };
+    return res.status(201).json({
+      message: `Role updated to ${req.body.role}`,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
 
 // add team member
 const addTeamMember = async (req, res, next) => {
@@ -52,10 +53,9 @@ const addTeamMember = async (req, res, next) => {
     const projectOwner = await Project.findOne({
       _id: req.query.pid,
     });
-    if (projectOwner.company.toString() === req.body.companyId) {
-      let members = req.body.members;
-
-      accounts = newMembers.map(member => member.account);
+    let members = req.body.members;
+    if (projectOwner.company.toString() === req.params.companyId) {
+      let accounts = members.map(member => member.account);
 
       // find previous members
       let prevMembers = await Team.find({
@@ -63,14 +63,40 @@ const addTeamMember = async (req, res, next) => {
         project: req.query.pid,
         removed: true,
       }).select('account');
+      prevMembers = prevMembers.map(member => member.account);
 
-      members.forEach(async account => {
-        await Team.insertMany({
-          account: account.account,
-          project: account.pid,
-          role: 'member',
+      // filter new members
+      members = members.filter(member => {
+        return !prevMembers.some(prevMemberAccount => {
+          return (
+            prevMemberAccount.toString() === member.account.toString()
+          );
         });
       });
+
+      if (prevMembers.length) {
+        // re-add team members
+        await Team.updateMany(
+          { account: { $in: prevMembers }, project: req.query.pid },
+          {
+            removed: false,
+          },
+        );
+      }
+
+      if (members.length) {
+        // add new team members
+        members = members.map(e => {
+          return {
+            account: e.account,
+            project: req.query.pid,
+            member: e.member,
+            role: 'member',
+          };
+        });
+        await Team.create(members);
+      }
+
       return sendJSONresponse(res, 201, {
         message: 'New Team created',
       });
@@ -78,14 +104,38 @@ const addTeamMember = async (req, res, next) => {
       const memberAllowNumber = await ProjectRequest.findOne({
         project: req.query.pid,
       }).select('size');
+      accounts = members.map(member => member.account);
+      // find previous members
+      let prevMembers = await Team.find({
+        account: { $in: accounts },
+        project: req.query.pid,
+        removed: true,
+      }).select('account');
+      prevMembers = prevMembers.map(member => member.account);
+      // filter new members
+      members = members.filter(member => {
+        return !prevMembers.some(prevMemberAccount => {
+          return (
+            prevMemberAccount.toString() === member.account.toString()
+          );
+        });
+      });
+      await Team.updateMany(
+        { account: { $in: prevMembers }, project: req.query.pid },
+        {
+          removed: false,
+        },
+      );
+
       if (memberAllowNumber.size >= req.body.members.length) {
         // need to insertMany method later
         let members = req.body.members;
         members.forEach(async account => {
           await Team.insertMany({
             account: account.account,
-            project: account.pid,
-            role: 'specialMember',
+            project: req.query.pid,
+            member: account.member,
+            role: 'member',
           });
         });
         return sendJSONresponse(res, 200, {
@@ -98,67 +148,49 @@ const addTeamMember = async (req, res, next) => {
       }
     }
   } catch (error) {
-    // const members = await Team.create(req.body.members);
-    // console.log(members);
-    // if (!members.length) {
-    //   return sendErrorResponse(res, 400, 'MemberCreatedError', {
-    //     message: 'No members created',
-    //   });
-    // }
-    // let membersId = members.map(m => {
-    //   return m._id;
-    // });
-    // // let accountsId = req.body.members.map(m => {
-    // //   return m.account;
-    // // });
-    // // save ref in company
-    // // req.project.members.addToSet(...membersId);
-    // // await req.project.save();
-    // // add members into General room
-    // const room = await Room.findOne({
-    //   name: 'General',
-    //   project: req.project._id,
-    // });
-    // if (room) {
-    //   // room.members.addToSet(...accountsId);
-    //   await room.save();
-    //   await chatkit.addUsersToRoom({
-    //     roomId: room._id,
-    //     // userIds: accountsId,
-    //   });
-    // }
-    // return res.status(201).json({
-    //   message: 'New member created',
-    //   members,
-    // });
     logger.error(`${error}`);
     next(error);
   }
 };
 
-// get all members for a company
+// get all members in a project
 const list = async (req, res, next) => {
   try {
-    const { limit = 50, skip = 0 } = req.query;
-
-    const members = await Member.find({
-      company: req.company._id,
-      removed: false,
+    const { limit = 50, skip = 0, pid } = req.query;
+    const members = await Team.find({
+      $and: [{ project: pid }, { removed: false }],
     })
       .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit)
-      .select('-__v -company -createdAt -updatedAt')
+      .select('role')
       .populate([
-        { path: 'account', select: '_id name firstName lastName' },
         {
-          path: 'designations',
-          select: 'division department position',
-          populate: [{ path: 'department', select: 'name' }],
+          path: 'member',
+          select: '_id account designations',
+          populate: [
+            {
+              path: 'account',
+              select: '_id name firstName lastName email',
+            },
+            {
+              path: 'designations',
+              select: 'division department position',
+              populate: [{ path: 'department', select: 'name' }],
+            },
+          ],
+        },
+        {
+          path: 'project',
+          select: 'company associate',
+          populate: [
+            { path: 'associate', select: 'associateCompany' },
+          ],
         },
       ]);
+
     return res.status(200).json({
-      members,
+      memberList: members,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -168,23 +200,27 @@ const list = async (req, res, next) => {
 
 // get a member
 const getMember = (req, res, next) => {
-  return res.status(200).json({
-    member: req.member,
-  });
+  try {
+    return res.status(200).json({
+      member: req.member,
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 // member will be found on req.member
 const getMemberLoad = async (req, res, next) => {
   try {
-    const member = await Member.findById(req.params.memberId)
+    const member = await Team.findById(req.params.memberId)
       .populate('account', 'name email firstName lastName')
-      .populate('company', 'name');
+      .populate('project', 'name');
 
     if (member) {
       req.member = member;
       return next();
     } else {
-      return res.status(404).json({
+      return sendErrorResponse(res, 404, 'MemberIdNotFoundError', {
         message: 'No valid entry found for provided Member ID',
       });
     }
@@ -194,50 +230,28 @@ const getMemberLoad = async (req, res, next) => {
   }
 };
 
-// 1st step: Find member list from company.
-// 2nd step: Create a list of employee
-// 3rd step: Exclude them from the Team Search
-// cid = companyID
 const searchTeamMember = async (req, res, next) => {
   try {
-    const {
-      limit = 50,
-      skip = 0,
-      name,
-      companyID,
-      holder,
-    } = req.query;
-    if (holder === 'projectOwner') {
-      const company = await Company.findById({
-        _id: companyID,
-      }).populate('members', 'account');
-      let memberListId = company.members;
-      memberListId = memberListId.map(member => member.account);
-      let data = await Account.find({
-        $and: [
-          { name: { $regex: new RegExp(name) } },
-          { _id: { $nin: memberListId } },
-        ],
-      })
-        .select('_id email name firstName lastName')
-        .sort({ createdAt: -1 })
-        .skip(+skip)
-        .limit(+limit);
-      // TODO: pore ami change korbo query onusaree
-      return sendJSONresponse(res, 200, {
-        employees: {
-          message: `Search complete ${name}`,
-          data,
-        },
+    let projectMembers = await Team.find({ project: req.query.pid })
+      .select('_id member')
+      .exec();
+
+    let companyMembers = await Member.find({
+      company: req.params.companyId,
+    })
+      .select('_id account')
+      .populate('account', '_id name firstName lastName email')
+      .exec();
+
+    let teams = companyMembers.filter(cm => {
+      return !projectMembers.some(pm => {
+        return pm.member._id.toString() === cm._id.toString();
       });
-    } else {
-      return sendJSONresponse(res, 200, {
-        employees: {
-          message: `Search complete ${name}`,
-          data,
-        },
-      });
-    }
+    });
+
+    return sendJSONresponse(res, 200, {
+      teams,
+    });
   } catch (error) {
     logger.error(`${error}`);
     next(error);
@@ -250,5 +264,5 @@ module.exports = {
   getMember,
   getMemberLoad,
   searchTeamMember,
-  // changeRole,
+  changeRole,
 };

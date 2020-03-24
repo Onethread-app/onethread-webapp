@@ -1,52 +1,46 @@
-const SkillArea = require('./skillArea.model');
+const { SkillArea, AccountSkill } = require('./skillArea.model');
 const Account = require('../account/account.model');
-const httpStatus = require('http-status');
 const logger = require('../../config/winston.js');
 const chalk = require('chalk');
 const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-const {
-  APIError,
-  EmailIdExistError,
-  BadRequestError,
-  SearchNotMatchError,
-} = require('../helpers/APIError');
-const {setDocument, skillIndex , search} = require('../services/elastic.services');
 
+// all services
+const {
+  setDocument,
+  skillIndex,
+  search,
+} = require('../services/elastic.services');
+const { addSkillIntoCache } = require('../services/redis.services');
 const createSkill = async (req, res, next) => {
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
-
   const skill = req.body.name;
-  // const skillExist = await SkillArea.findOne({ name: skill });
-  // if (skillExist) {
-  //   return sendJSONresponse(res, 200);
-  // }
   const newSkill = new SkillArea();
   newSkill.name = skill;
   newSkill.accountId.push(req.user._id);
   newSkill
     .save()
-    .then( async skill => {
+    .then(async skill => {
       const skillInfo = {};
       skillInfo._id = skill._id;
       skillInfo.name = skill.name;
 
-      await setDocument(skillIndex,'_doc', {
+      await setDocument(skillIndex, '_doc', {
         mongo_id: skillInfo._id,
         name: skillInfo.name,
-        accountId: skillInfo.accountId
-      })
-
+        accountId: skillInfo.accountId,
+      });
       logger.info(
         chalk.blueBright(
           `ElasticSearch successfully added document  on ${skillIndex}`,
         ),
       );
-
 
       return sendJSONresponse(res, 201, {
         success: true,
@@ -61,16 +55,13 @@ const createSkill = async (req, res, next) => {
 };
 
 const getSkillInfo = async (req, res) => {
-  
   const skill = req.params.id;
-  
+
   SkillArea.findOne({ _id: skill })
     .populate('accountId')
     .exec()
     .then(result => {
       if (result) {
-       
-
         return sendJSONresponse(res, 200, {
           success: true,
           msg: 'Skillset get',
@@ -115,7 +106,9 @@ const getAllSkill = async (req, res) => {
 
 const updateSkillInfo = async (req, res) => {
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
 
   SkillArea.findOneAndUpdate({ _id: req.params.skill })
@@ -165,7 +158,6 @@ const searchSkillSet = async (req, res, next) => {
   const userSkill = await Account.findOne({ _id: userId });
   const userskillId = userSkill.skillArea;
   if (name) {
-
     let body = {
       size: 200,
       from: 0,
@@ -174,29 +166,28 @@ const searchSkillSet = async (req, res, next) => {
           must: [
             {
               match: {
-                "name" : req.query.name
-              }
-            }
+                name: req.query.name,
+              },
+            },
           ],
           must_not: [
             {
-              "terms" : {
-                "mongo_id" : userskillId
-              }
-            }
-          ]
+              terms: {
+                mongo_id: userskillId,
+              },
+            },
+          ],
+        },
       },
-    }
-  };
+    };
 
-  const result = await search(skillIndex,'_doc', body);
+    const result = await search(skillIndex, '_doc', body);
 
-
-        return sendJSONresponse(res, 200 , {
-          success : true,
-          message: `Search complete for ${name}`,
-          data: results.hits.hits
-        });
+    return sendJSONresponse(res, 200, {
+      success: true,
+      message: `Search complete for ${name}`,
+      data: results.hits.hits,
+    });
 
     // await SkillArea.find({
     //   $and: [
@@ -224,8 +215,6 @@ const searchSkillSet = async (req, res, next) => {
     //     logger.error(`${err}`);
     //     return next(err);
     //   });
-
-      
   } else {
     return sendErrorResponse(res, 400, 'EmptySearchError', {
       message: `query error`,
@@ -243,11 +232,20 @@ const updateUserSkillInfo = async (req, res, next) => {
     );
     const userSkill = await Account.findOne({
       email: userID,
-    }).populate('skillArea', '_id name');
+    }).populate('skillArea', '_id name account');
     const skillList = userSkill.skillArea;
+    let skillObj = {
+      skillArea: userSkill._id,
+      accountId: req.user._id,
+    };
+    console.log(skilObj);
+    const createSkill = await AccountSkill.create(skillObj);
+
+    addSkillIntoCache(req.user._id, skillObj);
     return sendJSONresponse(res, 200, { skillList });
   } catch (error) {
-    return sendJSONresponse(res, 400, { error });
+    logger.error(`${error}`);
+    next(error);
   }
 };
 

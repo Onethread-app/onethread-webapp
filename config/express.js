@@ -14,11 +14,7 @@ const winstonInstance = require('./winston');
 
 const routes = require('../index.route');
 const config = require('./config');
-const {
-  APIError,
-  SearchNotMatchError,
-  EmailIdExistError,
-} = require('../server/helpers/APIError');
+const { APIError } = require('../server/helpers/APIError');
 const {
   sendErrorResponse,
 } = require('../server/helpers/jsonResponse');
