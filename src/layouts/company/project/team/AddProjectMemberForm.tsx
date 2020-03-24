@@ -1,66 +1,75 @@
 import React, { useState, useEffect } from 'react';
 import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
-import { tokenConfig, isEmail } from 'stores/UtilsActions';
+import { tokenConfig } from 'stores/UtilsActions';
 import { Button, Tag } from '@blueprintjs/core';
-import { addTeamMembers, getCompanyMembers } from 'stores/company/Actions';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { server } from 'config';
-import { isEmpty } from 'lodash';
+// import { addTeamMembers } from 'stores/company/Actions';
+import { tigrowApi } from 'config';
+import { isEmpty, isEqual } from 'lodash';
 
 interface ProjectTeamMembersProps {
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
 }
 
-const AddProjectMemberFormComponent = (props: ProjectTeamMembersProps) => {
+interface ProjectTeamMembersInternalProps extends ProjectTeamMembersProps {
+  companyId: string;
+  projectId: string;
+}
 
-  const [teamMembers, setTeamMembers]: any = useState([] as ItemEntityProps[]);
+const AddProjectMemberFormComponent = (props: ProjectTeamMembersInternalProps) => {
 
+  const [suggestedMembers, setSuggestedMembers]: any = useState([]);
   const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
 
-  const [pendingTeamMembers, setPendingTeamMembers] = useState([] as string[]);
-
-  const [email, setEmail] = useState('');
-
-  const userRequestFactory = (_email: string): Promise<any> => {
-    const headers = tokenConfig();
-    return fetch(`${server}project/members/search?email=${_email}`, headers)
-      .then(res => res.json())
-      .then(res => res.employees.data)
-      .catch(err => []);
+  const getSuggestionsForRoomMembers = async () => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const response = await tigrowApi.get(`/teams/${props.companyId}/search?pid=${props.projectId}`, headers);
+        setSuggestedMembers(response.data.teams);
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log('no headers');
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log(error.response);
+      }
+    }
   };
 
-  let result: any = [];
-  result = useLiveSearch(email, userRequestFactory, 800);
-
   useEffect(() => {
-    setTeamMembers(result);
-  }, [result]);
+    if (isEmpty(props.projectId) === false && isEmpty(props.companyId) === false) {
+      getSuggestionsForRoomMembers();
+    }
+  }, []);
 
   return (
     <div className="pa3">
-      <div className=" w-100">
-        <h1 className="f5 tigrow-lightBlue">Add Team Members</h1>
+      <div className="w-100">
+        <h1 className="f5 tigrow-darkBlue">Add Team Members</h1>
         <SuggestField
-          onChange={(query: string) => { setEmail(query); }}
-          items={teamMembers}
+          items={suggestedMembers}
           selectedItems={selectedTeamMember}
           setSelectedItems={setSelectedTeamMember}
           multipleItemSelect={true}
-          isCreatable={isEmpty(teamMembers) && isEmail(email) ? true : false}
-        // isCreatableAPI={addNewUser}
         />
       </div>
 
-      <div className="w-100">
-        {selectedTeamMember.map(item => (
+      <div className="w-100 mb2">
+        {selectedTeamMember.map((item) => (
           <Tag
             key={item._id}
             className="ma1 pa2"
+            style={{ backgroundColor: '#3b5998', color: 'white' }}
             interactive={true}
-            onRemove={e => {
-              const filteredItems = selectedTeamMember.filter(selectedItem => (
+            onRemove={(e) => {
+              const filteredItems = selectedTeamMember.filter((selectedItem) => (
                 item.name !== selectedItem.name
               ));
               setSelectedTeamMember([
@@ -68,82 +77,43 @@ const AddProjectMemberFormComponent = (props: ProjectTeamMembersProps) => {
               ]);
             }}
             large={true}
-            intent="primary"
           >
             {item.name}
           </Tag>
         ))}
       </div>
-      {pendingTeamMembers.length ?
-        <small>Invited Members:</small> : undefined
-      }
-      <div className="w-100">
-        {pendingTeamMembers.map((item, index) => (
-          <Tag
-            key={index}
-            className="ma1 pa2"
-            interactive={true}
-            onRemove={e => {
-              const filteredItems = pendingTeamMembers.filter(selectedItem => (
-                item !== selectedItem
-              ));
-              setPendingTeamMembers([
-                ...filteredItems
-              ]);
-            }}
-            large={true}
-            intent="primary"
-          >
-            {item}
-          </Tag>
-        ))}
-      </div>
 
-      {
-        selectedTeamMember.length + pendingTeamMembers.length > 20 ?
-          <small className="red">Could not add more than 20 members at a time.</small>
-          : undefined
-      }
-
-      <div className="flex justify-end mt4">
-        <Button className="grow h2 pointer white bp3-minimal w4 mr3"
-          style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
+      <div className="flex justify-end mt3">
+        <Button
+          className="grow h2 pointer white bp3-minimal w4 mr3"
+          style={{ background: '#fff', outline: 'none', border: '1px solid #3b5998', color: '#3b5998' }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
           Cancel
         </Button>
-        <Button className="grow h2 pointer white bp3-minimal w4"
-          style={selectedTeamMember.length + pendingTeamMembers.length > 0 &&
-            selectedTeamMember.length + pendingTeamMembers.length <= 20 ?
-            {
-              background: '#0fa3a3',
-              outline: 'none',
-              color: 'white'
-            } : {
-              background: '#011b1b2e',
-              outline: 'none',
-              color: 'white'
-            }
-          }
-          disabled={selectedTeamMember.length + pendingTeamMembers.length > 0 &&
-            selectedTeamMember.length + pendingTeamMembers.length <= 20 ? false : true}
-          onClick={async () => {
-            const userIdWithCompany = selectedTeamMember.map(selected => {
-              return {
-                account: selected._id,
-                // company: props.company._id
+        <Button className="grow h2 pointer white bp3-minimal w4 outline-0"
+          style={{ backgroundColor: '#3b5998', color: 'white' }}
+          disabled={selectedTeamMember.length === 0 || selectedTeamMember.length > 10}
+          onClick={
+            async () => {
+              const data = {
+                project: props.projectId,
+                members: selectedTeamMember
+                // members: selectedTeamMember.map((m) => m._id)
               };
-            });
-            if (userIdWithCompany || pendingTeamMembers) {
-              // await props.addTeamMembers(userIdWithCompany, pendingTeamMembers, props.company.name);
+              console.log(data);
+              // const response: any = await props.addRoomMembers(data, selectedTeamMember);
+
+              // if (response.status === 201) {
+              //   props.setShowDialog(!props.showDialog);
+              // } else if (response.status === 400) {
+              //   setError('Could not add more than 10 members at time');
+              // } else {
+              //   setError('Network Error');
+              // }
             }
-            // await props.getCompanyMembers();
-            props.setShowDialog(!props.showDialog);
           }
-          }
-        >
-          Add
-        </Button>
+        >Add</Button>
       </div>
     </div>
   );
@@ -151,9 +121,12 @@ const AddProjectMemberFormComponent = (props: ProjectTeamMembersProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.currentCompany
+    companyId: state.companyReducer.currentCompany._id,
+    projectId: state.projectReducer.pid
   };
 };
 
-export const AddProjectMemberForm = connect(mapStateToProps, 
-  { addTeamMembers, getCompanyMembers })(AddProjectMemberFormComponent);
+export const AddProjectMemberForm = connect(mapStateToProps,
+  {
+    // addTeamMembers 
+  })(AddProjectMemberFormComponent);

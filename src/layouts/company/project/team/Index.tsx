@@ -5,7 +5,6 @@ import {
   Popover,
   Position,
   Icon,
-  ButtonGroup,
   HTMLSelect,
   Dialog
 } from '@blueprintjs/core';

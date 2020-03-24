@@ -12,7 +12,7 @@ import {
 } from 'components/final-form/utils';
 import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
 import { boardColor, Entity } from 'stores/UtilsActions';
-import { isEqual, isEmpty, map } from 'lodash';
+import { isEqual, isEmpty } from 'lodash';
 import { Condition } from 'components/final-form/Condition';
 import { SuggestFieldWithError } from 'components/fields/SuggestField';
 import { ICompany } from 'stores/company/Reducer';

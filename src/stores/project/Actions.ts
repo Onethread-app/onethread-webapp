@@ -168,7 +168,6 @@ export const getSingleProject = (pid: string) => async (dispatch: any, getState:
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      const accountId = getState().userReducer.user._id;
       const response = await tigrowApi.get(`projects?pid=${pid}`, headers);
       await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT });
       await dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
