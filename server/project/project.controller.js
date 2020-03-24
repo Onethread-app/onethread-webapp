@@ -525,7 +525,7 @@ const getProjectIndividual = async (req, res, next) => {
     ];
     let projects = await Team.findOne({
       $and: [
-        { member: req.query.memberId },
+        { account: req.params.account },
         { project: req.query.pid },
         {
           removed: false,

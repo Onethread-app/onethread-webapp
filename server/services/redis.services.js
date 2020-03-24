@@ -1,6 +1,5 @@
-const redis = require('redis');
 const logger = require('../../config/winston');
-const client = redis.createClient();
+const client = require('../../index.redis');
 module.exports.addTokenToBlackList = async (token, tokenExpire) => {
   await client.SET(`BlackList:${token}`, token, 'PX', tokenExpire);
   logger.info(`access and refresh token add to blacklist`);
@@ -38,6 +37,8 @@ module.exports.addUserDataIntoCache = async (userId, userData) => {
     userData.contactNo,
     '_id',
     userData._id,
+    // 'skillArea',
+    // JSON.stringify(userData.skillArea),
   );
   logger.info(`User data add into cache server`);
 };
