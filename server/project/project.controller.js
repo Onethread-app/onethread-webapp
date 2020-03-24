@@ -495,7 +495,6 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
           { removed: false },
         ],
       });
-
       if (
         !team ||
         (functionalRole === 'all' && !userRoles.includes(team.role))

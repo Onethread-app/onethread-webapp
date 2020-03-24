@@ -1,4 +1,5 @@
-const { SkillArea, AccountSkill } = require('./skillArea.model');
+const SkillArea = require('./skillArea.model');
+// AccountSkill  = require('./skillArea.model');
 const Account = require('../account/account.model');
 const logger = require('../../config/winston.js');
 const chalk = require('chalk');
@@ -111,7 +112,7 @@ const updateSkillInfo = async (req, res) => {
     });
   }
 
-  SkillArea.findOneAndUpdate({ _id: req.params.skill })
+  await SkillArea.findOneAndUpdate({ _id: req.params.skill })
     .exec()
     .then(result => {
       if (result) {
@@ -219,12 +220,18 @@ const searchSkillSet = async (req, res, next) => {
     return sendErrorResponse(res, 400, 'EmptySearchError', {
       message: `query error`,
     });
-  }
+  // } else {
+  //   return sendErrorResponse(res, 400, 'EmptySearchError', {
+  //     message: `query error`,
+  //   });
+  // }
 };
+}
 
 const updateUserSkillInfo = async (req, res, next) => {
   try {
     const skillId = req.body.skillArea;
+    console.log(skillId);
     const userID = req.user.email;
     const user = await Account.updateOne(
       { email: userID },

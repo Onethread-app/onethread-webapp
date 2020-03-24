@@ -173,6 +173,7 @@ const getCompanyIndividual = async (req, res, next) => {
       companies,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

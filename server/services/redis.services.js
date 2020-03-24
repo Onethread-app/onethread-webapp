@@ -1,6 +1,5 @@
-const redis = require('redis');
 const logger = require('../../config/winston');
-const client = redis.createClient();
+const client = require('../../index.redis');
 module.exports.addTokenToBlackList = async (token, tokenExpire) => {
   await client.SET(`BlackList:${token}`, token, 'PX', tokenExpire);
   logger.info(`access and refresh token add to blacklist`);

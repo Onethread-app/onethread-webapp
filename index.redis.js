@@ -5,7 +5,6 @@ const config = require('./config/config');
 const logger = require('./config/winston');
 const client = redis.createClient({
   retry_strategy: function(options) {
-    
     if (options.error && options.error.code === 'ECONNREFUSED') {
       logger.error(`The server refused the connection`);
       return new Error('The server refused the connection');
@@ -20,8 +19,8 @@ const client = redis.createClient({
     // reconnect after
     return Math.min(options.attempt * 100, 3000);
   },
-  port: 6379,
-  host: '127.0.0.1',
+  port: config.redis.port,
+  host: config.redis.host,
 });
 
 client.auth(config.redis.password, function(err, response) {
