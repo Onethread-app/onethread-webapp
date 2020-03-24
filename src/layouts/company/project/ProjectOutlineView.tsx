@@ -1,35 +1,72 @@
 import React, { useState } from 'react';
 import { Icon } from '@blueprintjs/core';
 import { ProjectOutlineEditor } from './ProjectOutlineEditor';
+import { connect } from 'react-redux';
+import { projectRules } from './settings/projectrules';
 
 interface IProjectDescriptionViewProps {
   headline: string;
   projectOutline: string;
+  role?: string;
+  optionalRole?: any;
 }
 
-export const ProjectOutlineView = (props: IProjectDescriptionViewProps ) => {
+export const _ProjectOutlineView = (props: IProjectDescriptionViewProps) => {
   const [editDescriptionDialog, setEditDescriptionDialog] = useState(false);
   return (
     <>
-      <div className="flex justify-between" style={{ height: '30px' }}>
+      <div className='flex justify-between' style={{ height: '30px' }}>
         <div>
-          <h1 className="f6">{props.headline}</h1>
+          <h1 className='f6'>{props.headline}</h1>
         </div>
-        <div className="pr2" style={{ paddingTop: '10px' }}>
-          <Icon className="fr silver pointer"
-            icon="edit"
-            onClick={() => {
-              setEditDescriptionDialog(true);
-            }}
-          />
-        </div>
+        {props.role === 'admin' ? (
+          <div className='pr2' style={{ paddingTop: '10px' }}>
+            <Icon
+              className='fr silver pointer'
+              icon='edit'
+              onClick={() => {
+                setEditDescriptionDialog(true);
+              }}
+            />
+          </div>
+        ) : (
+          props.optionalRole &&
+          projectRules(props.optionalRole)[props.role!].includes(
+            'updateProjectPreface'
+          ) && (
+            <div className='pr2' style={{ paddingTop: '10px' }}>
+              <Icon
+                className='fr silver pointer'
+                icon='edit'
+                onClick={() => {
+                  setEditDescriptionDialog(true);
+                }}
+              />
+            </div>
+          )
+        )}
       </div>
-      {editDescriptionDialog ?
+      {editDescriptionDialog ? (
         <ProjectOutlineEditor
           editDescriptionDialog={editDescriptionDialog}
-          setEditDescriptionDialog={() => setEditDescriptionDialog(!editDescriptionDialog)}
-        /> : undefined}
-      <p className="pr2">{props.projectOutline}</p>
+          setEditDescriptionDialog={() =>
+            setEditDescriptionDialog(!editDescriptionDialog)
+          }
+        />
+      ) : (
+        undefined
+      )}
+      <p className='pr2'>{props.projectOutline}</p>
     </>
   );
 };
+
+const mapStateToProps = (state: any) => ({
+  role: state.projectReducer.projectRole.projects.role,
+  optionalRole: state.projectReducer.projectRole.projects.project.optionalRole
+});
+
+export const ProjectOutlineView = connect(
+  mapStateToProps,
+  null
+)(_ProjectOutlineView);

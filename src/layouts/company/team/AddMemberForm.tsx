@@ -16,16 +16,20 @@ interface TeamMembersViewProps {
 
 interface TeamMembersViewInternalProps extends TeamMembersViewProps {
   company: ICompany;
-  addTeamMembers: (members: Array<{ account: string | undefined, company: string }>,
-    pendingTeamMembers: string[], companyId: string) => void;
+  addTeamMembers: (
+    members: Array<{ account: string | undefined; company: string }>,
+    pendingTeamMembers: string[],
+    companyId: string
+  ) => void;
   getCompanyMembers: () => void;
 }
 
 const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
-
   const [teamMembers, setTeamMembers]: any = useState([] as ItemEntityProps[]);
 
-  const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
+  const [selectedTeamMember, setSelectedTeamMember] = useState(
+    [] as ItemEntityProps[]
+  );
 
   const [pendingTeamMembers, setPendingTeamMembers] = useState([] as string[]);
 
@@ -33,7 +37,10 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
 
   const userRequestFactory = (name: string): Promise<any> => {
     const headers = tokenConfig();
-    return fetch(`${server}company/${props.company._id}/members/search?name=${name}`, headers)
+    return fetch(
+      `${server}company/${props.company._id}/members/search?name=${name}`,
+      headers
+    )
       .then(res => res.json())
       .then(res => map(res.data, '_source'))
       .catch(err => []);
@@ -63,44 +70,46 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
     } catch (error) {
       // tslint:disable-next-line: no-console
       console.log(error);
-      return { status: false, message: isEqual(error.message, 'Network Error') ? 'Network Error' : 'Server Error' };
+      return {
+        status: false,
+        message: isEqual(error.message, 'Network Error')
+          ? 'Network Error'
+          : 'Server Error'
+      };
     }
   };
 
   const addNewUser = async (newUser: ItemEntityProps) => {
-
     if (props.company.members.some(member => member.account.email === email)) {
-      Toaster
-        .create({
-          position: Position.TOP
-        })
-        .show({
-          message: `Already exist in this company.`,
-          intent: 'danger'
-        });
+      Toaster.create({
+        position: Position.TOP
+      }).show({
+        message: `Already exist in this company.`,
+        intent: 'danger'
+      });
     } else {
       const res = await checkPendingMemberStatus(email);
       if (res.status) {
         setPendingTeamMembers([...pendingTeamMembers, newUser.name!]);
       } else {
-        Toaster
-          .create({
-            position: Position.TOP
-          })
-          .show({
-            message: res.message,
-            intent: 'danger'
-          });
+        Toaster.create({
+          position: Position.TOP
+        }).show({
+          message: res.message,
+          intent: 'danger'
+        });
       }
     }
   };
 
   return (
-    <div className="pa3">
-      <div className=" w-100">
-        <h1 className="f5 tigrow-lightBlue">Add members</h1>
+    <div className='pa3'>
+      <div className=' w-100'>
+        <h1 className='f5 tigrow-lightBlue'>Add members</h1>
         <SuggestField
-          onChange={(query: string) => { setEmail(query); }}
+          onChange={(query: string) => {
+            setEmail(query);
+          }}
           items={teamMembers}
           selectedItems={selectedTeamMember}
           setSelectedItems={setSelectedTeamMember}
@@ -109,95 +118,109 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           isCreatableAPI={addNewUser}
         />
       </div>
-      <div className="w-100">
+      <div className='w-100'>
         {selectedTeamMember.map(item => (
           <Tag
             key={item._id}
-            className="ma1 pa2"
+            className='ma1 pa2'
             interactive={true}
             onRemove={e => {
-              const filteredItems = selectedTeamMember.filter(selectedItem => (
-                item.name !== selectedItem.name
-              ));
-              setSelectedTeamMember([
-                ...filteredItems
-              ]);
+              const filteredItems = selectedTeamMember.filter(
+                selectedItem => item.name !== selectedItem.name
+              );
+              setSelectedTeamMember([...filteredItems]);
             }}
             large={true}
-            intent="primary"
+            intent='primary'
           >
             {item.name}
           </Tag>
         ))}
       </div>
-      {pendingTeamMembers.length ?
-        <small>Invited Members:</small> : undefined
-      }
-      <div className="w-100">
+      {pendingTeamMembers.length ? <small>Invited Members:</small> : undefined}
+      <div className='w-100'>
         {pendingTeamMembers.map((item, index) => (
           <Tag
             key={index}
-            className="ma1 pa2"
+            className='ma1 pa2'
             interactive={true}
             onRemove={e => {
-              const filteredItems = pendingTeamMembers.filter(selectedItem => (
-                item !== selectedItem
-              ));
-              setPendingTeamMembers([
-                ...filteredItems
-              ]);
+              const filteredItems = pendingTeamMembers.filter(
+                selectedItem => item !== selectedItem
+              );
+              setPendingTeamMembers([...filteredItems]);
             }}
             large={true}
-            intent="primary"
+            intent='primary'
           >
             {item}
           </Tag>
         ))}
       </div>
 
-      {
-        selectedTeamMember.length + pendingTeamMembers.length > 20 ?
-          <small className="red">Could not add more than 20 members at a time.</small>
-          : undefined
-      }
+      {selectedTeamMember.length + pendingTeamMembers.length > 20 ? (
+        <small className='red'>
+          Could not add more than 20 members at a time.
+        </small>
+      ) : (
+        undefined
+      )}
 
-      <div className="flex justify-end mt4">
-        <Button className="grow h2 pointer white bp3-minimal w4 mr3"
-          style={{ background: '#fff', outline: 'none', border: '1px solid #0fa3a3', color: '#0fa3a3' }}
+      <div className='flex justify-end mt4'>
+        <Button
+          className='grow h2 pointer white bp3-minimal w4 mr3'
+          style={{
+            background: '#fff',
+            outline: 'none',
+            border: '1px solid #0fa3a3',
+            color: '#0fa3a3'
+          }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
           Cancel
         </Button>
-        <Button className="grow h2 pointer white bp3-minimal w4"
-          style={selectedTeamMember.length + pendingTeamMembers.length > 0 &&
-            selectedTeamMember.length + pendingTeamMembers.length <= 20 ?
-            {
-              background: '#0fa3a3',
-              outline: 'none',
-              color: 'white'
-            } : {
-              background: '#011b1b2e',
-              outline: 'none',
-              color: 'white'
-            }
+        <Button
+          className='grow h2 pointer white bp3-minimal w4'
+          style={
+            selectedTeamMember.length + pendingTeamMembers.length > 0 &&
+            selectedTeamMember.length + pendingTeamMembers.length <= 20
+              ? {
+                  background: '#0fa3a3',
+                  outline: 'none',
+                  color: 'white'
+                }
+              : {
+                  background: '#011b1b2e',
+                  outline: 'none',
+                  color: 'white'
+                }
           }
-          disabled={selectedTeamMember.length + pendingTeamMembers.length > 0 &&
-            selectedTeamMember.length + pendingTeamMembers.length <= 20 ? false : true}
+          disabled={
+            selectedTeamMember.length + pendingTeamMembers.length > 0 &&
+            selectedTeamMember.length + pendingTeamMembers.length <= 20
+              ? false
+              : true
+          }
           onClick={async () => {
-            const userIdWithCompany = selectedTeamMember.map((selected: any) => {
-              return {
-                account: selected.mongo_id,
-                company: props.company._id
-              };
-            });
-            
+            const userIdWithCompany = selectedTeamMember.map(
+              (selected: any) => {
+                return {
+                  account: selected.mongo_id,
+                  company: props.company._id
+                };
+              }
+            );
+
             if (userIdWithCompany || pendingTeamMembers) {
-              await props.addTeamMembers(userIdWithCompany, pendingTeamMembers, props.company._id);
+              await props.addTeamMembers(
+                userIdWithCompany,
+                pendingTeamMembers,
+                props.company._id
+              );
             }
             await props.getCompanyMembers();
             props.setShowDialog(!props.showDialog);
-          }
-          }
+          }}
         >
           Add
         </Button>
@@ -212,4 +235,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AddMemberForm = connect(mapStateToProps, { addTeamMembers, getCompanyMembers })(AddMemberFormComponent);
+export const AddMemberForm = connect(mapStateToProps, {
+  addTeamMembers,
+  getCompanyMembers
+})(AddMemberFormComponent);

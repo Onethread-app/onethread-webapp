@@ -8,7 +8,7 @@ import storage from 'redux-persist/lib/storage';
 
 const persistConfig = {
   key: 'projectType',
-  storage: storage,
+  storage,
   whitelist: ['projectReducer'] // which reducer want to store
 };
 

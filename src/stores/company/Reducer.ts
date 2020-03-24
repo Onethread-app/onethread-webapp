@@ -28,8 +28,9 @@ import {
   UPDATE_ALL_COMPANY_PENDING_MEMBERS,
   DELETE_TEAM_MEMBER,
   GET_ALL_COMPANY_PENDING_MEMBERS
+  // ADD_CERTIFICATE,
+  // ADD_ORGANIZATION
 } from "./Types";
-import { User } from "stores/user/Reducer";
 import { Entity } from "stores/UtilsActions";
 
 // tslint:disable-next-line: interface-name
@@ -39,6 +40,7 @@ export interface IDesignations {
   position: string;
   department: { _id: string; name: string };
 }
+
 // tslint:disable-next-line: interface-name
 export interface ICompanyMembers {
   _id: string;
@@ -66,6 +68,11 @@ export interface ICompanyPendingMembers {
   removed: boolean;
 }
 
+export interface ICertificates {
+  _id: string;
+  name: string;
+  description: string;
+}
 export interface ICompany {
   _id: string;
   name: string;
@@ -74,7 +81,6 @@ export interface ICompany {
   address: string;
   legalOwnerName: string;
   legalOwnerMail: string;
-  employees: User[];
   divisions: Entity[];
   departments: Entity[];
   members: ICompanyMembers[];
@@ -83,6 +89,8 @@ export interface ICompany {
   about: string;
   skill: [{}];
   logo: string;
+  certificate: ICertificates[];
+  parentOrg: Entity[];
 }
 
 const InitialState = {
@@ -101,7 +109,9 @@ const InitialState = {
     role: "",
     about: "",
     skill: [{}],
-    logo: ""
+    logo: "",
+    certificate: [],
+    parentOrg: []
   },
   createCompanyError: {
     message: "",
@@ -130,7 +140,10 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case GET_COMPANY_DETAILS:
       return {
         ...state,
-        currentCompany: action.payload
+        currentCompany: {
+          ...state.currentCompany,
+          ...action.payload
+        }
       };
     case CREATE_COMPANY:
       return {

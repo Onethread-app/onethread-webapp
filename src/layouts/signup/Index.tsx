@@ -8,7 +8,7 @@ import { connect } from 'react-redux';
 import { userSignupAction, UserModel } from 'stores/auth/Actions';
 import { isEmpty } from 'lodash';
 
-import logo from './../../resources/images/logo.png';
+import logo from './../../resources/images/TiGrowLogoFinal.png';
 import nameTagIcon from './../../resources/images/nameTag.png';
 import phoneIcon from './../../resources/images/phone.png';
 import emailIcon from './../../resources/images/email.png';
@@ -213,7 +213,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                     parseDate={(str: string) => new Date(str)}
                                     onChange={input.onChange}
                                     canClearSelection={false}
-                                    value={input.value ? input.value : null}
+                                    value={input.value ? new Date(input.value) : null}
                                     popoverProps={{
                                       targetClassName: 'w-100'
                                     }}
@@ -435,14 +435,14 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
               TiGrow is a professional network crafted for
-                    Business Professionals, where they can
-                    trade between each other, find nearest
-                    suppliers, create workplaces in which they
-                    can maintain not only intra company
-                    communications but also external
-                    communications with organizations where
-                    they can create smart contracts between
-                    them.
+              Business Professionals, where they can
+              trade between each other, find nearest
+              suppliers, create workplaces in which they
+              can maintain not only intra company
+              communications but also external
+              communications with organizations where
+              they can create smart contracts between
+              them.
             </h3>
           </div>
         </div>
