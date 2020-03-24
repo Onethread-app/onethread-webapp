@@ -486,3 +486,40 @@ export const getProjectTeams = () => async (dispatch: any, getState: any) => {
     }
   }
 };
+
+export const addProjectTeams = (data: {
+  project: string;
+  company: string;
+  members: Array<({ account: string; member: string; })>;
+}, selectedTeamMember: {
+  _id: string,
+  email: string,
+  firstName: string,
+  lastName: string,
+  name: string;
+  memberId: string;
+}) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      // tslint:disable-next-line: max-line-length
+      const response = await tigrowApi.post(`/teams/${data.company}/add-team-member?pid=${data.project}`, { members: data.members }, headers);
+      if (response.status === 201) {
+        dispatch(getProjectTeams());
+      }
+      return response;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in adding members in a room');
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log(error.message);
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+    return error.response;
+  }
+};

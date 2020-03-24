@@ -3,7 +3,7 @@ import { SuggestField, ItemEntityProps } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { Button, Tag } from '@blueprintjs/core';
-// import { addTeamMembers } from 'stores/company/Actions';
+import { addProjectTeams } from 'stores/project/Actions';
 import { tigrowApi } from 'config';
 import { isEmpty, isEqual } from 'lodash';
 
@@ -15,6 +15,14 @@ interface ProjectTeamMembersProps {
 interface ProjectTeamMembersInternalProps extends ProjectTeamMembersProps {
   companyId: string;
   projectId: string;
+  // tslint:disable-next-line: max-line-length
+  addProjectTeams: (
+    data: {
+      project: string;
+      company: string;
+      members: Array<({ account: string; member: string; })>;
+    },
+    selectedTeamMember: any) => void;
 }
 
 const AddProjectMemberFormComponent = (props: ProjectTeamMembersInternalProps) => {
@@ -27,7 +35,13 @@ const AddProjectMemberFormComponent = (props: ProjectTeamMembersInternalProps) =
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = await tigrowApi.get(`/teams/${props.companyId}/search?pid=${props.projectId}`, headers);
-        setSuggestedMembers(response.data.teams);
+        const formatResponse = response.data.teams.map((e: any) => {
+          return {
+            ...e.account,
+            memberId: e._id
+          };
+        });
+        setSuggestedMembers(formatResponse);
       } else {
         // tslint:disable-next-line: no-console
         console.log('no headers');
@@ -93,24 +107,27 @@ const AddProjectMemberFormComponent = (props: ProjectTeamMembersInternalProps) =
         </Button>
         <Button className="grow h2 pointer white bp3-minimal w4 outline-0"
           style={{ backgroundColor: '#3b5998', color: 'white' }}
-          disabled={selectedTeamMember.length === 0 || selectedTeamMember.length > 10}
+          disabled={selectedTeamMember.length === 0}
           onClick={
             async () => {
               const data = {
                 project: props.projectId,
-                members: selectedTeamMember
-                // members: selectedTeamMember.map((m) => m._id)
+                company: props.companyId,
+                members: selectedTeamMember.map((m: any) => {
+                  return {
+                    account: m._id,
+                    member: m.memberId
+                  };
+                })
               };
-              console.log(data);
-              // const response: any = await props.addRoomMembers(data, selectedTeamMember);
 
-              // if (response.status === 201) {
-              //   props.setShowDialog(!props.showDialog);
-              // } else if (response.status === 400) {
-              //   setError('Could not add more than 10 members at time');
-              // } else {
-              //   setError('Network Error');
-              // }
+              // console.log(data);
+              const response: any = await props.addProjectTeams(data, selectedTeamMember);
+              // tslint:disable-next-line: no-console
+              // console.log('response', response);
+              if (response.status === 201) {
+                props.setShowDialog(!props.showDialog);
+              }
             }
           }
         >Add</Button>
@@ -127,6 +144,4 @@ const mapStateToProps = (state: any) => {
 };
 
 export const AddProjectMemberForm = connect(mapStateToProps,
-  {
-    // addTeamMembers 
-  })(AddProjectMemberFormComponent);
+  { addProjectTeams })(AddProjectMemberFormComponent);
