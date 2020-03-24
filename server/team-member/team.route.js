@@ -24,12 +24,12 @@ router
 router.route('/:companyId/add-team-member').post(
   authorization,
   // TODO: member validations
-  projectCtrl.authorizeProjectRole(
-    'all',
-    'admin',
-    'projectModerator',
-    'member',
-  ),
+  // projectCtrl.authorizeProjectRole(
+  //   'all',
+  //   'admin',
+  //   'projectModerator',
+  //   'member',
+  // ),
   // SchemaValidator(joiSchema.newMember),
   teamCtrl.addTeamMember,
 );

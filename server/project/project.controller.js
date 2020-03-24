@@ -33,7 +33,7 @@ const createNewProjectForCompany = async (req, res, next) => {
 
     if (!member) {
       return sendErrorResponse(res, 404, 'MemberNotFoundError', {
-        message: 'concernAdmin not added in company',
+        message: 'You are not added in company',
       });
     }
 
@@ -66,7 +66,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       });
       // Insert project request
       try {
-        let sendProjectReq = await ProjectRequest(projectReq);
+        let sendProjectReq = await ProjectRequest.create(projectReq);
         logger.info(
           `${req.params.companyId} company send a project request to its associate`,
         );
@@ -495,6 +495,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
           { removed: false },
         ],
       });
+      console.log(team);
       if (
         !team ||
         (functionalRole === 'all' && !userRoles.includes(team.role))

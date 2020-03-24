@@ -47,98 +47,98 @@ const addTeamMember = async (req, res, next) => {
       message: "Expects 'application/json'",
     });
   }
-  let pid = req.query.pid;
-  let members = req.body.members;
-  let projectOwner;
+
   try {
-    projectOwner = await Project.findOne({
-      _id: pid,
+    // check if this company is own the project
+    const projectOwner = await Project.findOne({
+      _id: req.query.pid,
     });
-  } catch (error) {
-    logger.error(`${error}`);
-    next(error);
-  }
-  // check if the company owns the project
-  if (projectOwner.company.toString() === req.params.companyId) {
-    accounts = members.map(member => member._id);
-    // find previous members
-    let prevMembers = await Team.find({
-      $and: [
-        { member: { $in: accounts } },
-        { project: pid },
-        { removed: true },
-      ],
-    }).select('account');
-    prevMembers = prevMembers.map(member => member.member);
-    // filter new members
-    members = members.filter(member => {
-      return !prevMembers.some(prevMemberAccount => {
-        return (
-          prevMemberAccount.toString() === member.member.toString()
-        );
+    let members = req.body.members;
+    if (projectOwner.company.toString() === req.params.companyId) {
+      let accounts = members.map(member => member.account);
+      // find previous members
+      let prevMembers = await Team.find({
+        account: { $in: accounts },
+        project: req.query.pid,
+        removed: true,
+      }).select('account');
+      prevMembers = prevMembers.map(member => member.account);
+      // filter new members
+      members = members.filter(member => {
+        return !prevMembers.some(prevMemberAccount => {
+          return (
+            prevMemberAccount.toString() === member.account.toString()
+          );
+        });
       });
-    });
-    try {
       await Team.updateMany(
-        { member: { $in: prevMembers }, project: pid },
+        { account: { $in: prevMembers }, project: req.query.pid },
         {
           removed: false,
         },
       );
-    } catch (error) {
-      next(error);
-    }
-    members.forEach(async member => {
-      await Team.insertMany({
-        member: member._id,
-        project: pid,
-        role: 'member',
-      });
-    });
-    return sendJSONresponse(res, 201, {
-      message: 'New Team created',
-    });
-  } else {
-    const memberAllowNumber = await ProjectRequest.findOne({
-      project: pid,
-    }).select('size');
-    accounts = members.map(member => member._id);
-    // find previous members
-    let prevMembers = await Team.find({
-      member: { $in: accounts },
-      project: pid,
-      removed: true,
-    }).select('account');
-    prevMembers = prevMembers.map(member => member._id);
-    // filter new members
-    members = members.filter(member => {
-      return !prevMembers.some(prevMemberAccount => {
-        return prevMemberAccount.toString() === member._id.toString();
-      });
-    });
-    await Team.updateMany(
-      { member: { $in: prevMembers }, project: pid },
-      {
-        removed: false,
-      },
-    );
-    if (memberAllowNumber.size >= req.body.members.length) {
-      // need to insertMany method later
-      members.forEach(async member => {
-        await Team.insertMany({
-          member: member._id,
-          project: member.pid,
+      members.forEach(async account => {
+        console.log(account);
+        await Team.create({
+          account: account.account,
+          project: req.query.pid,
+          member: account.member,
           role: 'member',
         });
       });
-      return sendJSONresponse(res, 200, {
-        message: 'special member add to project',
+      return sendJSONresponse(res, 201, {
+        message: 'New Team created',
       });
     } else {
-      return sendErrorResponse(res, 400, 'LimitExceedError', {
-        message: `you are not allow more than ${memberAllowNumber.size}`,
+      const memberAllowNumber = await ProjectRequest.findOne({
+        project: req.query.pid,
+      }).select('size');
+      accounts = members.map(member => member.account);
+      // find previous members
+      let prevMembers = await Team.find({
+        account: { $in: accounts },
+        project: req.query.pid,
+        removed: true,
+      }).select('account');
+      prevMembers = prevMembers.map(member => member.account);
+      // filter new members
+      members = members.filter(member => {
+        return !prevMembers.some(prevMemberAccount => {
+          return (
+            prevMemberAccount.toString() === member.account.toString()
+          );
+        });
       });
+      await Team.updateMany(
+        { account: { $in: prevMembers }, project: req.query.pid },
+        {
+          removed: false,
+        },
+      );
+
+      if (memberAllowNumber.size >= req.body.members.length) {
+        // need to insertMany method later
+        let members = req.body.members;
+        members.forEach(async account => {
+          await Team.insertMany({
+            account: account.account,
+            project: req.query.pid,
+            member: account.member,
+            role: 'member',
+          });
+        });
+        return sendJSONresponse(res, 200, {
+          message: 'special member add to project',
+        });
+      } else {
+        return sendErrorResponse(res, 400, 'LimitExceedError', {
+          message: `you are not allow more than ${memberAllowNumber.size}`,
+        });
+      }
     }
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
   }
 };
 
