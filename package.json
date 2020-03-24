@@ -7,6 +7,8 @@
     "@blueprintjs/datetime": "^3.14.0",
     "@blueprintjs/select": "^3.10.0",
     "@jukben/emoji-search": "^2.0.1",
+    "@material-ui/core": "^4.9.7",
+    "@material-ui/lab": "^4.0.0-alpha.46",
     "@pusher/chatkit-client": "^1.13.0",
     "@pusher/chatkit-client-react": "^0.1.2",
     "@types/emoji-mart": "^2.11.0",

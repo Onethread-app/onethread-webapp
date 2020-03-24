@@ -38,7 +38,8 @@ const initialState = {
     description: '',
     outline: ''
   },
-  pid: ''
+  pid: '',
+  projectRole: {}
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -76,6 +77,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         allProjects: [...state.allProjects, action.payload]
+      };
+    case PROJECT.PROJECT_GET_ROLES:
+      return {
+        ...state,
+        projectRole: action.payload
       };
     default:
       return state;

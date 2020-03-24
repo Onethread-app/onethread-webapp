@@ -1,20 +1,23 @@
 import React from 'react';
 import { connect } from 'react-redux';
 // import { isEqual } from 'lodash';
-// import { Form, Field } from 'react-final-form';
-// import { SubmitError } from 'components/final-form/SubmitError';
-// import { Button } from '@blueprintjs/core';
+import { Form, Field } from 'react-final-form';
+import { SubmitError } from 'components/final-form/SubmitError';
+import { Button } from '@blueprintjs/core';
 
-const GeneralPageComponent = (props: any) => {
+interface IProjectRole {
+  onSubmit: (values: any) => Promise<void>;
+  optionalRole?: [];
+}
+
+const GeneralPageComponent = (props: IProjectRole) => {
   const [archiveProjectCheck] = React.useState(false);
-  // const [disabled] = React.useState(
-  //   isEqual(props.companyRole, 'superAdmin') === false
-  // );
+  const [disabled] = React.useState(false);
   return (
     <div className='bl b--black-05 bw1 pl5 ml5 h5'>
       {console.log(archiveProjectCheck)}
-      <p>general</p>
-      {/* <Form
+      {/* <p>general</p> */}
+      <Form
         onSubmit={props.onSubmit}
         initialValues={{ optionalRole: props.optionalRole }}
         render={({
@@ -31,8 +34,8 @@ const GeneralPageComponent = (props: any) => {
             <div className='mb3'>
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className='b f5 mb3'>Admins</p>
-            <div className='mb3'>
+            <p className='b f5 mb3'>General</p>
+            <div className='mb3 ml2'>
               <Field<string>
                 name='optionalRole'
                 type='checkbox'
@@ -47,10 +50,34 @@ const GeneralPageComponent = (props: any) => {
                       className='mr2'
                       component='input'
                       type='checkbox'
-                      value='cRUDAnnoucment'
+                      value='updateArchiveProject'
                       disabled={disabled}
                     />
-                    Create/Update/Delete Company Announcement
+                    Update Archive Project
+                  </label>
+                )}
+              />
+            </div>
+            <p className='b f5 mb3'>Project Preface</p>
+            <div className='mb3 ml2'>
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='updateProjectPreface'
+                      disabled={disabled}
+                    />
+                    Update info's in Project Preface
                   </label>
                 )}
               />
@@ -68,10 +95,34 @@ const GeneralPageComponent = (props: any) => {
                       className='mr2'
                       component='input'
                       type='checkbox'
-                      value='editProfile'
+                      value='addFileProject'
                       disabled={disabled}
                     />
-                    Edit Basic/Advanced Information of Profile
+                    Add files in Project Preface
+                  </label>
+                )}
+              />
+            </div>
+            <p className='b f5 mb3'>Rooms</p>
+            <div className='mb3 ml2'>
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='addRemoveMemberRoom'
+                      disabled={disabled}
+                    />
+                    Add/Remove Members in Room
                   </label>
                 )}
               />
@@ -89,10 +140,10 @@ const GeneralPageComponent = (props: any) => {
                       className='mr2'
                       component='input'
                       type='checkbox'
-                      value='archiveProject'
+                      value='createUpdateRoom'
                       disabled={disabled}
                     />
-                    Archive Projects
+                    Create/Update Room
                   </label>
                 )}
               />
@@ -110,10 +161,34 @@ const GeneralPageComponent = (props: any) => {
                       className='mr2'
                       component='input'
                       type='checkbox'
-                      value='addRemoveModerator'
+                      value='archiveRoom'
                       disabled={disabled}
                     />
-                    Add/Delete Project Moderator
+                    Archive Room
+                  </label>
+                )}
+              />
+            </div>
+            <p className='b f5 mb3'>Board</p>
+            <div className='mb3 ml2'>
+              <Field<string>
+                name='optionalRole'
+                type='checkbox'
+                render={({ input, meta }) => (
+                  <label
+                    className={`flex items-center mb2 ${
+                      disabled ? 'not-allowed' : 'pointer'
+                    }`}
+                  >
+                    <Field
+                      name='optionalRole'
+                      className='mr2'
+                      component='input'
+                      type='checkbox'
+                      value='createUpdateBoard'
+                      disabled={disabled}
+                    />
+                    Create/Update Board
                   </label>
                 )}
               />
@@ -131,10 +206,10 @@ const GeneralPageComponent = (props: any) => {
                       className='mr2'
                       component='input'
                       type='checkbox'
-                      value='messageAssociate'
+                      value='createUpdateColumn'
                       disabled={disabled}
                     />
-                    Message Associates
+                    Create/Update Column
                   </label>
                 )}
               />
@@ -152,31 +227,10 @@ const GeneralPageComponent = (props: any) => {
                       className='mr2'
                       component='input'
                       type='checkbox'
-                      value='addAcceptRejectAssociate'
+                      value='assignDeleteMemberBoard'
                       disabled={disabled}
                     />
-                    Add/Accept/Reject Requests from Companies to be Associates
-                  </label>
-                )}
-              />
-              <Field<string>
-                name='optionalRole'
-                type='checkbox'
-                render={({ input, meta }) => (
-                  <label
-                    className={`flex items-center mb2 ${
-                      disabled ? 'not-allowed' : 'pointer'
-                    }`}
-                  >
-                    <Field
-                      name='optionalRole'
-                      className='mr2'
-                      component='input'
-                      type='checkbox'
-                      value='acceptRejectProjectFromAssociate'
-                      disabled={disabled}
-                    />
-                    Accept/Reject Project Request from Associates
+                    Assign/Delete Board Members
                   </label>
                 )}
               />
@@ -202,8 +256,13 @@ const GeneralPageComponent = (props: any) => {
             )}
           </form>
         )}
-      /> */}
+      />
     </div>
   );
 };
-export const GeneralPage = connect(null, null)(GeneralPageComponent);
+
+const mapStateToProps = (state: any) => ({
+  role: state.projectReducer.projectRole.projects.role,
+  optionalRole: state.projectReducer.projectRole.projects.project.optionalRole
+});
+export const GeneralPage = connect(mapStateToProps, null)(GeneralPageComponent);

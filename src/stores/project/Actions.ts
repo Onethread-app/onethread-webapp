@@ -57,7 +57,8 @@ export const createProject = (payload: any, admin: { _id: '' }) => async (
         concernedAdmin: admin._id,
         companyId,
         departments: payload.department,
-        associates: payload.associates
+        associates: payload.associates,
+        color: payload.color
       };
 
       const response = await tigrowApi.post(
@@ -90,7 +91,7 @@ export const archiveProject = (pid: string) => async (
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.put(
-        `projects/${pid}/archive`,
+        `projects/archive?pid=${pid}`,
         null,
         headers
       );
@@ -200,7 +201,7 @@ export const projectPrefaceDescriptionUpdate = (
         description
       };
       const response = await tigrowApi.put(
-        `projects/${pid}/description`,
+        `projects/description?pid=${pid}`,
         reqBody,
         headers
       );
@@ -230,7 +231,7 @@ export const projectPrefaceOutlineUpdate = (
         outline
       };
       const response = await tigrowApi.put(
-        `projects/${pid}/outline`,
+        `projects/outline?pid=${pid}`,
         reqBody,
         headers
       );
@@ -393,6 +394,70 @@ export const rejectPendingProject = (projectId: string) => async (
         // tslint:disable-next-line: no-console
         console.log(`Error in accept pending associate`);
       }
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      // return error.response;
+    }
+  }
+};
+
+export const updateProjectRole = (optionalRole: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  try {
+    const headers = tokenConfig();
+    const companyId = getState().companyReducer.currentCompany._id;
+    const projectId = getState().projectReducer.projectDetails._id;
+    if ((headers as any).headers.Authorization) {
+      const reqBody = {
+        optionalRole
+      };
+      await tigrowApi.put(
+        `projects/${companyId}/role?pid=${projectId}`,
+        reqBody,
+        headers
+      );
+      dispatch({
+        type: PROJECT.PROJECT_UPDATE_ROLE
+      });
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      // return error.response;
+    }
+  }
+};
+
+export const getRoleForProject = (projectId: string) => async (
+  dispatch: any,
+  getState: any
+) => {
+  try {
+    const headers = tokenConfig();
+    const userId = getState().userReducer.user._id;
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.get(
+        `projects/individual/${userId}?pid=${projectId}`,
+        headers
+      );
+      dispatch({
+        type: PROJECT.PROJECT_GET_ROLES,
+        payload: response.data
+      });
+
+      return response.data;
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
