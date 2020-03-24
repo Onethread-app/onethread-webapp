@@ -8,25 +8,6 @@ const companyCtrl = require('../company/company.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-// authentication
-router.route('/:companyId/create').post(
-  authorization,
-  companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-  // schemaValidator(projectValidation.createNewProjectForCompany),
-  projectCtrl.createNewProjectForCompany,
-);
-router.route('/:companyId/lists').get(
-  authorization,
-  companyCtrl.authorizeUser(
-    'all',
-    'admin',
-    'superAdmin',
-    'empoloyee',
-  ),
-  // projectCtrl.authorizeProjectRole('all', 'admin'),
-  schemaValidator(projectValidation.showProjectList),
-  projectCtrl.showAllProjectsForCompany,
-);
 router
   .route('/change-title')
   .put(
@@ -37,8 +18,28 @@ router
       'projectModerator',
     ),
     schemaValidator(projectValidation.changeNameProject),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     projectCtrl.changeTitleProject,
   );
+// authentication
+router.route('/:companyId/create').post(
+  authorization,
+  companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+  // schemaValidator(projectValidation.createNewProjectForCompany),
+  projectCtrl.createNewProjectForCompany,
+);
+router.route('/:companyId/lists').get(
+  authorization,
+  companyCtrl.authorizeUser('all', 'admin', 'superAdmin', 'employee'),
+  // projectCtrl.authorizeProjectRole('all', 'admin'),
+  schemaValidator(projectValidation.showProjectList),
+  projectCtrl.showAllProjectsForCompany,
+);
+
 router
   .route('/concern-admin-search/:companyId')
   .get(

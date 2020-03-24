@@ -16,7 +16,7 @@ const changeRole = async (req, res, next) => {
   try {
     // check role: superAdmin/admin
     const member = await Team.findOne({
-      account: req.user._id,
+      member: req.user._id,
       company: req.query.pid,
     });
 
@@ -55,7 +55,7 @@ const addTeamMember = async (req, res, next) => {
     });
     let members = req.body.members;
     if (projectOwner.company.toString() === req.params.companyId) {
-      accounts = members.map(member => member.account);
+      let accounts = members.map(member => member.account);
 
       // find previous members
       let prevMembers = await Team.find({
@@ -72,19 +72,30 @@ const addTeamMember = async (req, res, next) => {
           );
         });
       });
-      await Team.updateMany(
-        { account: { $in: prevMembers }, project: req.query.pid },
-        {
-          removed: false,
-        },
-      );
-      members.forEach(async account => {
-        await Team.insertMany({
-          account: account.account,
-          project: account.pid,
-          role: 'member',
+
+      if (prevMembers.length) {
+        // re-add team members
+        await Team.updateMany(
+          { account: { $in: prevMembers }, project: req.query.pid },
+          {
+            removed: false,
+          },
+        );
+      }
+
+      if (members.length) {
+        // add new team members
+        members = members.map(e => {
+          return {
+            account: e.account,
+            project: req.query.pid,
+            member: e.member,
+            role: 'member',
+          };
         });
-      });
+        await Team.create(members);
+      }
+
       return sendJSONresponse(res, 201, {
         message: 'New Team created',
       });
@@ -121,7 +132,8 @@ const addTeamMember = async (req, res, next) => {
         members.forEach(async account => {
           await Team.insertMany({
             account: account.account,
-            project: account.pid,
+            project: req.query.pid,
+            member: account.member,
             role: 'member',
           });
         });
@@ -143,26 +155,41 @@ const addTeamMember = async (req, res, next) => {
 // get all members in a project
 const list = async (req, res, next) => {
   try {
-    const { limit = 50, skip = 0 } = req.query;
-
+    const { limit = 50, skip = 0, pid } = req.query;
     const members = await Team.find({
-      project: req.query.pid,
-      removed: false,
+      $and: [{ project: pid }, { removed: false }],
     })
       .sort({ createdAt: 1 })
       .skip(+skip)
       .limit(+limit)
-      .select('role company')
+      .select('role')
       .populate([
-        { path: 'account', select: '_id name firstName lastName' },
-        // {
-        //   path: 'designations',
-        //   select: 'division department position',
-        //   populate: [{ path: 'department', select: 'name' }],
-        // },
+        {
+          path: 'member',
+          select: '_id account designations',
+          populate: [
+            {
+              path: 'account',
+              select: '_id name firstName lastName email',
+            },
+            {
+              path: 'designations',
+              select: 'division department position',
+              populate: [{ path: 'department', select: 'name' }],
+            },
+          ],
+        },
+        {
+          path: 'project',
+          select: 'company associate',
+          populate: [
+            { path: 'associate', select: 'associateCompany' },
+          ],
+        },
       ]);
+
     return res.status(200).json({
-      members,
+      memberList: members,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -177,7 +204,7 @@ const getMember = (req, res, next) => {
       member: req.member,
     });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
@@ -192,7 +219,9 @@ const getMemberLoad = async (req, res, next) => {
       req.member = member;
       return next();
     } else {
-      return sendErrorResponse(res, 404, 'MemberIdNotFoundError', { message: 'No valid entry found for provided Member ID',})
+      return sendErrorResponse(res, 404, 'MemberIdNotFoundError', {
+        message: 'No valid entry found for provided Member ID',
+      });
     }
   } catch (error) {
     logger.error(`${error}`);
@@ -202,27 +231,26 @@ const getMemberLoad = async (req, res, next) => {
 
 const searchTeamMember = async (req, res, next) => {
   try {
-    let projectMembers = await Project.findById(req.query.pid)
-      .select('-_id members')
-      .populate('members', '_id name')
+    let projectMembers = await Team.find({ project: req.query.pid })
+      .select('_id member')
       .exec();
+
     let companyMembers = await Member.find({
       company: req.params.companyId,
     })
-      .select('-_id account')
+      .select('_id account')
       .populate('account', '_id name firstName lastName email')
       .exec();
-    let members = companyMembers.filter(({ account }) => {
-      return !projectMembers.members.some(existingMember => {
-        return (
-          existingMember._id.toString() === account._id.toString()
-        );
+
+    let teams = companyMembers.filter(cm => {
+      return !projectMembers.some(pm => {
+        return pm.member._id.toString() === cm._id.toString();
       });
     });
-    members = members.map(m => m.account);
-    // console.log(members);
 
-    return sendJSONresponse(res, 200, { members });
+    return sendJSONresponse(res, 200, {
+      teams,
+    });
   } catch (error) {
     logger.error(`${error}`);
     next(error);

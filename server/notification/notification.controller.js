@@ -188,7 +188,7 @@ try{
   let companyRoleReciver = ['superAdmin', 'admin'];
   let companyEvent =  project.company; //
 
-   let projectRoleReciver = ['modarator', 'admin'];
+   let projectRoleReciver = ['modarator'];
   // let projectEvent =  project._id; //
 
 

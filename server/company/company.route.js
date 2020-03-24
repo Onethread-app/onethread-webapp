@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router({mergeParams: true});
+const router = express.Router({ mergeParams: true });
 const passport = require('passport');
 
 // const auth = passport.authenticate('jwt', { session: false });
@@ -23,7 +23,13 @@ router
     companyCtrl.createCompany,
   );
 
-router.route('/search').get(authorization, SchemaValidator(joiSchema.search), companyCtrl.searchCompany);
+router
+  .route('/search')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.search),
+    companyCtrl.searchCompany,
+  );
 // get company
 router
   .route('/:cname')
@@ -43,7 +49,6 @@ router
     companyCtrl.updateBasicInfo,
   );
 
-
 // update about
 router
   .route('/:companyId/about')
@@ -52,22 +57,20 @@ router
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
-  )
-  router
+  );
+router
   .route('/:companyId/certification')
   .post(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     companyCtrl.addCertifications,
   );
-  router
-  .route('/:companyId/parentorg')
-  .post(
-    authorization,
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-    // SchemaValidator(joiSchema.parentOrg),
-    companyCtrl.parentOrg,
-  );
+router.route('/:companyId/parentorg').put(
+  authorization,
+  companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+  // SchemaValidator(joiSchema.parentOrg),
+  companyCtrl.parentOrg,
+);
 
 // change name
 router
@@ -98,7 +101,6 @@ router
 router
   .route('/individual/:account')
   .get(authorization, companyCtrl.getCompanyIndividual);
-
 
 // redirect to member
 router.use('/:companyId/members', memberRoutes);

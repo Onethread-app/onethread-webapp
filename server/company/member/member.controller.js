@@ -25,7 +25,7 @@ const {
   sendInviteColleague,
 } = require('../../services/email.services');
 
-const changeRole = async (req, res, next) => {  
+const changeRole = async (req, res, next) => {
   try {
     // check role: superAdmin/admin
     const member = await Member.findOne({
@@ -55,9 +55,10 @@ const changeRole = async (req, res, next) => {
 const addMember = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
-
   try {
     if (!req.body.members.length && !req.body.pendingTeamMembers) {
       return res.status(400).json({
@@ -97,12 +98,14 @@ const addMember = async (req, res, next) => {
 
       // re-add previous members in company
       await Member.updateMany(
-        { account: { $in: prevMembers }, company: req.company._id },
+        {
+          account: { $in: prevMembers },
+          company: req.company._id,
+        },
         {
           removed: false,
         },
       );
-
       // add new members in company
       members = await Member.create(newMembers);
 
@@ -170,6 +173,7 @@ const addMember = async (req, res, next) => {
       pendingMembers,
     });
   } catch (error) {
+    console.log(error);
     logger.error(error);
     next(error);
   }

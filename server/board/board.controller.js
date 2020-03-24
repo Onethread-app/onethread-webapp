@@ -68,8 +68,8 @@ const create = async (req, res, next) => {
 
     const project = await Project.findOne({
       _id: req.body.projectId,
-    }).select('_id name company')
-    .populate('company', 'name');
+    }).select('_id name company');
+    
     //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
     console.log(req.user);
     const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
@@ -103,11 +103,13 @@ const addBoardMembers = async (req, res, next) => {
       _id: boardID,
     }).populate('project', '_id name company')
     .populate('members', 'name');
-    const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
+    const index  = board.members.findIndex(x => x._id ===memberID);
+    const text =`${req.user.name} has added  ${board.members[index].name} in ${board.name} from ${board.project.name}`; 
     createBoardNotification(board.project, {_id:req.user._id, name: req.user.name}, text );
     const memberList = board.members;
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };

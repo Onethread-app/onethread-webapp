@@ -56,7 +56,7 @@ module.exports.sendBoardNotification = async (
 ) => {
 
   let companyChannelsPusher = companyChannels.map(c => {
-    return `${project.company._id.toString()}-${c}`;
+    return `${project.company.toString()}-${c}`;
   });
 
   let projectChannelPusher = projectChannel.map(p => {
@@ -72,7 +72,7 @@ module.exports.sendBoardNotification = async (
   console.log(1,project.company,allChannel);
   channels_client.trigger(
     allChannel, 
-    project.company._id.toString(), 
+    project.company.toString(), 
      userNotification
      );
 

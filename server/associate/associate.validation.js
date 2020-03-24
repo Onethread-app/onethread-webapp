@@ -11,7 +11,6 @@ const idSchema = {
     }),
 };
 
-
 const schema = {
   company: idSchema.id,
   associateCompany: Joi.string(),
@@ -28,5 +27,5 @@ module.exports = {
           name: schema.associateCompany.required() ,
       }),
     }),
-  })
+  }),
 };

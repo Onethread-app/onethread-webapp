@@ -5,7 +5,6 @@ const passport = require('passport');
 const joiSchema = require('./associate.validation');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
-
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
@@ -19,7 +18,7 @@ const router = express.Router();
   .post(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-    SchemaValidator(joiSchema.createAssociate),
+    // SchemaValidator(joiSchema.createAssociate),
     associateCtrl.createPending,
   )
   .get(
@@ -28,7 +27,7 @@ const router = express.Router();
     associateCtrl.list,
   );
 
-  router
+router
   .route('/pending/:companyId')
   .get(
     authorization,
@@ -36,29 +35,29 @@ const router = express.Router();
     associateCtrl.listPending,
   );
 
-  router
+router
   .route('/accept/:companyId')
   .post(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     associateCtrl.acceptPending,
-  )
-  
-  router
+  );
+
+router
   .route('/reject/:companyId')
   .post(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     associateCtrl.rejectPending,
-  )
+  );
 
-  router
+router
   .route('/:associateId/:companyId')
   .get(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     associateCtrl.get,
-  )
+  );
 
 //router.param('boardId', boardCtrl.load);
 

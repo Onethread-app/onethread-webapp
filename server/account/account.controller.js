@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const httpStatus = require('http-status');
 const slug = require('slug');
 const Account = require('./account.model');
 const { Member } = require('../company/member/member.model');
@@ -24,11 +23,6 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
-const {
-  APIError,
-  BadRequestError,
-  SearchNotMatchError,
-} = require('../helpers/APIError');
 const {
   setDocument,
   accountIndex,
@@ -157,7 +151,9 @@ const register = async (req, res, next) => {
         user._id,
         verifyAccountTokenExpiration,
       );
-      return sendJSONresponse(res, 201, { message: 'User created' });
+      return sendJSONresponse(res, 201, {
+        message: 'User created',
+      });
     })
     .catch(err => {
       next(err);
@@ -190,7 +186,7 @@ const login = async (req, res, next) => {
     );
     let userObj = {};
     userObj.name = req.user.name;
-    addUserDataIntoCache(req.user.email, JSON.stringify(req.user));
+    addUserDataIntoCache(req.user._id, req.user);
     return sendJSONresponse(res, 200, {
       success: true,
       accessToken: accessToken,
@@ -204,6 +200,60 @@ const login = async (req, res, next) => {
 };
 
 const getAccount = async (req, res, next) => {
+  client
+    .multi()
+    .hgetall(`userID:${req.user._id}`)
+    .execAsync()
+    .then(async result => {
+      let user = result[0];
+      let userInfo = {};
+      if (user === null) {
+        userInfo = await Account.findOne({
+          _id: req.user._id,
+        }).select('-password');
+      } else {
+        userInfo = user;
+        // userInfo.skillArea = JSON.parse(user.skillArea);
+        // userInfo.skillArea = [];
+        // userInfo = await Account.findOne({
+        //   _id: req.user._id,
+        // }).select('-password');
+        // // userInfo = await Account.findOne({
+        // //   _id: req.user._id,
+        // // }).select('-password');
+        // client
+        //   .multi()
+        //   .smembers(`skillArea:${req.user._id}`)
+        //   .execAsync()
+        //   .then(result => {
+        //     userInfo.skillArea = result[0];
+        //   });
+      }
+      console.log(userInfo);
+      return sendJSONresponse(res, 200, {
+        success: true,
+        user: userInfo,
+      });
+      // const user = result[0];
+      // let userInfo = {};
+      // client
+      //   .multi()
+      //   .smembers(`skillArea:${req.user._id}`)
+      //   .execAsync()
+      //   .then(result => {
+      //     userInfo = user;
+      //     userInfo.skillArea = result[0];
+      //     return sendJSONresponse(res, 200, {
+      //       success: true,
+      //       user: userInfo,
+      //     });
+      //   });
+    })
+    .catch(err => {
+      console.log(err);
+      next(err);
+    });
+  } 
   // client
   //   .multi()
   //   .get(`userID:${req.user.email}`)
@@ -219,12 +269,6 @@ const getAccount = async (req, res, next) => {
   //     console.log(err);
   //     next(err);
   //   });
-  return sendJSONresponse(res, 200, {
-           success: true,
-          user: req.user,
-         });
-
-};
 
 // create a timeline for user
 const timeline = async (req, res, next) => {
@@ -314,9 +358,15 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
   await Account.findOneAndUpdate(
-    { email: req.user.email },
+    {
+      email: req.user.email,
+    },
     req.body,
-    { safe: true, upsert: true, new: true },
+    {
+      safe: true,
+      upsert: true,
+      new: true,
+    },
   )
     .select('-password')
     .exec()
@@ -328,19 +378,47 @@ const accountUpdate = async (req, res, next) => {
             name: req.body.name,
           });
         }
+
+        if (typeof user.about !== 'undefined') {
+          client.hmset(`userID:${user._id}`, 'about', user.about);
+          logger.info(`about added into ${user.email}'s cache`);
+        }
+        if (typeof user.location !== 'undefined') {
+          client.hmset(
+            `userID:${user._id}`,
+            'location',
+            user.location,
+          );
+          logger.info(`location added into ${user.email}'s cache`);
+        }
+        if (typeof user.gender !== 'undefined') {
+          client.hmset(`userID:${user._id}`, 'gender', user.gender);
+          logger.info(`gender added into ${user.email}'s cache`);
+        }
+        if (typeof user.bloodGroup !== 'undefined') {
+          client.hmset(
+            `userID:${user._id}`,
+            'bloodGroup',
+            user.bloodGroup,
+          );
+          logger.info(`bloodGroup added into ${user.email}'s cache`);
+        }
+        if (typeof user.position !== 'undefined') {
+          client.hmset(
+            `userID:${user._id}`,
+            'position',
+            user.position,
+          );
+          logger.info(`postion added into ${user.email}'s cache`);
+        }
+
         return sendJSONresponse(res, 200, {
           message: 'profile updated',
         });
-      } else {
-        const err = new APIError(
-          'Method not found',
-          httpStatus.NOT_FOUND,
-        );
-        return next(err);
       }
     })
     .catch(err => {
-      return next(err);
+      next(err);
     });
 };
 const logout = async (req, res, next) => {
@@ -440,7 +518,9 @@ const resetPassword = async (req, res, next) => {
       return sendErrorResponse(res, 401, 'TokenExpireError', {
         message: 'Time is expired',
       });
-    const user = await Account.findById({ _id: userID });
+    const user = await Account.findById({
+      _id: userID,
+    });
     user.password = password;
     await user.save();
     logger.info(`password successfully change`);
@@ -614,7 +694,9 @@ const changePassword = async (req, res, next) => {
         message: `You can not use the same password`,
       });
     }
-    await Account.findOne({ email: user.email }).exec((err, user) => {
+    await Account.findOne({
+      email: user.email,
+    }).exec((err, user) => {
       if (err) {
         next(err);
       }
@@ -633,7 +715,9 @@ const changePassword = async (req, res, next) => {
             res,
             401,
             'PasswordValidationError',
-            { message: `Your previous password is wrong` },
+            {
+              message: `Your previous password is wrong`,
+            },
           );
         }
       });

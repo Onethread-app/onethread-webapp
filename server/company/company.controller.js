@@ -191,12 +191,6 @@ const getCompanyIndividual = async (req, res, next) => {
       {
         path: 'company',
         select: '_id name logo',
-        // populate: [
-        //   {
-        //     path: 'logo',
-        //     select: 'link s3Key type',
-        //   },
-        // ],
       },
     ];
 
@@ -204,7 +198,7 @@ const getCompanyIndividual = async (req, res, next) => {
       account: req.params.account,
       removed: false,
     })
-      .select('-_id company role')
+      .select('_id company role')
       .populate(options);
 
     return res.status(200).json({
@@ -230,11 +224,19 @@ const getCompany = async (req, res, next) => {
       account: req.user._id,
       company: company._id,
     }).select('-_id role');
-    let parentCom = await Parentcom.find({company: company._id}).select('-__v -company');
-    let certificate = await Certificate.find({ company: company._id }).select('-__v');
-    let memberCount = await Member.find({company: company._id}).countDocuments();
+    let certificate = await Certificate.find({
+      company: company._id,
+    }).select('-__v');
+    let memberCount = await Member.find({
+      company: company._id,
+    }).countDocuments();
     return res.status(200).json({
-      company: { ...company._doc, role: member.role, parentOrg: parentCom, certificate: certificate, totalMember: memberCount },
+      company: {
+        ...company._doc,
+        role: member.role,
+        certificate: certificate,
+        totalMember: memberCount,
+      },
     });
   } catch (error) {
     next(error);
@@ -457,30 +459,44 @@ const searchCompany = async (req, res, next) => {
 
 const addCertifications = async (req, res, next) => {
   try {
-  const certificate = new Certificate({
-    name: req.body.name,
-    description: req.body.description,
-    company: req.params.companyId,
-  })
-  await certificate.save();
-  return sendJSONresponse(res, 201, { message: 'Certification add'})
+    const certificate = new Certificate({
+      name: req.body.name,
+      description: req.body.description,
+      company: req.params.companyId,
+    });
+    await certificate.save();
+    return sendJSONresponse(res, 201, {
+      message: 'Certification add',
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
-const parentOrg = async (req, res, next) =>{
+const parentOrg = async (req, res, next) => {
   try {
-    const parentcom = req.body.parentcom;
- const parentCom = new Parentcom({
-   name: parentcom,
-   company: req.params.companyId,
- })
- await parentCom.save();
-//  await Company.findOneAndUpdate({_id: req.params.companyId}, {$push:{parentcom: parentCom._id}},{safe: true, new: true, upsert: true})
- return sendJSONresponse(res, 201, {message: 'parentorg add'})
+    const parentCom = req.body.parentcom;
+    let user = await Company.findByIdAndUpdate(
+      {
+        _id: req.params.companyId,
+      },
+      {
+        $set: { parentcom: parentCom },
+      },
+      {
+        new: true,
+        safe: true,
+        upsert: true,
+      },
+    );
+    console.log(user);
+    //  await Company.findOneAndUpdate({_id: req.params.companyId}, {$push:{parentcom: parentCom._id}},{safe: true, new: true, upsert: true})
+    return sendJSONresponse(res, 200, {
+      success: true,
+      message: `parentOrg updated`,
+    });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
