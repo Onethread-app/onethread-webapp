@@ -19,7 +19,6 @@ export const _ProjectDescriptionView = (
     <>
       <div className='flex justify-between' style={{ height: '30px' }}>
         <div>
-          {console.log(props)}
           <h1 className='f6'>{props.headline}</h1>
         </div>
 
@@ -34,21 +33,21 @@ export const _ProjectDescriptionView = (
             />
           </div>
         ) : (
-          props.optionalRole &&
-          projectRules(props.optionalRole)[props.role!].includes(
-            'updateProjectPreface'
-          ) && (
-            <div className='pr2' style={{ paddingTop: '10px' }}>
-              <Icon
-                className='fr silver pointer'
-                icon='edit'
-                onClick={() => {
-                  setEditDescriptionDialog(true);
-                }}
-              />
-            </div>
-          )
-        )}
+            props.optionalRole &&
+            projectRules(props.optionalRole)[props.role!].includes(
+              'updateProjectPreface'
+            ) && (
+              <div className='pr2' style={{ paddingTop: '10px' }}>
+                <Icon
+                  className='fr silver pointer'
+                  icon='edit'
+                  onClick={() => {
+                    setEditDescriptionDialog(true);
+                  }}
+                />
+              </div>
+            )
+          )}
       </div>
       {editDescriptionDialog ? (
         <ProjectDescriptionEditor
@@ -59,8 +58,8 @@ export const _ProjectDescriptionView = (
           }
         />
       ) : (
-        undefined
-      )}
+          undefined
+        )}
       <p className='pr2'>{props.description}</p>
     </>
   );
