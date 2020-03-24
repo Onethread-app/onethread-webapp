@@ -1,6 +1,7 @@
 import { PROJECT, CLEAR_PROJECT_REDUCER_STATE } from './Types';
 import { Entity } from 'stores/UtilsActions';
 import { User } from 'stores/user/Reducer';
+import { IDesignations } from 'stores/company/Reducer';
 
 export interface IProject {
   _id: string;
@@ -26,6 +27,27 @@ export interface ProjectModel {
   projectDetails: IProject;
 }
 
+export interface IProjectTeam {
+  _id: string;
+  role: string;
+  member: {
+    _id: string;
+    account: {
+      _id: string;
+      name: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+    };
+    designations: [IDesignations];
+  };
+  project: {
+    _id: string;
+    company: string;
+    associate: any[];
+  };
+}
+
 const initialState = {
   allProjects: [],
   allArchive: [],
@@ -38,6 +60,7 @@ const initialState = {
     description: '',
     outline: ''
   },
+  teams: [],
   pid: '',
   projectRole: {}
 };
@@ -62,7 +85,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case PROJECT.PROJECT_SINGLE_VIEW:
       return {
         ...state,
-        projectDetails: action.payload
+        projectDetails: { ...state.projectDetails, ...action.payload }
       };
     case PROJECT.PROJECT_PROJECT_ID:
       return {
@@ -77,6 +100,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         allProjects: [...state.allProjects, action.payload]
+      };
+    case PROJECT.PROJECT_GET_TEAMS:
+      return {
+        ...state,
+        teams: action.payload
       };
     case PROJECT.PROJECT_GET_ROLES:
       return {
