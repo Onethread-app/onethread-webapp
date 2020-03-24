@@ -63,6 +63,10 @@ const company = new Schema(
       type: String,
       trim: true,
     },
+    coverImage: {
+      type: String,
+      trim: true,
+    },
     name: {
       type: String,
       unique: true,

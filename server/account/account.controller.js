@@ -206,7 +206,7 @@ const getAccount = async (req, res, next) => {
     })
       .select('-password')
       .populate('skillArea', '_id name');
-    console.log(userInfo);
+    // console.log(userInfo);
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,

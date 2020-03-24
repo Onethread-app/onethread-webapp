@@ -117,21 +117,21 @@ const profilePicture = async (req, res, next) => {
     });
 };
 
-const displayProPic = async (req, res, next) => {
-  const { Key } = req.query;
-  generateGetUrl(Key)
-    .then(getURL => {
-      return sendJSONresponse(res, 200, getURL);
-    })
-    .catch(err => {
-      next(err);
-    });
-};
+// const displayProPic = async (req, res, next) => {
+//   const { Key } = req.query;
+//   generateGetUrl(Key)
+//     .then(getURL => {
+//       return sendJSONresponse(res, 200, getURL);
+//     })
+//     .catch(err => {
+//       next(err);
+//     });
+// };
 
 const companyLogo = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
-  const companyID = req.query.cid;
+  const companyID = req.params.companyId;
   const fileRename = fileName(companyID, file.originalname);
   const params = {
     Bucket: 'tigrow-file',
@@ -150,25 +150,46 @@ const companyLogo = async (req, res, next) => {
         s3Key: data.Key,
         type: params.ContentType,
         account: userID,
+        imageType: req.query.imageType,
       };
       const file = new File(newFile);
       file
         .save()
         .then(async data => {
           logger.info('File Link successfully save to Database');
-          await Company.findOneAndUpdate(
-            {
-              _id: companyID,
-            },
-            {
-              $set: { logo: data.link },
-            },
-            {
-              new: true,
-              upsert: true,
-            },
-          );
-          return sendJSONresponse(res, 200, data);
+          console.log(data);
+          if (data.imageType === 'company-logo') {
+            await Company.findOneAndUpdate(
+              {
+                _id: companyID,
+              },
+              {
+                $set: { logo: data.link },
+              },
+              {
+                new: true,
+                upsert: true,
+              },
+            );
+
+            return sendJSONresponse(res, 200, data);
+          }
+          if (data.imageType === 'company-cover-photo') {
+            await Company.findOneAndUpdate(
+              {
+                _id: companyID,
+              },
+              {
+                $set: { coverImage: data.link },
+              },
+              {
+                new: true,
+                upsert: true,
+              },
+            );
+
+            return sendJSONresponse(res, 200, data);
+          }
         })
         .catch(error => {
           logger.error(`${error}`);
@@ -287,7 +308,7 @@ const fileInProject = async (req, res, next) => {
 };
 module.exports = {
   profilePicture,
-  displayProPic,
+  // displayProPic,
   companyLogo,
   fileInRooms,
   fileInProject,
