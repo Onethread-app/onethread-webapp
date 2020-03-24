@@ -1,4 +1,5 @@
 const Pusher = require("pusher");
+const _ = require('lodash');
 
 let channels_client = new Pusher({
     appId: '858307',
@@ -41,6 +42,57 @@ module.exports.sendMultipleNotification = async (
     company.toString(), 
     `${company}-superAdmin`,
     userNotifications//ARRAY
+     );
+
+};
+
+module.exports.sendBoardNotification = async (
+  
+  project,
+  companyChannels,
+  projectChannel,
+  adminUser,
+  userNoti,
+) => {
+
+  let companyChannelsPusher = companyChannels.map(c => {
+    return `${project.company._id.toString()}-${c}`;
+  });
+
+  let projectChannelPusher = projectChannel.map(p => {
+    return `${project._id.toString()}-${p}`;
+  });
+
+  let allChannel = _.union(companyChannelsPusher, projectChannelPusher)
+
+  let userNotification = userNoti;
+
+  userNotification = { notification: userNotification
+  };
+  console.log(1,project.company,allChannel);
+  channels_client.trigger(
+    allChannel, 
+    project.company._id.toString(), 
+     userNotification
+     );
+
+};
+
+module.exports.sendMultiChannelNotification = async (
+  companyChannels,//fromHeader
+  adminUser,
+  userNoti,
+) => {
+  let userNotification = userNoti;
+
+  userNotification = { notification: userNotification
+  };
+  console.log(1,company);
+  channels_client.trigger(
+    companyChannels,// `${company}-superAdmin` this type chennel
+    
+    company,
+     userNotification
      );
 
 };

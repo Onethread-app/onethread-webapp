@@ -1,11 +1,13 @@
 
 const { Company } = require('../company/company.model');
 const { Member } = require('../company/member/member.model');
-const { TeamMember } = require('../team-member/team.model');
+const { Team } = require('../team-member/team.model');
 const  Notification  = require('./notification.model');
 const  UserNotification  = require('./userNotification.model');
+const _ = require('lodash');
 const {
   sendMultipleNotification,
+  sendBoardNotification,
   sendCompanyNotification
 } = require('../services/notification.services');
 const logger = require('../../config/winston');
@@ -146,22 +148,22 @@ module.exports.createBoardNotification = async (
 ) => {
 
   //sendCompanyNotification(company, adminUser, usersNotification);
-
+try{
   const members = await Member.find({
     $or:[ {role: 'superAdmin'}, {role: 'admin'}],
     company: project.company,
   });
 
-  const teamMembers = await TeamMember.find({
+  const teamMembers = await Team.find({
     $or:[ {role: 'projectModerator'}, {role: 'admin'}],
-    company: company,
+    company: project.company,
   });
 
   let notification = new Notification({
     type: 'board',
     text: text,
     account: adminUser._id,
-    company: company,
+    company: project.company,
   });
 
   
@@ -172,7 +174,7 @@ module.exports.createBoardNotification = async (
     };
   });
 
-  let usersNotificationTeam = members.map(m => {
+  let usersNotificationTeam = teamMembers.map(m => {
     return {
       notification: notification._id,
       account: m.account,
@@ -183,10 +185,24 @@ module.exports.createBoardNotification = async (
 
   //project role wise notification incomplete
 
-  sendCompanyNotification(company._id, adminUser, notification);
+  let companyRoleReciver = ['superAdmin', 'admin'];
+  let companyEvent =  project.company; //
+
+   let projectRoleReciver = ['modarator', 'admin'];
+  // let projectEvent =  project._id; //
+
+
+  sendBoardNotification(project, companyRoleReciver, projectRoleReciver, adminUser, notification);
 
   await notification.save();
   await UserNotification.create(_.union(usersNotificationCollegue, usersNotificationTeam));
+} catch (error) {
+  console.log(error);
+  logger.error(`Board create: ${error}`);
+  
+  //next(error);
+}
+
 };
 
 module.exports.list   = async (req, res, next) => {

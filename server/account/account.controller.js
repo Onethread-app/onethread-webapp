@@ -204,20 +204,26 @@ const login = async (req, res, next) => {
 };
 
 const getAccount = async (req, res, next) => {
-  client
-    .multi()
-    .get(`userID:${req.user.email}`)
-    .execAsync()
-    .then(result => {
-      let user = JSON.parse(result);
-      return sendJSONresponse(res, 200, {
-        success: true,
-        user: user,
-      });
-    })
-    .catch(err => {
-      next(err);
-    });
+  // client
+  //   .multi()
+  //   .get(`userID:${req.user.email}`)
+  //   .execAsync()
+  //   .then(result => {
+  //     let user = JSON.parse(result);
+  //     return sendJSONresponse(res, 200, {
+  //       success: true,
+  //       user: user,
+  //     });
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     next(err);
+  //   });
+  return sendJSONresponse(res, 200, {
+           success: true,
+          user: req.user,
+         });
+
 };
 
 // create a timeline for user

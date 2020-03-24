@@ -54,6 +54,7 @@ const get = async (req, res , next) => {
 };
 
 const create = async (req, res, next) => {
+  console.log(req.body);
 
   try {
     const board = new Board({
@@ -70,21 +71,19 @@ const create = async (req, res, next) => {
     }).select('_id name company')
     .populate('company', 'name');
     //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
+    console.log(req.user);
     const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
     createBoardNotification(project, {_id:req.user._id, name: req.user.name}, text );
-   const createdBoard = board
-      .save()
+   const createdBoard = board.save()
       
     return res.status(201).json(createdBoard);
       
       
   } catch (error) {
+    console.log(error);
     logger.error(`Board create: ${error}`);
-    const err = new BadRequestError(
-      'board data is invalid.',
-      httpStatus.BAD_REQUEST,
-    );
-    next(err);
+    
+    next(error);
   }
 };
 
@@ -98,12 +97,15 @@ const addBoardMembers = async (req, res, next) => {
       { _id: boardID },
       { $addToSet: { members: memberID } },
       { safe: true, upsert: true, new: true },
-    ).populate('members', '_id name');
-    const boardMembers = await Board.findOne({
+    )
+    .populate('members', '_id name');
+    const board = await Board.findOne({
       _id: boardID,
-    }).populate('members', 'name');
-
-    const memberList = boardMembers.members;
+    }).populate('project', '_id name company')
+    .populate('members', 'name');
+    const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
+    createBoardNotification(board.project, {_id:req.user._id, name: req.user.name}, text );
+    const memberList = board.members;
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {
     next(error);
