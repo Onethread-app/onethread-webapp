@@ -56,6 +56,7 @@ const addTeamMember = async (req, res, next) => {
     let members = req.body.members;
     if (projectOwner.company.toString() === req.params.companyId) {
       let accounts = members.map(member => member.account);
+
       // find previous members
       let prevMembers = await Team.find({
         account: { $in: accounts },
@@ -63,6 +64,7 @@ const addTeamMember = async (req, res, next) => {
         removed: true,
       }).select('account');
       prevMembers = prevMembers.map(member => member.account);
+
       // filter new members
       members = members.filter(member => {
         return !prevMembers.some(prevMemberAccount => {

@@ -1,11 +1,7 @@
 const Account = require('../account/account.model');
 const mongoose = require('mongoose');
 const { Associate } = require('../associate/associate.model');
-const {
-  Company,
-  Certificate,
-  Parentcom,
-} = require('./company.model');
+const { Company, Certificate } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
