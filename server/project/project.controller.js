@@ -495,7 +495,6 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
           { removed: false },
         ],
       });
-      console.log(team);
       if (
         !team ||
         (functionalRole === 'all' && !userRoles.includes(team.role))
@@ -504,7 +503,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
           message: `Restricted`,
         });
       }
-
+      req.team = team;
       next();
     } catch (error) {
       logger.error(`${error}`);

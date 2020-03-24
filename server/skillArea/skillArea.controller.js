@@ -1,9 +1,5 @@
-<<<<<<< HEAD
 const SkillArea = require('./skillArea.model');
 // AccountSkill  = require('./skillArea.model');
-=======
-const { SkillArea, AccountSkill } = require('./skillArea.model');
->>>>>>> dev
 const Account = require('../account/account.model');
 const logger = require('../../config/winston.js');
 const chalk = require('chalk');
