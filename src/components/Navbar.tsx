@@ -121,12 +121,8 @@ const NavbarTopComponent = (
                 >
                   <div className='dtc w1 w2-ns'>
                     <img
-                      src={
-                        props.user.profileImage
-                          ? props.user.profileImage.link
-                          : user
-                      }
-                      className='db w1 w2-ns h1 h2-ns br-100 ba b--black-10 '
+                      src={props.user.profileImage ? props.user.profileImage : user}
+                      className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10 "
                     />
                   </div>
                   <div className='dtc v-mid pl3'>
@@ -157,10 +153,8 @@ const NavbarTopComponent = (
             }
             target={
               <img
-                src={
-                  props.user.profileImage ? props.user.profileImage.link : user
-                }
-                className='dim v-mid dib br-100 pointer'
+                src={props.user.profileImage ? props.user.profileImage : user}
+                className="dim v-mid dib br-100 pointer"
                 style={{
                   width: '2rem',
                   height: '2rem',
