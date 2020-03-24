@@ -56,6 +56,7 @@ const addTeamMember = async (req, res, next) => {
     let members = req.body.members;
     if (projectOwner.company.toString() === req.params.companyId) {
       let accounts = members.map(member => member.account);
+
       // find previous members
       let prevMembers = await Team.find({
         account: { $in: accounts },
@@ -63,6 +64,7 @@ const addTeamMember = async (req, res, next) => {
         removed: true,
       }).select('account');
       prevMembers = prevMembers.map(member => member.account);
+
       // filter new members
       members = members.filter(member => {
         return !prevMembers.some(prevMemberAccount => {
@@ -71,21 +73,30 @@ const addTeamMember = async (req, res, next) => {
           );
         });
       });
-      await Team.updateMany(
-        { account: { $in: prevMembers }, project: req.query.pid },
-        {
-          removed: false,
-        },
-      );
-      members.forEach(async account => {
-        console.log(account);
-        await Team.create({
-          account: account.account,
-          project: req.query.pid,
-          member: account.member,
-          role: 'member',
+
+      if (prevMembers.length) {
+        // re-add team members
+        await Team.updateMany(
+          { account: { $in: prevMembers }, project: req.query.pid },
+          {
+            removed: false,
+          },
+        );
+      }
+
+      if (members.length) {
+        // add new team members
+        members = members.map(e => {
+          return {
+            account: e.account,
+            project: req.query.pid,
+            member: e.member,
+            role: 'member',
+          };
         });
-      });
+        await Team.create(members);
+      }
+
       return sendJSONresponse(res, 201, {
         message: 'New Team created',
       });
@@ -237,8 +248,6 @@ const searchTeamMember = async (req, res, next) => {
         return pm.member._id.toString() === cm._id.toString();
       });
     });
-
-    teams = teams.map(t => t.account);
 
     return sendJSONresponse(res, 200, {
       teams,

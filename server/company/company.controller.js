@@ -1,11 +1,7 @@
 const Account = require('../account/account.model');
 const mongoose = require('mongoose');
 const { Associate } = require('../associate/associate.model');
-const {
-  Company,
-  Certificate,
-  Parentcom,
-} = require('./company.model');
+const { Company, Certificate } = require('./company.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
@@ -196,9 +192,6 @@ const getCompany = async (req, res, next) => {
       account: req.user._id,
       company: company._id,
     }).select('-_id role');
-    let parentCom = await Parentcom.find({
-      company: company._id,
-    }).select('-__v -company');
     let certificate = await Certificate.find({
       company: company._id,
     }).select('-__v');
@@ -209,7 +202,6 @@ const getCompany = async (req, res, next) => {
       company: {
         ...company._doc,
         role: member.role,
-        parentOrg: parentCom,
         certificate: certificate,
         totalMember: memberCount,
       },
