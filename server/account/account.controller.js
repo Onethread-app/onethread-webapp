@@ -200,59 +200,74 @@ const login = async (req, res, next) => {
 };
 
 const getAccount = async (req, res, next) => {
-  client
-    .multi()
-    .hgetall(`userID:${req.user._id}`)
-    .execAsync()
-    .then(async result => {
-      let user = result[0];
-      let userInfo = {};
-      if (user === null) {
-        userInfo = await Account.findOne({
-          _id: req.user._id,
-        }).select('-password');
-      } else {
-        userInfo = user;
-        // userInfo.skillArea = JSON.parse(user.skillArea);
-        // userInfo.skillArea = [];
-        // userInfo = await Account.findOne({
-        //   _id: req.user._id,
-        // }).select('-password');
-        // // userInfo = await Account.findOne({
-        // //   _id: req.user._id,
-        // // }).select('-password');
-        // client
-        //   .multi()
-        //   .smembers(`skillArea:${req.user._id}`)
-        //   .execAsync()
-        //   .then(result => {
-        //     userInfo.skillArea = result[0];
-        //   });
-      }
-      console.log(userInfo);
-      return sendJSONresponse(res, 200, {
-        success: true,
-        user: userInfo,
-      });
-      // const user = result[0];
-      // let userInfo = {};
-      // client
-      //   .multi()
-      //   .smembers(`skillArea:${req.user._id}`)
-      //   .execAsync()
-      //   .then(result => {
-      //     userInfo = user;
-      //     userInfo.skillArea = result[0];
-      //     return sendJSONresponse(res, 200, {
-      //       success: true,
-      //       user: userInfo,
-      //     });
-      //   });
+  try {
+    const userInfo = await Account.findOne({
+      _id: req.user._id,
     })
-    .catch(err => {
-      console.log(err);
-      next(err);
+      .select('-password')
+      .populate('skillArea', '_id name');
+    console.log(userInfo);
+    return sendJSONresponse(res, 200, {
+      success: true,
+      user: userInfo,
     });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+  // client
+  //   .multi()
+  //   .hgetall(`userID:${req.user._id}`)
+  //   .execAsync()
+  //   .then(async result => {
+  //     let user = result[0];
+  //     let userInfo = {};
+  //     if (user === null) {
+  //       userInfo = await Account.findOne({
+  //         _id: req.user._id,
+  //       }).select('-password');
+  //     } else {
+  //       userInfo = user;
+  //       // userInfo.skillArea = JSON.parse(user.skillArea);
+  //       // userInfo.skillArea = [];
+  //       // userInfo = await Account.findOne({
+  //       //   _id: req.user._id,
+  //       // }).select('-password');
+  //       // // userInfo = await Account.findOne({
+  //       // //   _id: req.user._id,
+  //       // // }).select('-password');
+  //       // client
+  //       //   .multi()
+  //       //   .smembers(`skillArea:${req.user._id}`)
+  //       //   .execAsync()
+  //       //   .then(result => {
+  //       //     userInfo.skillArea = result[0];
+  //       //   });
+  //     }
+  //     console.log(userInfo);
+  //     return sendJSONresponse(res, 200, {
+  //       success: true,
+  //       user: userInfo,
+  //     });
+  //     // const user = result[0];
+  //     // let userInfo = {};
+  //     // client
+  //     //   .multi()
+  //     //   .smembers(`skillArea:${req.user._id}`)
+  //     //   .execAsync()
+  //     //   .then(result => {
+  //     //     userInfo = user;
+  //     //     userInfo.skillArea = result[0];
+  //     //     return sendJSONresponse(res, 200, {
+  //     //       success: true,
+  //     //       user: userInfo,
+  //     //     });
+  //     //   });
+  //   })
+  // .catch(err => {
+  //   console.log(err);
+  //   next(err);
+  // });
 };
 // client
 //   .multi()

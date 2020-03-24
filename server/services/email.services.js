@@ -67,15 +67,14 @@ module.exports.sendEmailForVerifyAccount = async (
   const mailOptions = {
     to: emailID,
     subject: 'Please confirm your Email account',
-    html:
-      `
+    html: `
       <h1> Hi ${fullName}, </h1>
       <h2> Please Click on the link to verify your email <a href="${link}"> click here to verify </a> </h2>
   
     `,
   };
 
-  return transporter.sendMail(mailOptions, function (err, res) {
+  return transporter.sendMail(mailOptions, function(err, res) {
     if (err) {
       logger.error(' Message send to failed ' + err);
     } else {

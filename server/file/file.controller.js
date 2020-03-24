@@ -76,16 +76,34 @@ const profilePicture = async (req, res, next) => {
         .then(async data => {
           logger.info('File Link successfully save to Database');
           if (userID) {
-            const account = await Account.findOne({
-              _id: userID,
-            }).select('profileImage coverImage');
             if (data.imageType === 'profilePic') {
-              account.profileImage = data._id;
+              await Account.findOneAndUpdate(
+                {
+                  _id: userID,
+                },
+                {
+                  $set: { profileImage: data.link },
+                },
+                {
+                  new: true,
+                  upsert: true,
+                },
+              );
             }
             if (data.imageType === 'coverPhoto') {
-              account.coverImage = data._id;
+              await Account.findOneAndUpdate(
+                {
+                  _id: userID,
+                },
+                {
+                  $set: { coverImage: data.link },
+                },
+                {
+                  new: true,
+                  upsert: true,
+                },
+              );
             }
-            await account.save();
             return sendJSONresponse(res, 200, data);
           }
         })
@@ -138,12 +156,18 @@ const companyLogo = async (req, res, next) => {
         .save()
         .then(async data => {
           logger.info('File Link successfully save to Database');
-          const company = await Company.findOne({
-            _id: companyID,
-          });
-          company.logo = data.link;
-          company.imageType = 'companyLogo';
-          company.save();
+          await Company.findOneAndUpdate(
+            {
+              _id: companyID,
+            },
+            {
+              $set: { logo: data.link },
+            },
+            {
+              new: true,
+              upsert: true,
+            },
+          );
           return sendJSONresponse(res, 200, data);
         })
         .catch(error => {
