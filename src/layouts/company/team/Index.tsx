@@ -412,7 +412,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                                       </Button>
                                     )
                                 ) : null}
-                              {companyPermit(props.company.role) ? (
+                              {/* {companyPermit(props.company.role) ? (
                                 <Button
                                   className="outline-0 bp3-large bp3-popover-dismiss"
                                   onClick={async () => {
@@ -421,7 +421,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                                 >
                                   <span className="red">Remove from company</span>
                                 </Button>
-                              ) : null}
+                              ) : null} */}
                             </ButtonGroup>
                           }
                           target={

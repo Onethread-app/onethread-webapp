@@ -15,9 +15,10 @@ interface RoomMembersViewProps {
 
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
   // tslint:disable-next-line: max-line-length
-  addRoomMembers: (members: { room: string, members: Array<string | undefined> }, selectedRoomMember: ItemEntityProps[]) => void;
+  addRoomMembers: (members: { room: string, members: Array<string | undefined>; }, selectedRoomMember: ItemEntityProps[]) => void;
   currentRoom: IRoomReducer['currentRoom'];
   companyId: string;
+  projectId: string;
 }
 
 const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
@@ -32,7 +33,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         // tslint:disable-next-line:max-line-length
-        const response = await tigrowApi.get(`/rooms/suggest-member/${props.currentRoom._id}/${props.companyId}`, headers);
+        const response = await tigrowApi.get(`/rooms/suggest-member?projectId=${props.projectId}&roomId=${props.currentRoom._id}`, headers);
         setSuggestedMembers(response.data.members);
       } else {
         // tslint:disable-next-line: no-console
@@ -133,7 +134,8 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     currentRoom: state.roomReducer.currentRoom,
-    companyId: state.companyReducer.currentCompany._id
+    companyId: state.companyReducer.currentCompany._id,
+    projectId: state.projectReducer.projectDetails._id
   };
 };
 
