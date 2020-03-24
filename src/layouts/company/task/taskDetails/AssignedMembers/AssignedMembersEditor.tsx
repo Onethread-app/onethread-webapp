@@ -8,15 +8,15 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
-import { ICompany } from 'stores/company/Reducer';
 import { IconNames } from '@blueprintjs/icons';
 import { ITask } from 'stores/board/Reducer';
 import { addTaskMember } from 'stores/taskMembers/Action';
 import { tigrowApi } from 'config';
+import { IProject } from 'stores/project/Reducer';
 
 interface IMembersFormProps {
   setMembersPopover: (val: boolean) => void;
-  company?: ICompany;
+  project?: IProject;
   currentTask?: ITask;
   addTaskMember: (members: string[]) => Promise<any>;
 }
@@ -42,7 +42,7 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
   const userRequestFactory = async (userName: string) => {
     const headers = tokenConfig();
     const response = await tigrowApi.get(
-      `tasks/${props.currentTask!._id}/suggest-member?companyId=${props.company!._id}`,
+      `tasks/${props.currentTask!._id}/suggest-member?projectId=${props.project!._id}`,
       headers);
     return response.data.members;
   };
@@ -158,7 +158,7 @@ export const AssignedMembersEditorComponent = (props: IMembersFormProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.currentCompany,
+    project: state.projectReducer.projectDetails,
     currentTask: state.boardIndexReducer.boardReducer.currentTask
   };
 };
