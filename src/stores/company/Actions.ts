@@ -37,7 +37,7 @@ import {
   ADD_CERTIFICATE,
   ADD_ORGANIZATION
 } from './Types';
-import { CLEAR_ROOMS_REDUCER_STATE } from 'stores/room/Types';
+import { CLEAR_ROOMS_REDUCER_STATE, CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 import { Toaster } from '@blueprintjs/core';
@@ -52,8 +52,7 @@ export const getCompanyDetails = (name: string) => async (
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`company/${name}`, headers);
       dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
-      dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
-      dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
+      dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY });
       return response;
     } else {
       // tslint:disable-next-line: no-console
