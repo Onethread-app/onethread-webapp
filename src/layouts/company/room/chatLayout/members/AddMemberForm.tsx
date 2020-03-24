@@ -33,7 +33,7 @@ const AddMemberFormComponent = (props: RoomMembersViewInternalProps) => {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         // tslint:disable-next-line:max-line-length
-        const response = await tigrowApi.get(`/rooms/suggest-member?companyId=${props.companyId}&projectId=${props.projectId}&roomId=${props.currentRoom._id}`, headers);
+        const response = await tigrowApi.get(`/rooms/suggest-member?projectId=${props.projectId}&roomId=${props.currentRoom._id}`, headers);
         setSuggestedMembers(response.data.members);
       } else {
         // tslint:disable-next-line: no-console
