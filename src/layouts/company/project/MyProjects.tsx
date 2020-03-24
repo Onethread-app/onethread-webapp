@@ -8,6 +8,9 @@ import {
   MenuItem,
   HTMLSelect
 } from '@blueprintjs/core';
+
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import addIcon from '../../../resources/images/addIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormProject } from './CreateProjectForm';
@@ -25,10 +28,13 @@ import {
   getRoleForProject
 } from '../../../stores/project/Actions';
 import { getAllAssociates } from 'stores/associate/Actions';
+import { projectRules } from './settings/projectrules';
 
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const projectArchive = async (pid: string) => {
     await props.archiveProject(pid);
@@ -43,6 +49,29 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     props.history.push(`/company/${props.company.name}/project/${pid}`);
   };
 
+  const getProjectRole = async (pid: string) => {
+    await props.getRoleForProject(pid);
+    setModalOpen(true);
+  };
+  const checkRoleForChangeName = () => {
+    props.role === 'admin'
+      ? setShowUpdateNameDialog(true)
+      : projectRules(props.optionalRole)[props.role].includes(
+          'updateProjectPreface'
+        )
+      ? setShowUpdateNameDialog(true)
+      : setOpen(true);
+  };
+
+  const checkRoleForArchiveProject = (projectId: string) => {
+    props.role === 'admin'
+      ? projectArchive(projectId)
+      : projectRules(props.optionalRole)[props.role].includes(
+          'updateProjectPreface'
+        )
+      ? projectArchive(projectId)
+      : setOpen(true);
+  };
   useEffect(() => {
     props.getAllProjects();
     props.getAllDepartments();
@@ -125,20 +154,24 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       <Popover
                         className='w-10'
                         content={
-                          <Menu className='pa2'>
-                            <MenuItem
-                              className='pa1'
-                              text='Update Project Name'
-                              onClick={(e: any) =>
-                                setShowUpdateNameDialog(true)
-                              }
-                            />
-                            <MenuItem
-                              className='pa1 red'
-                              text='Archive Project'
-                              onClick={(e: any) => projectArchive(project._id)}
-                            />
-                          </Menu>
+                          modalOpen ? (
+                            <Menu className='pa2'>
+                              <MenuItem
+                                className='pa1'
+                                text='Update Project Name'
+                                onClick={(e: any) => checkRoleForChangeName()}
+                              />
+                              <MenuItem
+                                className='pa1 red'
+                                text='Archive Project'
+                                onClick={(e: any) =>
+                                  checkRoleForArchiveProject(project._id)
+                                }
+                              />
+                            </Menu>
+                          ) : (
+                            'Loading..'
+                          )
                         }
                         target={
                           <Button
@@ -151,6 +184,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             icon='more'
                             minimal={true}
                             className='outline-0'
+                            onClick={(e: any) => getProjectRole(project._id)}
                           />
                         }
                       />
@@ -342,6 +376,15 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
           <FormProject setShowProjectDialog={setShowProjectDialog} />
         </RightSidebar>
       )}
+      <Snackbar
+        open={open}
+        autoHideDuration={2000}
+        onClose={() => setOpen(false)}
+      >
+        <MuiAlert severity='warning'>
+          You are not allowed to do this change!
+        </MuiAlert>
+      </Snackbar>
     </>
   );
 };
@@ -350,7 +393,13 @@ const mapStateToProps = (state: any) => ({
   projects: state.projectReducer.allProjects,
   archiveProjectList: state.projectReducer.allArchive,
   company: state.companyReducer.currentCompany,
-  companyRooms: state.roomReducer.companyRooms
+  companyRooms: state.roomReducer.companyRooms,
+  role:
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.role,
+  optionalRole:
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project.optionalRole
 });
 
 export const MyProject = connect(mapStateToProps, {

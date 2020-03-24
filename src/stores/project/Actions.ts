@@ -409,11 +409,16 @@ export const updateProjectRole = (optionalRole: any) => async (
   try {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         optionalRole
       };
-      await tigrowApi.put(`projects/${companyId}/role`, reqBody, headers);
+      await tigrowApi.put(
+        `projects/${companyId}/role?pid=${projectId}`,
+        reqBody,
+        headers
+      );
       dispatch({
         type: PROJECT.PROJECT_UPDATE_ROLE
       });
@@ -438,13 +443,16 @@ export const getRoleForProject = (projectId: string) => async (
     const headers = tokenConfig();
     const userId = getState().userReducer.user._id;
     if ((headers as any).headers.Authorization) {
-      await tigrowApi.get(
+      const response = await tigrowApi.get(
         `projects/individual/${userId}?pid=${projectId}`,
         headers
       );
       dispatch({
-        type: PROJECT.PROJECT_GET_ROLES
+        type: PROJECT.PROJECT_GET_ROLES,
+        payload: response.data
       });
+
+      return response.data;
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
