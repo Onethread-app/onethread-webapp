@@ -51,7 +51,6 @@ export const getCompanyDetails = (name: string) => async (
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`company/${name}`, headers);
-      console.log(response);
       dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
       dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
       dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
@@ -140,7 +139,7 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
 };
 
 export const addTeamMembers = (
-  members: Array<{ account: string | undefined; company: string }>,
+  members: Array<{ account: string | undefined; company: string; }>,
   pendingTeamMembers: string[],
   companyId: string
 ) => async (dispatch: any) => {
@@ -454,7 +453,7 @@ export const editDesignation = (values: any, memberId: string) => async (
 };
 
 export const changeMemberRole = (
-  values: { role: string },
+  values: { role: string; },
   memberId: string
 ) => async (dispatch: any, getState: any) => {
   try {
