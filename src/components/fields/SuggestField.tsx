@@ -7,6 +7,7 @@ export interface ItemEntityProps {
   _id?: string;
   email?: string;
   name: string | null;
+  mongo_id?: string;
 }
 
 interface SuggestFieldProps {
