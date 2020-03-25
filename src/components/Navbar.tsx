@@ -1,25 +1,25 @@
-import * as React from 'react';
+import * as React from "react";
 import {
   Button,
   Popover,
   Position,
   ButtonGroup,
   Dialog
-} from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { logoutAction } from 'stores/auth/Actions';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { History } from 'history';
-import user from '../resources/images/profilePhoto.svg';
-import { User } from 'stores/user/Reducer';
-import { CompanyListView } from '../layouts/company/ListView';
-import { CompanySignupForm } from '../layouts/company/Form';
-import { Icon } from '@blueprintjs/core';
+} from "@blueprintjs/core";
+import { connect } from "react-redux";
+import { NavLink } from "react-router-dom";
+import { logoutAction } from "stores/auth/Actions";
+import { withRouter, RouteComponentProps } from "react-router";
+import { History } from "history";
+import user from "../resources/images/profilePhoto.svg";
+import { User } from "stores/user/Reducer";
+import { CompanyListView } from "../layouts/company/ListView";
+import { CompanySignupForm } from "../layouts/company/Form";
+import { Icon } from "@blueprintjs/core";
 // import projects from '../resources/images/ProjectsIcon.svg';
-import { tokenConfig } from 'stores/UtilsActions';
-import { tigrowApi } from 'config';
-import Notification from '../layouts/company/notification';
+import { tokenConfig } from "stores/UtilsActions";
+import { tigrowApi } from "config";
+import Notification from "../layouts/company/notification";
 // import { AxiosResponse } from 'axios';
 
 interface NavbarTopInternalProps {
@@ -53,10 +53,10 @@ const NavbarTopComponent = (
       <div
         className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between"
         style={{
-          height: '60px',
-          borderColor: props.scrollTop > 60 ? '#0fa3a3' : 'white',
-          position: 'sticky',
-          borderRadius: '0.5rem 0.5rem 0px 0px'
+          height: "60px",
+          borderColor: props.scrollTop > 60 ? "#0fa3a3" : "white",
+          position: "sticky",
+          borderRadius: "0.5rem 0.5rem 0px 0px"
         }}
       >
         <div>
@@ -64,13 +64,14 @@ const NavbarTopComponent = (
             <div
               className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
               style={{
-                textOverflow: 'ellipsis'
+                textOverflow: "ellipsis"
               }}
             >
-              {props.type === 'company' ? props.companyName : ''}
+              {props.type === "company" ? props.companyName : ""}
             </div>
           </NavLink>
         </div>
+        {console.log(notifications)}
         <div className="flex items-center">
           <Popover
             popoverClassName="bp3-popover-content-sizing bg-white"
@@ -101,9 +102,9 @@ const NavbarTopComponent = (
               <Button
                 className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l outline-0"
                 style={{
-                  fontSize: '0.8rem',
+                  fontSize: "0.8rem",
                   fontWeight: 600,
-                  border: '1px solid'
+                  border: "1px solid"
                 }}
                 text="My Companies"
               />
@@ -120,7 +121,9 @@ const NavbarTopComponent = (
                 >
                   <div className="dtc w1 w2-ns">
                     <img
-                      src={props.user.profileImage ? props.user.profileImage : user}
+                      src={
+                        props.user.profileImage ? props.user.profileImage : user
+                      }
                       className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10 "
                     />
                   </div>
@@ -155,9 +158,9 @@ const NavbarTopComponent = (
                 src={props.user.profileImage ? props.user.profileImage : user}
                 className="dim v-mid dib br-100 pointer"
                 style={{
-                  width: '2rem',
-                  height: '2rem',
-                  objectFit: 'cover'
+                  width: "2rem",
+                  height: "2rem",
+                  objectFit: "cover"
                 }}
                 alt="user"
               />
@@ -169,7 +172,7 @@ const NavbarTopComponent = (
         <Dialog
           onClose={() => setShowDialog(!showDialog)}
           isOpen={showDialog}
-          style={{ background: '#fff' }}
+          style={{ background: "#fff" }}
           canOutsideClickClose={false}
         >
           <div>

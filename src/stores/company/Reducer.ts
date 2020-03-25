@@ -23,13 +23,14 @@ import {
   EDIT_DESIGNATION,
   EDIT_DESIGNATION_ERROR,
   LOGO_UPLOAD,
+  COVER_IMAGE_UPLOAD,
   CHANGE_MEMBER_ROLE,
   COMPANY_ROLE,
   UPDATE_ALL_COMPANY_PENDING_MEMBERS,
   DELETE_TEAM_MEMBER,
-  GET_ALL_COMPANY_PENDING_MEMBERS
-  // ADD_CERTIFICATE,
-  // ADD_ORGANIZATION
+  GET_ALL_COMPANY_PENDING_MEMBERS,
+  ADD_CERTIFICATE,
+  ADD_ORGANIZATION
 } from "./Types";
 import { Entity } from "stores/UtilsActions";
 
@@ -89,6 +90,7 @@ export interface ICompany {
   about: string;
   skill: [{}];
   logo: string;
+  coverImage: string;
   certificate: ICertificates[];
   parentOrg: Entity[];
 }
@@ -110,6 +112,7 @@ const InitialState = {
     about: "",
     skill: [{}],
     logo: "",
+    coverImage: "",
     certificate: [],
     parentOrg: []
   },
@@ -328,6 +331,16 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           logo: action.payload.link
         }
       };
+      case COVER_IMAGE_UPLOAD: {
+        return {
+          ...state,
+          currentCompany: {
+            ...state.currentCompany,
+            coverImage: action.payload.link
+          }
+        };
+      }
+
     case CHANGE_MEMBER_ROLE:
       return {
         ...state,
@@ -353,6 +366,22 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         currentCompany: {
           ...state.currentCompany,
           optionalRole: action.payload
+        }
+      };
+    case ADD_CERTIFICATE:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          certificate: [...state.currentCompany.certificate, action.payload]
+        }
+      };
+    case ADD_ORGANIZATION:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          organizations: [...state.currentCompany.parentOrg, action.payload]
         }
       };
     default:
