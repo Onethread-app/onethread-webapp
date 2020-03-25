@@ -28,6 +28,29 @@ module.exports.sendCompanyNotification = async (
 
 };
 
+module.exports.sendCompanyRoleNotification = async (
+  company,//fromHeader
+  companyChannels,
+  adminUser,
+  userNoti,
+) => {
+  let companyChannelsPusher = companyChannels.map(c => {
+    return `${company.toString()}-${c}`;
+  });
+
+  let userNotification = userNoti;
+
+  userNotification = { notification: userNotification
+  };
+  
+  channels_client.trigger(
+    companyChannelsPusher, 
+    company.toString(), 
+     userNotification
+     );
+
+};
+
 module.exports.sendMultipleNotification = async (
   company,//fromHeader
   adminUser,

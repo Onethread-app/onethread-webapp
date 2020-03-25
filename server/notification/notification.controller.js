@@ -143,6 +143,41 @@ module.exports.createAssociateNotification = async (
   await UserNotification.create(usersNotification);
 };
 
+module.exports.createCompanyRoleNotification = async (
+  company, adminUser,text
+) => {
+
+  //sendCompanyNotification(company, adminUser, usersNotification);
+
+  const members = await Member.find({
+    $or:[ {role: 'superAdmin'}, {role: 'admin'}],
+    company: company,
+  });
+
+
+
+  let notification = new Notification({
+    type: 'associate',
+    text: text,
+    account: adminUser._id,
+    company: company,
+  });
+
+  
+  let usersNotification = members.map(m => {
+    return {
+      notification: notification._id,
+      account: m.account,
+    };
+  });
+
+  let companyRoleReciver = ['superAdmin', 'admin'];
+  sendCompanyRoleNotification(company._id, companyRoleReciver, adminUser, notification);
+
+  await notification.save();
+  await UserNotification.create(usersNotification);
+};
+
 module.exports.createBoardNotification = async (
   project, adminUser,text
 ) => {

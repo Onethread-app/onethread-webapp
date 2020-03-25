@@ -200,19 +200,19 @@ const login = async (req, res, next) => {
 };
 
 const getAccount = async (req, res, next) => {
-  client
-    .multi()
-    .hgetall(`userID:${req.user._id}`)
-    .execAsync()
-    .then(async result => {
-      let user = result[0];
-      let userInfo = {};
-      if (user === null) {
-        userInfo = await Account.findOne({
-          _id: req.user._id,
-        }).select('-password');
-      } else {
-        userInfo = user;
+  // client
+  //   .multi()
+  //   .hgetall(`userID:${req.user._id}`)
+  //   .execAsync()
+  //   .then(async result => {
+  //     let user = result[0];
+  //     let userInfo = {};
+  //     if (user === null) {
+  //       userInfo = await Account.findOne({
+  //         _id: req.user._id,
+  //       }).select('-password');
+  //     } else {
+  //       userInfo = user;
         // userInfo.skillArea = JSON.parse(user.skillArea);
         // userInfo.skillArea = [];
         // userInfo = await Account.findOne({
@@ -228,11 +228,11 @@ const getAccount = async (req, res, next) => {
         //   .then(result => {
         //     userInfo.skillArea = result[0];
         //   });
-      }
-      console.log(userInfo);
+      //}
+      //console.log(userInfo);
       return sendJSONresponse(res, 200, {
         success: true,
-        user: userInfo,
+        user: req.user,
       });
       // const user = result[0];
       // let userInfo = {};
@@ -248,11 +248,11 @@ const getAccount = async (req, res, next) => {
       //       user: userInfo,
       //     });
       //   });
-    })
-    .catch(err => {
-      console.log(err);
-      next(err);
-    });
+    //})
+    // .catch(err => {
+    //   console.log(err);
+    //   next(err);
+    // });
   } 
   // client
   //   .multi()
