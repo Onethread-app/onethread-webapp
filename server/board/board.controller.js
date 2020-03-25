@@ -5,6 +5,7 @@ const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
 const {sendErrorResponse, sendJSONresponse} = require('../helpers/jsonResponse');
+const { Team } = require('../team-member/team.model');
 
 const load = (req, res, next, id) => {
   Board.findById(id)
@@ -135,19 +136,21 @@ const suggestMember = async (req, res, next) => {
       .select('-_id members')
       .populate('members', '_id name')
       .exec();
-    let companyMembers = await Member.find({
-      company: req.query.companyId,
+      //now it will check form project team by projectId
+    let projectMembers = await Team.find({
+      project : req.query.projectId,
     })
       .select('-_id account')
       .populate('account', '_id name')
       .exec();
-    let members = companyMembers.filter(({ account }) => {
+    let members = projectMembers.filter(({ account }) => {
       return !boardMembers.members.some(existingMember => {
         return (
           existingMember._id.toString() === account._id.toString()
         );
       });
     });
+
     members = members.map(m => m.account);
     return res.status(200).json({
       members,
