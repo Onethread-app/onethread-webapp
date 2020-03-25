@@ -22,7 +22,7 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
     <>
       <div className="relative cover br4 w-100"
         style={{
-          backgroundImage: `url(${props.user.coverImage ? props.user.coverImage.link : coverPic})`,
+          backgroundImage: `url(${props.user.coverImage ? props.user.coverImage : coverPic})`,
           height: '340px',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
