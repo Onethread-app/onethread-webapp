@@ -10,8 +10,9 @@ const joiSchema = require('./message.validation');
 const messageCtrl = require('./message.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
-
-router.route('/search/room/:roomId').get(authorization,messageCtrl.searchMessage);
+router
+  .route('/search/room/:roomId')
+  .get(authorization, messageCtrl.searchMessage);
 
 router
   .route('/')
@@ -34,7 +35,7 @@ router
   .get(
     authorization,
     SchemaValidator(joiSchema.getRoomMessages),
-    messageCtrl.getRoomMessages
+    messageCtrl.getRoomMessages,
   );
 
 router

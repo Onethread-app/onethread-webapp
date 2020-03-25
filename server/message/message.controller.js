@@ -16,7 +16,9 @@ const {
 const create = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
 
   try {
@@ -26,8 +28,6 @@ const create = async (req, res, next) => {
         message: `No room exists`,
       });
     }
-
-    console.log(req.body.files);
 
     let files = req.body.files.map(file => file._id);
 
@@ -39,12 +39,9 @@ const create = async (req, res, next) => {
       account: req.user._id,
     });
 
-    const account = await Account.findById(req.user._id)
-      .select('name firstName lastName email')
-      .populate({
-        path: 'profileImage',
-        select: '-_id link',
-      });
+    const account = await Account.findById(req.user._id).select(
+      'name firstName lastName email profileImage',
+    );
 
     //send to chatkit-server
     let msg = await chatkit.sendMultipartMessage({
@@ -118,10 +115,6 @@ const getRoomMessages = async (req, res, next) => {
         {
           path: 'account',
           select: 'name firstName lastName email profileImage',
-          populate: {
-            path: 'profileImage',
-            select: '-_id link',
-          },
         },
         {
           path: 'files',
@@ -163,10 +156,6 @@ const getRoomFiles = async (req, res, next) => {
         {
           path: 'account',
           select: 'name firstName lastName email profileImage',
-          populate: {
-            path: 'profileImage',
-            select: '-_id link',
-          },
         },
         {
           path: 'files',

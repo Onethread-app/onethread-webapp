@@ -1,5 +1,4 @@
 const { Room } = require('./room.model');
-const { Member } = require('../company/member/member.model');
 const { Team } = require('../team-member/team.model');
 const { chatkit } = require('../services/pusher.services');
 const logger = require('../../config/winston');
@@ -84,10 +83,6 @@ const memberList = async (req, res, next) => {
       {
         path: 'members',
         select: 'name firstName lastName email profileImage',
-        populate: {
-          path: 'profileImage',
-          select: '-_id link',
-        },
       },
     ])
     .exec()
