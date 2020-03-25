@@ -27,7 +27,7 @@ export const getAllComments = () => async (dispatch: any, getState: any) => {
           return {
             _id: comment._id,
             name: comment.account.firstName + ' ' + comment.account.lastName,
-            profileImage: comment.account.profileImage.link,
+            profileImage: comment.account.profileImage,
             position: comment.account.position,
             text: comment.text,
             createdAt: comment.createdAt
