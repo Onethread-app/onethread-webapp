@@ -203,7 +203,6 @@ const companyLogo = async (req, res, next) => {
 
 const fileInRooms = async (req, res, next) => {
   const file = req.file;
-  console.log(file);
   if (!checkMimetype.includes(file.mimetype)) {
     return sendErrorResponse(res, 400, '', {
       message: 'This file format is not supported',

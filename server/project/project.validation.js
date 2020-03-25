@@ -68,7 +68,6 @@ module.exports = {
     }),
     query: Joi.object().keys({
       pid: schema.pid.required(),
-      memberId: schema.memberId.required(),
     }),
   }),
   showProjectList: Joi.object().keys({
