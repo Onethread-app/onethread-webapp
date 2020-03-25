@@ -24,7 +24,6 @@ const sname = Joi.object().keys({
   name: Joi.string().min(1),
 });
 
-
 // joi schema
 const schema = {
   name: Joi.string().max(32),
@@ -45,11 +44,13 @@ const schema = {
     .max(2000),
   email: Joi.string()
     .email()
-    .lowercase(),
-  legalOwnerName: Joi.string(),
+    .lowercase()
+    .allow(''),
+  legalOwnerName: Joi.string().allow(''),
   legalOwnerMail: Joi.string()
     .email()
-    .lowercase(),
+    .lowercase()
+    .allow(''),
   products: Joi.array()
     .min(1)
     .max(5)
