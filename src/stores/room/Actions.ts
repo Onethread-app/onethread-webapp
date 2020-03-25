@@ -36,10 +36,14 @@ export const createRoomAction = (roomData: any) => async (
 	try {
 		const headers = tokenConfig();
 		if ((headers as any).headers.Authorization) {
-			roomData.company = getState().companyReducer.currentCompany._id;
-			roomData.project = getState().projectReducer.projectDetails._id;
+			const company = getState().companyReducer.currentCompany._id;
+			const project = getState().projectReducer.projectDetails._id;
 			dispatch({ type: LOADING_ROOM });
-			const response = await tigrowApi.post(`rooms`, roomData, headers);
+			const response = await tigrowApi.post(`rooms?pid=${project}`, {
+				...roomData,
+				company,
+				project
+			}, headers);
 			await dispatch({
 				type: CREATE_ROOM_FROM_SERVER,
 				payload: response.data.room
@@ -156,7 +160,7 @@ export const clearRoomError = () => async (dispatch: any) => {
 	dispatch({ type: CLEAR_ROOMS_ERROR });
 };
 
-export const sendRoomMessage = (data: { text: string, room: string, files: any[], type?: string }) =>
+export const sendRoomMessage = (data: { text: string, room: string, files: any[], type?: string; }) =>
 	async (dispatch: any) => {
 		try {
 			const headers = tokenConfig();
@@ -235,7 +239,7 @@ export const fileUploadAction = (imageSelected: any, roomID: string) => async (d
 	}
 };
 
-export const archiveRoom = (data: { archive: boolean }, roomId: string) => async (
+export const archiveRoom = (data: { archive: boolean; }, roomId: string) => async (
 	dispatch: any,
 ) => {
 	try {
@@ -327,7 +331,7 @@ export const getRoomDiscussions = (roomId: string, limit: number = 1000, skip: n
 	}
 };
 
-export const toggleDiscussionRoom = (data: { discussion: boolean }, messageId: string) => async (
+export const toggleDiscussionRoom = (data: { discussion: boolean; }, messageId: string) => async (
 	dispatch: any,
 ) => {
 	try {
