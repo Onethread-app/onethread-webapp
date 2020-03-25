@@ -138,7 +138,7 @@ export const RoomListComponent = withChatkit(
 
 		useEffect(() => {
 			if (!props.chatkit.isLoading && props.companyId) {
-				connectChatManager();
+				// connectChatManager();
 
 				load(props.getRooms);
 
