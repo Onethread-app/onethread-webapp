@@ -1,10 +1,10 @@
-import { PROJECT } from './Types';
-import { tigrowApi } from 'config';
-import { tokenConfig, tokenConfigFIleUpload } from 'stores/UtilsActions';
-import { isEqual } from 'lodash';
-import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
-import { IPendingProject, IProject } from './Reducer';
-import { Toaster } from '@blueprintjs/core';
+import { PROJECT } from "./Types";
+import { tigrowApi } from "config";
+import { tokenConfig, tokenConfigFIleUpload } from "stores/UtilsActions";
+import { isEqual } from "lodash";
+import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from "stores/room/Types";
+import { IPendingProject, IProject } from "./Reducer";
+import { Toaster } from "@blueprintjs/core";
 
 export const getAllProjects = () => async (dispatch: any, getState: any) => {
   try {
@@ -22,9 +22,9 @@ export const getAllProjects = () => async (dispatch: any, getState: any) => {
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -49,7 +49,7 @@ export const createProject = (payload: any, admin: any) => async (
         account: userId,
         concernedAdmin: {
           memberId: admin.memberId,
-          accountId: admin._id,
+          accountId: admin._id
         },
         companyId,
         departments: payload.department,
@@ -67,9 +67,9 @@ export const createProject = (payload: any, admin: any) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -96,9 +96,9 @@ export const archiveProject = (pid: string) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -123,9 +123,9 @@ export const getProjectArchive = () => async (dispatch: any, getState: any) => {
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -143,19 +143,22 @@ export const updateProjectName = (
     let response: any;
     if ((headers as any).headers.Authorization) {
       const reqBody = {
-        name: projectName,
-        pid: projectId
+        name: projectName
       };
-      response = await tigrowApi.put(`projects/change-title`, reqBody, headers);
+      response = await tigrowApi.put(
+        `projects/change-title?pid=${projectId}`,
+        reqBody,
+        headers
+      );
       await dispatch({ type: PROJECT.PROJECT_ARCHIVE, payload: response.data });
       // dispatch({ type: PROJECT.PROJECT_GET_ALL_PROJECTS });
       dispatch(getAllProjects());
     }
     return response.status;
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -164,19 +167,25 @@ export const updateProjectName = (
   }
 };
 
-export const getSingleProject = (pid: string) => async (dispatch: any, getState: any) => {
+export const getSingleProject = (pid: string) => async (
+  dispatch: any,
+  getState: any
+) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`projects?pid=${pid}`, headers);
       await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT });
-      await dispatch({ type: PROJECT.PROJECT_SINGLE_VIEW, payload: response.data });
+      await dispatch({
+        type: PROJECT.PROJECT_SINGLE_VIEW,
+        payload: response.data
+      });
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -204,9 +213,9 @@ export const projectPrefaceDescriptionUpdate = (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -234,9 +243,9 @@ export const projectPrefaceOutlineUpdate = (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -264,9 +273,9 @@ export const projectFileUpload: any = (file: any, pid: string) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -295,12 +304,12 @@ export const getAllPendingProjects = () => async (
       });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in selection of company fetching');
+      console.log("error in selection of company fetching");
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -337,7 +346,7 @@ export const acceptPendingProject = (project: IProject) => async (
         Toaster.create().show({
           message: `Successfully accepted`,
           timeout: 3000,
-          intent: 'success'
+          intent: "success"
         });
       } else {
         // tslint:disable-next-line: no-console
@@ -345,9 +354,9 @@ export const acceptPendingProject = (project: IProject) => async (
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -383,7 +392,7 @@ export const rejectPendingProject = (projectId: string) => async (
         Toaster.create().show({
           message: `Successfully rejected`,
           timeout: 3000,
-          intent: 'success'
+          intent: "success"
         });
       } else {
         // tslint:disable-next-line: no-console
@@ -391,9 +400,9 @@ export const rejectPendingProject = (projectId: string) => async (
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -424,9 +433,9 @@ export const updateProjectRole = (optionalRole: any) => async (
       });
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -455,9 +464,9 @@ export const getRoleForProject = (projectId: string) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -471,14 +480,20 @@ export const getProjectTeams = () => async (dispatch: any, getState: any) => {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const pid = getState().projectReducer.pid;
-      const response = await tigrowApi.get(`/teams/member-list?pid=${pid}`, headers);
-      await dispatch({ type: PROJECT.PROJECT_GET_TEAMS, payload: response.data.memberList });
+      const response = await tigrowApi.get(
+        `/teams/member-list?pid=${pid}`,
+        headers
+      );
+      await dispatch({
+        type: PROJECT.PROJECT_GET_TEAMS,
+        payload: response.data.memberList
+      });
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      console.log("network error");
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -487,33 +502,40 @@ export const getProjectTeams = () => async (dispatch: any, getState: any) => {
   }
 };
 
-export const addProjectTeams = (data: {
-  project: string;
-  company: string;
-  members: Array<({ account: string; member: string; })>;
-}, selectedTeamMember: {
-  _id: string,
-  email: string,
-  firstName: string,
-  lastName: string,
-  name: string;
-  memberId: string;
-}) => async (dispatch: any, getState: any) => {
+export const addProjectTeams = (
+  data: {
+    project: string;
+    company: string;
+    members: Array<{ account: string; member: string }>;
+  },
+  selectedTeamMember: {
+    _id: string;
+    email: string;
+    firstName: string;
+    lastName: string;
+    name: string;
+    memberId: string;
+  }
+) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       // tslint:disable-next-line: max-line-length
-      const response = await tigrowApi.post(`/teams/${data.company}/add-team-member?pid=${data.project}`, { members: data.members }, headers);
+      const response = await tigrowApi.post(
+        `/teams/${data.company}/add-team-member?pid=${data.project}`,
+        { members: data.members },
+        headers
+      );
       if (response.status === 201) {
         dispatch(getProjectTeams());
       }
       return response;
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in adding members in a room');
+      console.log("error in adding members in a room");
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (isEqual(error.message, "Network Error")) {
       // tslint:disable-next-line: no-console
       console.log(error.message);
     } else {
