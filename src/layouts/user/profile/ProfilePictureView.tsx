@@ -21,6 +21,7 @@ const ProfilePictureViewComponent = (props: IProfilePictureViewProps) => {
           src={
             props.user.profileImage ? props.user.profileImage : DefaultUserImage
           }
+          alt=""
         />
       </div>
       {showDialogPicture && (
