@@ -6,8 +6,10 @@ const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
 const {
+  search,
   setDocument,
   memberIndex,
+  companyIndex
 } = require('../services/elastic.services');
 const chalk = require('chalk');
 const {
@@ -98,6 +100,17 @@ const createCompany = async (req, res, next) => {
 
     // company creation
     const company = await newCompany.save();
+
+    await setDocument(companyIndex,'_doc',{
+      mongo_id: company._id,
+      name: company.name
+    });
+
+    logger.info(
+      chalk.blueBright(
+        `Elasticsearch document added on ${companyIndex}`,
+      ),
+    );
     // const room = await newRoom.save();
     // await chatkit.createRoom({
     //   id: room._id,
@@ -394,22 +407,65 @@ const searchCompany = async (req, res, next) => {
       }
       return m.company;
     });
-
     associateCompanyId.push(companyId);
-    await Company.find({
-      name: { $regex: new RegExp(name), $options: 'i' },
-      _id: { $nin: associateCompanyId },
-    })
-      .select('name')
-      .skip(+skip)
-      .limit(+limit)
-      .then(data => {
-        return sendJSONresponse(res, 200, {
-          success: true,
-          message: `Search complete for ${name}`,
-          data,
-        });
+
+
+    if (name) {
+
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool: {
+            must: [
+              {
+                match_phrase_prefix: {
+                  name: name
+                }
+              }
+            ],
+            must_not: [
+              {
+                terms: {
+                  mongo_id: associateCompanyId,
+                },
+              },
+            ],
+          },
+        },
+      };
+
+
+    const response = await search(companyIndex,'_doc',body);
+
+    return sendJSONresponse(res, 200, {
+      success: true,
+      message: `Search complete for ${name}`,
+      data: response.hits.hits,
+    });
+
+    }
+
+    else {
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
       });
+    }
+
+    // await Company.find({
+    //   name: { $regex: new RegExp(name), $options: 'i' },
+    //   _id: { $nin: associateCompanyId },
+    // })
+    //   .select('name')
+    //   .skip(+skip)
+    //   .limit(+limit)
+    //   .then(data => {
+    //     return sendJSONresponse(res, 200, {
+    //       success: true,
+    //       message: `Search complete for ${name}`,
+    //       data,
+    //     });
+    //   });
   } catch (error) {
     next(error);
   }
