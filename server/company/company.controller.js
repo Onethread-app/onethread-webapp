@@ -8,7 +8,7 @@ const {
   sendCompanyNotification
 } = require('../services/notification.services');
 const {
-  createCompanyNotification
+  createCompanyRoleNotification
 } = require('../notification/notification.controller');
 
 
@@ -260,12 +260,14 @@ const updateBasicInfo = async (req, res, next) => {
 
     await req.company.save();
 
-    
-    createCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name} );
+    const text =`company profile has been updated by ${req.user.name}`;
+    createCompanyRoleNotification(req.company, {_id:req.user._id, name: req.user.name}, text, 'companyProfile' );
+    //createCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name} );
     return res.status(200).json({
       message: `Company's basic information updated`,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -288,8 +290,10 @@ const updateAbout = async (req, res, next) => {
       { safe: true, upsert: true, new: true },
     ).exec();
 
+    const text =`company profile has been updated by ${req.user.name}`;
+    createCompanyRoleNotification(req.company, {_id:req.user._id, name: req.user.name}, text, 'companyProfile' );
     //sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
-    createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
+    //createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
     
     return res.status(200).json({
       message: `Company's about updated`,
@@ -489,7 +493,7 @@ const parentOrg = async (req, res, next) => {
         upsert: true,
       },
     );
-    console.log(user);
+    
     //  await Company.findOneAndUpdate({_id: req.params.companyId}, {$push:{parentcom: parentCom._id}},{safe: true, new: true, upsert: true})
     return sendJSONresponse(res, 200, {
       success: true,

@@ -8,6 +8,7 @@ const _ = require('lodash');
 const {
   sendMultipleNotification,
   sendBoardNotification,
+  sendCompanyRoleNotification,
   sendCompanyNotification
 } = require('../services/notification.services');
 const logger = require('../../config/winston');
@@ -144,11 +145,11 @@ module.exports.createAssociateNotification = async (
 };
 
 module.exports.createCompanyRoleNotification = async (
-  company, adminUser,text
+  company, adminUser,text,type
 ) => {
 
   //sendCompanyNotification(company, adminUser, usersNotification);
-
+try{
   const members = await Member.find({
     $or:[ {role: 'superAdmin'}, {role: 'admin'}],
     company: company,
@@ -157,7 +158,7 @@ module.exports.createCompanyRoleNotification = async (
 
 
   let notification = new Notification({
-    type: 'associate',
+    type: type,
     text: text,
     account: adminUser._id,
     company: company,
@@ -176,6 +177,11 @@ module.exports.createCompanyRoleNotification = async (
 
   await notification.save();
   await UserNotification.create(usersNotification);
+
+} catch (error) {
+  console.log(error);
+  
+}
 };
 
 module.exports.createBoardNotification = async (

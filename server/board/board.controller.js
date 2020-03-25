@@ -54,7 +54,7 @@ const get = async (req, res , next) => {
 };
 
 const create = async (req, res, next) => {
-  console.log(req.body);
+ 
 
   try {
     const board = new Board({
@@ -71,7 +71,7 @@ const create = async (req, res, next) => {
     }).select('_id name company');
     
     //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
-    console.log(req.user);
+    console.log('board',req.user);
     const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
     createBoardNotification(project, {_id:req.user._id, name: req.user.name}, text );
    const createdBoard = board.save()
@@ -80,7 +80,7 @@ const create = async (req, res, next) => {
       
       
   } catch (error) {
-    console.log(error);
+    
     logger.error(`Board create: ${error}`);
     
     next(error);
@@ -109,7 +109,7 @@ const addBoardMembers = async (req, res, next) => {
     const memberList = board.members;
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {
-    console.log(error);
+    
     next(error);
   }
 };

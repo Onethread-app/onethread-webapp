@@ -172,6 +172,7 @@ const login = async (req, res, next) => {
   try {
     const payLoad = {
       email: req.user.email,
+      name:req.user.name,
       _id: req.user._id,
     };
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
