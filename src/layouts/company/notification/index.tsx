@@ -1,18 +1,33 @@
 import React from 'react';
 import { notificationType } from './rule';
+// import { Link } from 'react-router-dom';
+// import { store } from 'Store';
 
-export default function index(props: any ) {
+interface notification {
+  type: string;
+  text: string;
+}
+
+export default function index(props: notification) {
   return (
     <main className="mw6 center">
       <article className="dt w-100 pb2 mt2">
-        <div className="">
-          <img src={notificationType[props.type].img} className=" h2" />
+        {/* {console.log(
+          'notification',
+          store.getState().companyReducer.currentCompany.name
+        )} */}
+        <div style={{ width: '20px' }} className="">
+          {props.type && (
+            <img src={notificationType[props.type].img} className="h2" />
+          )}
         </div>
-        <div className="dtc v-mid p10 pl2">
-          <h6 className="f4 mv0">{props.text} </h6>
+        <div
+          // to={notificationType[props.type].path(store)}
+          className="dtc v-mid p10 pl2 link dim black hide-child pointer"
+        >
+          <p className="f6 mv0">{props.text} </p>
         </div>
       </article>
     </main>
-
   );
 }

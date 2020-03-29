@@ -31,6 +31,7 @@ import { AddDesignationForm } from 'layouts/company/team/AddDesignationForm';
 import { EditDesignationForm } from 'layouts/company/team/EditDesignationForm';
 import { isEqual, upperFirst, chunk } from 'lodash';
 import { User } from 'stores/user/Reducer';
+import { IProjectTeam } from 'stores/project/Reducer';
 
 interface TeamMember {
   company: ICompany;
@@ -45,14 +46,49 @@ interface TeamMember {
   companyLoading: boolean;
 }
 
-// tslint:disable-next-line: no-shadowed-variable
 const load = async (
-  getCompanyMembers: () => void,
-  // tslint:disable-next-line: no-shadowed-variable
-  getCompanyPendingMembers: (limit?: number, skip?: number) => void
+  _getCompanyMembers: () => void,
+  _getCompanyPendingMembers: (limit?: number, skip?: number) => void
 ) => {
-  await getCompanyMembers();
-  await getCompanyPendingMembers();
+  await _getCompanyMembers();
+  await _getCompanyPendingMembers();
+};
+
+const divisions = [
+  { _id: 'director', name: 'Director' },
+  { _id: 'cxo', name: 'CXO' },
+  { _id: 'seniorManager', name: 'Senior Manager' },
+  { _id: 'middleManager', name: 'Middle Manager' },
+  { _id: 'operationalEmployee', name: 'Operational Employee' }
+];
+
+export const getDivisionName = {
+  director: 'Director',
+  cxo: 'CXO',
+  seniorManager: 'Senior Manager',
+  middleManager: 'Middle Manager',
+  operationalEmployee: 'Operational Employee'
+};
+
+export const showDepartment = (
+  member: ICompanyMembers | IProjectTeam['member']
+) => {
+  if (
+    member.designations.length &&
+    ['director', 'cxo'].includes(member.designations[0].division) === false
+  ) {
+    // show department
+    if (
+      member.designations[0].department &&
+      member.designations[0].department.name
+    ) {
+      return member.designations[0].department.name;
+    } else {
+      return null;
+    }
+  } else {
+    return null;
+  }
 };
 
 const TeamMembersPageComponent = (props: TeamMember) => {
@@ -67,42 +103,6 @@ const TeamMembersPageComponent = (props: TeamMember) => {
   const [pendingList, setPendingList] = useState<ICompanyPendingMembers[][]>(
     []
   );
-
-  const divisions = [
-    { _id: 'director', name: 'Director' },
-    { _id: 'cxo', name: 'CXO' },
-    { _id: 'seniorManager', name: 'Senior Manager' },
-    { _id: 'middleManager', name: 'Middle Manager' },
-    { _id: 'operationalEmployee', name: 'Operational Employee' }
-  ];
-
-  const getDivisionName = {
-    director: 'Director',
-    cxo: 'CXO',
-    seniorManager: 'Senior Manager',
-    middleManager: 'Middle Manager',
-    operationalEmployee: 'Operational Employee'
-  };
-
-  // tslint:disable-next-line:no-shadowed-variable
-  const showDepartment = (member: ICompanyMembers) => {
-    if (
-      member.designations.length &&
-      ['director', 'cxo'].includes(member.designations[0].division) === false
-    ) {
-      // show department
-      if (
-        member.designations[0].department &&
-        member.designations[0].department.name
-      ) {
-        return member.designations[0].department.name;
-      } else {
-        return null;
-      }
-    } else {
-      return null;
-    }
-  };
 
   useEffect(() => {
     load(props.getCompanyMembers, props.getCompanyPendingMembers);
@@ -320,8 +320,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                 <tr className='hide-child' key={member._id}>
                   <td>
                     <span className='mr2'>
-                      {upperFirst(member.account.firstName)}{' '}
-                      {upperFirst(member.account.lastName)}
+                      {member.account && upperFirst(member.account.firstName)}
+                      {member.account && upperFirst(member.account.lastName)}
                     </span>
                     {companyPermit(member.role) ? (
                       member.role === 'superAdmin' ? (

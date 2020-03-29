@@ -1,49 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { CompanyInfoForm } from './BasicInformationEditor';
 import { companyLogoUploadAction } from 'stores/company/Actions';
 import addIcon from './../../../resources/images/addIcon.png';
+import { getNotifications } from '../../../stores/notifications/Action';
 
 const BasicInfoDetailsViewComponent = (props: any) => {
   const [showDialog, setShowDialog] = useState(false);
+  useEffect(() => {
+    console.log('mmmmmmmmm');
+    props.getNotifications(props.company._id);
+  }, []);
 
   return (
     <>
-      <div className='relative'>
-        <div className='flex justify-between w-100 mb5'>
-          <div className='w-50 pr4'>
-            <div className='bg-white h-auto'>
-              <h1 className='f6 lh-copy'>Company Name</h1>
-              <p className='f5'>{props.company.name}</p>
+      <div className="relative">
+        <div className="flex justify-between w-100 mb5">
+          <div className="w-50 pr4">
+            <div className="bg-white h-auto">
+              <h1 className="f6 lh-copy">Company Name</h1>
+              <p className="f5">{props.company.name}</p>
             </div>
-            <div className='bg-white h-auto'>
-              <h1 className='f6 lh-copy'>Company Type</h1>
-              <p className='f5'>{props.company.type}</p>
+            <div className="bg-white h-auto">
+              <h1 className="f6 lh-copy">Company Type</h1>
+              <p className="f5">{props.company.type}</p>
             </div>
-            <div className='bg-white h-auto'>
-              <h1 className='f6 lh-copy'>Company Address</h1>
-              <p className='f5'>{props.company.address}</p>
+            <div className="bg-white h-auto">
+              <h1 className="f6 lh-copy">Company Address</h1>
+              <p className="f5">{props.company.address}</p>
             </div>
           </div>
-          <div className='w-50'>
-            <div className='bg-white h-auto'>
-              <h1 className='f6 lh-copy'>Company Mail Address</h1>
-              <p className='f5'>{props.company.email}</p>
+          <div className="w-50">
+            <div className="bg-white h-auto">
+              <h1 className="f6 lh-copy">Company Mail Address</h1>
+              <p className="f5">{props.company.email}</p>
             </div>
-            <div className='bg-white h-auto'>
-              <h1 className='f6 lh-copy'>Legal Owner</h1>
-              <p className='f5'>{props.company.legalOwnerName}</p>
+            <div className="bg-white h-auto">
+              <h1 className="f6 lh-copy">Legal Owner</h1>
+              <p className="f5">{props.company.legalOwnerName}</p>
             </div>
-            <div className='bg-white h-auto'>
-              <h1 className='f6 lh-copy'>Legal owner Mail address</h1>
-              <p className='f5'>{props.company.legalOwnerMail}</p>
+            <div className="bg-white h-auto">
+              <h1 className="f6 lh-copy">Legal owner Mail address</h1>
+              <p className="f5">{props.company.legalOwnerMail}</p>
             </div>
           </div>
         </div>
         <div>
           <img
-            className='fixed pointer'
+            className="fixed pointer"
             style={{
               bottom: '5rem',
               right: '7rem',
@@ -78,5 +83,6 @@ const mapStateToProps = (state: any) => {
 };
 
 export const BasicInfoDetailsView = connect(mapStateToProps, {
-  companyLogoUploadAction
+  companyLogoUploadAction,
+  getNotifications
 })(BasicInfoDetailsViewComponent);
