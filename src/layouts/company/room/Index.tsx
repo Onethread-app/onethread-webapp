@@ -6,7 +6,15 @@ import { connect, useDispatch } from 'react-redux';
 import { IRoomReducer, ICompanyRoom, IRoom, IRoomMessage } from 'stores/room/Reducer';
 import { isEmpty } from 'lodash';
 import { RoomRightSidebar } from './rightSIdebar/Index';
-import { UNREAD_COUNT_ROOMS, GET_COMPANY_ROOMS, NEW_MESSAGE, ON_PRESENCE_CHANGE, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING, REFRESH_MEMBER, ACTIVE_ROOM } from 'stores/room/Types';
+import {
+	UNREAD_COUNT_ROOMS,
+	GET_COMPANY_ROOMS,
+	NEW_MESSAGE,
+	ON_PRESENCE_CHANGE,
+	ON_USER_STARTED_TYPING,
+	ON_USER_STOPPED_TYPING,
+	REFRESH_MEMBER, ACTIVE_ROOM, CURRENT_ROOM
+} from 'stores/room/Types';
 import {
 	getRoomMembers,
 	getRoomMessages,
@@ -14,14 +22,20 @@ import {
 	getRoomSharedFiles,
 	getRoomDiscussions
 } from 'stores/room/Actions';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
 
-interface RoomPageComponentProps {
+export interface RoomQueries {
+	view: 'default' | 'mobile'; roomId: string;
+}
+
+interface RoomPageComponentProps extends RouteComponentProps {
 	currentRoom: IRoomReducer['currentRoom'];
 	chatkit?: any;
 	companyId: string;
+	rooms: IRoom[];
 	getRooms: () => void;
 	getRoomMembers: (roomId: string) => void;
 	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
@@ -33,6 +47,9 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 
 	const [isOpenLeftSidebar, setIsOpenLeftSidebar] = useState(true);
 	const [isOpenRightSidebar, setIsOpenRightSidebar] = useState(true);
+	const [queries, setQueries] = useState<RoomQueries>({
+		view: 'default', roomId: ''
+	});
 
 	const dispatch = useDispatch();
 
@@ -40,16 +57,16 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 		await _getRooms();
 	};
 
-	const subscribeToRoom = async (room: IRoom) => {
+	const subscribeToRoom = async (roomId: string) => {
 
-		await props.getRoomMessages(room._id);
-		await props.getRoomMembers(room._id);
-		await props.getRoomSharedFiles(room._id);
-		await props.getRoomDiscussions(room._id);
+		await props.getRoomMessages(roomId);
+		await props.getRoomMembers(roomId);
+		await props.getRoomSharedFiles(roomId);
+		await props.getRoomDiscussions(roomId);
 
 		props.chatkit.currentUser
 			.subscribeToRoomMultipart({
-				roomId: room._id.toString(),
+				roomId: roomId.toString(),
 				hooks: {
 					onMessage: (newMessage: any) => {
 						const content = JSON.parse(newMessage.parts[0].payload.content);
@@ -76,13 +93,13 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 					onUserStartedTyping: (user: any) => {
 						dispatch({
 							type: ON_USER_STARTED_TYPING,
-							payload: { name: user.name, roomId: room._id }
+							payload: { name: user.name, roomId }
 						});
 					},
 					onUserStoppedTyping: (user: any) => {
 						dispatch({
 							type: ON_USER_STOPPED_TYPING,
-							payload: { name: user.name, roomId: room._id }
+							payload: { name: user.name, roomId }
 						});
 					},
 					onUserJoined: (user: any) => {
@@ -99,9 +116,16 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 				dispatch({ type: ACTIVE_ROOM, payload: pusherRoom });
 			})
 			.catch((err: any) => {
-				subscribeToRoom(room);
+				subscribeToRoom(roomId);
 			});
 	};
+
+	useEffect(() => {
+		const query = new URLSearchParams(props.location.search);
+		const view = query.get('view') && query.get('view') === 'mobile' ? 'mobile' : 'default';
+		const roomId = query.get('roomId') ? query.get('roomId')! : '';
+		setQueries({ view, roomId });
+	}, [props.location.search]);
 
 	useEffect(() => {
 		if (!props.chatkit.isLoading && props.companyId) {
@@ -130,15 +154,21 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 	}, [props.chatkit]);
 
 	useEffect(() => {
-		if (!props.chatkit.isLoading && props.currentRoom
-			&& !isEmpty(props.currentRoom._id) && !isEmpty(props.currentRoom.name)) {
-			subscribeToRoom(props.currentRoom);
+		if (!props.chatkit.isLoading
+			&& props.rooms.length > 0
+			&& !isEmpty(queries.roomId)) {
+
+			const currentRoom = props.rooms.filter(room => room._id === queries.roomId);
+			if (currentRoom && currentRoom.length > 0) {
+				dispatch({ type: CURRENT_ROOM, payload: currentRoom[0] });
+				subscribeToRoom(queries.roomId);
+			}
 		}
-	}, [props.chatkit, props.currentRoom]);
+	}, [props.chatkit, props.rooms, queries.roomId]);
 
 	return (
 		<div className="flex h-100 w-100">
-			<div
+			{queries.view === 'default' && <div
 				className="overflow-hidden t-25-a bg-white br b--tigrowLightGray-1"
 				style={{
 					borderBottomLeftRadius: '0.5rem',
@@ -151,17 +181,18 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 				<RoomSideBar
 					isOpen={isOpenLeftSidebar}
 				/>
-			</div>
+			</div>}
 			<div
 				className="relative flex justify-center items-center flex-grow-1"
 			>
-				<Icon
+				{queries.view === 'default' && <Icon
 					className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
 					icon={isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'}
 					iconSize={17}
-					onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)} />
-				{isEmpty(props.currentRoom.name) === false &&
-					isEmpty(props.currentRoom._id) === false &&
+					onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)} />}
+				{isEmpty(props.currentRoom.name) === false
+					&& isEmpty(props.currentRoom._id) === false
+					&& queries.view === 'default' &&
 					<Icon
 						className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
 						icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
@@ -169,17 +200,19 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 						onClick={() => setIsOpenRightSidebar(!isOpenRightSidebar)} />}
 				<ChatLayout />
 			</div>
-			{isEmpty(props.currentRoom.name) === false && isEmpty(props.currentRoom._id) === false && (
-				<div
-					className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
-					style={{
-						borderBottomRightRadius: '0.5rem',
-						width: isOpenRightSidebar ? '400px' : '16px'
-					}}
-				>
-					<RoomRightSidebar isOpen={isOpenRightSidebar} />
-				</div>
-			)}
+			{isEmpty(props.currentRoom.name) === false
+				&& isEmpty(props.currentRoom._id) === false
+				&& queries.view === 'default' && (
+					<div
+						className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
+						style={{
+							borderBottomRightRadius: '0.5rem',
+							width: isOpenRightSidebar ? '400px' : '16px'
+						}}
+					>
+						<RoomRightSidebar isOpen={isOpenRightSidebar} />
+					</div>
+				)}
 
 		</div >
 	);
@@ -189,8 +222,9 @@ const mapStateToProps = (state: any) => {
 	return {
 		currentRoom: state.roomReducer.currentRoom,
 		companyId: state.companyReducer.currentCompany._id,
+		rooms: state.roomReducer.rooms,
 	};
 };
 
 export const RoomPage = connect(mapStateToProps,
-	{ getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions })(RoomPageComponent);
+	{ getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions })(withRouter(RoomPageComponent));

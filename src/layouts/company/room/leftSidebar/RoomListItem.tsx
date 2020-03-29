@@ -1,7 +1,9 @@
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import React from 'react';
+import { useHistory, useLocation } from 'react-router';
 import { IRoom } from 'stores/room/Reducer';
-import { CHANGE_ROOM, CURRENT_ROOM } from 'stores/room/Types';
+import { CHANGE_ROOM } from 'stores/room/Types';
+import { RoomQueries } from '../Index';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -16,8 +18,20 @@ interface RoomListItemProps {
 
 export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 	const unreadCount = useSelector((state: any) => state.roomReducer.roomsUnreadCount[props.room._id]);
+	const [queries, setQueries] = useState<RoomQueries>({
+		view: 'default', roomId: ''
+	});
 
 	const dispatch = useDispatch();
+	const location = useLocation();
+	const history = useHistory();
+
+	useEffect(() => {
+		const query = new URLSearchParams(location.search);
+		const view = query.get('view') && query.get('view') === 'mobile' ? 'mobile' : 'default';
+		const roomId = query.get('roomId') ? query.get('roomId')! : '';
+		setQueries({ view, roomId });
+	}, [location.search]);
 
 	return (
 		<li
@@ -32,7 +46,8 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 				onClick={() => {
 					if (!props.chatkit.isLoading && !props.active) {
 						dispatch({ type: CHANGE_ROOM });
-						dispatch({ type: CURRENT_ROOM, payload: props.room });
+						// tslint:disable-next-line: max-line-length
+						history.push(`${location.pathname}?roomId=${props.room._id}${queries.view ? '&view=' + queries.view : ''}`);
 					}
 				}}
 				className={`flex items-center ph2 pv2 bb b--black-10 ${props.lastChild ? 'bn' : ''}`}
