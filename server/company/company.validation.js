@@ -148,6 +148,9 @@ module.exports = {
   search: Joi.object().keys({
     query: sname,
   }),
+  dashboard: Joi.object().keys({
+    params: companyId
+  }),
   createNotice: Joi.object().keys({
     params: companyId,
     body: Joi.object().keys({

@@ -119,6 +119,10 @@ router
 //     companyCtrl.removeNotice,
 // 		);
 
+router
+.route('/:companyId/dashboard')
+.get(authorization,SchemaValidator(joiSchema.dashboard),companyCtrl.dashBoard)
+
 // .delete(
 //   auth,
 //   // SchemaValidator(joiSchema.deleteCompany),

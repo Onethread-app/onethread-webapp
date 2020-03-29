@@ -17,6 +17,7 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 const logger = require('../../config/winston');
+const { Project } = require('../project/project.model');
 // create a company profile
 const changeName = async (req, res, next) => {
   // Check for JSON
@@ -507,6 +508,35 @@ const parentOrg = async (req, res, next) => {
   }
 };
 
+const dashBoard = async (req,res,next) => {
+  try {
+    const companyId = req.params.companyId;
+    const totalProject = await Project.find({
+      company: companyId
+    }).countDocuments();
+    const totalEmployee = await Member.find({
+      company: companyId
+    }).countDocuments();
+    const totalAssociates = await Associate.find( { 
+      $or:[ {company: companyId}, {associateCompany: companyId}],
+      isAccepted: true , removed:false, isRejected:false
+    }).countDocuments();
+
+    return sendJSONresponse(res,200,{
+      success: true,
+      data:{
+        totalProject,
+        totalEmployee,
+        totalAssociates
+      }
+    });
+
+  } catch (error) {
+    logger.error(error)
+    next(error);
+  }
+}
+
 const noticePostByCompany = async (req, res, next) => {
   try {
     const NewNotice = req.body.announcement;
@@ -561,6 +591,7 @@ module.exports = {
   searchCompany,
   parentOrg,
   addCertifications,
+  dashBoard,
   noticePostByCompany,
   allNoticesForCompany,
 };
