@@ -96,6 +96,9 @@ const schema = {
     '1001 -2000 square meters',
     'above 2000 square meters',
   ]),
+  announcement: Joi.string()
+    .max(500)
+    .allow(''),
 };
 
 module.exports = {
@@ -144,5 +147,14 @@ module.exports = {
   }),
   search: Joi.object().keys({
     query: sname,
+  }),
+  createNotice: Joi.object().keys({
+    params: companyId,
+    body: Joi.object().keys({
+      announcement: schema.announcement,
+    }),
+  }),
+  allNoticesForCompany: Joi.object().keys({
+    params: companyId,
   }),
 };

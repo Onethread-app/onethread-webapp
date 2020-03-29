@@ -9,7 +9,7 @@ const {
   search,
   setDocument,
   memberIndex,
-  companyIndex
+  companyIndex,
 } = require('../services/elastic.services');
 const chalk = require('chalk');
 const {
@@ -101,9 +101,9 @@ const createCompany = async (req, res, next) => {
     // company creation
     const company = await newCompany.save();
 
-    await setDocument(companyIndex,'_doc',{
+    await setDocument(companyIndex, '_doc', {
       mongo_id: company._id,
-      name: company.name
+      name: company.name,
     });
 
     logger.info(
@@ -409,9 +409,7 @@ const searchCompany = async (req, res, next) => {
     });
     associateCompanyId.push(companyId);
 
-
     if (name) {
-
       let body = {
         size: 200,
         from: 0,
@@ -420,9 +418,9 @@ const searchCompany = async (req, res, next) => {
             must: [
               {
                 match_phrase_prefix: {
-                  name: name
-                }
-              }
+                  name: name,
+                },
+              },
             ],
             must_not: [
               {
@@ -435,18 +433,14 @@ const searchCompany = async (req, res, next) => {
         },
       };
 
+      const response = await search(companyIndex, '_doc', body);
 
-    const response = await search(companyIndex,'_doc',body);
-
-    return sendJSONresponse(res, 200, {
-      success: true,
-      message: `Search complete for ${name}`,
-      data: response.hits.hits,
-    });
-
-    }
-
-    else {
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits,
+      });
+    } else {
       return sendErrorResponse(res, 400, 'EmptySearchError', {
         message: `query error`,
       });
@@ -503,7 +497,6 @@ const parentOrg = async (req, res, next) => {
         upsert: true,
       },
     );
-    console.log(user);
     //  await Company.findOneAndUpdate({_id: req.params.companyId}, {$push:{parentcom: parentCom._id}},{safe: true, new: true, upsert: true})
     return sendJSONresponse(res, 200, {
       success: true,
@@ -514,6 +507,46 @@ const parentOrg = async (req, res, next) => {
   }
 };
 
+const noticePostByCompany = async (req, res, next) => {
+  try {
+    const NewNotice = req.body.announcement;
+    await Company.findByIdAndUpdate(
+      {
+        _id: req.params.companyId,
+      },
+      {
+        $addToSet: { announcement: NewNotice },
+      },
+      {
+        new: true,
+        safe: true,
+        upsert: true,
+      },
+    );
+    logger.info(`new notice cerated`);
+    return sendJSONresponse(res, 200, {
+      message: 'New notice added',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
+const allNoticesForCompany = async (req, res, next) => {
+  try {
+    const company = await Company.find({
+      _id: req.params.companyId,
+    }).select('announcement');
+    logger.info(`announcement show for company`);
+    return sendJSONresponse(res, 200, {
+      company,
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
 module.exports = {
   authorizeUser,
   createCompany,
@@ -528,4 +561,6 @@ module.exports = {
   searchCompany,
   parentOrg,
   addCertifications,
+  noticePostByCompany,
+  allNoticesForCompany,
 };
