@@ -1,6 +1,7 @@
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import React from 'react';
 import { IRoom } from 'stores/room/Reducer';
+import { CHANGE_ROOM, CURRENT_ROOM } from 'stores/room/Types';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -9,13 +10,14 @@ interface RoomListItemProps {
 	room: IRoom;
 	lastChild: boolean;
 	active: boolean;
-	subscribeToRoom: (room: IRoom) => void;
 	chatkit?: any;
 	iconBgColor: string;
 }
 
 export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 	const unreadCount = useSelector((state: any) => state.roomReducer.roomsUnreadCount[props.room._id]);
+
+	const dispatch = useDispatch();
 
 	return (
 		<li
@@ -29,7 +31,8 @@ export const RoomListItem = withChatkit((props: RoomListItemProps) => {
 			<article
 				onClick={() => {
 					if (!props.chatkit.isLoading && !props.active) {
-						props.subscribeToRoom(props.room);
+						dispatch({ type: CHANGE_ROOM });
+						dispatch({ type: CURRENT_ROOM, payload: props.room });
 					}
 				}}
 				className={`flex items-center ph2 pv2 bb b--black-10 ${props.lastChild ? 'bn' : ''}`}
