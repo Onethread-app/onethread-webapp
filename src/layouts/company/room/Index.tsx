@@ -13,14 +13,15 @@ import {
 	ON_PRESENCE_CHANGE,
 	ON_USER_STARTED_TYPING,
 	ON_USER_STOPPED_TYPING,
-	REFRESH_MEMBER, ACTIVE_ROOM, CURRENT_ROOM
+	REFRESH_MEMBER, ACTIVE_ROOM
 } from 'stores/room/Types';
 import {
 	getRoomMembers,
 	getRoomMessages,
 	getRooms,
 	getRoomSharedFiles,
-	getRoomDiscussions
+	getRoomDiscussions,
+	getRoom
 } from 'stores/room/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
@@ -35,7 +36,9 @@ interface RoomPageComponentProps extends RouteComponentProps {
 	currentRoom: IRoomReducer['currentRoom'];
 	chatkit?: any;
 	companyId: string;
+	projectId: string;
 	rooms: IRoom[];
+	getRoom: (roomId: string) => void;
 	getRooms: () => void;
 	getRoomMembers: (roomId: string) => void;
 	getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
@@ -120,6 +123,13 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 			});
 	};
 
+	const _getRoom = async (roomId: string) => {
+		const status: any = await props.getRoom(roomId);
+		if (status === 200) {
+			subscribeToRoom(queries.roomId);
+		}
+	};
+
 	useEffect(() => {
 		const query = new URLSearchParams(props.location.search);
 		const view = query.get('view') && query.get('view') === 'mobile' ? 'mobile' : 'default';
@@ -128,9 +138,7 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 	}, [props.location.search]);
 
 	useEffect(() => {
-		if (!props.chatkit.isLoading && props.companyId) {
-			// connectChatManager();
-
+		if (!props.chatkit.isLoading && props.companyId && props.projectId) {
 			load(props.getRooms);
 
 			const roomsUnreadCount = {};
@@ -155,16 +163,10 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
 
 	useEffect(() => {
 		if (!props.chatkit.isLoading
-			&& props.rooms.length > 0
 			&& !isEmpty(queries.roomId)) {
-
-			const currentRoom = props.rooms.filter(room => room._id === queries.roomId);
-			if (currentRoom && currentRoom.length > 0) {
-				dispatch({ type: CURRENT_ROOM, payload: currentRoom[0] });
-				subscribeToRoom(queries.roomId);
-			}
+			_getRoom(queries.roomId);
 		}
-	}, [props.chatkit, props.rooms, queries.roomId]);
+	}, [props.chatkit, queries.roomId]);
 
 	return (
 		<div className="flex h-100 w-100">
@@ -222,9 +224,13 @@ const mapStateToProps = (state: any) => {
 	return {
 		currentRoom: state.roomReducer.currentRoom,
 		companyId: state.companyReducer.currentCompany._id,
+		projectId: state.projectReducer.projectDetails._id,
 		rooms: state.roomReducer.rooms,
 	};
 };
 
 export const RoomPage = connect(mapStateToProps,
-	{ getRoomMembers, getRoomMessages, getRooms, getRoomSharedFiles, getRoomDiscussions })(withRouter(RoomPageComponent));
+	{
+		getRoomMembers, getRoomMessages, getRooms,
+		getRoomSharedFiles, getRoomDiscussions, getRoom
+	})(withRouter(RoomPageComponent));
