@@ -341,7 +341,8 @@ module.exports.list   = async (req, res, next) => {
 
   await UserNotification.find(
     { 
-      account: req.user._id
+      account: req.user._id,
+      company: req.params.companyId
     }
   )
     .select('_id read notification account')
