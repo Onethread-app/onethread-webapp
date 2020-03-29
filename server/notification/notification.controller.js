@@ -82,8 +82,11 @@ module.exports.createMemberAddNotification = async (
     //     account: m.account,
     //   };
     // });
+
+    const companyRoleReciver = ['superAdmin', 'admin'];
+    sendMultipleNotification(company, companyRoleReciver, adminUser, notifications);
     
-    sendMultipleNotification(company, adminUser, notifications);
+  
     
     notifications = await Notification.create(notifications);
     
@@ -99,6 +102,90 @@ module.exports.createMemberAddNotification = async (
       });
       
       UserNotification.create(usersNotifications);
+     
+    }
+    
+  } catch (error) {
+    console.log(error);
+    logger.error(`${error}`);
+    //next(error);
+  }
+
+};
+
+module.exports.createTeamAddNotification = async (
+  project,//fromHeader
+  newMembers,
+  adminUser,
+  
+) => {
+  try{
+    const membersToSendNotification = await Member.find({
+      $or:[ {role: 'superAdmin'}, {role: 'admin'}],
+      company: project.company,
+    });
+    
+
+    const teamMembers = await Team.find({
+      $or:[ {role: 'projectModerator'}, {role: 'admin'}],
+      company: project._id,
+    });
+  
+
+    // let notification = new Notification({
+    //   type: 'companyProfile',
+    //   text: `company profile has been updated by ${adminUser.name}`,
+    //   account: adminUser._id,
+    //   company: company,
+    // });
+    
+    let notifications = newMembers.map(m => {
+      return {
+        type: 'team',
+        text: `PA has added ${m.account.name}`,
+        account: adminUser._id,
+        project: project._id,
+        company: project.company,
+      };
+    });
+
+    
+
+    
+    // let usersNotifications = membersToSendNotification.map(m => {
+    //   return {
+    //     notification: notification._id,
+    //     account: m.account,
+    //   };
+    // });
+
+    const companyRoleReciver = ['superAdmin', 'admin'];
+    let projectRoleReciver = ['modarator'];
+    sendCompanyAndProjectNotification(project, companyRoleReciver, projectRoleReciver, adminUser, notification);
+    
+  
+    
+    notifications = await Notification.create(notifications);
+    
+   
+
+    for (let i = 0; i < notifications.length ; i += 1) {
+
+      let usersNotificationCollegue = await members.map(m => {
+        return {
+          notification: notification._id,
+          account: m.account,
+        };
+      });
+    
+      let usersNotificationTeam = await teamMembers.map(m => {
+        return {
+          notification: notification._id,
+          account: m.account,
+        };
+      });
+      
+      UserNotification.create(_.union(usersNotificationTeam, usersNotificationCollegue));
      
     }
     
@@ -138,7 +225,9 @@ module.exports.createAssociateNotification = async (
     };
   });
 
-  sendCompanyNotification(company._id, adminUser, notification);
+  const companyRoleReciver = ['superAdmin', 'admin'];
+  sendCompanyRoleNotification(company._id, companyRoleReciver, adminUser, notification);
+  
 
   await notification.save();
   await UserNotification.create(usersNotification);
@@ -197,13 +286,14 @@ try{
 
   const teamMembers = await Team.find({
     $or:[ {role: 'projectModerator'}, {role: 'admin'}],
-    company: project.company,
+    project: project._id,
   });
 
   let notification = new Notification({
     type: 'board',
     text: text,
     account: adminUser._id,
+    project: project._id,
     company: project.company,
   });
 
@@ -233,7 +323,7 @@ try{
   // let projectEvent =  project._id; //
 
 
-  sendBoardNotification(project, companyRoleReciver, projectRoleReciver, adminUser, notification);
+  sendCompanyAndProjectNotification(project, companyRoleReciver, projectRoleReciver, adminUser, notification);
 
   await notification.save();
   await UserNotification.create(_.union(usersNotificationCollegue, usersNotificationTeam));

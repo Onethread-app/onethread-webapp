@@ -94,7 +94,20 @@ const addTeamMember = async (req, res, next) => {
           };
         });
         await Team.create(members);
+
+        
+
       }
+
+      const allTeamMembers = await Team.find({
+        account: { $in: accounts },
+        project: req.query.pid,
+      }).populate({
+        path: 'account',
+        select: '_id name firstName lastName email',
+      });
+
+      createTeamAddNotification(projectOwner, allTeamMembers, {_id:req.user._id, name: req.user.name} );
 
       return sendJSONresponse(res, 201, {
         message: 'New Team created',

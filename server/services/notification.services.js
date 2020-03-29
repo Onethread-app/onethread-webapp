@@ -46,30 +46,39 @@ module.exports.sendCompanyRoleNotification = async (
   channels_client.trigger(
     companyChannelsPusher, 
     company.toString(), 
-     userNotification
+     [userNotification]
      );
 
 };
 
 module.exports.sendMultipleNotification = async (
   company,//fromHeader
+  companyChannels,
   adminUser,
   userNoties,
 ) => {
-  let userNotifications = userNoties;
+  let userNotifications = userNoties.map(c => {
+    return  { notification: c};
+  });
+
+  let companyChannelsPusher = companyChannels.map(c => {
+    return `${company.toString()}-${c}`;
+  });
+
+  //let userNotifications = userNoties;
 
   // userNotification = { notification: userNotification
   // };
   console.log(1,company);
   channels_client.trigger(
-    company.toString(), 
-    `${company}-superAdmin`,
+    companyChannelsPusher, 
+    company.toString(),
     userNotifications//ARRAY
      );
 
 };
 
-module.exports.sendBoardNotification = async (
+module.exports.sendCompanyAndProjectNotification = async (
   
   project,
   companyChannels,
@@ -86,37 +95,47 @@ module.exports.sendBoardNotification = async (
     return `${project._id.toString()}-${p}`;
   });
 
-  let allChannel = _.union(companyChannelsPusher, projectChannelPusher)
+  let allChannel = _.union(companyChannelsPusher, projectChannelPusher);
 
   let userNotification = userNoti;
+  if(userNotification.length() > 1){
 
-  userNotification = { notification: userNotification
-  };
+    userNotification = userNotie.map(c => { //multiple
+      return  { notification: c};
+    });
+    
+  }else{
+    userNotification = { notification: userNoti };
+    userNotification = [userNotification];
+
+  }
+
+  
   console.log(1,project.company,allChannel);
   channels_client.trigger(
     allChannel, 
     project.company.toString(), 
-     userNotification
+     [userNotification]
      );
 
 };
 
-module.exports.sendMultiChannelNotification = async (
-  companyChannels,//fromHeader
-  adminUser,
-  userNoti,
-) => {
-  let userNotification = userNoti;
+// module.exports.sendMultiChannelNotification = async (
+//   companyChannels,//fromHeader
+//   adminUser,
+//   userNoti,
+// ) => {
+//   let userNotification = userNoti;
 
-  userNotification = { notification: userNotification
-  };
-  console.log(1,company);
-  channels_client.trigger(
-    companyChannels,// `${company}-superAdmin` this type chennel
+//   userNotification = { notification: userNotification
+//   };
+//   console.log(1,company);
+//   channels_client.trigger(
+//     companyChannels,// `${company}-superAdmin` this type chennel
     
-    company,
-     userNotification
-     );
+//     company,
+//      userNotification
+//      );
 
-};
+// };
 

@@ -8,7 +8,7 @@ const { sendJSONresponse } = require('../helpers/jsonResponse');
 const { log } = require('debug');
 const _ = require('lodash');
 const {
-  createAssociateNotification
+  createCompanyRoleNotification
 } = require('../notification/notification.controller');
 
 
@@ -70,7 +70,8 @@ const createPending = async (req, res, next) => {
       .save();
 
       const text =`${req.body.associateCompany.name} wants to add you as their associate`;
-      createAssociateNotification(req.body.associateCompany, {_id:req.user._id, name: req.user.name}, text );
+      
+    createCompanyRoleNotification(req.body.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
       await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
       //await associate.populate('associateCompany', '_id name type').execPopulate;
       
@@ -95,7 +96,10 @@ const acceptPending = async (req, res, next) => {
 
     associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
     const text =`${associate.associateCompany.name} accepted you as their associate`;
-    createAssociateNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name}, text );
+    
+    createCompanyRoleNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
+    
+   
     //associate = await Associate.populate(associate, { path: 'company', select: '_id name type'});
       
       return res.status(200).json(associate);
@@ -118,7 +122,9 @@ const rejectPending = async (req, res, next) => {
 
     associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
     const text =`${associate.associateCompany.name} rejected you as their associate`;
-    createAssociateNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name}, text );
+    
+    
+    createCompanyRoleNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
     return res.status(200).json({   remove: true  });
   } catch (error) {
     
