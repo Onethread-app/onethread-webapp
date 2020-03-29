@@ -41,13 +41,7 @@ const list = (req, res, next) => {
     .populate([
       {
         path: 'account',
-        select: '_id firstName lastName profileImage position',
-        populate: [
-          {
-            path: 'profileImage',
-            select: 'link',
-          },
-        ],
+        select: '_id firstName lastName profileImage position'
       },
     ])
     .sort({ createdAt: -1 })
