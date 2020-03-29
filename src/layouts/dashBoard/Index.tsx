@@ -19,6 +19,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [showAnnouncementDialog, setShowAnnouncementDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
+  const [companyAnnouncement, setCompanyAnnouncement] = useState([]);
 
   useEffect(() => {
 
@@ -27,7 +28,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       const response = await tigrowApi.get(
         `company/${props.company!._id}/dashboard`,
         headers);
+      const res =  await tigrowApi.get(
+        `company/${props.company!._id}/announcements`,
+        headers);
         await setDashboard(response.data.data);
+        await setCompanyAnnouncement(res.data.company[0].announcement);
         await setLoading(false);
     }
     getAPI();
@@ -58,13 +63,19 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
         </Card>
       </div>
       <Card className="w-50 ma2"
-        style={{ margin: '10px 40px' }}
-      >
-        <h1 className="f5">Company Announcement</h1>
-        <div className="flex items-center">
-          <div className="w2 h2 bg-red br3"></div>
-          <h1 className="f5 fw4 mh3">Anthony has joined the company</h1>
-        </div>
+          style={{ margin: '10px 40px' }}
+        >
+          <h1 className="f5">Company Announcement</h1>
+      {
+        companyAnnouncement.map((announcement) => (
+          
+          <div className="flex items-center">
+            <div className="w2 h2 bg-red br3"></div>
+            <h1 className="f5 fw4 mh3">{announcement}</h1>
+          </div>
+        
+        ))
+      }
       </Card>
       <div>
         <img
@@ -91,7 +102,10 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           canOutsideClickClose={false}
         >
           <div>
-            <AnnouncementEditor setShowDialog={setShowAnnouncementDialog} />
+            <AnnouncementEditor
+            companyAnnouncement={companyAnnouncement}
+            setcompanyAnnouncement={setCompanyAnnouncement}
+            setShowDialog={setShowAnnouncementDialog} />
           </div>
         </Dialog>
       )}
