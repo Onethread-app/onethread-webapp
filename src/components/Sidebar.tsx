@@ -349,14 +349,16 @@ export const Sidebar = (props: {
 
                 <NavLink
                   exact
-                  className='flex items-center nowrap ma1 hover-bg-white-20'
+                  className='w-100 flex items-center nowrap ma1 hover-bg-white-20'
                   style={{ color: 'white' }}
                   activeStyle={{ background: '#3F61C5' }}
                   to={`/company/${props.company.name}/project/${props.project._id}/board`}
                 >
                   {props.leftOpen ? (
                     <span className='pl4'>
-                      <img src={board} className='w2 pt1' />
+                      <img src={board} className='pt1' 
+                      style={{ width: '25px' }}
+                      />
                     </span>
                   ) : (
                     <Tooltip
@@ -364,7 +366,9 @@ export const Sidebar = (props: {
                       position='right'
                     >
                       <span className='pl3'>
-                        <img src={board} className='w2 pt1' />
+                        <img src={board} className='pt1' 
+                        style={{ width: '25px' }}
+                        />
                       </span>
                     </Tooltip>
                   )}
