@@ -5,6 +5,7 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 const joiSchema = require('./room.validation');
 const roomCtrl = require('./room.controller');
+const projectCtrl = require('./../project/project.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
 const router = express.Router();
@@ -14,6 +15,11 @@ router
   .route('/')
   .post(
     authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     SchemaValidator(joiSchema.createRoom),
     roomCtrl.create,
   );
@@ -51,7 +57,7 @@ router
 
 // get suggestions for adding members
 router
-  .route('/suggest-member/:roomId/:companyId')
+  .route('/suggest-member')
   .get(authorization, roomCtrl.suggestMember);
 
 // get rooms for a company

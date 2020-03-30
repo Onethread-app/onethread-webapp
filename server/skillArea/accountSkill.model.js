@@ -8,16 +8,16 @@ const accountSkillSchema = mongoose.Schema({
       unique: true,
     },
   ],
-  accountId: {
+  account: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
     unique: true,
   },
 });
-accountSkillSchema.index(
-  { skillArea: 1, accountId: 1 },
-  { unique: true },
-);
+// accountSkillSchema.index(
+//   { skillArea: 1, accountId: 1 },
+//   { unique: true },
+// );
 let AccountSkill = mongoose.model('AccountSkill', accountSkillSchema);
 
 module.exports = {

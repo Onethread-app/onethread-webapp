@@ -1,7 +1,5 @@
 const { Room } = require('./room.model');
-const { Member } = require('../company/member/member.model');
-// const { Company } = require('../company/company.model');
-const { Project } = require('../project/project.model');
+const { Team } = require('../team-member/team.model');
 const { chatkit } = require('../services/pusher.services');
 const logger = require('../../config/winston');
 const _ = require('lodash');
@@ -85,10 +83,6 @@ const memberList = async (req, res, next) => {
       {
         path: 'members',
         select: 'name firstName lastName email profileImage',
-        populate: {
-          path: 'profileImage',
-          select: '-_id link',
-        },
       },
     ])
     .exec()
@@ -97,28 +91,24 @@ const memberList = async (req, res, next) => {
 };
 
 const suggestMember = async (req, res, next) => {
-  //req.params.roomId empty check require
+  const { projectId, roomId } = req.query;
   try {
-    let roomMembers = await Room.findById(req.params.roomId)
+    let roomMembers = await Room.findById(roomId)
       .select('-_id members')
       .populate('members', '_id name')
       .exec();
 
-    let companyMembers = await Member.find({
-      company: req.params.companyId,
-    })
+    let projectMembers = await Team.find({ project: projectId })
       .select('-_id account')
       .populate('account', '_id name firstName lastName email')
       .exec();
-    let members = companyMembers.filter(({ account }) => {
-      return !roomMembers.members.some(existingMember => {
-        return (
-          existingMember._id.toString() === account._id.toString()
-        );
+
+    let members = projectMembers.filter(pm => {
+      return !roomMembers.members.some(rm => {
+        return rm._id.toString() === pm.account._id.toString();
       });
     });
-    // TODO: it will execute in client
-    // members empty check
+
     members = members.map(m => m.account);
 
     return res.status(200).json({

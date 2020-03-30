@@ -12,6 +12,7 @@ const {sendErrorResponse} = require('../helpers/jsonResponse');
 const {
   createCompanyRoleNotification
 } = require('../notification/notification.controller');
+const { Team } = require('../team-member/team.model');
 
 const load = (req, res, next, id) => {
   Task.findById(id)
@@ -96,13 +97,7 @@ const getMembers = async (req, res, next) => {
     .populate([
       {
         path: 'assignedPerson account',
-        select: '_id firstName lastName profileImage',
-        populate: [
-          {
-            path: 'profileImage',
-            select: 'link',
-          },
-        ],
+        select: '_id firstName lastName profileImage'
       },
     ])
     .exec()
@@ -161,14 +156,8 @@ const addMember = async (req, res, next) => {
         .populate([
           {
             path: 'assignedPerson account',
-            select: '_id firstName lastName profileImage',
-            populate: [
-              {
-                path: 'profileImage',
-                select: 'link',
-              },
-            ],
-          },
+            select: '_id firstName lastName profileImage'
+          }
         ])
         .exec()
         .then(result => {
@@ -218,14 +207,14 @@ const suggestMember = async (req, res, next) => {
       .select('-_id assignedPerson')
       .populate('assignedPerson', '_id name')
       .exec();
-    let companyMembers = await Member.find({
-      company: req.query.companyId,
-    })
-      .select('-_id account')
-      .populate('account', '_id name')
-      .exec();
+      let projectMembers = await Team.find({
+        project : req.query.projectId,
+      })
+        .select('_id account')
+        .populate('account', '_id name')
+        .exec();
 
-    let members = companyMembers.filter(({ account }) => {
+    let members = projectMembers.filter(({ account }) => {
       return !taskMembers.some(existingMember => {
         return (
           existingMember.assignedPerson._id.toString() ===
@@ -234,7 +223,7 @@ const suggestMember = async (req, res, next) => {
       });
     });
 
-    members = members.map(m => m.account);
+    members = members.map( (m) => m.account );
     return res.status(200).json({
       members,
     });

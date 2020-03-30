@@ -7,7 +7,8 @@ require('dotenv').config();
 
 const accountIndex = 'accounts';
 const memberIndex = 'members';
-const skillIndex = 'skillareas'
+const skillIndex = 'skillareas';
+const companyIndex = 'companies'
 
 const elasticUrl =
   process.env.ELASTIC_SEARCH_ADDRESS || 'http://localhost:9200';
@@ -191,6 +192,58 @@ async function createSkillareas(index, mapping, model) {
   }
 }
 
+async function createCompany(index, mapping, model) {
+  try {
+    if (await esclient.indices.exists({ index })) {
+      await esclient.indices.delete({ index });
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch existing index ${index} is deleted`,
+        ),
+      );
+    }
+
+    await esclient.indices.create({
+      index: index,
+      body: mapping,
+    });
+
+    const bulk = [];
+
+    const dataset = await model.find({});
+
+    if (!isEmpty(dataset)) {
+      dataset.forEach(data => {
+        bulk.push({
+          index: { _index: index },
+        });
+        bulk.push({
+          mongo_id: data._id.toString(),
+          name: data.name
+        });
+      });
+
+      await esclient.bulk({ body: bulk });
+
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch successfully created index ${index} with bulk`,
+        ),
+      );
+    } else {
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch successfully created index ${index}`,
+        ),
+      );
+    }
+  } catch (error) {
+    logger.error(chalk.redBright(error));
+  }
+}
+
+
+
 function setDocument(indexName, indexType, document) {
   return esclient.index({
     index: indexName,
@@ -284,6 +337,15 @@ const skillMapping = {
   },
 };
 
+const companyMappnig = {
+  mappings: {
+    properties: {
+      mongo_id: { type: 'text' },
+      name: { type: 'text' }
+    }
+  }
+}
+
 module.exports = {
   esclient,
   checkConnection,
@@ -300,7 +362,10 @@ module.exports = {
   bulkInsert,
   deleteDocument,
   skillIndex,
-  createSkillareas
+  companyIndex,
+  createSkillareas,
+  createCompany,
+  companyMappnig
 };
 
 // function createMessages(index,model,mapping, structure){

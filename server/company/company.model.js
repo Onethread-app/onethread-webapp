@@ -63,6 +63,10 @@ const company = new Schema(
       type: String,
       trim: true,
     },
+    coverImage: {
+      type: String,
+      trim: true,
+    },
     name: {
       type: String,
       unique: true,
@@ -175,6 +179,7 @@ const company = new Schema(
       ],
     },
     parentcom: [String],
+    announcement: [String],
     removed: {
       type: Boolean,
       default: false,
@@ -187,10 +192,8 @@ const company = new Schema(
 
 let Company = mongoose.model('Company', company);
 let Certificate = mongoose.model('Certificate', certificate);
-//let Parentcom = mongoose.model('Parentcom', parentCom);
 
 module.exports = {
   Company,
   Certificate,
- // Parentcom,
 };

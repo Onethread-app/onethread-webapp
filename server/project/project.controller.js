@@ -520,7 +520,6 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
           { removed: false },
         ],
       });
-      console.log(team);
       if (
         !team ||
         (functionalRole === 'all' && !userRoles.includes(team.role))
@@ -529,7 +528,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
           message: `Restricted`,
         });
       }
-
+      req.team = team;
       next();
     } catch (error) {
       logger.error(`${error}`);
@@ -566,61 +565,6 @@ const getProjectIndividual = async (req, res, next) => {
     next(error);
   }
 };
-
-// const authorizeProjectRole = (functionalRole, ...userRoles) => {
-//   return async function(req, res, next) {
-//     try {
-//       console.log(req)
-//       const team = await Team.findOne({
-//         account: req.user._id,
-//         project: req.query.pid,
-//       }).exec();
-//       console.log(team)
-//       if (
-//         !team ||
-//         (functionalRole === 'all' && !userRoles.includes(team.role))
-//       ) {
-//         return res.status(403).json({
-//           message: `Restricted`,
-//         });
-//       }
-
-//       next();
-//     } catch (error) {
-//       logger.error(`${error}`);
-//       next(error);
-//     }
-//   };
-// };
-
-// get companies list for individual user
-// const getProjectIndividual = async (req, res, next) => {
-//   try {
-//     // populate options
-//     let options = [
-//       {
-//         path: 'project',
-//         select: '_id name optionalRole',
-//       },
-//     ];
-//     let projects = await Team.findOne({
-//       $and: [
-//         { account: req.params.account },
-//         { project: req.query.pid },
-//         {
-//           removed: false,
-//         },
-//       ],
-//     })
-//       .select('-_id project role')
-//       .populate(options);
-//     return res.status(200).json({
-//       projects,
-//     });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 module.exports = {
   createNewProjectForCompany,
   showAllProjectsForCompany,

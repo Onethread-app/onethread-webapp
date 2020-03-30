@@ -90,6 +90,38 @@ router
     SchemaValidator(joiSchema.changeRole),
     companyCtrl.updateRole,
   );
+router
+  .route('/:companyId/announcements')
+  .put(
+    authorization,
+    SchemaValidator(joiSchema.createNotice),
+    companyCtrl.noticePostByCompany,
+  );
+router
+  .route('/:companyId/announcements')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.allNoticesForCompany),
+    companyCtrl.allNoticesForCompany,
+  );
+// 		router
+//   .route('/:companyId/announcements')
+//   .delete(
+//     authorization,
+//     SchemaValidator(),
+//     companyCtrl.removeNotice,
+// 		);
+// 		router
+//   .route('/:companyId/announcements')
+//   .put(
+//     authorization,
+//     SchemaValidator(),
+//     companyCtrl.removeNotice,
+// 		);
+
+router
+.route('/:companyId/dashboard')
+.get(authorization,SchemaValidator(joiSchema.dashboard),companyCtrl.dashBoard)
 
 // .delete(
 //   auth,

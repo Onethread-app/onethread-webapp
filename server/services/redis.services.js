@@ -1,6 +1,5 @@
-const redis = require('redis');
 const logger = require('../../config/winston');
-const client = redis.createClient();
+const client = require('../../index.redis');
 module.exports.addTokenToBlackList = async (token, tokenExpire) => {
   await client.SET(`BlackList:${token}`, token, 'PX', tokenExpire);
   logger.info(`access and refresh token add to blacklist`);
@@ -45,24 +44,4 @@ module.exports.addUserDataIntoCache = async (userId, userData) => {
 module.exports.addSkillIntoCache = async (userId, skillObject) => {
   await client.hmset(`userID: ${userId}`, 'skillArea', skillObject);
   logger.info(`create multiple skills for user`);
-};
-
-module.exports.addUserDataIntoCache = async (userId, userData) => {
-  // await client.set(`userID:${userId}`, JSON.stringify(userData));
-  await client.hmset(
-    `userID:${userId}`,
-    'name',
-    userData.name,
-    'firstName',
-    userData.firstName,
-    'lastName',
-    userData.lastName,
-    'birthDate',
-    userData.birthDate,
-    'contactNo',
-    userData.contactNo,
-    'skillArea',
-    `skillArea:${userId}`,
-  );
-  logger.info(`User data add into cache server`);
 };

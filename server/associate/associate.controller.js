@@ -45,7 +45,7 @@ const get = async (req, res , next) => {
 const createPending = async (req, res, next) => {
   
   try {
-    let associate = await Associate.findOne(
+        let associate = await Associate.findOne(
       { 
         company: req.body.companyId,
         associateCompany : req.body.associateCompany,

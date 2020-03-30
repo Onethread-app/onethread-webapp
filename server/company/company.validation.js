@@ -24,7 +24,6 @@ const sname = Joi.object().keys({
   name: Joi.string().min(1),
 });
 
-
 // joi schema
 const schema = {
   name: Joi.string().max(32),
@@ -45,11 +44,13 @@ const schema = {
     .max(2000),
   email: Joi.string()
     .email()
-    .lowercase(),
-  legalOwnerName: Joi.string(),
+    .lowercase()
+    .allow(''),
+  legalOwnerName: Joi.string().allow(''),
   legalOwnerMail: Joi.string()
     .email()
-    .lowercase(),
+    .lowercase()
+    .allow(''),
   products: Joi.array()
     .min(1)
     .max(5)
@@ -95,6 +96,9 @@ const schema = {
     '1001 -2000 square meters',
     'above 2000 square meters',
   ]),
+  announcement: Joi.string()
+    .max(500)
+    .allow(''),
 };
 
 module.exports = {
@@ -143,5 +147,17 @@ module.exports = {
   }),
   search: Joi.object().keys({
     query: sname,
+  }),
+  dashboard: Joi.object().keys({
+    params: companyId
+  }),
+  createNotice: Joi.object().keys({
+    params: companyId,
+    body: Joi.object().keys({
+      announcement: schema.announcement,
+    }),
+  }),
+  allNoticesForCompany: Joi.object().keys({
+    params: companyId,
   }),
 };

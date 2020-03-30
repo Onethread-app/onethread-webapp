@@ -21,9 +21,9 @@ router.post(
   fileCtrl.profilePicture,
 );
 
-router.get('/show-file', fileCtrl.displayProPic);
+// router.get('/show-file', fileCtrl.displayProPic);
 router.post(
-  '/company-logo',
+  '/:companyId/upload',
   upload.single('file'),
   authorization,
   fileCtrl.companyLogo,

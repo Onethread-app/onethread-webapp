@@ -7,12 +7,11 @@ const skillAreaSchema = mongoose.Schema({
     trim: true,
     lowercase: true,
   },
-  accountId: [
-    {
+  account: 
+    [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',
-    },
-  ],
+    }],
 });
 
 module.exports = mongoose.model('SkillArea', skillAreaSchema);

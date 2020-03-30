@@ -12,11 +12,6 @@ router
   .route('/change-title')
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
     schemaValidator(projectValidation.changeNameProject),
     projectCtrl.authorizeProjectRole(
       'all',

@@ -10,12 +10,12 @@ const { Schema } = mongoose;
 // defining all the fields of individual account
 const accountsSchema = new mongoose.Schema({
   profileImage: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'File',
+    type: String,
+    trim: true,
   },
   coverImage: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'File',
+    type: String,
+    trim: true
   },
   name: {
     type: String,
