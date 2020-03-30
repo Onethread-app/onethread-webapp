@@ -36,8 +36,8 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           </div>
           <Divider />
           <div>
-            <p className="f5 fw6">oxford</p>
-            <p className="f5 fw6">office shirt</p>
+            <p className="f5">oxford</p>
+            <p className="f5">office shirt</p>
           </div>
         </div>
         <div className="mt4">
