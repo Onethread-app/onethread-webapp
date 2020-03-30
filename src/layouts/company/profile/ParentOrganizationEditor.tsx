@@ -25,7 +25,6 @@ const OrganizationEditComponent = (props: IOrganizationEditProps) => {
   }, []);
 
   const onSubmit = async (values: any) => {
-    window.alert(JSON.stringify(values, null, 2));
     const response = await props.addOrganization(values);
     if (response === 201) {
       props.setShowDialog(false);
