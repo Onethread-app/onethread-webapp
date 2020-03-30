@@ -42,33 +42,53 @@
     color: #1E1C24;
 }
 
-.homeUl{
-    list-style: none;
-    padding-left: 0rem;
+.titleText{
+    font-family: 'Muli';
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: -0.35px;
+    color: #1E1C24;
 }
 
-.homeUl>li::before{
+.homeUl{
+    list-style: none;
+    padding-left: 2.5rem;
+    padding-right: 1rem;
+}
+
+.homeUl.light>.featureTitle{
+    font-weight: 200; 
+    color: #707070;
+}
+
+.homeUl>.featureTitle::before{
     content: '';
     display: inline-block;
-    height: 1em;
-    width: 1em;
-    background-image: url('data:image/svg+xml;utf8,<svg data-layer="8e4ad862-5782-459f-9225-8d741642e555" preserveAspectRatio="none" viewBox="0 0 27 27" class="ellipse1947dd251e1"><path d="M 13.5 0 C 20.95584297180176 0 27 6.044156551361084 27 13.5 C 27 20.95584297180176 20.95584297180176 27 13.5 27 C 6.044156551361084 27 0 20.95584297180176 0 13.5 C 0 6.044156551361084 6.044156551361084 0 13.5 0 Z"></path></svg>');
+    height: 1.3rem;
+    width: 1.3rem;
+    background-image: url('./../../resources/homepageImages/check-primary.png');
     background-size: contain;
     background-repeat: no-repeat;
-    margin-right: 0.5em;
+    margin-left: -2rem;
+    margin-right: 0.5rem;
+}
+
+.homeUl.light>.featureTitle::before{
+    background-image: url('./../../resources/homepageImages/check.png');
 }
 
 .featureTitle{
-    font-weight: Bold;
-    font-size:  1.9rem;
+    font-weight: bold;
+    font-size:  1.7rem;
     line-height: 1.5;
     font-family: 'Muli';
     letter-spacing: 0.3px;
     color: #356E8D;
+    text-align: left;
 }
 
 .footerText{
-    font: Bold 1.2rem/1.4rem Muli;
+    font: bold 1.2rem/1.4rem Muli;
     letter-spacing: 0.96px;
     color: #FFFFFF;
 }

@@ -15,6 +15,7 @@ import attractiveCompanyIcon from './../../resources/images/AttractiveCompanyPro
 import verificationIcon from './../../resources/images/GetVerified.svg';
 import tigrowLogo from './../../resources/homepageImages/tigrowLogo.svg';
 import heroSection from "./../../resources/homepageImages/heroSection.png";
+import projects from "./../../resources/homepageImages/projects.png";
 
 export const HomePage = () => {
 
@@ -58,7 +59,7 @@ export const HomePage = () => {
                 See The Demo
               </a>
             </div>
-            <ul className='homeUl'>
+            <ul className='homeUl light'>
               <li className="featureTitle">
                 Full access to all features 
                 </li>
@@ -66,7 +67,10 @@ export const HomePage = () => {
                 Zero obligation, no credit card needed 
                 </li>
               <li className="featureTitle">
-                Add unlimited users Access to sales and technical support 
+                Add unlimited users
+                </li>
+                <li className="featureTitle">
+                Access to sales and technical support 
                 </li>
               <li className="featureTitle">
                 Test drive with 15-day free trial
@@ -80,11 +84,30 @@ export const HomePage = () => {
               </a>
             </div>
           </div>
-          <div className="w-60-ns h-100-ns w-100 h-100" style={{backgroundImage: heroSection}}>
+          <div className="w-60-ns h-100-ns w-100 h-100">
             <img
               src={heroSection}
               style={{}}
             />
+          </div>
+        </div>
+      </div>
+      <div className="w-70-ns w100 center pv5 tc titleText">
+        Use TiGrow Workplace for Remote Working with Teams, For Vendor Management &amp; To Collaborate with All of your Stakeholders at one place.
+      </div>
+      <div className="flex-ns items-center pl4-l pl4 ph2">
+        <div className="pl5-ns w-70-ns h-100-ns w-100 h-100">
+          <img src={projects}/>
+        </div>
+        <div className="pr5-ns w-30-ns h-100-ns w-100 h-100">
+          <div className="titleText tc" style={{fontWeight: 200}}>
+            <span style={{color: '#588F8F', fontWeight: 'bold'}}>Introducing Projects</span><br/>
+            Create Projects With&nbsp;
+            <span style={{fontWeight: 'bold'}}>Single Department</span>
+            ,&nbsp;
+            <span style={{fontWeight: 'bold'}}>Multiple Departments</span>
+            &nbsp;or&nbsp;
+            <span style={{fontWeight: 'bold'}}>With External Stakeholders of the Company</span>
           </div>
         </div>
       </div>
