@@ -588,7 +588,7 @@ const dashBoard = async (req,res,next) => {
 const noticePostByCompany = async (req, res, next) => {
   try {
     const NewNotice = req.body.announcement;
-    await Company.findByIdAndUpdate(
+    const company = await Company.findByIdAndUpdate(
       {
         _id: req.params.companyId,
       },
@@ -601,6 +601,9 @@ const noticePostByCompany = async (req, res, next) => {
         upsert: true,
       },
     );
+
+    const text =` ${req.user.name} has created a announcment in ${req.user.name} company `;
+    createCompanyRoleNotification(company, {_id:req.user._id, name: req.user.name}, text, 'announcement' );
     logger.info(`new notice cerated`);
     return sendJSONresponse(res, 200, {
       message: 'New notice added',
