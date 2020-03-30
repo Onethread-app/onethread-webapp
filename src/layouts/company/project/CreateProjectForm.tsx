@@ -292,7 +292,7 @@ const FormComponent = (props: {
                     return ['associates'].includes(value);
                   }}
                 >
-                  <div>
+                  <div className="mb4">
                     <p className="fw5" style={{ fontSize: '.8rem' }}>
                       Select Your Associate Companies
                   </p>
