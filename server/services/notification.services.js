@@ -17,7 +17,8 @@ module.exports.sendCompanyNotification = async (
 ) => {
   let userNotification = userNoti;
 
-  userNotification = { notification: userNotification
+  userNotification = { notification: userNotification,
+    read: false
   };
   console.log(1,company);
   channels_client.trigger(
@@ -40,7 +41,8 @@ module.exports.sendCompanyRoleNotification = async (
 
   let userNotification = userNoti;
 
-  userNotification = { notification: userNotification
+  userNotification = { notification: userNotification,
+    read: false
   };
   
   channels_client.trigger(
@@ -58,7 +60,7 @@ module.exports.sendMultipleNotification = async (
   userNoties,
 ) => {
   let userNotifications = userNoties.map(c => {
-    return  { notification: c};
+    return  { notification: c, read: false};
   });
 
   let companyChannelsPusher = companyChannels.map(c => {
@@ -98,24 +100,26 @@ module.exports.sendCompanyAndProjectNotification = async (
   let allChannel = _.union(companyChannelsPusher, projectChannelPusher);
 
   let userNotification = userNoti;
-  if(userNotification.length() > 1){
+  if(userNotification.length > 1){
 
-    userNotification = userNotie.map(c => { //multiple
-      return  { notification: c};
+    userNotification = userNoti.map(c => { //multiple
+      return  { notification: c,
+      read: false};
     });
     
   }else{
-    userNotification = { notification: userNoti };
+    userNotification = { notification: userNoti,
+    read: false };
     userNotification = [userNotification];
 
   }
-
   
-  console.log(1,project.company,allChannel);
+  
+  console.log(1, userNotification, project.company,allChannel);
   channels_client.trigger(
     allChannel, 
     project.company.toString(), 
-     [userNotification]
+     userNotification
      );
 
 };

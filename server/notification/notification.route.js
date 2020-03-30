@@ -7,7 +7,7 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 
 router
-  .route('/:companyId')
+  .route('/')
   .get(
     authorization,
     notificationCtrl.list,
