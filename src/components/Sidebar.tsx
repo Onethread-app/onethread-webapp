@@ -42,7 +42,7 @@ export const Sidebar = (props: {
         className={`${props.leftOpen ? 'db ml4 mv3' : 'dn'} `}
         style={{ width: '6rem' }}
       >
-        <NavLink to={`/${props.user.name}`}>
+        <NavLink to={`/company/${props.company.name}`}>
           {props.leftOpen ? <img src={logo} /> : <img src={tigrowLogo} />}
         </NavLink>
       </div>
