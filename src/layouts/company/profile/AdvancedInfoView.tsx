@@ -53,27 +53,25 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
             />
           </div>
           <Divider />
-          <div className="flex justify-between items-center mb4">
-            <div>
-              <h1 className="f5 fw6 ma0">StartUp of the Year</h1>
-              <h1 className="f6 silver fw6">When every question has countless different answers</h1>
-              {props.company && props.company.certificate && props.company.certificate.length > 0 ?
-                props.company.certificate.map((certificate: any) => (
+          {props.company && props.company.certificate && props.company.certificate.length > 0 ?
+            props.company.certificate.map((certificate: any) => (
+              <div className="flex justify-between items-center mb4">
+                <div>
                   <div>
                     <h1 className="f5 fw6 ma0">{certificate.name}</h1>
                     <h1 className="f6 silver fw6">{certificate.description}</h1>
                   </div>
-                )) : <h1>No certificates</h1>}
-            </div>
-            <div>
-              <img
-                src={editIcon}
-                width="38"
-                className="br2 pointer"
-                onClick={() => setShowCertificateDialog(true)}
-              />
-            </div>
-          </div>
+                </div>
+                <div>
+                  <img
+                    src={editIcon}
+                    width="38"
+                    className="br2 pointer"
+                    onClick={() => setShowCertificateDialog(true)}
+                  />
+                </div>
+              </div>
+            )) : <p className="f5">No certificates</p>}
         </div>
         <div className="mt4">
           <div className="flex w-100">
@@ -82,7 +80,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
 			    </h1>
           </div>
           <Divider />
-          <p className="fw6 f5">50-100</p>
+          <p className="f5">50-100</p>
         </div>
         <div className="mt4">
           <div className="flex justify-between">
@@ -102,7 +100,8 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           >
             {props.company && props.company.parentOrg && props.company.parentOrg.length > 0 ?
               props.company.parentOrg.map((parentOrg: any) => (
-                <h1 key={parentOrg._id} className="f5 fw6">{parentOrg.name}</h1>)) : <h1>No organizations</h1>}
+                <h1 key={parentOrg._id} className="f5 fw6">{parentOrg.name}</h1>)) :
+              <p className="f5">No organizations</p>}
           </div>
         </div>
       </div>
