@@ -1,3 +1,4 @@
+import { notificationReducer } from './notifications/Reducer';
 import { combineReducers } from 'redux';
 import { UserReducer } from './user/Reducer';
 import { CompanyReducer } from './company/Reducer';
@@ -14,5 +15,6 @@ export const rootReducer = combineReducers({
   companyReducer: CompanyReducer,
   boardIndexReducer: BoardIndexReducer,
   associateReducer: AssociateReducer,
-  projectReducer: ProjectReducer
+  projectReducer: ProjectReducer,
+  notificationReducer
 });
