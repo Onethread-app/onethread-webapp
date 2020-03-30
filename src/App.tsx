@@ -7,7 +7,7 @@ import { RoomPage } from 'layouts/company/room/Index';
 import { CompanyProfilePage } from 'layouts/company/profile/Index';
 import { Layout } from 'components/Layout';
 import { BoardPage } from 'layouts/company/board/Index';
-import { TeamMembersPage } from 'layouts/company/team/Index';
+import { ColleaguesPage } from 'layouts/company/colleagues/Index';
 import { SettingsPage } from 'layouts/company/settings/Index';
 import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
 import { ResetPasswordPage } from 'layouts/resetPassword/Index';
@@ -165,9 +165,9 @@ export const App = () => (
 				component={TaskPage}
 			/>
 			<PrivateRoute
-				path="/company/:cname/team"
+				path="/company/:cname/colleague"
 				exact={true}
-				component={TeamMembersPage}
+				component={ColleaguesPage}
 			/>
 			<PrivateRoute
 				path="/company/:cname/settings"
