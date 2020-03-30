@@ -1,8 +1,8 @@
-import React from "react";
-import { BasicInfoDetailsView } from "layouts/company/profile/BasicInformationView";
-import { CoverPhotoView } from "./CompanyCoverPhoto";
-import { Tabs, Tab } from "@blueprintjs/core";
-import { AdvancedInfo } from "./AdvancedInfoView";
+import React from 'react';
+import { BasicInfoDetailsView } from 'layouts/company/profile/BasicInformationView';
+import { CoverPhotoView } from './CompanyCoverPhoto';
+import { Tabs, Tab } from '@blueprintjs/core';
+import { AdvancedInfo } from './AdvancedInfoView';
 
 export const CompanyProfilePage = () => (
   <div className="w-100 pa4">
