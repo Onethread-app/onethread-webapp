@@ -15,7 +15,7 @@ import user from '../resources/images/profilePhoto.svg';
 import { User } from 'stores/user/Reducer';
 import { CompanyListView } from '../layouts/company/ListView';
 import { CompanySignupForm } from '../layouts/company/Form';
-import Notification from '../layouts/company/notification/Index';
+import Notification from '../layouts/company/notification/index';
 import { companySubscriber } from '../layouts/company/notification/subscribers';
 import { notificationType } from '../layouts/company/notification/rule';
 // import { store } from 'Store';
