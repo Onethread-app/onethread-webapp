@@ -1,7 +1,8 @@
 import { NOTIFICATION } from './Types';
 
 const initialState = {
-  allNotifications: []
+  allNotifications: [],
+  read: 0
 };
 export const notificationReducer = (state = initialState, action: any) => {
   switch (action.type) {
@@ -14,6 +15,11 @@ export const notificationReducer = (state = initialState, action: any) => {
       return {
         ...state,
         allNotifications: [...action.payload, ...state.allNotifications]
+      };
+    case NOTIFICATION.SET_READ_COUNT:
+      return {
+        ...state,
+        read: action.payload
       };
     default:
       return state;

@@ -1,7 +1,6 @@
 import { NOTIFICATION } from './../../../stores/notifications/Types';
 import { store } from 'Store';
 import Pusher from 'pusher-js';
-// import { subscribeNotification } from '../../../stores/notifications/Action';
 
 export const companySubscriber = (companyId: string) => {
   const pusher = new Pusher('2d2483157c37a8782f19', {
@@ -10,15 +9,23 @@ export const companySubscriber = (companyId: string) => {
   });
   const channel = pusher.subscribe(`${companyId}-admin`);
 
-  console.log('companyId:', companyId);
-  channel.bind(companyId, (data: any) => {
-    console.log(
-      'notification',
-      store.getState().companyReducer.currentCompany.name
-    );
-    store.dispatch({
+  channel.bind(companyId, async (data: any) => {
+    let count = 0;
+    await store.dispatch({
       type: NOTIFICATION.GET_SUBSCRIBED_NOTIFICATIONS,
       payload: data
+    });
+    await store
+      .getState()
+      .notificationReducer.allNotifications.map((notification: any) => {
+        if (notification.read === false) {
+          count = count + 1;
+        }
+      });
+    console.log(count);
+    store.dispatch({
+      type: NOTIFICATION.SET_READ_COUNT,
+      payload: count
     });
   });
 };

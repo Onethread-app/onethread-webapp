@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
-import { Dialog } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { ImageEdit } from './ImageEditor';
-import DefaultUserImage from './../../../resources/images/profilePhoto.svg';
+import React, { useState } from "react";
+import { Dialog } from "@blueprintjs/core";
+import { connect } from "react-redux";
+import { ImageEdit } from "./ImageEditor";
+import DefaultUserImage from "./../../../resources/images/profilePhoto.svg";
 
 const CompanyProfilePictureComponent = (props: any) => {
-
   const [showDialogPicture, setShowDialogPicture] = useState(false);
 
   return (
@@ -13,8 +12,8 @@ const CompanyProfilePictureComponent = (props: any) => {
       <div>
         <img
           className=""
-          style={{ objectFit: 'cover', width: '220px', height: '220px' }}
-          src={props.company.logo ? props.company.logo.link : DefaultUserImage}
+          style={{ objectFit: "cover", width: "220px", height: "220px" }}
+          src={props.company.logo ? props.company.logo : DefaultUserImage}
           onClick={() => setShowDialogPicture(true)}
         />
         <h1 className="ma1 ws-break ttc"> {props.company.name} </h1>
@@ -25,10 +24,10 @@ const CompanyProfilePictureComponent = (props: any) => {
           icon="briefcase"
           onClose={() => setShowDialogPicture(!showDialogPicture)}
           isOpen
-          style={{ background: '#fff' }}
+          style={{ background: "#fff" }}
           canOutsideClickClose={false}
         >
-          <ImageEdit setShowDialog={setShowDialogPicture} />
+          <ImageEdit setShowDialog={setShowDialogPicture} type="company-logo" />
         </Dialog>
       )}
     </>
@@ -41,4 +40,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const CompanyProfilePicture = connect(mapStateToProps)(CompanyProfilePictureComponent);
+export const CompanyProfilePicture = connect(mapStateToProps)(
+  CompanyProfilePictureComponent
+);

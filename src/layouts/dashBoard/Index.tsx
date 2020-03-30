@@ -1,36 +1,60 @@
 import { User } from 'stores/user/Reducer';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Card, Dialog } from '@blueprintjs/core';
 import addIcon from '../../resources/images/addIcon.png';
 import { AnnouncementEditor } from './announcementEditor';
+import { tigrowApi } from 'config';
+import { ICompany } from 'stores/company/Reducer';
+import { tokenConfig } from 'stores/UtilsActions';
+import { Loading } from 'components/Loading';
 
 interface DashBoardViewProps {
   user: User;
+  company: ICompany;
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
 
   const [showAnnouncementDialog, setShowAnnouncementDialog] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [dashboard, setDashboard] = useState(Object);
+
+  useEffect(() => {
+
+    async function getAPI() {
+      const headers = tokenConfig();
+      const response = await tigrowApi.get(
+        `company/${props.company!._id}/dashboard`,
+        headers);
+        await setDashboard(response.data.data);
+        await setLoading(false);
+    }
+    getAPI();
+
+}, []);
 
   return (
     <>
+    {
+                loading === false ?
+                <>
       <div className="flex justify-around mh4">
         <Card className="w-25 ma2">
           <h1 className="f6 fw6">Total running project</h1>
-          <h1 className="mv0">10</h1>
+          <h1 className="mv0">{dashboard.totalProject}</h1>
         </Card>
-        <Card className="w-25 ma2">
+        {/* <Card className="w-25 ma2">
           <h1 className="f6 fw6">Completed project</h1>
           <h1 className="mv0">10</h1>
-        </Card>
+        </Card> */}
         <Card className="w-25 ma2">
           <h1 className="f6 fw6">Total Employee</h1>
-          <h1 className="mv0">10</h1>
+          <h1 className="mv0">{dashboard.totalEmployee}</h1>
         </Card>
         <Card className="w-25 ma2">
           <h1 className="f6 fw6">Total Associates</h1>
-          <h1 className="mv0">10</h1>
+          <h1 className="mv0">{dashboard.totalAssociates}</h1>
         </Card>
       </div>
       <Card className="w-50 ma2"
@@ -56,6 +80,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           }}
         />
       </div>
+      </> : <Loading/>
+
+        }
       {showAnnouncementDialog && (
         <Dialog
           onClose={() => setShowAnnouncementDialog(!showAnnouncementDialog)}
@@ -74,7 +101,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user
+    user: state.userReducer.user,
+    company: state.companyReducer.currentCompany
   };
 };
 

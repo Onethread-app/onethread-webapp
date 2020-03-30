@@ -140,12 +140,12 @@ const TeamMembersPageComponent = (props: TeamMember) => {
 
   return (
     <>
-      <div className='ph5'>
-        <div className='flex justify-between items-center'>
-          <h1 className='tigrow-lightGray-1'>Colleagues</h1>
+      <div className="ph5">
+        <div className="flex justify-between items-center">
+          <h1 className="tigrow-lightGray-1">Colleagues</h1>
           {companyPermit(props.company.role) ? (
             <Button
-              className='grow fr h2 pointer white bp3-minimal '
+              className="grow fr h2 pointer white bp3-minimal "
               style={{
                 background: '#0fa3a3',
                 outline: 'none',
@@ -160,8 +160,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
           )}
         </div>
         {/* Admins list starts */}
-        <h1 className='f4 mb0 tigrow-lightGray-1'>Admins</h1>
-        <HTMLTable className='w-100 mv3' striped={true}>
+        <h1 className="f4 mb0 tigrow-lightGray-1">Admins</h1>
+        <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
               <th>Name</th>
@@ -177,20 +177,20 @@ const TeamMembersPageComponent = (props: TeamMember) => {
             ) : adminsList.length ? (
               // tslint:disable-next-line: no-shadowed-variable
               adminsList.map(member => (
-                <tr className='hide-child' key={member._id}>
+                <tr className="hide-child" key={member._id}>
                   <td>
-                    <span className='mr2'>
+                    <span className="mr2">
                       {upperFirst(member.account.firstName)}{' '}
                       {upperFirst(member.account.lastName)}
                     </span>
                     {companyPermit(member.role) ? (
                       member.role === 'superAdmin' ? (
                         <Icon
-                          icon='star'
+                          icon="star"
                           style={{ color: 'rgb(228, 162, 0)' }}
                         />
                       ) : (
-                        <Icon icon='star' />
+                        <Icon icon="star" />
                       )
                     ) : null}
                   </td>
@@ -200,11 +200,11 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                       : null}
                   </td>
                   <td>
-                    <small className='f6'>{showDepartment(member)}</small>
+                    <small className="f6">{showDepartment(member)}</small>
                   </td>
                   <td>
                     {member.designations.length ? (
-                      <small className='f6'>
+                      <small className="f6">
                         {member.designations[0].position}
                       </small>
                     ) : null}
@@ -214,18 +214,18 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                     {companyPermit(props.company.role) ||
                     isEqual(member.account._id, props.user._id) ? (
                       <Popover
-                        className='fr'
+                        className="fr"
                         position={Position.BOTTOM}
-                        popoverClassName='bp3-popover-content-sizing bg-white'
+                        popoverClassName="bp3-popover-content-sizing bg-white"
                         content={
                           <ButtonGroup
                             alignText={Alignment.LEFT}
-                            className='bp3-minimal bp3-vertical bp3-fill'
+                            className="bp3-minimal bp3-vertical bp3-fill"
                           >
                             {member.designations &&
                             member.designations.length ? (
                               <Button
-                                className='outline-0 bp3-large bp3-popover-dismiss'
+                                className="outline-0 bp3-large bp3-popover-dismiss"
                                 onClick={async () => {
                                   setEditMember(member);
                                   await props.getAllDepartments();
@@ -236,7 +236,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                               </Button>
                             ) : (
                               <Button
-                                className='outline-0 bp3-large bp3-popover-dismiss'
+                                className="outline-0 bp3-large bp3-popover-dismiss"
                                 onClick={async () => {
                                   setEditMember(member);
                                   await props.getAllDepartments();
@@ -250,7 +250,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                             isEqual(member.role, 'superAdmin') === false ? (
                               isEqual(member.role, 'admin') === true ? (
                                 <Button
-                                  className='outline-0 bp3-large bp3-popover-dismiss'
+                                  className="outline-0 bp3-large bp3-popover-dismiss"
                                   onClick={async () => {
                                     await props.changeMemberRole(
                                       { role: 'employee' },
@@ -258,11 +258,11 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                                     );
                                   }}
                                 >
-                                  <span className='red'>Remove from Admin</span>
+                                  <span className="red">Remove from Admin</span>
                                 </Button>
                               ) : (
                                 <Button
-                                  className='outline-0 bp3-large bp3-popover-dismiss'
+                                  className="outline-0 bp3-large bp3-popover-dismiss"
                                   onClick={async () => {
                                     await props.changeMemberRole(
                                       { role: 'admin' },
@@ -278,8 +278,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                         }
                         target={
                           <Icon
-                            className=' pointer'
-                            icon='drag-handle-vertical'
+                            className=" pointer"
+                            icon="drag-handle-vertical"
                           />
                         }
                       />
@@ -299,8 +299,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
         </HTMLTable>
         {/* Admins list ends */}
         {/* members list starts */}
-        <h1 className='f4 mb0 tigrow-lightGray-1'>Members</h1>
-        <HTMLTable className='w-100 mv3' striped={true}>
+        <h1 className="f4 mb0 tigrow-lightGray-1">Members</h1>
+        <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
               <th>Name</th>
@@ -317,20 +317,20 @@ const TeamMembersPageComponent = (props: TeamMember) => {
               // tslint:disable-next-line: no-shadowed-variable
               membersList.map(member => (
                 // TODO Separate this <tr> into a component
-                <tr className='hide-child' key={member._id}>
+                <tr className="hide-child" key={member._id}>
                   <td>
-                    <span className='mr2'>
+                    <span className="mr2">
                       {member.account && upperFirst(member.account.firstName)}
                       {member.account && upperFirst(member.account.lastName)}
                     </span>
                     {companyPermit(member.role) ? (
                       member.role === 'superAdmin' ? (
                         <Icon
-                          icon='star'
+                          icon="star"
                           style={{ color: 'rgb(228, 162, 0)' }}
                         />
                       ) : (
-                        <Icon icon='star' />
+                        <Icon icon="star" />
                       )
                     ) : null}
                   </td>
@@ -340,11 +340,11 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                       : null}
                   </td>
                   <td>
-                    <small className='f6'>{showDepartment(member)}</small>
+                    <small className="f6">{showDepartment(member)}</small>
                   </td>
                   <td>
                     {member.designations.length ? (
-                      <small className='f6'>
+                      <small className="f6">
                         {member.designations[0].position}
                       </small>
                     ) : null}
@@ -354,18 +354,18 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                     {companyPermit(props.company.role) ||
                     isEqual(member.account._id, props.user._id) ? (
                       <Popover
-                        className='fr'
+                        className="fr"
                         position={Position.BOTTOM}
-                        popoverClassName='bp3-popover-content-sizing bg-white'
+                        popoverClassName="bp3-popover-content-sizing bg-white"
                         content={
                           <ButtonGroup
                             alignText={Alignment.LEFT}
-                            className='bp3-minimal bp3-vertical bp3-fill'
+                            className="bp3-minimal bp3-vertical bp3-fill"
                           >
                             {member.designations &&
                             member.designations.length ? (
                               <Button
-                                className='outline-0 bp3-large bp3-popover-dismiss'
+                                className="outline-0 bp3-large bp3-popover-dismiss"
                                 onClick={async () => {
                                   setEditMember(member);
                                   await props.getAllDepartments();
@@ -376,7 +376,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                               </Button>
                             ) : (
                               <Button
-                                className='outline-0 bp3-large bp3-popover-dismiss'
+                                className="outline-0 bp3-large bp3-popover-dismiss"
                                 onClick={async () => {
                                   setEditMember(member);
                                   await props.getAllDepartments();
@@ -390,7 +390,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                             isEqual(member.role, 'superAdmin') === false ? (
                               isEqual(member.role, 'admin') === true ? (
                                 <Button
-                                  className='outline-0 bp3-large bp3-popover-dismiss'
+                                  className="outline-0 bp3-large bp3-popover-dismiss"
                                   onClick={async () => {
                                     await props.changeMemberRole(
                                       { role: 'employee' },
@@ -398,11 +398,11 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                                     );
                                   }}
                                 >
-                                  <span className='red'>Remove from Admin</span>
+                                  <span className="red">Remove from Admin</span>
                                 </Button>
                               ) : (
                                 <Button
-                                  className='outline-0 bp3-large bp3-popover-dismiss'
+                                  className="outline-0 bp3-large bp3-popover-dismiss"
                                   onClick={async () => {
                                     await props.changeMemberRole(
                                       { role: 'admin' },
@@ -414,22 +414,25 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                                 </Button>
                               )
                             ) : null}
-                            {companyPermit(props.company.role) ? (
-                              <Button
-                                className='outline-0 bp3-large bp3-popover-dismiss'
-                                onClick={async () => {
-                                  await props.deleteCompanyMember(member._id);
-                                }}
-                              >
-                                <span className='red'>Remove from company</span>
-                              </Button>
-                            ) : null}
+                            {/* {companyPermit(props.company.role) ? (
+                                <Button
+                                  className='outline-0 bp3-large bp3-popover-dismiss'
+                                  onClick={async () => {
+                                    await props.changeMemberRole(
+                                      { role: 'employee' },
+                                      member._id
+                                    );
+                                  }}
+                                >
+                                  <span className='red'>Remove from Admin</span>
+                                </Button>
+                              ) : null} */}
                           </ButtonGroup>
                         }
                         target={
                           <Icon
-                            className=' pointer'
-                            icon='drag-handle-vertical'
+                            className=" pointer"
+                            icon="drag-handle-vertical"
                           />
                         }
                       />
@@ -451,18 +454,18 @@ const TeamMembersPageComponent = (props: TeamMember) => {
         {/* pending list starts */}
         {companyPermit(props.company.role) ? (
           <>
-            <h1 className='f4 tigrow-lightGray-1'>Pending request</h1>
-            <HTMLTable className='w-100 mv3' striped={true}>
+            <h1 className="f4 tigrow-lightGray-1">Pending request</h1>
+            <HTMLTable className="w-100 mv3" striped={true}>
               <tbody>
                 {props.companyLoading ? (
                   <Loading />
                 ) : pendingList.length ? (
                   // tslint:disable-next-line: no-shadowed-variable
                   pendingList.map((chunkMembers, i1) => (
-                    <tr className='hide-child' key={i1}>
+                    <tr className="hide-child" key={i1}>
                       {chunkMembers.map(member => (
                         <td>
-                          <span className='mr2'>{member.email}</span>
+                          <span className="mr2">{member.email}</span>
                         </td>
                       ))}
                     </tr>

@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEmpty, isEqual } from 'lodash';
 import { TaskBoard } from 'stores/board/Reducer';
-import { ICompany } from 'stores/company/Reducer';
 import { addTeamMembersIntoBoard } from 'stores/board/Actions';
 import { tigrowApi } from 'config';
+import { IProject } from 'stores/project/Reducer';
 
 interface AddTeamMemberFormProps {
   setShowAddMemberFormDialog?: (val: boolean) => void;
@@ -15,7 +15,7 @@ interface AddTeamMemberFormProps {
 }
 
 interface AddTeamMemberFormInternalProps extends AddTeamMemberFormProps {
-  company?: ICompany;
+  project?: IProject;
   addTeamMembersIntoBoard: (memberId: Array<string | undefined>, name: string | undefined) => void;
 }
 
@@ -33,7 +33,7 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         if (isEmpty(userName) === false) {
-          const response = await tigrowApi.get(`/boards/${props.currentBoard._id}/suggest-member?companyId=${props.company!._id}`, headers);
+          const response = await tigrowApi.get(`/boards/${props.currentBoard._id}/suggest-member?projectId=${props.project!._id}`, headers);
           setTeamMembers(response.data.members);
         }
       } else {
@@ -136,7 +136,7 @@ const AddTeamMemberFormComponent = (props: AddTeamMemberFormInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.currentCompany
+    project: state.projectReducer.projectDetails
   };
 };
 

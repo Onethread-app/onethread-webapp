@@ -15,7 +15,7 @@ interface MessageItemProps {
     message: boolean;
     showPicAndName: boolean;
   };
-  toggleDiscussionRoom: (data: { discussion: boolean }, messageId: string) => void;
+  toggleDiscussionRoom: (data: { discussion: boolean; }, messageId: string) => void;
 }
 
 const MessageItemComponent = (props: MessageItemProps) => {
@@ -43,7 +43,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
             <>
               <img
                 src={props.message.account.profileImage ?
-                  props.message.account.profileImage.link : UserIcon}
+                  props.message.account.profileImage : UserIcon}
                 className="v-mid dib br-100"
                 alt="user"
                 style={{
@@ -67,6 +67,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
       {props.message.text ?
         <article
           key={props.message.createdAt}
+          // tslint:disable-next-line: max-line-length
           className={`message-text db flex items-center ${currentUser ? 'flex-row-reverse' : ''} ${props.group.message ? 'mb1' : 'mb3'}`}
           style={{
             marginLeft: '48px'

@@ -6,26 +6,24 @@ import { notificationType } from './rule';
 interface notification {
   type: string;
   text: string;
+  read: string;
 }
 
 export default function index(props: notification) {
   return (
-    <main className="mw6 center">
-      <article className="dt w-100 pb2 mt2">
-        {/* {console.log(
-          'notification',
-          store.getState().companyReducer.currentCompany.name
-        )} */}
-        <div style={{ width: '20px' }} className="">
+    <main
+      className={`mw6 center ${
+        props.read ? 'bg-near-white' : ''
+      } ba b--near-white`}
+    >
+      <article className="dt w-100 p2 pl2">
+        <div style={{ width: '20px' }}>
           {props.type && (
             <img src={notificationType[props.type].img} className="h2" />
           )}
         </div>
-        <div
-          // to={notificationType[props.type].path(store)}
-          className="dtc v-mid p10 pl2 link dim black hide-child pointer"
-        >
-          <p className="f6 mv0">{props.text} </p>
+        <div className="dtc v-mid p10 pl2 link dim black hide-child pointer">
+          <p className="f6 lh-copy mv0">{props.text} </p>
         </div>
       </article>
     </main>

@@ -15,7 +15,10 @@ export const addAssociate = (associateWith: ItemEntityProps, companyID: string) 
       const response = await tigrowApi.post(`/associate/${companyID}`,
         {
           companyId: companyID,
-          associateCompany: associateWith
+          associateCompany: {
+            _id: associateWith.mongo_id,
+            name: associateWith.name
+          }
         },
         headers
       );

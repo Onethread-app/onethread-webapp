@@ -6,7 +6,7 @@ import { Button, Toaster } from '@blueprintjs/core';
 import { addAssociate } from 'stores/associate/Actions';
 import { server } from 'config';
 import { useLiveSearch } from 'components/useLiveSearch';
-import { isEmpty } from 'lodash';
+import { isEmpty , map } from 'lodash';
 
 interface AddAssociateEditorProps {
   companyId: string;
@@ -32,9 +32,7 @@ const AssociateFormEditorComponent = (props: AddAssociateEditorInternalProps) =>
     const headers = tokenConfig();
     return fetch(`${server}company/search?name=${value}&companyId=${props.companyId}`, headers)
       .then(res => res.json())
-      .then(res => {
-        return res.data;
-      })
+      .then(res => map(res.data, '_source'))
       .catch(err => []);
   };
 

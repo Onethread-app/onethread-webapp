@@ -35,7 +35,8 @@ import {
 	TOGGLE_ROOM_DISCUSSIONS_ERROR,
 	REMOVE_ROOM_DISCUSSIONS,
 	GET_COMPANY_ROOMS,
-	CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT
+	CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
+	CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY
 } from './Types';
 import { isEmpty } from 'lodash';
 
@@ -58,9 +59,7 @@ export interface IRoomMember {
 	lastName: string;
 	name: string;
 	presence: string;
-	profileImage?: {
-		link: string;
-	};
+	profileImage?: string;
 }
 
 export interface IRoomPendingFile {
@@ -482,6 +481,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...InitialState
 			};
+		case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY:
 		case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT:
 			return {
 				...InitialState,

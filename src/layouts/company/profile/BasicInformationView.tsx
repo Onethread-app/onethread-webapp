@@ -1,18 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { CompanyInfoForm } from './BasicInformationEditor';
 import { companyLogoUploadAction } from 'stores/company/Actions';
 import addIcon from './../../../resources/images/addIcon.png';
-import { getNotifications } from '../../../stores/notifications/Action';
 
 const BasicInfoDetailsViewComponent = (props: any) => {
   const [showDialog, setShowDialog] = useState(false);
-  useEffect(() => {
-    console.log('mmmmmmmmm');
-    props.getNotifications(props.company._id);
-  }, []);
-
   return (
     <>
       <div className="relative">
@@ -83,6 +77,5 @@ const mapStateToProps = (state: any) => {
 };
 
 export const BasicInfoDetailsView = connect(mapStateToProps, {
-  companyLogoUploadAction,
-  getNotifications
+  companyLogoUploadAction
 })(BasicInfoDetailsViewComponent);

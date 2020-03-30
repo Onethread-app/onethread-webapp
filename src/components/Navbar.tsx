@@ -15,11 +15,14 @@ import user from '../resources/images/profilePhoto.svg';
 import { User } from 'stores/user/Reducer';
 import { CompanyListView } from '../layouts/company/ListView';
 import { CompanySignupForm } from '../layouts/company/Form';
-import { Icon } from '@blueprintjs/core';
 import Notification from '../layouts/company/notification/Index';
 import { companySubscriber } from '../layouts/company/notification/subscribers';
 import { notificationType } from '../layouts/company/notification/rule';
-import { store } from 'Store';
+// import { store } from 'Store';
+import { readNotification } from '../stores/notifications/Action';
+import { Badge } from '@material-ui/core';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { getNotifications } from '../stores/notifications/Action';
 
 interface NavbarTopInternalProps {
   user: User;
@@ -28,8 +31,10 @@ interface NavbarTopInternalProps {
   companyName: string;
   type: string;
   companyId: string;
-  // getNotifications: any;
+  getNotifications: any;
   notifications: any;
+  readNotification: any;
+  read: number;
 }
 
 const NavbarTopComponent = (
@@ -38,20 +43,21 @@ const NavbarTopComponent = (
   const [showDialog, setShowDialog] = React.useState(false);
 
   React.useEffect(() => {
-    // props.match.path !== '/:username' && props.getNotifications();
+    props.match.path !== '/:username' && props.getNotifications();
     companySubscriber(props.companyId);
   }, []);
 
-  const makeUrl = async (sNotification: any) => {
+  const onCLickNotification = async (sNotification: any) => {
+    await props.readNotification(sNotification.notification._id);
     const url = await notificationType[sNotification.notification.type].path(
-      store
+      sNotification.notification
     );
+    props.getNotifications();
     props.history.push(url);
   };
 
   return (
     <>
-      {console.log(props)}
       <div
         className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between"
         style={{
@@ -76,34 +82,51 @@ const NavbarTopComponent = (
         <div className="flex items-center">
           {props.match.path !== '/:username' && (
             <Popover
-              popoverClassName="bp3-popover-content-sizing bg-white"
+              popoverClassName="bg-white mw5 m1 ml1"
               position={Position.BOTTOM}
+              // inline={true}
               content={
                 <div
-                  style={{ height: '300px' }}
+                  style={{ maxHeight: '300px', paddingBottom: '5px' }}
                   className="h25 overflow-y-auto"
                 >
-                  {props.notifications.length > 0 &&
+                  {props.notifications.length > 0 ? (
                     props.notifications.map((sNotification: any) => (
                       <div
                         onClick={() => {
-                          makeUrl(sNotification);
+                          onCLickNotification(sNotification);
                         }}
                       >
                         <Notification
                           type={sNotification.notification.type}
                           text={sNotification.notification.text}
+                          read={sNotification.read}
                         />
                       </div>
-                    ))}
+                    ))
+                  ) : (
+                    <div
+                      style={{ maxHeight: '300px', paddingBottom: '5px' }}
+                      className="h25 overflow-y-auto"
+                    >
+                      Loading..
+                    </div>
+                  )}
                 </div>
               }
               target={
-                <Icon
-                  icon="notifications"
-                  iconSize={25}
-                  className="mr3 mr4-l"
-                />
+                <div style={{ marginRight: '10px' }}>
+                  <Badge
+                    badgeContent={props.read}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right'
+                    }}
+                    color="secondary"
+                  >
+                    <NotificationsIcon />
+                  </Badge>
+                </div>
               }
             />
           )}
@@ -207,11 +230,14 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     companyName: state.companyReducer.currentCompany.name,
     companyId: state.companyReducer.currentCompany._id,
-    notifications: state.notificationReducer.allNotifications
+    notifications: state.notificationReducer.allNotifications,
+    read: state.notificationReducer.read
   };
 };
 
 export const NavbarTop = connect(mapStateToProps, {
   logoutAction,
-  companySubscriber
+  companySubscriber,
+  readNotification,
+  getNotifications
 })(withRouter(NavbarTopComponent));

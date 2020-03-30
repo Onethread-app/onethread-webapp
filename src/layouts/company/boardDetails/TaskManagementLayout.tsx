@@ -7,30 +7,44 @@ import { dragAndDropTask } from 'stores/board/Actions';
 import { Button } from '@blueprintjs/core';
 import { RightSidebar } from 'components/RightSidebar';
 import { ColumnForm } from './column/ColumnForm';
+import { projectRules } from '../project/settings/projectrules';
 
 interface TaskManagementLayoutProps {
   columns: IColumn[];
 }
 
 interface TaskManagementLayoutInternalProps extends TaskManagementLayoutProps {
-  dragAndDropTask: (taskId: string, sourceColumnId: string, destinationColumnId: string,
-    taskIndexOfDestinationColumn: number) => void;
+  dragAndDropTask: (
+    taskId: string,
+    sourceColumnId: string,
+    destinationColumnId: string,
+    taskIndexOfDestinationColumn: number
+  ) => void;
+  role: string;
+  optionalRole: any;
 }
 
-const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps) => {
-
+const TaskManagementLayoutComponent = (
+  props: TaskManagementLayoutInternalProps
+) => {
   const [showColumnFormDialog, setShowColumnFormDialog] = useState(false);
 
   const dragEnd = async (result: DropResult) => {
     if (!result.destination) {
       return;
     }
-    if (result.source.droppableId === result.destination.droppableId
-      && result.source.index === result.destination.index) {
+    if (
+      result.source.droppableId === result.destination.droppableId &&
+      result.source.index === result.destination.index
+    ) {
       return;
     }
-    await props.dragAndDropTask(result.draggableId, result.source.droppableId,
-      result.destination.droppableId, result.destination.index);
+    await props.dragAndDropTask(
+      result.draggableId,
+      result.source.droppableId,
+      result.destination.droppableId,
+      result.destination.index
+    );
 
     // if (result.type === "column") {
     //   const newColumnOrder = Array.from(state.columnOrder);
@@ -89,15 +103,13 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
   return (
     <>
       <div className="h-100">
-        <DragDropContext
-          onDragEnd={(result) => dragEnd(result)}
-        >
+        <DragDropContext onDragEnd={result => dragEnd(result)}>
           <Droppable
             droppableId="all-columns"
             type="column"
             direction="horizontal"
           >
-            {(provided) => {
+            {provided => {
               const allowedProps = { ref: provided.innerRef };
               return (
                 <div
@@ -106,34 +118,48 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
                   {...allowedProps}
                 >
                   <div className="fl nowrap w-100 overflow-y-hidden">
-                    {props.columns && props.columns.length > 0 ? props.columns.map((colmun, index) => (
-                      <Column
-                        key={colmun._id ? colmun._id : `col${index}`}
-                        column={colmun}
-                        index={index}
-                      />
-                    ))
-                      : <h5 className="tc fw5 f3">No Columns</h5>}
+                    {props.columns && props.columns.length > 0 ? (
+                      props.columns.map((colmun, index) => (
+                        <Column
+                          key={colmun._id ? colmun._id : `col${index}`}
+                          column={colmun}
+                          index={index}
+                        />
+                      ))
+                    ) : (
+                      <h5 className="tc fw5 f3">No Columns</h5>
+                    )}
                     {provided.placeholder}
-                    <div
-                      className={`${props.columns && props.columns.length > 0 ? 'dib' : 'tc'} pr2  w-23-l w-50-m br3`}
-                      style={{ margin: '0 auto' }}
-                    >
-                      <Button
-                        className="pointer bp3-minimal w-100 ba b--dashed"
-                        style={{
-                          outline: 'none',
-                          color: 'black',
-                          height: '80px',
-                          fontWeight: 'bold'
-                        }}
-                        type="submit"
-                        onClick={() => setShowColumnFormDialog(!showColumnFormDialog)}
-                        icon="add"
+                    {props.role === 'admin' ||
+                    projectRules(props.optionalRole)[props.role].includes(
+                      'assignDeleteMemberBoard'
+                    ) ? (
+                      <div
+                        className={`${
+                          props.columns && props.columns.length > 0
+                            ? 'dib'
+                            : 'tc'
+                        } pr2  w-23-l w-50-m br3`}
+                        style={{ margin: '0 auto' }}
                       >
-                        Add Column
-                      </Button>
-                    </div>
+                        <Button
+                          className="pointer bp3-minimal w-100 ba b--dashed"
+                          style={{
+                            outline: 'none',
+                            color: 'black',
+                            height: '80px',
+                            fontWeight: 'bold'
+                          }}
+                          type="submit"
+                          onClick={() =>
+                            setShowColumnFormDialog(!showColumnFormDialog)
+                          }
+                          icon="add"
+                        >
+                          Add Column
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               );
@@ -151,5 +177,15 @@ const TaskManagementLayoutComponent = (props: TaskManagementLayoutInternalProps)
     </>
   );
 };
+const mapStateToProps = (state: any) => ({
+  role:
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.role,
+  optionalRole:
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project.optionalRole
+});
 
-export const TaskManagementLayout = connect(null, { dragAndDropTask })(TaskManagementLayoutComponent);
+export const TaskManagementLayout = connect(mapStateToProps, {
+  dragAndDropTask
+})(TaskManagementLayoutComponent);

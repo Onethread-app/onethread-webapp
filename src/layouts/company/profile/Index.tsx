@@ -1,12 +1,12 @@
 import React from 'react';
 import { BasicInfoDetailsView } from 'layouts/company/profile/BasicInformationView';
-import { CompanyCoverPhoto } from './CompanyCoverPhoto';
+import { CoverPhotoView } from './CompanyCoverPhoto';
 import { Tabs, Tab } from '@blueprintjs/core';
 import { AdvancedInfo } from './AdvancedInfoView';
 
 export const CompanyProfilePage = () => (
   <div className="w-100 pa4">
-    <CompanyCoverPhoto />
+    <CoverPhotoView />
     <Tabs id="TabsExample" className="mt7 ph5">
       <Tab
         id="basic_info"
