@@ -1,0 +1,239 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1135" height="624" viewBox="0 0 1135 624">
+  <defs>
+    <filter id="Rectangle_1195" x="3" y="63" width="373" height="270" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1371" x="375" y="63" width="373" height="270" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-2"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-2"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1805" x="0" y="99" width="27" height="107" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-3"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-3"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1959" x="371" y="102" width="27" height="106" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-4"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-4"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1195-2" x="375" y="354" width="373" height="270" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-5"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-5"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1371-2" x="754" y="354" width="381" height="270" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-6"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-6"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1805-2" x="371" y="390" width="27" height="107" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-7"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-7"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1959-2" x="749" y="393" width="27" height="106" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-8"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-8"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1373" x="3" y="354" width="372" height="270" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-9"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-9"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_1961" x="0" y="390" width="27" height="107" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-10"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-10"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_2541" x="753" y="63" width="382" height="270" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-11"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-11"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <filter id="Rectangle_2542" x="750" y="99" width="27" height="107" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="3" result="blur-12"/>
+      <feFlood flood-color="#777" flood-opacity="0.161"/>
+      <feComposite operator="in" in2="blur-12"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <g id="Group_1393" data-name="Group 1393" transform="translate(-137 -1714)">
+    <text id="My_Projects" data-name="My Projects" transform="translate(146 1747.627)" fill="#303030" font-size="24" font-family="OpenSans-Bold, Open Sans" font-weight="700"><tspan x="0" y="0">My Projects</tspan></text>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1195)">
+      <g id="Rectangle_1195-3" data-name="Rectangle 1195" transform="translate(12 71)" fill="#fff" stroke="#e1e1e1" stroke-width="1">
+        <rect width="355" height="252" rx="5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="354" height="251" rx="4.5" fill="none"/>
+      </g>
+    </g>
+    <text id="Project_with_Unilever" data-name="Project with Unilever" transform="translate(178.981 1840.185)" fill="#303030" font-size="24" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="0">Project with Unilever</tspan></text>
+    <text id="Sales_Department_Accounts_Department_Unilever" data-name="Sales Department, Accounts
+Department, Unilever" transform="translate(177.411 1892.172)" fill="#303030" font-size="16" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.83"><tspan x="0" y="0">Sales Department, Accounts</tspan><tspan x="0" y="22">Department, Unilever</tspan></text>
+    <text id="Assigned_Members" data-name="Assigned Members" transform="translate(178.981 1978.696)" fill="#303030" font-size="12" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.55"><tspan x="0" y="0">Assigned Members</tspan></text>
+    <text id="_15" data-name="15" transform="translate(178.981 2010.658)" fill="#292929" font-size="18" font-family="OpenSans-Bold, Open Sans" font-weight="700"><tspan x="0" y="0">15</tspan></text>
+    <g id="Group_944" data-name="Group 944" transform="translate(463.247 1830.375)">
+      <ellipse id="Ellipse_338" data-name="Ellipse 338" cx="1.5" cy="2.5" rx="1.5" ry="2.5" transform="translate(-0.247 -0.375)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_339" data-name="Ellipse 339" cx="1.5" cy="2.5" rx="1.5" ry="2.5" transform="translate(-0.247 8.625)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_340" data-name="Ellipse 340" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(-0.247 18.625)" fill="#8d8d8d"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1371)">
+      <g id="Rectangle_1371-3" data-name="Rectangle 1371" transform="translate(384 71)" fill="#fff" stroke="#e1e1e1" stroke-width="1">
+        <rect width="355" height="252" rx="5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="354" height="251" rx="4.5" fill="none"/>
+      </g>
+    </g>
+    <text id="Yearly_Budget_Review_" data-name="Yearly Budget Review
+" transform="translate(553.073 1840.185)" fill="#303030" font-size="24" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="0">Yearly Budget Review</tspan><tspan x="0" y="33"></tspan></text>
+    <ellipse id="Ellipse_341" data-name="Ellipse 341" cx="1.5" cy="2.5" rx="1.5" ry="2.5" transform="translate(842 1830)" fill="#8d8d8d"/>
+    <ellipse id="Ellipse_342" data-name="Ellipse 342" cx="1.5" cy="2.5" rx="1.5" ry="2.5" transform="translate(842 1839)" fill="#8d8d8d"/>
+    <ellipse id="Ellipse_343" data-name="Ellipse 343" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(842 1849)" fill="#8d8d8d"/>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1805)">
+      <g id="Rectangle_1805-3" data-name="Rectangle 1805" transform="translate(9 107)" fill="#61a3fa" stroke="#e1e1e1" stroke-width="1">
+        <rect width="9" height="89" rx="4.5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="8" height="88" rx="4" fill="none"/>
+      </g>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1959)">
+      <g id="Rectangle_1959-3" data-name="Rectangle 1959" transform="translate(380 110)" fill="#fa617f" stroke="#e1e1e1" stroke-width="1">
+        <rect width="9" height="88" rx="4.5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="8" height="87" rx="4" fill="none"/>
+      </g>
+    </g>
+    <text id="Assigned_Members-2" data-name="Assigned Members" transform="translate(554.334 1978.696)" fill="#303030" font-size="12" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.55"><tspan x="0" y="0">Assigned Members</tspan></text>
+    <text id="_20" data-name="20" transform="translate(555.677 2010.658)" fill="#292929" font-size="18" font-family="OpenSans-Bold, Open Sans" font-weight="700"><tspan x="0" y="0">20</tspan></text>
+    <text id="Accounts_Department_Admin_Department_Management" data-name="Accounts Department, Admin 
+Department, Management" transform="translate(554.338 1892.172)" fill="#303030" font-size="16" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.83"><tspan x="0" y="0">Accounts Department, Admin </tspan><tspan x="0" y="22">Department, Management</tspan></text>
+    <text id="Filter_By" data-name="Filter  By" transform="translate(1034 1739.627)" fill="#333" font-size="15" font-family="OpenSans-Bold, Open Sans" font-weight="700"><tspan x="0" y="0" xml:space="preserve">Filter  By</tspan></text>
+    <g id="Rectangle_1384" data-name="Rectangle 1384" transform="translate(1131 1714)" fill="#fff" stroke="#e1e1e1" stroke-width="1">
+      <rect width="119" height="41" rx="5" stroke="none"/>
+      <rect x="0.5" y="0.5" width="118" height="40" rx="4.5" fill="none"/>
+    </g>
+    <text id="All" transform="translate(1175 1738.627)" fill="#272727" font-size="14" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="0">All</tspan></text>
+    <g id="Polygon_2" data-name="Polygon 2" transform="translate(1231 1737) rotate(180)" fill="#333">
+      <path d="M 5.116899967193604 4.5 L 0.8830999732017517 4.5 L 3 0.971833348274231 L 5.116899967193604 4.5 Z" stroke="none"/>
+      <path d="M 3 1.943650007247925 L 1.766190052032471 4 L 4.233809947967529 4 L 3 1.943650007247925 M 3 0 L 6 5 L 0 5 L 3 0 Z" stroke="none" fill="#333"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1195-2)">
+      <g id="Rectangle_1195-4" data-name="Rectangle 1195" transform="translate(384 362)" fill="#fff" stroke="#e1e1e1" stroke-width="1">
+        <rect width="355" height="252" rx="5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="354" height="251" rx="4.5" fill="none"/>
+      </g>
+    </g>
+    <text id="Sales_Department_Accounts_Department_Procurement_Department_H_M" data-name="Sales Department, Accounts 
+Department, Procurement Department, 
+H&amp;M" transform="translate(548.323 2180.116)" fill="#303030" font-size="16" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.83"><tspan x="0" y="0">Sales Department, Accounts </tspan><tspan x="0" y="22">Department, Procurement Department, </tspan><tspan x="0" y="44">H&amp;M</tspan></text>
+    <text id="Assigned_Members-3" data-name="Assigned Members" transform="translate(549.889 2268.6)" fill="#303030" font-size="11" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.55"><tspan x="0" y="0">Assigned Members</tspan></text>
+    <text id="_55" data-name="55" transform="translate(549.889 2298.546)" fill="#292929" font-size="15" font-family="OpenSans-Bold, Open Sans" font-weight="700"><tspan x="0" y="0">55</tspan></text>
+    <g id="Group_944-2" data-name="Group 944" transform="translate(842 2121.095)">
+      <ellipse id="Ellipse_338-2" data-name="Ellipse 338" cx="1.5" cy="2.5" rx="1.5" ry="2.5" transform="translate(0 -0.095)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_339-2" data-name="Ellipse 339" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(0 9.905)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_340-2" data-name="Ellipse 340" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(0 18.905)" fill="#8d8d8d"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1371-2)">
+      <g id="Rectangle_1371-4" data-name="Rectangle 1371" transform="translate(763 362)" fill="#fff" stroke="#e1e1e1" stroke-width="1">
+        <rect width="363" height="252" rx="5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="362" height="251" rx="4.5" fill="none"/>
+      </g>
+    </g>
+    <text id="ERP_Deployment_" data-name="ERP Deployment
+" transform="translate(928.936 2127.165)" fill="#303030" font-size="24" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="0">ERP Deployment</tspan><tspan x="0" y="33"></tspan></text>
+    <g id="Group_1392" data-name="Group 1392" transform="translate(23)">
+      <ellipse id="Ellipse_341-2" data-name="Ellipse 341" cx="1.5" cy="2.5" rx="1.5" ry="2.5" transform="translate(1217 2121)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_342-2" data-name="Ellipse 342" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(1217 2131)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_343-2" data-name="Ellipse 343" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(1217 2140)" fill="#8d8d8d"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1805-2)">
+      <g id="Rectangle_1805-4" data-name="Rectangle 1805" transform="translate(380 398)" fill="#61a3fa" stroke="#e1e1e1" stroke-width="1">
+        <rect width="9" height="89" rx="4.5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="8" height="88" rx="4" fill="none"/>
+      </g>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1959-2)">
+      <g id="Rectangle_1959-4" data-name="Rectangle 1959" transform="translate(758 401)" fill="#fa617f" stroke="#e1e1e1" stroke-width="1">
+        <rect width="9" height="88" rx="4.5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="8" height="87" rx="4" fill="none"/>
+      </g>
+    </g>
+    <text id="Assigned_Members-4" data-name="Assigned Members" transform="translate(930.19 2268.6)" fill="#303030" font-size="11" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.55"><tspan x="0" y="0">Assigned Members</tspan></text>
+    <text id="_25" data-name="25" transform="translate(931.53 2298.546)" fill="#292929" font-size="15" font-family="OpenSans-Bold, Open Sans" font-weight="700"><tspan x="0" y="0">25</tspan></text>
+    <text id="IT_Department" data-name="IT Department" transform="translate(929.198 2180.116)" fill="#303030" font-size="16" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.83"><tspan x="0" y="0">IT Department</tspan></text>
+    <ellipse id="Ellipse_573" data-name="Ellipse 573" cx="1.5" cy="3" rx="1.5" ry="3" transform="translate(472 2089)" fill="#8d8d8d"/>
+    <ellipse id="Ellipse_574" data-name="Ellipse 574" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(472 2099)" fill="#8d8d8d"/>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1373)">
+      <g id="Rectangle_1373-2" data-name="Rectangle 1373" transform="translate(12 362)" fill="#fff" stroke="#e1e1e1" stroke-width="1">
+        <rect width="354" height="252" rx="5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="353" height="251" rx="4.5" fill="none"/>
+      </g>
+    </g>
+    <text id="Sourcing_for_Nike_Order" data-name="Sourcing for Nike Order" transform="translate(177.341 2126.165)" fill="#303030" font-size="24" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="0">Sourcing for Nike Order</tspan></text>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_1961)">
+      <g id="Rectangle_1961-2" data-name="Rectangle 1961" transform="translate(9 398)" fill="#fdb64e" stroke="#e1e1e1" stroke-width="1">
+        <rect width="9" height="89" rx="4.5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="8" height="88" rx="4" fill="none"/>
+      </g>
+    </g>
+    <text id="Assigned_Members-5" data-name="Assigned Members" transform="translate(177.806 2268.603)" fill="#303030" font-size="11" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.55"><tspan x="0" y="0">Assigned Members</tspan></text>
+    <text id="_20-2" data-name="20" transform="translate(180.377 2298.549)" fill="#292929" font-size="15" font-family="OpenSans-Bold, Open Sans" font-weight="700"><tspan x="0" y="0">20</tspan></text>
+    <text id="Plummy_Fashions_Limited_Akiz_Textiles_Ltd._Unique_Button_Ltd._Neo_Zipper_Ltd._Knit_Concern_Group_Vialatex_Procurement_Department" data-name="Plummy Fashions Limited, Akiz Textiles
+Ltd., Unique Button Ltd., Neo Zipper Ltd.,
+Knit Concern Group, Vialatex, 
+Procurement Department" transform="translate(179 2155)" fill="#303030" font-size="15" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="16">Plummy Fashions Limited, Akiz Textiles</tspan><tspan x="0" y="36">Ltd., Unique Button Ltd., Neo Zipper Ltd.,</tspan><tspan x="0" y="56">Knit Concern Group, Vialatex, </tspan><tspan x="0" y="76">Procurement Department</tspan></text>
+    <text id="Project_with_H_M" data-name="Project with H&amp;M" transform="translate(549.889 2126.16)" fill="#303030" font-size="24" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="0">Project with H&amp;M</tspan></text>
+    <g id="Group_1390" data-name="Group 1390" transform="translate(473 2121.095)">
+      <ellipse id="Ellipse_338-3" data-name="Ellipse 338" cx="1.5" cy="2.5" rx="1.5" ry="2.5" transform="translate(0 -0.095)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_339-3" data-name="Ellipse 339" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(0 9.905)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_340-3" data-name="Ellipse 340" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(0 18.905)" fill="#8d8d8d"/>
+    </g>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_2541)">
+      <g id="Rectangle_2541-2" data-name="Rectangle 2541" transform="translate(762 71)" fill="#fff" stroke="#e1e1e1" stroke-width="1">
+        <rect width="364" height="252" rx="5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="363" height="251" rx="4.5" fill="none"/>
+      </g>
+    </g>
+    <text id="Sourcing_for_Adidas_Order" data-name="Sourcing for Adidas Order" transform="translate(927.341 1835.165)" fill="#303030" font-size="24" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="0">Sourcing for Adidas Order</tspan></text>
+    <g transform="matrix(1, 0, 0, 1, 137, 1714)" filter="url(#Rectangle_2542)">
+      <g id="Rectangle_2542-2" data-name="Rectangle 2542" transform="translate(759 107)" fill="#fdb64e" stroke="#e1e1e1" stroke-width="1">
+        <rect width="9" height="89" rx="4.5" stroke="none"/>
+        <rect x="0.5" y="0.5" width="8" height="88" rx="4" fill="none"/>
+      </g>
+    </g>
+    <text id="Assigned_Members-6" data-name="Assigned Members" transform="translate(927.806 1977.603)" fill="#303030" font-size="11" font-family="OpenSans-Semibold, Open Sans" font-weight="600" opacity="0.55"><tspan x="0" y="0">Assigned Members</tspan></text>
+    <text id="_20-3" data-name="20" transform="translate(930.377 2007.549)" fill="#292929" font-size="15" font-family="OpenSans-Bold, Open Sans" font-weight="700"><tspan x="0" y="0">20</tspan></text>
+    <text id="Plummy_Fashions_Limited_Akiz_Textiles_Ltd._Unique_Button_Ltd._Neo_Zipper_Ltd._Knit_Concern_Group_Vialatex_Procurement_Department-2" data-name="Plummy Fashions Limited, Akiz Textiles
+Ltd., Unique Button Ltd., Neo Zipper Ltd.,
+Knit Concern Group, Vialatex, 
+Procurement Department" transform="translate(929 1864)" fill="#303030" font-size="15" font-family="OpenSans-Semibold, Open Sans" font-weight="600"><tspan x="0" y="16">Plummy Fashions Limited, Akiz Textiles</tspan><tspan x="0" y="36">Ltd., Unique Button Ltd., Neo Zipper Ltd.,</tspan><tspan x="0" y="56">Knit Concern Group, Vialatex, </tspan><tspan x="0" y="76">Procurement Department</tspan></text>
+    <g id="Group_1391" data-name="Group 1391" transform="translate(1240 1830.095)">
+      <ellipse id="Ellipse_338-4" data-name="Ellipse 338" cx="1.5" cy="2.5" rx="1.5" ry="2.5" transform="translate(0 -0.095)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_339-4" data-name="Ellipse 339" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(0 9.905)" fill="#8d8d8d"/>
+      <ellipse id="Ellipse_340-4" data-name="Ellipse 340" cx="1.5" cy="2" rx="1.5" ry="2" transform="translate(0 18.905)" fill="#8d8d8d"/>
+    </g>
+  </g>
+</svg>

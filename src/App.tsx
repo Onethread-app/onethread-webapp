@@ -16,7 +16,7 @@ import { BoardDetailsView } from 'layouts/company/boardDetails/Index';
 import { LandingPage } from 'layouts/user/profile/Index';
 import { ProfileSettingsPage } from 'layouts/user/settings/Index';
 import { FeedPage } from 'layouts/company/feed/Index';
-import { HomePage } from 'layouts/landing/Index';
+import { HomePage } from 'layouts/landingNew/Index';
 import { TaskPage } from 'layouts/company/task';
 import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
 import { ProjectPage } from 'layouts/company/project/Index';

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1321" height="146" viewBox="0 0 1321 146">
+  <g id="Group_1377" data-name="Group 1377" transform="translate(-298 -4475)">
+    <g id="Rectangle_1386" data-name="Rectangle 1386" transform="translate(298 4475)" fill="#4a5b9d" stroke="#b7b7b7" stroke-width="1">
+      <path d="M8,0H324a0,0,0,0,1,0,0V146a0,0,0,0,1,0,0H8a8,8,0,0,1-8-8V8A8,8,0,0,1,8,0Z" stroke="none"/>
+      <path d="M8,.5H323a.5.5,0,0,1,.5.5V145a.5.5,0,0,1-.5.5H8A7.5,7.5,0,0,1,.5,138V8A7.5,7.5,0,0,1,8,.5Z" fill="none"/>
+    </g>
+    <text id="Buying_Requests" data-name="Buying Requests" transform="translate(348.435 4541.236)" fill="#fff" font-size="28" font-family="Muli-Bold, Muli" font-weight="700"><tspan x="0" y="0">Buying Requests</tspan></text>
+    <text id="someone_wants_to_buy_a_product" data-name="someone wants to buy a product" transform="translate(325.272 4566.618)" fill="#fff" font-size="18" font-family="Muli-Light, Muli" font-weight="300"><tspan x="0" y="0">someone wants to buy a product</tspan></text>
+    <g id="Rectangle_1393" data-name="Rectangle 1393" transform="translate(629 4475)" fill="#fff" stroke="#b7b7b7" stroke-width="1">
+      <rect width="325" height="146" stroke="none"/>
+      <rect x="0.5" y="0.5" width="324" height="145" fill="none"/>
+    </g>
+    <text id="Service_Requests" data-name="Service Requests" transform="translate(682.628 4541.236)" fill="#3e3e3e" font-size="28" font-family="Muli-Bold, Muli" font-weight="700"><tspan x="0" y="0">Service Requests</tspan></text>
+    <text id="someone_wants_to_buy_a_service" data-name="someone wants to buy a service" transform="translate(929 4567)" fill="#3e3e3e" font-size="18" font-family="Muli-Light, Muli" font-weight="300"><tspan x="-263.898" y="0">someone wants to buy a service</tspan></text>
+    <g id="Rectangle_1394" data-name="Rectangle 1394" transform="translate(964 4475)" fill="#fff" stroke="#b7b7b7" stroke-width="1">
+      <rect width="324" height="146" stroke="none"/>
+      <rect x="0.5" y="0.5" width="323" height="145" fill="none"/>
+    </g>
+    <text id="Selling_Offers" data-name="Selling Offers" transform="translate(1035.71 4542.236)" fill="#3e3e3e" font-size="28" font-family="Muli-Bold, Muli" font-weight="700"><tspan x="0" y="0">Selling Offers</tspan></text>
+    <text id="someone_wants_to_sell_product" data-name="someone wants to sell product" transform="translate(1000.864 4566.618)" fill="#3e3e3e" font-size="18" font-family="Muli-Light, Muli" font-weight="300"><tspan x="0" y="0">someone wants to sell product</tspan></text>
+    <g id="Rectangle_1395" data-name="Rectangle 1395" transform="translate(1294 4475)" fill="#fff" stroke="#b7b7b7" stroke-width="1">
+      <path d="M0,0H317a8,8,0,0,1,8,8V138a8,8,0,0,1-8,8H0a0,0,0,0,1,0,0V0A0,0,0,0,1,0,0Z" stroke="none"/>
+      <path d="M1,.5H317A7.5,7.5,0,0,1,324.5,8V138a7.5,7.5,0,0,1-7.5,7.5H1a.5.5,0,0,1-.5-.5V1A.5.5,0,0,1,1,.5Z" fill="none"/>
+    </g>
+    <text id="Service_Offers" data-name="Service Offers" transform="translate(1372.834 4542.236)" fill="#3e3e3e" font-size="28" font-family="Muli-Bold, Muli" font-weight="700"><tspan x="0" y="0">Service Offers</tspan></text>
+    <text id="someone_wants_to_sell_a_service" data-name="someone wants to sell a service" transform="translate(1326.989 4565.618)" fill="#3e3e3e" font-size="18" font-family="Muli-Light, Muli" font-weight="300"><tspan x="0" y="0">someone wants to sell a service</tspan></text>
+  </g>
+</svg>
