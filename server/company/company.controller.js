@@ -2,17 +2,17 @@ const Account = require('../account/account.model');
 const mongoose = require('mongoose');
 const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
+const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
 const { chatkit } = require('../services/pusher.services');
 const {
-  sendCompanyNotification
+  sendCompanyNotification,
 } = require('../services/notification.services');
 const {
-  createCompanyRoleNotification
+  createCompanyRoleNotification,
 } = require('../notification/notification.controller');
 
-
- const { 
+const {
   search,
   setDocument,
   memberIndex,
@@ -35,7 +35,7 @@ const changeName = async (req, res, next) => {
   try {
     // check member & role: superAdmin/admin
     const members = await Member.findOne({
-      $or:[ {role: 'superAdmin'}, {role: 'admin'}],
+      $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: req.company._id,
     });
 
@@ -61,7 +61,10 @@ const changeName = async (req, res, next) => {
 
     //notification
 
-    sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
+    sendCompanyNotification(req.company._id, {
+      _id: req.user._id,
+      name: req.user.name,
+    });
 
     const notification = new Notification({
       type: 'companyProfile',
@@ -82,7 +85,6 @@ const changeName = async (req, res, next) => {
 
     await notification.save();
     await UserNotification.create(usersNotification);
-
 
     return res.status(200).json({
       message: `Company's name updated`,
@@ -276,8 +278,13 @@ const updateBasicInfo = async (req, res, next) => {
 
     await req.company.save();
 
-    const text =`company profile has been updated by ${req.user.name}`;
-    createCompanyRoleNotification(req.company, {_id:req.user._id, name: req.user.name}, text, 'companyProfile' );
+    const text = `company profile has been updated by ${req.user.name}`;
+    createCompanyRoleNotification(
+      req.company,
+      { _id: req.user._id, name: req.user.name },
+      text,
+      'companyProfile',
+    );
     //createCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name} );
     return res.status(200).json({
       message: `Company's basic information updated`,
@@ -290,27 +297,30 @@ const updateBasicInfo = async (req, res, next) => {
 
 // update a company basic info
 const updateAbout = async (req, res, next) => {
-  
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
 
   try {
-    
     req.company.about = req.body.about;
 
     await Company.findOneAndUpdate(
       { _id: req.company._id },
-      {about : req.body.about},
+      { about: req.body.about },
       { safe: true, upsert: true, new: true },
     ).exec();
 
-    const text =`company profile has been updated by ${req.user.name}`;
-    createCompanyRoleNotification(req.company, {_id:req.user._id, name: req.user.name}, text, 'companyProfile' );
+    const text = `company profile has been updated by ${req.user.name}`;
+    createCompanyRoleNotification(
+      req.company,
+      { _id: req.user._id, name: req.user.name },
+      text,
+      'companyProfile',
+    );
     //sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
     //createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
-    
+
     return res.status(200).json({
       message: `Company's about updated`,
     });
@@ -556,57 +566,55 @@ const parentOrg = async (req, res, next) => {
   }
 };
 
-const dashBoard = async (req,res,next) => {
+const dashBoard = async (req, res, next) => {
   try {
     const companyId = req.params.companyId;
     const totalProject = await Project.find({
-      company: companyId
+      company: companyId,
     }).countDocuments();
     const totalEmployee = await Member.find({
-      company: companyId
+      company: companyId,
     }).countDocuments();
-    const totalAssociates = await Associate.find( { 
-      $or:[ {company: companyId}, {associateCompany: companyId}],
-      isAccepted: true , removed:false, isRejected:false
+    const totalAssociates = await Associate.find({
+      $or: [{ company: companyId }, { associateCompany: companyId }],
+      isAccepted: true,
+      removed: false,
+      isRejected: false,
     }).countDocuments();
 
-    return sendJSONresponse(res,200,{
+    return sendJSONresponse(res, 200, {
       success: true,
-      data:{
+      data: {
         totalProject,
         totalEmployee,
-        totalAssociates
-      }
+        totalAssociates,
+      },
     });
-
   } catch (error) {
-    logger.error(error)
+    logger.error(error);
     next(error);
   }
-}
+};
 
 const noticePostByCompany = async (req, res, next) => {
   try {
     const NewNotice = req.body.announcement;
-    const company = await Company.findByIdAndUpdate(
-      {
-        _id: req.params.companyId,
-      },
-      {
-        $addToSet: { announcement: NewNotice },
-      },
-      {
-        new: true,
-        safe: true,
-        upsert: true,
-      },
+    const announcement = new Announcement({
+      text: NewNotice,
+      company: req.params.companyId,
+    });
+    logger.info(`new notice created`);
+    await announcement.save();
+    const text = ` ${req.user.name} has created a announcment in ${req.user.name} company `;
+    createCompanyRoleNotification(
+      company,
+      { _id: req.user._id, name: req.user.name },
+      text,
+      'announcement',
     );
-
-    const text =` ${req.user.name} has created a announcment in ${req.user.name} company `;
-    createCompanyRoleNotification(company, {_id:req.user._id, name: req.user.name}, text, 'announcement' );
-    logger.info(`new notice cerated`);
-    return sendJSONresponse(res, 200, {
+    return sendJSONresponse(res, 201, {
       message: 'New notice added',
+      announcement,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -616,12 +624,13 @@ const noticePostByCompany = async (req, res, next) => {
 
 const allNoticesForCompany = async (req, res, next) => {
   try {
-    const company = await Company.find({
-      _id: req.params.companyId,
-    }).select('announcement');
+    const announce = await Announcement.find({
+      company: req.params.companyId,
+    });
+
     logger.info(`announcement show for company`);
     return sendJSONresponse(res, 200, {
-      company,
+      announce,
     });
   } catch (error) {
     logger.error(`${error}`);

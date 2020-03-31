@@ -30,7 +30,7 @@ const projectSchema = new Schema(
     },
     concernedAdmin: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Member',
+      ref: 'Account',
       required: true,
     },
     optionalRole: {
