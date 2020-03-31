@@ -41,7 +41,7 @@ router.route('/:memberId').get(
   teamCtrl.getMember,
 );
 
-router.route('/:memberId/changeRole').put(
+router.route('/:memberId/change-role').put(
   authorization,
   projectCtrl.authorizeProjectRole(
     'all',

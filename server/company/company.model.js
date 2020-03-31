@@ -179,7 +179,6 @@ const company = new Schema(
       ],
     },
     parentcom: [String],
-    announcement: [String],
     removed: {
       type: Boolean,
       default: false,
