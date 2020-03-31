@@ -32,7 +32,7 @@ export const notificationType = {
     path: async () => {
       const companyName = await store.getState().companyReducer.currentCompany
         .name;
-      return `/company/${companyName}/team`;
+      return `/company/${companyName}/colleague`;
     }
   },
   announcement: {
