@@ -117,7 +117,9 @@ module.exports = {
   }),
   updateBasicInfo: Joi.object().keys({
     body: Joi.object().keys({
-      address: schema.address.required(),
+      name: schema.name,
+      type: schema.type,
+      address: schema.address,
       email: schema.email,
       legalOwnerName: schema.legalOwnerName,
       legalOwnerMail: schema.legalOwnerMail,
@@ -149,7 +151,7 @@ module.exports = {
     query: sname,
   }),
   dashboard: Joi.object().keys({
-    params: companyId
+    params: companyId,
   }),
   createNotice: Joi.object().keys({
     params: companyId,
