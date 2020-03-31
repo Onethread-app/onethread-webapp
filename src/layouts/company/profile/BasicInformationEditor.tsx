@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { isNumber, isEmpty, isEqual } from 'lodash';
 import { connect } from 'react-redux';
-import { Button } from '@blueprintjs/core';
+import { Button, Icon, HTMLSelect } from '@blueprintjs/core';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { ICompany } from 'stores/company/Reducer';
@@ -10,6 +10,18 @@ import { editCompanyInfoAction } from 'stores/company/Actions';
 interface CompanyInfoProps {
   companyInfo: ICompany;
 }
+
+const Type = [
+  'Manufacturer',
+  'Trading Company',
+  'Buying Office',
+  'Agent',
+  'Distributor/Wholesaler',
+  'Government ministry/Bureau/Commission',
+  'Association',
+  'Business Service (Transportation, finance, travel, Ads, etc)',
+  'Other',
+]
 
 const CompanyInfoFormComponent = (
   props: {
@@ -76,6 +88,12 @@ const CompanyInfoFormComponent = (
     setValues({ ...values, [name]: value });
   };
 
+  const onChangeSelectField = (name: string) => (event: any) => {
+    const value = event.currentTarget.value;
+    setValues({ ...values, [name]: value });
+    setErrors({ ...errors, [name]: '' });
+  };
+
   const checkLegalOwnerMail = () => {
     if (isEqual(values.email, values.legalOwnerMail)) {
       return true;
@@ -120,42 +138,41 @@ const CompanyInfoFormComponent = (
         {errors.name ? (
           <small style={{ color: 'red' }}>{errors.name}</small>
         ) : (
-          ''
-        )}
+            ''
+          )}
       </div>
       <div className={` ${errors.type ? 'mb3' : 'mb4'}`}>
-        <InputGroupField
-          id="type"
-          value={values.type}
-          onChange={handleChange('type')}
-          placeHolder="Company Type"
-          leftIcon="user"
-          style={{
-            boxShadow: 'none'
-          }}
-          className={`br0 ${errors.type ? 'bb b--red' : 'bb b--lightBlue'}`}
-          leftIconColor={`${errors.type ? 'red' : '#0fa3a3'}`}
-          validationOnBlur={() => {
-            if (isEmpty(values.type)) {
-              const typeError = { ...errors, type: 'Required' };
-              setErrors(typeError);
-            } else if (values.type && values.type.length > 120) {
-              const typeError = {
-                ...errors,
-                type: 'Company type must be less than 32 character.'
-              };
-              setErrors(typeError);
-            } else {
-              const typeError = { ...errors, type: '' };
-              setErrors(typeError);
-            }
-          }}
-        />
-        {errors.name ? (
-          <small style={{ color: 'red' }}>{errors.name}</small>
+        <div className="flex">
+          <div className=" f5 pa1 bb b--lightBlue">
+            <Icon
+              icon={'briefcase'}
+              className="tigrow-lightBlue"
+            />
+          </div>
+          <HTMLSelect
+            fill={true}
+            minimal={true}
+            onChange={onChangeSelectField('type')}
+            className=" bb b--lightBlue"
+            style={{
+              boxShadow: 'none',
+              borderRadius: '0px',
+              backgroundColor: 'white',
+              flex: '1',
+              outline: 'none'
+            }}
+          >
+            <option selected value={values.type}>{values.type}</option>
+            {Type.map(t => (
+              <option value={t}>{t}</option>
+            ))}
+          </HTMLSelect>
+        </div>
+        {errors.type ? (
+          <small style={{ color: 'red' }}>{errors.type}</small>
         ) : (
-          ''
-        )}
+            ''
+          )}
       </div>
       <div className={` ${errors.address ? 'mb3' : 'mb4'}`}>
         <InputGroupField
@@ -188,8 +205,8 @@ const CompanyInfoFormComponent = (
         {errors.address ? (
           <small style={{ color: 'red' }}>{errors.address}</small>
         ) : (
-          ''
-        )}
+            ''
+          )}
       </div>
       <div className={` ${errors.email ? 'mb3' : 'mb4'}`}>
         <InputGroupField
@@ -226,8 +243,8 @@ const CompanyInfoFormComponent = (
         {errors.email ? (
           <small style={{ color: 'red' }}>{errors.email}</small>
         ) : (
-          ''
-        )}
+            ''
+          )}
       </div>
       <div className={` ${errors.legalOwnerName ? 'mb3' : 'mb4'}`}>
         <InputGroupField
@@ -241,7 +258,7 @@ const CompanyInfoFormComponent = (
           }}
           className={`br0 ${
             errors.legalOwnerName ? 'bb b--red' : 'bb b--lightBlue'
-          }`}
+            }`}
           leftIconColor={`${errors.legalOwnerName ? 'red' : '#0fa3a3'}`}
           validationOnBlur={() => {
             if (values.legalOwnerName && values.legalOwnerName.length > 32) {
@@ -260,8 +277,8 @@ const CompanyInfoFormComponent = (
         {errors.legalOwnerName ? (
           <small style={{ color: 'red' }}>{errors.legalOwnerName}</small>
         ) : (
-          ''
-        )}
+            ''
+          )}
       </div>
       <div className={` ${errors.legalOwnerMail ? 'mb3' : 'mb4'}`}>
         <InputGroupField
@@ -275,7 +292,7 @@ const CompanyInfoFormComponent = (
           }}
           className={`br0 ${
             errors.legalOwnerMail ? 'bb b--red' : 'bb b--lightBlue'
-          }`}
+            }`}
           leftIconColor={`${errors.legalOwnerMail ? 'red' : '#0fa3a3'}`}
           validationOnBlur={() => {
             if (checkLegalOwnerMail() && !isEmpty(values.legalOwnerMail)) {
@@ -303,8 +320,8 @@ const CompanyInfoFormComponent = (
         {errors.legalOwnerMail ? (
           <small style={{ color: 'red' }}>{errors.legalOwnerMail}</small>
         ) : (
-          ''
-        )}
+            ''
+          )}
       </div>
       <div className="flex justify-end">
         <Button

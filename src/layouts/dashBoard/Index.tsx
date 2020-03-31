@@ -73,7 +73,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                   props.company.announce.map((announcement: any) => (
 
                     <div className="flex items-center">
-                      <div className="w2 h2 bg-red br3"></div>
+                      <div className="w2 h2 bg-red br2 mv1"></div>
                       <h1 className="f5 fw4 mh3">{announcement.text}</h1>
                     </div>
 
