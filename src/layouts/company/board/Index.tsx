@@ -215,10 +215,11 @@ const TaskPageComponent = (
             <Loading />
           )}
           <div>
-            {props.role === 'admin' ||
-            projectRules(props.optionalRole)[props.role].includes(
-              'createUpdateBoard'
-            ) ? (
+            {props.role &&
+            (props.role === 'admin' ||
+              projectRules(props.optionalRole)[props.role].includes(
+                'createUpdateBoard'
+              )) ? (
               <img
                 onClick={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
                 src={addIcon}
@@ -231,9 +232,7 @@ const TaskPageComponent = (
                   borderRadius: '50%'
                 }}
               />
-            ) : (
-              undefined
-            )}
+            ) : undefined}
           </div>
         </div>
         {showTaskBoardDialog && (
