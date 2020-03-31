@@ -72,7 +72,7 @@ const create = async (req, res, next) => {
     }).select('_id name company');
     
     //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
-    console.log('board',req.user);
+    
     const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
     createBoardNotification(project, {_id:req.user._id, name: req.user.name}, text );
    const createdBoard = board.save()

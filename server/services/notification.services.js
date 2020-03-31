@@ -20,7 +20,7 @@ module.exports.sendCompanyNotification = async (
   userNotification = { notification: userNotification,
     read: false
   };
-  console.log(1,company);
+  
   channels_client.trigger(
     company.toString(), 
     `${company}-superAdmin`,
@@ -71,7 +71,7 @@ module.exports.sendMultipleNotification = async (
 
   // userNotification = { notification: userNotification
   // };
-  console.log(1,company);
+ 
   channels_client.trigger(
     companyChannelsPusher, 
     company.toString(),
@@ -115,7 +115,7 @@ module.exports.sendCompanyAndProjectNotification = async (
   }
   
   
-  console.log(1, userNotification, project.company,allChannel);
+ 
   channels_client.trigger(
     allChannel, 
     project.company.toString(), 
