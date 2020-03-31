@@ -145,43 +145,34 @@ const FormComponent = (props: {
                         </div>
                         {selectedAdmins.length > 0 && (
                           <div className="w-100">
-                            <div
-                              className="overflow-auto br2"
-                              style={{
-                                border: '1px solid #707070',
-                                maxHeight: '120px',
-                                background: '#707070'
-                              }}
-                            >
-                              {selectedAdmins.map(item => (
-                                <div>
-                                  <Tag
-                                    key={item._id}
-                                    className="pa1"
-                                    interactive={true}
-                                    style={{ background: '#707070' }}
-                                    onRemove={e => {
-                                      const filteredItems = selectedAdmins.filter(
-                                        selectedItem =>
-                                          item.name !== selectedItem.name
-                                      );
-                                      setSelectedAdmins([...filteredItems]);
-                                      input.onChange(
-                                        isEmpty(filteredItems)
-                                          ? undefined
-                                          : filteredItems.map(
-                                            (admin: Entity) => admin._id
-                                          )
-                                      );
-                                    }}
-                                    large={true}
-                                    intent="primary"
-                                  >
-                                    {item.name}
-                                  </Tag>
-                                </div>
-                              ))}
-                            </div>
+                            {selectedAdmins.map(item => (
+                              <div>
+                                <Tag
+                                  key={item._id}
+                                  className="pa1 ma1"
+                                  interactive={true}
+                                  style={{ background: '#0fa3a3' }}
+                                  onRemove={e => {
+                                    const filteredItems = selectedAdmins.filter(
+                                      selectedItem =>
+                                        item.name !== selectedItem.name
+                                    );
+                                    setSelectedAdmins([...filteredItems]);
+                                    input.onChange(
+                                      isEmpty(filteredItems)
+                                        ? undefined
+                                        : filteredItems.map(
+                                          (admin: Entity) => admin._id
+                                        )
+                                    );
+                                  }}
+                                  large={true}
+                                  intent="primary"
+                                >
+                                  {item.name}
+                                </Tag>
+                              </div>
+                            ))}
                           </div>
                         )}
                       </div>
@@ -194,7 +185,7 @@ const FormComponent = (props: {
                     validate={required}
                     render={({ meta, input }) => (
                       <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                        <div className="fl w-100 pb2">
+                        <div className="w-100 pb2">
                           <div className="mb1">
                             <p className="fw5" style={{ fontSize: '.8rem' }}>
                               Select Departments
@@ -219,43 +210,34 @@ const FormComponent = (props: {
                         </div>
                         {selectedDepartment.length > 0 && (
                           <div className="w-100">
-                            <div
-                              className="overflow-auto br2"
-                              style={{
-                                border: '1px solid #707070',
-                                maxHeight: '120px',
-                                background: '#707070'
-                              }}
-                            >
-                              {selectedDepartment.map(item => (
-                                <div>
-                                  <Tag
-                                    key={item._id}
-                                    className="pa1"
-                                    interactive={true}
-                                    style={{ background: '#707070' }}
-                                    onRemove={e => {
-                                      const filteredItems = selectedDepartment.filter(
-                                        selectedItem =>
-                                          item.name !== selectedItem.name
-                                      );
-                                      setSelectedDepartment([...filteredItems]);
-                                      input.onChange(
-                                        isEmpty(filteredItems)
-                                          ? undefined
-                                          : filteredItems.map(
-                                            (dept: Entity) => dept._id
-                                          )
-                                      );
-                                    }}
-                                    large={true}
-                                    intent="primary"
-                                  >
-                                    {item.name}
-                                  </Tag>
-                                </div>
-                              ))}
-                            </div>
+                            {selectedDepartment.map(item => (
+                              <div className="ma1 fl">
+                                <Tag
+                                  key={item._id}
+                                  className="pa1"
+                                  interactive={true}
+                                  style={{ background: '#0fa3a3' }}
+                                  onRemove={e => {
+                                    const filteredItems = selectedDepartment.filter(
+                                      selectedItem =>
+                                        item.name !== selectedItem.name
+                                    );
+                                    setSelectedDepartment([...filteredItems]);
+                                    input.onChange(
+                                      isEmpty(filteredItems)
+                                        ? undefined
+                                        : filteredItems.map(
+                                          (dept: Entity) => dept._id
+                                        )
+                                    );
+                                  }}
+                                  large={true}
+                                  intent="primary"
+                                >
+                                  {item.name}
+                                </Tag>
+                              </div>
+                            ))}
                           </div>
                         )}
                       </div>
@@ -292,7 +274,7 @@ const FormComponent = (props: {
                     return ['associates'].includes(value);
                   }}
                 >
-                  <div>
+                  <div className="mb4">
                     <p className="fw5" style={{ fontSize: '.8rem' }}>
                       Select Your Associate Companies
                   </p>

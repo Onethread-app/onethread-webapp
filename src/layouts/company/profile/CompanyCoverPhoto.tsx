@@ -64,7 +64,7 @@ const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
               text="Request Sent"
             /> */}
           </div>
-          <Button
+          {/* <Button
             className="bp3-minimal"
             style={{
               color: "white",
@@ -75,7 +75,7 @@ const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
               width: "200px"
             }}
             text="Add as Associates"
-          />
+          /> */}
         </div>
 
         <Button

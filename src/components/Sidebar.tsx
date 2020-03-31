@@ -42,7 +42,7 @@ export const Sidebar = (props: {
         className={`${props.leftOpen ? 'db ml4 mv3' : 'dn'} `}
         style={{ width: '6rem' }}
       >
-        <NavLink to={`/${props.user.name}`}>
+        <NavLink to={`/company/${props.company.name}`}>
           {props.leftOpen ? <img src={logo} /> : <img src={tigrowLogo} />}
         </NavLink>
       </div>
@@ -356,7 +356,9 @@ export const Sidebar = (props: {
                   >
                     {props.leftOpen ? (
                       <span className="pl4">
-                        <img src={board} className="w2 pt1" />
+                        <img src={board} className="pt1" 
+                        style={{ width: '25px' }}
+                        />
                       </span>
                     ) : (
                         <Tooltip
@@ -364,7 +366,9 @@ export const Sidebar = (props: {
                           position="right"
                         >
                           <span className="pl3">
-                            <img src={board} className="w2 pt1" />
+                            <img src={board} className="pt1" 
+                            style={{ width: '25px' }}
+                            />
                           </span>
                         </Tooltip>
                       )}
