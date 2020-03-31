@@ -27,7 +27,6 @@ import {
   EDIT_DESIGNATION,
   EDIT_DESIGNATION_ERROR,
   LOGO_UPLOAD,
-  COVER_IMAGE_UPLOAD,
   CHANGE_MEMBER_ROLE,
   CHANGE_MEMBER_ROLE_ERROR,
   COMPANY_ROLE,
@@ -36,7 +35,8 @@ import {
   DELETE_TEAM_MEMBER,
   DELETE_TEAM_MEMBER_ERROR,
   ADD_CERTIFICATE,
-  ADD_ORGANIZATION
+  ADD_ORGANIZATION,
+  COVER_IMAGE_UPLOAD_COMPANY
 } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE, CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -53,6 +53,7 @@ export const getCompanyDetails = (name: string) => async (
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`company/${name}`, headers);
       dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
+      console.log(response.data);
       dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY });
       return response;
     } else {
@@ -376,7 +377,7 @@ export const companyLogoUploadAction = (
         });
       } else if (response.data.imageType === 'company-cover-photo') {
         dispatch({
-          type: COVER_IMAGE_UPLOAD,
+          type: COVER_IMAGE_UPLOAD_COMPANY,
           payload: { ...response.data, link: response.data.link }
         });
       }
