@@ -6,13 +6,11 @@ const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
 const { chatkit } = require('../services/pusher.services');
 const {
-  sendCompanyNotification
+  sendCompanyNotification,
 } = require('../services/notification.services');
 const {
-  createCompanyRoleNotification
+  createCompanyRoleNotification,
 } = require('../notification/notification.controller');
-
-
 
 const {
   search,
@@ -299,14 +297,12 @@ const updateBasicInfo = async (req, res, next) => {
 
 // update a company basic info
 const updateAbout = async (req, res, next) => {
-  
   // Check for JSON
   if (!req.is('application/json')) {
     return res.send("Expects 'application/json'");
   }
 
   try {
-    
     req.company.about = req.body.about;
 
     await Company.findOneAndUpdate(
@@ -325,8 +321,6 @@ const updateAbout = async (req, res, next) => {
     //sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
     //createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
 
-   
-    
     return res.status(200).json({
       message: `Company's about updated`,
     });
