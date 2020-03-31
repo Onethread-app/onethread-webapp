@@ -8,7 +8,6 @@ const companyCtrl = require('../company/company.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-
 router
   .route('/change-title')
   .put(

@@ -13,8 +13,8 @@ const { permit, authSelf } = require('./../helpers/permission');
 const router = express.Router();
 
 // get borad list
-router
-  .route('/:companyId')
+  router
+  .route('/:companyId') //companyId for authorization
   .post(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),

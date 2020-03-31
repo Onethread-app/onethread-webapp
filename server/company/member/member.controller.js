@@ -16,6 +16,9 @@ const {
   deleteDocument,
 } = require('../../services/elastic.services');
 const chalk = require('chalk');
+const {
+  createMemberAddNotification
+} = require('../../notification/notification.controller');
 
 const { PendingMember } = require('./pendingMember.model');
 const {
@@ -106,6 +109,8 @@ const addMember = async (req, res, next) => {
       // add new members in company
       members = await Member.create(newMembers);
 
+      
+
       const elasticSearchIndexedMembers = await Member.find({
         account: { $in: accounts },
         company: req.company._id,
@@ -113,6 +118,20 @@ const addMember = async (req, res, next) => {
         path: 'account',
         select: '_id name firstName lastName email',
       });
+      
+      // console.log(elasticSearchIndexedMembers);
+      // //notification need account info
+      // newMembersForNotification = await elasticSearchIndexedMembers.filter(newMember => {
+      //   return !prevMembers.some(prevMemberAccount => {
+      //     return (
+      //       prevMemberAccount.toString() ===
+      //       newMember.account._id.toString()
+      //     );
+      //   });
+      // });
+      // console.log(newMembersForNotification);
+
+      createMemberAddNotification(req.company._id, elasticSearchIndexedMembers, {_id:req.user._id, name: req.user.name} );
 
       const memberStructure = data => {
         return {

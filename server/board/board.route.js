@@ -12,7 +12,7 @@ const { permit, authSelf } = require('./../helpers/permission');
 
 const router = express.Router();
 
-// get borad list
+
 router
   .route('/')
   

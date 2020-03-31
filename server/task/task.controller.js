@@ -9,6 +9,9 @@ const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
 var _ = require('lodash');
 const {sendErrorResponse} = require('../helpers/jsonResponse');
+const {
+  createCompanyRoleNotification
+} = require('../notification/notification.controller');
 const { Team } = require('../team-member/team.model');
 
 const load = (req, res, next, id) => {
@@ -42,7 +45,18 @@ const create = async (req, res, next) => {
     // TODO: should use update function
     const column = await BoardColumn.findOne({
       _id: req.body.columnId,
-    });
+    }).populate({ 
+      path: 'boardId',
+      populate: {
+        path: 'project',
+        model: 'Project',
+        select: 'name company'
+      } 
+   });
+
+    const text =`${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
+    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name}, text, 'task' );
+       
     column.tasks.push(createdTask._id);
     await column.save();
 
@@ -246,7 +260,7 @@ const list = (req, res, next) => {};
 
 const dragTask = async (req, res, next) => {
   try {
-    await Task.findByIdAndUpdate(req.body.taskId, {
+    const task = await Task.findByIdAndUpdate(req.body.taskId, {
       $set: { columnId: req.body.destinationColumnId },
     }).exec();
 
@@ -275,6 +289,10 @@ const dragTask = async (req, res, next) => {
       .populate('tasks', '_id name description dueDate')
       .exec();
 
+    const text =`${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
+    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name}, text, 'task' );
+    
+    
     await ActivityCtrl.create(
       `moved this card from ${sourceColumn.name} to ${destinationColumn.name}`,
       'move',

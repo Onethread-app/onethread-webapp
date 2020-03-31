@@ -14,6 +14,7 @@ const roomRoutes = require('./server/room/room.route');
 const skillRoutes = require('./server/skillArea/skillArea.route');
 const fileRoutes = require('./server/file/file.route');
 const messageRoutes = require('./server/message/message.route');
+const notificationRoutes = require('./server/notification/notification.route');
 const jobRoutes = require('./server/job/job.route');
 const educationRoutes = require('./server/education/education.route');
 const boardRoutes = require('./server/board/board.route');
@@ -54,5 +55,7 @@ router.use('/utils', utilsRoutes);
 router.use('/chatkit', chatkitRoutes);
 router.use('/projects', projectRoutes);
 router.use('/associate', associateRoutes);
+router.use('/notifications', notificationRoutes);
+
 router.use('/teams', teamRoutes);
 module.exports = router;

@@ -7,6 +7,9 @@ const {  BadRequestError } = require('../helpers/APIError');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
 const { log } = require('debug');
 const _ = require('lodash');
+const {
+  createCompanyRoleNotification
+} = require('../notification/notification.controller');
 
 
 
@@ -30,7 +33,7 @@ const get = async (req, res , next) => {
         colResult.associateCompany = colResult.company;
         colResult.company = undefined;
       }
-      
+
       res.json(colResult);
     })
     .catch(e => {
@@ -65,6 +68,10 @@ const createPending = async (req, res, next) => {
     }
     await associate
       .save();
+
+      const text =`${req.body.associateCompany.name} wants to add you as their associate`;
+      
+    createCompanyRoleNotification(req.body.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
       await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
       //await associate.populate('associateCompany', '_id name type').execPopulate;
       
@@ -86,8 +93,14 @@ const acceptPending = async (req, res, next) => {
       {   isAccepted: true, isRejected: false  },
       { safe: true, upsert: true, new: true },
     ).exec();
-      
-    associate = await Associate.populate(associate, { path: 'company', select: '_id name type'});
+
+    associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
+    const text =`${associate.associateCompany.name} accepted you as their associate`;
+    
+    createCompanyRoleNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
+    
+   
+    //associate = await Associate.populate(associate, { path: 'company', select: '_id name type'});
       
       return res.status(200).json(associate);
   } catch (error) {
@@ -101,14 +114,17 @@ const acceptPending = async (req, res, next) => {
 const rejectPending = async (req, res, next) => {
   try {
     //console.log();
-    await Associate.findOneAndUpdate(
+    let associate =  await Associate.findOneAndUpdate(
       { _id: req.body.associateId },
         { isRejected: true  },
       { safe: true, upsert: true, new: true },
     ).exec();
+
+    associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
+    const text =`${associate.associateCompany.name} rejected you as their associate`;
     
     
-      
+    createCompanyRoleNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
     return res.status(200).json({   remove: true  });
   } catch (error) {
     
@@ -136,7 +152,6 @@ const list = async (req, res, next) => {
     .exec()
     .then(result => {
       
-      logger.info(`${result}`);
       return sendJSONresponse(res, 200, result);
     })
     .catch(e => next(e));
@@ -161,7 +176,6 @@ const listPending = async (req, res, next) => {
     .exec()
     .then(result => {
       
-      logger.info(`${result}`);
       return sendJSONresponse(res, 200, result);
     })
     .catch(e => {

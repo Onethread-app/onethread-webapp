@@ -5,6 +5,10 @@ const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
 const {sendErrorResponse, sendJSONresponse} = require('../helpers/jsonResponse');
+const { Project } = require('../project/project.model');
+const {
+  createBoardNotification
+} = require('../notification/notification.controller');
 const { Team } = require('../team-member/team.model');
 
 const load = (req, res, next, id) => {
@@ -51,6 +55,7 @@ const get = async (req, res , next) => {
 };
 
 const create = async (req, res, next) => {
+ 
 
   try {
     const board = new Board({
@@ -61,19 +66,25 @@ const create = async (req, res, next) => {
       project: req.body.projectId,
       members: [req.user._id],
     });
-    board
-      .save()
-      .then(createdBoard => {
-        return res.status(201).json(createdBoard);
-      })
-      .catch(e => next(e));
+
+    const project = await Project.findOne({
+      _id: req.body.projectId,
+    }).select('_id name company');
+    
+    //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
+    
+    const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
+    createBoardNotification(project, {_id:req.user._id, name: req.user.name}, text );
+   const createdBoard = board.save()
+      
+    return res.status(201).json(createdBoard);
+      
+      
   } catch (error) {
+    
     logger.error(`Board create: ${error}`);
-    const err = new BadRequestError(
-      'board data is invalid.',
-      httpStatus.BAD_REQUEST,
-    );
-    next(err);
+    
+    next(error);
   }
 };
 
@@ -87,14 +98,19 @@ const addBoardMembers = async (req, res, next) => {
       { _id: boardID },
       { $addToSet: { members: memberID } },
       { safe: true, upsert: true, new: true },
-    ).populate('members', '_id name');
-    const boardMembers = await Board.findOne({
+    )
+    .populate('members', '_id name');
+    const board = await Board.findOne({
       _id: boardID,
-    }).populate('members', 'name');
-
-    const memberList = boardMembers.members;
+    }).populate('project', '_id name company')
+    .populate('members', 'name');
+    const index  = board.members.findIndex(x => x._id ===memberID);
+    const text =`${req.user.name} has added  ${board.members[index].name} in ${board.name} from ${board.project.name}`; 
+    createBoardNotification(board.project, {_id:req.user._id, name: req.user.name}, text );
+    const memberList = board.members;
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {
+    
     next(error);
   }
 };

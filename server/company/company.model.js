@@ -90,23 +90,21 @@ const company = new Schema(
       required: true,
     },
     optionalRole: {
-      type: [
-        {
-          type: String,
-          enum: [
-            'editProfile',
-            'cRUDAnnouncement',
-            'archiveProject',
-            'addRemoveModerator',
-            'messageAssociate',
-            'addAcceptRejectAssociate',
-            'acceptRejectProjectFromAssociate',
-          ],
-        },
-      ],
-      default: ['editProfile', 'cRUDAnnouncement'],
+      type: [{
+        type: String,
+        enum: [
+          'editProfile',
+          'cRUDAnnouncement',
+          'archiveProject',
+          'addRemoveModerator',
+          'messageAssociate',
+          'addAcceptRejectAssociate',
+          'acceptRejectProjectFromAssociate',
+        ]
+      }],
+      
     },
-
+    
     address: {
       type: String,
       maxlength: 120,

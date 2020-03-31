@@ -4,8 +4,14 @@ const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
-const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
+const {
+  sendCompanyNotification,
+} = require('../services/notification.services');
+const {
+  createCompanyRoleNotification,
+} = require('../notification/notification.controller');
+
 const {
   search,
   setDocument,
@@ -28,16 +34,17 @@ const changeName = async (req, res, next) => {
 
   try {
     // check member & role: superAdmin/admin
-    const member = await Member.findOne({
-      account: req.user._id,
+    const members = await Member.findOne({
+      $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: req.company._id,
     });
 
-    if (!member || !['superAdmin', 'admin'].includes(member.role)) {
-      return res.status(403).json({
-        message: `Restricted`,
-      });
-    }
+    //middleware added
+    // if (!member || !['superAdmin', 'admin'].includes(member.role)) {
+    //   return res.status(403).json({
+    //     message: `Restricted`,
+    //   });
+    // }
 
     // check duplicate company name
     const duplicate = await Company.findOne({
@@ -51,6 +58,33 @@ const changeName = async (req, res, next) => {
 
     req.company.name = req.body.name;
     await req.company.save();
+
+    //notification
+
+    sendCompanyNotification(req.company._id, {
+      _id: req.user._id,
+      name: req.user.name,
+    });
+
+    const notification = new Notification({
+      type: 'companyProfile',
+      account: req.user._id,
+      company: req.company._id,
+    });
+
+    // const userNotification = new UserNotification({
+    //   notification: notification._id,
+    //   company: req.company._id,
+    // });
+    let usersNotification = members.map(m => {
+      return {
+        notification: notification._id,
+        account: m.account,
+      };
+    });
+
+    await notification.save();
+    await UserNotification.create(usersNotification);
 
     return res.status(200).json({
       message: `Company's name updated`,
@@ -244,10 +278,19 @@ const updateBasicInfo = async (req, res, next) => {
 
     await req.company.save();
 
+    const text = `company profile has been updated by ${req.user.name}`;
+    createCompanyRoleNotification(
+      req.company,
+      { _id: req.user._id, name: req.user.name },
+      text,
+      'companyProfile',
+    );
+    //createCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name} );
     return res.status(200).json({
       message: `Company's basic information updated`,
     });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 };
@@ -262,7 +305,21 @@ const updateAbout = async (req, res, next) => {
   try {
     req.company.about = req.body.about;
 
-    await req.company.save();
+    await Company.findOneAndUpdate(
+      { _id: req.company._id },
+      { about: req.body.about },
+      { safe: true, upsert: true, new: true },
+    ).exec();
+
+    const text = `company profile has been updated by ${req.user.name}`;
+    createCompanyRoleNotification(
+      req.company,
+      { _id: req.user._id, name: req.user.name },
+      text,
+      'companyProfile',
+    );
+    //sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
+    //createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
 
     return res.status(200).json({
       message: `Company's about updated`,
@@ -548,6 +605,13 @@ const noticePostByCompany = async (req, res, next) => {
     });
     logger.info(`new notice created`);
     await announcement.save();
+    const text = ` ${req.user.name} has created a announcment in ${req.user.name} company `;
+    createCompanyRoleNotification(
+      company,
+      { _id: req.user._id, name: req.user.name },
+      text,
+      'announcement',
+    );
     return sendJSONresponse(res, 201, {
       message: 'New notice added',
       announcement,

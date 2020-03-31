@@ -13,6 +13,9 @@ const {
   sendErrorResponse,
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
+const {
+  createCompanyRoleNotification
+} = require('../notification/notification.controller');
 const teamCreate = (account, member, project, role) => {
   let newTeam = new Team({
     account,
@@ -67,6 +70,17 @@ const createNewProjectForCompany = async (req, res, next) => {
       // Insert project request
       try {
         let sendProjectReq = await ProjectRequest.create(projectReq);
+        let associate = await Associate.findOne(
+          { _id: req.body.associates },
+          {   isAccepted: true, isRejected: false  },
+        ).populate('associateCompany', '_id name type')
+        .populate('company', '_id name type')
+        .exec();
+  
+        
+        
+        const text =`${associate.company.name} wants to create a associate project ${project.name} with your ${associate.company.name} `;
+        createCompanyRoleNotification(associate.company, {_id:req.user._id, name: req.user.name}, text,'project' );
         logger.info(
           `${req.params.companyId} company send a project request to its associate`,
         );
@@ -110,6 +124,10 @@ const createNewProjectForCompany = async (req, res, next) => {
         description: '',
         outline: '',
       });
+      
+      const text =`${req.user.name} has created a project ${project.name} `;
+      createCompanyRoleNotification({_id: req.body.companyId}, {_id:req.user._id, name: req.user.name}, text,'project' );
+        
       await project
         .save()
         .then(project => {
@@ -208,7 +226,7 @@ const projectPendingRequest = async (req, res, next) => {
 
 const acceptProjectRequest = async (req, res, next) => {
   try {
-    await ProjectRequest.updateOne(
+    let projectReq =  await ProjectRequest.updateOne(
       { project: req.query.pid },
       {
         $set: {
@@ -219,7 +237,7 @@ const acceptProjectRequest = async (req, res, next) => {
       { safe: true, new: true, upsert: true },
     );
     logger.info(`project request accept for ${req.query.pid}`);
-    await Associate.updateOne(
+    let associate = await Associate.updateOne(
       {
         company: req.params.companyId,
       },
@@ -231,6 +249,10 @@ const acceptProjectRequest = async (req, res, next) => {
     // logger.info(
     //   `${req.query.companyId} create a project`,
     // );
+
+    associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
+    const text =`${associate.associateCompany.name} has accepted ${projectReq.name} request `;
+    createCompanyRoleNotification(associate.company, {_id:req.user._id, name: req.user.name}, text,'project' );
     await Project.updateOne(
       { _id: req.query.pid },
       {
@@ -378,11 +400,14 @@ const archiveProject = async (req, res, next) => {
       removed: false,
     });
     if (projectExist) {
-      await Project.updateOne(
+      const project = await Project.updateOne(
         { _id: req.query.pid },
         { $set: { removed: true } },
         { safe: true, upsert: true, new: true },
       );
+      const text =`${req.user.name} has archived a project ${project.name}`;
+      createCompanyRoleNotification(associate.company, {_id:req.user._id, name: req.user.name}, text,'project' );
+        
       logger.info(`Archive a project  ${req.params.pid}`);
       return sendJSONresponse(res, 200, {
         message: `Archive a project`,
