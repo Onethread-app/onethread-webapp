@@ -367,6 +367,35 @@ try{
 
 };
 
+module.exports.listtest   = async (req, res, next) => {
+  const { limit = 50, skip = 0, companyId } = req.query;
+
+  
+try{
+ 
+
+  // console.log(1,req.params.companyId)
+  
+  UserNotification.aggregate()
+  //.project('notification')
+  .match({'account' : new ObjectId(req.user._id)})
+  .unwind('notification')
+  //.unwind('$notification.company')
+  .match({'notification.company' : new ObjectId(req.params.companyId)})
+  .exec()
+  .then(result => {
+    console.log(result);
+    logger.info(`${result}`);
+    return sendJSONresponse(res, 200, result);
+  });
+} catch (error) {
+  console.log(error);
+  logger.error(`${error}`);
+  next(error);
+}
+
+};
+
 module.exports.list   = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 

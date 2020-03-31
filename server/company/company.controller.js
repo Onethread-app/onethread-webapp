@@ -607,7 +607,7 @@ const noticePostByCompany = async (req, res, next) => {
     await announcement.save();
     const text = ` ${req.user.name} has created a announcment in ${req.user.name} company `;
     createCompanyRoleNotification(
-      company,
+      { _id: req.params.companyId },
       { _id: req.user._id, name: req.user.name },
       text,
       'announcement',
@@ -617,6 +617,7 @@ const noticePostByCompany = async (req, res, next) => {
       announcement,
     });
   } catch (error) {
+    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
