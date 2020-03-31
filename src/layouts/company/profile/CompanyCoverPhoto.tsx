@@ -83,7 +83,7 @@ const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
           style={{
             marginTop: "265px",
             marginRight: "45px",
-            color: "white"
+            color: "#0fa3a3"
           }}
           onClick={() => setShowDialogPicture(true)}
         >
