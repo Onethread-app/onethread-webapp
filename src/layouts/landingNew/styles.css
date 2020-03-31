@@ -18,6 +18,12 @@
     min-width: 140px;
 }
 
+.tryLink.light{
+    background: #FFFFFF 0% 0% no-repeat padding-box;
+    color: #3E5578;
+    opacity: 1;
+}
+
 .demoLink{
     padding: 2rem 0rem;
 }
@@ -25,6 +31,10 @@
 .tryLink:hover{
     outline: none;
     color: white;
+}
+
+.tryLink.light:hover{
+    color: #3E5578;
 }
 
 .primeText{
@@ -91,6 +101,34 @@
     font: bold 1.2rem/1.4rem Muli;
     letter-spacing: 0.96px;
     color: #FFFFFF;
+}
+
+@media (max-width: 1366px){
+    .primeText{
+        font-size: 3rem;
+    }
+
+    .secondaryText{
+        font-size: 2rem;
+    }
+
+    .titleText{
+        font-size: 1.55rem;
+    }
+
+    .featureTitle{
+        font-size:  1.2rem;
+    }
+
+    .homeUl>.featureTitle::before{
+        height: 1.1rem;
+        width: 1.1rem;
+    }
+
+    .footerText{
+        font-size: 0.9rem;
+        line-height: 1rem;
+    }
 }
 
 @media only screen and (max-width: 600px) {

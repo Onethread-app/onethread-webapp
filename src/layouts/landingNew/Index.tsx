@@ -3,19 +3,17 @@ import { Navbar, Alignment } from '@blueprintjs/core';
 import { EmailVerificationForm } from './EmailVerificationForm';
 import './styles.css';
 
-import growNetworkIcon from './../../resources/images/GrowYourNetwork.svg';
-import landingPic2 from './../../resources/images/landingIllustration2.png';
-import boardIcon from './../../resources/images/sideBarBoard.svg';
-import roomIcon from './../../resources/images/sidebarRoom.svg';
-import portfolioIcon from './../../resources/images/PortfoliosIcon.svg';
-import projectIcon from './../../resources/images/ProjectsIcon.svg';
-import growTribeIcon from './../../resources/images/GrowYourTribes.svg';
-import connectTribeIcon from './../../resources/images/ConnectWithTribes.svg';
-import attractiveCompanyIcon from './../../resources/images/AttractiveCompanyProfile.svg';
-import verificationIcon from './../../resources/images/GetVerified.svg';
 import tigrowLogo from './../../resources/homepageImages/tigrowLogo.svg';
 import heroSection from "./../../resources/homepageImages/heroSection.png";
 import projects from "./../../resources/homepageImages/projects.png";
+import project from "./../../resources/homepageImages/project.svg";
+import chat from "./../../resources/homepageImages/chat.svg";
+import board from "./../../resources/homepageImages/board.svg";
+import customers from "./../../resources/homepageImages/customers.png";
+import packages from "./../../resources/homepageImages/packages.png";
+import offers from "./../../resources/homepageImages/offers.png";
+import service from './../../resources/homepageImages/service.png';
+import meet from './../../resources/homepageImages/meet.png';
 
 export const HomePage = () => {
 
@@ -86,8 +84,9 @@ export const HomePage = () => {
           </div>
           <div className="w-60-ns h-100-ns w-100 h-100">
             <img
+              style={{float: 'right'}}
               src={heroSection}
-              style={{}}
+              alt="hero Section"
             />
           </div>
         </div>
@@ -95,212 +94,78 @@ export const HomePage = () => {
       <div className="w-70-ns w100 center pv5 tc titleText">
         Use TiGrow Workplace for Remote Working with Teams, For Vendor Management &amp; To Collaborate with All of your Stakeholders at one place.
       </div>
-      <div className="flex-ns items-center pl4-l pl4 ph2">
-        <div className="pl5-ns w-70-ns h-100-ns w-100 h-100">
+      <div className="flex-ns items-center pl4-l pl4 ph2 pv4-ns">
+        <div className="pl5-ns w-60-ns h-100-ns w-100 h-100">
           <img src={projects}/>
         </div>
-        <div className="pr5-ns w-30-ns h-100-ns w-100 h-100">
+        <div className="pr5-ns w-40-ns h-100-ns w-100 h-100 center">
           <div className="titleText tc" style={{fontWeight: 200}}>
             <span style={{color: '#588F8F', fontWeight: 'bold'}}>Introducing Projects</span><br/>
             Create Projects With&nbsp;
             <span style={{fontWeight: 'bold'}}>Single Department</span>
             ,&nbsp;
             <span style={{fontWeight: 'bold'}}>Multiple Departments</span>
-            &nbsp;or&nbsp;
+            <br/>or&nbsp;
             <span style={{fontWeight: 'bold'}}>With External Stakeholders of the Company</span>
           </div>
         </div>
       </div>
-      <div
-        className="flex-ns items-center pv6-ns pv4 ph2"
-        style={{
-          backgroundColor: '#474DBB'
-        }}
-      >
-        <div className="w-50-ns w-100 tc mb4 mb0-ns">
-          <h1 className="white f2-ns mt0"
-          >Workplace</h1>
-          <p className="white-90 f4 mb4"
-            style={{ lineHeight: '2.5rem' }}
-          >A Team Collaboration Tool
-            <br />The easiest way to manage team
-            <br />projects and tasks</p>
-          <a
-            href="/signup"
-            className="grow ph4 pointer f5 fw7 pv3"
-            style={{
-              background: 'white',
-              outline: 'none',
-              color: '#474DBB',
-              borderRadius: '25px',
-              border: 'none',
-              height: '50px'
-            }}
-            type="submit"
-          >Try for free</a>
+      <div className="flex-ns items-center pl4-l pl4 ph4-ns pv4-ns" style={{justifyContent: 'space-around'}}>
+        <div className="pl5-ns w-20-ns h-100-ns w-100 h-100">
+          <img src={project} alt=""/>
         </div>
-        <div className="w-50-ns w-100 tc">
-          <h1 className="white f2-ns mt0"
-          >Tribe</h1>
-          <p className="white-90 f4 mb4"
-            style={{ lineHeight: '2.5rem' }}
-          >Business Lead Generation was never this simple
-            <br />Showcase your product/service in the largest
-            <br />enterprise network in the world</p>
-          <a
-            href="/signup"
-            className="grow ph4 pointer f5 fw7 pv3"
-            style={{
-              background: 'white',
-              outline: 'none',
-              color: '#474DBB',
-              borderRadius: '25px',
-              border: 'none',
-              height: '50px'
-            }}
-            type="submit"
-          >Create your company profile for free</a>
+        <div className="pr5-ns pl4-ns w-80-ns h-100-ns w-100 h-100">
+          <img src={chat} alt=""/>
+          <div className="titleText tc pv4">
+            <span style={{color: '#588F8F'}}>Chat from anywhere through Rooms</span><br/>
+            Share your opinion, and your personality. Highlight Important <br/> Discussion in a group chat or in one-to-one messages.
+          </div>
+          <img src={board} alt=""/>
         </div>
       </div>
-      <div id="features" className="tc mv5 ph4">
-        <h1 className="black f2-ns">The Easiest Way To Manage Team Projects and Tasks</h1>
-        <div className="flex-ns mt6-ns mt2">
-          <div className="w-25-ns w-100 ph2">
-            <img
-              style={{ width: '60px' }}
-              src={boardIcon} />
-            <h1>Board</h1>
-            <p className="f5 fw6">Communicate with your Team in<br /> the most effective manner.</p>
-            <p className="f5 fw6 mt3">We revisioned chat features for<br /> the best user experience.</p>
-            <p className="f5 fw6 mt3">You can now select featured chats<br />
-              and see them separately as <br />
-              discussion topics.</p>
+      <div className="flex-ns items-center pl4-l pl4 ph2" style={{justifyContent: 'space-around'}}>
+        <div className="pl5-ns w-50-ns h-100-ns w-100 h-100">
+          <div className="titleText tc">
+            <span style={{color: '#588F8F'}}>Meet from anywhere</span><br/>
+            Use video conference with features <br/> like screen sharing. Teams of 10 or <br/> 10,000 can meet in one place, no <br/> matter how many places they’re in.
           </div>
-          <div className="w-25-ns w-100 ph2">
-            <img
-              style={{ width: '60px' }}
-              src={roomIcon} />
-            <h1 className="">Room</h1>
-            <p className="f5 fw6">See where everything stands<br />Visualize your work.</p>
-            <p className="f5 fw6 mt3">Move work, through multiple stages<br />quickly, easily, and beautifully.</p>
-          </div>
-          <div className="w-25-ns w-100 ph2">
-            <img
-              style={{ width: '60px' }}
-              src={portfolioIcon} />
-            <h1>Portfolios</h1>
-            <p className="f5 fw6">Monitor the status of key<br />initiatives in real time.</p>
-            <p className="f5 fw6 mt3">See how all your projects are<br />progressing in real time with Portfolios.</p>
-            <p className="f5 fw6 mt3">So you can proactively
-            <br />address risks and report updates to
-            <br />stakeholders.</p>
-          </div>
-          <div className="w-25-ns w-100 ph2">
-            <img
-              style={{ width: '60px' }}
-              src={projectIcon} />
-            <h1>Projects</h1>
-            <p className="f5 fw6">Hit your goals, without the
-            <br />scramble Make every<br />
-              project a success.</p>
-            <p className="f5 fw6 mt3">Map out each step and
-            <br />organize all the details of your<br />
-              work in one place.
-            </p>
-          </div>
+        </div>
+        <div className="pr5-ns w-50-ns h-100-ns w-100 h-100">
+          <img src={meet} style={{padding: '5rem', paddingLeft: 0}}/>
         </div>
       </div>
       <div className="flex-ns items-center ph6-ns ph4 pv5-ns">
-        <div className="w-40-ns w-100 pl4">
-          <h1 className="black f2-ns">Introducing Tribe</h1>
-          <h1 className="black f3-ns">So, What is Tribe?</h1>
-          <p className="f4 fw6 lh-2">Any Enterprise With All It's<br />
-            Business Associates is a Tribe.</p>
-          <p className="f4 fw6 mt3 lh-2">The World is Filled with Lots<br />
-            of Disconnected Tribes.</p>
-          <p className="f4 fw6 mt3 lh-2">We want to create connectivity<br />
-            among them.</p>
-          <p className="f4 fw6 mt3 lh-2">Grow your Network with<br />
-            TiGrow.
-          </p>
-          <h1 className="f4"
-            style={{ color: '#474DBB' }}
-          >Coming Soon</h1>
-        </div>
-        <div className="w-50-ns w-100">
-          <img
-            src={landingPic2} />
-
+        <div className="w-80-ns w-100 center">
+            <img src={service} alt="funtionality tabs"/>
         </div>
       </div>
-      <div className="flex-ns items-center tc mv5">
-        <div className="w-50-ns w-100 pv6-ns pv2"
-          style={{ backgroundColor: '#EAF6F0' }}
-        >
-          <img
-            style={{ width: '60px' }}
-            src={growTribeIcon} />
-          <h1 className="f2-ns">Grow Your Tribe</h1>
-          <p className="f5 fw6 lh-2">Connect all of your Business Associates
-            <br />in your Tribe.</p>
-          <p className="f5 fw6 lh-2 mt3">Create small groups and<br />
-            maintain communications in one place.
-            </p>
-        </div>
-        <div
-          className="w-50-ns w-100 pv6-ns pv2"
-          style={{ backgroundColor: '#F4F5FB' }}
-        >
-          <img
-            style={{ width: '60px' }}
-            src={connectTribeIcon} />
-          <h1 className="f2-ns">Connect with Tribes</h1>
-          <p className="f5 fw6 lh-2">Connect with millions of Tribes all around
-            <br />the world.</p>
-          <p className="f5 fw6 lh-2 mt3">Showcase your product/service in the largest<br />
-            enterprise network of the world.
-            </p>
+      <div className="flex-ns items-center ph6-ns ph4 pv5-ns">
+        <div className="w-90-ns w-100 center">
+            <img src={offers} alt="top offers"/>
         </div>
       </div>
-      <div className="tc pv5-ns pv3 ph2">
-        <h1 className="f2-ns black">Three Easy Steps to Get Connected With Millions<br />
-          of Enterprises All Around The World</h1>
-        <div className="flex-ns justify-center pv5">
-          <div className="w-30-ns w-100">
-            <img
-              style={{ width: '60px' }}
-              src={attractiveCompanyIcon} />
-            <h1 className="f3-ns f4 black lh-2">Create an Attractive<br /> Company Profile</h1>
-          </div>
-          <div className="w-30-ns w-100">
-            <img
-              style={{ width: '60px' }}
-              src={verificationIcon} />
-            <h1 className="f3-ns f4 black lh-2">Get Verified</h1>
-          </div>
-          <div className="w-30-ns w-100">
-            <img
-              style={{ width: '60px' }}
-              src={growNetworkIcon} />
-            <h1 className="f3-ns f4 black lh-2">Start approaching Tribes<br />
-              to grow your network<br />
-              immediately.
-          </h1>
-          </div>
+      <div className="w-80-ns w100 center pv5 ph3-ns tc titleText">
+        <span style={{color: '#588F8F', fontWeight: 'bold'}}>
+          Tribe Feature To Create Alliances with Thousands of Small &amp; Medium Enterprises. 
+        </span><br/>
+        Then Start Working In Projects With Them in TiGrow Workplace. Why Waste Time Switching Between Multiple Platforms!!
+      </div>
+      <div className="flex-ns items-center pv6-ns pv4 ph2" style={{ backgroundColor: 'rgba(215, 197, 255, 0.4)', flexDirection: 'column' }}>
+        <div className="w-80-ns w-100 tc center mb4 mb0-ns secondaryText" style={{fontWeight: 'bold', color: '#3E5578'}}>
+          It's Completely Free for 15 Days, Let's Onboard
         </div>
-        <a
-          href="/signup"
-          className="grow ph4 pointer f5 fw6 pv3"
-          style={{
-            background: '#474DBB',
-            outline: 'none',
-            color: 'white',
-            borderRadius: '25px',
-            border: 'none',
-            height: '50px'
-          }}
-          type="submit"
-        >Create your company profile for free</a>
+        <a href="/signin" className="tryLink light mt2" style={{fontSize: '1.4rem'}}>Try for free</a>
+      </div>
+      <div className="flex-ns items-center ph6-ns ph4 pv5-ns">
+        <div className="w-60-ns w-100 center">
+            <img src={packages} alt="packages"/>
+        </div>
+      </div>
+      <div className="w-70-ns w100 center pt4-ns tc titleText">
+        Trusted by over 1,000 customers world-wide
+      </div>
+      <div className="w-70-ns w100 center pb4-ns">
+        <img src={customers} alt="customers"/>
       </div>
       <div
         className="pv4 tc"
