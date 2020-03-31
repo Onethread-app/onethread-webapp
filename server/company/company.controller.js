@@ -490,7 +490,7 @@ const parentOrg = async (req, res, next) => {
         _id: req.params.companyId,
       },
       {
-        $set: { parentcom: parentCom },
+        $push: { parentcom: parentCom },
       },
       {
         new: true,
