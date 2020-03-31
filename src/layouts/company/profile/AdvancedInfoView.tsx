@@ -100,9 +100,9 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           <div
             className="outline-0"
           >
-            {props.company && props.company.parentOrg && props.company.parentOrg.length > 0 ?
-              props.company.parentOrg.map((parentOrg: any) => (
-                <h1 key={parentOrg._id} className="f5 fw6">{parentOrg.name}</h1>)) : <h1>No organizations</h1>}
+          {props.company && props.company.parentcom && props.company.parentcom.length > 0 ?
+              props.company.parentcom.map((parentcom: any) => (
+                <h1 key={parentcom._id} className="f5 fw6">{parentcom}</h1>)) : <h1>No organizations</h1>}
           </div>
         </div>
       </div>

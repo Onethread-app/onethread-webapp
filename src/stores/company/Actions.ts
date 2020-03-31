@@ -605,12 +605,12 @@ export const addOrganization = (organization: any) => async (
     let response;
     if ((headers as any).headers.Authorization) {
       const companyId = getState().companyReducer.currentCompany._id;
-      response = await tigrowApi.post(
+      response = await tigrowApi.put(
         `company/${companyId}/parentorg`,
         organization,
         headers
       );
-      dispatch({ type: ADD_ORGANIZATION, payload: organization });
+      dispatch({ type: ADD_ORGANIZATION, payload: organization.parentcom });
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
