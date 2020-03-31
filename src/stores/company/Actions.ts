@@ -53,7 +53,6 @@ export const getCompanyDetails = (name: string) => async (
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`company/${name}`, headers);
       dispatch({ type: GET_COMPANY_DETAILS, payload: response.data.company });
-      console.log(response.data);
       dispatch({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY });
       return response;
     } else {
