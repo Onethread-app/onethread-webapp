@@ -9,7 +9,7 @@ import {
   ButtonGroup,
   Alignment
 } from '@blueprintjs/core';
-import { AddMemberForm } from 'layouts/company/team/AddMemberForm';
+import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
 import { connect } from 'react-redux';
 import {
   getCompanyMembers,
@@ -27,13 +27,13 @@ import {
 } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
 import { companyPermit } from 'stores/UtilsActions';
-import { AddDesignationForm } from 'layouts/company/team/AddDesignationForm';
-import { EditDesignationForm } from 'layouts/company/team/EditDesignationForm';
+import { AddDesignationForm } from 'layouts/company/colleagues/AddDesignationForm';
+import { EditDesignationForm } from 'layouts/company/colleagues/EditDesignationForm';
 import { isEqual, upperFirst, chunk } from 'lodash';
 import { User } from 'stores/user/Reducer';
 import { IProjectTeam } from 'stores/project/Reducer';
 
-interface TeamMember {
+interface Colleagues {
   company: ICompany;
   user: User;
   getCompanyMembers: () => void;
@@ -91,7 +91,7 @@ export const showDepartment = (
   }
 };
 
-const TeamMembersPageComponent = (props: TeamMember) => {
+const ColleaguesPageComponent = (props: Colleagues) => {
   const [showDialog, setShowDialog] = useState(false);
   const [showDialogAdd, setShowDialogAdd] = useState(false);
   const [showDialogEdit, setShowDialogEdit] = useState(false);
@@ -491,7 +491,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
         >
-          <AddMemberForm
+          <AddColleaguesForm
             showDialog={showDialog}
             setShowDialog={e => setShowDialog(!showDialog)}
           />
@@ -541,7 +541,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const TeamMembersPage = connect(mapStateToProps, {
+export const ColleaguesPage = connect(mapStateToProps, {
   getCompanyMembers,
   getAllDepartments,
   addDesignation,
@@ -549,4 +549,4 @@ export const TeamMembersPage = connect(mapStateToProps, {
   changeMemberRole,
   getCompanyPendingMembers,
   deleteCompanyMember
-})(TeamMembersPageComponent);
+})(ColleaguesPageComponent);

@@ -1,12 +1,12 @@
-import React from "react";
-import { Icon } from "@blueprintjs/core";
-import { Entity } from "stores/UtilsActions";
-import { Form, Field } from "react-final-form";
-import { required, checkError } from "components/final-form/utils";
-import { IconNames } from "@blueprintjs/icons";
-import { SubmitAndResetButtons } from "components/final-form/SubmitResetButtons";
-import { Condition } from "components/final-form/Condition";
-import { ICompanyMembers } from "stores/company/Reducer";
+import React from 'react';
+import { Icon } from '@blueprintjs/core';
+import { Entity } from 'stores/UtilsActions';
+import { Form, Field } from 'react-final-form';
+import { required, checkError } from 'components/final-form/utils';
+import { IconNames } from '@blueprintjs/icons';
+import { SubmitAndResetButtons } from 'components/final-form/SubmitResetButtons';
+import { Condition } from 'components/final-form/Condition';
+import { ICompanyMembers } from 'stores/company/Reducer';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { DropdownFieldWithError } from 'components/fields/DropdownField';
 
@@ -78,9 +78,9 @@ export const AddDesignationForm = (props: AddDesignationFormProps) => {
 								when="division"
 								validate={(value => {
 									return [
-										"seniorManager",
-										"middleManager",
-										"operationalEmployee"
+										'seniorManager',
+										'middleManager',
+										'operationalEmployee'
 									].includes(value);
 								})}
 							>
@@ -112,13 +112,13 @@ export const AddDesignationForm = (props: AddDesignationFormProps) => {
 							render={({ input, meta }) =>
 								<InputGroupFieldWithError
 									id={input.name}
-									className={`br0 ${checkError(meta) ? "bb b--red" : "bb b--lightBlue"}`}
+									className={`br0 ${checkError(meta) ? 'bb b--red' : 'bb b--lightBlue'}`}
 									placeHolder="Position"
 									value={input.value}
 									onChange={input.onChange}
 									leftIcon="id-number"
-									leftIconColor={`${checkError(meta) ? "red" : "#0fa3a3"}`}
-									style={{ boxShadow: "none" }}
+									leftIconColor={`${checkError(meta) ? 'red' : '#0fa3a3'}`}
+									style={{ boxShadow: 'none' }}
 									error={checkError(meta) && (meta.error || meta.submitError)}
 								/>
 							}

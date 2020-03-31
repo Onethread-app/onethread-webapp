@@ -7,7 +7,7 @@ import { RoomPage } from 'layouts/company/room/Index';
 import { CompanyProfilePage } from 'layouts/company/profile/Index';
 import { Layout } from 'components/Layout';
 import { BoardPage } from 'layouts/company/board/Index';
-import { TeamMembersPage } from 'layouts/company/team/Index';
+import { ColleaguesPage } from 'layouts/company/colleagues/Index';
 import { SettingsPage } from 'layouts/company/settings/Index';
 import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
 import { ResetPasswordPage } from 'layouts/resetPassword/Index';
@@ -40,8 +40,8 @@ const PrivateRoute = (props: {
         isAuthenticate() ? (
           <Layout Component={props.component} />
         ) : (
-          <Redirect to="/home" />
-        )
+            <Redirect to="/home" />
+          )
       }
     />
   );
@@ -77,17 +77,23 @@ export const App = () => (
       <Route
         exact
         path="/home"
-        render={() => (isAuthenticate() ? <Redirect to="/" /> : <HomePage />)}
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <HomePage />
+        }
       />
       <Route
         exact
         path="/signin"
-        render={() => (isAuthenticate() ? <Redirect to="/" /> : <SignInPage />)}
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <SignInPage />
+        }
       />
       <Route
         exact
         path="/signup"
-        render={() => (isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />)}
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
+        }
       />
       <Route
         exact
@@ -111,19 +117,25 @@ export const App = () => (
       <Route
         path="/signup-confirmation"
         render={() =>
-          localStorage.getItem('email') ? (
-            <SignupConfirmationPage />
-          ) : (
-            <Redirect to="/signin" />
-          )
+          localStorage.getItem('email') ? <SignupConfirmationPage /> : <Redirect to="/signin" />
         }
       />
       <Route
         path="/notFound"
-        render={() => (isAuthenticate() ? <NotFound /> : <Redirect to="/" />)}
+        render={() =>
+          isAuthenticate() ? <NotFound /> : <Redirect to="/" />
+        }
       />
-      <PrivateRoute exact path="/" component={Demo} />
-      <PrivateRoute path="/:username" exact={true} component={LandingPage} />
+      <PrivateRoute
+        exact
+        path="/"
+        component={Demo}
+      />
+      <PrivateRoute
+        path="/:username"
+        exact={true}
+        component={LandingPage}
+      />
       <PrivateRoute
         path="/:username/settings"
         exact={true}
@@ -160,9 +172,9 @@ export const App = () => (
         component={TaskPage}
       />
       <PrivateRoute
-        path="/company/:cname/team"
+        path="/company/:cname/colleague"
         exact={true}
-        component={TeamMembersPage}
+        component={ColleaguesPage}
       />
       <PrivateRoute
         path="/company/:cname/settings"
@@ -205,6 +217,8 @@ export const App = () => (
         component={AssociatesDetailsView}
       />
       <Route component={NoMatch} />
+
     </Switch>
+
   </BrowserRouter>
 );

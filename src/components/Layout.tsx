@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Loading } from './Loading';
 import { connect } from 'react-redux';
 import { User } from 'stores/user/Reducer';
+import { useLocation } from 'react-router';
 import { isEmpty, isEqual } from 'lodash';
 import { withRouter, RouteComponentProps, match, Link } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
@@ -17,6 +18,7 @@ import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
 import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
+import { RoomQueries } from 'layouts/company/room/Index';
 
 // tslint:disable-next-line: no-var-requires
 const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
@@ -79,6 +81,10 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
 
 const LayoutComponent = (props: LayoutInternalProps) => {
   const [loading, setLoading] = useState(true);
+  const [queries, setQueries] = useState<RoomQueries>({
+    view: 'default', roomId: ''
+  });
+  const location = useLocation();
 
   useEffect(() => {
     if (props.match.url === '/' && isEmpty(props.user._id) === false) {
@@ -113,6 +119,13 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       });
     }
   }, [loading]);
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const view = query.get('view') && query.get('view') === 'mobile' ? 'mobile' : 'default';
+    const roomId = query.get('roomId') ? query.get('roomId')! : '';
+    setQueries({ view, roomId });
+  }, [location.search]);
 
   const [leftOpen, setLeftOpen] = useState(true);
   const [scrollTop, setScrollTop] = React.useState(0);
@@ -150,7 +163,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
               tokenProvider={tokenProvider}
               userId={props.user._id}
             >
-              <div
+              {queries.view === 'default' ? <div
                 id="main-layout"
                 className={`flex relative h-100 ${props.rightSidebarOpen &&
                   'main-layout-overlay'}`}
@@ -225,7 +238,25 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     }}
                   ></div>
                 </div>
-              </div>
+              </div> :
+                <div className="vh-100 bg-white"
+                // style={{ borderRadius: '0.5rem 0.5rem 0.5rem 0.5rem' }}
+                >
+                  <SecondaryLayout Component={props.Component} />
+                </div>
+                // <div className="flex flex-column h-100">
+                //   <NavbarTop
+                //     scrollTop={scrollTop}
+                //     type={(props.match.params as any).cname ? 'company' : 'default'}
+                //   />
+                //   <div
+                //     ref={scrollRef}
+                //     className="flex-grow-1 overflow-y-auto bg-white"
+                //     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+                //     <SecondaryLayout Component={props.Component} />
+                //   </div>
+                // </div>
+              }
             </ChatkitProvider>
           )}
     </div >
