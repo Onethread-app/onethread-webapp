@@ -2,6 +2,7 @@ const Account = require('../account/account.model');
 const mongoose = require('mongoose');
 const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
+const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
 const { Room } = require('./../room/room.model');
 const { chatkit } = require('../services/pusher.services');
@@ -508,54 +509,48 @@ const parentOrg = async (req, res, next) => {
   }
 };
 
-const dashBoard = async (req,res,next) => {
+const dashBoard = async (req, res, next) => {
   try {
     const companyId = req.params.companyId;
     const totalProject = await Project.find({
-      company: companyId
+      company: companyId,
     }).countDocuments();
     const totalEmployee = await Member.find({
-      company: companyId
+      company: companyId,
     }).countDocuments();
-    const totalAssociates = await Associate.find( { 
-      $or:[ {company: companyId}, {associateCompany: companyId}],
-      isAccepted: true , removed:false, isRejected:false
+    const totalAssociates = await Associate.find({
+      $or: [{ company: companyId }, { associateCompany: companyId }],
+      isAccepted: true,
+      removed: false,
+      isRejected: false,
     }).countDocuments();
 
-    return sendJSONresponse(res,200,{
+    return sendJSONresponse(res, 200, {
       success: true,
-      data:{
+      data: {
         totalProject,
         totalEmployee,
-        totalAssociates
-      }
+        totalAssociates,
+      },
     });
-
   } catch (error) {
-    logger.error(error)
+    logger.error(error);
     next(error);
   }
-}
+};
 
 const noticePostByCompany = async (req, res, next) => {
   try {
     const NewNotice = req.body.announcement;
-    await Company.findByIdAndUpdate(
-      {
-        _id: req.params.companyId,
-      },
-      {
-        $addToSet: { announcement: NewNotice },
-      },
-      {
-        new: true,
-        safe: true,
-        upsert: true,
-      },
-    );
-    logger.info(`new notice cerated`);
-    return sendJSONresponse(res, 200, {
+    const announcement = new Announcement({
+      text: NewNotice,
+      company: req.params.companyId,
+    });
+    logger.info(`new notice created`);
+    await announcement.save();
+    return sendJSONresponse(res, 201, {
       message: 'New notice added',
+      announcement,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -565,12 +560,13 @@ const noticePostByCompany = async (req, res, next) => {
 
 const allNoticesForCompany = async (req, res, next) => {
   try {
-    const company = await Company.find({
-      _id: req.params.companyId,
-    }).select('announcement');
+    const announce = await Announcement.find({
+      company: req.params.companyId,
+    });
+
     logger.info(`announcement show for company`);
     return sendJSONresponse(res, 200, {
-      company,
+      announce,
     });
   } catch (error) {
     logger.error(`${error}`);

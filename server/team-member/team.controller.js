@@ -14,18 +14,14 @@ const {
 
 const changeRole = async (req, res, next) => {
   try {
-    // check role: superAdmin/admin
-    const member = await Team.findOne({
-      member: req.user._id,
-      company: req.query.pid,
-    });
-
-    if (req.body.role !== 'admin' || member.role !== 'admin') {
+    if (
+      req.member.role !== 'projectAdmin' &&
+      req.body.role === 'admin'
+    ) {
       return res.status(403).json({
         message: `Restricted`,
       });
     }
-
     req.member.role = req.body.role;
 
     await req.member.save();
@@ -212,10 +208,12 @@ const getMember = (req, res, next) => {
 // member will be found on req.member
 const getMemberLoad = async (req, res, next) => {
   try {
-    const member = await Team.findById(req.params.memberId)
+    const member = await Team.findOne({
+      member: req.params.memberId,
+      project: req.query.pid,
+    })
       .populate('account', 'name email firstName lastName')
       .populate('project', 'name');
-
     if (member) {
       req.member = member;
       return next();
