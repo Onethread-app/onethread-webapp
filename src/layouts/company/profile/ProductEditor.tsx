@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { ItemEntityProps, SuggestField } from 'components/fields/SuggestField';
-import { tokenConfig } from 'stores/UtilsActions';
-import { Tag, Button } from '@blueprintjs/core';
-import { isEqual, isEmpty, lowerCase } from 'lodash';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { useSelector, connect } from 'react-redux';
-import { tigrowApi, server } from 'config';
+import React from 'react';
+import { Button } from '@blueprintjs/core';
+import { connect } from 'react-redux';
 import { Field, Form } from 'react-final-form';
 import { DropdownField } from 'components/fields/DropdownField';
 import { InputGroupField } from 'components/fields/InputGroupField';
