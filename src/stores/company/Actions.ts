@@ -1,7 +1,7 @@
-import { isEqual } from "lodash";
-import { History } from "history";
-import { tokenConfig } from "../UtilsActions";
-import { ICompany } from "stores/company/Reducer";
+import { isEqual } from 'lodash';
+import { History } from 'history';
+import { tokenConfig } from '../UtilsActions';
+import { ICompany } from 'stores/company/Reducer';
 import {
   CREATE_COMPANY,
   CREATE_COMPANY_ERROR,
@@ -57,13 +57,13 @@ export const getCompanyDetails = (name: string) => async (
       return response;
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in selection of company fetching");
+      console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
-      dispatch({ type: CREATE_COMPANY_ERROR, payload: "Network error" });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: CREATE_COMPANY_ERROR, payload: 'Network error' });
       // tslint:disable-next-line: no-console
-      console.log("network error");
+      console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -87,14 +87,14 @@ export const createCompanyAction = (
       return response.data;
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in creation of company");
+      console.log('error in creation of company');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
+    if (isEqual(error.message, 'Network Error')) {
       dispatch({
         type: CREATE_COMPANY_ERROR,
         payload: {
-          message: "Network error",
+          message: 'Network error',
           network: true
         }
       });
@@ -102,7 +102,7 @@ export const createCompanyAction = (
       dispatch({
         type: CREATE_COMPANY_ERROR,
         payload: {
-          message: "Duplicate Company Name",
+          message: 'Duplicate Company Name',
           network: false
         }
       });
@@ -126,11 +126,11 @@ export const getCompanyMembers = () => async (dispatch: any, getState: any) => {
       dispatch({ type: GET_ALL_COMPANY_MEMBERS, payload: response.data });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in selection of company fetching");
+      console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
-      dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: "Network error" });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: 'Network error' });
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -162,11 +162,11 @@ export const addTeamMembers = (
       // dispatch({ type: ADD_TEAM_MEMBERS, payload: response.data });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in selection of company fetching");
+      console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
-      dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: "Network error" });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: 'Network error' });
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -189,11 +189,11 @@ export const deleteCompanyMember = (memberId: string) => async (
       dispatch({ type: DELETE_TEAM_MEMBER, payload: memberId });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in selection of company fetching");
+      console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
-      dispatch({ type: DELETE_TEAM_MEMBER_ERROR, payload: "Network error" });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: DELETE_TEAM_MEMBER_ERROR, payload: 'Network error' });
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -219,7 +219,7 @@ export const addDepartment = (name: string) => async (
       dispatch({ type: ADD_DEPARTMENT, payload: response.data });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in adding department");
+      console.log('error in adding department');
     }
     return errorMessgeHandler(response);
   } catch (error) {
@@ -244,13 +244,13 @@ export const getAllDepartments = () => async (dispatch: any, getState: any) => {
       dispatch({ type: GET_ALL_DEPARTMENT, payload: response.data });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in adding department");
+      console.log('error in adding department');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
-      dispatch({ type: ADD_DEPARTMENT_ERROR, payload: "Network error" });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Network error' });
     } else if (error.response.status === 401) {
-      dispatch({ type: ADD_DEPARTMENT_ERROR, payload: "Unauthorized user." });
+      dispatch({ type: ADD_DEPARTMENT_ERROR, payload: 'Unauthorized user.' });
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -270,14 +270,14 @@ export const editCompanyInfoAction = (companyInfo: ICompany) => async (
       dispatch({ type: EDIT_COMPANY_INFO, payload: companyInfo });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in user fetching");
+      console.log('error in user fetching');
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
     console.log(error);
-    if (isEqual(error.message, "Network Error")) {
+    if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log("Network error");
+      console.log('Network error');
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -301,12 +301,12 @@ export const editCompanyAboutAction = (companyAbout: string) => async (
       dispatch({ type: EDIT_COMPANY_INFO, payload: { about: companyAbout } });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in user fetching");
+      console.log('error in user fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
+    if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log("Network error");
+      console.log('Network error');
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -334,16 +334,16 @@ export const changeCompanyName = (companyName: string) => async (
       }
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in changing Company Name");
+      console.log('error in changing Company Name');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
+    if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log("Network error");
+      console.log('Network error');
     } else if (error.response.status === 409) {
       dispatch({
         type: CHANGE_COMPANY_NAME_ERROR,
-        payload: "Name already exist"
+        payload: 'Name already exist'
       });
     } else {
       // tslint:disable-next-line: no-console
@@ -369,12 +369,12 @@ export const companyLogoUploadAction = (
         imageSelected,
         headers
       );
-      if (response.data.imageType === "company-logo") {
+      if (response.data.imageType === 'company-logo') {
         dispatch({
           type: LOGO_UPLOAD,
           payload: { ...response.data, link: response.data.link }
         });
-      } else if (response.data.imageType === "company-cover-photo") {
+      } else if (response.data.imageType === 'company-cover-photo') {
         dispatch({
           type: COVER_IMAGE_UPLOAD,
           payload: { ...response.data, link: response.data.link }
@@ -383,12 +383,12 @@ export const companyLogoUploadAction = (
       return response.data;
     } else {
       // tslint:disable-next-line: no-console
-      console.log("no headers");
+      console.log('no headers');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
+    if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log("network error");
+      console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -414,13 +414,13 @@ export const addDesignation = (values: any, memberId: string) => async (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in adding designation");
+      console.log('error in adding designation');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
-      dispatch({ type: ADD_DESIGNATION_ERROR, payload: "Network error" });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: ADD_DESIGNATION_ERROR, payload: 'Network error' });
     } else if (error.response.status === 401) {
-      dispatch({ type: ADD_DESIGNATION_ERROR, payload: "Unauthorized user." });
+      dispatch({ type: ADD_DESIGNATION_ERROR, payload: 'Unauthorized user.' });
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -447,13 +447,13 @@ export const editDesignation = (values: any, memberId: string) => async (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in adding designation");
+      console.log('error in adding designation');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
-      dispatch({ type: EDIT_DESIGNATION_ERROR, payload: "Network error" });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: EDIT_DESIGNATION_ERROR, payload: 'Network error' });
     } else if (error.response.status === 401) {
-      dispatch({ type: EDIT_DESIGNATION_ERROR, payload: "Unauthorized user." });
+      dispatch({ type: EDIT_DESIGNATION_ERROR, payload: 'Unauthorized user.' });
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
@@ -482,15 +482,15 @@ export const changeMemberRole = (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in changing member role");
+      console.log('error in changing member role');
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
-      dispatch({ type: CHANGE_MEMBER_ROLE_ERROR, payload: "Network error" });
+    if (isEqual(error.message, 'Network Error')) {
+      dispatch({ type: CHANGE_MEMBER_ROLE_ERROR, payload: 'Network error' });
     } else if (error.response.status === 401) {
       dispatch({
         type: CHANGE_MEMBER_ROLE_ERROR,
-        payload: "Unauthorized user."
+        payload: 'Unauthorized user.'
       });
     } else {
       // tslint:disable-next-line: no-console
@@ -515,30 +515,30 @@ export const companyOptionalRole = (values: {
       if (response.status === 200) {
         dispatch({ type: COMPANY_ROLE, payload: values.optionalRole });
         Toaster.create().show({
-          message: "Company admin role updated successfully",
+          message: 'Company admin role updated successfully',
           timeout: 3000,
-          intent: "success"
+          intent: 'success'
         });
       }
     }
   } catch (error) {
-    if (isEqual(error.message, "Network Error")) {
+    if (isEqual(error.message, 'Network Error')) {
       Toaster.create().show({
-        message: "Network is disconnected.",
+        message: 'Network is disconnected.',
         action: {
-          icon: "refresh",
-          className: "bp3-intent-warning b",
+          icon: 'refresh',
+          className: 'bp3-intent-warning b',
           onClick: () => {
             window.location.reload(false);
           },
-          text: "Reload"
+          text: 'Reload'
         },
         timeout: 300000
       });
     } else {
       Toaster.create().show({
         message: error.response.data.errors[0].message,
-        intent: "danger",
+        intent: 'danger',
         timeout: 300000
       });
     }
@@ -562,7 +562,7 @@ export const getCompanyPendingMembers = (
       });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in getting of pending members");
+      console.log('error in getting of pending members');
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
@@ -588,7 +588,7 @@ export const addCertificate = (certificate: any) => async (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in adding certificate");
+      console.log('error in adding certificate');
     }
     return;
   } catch (error) {
@@ -614,7 +614,7 @@ export const addOrganization = (organization: any) => async (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in adding organization");
+      console.log('error in adding organization');
     }
     return;
   } catch (error) {

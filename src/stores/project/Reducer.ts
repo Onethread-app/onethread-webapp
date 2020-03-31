@@ -111,6 +111,22 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         projectRole: action.payload
       };
+    case PROJECT.PROJECT_UPDATE_TEAM_ROLE:
+      return {
+        ...state,
+        teams: state.teams.map(
+          (team: IProjectTeam) => {
+            if (action.payload.memberId === team.member._id) {
+              return {
+                ...team,
+                role: action.payload.role
+              };
+            } else {
+              return team;
+            }
+          }
+        )
+      };
     default:
       return state;
   }
