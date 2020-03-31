@@ -10,7 +10,9 @@ import project from "./../../resources/homepageImages/project.svg";
 import chat from "./../../resources/homepageImages/chat.svg";
 import board from "./../../resources/homepageImages/board.svg";
 import customers from "./../../resources/homepageImages/customers.png";
-import packages from "./../../resources/homepageImages/packages.png";
+import pack1 from "./../../resources/homepageImages/pack1.png";
+import pack2 from "./../../resources/homepageImages/pack2.png";
+import pack3 from "./../../resources/homepageImages/pack3.png";
 import offers from "./../../resources/homepageImages/offers.png";
 import service from './../../resources/homepageImages/service.png';
 import meet from './../../resources/homepageImages/meet.png';
@@ -22,24 +24,16 @@ export const HomePage = () => {
       <div>
         <Navbar className="ph5-ns shadow-0 fixed pv3 flex justify-between h-auto" >
           <Navbar.Group align={Alignment.LEFT}>
-            <img
-              src={tigrowLogo}
-              className="companyLogo"
-              alt="Site Logo"
-            />
+            <img src={tigrowLogo} className="companyLogo" alt="Site Logo"/>
           </Navbar.Group>
           <Navbar.Group align={Alignment.RIGHT} >
-            <a href="/signin"
-              className="tryLink"
-            >
-              Try for free
-              </a>
+            <a href="/signin" className="tryLink">Try for free</a>
           </Navbar.Group>
         </Navbar>
       </div>
-      <div className="pl5-l pl4 pt6 pb4">
+      <div className="pl5-l pt6 pb4">
         <div className="flex-ns items-center pl5-ns">
-          <div className="w-40-ns w-100">
+          <div className="w-40-ns w-100 pl0-ns pl4">
             <div className="black primeText">An Enterprise Connectivity Platform</div>
             <div className="black secondaryText">where you can</div>
             <ul className='homeUl'>
@@ -51,11 +45,7 @@ export const HomePage = () => {
               </li>
             </ul>
             <div className='demoLink'>
-              <a href="#"
-                className="tryLink"
-              >
-                See The Demo
-              </a>
+              <a href="#" className="tryLink">See The Demo</a>
             </div>
             <ul className='homeUl light'>
               <li className="featureTitle">
@@ -75,23 +65,15 @@ export const HomePage = () => {
               </li>
             </ul>
             <div className='demoLink'>
-              <a href="/signin"
-                className="tryLink"
-              >
-                Try for free
-              </a>
+              <a href="/signin" className="tryLink">Try for free</a>
             </div>
           </div>
-          <div className="w-60-ns h-100-ns w-100 h-100">
-            <img
-              style={{float: 'right'}}
-              src={heroSection}
-              alt="hero Section"
-            />
+          <div className="w-60-ns w-100 tr">
+            <img src={heroSection} alt="hero Section"/>
           </div>
         </div>
       </div>
-      <div className="w-70-ns w100 center pv5 tc titleText">
+      <div className="w-70-ns w100 center pv5-ns tc titleText">
         Use TiGrow Workplace for Remote Working with Teams, For Vendor Management &amp; To Collaborate with All of your Stakeholders at one place.
       </div>
       <div className="flex-ns items-center pl4-l pl4 ph2 pv4-ns">
@@ -100,13 +82,7 @@ export const HomePage = () => {
         </div>
         <div className="pr5-ns w-40-ns h-100-ns w-100 h-100 center">
           <div className="titleText tc" style={{fontWeight: 200}}>
-            <span style={{color: '#588F8F', fontWeight: 'bold'}}>Introducing Projects</span><br/>
-            Create Projects With&nbsp;
-            <span style={{fontWeight: 'bold'}}>Single Department</span>
-            ,&nbsp;
-            <span style={{fontWeight: 'bold'}}>Multiple Departments</span>
-            <br/>or&nbsp;
-            <span style={{fontWeight: 'bold'}}>With External Stakeholders of the Company</span>
+            <span style={{color: '#588F8F', fontWeight: 'bold'}}>Introducing Projects</span><br/>Create Projects With <span style={{fontWeight: 'bold'}}>Single Department</span>, <span style={{fontWeight: 'bold'}}>Multiple Departments</span><br/>or <span style={{fontWeight: 'bold'}}>With External Stakeholders of the Company</span>
           </div>
         </div>
       </div>
@@ -117,8 +93,7 @@ export const HomePage = () => {
         <div className="pr5-ns pl4-ns w-80-ns h-100-ns w-100 h-100">
           <img src={chat} alt=""/>
           <div className="titleText tc pv4">
-            <span style={{color: '#588F8F'}}>Chat from anywhere through Rooms</span><br/>
-            Share your opinion, and your personality. Highlight Important <br/> Discussion in a group chat or in one-to-one messages.
+            <span style={{color: '#588F8F'}}>Chat from anywhere through Rooms</span><br/>Share your opinion, and your personality. Highlight Important <br/> Discussion in a group chat or in one-to-one messages.
           </div>
           <img src={board} alt=""/>
         </div>
@@ -134,12 +109,12 @@ export const HomePage = () => {
           <img src={meet} style={{padding: '5rem', paddingLeft: 0}}/>
         </div>
       </div>
-      <div className="flex-ns items-center ph6-ns ph4 pv5-ns">
+      <div className="flex-ns items-center ph6-ns ph4 pv3-ns">
         <div className="w-80-ns w-100 center">
             <img src={service} alt="funtionality tabs"/>
         </div>
       </div>
-      <div className="flex-ns items-center ph6-ns ph4 pv5-ns">
+      <div className="flex-ns items-center ph6-ns ph4 pv3-ns">
         <div className="w-90-ns w-100 center">
             <img src={offers} alt="top offers"/>
         </div>
@@ -150,15 +125,19 @@ export const HomePage = () => {
         </span><br/>
         Then Start Working In Projects With Them in TiGrow Workplace. Why Waste Time Switching Between Multiple Platforms!!
       </div>
-      <div className="flex-ns items-center pv6-ns pv4 ph2" style={{ backgroundColor: 'rgba(215, 197, 255, 0.4)', flexDirection: 'column' }}>
+      <div className="flex-ns items-center pv5-ns pv4 ph2" style={{ backgroundColor: 'rgba(215, 197, 255, 0.4)', flexDirection: 'column' }}>
         <div className="w-80-ns w-100 tc center mb4 mb0-ns secondaryText" style={{fontWeight: 'bold', color: '#3E5578'}}>
           It's Completely Free for 15 Days, Let's Onboard
         </div>
-        <a href="/signin" className="tryLink light mt2" style={{fontSize: '1.4rem'}}>Try for free</a>
+        <a href="/signin" className="tryLink light mt2" style={{fontSize: '1.2rem'}}>Try for free</a>
       </div>
       <div className="flex-ns items-center ph6-ns ph4 pv5-ns">
         <div className="w-60-ns w-100 center">
-            <img src={packages} alt="packages"/>
+          <div className="flex-ns items-baseline">
+            <a href="/signup"><img src={pack1} alt="packages"/></a>
+            <a href="/signup"><img src={pack2} alt="packages"/></a>
+            <a href="/signup"><img src={pack3} alt="packages"/></a>
+          </div>
         </div>
       </div>
       <div className="w-70-ns w100 center pt4-ns tc titleText">
@@ -167,10 +146,7 @@ export const HomePage = () => {
       <div className="w-70-ns w100 center pb4-ns">
         <img src={customers} alt="customers"/>
       </div>
-      <div
-        className="pv4 tc"
-        style={{ background: '#43466D' }}
-      >
+      <div className="pv4 tc" style={{ background: '#43466D' }}>
         <h1 className="f2-ns white">Join Today</h1>
         <div className="dt center w-34-ns w-80 mb3">
           <EmailVerificationForm />
