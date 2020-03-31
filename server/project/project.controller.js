@@ -406,7 +406,7 @@ const archiveProject = async (req, res, next) => {
         { safe: true, upsert: true, new: true },
       );
       const text =`${req.user.name} has archived a project ${project.name}`;
-      createCompanyRoleNotification(associate.company, {_id:req.user._id, name: req.user.name}, text,'project' );
+      createCompanyRoleNotification({_id: project.company}, {_id:req.user._id, name: req.user.name}, text,'project' );
         
       logger.info(`Archive a project  ${req.params.pid}`);
       return sendJSONresponse(res, 200, {
