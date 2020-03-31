@@ -6,40 +6,6 @@ import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types'
 import { IPendingProject, IProject } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
 
-export const changeProjectMemberRole = (
-  values: { role: string; },
-  memberId: string
-) => async (dispatch: any, getState: any) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const projectId = getState().projectReducer.projectDetails._id;
-      const response = await tigrowApi.put(
-        `/teams/${memberId}/change-role?pid=${projectId}`,
-        values,
-        headers
-      );
-      dispatch({
-        type: PROJECT.PROJECT_UPDATE_TEAM_ROLE,
-        payload: { memberId, role: values.role }
-      });
-      return response.status;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in changing team role');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response.status;
-  }
-};
-
 export const getAllProjects = () => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
@@ -577,5 +543,44 @@ export const addProjectTeams = (
       console.log(error.response);
     }
     return error.response;
+  }
+};
+
+export const changeProjectMemberRole = (
+  values: { role: string; },
+  memberId: string,
+  accountId: string
+) => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const userId = getState().userReducer.user._id;
+      const projectId = getState().projectReducer.projectDetails._id;
+      const response = await tigrowApi.put(
+        `/teams/${memberId}/change-role?pid=${projectId}`,
+        values,
+        headers
+      );
+      if (userId === accountId) {
+        dispatch(getRoleForProject(projectId));
+      }
+      dispatch({
+        type: PROJECT.PROJECT_UPDATE_TEAM_ROLE,
+        payload: { memberId, role: values.role }
+      });
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in changing team role');
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+    return error.response.status;
   }
 };

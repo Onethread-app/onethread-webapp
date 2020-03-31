@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { TextArea, Button } from '@blueprintjs/core';
-import { tigrowApi } from 'config';
 import { ICompany } from 'stores/company/Reducer';
-import { tokenConfig } from 'stores/UtilsActions';
+import { addAnnouncement } from 'stores/company/Actions';
 
 interface AnnouncementEditorProps {
   setShowDialog: (val: boolean) => void;
-  setcompanyAnnouncement: (val: any) => void;
   company: ICompany;
-  companyAnnouncement: any;
+  addAnnouncement: (val: any) => void;
 }
 
 const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
@@ -41,16 +39,7 @@ const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
           type="submit"
           onClick={async (e: any) => {
             e.preventDefault();
-            const headers = tokenConfig();
-            const announce = {
-              'announcement': inputValues
-            };
-            await tigrowApi.put(`company/${props.company!._id}/announcements`, announce, headers);
-            const ann = [
-              ...props.companyAnnouncement,
-              inputValues,
-            ];
-            await props.setcompanyAnnouncement(ann);
+            await props.addAnnouncement(inputValues);
             props.setShowDialog(false);
           }}
           className="w4 grow h2 pointer fr mv2"
@@ -69,4 +58,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AnnouncementEditor = connect(mapStateToProps)(AnnouncementEditorComponent);
+export const AnnouncementEditor = connect(mapStateToProps, {addAnnouncement})(AnnouncementEditorComponent);

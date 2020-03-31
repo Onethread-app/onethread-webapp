@@ -26,7 +26,7 @@ interface TeamMember {
   companyRole: string;
   projectRole: string;
   getProjectTeams: () => void;
-  changeProjectMemberRole: (values: { role: string; }, memberId: string) => void;
+  changeProjectMemberRole: (values: { role: string; }, memberId: string, accountId: string) => void;
 }
 
 const load = async (_getProjectTeams: () => void) => {
@@ -127,7 +127,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                               onClick={async () => {
                                 await props.changeProjectMemberRole(
                                   { role: 'projectModerator' },
-                                  member._id
+                                  member._id,
+                                  member.account._id
                                 );
                               }}
                             ><span>Remove from Admin</span>
@@ -197,7 +198,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                               onClick={async () => {
                                 await props.changeProjectMemberRole(
                                   { role: 'admin' },
-                                  member._id
+                                  member._id,
+                                  member.account._id
                                 );
                               }}
                             ><span>Make Admin</span>
@@ -208,7 +210,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                               onClick={async () => {
                                 await props.changeProjectMemberRole(
                                   { role: 'member' },
-                                  member._id
+                                  member._id,
+                                  member.account._id
                                 );
                               }}
                             ><span>Remove from Moderator</span>
@@ -344,7 +347,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                               onClick={async () => {
                                 await props.changeProjectMemberRole(
                                   { role: 'projectModerator' },
-                                  member._id
+                                  member._id,
+                                  member.account._id
                                 );
                               }}
                             ><span>Make Moderator</span>
