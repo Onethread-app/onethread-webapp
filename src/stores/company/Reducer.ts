@@ -31,8 +31,8 @@ import {
   GET_ALL_COMPANY_PENDING_MEMBERS,
   ADD_CERTIFICATE,
   ADD_ORGANIZATION
-} from "./Types";
-import { Entity } from "stores/UtilsActions";
+} from './Types';
+import { Entity } from 'stores/UtilsActions';
 
 // tslint:disable-next-line: interface-name
 export interface IDesignations {
@@ -92,32 +92,32 @@ export interface ICompany {
   logo: string;
   coverImage: string;
   certificate: ICertificates[];
-  parentOrg: Entity[];
+  parentcom: Entity[];
 }
 
 const InitialState = {
   currentCompany: {
-    _id: "",
-    name: "",
-    type: "",
-    email: "",
-    address: "",
-    legalOwnerName: "",
-    legalOwnerMail: "",
+    _id: '',
+    name: '',
+    type: '',
+    email: '',
+    address: '',
+    legalOwnerName: '',
+    legalOwnerMail: '',
     members: [],
     pendingMembers: [],
     divisions: [{}],
     departments: [{}],
-    role: "",
-    about: "",
+    role: '',
+    about: '',
     skill: [{}],
-    logo: "",
-    coverImage: "",
+    logo: '',
+    coverImage: '',
     certificate: [],
-    parentOrg: []
+    parentcom: []
   },
   createCompanyError: {
-    message: "",
+    message: '',
     network: false
   },
   loading: false,
@@ -125,7 +125,7 @@ const InitialState = {
   changeCompanyNameLoading: false,
   departmentNameLoading: false,
   designationLoading: false,
-  error: ""
+  error: ''
 };
 
 export const CompanyReducer = (state = InitialState, action: any) => {
@@ -232,12 +232,12 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           ]
         },
         departmentNameLoading: false,
-        error: ""
+        error: ''
       };
     case CLEAR_ADD_DEPARTMENT_ERROR:
       return {
         ...state,
-        error: "",
+        error: '',
         departmentNameLoading: false
       };
     case GET_ALL_DEPARTMENT:
@@ -280,7 +280,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           name: action.payload
         },
         changeCompanyNameLoading: false,
-        error: ""
+        error: ''
       };
     case CHANGE_COMPANY_NAME_ERROR:
       return {
@@ -291,7 +291,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CLEAR_CHANGE_COMPANY_NAME_ERROR:
       return {
         ...state,
-        error: "",
+        error: '',
         changeCompanyNameLoading: false
       };
     case COMPANY_DESIGNATION_LOADING:
@@ -302,7 +302,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case ADD_DESIGNATION:
       return {
         ...state,
-        error: "",
+        error: '',
         designationLoading: false
       };
     case ADD_DESIGNATION_ERROR:
@@ -314,7 +314,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case EDIT_DESIGNATION:
       return {
         ...state,
-        error: "",
+        error: '',
         designationLoading: false
       };
     case EDIT_DESIGNATION_ERROR:
@@ -381,7 +381,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          organizations: [...state.currentCompany.parentOrg, action.payload]
+          parentcom: [...state.currentCompany.parentcom, action.payload]
         }
       };
     default:

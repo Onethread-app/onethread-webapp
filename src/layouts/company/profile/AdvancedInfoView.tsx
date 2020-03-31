@@ -58,8 +58,8 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
               <div className="flex justify-between items-center mb4">
                 <div>
                   <div>
-                    <h1 className="f5 fw6 ma0">{certificate.name}</h1>
-                    <h1 className="f6 silver fw6">{certificate.description}</h1>
+                    <h1 className="f5 fw4 ma0">{certificate.name}</h1>
+                    <h1 className="f6 silver fw4">{certificate.description}</h1>
                   </div>
                 </div>
                 <div>
@@ -98,10 +98,9 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           <div
             className="outline-0"
           >
-            {props.company && props.company.parentOrg && props.company.parentOrg.length > 0 ?
-              props.company.parentOrg.map((parentOrg: any) => (
-                <h1 key={parentOrg._id} className="f5 fw6">{parentOrg.name}</h1>)) :
-              <p className="f5">No organizations</p>}
+          {props.company && props.company.parentcom && props.company.parentcom.length > 0 ?
+              props.company.parentcom.map((parentcom: any) => (
+                <h1 key={parentcom._id} className="f5 fw4">{parentcom}</h1>)) : <p className="f5">No organizations</p>}
           </div>
         </div>
       </div>
