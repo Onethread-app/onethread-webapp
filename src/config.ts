@@ -10,7 +10,7 @@ export const test5 = 'http://52.221.186.32:4001/api/v1/';
 export const test6 = 'http://52.221.186.32:1727/api/v1/';
 export const local = 'http://localhost:4040/api/v1/';
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
-export const server = local;
+export const server = test6;
 
 export const TokenUrlServer = `${server}chatkit/authenticate`;
 
