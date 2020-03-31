@@ -131,12 +131,12 @@ export const HomePage = () => {
         </div>
         <a href="/signin" className="tryLink light mt2" style={{fontSize: '1.2rem'}}>Try for free</a>
       </div>
-      <div className="flex-ns items-center ph6-ns ph4 pv5-ns">
-        <div className="w-60-ns w-100 center">
-          <div className="flex-ns items-baseline">
-            <a href="/signup"><img src={pack1} alt="packages"/></a>
-            <a href="/signup"><img src={pack2} alt="packages"/></a>
-            <a href="/signup"><img src={pack3} alt="packages"/></a>
+      <div className="flex-ns items-center ph6-ns ph4 pt5-ns">
+        <div className="w-80-ns w-100 center">
+          <div className="flex-ns items-baseline w-100">
+            <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack1} alt="packages"/></a>
+            <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack2} alt="packages"/></a>
+            <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack3} alt="packages"/></a>
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@ export const HomePage = () => {
         <img src={customers} alt="customers"/>
       </div>
       <div className="pv4 tc" style={{ background: '#43466D' }}>
-        <h1 className="f2-ns white">Join Today</h1>
+        <h1 className="primaryText white">Join Today</h1>
         <div className="dt center w-34-ns w-80 mb3">
           <EmailVerificationForm />
         </div>

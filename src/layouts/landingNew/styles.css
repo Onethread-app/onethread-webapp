@@ -89,7 +89,7 @@
 
 .featureTitle{
     font-weight: bold;
-    font-size:  1.7rem;
+    font-size:  2rem;
     line-height: 1.5;
     font-family: 'Muli';
     letter-spacing: 0.3px;
@@ -117,7 +117,7 @@
     }
 
     .featureTitle{
-        font-size:  1.2rem;
+        font-size:  1.3rem;
     }
 
     .homeUl>.featureTitle::before{
@@ -128,6 +128,70 @@
     .footerText{
         font-size: 0.9rem;
         line-height: 1rem;
+    }
+}
+
+@media (max-width: 1112px){
+    .primeText{
+        font-size: 2.5rem;
+    }
+
+    .secondaryText{
+        font-size: 1.6rem;
+    }
+
+    .titleText{
+        font-size: 1.17rem;
+    }
+
+    .featureTitle{
+        font-size:  0.93rem;
+    }
+
+    .homeUl{
+        padding-left: 2rem;
+    }
+
+    .homeUl>.featureTitle::before{
+        height: 0.7rem;
+        width: 0.7rem;
+    }
+
+    .footerText{
+        font-size: 0.6rem;
+        line-height: 1.1;
+    }
+}
+
+@media (max-width: 834px){
+    .primeText{
+        font-size: 1.8rem;
+    }
+
+    .secondaryText{
+        font-size: 1.2rem;
+    }
+
+    .titleText{
+        font-size: 0.9rem;
+    }
+
+    .featureTitle{
+        font-size:  0.71rem;
+    }
+
+    .homeUl{
+        padding-left: 2rem;
+    }
+
+    .homeUl>.featureTitle::before{
+        height: 0.7rem;
+        width: 0.7rem;
+    }
+
+    .footerText{
+        font-size: 0.48rem;
+        line-height: 1.1;
     }
 }
 
