@@ -598,7 +598,7 @@ const dashBoard = async (req, res, next) => {
 
 const noticePostByCompany = async (req, res, next) => {
   try {
-    const NewNotice = req.body.announcement;
+    const NewNotice = req.body.text;
     const announcement = new Announcement({
       text: NewNotice,
       company: req.params.companyId,
@@ -607,7 +607,7 @@ const noticePostByCompany = async (req, res, next) => {
     await announcement.save();
     const text = ` ${req.user.name} has created a announcment in ${req.user.name} company `;
     createCompanyRoleNotification(
-      company,
+      { _id: req.params.companyId },
       { _id: req.user._id, name: req.user.name },
       text,
       'announcement',
