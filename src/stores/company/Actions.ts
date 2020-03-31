@@ -36,7 +36,10 @@ import {
   DELETE_TEAM_MEMBER,
   DELETE_TEAM_MEMBER_ERROR,
   ADD_CERTIFICATE,
-  ADD_ORGANIZATION
+  ADD_ORGANIZATION,
+  GET_ALL_COMPANY_ANNOUNCEMENT,
+  ADD_ANNOUNCEMENT,
+  // ADD_ANNOUNCEMENT
 } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE, CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY } from 'stores/room/Types';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -621,3 +624,55 @@ export const addOrganization = (organization: any) => async (
     return false;
   }
 };
+
+export const getCompanyAnnouncement = () => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const companyId = getState().companyReducer.currentCompany._id;
+      const response = await tigrowApi.get(
+        `company/${companyId}/announcements`,
+        headers);
+      dispatch({
+        type: GET_ALL_COMPANY_ANNOUNCEMENT,
+        payload: response.data.announce
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in getting of pending members');
+    }
+  } catch (error) {
+    // tslint:disable-next-line: no-console
+    console.log(error);
+  }
+};
+
+export const addAnnouncement = (announcement: any) => async (
+  dispatch: any,
+  getState: any
+) => {
+  try {
+    const headers = tokenConfig();
+    let response;
+    if ((headers as any).headers.Authorization) {
+      const announce = {
+        'text': announcement
+      };
+      const companyId = getState().companyReducer.currentCompany._id;
+      response = await tigrowApi.post(
+        `company/${companyId}/announcements`,
+        announce,
+        headers
+      );
+      dispatch({ type: ADD_ANNOUNCEMENT, payload: response.data.announcement });
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in adding organization');
+    }
+    return;
+  } catch (error) {
+    return false;
+  }
+};
+

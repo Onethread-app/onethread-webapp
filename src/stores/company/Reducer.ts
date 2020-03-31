@@ -30,7 +30,9 @@ import {
   DELETE_TEAM_MEMBER,
   GET_ALL_COMPANY_PENDING_MEMBERS,
   ADD_CERTIFICATE,
-  ADD_ORGANIZATION
+  ADD_ORGANIZATION,
+  GET_ALL_COMPANY_ANNOUNCEMENT,
+  ADD_ANNOUNCEMENT
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
 
@@ -93,6 +95,7 @@ export interface ICompany {
   coverImage: string;
   certificate: ICertificates[];
   parentcom: Entity[];
+  announce: [];
 }
 
 const InitialState = {
@@ -114,7 +117,8 @@ const InitialState = {
     logo: '',
     coverImage: '',
     certificate: [],
-    parentcom: []
+    parentcom: [],
+    announce: []
   },
   createCompanyError: {
     message: '',
@@ -384,6 +388,23 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           parentcom: [...state.currentCompany.parentcom, action.payload]
         }
       };
+    case GET_ALL_COMPANY_ANNOUNCEMENT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          announce: action.payload
+        },
+        loading: false
+      };
+      case ADD_ANNOUNCEMENT:
+        return {
+          ...state,
+          currentCompany: {
+            ...state.currentCompany,
+            announce: [...state.currentCompany.announce, action.payload]
+          }
+        };
     default:
       return state;
   }
