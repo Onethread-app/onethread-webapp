@@ -68,7 +68,7 @@ const NavbarTopComponent = (
         }}
       >
         <div>
-          <NavLink exact to={`/company/${props.companyName}`}>
+          <NavLink exact to={`/company/${props.companyName}/dashboard`}>
             <div
               className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
               style={{
@@ -115,7 +115,7 @@ const NavbarTopComponent = (
                 </div>
               }
               target={
-                <div style={{ marginRight: '10px' }}>
+                <div className="mr3 mr4-l">
                   <Badge
                     badgeContent={props.read}
                     anchorOrigin={{

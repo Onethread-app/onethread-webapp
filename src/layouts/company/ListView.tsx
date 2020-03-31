@@ -54,7 +54,7 @@ export const ListViewComponent = (
                   // tslint:disable-next-line: max-line-length
                   className={`dt w-100 hover-bg-black-10 pa2 ${
                     props.currentCompany === c.company._id ? 'bg-black-10' : ''
-                  } mt2 pointer bp3-popover-dismiss`}
+                    } mt2 pointer bp3-popover-dismiss`}
                   onClick={async () => {
                     props.getNotifications(c.company._id);
                     const response = (await props.getCompanyDetails(
@@ -64,7 +64,7 @@ export const ListViewComponent = (
                     if (response.status === 200) {
                       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                       props.history.push(
-                        `/company/${(response as any).data.company.name}`
+                        `/company/${(response as any).data.company.name}/dashboard`
                       );
                     }
                     // else{
@@ -92,8 +92,8 @@ export const ListViewComponent = (
               )
           )
         ) : (
-          undefined
-        )}
+              undefined
+            )}
       </div>
       <button
         onClick={() => props.setShowDialog(!props.showDialog)}

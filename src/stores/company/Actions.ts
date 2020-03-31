@@ -86,7 +86,7 @@ export const createCompanyAction = (
       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
       dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
       dispatch({ type: CREATE_COMPANY, payload: response.data });
-      routeHistory.push(`/company/${response.data.company.name}`);
+      routeHistory.push(`/company/${response.data.company.name}/dashboard`);
       return response.data;
     } else {
       // tslint:disable-next-line: no-console
