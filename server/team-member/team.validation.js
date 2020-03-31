@@ -46,7 +46,11 @@ module.exports = {
   }),
   changeRole: Joi.object().keys({
     body: Joi.object().keys({
-      role: schema.role.required(),
+      role: Joi.string().valid([
+        'admin',
+        'projectModerator',
+        'member',
+      ]),
     }),
     params: memberId,
   }),

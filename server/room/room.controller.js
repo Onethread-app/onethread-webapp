@@ -119,7 +119,28 @@ const suggestMember = async (req, res, next) => {
   }
 };
 
-const list = async (req, res) => {
+const getRoom = async (req, res, next) => {
+  try {
+    let room = await Room.findOne({
+      _id: req.params.roomId,
+      removed: false,
+    })
+      .select('-__v -members')
+      .exec();
+    if (!room) {
+      return res.status(404).json({
+        message: 'No room found.',
+      });
+    }
+    return res.status(200).json({
+      room,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const list = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   Room.find({
     members: req.user._id,
@@ -208,6 +229,7 @@ const recheckMembersWithChatkit = async (req, res) => {
 module.exports = {
   create,
   list,
+  getRoom,
   addMembers,
   suggestMember,
   memberList,

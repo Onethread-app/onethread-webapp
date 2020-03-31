@@ -34,7 +34,7 @@ router
 
 // recheck mongodb room users with chatkit room users
 router
-  .route('/hot-fix')
+  .route('/chatkit/hot-fix')
   .post(
     authorization,
     SchemaValidator(joiSchema.recheckMembersWithChatkit),
@@ -62,5 +62,14 @@ router
 
 // get rooms for a company
 router.route('/:company/:project').get(authorization, roomCtrl.list);
+
+// get single room
+router
+  .route('/:roomId')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.getRoom),
+    roomCtrl.getRoom,
+  );
 
 module.exports = router;

@@ -1,11 +1,7 @@
-const Account = require('../account/account.model');
 const { Team } = require('./team.model');
 const { Member } = require('../company/member/member.model');
 const { Project } = require('../project/project.model');
-const { Company } = require('../company/company.model');
 const { ProjectRequest } = require('../request/request.model');
-const { Room } = require('../room/room.model');
-const { chatkit } = require('../services/pusher.services');
 const logger = require('../../config/winston');
 const {
   sendJSONresponse,
@@ -14,16 +10,7 @@ const {
 
 const changeRole = async (req, res, next) => {
   try {
-    if (
-      req.member.role !== 'projectAdmin' &&
-      req.body.role === 'admin'
-    ) {
-      return res.status(403).json({
-        message: `Restricted`,
-      });
-    }
     req.member.role = req.body.role;
-
     await req.member.save();
 
     return res.status(201).json({
@@ -90,9 +77,6 @@ const addTeamMember = async (req, res, next) => {
           };
         });
         await Team.create(members);
-
-        
-
       }
 
       const allTeamMembers = await Team.find({
@@ -103,7 +87,10 @@ const addTeamMember = async (req, res, next) => {
         select: '_id name firstName lastName email',
       });
 
-      createTeamAddNotification(projectOwner, allTeamMembers, {_id:req.user._id, name: req.user.name} );
+      createTeamAddNotification(projectOwner, allTeamMembers, {
+        _id: req.user._id,
+        name: req.user.name,
+      });
 
       return sendJSONresponse(res, 201, {
         message: 'New Team created',
@@ -218,6 +205,7 @@ const getMember = (req, res, next) => {
 };
 
 // member will be found on req.member
+
 const getMemberLoad = async (req, res, next) => {
   try {
     const member = await Team.findOne({

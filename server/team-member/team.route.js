@@ -41,16 +41,14 @@ router.route('/:memberId').get(
   teamCtrl.getMember,
 );
 
-router.route('/:memberId/change-role').put(
-  authorization,
-  projectCtrl.authorizeProjectRole(
-    'all',
-    'admin',
-    'projectModerator',
-  ),
-  // SchemaValidator(teamValidation.changeRole),
-  teamCtrl.changeRole,
-);
+router
+  .route('/:memberId/change-role')
+  .put(
+    authorization,
+    projectCtrl.authorizeProjectRole('all', 'admin'),
+    SchemaValidator(teamValidation.changeRole),
+    teamCtrl.changeRole,
+  );
 router.param('memberId', teamCtrl.getMemberLoad);
 
 module.exports = router;
