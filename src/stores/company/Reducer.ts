@@ -23,7 +23,7 @@ import {
   EDIT_DESIGNATION,
   EDIT_DESIGNATION_ERROR,
   LOGO_UPLOAD,
-  COVER_IMAGE_UPLOAD,
+  COVER_IMAGE_UPLOAD_COMPANY,
   CHANGE_MEMBER_ROLE,
   COMPANY_ROLE,
   UPDATE_ALL_COMPANY_PENDING_MEMBERS,
@@ -143,10 +143,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case GET_COMPANY_DETAILS:
       return {
         ...state,
-        currentCompany: {
-          ...state.currentCompany,
-          ...action.payload
-        }
+        currentCompany: action.payload
       };
     case CREATE_COMPANY:
       return {
@@ -331,7 +328,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           logo: action.payload.link
         }
       };
-      case COVER_IMAGE_UPLOAD: {
+      case COVER_IMAGE_UPLOAD_COMPANY: {
         return {
           ...state,
           currentCompany: {
