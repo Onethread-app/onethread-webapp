@@ -336,7 +336,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then(result => {
-      console.log(result);
+      
       logger.info(`all projects for company:${companyId}`);
       return sendJSONresponse(res, 200, result);
     })
@@ -398,7 +398,7 @@ const getProjectDetails = async (req, res, next) => {
     })
       .populate('files', 'link s3Key')
       .select('outline description color name');
-    // console.log(req.project)
+    
     return sendJSONresponse(res, 200, project);
   } catch (error) {
     next(error);
@@ -437,7 +437,7 @@ const archiveProject = async (req, res, next) => {
         { safe: true, upsert: true, new: true },
       );
       const text =`${req.user.name} has archived a project ${project.name}`;
-      console.log(project);
+      
       createCompanyRoleNotification({_id: project.company}, {_id:req.user._id, name: req.user.name}, text,'project' );
         
       logger.info(`Archive a project  ${req.query.pid}`);
@@ -451,7 +451,7 @@ const archiveProject = async (req, res, next) => {
       });
     }
   } catch (error) {
-    console.log(error);
+   
     logger.error(`${error}`);
     return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
       message: 'Project id is not found',
