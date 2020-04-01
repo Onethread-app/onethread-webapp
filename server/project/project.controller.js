@@ -318,9 +318,15 @@ const showAllProjectsForCompany = async (req, res, next) => {
     return data.project._id;
   });
   await Project.find({
-    $or: [
+    $and: [
       { _id: { $nin: pendingProject } },
-      { company: companyId, removed: false },
+      {
+        $or: [
+          { company: companyId },
+          { associate: { $in: companyId } },
+        ],
+      },
+      { removed: false },
     ],
   })
     .populate('departments', 'name _id ')
@@ -330,6 +336,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then(result => {
+      console.log(result);
       logger.info(`all projects for company:${companyId}`);
       return sendJSONresponse(res, 200, result);
     })
@@ -417,25 +424,27 @@ const changeTitleProject = async (req, res, next) => {
 
 const archiveProject = async (req, res, next) => {
   try {
-    const projectExist = await Project.findOne({
-      _id: req.query.pid,
-      removed: false,
-    });
+    const projectExist = await Project.findOne(
+      {
+        _id: req.query.pid,
+      },
+      { removed: false },
+    );
     if (projectExist) {
       const project = await Project.updateOne(
         { _id: req.query.pid },
         { $set: { removed: true } },
         { safe: true, upsert: true, new: true },
       );
-      const text = `${req.user.name} has archived a project ${project.name}`;
-      createCompanyRoleNotification(
-        associate.company,
-        { _id: req.user._id, name: req.user.name },
-        text,
-        'project',
-      );
+      // const text = `${req.user.name} has archived a project ${project.name}`;
+      // createCompanyRoleNotification(
+      //   associate.company,
+      //   { _id: req.user._id, name: req.user.name },
+      //   text,
+      //   'project',
+      // );
 
-      logger.info(`Archive a project  ${req.params.pid}`);
+      logger.info(`Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         message: `Archive a project`,
       });
