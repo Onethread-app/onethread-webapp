@@ -22,7 +22,6 @@ export const companySubscriber = (companyId: string) => {
           count = count + 1;
         }
       });
-    console.log(count);
     store.dispatch({
       type: NOTIFICATION.SET_READ_COUNT,
       payload: count

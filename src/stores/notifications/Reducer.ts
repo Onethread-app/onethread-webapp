@@ -2,7 +2,8 @@ import { NOTIFICATION } from './Types';
 
 const initialState = {
   allNotifications: [],
-  read: 0
+  read: 0,
+  seen: 0
 };
 export const notificationReducer = (state = initialState, action: any) => {
   switch (action.type) {
