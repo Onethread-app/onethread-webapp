@@ -22,13 +22,6 @@ const client = redis.createClient({
   port: config.redis.port,
   host: config.redis.host,
 });
-
-// client.auth((err, response) => {
-//   if (err) {
-//     logger.error(`${err}`);
-//   }
-//   logger.info(`authentication: ${response}`);
-// });
 client.on('connect', () => {
   logger.info('REDIS ready');
 });
