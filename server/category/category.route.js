@@ -7,22 +7,27 @@ const categoryCtrl = require('./category.controller');
 const passport = require('passport');
 const requireAuth = passport.authenticate('jwt', { session: false });
 const { permit, authSelf } = require('./../helpers/permission');
+const {
+  authorization,
+} = require('../middlewares/authorizationMiddleware');
 // authentication
 router
   .route('/')
-  .get(validate(paramValidation.getCategory), categoryCtrl.getCategory)
+  .get(authorization,validate(paramValidation.getCategory), categoryCtrl.getCategory)
   .post(
-    requireAuth,
-    permit('admin'),
+    authorization,
+    // requireAuth,
+    // permit('admin'),
     validate(paramValidation.newCategory),
     categoryCtrl.newCategory
   );
 router
   .route('/:cid')
-  .get(categoryCtrl.getSubCategory)
+  .get(authorization,categoryCtrl.getSubCategory)
   .post(
-    requireAuth,
-    permit('admin'),
+    authorization,
+    // requireAuth,
+    // permit('admin'),
     validate(paramValidation.newSubCategory),
     categoryCtrl.newSubCategory
   )
@@ -34,12 +39,15 @@ router
   );
 router
   .route('/sub-category/:sid')
-  .get(categoryCtrl.getSubSubCategory)
   .post(
-    requireAuth,
-    permit('admin'),
+    authorization,
+    // requireAuth,
+    // permit('admin'),
     validate(paramValidation.newSubSubCategory),
     categoryCtrl.newSubSubCategory
   );
+router
+    .route('/products/:companyId')
+    .get(authorization,categoryCtrl.getSubSubCategory)
 
 module.exports = router;

@@ -182,13 +182,7 @@ const addMember = async (req, res, next) => {
         .populate([
           {
             path: 'assignedPerson account',
-            select: '_id firstName lastName profileImage',
-            populate: [
-              {
-                path: 'profileImage',
-                select: 'link',
-              },
-            ],
+            select: '_id firstName lastName profileImage'
           },
         ])
         .exec()
