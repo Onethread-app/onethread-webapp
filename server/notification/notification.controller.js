@@ -374,9 +374,8 @@ module.exports.createBoardNotification = async (
 // module.exports.listtest   = async (req, res, next) => {
 //   const { limit = 50, skip = 0, companyId } = req.query;
 
-  
 // try{
- 
+
 //   this.aggregate([
 //     {"$lookup":{
 //       "from":"cartitems", // name of the collection, not model or schema name
@@ -391,14 +390,14 @@ module.exports.createBoardNotification = async (
 //       "total":{"$sum":"$cartitems.quantity"}
 //     }}])
 //   // console.log(1,req.params.companyId)
-  
+
 //   UserNotification.aggregate()
 //   //.project('notification')
 //   //.match({'account' : new ObjectId('5e7a00476aa4b829bc049f45')})
 //  // .unwind('$notification')
 //   //.unwind('$notification.company')
 //   .match({'notification.company' : new ObjectId('5e7af03da5967a1a00a17f23')})
-  
+
 //   .exec()
 //   .then(result => {
 //     console.log(result);
@@ -413,39 +412,38 @@ module.exports.createBoardNotification = async (
 
 // };
 
-module.exports.list   = async (req, res, next) => {
+module.exports.list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
-  
-try{
- let option =  {
-    path: 'notification', 
-    select: '_id text type company',
-    populate:[ {
-        path: 'company',
-        select: '_id name'
-    },
-    {
-      path: 'project',
-      select: '_id name'
-  }]
-};
+  try {
+    let option = {
+      path: 'notification',
+      select: '_id text type company',
+      populate: [
+        {
+          path: 'company',
+          select: '_id name',
+        },
+        {
+          path: 'project',
+          select: '_id name',
+        },
+      ],
+    };
 
-  await UserNotification.find(
-    { 
-      account: req.user._id
-    }
-  )
-    .select('_id read notification account')
-    .populate(option)
-    .sort({ createdAt: -1 })
-    .skip(+skip)
-    .limit(+limit)
-    .exec()
-    .then(result => {
-      //logger.info(`${result}`);
-      return sendJSONresponse(res, 200, result);
-    });
+    await UserNotification.find({
+      account: req.user._id,
+    })
+      .select('_id read notification account')
+      .populate(option)
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit)
+      .exec()
+      .then(result => {
+        //logger.info(`${result}`);
+        return sendJSONresponse(res, 200, result);
+      });
 
     await UserNotification.find({
       account: req.user._id,
