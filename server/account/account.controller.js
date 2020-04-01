@@ -357,6 +357,10 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
             `ElasticSearch document added on ${accountIndex}`,
           ),
         );
+        return sendJSONresponse(res, 200, {
+          isAccountVerified: true,
+          message: 'Account Verified Successfully',
+        });
       } else {
         return sendErrorResponse(res, 400, 'TokenExpireError', {
           isAccountVerified: false,
