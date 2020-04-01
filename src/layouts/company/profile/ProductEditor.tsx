@@ -1,20 +1,81 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '@blueprintjs/core';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Field, Form } from 'react-final-form';
 import { DropdownField } from 'components/fields/DropdownField';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
+import { tokenConfig, Entity } from 'stores/UtilsActions';
+import { tigrowApi } from 'config';
+import { ICompany } from 'stores/company/Reducer';
+import { required } from 'components/final-form/utils';
+import { ADD_PRODUCT } from 'stores/company/Types';
 interface ProductEditProps {
   setShowDialog: (val: boolean) => void;
   showDialog: boolean;
 }
 
-export const ProductEditComponent = (props: ProductEditProps) => {
+interface ProductEditInternalProps extends ProductEditProps {
+  company?: ICompany;
+}
+
+export const ProductEditComponent = (props: ProductEditInternalProps) => {
+
+  const [category, setCategory] = useState([] as Entity[]);
+  const [subcategory, setSubCategory] = useState([] as Entity[]);
+  const [selectcategory, setSelectedCategory] = useState('');
+  const dispatch = useDispatch();
 
   const onSubmit = async (values: any) => {
-    console.log(values);
+    const headers = tokenConfig();
+    try {
+      const response = await tigrowApi.post(
+        `category/sub-category/${values.productSubCategories}`,
+        {
+          name: values.name,
+          company: props.company ? props.company._id : undefined
+        },
+        headers);
+        dispatch({ type: ADD_PRODUCT, payload: response.data.newSubSubCategory });
+      if (response.status === 201) {
+        props.setShowDialog(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
   };
+
+  useEffect(() => {
+    async function getAPI() {
+      const headers = tokenConfig();
+      try {
+        const response = await tigrowApi.get(
+          `category?type=business-category`,
+          headers);
+        await setCategory(response.data.categories);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getAPI();
+  }, []);
+
+  useEffect(() => {
+    async function getAPI(_selectcategory: string) {
+      const headers = tokenConfig();
+      try {
+        const response = await tigrowApi.get(
+          `category/${_selectcategory}`,
+          headers);
+        await setSubCategory(response.data.subcategories);
+      } catch (error) {
+        console.log(error);
+      }
+
+    }
+    if (selectcategory !== '') { getAPI(selectcategory); }
+  }, [selectcategory]);
 
   return (
     <Form
@@ -31,16 +92,18 @@ export const ProductEditComponent = (props: ProductEditProps) => {
               <label>Product Type</label>
               <Field<string>
                 name="productType"
+                validate={required}
                 render={({ input, meta }) =>
                   <DropdownField
                     id="productType"
                     selectedValue={input.value}
-                    options={
-                      [{ _id: 'cosmetics', name: 'cosmetics' },
-                      { _id: 'electronics', name: 'electronics' },
-                      { _id: 'vegetables', name: 'vegetables' }]
+                    options={category}
+                    onChange={(e) => {
+                      setSelectedCategory(e.target.value);
+                      input.onChange(e.target.value);
                     }
-                    onChange={input.onChange}
+                    }
+
                     className="bn"
                   />
                 }
@@ -50,15 +113,12 @@ export const ProductEditComponent = (props: ProductEditProps) => {
               <label>Product Sub Categories</label>
               <Field<string>
                 name="productSubCategories"
+                validate={required}
                 render={({ input, meta }) =>
                   <DropdownField
                     id="productSubCategories"
                     selectedValue={input.value}
-                    options={
-                      [{ _id: 'cosmetics', name: 'cosmetics' },
-                      { _id: 'electronics', name: 'electronics' },
-                      { _id: 'vegetables', name: 'vegetables' }]
-                    }
+                    options={subcategory}
                     onChange={input.onChange}
                     className="bn"
                   />
@@ -68,11 +128,12 @@ export const ProductEditComponent = (props: ProductEditProps) => {
             <div className="mb4">
               <label>Product Name</label>
               <Field<string>
-                name="productName"
+                name="name"
+                validate={required}
                 render={({ input, meta }) =>
                   <div className="mb4">
                     <InputGroupField
-                      id="productName"
+                      id="name"
                       className="mt1 bg-white"
                       value={input.value}
                       onChange={input.onChange}
@@ -112,4 +173,10 @@ export const ProductEditComponent = (props: ProductEditProps) => {
 
 };
 
-export const ProductEdit = connect(null, null)(ProductEditComponent);
+const mapStateToProps = (state: any) => {
+  return {
+    company: state.companyReducer.currentCompany
+  };
+};
+
+export const ProductEdit = connect(mapStateToProps, null)(ProductEditComponent);
