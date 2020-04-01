@@ -11,7 +11,6 @@ export const companySubscriber = (companyId: string) => {
 
   channel.bind(companyId, async (data: any) => {
     let count = 0;
-    console.log(data);
     await store.dispatch({
       type: NOTIFICATION.GET_SUBSCRIBED_NOTIFICATIONS,
       payload: data
@@ -23,7 +22,6 @@ export const companySubscriber = (companyId: string) => {
           count = count + 1;
         }
       });
-    console.log(count);
     store.dispatch({
       type: NOTIFICATION.SET_READ_COUNT,
       payload: count

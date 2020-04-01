@@ -74,7 +74,6 @@ const FormComponent = (props: {
       <div className="pl3" style={{ marginTop: '6rem' }}>
         <h3>Create Project</h3>
       </div>
-      {console.log(selectedAssociates)}
       <Form
         onSubmit={onSubmit}
         mutators={{
@@ -297,7 +296,6 @@ const FormComponent = (props: {
                   <p className="fw5" style={{ fontSize: '.8rem' }}>
                     Select Your Associate Companies
                   </p>
-                  {console.log}
                   <SuggestFieldWithError
                     onChange={(query: string) => {
                       setSearch(query);
