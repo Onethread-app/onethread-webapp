@@ -428,19 +428,21 @@ const archiveProject = async (req, res, next) => {
         { safe: true, upsert: true, new: true },
       );
       const text =`${req.user.name} has archived a project ${project.name}`;
+      console.log(project);
       createCompanyRoleNotification({_id: project.company}, {_id:req.user._id, name: req.user.name}, text,'project' );
         
-      logger.info(`Archive a project  ${req.params.pid}`);
+      logger.info(`Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         message: `Archive a project`,
       });
     } else {
-      logger.error(`project id not found`);
-      return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+      logger.error(`Already Archived`);
+      return sendErrorResponse(res, 400, 'ProjectIdNotFoundError', {
         message: 'Already Archived',
       });
     }
   } catch (error) {
+    console.log(error);
     logger.error(`${error}`);
     return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
       message: 'Project id is not found',

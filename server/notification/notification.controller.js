@@ -289,7 +289,7 @@ try{
   await UserNotification.create(usersNotification);
 
 } catch (error) {
-  console.log(error);
+  console.log(2,error);
   
 }
 };
@@ -439,7 +439,7 @@ try{
     .limit(+limit)
     .exec()
     .then(result => {
-      logger.info(`${result}`);
+      //logger.info(`${result}`);
       return sendJSONresponse(res, 200, result);
     });
 
