@@ -144,7 +144,6 @@ const companyLogo = async (req, res, next) => {
         .save()
         .then(async data => {
           logger.info('File Link successfully save to Database');
-          console.log(data);
           if (data.imageType === 'company-logo') {
             await Company.findOneAndUpdate(
               {
