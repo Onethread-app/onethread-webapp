@@ -357,7 +357,6 @@ module.exports.createBoardNotification = async (
     await notification.save();
     await UserNotification.create(usersNotificationAll);
   } catch (error) {
-    console.log(error);
     logger.error(`Board create: ${error}`);
 
     //next(error);

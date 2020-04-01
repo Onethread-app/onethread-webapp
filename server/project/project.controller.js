@@ -67,7 +67,6 @@ const createNewProjectForCompany = async (req, res, next) => {
         projectReq.push(reqObject);
         return reqObject;
       });
-      console.log(req.body);
       let sendProjectReq = await ProjectRequest.create(projectReq);
       let associateId = [];
       associateId = associates.map(data => {
