@@ -617,6 +617,7 @@ const noticePostByCompany = async (req, res, next) => {
       announcement,
     });
   } catch (error) {
+    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
