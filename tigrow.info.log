@@ -166,3 +166,12 @@ info: 21729 MongoDB is connected 2020-04-01T14:19:33.503Z
 info: 21729 Ok, server is running on port 4044 (local) 2020-04-01T14:19:33.522Z 
 info: 21729 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:19:33.934Z 
 info: 21729 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:19:34.099Z 
+info: 21729 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:19:35.098Z 
+info: 21729 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:19:35.678Z 
+info: 21729 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:19:36.132Z 
+info: 21729 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:19:36.285Z 
+info: 21729 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:19:37.265Z 
+info: 21729 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:19:37.427Z 
+info: 21729 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:19:37.711Z 
+info: 21729 REDIS disconnect 2020-04-01T14:21:44.221Z 
+error: 21729 REDIS Redis connection lost and command aborted. It might have been processed. 2020-04-01T14:21:44.223Z 
