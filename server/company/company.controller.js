@@ -290,7 +290,7 @@ const updateBasicInfo = async (req, res, next) => {
       message: `Company's basic information updated`,
     });
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`);
     next(error);
   }
 };

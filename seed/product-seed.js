@@ -1,207 +1,162 @@
-const axios = require("axios");
-
-
+const axios = require('axios');
 
 const levelOne = [
+  'Agriculture & Food',
 
-	"Agriculture & Food",
+  'Apparel,Textiles & Accessories',
 
-	"Apparel,Textiles & Accessories",
+  'Auto & Transportation',
 
-	"Auto & Transportation",
+  'Bags, Shoes & Accessories',
 
-	"Bags, Shoes & Accessories",
+  'Electronics',
 
-	"Electronics",
+  'Electrical Equipment, Components & Telecom',
 
-	"Electrical Equipment, Components & Telecom",
+  'Gifts, Sports & Toys',
 
-	"Gifts, Sports & Toys",
+  'Health & Beauty',
 
-	"Health & Beauty",
+  'Home, Lights & Construction',
 
-	"Home, Lights & Construction",
+  'Machinery, Industrial Parts & Tools',
 
-	"Machinery, Industrial Parts & Tools",
+  'Metallurgy, Chemicals, Rubber & Plastics',
 
-	"Metallurgy, Chemicals, Rubber & Plastics",
-
-	"Packaging, Advertising & Office"
-
+  'Packaging, Advertising & Office',
 ];
 
-
-
 const levelTwo = {
+  'Agriculture & Food': ['Agriculture', 'Food & Beverage'],
 
-	"Agriculture & Food": ["Agriculture", "Food & Beverage"],
+  'Apparel,Textiles & Accessories': [
+    'Apparel',
 
-	"Apparel,Textiles & Accessories": [
+    'Textile & Leather Product',
 
-		"Apparel",
+    'Fashion Accessories',
 
-		"Textile & Leather Product",
+    'Timepieces, Jewelry, Eyewear',
+  ],
 
-		"Fashion Accessories",
+  'Auto & Transportation': ['Vehicles & Accessories'],
 
-		"Timepieces, Jewelry, Eyewear"
+  'Bags, Shoes & Accessories': [
+    'Luggage, Bags & Cases',
+    'Shoes & Accessories',
+  ],
 
-	],
+  Electronics: [
+    'Consumer Electronic',
 
-	"Auto & Transportation": ["Vehicles & Accessories"],
+    'Home Appliance',
 
-	"Bags, Shoes & Accessories": ["Luggage, Bags & Cases", "Shoes & Accessories"],
+    'Security & Protection',
+  ],
 
-	Electronics: [
+  'Electrical Equipment, Components & Telecom': [
+    'Electrical Equipment & Supplies',
 
-		"Consumer Electronic",
+    'Telecommunication',
+  ],
 
-		"Home Appliance",
+  'Gifts, Sports & Toys': [
+    'Sports & Entertainment',
 
-		"Security & Protection"
+    'Gifts & Crafts',
 
-	],
+    'Toys & Hobbies',
+  ],
 
-	"Electrical Equipment, Components & Telecom": [
+  'Health & Beauty': ['Health & Medical', 'Beauty & Personal Care'],
 
-		"Electrical Equipment & Supplies",
+  'Home, Lights & Construction': [
+    'Construction & Real Estate',
 
-		"Telecommunication"
+    'Home & Garden',
 
-	],
+    'Lights & Lighting',
 
-	"Gifts, Sports & Toys": [
+    'Furniture',
+  ],
 
-		"Sports & Entertainment",
+  'Machinery, Industrial Parts & Tools': [
+    'Machinery',
 
-		"Gifts & Crafts",
+    'Fabrication Services',
 
-		"Toys & Hobbies"
+    'Tools & Hardware',
+  ],
 
-	],
+  'Metallurgy, Chemicals, Rubber & Plastics': [
+    'Minerals & Metallurgy',
 
-	"Health & Beauty": ["Health & Medical", "Beauty & Personal Care"],
+    'Chemicals',
 
-	"Home, Lights & Construction": [
+    'Rubber & Plastics',
 
-		"Construction & Real Estate",
+    'Energy',
+  ],
 
-		"Home & Garden",
+  'Packaging, Advertising & Office': [
+    'Packaging & Printing',
 
-		"Lights & Lighting",
+    'Office & School Supplies',
 
-		"Furniture"
-
-	],
-
-	"Machinery, Industrial Parts & Tools": [
-
-		"Machinery",
-
-		"Fabrication Services",
-
-		"Tools & Hardware"
-
-	],
-
-	"Metallurgy, Chemicals, Rubber & Plastics": [
-
-		"Minerals & Metallurgy",
-
-		"Chemicals",
-
-		"Rubber & Plastics",
-
-		"Energy"
-
-	],
-
-	"Packaging, Advertising & Office": [
-
-		"Packaging & Printing",
-
-		"Office & School Supplies",
-
-		"Service Equipment"
-
-	]
-
+    'Service Equipment',
+  ],
 };
 
-
-
-const url = "http://127.0.0.1:4044/api/v1/category";
-
-
+const url = 'http://127.0.0.1:4044/api/v1/category';
 
 function insert(levelOne, levelTwo) {
+  levelOne.forEach(data => {
+    // format data
 
-	levelOne.forEach(data => {
+    let postData = {
+      name: data,
 
-		// format data
+      type: 'business-category',
+    };
 
-		let postData = {
+    //post data
 
-			name: data,
+    axios
 
-			type: "business-category"
+      .post(url, postData)
 
-		};
+      .then(res => {
+        console.log('Level-one : ', res.data.newCategory._id);
 
-		//post data
+        // insert level two
 
-		axios
+        levelTwo[res.data.newCategory.name].forEach(element => {
+          axios
 
-			.post(url, postData)
+            .post(`${url}/${res.data.newCategory._id}`, {
+              name: element,
+            })
 
-			.then(res => {
+            .then(response => {
+              console.log(
+                'Level-two : ',
 
-				console.log("Level-one : ", res.data.newCategory._id);
+                response.data.newSubCategory._id,
 
-				// insert level two
+                response.data.newSubCategory.name,
+              );
+            })
 
-				levelTwo[res.data.newCategory.name].forEach(element => {
+            .catch(err => {
+              console.log('Level-two ERROR: ', err.message);
+            });
+        });
+      })
 
-					axios
-
-						.post(`${url}/${res.data.newCategory._id}`, {
-
-							name: element
-
-						})
-
-						.then(response => {
-
-							console.log(
-
-								"Level-two : ",
-
-								response.data.newSubCategory._id,
-
-								response.data.newSubCategory.name
-
-							);
-
-						})
-
-						.catch(err => {
-
-							console.log("Level-two ERROR: ", err.message);
-
-						});
-
-				});
-
-			})
-
-			.catch(err => {
-
-				console.log("Level-one ERROR: ", err);
-
-			});
-
-	});
-
+      .catch(err => {
+        console.log('Level-one ERROR: ', err);
+      });
+  });
 }
 
 insert(levelOne, levelTwo);

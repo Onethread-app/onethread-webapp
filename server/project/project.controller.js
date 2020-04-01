@@ -253,7 +253,6 @@ const acceptProjectRequest = async (req, res, next) => {
       },
       { safe: true, new: true, upsert: true },
     );
-    console.log(req.params.companyId);
     logger.info(`project request accept for ${req.query.pid}`);
     let associate = await Associate.findOneAndUpdate(
       {

@@ -1,0 +1,120 @@
+info: 19296 MongoDB is connected 2020-04-01T14:08:28.514Z 
+info: 19296 Ok, server is running on port 4044 (local) 2020-04-01T14:08:28.534Z 
+info: 19296 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:08:28.873Z 
+info: 19296 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:08:29.029Z 
+info: 19296 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:08:29.727Z 
+info: 19296 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:08:29.873Z 
+info: 19296 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:08:31.213Z 
+info: 19296 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:08:31.441Z 
+info: 19296 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:08:31.642Z 
+info: 19296 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:08:31.788Z 
+info: 19296 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:08:32.059Z 
+info: 19334 MongoDB is connected 2020-04-01T14:08:34.537Z 
+info: 19334 Ok, server is running on port 4044 (local) 2020-04-01T14:08:34.567Z 
+info: 19334 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:08:34.831Z 
+info: 19334 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:08:34.979Z 
+info: 19334 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:08:35.691Z 
+info: 19334 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:08:35.839Z 
+info: 19334 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:08:36.208Z 
+info: 19334 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:08:36.353Z 
+info: 19334 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:08:36.554Z 
+info: 19370 MongoDB is connected 2020-04-01T14:08:38.671Z 
+info: 19370 Ok, server is running on port 4044 (local) 2020-04-01T14:08:38.694Z 
+info: 19370 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:08:38.934Z 
+info: 19370 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:08:39.081Z 
+info: 19370 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:08:39.802Z 
+info: 19370 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:08:40.211Z 
+info: 19370 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:08:40.621Z 
+info: 19370 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:08:40.765Z 
+info: 19370 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:08:41.001Z 
+info: 19370 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:08:41.337Z 
+info: 19639 MongoDB is connected 2020-04-01T14:09:28.306Z 
+info: 19639 Ok, server is running on port 4044 (local) 2020-04-01T14:09:28.326Z 
+info: 19639 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:09:28.667Z 
+info: 19639 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:09:29.282Z 
+info: 19639 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:09:29.659Z 
+info: 19639 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:09:29.811Z 
+info: 19639 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:09:30.175Z 
+info: 19639 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:09:30.314Z 
+info: 19639 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:09:30.518Z 
+info: 19639 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:09:30.662Z 
+info: 19639 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:09:31.172Z 
+info: 19765 MongoDB is connected 2020-04-01T14:10:06.373Z 
+info: 19765 Ok, server is running on port 4044 (local) 2020-04-01T14:10:06.390Z 
+info: 19765 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:10:06.690Z 
+info: 19765 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:10:06.860Z 
+info: 19765 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:10:07.658Z 
+info: 19765 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:10:08.164Z 
+info: 19765 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:10:10.039Z 
+info: 19765 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:10:10.182Z 
+info: 19765 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:10:10.405Z 
+info: 19765 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:10:10.552Z 
+info: 19765 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:10:10.843Z 
+info: 19930 MongoDB is connected 2020-04-01T14:10:39.101Z 
+info: 19930 Ok, server is running on port 4044 (local) 2020-04-01T14:10:39.118Z 
+info: 19930 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:10:39.473Z 
+info: 19930 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:10:39.651Z 
+info: 19930 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:10:40.430Z 
+info: 19930 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:10:40.594Z 
+info: 19930 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:10:40.961Z 
+info: 19930 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:10:41.107Z 
+info: 19930 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:10:41.312Z 
+info: 19930 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:10:41.855Z 
+info: 19930 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:10:42.140Z 
+info: 20041 MongoDB is connected 2020-04-01T14:11:06.477Z 
+info: 20041 Ok, server is running on port 4044 (local) 2020-04-01T14:11:06.494Z 
+info: 20041 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:11:06.799Z 
+info: 20041 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:11:06.955Z 
+info: 20041 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:11:07.606Z 
+info: 20041 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:11:07.758Z 
+info: 20041 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:11:09.447Z 
+info: 20041 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:11:09.598Z 
+info: 20041 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:11:09.804Z 
+info: 20041 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:11:09.954Z 
+info: 20041 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:11:10.230Z 
+info: 20134 MongoDB is connected 2020-04-01T14:11:33.234Z 
+info: 20134 Ok, server is running on port 4044 (local) 2020-04-01T14:11:33.250Z 
+info: 20134 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:11:33.488Z 
+info: 20134 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:11:34.051Z 
+info: 20134 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:11:34.499Z 
+info: 20134 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:11:34.648Z 
+info: 20134 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:11:35.720Z 
+info: 20134 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:11:35.865Z 
+info: 20134 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:11:36.069Z 
+info: 20134 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:11:36.218Z 
+info: 20134 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:11:37.017Z 
+info: 20318 MongoDB is connected 2020-04-01T14:12:33.442Z 
+info: 20318 Ok, server is running on port 4044 (local) 2020-04-01T14:12:33.464Z 
+info: 20318 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:12:33.810Z 
+info: 20318 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:12:33.962Z 
+info: 20318 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:12:34.710Z 
+info: 20318 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:12:34.856Z 
+info: 20318 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:12:35.423Z 
+info: 20318 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:12:35.566Z 
+info: 20318 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:12:35.770Z 
+info: 20318 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:12:36.343Z 
+info: 20318 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:12:37.226Z 
+info: 20443 MongoDB is connected 2020-04-01T14:13:17.142Z 
+info: 20443 Ok, server is running on port 4044 (local) 2020-04-01T14:13:17.160Z 
+info: 20443 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:13:17.425Z 
+info: 20443 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:13:17.590Z 
+info: 20443 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:13:18.338Z 
+info: 20443 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:13:18.488Z 
+info: 20443 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:13:19.461Z 
+info: 20443 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:13:19.966Z 
+info: 20443 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:13:21.042Z 
+info: 20443 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:13:21.191Z 
+info: 20443 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:13:21.467Z 
+info: 20560 MongoDB is connected 2020-04-01T14:13:55.340Z 
+info: 20560 Ok, server is running on port 4044 (local) 2020-04-01T14:13:55.356Z 
+info: 20560 [38;2;0;128;0mElasticSearch cluster health is green[39m 2020-04-01T14:13:55.748Z 
+info: 20560 [94mElasticSearch existing index accounts is deleted[39m 2020-04-01T14:13:55.901Z 
+info: 20560 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-01T14:13:56.570Z 
+info: 20560 [94mElasticSearch existing index members is deleted[39m 2020-04-01T14:13:56.721Z 
+info: 20560 [94mElasticSearch successfully created index members with bulk[39m 2020-04-01T14:13:57.354Z 
+info: 20560 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-01T14:13:57.497Z 
+info: 20560 [94mElasticSearch successfully created index skillareas[39m 2020-04-01T14:13:57.697Z 
+info: 20560 [94mElasticSearch existing index companies is deleted[39m 2020-04-01T14:13:57.922Z 
+info: 20560 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-01T14:13:58.216Z 
+info: 20560 REDIS disconnect 2020-04-01T14:16:06.298Z 
+error: 20560 REDIS Redis connection lost and command aborted. It might have been processed. 2020-04-01T14:16:06.303Z 

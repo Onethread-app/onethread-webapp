@@ -9,7 +9,6 @@ const File = require('./file.model');
 const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
 const { Project } = require('../project/project.model');
-const { generateGetUrl } = require('../services/s3');
 let s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
   secretAccessKey: config.awsSecretAccessKey,
@@ -116,25 +115,13 @@ const profilePicture = async (req, res, next) => {
       next(err);
     });
 };
-
-// const displayProPic = async (req, res, next) => {
-//   const { Key } = req.query;
-//   generateGetUrl(Key)
-//     .then(getURL => {
-//       return sendJSONresponse(res, 200, getURL);
-//     })
-//     .catch(err => {
-//       next(err);
-//     });
-// };
-
 const companyLogo = async (req, res, next) => {
   const file = req.file;
   const userID = req.user._id;
   const companyID = req.params.companyId;
   const fileRename = fileName(companyID, file.originalname);
   const params = {
-    Bucket: 'tigrow-file',
+    Bucket: 'tigrowprod',
     Key: `${companyID}/${fileRename}`,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -212,7 +199,7 @@ const fileInRooms = async (req, res, next) => {
   const roomID = req.query.roomID;
   const userID = req.user._id;
   const params = {
-    Bucket: 'tigrow-file',
+    Bucket: 'tigrowprod',
     Key: `${roomID}/${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -264,7 +251,7 @@ const fileInProject = async (req, res, next) => {
   const pidExist = await Project.findOne({ _id: pid });
   if (pidExist) {
     const params = {
-      Bucket: 'tigrow-file',
+      Bucket: 'tigrowprod',
       Key: `${pid}/${file.originalname}`,
       Body: file.buffer,
       ContentType: file.mimetype,
@@ -307,7 +294,6 @@ const fileInProject = async (req, res, next) => {
 };
 module.exports = {
   profilePicture,
-  // displayProPic,
   companyLogo,
   fileInRooms,
   fileInProject,
