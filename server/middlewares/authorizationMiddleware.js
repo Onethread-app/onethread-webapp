@@ -16,21 +16,16 @@ module.exports.authorization = async (req, res, next) => {
   }
   let isBlackListed;
   let bearerToken = parts.split(' ')[1];
-  await client
-    .multi()
-    .GET(`BlackList:${bearerToken}`)
-    .execAsync()
-    .then(data => {
-      // if data object is null token is not blacklisted
-      if (data[0] === null) {
-        isBlackListed = false;
-      } else {
-        isBlackListed = true;
-      }
-    })
-    .catch(err => {
-      next(err);
-    });
+  let multi = client.multi();
+  multi.get(`BlackList:${bearerToken}`);
+  multi.exec(function(err, data) {
+    // if data object is null token is not blacklisted
+    if (data[0] === null) {
+      isBlackListed = false;
+    } else {
+      isBlackListed = true;
+    }
+  });
   if (isBlackListed) {
     return sendErrorResponse(res, 401, 'AuthError', {
       message: 'invalid token',
