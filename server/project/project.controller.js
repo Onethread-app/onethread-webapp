@@ -534,9 +534,23 @@ const suggestConcernAdmin = async (req, res, next) => {
 };
 
 const archiveProjectList = async (req, res, next) => {
-  await Project.find({ company: req.params.companyId, removed: true })
+  const { limit = 50, skip = 0 } = req.query;
+  await Project.find({
+    $and: [
+      {
+        $or: [
+          { company: req.params.companyId },
+          { associate: { $in: req.params.companyId } },
+        ],
+      },
+      { removed: true },
+    ],
+  })
     .populate('departments', 'name _id')
     .select('name members')
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
     .exec()
     .then(result => {
       return sendJSONresponse(res, 200, result);
