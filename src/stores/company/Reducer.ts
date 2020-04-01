@@ -32,7 +32,9 @@ import {
   ADD_CERTIFICATE,
   ADD_ORGANIZATION,
   GET_ALL_COMPANY_ANNOUNCEMENT,
-  ADD_ANNOUNCEMENT
+  ADD_ANNOUNCEMENT,
+  GET_ALL_PRODUCT,
+  ADD_PRODUCT
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
 
@@ -96,6 +98,7 @@ export interface ICompany {
   certificate: ICertificates[];
   parentcom: Entity[];
   announce: [];
+  products: Entity[];
 }
 
 const InitialState = {
@@ -118,7 +121,8 @@ const InitialState = {
     coverImage: '',
     certificate: [],
     parentcom: [],
-    announce: []
+    announce: [],
+    products: []
   },
   createCompanyError: {
     message: '',
@@ -332,15 +336,15 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           logo: action.payload.link
         }
       };
-      case COVER_IMAGE_UPLOAD_COMPANY: {
-        return {
-          ...state,
-          currentCompany: {
-            ...state.currentCompany,
-            coverImage: action.payload.link
-          }
-        };
-      }
+    case COVER_IMAGE_UPLOAD_COMPANY: {
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          coverImage: action.payload.link
+        }
+      };
+    }
 
     case CHANGE_MEMBER_ROLE:
       return {
@@ -394,14 +398,38 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
         loading: false
       };
-      case ADD_ANNOUNCEMENT:
-        return {
-          ...state,
-          currentCompany: {
-            ...state.currentCompany,
-            announce: [...state.currentCompany.announce, action.payload]
-          }
-        };
+    case ADD_ANNOUNCEMENT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          announce: [...state.currentCompany.announce, action.payload]
+        }
+      };
+    case GET_ALL_PRODUCT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          products: action.payload
+        }
+      };
+    case ADD_PRODUCT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          products: [
+            ...state.currentCompany.products,
+            {
+              _id : action.payload._id,
+              name : action.payload.name,
+            }
+          ]
+        },
+        departmentNameLoading: false,
+        error: ''
+      };
     default:
       return state;
   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import addIcon from '../../../resources/images/addIcon.png';
@@ -9,15 +9,29 @@ import { ProductEdit } from './ProductEditor';
 import { CertificateEdit } from './CertificateEditor';
 import { OrganizationEdit } from './ParentOrganizationEditor';
 import { ICompany } from 'stores/company/Reducer';
+import { getAllProduct } from 'stores/company/Actions';
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
+  getAllProduct: () => any;
 }
+
 const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
 
   const [showProductDialog, setShowProductDialog] = useState(false);
   const [showCertificateDialog, setShowCertificateDialog] = useState(false);
   const [showOrganizationDialog, setShowOrganizationDialog] = useState(false);
+
+  useEffect(() => {
+    async function getAPI() {
+      try {
+        await props.getAllProduct();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getAPI();
+  }, []);
 
   return (
     <>
@@ -35,10 +49,9 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
             />
           </div>
           <Divider />
-          <div>
-            <p className="f5">oxford</p>
-            <p className="f5">office shirt</p>
-          </div>
+          {props.company && props.company.products && props.company.products.length > 0 ?
+            props.company.products.map((product: any) => (
+              <h1 key={product._id} className="f5 fw4">{product.name}</h1>)) : <p className="f5">No products</p>}
         </div>
         <div className="mt4">
           <div className="flex justify-between">
@@ -98,7 +111,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           <div
             className="outline-0"
           >
-          {props.company && props.company.parentcom && props.company.parentcom.length > 0 ?
+            {props.company && props.company.parentcom && props.company.parentcom.length > 0 ?
               props.company.parentcom.map((parentcom: any) => (
                 <h1 key={parentcom._id} className="f5 fw4">{parentcom}</h1>)) : <p className="f5">No organizations</p>}
           </div>
@@ -147,4 +160,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AdvancedInfo = connect(mapStateToProps, null)(AdvancedInfoComponent);
+export const AdvancedInfo = connect(mapStateToProps, { getAllProduct })(AdvancedInfoComponent);
