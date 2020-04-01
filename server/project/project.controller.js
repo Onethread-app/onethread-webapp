@@ -318,9 +318,15 @@ const showAllProjectsForCompany = async (req, res, next) => {
     return data.project._id;
   });
   await Project.find({
-    $or: [
+    $and: [
       { _id: { $nin: pendingProject } },
-      { company: companyId, removed: false },
+      {
+        $or: [
+          { company: companyId },
+          { associate: { $in: companyId } },
+        ],
+      },
+      { removed: false },
     ],
   })
     .populate('departments', 'name _id ')
@@ -330,6 +336,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then(result => {
+      console.log(result);
       logger.info(`all projects for company:${companyId}`);
       return sendJSONresponse(res, 200, result);
     })
@@ -417,12 +424,14 @@ const changeTitleProject = async (req, res, next) => {
 
 const archiveProject = async (req, res, next) => {
   try {
-    const projectExist = await Project.findOne({
-      _id: req.query.pid,
-      removed: false,
-    });
+    const projectExist = await Project.findOne(
+      {
+        _id: req.query.pid,
+      },
+      { removed: false },
+    );
     if (projectExist) {
-      const project = await Project.updateOne(
+      const project = await Project.findOneAndUpdate(
         { _id: req.query.pid },
         { $set: { removed: true } },
         { safe: true, upsert: true, new: true },
