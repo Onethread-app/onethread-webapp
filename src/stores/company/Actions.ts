@@ -39,6 +39,7 @@ import {
   COVER_IMAGE_UPLOAD_COMPANY,
   GET_ALL_COMPANY_ANNOUNCEMENT,
   ADD_ANNOUNCEMENT,
+  GET_ALL_PRODUCT,
   // ADD_ANNOUNCEMENT
 } from './Types';
 import { CLEAR_ROOMS_REDUCER_STATE, CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY } from 'stores/room/Types';
@@ -676,3 +677,27 @@ export const addAnnouncement = (announcement: any) => async (
   }
 };
 
+export const getAllProduct = () => async (dispatch: any, getState: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const companyId = getState().companyReducer.currentCompany._id;
+      const response = await tigrowApi.get(
+        `category/products/${companyId}`,
+        headers
+      );
+      dispatch({ type: GET_ALL_PRODUCT, payload: response.data });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in getting product');
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      console.log('network error');
+
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+  }
+};
