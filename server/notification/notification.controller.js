@@ -371,47 +371,47 @@ module.exports.createBoardNotification = async (
   }
 };
 
-module.exports.listtest   = async (req, res, next) => {
-  const { limit = 50, skip = 0, companyId } = req.query;
+// module.exports.listtest   = async (req, res, next) => {
+//   const { limit = 50, skip = 0, companyId } = req.query;
 
   
-try{
+// try{
  
-  this.aggregate([
-    {"$lookup":{
-      "from":"cartitems", // name of the collection, not model or schema name
-      "localField":"cartitems",
-      "foreignField":"_id",
-      "as":"cartitems"
-    }},
-    {"$unwind":"$cartitems"},
-    {"$match":{"cartitems.product":mongoose.Types.ObjectId(productId)}},
-    {"$group":{
-      "_id":"$_id",
-      "total":{"$sum":"$cartitems.quantity"}
-    }}])
-  // console.log(1,req.params.companyId)
+//   this.aggregate([
+//     {"$lookup":{
+//       "from":"cartitems", // name of the collection, not model or schema name
+//       "localField":"cartitems",
+//       "foreignField":"_id",
+//       "as":"cartitems"
+//     }},
+//     {"$unwind":"$cartitems"},
+//     {"$match":{"cartitems.product":mongoose.Types.ObjectId(productId)}},
+//     {"$group":{
+//       "_id":"$_id",
+//       "total":{"$sum":"$cartitems.quantity"}
+//     }}])
+//   // console.log(1,req.params.companyId)
   
-  UserNotification.aggregate()
-  //.project('notification')
-  //.match({'account' : new ObjectId('5e7a00476aa4b829bc049f45')})
- // .unwind('$notification')
-  //.unwind('$notification.company')
-  .match({'notification.company' : new ObjectId('5e7af03da5967a1a00a17f23')})
+//   UserNotification.aggregate()
+//   //.project('notification')
+//   //.match({'account' : new ObjectId('5e7a00476aa4b829bc049f45')})
+//  // .unwind('$notification')
+//   //.unwind('$notification.company')
+//   .match({'notification.company' : new ObjectId('5e7af03da5967a1a00a17f23')})
   
-  .exec()
-  .then(result => {
-    console.log(result);
-    logger.info(`${result}`);
-    return sendJSONresponse(res, 200, result);
-  });
-} catch (error) {
-  console.log(error);
-  logger.error(`${error}`);
-  next(error);
-}
+//   .exec()
+//   .then(result => {
+//     console.log(result);
+//     logger.info(`${result}`);
+//     return sendJSONresponse(res, 200, result);
+//   });
+// } catch (error) {
+//   console.log(error);
+//   logger.error(`${error}`);
+//   next(error);
+// }
 
-};
+// };
 
 module.exports.list   = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;

@@ -13,12 +13,12 @@ router
     notificationCtrl.list,
   );
 
-  router
-  .route('/test')
-  .get(
+  // router
+  // .route('/test')
+  // .get(
     
-    notificationCtrl.listtest,
-  );
+  //   notificationCtrl.listtest,
+  // );
 
 router
   .route('/:notificationId')
