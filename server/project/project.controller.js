@@ -14,7 +14,7 @@ const {
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
 const {
-  createCompanyRoleNotification
+  createCompanyRoleNotification,
 } = require('../notification/notification.controller');
 const teamCreate = (account, member, project, role) => {
   let newTeam = new Team({
@@ -60,34 +60,43 @@ const createNewProjectForCompany = async (req, res, next) => {
       let reqObjectMap = associates.map(async data => {
         let reqObject = {};
         reqObject.cid = req.params.companyId;
-        reqObject.assoId = data._id;
+        reqObject.associate = data._id;
         reqObject.isAccepted = false;
         reqObject.project = project._id;
         reqObject.size = data.size;
         projectReq.push(reqObject);
         return reqObject;
       });
-      // Insert project request
-      try {
-        let sendProjectReq = await ProjectRequest.create(projectReq);
-        let associate = await Associate.findOne(
-          { _id: req.body.associates },
-          {   isAccepted: true, isRejected: false  },
-        ).populate('associateCompany', '_id name type')
-        .populate('company', '_id name type')
-        .exec();
-  
-        
-        
-        const text =`${associate.company.name} wants to create a associate project ${project.name} with your ${associate.company.name} `;
-        createCompanyRoleNotification(associate.company, {_id:req.user._id, name: req.user.name}, text,'project' );
-        logger.info(
-          `${req.params.companyId} company send a project request to its associate`,
+      let sendProjectReq = await ProjectRequest.create(projectReq);
+      let associateId = [];
+      associateId = associates.map(data => {
+        return data._id;
+      });
+      // // Insert project request
+      associateId.forEach(async data => {
+        let associate = await Associate.findOne({
+          $and: [
+            {
+              associateCompany: data,
+            },
+            { isAccepted: true, isRejected: false },
+          ],
+        })
+          .populate('associateCompany', '_id name type')
+          .populate('company', '_id name type')
+          .exec();
+        const text = `${associate.company.name} wants to create a associate project ${project.name} with your ${associate.associateCompany.name} `;
+        createCompanyRoleNotification(
+          associate.company._id,
+          { _id: req.user._id, name: req.user.name },
+          text,
+          'project',
         );
-      } catch (error) {
-        logger.error(`${error}`);
-        next(error);
-      }
+      });
+      logger.info(
+        `${req.params.companyId} company send a project request to its associate`,
+      );
+
       // build a team for this project
       if (req.user._id === concernedAdmin.accountId) {
         teamCreate(
@@ -124,10 +133,15 @@ const createNewProjectForCompany = async (req, res, next) => {
         description: '',
         outline: '',
       });
-      
-      const text =`${req.user.name} has created a project ${project.name} `;
-      createCompanyRoleNotification({_id: req.body.companyId}, {_id:req.user._id, name: req.user.name}, text,'project' );
-        
+
+      const text = `${req.user.name} has created a project ${project.name} `;
+      createCompanyRoleNotification(
+        { _id: req.body.companyId },
+        { _id: req.user._id, name: req.user.name },
+        text,
+        'project',
+      );
+
       await project
         .save()
         .then(project => {
@@ -226,7 +240,7 @@ const projectPendingRequest = async (req, res, next) => {
 
 const acceptProjectRequest = async (req, res, next) => {
   try {
-    let projectReq =  await ProjectRequest.updateOne(
+    let projectReq = await ProjectRequest.updateOne(
       { project: req.query.pid },
       {
         $set: {
@@ -244,21 +258,24 @@ const acceptProjectRequest = async (req, res, next) => {
       {
         $push: { project: req.query.pid },
       },
-      { safe: true, upsert: true },
+      { new: true, upsert: true },
     );
-    // logger.info(
-    //   `${req.query.companyId} create a project`,
-    // );
-
-    associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
-    const text =`${associate.associateCompany.name} has accepted ${projectReq.name} request `;
-    createCompanyRoleNotification(associate.company, {_id:req.user._id, name: req.user.name}, text,'project' );
+    let asso = await Associate.findOne({
+      associateCompany: req.params.companyId,
+    }).populate('associateCompany', '_id name type');
+    const text = `${asso.company.name} has accepted request `;
+    createCompanyRoleNotification(
+      asso.company._id,
+      { _id: req.user._id, name: req.user.name },
+      text,
+      'project',
+    );
     await Project.updateOne(
       { _id: req.query.pid },
       {
         $push: { associate: req.params.companyId },
       },
-      { safe: true, upsert: true },
+      { new: true, upsert: true },
     );
     return sendJSONresponse(res, 200, {
       message: `${req.query.pid} accepted by ${req.params.companyId}`,
@@ -294,11 +311,16 @@ const rejectProjectRequest = async (req, res, next) => {
 const showAllProjectsForCompany = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   let companyId = req.params.companyId;
-
+  let pendingProject = await ProjectRequest.find({
+    $and: [{ isAccepted: false }, { associate: companyId }],
+  }).populate('project', '_id');
+  pendingProject = pendingProject.map(data => {
+    return data.project._id;
+  });
   await Project.find({
     $or: [
+      { _id: { $nin: pendingProject } },
       { company: companyId, removed: false },
-      { associate: { $in: [companyId] }, removed: false },
     ],
   })
     .populate('departments', 'name _id ')
@@ -326,7 +348,7 @@ const updateProjectDescription = async (req, res, next) => {
   )
     .exec()
     .then(result => {
-      logger.info(`Description addeed for ${req.parms.pid}`);
+      logger.info(`Description addeed for ${req.params.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
         message: 'Description updated',

@@ -373,15 +373,28 @@ module.exports.listtest   = async (req, res, next) => {
   
 try{
  
-
+  this.aggregate([
+    {"$lookup":{
+      "from":"cartitems", // name of the collection, not model or schema name
+      "localField":"cartitems",
+      "foreignField":"_id",
+      "as":"cartitems"
+    }},
+    {"$unwind":"$cartitems"},
+    {"$match":{"cartitems.product":mongoose.Types.ObjectId(productId)}},
+    {"$group":{
+      "_id":"$_id",
+      "total":{"$sum":"$cartitems.quantity"}
+    }}])
   // console.log(1,req.params.companyId)
   
   UserNotification.aggregate()
   //.project('notification')
-  .match({'account' : new ObjectId(req.user._id)})
-  .unwind('notification')
+  //.match({'account' : new ObjectId('5e7a00476aa4b829bc049f45')})
+ // .unwind('$notification')
   //.unwind('$notification.company')
-  .match({'notification.company' : new ObjectId(req.params.companyId)})
+  .match({'notification.company' : new ObjectId('5e7af03da5967a1a00a17f23')})
+  
   .exec()
   .then(result => {
     console.log(result);

@@ -78,4 +78,16 @@ module.exports = {
       archive: Joi.boolean().required(),
     }),
   }),
+  getRoom: Joi.object().keys({
+    params: Joi.object().keys({
+      roomId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .error(errors => {
+          return {
+            message: 'Invalid Room ID',
+          };
+        }),
+    }),
+  }),
 };

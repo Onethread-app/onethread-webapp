@@ -92,7 +92,7 @@ router
   );
 router
   .route('/:companyId/announcements')
-  .put(
+  .post(
     authorization,
     SchemaValidator(joiSchema.createNotice),
     companyCtrl.noticePostByCompany,
@@ -120,8 +120,12 @@ router
 // 		);
 
 router
-.route('/:companyId/dashboard')
-.get(authorization,SchemaValidator(joiSchema.dashboard),companyCtrl.dashBoard)
+  .route('/:companyId/dashboard')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.dashboard),
+    companyCtrl.dashBoard,
+  );
 
 // .delete(
 //   auth,

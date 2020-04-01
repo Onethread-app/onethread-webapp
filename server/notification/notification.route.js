@@ -13,6 +13,13 @@ router
     notificationCtrl.list,
   );
 
+  router
+  .route('/test')
+  .get(
+    
+    notificationCtrl.listtest,
+  );
+
 router
   .route('/:notificationId')
   .get(

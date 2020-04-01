@@ -598,14 +598,14 @@ const dashBoard = async (req, res, next) => {
 
 const noticePostByCompany = async (req, res, next) => {
   try {
-    const NewNotice = req.body.announcement;
+    const NewNotice = req.body.text;
     const announcement = new Announcement({
       text: NewNotice,
       company: req.params.companyId,
     });
     logger.info(`new notice created`);
     await announcement.save();
-    const text = ` ${req.user.name} has created a announcment in ${req.user.name} company `;
+    const text = ` ${req.user.name} has created a announcement in ${req.params.companyId} company `;
     createCompanyRoleNotification(
       { _id: req.params.companyId },
       { _id: req.user._id, name: req.user.name },
