@@ -27,7 +27,6 @@ import {
   EDIT_DESIGNATION,
   EDIT_DESIGNATION_ERROR,
   LOGO_UPLOAD,
-  COVER_IMAGE_UPLOAD,
   CHANGE_MEMBER_ROLE,
   CHANGE_MEMBER_ROLE_ERROR,
   COMPANY_ROLE,
@@ -37,6 +36,7 @@ import {
   DELETE_TEAM_MEMBER_ERROR,
   ADD_CERTIFICATE,
   ADD_ORGANIZATION,
+  COVER_IMAGE_UPLOAD_COMPANY,
   GET_ALL_COMPANY_ANNOUNCEMENT,
   ADD_ANNOUNCEMENT,
   // ADD_ANNOUNCEMENT
@@ -86,7 +86,7 @@ export const createCompanyAction = (
       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
       dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
       dispatch({ type: CREATE_COMPANY, payload: response.data });
-      routeHistory.push(`/company/${response.data.company.name}`);
+      routeHistory.push(`/company/${response.data.company.name}/dashboard`);
       return response.data;
     } else {
       // tslint:disable-next-line: no-console
@@ -379,7 +379,7 @@ export const companyLogoUploadAction = (
         });
       } else if (response.data.imageType === 'company-cover-photo') {
         dispatch({
-          type: COVER_IMAGE_UPLOAD,
+          type: COVER_IMAGE_UPLOAD_COMPANY,
           payload: { ...response.data, link: response.data.link }
         });
       }

@@ -58,7 +58,7 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
         </div>
         <Button
           className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3"
-          style={{ marginTop: '265px', marginRight: '45px', color: 'white' }}
+          style={{ marginTop: '265px', marginRight: '45px', color: '#0fa3a3' }}
           onClick={() => setShowDialogPicture(true)}
         >
           Change Cover

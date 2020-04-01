@@ -116,7 +116,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
               <div>
                 <Card
                   key={project._id}
-                  className="h-100"
+                  className="h-100 ma1"
                   interactive={false}
                   style={{ paddingLeft: '0px', paddingBottom: '0px' }}
                 >
