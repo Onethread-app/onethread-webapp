@@ -25,7 +25,8 @@ import {
 	GET_ROOM_DISCUSSIONS_ERROR,
 	SET_ROOM_DISCUSSIONS,
 	TOGGLE_ROOM_DISCUSSIONS_ERROR,
-	REMOVE_ROOM_DISCUSSIONS
+	REMOVE_ROOM_DISCUSSIONS,
+	CURRENT_ROOM
 } from './Types';
 import { tigrowApi } from 'config';
 
@@ -91,6 +92,34 @@ export const getRooms = () => async (dispatch: any, getState: any) => {
 			// tslint:disable-next-line: no-console
 			console.log(error.response);
 		}
+	}
+};
+
+export const getRoom = (roomId: string) => async (dispatch: any, getState: any) => {
+	try {
+		const headers = tokenConfig();
+		if ((headers as any).headers.Authorization) {
+			dispatch({ type: LOADING_ROOM });
+			const response = await tigrowApi.get(
+				`rooms/${roomId}`,
+				headers
+			);
+			dispatch({ type: CURRENT_ROOM, payload: response.data.room });
+			return response.status;
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log('error in room fetching');
+		}
+	} catch (error) {
+		if (isEqual(error.message, 'Network Error')) {
+			dispatch({ type: GET_ROOM_ERROR, payload: 'Network error' });
+		} else if (error.response.status === 401) {
+			dispatch({ type: GET_ROOM_ERROR, payload: 'Unauthorized user' });
+		} else {
+			// tslint:disable-next-line: no-console
+			console.log(error.response);
+		}
+		return error.response.status;
 	}
 };
 

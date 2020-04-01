@@ -158,9 +158,9 @@ const FormComponent = (props: {
                               <div>
                                 <Tag
                                   key={item._id}
-                                  className="pa1"
+                                  className="pa1 ma1"
                                   interactive={true}
-                                  style={{ background: '#707070' }}
+                                  style={{ background: '#0fa3a3' }}
                                   onRemove={e => {
                                     const filteredItems = selectedAdmins.filter(
                                       selectedItem =>

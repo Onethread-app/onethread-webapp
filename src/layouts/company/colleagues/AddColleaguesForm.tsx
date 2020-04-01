@@ -17,14 +17,14 @@ interface TeamMembersViewProps {
 interface TeamMembersViewInternalProps extends TeamMembersViewProps {
   company: ICompany;
   addTeamMembers: (
-    members: Array<{ account: string | undefined; company: string }>,
+    members: Array<{ account: string | undefined; company: string; }>,
     pendingTeamMembers: string[],
     companyId: string
   ) => void;
   getCompanyMembers: () => void;
 }
 
-const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
+const AddColleaguesFormComponent = (props: TeamMembersViewInternalProps) => {
   const [teamMembers, setTeamMembers]: any = useState([] as ItemEntityProps[]);
 
   const [selectedTeamMember, setSelectedTeamMember] = useState(
@@ -163,8 +163,8 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           Could not add more than 20 members at a time.
         </small>
       ) : (
-        undefined
-      )}
+          undefined
+        )}
 
       <div className='flex justify-end mt4'>
         <Button
@@ -183,21 +183,21 @@ const AddMemberFormComponent = (props: TeamMembersViewInternalProps) => {
           className='grow h2 pointer white bp3-minimal w4'
           style={
             selectedTeamMember.length + pendingTeamMembers.length > 0 &&
-            selectedTeamMember.length + pendingTeamMembers.length <= 20
+              selectedTeamMember.length + pendingTeamMembers.length <= 20
               ? {
-                  background: '#0fa3a3',
-                  outline: 'none',
-                  color: 'white'
-                }
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white'
+              }
               : {
-                  background: '#011b1b2e',
-                  outline: 'none',
-                  color: 'white'
-                }
+                background: '#011b1b2e',
+                outline: 'none',
+                color: 'white'
+              }
           }
           disabled={
             selectedTeamMember.length + pendingTeamMembers.length > 0 &&
-            selectedTeamMember.length + pendingTeamMembers.length <= 20
+              selectedTeamMember.length + pendingTeamMembers.length <= 20
               ? false
               : true
           }
@@ -235,7 +235,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AddMemberForm = connect(mapStateToProps, {
+export const AddColleaguesForm = connect(mapStateToProps, {
   addTeamMembers,
   getCompanyMembers
-})(AddMemberFormComponent);
+})(AddColleaguesFormComponent);

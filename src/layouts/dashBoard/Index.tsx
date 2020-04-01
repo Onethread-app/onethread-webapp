@@ -8,10 +8,12 @@ import { tigrowApi } from 'config';
 import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
+import { getCompanyAnnouncement } from 'stores/company/Actions';
 
 interface DashBoardViewProps {
   user: User;
   company: ICompany;
+  getCompanyAnnouncement: () => void;
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
@@ -19,7 +21,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [showAnnouncementDialog, setShowAnnouncementDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
-  const [companyAnnouncement, setCompanyAnnouncement] = useState([]);
 
   useEffect(() => {
 
@@ -28,11 +29,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       const response = await tigrowApi.get(
         `company/${props.company!._id}/dashboard`,
         headers);
-      const res =  await tigrowApi.get(
-        `company/${props.company!._id}/announcements`,
-        headers);
         await setDashboard(response.data.data);
-        await setCompanyAnnouncement(res.data.company[0].announcement);
+        await props.getCompanyAnnouncement();
         await setLoading(false);
     }
     getAPI();
@@ -67,11 +65,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
         >
           <h1 className="f5">Company Announcement</h1>
       {
-        companyAnnouncement.map((announcement) => (
+        props.company.announce.map((announcement: any ) => (
           
           <div className="flex items-center">
             <div className="w2 h2 bg-red br3"></div>
-            <h1 className="f5 fw4 mh3">{announcement}</h1>
+            <h1 className="f5 fw4 mh3">{announcement.text}</h1>
           </div>
         
         ))
@@ -103,8 +101,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
         >
           <div>
             <AnnouncementEditor
-            companyAnnouncement={companyAnnouncement}
-            setcompanyAnnouncement={setCompanyAnnouncement}
             setShowDialog={setShowAnnouncementDialog} />
           </div>
         </Dialog>
@@ -120,4 +116,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const DashboardView = connect(mapStateToProps)(DashboardViewComponent);
+export const DashboardView = connect(mapStateToProps, {getCompanyAnnouncement})(DashboardViewComponent);
