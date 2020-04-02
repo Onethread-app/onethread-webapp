@@ -33,8 +33,8 @@ const EmailVerificationFormComponent = ((props: RouteComponentProps) => {
     <Form
       onSubmit={onSubmit}
       render={({ handleSubmit, submitting, pristine }) => (
-        <form className="flex-ns" onSubmit={handleSubmit}>
-          <div className="flex-ns flex-column-ns flex-auto-ns w-90-ns mr3-ns w-100 mv3 mv0-ns">
+        <form className="flex items-center" onSubmit={handleSubmit}>
+          <div className="flex-ns flex-column-ns flex-auto-ns w-90-ns mr3-ns w-60 mv3-ns mv0-ns">
             <Field<string>
               name="email"
               validate={composeValidators(required, isEmail)}
@@ -51,7 +51,7 @@ const EmailVerificationFormComponent = ((props: RouteComponentProps) => {
             />
           </div>
           <Button
-            className="grow h2 pointer white bp3-minimal w5-ns w-100 ba"
+            className="grow h2 pointer white bp3-minimal w5-ns w-40 ba"
             style={{
               background: 'transparent',
               // outline: 'none',

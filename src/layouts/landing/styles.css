@@ -12,10 +12,11 @@
     outline: none;
     font-family: 'Montserrat';
     color: white;
-    font-size: 0.8rem;
+    font-size: 1rem;
     padding: 1.2rem 1.9rem;
     font-weight: bold;
     min-width: 140px;
+    text-align: center;
 }
 
 .tryLink.light{
@@ -95,6 +96,24 @@
     letter-spacing: 0.3px;
     color: #356E8D;
     text-align: left;
+}
+
+.chatIntro{
+    background-color: #F4F6FC;
+    border-radius: 10px;
+}
+
+.carousel{
+    position: relative;
+}
+
+.react-multi-carousel-dot button{
+    background: #000;
+    border-width: 1px;
+}
+
+.react-multi-carousel-dot--active button {
+    background: #fff;
 }
 
 .footerText{
@@ -195,9 +214,68 @@
     }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 824px) {
     .companyLogo{
         margin-left: -8.5rem;
+    }
+
+    .tryLink{
+        padding: 0.5rem 1rem;
+        min-width: 110px;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    .tryLink.light{
+        font-size: 0.8rem;
+    }
+
+    .demoLink{
+        padding: 0rem;
+        justify-content: center;
+    }
+
+    .primeText{
+        font-size: 1.7rem;
+    }
+
+    .secondaryText{
+        font-size: 1.5rem;
+    }
+
+    .titleText{
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .featureTitle{
+        font-size:  0.9rem;
+        flex: 1;
+        padding: 1rem ;
+    }
+
+    .light .featureTitle{
+        padding: 0 ;
+    }
+
+    .homeUl.light{
+        margin-left: 2rem;
+    }
+
+    .homeUl{
+        padding-left: 2.5rem;
+        align-items: flex-start;
+    }
+
+    .homeUl>.featureTitle::before{
+        margin-left: -1.5rem;
+        height: 0.9rem;
+        width: 0.9rem;
+    }
+
+    .footerText{
+        font-size: 0.48rem;
+        line-height: 1.1;
     }
 }
 
