@@ -336,7 +336,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
         logger.error(`${err}`);
         next(err);
       }
-      userID = JSON.parse(data[0]);
+      let userID = JSON.parse(data[0]);
       if (typeof userID === 'string') {
         const user = Account.findByIdAndUpdate(
           { _id: userID },
@@ -527,11 +527,11 @@ const resetPassword = async (req, res, next) => {
         logger.error(`${err}`);
         next(err);
       }
-      userID = JSON.parse(data[0]);
+      let userID = JSON.parse(data[0]);
       if (typeof userID === 'string') {
         const user = Account.findById({
           _id: userID,
-        });
+        }).exec();
         user.password = password;
         user.save();
         logger.info(`password successfully change`);
@@ -557,21 +557,16 @@ const tokenRefresh = async (req, res, next) => {
     const refreshToken = req.body.refreshToken;
     // check if a refresh token exist in blacklist
     let isBlackListed;
-    await client
-      .multi()
-      .GET(`BlackList:${refreshToken}`)
-      .execAsync()
-      .then(data => {
-        // if data object is null token is not blacklisted
-        if (data[0] === null) {
-          isBlackListed = false;
-        } else {
-          isBlackListed = true;
-        }
-      })
-      .catch(err => {
-        next(err);
-      });
+    let multi = client.multi();
+    multi.get(`BlackList:${refreshToken}`);
+    multi.exec(function(err, data) {
+      // if data object is null token is not blacklisted
+      if (data[0] === null) {
+        isBlackListed = false;
+      } else {
+        isBlackListed = true;
+      }
+    });
 
     if (isBlackListed) {
       return sendErrorResponse(res, 401, 'AuthError', {
