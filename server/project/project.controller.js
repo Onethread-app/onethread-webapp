@@ -67,7 +67,6 @@ const createNewProjectForCompany = async (req, res, next) => {
         projectReq.push(reqObject);
         return reqObject;
       });
-      console.log(req.body);
       let sendProjectReq = await ProjectRequest.create(projectReq);
       let associateId = [];
       associateId = associates.map(data => {
@@ -253,7 +252,6 @@ const acceptProjectRequest = async (req, res, next) => {
       },
       { safe: true, new: true, upsert: true },
     );
-    console.log(req.params.companyId);
     logger.info(`project request accept for ${req.query.pid}`);
     let associate = await Associate.findOneAndUpdate(
       {

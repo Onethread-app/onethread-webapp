@@ -202,7 +202,7 @@ const getRoomDiscussion = async (req, res, next) => {
       discussion,
     });
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -240,7 +240,6 @@ const toggleDiscussion = async (req, res, next) => {
 
 const searchMessage = async (req, res, next) => {
   try {
-    console.log(req.query);
     const name = req.query.name;
     const roomId = req.params.roomId;
 
