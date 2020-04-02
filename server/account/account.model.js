@@ -10,12 +10,12 @@ const { Schema } = mongoose;
 // defining all the fields of individual account
 const accountsSchema = new mongoose.Schema({
   profileImage: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'File',
+    type: String,
+    trim: true,
   },
   coverImage: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'File',
+    type: String,
+    trim: true
   },
   name: {
     type: String,
@@ -107,21 +107,21 @@ const accountsSchema = new mongoose.Schema({
       ref: 'Company',
     },
   ],
-  token: {
-    type: String,
-  },
-  resetPasswordToken: {
-    type: String,
-  },
-  resetPasswordTokenExpiration: {
-    type: String,
-  },
-  verifyAccountToken: {
-    type: String,
-  },
-  verifyAccountTokenExpiration: {
-    type: String,
-  },
+  // token: {
+  //   type: String,
+  // },
+  // resetPasswordToken: {
+  //   type: String,
+  // },
+  // resetPasswordTokenExpiration: {
+  //   type: String,
+  // },
+  // verifyAccountToken: {
+  //   type: String,
+  // },
+  // verifyAccountTokenExpiration: {
+  //   type: String,
+  // },
   isAccountVerified: {
     type: Boolean,
     default: false,
@@ -138,6 +138,10 @@ const accountsSchema = new mongoose.Schema({
       ref: 'Education',
     },
   ],
+  version: {
+    type: Number,
+    default: 0,
+  },
 });
 accountsSchema.index(
   { email: 1, secondaryEmail: 1 },

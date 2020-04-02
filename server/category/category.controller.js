@@ -8,7 +8,7 @@ const {
 const newCategory = async (req, res) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
   // fetch the request data
   const category = new Category({
@@ -34,7 +34,7 @@ const newCategory = async (req, res) => {
 const newSubCategory = async (req, res) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
   // category
   const category = await Category.findById(req.params.cid);
@@ -71,7 +71,7 @@ const newSubCategory = async (req, res) => {
 const newSubSubCategory = async (req, res) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
   // sub-category
   const subcategory = await SubCategory.findById(req.params.sid);
@@ -155,7 +155,9 @@ const getSubCategory = (req, res, next) => {
     });
 };
 const getSubSubCategory = (req, res, next) => {
-  SubCategory.findById(req.params.sid)
+  SubSubCategory.find({
+    company: req.params.companyId
+  })
     .select('_id name subsubcategories')
     .populate('subsubcategories', '_id name')
     .exec()

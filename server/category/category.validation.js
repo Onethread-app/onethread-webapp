@@ -29,7 +29,10 @@ module.exports = {
   },
   newSubCategory: {
     body: {
-      name: Joi.string().required()
+      name: Joi.string().required(),
+      company: Joi.string()
+      .regex(/^[0-9a-fA-F]{24}$/)
+      .required()
     },
     params: {
       cid: Joi.string()

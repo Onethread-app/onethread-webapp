@@ -16,7 +16,7 @@ const schema = {
   name: Joi.string(),
   department: idSchema.id,
   color: Joi.number(),
-  company: idSchema.id,
+  project: idSchema.id,
   columns: Joi.array().items(idSchema.id),
   members: Joi.array().items(idSchema.id),
   removed: Joi.boolean()
@@ -28,8 +28,11 @@ module.exports = {
     body: Joi.object().keys({
       name: schema.name.required(),
       department: schema.department,
-      companyId: schema.company ,
+      projectId: schema.project,
       color : schema.color
     }),
+  }),
+  getAllBoards: Joi.object().keys({
+    params: schema.project
   })
 };

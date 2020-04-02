@@ -1,21 +1,21 @@
 const load = (to, from, entity, Model, modelEntity) => {
   return async (req, res, next) => {
-    console.log(req[from][entity]);
+    
     try {
       let doc;
       if (modelEntity == undefined) {
         doc = await Model.findOne({
           _id: req[from][entity],
         });
-        console.log(true, doc);
+        
       } else {
         doc = await Model.findOne({
           modelEntity: req[from][entity],
         });
-        console.log(false, doc);
+        
       }
 
-      console.log(`doc:${modelEntity}`, doc);
+      
       if (doc) {
         req[to] = doc;
         return next();

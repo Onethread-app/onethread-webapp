@@ -1,7 +1,8 @@
 const express = require('express');
 const multer = require('multer');
+const fileValidation = require('./file.validation');
 const router = express.Router();
-const passport = require('passport');
+const schemaValidator = require('../helpers/joiSchemaValidator');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
@@ -20,9 +21,9 @@ router.post(
   fileCtrl.profilePicture,
 );
 
-router.get('/show-file', fileCtrl.displayProPic);
+// router.get('/show-file', fileCtrl.displayProPic);
 router.post(
-  '/company-logo',
+  '/:companyId/upload',
   upload.single('file'),
   authorization,
   fileCtrl.companyLogo,
@@ -32,5 +33,12 @@ router.post(
   upload.single('file'),
   authorization,
   fileCtrl.fileInRooms,
+);
+router.post(
+  '/file-upload-project',
+  upload.single('file'),
+  authorization,
+  schemaValidator(fileValidation.fileInProject),
+  fileCtrl.fileInProject,
 );
 module.exports = router;

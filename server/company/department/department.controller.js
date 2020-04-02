@@ -8,7 +8,9 @@ const {
 const create = async (req, res) => {
   if (!req.is('application/json')) {
     logger.error("'Expects 'application/json'");
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
   try {
     // check Department already exists with same company

@@ -21,9 +21,18 @@ const RoomSchema = new mongoose.Schema(
       unique: false,
       ref: 'Company',
     },
+    project: {
+      type: Schema.ObjectId,
+      unique: false,
+      ref: 'Project',
+    },
     account: {
       type: Schema.ObjectId,
       ref: 'Account',
+    },
+    archive: {
+      type: Boolean,
+      default: false,
     },
     removed: {
       type: Boolean,
@@ -33,7 +42,10 @@ const RoomSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-RoomSchema.index({ name: 1, company: 1 }, { unique: true });
+RoomSchema.index(
+  { name: 1, company: 1, project: 1 },
+  { unique: true },
+);
 
 let Room = mongoose.model('Room', RoomSchema);
 

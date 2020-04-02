@@ -6,7 +6,7 @@ const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const create = async (req, res, next) => {
   if (!req.is('application/json')) {
     logger.error("'Expects 'application/json'");
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
   try {
     let divisions = ['director', 'cxo'],
@@ -37,7 +37,7 @@ const create = async (req, res, next) => {
 const edit = async (req, res, next) => {
   if (!req.is('application/json')) {
     logger.error("'Expects 'application/json'");
-    return res.send("Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
   }
   try {
     // find designation

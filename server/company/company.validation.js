@@ -13,8 +13,15 @@ const id = Joi.object().keys({
 });
 
 // company-name
+const companyId = Joi.object().keys({
+  companyId: Joi.string().required(),
+});
+
 const cname = Joi.object().keys({
   cname: Joi.string().required(),
+});
+const sname = Joi.object().keys({
+  name: Joi.string().min(1),
 });
 
 // joi schema
@@ -37,15 +44,21 @@ const schema = {
     .max(2000),
   email: Joi.string()
     .email()
-    .lowercase(),
-  legalOwnerName: Joi.string(),
+    .lowercase()
+    .allow(''),
+  legalOwnerName: Joi.string().allow(''),
   legalOwnerMail: Joi.string()
     .email()
-    .lowercase(),
+    .lowercase()
+    .allow(''),
   products: Joi.array()
     .min(1)
     .max(5)
     .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
+  optionalRole: Joi.array()
+    .min(0)
+    .max(7)
+    .items(Joi.string()),
   location: Joi.string(),
   websites: Joi.array()
     .max(3)
@@ -83,6 +96,9 @@ const schema = {
     '1001 -2000 square meters',
     'above 2000 square meters',
   ]),
+  announcement: Joi.string()
+    .max(500)
+    .allow(''),
 };
 
 module.exports = {
@@ -101,26 +117,49 @@ module.exports = {
   }),
   updateBasicInfo: Joi.object().keys({
     body: Joi.object().keys({
-      address: schema.address.required(),
+      name: schema.name,
+      type: schema.type,
+      address: schema.address,
       email: schema.email,
       legalOwnerName: schema.legalOwnerName,
       legalOwnerMail: schema.legalOwnerMail,
     }),
-    params: cname,
+    params: companyId,
   }),
   updateAbout: Joi.object().keys({
     body: Joi.object().keys({
       about: schema.about,
     }),
-    params: cname,
+    params: companyId,
+  }),
+  changeRole: Joi.object().keys({
+    body: Joi.object().keys({
+      optionalRole: schema.optionalRole.required(),
+    }),
+    params: companyId,
   }),
   changeName: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
     }),
-    params: cname,
+    params: companyId,
   }),
   deleteCompany: Joi.object().keys({
-    params: cname,
+    params: companyId,
+  }),
+  search: Joi.object().keys({
+    query: sname,
+  }),
+  dashboard: Joi.object().keys({
+    params: companyId,
+  }),
+  createNotice: Joi.object().keys({
+    params: companyId,
+    body: Joi.object().keys({
+      text: schema.announcement,
+    }),
+  }),
+  allNoticesForCompany: Joi.object().keys({
+    params: companyId,
   }),
 };

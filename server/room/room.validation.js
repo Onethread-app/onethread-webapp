@@ -1,6 +1,15 @@
-'use strict';
-
 const Joi = require('joi');
+
+const id = Joi.object().keys({
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required()
+    .error(errors => {
+      return {
+        message: 'Invalid ID',
+      };
+    }),
+});
 
 module.exports = {
   createRoom: Joi.object().keys({
@@ -13,7 +22,15 @@ module.exports = {
         .required()
         .error(errors => {
           return {
-            message: 'Invalid ID',
+            message: 'Invalid Company ID',
+          };
+        }),
+      project: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .error(errors => {
+          return {
+            message: 'Invalid Project ID',
           };
         }),
     }),
@@ -32,6 +49,45 @@ module.exports = {
             .required(),
         )
         .required(),
+    }),
+  }),
+  recheckMembersWithChatkit: Joi.object().keys({
+    body: Joi.object().keys({
+      company: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .error(errors => {
+          return {
+            message: 'Invalid Company ID',
+          };
+        }),
+    }),
+  }),
+  archiveRoom: Joi.object().keys({
+    params: Joi.object().keys({
+      roomId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .error(errors => {
+          return {
+            message: 'Invalid Room ID',
+          };
+        }),
+    }),
+    body: Joi.object().keys({
+      archive: Joi.boolean().required(),
+    }),
+  }),
+  getRoom: Joi.object().keys({
+    params: Joi.object().keys({
+      roomId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .error(errors => {
+          return {
+            message: 'Invalid Room ID',
+          };
+        }),
     }),
   }),
 };

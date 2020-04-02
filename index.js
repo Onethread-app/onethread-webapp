@@ -9,6 +9,7 @@ const config = require('./config/config');
 //const client = require('./index.redis');
 const app = require('./config/express');
 const logger = require('./config/winston');
+const { IndexElasticSearch } = require('./index.elasticsearch');
 
 const { webhook } = require('./server/services/slack.services.js');
 
@@ -17,13 +18,13 @@ mongoose.Promise = Promise;
 
 // connect to mongo db
 const mongoUri = config.mongo.host;
-mongoose.set('useUnifiedTopology', true);
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUri, () => {});
 logger.info('MongoDB is connected');
+IndexElasticSearch();
 mongoose.connection.on('error', () => {
   // webhook('unable to connect database');
   logger.error(`unable to connect to database: ${mongoUri}`);
@@ -39,6 +40,17 @@ if (config.mongooseDebug) {
     );
   });
 }
+
+// var apm = require('elastic-apm-node').start({
+//   // Override service name from package.json
+//   // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+//   serviceName: 'tigrowkibana',
+
+//   // Use if APM Server requires a token
+//   secretToken: 'false',
+
+//   serverUrl: 'http://localhost:8200'
+// });
 
 if (!module.parent) {
   // Event listener for HTTP server "error" event.
@@ -68,6 +80,8 @@ if (!module.parent) {
   // 	}
   // }
 
+  
+
   // listen on port config.port
   app.listen(config.port, () => {
     logger.info(
@@ -75,14 +89,6 @@ if (!module.parent) {
     );
   });
 }
-
-process.on('unhandledRejection', async (err, promise) => {
-  logger.error(err, {
-    dispatcher: loggerDispatcher,
-    from: 'unhandledRejection event',
-    promise,
-  });
-});
 
 process.on('unhandledRejection', async (err, promise) => {
   logger.error(err, {
