@@ -41,12 +41,31 @@ const validateUrl = [
   },
 ];
 
+const certificate = new Schema({
+  name: {
+    type: String,
+    trim: true,
+  },
+  description: {
+    type: String,
+    trim: true,
+  },
+  company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+  },
+});
+
 // company schema
 const company = new Schema(
   {
     logo: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'File',
+      type: String,
+      trim: true,
+    },
+    coverImage: {
+      type: String,
+      trim: true,
     },
     name: {
       type: String,
@@ -70,6 +89,22 @@ const company = new Schema(
       ],
       required: true,
     },
+    optionalRole: {
+      type: [{
+        type: String,
+        enum: [
+          'editProfile',
+          'cRUDAnnouncement',
+          'archiveProject',
+          'addRemoveModerator',
+          'messageAssociate',
+          'addAcceptRejectAssociate',
+          'acceptRejectProjectFromAssociate',
+        ]
+      }],
+      
+    },
+    
     address: {
       type: String,
       maxlength: 120,
@@ -99,18 +134,6 @@ const company = new Schema(
       ref: 'Account',
       required: true,
     },
-    members: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Member',
-      },
-    ],
-    rooms: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Room',
-      },
-    ],
     location: {
       type: String,
     },
@@ -155,6 +178,7 @@ const company = new Schema(
         'above 2000 square meters',
       ],
     },
+    parentcom: [String],
     removed: {
       type: Boolean,
       default: false,
@@ -166,7 +190,9 @@ const company = new Schema(
 );
 
 let Company = mongoose.model('Company', company);
+let Certificate = mongoose.model('Certificate', certificate);
 
 module.exports = {
   Company,
+  Certificate,
 };

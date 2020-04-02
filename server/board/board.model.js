@@ -23,9 +23,9 @@ const BoardSchema = new mongoose.Schema(
       ref: 'Account',
       required: true,
     },
-    company: {
+    project: {
       type: Schema.Types.ObjectId,
-      ref: 'Company',
+      ref: 'Project',
       required: true,
     },
     columns: [

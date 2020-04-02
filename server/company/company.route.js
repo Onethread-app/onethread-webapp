@@ -1,5 +1,5 @@
 const express = require('express');
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const passport = require('passport');
 
 // const auth = passport.authenticate('jwt', { session: false });
@@ -23,6 +23,13 @@ router
     companyCtrl.createCompany,
   );
 
+router
+  .route('/search')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.search),
+    companyCtrl.searchCompany,
+  );
 // get company
 router
   .route('/:cname')
@@ -34,29 +41,90 @@ router
 
 // update basic info
 router
-  .route('/:cname/basic')
+  .route('/:companyId/basic')
   .put(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateBasicInfo),
     companyCtrl.updateBasicInfo,
   );
 
 // update about
 router
-  .route('/:cname/about')
+  .route('/:companyId/about')
   .put(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
   );
-
-// update about
 router
-  .route('/:cname/changeName')
+  .route('/:companyId/certification')
+  .post(
+    authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    companyCtrl.addCertifications,
+  );
+router.route('/:companyId/parentorg').put(
+  authorization,
+  companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+  // SchemaValidator(joiSchema.parentOrg),
+  companyCtrl.parentOrg,
+);
+
+// change name
+router
+  .route('/:companyId/changeName')
   .put(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeName),
     companyCtrl.changeName,
+  );
+
+router
+  .route('/:companyId/role')
+  .put(
+    authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    SchemaValidator(joiSchema.changeRole),
+    companyCtrl.updateRole,
+  );
+router
+  .route('/:companyId/announcements')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.createNotice),
+    companyCtrl.noticePostByCompany,
+  );
+router
+  .route('/:companyId/announcements')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.allNoticesForCompany),
+    companyCtrl.allNoticesForCompany,
+  );
+// 		router
+//   .route('/:companyId/announcements')
+//   .delete(
+//     authorization,
+//     SchemaValidator(),
+//     companyCtrl.removeNotice,
+// 		);
+// 		router
+//   .route('/:companyId/announcements')
+//   .put(
+//     authorization,
+//     SchemaValidator(),
+//     companyCtrl.removeNotice,
+// 		);
+
+router
+  .route('/:companyId/dashboard')
+  .get(
+    authorization,
+    SchemaValidator(joiSchema.dashboard),
+    companyCtrl.dashBoard,
   );
 
 // .delete(
@@ -71,12 +139,12 @@ router
   .get(authorization, companyCtrl.getCompanyIndividual);
 
 // redirect to member
-router.use('/:cname/members', memberRoutes);
+router.use('/:companyId/members', memberRoutes);
 // redirect to department
-router.use('/:cname/departments', deptRoutes);
+router.use('/:companyId/departments', deptRoutes);
 // redirect to designation
-router.use('/:cname/designations', designationRoutes);
+router.use('/:companyId/designations', designationRoutes);
 
-router.param('cname', companyCtrl.getCompanyLoad);
+router.param('companyId', companyCtrl.getCompanyLoad);
 
 module.exports = router;

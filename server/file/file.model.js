@@ -44,7 +44,12 @@ const fileSchema = new mongoose.Schema(
     },
     imageType: {
       type: String,
-      enum: ['profilePic', 'coverPhoto'],
+      enum: [
+        'profilePic',
+        'coverPhoto',
+        'company-logo',
+        'company-cover-photo',
+      ],
     },
     account: {
       type: mongoose.Schema.Types.ObjectId,
@@ -58,6 +63,10 @@ const fileSchema = new mongoose.Schema(
     room: {
       type: Schema.ObjectId,
       ref: 'Room',
+    },
+    project: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Project',
     },
   },
   { timestamps: true },

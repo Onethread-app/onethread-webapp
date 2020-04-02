@@ -2,7 +2,10 @@ const Education = require('./education.model');
 const Account = require('../account/account.model');
 const { sendJSONresponse } = require('../helpers/jsonResponse.js');
 const logger = require('../../config/winston');
-
+const {
+  addUserDataIntoCache,
+} = require('../services/redis.services');
+const client = require('../../index.redis');
 const addEducation = async (req, res, next) => {
   const account = await Account.findById(req.user._id);
   const addEducation = new Education({
@@ -31,7 +34,7 @@ const addEducation = async (req, res, next) => {
 const updateEducation = async (req, res, next) => {
   try {
     if (!req.is('application/json')) {
-      return res.send("Expects 'application/json'");
+      return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
     }
     const updateEdu = await Education.findByIdAndUpdate(
       {

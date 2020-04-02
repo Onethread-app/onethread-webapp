@@ -10,6 +10,6 @@
 
 yarn-error.log*
 package-lock.json
-cemui.log
-cemui.info.log
-cemui.error.log
+tigrow.log
+tigrow.info.log
+tigrow.error.log

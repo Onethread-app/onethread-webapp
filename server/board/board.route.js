@@ -12,20 +12,24 @@ const { permit, authSelf } = require('./../helpers/permission');
 
 const router = express.Router();
 
-// get borad list
+
 router
   .route('/')
-  .get(
-    authorization,
-    // permit('user', 'admin'),
-    boardCtrl.list,
-  )
+  
   .post(
     authorization,
     // permit('user', 'admin'),
     SchemaValidator(joiSchema.createBoard),
     boardCtrl.create,
   );
+
+  router
+  .route('/boardProject/:projectId')
+  .get(
+    authorization,
+    // permit('user', 'admin'),
+    boardCtrl.list,
+  )
 
 // get specific board details
 router

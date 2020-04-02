@@ -1,8 +1,11 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const httpStatus = require('http-status');
 const slug = require('slug');
 const Account = require('./account.model');
+const { Member } = require('../company/member/member.model');
+const {
+  PendingMember,
+} = require('../company/member/pendingMember.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
@@ -12,18 +15,21 @@ const {
 } = require('../services/email.services');
 const { chatkit } = require('../services/pusher.services');
 const {
-  updateRefreshTokenfromList,
-  removeRefreshTokenfromList,
+  addTokenToBlackList,
+  accountVerificationToken,
+  addUserDataIntoCache,
 } = require('../services/redis.services');
 const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 const {
-  APIError,
-  BadRequestError,
-  SearchNotMatchError,
-} = require('../helpers/APIError');
+  setDocument,
+  accountIndex,
+  bulkInsert,
+  memberIndex,
+} = require('../services/elastic.services');
+const chalk = require('chalk');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -67,13 +73,6 @@ const register = async (req, res, next) => {
     password: data.password,
     birthDate: data.birthDate,
   });
-  const token = crypto.randomBytes(20).toString('hex');
-  const verifyToken = crypto
-    .createHash('sha256')
-    .update(token)
-    .digest('hex');
-  account.verifyAccountToken = verifyToken;
-  account.verifyAccountTokenExpiration = Date.now() + 604800;
   await account
     .save()
     .then(async user => {
@@ -81,13 +80,80 @@ const register = async (req, res, next) => {
         id: user._id,
         name: user.name,
       });
+      let token = crypto.randomBytes(20).toString('hex');
+      let verifyToken = crypto
+        .createHash('sha256')
+        .update(token)
+        .digest('hex');
+      let verifyAccountTokenExpiration = Date.now() + 604800;
+
+      let pendingMember = await PendingMember.find({
+        email: account.email,
+      }).select('-__v -createdAt -updatedAt');
+
+      if (pendingMember.length > 0) {
+        let pendingMemberToMember = pendingMember.map(m => {
+          return { account: account._id, company: m.company };
+        });
+
+        const pendingMemberToMemberAccounts = pendingMemberToMember.map(
+          member => member.account,
+        );
+        const pendingMemberToMemberCompany = pendingMemberToMember.map(
+          member => member.company,
+        );
+
+        await Member.create(pendingMemberToMember);
+
+        const elasticIndexedMembers = await Member.find({
+          account: { $in: pendingMemberToMemberAccounts },
+          company: { $in: pendingMemberToMemberCompany },
+        }).populate({
+          path: 'account',
+          select: '_id name firstName lastName email',
+        });
+
+        const memberStructure = data => {
+          return {
+            mongo_id: data.mongo_id,
+            account: data.account,
+            company: data.company,
+          };
+        };
+
+        await bulkInsert(
+          memberIndex,
+          elasticIndexedMembers,
+          memberStructure,
+        );
+        logger.info(
+          chalk.blueBright(
+            `ElasticSearch successfully documented with bulk on ${memberIndex}`,
+          ),
+        );
+
+        await PendingMember.updateMany(
+          { email: account.email },
+          {
+            removed: true,
+          },
+        );
+      }
+
       sendEmailForVerifyAccount(
         user.firstName,
         user.lastName,
         user.email,
         verifyToken,
       );
-      return sendJSONresponse(res, 201, { message: 'User created' });
+      accountVerificationToken(
+        `verifyAccountToken:${verifyToken}`,
+        user._id,
+        verifyAccountTokenExpiration,
+      );
+      return sendJSONresponse(res, 201, {
+        message: 'User created',
+      });
     })
     .catch(err => {
       next(err);
@@ -106,113 +172,202 @@ const login = async (req, res, next) => {
   try {
     const payLoad = {
       email: req.user.email,
+      name: req.user.name,
       _id: req.user._id,
     };
-    const token = jwt.sign(
-      { email: req.user.email, _id: req.user._id },
-      config.jwtSecret,
-      {
-        expiresIn: config.jwtExpire,
-      },
-    );
     const accessToken = jwt.sign(payLoad, config.accessTokenSecret, {
-      expiresIn: config.jwtExpire,
+      expiresIn: config.accessTokenExpire,
     });
     const refreshToken = jwt.sign(
       payLoad,
       config.refreshTokenSecret,
       {
-        expiresIn: config.jwtRefreshExpire,
+        expiresIn: config.refreshTokenExpire,
       },
     );
-
-    const userObj = req.user.toObject();
-    const timeline = [
-      ...req.user.jobExperience,
-      ...req.user.education,
-    ];
-    const timelineHistory = timeline.sort((a, b) =>
-      a.startYear < b.startYear ? 1 : -1,
-    );
-    userObj.timeline = timelineHistory;
-    delete userObj.password;
-    delete userObj.companies;
+    let userObj = {};
+    userObj.name = req.user.name;
+    // addUserDataIntoCache(req.user._id, req.user);
     return sendJSONresponse(res, 200, {
       success: true,
-      token: token,
       accessToken: accessToken,
       refreshToken: refreshToken,
       user: userObj,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
 
 const getAccount = async (req, res, next) => {
   try {
-    const user = await Account.findOne({
-      email: req.user.email,
+    const userInfo = await Account.findOne({
+      _id: req.user._id,
     })
       .select('-password')
-      .populate(
-        'companies skillArea jobExperience education profileImage coverImage',
-        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy name link s3Key fileType imageType',
-      );
-    const timeline = [...user.jobExperience, ...user.education];
-    const timelineHistory = timeline.sort((a, b) =>
-      a.startYear < b.startYear ? 1 : -1,
-    );
-    const userInfo = { ...user._doc };
-    userInfo.timeline = timelineHistory;
-    delete userInfo.password;
-    delete userInfo.companies;
-    logger.info('userInfo successfully fetched');
+      .populate('skillArea', '_id name');
+    // console.log(userInfo);
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,
     });
   } catch (error) {
-    return next(error);
+    logger.error(`${error}`);
+    next(error);
+  }
+  // client
+  //   .multi()
+  //   .hgetall(`userID:${req.user._id}`)
+  //   .execAsync()
+  //   .then(async result => {
+  //     let user = result[0];
+  //     let userInfo = {};
+  //     if (user === null) {
+  //       userInfo = await Account.findOne({
+  //         _id: req.user._id,
+  //       }).select('-password');
+  //     } else {
+  //       userInfo = user;
+  //       // userInfo.skillArea = JSON.parse(user.skillArea);
+  //       // userInfo.skillArea = [];
+  //       // userInfo = await Account.findOne({
+  //       //   _id: req.user._id,
+  //       // }).select('-password');
+  //       // // userInfo = await Account.findOne({
+  //       // //   _id: req.user._id,
+  //       // // }).select('-password');
+  //       // client
+  //       //   .multi()
+  //       //   .smembers(`skillArea:${req.user._id}`)
+  //       //   .execAsync()
+  //       //   .then(result => {
+  //       //     userInfo.skillArea = result[0];
+  //       //   });
+  //     }
+  //     console.log(userInfo);
+  //     return sendJSONresponse(res, 200, {
+  //       success: true,
+  //       user: userInfo,
+  //     });
+  //     // const user = result[0];
+  //     // let userInfo = {};
+  //     // client
+  //     //   .multi()
+  //     //   .smembers(`skillArea:${req.user._id}`)
+  //     //   .execAsync()
+  //     //   .then(result => {
+  //     //     userInfo = user;
+  //     //     userInfo.skillArea = result[0];
+  //     //     return sendJSONresponse(res, 200, {
+  //     //       success: true,
+  //     //       user: userInfo,
+  //     //     });
+  //     //   });
+  //   })
+  // .catch(err => {
+  //   console.log(err);
+  //   next(err);
+  // });
+};
+// client
+//   .multi()
+//   .get(`userID:${req.user.email}`)
+//   .execAsync()
+//   .then(result => {
+//     let user = JSON.parse(result);
+//     return sendJSONresponse(res, 200, {
+//       success: true,
+//       user: user,
+//     });
+//   })
+//   .catch(err => {
+//     console.log(err);
+//     next(err);
+//   });
+
+const skillArea = async (req, res, next) => {
+  try {
+    const user = await Account.findOne({
+      email: req.user.email,
+    })
+      .select('-password')
+      .populate('skillArea', '_id name');
+    return sendJSONresponse(res, 200, {
+      success: true,
+      user: user,
+    });
+  } catch (error) {
+    next(error);
   }
 };
-
+// create a timeline for user
+const timeline = async (req, res, next) => {
+  try {
+    const user = await Account.findOne({
+      email: req.user.email,
+    })
+      .select('-password')
+      .populate(
+        'jobExperience education',
+        '_id name companyName positionName currentlyWork startYear endingYear jobDescription degree institutionName eduDescription startYear endingYear currentlyStudy',
+      );
+    const timeline = [...user.jobExperience, ...user.education];
+    const timelineHistory = timeline.sort((a, b) =>
+      a.startYear < b.startYear ? 1 : -1,
+    );
+    const userInfo = {};
+    userInfo.timeline = timelineHistory;
+    return sendJSONresponse(res, 200, {
+      success: true,
+      user: userInfo,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 // token verification for mail
 const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
-    const { token } = req.params;
-    const isUserExist = await Account.findOne({
-      verifyAccountToken: token,
+    let multi = client.multi();
+    multi.get(`verifyAccountToken:${req.params.token}`);
+    multi.exec(function(err, data) {
+      if (err) {
+        logger.error(`${err}`);
+        next(err);
+      }
+      userID = JSON.parse(data[0]);
+      if (typeof userID === 'string') {
+        const user = Account.findByIdAndUpdate(
+          { _id: userID },
+          { $set: { isAccountVerified: true } },
+          { safe: true, upsert: true, new: true },
+        ).exec();
+        client.del(`verifyAccountToken:${req.params.token}`);
+        setDocument(accountIndex, '_doc', {
+          mongo_id: user._id,
+          name: user.name,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        });
+
+        logger.info(
+          chalk.blueBright(
+            `ElasticSearch document added on ${accountIndex}`,
+          ),
+        );
+        return sendJSONresponse(res, 200, {
+          isAccountVerified: true,
+          message: 'Account Verified Successfully',
+        });
+      } else {
+        return sendErrorResponse(res, 400, 'TokenExpireError', {
+          isAccountVerified: false,
+          message: 'Link is expired',
+        });
+      }
     });
-    if (!isUserExist)
-      return sendJSONresponse(res, 404, {
-        isAccountVerified: false,
-        message: 'User is not exist',
-      });
-    const isTimeLimit = await Account.findOne({
-      verifyAccountTokenExpiration: { $gt: Date.now() },
-    });
-    if (!isTimeLimit)
-      return sendJSONresponse(res, 400, {
-        isAccountVerified: false,
-        message: 'Link is expired',
-      });
-    if (isUserExist && isTimeLimit) {
-      await Account.findOneAndUpdate(
-        { verifyAccountToken: token },
-        {
-          $set: {
-            verifyAccountToken: undefined,
-            isAccountVerified: true,
-          },
-        },
-        { safe: true, upsert: true, new: true },
-      );
-      return sendJSONresponse(res, 200, {
-        isAccountVerified: true,
-        message: 'Account Verified Successfully',
-      });
-    }
   } catch (err) {
     next(err);
   }
@@ -220,9 +375,15 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
 // account holder can update their account information
 const accountUpdate = async (req, res, next) => {
   await Account.findOneAndUpdate(
-    { email: req.user.email },
+    {
+      email: req.user.email,
+    },
     req.body,
-    { safe: true, upsert: true, new: true },
+    {
+      safe: true,
+      upsert: true,
+      new: true,
+    },
   )
     .select('-password')
     .exec()
@@ -234,28 +395,90 @@ const accountUpdate = async (req, res, next) => {
             name: req.body.name,
           });
         }
+
+        // if (typeof user.about !== 'undefined') {
+        //   client.hmset(`userID:${user._id}`, 'about', user.about);
+        //   logger.info(`about added into ${user.email}'s cache`);
+        // }
+        // if (typeof user.location !== 'undefined') {
+        //   client.hmset(
+        //     `userID:${user._id}`,
+        //     'location',
+        //     user.location,
+        //   );
+        //   logger.info(`location added into ${user.email}'s cache`);
+        // }
+        // if (typeof user.gender !== 'undefined') {
+        //   client.hmset(`userID:${user._id}`, 'gender', user.gender);
+        //   logger.info(`gender added into ${user.email}'s cache`);
+        // }
+        // if (typeof user.bloodGroup !== 'undefined') {
+        //   client.hmset(
+        //     `userID:${user._id}`,
+        //     'bloodGroup',
+        //     user.bloodGroup,
+        //   );
+        //   logger.info(`bloodGroup added into ${user.email}'s cache`);
+        // }
+        // if (typeof user.position !== 'undefined') {
+        //   client.hmset(
+        //     `userID:${user._id}`,
+        //     'position',
+        //     user.position,
+        //   );
+        //   logger.info(`postion added into ${user.email}'s cache`);
+        // }
+
         return sendJSONresponse(res, 200, {
           message: 'profile updated',
         });
-      } else {
-        const err = new APIError(
-          'Method not found',
-          httpStatus.NOT_FOUND,
-        );
-        return next(err);
       }
     })
     .catch(err => {
-      return next(err);
+      logger.error(`${err}`);
+      next(err);
     });
 };
-const logout = async (req, res) => {
-  req.logout();
-  logger.info('Account successfully Logout');
-  return sendJSONresponse(res, 200, {
-    success: true,
-    message: 'Successfully logout',
-  });
+const logout = async (req, res, next) => {
+  try {
+    let refreshToken = req.body.refreshToken;
+    let accessToken = req.headers.authorization.split(' ')[1];
+    let accessTokenExpire =
+      req.user.exp * 1000 +
+      new Date(req.user.exp * 1000).getTimezoneOffset() * 60 * 1000 -
+      (Date.now() +
+        new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+    if (refreshToken) {
+      await jwt.verify(
+        refreshToken,
+        config.refreshTokenSecret,
+        (err, user) => {
+          if (err) {
+            return sendErrorResponse(res, 401, 'AuthError', {
+              message: err.message,
+              fieldName: 'headers',
+            });
+          }
+          let refreshTokenExpire =
+            user.exp * 1000 +
+            new Date(user.exp * 1000).getTimezoneOffset() *
+              60 *
+              1000 -
+            (Date.now() +
+              new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+          addTokenToBlackList(accessToken, accessTokenExpire);
+          addTokenToBlackList(refreshToken, refreshTokenExpire);
+          logger.info('Account successfully Logout');
+          return sendJSONresponse(res, 200, {
+            success: true,
+            message: 'Successfully logout',
+          });
+        },
+      );
+    }
+  } catch (error) {
+    next(error);
+  }
 };
 
 const sendEmailForForgetPassword = async (req, res, next) => {
@@ -269,21 +492,26 @@ const sendEmailForForgetPassword = async (req, res, next) => {
       email: req.body.email,
     });
     if (!user)
-      return sendErrorResponse(res, 404, '', {
+      return sendErrorResponse(res, 404, 'UserNotFoundError', {
         message: 'no user found',
         fieldName: 'email',
       });
-    user.resetPasswordToken = verifyToken;
-    user.resetPasswordTokenExpiration = Date.now() + 86400; // 1 day
-    user.save();
     sendEmailForResetPassword(
       user.firstName,
       user.lastName,
       user.email,
       verifyToken,
     );
+    let resetPasswordTokenExpiration = Date.now() + 86400; // 1 day
+    accountVerificationToken(
+      `resetPasswordToken:${verifyToken}`,
+      user._id,
+      resetPasswordTokenExpiration,
+    );
     logger.info(`send reset password mail to user successfully`);
-    return sendJSONresponse(res, 200);
+    return sendJSONresponse(res, 200, {
+      message: 'Mail send successfully',
+    });
   } catch (error) {
     next(error);
   }
@@ -292,22 +520,31 @@ const sendEmailForForgetPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   try {
     const { password, token } = req.body;
-    const user = await Account.findOne({
-      resetPasswordToken: token,
-      resetPasswordTokenExpiration: { $gt: Date.now() },
-    }).select('-password');
-
-    if (!user)
-      return sendErrorResponse(res, 401, 'TokenExpireError', {
-        message: 'Time is expired',
-      });
-    user.resetPasswordToken = undefined;
-    user.resetPasswordTokenExpiration = undefined;
-    user.password = password;
-    await user.save();
-    logger.info(`password successfully change`);
-    return sendJSONresponse(res, 200, {
-      message: 'Password Changed',
+    let multi = client.multi();
+    multi.get(`resetPasswordToken:${token}`);
+    multi.exec(function(err, data) {
+      if (err) {
+        logger.error(`${err}`);
+        next(err);
+      }
+      userID = JSON.parse(data[0]);
+      if (typeof userID === 'string') {
+        const user = Account.findById({
+          _id: userID,
+        });
+        user.password = password;
+        user.save();
+        logger.info(`password successfully change`);
+        client.del(`resetPasswordToken:${token}`);
+        logger.info(`delete reset password token from tokenList`);
+        return sendJSONresponse(res, 200, {
+          message: 'Password Changed',
+        });
+      } else {
+        return sendErrorResponse(res, 401, 'TokenExpireError', {
+          message: 'Time is expired',
+        });
+      }
     });
   } catch (err) {
     logger.error(`password does not change`);
@@ -315,145 +552,129 @@ const resetPassword = async (req, res, next) => {
   }
 };
 
-const accountLoad = async (req, res, next, id) => {
-  Account.findById(id)
-    .select('-password')
-    .exec()
-    .then(result => {
-      if (result) {
-        logger.info(`${result} account successfully load`);
-        req.account = result;
-        next();
-      } else {
-        logger.warn(`No valid entry for provided id`);
-        return sendJSONresponse(res, 400, {
-          message: `no valid entry found for id`,
-        });
-      }
-    })
-    .catch(err => {
-      return next(err);
-    });
-};
-
-const searchAccount = async (req, res, next) => {
-  const name = req.query.name;
-  if (name === '') {
-    const err = new BadRequestError(
-      'Nothing Submitted',
-      httpStatus.BAD_REQUEST,
-      true,
-    );
-    logger.error(`Query Error: ${err}`);
-    return next(err);
-  }
-  Account.find({ name: { $regex: new RegExp(name) } })
-    .select('email name _id')
-    .then(data => {
-      if (data.length < 1) {
-        const err = new SearchNotMatchError(
-          'Query does not found',
-          httpStatus.BAD_REQUEST,
-          true,
-        );
-        logger.error(`Query Error: ${err}`);
-        return next(err);
-      } else {
-        logger.info(`Search complete ${name}`);
-        return sendJSONresponse(res, 200, {
-          employees: {
-            success: true,
-            message: `Search complete ${name}`,
-            data,
-          },
-        });
-      }
-    })
-    .catch(err => {
-      return next(err);
-    });
-};
-
 const tokenRefresh = async (req, res, next) => {
-  const refreshToken = req.body.refreshToken;
-  if (refreshToken) {
-    client.exists(refreshToken, function(err, exists) {
-      if (exists) {
-        let refreshTokenPayload;
-        jwt.verify(refreshToken, config.refreshTokenSecret, function(
-          err,
-          user,
-        ) {
+  try {
+    const refreshToken = req.body.refreshToken;
+    // check if a refresh token exist in blacklist
+    let isBlackListed;
+    await client
+      .multi()
+      .GET(`BlackList:${refreshToken}`)
+      .execAsync()
+      .then(data => {
+        // if data object is null token is not blacklisted
+        if (data[0] === null) {
+          isBlackListed = false;
+        } else {
+          isBlackListed = true;
+        }
+      })
+      .catch(err => {
+        next(err);
+      });
+
+    if (isBlackListed) {
+      return sendErrorResponse(res, 401, 'AuthError', {
+        message: 'invalid token',
+      });
+    } else {
+      await jwt.verify(
+        refreshToken,
+        config.refreshTokenSecret,
+        async function(err, user) {
           if (err) {
-            return res.status(401).json({
-              statusCode: 401,
-              error: 'Unauthorized',
+            return sendErrorResponse(res, 401, 'AuthError', {
               message: err.message,
             });
           }
-          refreshTokenPayload = user;
-        });
-        const payload = {
-          email: refreshTokenPayload.email,
-        };
-        const accessToken = jwt.sign(
-          payload,
-          config.accessTokenSecret,
-          { expiresIn: '45m' },
-        );
-        const refreshToken1 = jwt.sign(
-          payload,
-          config.refreshTokenSecret,
-          {
-            expiresIn: '48h',
-          },
-        );
-        const response = {
-          accessToken: accessToken,
-          tokenType: 'Bearer',
-          refreshToken: refreshToken1,
-        };
-        updateRefreshTokenfromList(refreshToken1, accessToken);
-        return sendJSONresponse(res, 200, response);
-      } else {
-        logger.error('The refresh token does not exist');
-        return sendJSONresponse(res, 401, {
-          message: 'Refresh token does not exist',
-        });
-      }
-    });
-  } else {
-    logger.error(
-      `The required parameters were not sent in the request`,
-    );
-    return sendJSONresponse(res, 401, {
-      error: 'Bad Request',
-      message: 'The required parameters were not sent in the request',
-    });
-  }
-};
-
-const tokenRevoke = async (req, res, next) => {
-  const refreshToken = req.body.refresh_token;
-  if (refreshToken) {
-    client.exists(refreshToken, function(err, exists) {
-      if (exists) {
-        removeRefreshTokenfromList(refreshToken);
-        res.sendStatus(204);
-      } else {
-        res.status(401).send({
-          statusCode: 401,
-          error: 'Unauthorized',
-          message: 'The refresh token does not exist',
-        });
-      }
-    });
-  } else {
-    res.status(401).send({
-      statusCode: 400,
-      error: 'Bad Request',
-      message: 'The required parameters were not sent in the request',
-    });
+          const payLoad = {
+            email: user.email,
+            _id: user._id,
+          };
+          // convert to msec
+          // add local time zone offset
+          // get UTC time in msec
+          // create new Date object for different city
+          const refreshTokenExpire =
+            user.exp * 1000 +
+            new Date(user.exp * 1000).getTimezoneOffset() *
+              60 *
+              1000 -
+            (Date.now() +
+              new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
+          const oldAccessToken = req.body.accessToken;
+          await jwt.verify(
+            oldAccessToken,
+            config.accessTokenSecret,
+            (err, verified) => {
+              // if access token expired
+              // add refresh token in blacklist
+              // make new access and refresh token
+              if (err) {
+                addTokenToBlackList(refreshToken, refreshTokenExpire);
+                const accessToken = jwt.sign(
+                  payLoad,
+                  config.accessTokenSecret,
+                  {
+                    expiresIn: config.accessTokenExpire,
+                  },
+                );
+                const newRefreshToken = jwt.sign(
+                  payLoad,
+                  config.refreshTokenSecret,
+                  {
+                    expiresIn: config.refreshTokenExpire,
+                  },
+                );
+                const response = {
+                  accessToken: accessToken,
+                  token_type: 'Bearer',
+                  refreshToken: newRefreshToken,
+                };
+                return sendJSONresponse(res, 200, response);
+              } else {
+                let oldAccessTokenExpire =
+                  verified.exp * 1000 +
+                  new Date(verified.exp * 1000).getTimezoneOffset() *
+                    60 *
+                    1000 -
+                  (Date.now() +
+                    new Date(Date.now()).getTimezoneOffset() *
+                      60 *
+                      1000);
+                addTokenToBlackList(
+                  oldAccessToken,
+                  oldAccessTokenExpire,
+                );
+                addTokenToBlackList(refreshToken, refreshTokenExpire);
+                const accessToken = jwt.sign(
+                  payLoad,
+                  config.accessTokenSecret,
+                  {
+                    expiresIn: config.accessTokenExpire,
+                  },
+                );
+                const newRefreshToken = jwt.sign(
+                  payLoad,
+                  config.refreshTokenSecret,
+                  {
+                    expiresIn: config.refreshTokenExpire,
+                  },
+                );
+                const response = {
+                  accessToken: accessToken,
+                  token_type: 'Bearer',
+                  refreshToken: newRefreshToken,
+                };
+                return sendJSONresponse(res, 200, response);
+              }
+            },
+          );
+        },
+      );
+    }
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -466,7 +687,9 @@ const changePassword = async (req, res, next) => {
         message: `You can not use the same password`,
       });
     }
-    await Account.findOne({ email: user.email }).exec((err, user) => {
+    await Account.findOne({
+      email: user.email,
+    }).exec((err, user) => {
       if (err) {
         next(err);
       }
@@ -485,7 +708,9 @@ const changePassword = async (req, res, next) => {
             res,
             401,
             'PasswordValidationError',
-            { message: `Your previous password is wrong` },
+            {
+              message: `Your previous password is wrong`,
+            },
           );
         }
       });
@@ -504,7 +729,7 @@ const resendEmail = async (req, res, next) => {
       .createHash('sha256')
       .update(token)
       .digest('hex');
-    const account = await Account.findOne({
+    const user = await Account.findOne({
       email: email,
     });
     if (!resentType) {
@@ -513,25 +738,19 @@ const resendEmail = async (req, res, next) => {
       });
     }
     if (resentType === 'verify-account') {
-      account.verifyAccountToken = verifyToken;
-      account.verifyAccountTokenExpiration = Date.now() + 604800;
-      await sendEmailForVerifyAccount(
-        account.firstName,
-        account.lastName,
-        account.email,
+      let verifyAccountTokenExpiration = Date.now() + 604800;
+      sendEmailForVerifyAccount(
+        user.firstName,
+        user.lastName,
+        user.email,
         verifyToken,
       );
-    }
-    if (resentType === 'reset-password-mail') {
-      account.resetPasswordToken = verifyToken;
-      account.resetPasswordTokenExpiration = Date.now() + 86400;
-      await sendEmailForResetPassword(
-        account.name,
-        account.email,
+      accountVerificationToken(
         verifyToken,
+        user._id,
+        verifyAccountTokenExpiration,
       );
     }
-    await account.save();
     return sendJSONresponse(res, 200, {
       message: 'resend email successfully',
     });
@@ -546,13 +765,13 @@ module.exports = {
   logout,
   getAccessTokenForVerifyAccount,
   getAccount,
-  accountLoad,
+  timeline,
   accountUpdate,
-  searchAccount,
   tokenRefresh,
   // tokenRevoke,
   sendEmailForForgetPassword,
   // getAccessTokenForForgetPassword,
   resetPassword,
   changePassword,
+  skillArea,
 };

@@ -4,22 +4,25 @@ const BoardColumn = require('./../boardColumn/boardColumn.model');
 const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const { APIError, BadRequestError } = require('../helpers/APIError');
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {sendErrorResponse, sendJSONresponse} = require('../helpers/jsonResponse');
+const { Project } = require('../project/project.model');
+const {
+  createBoardNotification
+} = require('../notification/notification.controller');
+const { Team } = require('../team-member/team.model');
 
 const load = (req, res, next, id) => {
   Board.findById(id)
     .exec()
     .then(result => {
-      if (result) {
         req.board = result;
         return next();
-      }
-      return res.status(400).json({
-        message: 'No valid entry found for provided Board ID',
-      });
     })
     .catch(err => {
-      next(err);
+      return sendErrorResponse(res,404,'Idisnotexits',{
+        success: false,
+        message: 'No valid entry found for provided Board ID',
+      })
     });
 };
 
@@ -52,6 +55,7 @@ const get = async (req, res , next) => {
 };
 
 const create = async (req, res, next) => {
+ 
 
   try {
     const board = new Board({
@@ -59,22 +63,28 @@ const create = async (req, res, next) => {
       department : req.body.department,
       color : req.body.color,
       account: req.user._id,
-      company: req.body.companyId,
+      project: req.body.projectId,
       members: [req.user._id],
     });
-    board
-      .save()
-      .then(createdBoard => {
-        return res.status(201).json(createdBoard);
-      })
-      .catch(e => next(e));
+
+    const project = await Project.findOne({
+      _id: req.body.projectId,
+    }).select('_id name company');
+    
+    //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
+    
+    const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
+    createBoardNotification(project, {_id:req.user._id, name: req.user.name}, text );
+   const createdBoard = await board.save()
+      
+    return res.status(201).json(createdBoard);
+      
+      
   } catch (error) {
+    
     logger.error(`Board create: ${error}`);
-    const err = new BadRequestError(
-      'board data is invalid.',
-      httpStatus.BAD_REQUEST,
-    );
-    next(err);
+    
+    next(error);
   }
 };
 
@@ -88,14 +98,19 @@ const addBoardMembers = async (req, res, next) => {
       { _id: boardID },
       { $addToSet: { members: memberID } },
       { safe: true, upsert: true, new: true },
-    ).populate('members', '_id name');
-    const boardMembers = await Board.findOne({
+    )
+    .populate('members', '_id name');
+    const board = await Board.findOne({
       _id: boardID,
-    }).populate('members', 'name');
-
-    const memberList = boardMembers.members;
+    }).populate('project', '_id name company')
+    .populate('members', 'name');
+    const index  = board.members.findIndex(x => x._id ===memberID);
+    const text =`${req.user.name} has added  ${board.members[index].name} in ${board.name} from ${board.project.name}`; 
+    createBoardNotification(board.project, {_id:req.user._id, name: req.user.name}, text );
+    const memberList = board.members;
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {
+    
     next(error);
   }
 };
@@ -103,10 +118,10 @@ const addBoardMembers = async (req, res, next) => {
 const addBoardColumn = (req, res, next) => {};
 
 const list = async (req, res, next) => {
-  const { limit = 50, skip = 0, companyId } = req.query;
+  const { limit = 50, skip = 0 } = req.query;
 
   await Board.find({
-    company: companyId,
+    project: req.params.projectId,
     members: req.user._id,
   })
     .select('_id name color department members')
@@ -118,7 +133,10 @@ const list = async (req, res, next) => {
       logger.info(`${result}`);
       return sendJSONresponse(res, 200, result);
     })
-    .catch(e => next(e));
+    .catch(e => {
+      logger.error(e);
+      next(e)}
+    );
 };
 
 const remove = (req, res, next) => {
@@ -134,19 +152,21 @@ const suggestMember = async (req, res, next) => {
       .select('-_id members')
       .populate('members', '_id name')
       .exec();
-    let companyMembers = await Member.find({
-      company: req.query.companyId,
+      //now it will check form project team by projectId
+    let projectMembers = await Team.find({
+      project : req.query.projectId,
     })
       .select('-_id account')
       .populate('account', '_id name')
       .exec();
-    let members = companyMembers.filter(({ account }) => {
+    let members = projectMembers.filter(({ account }) => {
       return !boardMembers.members.some(existingMember => {
         return (
           existingMember._id.toString() === account._id.toString()
         );
       });
     });
+
     members = members.map(m => m.account);
     return res.status(200).json({
       members,

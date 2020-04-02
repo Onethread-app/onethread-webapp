@@ -14,11 +14,10 @@ const winstonInstance = require('./winston');
 
 const routes = require('../index.route');
 const config = require('./config');
+const { APIError } = require('../server/helpers/APIError');
 const {
-  APIError,
-  SearchNotMatchError,
-  EmailIdExistError,
-} = require('../server/helpers/APIError');
+  sendErrorResponse,
+} = require('../server/helpers/jsonResponse');
 
 const mongoErrorHandler = require('../server/helpers/mongoErrorFormat');
 const app = express();
@@ -49,22 +48,9 @@ app.use(helmet.noSniff());
 
 app.use(cors());
 
-// app.options('/*', function(req, res, next) {
-//   res.header('Access-Control-Allow-Origin', '*');
-//   res.header(
-//     'Access-Control-Allow-Methods',
-//     'GET,PUT,POST,DELETE,OPTIONS',
-//   );
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'Content-Type, Authorization, Content-Length, X-Requested-With',
-//   );
-//   res.send(200);
-// });
 // TODO: cors customize
 // enable detailed API logging in dev env
-if (config.env === 'development' || config.env === 'production') {
-  console.log(config.env);
+if (config.env === 'development' || config.env === 'test') {
   expressWinston.requestWhitelist.push('body');
   expressWinston.responseWhitelist.push('body');
   app.use(
@@ -100,34 +86,14 @@ app.use((err, req, res, next) => {
     );
     return next(apiError);
   }
-  // if (err instanceof EmailIdExistError) {
-  //   const emailApiError = new EmailIdExistError(
-  //     err.message,
-  //     err.status,
-  //     err.isPublic,
-  //   );
-  //   return next(emailApiError);
-  // }
-
-  // if (err instanceof SearchNotMatchError) {
-  //   const searchNotMatchError = new SearchNotMatchError(
-  //     err.message,
-  //     err.status,
-  //     err.isPublic,
-  //   );
-  //   return next(searchNotMatchError);
-  // }
-  // if (err instanceof getErrorMessage) {
-  //   const mongoDBError = new getErrorMessage(err);
-  //   return next(mongoDBError);
-  // }
   return next(err);
 });
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-  const err = new APIError('API not found', httpStatus.NOT_FOUND);
-  return next(err);
+  return sendErrorResponse(res, 404, 'MethodNotFoundError', {
+    message: 'API not found',
+  });
 });
 
 // log error in winston transports except when executing test suite
