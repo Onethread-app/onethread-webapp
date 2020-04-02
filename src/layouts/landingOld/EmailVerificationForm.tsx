@@ -51,13 +51,11 @@ const EmailVerificationFormComponent = ((props: RouteComponentProps) => {
             />
           </div>
           <Button
-            className="grow h2 pointer white bp3-minimal w5-ns w-100 ba"
+            className="grow h2 pointer white bp3-minimal w5-ns w-100"
             style={{
-              background: 'transparent',
-              // outline: 'none',
+              background: '#0fa3a3',
+              outline: 'none',
               color: 'white',
-              borderColor: 'white',
-              borderWidth: '1px',
               borderRadius: '25px',
               height: '46px'
             }}
