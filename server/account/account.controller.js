@@ -529,11 +529,13 @@ const resetPassword = async (req, res, next) => {
       }
       let userID = JSON.parse(data[0]);
       if (typeof userID === 'string') {
-        const user = Account.findById({
-          _id: userID,
-        }).exec();
-        user.password = password;
-        user.save();
+        Account.findByIdAndUpdate(
+          {
+            _id: userID,
+          },
+          { $set: { password: password } },
+          { new: true, upsert: true },
+        ).exec();
         logger.info(`password successfully change`);
         client.del(`resetPasswordToken:${token}`);
         logger.info(`delete reset password token from tokenList`);
