@@ -253,7 +253,10 @@ const acceptProjectRequest = async (req, res, next) => {
     logger.info(`project request accept for ${req.query.pid}`);
     let associate = await Associate.updateOne(
       {
-        company: req.params.companyId,
+        $or: [
+          { company: req.params.companyId },
+          { associate: req.params.companyId },
+        ],
       },
       {
         $push: { project: req.query.pid },
@@ -336,7 +339,6 @@ const showAllProjectsForCompany = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then(result => {
-      
       logger.info(`all projects for company:${companyId}`);
       return sendJSONresponse(res, 200, result);
     })
@@ -398,7 +400,6 @@ const getProjectDetails = async (req, res, next) => {
     })
       .populate('files', 'link s3Key')
       .select('outline description color name');
-    
     return sendJSONresponse(res, 200, project);
   } catch (error) {
     next(error);
@@ -531,9 +532,23 @@ const suggestConcernAdmin = async (req, res, next) => {
 };
 
 const archiveProjectList = async (req, res, next) => {
-  await Project.find({ company: req.params.companyId, removed: true })
+  const { limit = 50, skip = 0 } = req.query;
+  await Project.find({
+    $and: [
+      {
+        $or: [
+          { company: req.params.companyId },
+          { associate: { $in: req.params.companyId } },
+        ],
+      },
+      { removed: true },
+    ],
+  })
     .populate('departments', 'name _id')
     .select('name members')
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
     .exec()
     .then(result => {
       return sendJSONresponse(res, 200, result);

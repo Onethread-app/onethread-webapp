@@ -155,7 +155,9 @@ const getSubCategory = (req, res, next) => {
     });
 };
 const getSubSubCategory = (req, res, next) => {
-  SubCategory.findById(req.params.sid)
+  SubSubCategory.find({
+    company: req.params.companyId
+  })
     .select('_id name subsubcategories')
     .populate('subsubcategories', '_id name')
     .exec()
