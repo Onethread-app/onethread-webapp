@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="457.964" height="424.64" viewBox="0 0 457.964 424.64">
+  <g id="Group_1372" data-name="Group 1372" transform="translate(201.631 188.537)">
+    <path id="Path_1" data-name="Path 1" d="M51.641,0H242.2C270.72,0,293.84,20.859,293.84,46.59V319.626c0,25.731-23.12,46.59-51.641,46.59H51.641C23.12,366.216,0,345.357,0,319.626V46.59C0,20.859,23.12,0,51.641,0Z" transform="translate(-72.82 236.103) rotate(-116)" fill="#43466d"/>
+    <g id="Group_21" data-name="Group 21" transform="translate(10.547 14)">
+      <g id="Group_1192" data-name="Group 1192" transform="translate(94.92 35.835)">
+        <g id="Group_1191" data-name="Group 1191" transform="translate(-34 -7)">
+          <path id="Path_374" data-name="Path 374" d="M13.537,1H57.929c.552,0,0,4.635,0,5.187V37.04c0,.552-2.572,0-3.124,0H8.2c-.552,0,0,.552,0,0V1C8.2.448,12.985,1,13.537,1Z" transform="translate(0 0.048)" fill="#3f61c5"/>
+          <text id="Grow" transform="translate(32.533 28.543)" fill="#fff" font-size="28" font-family="Poppins-SemiBold, Poppins" font-weight="600"><tspan x="0" y="0">Grow</tspan></text>
+          <text id="ti" transform="translate(13.468 29)" fill="#fff" font-size="28" font-family="Poppins-SemiBold, Poppins" font-weight="600"><tspan x="0" y="0">ti</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
