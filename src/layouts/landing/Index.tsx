@@ -1,5 +1,5 @@
 import React from 'react';
-import { CustomView, MobileOnlyView, isMobileOnly} from "react-device-detect";
+import { CustomView, MobileOnlyView, isMobileOnly } from "react-device-detect";
 import { Navbar, Alignment } from '@blueprintjs/core';
 import { EmailVerificationForm } from './EmailVerificationForm';
 import Carousel from "react-multi-carousel";
@@ -7,13 +7,14 @@ import "react-multi-carousel/lib/styles.css";
 import './styles.css';
 
 import tigrowLogo from './../../resources/homepageImages/tigrowLogo.svg';
+import tigrowLogoMob from './../../resources/homepageImages/tigrowLogoMobile.svg';
 import heroSection from "./../../resources/homepageImages/heroSection.png";
 import projects from "./../../resources/homepageImages/projects.png";
 import projectsMobile from "./../../resources/homepageImages/projectsMobile.png";
 import project from "./../../resources/homepageImages/project.svg";
 import chat from "./../../resources/homepageImages/chat.svg";
 import chatMobile from "./../../resources/homepageImages/chatMobile.png";
-import discussions from './../../resources/homepageImages/highlightedDiscussion.png'; 
+import discussions from './../../resources/homepageImages/highlightedDiscussion.png';
 import board from "./../../resources/homepageImages/board.png";
 import boards1 from "./../../resources/homepageImages/boards1.png";
 import boards2 from "./../../resources/homepageImages/boards2.png";
@@ -59,7 +60,9 @@ export const HomePage = () => {
       <div>
         <Navbar className="ph5-ns shadow-0 fixed pv2 flex justify-between h-auto" >
           <Navbar.Group align={Alignment.LEFT}>
-            <img src={tigrowLogo} className="companyLogo" alt="Site Logo"/>
+            {isMobileOnly ?
+              <img src={tigrowLogoMob} className="companyLogo" alt="Site Logo" /> :
+              <img src={tigrowLogo} className="companyLogo" alt="Site Logo" />}
           </Navbar.Group>
           <Navbar.Group align={Alignment.RIGHT} >
             <a href="/signin" className="tryLink">Try for free</a>
@@ -69,7 +72,7 @@ export const HomePage = () => {
       <div className="pl5-l pt6-ns pt5 pb4">
         <CustomView condition={!isMobileOnly}>
           <div className="flex-ns items-center pl5-ns">
-            <div className="w-40-ns w-100 pl0-ns pl4">
+            <div className="w-40-ns w-100 pl0-ns pl4 ">
               <div className="black primeText">An Enterprise Connectivity Platform</div>
               <div className="black secondaryText">where you can</div>
               <ul className='homeUl'>
@@ -85,16 +88,16 @@ export const HomePage = () => {
               </div>
               <ul className='homeUl light'>
                 <li className="featureTitle">
-                  Full access to all features 
+                  Full access to all features
                   </li>
                 <li className="featureTitle">
-                  Zero obligation, no credit card needed 
+                  Zero obligation, no credit card needed
                   </li>
                 <li className="featureTitle">
                   Add unlimited users
                   </li>
-                  <li className="featureTitle">
-                  Access to sales and technical support 
+                <li className="featureTitle">
+                  Access to sales and technical support
                   </li>
                 <li className="featureTitle">
                   Test drive with 15-day free trial
@@ -105,17 +108,17 @@ export const HomePage = () => {
               </div>
             </div>
             <div className="w-60-ns w-100 tr">
-              <img src={heroSection} alt="hero Section"/>
+              <img src={heroSection} alt="hero Section" />
             </div>
           </div>
         </CustomView>
         <MobileOnlyView>
-          <div className="flex items-center pl5-ns">
-            <div className="w-40-ns w-100 pl0-ns pl4">
+          <div className="flex items-center pl5-ns ph2">
+            <div className="w-40-ns w-100 ph1">
               <div className="black primeText">An Enterprise Connectivity Platform</div>
             </div>
             <div className="w-60-ns w-100 tr">
-              <img src={heroSection} alt="hero Section"/>
+              <img src={heroSection} alt="hero Section" />
             </div>
           </div>
           <div className="flex items-center center">
@@ -134,16 +137,16 @@ export const HomePage = () => {
               </div>
               <ul className='homeUl light'>
                 <li className="featureTitle">
-                  Full access to all features 
+                  Full access to all features
                   </li>
                 <li className="featureTitle">
-                  Zero obligation, no credit card needed 
+                  Zero obligation, no credit card needed
                   </li>
                 <li className="featureTitle">
                   Add unlimited users
                   </li>
-                  <li className="featureTitle">
-                  Access to sales and technical support 
+                <li className="featureTitle">
+                  Access to sales and technical support
                   </li>
                 <li className="featureTitle">
                   Test drive with 15-day free trial
@@ -157,93 +160,113 @@ export const HomePage = () => {
         </MobileOnlyView>
       </div>
       <div className="w-70-ns w-80 center pv5-ns tc titleText">
-        Use TiGrow Workplace for Remote Working with Teams, For Vendor Management &amp; To Collaborate with All of your Stakeholders at one place.
+        Use TiGrow Workplace For Remote Working With Teams, For Vendor Management &amp; To Collaborate With<br />
+        All Of Your Stakeholders At One <br />Place.
       </div>
       <div className="flex-ns items-center pl4-ns pl4 ph2 pv4-ns">
         <div className="pl5-ns w-60-ns h-100-ns w-100 h-100">
-          <img src={isMobileOnly ? projectsMobile : projects}/>
+          <img src={isMobileOnly ? projectsMobile : projects} />
         </div>
         <div className="pr5-ns w-40-ns h-100-ns w-70 h-100 mt3 mt0-ns center">
-          <div className="titleText tc" style={{fontWeight: 200}}>
-            <span style={{color: '#588F8F', fontWeight: 'bold'}}>Introducing Projects</span><br/>Create Projects With <span style={{fontWeight: 'bold'}}>Single Department</span>, <span style={{fontWeight: 'bold'}}>Multiple Departments</span><br/>or <span style={{fontWeight: 'bold'}}>With External Stakeholders of the Company</span>
+          <div className="titleText tc" style={{ fontWeight: 200 }}>
+            <span >
+              <span style={{ color: '#588F8F', fontWeight: 'bold' }}>Introducing Projects<br /></span>
+            Create Projects With <span className="silver" style={{ fontWeight: 'bold' }}>Single<br /></span>
+              <span className="silver" style={{ fontWeight: 'bold' }}>Department, Multiple Departments</span> or<br />
+            With <span className="silver" style={{ fontWeight: 'bold' }}>External Stakeholders of the <br />
+            Company</span></span>
           </div>
         </div>
       </div>
-      <div className="flex-ns items-center pl4-l ph4-ns pv4-ns" style={{justifyContent: 'space-around'}}>
+      <div className="flex-ns items-center pl4-l ph4-ns pv4-ns" style={{ justifyContent: 'space-around' }}>
         <div className="pl5-ns w-20-ns h-100-ns w-100 h-100 tc">
-          <img src={project} alt=""/>
+          <img src={project} alt="" />
         </div>
         <div className="pr5-ns pl4-ns w-80-ns h-100-ns w-100 h-100">
-        <CustomView condition={!isMobileOnly}>
-          <img src={chat} alt=""/>
-          <div className="titleText tc pv4">
-            <span style={{color: '#588F8F'}}>Chat from anywhere through Rooms</span><br/>Share your opinion, and your personality. Highlight Important <br/> Discussion in a group chat or in one-to-one messages.
+          <CustomView condition={!isMobileOnly}>
+            <img src={chat} alt="" />
+            <div className="titleText tc pv4">
+              <span style={{ color: '#588F8F' }}>Chat from anywhere through Rooms</span><br />Share your opinion, and your personality. Highlight Important <br /> Discussion in a group chat or in one-to-one messages.
           </div>
-          <img src={board} alt=""/>
+            <img src={board} alt="" />
           </CustomView>
           <MobileOnlyView>
             <div className="flex mt3">
               <div className="titleText tc w-50 ph2 pv2 mh3 chatIntro">
-                <span style={{color: '#588F8F'}}>Chat from anywhere through Rooms</span><br/>Share your opinion, and your personality. Highlight Important <br/> Discussion in a group chat or in one-to-one messages.
+                <span className="silver">
+                  <span style={{ color: '#588F8F' }}>Chat from anywhere<br /> through Rooms</span><br />
+                  Share Your Opinion,<br />
+                   And Your Personality.<br />
+                    Highlight Important <br /> Discussion In A Group<br /> Chat Or In One-To-<br />
+                    One Messages.
+                  </span>
               </div>
               <div className="w-50">
-                <img className="ph1" src={discussions} alt=""/>
+                <img className="ph1" src={discussions} alt="" />
               </div>
             </div>
-            <img src={chatMobile} alt=""/>
+            <img src={chatMobile} alt="" />
             <div className="w-80 center ph2 tc titleText">
-              <span style={{color: '#588F8F'}}>Collaborate &amp; Manage Your Team from anywhere through Boards</span> Monitor your team performance, employee kpi's in real time. Assign tasks, subtasks, deadlines; get updated if the tasks are done or not.
+              <span className="silver">
+                <span style={{ color: '#588F8F' }}>
+                  Collaborate &amp; Manage Your Team from anywhere through Boards </span>
+                 Monitor your team performance, employee kpi's in real time. Assign tasks, subtasks, deadlines; get updated if the tasks are done or not.
+                 </span>
             </div>
-            <img src={boards1} className="mb3 ph3" alt="board"/>
-            <img src={boards2} className="mb3 ph3" alt="board"/>
-            <img src={boards3} className="mb3 ph3" alt="board"/>
+            <img src={boards1} className="mb3 ph3" alt="board" />
+            <img src={boards2} className="mb3 ph3" alt="board" />
+            <img src={boards3} className="mb3 ph3" alt="board" />
           </MobileOnlyView>
         </div>
       </div>
       <CustomView condition={!isMobileOnly}>
         <div className="w-70-ns w-100 center pv5-ns tc titleText">
-          <span style={{color: '#588F8F'}}>Collaborate &amp; Manage Your Team from anywhere through Boards</span> Monitor your team performance, employee kpi's in real time. Assign tasks, subtasks, deadlines; get updated if the tasks are done or not.
+          <span style={{ color: '#588F8F' }}>Collaborate &amp; Manage Your Team from anywhere through Boards</span> Monitor your team performance, employee kpi's in real time. Assign tasks, subtasks, deadlines; get updated if the tasks are done or not.
         </div>
       </CustomView>
-      <div className="flex-ns items-center pl4-l pl4 pv0-ns pv2 ph2" style={{justifyContent: 'space-around'}}>
+      <div className="flex-ns items-center pl4-l pl4 pv0-ns pv2 ph2" style={{ justifyContent: 'space-around' }}>
         <div className="pl5-ns w-50-ns h-100-ns w-100 h-100">
           <div className="titleText tc">
-            <span style={{color: '#588F8F'}}>Meet from anywhere</span><br/>
-            Use video conference with features <br/> like screen sharing. Teams of 10 or <br/> 10,000 can meet in one place, no <br/> matter how many places they’re in.
+            <span className="silver"><span style={{ color: '#588F8F' }}>Meet from anywhere</span><br />
+            Use video conference with features <br /> like screen sharing. Teams of 10 or <br />
+             10,000 can meet in one place, no <br /> matter how many places they’re in.</span>
           </div>
         </div>
         <div className="pr5-ns w-50-ns h-100-ns w-100 h-100">
-          <img src={meet} className="pr4-ns pv5-ns"/>
+          <img src={meet} className="pr4-ns pv5-ns" />
         </div>
       </div>
       <MobileOnlyView>
         <div className="w-90 center pv2 ph3 tc titleText">
-          <span style={{color: '#588F8F', fontWeight: 'bold'}}>
-            Tribe Feature To Create Alliances with Thousands of Small &amp; Medium Enterprises. 
-          </span><br/>
-          Then Start Working In Projects With Them in TiGrow Workplace. Why Waste Time Switching Between Multiple Platforms!!
+          <span className="silver">
+            <span style={{ color: '#588F8F', fontWeight: 'bold' }}>
+              Tribe Feature To Create Alliances <br />
+            with Thousands of Small &amp; Medium<br /> Enterprises.<br /></span>
+          Then Start Working In Projects<br /> With Them in TiGrow Workplace.<br />
+           Why Waste Time Switching<br />
+            Between Multiple Platforms!!</span>
         </div>
       </MobileOnlyView>
       <div className="flex-ns items-center ph6-ns ph4 pv3-ns pv3">
         <div className="w-80-ns w-100 center">
-            <img src={isMobileOnly ? request : service} alt="funtionality tabs"/>
+          <img src={isMobileOnly ? request : service} alt="funtionality tabs" />
         </div>
       </div>
       <div className="flex-ns items-center ph6-ns pv3-ns pv3">
         <div className="w-90-ns w-100 center">
-            <img src={isMobileOnly ? offersMobile : offers} className="w-100" alt="top offers"/>
+          <img src={isMobileOnly ? offersMobile : offers} className="w-100" alt="top offers" />
         </div>
       </div>
       <CustomView condition={!isMobileOnly}>
         <div className="w-80-ns w-100 center pv5 ph3-ns tc titleText">
-          <span style={{color: '#588F8F', fontWeight: 'bold'}}>
-            Tribe Feature To Create Alliances with Thousands of Small &amp; Medium Enterprises. 
-          </span><br/>
+          <span style={{ color: '#588F8F', fontWeight: 'bold' }}>
+            Tribe Feature To Create Alliances with Thousands of Small &amp; Medium Enterprises.
+          </span><br />
           Then Start Working In Projects With Them in TiGrow Workplace. Why Waste Time Switching Between Multiple Platforms!!
         </div>
       </CustomView>
       <div className="flex items-center pv5-ns pv4 ph2" style={{ backgroundColor: 'rgba(215, 197, 255, 0.4)', flexDirection: 'column' }}>
-        <div className="w-80-ns w-100 tc center mb4-ns mb0-ns secondaryText" style={{fontWeight: 'bold', color: '#3E5578'}}>
+        <div className="w-80-ns w-100 tc center mb4-ns mb0-ns secondaryText" style={{ fontWeight: 'bold', color: '#3E5578' }}>
           It's Completely Free for 15 Days, Let's Onboard
         </div>
         <a href="/signin" className="tryLink light mt2">Try for free</a>
@@ -252,27 +275,27 @@ export const HomePage = () => {
         <div className="w-80-ns w-100 center">
           <CustomView condition={!isMobileOnly}>
             <div className="flex-ns items-baseline w-100">
-              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack1} alt="packages"/></a>
-              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack2} alt="packages"/></a>
-              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack3} alt="packages"/></a>
+              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack1} alt="packages" /></a>
+              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack2} alt="packages" /></a>
+              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack3} alt="packages" /></a>
             </div>
           </CustomView>
           <MobileOnlyView>
             <div className="carousel">
-              <Carousel additionalTransfrom={-window.innerWidth/2} arrows={false} responsive={responsive} centerMode={true} showDots={true} sliderClass="items-baseline" className="pb4" renderDotsOutside swipeable draggable infinite>
-                <a href="/signup" className="center"><img className="w-100" src={pack1} alt="packages"/></a>
-                <a href="/signup" className="center"><img className="w-100" src={pack2} alt="packages"/></a>
-                <a href="/signup" className="center"><img className="w-100" src={pack3} alt="packages"/></a>
+              <Carousel additionalTransfrom={-window.innerWidth / 2} arrows={false} responsive={responsive} centerMode={true} showDots={true} sliderClass="items-baseline" className="pb4" renderDotsOutside swipeable draggable infinite>
+                <a href="/signup" className="center"><img className="w-100" src={pack1} alt="packages" /></a>
+                <a href="/signup" className="center"><img className="w-100" src={pack2} alt="packages" /></a>
+                <a href="/signup" className="center"><img className="w-100" src={pack3} alt="packages" /></a>
               </Carousel>
             </div>
           </MobileOnlyView>
         </div>
       </div>
-      <div className="w-70 center pt4-ns tc titleText">
+      <div className="w-70 center pt4-ns tc titleText silver" style={{ color: 'gray', fontWeight: 900 }}>
         Trusted by over 1,000 customers world-wide
       </div>
       <div className="w-70 center pb4-ns">
-        <img src={isMobileOnly ? customersMobile : customers} alt="customers"/>
+        <img src={isMobileOnly ? customersMobile : customers} alt="customers" />
       </div>
       <div className="pv4-ns pv2 tc" style={{ background: '#43466D' }}>
         <h1 className="primaryText white">Join Today</h1>
