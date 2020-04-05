@@ -20,21 +20,28 @@ interface ProjectTeamMembersInternalProps extends ProjectTeamMembersProps {
     data: {
       project: string;
       company: string;
-      members: Array<({ account: string; member: string; })>;
+      members: Array<{ account: string; member: string }>;
     },
-    selectedTeamMember: any) => void;
+    selectedTeamMember: any
+  ) => void;
 }
 
-const AddProjectMemberFormComponent = (props: ProjectTeamMembersInternalProps) => {
-
+const AddProjectMemberFormComponent = (
+  props: ProjectTeamMembersInternalProps
+) => {
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
-  const [selectedTeamMember, setSelectedTeamMember] = useState([] as ItemEntityProps[]);
+  const [selectedTeamMember, setSelectedTeamMember] = useState(
+    [] as ItemEntityProps[]
+  );
 
   const getSuggestionsForRoomMembers = async () => {
     try {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
-        const response = await tigrowApi.get(`/teams/${props.companyId}/search?pid=${props.projectId}`, headers);
+        const response = await tigrowApi.get(
+          `/teams/${props.companyId}/search?pid=${props.projectId}`,
+          headers
+        );
         const formatResponse = response.data.teams.map((e: any) => {
           return {
             ...e.account,
@@ -58,7 +65,10 @@ const AddProjectMemberFormComponent = (props: ProjectTeamMembersInternalProps) =
   };
 
   useEffect(() => {
-    if (isEmpty(props.projectId) === false && isEmpty(props.companyId) === false) {
+    if (
+      isEmpty(props.projectId) === false &&
+      isEmpty(props.companyId) === false
+    ) {
       getSuggestionsForRoomMembers();
     }
   }, []);
@@ -76,19 +86,17 @@ const AddProjectMemberFormComponent = (props: ProjectTeamMembersInternalProps) =
       </div>
 
       <div className="w-100 mb2">
-        {selectedTeamMember.map((item) => (
+        {selectedTeamMember.map(item => (
           <Tag
             key={item._id}
             className="ma1 pa2"
             style={{ backgroundColor: '#3b5998', color: 'white' }}
             interactive={true}
-            onRemove={(e) => {
-              const filteredItems = selectedTeamMember.filter((selectedItem) => (
-                item.name !== selectedItem.name
-              ));
-              setSelectedTeamMember([
-                ...filteredItems
-              ]);
+            onRemove={e => {
+              const filteredItems = selectedTeamMember.filter(
+                selectedItem => item.name !== selectedItem.name
+              );
+              setSelectedTeamMember([...filteredItems]);
             }}
             large={true}
           >
@@ -100,37 +108,44 @@ const AddProjectMemberFormComponent = (props: ProjectTeamMembersInternalProps) =
       <div className="flex justify-end mt3">
         <Button
           className="grow h2 pointer white bp3-minimal w4 mr3"
-          style={{ background: '#fff', outline: 'none', border: '1px solid #3b5998', color: '#3b5998' }}
+          style={{
+            background: '#fff',
+            outline: 'none',
+            border: '1px solid #3b5998',
+            color: '#3b5998'
+          }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
           Cancel
         </Button>
-        <Button className="grow h2 pointer white bp3-minimal w4 outline-0"
+        <Button
+          className="grow h2 pointer white bp3-minimal w4 outline-0"
           style={{ backgroundColor: '#3b5998', color: 'white' }}
           disabled={selectedTeamMember.length === 0}
-          onClick={
-            async () => {
-              const data = {
-                project: props.projectId,
-                company: props.companyId,
-                members: selectedTeamMember.map((m: any) => {
-                  return {
-                    account: m._id,
-                    member: m.memberId
-                  };
-                })
-              };
+          onClick={async () => {
+            const data = {
+              project: props.projectId,
+              company: props.companyId,
+              members: selectedTeamMember.map((m: any) => {
+                return {
+                  account: m._id,
+                  member: m.memberId
+                };
+              })
+            };
 
-              // console.log(data);
-              const response: any = await props.addProjectTeams(data, selectedTeamMember);
-              // tslint:disable-next-line: no-console
-              // console.log('response', response);
-              if (response.status === 201) {
-                props.setShowDialog(!props.showDialog);
-              }
+            const response: any = await props.addProjectTeams(
+              data,
+              selectedTeamMember
+            );
+
+            if (response.status === 201) {
+              props.setShowDialog(!props.showDialog);
             }
-          }
-        >Add</Button>
+          }}
+        >
+          Add
+        </Button>
       </div>
     </div>
   );
@@ -143,5 +158,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AddProjectMemberForm = connect(mapStateToProps,
-  { addProjectTeams })(AddProjectMemberFormComponent);
+export const AddProjectMemberForm = connect(mapStateToProps, {
+  addProjectTeams
+})(AddProjectMemberFormComponent);

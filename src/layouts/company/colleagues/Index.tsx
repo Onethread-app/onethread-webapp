@@ -9,7 +9,7 @@ import {
   ButtonGroup,
   Alignment
 } from '@blueprintjs/core';
-import { AddMemberForm } from 'layouts/company/team/AddMemberForm';
+import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
 import { connect } from 'react-redux';
 import {
   getCompanyMembers,
@@ -27,13 +27,13 @@ import {
 } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
 import { companyPermit } from 'stores/UtilsActions';
-import { AddDesignationForm } from 'layouts/company/team/AddDesignationForm';
-import { EditDesignationForm } from 'layouts/company/team/EditDesignationForm';
+import { AddDesignationForm } from 'layouts/company/colleagues/AddDesignationForm';
+import { EditDesignationForm } from 'layouts/company/colleagues/EditDesignationForm';
 import { isEqual, upperFirst, chunk } from 'lodash';
 import { User } from 'stores/user/Reducer';
 import { IProjectTeam } from 'stores/project/Reducer';
 
-interface TeamMember {
+interface Colleagues {
   company: ICompany;
   user: User;
   getCompanyMembers: () => void;
@@ -41,7 +41,7 @@ interface TeamMember {
   getAllDepartments: () => void;
   addDesignation: (values: any, memberId: string) => void;
   editDesignation: (values: any, memberId: string) => void;
-  changeMemberRole: (values: { role: string; }, memberId: string) => void;
+  changeMemberRole: (values: { role: string }, memberId: string) => void;
   deleteCompanyMember: (memberId: string) => void;
   companyLoading: boolean;
 }
@@ -70,7 +70,9 @@ export const getDivisionName = {
   operationalEmployee: 'Operational Employee'
 };
 
-export const showDepartment = (member: ICompanyMembers | IProjectTeam['member']) => {
+export const showDepartment = (
+  member: ICompanyMembers | IProjectTeam['member']
+) => {
   if (
     member.designations.length &&
     ['director', 'cxo'].includes(member.designations[0].division) === false
@@ -89,7 +91,7 @@ export const showDepartment = (member: ICompanyMembers | IProjectTeam['member'])
   }
 };
 
-const TeamMembersPageComponent = (props: TeamMember) => {
+const ColleaguesPageComponent = (props: Colleagues) => {
   const [showDialog, setShowDialog] = useState(false);
   const [showDialogAdd, setShowDialogAdd] = useState(false);
   const [showDialogEdit, setShowDialogEdit] = useState(false);
@@ -154,8 +156,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
               Add Colleagues
             </Button>
           ) : (
-              undefined
-            )}
+            undefined
+          )}
         </div>
         {/* Admins list starts */}
         <h1 className="f4 mb0 tigrow-lightGray-1">Admins</h1>
@@ -188,8 +190,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                           style={{ color: 'rgb(228, 162, 0)' }}
                         />
                       ) : (
-                          <Icon icon="star" />
-                        )
+                        <Icon icon="star" />
+                      )
                     ) : null}
                   </td>
                   <td>
@@ -210,89 +212,89 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                   {/* Popover starts */}
                   <td>
                     {companyPermit(props.company.role) ||
-                      isEqual(member.account._id, props.user._id) ? (
-                        <Popover
-                          className="fr"
-                          position={Position.BOTTOM}
-                          popoverClassName="bp3-popover-content-sizing bg-white"
-                          content={
-                            <ButtonGroup
-                              alignText={Alignment.LEFT}
-                              className="bp3-minimal bp3-vertical bp3-fill"
-                            >
-                              {member.designations &&
-                                member.designations.length ? (
-                                  <Button
-                                    className="outline-0 bp3-large bp3-popover-dismiss"
-                                    onClick={async () => {
-                                      setEditMember(member);
-                                      await props.getAllDepartments();
-                                      setShowDialogEdit(!showDialogEdit);
-                                    }}
-                                  >
-                                    <span>Edit Designation</span>
-                                  </Button>
-                                ) : (
-                                  <Button
-                                    className="outline-0 bp3-large bp3-popover-dismiss"
-                                    onClick={async () => {
-                                      setEditMember(member);
-                                      await props.getAllDepartments();
-                                      setShowDialogAdd(!showDialogAdd);
-                                    }}
-                                  >
-                                    <span>Add Designation</span>
-                                  </Button>
-                                )}
-                              {companyPermit(props.company.role) &&
-                                isEqual(member.role, 'superAdmin') === false ? (
-                                  isEqual(member.role, 'admin') === true ? (
-                                    <Button
-                                      className="outline-0 bp3-large bp3-popover-dismiss"
-                                      onClick={async () => {
-                                        await props.changeMemberRole(
-                                          { role: 'employee' },
-                                          member._id
-                                        );
-                                      }}
-                                    >
-                                      <span className="red">Remove from Admin</span>
-                                    </Button>
-                                  ) : (
-                                      <Button
-                                        className="outline-0 bp3-large bp3-popover-dismiss"
-                                        onClick={async () => {
-                                          await props.changeMemberRole(
-                                            { role: 'admin' },
-                                            member._id
-                                          );
-                                        }}
-                                      >
-                                        <span>Make Admin</span>
-                                      </Button>
-                                    )
-                                ) : null}
-                            </ButtonGroup>
-                          }
-                          target={
-                            <Icon
-                              className=" pointer"
-                              icon="drag-handle-vertical"
-                            />
-                          }
-                        />
-                      ) : (
-                        undefined
-                      )}
+                    isEqual(member.account._id, props.user._id) ? (
+                      <Popover
+                        className="fr"
+                        position={Position.BOTTOM}
+                        popoverClassName="bp3-popover-content-sizing bg-white"
+                        content={
+                          <ButtonGroup
+                            alignText={Alignment.LEFT}
+                            className="bp3-minimal bp3-vertical bp3-fill"
+                          >
+                            {member.designations &&
+                            member.designations.length ? (
+                              <Button
+                                className="outline-0 bp3-large bp3-popover-dismiss"
+                                onClick={async () => {
+                                  setEditMember(member);
+                                  await props.getAllDepartments();
+                                  setShowDialogEdit(!showDialogEdit);
+                                }}
+                              >
+                                <span>Edit Designation</span>
+                              </Button>
+                            ) : (
+                              <Button
+                                className="outline-0 bp3-large bp3-popover-dismiss"
+                                onClick={async () => {
+                                  setEditMember(member);
+                                  await props.getAllDepartments();
+                                  setShowDialogAdd(!showDialogAdd);
+                                }}
+                              >
+                                <span>Add Designation</span>
+                              </Button>
+                            )}
+                            {companyPermit(props.company.role) &&
+                            isEqual(member.role, 'superAdmin') === false ? (
+                              isEqual(member.role, 'admin') === true ? (
+                                <Button
+                                  className="outline-0 bp3-large bp3-popover-dismiss"
+                                  onClick={async () => {
+                                    await props.changeMemberRole(
+                                      { role: 'employee' },
+                                      member._id
+                                    );
+                                  }}
+                                >
+                                  <span className="red">Remove from Admin</span>
+                                </Button>
+                              ) : (
+                                <Button
+                                  className="outline-0 bp3-large bp3-popover-dismiss"
+                                  onClick={async () => {
+                                    await props.changeMemberRole(
+                                      { role: 'admin' },
+                                      member._id
+                                    );
+                                  }}
+                                >
+                                  <span>Make Admin</span>
+                                </Button>
+                              )
+                            ) : null}
+                          </ButtonGroup>
+                        }
+                        target={
+                          <Icon
+                            className=" pointer"
+                            icon="drag-handle-vertical"
+                          />
+                        }
+                      />
+                    ) : (
+                      undefined
+                    )}
                     {/* Popover ends */}
                   </td>
                 </tr>
               ))
             ) : (
-                  <tr>
-                    <td colSpan={5}>No admins</td>
-                  </tr>
-                )}
+              <tr>
+                <td colSpan={5}>No admins</td>
+              </tr>
+            )}
           </tbody>
         </HTMLTable>
         {/* Admins list ends */}
@@ -318,8 +320,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                 <tr className="hide-child" key={member._id}>
                   <td>
                     <span className="mr2">
-                      {upperFirst(member.account.firstName)}{' '}
-                      {upperFirst(member.account.lastName)}
+                      {member.account && upperFirst(member.account.firstName)}
+                      {member.account && upperFirst(member.account.lastName)}
                     </span>
                     {companyPermit(member.role) ? (
                       member.role === 'superAdmin' ? (
@@ -328,8 +330,8 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                           style={{ color: 'rgb(228, 162, 0)' }}
                         />
                       ) : (
-                          <Icon icon="star" />
-                        )
+                        <Icon icon="star" />
+                      )
                     ) : null}
                   </td>
                   <td>
@@ -350,99 +352,102 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                   {/* Popover starts */}
                   <td>
                     {companyPermit(props.company.role) ||
-                      isEqual(member.account._id, props.user._id) ? (
-                        <Popover
-                          className="fr"
-                          position={Position.BOTTOM}
-                          popoverClassName="bp3-popover-content-sizing bg-white"
-                          content={
-                            <ButtonGroup
-                              alignText={Alignment.LEFT}
-                              className="bp3-minimal bp3-vertical bp3-fill"
-                            >
-                              {member.designations &&
-                                member.designations.length ? (
-                                  <Button
-                                    className="outline-0 bp3-large bp3-popover-dismiss"
-                                    onClick={async () => {
-                                      setEditMember(member);
-                                      await props.getAllDepartments();
-                                      setShowDialogEdit(!showDialogEdit);
-                                    }}
-                                  >
-                                    <span>Edit Designation</span>
-                                  </Button>
-                                ) : (
-                                  <Button
-                                    className="outline-0 bp3-large bp3-popover-dismiss"
-                                    onClick={async () => {
-                                      setEditMember(member);
-                                      await props.getAllDepartments();
-                                      setShowDialogAdd(!showDialogAdd);
-                                    }}
-                                  >
-                                    <span>Add Designation</span>
-                                  </Button>
-                                )}
-                              {companyPermit(props.company.role) &&
-                                isEqual(member.role, 'superAdmin') === false ? (
-                                  isEqual(member.role, 'admin') === true ? (
-                                    <Button
-                                      className="outline-0 bp3-large bp3-popover-dismiss"
-                                      onClick={async () => {
-                                        await props.changeMemberRole(
-                                          { role: 'employee' },
-                                          member._id
-                                        );
-                                      }}
-                                    >
-                                      <span className="red">Remove from Admin</span>
-                                    </Button>
-                                  ) : (
-                                      <Button
-                                        className="outline-0 bp3-large bp3-popover-dismiss"
-                                        onClick={async () => {
-                                          await props.changeMemberRole(
-                                            { role: 'admin' },
-                                            member._id
-                                          );
-                                        }}
-                                      >
-                                        <span>Make Admin</span>
-                                      </Button>
-                                    )
-                                ) : null}
-                              {/* {companyPermit(props.company.role) ? (
+                    isEqual(member.account._id, props.user._id) ? (
+                      <Popover
+                        className="fr"
+                        position={Position.BOTTOM}
+                        popoverClassName="bp3-popover-content-sizing bg-white"
+                        content={
+                          <ButtonGroup
+                            alignText={Alignment.LEFT}
+                            className="bp3-minimal bp3-vertical bp3-fill"
+                          >
+                            {member.designations &&
+                            member.designations.length ? (
+                              <Button
+                                className="outline-0 bp3-large bp3-popover-dismiss"
+                                onClick={async () => {
+                                  setEditMember(member);
+                                  await props.getAllDepartments();
+                                  setShowDialogEdit(!showDialogEdit);
+                                }}
+                              >
+                                <span>Edit Designation</span>
+                              </Button>
+                            ) : (
+                              <Button
+                                className="outline-0 bp3-large bp3-popover-dismiss"
+                                onClick={async () => {
+                                  setEditMember(member);
+                                  await props.getAllDepartments();
+                                  setShowDialogAdd(!showDialogAdd);
+                                }}
+                              >
+                                <span>Add Designation</span>
+                              </Button>
+                            )}
+                            {companyPermit(props.company.role) &&
+                            isEqual(member.role, 'superAdmin') === false ? (
+                              isEqual(member.role, 'admin') === true ? (
                                 <Button
                                   className="outline-0 bp3-large bp3-popover-dismiss"
                                   onClick={async () => {
-                                    await props.deleteCompanyMember(member._id);
+                                    await props.changeMemberRole(
+                                      { role: 'employee' },
+                                      member._id
+                                    );
                                   }}
                                 >
-                                  <span className="red">Remove from company</span>
+                                  <span className="red">Remove from Admin</span>
+                                </Button>
+                              ) : (
+                                <Button
+                                  className="outline-0 bp3-large bp3-popover-dismiss"
+                                  onClick={async () => {
+                                    await props.changeMemberRole(
+                                      { role: 'admin' },
+                                      member._id
+                                    );
+                                  }}
+                                >
+                                  <span>Make Admin</span>
+                                </Button>
+                              )
+                            ) : null}
+                            {/* {companyPermit(props.company.role) ? (
+                                <Button
+                                  className='outline-0 bp3-large bp3-popover-dismiss'
+                                  onClick={async () => {
+                                    await props.changeMemberRole(
+                                      { role: 'employee' },
+                                      member._id
+                                    );
+                                  }}
+                                >
+                                  <span className='red'>Remove from Admin</span>
                                 </Button>
                               ) : null} */}
-                            </ButtonGroup>
-                          }
-                          target={
-                            <Icon
-                              className=" pointer"
-                              icon="drag-handle-vertical"
-                            />
-                          }
-                        />
-                      ) : (
-                        undefined
-                      )}
+                          </ButtonGroup>
+                        }
+                        target={
+                          <Icon
+                            className=" pointer"
+                            icon="drag-handle-vertical"
+                          />
+                        }
+                      />
+                    ) : (
+                      undefined
+                    )}
                     {/* Popover ends */}
                   </td>
                 </tr>
               ))
             ) : (
-                  <tr>
-                    <td colSpan={5}>No members</td>
-                  </tr>
-                )}
+              <tr>
+                <td colSpan={5}>No members</td>
+              </tr>
+            )}
           </tbody>
         </HTMLTable>
         {/* members list ends */}
@@ -466,16 +471,16 @@ const TeamMembersPageComponent = (props: TeamMember) => {
                     </tr>
                   ))
                 ) : (
-                      <tr>
-                        <td colSpan={3}>No pending request</td>
-                      </tr>
-                    )}
+                  <tr>
+                    <td colSpan={3}>No pending request</td>
+                  </tr>
+                )}
               </tbody>
             </HTMLTable>
           </>
         ) : (
-            undefined
-          )}
+          undefined
+        )}
         {/* pending list ends */}
       </div>
 
@@ -486,7 +491,7 @@ const TeamMembersPageComponent = (props: TeamMember) => {
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
         >
-          <AddMemberForm
+          <AddColleaguesForm
             showDialog={showDialog}
             setShowDialog={e => setShowDialog(!showDialog)}
           />
@@ -536,7 +541,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const TeamMembersPage = connect(mapStateToProps, {
+export const ColleaguesPage = connect(mapStateToProps, {
   getCompanyMembers,
   getAllDepartments,
   addDesignation,
@@ -544,4 +549,4 @@ export const TeamMembersPage = connect(mapStateToProps, {
   changeMemberRole,
   getCompanyPendingMembers,
   deleteCompanyMember
-})(TeamMembersPageComponent);
+})(ColleaguesPageComponent);

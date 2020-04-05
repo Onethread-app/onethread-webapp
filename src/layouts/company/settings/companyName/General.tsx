@@ -35,7 +35,7 @@ const GeneralViewComponent = (props: DetailsViewProps & RouteComponentProps) => 
             <Button
               type="submit"
               className="grow pointer outline-0 shadow-0 h2"
-              text="Change CompanyName"
+              text="Change Company Name"
               style={{ background: '#0fa3a3', color: 'white', fontSize: '16px' }}
               onClick={() => setShowDialog(true)}
             />
@@ -51,7 +51,7 @@ const GeneralViewComponent = (props: DetailsViewProps & RouteComponentProps) => 
           canOutsideClickClose={false}
         >
           <form className="pa4">
-            <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Change CompanyName</h1>
+            <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">Change Company Name</h1>
             <div>
               {props.errorCompanyName ?
                 <small className="red">{props.errorCompanyName}</small>

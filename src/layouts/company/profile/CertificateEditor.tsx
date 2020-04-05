@@ -15,7 +15,6 @@ interface ICertificateEditProps {
 const CertificateEditComponent = (props: ICertificateEditProps) => {
 
   const onSubmit = async (values: any) => {
-    window.alert(JSON.stringify(values, null, 2));
     const res = await props.addCertificate(values);
     if (res === 201) {
       props.setShowDialog(false);

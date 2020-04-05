@@ -64,7 +64,7 @@ const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
               text="Request Sent"
             /> */}
           </div>
-          <Button
+          {/* <Button
             className="bp3-minimal"
             style={{
               color: "white",
@@ -75,7 +75,7 @@ const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
               width: "200px"
             }}
             text="Add as Associates"
-          />
+          /> */}
         </div>
 
         <Button
@@ -83,7 +83,7 @@ const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
           style={{
             marginTop: "265px",
             marginRight: "45px",
-            color: "white"
+            color: "#0fa3a3"
           }}
           onClick={() => setShowDialogPicture(true)}
         >

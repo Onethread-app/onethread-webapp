@@ -33,7 +33,7 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
           <h1 className="f6 lh-copy">Departments</h1>
           <Button
             type="submit"
-            className="grow pointer w-15"
+            className="grow pointer"
             style={{ background: '#0fa3a3', outline: 'none', color: 'white', fontSize: '16px' }}
             onClick={() => setShowDialogDepartment(true)}
           >
