@@ -68,7 +68,7 @@
 }
 
 .homeUl.light>.featureTitle{
-    font-weight: 200; 
+    font-weight: 400; 
     color: #707070;
 }
 
@@ -216,7 +216,7 @@
 
 @media only screen and (max-width: 824px) {
     .companyLogo{
-        margin-left: -8.5rem;
+        margin-left: -14.5rem;
     }
 
     .tryLink{
@@ -279,8 +279,76 @@
     }
 }
 
-@media only screen and (max-width: 350px) {
+@media only screen and (max-width: 414px) {
     .companyLogo{
-        margin-left: -6rem;
+        margin-left: -9.5rem;
+    }
+
+    .tryLink{
+        padding: 0.5rem 1rem;
+        min-width: 110px;
+        font-size: 0.8rem;
+        text-align: center;
+    }
+
+    .tryLink.light{
+        font-size: 0.8rem;
+    }
+
+    .demoLink{
+        padding: 0rem;
+        justify-content: center;
+    }
+
+    .primeText{
+        font-size: 1.5rem;
+    }
+
+    .secondaryText{
+        font-size: 1.5rem;
+        font-weight: 300;
+    }
+
+    .titleText{
+        font-size: .9rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.5rem;
+        letter-spacing: normal;
+    }
+
+    .featureTitle{
+        font-size:  0.9rem;
+        flex: 1;
+        padding: 1rem ;
+    }
+
+    .light .featureTitle{
+        padding: 0 ;
+    }
+
+    .homeUl.light{
+        margin-left: 2rem;
+    }
+
+    .homeUl{
+        padding-left: 2rem;
+        align-items: flex-start;
+    }
+
+    .homeUl>.featureTitle::before{
+        margin-left: -1.5rem;
+        height: 0.9rem;
+        width: 0.9rem;
+    }
+
+    .footerText{
+        font-size: 0.48rem;
+        line-height: 1.1;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .companyLogo{
+        margin-left: -7rem;
     }
 }
