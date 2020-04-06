@@ -8,6 +8,10 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 
+const {
+  createTeamAddNotification
+} = require('../notification/notification.controller');
+
 const changeRole = async (req, res, next) => {
   try {
     req.member.role = req.body.role;
@@ -143,6 +147,7 @@ const addTeamMember = async (req, res, next) => {
       }
     }
   } catch (error) {
+    console.log(error);
     logger.error(`${error}`);
     next(error);
   }

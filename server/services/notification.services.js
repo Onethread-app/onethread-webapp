@@ -100,7 +100,7 @@ module.exports.sendCompanyAndProjectNotification = async (
   let allChannel = _.union(companyChannelsPusher, projectChannelPusher);
 
   let userNotification = userNoti;
-  if(userNotification.length > 1){
+  if(Array.isArray(userNotification)){
 
     userNotification = userNoti.map(c => { //multiple
       return  { notification: c,

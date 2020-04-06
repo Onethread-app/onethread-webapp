@@ -117,7 +117,7 @@ module.exports.createTeamAddNotification = async (
   adminUser,
 ) => {
   try {
-    const membersToSendNotification = await Member.find({
+    const members = await Member.find({
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: project.company,
     });
@@ -158,7 +158,7 @@ module.exports.createTeamAddNotification = async (
       companyRoleReciver,
       projectRoleReciver,
       adminUser,
-      notification,
+      notifications,
     );
 
     notifications = await Notification.create(notifications);
