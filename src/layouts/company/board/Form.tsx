@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { checkError, required, composeValidators, maxValue } from 'components/final-form/utils';
 import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
-import { boardColor } from 'stores/UtilsActions';
+import { Color } from 'stores/UtilsActions';
 // import { server } from 'tigrowApi';
 import { ICompany } from 'stores/company/Reducer';
 // import { useLiveSearch } from 'components/useLiveSearch';
@@ -103,7 +103,7 @@ const FormComponent = (props: {
                   <div className="mb3">
                     <p className="fw5 mb3" style={{ fontSize: '.8rem' }}>Label</p>
                     <div className="flex">
-                      {boardColor.map((color) => (
+                      {Color.map((color) => (
                         <div className="pr2" key={color.code}>
                           <Icon
                             className="br2"
