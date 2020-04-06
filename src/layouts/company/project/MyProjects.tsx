@@ -292,7 +292,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       >
                         {archProject.name}
                       </h3>
-                      <Popover
+                      {/* <Popover
                         className="w-10"
                         content={
                           <Menu className="pa2">
@@ -319,7 +319,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             className="outline-0"
                           />
                         }
-                      />
+                      /> */}
                     </div>
                     <h3
                       className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
@@ -400,7 +400,8 @@ const mapStateToProps = (state: any) => ({
   optionalRole:
     state.projectReducer.projectRole.projects &&
     state.projectReducer.projectRole.projects.project.optionalRole,
-  currentProject: state.projectReducer.projectRole.projects.project
+  currentProject: state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project
 });
 
 export const MyProject = connect(mapStateToProps, {
