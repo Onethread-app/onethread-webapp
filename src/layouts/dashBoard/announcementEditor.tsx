@@ -29,7 +29,7 @@ const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
           fill={true}
           growVertically={true}
           value={inputValues}
-          placeholder="Write Something ..."
+          placeholder="Write Something (max 500)"
           onChange={(event) => {
             setInputValues(event.target.value);
           }

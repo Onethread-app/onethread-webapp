@@ -9,6 +9,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
+import { Text } from "@blueprintjs/core"
 
 interface DashBoardViewProps {
   user: User;
@@ -49,7 +50,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
         loading === false ?
           <>
             <div className="mh4">
-              <div className="flex justify-between">
+              <div  className="flex justify-between">
                 <Card className="w-25 ma2">
                   <h1 className="f6 fw6">Total running project</h1>
                   <h1 className="mv0">{dashboard.totalProject}</h1>
@@ -67,6 +68,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                   <h1 className="mv0">{dashboard.totalAssociates}</h1>
                 </Card>
               </div>
+              <div>
+
               <Card className="w-50 ma2">
                 <h1 className="f5">Company Announcement</h1>
                 {props.company.announce && props.company.announce.length > 0 ?
@@ -74,13 +77,14 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
 
                     <div className="flex items-center">
                       <div className="w2 h2 bg-red br2 mv1"></div>
-                      <h1 className="f5 fw4 mh3">{announcement.text}</h1>
+                      <Text ellipsize={true} className="f5 fw4 mh3 ws-normal">{announcement.text}</Text> 
                     </div>
 
                   )) :
                   <small>No announcements.</small>
                 }
               </Card>
+              </div>
             </div>
             <div>
               <img
@@ -104,7 +108,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           onClose={() => setShowAnnouncementDialog(!showAnnouncementDialog)}
           isOpen={showAnnouncementDialog}
           style={{ background: '#fff' }}
-          canOutsideClickClose={false}
+          canOutsideClickClose={true}
         >
           <div>
             <AnnouncementEditor

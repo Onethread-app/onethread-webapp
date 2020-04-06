@@ -3,6 +3,8 @@ import { Icon } from '@blueprintjs/core';
 import { ProjectOutlineEditor } from './ProjectOutlineEditor';
 import { connect } from 'react-redux';
 import { projectRules } from './settings/projectrules';
+import { Text } from "@blueprintjs/core"
+
 
 interface IProjectDescriptionViewProps {
   headline: string;
@@ -56,7 +58,7 @@ export const _ProjectOutlineView = (props: IProjectDescriptionViewProps) => {
       ) : (
         undefined
       )}
-      <p className='pr2'>{props.projectOutline}</p>
+      <Text ellipsize={true} className='pr2 ws-normal'>{props.projectOutline}</Text>
     </>
   );
 };
