@@ -240,8 +240,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                     }
                   >
                     <ChangeName
-                      projectName={project.name}
-                      projectId={project._id}
+                      projectName={props.currentProject.name}
+                      projectId={props.currentProject._id}
                       setShowDialog={setShowUpdateNameDialog}
                     />
                   </RightSidebar>
@@ -399,7 +399,8 @@ const mapStateToProps = (state: any) => ({
     state.projectReducer.projectRole.projects.role,
   optionalRole:
     state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project.optionalRole
+    state.projectReducer.projectRole.projects.project.optionalRole,
+  currentProject: state.projectReducer.projectRole.projects.project
 });
 
 export const MyProject = connect(mapStateToProps, {
