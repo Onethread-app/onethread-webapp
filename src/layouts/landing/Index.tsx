@@ -1,292 +1,312 @@
 import React from 'react';
+import { CustomView, MobileOnlyView, isMobileOnly } from "react-device-detect";
 import { Navbar, Alignment } from '@blueprintjs/core';
 import { EmailVerificationForm } from './EmailVerificationForm';
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+import './styles.css';
 
-import growNetworkIcon from './../../resources/images/GrowYourNetwork.svg';
-import landingPic1 from './../../resources/images/landingIllustration1.png';
-import landingPic2 from './../../resources/images/landingIllustration2.png';
-import boardIcon from './../../resources/images/sideBarBoard.svg';
-import roomIcon from './../../resources/images/sidebarRoom.svg';
-import portfolioIcon from './../../resources/images/PortfoliosIcon.svg';
-import projectIcon from './../../resources/images/ProjectsIcon.svg';
-import growTribeIcon from './../../resources/images/GrowYourTribes.svg';
-import connectTribeIcon from './../../resources/images/ConnectWithTribes.svg';
-import attractiveCompanyIcon from './../../resources/images/AttractiveCompanyProfile.svg';
-import verificationIcon from './../../resources/images/GetVerified.svg';
-import tigrowLogo from './../../resources/images/TiGrowLogoFinal.png';
+import tigrowLogo from './../../resources/homepageImages/tigrowLogo.svg';
+import tigrowLogoMob from './../../resources/homepageImages/tigrowLogoMobile.svg';
+import heroSection from "./../../resources/homepageImages/heroSection.png";
+import projects from "./../../resources/homepageImages/projects.png";
+import projectsMobile from "./../../resources/homepageImages/projectsMobile.png";
+import project from "./../../resources/homepageImages/project.svg";
+import chat from "./../../resources/homepageImages/chat.svg";
+import chatMobile from "./../../resources/homepageImages/chatMobile.png";
+import discussions from './../../resources/homepageImages/highlightedDiscussion.png';
+import board from "./../../resources/homepageImages/board.png";
+import boards1 from "./../../resources/homepageImages/boards1.png";
+import boards2 from "./../../resources/homepageImages/boards2.png";
+import boards3 from "./../../resources/homepageImages/boards3.png";
+import customers from "./../../resources/homepageImages/customers.png";
+import customersMobile from "./../../resources/homepageImages/customersMobile.png";
+import pack1 from "./../../resources/homepageImages/pack1.png";
+import pack2 from "./../../resources/homepageImages/pack2.png";
+import pack3 from "./../../resources/homepageImages/pack3.png";
+import offers from "./../../resources/homepageImages/offers.png";
+import offersMobile from "./../../resources/homepageImages/offersMobile.png";
+import service from './../../resources/homepageImages/service.png';
+import request from './../../resources/homepageImages/requestsMobile.png';
+import meet from './../../resources/homepageImages/meet.png';
 
 export const HomePage = () => {
+
+  const responsive = {
+    superLargeDesktop: {
+      breakpoint: { max: 4000, min: 3000 },
+      items: 1,
+      partialVisibilityGutter: 20
+    },
+    desktop: {
+      breakpoint: { max: 3000, min: 1024 },
+      items: 1,
+      partialVisibilityGutter: 20
+    },
+    tablet: {
+      breakpoint: { max: 1024, min: 464 },
+      items: 1,
+      partialVisibilityGutter: 20
+    },
+    mobile: {
+      breakpoint: { max: 464, min: 0 },
+      items: 1,
+      partialVisibilityGutter: 20
+    },
+  };
 
   return (
     <div>
       <div>
-        <Navbar className="ph5-ns shadow-0 fixed pv3 flex justify-between h-auto" >
+        <Navbar className="ph5-ns shadow-0 fixed pv2 flex justify-between h-auto" >
           <Navbar.Group align={Alignment.LEFT}>
-            <img
-              src={tigrowLogo}
-              className=""
-              alt="Site Logo"
-              style={{ width: '8rem' }}
-            />
+            {isMobileOnly ?
+              <img src={tigrowLogoMob} className="companyLogo" alt="Site Logo" /> :
+              <img src={tigrowLogo} className="companyLogo" alt="Site Logo" />}
           </Navbar.Group>
           <Navbar.Group align={Alignment.RIGHT} >
-            <a href="#features"
-              className="link black f4-l f5-m f5 fw7 mh4-l mh2-m mr1"
-              style={{ outline: '0px' }}
-            >
-              Features
-              </a>
-            <a href="/signin"
-              className="link black ba bw1 f4-l f5-m f5 fw7 mh4-l mh2-m"
-              style={{
-                outline: '0px',
-                borderRadius: '24px',
-                padding: '8px 34px'
-              }}
-            >
-              Login
-              </a>
+            <a href="/signin" className="tryLink">Try for free</a>
           </Navbar.Group>
         </Navbar>
       </div>
-      <div className="ph5-l ph4 pt6 pb4">
-        <div className="flex-ns items-center ph5-ns">
-          <div className="w-60-ns w-100">
-            <h1
-              className="f2-ns black"
-            >An Enterprise Connectivity Platform</h1>
-            <p className="f4 lh-2">We have launched our Team Collaboration Tool with<br />
-              enterprise-grade durability, performance, and superior<br />
-              security at a fraction of the cost of already existing<br />
-              solutions in the market.</p>
-            <div className="mt1">
-              <h1 className="f4 lh-2"
-                style={{ color: '#474DBB' }}>
-                Join thousands of small, medium enterprises <br />
-                already using the network.</h1>
+      <div className="pl5-l pt6-ns pt5 pb4">
+        <CustomView condition={!isMobileOnly}>
+          <div className="flex-ns items-center pl5-ns">
+            <div className="w-40-ns w-100 pl0-ns pl4 ">
+              <div className="black primeText">An Enterprise Connectivity Platform</div>
+              <div className="black secondaryText">where you can</div>
+              <ul className='homeUl'>
+                <li className="featureTitle">
+                  Manage Teams &amp; Projects on One Platform
+                </li>
+                <li className="featureTitle">
+                  Create Alliances with Thousands of Small &amp; Medium Enterprises
+                </li>
+              </ul>
+              <div className='demoLink'>
+                <a href="#" className="tryLink">See The Demo</a>
+              </div>
+              <ul className='homeUl light'>
+                <li className="featureTitle">
+                  Full access to all features
+                  </li>
+                <li className="featureTitle">
+                  Zero obligation, no credit card needed
+                  </li>
+                <li className="featureTitle">
+                  Add unlimited users
+                  </li>
+                <li className="featureTitle">
+                  Access to sales and technical support
+                  </li>
+                <li className="featureTitle">
+                  Test drive with 15-day free trial
+                </li>
+              </ul>
+              <div className='demoLink'>
+                <a href="/signin" className="tryLink">Try for free</a>
+              </div>
             </div>
-            <div className="mt5 mb3">
-              <a href="#"
-                className="link black ba bw1 f5-ns fw7"
-                style={{
-                  outline: '0px',
-                  borderRadius: '24px',
-                  borderColor: '#474DBB',
-                  padding: '10px 35px'
-                }}
-              >
-                See The Demo
-              </a>
+            <div className="w-60-ns w-100 tr">
+              <img src={heroSection} alt="hero Section" />
             </div>
           </div>
-          <div className="w-40-ns w-100">
-            <img
-              src={landingPic1}
-            />
+        </CustomView>
+        <MobileOnlyView>
+          <div className="flex items-center pl5-ns ph2">
+            <div className="w-40-ns w-100 ph1">
+              <div className="black primeText">An Enterprise Connectivity Platform</div>
+            </div>
+            <div className="w-60-ns w-100 tr">
+              <img src={heroSection} alt="hero Section" />
+            </div>
+          </div>
+          <div className="flex items-center center">
+            <div className="w-100">
+              <div className="black secondaryText tc">where you can</div>
+              <ul className='homeUl flex ph4 items-center'>
+                <li className="featureTitle">
+                  Manage Teams &amp; Projects on One Platform
+                </li>
+                <li className="featureTitle">
+                  Create Alliances with Thousands of Small &amp; Medium Enterprises
+                </li>
+              </ul>
+              <div className='demoLink flex items-center'>
+                <a href="#" className="tryLink">See The Demo</a>
+              </div>
+              <ul className='homeUl light'>
+                <li className="featureTitle">
+                  Full access to all features
+                  </li>
+                <li className="featureTitle">
+                  Zero obligation, no credit card needed
+                  </li>
+                <li className="featureTitle">
+                  Add unlimited users
+                  </li>
+                <li className="featureTitle">
+                  Access to sales and technical support
+                  </li>
+                <li className="featureTitle">
+                  Test drive with 15-day free trial
+                </li>
+              </ul>
+              <div className='demoLink flex items-cemter'>
+                <a href="/signin" className="tryLink">Try for free</a>
+              </div>
+            </div>
+          </div>
+        </MobileOnlyView>
+      </div>
+      <div className="w-70-ns w-80 center pv5-ns tc titleText">
+        Use TiGrow Workplace For Remote Working With Teams, For Vendor Management &amp; To Collaborate With<br />
+        All Of Your Stakeholders At One <br />Place.
+      </div>
+      <div className="flex-ns items-center pl4-ns pl4 ph2 pv4-ns">
+        <div className="pl5-ns w-60-ns h-100-ns w-100 h-100">
+          <img src={isMobileOnly ? projectsMobile : projects} />
+        </div>
+        <div className="pr5-ns w-40-ns h-100-ns w-70 h-100 mt3 mt0-ns center">
+          <div className="titleText tc" style={{ fontWeight: 200 }}>
+            <span >
+              <span style={{ color: '#588F8F', fontWeight: 'bold' }}>Introducing Projects<br /></span>
+            Create Projects With <span className="silver" style={{ fontWeight: 'bold' }}>Single<br /></span>
+              <span className="silver" style={{ fontWeight: 'bold' }}>Department, Multiple Departments</span> or<br />
+            With <span className="silver" style={{ fontWeight: 'bold' }}>External Stakeholders of the <br />
+            Company</span></span>
           </div>
         </div>
       </div>
-      <div
-        className="flex-ns items-center pv6-ns pv4 ph2"
-        style={{
-          backgroundColor: '#474DBB'
-        }}
-      >
-        <div className="w-50-ns w-100 tc mb4 mb0-ns">
-          <h1 className="white f2-ns mt0"
-          >Workplace</h1>
-          <p className="white-90 f4 mb4"
-            style={{ lineHeight: '2.5rem' }}
-          >A Team Collaboration Tool
-            <br />The easiest way to manage team
-            <br />projects and tasks</p>
-          <a
-            href="/signup"
-            className="grow ph4 pointer f5 fw7 pv3"
-            style={{
-              background: 'white',
-              outline: 'none',
-              color: '#474DBB',
-              borderRadius: '25px',
-              border: 'none',
-              height: '50px'
-            }}
-            type="submit"
-          >Try for free</a>
+      <div className="flex-ns items-center pl4-l ph4-ns pv4-ns" style={{ justifyContent: 'space-around' }}>
+        <div className="pl5-ns w-20-ns h-100-ns w-100 h-100 tc">
+          <img src={project} alt="" />
         </div>
-        <div className="w-50-ns w-100 tc">
-          <h1 className="white f2-ns mt0"
-          >Tribe</h1>
-          <p className="white-90 f4 mb4"
-            style={{ lineHeight: '2.5rem' }}
-          >Business Lead Generation was never this simple
-            <br />Showcase your product/service in the largest
-            <br />enterprise network in the world</p>
-          <a
-            href="/signup"
-            className="grow ph4 pointer f5 fw7 pv3"
-            style={{
-              background: 'white',
-              outline: 'none',
-              color: '#474DBB',
-              borderRadius: '25px',
-              border: 'none',
-              height: '50px'
-            }}
-            type="submit"
-          >Create your company profile for free</a>
+        <div className="pr5-ns pl4-ns w-80-ns h-100-ns w-100 h-100">
+          <CustomView condition={!isMobileOnly}>
+            <img src={chat} alt="" />
+            <div className="titleText tc pv4">
+              <span style={{ color: '#588F8F' }}>Chat from anywhere through Rooms</span><br />Share your opinion, and your personality. Highlight Important <br /> Discussion in a group chat or in one-to-one messages.
+          </div>
+            <img src={board} alt="" />
+          </CustomView>
+          <MobileOnlyView>
+            <div className="flex mt3">
+              <div className="titleText tc w-50 ph2 pv2 mh3 chatIntro">
+                <span className="silver">
+                  <span style={{ color: '#588F8F' }}>Chat from anywhere<br /> through Rooms</span><br />
+                  Share Your Opinion,<br />
+                   And Your Personality.<br />
+                    Highlight Important <br /> Discussion In A Group<br /> Chat Or In One-To-<br />
+                    One Messages.
+                  </span>
+              </div>
+              <div className="w-50">
+                <img className="ph1" src={discussions} alt="" />
+              </div>
+            </div>
+            <img src={chatMobile} alt="" />
+            <div className="w-80 center ph2 tc titleText">
+              <span className="silver">
+                <span style={{ color: '#588F8F' }}>
+                  Collaborate &amp; Manage Your Team from anywhere through Boards </span>
+                 Monitor your team performance, employee kpi's in real time. Assign tasks, subtasks, deadlines; get updated if the tasks are done or not.
+                 </span>
+            </div>
+            <img src={boards1} className="mb3 ph3" alt="board" />
+            <img src={boards2} className="mb3 ph3" alt="board" />
+            <img src={boards3} className="mb3 ph3" alt="board" />
+          </MobileOnlyView>
         </div>
       </div>
-      <div id="features" className="tc mv5 ph4">
-        <h1 className="black f2-ns">The Easiest Way To Manage Team Projects and Tasks</h1>
-        <div className="flex-ns mt6-ns mt2">
-          <div className="w-25-ns w-100 ph2">
-            <img
-              style={{ width: '60px' }}
-              src={boardIcon} />
-            <h1>Board</h1>
-            <p className="f5 fw6">Communicate with your Team in<br /> the most effective manner.</p>
-            <p className="f5 fw6 mt3">We revisioned chat features for<br /> the best user experience.</p>
-            <p className="f5 fw6 mt3">You can now select featured chats<br />
-              and see them separately as <br />
-              discussion topics.</p>
+      <CustomView condition={!isMobileOnly}>
+        <div className="w-70-ns w-100 center pv5-ns tc titleText">
+          <span style={{ color: '#588F8F' }}>Collaborate &amp; Manage Your Team from anywhere through Boards</span> Monitor your team performance, employee kpi's in real time. Assign tasks, subtasks, deadlines; get updated if the tasks are done or not.
+        </div>
+      </CustomView>
+      <div className="flex-ns items-center pl4-l pl4 pv0-ns pv2 ph2" style={{ justifyContent: 'space-around' }}>
+        <div className="pl5-ns w-50-ns h-100-ns w-100 h-100">
+          <div className="titleText tc">
+            <span className="silver"><span style={{ color: '#588F8F' }}>Meet from anywhere</span><br />
+            Use video conference with features <br /> like screen sharing. Teams of 10 or <br />
+             10,000 can meet in one place, no <br /> matter how many places they’re in.</span>
           </div>
-          <div className="w-25-ns w-100 ph2">
-            <img
-              style={{ width: '60px' }}
-              src={roomIcon} />
-            <h1 className="">Room</h1>
-            <p className="f5 fw6">See where everything stands<br />Visualize your work.</p>
-            <p className="f5 fw6 mt3">Move work, through multiple stages<br />quickly, easily, and beautifully.</p>
-          </div>
-          <div className="w-25-ns w-100 ph2">
-            <img
-              style={{ width: '60px' }}
-              src={portfolioIcon} />
-            <h1>Portfolios</h1>
-            <p className="f5 fw6">Monitor the status of key<br />initiatives in real time.</p>
-            <p className="f5 fw6 mt3">See how all your projects are<br />progressing in real time with Portfolios.</p>
-            <p className="f5 fw6 mt3">So you can proactively
-            <br />address risks and report updates to
-            <br />stakeholders.</p>
-          </div>
-          <div className="w-25-ns w-100 ph2">
-            <img
-              style={{ width: '60px' }}
-              src={projectIcon} />
-            <h1>Projects</h1>
-            <p className="f5 fw6">Hit your goals, without the
-            <br />scramble Make every<br />
-              project a success.</p>
-            <p className="f5 fw6 mt3">Map out each step and
-            <br />organize all the details of your<br />
-              work in one place.
-            </p>
-          </div>
+        </div>
+        <div className="pr5-ns w-50-ns h-100-ns w-100 h-100">
+          <img src={meet} className="pr4-ns pv5-ns" />
         </div>
       </div>
-      <div className="flex-ns items-center ph6-ns ph4 pv5-ns">
-        <div className="w-40-ns w-100 pl4">
-          <h1 className="black f2-ns">Introducing Tribe</h1>
-          <h1 className="black f3-ns">So, What is Tribe?</h1>
-          <p className="f4 fw6 lh-2">Any Enterprise With All It's<br />
-            Business Associates is a Tribe.</p>
-          <p className="f4 fw6 mt3 lh-2">The World is Filled with Lots<br />
-            of Disconnected Tribes.</p>
-          <p className="f4 fw6 mt3 lh-2">We want to create connectivity<br />
-            among them.</p>
-          <p className="f4 fw6 mt3 lh-2">Grow your Network with<br />
-            TiGrow.
-          </p>
-          <h1 className="f4"
-            style={{ color: '#474DBB' }}
-          >Coming Soon</h1>
+      <MobileOnlyView>
+        <div className="w-90 center pv2 ph3 tc titleText">
+          <span className="silver">
+            <span style={{ color: '#588F8F', fontWeight: 'bold' }}>
+              Tribe Feature To Create Alliances <br />
+            with Thousands of Small &amp; Medium<br /> Enterprises.<br /></span>
+          Then Start Working In Projects<br /> With Them in TiGrow Workplace.<br />
+           Why Waste Time Switching<br />
+            Between Multiple Platforms!!</span>
         </div>
-        <div className="w-50-ns w-100">
-          <img
-            src={landingPic2} />
-
+      </MobileOnlyView>
+      <div className="flex-ns items-center ph6-ns ph4 pv3-ns pv3">
+        <div className="w-80-ns w-100 center">
+          <img src={isMobileOnly ? request : service} alt="funtionality tabs" />
         </div>
       </div>
-      <div className="flex-ns items-center tc mv5">
-        <div className="w-50-ns w-100 pv6-ns pv2"
-          style={{ backgroundColor: '#EAF6F0' }}
-        >
-          <img
-            style={{ width: '60px' }}
-            src={growTribeIcon} />
-          <h1 className="f2-ns">Grow Your Tribe</h1>
-          <p className="f5 fw6 lh-2">Connect all of your Business Associates
-            <br />in your Tribe.</p>
-          <p className="f5 fw6 lh-2 mt3">Create small groups and<br />
-            maintain communications in one place.
-            </p>
-        </div>
-        <div
-          className="w-50-ns w-100 pv6-ns pv2"
-          style={{ backgroundColor: '#F4F5FB' }}
-        >
-          <img
-            style={{ width: '60px' }}
-            src={connectTribeIcon} />
-          <h1 className="f2-ns">Connect with Tribes</h1>
-          <p className="f5 fw6 lh-2">Connect with millions of Tribes all around
-            <br />the world.</p>
-          <p className="f5 fw6 lh-2 mt3">Showcase your product/service in the largest<br />
-            enterprise network of the world.
-            </p>
+      <div className="flex-ns items-center ph6-ns pv3-ns pv3">
+        <div className="w-90-ns w-100 center">
+          <img src={isMobileOnly ? offersMobile : offers} className="w-100" alt="top offers" />
         </div>
       </div>
-      <div className="tc pv5-ns pv3 ph2">
-        <h1 className="f2-ns black">Three Easy Steps to Get Connected With Millions<br />
-          of Enterprises All Around The World</h1>
-        <div className="flex-ns justify-center pv5">
-          <div className="w-30-ns w-100">
-            <img
-              style={{ width: '60px' }}
-              src={attractiveCompanyIcon} />
-            <h1 className="f3-ns f4 black lh-2">Create an Attractive<br /> Company Profile</h1>
-          </div>
-          <div className="w-30-ns w-100">
-            <img
-              style={{ width: '60px' }}
-              src={verificationIcon} />
-            <h1 className="f3-ns f4 black lh-2">Get Verified</h1>
-          </div>
-          <div className="w-30-ns w-100">
-            <img
-              style={{ width: '60px' }}
-              src={growNetworkIcon} />
-            <h1 className="f3-ns f4 black lh-2">Start approaching Tribes<br />
-              to grow your network<br />
-              immediately.
-          </h1>
-          </div>
+      <CustomView condition={!isMobileOnly}>
+        <div className="w-80-ns w-100 center pv5 ph3-ns tc titleText">
+          <span style={{ color: '#588F8F', fontWeight: 'bold' }}>
+            Tribe Feature To Create Alliances with Thousands of Small &amp; Medium Enterprises.
+          </span><br />
+          Then Start Working In Projects With Them in TiGrow Workplace. Why Waste Time Switching Between Multiple Platforms!!
         </div>
-        <a
-          href="/signup"
-          className="grow ph4 pointer f5 fw6 pv3"
-          style={{
-            background: '#474DBB',
-            outline: 'none',
-            color: 'white',
-            borderRadius: '25px',
-            border: 'none',
-            height: '50px'
-          }}
-          type="submit"
-        >Create your company profile for free</a>
+      </CustomView>
+      <div className="flex items-center pv5-ns pv4 ph2" style={{ backgroundColor: 'rgba(215, 197, 255, 0.4)', flexDirection: 'column' }}>
+        <div className="w-80-ns w-100 tc center mb4-ns mb0-ns secondaryText" style={{ fontWeight: 'bold', color: '#3E5578' }}>
+          It's Completely Free for 15 Days, Let's Onboard
+        </div>
+        <a href="/signin" className="tryLink light mt2">Try for free</a>
       </div>
-      <div
-        className="pv4 tc"
-        style={{ background: '#474DBB' }}
-      >
-        <h1 className="f2-ns white">Don't Miss Any Updates</h1>
-        <div className="dt center w-34-ns w-80 mb5">
+      <div className="flex-ns items-center ph6-ns pt5-ns pb0-ns pv3">
+        <div className="w-80-ns w-100 center">
+          <CustomView condition={!isMobileOnly}>
+            <div className="flex-ns items-baseline w-100">
+              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack1} alt="packages" /></a>
+              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack2} alt="packages" /></a>
+              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack3} alt="packages" /></a>
+            </div>
+          </CustomView>
+          <MobileOnlyView>
+            <div className="carousel">
+              <Carousel additionalTransfrom={-window.innerWidth / 2} arrows={false} responsive={responsive} centerMode={true} showDots={true} sliderClass="items-baseline" className="pb4" renderDotsOutside swipeable draggable infinite>
+                <a href="/signup" className="center"><img className="w-100" src={pack1} alt="packages" /></a>
+                <a href="/signup" className="center"><img className="w-100" src={pack2} alt="packages" /></a>
+                <a href="/signup" className="center"><img className="w-100" src={pack3} alt="packages" /></a>
+              </Carousel>
+            </div>
+          </MobileOnlyView>
+        </div>
+      </div>
+      <div className="w-70 center pt4-ns tc titleText silver" style={{ color: 'gray', fontWeight: 900 }}>
+        Trusted by over 1,000 customers world-wide
+      </div>
+      <div className="w-70 center pb4-ns">
+        <img src={isMobileOnly ? customersMobile : customers} alt="customers" />
+      </div>
+      <div className="pv4-ns pv2 tc" style={{ background: '#43466D' }}>
+        <h1 className="primaryText white">Join Today</h1>
+        <div className="dt center w-34-ns w-80 mb3">
           <EmailVerificationForm />
         </div>
-        <small className="white">
-          © 2019 TiGrow Inc. - House 208, Road 12, Mohakhali DOHS, Dhaka, 1205, Bangladesh
+        <div className="dt center w-34-ns w-80 mb5-ns mb3 footerText">
+          Contact us at rubaiyat@tigrow.co for Enterprise Solution
+        </div>
+        <small className="white footerText">
+          © {(new Date().getFullYear())} TiGrow Inc. - House 208, Road 12, Mohakhali DOHS, Dhaka, 1205, Bangladesh
           </small>
       </div>
     </div>
