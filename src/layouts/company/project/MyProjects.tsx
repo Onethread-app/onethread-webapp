@@ -16,7 +16,7 @@ import { RightSidebar } from 'components/RightSidebar';
 import { FormProject } from './CreateProjectForm';
 import { ChangeName } from './ChangeProjectName';
 import { find } from 'lodash';
-import { boardColor, unreadMessageNotification } from 'stores/UtilsActions';
+import { Color, unreadMessageNotification } from 'stores/UtilsActions';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { getAllDepartments } from '../../../stores/company/Actions';
 import {
@@ -57,20 +57,20 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     props.role === 'admin'
       ? setShowUpdateNameDialog(true)
       : projectRules(props.optionalRole)[props.role].includes(
-          'updateProjectPreface'
-        )
-      ? setShowUpdateNameDialog(true)
-      : setOpen(true);
+        'updateProjectPreface'
+      )
+        ? setShowUpdateNameDialog(true)
+        : setOpen(true);
   };
 
   const checkRoleForArchiveProject = (projectId: string) => {
     props.role === 'admin'
       ? projectArchive(projectId)
       : projectRules(props.optionalRole)[props.role].includes(
-          'updateProjectPreface'
-        )
-      ? projectArchive(projectId)
-      : setOpen(true);
+        'updateProjectPreface'
+      )
+        ? projectArchive(projectId)
+        : setOpen(true);
   };
   useEffect(() => {
     props.getAllProjects();
@@ -125,10 +125,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                     style={{
                       borderLeft: `5px solid 
                     ${
-                      find(boardColor, ['code', project.color])
-                        ? find(boardColor, ['code', project.color])!.value
-                        : 'white'
-                    }`,
+                        find(Color, ['code', project.color])
+                          ? find(Color, ['code', project.color])!.value
+                          : 'white'
+                        }`,
                       // TODO use dictionary
                       // borderLeft: '5px solid',
                       paddingLeft: '20px',
@@ -170,8 +170,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                               />
                             </Menu>
                           ) : (
-                            'Loading..'
-                          )
+                              'Loading..'
+                            )
                         }
                         target={
                           <Button
@@ -189,16 +189,16 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                         }
                       />
                       {props.companyRooms &&
-                      unreadMessageNotification(
-                        props.companyRooms,
-                        'project',
-                        project._id
-                      ) ? (
-                        <span
-                          className="ml1 br-100 bg-red"
-                          style={{ width: '7px', height: '7px' }}
-                        ></span>
-                      ) : null}
+                        unreadMessageNotification(
+                          props.companyRooms,
+                          'project',
+                          project._id
+                        ) ? (
+                          <span
+                            className="ml1 br-100 bg-red"
+                            style={{ width: '7px', height: '7px' }}
+                          ></span>
+                        ) : null}
                     </div>
                     <h3
                       className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
@@ -228,7 +228,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                         Assigned Members
                       </p>
                       <p className="fw8">
-                        {/* {board.members ? board.members.length : 0} */}
                         15
                       </p>
                     </div>
@@ -241,7 +240,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                     }
                   >
                     <ChangeName
-                      projectId={project._id}
+                      projectName={props.currentProject.name}
+                      projectId={props.currentProject._id}
                       setShowDialog={setShowUpdateNameDialog}
                     />
                   </RightSidebar>
@@ -270,10 +270,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                     style={{
                       borderLeft: `5px solid 
                       ${
-                        find(boardColor, ['code', archProject.color])
-                          ? find(boardColor, ['code', archProject.color])!.value
+                        find(Color, ['code', archProject.color])
+                          ? find(Color, ['code', archProject.color])!.value
                           : 'red'
-                      }`,
+                        }`,
                       // TODO use dictionary
                       // borderLeft: '5px solid red',
                       paddingLeft: '20px',
@@ -292,7 +292,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       >
                         {archProject.name}
                       </h3>
-                      <Popover
+                      {/* <Popover
                         className="w-10"
                         content={
                           <Menu className="pa2">
@@ -319,7 +319,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             className="outline-0"
                           />
                         }
-                      />
+                      /> */}
                     </div>
                     <h3
                       className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
@@ -399,7 +399,9 @@ const mapStateToProps = (state: any) => ({
     state.projectReducer.projectRole.projects.role,
   optionalRole:
     state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project.optionalRole
+    state.projectReducer.projectRole.projects.project.optionalRole,
+  currentProject: state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project
 });
 
 export const MyProject = connect(mapStateToProps, {
