@@ -405,7 +405,6 @@ const getProjectDetails = async (req, res, next) => {
     })
       .populate('files', 'link s3Key')
       .select('outline description color name');
-
     return sendJSONresponse(res, 200, project);
   } catch (error) {
     next(error);
@@ -443,15 +442,10 @@ const archiveProject = async (req, res, next) => {
         { $set: { removed: true } },
         { safe: true, upsert: true, new: true },
       );
-      const text = `${req.user.name} has archived a project ${project.name}`;
-
-      createCompanyRoleNotification(
-        { _id: project.company },
-        { _id: req.user._id, name: req.user.name },
-        text,
-        'project',
-      );
-
+      const text =`${req.user.name} has archived a project ${project.name}`;
+      
+      createCompanyRoleNotification({_id: project.company}, {_id:req.user._id, name: req.user.name}, text,'project' );
+        
       logger.info(`Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         message: `Archive a project`,
@@ -463,6 +457,7 @@ const archiveProject = async (req, res, next) => {
       });
     }
   } catch (error) {
+   
     logger.error(`${error}`);
     return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
       message: 'Project id is not found',
