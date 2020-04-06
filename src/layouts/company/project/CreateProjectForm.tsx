@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 import { Button, Icon, Tag } from '@blueprintjs/core';
-import { createBoard } from 'stores/board/Actions';
 import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import {
@@ -11,7 +10,7 @@ import {
   maxValue
 } from 'components/final-form/utils';
 import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
-import { boardColor, Entity } from 'stores/UtilsActions';
+import { Color, Entity } from 'stores/UtilsActions';
 import { isEqual, isEmpty } from 'lodash';
 import { Condition } from 'components/final-form/Condition';
 import { SuggestFieldWithError } from 'components/fields/SuggestField';
@@ -353,7 +352,7 @@ const FormComponent = (props: {
                       Label
                     </p>
                     <div className="flex">
-                      {boardColor.map(color => (
+                      {Color.map(color => (
                         <div className="pr2" key={color.code}>
                           <Icon
                             className="br2"
@@ -427,7 +426,6 @@ const mapStateToProps = (state: any) => {
 };
 
 export const FormProject = connect(mapStateToProps, {
-  createBoard,
   createProject,
   getAllDepartments
 })(FormComponent);
