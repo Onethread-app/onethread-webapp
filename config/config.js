@@ -34,6 +34,7 @@ const envVarsSchema = Joi.object({
   REDIS_HOST: Joi.string()
     .required()
     .description('Redis DB host url'),
+  REDIS_PASSWORD: Joi.string().required(),
   REDIS_PORT: Joi.number(),
   EMAIL_ADDRESS: Joi.string()
     .required()

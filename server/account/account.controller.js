@@ -44,7 +44,7 @@ const register = async (req, res, next) => {
     lastName: data.lastName,
   })
     .exec()
-    .then(result => {
+    .then((result) => {
       let firstName = slug(data.firstName, {
         replacement: '-',
         symbols: true,
@@ -75,7 +75,7 @@ const register = async (req, res, next) => {
   });
   await account
     .save()
-    .then(async user => {
+    .then(async (user) => {
       await chatkit.createUser({
         id: user._id,
         name: user.name,
@@ -92,15 +92,15 @@ const register = async (req, res, next) => {
       }).select('-__v -createdAt -updatedAt');
 
       if (pendingMember.length > 0) {
-        let pendingMemberToMember = pendingMember.map(m => {
+        let pendingMemberToMember = pendingMember.map((m) => {
           return { account: account._id, company: m.company };
         });
 
         const pendingMemberToMemberAccounts = pendingMemberToMember.map(
-          member => member.account,
+          (member) => member.account,
         );
         const pendingMemberToMemberCompany = pendingMemberToMember.map(
-          member => member.company,
+          (member) => member.company,
         );
 
         await Member.create(pendingMemberToMember);
@@ -113,7 +113,7 @@ const register = async (req, res, next) => {
           select: '_id name firstName lastName email',
         });
 
-        const memberStructure = data => {
+        const memberStructure = (data) => {
           return {
             mongo_id: data.mongo_id,
             account: data.account,
@@ -155,7 +155,7 @@ const register = async (req, res, next) => {
         message: 'User created',
       });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -331,20 +331,20 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
     let multi = client.multi();
     multi.get(`verifyAccountToken:${req.params.token}`);
-    multi.exec(function(err, data) {
+    multi.exec(async (err, data) => {
       if (err) {
         logger.error(`${err}`);
         next(err);
       }
       let userID = JSON.parse(data[0]);
       if (typeof userID === 'string') {
-        const user = Account.findByIdAndUpdate(
+        const user = await Account.findByIdAndUpdate(
           { _id: userID },
           { $set: { isAccountVerified: true } },
           { safe: true, upsert: true, new: true },
         ).exec();
         client.del(`verifyAccountToken:${req.params.token}`);
-        setDocument(accountIndex, '_doc', {
+        await setDocument(accountIndex, '_doc', {
           mongo_id: user._id,
           name: user.name,
           email: user.email,
@@ -387,7 +387,7 @@ const accountUpdate = async (req, res, next) => {
   )
     .select('-password')
     .exec()
-    .then(async user => {
+    .then(async (user) => {
       if (user) {
         if (req.body.name !== user.name) {
           await chatkit.updateUser({
@@ -434,7 +434,7 @@ const accountUpdate = async (req, res, next) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`${err}`);
       next(err);
     });
@@ -522,20 +522,18 @@ const resetPassword = async (req, res, next) => {
     const { password, token } = req.body;
     let multi = client.multi();
     multi.get(`resetPasswordToken:${token}`);
-    multi.exec(function(err, data) {
+    multi.exec(async (err, data) => {
       if (err) {
         logger.error(`${err}`);
         next(err);
       }
       let userID = JSON.parse(data[0]);
       if (typeof userID === 'string') {
-        Account.findByIdAndUpdate(
-          {
-            _id: userID,
-          },
-          { $set: { password: password } },
-          { new: true, upsert: true },
-        ).exec();
+        const user = await Account.findById({
+          _id: userID,
+        });
+        user.password = password;
+        await user.save();
         logger.info(`password successfully change`);
         client.del(`resetPasswordToken:${token}`);
         logger.info(`delete reset password token from tokenList`);
@@ -561,7 +559,7 @@ const tokenRefresh = async (req, res, next) => {
     let isBlackListed;
     let multi = client.multi();
     multi.get(`BlackList:${refreshToken}`);
-    multi.exec(function(err, data) {
+    multi.exec(function (err, data) {
       // if data object is null token is not blacklisted
       if (data[0] === null) {
         isBlackListed = false;
@@ -578,7 +576,7 @@ const tokenRefresh = async (req, res, next) => {
       await jwt.verify(
         refreshToken,
         config.refreshTokenSecret,
-        async function(err, user) {
+        async function (err, user) {
           if (err) {
             return sendErrorResponse(res, 401, 'AuthError', {
               message: err.message,

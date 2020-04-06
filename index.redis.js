@@ -5,30 +5,38 @@ bluebird.promisifyAll(redis);
 const config = require('./config/config');
 const logger = require('./config/winston');
 
-const client = new RedisClustr({
-  servers: [
-    {
-      host: config.redis.host,
-      port: config.redis.port,
-    },
-  ],
-  slotInterval: 1000, // default: none. Interval to repeatedly re-fetch cluster slot configuration
-  maxQueueLength: 100, // default: no limit. Maximum length of the getSlots queue (basically number of commands that can be queued whilst connecting to the cluster)
-  queueShift: false, // default: true. Whether to shift the getSlots callback queue when it's at max length (error oldest callback), or to error on the new callback
-  wait: 5000, // default: no timeout. Max time to wait to connect to cluster before sending an error to all getSlots callbacks
-  slaves: 'share',
-  createClient: (port, host) => {
-    // this is the default behaviour
-    return redis.createClient(port, host);
+const client = redis.createClient({
+  retry_strategy: function (options) {
+    if (options.error && options.error.code === 'ECONNREFUSED') {
+      logger.error(`The server refused the connection`);
+      return new Error('The server refused the connection');
+    }
+    if (options.total_retry_time > 1000 * 60 * 60) {
+      logger.error('Retry time exhausted');
+      return new Error('Retry time exhausted');
+    }
+    if (options.attempt > 10) {
+      return undefined;
+    }
+    // reconnect after
+    return Math.min(options.attempt * 100, 3000);
   },
+  port: config.redis.port,
+  host: config.redis.host,
+});
+client.auth(config.redis.password, (err, response) => {
+  if (err) {
+    logger.error(`${err}`);
+  }
+  logger.info(`authentication: ${response}`);
 });
 client.on('connect', () => {
   logger.info('REDIS ready');
 });
-client.on('error', err => {
+client.on('error', (err) => {
   logger.error('REDIS ' + err.message);
 });
-client.on('end', function() {
+client.on('end', function () {
   logger.info('REDIS disconnect');
 });
 // client.quit();
