@@ -279,7 +279,7 @@
     }
 }
 
-@media only screen and (max-width: 414px) {
+@media only screen and (max-width: 505px) {
     .companyLogo{
         margin-left: -9.5rem;
     }
