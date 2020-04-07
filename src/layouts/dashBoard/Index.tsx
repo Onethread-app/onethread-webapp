@@ -1,6 +1,6 @@
 import { User } from 'stores/user/Reducer';
 import React, { useState, useEffect } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Card, Dialog } from '@blueprintjs/core';
 import addIcon from '../../resources/images/addIcon.png';
 import { AnnouncementEditor } from './announcementEditor';
@@ -9,6 +9,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
+import { ADD_TOTAL_ASSOCIATE, ADD_TOTAL_MEMBER } from 'stores/company/Types';
 
 interface DashBoardViewProps {
   user: User;
@@ -21,7 +22,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [showAnnouncementDialog, setShowAnnouncementDialog] = useState(false);
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
-
+  const dispatch = useDispatch();
   useEffect(() => {
 
     async function getAPI() {
@@ -30,7 +31,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
         const response = await tigrowApi.get(
           `company/${props.company!._id}/dashboard`,
           headers);
-
+        dispatch({ type: ADD_TOTAL_ASSOCIATE, payload: response.data.data.totalAssociates });
+        dispatch({ type: ADD_TOTAL_MEMBER, payload: response.data.data.totalEmployee });
         await setDashboard(response.data.data);
         await props.getCompanyAnnouncement();
         await setLoading(false);
