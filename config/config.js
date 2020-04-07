@@ -6,7 +6,7 @@ require('dotenv').config();
 // define validation for all the env vars
 const envVarsSchema = Joi.object({
   NODE_ENV: Joi.string()
-    .allow(['development', 'production', 'test', 'provision'])
+    .allow(['development', 'production', 'test', 'local'])
     .default('development'),
   PORT: Joi.number().default(4040),
   MONGOOSE_DEBUG: Joi.boolean().when('NODE_ENV', {
@@ -14,9 +14,7 @@ const envVarsSchema = Joi.object({
     then: Joi.boolean().default(true),
     otherwise: Joi.boolean().default(false),
   }),
-  JWT_SECRET: Joi.string()
-    .required()
-    .description('JWT Secret required to sign'),
+
   JWT_ACCESS_TOKEN: Joi.string()
     .required()
     .description('JWT Access token Secret required to sign'),
@@ -36,28 +34,15 @@ const envVarsSchema = Joi.object({
   REDIS_HOST: Joi.string()
     .required()
     .description('Redis DB host url'),
+  REDIS_PASSWORD: Joi.string().required(),
   REDIS_PORT: Joi.number(),
-  REDIS_PASSWORD: Joi.string()
-    .required()
-    .description('password should be required'),
   EMAIL_ADDRESS: Joi.string()
     .required()
     .description('email address required'),
   EMAIL_PASSWORD: Joi.string()
     .required()
     .description('password required'),
-  FACEBOOK_ID: Joi.string()
-    .required()
-    .description('facebook id required'),
-  FACEBOOK_SECRET: Joi.string()
-    .required()
-    .description('facebook secret key required'),
-  GOOGLE_CLIENT_ID: Joi.string()
-    .required()
-    .description('Google client id required'),
-  GOOGLE_CLIENT_SECRET: Joi.string()
-    .required()
-    .description('Google client secret required'),
+
   INSTANCE_LOCATOR: Joi.string()
     .required()
     .description('INSTANCE_LOCATOR required'),
@@ -89,7 +74,6 @@ const config = {
   env: envVars.NODE_ENV,
   port: envVars.PORT,
   mongooseDebug: envVars.MONGOOSE_DEBUG,
-  jwtSecret: envVars.JWT_SECRET,
   accessTokenSecret: envVars.JWT_ACCESS_TOKEN,
   refreshTokenSecret: envVars.JWT_REFRESH_TOKEN,
   accessTokenExpire: envVars.JWT_EXPIRATION,
@@ -105,10 +89,6 @@ const config = {
   },
   emailAddress: envVars.EMAIL_ADDRESS,
   emailPassword: envVars.EMAIL_PASSWORD,
-  facebookID: envVars.FACEBOOK_ID,
-  facebookSecret: envVars.FACEBOOK_SECRET,
-  googleClientID: envVars.GOOGLE_CLIENT_ID,
-  googleClientSecret: envVars.GOOGLE_CLIENT_SECRET,
   instanceLocator: envVars.INSTANCE_LOCATOR,
   pusherKey: envVars.PUSHER_KEY,
   awsAccessKey: envVars.AWS_ACCESS_KEY,

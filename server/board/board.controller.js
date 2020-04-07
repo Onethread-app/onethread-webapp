@@ -75,7 +75,7 @@ const create = async (req, res, next) => {
     
     const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
     createBoardNotification(project, {_id:req.user._id, name: req.user.name}, text );
-   const createdBoard = board.save()
+   const createdBoard = await board.save()
       
     return res.status(201).json(createdBoard);
       

@@ -59,7 +59,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       // create an id of map array
       let reqObjectMap = associates.map(async data => {
         let reqObject = {};
-        reqObject.cid = req.params.companyId;
+        reqObject.company = req.params.companyId;
         reqObject.associate = data._id;
         reqObject.isAccepted = false;
         reqObject.project = project._id;
@@ -75,9 +75,10 @@ const createNewProjectForCompany = async (req, res, next) => {
       // // Insert project request
       associateId.forEach(async data => {
         let associate = await Associate.findOne({
-          $and: [
+          $or: [
             {
-              associateCompany: data,
+              company: data,
+              associateCompany: { $in: data },
             },
             { isAccepted: true, isRejected: false },
           ],
@@ -85,6 +86,7 @@ const createNewProjectForCompany = async (req, res, next) => {
           .populate('associateCompany', '_id name type')
           .populate('company', '_id name type')
           .exec();
+
         const text = `${associate.company.name} wants to create a associate project ${project.name} with your ${associate.associateCompany.name} `;
         createCompanyRoleNotification(
           associate.company._id,
@@ -251,11 +253,11 @@ const acceptProjectRequest = async (req, res, next) => {
       { safe: true, new: true, upsert: true },
     );
     logger.info(`project request accept for ${req.query.pid}`);
-    let associate = await Associate.updateOne(
+    let associate = await Associate.findOneAndUpdate(
       {
         $or: [
           { company: req.params.companyId },
-          { associate: req.params.companyId },
+          { associateCompany: { $in: req.params.companyId } },
         ],
       },
       {
@@ -264,7 +266,10 @@ const acceptProjectRequest = async (req, res, next) => {
       { new: true, upsert: true },
     );
     let asso = await Associate.findOne({
-      associateCompany: req.params.companyId,
+      $or: [
+        { company: req.params.companyId },
+        { associateCompany: { $in: req.params.companyId } },
+      ],
     }).populate('associateCompany', '_id name type');
     const text = `${asso.company.name} has accepted request `;
     createCompanyRoleNotification(

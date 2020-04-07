@@ -5,7 +5,7 @@ const id = Joi.object().keys({
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required()
-    .error(errors => {
+    .error((errors) => {
       return {
         message: 'Invalid ID',
       };
@@ -39,26 +39,15 @@ const schema = {
     'Other',
   ]),
   address: Joi.string().max(120),
-  about: Joi.string()
-    .allow('')
-    .max(2000),
-  email: Joi.string()
-    .email()
-    .lowercase()
-    .allow(''),
+  about: Joi.string().allow('').max(2000),
+  email: Joi.string().email().lowercase().allow(''),
   legalOwnerName: Joi.string().allow(''),
-  legalOwnerMail: Joi.string()
-    .email()
-    .lowercase()
-    .allow(''),
+  legalOwnerMail: Joi.string().email().lowercase().allow(''),
   products: Joi.array()
     .min(1)
     .max(5)
     .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
-  optionalRole: Joi.array()
-    .min(0)
-    .max(7)
-    .items(Joi.string()),
+  optionalRole: Joi.array().min(0).max(7).items(Joi.string()),
   location: Joi.string(),
   websites: Joi.array()
     .max(3)
@@ -69,7 +58,7 @@ const schema = {
         )
         .required(),
     )
-    .error(errors => {
+    .error((errors) => {
       return {
         message: 'URL should starts with [http://] or [https://]',
       };
@@ -96,9 +85,7 @@ const schema = {
     '1001 -2000 square meters',
     'above 2000 square meters',
   ]),
-  announcement: Joi.string()
-    .max(500)
-    .allow(''),
+  announcement: Joi.string().max(500),
 };
 
 module.exports = {

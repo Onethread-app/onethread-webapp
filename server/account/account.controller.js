@@ -44,7 +44,7 @@ const register = async (req, res, next) => {
     lastName: data.lastName,
   })
     .exec()
-    .then(result => {
+    .then((result) => {
       let firstName = slug(data.firstName, {
         replacement: '-',
         symbols: true,
@@ -75,7 +75,7 @@ const register = async (req, res, next) => {
   });
   await account
     .save()
-    .then(async user => {
+    .then(async (user) => {
       await chatkit.createUser({
         id: user._id,
         name: user.name,
@@ -92,15 +92,15 @@ const register = async (req, res, next) => {
       }).select('-__v -createdAt -updatedAt');
 
       if (pendingMember.length > 0) {
-        let pendingMemberToMember = pendingMember.map(m => {
+        let pendingMemberToMember = pendingMember.map((m) => {
           return { account: account._id, company: m.company };
         });
 
         const pendingMemberToMemberAccounts = pendingMemberToMember.map(
-          member => member.account,
+          (member) => member.account,
         );
         const pendingMemberToMemberCompany = pendingMemberToMember.map(
-          member => member.company,
+          (member) => member.company,
         );
 
         await Member.create(pendingMemberToMember);
@@ -113,7 +113,7 @@ const register = async (req, res, next) => {
           select: '_id name firstName lastName email',
         });
 
-        const memberStructure = data => {
+        const memberStructure = (data) => {
           return {
             mongo_id: data.mongo_id,
             account: data.account,
@@ -155,7 +155,7 @@ const register = async (req, res, next) => {
         message: 'User created',
       });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -329,60 +329,46 @@ const timeline = async (req, res, next) => {
 // token verification for mail
 const getAccessTokenForVerifyAccount = async (req, res, next) => {
   try {
-    let userID = '';
-    await client
-      .multi()
-      .get(`verifyAccountToken:${req.params.token}`)
-      .execAsync()
-      .then(data => {
-        userID = JSON.parse(data[0]);
-      })
-      .catch(err => {
+    let multi = client.multi();
+    multi.get(`verifyAccountToken:${req.params.token}`);
+    multi.exec(async (err, data) => {
+      if (err) {
+        logger.error(`${err}`);
         next(err);
-      });
-    if (!userID)
-      return sendErrorResponse(res, 400, 'TokenExpireError', {
-        isAccountVerified: false,
-        message: 'Link is expired',
-      });
-    const user = await Account.findByIdAndUpdate(
-      { _id: userID },
-      { $set: { isAccountVerified: true } },
-      { safe: true, upsert: true, new: true },
-    );
+      }
+      let userID = JSON.parse(data[0]);
+      if (typeof userID === 'string') {
+        const user = await Account.findByIdAndUpdate(
+          { _id: userID },
+          { $set: { isAccountVerified: true } },
+          { safe: true, upsert: true, new: true },
+        ).exec();
+        client.del(`verifyAccountToken:${req.params.token}`);
+        await setDocument(accountIndex, '_doc', {
+          mongo_id: user._id,
+          name: user.name,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        });
 
-    await client.del(`verifyAccountToken:${req.params.token}`);
-
-    await setDocument(accountIndex, '_doc', {
-      mongo_id: user._id,
-      name: user.name,
-      email: user.email,
-      firstName: user.firstName,
-      lastName: user.lastName,
-    });
-
-    logger.info(
-      chalk.blueBright(
-        `ElasticSearch document added on ${accountIndex}`,
-      ),
-    );
-
-    //  const response  =  await elasticService.set('accounts','_doc',{
-    //     mongo_id : user._id,
-    //     name: user.name,
-    //     email: user.email,
-    //     firstName: user.firstName,
-    //     lastName: user.lastName
-    //   })
-
-    //   logger.info(` ✔ ️Elasticsearch document ${response.result}`);
-
-    return sendJSONresponse(res, 200, {
-      isAccountVerified: true,
-      message: 'Account Verified Successfully',
+        logger.info(
+          chalk.blueBright(
+            `ElasticSearch document added on ${accountIndex}`,
+          ),
+        );
+        return sendJSONresponse(res, 200, {
+          isAccountVerified: true,
+          message: 'Account Verified Successfully',
+        });
+      } else {
+        return sendErrorResponse(res, 400, 'TokenExpireError', {
+          isAccountVerified: false,
+          message: 'Link is expired',
+        });
+      }
     });
   } catch (err) {
-    logger.error(err);
     next(err);
   }
 };
@@ -401,7 +387,7 @@ const accountUpdate = async (req, res, next) => {
   )
     .select('-password')
     .exec()
-    .then(async user => {
+    .then(async (user) => {
       if (user) {
         if (req.body.name !== user.name) {
           await chatkit.updateUser({
@@ -410,45 +396,46 @@ const accountUpdate = async (req, res, next) => {
           });
         }
 
-        if (typeof user.about !== 'undefined') {
-          client.hmset(`userID:${user._id}`, 'about', user.about);
-          logger.info(`about added into ${user.email}'s cache`);
-        }
-        if (typeof user.location !== 'undefined') {
-          client.hmset(
-            `userID:${user._id}`,
-            'location',
-            user.location,
-          );
-          logger.info(`location added into ${user.email}'s cache`);
-        }
-        if (typeof user.gender !== 'undefined') {
-          client.hmset(`userID:${user._id}`, 'gender', user.gender);
-          logger.info(`gender added into ${user.email}'s cache`);
-        }
-        if (typeof user.bloodGroup !== 'undefined') {
-          client.hmset(
-            `userID:${user._id}`,
-            'bloodGroup',
-            user.bloodGroup,
-          );
-          logger.info(`bloodGroup added into ${user.email}'s cache`);
-        }
-        if (typeof user.position !== 'undefined') {
-          client.hmset(
-            `userID:${user._id}`,
-            'position',
-            user.position,
-          );
-          logger.info(`postion added into ${user.email}'s cache`);
-        }
+        // if (typeof user.about !== 'undefined') {
+        //   client.hmset(`userID:${user._id}`, 'about', user.about);
+        //   logger.info(`about added into ${user.email}'s cache`);
+        // }
+        // if (typeof user.location !== 'undefined') {
+        //   client.hmset(
+        //     `userID:${user._id}`,
+        //     'location',
+        //     user.location,
+        //   );
+        //   logger.info(`location added into ${user.email}'s cache`);
+        // }
+        // if (typeof user.gender !== 'undefined') {
+        //   client.hmset(`userID:${user._id}`, 'gender', user.gender);
+        //   logger.info(`gender added into ${user.email}'s cache`);
+        // }
+        // if (typeof user.bloodGroup !== 'undefined') {
+        //   client.hmset(
+        //     `userID:${user._id}`,
+        //     'bloodGroup',
+        //     user.bloodGroup,
+        //   );
+        //   logger.info(`bloodGroup added into ${user.email}'s cache`);
+        // }
+        // if (typeof user.position !== 'undefined') {
+        //   client.hmset(
+        //     `userID:${user._id}`,
+        //     'position',
+        //     user.position,
+        //   );
+        //   logger.info(`postion added into ${user.email}'s cache`);
+        // }
 
         return sendJSONresponse(res, 200, {
           message: 'profile updated',
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
+      logger.error(`${err}`);
       next(err);
     });
 };
@@ -533,32 +520,31 @@ const sendEmailForForgetPassword = async (req, res, next) => {
 const resetPassword = async (req, res, next) => {
   try {
     const { password, token } = req.body;
-    let userID = '';
-    await client
-      .multi()
-      .get(`resetPasswordToken:${token}`)
-      .execAsync()
-      .then(data => {
-        userID = JSON.parse(data[0]);
-      })
-      .catch(err => {
+    let multi = client.multi();
+    multi.get(`resetPasswordToken:${token}`);
+    multi.exec(async (err, data) => {
+      if (err) {
+        logger.error(`${err}`);
         next(err);
-      });
-
-    if (!userID)
-      return sendErrorResponse(res, 401, 'TokenExpireError', {
-        message: 'Time is expired',
-      });
-    const user = await Account.findById({
-      _id: userID,
-    });
-    user.password = password;
-    await user.save();
-    logger.info(`password successfully change`);
-    await client.del(`resetPasswordToken:${token}`);
-    logger.info(`delete reset password token from tokenList`);
-    return sendJSONresponse(res, 200, {
-      message: 'Password Changed',
+      }
+      let userID = JSON.parse(data[0]);
+      if (typeof userID === 'string') {
+        const user = await Account.findById({
+          _id: userID,
+        });
+        user.password = password;
+        await user.save();
+        logger.info(`password successfully change`);
+        client.del(`resetPasswordToken:${token}`);
+        logger.info(`delete reset password token from tokenList`);
+        return sendJSONresponse(res, 200, {
+          message: 'Password Changed',
+        });
+      } else {
+        return sendErrorResponse(res, 401, 'TokenExpireError', {
+          message: 'Time is expired',
+        });
+      }
     });
   } catch (err) {
     logger.error(`password does not change`);
@@ -571,21 +557,16 @@ const tokenRefresh = async (req, res, next) => {
     const refreshToken = req.body.refreshToken;
     // check if a refresh token exist in blacklist
     let isBlackListed;
-    await client
-      .multi()
-      .GET(`BlackList:${refreshToken}`)
-      .execAsync()
-      .then(data => {
-        // if data object is null token is not blacklisted
-        if (data[0] === null) {
-          isBlackListed = false;
-        } else {
-          isBlackListed = true;
-        }
-      })
-      .catch(err => {
-        next(err);
-      });
+    let multi = client.multi();
+    multi.get(`BlackList:${refreshToken}`);
+    multi.exec(function (err, data) {
+      // if data object is null token is not blacklisted
+      if (data[0] === null) {
+        isBlackListed = false;
+      } else {
+        isBlackListed = true;
+      }
+    });
 
     if (isBlackListed) {
       return sendErrorResponse(res, 401, 'AuthError', {
@@ -595,7 +576,7 @@ const tokenRefresh = async (req, res, next) => {
       await jwt.verify(
         refreshToken,
         config.refreshTokenSecret,
-        async function(err, user) {
+        async function (err, user) {
           if (err) {
             return sendErrorResponse(res, 401, 'AuthError', {
               message: err.message,

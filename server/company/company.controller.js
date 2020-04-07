@@ -290,7 +290,7 @@ const updateBasicInfo = async (req, res, next) => {
       message: `Company's basic information updated`,
     });
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -605,7 +605,7 @@ const noticePostByCompany = async (req, res, next) => {
     });
     logger.info(`new notice created`);
     await announcement.save();
-    const text = ` ${req.user.name} has created a announcement in ${req.params.companyId} company `;
+    const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
     createCompanyRoleNotification(
       { _id: req.params.companyId },
       { _id: req.user._id, name: req.user.name },
@@ -617,7 +617,6 @@ const noticePostByCompany = async (req, res, next) => {
       announcement,
     });
   } catch (error) {
-    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
