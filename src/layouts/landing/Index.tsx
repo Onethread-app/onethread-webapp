@@ -7,7 +7,6 @@ import "react-multi-carousel/lib/styles.css";
 import './styles.css';
 
 import tigrowLogo from './../../resources/homepageImages/tigrowLogo.svg';
-import tigrowLogoMob from './../../resources/homepageImages/tigrowLogoMobile.svg';
 import heroSection from "./../../resources/homepageImages/heroSection.png";
 import projects from "./../../resources/homepageImages/projects.png";
 import projectsMobile from "./../../resources/homepageImages/projectsMobile.png";
@@ -24,11 +23,14 @@ import customersMobile from "./../../resources/homepageImages/customersMobile.pn
 import pack1 from "./../../resources/homepageImages/pack1.png";
 import pack2 from "./../../resources/homepageImages/pack2.png";
 import pack3 from "./../../resources/homepageImages/pack3.png";
-import offers from "./../../resources/homepageImages/offers.png";
-import offersMobile from "./../../resources/homepageImages/offersMobile.png";
 import service from './../../resources/homepageImages/service.png';
 import request from './../../resources/homepageImages/requestsMobile.png';
 import meet from './../../resources/homepageImages/meet.png';
+import offer1 from './../../resources/homepageImages/offertshirt.png';
+import offer2 from './../../resources/homepageImages/offerbags.svg';
+import offer3 from './../../resources/homepageImages/offerjackets.svg';
+import offer4 from './../../resources/homepageImages/offerlining.svg';
+import offer5 from './../../resources/homepageImages/offerdyes.svg';
 
 export const HomePage = () => {
 
@@ -40,7 +42,7 @@ export const HomePage = () => {
     },
     desktop: {
       breakpoint: { max: 3000, min: 1024 },
-      items: 1,
+      items: 4,
       partialVisibilityGutter: 20
     },
     tablet: {
@@ -60,11 +62,9 @@ export const HomePage = () => {
       <div>
         <Navbar className="ph5-ns shadow-0 fixed pv2 flex justify-between h-auto" >
           <Navbar.Group align={Alignment.LEFT}>
-            {isMobileOnly ?
-              <img src={tigrowLogoMob} className="companyLogo" alt="Site Logo" /> :
-              <img src={tigrowLogo} className="companyLogo" alt="Site Logo" />}
+            <img src={tigrowLogo} className="companyLogo" alt="Site Logo" />
           </Navbar.Group>
-          <Navbar.Group align={Alignment.RIGHT} >
+          <Navbar.Group align={Alignment.RIGHT} className="mt3-ns">
             <a href="/signin" className="tryLink">Try for free</a>
           </Navbar.Group>
         </Navbar>
@@ -103,7 +103,7 @@ export const HomePage = () => {
                   Test drive with 15-day free trial
                 </li>
               </ul>
-              <div className='demoLink'>
+              <div className='demoLink' style={{ marginTop: '25px' }}>
                 <a href="/signin" className="tryLink">Try for free</a>
               </div>
             </div>
@@ -152,7 +152,7 @@ export const HomePage = () => {
                   Test drive with 15-day free trial
                 </li>
               </ul>
-              <div className='demoLink flex items-cemter'>
+              <div className='demoLink flex items-cemter' style={{ marginTop: '25px' }}>
                 <a href="/signin" className="tryLink">Try for free</a>
               </div>
             </div>
@@ -160,8 +160,8 @@ export const HomePage = () => {
         </MobileOnlyView>
       </div>
       <div className="w-70-ns w-80 center pv5-ns tc titleText">
-        Use TiGrow Workplace For Remote Working With Teams, For Vendor Management &amp; To Collaborate With<br />
-        All Of Your Stakeholders At One <br />Place.
+        Use TiGrow Workplace For Remote Working With Teams, For Vendor Management &amp; <br /> To Collaborate With
+        All Of Your Stakeholders At One Place.
       </div>
       <div className="flex-ns items-center pl4-ns pl4 ph2 pv4-ns">
         <div className="pl5-ns w-60-ns h-100-ns w-100 h-100">
@@ -259,16 +259,25 @@ export const HomePage = () => {
           <img src={isMobileOnly ? request : service} alt="funtionality tabs" />
         </div>
       </div>
-      <div className="flex-ns items-center ph6-ns pv3-ns pv3">
-        <div className="w-90-ns w-100 center">
-          <img src={isMobileOnly ? offersMobile : offers} className="w-100" alt="top offers" />
+      <div className="pv3-ns pv3">
+        <div className="w-80-ns w-100 center">
+          <h1>Top Offers</h1>
+          <div className="carousel">
+            <Carousel arrows={true} responsive={responsive} centerMode={true} sliderClass="items-baseline" className="pb4" renderDotsOutside swipeable draggable infinite>
+              <img className="w-100" src={offer1} alt="packages" />
+              <img className="w-100" src={offer2} alt="packages" />
+              <img className="w-100" src={offer3} alt="packages" />
+              <img className="w-100" src={offer4} alt="packages" />
+              <img className="w-100" src={offer5} alt="packages" />
+            </Carousel>
+          </div>
         </div>
       </div>
       <CustomView condition={!isMobileOnly}>
         <div className="w-80-ns w-100 center pv5 ph3-ns tc titleText">
           <span className="black-50">
-          <span style={{ color: '#588F8F', fontWeight: 'bold' }}>
-            Tribe Feature To Create Alliances with Thousands of Small &amp; Medium Enterprises.
+            <span style={{ color: '#588F8F', fontWeight: 'bold' }}>
+              Tribe Feature To Create Alliances with Thousands of Small &amp; Medium Enterprises.
           </span><br />
           Then Start Working In Projects With Them in TiGrow Workplace. Why Waste Time Switching Between Multiple Platforms!!
           </span>
@@ -286,7 +295,7 @@ export const HomePage = () => {
             <div className="flex-ns items-baseline w-100">
               <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack1} alt="packages" /></a>
               <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack2} alt="packages" /></a>
-              <a href="/signup" className="w-30-ns center"><img className="w-100" src={pack3} alt="packages" /></a>
+              <a href="#footer" className="w-30-ns center"><img className="w-100" src={pack3} alt="packages" /></a>
             </div>
           </CustomView>
           <MobileOnlyView>
@@ -294,7 +303,7 @@ export const HomePage = () => {
               <Carousel additionalTransfrom={-window.innerWidth / 2} arrows={false} responsive={responsive} centerMode={true} showDots={true} sliderClass="items-baseline" className="pb4" renderDotsOutside swipeable draggable infinite>
                 <a href="/signup" className="center"><img className="w-100" src={pack1} alt="packages" /></a>
                 <a href="/signup" className="center"><img className="w-100" src={pack2} alt="packages" /></a>
-                <a href="/signup" className="center"><img className="w-100" src={pack3} alt="packages" /></a>
+                <a href="#footer" className="center"><img className="w-100" src={pack3} alt="packages" /></a>
               </Carousel>
             </div>
           </MobileOnlyView>
@@ -306,7 +315,7 @@ export const HomePage = () => {
       <div className="w-70 center pb4-ns">
         <img src={isMobileOnly ? customersMobile : customers} alt="customers" />
       </div>
-      <div className="pv4-ns pv2 tc" style={{ background: '#43466D' }}>
+      <div id="footer" className="pv4-ns pv2 tc" style={{ background: '#43466D' }}>
         <h1 className="primaryText white">Join Today</h1>
         <div className="dt center w-34-ns w-80 mb3">
           <EmailVerificationForm />
