@@ -186,8 +186,12 @@ export const HomePage = () => {
           <CustomView condition={!isMobileOnly}>
             <img src={chat} alt="" />
             <div className="titleText tc pv4">
-              <span style={{ color: '#588F8F' }}>Chat from anywhere through Rooms</span><br />Share your opinion, and your personality. Highlight Important <br /> Discussion in a group chat or in one-to-one messages.
-          </div>
+              <span className="black-50">
+                <span style={{ color: '#588F8F' }}>Chat from anywhere through Rooms</span><br />
+              Share your opinion, and your personality. Highlight Important <br />
+               Discussion in a group chat or in one-to-one messages.
+               </span>
+            </div>
             <img src={board} alt="" />
           </CustomView>
           <MobileOnlyView>
@@ -221,7 +225,10 @@ export const HomePage = () => {
       </div>
       <CustomView condition={!isMobileOnly}>
         <div className="w-70-ns w-100 center pv5-ns tc titleText">
-          <span style={{ color: '#588F8F' }}>Collaborate &amp; Manage Your Team from anywhere through Boards</span> Monitor your team performance, employee kpi's in real time. Assign tasks, subtasks, deadlines; get updated if the tasks are done or not.
+          <span className="black-50">
+            <span style={{ color: '#588F8F' }}>Collaborate &amp; Manage Your Team from anywhere through Boards</span>
+           Monitor your team performance, employee kpi's in real time. Assign tasks, subtasks, deadlines; get updated if the tasks are done or not.
+           </span>
         </div>
       </CustomView>
       <div className="flex-ns items-center pl4-l pl4 pv0-ns pv2 ph2" style={{ justifyContent: 'space-around' }}>
@@ -259,10 +266,12 @@ export const HomePage = () => {
       </div>
       <CustomView condition={!isMobileOnly}>
         <div className="w-80-ns w-100 center pv5 ph3-ns tc titleText">
+          <span className="black-50">
           <span style={{ color: '#588F8F', fontWeight: 'bold' }}>
             Tribe Feature To Create Alliances with Thousands of Small &amp; Medium Enterprises.
           </span><br />
           Then Start Working In Projects With Them in TiGrow Workplace. Why Waste Time Switching Between Multiple Platforms!!
+          </span>
         </div>
       </CustomView>
       <div className="flex items-center pv5-ns pv4 ph2" style={{ backgroundColor: 'rgba(215, 197, 255, 0.4)', flexDirection: 'column' }}>

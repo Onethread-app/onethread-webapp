@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { TaskBoard } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { boardColor } from 'stores/UtilsActions';
+import { Color } from 'stores/UtilsActions';
 import { Card, Elevation, HTMLSelect } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 import { connect } from 'react-redux';
@@ -46,8 +46,8 @@ const BoardCard = withRouter(
               style={{
                 borderLeft: `5px solid 
 							${
-                find(boardColor, ['code', board.color])
-                  ? find(boardColor, ['code', board.color])!.value
+                find(Color, ['code', board.color])
+                  ? find(Color, ['code', board.color])!.value
                   : 'white'
               }`, // TODO use dictionary
                 paddingLeft: '20px',

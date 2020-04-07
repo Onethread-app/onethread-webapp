@@ -82,7 +82,7 @@ export const Sidebar = (props: {
           </NavLink>
         ) : (
             <>
-              <NavLink
+              {companyPermit(props.company.role) && <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"
                 style={{ color: 'white' }}
@@ -111,8 +111,8 @@ export const Sidebar = (props: {
                     Dashboard
                   </span>
                 )}
-              </NavLink>
-              <NavLink
+              </NavLink>}
+              { companyPermit(props.company.role) && <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"
                 style={{ color: 'white' }}
@@ -141,8 +141,8 @@ export const Sidebar = (props: {
                     Profile
                   </span>
                 )}
-              </NavLink>
-              <NavLink
+              </NavLink>}
+              {companyPermit(props.company.role) && <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"
                 style={{ color: 'white' }}
@@ -171,7 +171,7 @@ export const Sidebar = (props: {
                     Colleague
                   </span>
                 )}
-              </NavLink>
+              </NavLink>}
               {companyPermit(props.company.role) && (
                 <NavLink
                   exact

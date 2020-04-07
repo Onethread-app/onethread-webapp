@@ -101,7 +101,7 @@ export const passwordValidation = (password: string) => {
   }
 };
 
-export const boardColor = [
+export const Color = [
   { code: 0, value: '#FA617F' },
   { code: 1, value: '#A8D16B' },
   { code: 2, value: '#FFD7D0' },
