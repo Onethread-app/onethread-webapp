@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { TextArea, Button } from '@blueprintjs/core';
 import { ICompany } from 'stores/company/Reducer';
 import { addAnnouncement } from 'stores/company/Actions';
+import { isEmpty } from 'lodash';
 
 interface AnnouncementEditorProps {
   setShowDialog: (val: boolean) => void;
@@ -35,18 +36,31 @@ const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
           }
           }
         />
-        <Button
-          type="submit"
-          onClick={async (e: any) => {
-            e.preventDefault();
-            await props.addAnnouncement(inputValues);
-            props.setShowDialog(false);
-          }}
-          className="w4 grow h2 pointer fr mv2"
-          style={{ background: '#3F61C5', outline: 'none', color: 'white' }}
-        >
-          Post
+        <div className="flex justify-end mv2">
+          <Button className="w4 grow h2 pointer mr3"
+            style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+            onClick={(e: any) => {
+              e.preventDefault();
+              props.setShowDialog(false);
+            }}
+          >
+            cancel
+        </Button>
+          <Button
+            type="submit"
+            onClick={async (e: any) => {
+              e.preventDefault();
+              if (!isEmpty(inputValues)) {
+                await props.addAnnouncement(inputValues);
+              }
+              props.setShowDialog(false);
+            }}
+            className="w4 grow h2 pointer fr"
+            style={{ background: '#3F61C5', outline: 'none', color: 'white' }}
+          >
+            Post
             </Button>
+        </div>
       </div>
     </>
   );
@@ -58,4 +72,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AnnouncementEditor = connect(mapStateToProps, {addAnnouncement})(AnnouncementEditorComponent);
+export const AnnouncementEditor = connect(mapStateToProps, { addAnnouncement })(AnnouncementEditorComponent);
