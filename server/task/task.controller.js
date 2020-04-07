@@ -182,13 +182,7 @@ const addMember = async (req, res, next) => {
         .populate([
           {
             path: 'assignedPerson account',
-            select: '_id firstName lastName profileImage',
-            populate: [
-              {
-                path: 'profileImage',
-                select: 'link',
-              },
-            ],
+            select: '_id firstName lastName profileImage'
           },
         ])
         .exec()
@@ -289,6 +283,17 @@ const dragTask = async (req, res, next) => {
       .populate('tasks', '_id name description dueDate')
       .exec();
 
+      const column = await BoardColumn.findOne({
+        _id: req.body.destinationColumnId,
+      }).populate({ 
+        path: 'boardId',
+        populate: {
+          path: 'project',
+          model: 'Project',
+          select: 'name company'
+        } 
+     });
+
     const text =`${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
     createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name}, text, 'task' );
     
@@ -313,12 +318,10 @@ const dragTask = async (req, res, next) => {
 
     res.status(200).send(responseData);
   } catch (error) {
+    console.log(error);
     logger.error(`Board column create: ${error}`);
-    const err = new BadRequestError(
-      'board column data is invalid.',
-      httpStatus.BAD_REQUEST,
-    );
-    next(err);
+    
+    next(error);
   }
 };
 

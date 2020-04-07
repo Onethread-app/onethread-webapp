@@ -201,7 +201,6 @@ module.exports.createTeamAddNotification = async (
       UserNotification.create(usersNotificationAll);
     }
   } catch (error) {
-    console.log(error);
     logger.error(`${error}`);
     //next(error);
   }
@@ -283,7 +282,8 @@ module.exports.createCompanyRoleNotification = async (
     await notification.save();
     await UserNotification.create(usersNotification);
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`);
+    next(error);
   }
 };
 
@@ -324,13 +324,6 @@ module.exports.createBoardNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
-    console.log(
-      9,
-      usersAccountNotificationCollegue,
-      usersAccountNotificationTeam,
-      allNotificationReciver,
-    );
-
     let usersNotificationAll = allNotificationReciver.map(m => {
       return {
         notification: notification._id,
@@ -364,7 +357,6 @@ module.exports.createBoardNotification = async (
     await notification.save();
     await UserNotification.create(usersNotificationAll);
   } catch (error) {
-    console.log(error);
     logger.error(`Board create: ${error}`);
 
     //next(error);
@@ -436,7 +428,7 @@ module.exports.seen = async (req, res, next) => {
       return sendJSONresponse(res, 200, { seen: true });
     })
     .catch(e => {
-      console.log(e);
+      logger.error(`${e}`);
       next(e);
     });
 };
@@ -444,7 +436,7 @@ module.exports.seen = async (req, res, next) => {
 module.exports.read = async (req, res, next) => {
   await UserNotification.updateOne(
     {
-      notification: req.params.notificationId,
+      notification: req.params.userNotificationId,
       account: req.user._id,
     }, //notUserNotification
     { $set: { read: true } },
@@ -455,7 +447,7 @@ module.exports.read = async (req, res, next) => {
       return sendJSONresponse(res, 200, { read: true });
     })
     .catch(e => {
-      console.log(e);
+      logger.log(`${e}`);
       next(e);
     });
 };
