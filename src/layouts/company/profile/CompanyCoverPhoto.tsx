@@ -24,7 +24,7 @@ const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
             props.currentCompany.coverImage
               ? props.currentCompany.coverImage
               : coverPic
-          })`,
+            })`,
           height: "340px",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -43,11 +43,11 @@ const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
             <div className="flex">
               <div className="ml5 ml1-m" style={{ marginTop: "15rem" }}>
                 <h1 className="f6 ma0 ws-break ttc">Total Employee</h1>
-                <h1 className="f3-l f4 fw4 ma0 ws-break">125</h1>
+                <h1 className="f3-l f4 fw4 ma0 ws-break">{props.currentCompany.totalMember}</h1>
               </div>
               <div className="ml4 ml1-m" style={{ marginTop: "15rem" }}>
                 <h1 className="f6 ma0 ws-break ttc">Associates</h1>
-                <h1 className="f3-l f4 fw4 ma0 ws-break">18</h1>
+                <h1 className="f3-l f4 fw4 ma0 ws-break">{props.currentCompany.totalAssociate}</h1>
               </div>
             </div>
 
