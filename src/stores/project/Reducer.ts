@@ -58,11 +58,12 @@ const initialState = {
     _id: '',
     name: '',
     description: '',
-    outline: ''
+    outline: '',
   },
   teams: [],
   pid: '',
-  projectRole: {}
+  projectRole: {},
+  projectFileOpen: false,
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -70,62 +71,65 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case PROJECT.PROJECT_GET_ALL_PROJECTS:
       return {
         ...state,
-        allProjects: action.payload
+        allProjects: action.payload,
       };
     case PROJECT.PROJECT_GET_ALL_PENDING_PROJECT:
       return {
         ...state,
-        pendingProjects: action.payload
+        pendingProjects: action.payload,
       };
     case PROJECT.PROJECT_GET_ALL_ARCHIVE:
       return {
         ...state,
-        allArchive: action.payload
+        allArchive: action.payload,
       };
     case PROJECT.PROJECT_SINGLE_VIEW:
       return {
         ...state,
-        projectDetails: { ...state.projectDetails, ...action.payload }
+        projectDetails: { ...state.projectDetails, ...action.payload },
       };
     case PROJECT.PROJECT_PROJECT_ID:
       return {
         ...state,
-        pid: action.payload
+        pid: action.payload,
       };
     case CLEAR_PROJECT_REDUCER_STATE:
       return {
-        ...initialState
+        ...initialState,
       };
     case PROJECT.PROJECT_ADD_PROJECT:
       return {
         ...state,
-        allProjects: [...state.allProjects, action.payload]
+        allProjects: [...state.allProjects, action.payload],
       };
     case PROJECT.PROJECT_GET_TEAMS:
       return {
         ...state,
-        teams: action.payload
+        teams: action.payload,
       };
     case PROJECT.PROJECT_GET_ROLES:
       return {
         ...state,
-        projectRole: action.payload
+        projectRole: action.payload,
       };
     case PROJECT.PROJECT_UPDATE_TEAM_ROLE:
       return {
         ...state,
-        teams: state.teams.map(
-          (team: IProjectTeam) => {
-            if (action.payload.memberId === team.member._id) {
-              return {
-                ...team,
-                role: action.payload.role
-              };
-            } else {
-              return team;
-            }
+        teams: state.teams.map((team: IProjectTeam) => {
+          if (action.payload.memberId === team.member._id) {
+            return {
+              ...team,
+              role: action.payload.role,
+            };
+          } else {
+            return team;
           }
-        )
+        }),
+      };
+    case PROJECT.PROJECT_FILE_OPEN:
+      return {
+        ...state,
+        projectFileOpen: action.payload,
       };
     default:
       return state;

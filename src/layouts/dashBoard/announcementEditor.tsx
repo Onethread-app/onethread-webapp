@@ -16,6 +16,15 @@ const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
   const [error, setError] = useState(false);
   const [massage] = useState('Empty announcement can not be created ! !');
 
+  const validateInput = async () => {
+    if (!isEmpty(inputValues)) {
+      await props.addAnnouncement(inputValues);
+      props.setShowDialog(false);
+    } else {
+      setError(true);
+    }
+  };
+
   return (
     <>
       <div className="bg-white pa4">
@@ -55,13 +64,9 @@ const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
           </Button>
           <Button
             type="submit"
-            onClick={async (e: any) => {
+            onClick={(e: any) => {
               e.preventDefault();
-              !isEmpty(inputValues)
-                ? await props.addAnnouncement(inputValues)
-                : setError(true);
-
-              // props.setShowDialog(false);
+              validateInput();
             }}
             className="w4 grow h2 pointer fr"
             style={{ background: '#3F61C5', outline: 'none', color: 'white' }}

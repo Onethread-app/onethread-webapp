@@ -9,7 +9,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
-import { Text } from '@blueprintjs/core';
+// import { Text } from '@blueprintjs/core';
 import { ADD_TOTAL_ASSOCIATE, ADD_TOTAL_MEMBER } from 'stores/company/Types';
 
 interface DashBoardViewProps {
@@ -78,10 +78,18 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 {props.company.announce && props.company.announce.length > 0 ? (
                   props.company.announce.map((announcement: any) => (
                     <div className="flex items-center">
-                      <div className="w2 h2 bg-red br2 mv1"></div>
-                      <Text ellipsize={true} className="f5 fw4 mh3 ws-normal">
+                      <div
+                        className="w2 h2 bg-red br2 mv1"
+                        style={{ width: '35px', height: '35px' }}
+                      ></div>
+                      {/* <Text ellipsize={true} className="f5 fw4 mh3 ws-normal"> */}
+                      <h1
+                        className="w-90 f5 fw4 mh3 tj break-word"
+                        style={{ lineHeight: '25px' }}
+                      >
                         {announcement.text}
-                      </Text>
+                      </h1>
+                      {/* </Text> */}
                     </div>
                   ))
                 ) : (
