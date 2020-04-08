@@ -51,7 +51,7 @@ const profilePicture = async (req, res, next) => {
   const userID = req.user._id;
   const fileRename = fileName(userID, file.originalname);
   const params = {
-    Bucket: 'tigrow-file',
+    Bucket: config.bucketName,
     Key: `${userID}/${fileRename}`,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -60,7 +60,7 @@ const profilePicture = async (req, res, next) => {
   await s3bucket
     .upload(params)
     .promise()
-    .then(async data => {
+    .then(async (data) => {
       logger.info(`File Successfully upload to S3`);
       const newFile = {
         link: data.Location,
@@ -72,7 +72,7 @@ const profilePicture = async (req, res, next) => {
       const file = new File(newFile);
       file
         .save()
-        .then(async data => {
+        .then(async (data) => {
           logger.info('File Link successfully save to Database');
           if (userID) {
             if (data.imageType === 'profilePic') {
@@ -106,12 +106,12 @@ const profilePicture = async (req, res, next) => {
             return sendJSONresponse(res, 200, data);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           logger.error(`${error}`);
           next(error);
         });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -121,7 +121,7 @@ const companyLogo = async (req, res, next) => {
   const companyID = req.params.companyId;
   const fileRename = fileName(companyID, file.originalname);
   const params = {
-    Bucket: 'tigrowprod',
+    Bucket: config.bucketName,
     Key: `${companyID}/${fileRename}`,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -130,7 +130,7 @@ const companyLogo = async (req, res, next) => {
   await s3bucket
     .upload(params)
     .promise()
-    .then(async data => {
+    .then(async (data) => {
       logger.info(`Company Logo Successfully upload to S3`);
       const newFile = {
         link: data.Location,
@@ -142,7 +142,7 @@ const companyLogo = async (req, res, next) => {
       const file = new File(newFile);
       file
         .save()
-        .then(async data => {
+        .then(async (data) => {
           logger.info('File Link successfully save to Database');
           if (data.imageType === 'company-logo') {
             await Company.findOneAndUpdate(
@@ -177,12 +177,12 @@ const companyLogo = async (req, res, next) => {
             return sendJSONresponse(res, 200, data);
           }
         })
-        .catch(error => {
+        .catch((error) => {
           logger.error(`${error}`);
           next(error);
         });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -198,7 +198,7 @@ const fileInRooms = async (req, res, next) => {
   const roomID = req.query.roomID;
   const userID = req.user._id;
   const params = {
-    Bucket: 'tigrowprod',
+    Bucket: config.bucketName,
     Key: `${roomID}/${file.originalname}`,
     Body: file.buffer,
     ContentType: file.mimetype,
@@ -207,7 +207,7 @@ const fileInRooms = async (req, res, next) => {
   await s3bucket
     .upload(params)
     .promise()
-    .then(async data => {
+    .then(async (data) => {
       logger.info(data);
       try {
         logger.info(`File in rooms Successfully upload to S3`);
@@ -227,7 +227,7 @@ const fileInRooms = async (req, res, next) => {
         next(error);
       }
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -250,7 +250,7 @@ const fileInProject = async (req, res, next) => {
   const pidExist = await Project.findOne({ _id: pid });
   if (pidExist) {
     const params = {
-      Bucket: 'tigrowprod',
+      Bucket: config.bucketName,
       Key: `${pid}/${file.originalname}`,
       Body: file.buffer,
       ContentType: file.mimetype,
@@ -259,7 +259,7 @@ const fileInProject = async (req, res, next) => {
     await s3bucket
       .upload(params)
       .promise()
-      .then(async data => {
+      .then(async (data) => {
         logger.info(data);
         try {
           logger.info(`File in project Successfully upload to S3`);
@@ -282,7 +282,7 @@ const fileInProject = async (req, res, next) => {
           next(error);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         next(err);
       });
   } else {

@@ -58,6 +58,9 @@ const envVarsSchema = Joi.object({
   S3_REGION: Joi.string()
     .required()
     .description('S3 region required'),
+  BUCKET_NAME: Joi.string()
+    .required()
+    .description('Bucket Name required'),
 })
   .unknown()
   .required();
@@ -94,6 +97,7 @@ const config = {
   awsAccessKey: envVars.AWS_ACCESS_KEY,
   awsSecretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
   s3Region: envVars.S3_REGION,
+  bucketName: envVars.BUCKET_NAME,
 };
 
 module.exports = config;
