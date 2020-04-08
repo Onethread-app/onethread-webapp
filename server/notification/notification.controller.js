@@ -436,7 +436,7 @@ module.exports.seen = async (req, res, next) => {
 module.exports.read = async (req, res, next) => {
   await UserNotification.updateOne(
     {
-      notification: req.params.notificationId,
+      notification: req.params.userNotificationId,
       account: req.user._id,
     }, //notUserNotification
     { $set: { read: true } },

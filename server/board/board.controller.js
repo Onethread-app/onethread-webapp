@@ -104,7 +104,8 @@ const addBoardMembers = async (req, res, next) => {
       _id: boardID,
     }).populate('project', '_id name company')
     .populate('members', 'name');
-    const index  = board.members.findIndex(x => x._id ===memberID);
+    const index  = board.members.findIndex(x => x._id.toString() == memberID);
+    
     const text =`${req.user.name} has added  ${board.members[index].name} in ${board.name} from ${board.project.name}`; 
     createBoardNotification(board.project, {_id:req.user._id, name: req.user.name}, text );
     const memberList = board.members;

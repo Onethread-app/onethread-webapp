@@ -21,7 +21,7 @@ router
   // );
 
 router
-  .route('/:notificationId')
+  .route('/:userNotificationId')
   .get(
     authorization,
     notificationCtrl.read,
