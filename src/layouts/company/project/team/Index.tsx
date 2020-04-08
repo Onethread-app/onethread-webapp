@@ -8,15 +8,21 @@ import {
   HTMLSelect,
   Dialog,
   ButtonGroup,
-  Alignment
+  Alignment,
 } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 import { AddProjectMemberForm } from './AddProjectMemberForm';
-import { getProjectTeams, changeProjectMemberRole } from 'stores/project/Actions';
+import {
+  getProjectTeams,
+  changeProjectMemberRole,
+} from 'stores/project/Actions';
 import { IProjectTeam } from 'stores/project/Reducer';
-import { getDivisionName, showDepartment } from 'layouts/company/colleagues/Index';
+import {
+  getDivisionName,
+  showDepartment,
+} from 'layouts/company/colleagues/Index';
 import { isEmpty, isEqual } from 'lodash';
 
 interface TeamMember {
@@ -26,7 +32,11 @@ interface TeamMember {
   companyRole: string;
   projectRole: string;
   getProjectTeams: () => void;
-  changeProjectMemberRole: (values: { role: string; }, memberId: string, accountId: string) => void;
+  changeProjectMemberRole: (
+    values: { role: string },
+    memberId: string,
+    accountId: string
+  ) => void;
 }
 
 const load = async (_getProjectTeams: () => void) => {
@@ -48,7 +58,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
       const a: IProjectTeam[] = [];
       const m: IProjectTeam[] = [];
       const t: IProjectTeam[] = [];
-      props.teams.forEach(e => {
+      props.teams.forEach((e) => {
         if (e.role === 'admin') {
           a.push(e);
         } else if (e.role === 'projectModerator') {
@@ -73,12 +83,12 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             style={{
               background: '#0fa3a3',
               outline: 'none',
-              color: 'white'
+              color: 'white',
             }}
             onClick={() => setShowDialog(!showDialog)}
           >
             Add Team Members
-							</Button>
+          </Button>
         </div>
         {/* Admins list starts */}
         <h1 className="f4 mt4">Admins</h1>
@@ -93,26 +103,27 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </tr>
           </thead>
           <tbody>
-            {adminList.length ?
+            {adminList.length ? (
               adminList.map(({ _id, member }) => (
                 <tr key={_id}>
+                  {console.log(member)}
                   <td style={{ width: '24%' }}>{member.account.name}</td>
                   <td style={{ width: '24%' }}>
                     {member.designations.length
                       ? getDivisionName[member.designations[0].division]
                       : null}
                   </td>
-                  <td style={{ width: '24%' }}>
-                    {showDepartment(member)}
-                  </td>
+                  <td style={{ width: '24%' }}>{showDepartment(member)}</td>
                   <td style={{ width: '24%' }}>
                     {member.designations.length
                       ? member.designations[0].position
                       : null}
                   </td>
                   <td style={{ width: '4%' }}>
-                    {isEqual(props.companyRole, 'superAdmin')
-                      || (!isEmpty(props.projectRole) && isEqual(props.projectRole, 'admin')) ? <Popover
+                    {isEqual(props.companyRole, 'superAdmin') ||
+                    (!isEmpty(props.projectRole) &&
+                      isEqual(props.projectRole, 'admin')) ? (
+                      <Popover
                         className="fr"
                         position={Position.BOTTOM}
                         popoverClassName="bp3-popover-content-sizing bg-white"
@@ -131,7 +142,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                                   member.account._id
                                 );
                               }}
-                            ><span>Remove from Admin</span>
+                            >
+                              <span>Remove from Admin</span>
                             </Button>
                           </ButtonGroup>
                         }
@@ -141,13 +153,16 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                             icon="drag-handle-vertical"
                           />
                         }
-                      /> : null}
+                      />
+                    ) : null}
                   </td>
                 </tr>
-              )) :
+              ))
+            ) : (
               <tr>
                 <td colSpan={5}>No admins</td>
-              </tr>}
+              </tr>
+            )}
           </tbody>
         </HTMLTable>
         {/* Admins list ends */}
@@ -165,7 +180,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </tr>
           </thead>
           <tbody>
-            {moderatorList.length ?
+            {moderatorList.length ? (
               moderatorList.map(({ _id, member }) => (
                 <tr key={_id}>
                   <td style={{ width: '24%' }}>{member.account.name}</td>
@@ -174,17 +189,17 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                       ? getDivisionName[member.designations[0].division]
                       : null}
                   </td>
-                  <td style={{ width: '24%' }}>
-                    {showDepartment(member)}
-                  </td>
+                  <td style={{ width: '24%' }}>{showDepartment(member)}</td>
                   <td style={{ width: '24%' }}>
                     {member.designations.length
                       ? member.designations[0].position
                       : null}
                   </td>
                   <td style={{ width: '4%' }}>
-                    {isEqual(props.companyRole, 'superAdmin')
-                      || (!isEmpty(props.projectRole) && isEqual(props.projectRole, 'admin')) ? <Popover
+                    {isEqual(props.companyRole, 'superAdmin') ||
+                    (!isEmpty(props.projectRole) &&
+                      isEqual(props.projectRole, 'admin')) ? (
+                      <Popover
                         className="fr"
                         position={Position.BOTTOM}
                         popoverClassName="bp3-popover-content-sizing bg-white"
@@ -202,7 +217,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                                   member.account._id
                                 );
                               }}
-                            ><span>Make Admin</span>
+                            >
+                              <span>Make Admin</span>
                             </Button>
                             <Button
                               className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
@@ -214,7 +230,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                                   member.account._id
                                 );
                               }}
-                            ><span>Remove from Moderator</span>
+                            >
+                              <span>Remove from Moderator</span>
                             </Button>
                           </ButtonGroup>
                         }
@@ -224,13 +241,16 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                             icon="drag-handle-vertical"
                           />
                         }
-                      /> : null}
+                      />
+                    ) : null}
                   </td>
                 </tr>
-              )) :
+              ))
+            ) : (
               <tr>
                 <td colSpan={5}>No Moderators</td>
-              </tr>}
+              </tr>
+            )}
           </tbody>
         </HTMLTable>
         {/* Project Moderators list ends */}
@@ -283,7 +303,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         <div className="flex items-center justify-between mt4">
           <h1 className="f4">Project Teammates</h1>
           <div className="flex">
-            <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>Filter By</p>
+            <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
+              Filter By
+            </p>
             <div className="mt2" style={{ width: '200px' }}>
               <HTMLSelect
                 fill={true}
@@ -292,12 +314,12 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                   outline: 'none',
                   border: '1px solid #E1E1E1',
                   fontWeight: 600,
-                  textAlignLast: 'center'
+                  textAlignLast: 'center',
                 }}
               >
                 <option selected value="">
                   Department
-								</option>
+                </option>
               </HTMLSelect>
             </div>
           </div>
@@ -313,7 +335,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </tr>
           </thead>
           <tbody>
-            {teamList.length ?
+            {teamList.length ? (
               teamList.map(({ _id, member }) => (
                 <tr key={_id}>
                   <td style={{ width: '24%' }}>{member.account.name}</td>
@@ -322,22 +344,21 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                       ? getDivisionName[member.designations[0].division]
                       : null}
                   </td>
-                  <td style={{ width: '24%' }}>
-                    {showDepartment(member)}
-                  </td>
+                  <td style={{ width: '24%' }}>{showDepartment(member)}</td>
                   <td style={{ width: '24%' }}>
                     {member.designations.length
                       ? member.designations[0].position
                       : null}
                   </td>
                   <td style={{ width: '4%' }}>
-                    {isEqual(props.companyRole, 'superAdmin')
-                      || (!isEmpty(props.projectRole) && isEqual(props.projectRole, 'admin')) ? <Popover
+                    {isEqual(props.companyRole, 'superAdmin') ||
+                    (!isEmpty(props.projectRole) &&
+                      isEqual(props.projectRole, 'admin')) ? (
+                      <Popover
                         className="fr"
                         position={Position.BOTTOM}
                         popoverClassName="bp3-popover-content-sizing bg-white"
                         content={
-
                           <ButtonGroup
                             alignText={Alignment.LEFT}
                             className="bp3-minimal bp3-vertical bp3-fill"
@@ -351,7 +372,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                                   member.account._id
                                 );
                               }}
-                            ><span>Make Moderator</span>
+                            >
+                              <span>Make Moderator</span>
                             </Button>
                             {/* <Button
                               className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
@@ -366,32 +388,33 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                             icon="drag-handle-vertical"
                           />
                         }
-                      /> : null}
+                      />
+                    ) : null}
                   </td>
                 </tr>
-              )) :
+              ))
+            ) : (
               <tr>
                 <td colSpan={5}>No Teammates</td>
-              </tr>}
+              </tr>
+            )}
           </tbody>
         </HTMLTable>
       </div>
 
-      {
-        showDialog && (
-          <Dialog
-            onClose={() => setShowDialog(!showDialog)}
-            isOpen={showDialog}
-            style={{ background: '#fff' }}
-            canOutsideClickClose={false}
-          >
-            <AddProjectMemberForm
-              showDialog={showDialog}
-              setShowDialog={e => setShowDialog(!showDialog)}
-            />
-          </Dialog>
-        )
-      }
+      {showDialog && (
+        <Dialog
+          onClose={() => setShowDialog(!showDialog)}
+          isOpen={showDialog}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+        >
+          <AddProjectMemberForm
+            showDialog={showDialog}
+            setShowDialog={(e) => setShowDialog(!showDialog)}
+          />
+        </Dialog>
+      )}
     </>
   );
 };
@@ -400,13 +423,14 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     teams: state.projectReducer.teams,
-    projectRole: state.projectReducer.projectRole.projects &&
+    projectRole:
+      state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.role,
-    companyRole: state.companyReducer.currentCompany.role
+    companyRole: state.companyReducer.currentCompany.role,
   };
 };
 
 export const ProjectTeamPage = connect(mapStateToProps, {
   getProjectTeams,
-  changeProjectMemberRole
+  changeProjectMemberRole,
 })(ProjectTeamPageComponent);

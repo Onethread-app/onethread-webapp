@@ -15,6 +15,7 @@ interface ProjectPrefaceProps {
   files: any;
   role: string;
   optionalRole: any;
+  projectMembers: any;
 }
 
 export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
@@ -22,10 +23,10 @@ export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
 
   return (
     <>
-      <h1 className='f3 ph5-ns'>Preface</h1>
-      <div className='flex w-100 ph4-ns'>
-        <div className='h-auto w-70 pa4'>
-          <div className='w-90'>
+      <h1 className="f3 ph5-ns">Preface</h1>
+      <div className="flex w-100 ph4-ns">
+        <div className="h-auto w-70 pa4">
+          <div className="w-90">
             <ProjectDescriptionView
               headline={'Project Description'}
               description={props.description}
@@ -36,26 +37,26 @@ export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
             />
           </div>
         </div>
-        <div className='w-30 pa4'>
+        <div className="w-30 pa4">
           {props.role === 'admin' ? (
             <div>
-              <h1 className='f6'>Shared Files</h1>
+              <h1 className="f6">Shared Files</h1>
               {props.files.map((file: any) => (
-                <div className='flex items-center justify-between'>
-                  <h1 className='f6 fw6 blue'>{file.s3Key.split('/')[1]}</h1>
+                <div className="flex items-center justify-between">
+                  <h1 className="f6 fw6 blue">{file.s3Key.split('/')[1]}</h1>
                   <a
                     href={file.link}
-                    target='_blank'
-                    rel='noopener noreferrer'
+                    target="_blank"
+                    rel="noopener noreferrer"
                     download
                   >
-                    <span className='flex pl3'>
+                    <span className="flex pl3">
                       <img
                         src={DownloadIcon}
-                        alt='Download icon'
+                        alt="Download icon"
                         style={{
                           width: '23px',
-                          height: '23px'
+                          height: '23px',
                         }}
                       />
                     </span>
@@ -63,12 +64,12 @@ export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
                 </div>
               ))}
               <Button
-                className='pointer w4 pa2 flex flex-column center mb5 mt4'
+                className="pointer w4 pa2 flex flex-column center mb5 mt4"
                 style={{
                   background: '#fff',
                   outline: 'none',
                   border: '2px solid blue',
-                  color: 'blue'
+                  color: 'blue',
                 }}
                 onClick={() => setShowFileDialog(true)}
               >
@@ -80,23 +81,23 @@ export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
               'addFileProject'
             ) && (
               <div>
-                <h1 className='f6'>Shared Files</h1>
+                <h1 className="f6">Shared Files</h1>
                 {props.files.map((file: any) => (
-                  <div className='flex items-center justify-between'>
-                    <h1 className='f6 fw6 blue'>{file.s3Key.split('/')[1]}</h1>
+                  <div className="flex items-center justify-between">
+                    <h1 className="f6 fw6 blue">{file.s3Key.split('/')[1]}</h1>
                     <a
                       href={file.link}
-                      target='_blank'
-                      rel='noopener noreferrer'
+                      target="_blank"
+                      rel="noopener noreferrer"
                       download
                     >
-                      <span className='flex pl3'>
+                      <span className="flex pl3">
                         <img
                           src={DownloadIcon}
-                          alt='Download icon'
+                          alt="Download icon"
                           style={{
                             width: '23px',
-                            height: '23px'
+                            height: '23px',
                           }}
                         />
                       </span>
@@ -104,12 +105,12 @@ export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
                   </div>
                 ))}
                 <Button
-                  className='pointer w4 pa2 flex flex-column center mb5 mt4'
+                  className="pointer w4 pa2 flex flex-column center mb5 mt4"
                   style={{
                     background: '#fff',
                     outline: 'none',
                     border: '2px solid blue',
-                    color: 'blue'
+                    color: 'blue',
                   }}
                   onClick={() => setShowFileDialog(true)}
                 >
@@ -118,39 +119,32 @@ export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
               </div>
             )
           )}
-          <h1 className='f6 pb2'>Project Members</h1>
-          <article className='pv2'>
-            <div className='dtc v-mid'>
-              <img
-                src={user}
-                className='db br-100 ba b--black-10'
-                style={{ width: '45px', height: '45px' }}
-              />
+          <h1 className="f6 pb2">
+            Project Members ({props.projectMembers.length})
+          </h1>
+          {props.projectMembers.map((member: any) => (
+            <div>
+              <article className="pv2">
+                <div className="dtc v-mid">
+                  <img
+                    src={user}
+                    className="db br-100 ba b--black-10"
+                    style={{ width: '45px', height: '45px' }}
+                  />
+                </div>
+                <div className="dtc v-mid pl3">
+                  <h1 className="f6 fw6 black mv0">{member.account.name}</h1>
+                  <h1 className="f7 fw4 black mv1">{member.role}</h1>
+                </div>
+              </article>
             </div>
-            <div className='dtc v-mid pl3'>
-              <h1 className='f6 fw6 black mv0'>John Martial</h1>
-              <h1 className='f7 fw4 black mv1'>Project Manager</h1>
-            </div>
-          </article>
-          <article className='pv2'>
-            <div className='dtc v-mid'>
-              <img
-                src={user}
-                className='db br-100 ba b--black-10'
-                style={{ width: '45px', height: '45px' }}
-              />
-            </div>
-            <div className='dtc v-mid pl3'>
-              <h1 className='f6 fw6 black mv0'>John Martial</h1>
-              <h1 className='f7 fw4 black mv1'>Project Manager</h1>
-            </div>
-          </article>
-          <h1 className='f6 pointer blue mv0 fr'>Show All</h1>
+          ))}
+          {/* <h1 className="f6 pointer blue mv0 fr">Show All</h1> */}
         </div>
       </div>
       {showFileDialog && (
         <Dialog
-          icon='briefcase'
+          icon="briefcase"
           onClose={() => setShowFileDialog(!showFileDialog)}
           isOpen
           style={{ background: '#fff' }}
@@ -168,7 +162,8 @@ const mapStateToProps = (state: any) => ({
   outline: state.projectReducer.projectDetails.outline,
   files: state.projectReducer.projectDetails.files,
   role: state.projectReducer.projectRole.projects.role,
-  optionalRole: state.projectReducer.projectRole.projects.project.optionalRole
+  optionalRole: state.projectReducer.projectRole.projects.project.optionalRole,
+  projectMembers: state.projectReducer.projectDetails.members,
 });
 
 export const ProjectPrefaceView = connect(
