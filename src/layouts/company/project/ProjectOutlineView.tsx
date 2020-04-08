@@ -56,7 +56,7 @@ export const _ProjectOutlineView = (props: IProjectDescriptionViewProps) => {
       ) : (
         undefined
       )}
-      <p className='pr2'>{props.projectOutline}</p>
+      <p className='pr2 break-word' style={{lineHeight: '25px'}}>{props.projectOutline}</p>
     </>
   );
 };
