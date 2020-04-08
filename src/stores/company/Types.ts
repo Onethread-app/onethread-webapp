@@ -68,3 +68,9 @@ export const ADD_ANNOUNCEMENT = "ADD_ANNOUNCEMENT";
 // product
 export const GET_ALL_PRODUCT = "GET_ALL_PRODUCT";
 export const ADD_PRODUCT = "ADD_PRODUCT";
+
+// associate no
+export const ADD_TOTAL_ASSOCIATE = "ADD_TOTAL_ASSOCIATE";
+
+// member no
+export const ADD_TOTAL_MEMBER = "ADD_TOTAL_MEMBER";

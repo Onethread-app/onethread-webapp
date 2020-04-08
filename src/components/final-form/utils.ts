@@ -44,7 +44,7 @@ export const passwordValidation = (password: string) => {
   if (password.match(regex)) {
     return undefined;
   }
-  return 'Please enter a valid password';
+  return 'Password should contain at least 1 capital letter, 1 small letter, 1 special character and 1 numeric value and should be atleast 8 character long!';
 };
 
 export const errorMessgeHandler = (handlerResponse: any) => {

@@ -35,14 +35,14 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
               text: `Board`,
               href: `/company/${props.company.name}/project/${
                 props.currentProject!._id
-              }/board`
+              }/board`,
             },
             {
               text: `${props.currentBoard!.name}`,
               href: `/company/${props.company.name}/board/${
                 props.currentBoard!._id
-              }`
-            }
+              }`,
+            },
           ]}
         />
       </div>
@@ -52,7 +52,6 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
       >
         <h3 className="w-100 ma0 f3">{props.currentBoard!.name}</h3>
         <div className="flex mh3">
-          {console.log(props)}
           {props.role === 'admin' ||
           projectRules(props.optionalRole)[props.role].includes(
             'assignDeleteMemberBoard'
@@ -74,9 +73,7 @@ const BoardDetailsViewComponent = (props: BoardDetailsViewInternalProps) => {
                 }
               />
             </>
-          ) : (
-            undefined
-          )}
+          ) : undefined}
         </div>
       </div>
       <div className="flex-auto">
@@ -140,7 +137,7 @@ const mapStateToProps = (state: any) => {
       state.projectReducer.projectRole.projects.role,
     optionalRole:
       state.projectReducer.projectRole.projects &&
-      state.projectReducer.projectRole.projects.project.optionalRole
+      state.projectReducer.projectRole.projects.project.optionalRole,
   };
 };
 

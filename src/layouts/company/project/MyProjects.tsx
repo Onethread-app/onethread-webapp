@@ -85,7 +85,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
       {' '}
       <div className="flex justify-end">
         <p className="pr3 fw7 mt1">Filter By</p>
-        {console.log(props)}
         <div style={{ width: '200px' }}>
           {/* TODO: Use common dropdown component */}
           <HTMLSelect
@@ -237,50 +236,51 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                 </div>
               ))}
           </div>
-          <div>
-            <h3 className="f3">Archieved Projects</h3>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 265px))',
-                gridTemplateRows: 'repeat(2, 135px)',
-                gridGap: '10px 10px',
-              }}
-            >
-              {props.archiveProjectList.map((archProject: any) => (
-                <Card
-                  className="h-100"
-                  interactive={true}
-                  style={{ paddingLeft: '0px', paddingBottom: '0px' }}
-                >
-                  <div
-                    className=""
-                    style={{
-                      borderLeft: `5px solid 
+          {props.company.role !== 'employee' && (
+            <div>
+              <h3 className="f3">Archieved Projects</h3>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 265px))',
+                  gridTemplateRows: 'repeat(2, 135px)',
+                  gridGap: '10px 10px',
+                }}
+              >
+                {props.archiveProjectList.map((archProject: any) => (
+                  <Card
+                    className="h-100"
+                    interactive={true}
+                    style={{ paddingLeft: '0px', paddingBottom: '0px' }}
+                  >
+                    <div
+                      className=""
+                      style={{
+                        borderLeft: `5px solid 
                       ${
                         find(Color, ['code', archProject.color])
                           ? find(Color, ['code', archProject.color])!.value
                           : 'red'
                       }`,
-                      // TODO use dictionary
-                      // borderLeft: '5px solid red',
-                      paddingLeft: '20px',
-                      marginLeft: '-2px',
-                      borderRadius: '3px',
-                    }}
-                  >
-                    <div className="flex">
-                      <h3
-                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
-                        style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                        }}
-                      >
-                        {archProject.name}
-                      </h3>
-                      {/* <Popover
+                        // TODO use dictionary
+                        // borderLeft: '5px solid red',
+                        paddingLeft: '20px',
+                        marginLeft: '-2px',
+                        borderRadius: '3px',
+                      }}
+                    >
+                      <div className="flex">
+                        <h3
+                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
+                          style={{
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                          }}
+                        >
+                          {archProject.name}
+                        </h3>
+                        {/* <Popover
                         className="w-10"
                         content={
                           <Menu className="pa2">
@@ -308,38 +308,43 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           />
                         }
                       /> */}
+                      </div>
+                      <h3
+                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
+                        style={{
+                          display: '-webkit-box',
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: 'vertical',
+                        }}
+                      >
+                        {archProject.departments.map((dep: any) => (
+                          <label style={{ paddingLeft: '2px' }}>
+                            {dep.name}
+                          </label>
+                        ))}
+                      </h3>
                     </div>
-                    <h3
-                      className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
-                      style={{
-                        display: '-webkit-box',
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: 'vertical',
-                      }}
-                    >
-                      {archProject.departments.map((dep: any) => (
-                        <label style={{ paddingLeft: '2px' }}>{dep.name}</label>
-                      ))}
-                    </h3>
-                  </div>
-                </Card>
-              ))}
+                  </Card>
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <img
-              onClick={() => setShowProjectDialog(!showProjectDialog)}
-              src={addIcon}
-              className={`fixed pointer ${showProjectDialog ? 'dn' : 'db'}`}
-              style={{
-                bottom: '5rem',
-                right: '7rem',
-                width: '5rem',
-                boxShadow: '0px 6px 6px #00000029',
-                borderRadius: '50%',
-              }}
-            />
-          </div>
+          )}
+          {props.company.role !== 'employee' && (
+            <div>
+              <img
+                onClick={() => setShowProjectDialog(!showProjectDialog)}
+                src={addIcon}
+                className={`fixed pointer ${showProjectDialog ? 'dn' : 'db'}`}
+                style={{
+                  bottom: '5rem',
+                  right: '7rem',
+                  width: '5rem',
+                  boxShadow: '0px 6px 6px #00000029',
+                  borderRadius: '50%',
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
       {showProjectDialog && (

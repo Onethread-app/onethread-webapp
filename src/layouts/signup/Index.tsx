@@ -3,7 +3,7 @@ import { Form, Field } from 'react-final-form';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { required, checkError, composeValidators, isEmail, phoneNoValidation, passwordValidation, maxValue } from 'components/final-form/utils';
 import { Link, NavLink, withRouter, RouteComponentProps } from 'react-router-dom';
-import { Tooltip, Button, Position, Icon } from '@blueprintjs/core';
+import { Button, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { userSignupAction, UserModel } from 'stores/auth/Actions';
 import { isEmpty } from 'lodash';
@@ -14,7 +14,6 @@ import phoneIcon from './../../resources/images/phone.png';
 import emailIcon from './../../resources/images/email.png';
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
-import questionIcon from './../../resources/images/question.png';
 import greyLockIcon from './../../resources/images/lock-grey.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
 
@@ -304,20 +303,18 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                     }
                                     rightElement={
                                       <span className="bp3-icon" style={{ paddingTop: '5px', paddingRight: '5px' }}>
-                                        <span style={{ paddingRight: '10px' }}>
-                                          <img
-                                            onMouseDown={() => setShowPassword(true)}
-                                            onMouseUp={() => setShowPassword(false)}
-                                            src={eyeIcon}
-                                            width="15px"
-                                            height="15px"
-                                            color="#0fa3a3"
-                                          />
-                                        </span>
-                                        <Tooltip content={
+                                        <img
+                                          onMouseDown={() => setShowPassword(true)}
+                                          onMouseUp={() => setShowPassword(false)}
+                                          src={eyeIcon}
+                                          width="15px"
+                                          height="15px"
+                                          color="#0fa3a3"
+                                        />
+                                        {/* <Tooltip content={
                                           <p style={{ width: '400px' }}>
                                             Password should contain at least 1 capital letter, 1 small letter,
-                                            1 special character and 1 numeric value
+                                            1 special character and 1 numeric value and should be atleast 8 character long!
                                         </p>}
                                           position={Position.TOP_RIGHT}>
                                           <img
@@ -326,7 +323,7 @@ export const SignUpPageComponent = (props: SignUpPageInternalProps & RouteCompon
                                             height="20px"
                                             color="#0fa3a3"
                                           />
-                                        </Tooltip>
+                                        </Tooltip> */}
                                       </span>
                                     }
                                     style={{

@@ -34,7 +34,9 @@ import {
   GET_ALL_COMPANY_ANNOUNCEMENT,
   ADD_ANNOUNCEMENT,
   GET_ALL_PRODUCT,
-  ADD_PRODUCT
+  ADD_PRODUCT,
+  ADD_TOTAL_ASSOCIATE,
+  ADD_TOTAL_MEMBER
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
 
@@ -99,6 +101,8 @@ export interface ICompany {
   parentcom: Entity[];
   announce: [];
   products: Entity[];
+  totalMember: number;
+  totalAssociate: number;
 }
 
 const InitialState = {
@@ -122,7 +126,9 @@ const InitialState = {
     certificate: [],
     parentcom: [],
     announce: [],
-    products: []
+    products: [],
+    totalMember: 0,
+    totalAssociate: 0
   },
   createCompanyError: {
     message: '',
@@ -422,13 +428,29 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           products: [
             ...state.currentCompany.products,
             {
-              _id : action.payload._id,
-              name : action.payload.name,
+              _id: action.payload._id,
+              name: action.payload.name,
             }
           ]
         },
         departmentNameLoading: false,
         error: ''
+      };
+    case ADD_TOTAL_ASSOCIATE:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          totalAssociate: action.payload
+        }
+      };
+    case ADD_TOTAL_MEMBER:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          totalMember: action.payload
+        }
       };
     default:
       return state;

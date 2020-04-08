@@ -120,25 +120,27 @@ export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
             )
           )}
           <h1 className="f6 pb2">
-            Project Members ({props.projectMembers.length})
+            Project Members (
+            {props.projectMembers && props.projectMembers.length})
           </h1>
-          {props.projectMembers.map((member: any) => (
-            <div>
-              <article className="pv2">
-                <div className="dtc v-mid">
-                  <img
-                    src={user}
-                    className="db br-100 ba b--black-10"
-                    style={{ width: '45px', height: '45px' }}
-                  />
-                </div>
-                <div className="dtc v-mid pl3">
-                  <h1 className="f6 fw6 black mv0">{member.account.name}</h1>
-                  <h1 className="f7 fw4 black mv1">{member.role}</h1>
-                </div>
-              </article>
-            </div>
-          ))}
+          {props.projectMembers &&
+            props.projectMembers.map((member: any) => (
+              <div>
+                <article className="pv2">
+                  <div className="dtc v-mid">
+                    <img
+                      src={user}
+                      className="db br-100 ba b--black-10"
+                      style={{ width: '45px', height: '45px' }}
+                    />
+                  </div>
+                  <div className="dtc v-mid pl3">
+                    <h1 className="f6 fw6 black mv0">{member.account.name}</h1>
+                    <h1 className="f7 fw4 black mv1">{member.role}</h1>
+                  </div>
+                </article>
+              </div>
+            ))}
           {/* <h1 className="f6 pointer blue mv0 fr">Show All</h1> */}
         </div>
       </div>

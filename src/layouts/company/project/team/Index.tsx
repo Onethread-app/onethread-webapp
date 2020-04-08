@@ -106,7 +106,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             {adminList.length ? (
               adminList.map(({ _id, member }) => (
                 <tr key={_id}>
-                  {console.log(member)}
                   <td style={{ width: '24%' }}>{member.account.name}</td>
                   <td style={{ width: '24%' }}>
                     {member.designations.length
