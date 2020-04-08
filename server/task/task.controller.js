@@ -318,7 +318,7 @@ const dragTask = async (req, res, next) => {
 
     res.status(200).send(responseData);
   } catch (error) {
-    console.log(error);
+    
     logger.error(`Board column create: ${error}`);
     
     next(error);
