@@ -60,7 +60,7 @@ export const _ProjectDescriptionView = (
       ) : (
           undefined
         )}
-      <p className='pr2'>{props.description}</p>
+      <p className='pr2 break-word' style={{lineHeight: '25px'}}>{props.description}</p>
     </>
   );
 };

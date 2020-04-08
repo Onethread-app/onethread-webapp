@@ -74,9 +74,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 {props.company.announce && props.company.announce.length > 0 ?
                   props.company.announce.map((announcement: any) => (
 
-                    <div className="flex items-center">
-                      <div className="w2 h2 bg-red br2 mv1"></div>
-                      <h1 className="f5 fw4 mh3">{announcement.text}</h1>
+                    <div className="flex items-center w-100">
+                      <div className="w-10 bg-red br2 mv1" style={{ width: '35px', height: '35px' }}></div>
+                      <h1 className="w-90 f5 fw4 mh3 tj break-word" style={{lineHeight: '25px'}}>{announcement.text}</h1>
                     </div>
 
                   )) :
