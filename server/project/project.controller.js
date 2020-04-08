@@ -57,7 +57,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       // // assoId = assosiate id
       let projectReq = [];
       // create an id of map array
-      let reqObjectMap = associates.map(async data => {
+      let reqObjectMap = associates.map(async (data) => {
         let reqObject = {};
         reqObject.company = req.params.companyId;
         reqObject.associate = data._id;
@@ -69,11 +69,11 @@ const createNewProjectForCompany = async (req, res, next) => {
       });
       let sendProjectReq = await ProjectRequest.create(projectReq);
       let associateId = [];
-      associateId = associates.map(data => {
+      associateId = associates.map((data) => {
         return data._id;
       });
       // // Insert project request
-      associateId.forEach(async data => {
+      associateId.forEach(async (data) => {
         let associate = await Associate.findOne({
           $or: [
             {
@@ -146,15 +146,16 @@ const createNewProjectForCompany = async (req, res, next) => {
 
       await project
         .save()
-        .then(project => {
+        .then((project) => {
           logger.info(`new project created`);
-          if (req.user._id === req.body.concernedAdmin) {
+          if (req.user._id === concernedAdmin.accountId) {
             teamCreate(
               concernedAdmin.accountId,
               concernedAdmin.memberId,
               project._id,
               'admin',
             );
+            logger.info(`project creator add as a admin here`);
           } else {
             teamCreate(
               member.account,
@@ -162,14 +163,15 @@ const createNewProjectForCompany = async (req, res, next) => {
               project._id,
               'admin',
             );
-            logger.info(`project creator add as a admin here`);
             teamCreate(
               concernedAdmin.accountId,
               concernedAdmin.memberId,
               project._id,
               'admin',
             );
-            logger.info(`concern admin add as an admin here`);
+            logger.info(
+              `${concernedAdmin.accountId} & ${member.account} admin here`,
+            );
           }
           return sendJSONresponse(res, 201, {
             success: true,
@@ -177,7 +179,7 @@ const createNewProjectForCompany = async (req, res, next) => {
             project,
           });
         })
-        .catch(error => {
+        .catch((error) => {
           logger.error(`${error}`);
           next(error);
         });
@@ -230,11 +232,11 @@ const projectPendingRequest = async (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then(result => {
+    .then((result) => {
       logger.info(`pending project list for company:${companyId}`);
       return sendJSONresponse(res, 200, result);
     })
-    .catch(e => {
+    .catch((e) => {
       logger.error(`${e}`);
       next(e);
     });
@@ -317,37 +319,52 @@ const rejectProjectRequest = async (req, res, next) => {
 };
 
 const showAllProjectsForCompany = async (req, res, next) => {
-  const { limit = 50, skip = 0 } = req.query;
-  let companyId = req.params.companyId;
-  let pendingProject = await ProjectRequest.find({
-    $and: [{ isAccepted: false }, { associate: companyId }],
-  }).populate('project', '_id');
-  pendingProject = pendingProject.map(data => {
-    return data.project._id;
-  });
-  await Project.find({
-    $and: [
-      { _id: { $nin: pendingProject } },
-      {
-        $or: [
-          { company: companyId },
-          { associate: { $in: companyId } },
-        ],
-      },
-      { removed: false },
-    ],
-  })
-    .populate('departments', 'name _id ')
-    .select('-type -__v  -files -version -optionalRole ')
-    .sort({ createdAt: -1 })
-    .skip(+skip)
-    .limit(+limit)
-    .exec()
-    .then(result => {
-      logger.info(`all projects for company:${companyId}`);
-      return sendJSONresponse(res, 200, result);
+  try {
+    const { limit = 50, skip = 0 } = req.query;
+    let companyId = req.params.companyId;
+    let pendingProject = await ProjectRequest.find({
+      $and: [{ isAccepted: false }, { associate: companyId }],
+    }).populate('project', '_id');
+    let memberExistInProject = await Team.find({
+      $and: [{ account: req.user._id }, { removed: false }],
+    }).populate('project', '_id');
+    pendingProject = pendingProject.map((data) => {
+      return data.project._id;
+    });
+    memberExistInProject = memberExistInProject.map((data) => {
+      return data.project._id;
+    });
+
+    await Project.find({
+      $and: [
+        { _id: { $nin: pendingProject } },
+        { _id: { $in: memberExistInProject } },
+        {
+          $or: [
+            { company: companyId },
+            { associate: { $in: companyId } },
+          ],
+        },
+        { removed: false },
+      ],
     })
-    .catch(e => next(e));
+      .populate('departments', 'name _id ')
+      .select('-type -__v  -files -version -optionalRole ')
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit)
+      .exec()
+      .then((result) => {
+        return sendJSONresponse(res, 200, result);
+      })
+      .catch((e) => {
+        logger.error(`${error}`);
+        next(e);
+      });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
 };
 
 const updateProjectDescription = async (req, res, next) => {
@@ -361,14 +378,14 @@ const updateProjectDescription = async (req, res, next) => {
     { safe: true, upsert: true, new: true },
   )
     .exec()
-    .then(result => {
+    .then((result) => {
       logger.info(`Description addeed for ${req.params.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
         message: 'Description updated',
       });
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`${err}`);
       next(err);
     });
@@ -385,14 +402,14 @@ const updateProjectOutline = async (req, res, next) => {
     { safe: true, upsert: true, new: true },
   )
     .exec()
-    .then(result => {
+    .then((result) => {
       logger.info(`Outline addeed for ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
         message: 'Outline updated',
       });
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`${err}`);
       next(err);
     });
@@ -405,6 +422,10 @@ const getProjectDetails = async (req, res, next) => {
     })
       .populate('files', 'link s3Key')
       .select('outline description color name');
+    const memberList = await Team.find({
+      project: req.query.pid,
+    }).populate('account', 'name profileImage');
+    project.members = memberList;
     return sendJSONresponse(res, 200, project);
   } catch (error) {
     next(error);
@@ -442,10 +463,15 @@ const archiveProject = async (req, res, next) => {
         { $set: { removed: true } },
         { safe: true, upsert: true, new: true },
       );
-      const text =`${req.user.name} has archived a project ${project.name}`;
-      
-      createCompanyRoleNotification({_id: project.company}, {_id:req.user._id, name: req.user.name}, text,'project' );
-        
+      const text = `${req.user.name} has archived a project ${project.name}`;
+
+      createCompanyRoleNotification(
+        { _id: project.company },
+        { _id: req.user._id, name: req.user.name },
+        text,
+        'project',
+      );
+
       logger.info(`Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         message: `Archive a project`,
@@ -457,7 +483,6 @@ const archiveProject = async (req, res, next) => {
       });
     }
   } catch (error) {
-   
     logger.error(`${error}`);
     return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
       message: 'Project id is not found',
@@ -473,11 +498,11 @@ const showAllFilesForProject = async (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then(result => {
+    .then((result) => {
       logger.info(`get all files from project ${req.params.pid}`);
       return sendJSONresponse(res, 200, { success: true, result });
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`${err}`);
       next(err);
     });
@@ -555,16 +580,16 @@ const archiveProjectList = async (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then(result => {
+    .then((result) => {
       return sendJSONresponse(res, 200, result);
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
 
 const authorizeProjectRole = (functionalRole, ...userRoles) => {
-  return async function(req, res, next) {
+  return async function (req, res, next) {
     try {
       const team = await Team.findOne({
         $and: [

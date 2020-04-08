@@ -1,4 +1,3 @@
-const RedisClustr = require('redis-clustr');
 const redis = require('redis');
 const bluebird = require('bluebird');
 bluebird.promisifyAll(redis);

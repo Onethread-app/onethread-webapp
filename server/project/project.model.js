@@ -96,14 +96,6 @@ const projectSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    activate: {
-      type: Boolean,
-      deafult: true,
-    },
-    teamsize: {
-      type: Number,
-      default: 1,
-    },
     associate: [
       {
         type: mongoose.Schema.Types.ObjectId,
