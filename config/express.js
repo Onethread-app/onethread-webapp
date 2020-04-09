@@ -1,14 +1,3 @@
-// var apm = require('elastic-apm-node').start({
-//   // Override service name from package.json
-//   // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-//   serviceName: 'tigrowProduction',
-
-//   // Use if APM Server requires a token
-//   secretToken: 'PSsBuM57LOO1CP4lMP',
-
-//   serverUrl: 'https://359bff683ecf425192a1e1fbe2c457a3.apm.ap-southeast-1.aws.cloud.es.io'
-// });
-
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
