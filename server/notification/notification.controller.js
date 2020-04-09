@@ -18,34 +18,34 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 
-module.exports.createCompanyNotification = async (
-  company, //fromHeader
-  adminUser,
-) => {
-  const members = await Member.find({
-    $or: [{ role: 'superAdmin' }, { role: 'admin' }],
-    company: company,
-  });
+// module.exports.createCompanyNotification = async (
+//   company, //fromHeader
+//   adminUser,
+// ) => {
+//   const members = await Member.find({
+//     $or: [{ role: 'superAdmin' }, { role: 'admin' }],
+//     company: company,
+//   });
 
-  let notification = new Notification({
-    type: 'companyProfile',
-    text: `company profile has been updated by ${adminUser.name}`,
-    account: adminUser._id,
-    company: company,
-  });
+//   let notification = new Notification({
+//     type: 'companyProfile',
+//     text: `company profile has been updated by ${adminUser.name}`,
+//     account: adminUser._id,
+//     company: company,
+//   });
 
-  let usersNotifications = members.map(m => {
-    return {
-      notification: notification._id,
-      account: m.account,
-    };
-  });
+//   let usersNotifications = members.map(m => {
+//     return {
+//       notification: notification._id,
+//       account: m.account,
+//     };
+//   });
 
-  sendCompanyNotification(company, adminUser, notification);
+//   sendCompanyNotification(company, adminUser, notification);
 
-  await notification.save();
-  await UserNotification.create(usersNotifications);
-};
+//   await notification.save();
+//   await UserNotification.create(usersNotifications);
+// };
 
 module.exports.createMemberAddNotification = async (
   company, //fromHeader
@@ -206,43 +206,43 @@ module.exports.createTeamAddNotification = async (
   }
 };
 
-module.exports.createAssociateNotification = async (
-  company,
-  adminUser,
-  text,
-) => {
-  //sendCompanyNotification(company, adminUser, usersNotification);
+// module.exports.createAssociateNotification = async (
+//   company,
+//   adminUser,
+//   text,
+// ) => {
+//   //sendCompanyNotification(company, adminUser, usersNotification);
 
-  const members = await Member.find({
-    $or: [{ role: 'superAdmin' }, { role: 'admin' }],
-    company: company,
-  });
+//   const members = await Member.find({
+//     $or: [{ role: 'superAdmin' }, { role: 'admin' }],
+//     company: company,
+//   });
 
-  let notification = new Notification({
-    type: 'associate',
-    text: text,
-    account: adminUser._id,
-    company: company,
-  });
+//   let notification = new Notification({
+//     type: 'associate',
+//     text: text,
+//     account: adminUser._id,
+//     company: company,
+//   });
 
-  let usersNotification = members.map(m => {
-    return {
-      notification: notification._id,
-      account: m.account,
-    };
-  });
+//   let usersNotification = members.map(m => {
+//     return {
+//       notification: notification._id,
+//       account: m.account,
+//     };
+//   });
 
-  const companyRoleReciver = ['superAdmin', 'admin'];
-  sendCompanyRoleNotification(
-    company._id,
-    companyRoleReciver,
-    adminUser,
-    notification,
-  );
+//   const companyRoleReciver = ['superAdmin', 'admin'];
+//   sendCompanyRoleNotification(
+//     company._id,
+//     companyRoleReciver,
+//     adminUser,
+//     notification,
+//   );
 
-  await notification.save();
-  await UserNotification.create(usersNotification);
-};
+//   await notification.save();
+//   await UserNotification.create(usersNotification);
+// };
 
 module.exports.createCompanyRoleNotification = async (
   company,

@@ -5,9 +5,7 @@ const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
 const { chatkit } = require('../services/pusher.services');
-const {
-  sendCompanyNotification,
-} = require('../services/notification.services');
+
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
@@ -61,30 +59,37 @@ const changeName = async (req, res, next) => {
 
     //notification
 
-    sendCompanyNotification(req.company._id, {
-      _id: req.user._id,
-      name: req.user.name,
-    });
+    const text = `company name has been updated by ${req.user.name}`;
+    createCompanyRoleNotification(
+      req.company,
+      { _id: req.user._id, name: req.user.name },
+      text,
+      'companyProfile',
+    );
+    // sendCompanyNotification(req.company._id, {
+    //   _id: req.user._id,
+    //   name: req.user.name,
+    // });
 
-    const notification = new Notification({
-      type: 'companyProfile',
-      account: req.user._id,
-      company: req.company._id,
-    });
-
-    // const userNotification = new UserNotification({
-    //   notification: notification._id,
+    // const notification = new Notification({
+    //   type: 'companyProfile',
+    //   account: req.user._id,
     //   company: req.company._id,
     // });
-    let usersNotification = members.map(m => {
-      return {
-        notification: notification._id,
-        account: m.account,
-      };
-    });
 
-    await notification.save();
-    await UserNotification.create(usersNotification);
+    // // const userNotification = new UserNotification({
+    // //   notification: notification._id,
+    // //   company: req.company._id,
+    // // });
+    // let usersNotification = members.map(m => {
+    //   return {
+    //     notification: notification._id,
+    //     account: m.account,
+    //   };
+    // });
+
+    // await notification.save();
+    // await UserNotification.create(usersNotification);
 
     return res.status(200).json({
       message: `Company's name updated`,
