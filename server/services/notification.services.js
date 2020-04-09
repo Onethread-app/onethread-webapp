@@ -2,7 +2,7 @@ const Pusher = require("pusher");
 const config = require('../../config/config');
 const _ = require('lodash');
 
-console.log(config.pusherChanel)
+
 const channels_client = new Pusher({
   appId: config.pusherChanel.appid,
   key: config.pusherChanel.key,
