@@ -24,7 +24,6 @@ export const ProjectPrefaceViewComponent = (props: ProjectPrefaceProps) => {
   return (
     <>
       <h1 className="f3 ph5-ns">Preface</h1>
-      {console.log(props)}
       <div className="flex w-100 ph4-ns">
         <div className="h-auto w-70 pa4">
           <div className="w-90">
