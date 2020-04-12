@@ -53,10 +53,11 @@ module.exports.createMemberAddNotification = async (
   adminUser,
 ) => {
   try {
-    const membersToSendNotification = await Member.find({
+    let membersToSendNotification = await Member.find({
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
+    membersToSendNotification = membersToSendNotification.filter( m => m.account.toString() !== req.user._id.toString() ); 
 
     // let notification = new Notification({
     //   type: 'companyProfile',
@@ -64,6 +65,7 @@ module.exports.createMemberAddNotification = async (
     //   account: adminUser._id,
     //   company: company,
     // });
+    
 
     let notifications = newMembers.map(m => {
       return {
@@ -175,6 +177,8 @@ module.exports.createTeamAddNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
+    allNotificationReciver = allNotificationReciver.filter( m => m !== req.user._id.toString() ); 
+
 
     for (let i = 0; i < notifications.length; i += 1) {
       let usersNotificationAll = allNotificationReciver.map(m => {
@@ -256,6 +260,8 @@ module.exports.createCompanyRoleNotification = async (
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
+    
+    members = members.filter( m => m.account.toString() !== req.user._id.toString() ); 
 
     let notification = new Notification({
       type: type,
@@ -324,6 +330,8 @@ module.exports.createBoardNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
+    allNotificationReciver = allNotificationReciver.filter( m => m !== req.user._id.toString() ); 
+
     let usersNotificationAll = allNotificationReciver.map(m => {
       return {
         notification: notification._id,
