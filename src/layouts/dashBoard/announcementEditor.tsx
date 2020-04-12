@@ -12,8 +12,18 @@ interface AnnouncementEditorProps {
 }
 
 const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
-
   const [inputValues, setInputValues] = useState('');
+  const [error, setError] = useState(false);
+  const [massage] = useState('Empty announcement can not be created ! !');
+
+  const validateInput = async () => {
+    if (!isEmpty(inputValues)) {
+      await props.addAnnouncement(inputValues);
+      props.setShowDialog(false);
+    } else {
+      setError(true);
+    }
+  };
 
   return (
     <>
@@ -25,41 +35,44 @@ const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
           style={{
             resize: 'none',
             minHeight: '50px',
-            maxHeight: '150px'
+            maxHeight: '150px',
           }}
           fill={true}
           growVertically={true}
           value={inputValues}
-          placeholder="Write Something ..."
+          placeholder="Write Something (max 500)"
           onChange={(event) => {
             setInputValues(event.target.value);
-          }
-          }
+          }}
         />
+        {error ? <h5 className="red">{massage}</h5> : ''}
         <div className="flex justify-end mv2">
-          <Button className="w4 grow h2 pointer mr3"
-            style={{ background: "#fff", outline: "none", border: "1px solid #0fa3a3", color: "#0fa3a3" }}
+          <Button
+            className="w4 grow h2 pointer mr3"
+            style={{
+              background: '#fff',
+              outline: 'none',
+              border: '1px solid #0fa3a3',
+              color: '#0fa3a3',
+            }}
             onClick={(e: any) => {
               e.preventDefault();
               props.setShowDialog(false);
             }}
           >
             cancel
-        </Button>
+          </Button>
           <Button
             type="submit"
-            onClick={async (e: any) => {
+            onClick={(e: any) => {
               e.preventDefault();
-              if (!isEmpty(inputValues)) {
-                await props.addAnnouncement(inputValues);
-              }
-              props.setShowDialog(false);
+              validateInput();
             }}
             className="w4 grow h2 pointer fr"
             style={{ background: '#3F61C5', outline: 'none', color: 'white' }}
           >
             Post
-            </Button>
+          </Button>
         </div>
       </div>
     </>
@@ -68,8 +81,10 @@ const AnnouncementEditorComponent = (props: AnnouncementEditorProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    company: state.companyReducer.currentCompany
+    company: state.companyReducer.currentCompany,
   };
 };
 
-export const AnnouncementEditor = connect(mapStateToProps, { addAnnouncement })(AnnouncementEditorComponent);
+export const AnnouncementEditor = connect(mapStateToProps, { addAnnouncement })(
+  AnnouncementEditorComponent
+);
