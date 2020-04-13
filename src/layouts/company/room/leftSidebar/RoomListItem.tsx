@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useHistory, useLocation } from 'react-router';
+import { useHistory, useLocation } from 'react-router-dom';
 import { IRoom } from 'stores/room/Reducer';
 import { CHANGE_ROOM } from 'stores/room/Types';
 import { RoomQueries } from '../Index';
