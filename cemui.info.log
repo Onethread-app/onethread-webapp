@@ -1,0 +1,31 @@
+info: 28580 MongoDB is connected 2020-04-12T09:49:55.368Z 
+info: 28580 Ok, server is running on port 4044 (development) 2020-04-12T09:49:55.459Z 
+info: 28580 REDIS ready 2020-04-12T09:49:55.487Z 
+info: 28580 authentication: OK 2020-04-12T09:49:55.547Z 
+info: 28580 [38;2;255;255;0mElasticSearch cluster health is yellow[39m 2020-04-12T09:49:55.706Z 
+info: 28580 [94mElasticSearch existing index accounts is deleted[39m 2020-04-12T09:49:55.990Z 
+info: 28580 [94mElasticSearch successfully created index accounts with bulk[39m 2020-04-12T09:49:58.423Z 
+info: 28580 [94mElasticSearch existing index members is deleted[39m 2020-04-12T09:49:58.612Z 
+info: 28580 [94mElasticSearch successfully created index members with bulk[39m 2020-04-12T09:49:59.780Z 
+info: 28580 [94mElasticSearch existing index skillareas is deleted[39m 2020-04-12T09:49:59.969Z 
+info: 28580 [94mElasticSearch successfully created index skillareas with bulk[39m 2020-04-12T09:50:00.545Z 
+info: 28580 [94mElasticSearch existing index companies is deleted[39m 2020-04-12T09:50:01.033Z 
+info: 28580 [94mElasticSearch successfully created index companies with bulk[39m 2020-04-12T09:50:02.511Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T09:50:51.787Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 349ms 2020-04-12T09:50:51.796Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T09:50:59.552Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 387ms 2020-04-12T09:50:59.556Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T10:04:16.653Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 2271ms 2020-04-12T10:04:16.657Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T10:04:51.214Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 319ms 2020-04-12T10:04:51.216Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T10:06:52.785Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 327ms 2020-04-12T10:06:52.787Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T10:08:43.481Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 342ms 2020-04-12T10:08:43.485Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T10:09:15.515Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 277ms 2020-04-12T10:09:15.517Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T10:13:58.715Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 334ms 2020-04-12T10:13:58.717Z 
+error: 28580 TypeError: addUserDataIntoCache is not a function 2020-04-12T10:22:16.535Z 
+info: 28580 HTTP POST /api/v1/accounts/login 500 2932ms 2020-04-12T10:22:16.537Z 

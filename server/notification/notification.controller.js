@@ -57,7 +57,7 @@ module.exports.createMemberAddNotification = async (
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
-    membersToSendNotification = membersToSendNotification.filter( m => m.account.toString() !== req.user._id.toString() ); 
+    membersToSendNotification = membersToSendNotification.filter( m => m.account.toString() !== adminUser._id.toString() ); 
 
     // let notification = new Notification({
     //   type: 'companyProfile',
@@ -177,7 +177,7 @@ module.exports.createTeamAddNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
-    allNotificationReciver = allNotificationReciver.filter( m => m !== req.user._id.toString() ); 
+    allNotificationReciver = allNotificationReciver.filter( m => m !== adminUser._id.toString() ); 
 
 
     for (let i = 0; i < notifications.length; i += 1) {
@@ -256,12 +256,12 @@ module.exports.createCompanyRoleNotification = async (
 ) => {
   //sendCompanyNotification(company, adminUser, usersNotification);
   try {
-    const members = await Member.find({
+    let members = await Member.find({
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
     
-    members = members.filter( m => m.account.toString() !== req.user._id.toString() ); 
+    members = members.filter( m => m.account.toString() !== adminUser._id.toString() ); 
 
     let notification = new Notification({
       type: type,
@@ -289,7 +289,7 @@ module.exports.createCompanyRoleNotification = async (
     await UserNotification.create(usersNotification);
   } catch (error) {
     logger.error(`${error}`);
-    next(error);
+    
   }
 };
 
@@ -330,7 +330,7 @@ module.exports.createBoardNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
-    allNotificationReciver = allNotificationReciver.filter( m => m !== req.user._id.toString() ); 
+    allNotificationReciver = allNotificationReciver.filter( m => m !== adminUser._id.toString() ); 
 
     let usersNotificationAll = allNotificationReciver.map(m => {
       return {
