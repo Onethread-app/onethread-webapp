@@ -36,9 +36,11 @@ import {
 	REMOVE_ROOM_DISCUSSIONS,
 	GET_COMPANY_ROOMS,
 	CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
-	CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY
+	CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY,
+	UPDATE_PUSHER_INSTANCE
 } from './Types';
 import { isEmpty } from 'lodash';
+import Pusher from 'pusher-js';
 
 export interface IRoom {
 	_id: string;
@@ -58,7 +60,6 @@ export interface IRoomMember {
 	firstName: string;
 	lastName: string;
 	name: string;
-	presence: string;
 	profileImage?: string;
 }
 
@@ -77,7 +78,6 @@ export interface IRoomFile {
 	_id: string;
 	link: string;
 	s3Key: string;
-	type: string;
 }
 
 export interface IRoomMessage {
@@ -134,7 +134,7 @@ export interface IRoomReducer {
 	pendingFiles: IRoomPendingFile[];
 	companyRooms: ICompanyRoom[];
 	roomError: string;
-
+	pusherInstance: Pusher | undefined;
 }
 const InitialState: IRoomReducer = {
 	activeRoom: {},
@@ -166,6 +166,7 @@ const InitialState: IRoomReducer = {
 	companyRooms: [],
 	loading: false,
 	roomError: '',
+	pusherInstance: undefined
 };
 
 export const sortRooms = (a: IRoom, b: IRoom) => {
@@ -221,6 +222,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
 				loading: true,
 				roomError: ''
 			};
+		case UPDATE_PUSHER_INSTANCE: {
+			return {
+				...state,
+				pusherInstance: action.payload,
+			};
+		}
 		case FILE_UPLOAD: {
 			return {
 				...state,
@@ -307,7 +314,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 			return {
 				...state,
 				messages:
-					action.payload.room === (state.activeRoom as any).id
+					action.payload.room === state.currentRoom._id
 						? state.messages.length === 0 ||
 							(state.messages[state.messages.length - 1] as IRoomMessage)._id !==
 							action.payload._id
@@ -315,7 +322,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
 							: [...state.messages]
 						: [...state.messages],
 				sharedFileMessages:
-					action.payload.room === (state.activeRoom as any).id
+					action.payload.room === state.currentRoom._id
 						? state.messages.length === 0 ||
 							(state.messages[state.messages.length - 1] as IRoomMessage)._id !==
 							action.payload._id

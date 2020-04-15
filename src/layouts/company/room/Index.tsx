@@ -5,15 +5,12 @@ import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
 import { connect, useDispatch } from 'react-redux';
 import {
   IRoomReducer,
-  ICompanyRoom,
   IRoom,
   IRoomMessage
 } from 'stores/room/Reducer';
 import { isEmpty } from 'lodash';
 import { RoomRightSidebar } from './rightSIdebar/Index';
 import {
-  UNREAD_COUNT_ROOMS,
-  GET_COMPANY_ROOMS,
   NEW_MESSAGE,
   ON_PRESENCE_CHANGE,
   ON_USER_STARTED_TYPING,
@@ -30,6 +27,8 @@ import {
   getRoom
 } from 'stores/room/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { roomSubscribe } from './channelSubscribe';
+import Pusher from 'pusher-js';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -51,6 +50,7 @@ interface RoomPageComponentProps extends RouteComponentProps {
   getRoomMessages: (roomId: string, limit?: number, skip?: number) => void;
   getRoomSharedFiles: (roomId: string, limit?: number, skip?: number) => void;
   getRoomDiscussions: (roomId: string, limit?: number, skip?: number) => void;
+  pusherInstance: Pusher | undefined;
 }
 
 const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
@@ -67,12 +67,19 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
     await _getRooms();
   };
 
-  const subscribeToRoom = async (roomId: string) => {
-    await props.getRoomMessages(roomId);
-    await props.getRoomMembers(roomId);
-    await props.getRoomSharedFiles(roomId);
-    await props.getRoomDiscussions(roomId);
+  const roomSwitch = async (roomId: string) => {
+    const status: any = await props.getRoom(roomId);
+    if (status === 200) {
+      await props.getRoomMessages(roomId);
+      await props.getRoomMembers(roomId);
+      await props.getRoomSharedFiles(roomId);
+      await props.getRoomDiscussions(roomId);
+      await roomSubscribe(roomId);
+      // subscribeToRoom(roomId);
+    }
+  };
 
+  const subscribeToRoom = async (roomId: string) => {
     props.chatkit.currentUser
       .subscribeToRoomMultipart({
         roomId: roomId.toString(),
@@ -128,13 +135,14 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
       });
   };
 
-  const _getRoom = async (roomId: string) => {
-    const status: any = await props.getRoom(roomId);
-    if (status === 200) {
-      subscribeToRoom(queries.roomId);
+  // get all rooms
+  useEffect(() => {
+    if (props.companyId && props.projectId) {
+      load(props.getRooms);
     }
-  };
+  }, [props.companyId, props.projectId]);
 
+  // get roomId and view option from query
   useEffect(() => {
     const query = new URLSearchParams(props.location.search);
     const view =
@@ -143,37 +151,19 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
         : 'default';
     const roomId = query.get('roomId') ? query.get('roomId')! : '';
     setQueries({ view, roomId });
+
   }, [props.location.search]);
 
+  // fetch room infos
   useEffect(() => {
-    if (!props.chatkit.isLoading && props.companyId && props.projectId) {
-      load(props.getRooms);
-
-      const roomsUnreadCount = {};
-      const companyRooms: ICompanyRoom[] = [];
-      props.chatkit.currentUser.rooms
-        .filter((room: any) => room.customData.company === props.companyId)
-        .forEach((room: any) => {
-          roomsUnreadCount[room.id] = room.unreadCount;
-          companyRooms.push({
-            _id: room.id,
-            name: room.name,
-            company: room.customData.company,
-            project: room.customData.project,
-            unreadCount: room.unreadCount
-          });
-        });
-
-      dispatch({ type: UNREAD_COUNT_ROOMS, payload: roomsUnreadCount });
-      dispatch({ type: GET_COMPANY_ROOMS, payload: companyRooms });
+    if (!isEmpty(queries.roomId) && props.pusherInstance !== undefined) {
+      if (!isEmpty(props.currentRoom._id)) {
+        props.pusherInstance.unsubscribe(props.currentRoom._id);
+        props.pusherInstance.unsubscribe(`presence-${props.currentRoom._id}`);
+      }
+      roomSwitch(queries.roomId);
     }
-  }, [props.chatkit]);
-
-  useEffect(() => {
-    if (!props.chatkit.isLoading && !isEmpty(queries.roomId)) {
-      _getRoom(queries.roomId);
-    }
-  }, [props.chatkit, queries.roomId]);
+  }, [queries.roomId, props.pusherInstance]);
 
   return (
     <div className="flex h-100 w-100">
@@ -184,9 +174,9 @@ const RoomPageComponent = withChatkit((props: RoomPageComponentProps) => {
             borderBottomLeftRadius: '0.5rem',
             width: isOpenLeftSidebar ? '220px' : '16px'
           }}
-          // TODO: mouse active
-          // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
-          // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
+        // TODO: mouse active
+        // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
+        // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
         >
           <RoomSideBar isOpen={isOpenLeftSidebar} />
         </div>
@@ -234,7 +224,8 @@ const mapStateToProps = (state: any) => {
     currentRoom: state.roomReducer.currentRoom,
     companyId: state.companyReducer.currentCompany._id,
     projectId: state.projectReducer.projectDetails._id,
-    rooms: state.roomReducer.rooms
+    rooms: state.roomReducer.rooms,
+    pusherInstance: state.roomReducer.pusherInstance
   };
 };
 

@@ -2,6 +2,8 @@ import { store } from 'Store';
 import Pusher from 'pusher-js';
 import { channelAuthEndPoint } from 'config';
 import { User } from 'stores/user/Reducer';
+import { UPDATE_PUSHER_INSTANCE, NEW_MESSAGE } from 'stores/room/Types';
+import { IRoomMessage, IRoomMember, IRoomFile } from 'stores/room/Reducer';
 
 export interface IChannelMember {
   id: string;
@@ -18,6 +20,12 @@ export interface IChannelSubscriptionSucceeded {
   count: number;
   myID: string;
   me: IChannelMember;
+}
+
+export interface INewMessagePayload {
+  message: IRoomMessage;
+  account: IRoomMember;
+  files: IRoomFile[];
 }
 
 export const userSubscriber = async () => {
@@ -41,6 +49,11 @@ export const userSubscriber = async () => {
     }
   });
 
+  await store.dispatch({
+    type: UPDATE_PUSHER_INSTANCE,
+    payload: pusher
+  });
+
   pusher.connection.bind('error', (err: any) => {
     if (err.error.data.code === 4004) {
       // tslint:disable-next-line: no-console
@@ -52,15 +65,52 @@ export const userSubscriber = async () => {
 
   channel.bind('pusher:subscription_succeeded', async (data: IChannelSubscriptionSucceeded) => {
     // tslint:disable-next-line: no-console
-    console.log('data', data);
+    // console.log('data', data);
     channel.bind('pusher:member_added', (member: IChannelMember) => {
       // tslint:disable-next-line: no-console
-      console.log('join', member);
+      // console.log('join', member);
     });
     channel.bind('pusher:member_removed', (member: IChannelMember) => {
       // tslint:disable-next-line: no-console
-      console.log('leave', member);
+      // console.log('leave', member);
     });
   });
 
+};
+
+export const roomSubscribe = async (roomId: string) => {
+  const pusher: Pusher = await store.getState().roomReducer.pusherInstance;
+
+  await store.dispatch({
+    type: UPDATE_PUSHER_INSTANCE,
+    payload: pusher
+  });
+
+  const channel = pusher.subscribe(roomId);
+
+  // TODO who are currently in the room
+  // const presenceChannel = pusher.subscribe(`presence-${roomId}`);
+
+  // presenceChannel.bind('pusher:subscription_succeeded', async (data: any) => {
+  //   // tslint:disable-next-line: no-console
+  //   console.log('data', data);
+  //   presenceChannel.bind('pusher:member_added', (member: any) => {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('join', member);
+  //   });
+  //   presenceChannel.bind('pusher:member_removed', (member: any) => {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('leave', member);
+  //   });
+  // });
+
+  // new message hook
+  channel.bind('new_message', async (data: INewMessagePayload) => {
+    const formatMessage: IRoomMessage = {
+      ...data.message,
+      account: data.account,
+      files: data.files,
+    };
+    await store.dispatch({ type: NEW_MESSAGE, payload: formatMessage });
+  });
 };

@@ -26,29 +26,29 @@ export const MessageListComponent = withChatkit((props: MessageListProps) => {
 	const dispatch = useDispatch();
 
 	const scrollToBottom = () => {
-		if (props.messages.length) {
-			props.chatkit.currentUser.setReadCursor({
-				roomId: props.currentRoom._id,
-				position: props.messages[props.messages.length - 1].chatkitId
-			})
-				.then()
-				.catch((err: any) => {
-					console.log(`Error setting cursor: ${err}`);
-				});
-		}
+		// if (props.messages.length) {
+		// 	props.chatkit.currentUser.setReadCursor({
+		// 		roomId: props.currentRoom._id,
+		// 		position: props.messages[props.messages.length - 1].chatkitId
+		// 	})
+		// 		.then()
+		// 		.catch((err: any) => {
+		// 			console.log(`Error setting cursor: ${err}`);
+		// 		});
+		// }
 
 		// On new message, scroll to bottom
-		// if (
-		// 	messagesEndRef &&
-		// 	messagesEndRef.current &&
-		// 	messagesEndRef.current.scrollTop +
-		// 	messagesEndRef.current.clientHeight +
-		// 	60 >=
-		// 	messagesEndRef.current.scrollHeight
-		// ) {
-		// 	// On new message, scroll to bottom
-		// 	messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
-		// }
+		if (
+			messagesEndRef &&
+			messagesEndRef.current &&
+			messagesEndRef.current.scrollTop +
+			messagesEndRef.current.clientHeight +
+			messagesEndRef.current.clientHeight * .3 >=
+			messagesEndRef.current.scrollHeight
+		) {
+			// On new message, scroll to bottom
+			messagesEndRef.current.scrollTop = messagesEndRef.current.scrollHeight;
+		}
 
 		if (messagesEndRef && messagesEndRef.current && !first) {
 			// On enter the room, scroll to bottom
