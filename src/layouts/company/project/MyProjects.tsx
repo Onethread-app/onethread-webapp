@@ -5,8 +5,7 @@ import {
   Popover,
   Button,
   Menu,
-  MenuItem,
-  HTMLSelect,
+  MenuItem
 } from '@blueprintjs/core';
 
 import Snackbar from '@material-ui/core/Snackbar';
@@ -82,27 +81,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   }, []);
   return (
     <>
-      {' '}
-      <div className="flex justify-end">
-        <p className="pr3 fw7 mt1">Filter By</p>
-        <div style={{ width: '200px' }}>
-          {/* TODO: Use common dropdown component */}
-          <HTMLSelect
-            fill={true}
-            minimal={true}
-            style={{
-              outline: 'none',
-              border: '1px solid #E1E1E1',
-              fontWeight: 600,
-              textAlignLast: 'center',
-            }}
-          >
-            <option selected value="">
-              All
-            </option>
-          </HTMLSelect>
-        </div>
-      </div>
       <div>
         <h3 className="f3">My Projects</h3>
         <div className="overflow-auto">
@@ -145,7 +123,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             singleProjectOnClick(project._id);
                             e.preventDefault();
                           }}
-                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5 hover-dark-blue pointer"
+                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
                           style={{
                             whiteSpace: 'nowrap',
                             textOverflow: 'ellipsis',
@@ -204,7 +182,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           ) : null}
                       </div>
                       <h3
-                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
+                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
                         style={{
                           whiteSpace: 'nowrap',
                           textOverflow: 'ellipsis',
@@ -271,11 +249,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                     >
                       <div className="flex">
                         <h3
-                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
+                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
                           style={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            width: '220px'
                           }}
                         >
                           {archProject.name}
@@ -309,18 +287,20 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                         }
                       /> */}
                       </div>
-                      {archProject.departments.map((dep: any) => (
-                        <h3
-                          className="pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break pv1"
-                          style={{
-                            whiteSpace: 'nowrap',
-                            textOverflow: 'ellipsis',
-                            width: '220px'
-                          }}
-                        >
-                          {dep.name}
-                        </h3>
-                      ))}
+                      <h3
+                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
+                        style={{
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                          width: '220px'
+                        }}
+                      >
+                        {archProject.departments.map((dep: any) => (
+                          <label style={{ paddingLeft: '2px' }}>
+                            {dep.name}
+                          </label>
+                        ))}
+                      </h3>
                     </div>
                   </Card>
                 ))}
