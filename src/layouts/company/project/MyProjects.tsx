@@ -57,20 +57,20 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     props.role === 'admin'
       ? setShowUpdateNameDialog(true)
       : projectRules(props.optionalRole)[props.role].includes(
-          'updateProjectPreface'
-        )
-      ? setShowUpdateNameDialog(true)
-      : setOpen(true);
+        'updateProjectPreface'
+      )
+        ? setShowUpdateNameDialog(true)
+        : setOpen(true);
   };
 
   const checkRoleForArchiveProject = (projectId: string) => {
     props.role === 'admin'
       ? projectArchive(projectId)
       : projectRules(props.optionalRole)[props.role].includes(
-          'updateProjectPreface'
-        )
-      ? projectArchive(projectId)
-      : setOpen(true);
+        'updateProjectPreface'
+      )
+        ? projectArchive(projectId)
+        : setOpen(true);
   };
   useEffect(() => {
     props.getAllProjects();
@@ -128,10 +128,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       style={{
                         borderLeft: `5px solid 
                     ${
-                      find(Color, ['code', project.color])
-                        ? find(Color, ['code', project.color])!.value
-                        : 'white'
-                    }`,
+                          find(Color, ['code', project.color])
+                            ? find(Color, ['code', project.color])!.value
+                            : 'white'
+                          }`,
                         // TODO use dictionary
                         // borderLeft: '5px solid',
                         paddingLeft: '20px',
@@ -147,9 +147,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           }}
                           className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5 hover-dark-blue pointer"
                           style={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            width: '220px'
                           }}
                         >
                           {project.name}
@@ -173,8 +173,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                 />
                               </Menu>
                             ) : (
-                              'Loading..'
-                            )
+                                'Loading..'
+                              )
                           }
                           target={
                             <Button
@@ -192,23 +192,23 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           }
                         />
                         {props.companyRooms &&
-                        unreadMessageNotification(
-                          props.companyRooms,
-                          'project',
-                          project._id
-                        ) ? (
-                          <span
-                            className="ml1 br-100 bg-red"
-                            style={{ width: '7px', height: '7px' }}
-                          ></span>
-                        ) : null}
+                          unreadMessageNotification(
+                            props.companyRooms,
+                            'project',
+                            project._id
+                          ) ? (
+                            <span
+                              className="ml1 br-100 bg-red"
+                              style={{ width: '7px', height: '7px' }}
+                            ></span>
+                          ) : null}
                       </div>
                       <h3
                         className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
                         style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                          width: '220px'
                         }}
                       >
                         {project.departments &&
@@ -258,10 +258,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       style={{
                         borderLeft: `5px solid 
                       ${
-                        find(Color, ['code', archProject.color])
-                          ? find(Color, ['code', archProject.color])!.value
-                          : 'red'
-                      }`,
+                          find(Color, ['code', archProject.color])
+                            ? find(Color, ['code', archProject.color])!.value
+                            : 'red'
+                          }`,
                         // TODO use dictionary
                         // borderLeft: '5px solid red',
                         paddingLeft: '20px',
@@ -309,20 +309,18 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                         }
                       /> */}
                       </div>
-                      <h3
-                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
-                        style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
-                        }}
-                      >
-                        {archProject.departments.map((dep: any) => (
-                          <label style={{ paddingLeft: '2px' }}>
-                            {dep.name}
-                          </label>
-                        ))}
-                      </h3>
+                      {archProject.departments.map((dep: any) => (
+                        <h3
+                          className="pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break pv1"
+                          style={{
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            width: '220px'
+                          }}
+                        >
+                          {dep.name}
+                        </h3>
+                      ))}
                     </div>
                   </Card>
                 ))}
