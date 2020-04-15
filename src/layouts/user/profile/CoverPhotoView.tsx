@@ -20,7 +20,7 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
   return (
     <>
       <div
-        className="relative cover br4 w-100"
+        className="relative hide-child cover bg-center br4"
         style={{
           backgroundImage: `url(${
             props.user.coverImage ? props.user.coverImage : coverPic
@@ -31,38 +31,40 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
           objectFit: 'cover'
         }}
       >
-        <div className="absolute flex" style={{ left: '40px', top: '63%' }}>
-          <div
-            className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray"
-            style={{ width: '235px', height: '235px' }}
+        <div className="h-100 child bg-black-40 br4">
+          <Button
+            className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3"
+            style={{ marginTop: '265px', marginRight: '45px', color: 'white' }}
+            onClick={() => setShowDialogPicture(true)}
           >
-            <ProfilePictureView />
-          </div>
-          <div className="ml5-tigrow-l ml1-m" style={{ marginTop: '9rem' }}>
-            <h1 className="f3-l f4 ma0 ws-break ttc">
-              {props.user.firstName} {props.user.lastName}
+            Change Cover
+        </Button>
+        </div>
+      </div>
+      <div className="relative flex" style={{ marginTop: '-120px', marginLeft: '50px' }}>
+        <div
+          className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray"
+          style={{ width: '235px', height: '235px' }}
+        >
+          <ProfilePictureView />
+        </div>
+        <div className="ml5-tigrow-l ml1-m" style={{ marginTop: '9rem' }}>
+          <h1 className="f3-l f4 ma0 ws-break ttc">
+            {props.user.firstName} {props.user.lastName}
+          </h1>
+          <div className="cf ">
+            <h1 className="f5 dib ws-break black-70 ttc">
+              {props.user.position ? props.user.position : 'No designation'}
             </h1>
-            <div className="cf ">
-              <h1 className="f5 dib ws-break black-70 ttc">
-                {props.user.position ? props.user.position : 'No designation'}
-              </h1>
-              <img
-                src={editIcon}
-                width="30"
-                height="30"
-                className="br2 pointer fr mv1"
-                onClick={() => setShowDialogPosition(true)}
-              />
-            </div>
+            <img
+              src={editIcon}
+              width="30"
+              height="30"
+              className="br2 pointer fr mv1"
+              onClick={() => setShowDialogPosition(true)}
+            />
           </div>
         </div>
-        <Button
-          className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3"
-          style={{ marginTop: '265px', marginRight: '45px', color: '#0fa3a3' }}
-          onClick={() => setShowDialogPicture(true)}
-        >
-          Change Cover
-        </Button>
       </div>
       {showDialogPicture && (
         <Dialog
