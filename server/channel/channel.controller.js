@@ -1,4 +1,4 @@
-const { pusher } = require('../services/pusher.services');
+const { pusherChannel } = require('../services/pusher.services');
 
 const authenticate = async (req, res, next) => {
   const socketId = req.body.socket_id;
@@ -10,7 +10,11 @@ const authenticate = async (req, res, next) => {
     user_id: _id,
     user_info: { email, name },
   };
-  const auth = pusher.authenticate(socketId, channel, presenceData);
+  const auth = pusherChannel.authenticate(
+    socketId,
+    channel,
+    presenceData,
+  );
   res.send(auth);
 };
 

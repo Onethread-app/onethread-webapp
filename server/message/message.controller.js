@@ -1,7 +1,10 @@
 const { Message } = require('./message.model');
 const { Room } = require('./../room/room.model');
 const Account = require('./../account/account.model');
-const { chatkit } = require('../services/pusher.services');
+const {
+  chatkit,
+  pusherChannel,
+} = require('../services/pusher.services');
 const File = require('./../file/file.model');
 // const ElasticsearchService  = require('../../index.elasticsearch');
 // const { messageMapping , messageStructure } = require('../services/elastic.services');
@@ -29,7 +32,7 @@ const create = async (req, res, next) => {
       });
     }
 
-    let files = req.body.files.map(file => file._id);
+    let files = req.body.files.map((file) => file._id);
 
     const message = new Message({
       text: req.body.text,
@@ -59,6 +62,12 @@ const create = async (req, res, next) => {
       ],
     });
 
+    pusherChannel.trigger(req.body.room, 'new_message', {
+      message,
+      account,
+      files: req.body.files,
+    });
+
     // save ref of chatkit
     if (msg) {
       message.chatkitId = msg.message_id;
@@ -83,8 +92,6 @@ const create = async (req, res, next) => {
     //   type: message.type,
     //   files: req.body.files
     // });
-
-    // logger.info(` ✔ ️Elasticsearch document ${response.result}`);
 
     return res.status(201).json({
       message,
