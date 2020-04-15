@@ -8,7 +8,6 @@ export const getNotifications = (companyId: string) => async (
   getState: any
 ) => {
   try {
-    console.log('notification......');
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(`notifications`, headers);
@@ -18,7 +17,6 @@ export const getNotifications = (companyId: string) => async (
           count = count + 1;
         }
       });
-      console.log(count);
       dispatch({
         type: NOTIFICATION.SET_READ_COUNT,
         payload: count
@@ -45,7 +43,6 @@ export const readNotification = (notificationId: any) => async (
   dispatch: any
 ) => {
   try {
-    console.log('notification......');
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(
