@@ -3,21 +3,21 @@ const config = require('../../config/config');
 const _ = require('lodash');
 
 
-// const channels_client = new Pusher({
-//   appId: config.pusherChanel.appid,
-//   key: config.pusherChanel.key,
-//   secret: config.pusherChanel.secret,
-//   cluster: config.pusherChanel.cluster,
-//   useTLS: true,
-// });
-
 const channels_client = new Pusher({
-    appId: '858307',
-    key: '2d2483157c37a8782f19',
-    secret: '45076d25b7f1dad63f12',
-    cluster: 'ap2',
-    useTLS: true,
-  });
+  appId: config.pusherChanel.appid,
+  key: config.pusherChanel.key,
+  secret: config.pusherChanel.secret,
+  cluster: config.pusherChanel.cluster,
+  useTLS: true,
+});
+
+// const channels_client = new Pusher({
+//     appId: '858307',
+//     key: '2d2483157c37a8782f19',
+//     secret: '45076d25b7f1dad63f12',
+//     cluster: 'ap2',
+//     useTLS: true,
+//   });
 
 
 module.exports.sendCompanyNotification = async (
