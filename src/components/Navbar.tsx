@@ -4,7 +4,7 @@ import {
   Popover,
   Position,
   ButtonGroup,
-  Dialog
+  Dialog,
 } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { NavLink } from 'react-router-dom';
@@ -64,7 +64,7 @@ const NavbarTopComponent = (
           height: '60px',
           borderColor: props.scrollTop > 60 ? '#0fa3a3' : 'white',
           position: 'sticky',
-          borderRadius: '0.5rem 0.5rem 0px 0px'
+          borderRadius: '0.5rem 0.5rem 0px 0px',
         }}
       >
         <div>
@@ -72,7 +72,7 @@ const NavbarTopComponent = (
             <div
               className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
               style={{
-                textOverflow: 'ellipsis'
+                textOverflow: 'ellipsis',
               }}
             >
               {props.type === 'company' ? props.companyName : ''}
@@ -120,7 +120,7 @@ const NavbarTopComponent = (
                     badgeContent={props.read}
                     anchorOrigin={{
                       vertical: 'top',
-                      horizontal: 'right'
+                      horizontal: 'right',
                     }}
                     color="secondary"
                   >
@@ -145,7 +145,7 @@ const NavbarTopComponent = (
                 style={{
                   fontSize: '0.8rem',
                   fontWeight: 600,
-                  border: '1px solid'
+                  border: '1px solid',
                 }}
                 text="My Companies"
               />
@@ -201,7 +201,7 @@ const NavbarTopComponent = (
                 style={{
                   width: '2rem',
                   height: '2rem',
-                  objectFit: 'cover'
+                  objectFit: 'cover',
                 }}
                 alt="user"
               />
@@ -231,7 +231,7 @@ const mapStateToProps = (state: any) => {
     companyName: state.companyReducer.currentCompany.name,
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
-    read: state.notificationReducer.read
+    read: state.notificationReducer.read,
   };
 };
 
@@ -239,5 +239,5 @@ export const NavbarTop = connect(mapStateToProps, {
   logoutAction,
   companySubscriber,
   readNotification,
-  getNotifications
+  getNotifications,
 })(withRouter(NavbarTopComponent));

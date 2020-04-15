@@ -19,11 +19,11 @@ export const getNotifications = (companyId: string) => async (
       });
       dispatch({
         type: NOTIFICATION.SET_READ_COUNT,
-        payload: count
+        payload: count,
       });
       dispatch({
         type: NOTIFICATION.GET_NOTIFICATIONS,
-        payload: response.data
+        payload: response.data,
       });
       return response.data;
     }
@@ -50,7 +50,7 @@ export const readNotification = (notificationId: any) => async (
         headers
       );
       dispatch({
-        type: NOTIFICATION.READ_NOTIFICATION
+        type: NOTIFICATION.READ_NOTIFICATION,
       });
       return response.data;
     }
