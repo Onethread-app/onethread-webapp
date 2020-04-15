@@ -34,7 +34,8 @@ module.exports.sendCompanyNotification = async (
   channels_client.trigger(
     company.toString(), 
     `${company}-superAdmin`,
-     userNotification
+     userNotification,
+     adminUser.pusherSock
      );
 
 };
@@ -58,7 +59,8 @@ module.exports.sendCompanyRoleNotification = async (
   channels_client.trigger(
     companyChannelsPusher, 
     company.toString(), 
-     [userNotification]
+     [userNotification],
+     adminUser.pusherSock
      );
 
 };
@@ -82,7 +84,8 @@ module.exports.sendMultipleNotification = async (
   channels_client.trigger(
     companyChannelsPusher, 
     company.toString(),
-    userNotifications//ARRAY
+    userNotifications,//ARRAY
+    adminUser.pusherSock
      );
 
 };
@@ -127,7 +130,8 @@ module.exports.sendCompanyAndProjectNotification = async (
   channels_client.trigger(
     allChannel, 
     project.company.toString(), 
-     userNotification
+     userNotification,
+     adminUser.pusherSock
      );
 
 };

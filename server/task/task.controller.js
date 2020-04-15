@@ -55,7 +55,7 @@ const create = async (req, res, next) => {
    });
 
     const text =`${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
-    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name}, text, 'task' );
+    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'task' );
        
     column.tasks.push(createdTask._id);
     await column.save();
@@ -295,7 +295,7 @@ const dragTask = async (req, res, next) => {
      });
 
     const text =`${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
-    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name}, text, 'task' );
+    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'task' );
     
     
     await ActivityCtrl.create(

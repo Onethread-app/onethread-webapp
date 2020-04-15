@@ -94,6 +94,7 @@ const addTeamMember = async (req, res, next) => {
       createTeamAddNotification(projectOwner, allTeamMembers, {
         _id: req.user._id,
         name: req.user.name,
+        pusherSock: req.headers.clientid,
       });
 
       return sendJSONresponse(res, 201, {

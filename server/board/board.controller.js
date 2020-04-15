@@ -72,16 +72,16 @@ const create = async (req, res, next) => {
     }).select('_id name company');
     
     //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
-    
+    console.log( req.headers.clientid);
     const text =`${req.user.name} has created a board ${req.body.name} from ${project.name}`; 
-    createBoardNotification(project, {_id:req.user._id, name: req.user.name}, text );
+    createBoardNotification(project, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid }, text );
    const createdBoard = await board.save()
       
-    return res.status(201).json(createdBoard);
+    return res.status(201).json(req.headers);
       
       
   } catch (error) {
-    
+    console.log(error)
     logger.error(`Board create: ${error}`);
     
     next(error);
@@ -107,7 +107,7 @@ const addBoardMembers = async (req, res, next) => {
     const index  = board.members.findIndex(x => x._id.toString() == memberID);
     
     const text =`${req.user.name} has added  ${board.members[index].name} in ${board.name} from ${board.project.name}`; 
-    createBoardNotification(board.project, {_id:req.user._id, name: req.user.name}, text );
+    createBoardNotification(board.project, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid }, text );
     const memberList = board.members;
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {
