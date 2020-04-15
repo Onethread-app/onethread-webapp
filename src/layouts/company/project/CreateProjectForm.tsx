@@ -262,7 +262,7 @@ const FormComponent = (props: {
                 />
                 <Field<string>
                   name="projectType"
-                  // validate={required}
+                  validate={required}
                   render={({ input, meta }) => (
                     <div className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}>
                       <DropdownFieldErrorWithLabel
