@@ -393,7 +393,7 @@ module.exports.list = async (req, res, next) => {
     await UserNotification.find({
       account: req.user._id,
     })
-      .select('_id read notification account')
+      .select('_id read notification account createdAt')
       .populate(option)
       .sort({ createdAt: -1 })
       .skip(+skip)
