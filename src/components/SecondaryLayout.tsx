@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { UPDATE_ROOM, GET_COMPANY_ROOMS } from 'stores/room/Types';
+import { userSubscriber } from 'layouts/company/room/channelSubscribe';
+import { isEmpty } from 'lodash';
+import { User } from 'stores/user/Reducer';
 
 // tslint:disable-next-line: no-var-requires
 const { withChatkit } = require('@pusher/chatkit-client-react');
@@ -12,6 +15,7 @@ interface SecondaryLayoutProps {
 
 export const SecondaryLayout = withChatkit((props: SecondaryLayoutProps) => {
   const companyId = useSelector((state: any) => state.companyReducer.currentCompany._id);
+  const user: User = useSelector((state: any) => state.userReducer.user);
 
   const dispatch = useDispatch();
 
@@ -51,6 +55,15 @@ export const SecondaryLayout = withChatkit((props: SecondaryLayoutProps) => {
       dispatch({ type: GET_COMPANY_ROOMS, payload: companyRooms });
     }
   }, [props.chatkit, companyId]);
+
+  useEffect(() => {
+    async function subscribeUser() {
+      await userSubscriber();
+    }
+    if (!isEmpty(user._id)) {
+      subscribeUser();
+    }
+  }, []);
 
   return props.Component ? <props.Component /> : null;
 });

@@ -9,6 +9,7 @@ export const local = 'http://localhost:4040/api/v1/';
 export const server = local;
 
 export const TokenUrlServer = `${server}chatkit/authenticate`;
+export const channelAuthEndPoint = `${server}channel/authenticate`;
 
 export const InstanceLocator = process.env.REACT_APP_PUSHER_INSTANCE_LOCATOR;
 
