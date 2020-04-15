@@ -82,13 +82,13 @@ const NavbarTopComponent = (
         <div className="flex items-center">
           {props.match.path !== '/:username' && (
             <Popover
-              popoverClassName="bg-white mw5 m1 ml1"
+              popoverClassName="bg-white"
               position={Position.BOTTOM}
               // inline={true}
               content={
                 <div
-                  style={{ maxHeight: '300px', paddingBottom: '5px' }}
-                  className="h25 overflow-y-auto"
+                  style={{ maxHeight: '300px', width: '500px' }}
+                  className="pa3 overflow-y-auto"
                 >
                   {props.notifications.length > 0 ? (
                     props.notifications.map((sNotification: any) => (
@@ -106,8 +106,8 @@ const NavbarTopComponent = (
                     ))
                   ) : (
                     <div
-                      style={{ maxHeight: '300px', paddingBottom: '5px' }}
-                      className="h25 overflow-y-auto"
+                      style={{ maxHeight: '300px'}}
+                      className="pa3 overflow-y-auto"
                     >
                       Loading..
                     </div>
@@ -115,7 +115,7 @@ const NavbarTopComponent = (
                 </div>
               }
               target={
-                <div className="mr3 mr4-l">
+                <div className="mh4 pointer">
                   <Badge
                     badgeContent={props.read}
                     anchorOrigin={{
