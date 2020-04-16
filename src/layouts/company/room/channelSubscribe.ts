@@ -1,21 +1,22 @@
-import { store } from 'Store';
 import Pusher from 'pusher-js';
 import { channelAuthEndPoint } from 'config';
 import { User } from 'stores/user/Reducer';
 import { UPDATE_PUSHER_INSTANCE, NEW_MESSAGE } from 'stores/room/Types';
 import { IRoomMessage, IRoomMember, IRoomFile } from 'stores/room/Reducer';
+import { store } from 'Store';
+import { CHANNEL_USER_LOGIN, CHANNEL_USER_JOINED, CHANNEL_USER_LEAVED } from 'stores/pusher/Types';
 
 export interface IChannelMember {
   id: string;
   info: {
-    name: string,
+    name: string;
     email: string;
   };
 }
 
 export interface IChannelSubscriptionSucceeded {
   members: {
-    [key: string]: Array<IChannelMember['info']>;
+    [id: string]: IChannelMember['info'];
   };
   count: number;
   myID: string;
@@ -30,8 +31,10 @@ export interface INewMessagePayload {
 
 export const userSubscriber = async () => {
   // Pusher.logToConsole = true;
-  const token = typeof window !== undefined && localStorage.getItem('tigrow_acc_id') ?
-    JSON.parse(localStorage.getItem('tigrow_acc_id')!) : null;
+  const token =
+    typeof window !== undefined && localStorage.getItem('tigrow_acc_id')
+      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+      : null;
 
   const user: User = await store.getState().userReducer.user;
 
@@ -41,17 +44,17 @@ export const userSubscriber = async () => {
     authEndpoint: channelAuthEndPoint,
     auth: {
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
       params: {
-        account: user._id
-      }
-    }
+        account: user._id,
+      },
+    },
   });
 
   await store.dispatch({
     type: UPDATE_PUSHER_INSTANCE,
-    payload: pusher
+    payload: pusher,
   });
 
   pusher.connection.bind('error', (err: any) => {
@@ -64,28 +67,29 @@ export const userSubscriber = async () => {
   const channel = pusher.subscribe('presence-quickstart');
 
   channel.bind('pusher:subscription_succeeded', async (data: IChannelSubscriptionSucceeded) => {
-    // tslint:disable-next-line: no-console
-    // console.log('data', data);
-    channel.bind('pusher:member_added', (member: IChannelMember) => {
-      // tslint:disable-next-line: no-console
-      // console.log('join', member);
+    await store.dispatch({
+      type: CHANNEL_USER_LOGIN,
+      payload: data.members,
     });
-    channel.bind('pusher:member_removed', (member: IChannelMember) => {
-      // tslint:disable-next-line: no-console
-      // console.log('leave', member);
+
+    channel.bind('pusher:member_added', async (member: IChannelMember) => {
+      await store.dispatch({
+        type: CHANNEL_USER_JOINED,
+        payload: member,
+      });
+    });
+
+    channel.bind('pusher:member_removed', async (member: IChannelMember) => {
+      await store.dispatch({
+        type: CHANNEL_USER_LEAVED,
+        payload: member,
+      });
     });
   });
-
 };
 
 export const roomSubscribe = async (roomId: string) => {
-  const pusher: Pusher = await store.getState().roomReducer.pusherInstance;
-
-  await store.dispatch({
-    type: UPDATE_PUSHER_INSTANCE,
-    payload: pusher
-  });
-
+  const pusher: Pusher = await store.getState().pusherReducer.pusherInstance;
   const channel = pusher.subscribe(roomId);
 
   // TODO who are currently in the room
