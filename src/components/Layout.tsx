@@ -20,6 +20,9 @@ import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
 
+import { CustomView, MobileOnlyView, isMobileOnly } from 'react-device-detect';
+import { Navbar, Alignment, Button } from '@blueprintjs/core';
+
 // tslint:disable-next-line: no-var-requires
 const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
 
@@ -134,7 +137,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   return (
     <div
       className="cf vh-100"
-      style={{ background: '#060517' }}
+      style={{ background: isMobileOnly ? 'white' : '#060517' }}
       onScroll={() =>
         scrollRef &&
         scrollRef.current &&
@@ -158,106 +161,175 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           </Link>
         </p>
       ) : (
-            <ChatkitProvider
-              instanceLocator={InstanceLocator}
-              tokenProvider={tokenProvider}
-              userId={props.user._id}
-            >
-              {queries.view === 'default' ? <div
-                id="main-layout"
-                className={`flex relative h-100 ${props.rightSidebarOpen &&
-                  'main-layout-overlay'}`}
-              >
-                <div
-                  className={`relative`}
-                  style={{
-                    transition: 'width 0.4s',
-                    width: leftOpen ? '15%' : '4%'
-                  }}
+            <>
+              <CustomView condition={!isMobileOnly}>
+                <ChatkitProvider
+                  instanceLocator={InstanceLocator}
+                  tokenProvider={tokenProvider}
+                  userId={props.user._id}
                 >
-                  <div>
-                    <Sidebar
-                      user={props.user}
-                      company={props.company}
-                      type={(props.match.params as any).cname ? 'company' : 'default'}
-                      leftOpen={leftOpen}
-                      project={props.project}
-                      companyRooms={props.companyRooms}
-                    />
-                  </div>
-                </div>
-                <div
-                  className="relative br3 pv1"
-                  style={{
-                    transition: 'width 0.4s',
-                    width: leftOpen
-                      ? props.rightSidebarOpen
-                        ? '55%'
-                        : '85%'
-                      : props.rightSidebarOpen
-                        ? '66%'
-                        : '96%'
-                  }}
-                >
-                  <span
-                    className="pointer absolute bp3-icon z-3 top-1 left--1"
-                    onClick={() => setLeftOpen(!leftOpen)}
+                  {queries.view === 'default' ? <div
+                    id="main-layout"
+                    className={`flex relative h-100 ${props.rightSidebarOpen &&
+                      'main-layout-overlay'}`}
                   >
-                    <img
-                      src={leftOpen ? arrowLeft : arrowRight}
-                      className="br2 w2"
-                      color="#0FA3A3"
-                    />
-                  </span>
-                  <div className="flex flex-column h-100">
-                    <NavbarTop
-                      scrollTop={scrollTop}
-                      type={(props.match.params as any).cname ? 'company' : 'default'}
-                    />
                     <div
-                      ref={scrollRef}
-                      className="flex-grow-1 overflow-y-auto bg-white"
-                      style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+                      className={`relative`}
+                      style={{
+                        transition: 'width 0.4s',
+                        width: leftOpen ? '15%' : '4%'
+                      }}
+                    >
+                      <div>
+                        <Sidebar
+                          user={props.user}
+                          company={props.company}
+                          type={(props.match.params as any).cname ? 'company' : 'default'}
+                          leftOpen={leftOpen}
+                          project={props.project}
+                          companyRooms={props.companyRooms}
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="relative br3 pv1"
+                      style={{
+                        transition: 'width 0.4s',
+                        width: leftOpen
+                          ? props.rightSidebarOpen
+                            ? '55%'
+                            : '85%'
+                          : props.rightSidebarOpen
+                            ? '66%'
+                            : '96%'
+                      }}
+                    >
+                      <span
+                        className="pointer absolute bp3-icon z-3 top-1 left--1"
+                        onClick={() => setLeftOpen(!leftOpen)}
+                      >
+                        <img
+                          src={leftOpen ? arrowLeft : arrowRight}
+                          className="br2 w2"
+                          color="#0FA3A3"
+                        />
+                      </span>
+                      <div className="flex flex-column h-100">
+                        <NavbarTop
+                          scrollTop={scrollTop}
+                          type={(props.match.params as any).cname ? 'company' : 'default'}
+                        />
+                        <div
+                          ref={scrollRef}
+                          className="flex-grow-1 overflow-y-auto bg-white"
+                          style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+                          <SecondaryLayout Component={props.Component} />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="relative h-100"
+                      style={{
+                        transition: 'width 0.4s',
+                        width: props.rightSidebarOpen ? '30%' : '0%',
+                        zIndex: 5
+                      }}
+                    >
+                      <div
+                        id="rightSidebar"
+                        className="h-100 c-tigrowWhite"
+                        style={{
+                          background: 'rgb(6, 5, 23)'
+                        }}
+                      ></div>
+                    </div>
+                  </div> :
+                    <div className="vh-100 bg-white"
+                    // style={{ borderRadius: '0.5rem 0.5rem 0.5rem 0.5rem' }}
+                    >
                       <SecondaryLayout Component={props.Component} />
                     </div>
-                  </div>
-                </div>
-                <div
-                  className="relative h-100"
-                  style={{
-                    transition: 'width 0.4s',
-                    width: props.rightSidebarOpen ? '30%' : '0%',
-                    zIndex: 5
-                  }}
+                    // <div className="flex flex-column h-100">
+                    //   <NavbarTop
+                    //     scrollTop={scrollTop}
+                    //     type={(props.match.params as any).cname ? 'company' : 'default'}
+                    //   />
+                    //   <div
+                    //     ref={scrollRef}
+                    //     className="flex-grow-1 overflow-y-auto bg-white"
+                    //     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+                    //     <SecondaryLayout Component={props.Component} />
+                    //   </div>
+                    // </div>
+                  }
+                </ChatkitProvider>
+              </CustomView>
+              <MobileOnlyView>
+                <ChatkitProvider
+                  instanceLocator={InstanceLocator}
+                  tokenProvider={tokenProvider}
+                  userId={props.user._id}
                 >
-                  <div
-                    id="rightSidebar"
-                    className="h-100 c-tigrowWhite"
-                    style={{
-                      background: 'rgb(6, 5, 23)'
-                    }}
-                  ></div>
-                </div>
-              </div> :
-                <div className="vh-100 bg-white"
-                // style={{ borderRadius: '0.5rem 0.5rem 0.5rem 0.5rem' }}
-                >
-                  <SecondaryLayout Component={props.Component} />
-                </div>
-                // <div className="flex flex-column h-100">
-                //   <NavbarTop
-                //     scrollTop={scrollTop}
-                //     type={(props.match.params as any).cname ? 'company' : 'default'}
-                //   />
-                //   <div
-                //     ref={scrollRef}
-                //     className="flex-grow-1 overflow-y-auto bg-white"
-                //     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
-                //     <SecondaryLayout Component={props.Component} />
-                //   </div>
-                // </div>
-              }
-            </ChatkitProvider>
+                  {queries.view === 'default' ? <div
+                    id="main-layout"
+                    className={`flex relative h-100 ${props.rightSidebarOpen &&
+                      'main-layout-overlay'}`}
+                  >
+                    <div
+                      className="relative br3 pv1"
+                      style={{
+                        transition: 'width 0.4s',
+                        width: props.rightSidebarOpen
+                          ? '0%'
+                          : '100%'
+                      }}
+                    >
+                      <div className="flex flex-column h-100">
+                        {/* <NavbarTop
+                          scrollTop={scrollTop}
+                          type={(props.match.params as any).cname ? 'company' : 'default'}
+                        /> */}
+                        <div
+                          ref={scrollRef}
+                          className="flex-grow-1 overflow-y-auto bg-white"
+                          style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+                          <SecondaryLayout Component={props.Component} />
+                        </div>
+                       { props.rightSidebarOpen ? undefined : <Navbar style={{position: 'fixed', bottom: '0'}}>
+                          <Navbar.Group align={Alignment.LEFT} >
+                            <Navbar.Heading>Blueprint</Navbar.Heading>
+                            <Navbar.Divider />
+                            <Button className="bp3-minimal" icon="home" text="Home" />
+                            <Button className="bp3-minimal" icon="document" text="Files" />
+                          </Navbar.Group>
+                        </Navbar>}
+                      </div>
+                    </div>
+                    <div
+                      className="relative h-100"
+                      style={{
+                        transition: 'width 0.4s',
+                        width: props.rightSidebarOpen ? '100%' : '0%',
+                        zIndex: 5
+                      }}
+                    >
+                      <div
+                        id="rightSidebar"
+                        className="h-100 c-tigrowWhite"
+                        style={{
+                          background: 'rgb(6, 5, 23)'
+                        }}
+                      ></div>
+                    </div>
+                  </div> :
+                    <div className="vh-100 bg-white"
+                    >
+                      <SecondaryLayout Component={props.Component} />
+                    </div>
+                  }
+                </ChatkitProvider>
+              </MobileOnlyView>
+            </>
           )}
     </div >
   );
