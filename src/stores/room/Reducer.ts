@@ -14,12 +14,10 @@ import {
   ADD_MEMBER_IN_ROOM_ERROR,
   ADD_MEMBER_IN_ROOM,
   ACTIVE_ROOM,
-  ON_PRESENCE_CHANGE,
   UPDATE_ROOM,
   ON_USER_STARTED_TYPING,
   ON_USER_STOPPED_TYPING,
   CLEAR_ROOMS_ERROR,
-  REFRESH_MEMBER,
   TOGGLE_EMOJI_PICKER,
   FILE_UPLOAD,
   CLEAR_FILE_UPLOAD,
@@ -38,7 +36,6 @@ import {
   CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
   CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY,
 } from './Types';
-import { isEmpty } from 'lodash';
 
 export interface IRoom {
   _id: string;
@@ -119,7 +116,6 @@ export interface IRoomReducer {
     }>;
   };
   users: IRoomMember[];
-  userStatus: any;
   roomMembers: any[];
   discussions: IRoomDiscussion[];
   sharedFileMessages: IRoomMessage[];
@@ -150,7 +146,6 @@ const InitialState: IRoomReducer = {
     users: [],
   },
   users: [],
-  userStatus: {},
   roomMembers: [],
   discussions: [],
   sharedFileMessages: [],
@@ -176,14 +171,6 @@ export const sortRooms = (a: IRoom, b: IRoom) => {
   // 			1 : createdAtA < createdAtB ?
   // 				-1 : 0;
   return createdAtA > createdAtB ? 1 : createdAtA < createdAtB ? -1 : 0;
-};
-
-const userStatus = (arr: any) => {
-  const obj = {};
-  arr.forEach((e: any) => {
-    obj[e.id] = e.presence.state;
-  });
-  return obj;
 };
 
 const updateUnreadCount = (roomsUnreadCount: any, updatedRoom: any) => {
@@ -281,14 +268,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         activeRoom: action.payload,
-        userStatus: userStatus(action.payload.users),
-        loading: false,
-      };
-    case REFRESH_MEMBER:
-    case ON_PRESENCE_CHANGE:
-      return {
-        ...state,
-        userStatus: !isEmpty(state.activeRoom) ? userStatus((state.activeRoom as any).users) : state.userStatus,
         loading: false,
       };
     case CURRENT_ROOM:
