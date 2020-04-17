@@ -8,10 +8,12 @@ import { TOGGLE_EMOJI_PICKER, CLEAR_FILE_UPLOAD, DELETE_ONE_PENDING_FILE } from 
 import ReactDOM from 'react-dom';
 import { Picker } from 'emoji-mart';
 import { FileUpload } from './fileUpload';
-import { IRoomPendingFile, IRoomReducer } from 'stores/room/Reducer';
+import { IRoomPendingFile, IRoomReducer, ITypingUsers } from 'stores/room/Reducer';
 import SmileIcon from './../../../../../resources/images/Emoji.svg';
 import SendIcon from './../../../../../resources/images/Send.svg';
 import AttachmentIcon from './../../../../../resources/images/attachment.svg';
+import { isTypingStartTrigger, isTypingStopTrigger } from '../../channelSubscribe';
+import { User } from 'stores/user/Reducer';
 
 interface SendMessageFormProps {
   sendRoomMessage: (data: { text: string; room: string; files: any[]; type?: string }) => void;
@@ -19,7 +21,8 @@ interface SendMessageFormProps {
   profileImage: any;
   emojiPicker: boolean;
   pendingFiles: IRoomPendingFile[];
-  typingUsers: Array<{ name: string; roomId: string }>;
+  typingUsers: ITypingUsers[];
+  user: User;
 }
 
 const SendMessageFormComponent = (props: SendMessageFormProps) => {
@@ -33,6 +36,11 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
 
   const dispatch = useDispatch();
 
+  // user typing states
+  const [typingTimer, setTypingTimer] = useState<any>(null);
+  const [isTyping, setIsTyping] = useState(false);
+  const [typingInterval] = useState(1000);
+
   useEffect(() => {
     setText('');
     setTextError('');
@@ -40,19 +48,32 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
     dispatch({ type: CLEAR_FILE_UPLOAD });
   }, [props.currentRoom._id]);
 
-  // tslint:disable-next-line: no-shadowed-variable
-  const resetMessage = (text: string) => {
-    const resetText = text.replace(/(\r\n|\n|\r)/gm, '');
+  const resetMessage = (_text: string) => {
+    const resetText = _text.replace(/(\r\n|\n|\r)/gm, '');
     setText(resetText);
     return resetText;
   };
 
-  const onChange = (e: any) => {
+  const doneTyping = async () => {
+    await isTypingStopTrigger({
+      roomId: props.currentRoom._id,
+      name: `${props.user.firstName} ${props.user.lastName}`,
+      _id: props.user._id,
+    });
+
+    setIsTyping(false);
+  };
+
+  const onChange = async (e: any) => {
     setText(e.target.value);
-    // TODO send typing trigger
-    // props.chatkit.currentUser
-    // 	.isTypingIn({ roomId: props.currentRoom._id })
-    // 	.catch((error: any) => console.error('error on typing', error));
+    if (!isTyping) {
+      await isTypingStartTrigger({
+        roomId: props.currentRoom._id,
+        name: `${props.user.firstName} ${props.user.lastName}`,
+        _id: props.user._id,
+      });
+    }
+    setIsTyping(true);
   };
 
   const sendMessage = async (_text: string, type: string) => {
@@ -140,7 +161,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
     <>
       {/* typing indicator */}
       {props.typingUsers.length
-        ? props.typingUsers.map((user: { name: string; roomId: string }, i: number) => {
+        ? props.typingUsers.map((user, i: number) => {
             if (isEmpty(props.currentRoom._id) === false && isEqual(props.currentRoom._id, user.roomId) === true) {
               return (
                 <h6 key={i} className="mv1 pl1">
@@ -217,6 +238,13 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
             value={isEqual(text.length, 1) && isEqual(text, '\n') ? resetMessage(text) : text}
             onChange={onChange}
             onKeyPress={handleKeyPress}
+            onKeyUp={() => {
+              setTypingTimer(setTimeout(doneTyping, typingInterval));
+              clearTimeout(typingTimer);
+            }}
+            onKeyDown={() => {
+              clearTimeout(typingTimer);
+            }}
             placeholder="Type your message and hit ENTER to send"
           ></textarea>
           <Button className="bp3-minimal outline-0 toggle-emoji" onClick={toggleEmojiPicker}>
@@ -225,34 +253,6 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
             </span>
           </Button>
         </div>
-        {/* TODO onKeyPress has not found yet */}
-        {/* <ReactTextareaAutocomplete
-					className="message-input my-textarea"
-					value={isEqual(text.length, 1) && isEqual(text, "\n") ? resetMessage(text) : text}
-					loadingComponent={() => <span>Loading</span>}
-					onChange={onChange}
-					trigger={{
-						':': {
-							dataProvider: (token: any): any => {
-								if (token) {
-									let a = (emojiIndex.search(token) as any).map((o: BaseEmoji) => ({
-										colons: o.colons,
-										native: o.native,
-									}));
-									return a;
-								}
-								return null;
-							},
-							component: (obj: any) => {
-								const { colons, native } = obj.entity;
-								return (
-									<div>{`${colons.replace(/:/, '')} ${native}`}</div>
-								)
-							},
-							output: (item: any) => `${item.native}`,
-						},
-					}}
-				/> */}
         <Button className="bp3-minimal outline-0" onClick={handleMessageSend}>
           <span className="bp3-icon">
             <img src={SendIcon} width="30px" height="30px" color="#0FA3A3" />
@@ -264,7 +264,6 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
           </span>
         </Button>
       </div>
-      {/* <div>{JSON.stringify({ text, length: text.length, sendStatus }, null, 2)}</div> */}
       {showFileDialog && (
         <Dialog
           icon="briefcase"
@@ -286,6 +285,7 @@ const mapStateToProps = (state: any) => {
     emojiPicker: state.roomReducer.emojiPicker,
     typingUsers: state.roomReducer.typing.users,
     pendingFiles: state.roomReducer.pendingFiles,
+    user: state.userReducer.user,
   };
 };
 export const SendMessageForm = connect(mapStateToProps, { sendRoomMessage })(SendMessageFormComponent);

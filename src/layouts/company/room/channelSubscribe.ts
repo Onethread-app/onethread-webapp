@@ -1,8 +1,8 @@
 import Pusher from 'pusher-js';
 import { channelAuthEndPoint } from 'config';
 import { User } from 'stores/user/Reducer';
-import { UPDATE_PUSHER_INSTANCE, NEW_MESSAGE } from 'stores/room/Types';
-import { IRoomMessage, IRoomMember, IRoomFile } from 'stores/room/Reducer';
+import { UPDATE_PUSHER_INSTANCE, NEW_MESSAGE, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING } from 'stores/room/Types';
+import { IRoomMessage, IRoomMember, IRoomFile, ITypingUsers } from 'stores/room/Reducer';
 import { store } from 'Store';
 import { CHANNEL_USER_LOGIN, CHANNEL_USER_JOINED, CHANNEL_USER_LEAVED } from 'stores/pusher/Types';
 
@@ -90,7 +90,7 @@ export const userSubscriber = async () => {
 
 export const roomSubscribe = async (roomId: string) => {
   const pusher: Pusher = await store.getState().pusherReducer.pusherInstance;
-  const channel = pusher.subscribe(roomId);
+  const channel = pusher.subscribe(`private-${roomId}`);
 
   // TODO who are currently in the room
   // const presenceChannel = pusher.subscribe(`presence-${roomId}`);
@@ -117,4 +117,28 @@ export const roomSubscribe = async (roomId: string) => {
     };
     await store.dispatch({ type: NEW_MESSAGE, payload: formatMessage });
   });
+
+  // user start typing hook
+  channel.bind('client-user-start-typing', async (data: ITypingUsers) => {
+    await store.dispatch({ type: ON_USER_STARTED_TYPING, payload: data });
+  });
+
+  // user stop typing hook
+  channel.bind('client-user-stop-typing', async (data: ITypingUsers) => {
+    await store.dispatch({ type: ON_USER_STOPPED_TYPING, payload: data });
+  });
+};
+
+export const isTypingStartTrigger = async (typingUser: ITypingUsers) => {
+  const pusher: Pusher = await store.getState().pusherReducer.pusherInstance;
+  const channel = pusher.subscribe(`private-${typingUser.roomId}`);
+
+  channel.trigger('client-user-start-typing', typingUser);
+};
+
+export const isTypingStopTrigger = async (typingUser: ITypingUsers) => {
+  const pusher: Pusher = await store.getState().pusherReducer.pusherInstance;
+  const channel = pusher.subscribe(`private-${typingUser.roomId}`);
+
+  channel.trigger('client-user-stop-typing', typingUser);
 };

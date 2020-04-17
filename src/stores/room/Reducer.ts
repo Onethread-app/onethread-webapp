@@ -104,16 +104,19 @@ export interface ICompanyRoom {
   unreadCount: number;
 }
 
+export interface ITypingUsers {
+  _id: string;
+  name: string;
+  roomId: string;
+}
+
 export interface IRoomReducer {
   activeRoom: {};
   currentRoom: IRoom;
   allMessages: boolean;
   messages: IRoomMessage[];
   typing: {
-    users: Array<{
-      name: string;
-      roomId: string;
-    }>;
+    users: ITypingUsers[];
   };
   users: IRoomMember[];
   roomMembers: any[];
@@ -247,7 +250,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
         typing: {
           ...state.typing,
           users: state.typing.users.filter((user: any) => {
-            return user.name !== action.payload.name;
+            return user._id !== action.payload._id;
           }),
         },
         loading: false,
