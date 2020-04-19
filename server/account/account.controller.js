@@ -13,7 +13,6 @@ const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
 } = require('../services/email.services');
-const { chatkit } = require('../services/pusher.services');
 const {
   addTokenToBlackList,
   accountVerificationToken,
@@ -76,10 +75,6 @@ const register = async (req, res, next) => {
   await account
     .save()
     .then(async (user) => {
-      await chatkit.createUser({
-        id: user._id,
-        name: user.name,
-      });
       let token = crypto.randomBytes(20).toString('hex');
       let verifyToken = crypto
         .createHash('sha256')
@@ -389,13 +384,6 @@ const accountUpdate = async (req, res, next) => {
     .exec()
     .then(async (user) => {
       if (user) {
-        if (req.body.name !== user.name) {
-          await chatkit.updateUser({
-            id: user._id,
-            name: req.body.name,
-          });
-        }
-
         // if (typeof user.about !== 'undefined') {
         //   client.hmset(`userID:${user._id}`, 'about', user.about);
         //   logger.info(`about added into ${user.email}'s cache`);

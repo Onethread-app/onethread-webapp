@@ -4,7 +4,6 @@ const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
-const { chatkit } = require('../services/pusher.services');
 const {
   sendCompanyNotification,
 } = require('../services/notification.services');
@@ -76,7 +75,7 @@ const changeName = async (req, res, next) => {
     //   notification: notification._id,
     //   company: req.company._id,
     // });
-    let usersNotification = members.map(m => {
+    let usersNotification = members.map((m) => {
       return {
         notification: notification._id,
         account: m.account,
@@ -96,11 +95,6 @@ const changeName = async (req, res, next) => {
 
 // create a company profile
 const createCompany = async (req, res, next) => {
-  // Check for JSON
-  // if (!req.is('application/json')) {
-  //   return res.send("Expects 'application/json'");
-  // }
-
   try {
     // check duplicate company name
     const duplicate = await Company.findOne({
@@ -115,24 +109,12 @@ const createCompany = async (req, res, next) => {
     req.body.account = req.user._id;
     const newCompany = new Company(req.body);
 
-    // create a default room
-    // const newRoom = new Room({
-    //   name: 'General',
-    //   company: newCompany._id,
-    //   members: [req.user._id],
-    //   account: req.user._id,
-    // });
-
     // create a default member
     const newMember = new Member({
       account: req.user._id,
       company: newCompany._id,
       role: 'superAdmin',
     });
-
-    // add ref[member,room] in company
-    //newCompany.members.push(newMember._id);
-    // newCompany.rooms.push(newRoom._id);
 
     // company creation
     const company = await newCompany.save();
@@ -147,15 +129,7 @@ const createCompany = async (req, res, next) => {
         `Elasticsearch document added on ${companyIndex}`,
       ),
     );
-    // const room = await newRoom.save();
-    // await chatkit.createRoom({
-    //   id: room._id,
-    //   creatorId: req.user._id,
-    //   name: room.name,
-    //   customData: {
-    //     company: company._id,
-    //   },
-    // });
+
     const elasticMember = await newMember.save();
 
     const elasticMemberPopulated = await Member.findOne({
@@ -176,10 +150,6 @@ const createCompany = async (req, res, next) => {
         `Elasticsearch document added on ${memberIndex}`,
       ),
     );
-
-    // // add company ref in user
-    // req.user.companies.push(newCompany._id);
-    // await req.user.save();
 
     return res.status(201).json({
       message: 'New company created',
@@ -385,7 +355,7 @@ const getCompanyLoad = async (req, res, next) => {
 const deleteCompany = async (req, res, next) => {
   Company.findByIdAndRemove({ _id: req.params.id })
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         //Store this company's ref into Account
         Account.findOneAndUpdate(
@@ -397,12 +367,12 @@ const deleteCompany = async (req, res, next) => {
           },
         )
           .exec()
-          .then(data => {
+          .then((data) => {
             res.status(200).json({
               message: 'Company deleted',
             });
           })
-          .catch(err => {
+          .catch((err) => {
             res.status(500).json({
               error: err,
             });
@@ -411,13 +381,13 @@ const deleteCompany = async (req, res, next) => {
         res.status(404);
       }
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({ error: err });
     });
 };
 
 const authorizeUser = (functionalRole, ...userRoles) => {
-  return async function(req, res, next) {
+  return async function (req, res, next) {
     // console.log(functionalRole)
     // console.log(req)
     // console.log(...userRoles)
@@ -460,7 +430,7 @@ const searchCompany = async (req, res, next) => {
       isRejected: false,
     }).exec();
 
-    let associateCompanyId = associate.map(m => {
+    let associateCompanyId = associate.map((m) => {
       if (m.company.toString() === companyId) {
         return m.associateCompany;
       }

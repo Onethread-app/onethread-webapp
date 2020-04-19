@@ -4,7 +4,7 @@ const id = Joi.object().keys({
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required()
-    .error(errors => {
+    .error((errors) => {
       return {
         message: 'Invalid ID',
       };
@@ -14,13 +14,11 @@ const id = Joi.object().keys({
 module.exports = {
   createRoom: Joi.object().keys({
     body: Joi.object().keys({
-      name: Joi.string()
-        .max(32)
-        .required(),
+      name: Joi.string().max(32).required(),
       company: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error(errors => {
+        .error((errors) => {
           return {
             message: 'Invalid Company ID',
           };
@@ -28,7 +26,7 @@ module.exports = {
       project: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error(errors => {
+        .error((errors) => {
           return {
             message: 'Invalid Project ID',
           };
@@ -51,24 +49,12 @@ module.exports = {
         .required(),
     }),
   }),
-  recheckMembersWithChatkit: Joi.object().keys({
-    body: Joi.object().keys({
-      company: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required()
-        .error(errors => {
-          return {
-            message: 'Invalid Company ID',
-          };
-        }),
-    }),
-  }),
   archiveRoom: Joi.object().keys({
     params: Joi.object().keys({
       roomId: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error(errors => {
+        .error((errors) => {
           return {
             message: 'Invalid Room ID',
           };
@@ -83,7 +69,7 @@ module.exports = {
       roomId: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error(errors => {
+        .error((errors) => {
           return {
             message: 'Invalid Room ID',
           };
