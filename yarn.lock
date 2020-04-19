@@ -1355,20 +1355,6 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@pusher/chatkit-client-react@^0.1.2":
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/@pusher/chatkit-client-react/-/chatkit-client-react-0.1.4.tgz#6e2004c919e0a3beaa18eaa54161e85ed71d15a1"
-  integrity sha512-k90lVFRx4BqbsM2Lfo1Vc7l8S35U7axd28ABHPysYFbgLLUei2UhIvtsXXuUBlCAmCj4N5VqzsBx2OwFXsdrZw==
-  dependencies:
-    "@pusher/chatkit-client" "^1.13.0"
-    prop-types "^15.7.2"
-    react "^16.9.0"
-
-"@pusher/chatkit-client@^1.13.0":
-  version "1.14.1"
-  resolved "https://registry.yarnpkg.com/@pusher/chatkit-client/-/chatkit-client-1.14.1.tgz#889a8e3175fd0fcc0b2c1550c2071881cd12c540"
-  integrity sha512-s0QYAxGYaJw1Y7terGlbhM/hegFfyAcJds7aj1Gdy4trMCxp6Xo3NDfsQOk/6sccd4T7K0soC/oWk5kEpkUbkA==
-
 "@redux-saga/core@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@redux-saga/core/-/core-1.1.3.tgz#3085097b57a4ea8db5528d58673f20ce0950f6a4"

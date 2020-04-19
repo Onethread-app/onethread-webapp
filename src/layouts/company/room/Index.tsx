@@ -57,65 +57,8 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
       await props.getRoomSharedFiles(roomId);
       await props.getRoomDiscussions(roomId);
       await roomSubscribe(roomId);
-      // subscribeToRoom(roomId);
     }
   };
-
-  // const subscribeToRoom = async (roomId: string) => {
-  //   props.chatkit.currentUser
-  //     .subscribeToRoomMultipart({
-  //       roomId: roomId.toString(),
-  //       hooks: {
-  //         onMessage: (newMessage: any) => {
-  //           const content = JSON.parse(newMessage.parts[0].payload.content);
-
-  //           const formatMessage: IRoomMessage = {
-  //             type: content.message.type,
-  //             files: content.files,
-  //             removed: content.message.removed,
-  //             _id: content.message._id,
-  //             text: content.message.text,
-  //             room: content.message.room,
-  //             discussion: content.message.discussion,
-  //             account: content.account,
-  //             chatkitId: newMessage.id,
-  //             createdAt: newMessage.createdAt,
-  //             updatedAt: newMessage.updatedAt,
-  //           };
-
-  //           dispatch({ type: NEW_MESSAGE, payload: formatMessage });
-  //         },
-  //         onPresenceChanged: (state: any, user: any) => {
-  //           dispatch({ type: ON_PRESENCE_CHANGE });
-  //         },
-  //         onUserStartedTyping: (user: any) => {
-  //           dispatch({
-  //             type: ON_USER_STARTED_TYPING,
-  //             payload: { name: user.name, roomId },
-  //           });
-  //         },
-  //         onUserStoppedTyping: (user: any) => {
-  //           dispatch({
-  //             type: ON_USER_STOPPED_TYPING,
-  //             payload: { name: user.name, roomId },
-  //           });
-  //         },
-  //         onUserJoined: (user: any) => {
-  //           dispatch({ type: REFRESH_MEMBER });
-  //         },
-  //         onUserLeft: (user: any) => {
-  //           // console.log("left : " + user.name);
-  //         },
-  //       },
-  //       messageLimit: 1,
-  //     })
-  //     .then((pusherRoom: any) => {
-  //       dispatch({ type: ACTIVE_ROOM, payload: pusherRoom });
-  //     })
-  //     .catch((err: any) => {
-  //       subscribeToRoom(roomId);
-  //     });
-  // };
 
   // get all rooms
   useEffect(() => {

@@ -18,11 +18,6 @@ import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
 
-// tslint:disable-next-line: no-var-requires
-// const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
-
-// const tokenProvider = new TokenProvider({ url: TokenUrlServer });
-
 const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
@@ -146,11 +141,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           </Link>
         </p>
       ) : (
-        // <ChatkitProvider
-        //   instanceLocator={InstanceLocator}
-        //   tokenProvider={tokenProvider}
-        //   userId={props.user._id}
-        // >
         <>
           {queries.view === 'default' ? (
             <div id="main-layout" className={`flex relative h-100 ${props.rightSidebarOpen && 'main-layout-overlay'}`}>
@@ -232,7 +222,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           // </div>
           }
         </>
-        // </ChatkitProvider>
       )}
     </div>
   );

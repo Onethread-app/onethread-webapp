@@ -11,28 +11,10 @@ interface SecondaryLayoutProps {
 export const SecondaryLayout = (props: SecondaryLayoutProps) => {
   const user: User = useSelector((state: any) => state.userReducer.user);
 
-  // const connectChatManager = () => {
-  //   if (!props.chatkit.isLoading) {
-  //     props.chatkit.chatManager
-  //       .connect({
-  //         onRoomUpdated: (room: any) => {
-  //           dispatch({ type: UPDATE_ROOM, payload: room });
-  //         }
-  //       })
-  //       .then((currentUser: any) => {
-  //         // console.log('Successful connection', currentUser)
-  //       })
-  //       .catch((err: any) => {
-  //         connectChatManager();
-  //       });
-  //   }
-  // };
-
+  // TODO count unread messages here
   // useEffect(() => {
-  //   if (!props.chatkit.isLoading && companyId) {
-  //     connectChatManager();
-
-  //     const companyRooms = props.chatkit.currentUser.rooms
+  //   if (companyId) {
+  //     const companyRooms = rooms
   //       .filter((room: any) => room.customData.company === companyId)
   //       .map((room: any) => {
   //         return {
@@ -46,7 +28,7 @@ export const SecondaryLayout = (props: SecondaryLayoutProps) => {
 
   //     dispatch({ type: GET_COMPANY_ROOMS, payload: companyRooms });
   //   }
-  // }, [props.chatkit, companyId]);
+  // }, [companyId]);
 
   useEffect(() => {
     async function subscribeUser() {
