@@ -28,7 +28,7 @@ export const SecondaryLayout = (props: SecondaryLayoutProps) => {
 
   //     dispatch({ type: GET_COMPANY_ROOMS, payload: companyRooms });
   //   }
-  // }, [, companyId]);
+  // }, [companyId]);
 
   useEffect(() => {
     async function subscribeUser() {
