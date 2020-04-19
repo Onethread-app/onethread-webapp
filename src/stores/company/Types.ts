@@ -43,7 +43,7 @@ export const EDIT_DESIGNATION_ERROR = "EDIT_DESIGNATION_ERROR";
 // Logo
 export const LOGO_UPLOAD = "LOGO_UPLOAD";
 export const LOGO_LOADING = "LOGO_LOADING";
-export const COVER_IMAGE_UPLOAD = "COVER_IMAGE_UPLOAD";
+export const COVER_IMAGE_UPLOAD_COMPANY = "COVER_IMAGE_UPLOAD_COMPANY";
 export const COVER_IMAGE_LOADING = "LOGO_LOADING";
 
 // Pending member
@@ -60,3 +60,17 @@ export const ADD_CERTIFICATE = "ADD_CERTIFICATE";
 
 // Organization
 export const ADD_ORGANIZATION = "ADD_ORGANIZATION";
+
+export const GET_ALL_COMPANY_ANNOUNCEMENT = 'GET_ALL_COMPANY_ANNOUNCEMENT';
+
+export const ADD_ANNOUNCEMENT = "ADD_ANNOUNCEMENT";
+
+// product
+export const GET_ALL_PRODUCT = "GET_ALL_PRODUCT";
+export const ADD_PRODUCT = "ADD_PRODUCT";
+
+// associate no
+export const ADD_TOTAL_ASSOCIATE = "ADD_TOTAL_ASSOCIATE";
+
+// member no
+export const ADD_TOTAL_MEMBER = "ADD_TOTAL_MEMBER";

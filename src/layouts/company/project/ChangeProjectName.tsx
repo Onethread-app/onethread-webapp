@@ -15,6 +15,7 @@ import { updateProjectName } from '../../../stores/project/Actions';
 interface ChangeNameProps {
   setShowDialog: (val: boolean) => void;
   projectId: string;
+  projectName: string;
 }
 
 interface ChangeNameInternalProps extends ChangeNameProps {
@@ -38,7 +39,7 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
     <Form
       onSubmit={onSubmit}
       initialValues={{
-        name: ''
+        name: props.projectName
       }}
       render={({
         handleSubmit,

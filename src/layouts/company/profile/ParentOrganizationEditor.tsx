@@ -1,6 +1,6 @@
 import { Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form, Field } from 'react-final-form';
 import { checkError, maxValue } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
@@ -17,17 +17,16 @@ interface IOrganizationEditProps {
 
 const OrganizationEditComponent = (props: IOrganizationEditProps) => {
 
-  useEffect(() => {
-    async function loadOrganization(getCompanyDetails: (companyName: string) => void) {
-      await getCompanyDetails(props.company.name);
-    }
-    loadOrganization(props.getCompanyDetails);
-  }, []);
+  // useEffect(() => {
+  //   async function loadOrganization(getCompanyDetails: (companyName: string) => void) {
+  //     await getCompanyDetails(props.company.name);
+  //   }
+  //   loadOrganization(props.getCompanyDetails);
+  // }, []);
 
   const onSubmit = async (values: any) => {
-    window.alert(JSON.stringify(values, null, 2));
     const response = await props.addOrganization(values);
-    if (response === 201) {
+    if (response === 200) {
       props.setShowDialog(false);
     }
   };

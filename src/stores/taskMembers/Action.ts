@@ -59,7 +59,7 @@ export const getAllMembers = () => async (dispatch: any, getState: any) => {
             _id: assigned._id,
             name: assigned.assignedPerson.firstName + ' ' + assigned.assignedPerson.lastName,
             account: assigned.account.firstName + ' ' + assigned.account.lastName,
-            profileImage: assigned.assignedPerson.profileImage.link
+            profileImage: assigned.assignedPerson.profileImage
           };
         }
       });

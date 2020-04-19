@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import addIcon from '../../../resources/images/addIcon.png';
@@ -9,15 +9,29 @@ import { ProductEdit } from './ProductEditor';
 import { CertificateEdit } from './CertificateEditor';
 import { OrganizationEdit } from './ParentOrganizationEditor';
 import { ICompany } from 'stores/company/Reducer';
+import { getAllProduct } from 'stores/company/Actions';
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
+  getAllProduct: () => any;
 }
+
 const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
 
   const [showProductDialog, setShowProductDialog] = useState(false);
   const [showCertificateDialog, setShowCertificateDialog] = useState(false);
   const [showOrganizationDialog, setShowOrganizationDialog] = useState(false);
+
+  useEffect(() => {
+    async function getAPI() {
+      try {
+        await props.getAllProduct();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getAPI();
+  }, []);
 
   return (
     <>
@@ -35,10 +49,9 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
             />
           </div>
           <Divider />
-          <div>
-            <p className="f5 fw6">oxford</p>
-            <p className="f5 fw6">office shirt</p>
-          </div>
+          {props.company && props.company.products && props.company.products.length > 0 ?
+            props.company.products.map((product: any) => (
+              <h1 key={product._id} className="f5 fw4">{product.name}</h1>)) : <p className="f5">No products</p>}
         </div>
         <div className="mt4">
           <div className="flex justify-between">
@@ -53,27 +66,25 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
             />
           </div>
           <Divider />
-          <div className="flex justify-between items-center mb4">
-            <div>
-              <h1 className="f5 fw6 ma0">StartUp of the Year</h1>
-              <h1 className="f6 silver fw6">When every question has countless different answers</h1>
-              {props.company && props.company.certificate && props.company.certificate.length > 0 ?
-                props.company.certificate.map((certificate: any) => (
+          {props.company && props.company.certificate && props.company.certificate.length > 0 ?
+            props.company.certificate.map((certificate: any) => (
+              <div className="flex justify-between items-center mb4">
+                <div>
                   <div>
-                    <h1 className="f5 fw6 ma0">{certificate.name}</h1>
-                    <h1 className="f6 silver fw6">{certificate.description}</h1>
+                    <h1 className="f5 fw4 ma0">{certificate.name}</h1>
+                    <h1 className="f6 silver fw4">{certificate.description}</h1>
                   </div>
-                )) : <h1>No certificates</h1>}
-            </div>
-            <div>
-              <img
-                src={editIcon}
-                width="38"
-                className="br2 pointer"
-                onClick={() => setShowCertificateDialog(true)}
-              />
-            </div>
-          </div>
+                </div>
+                <div>
+                  <img
+                    src={editIcon}
+                    width="38"
+                    className="br2 pointer"
+                    onClick={() => setShowCertificateDialog(true)}
+                  />
+                </div>
+              </div>
+            )) : <p className="f5">No certificates</p>}
         </div>
         <div className="mt4">
           <div className="flex w-100">
@@ -82,7 +93,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
 			    </h1>
           </div>
           <Divider />
-          <p className="fw6 f5">50-100</p>
+          <p className="f5">50-100</p>
         </div>
         <div className="mt4">
           <div className="flex justify-between">
@@ -100,9 +111,9 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           <div
             className="outline-0"
           >
-            {props.company && props.company.parentOrg && props.company.parentOrg.length > 0 ?
-              props.company.parentOrg.map((parentOrg: any) => (
-                <h1 key={parentOrg._id} className="f5 fw6">{parentOrg.name}</h1>)) : <h1>No organizations</h1>}
+            {props.company && props.company.parentcom && props.company.parentcom.length > 0 ?
+              props.company.parentcom.map((parentcom: any) => (
+                <h1 key={parentcom._id} className="f5 fw4">{parentcom}</h1>)) : <p className="f5">No organizations</p>}
           </div>
         </div>
       </div>
@@ -149,4 +160,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const AdvancedInfo = connect(mapStateToProps, null)(AdvancedInfoComponent);
+export const AdvancedInfo = connect(mapStateToProps, { getAllProduct })(AdvancedInfoComponent);

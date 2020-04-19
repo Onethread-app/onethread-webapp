@@ -23,16 +23,22 @@ import {
   EDIT_DESIGNATION,
   EDIT_DESIGNATION_ERROR,
   LOGO_UPLOAD,
-  COVER_IMAGE_UPLOAD,
+  COVER_IMAGE_UPLOAD_COMPANY,
   CHANGE_MEMBER_ROLE,
   COMPANY_ROLE,
   UPDATE_ALL_COMPANY_PENDING_MEMBERS,
   DELETE_TEAM_MEMBER,
   GET_ALL_COMPANY_PENDING_MEMBERS,
   ADD_CERTIFICATE,
-  ADD_ORGANIZATION
-} from "./Types";
-import { Entity } from "stores/UtilsActions";
+  ADD_ORGANIZATION,
+  GET_ALL_COMPANY_ANNOUNCEMENT,
+  ADD_ANNOUNCEMENT,
+  GET_ALL_PRODUCT,
+  ADD_PRODUCT,
+  ADD_TOTAL_ASSOCIATE,
+  ADD_TOTAL_MEMBER
+} from './Types';
+import { Entity } from 'stores/UtilsActions';
 
 // tslint:disable-next-line: interface-name
 export interface IDesignations {
@@ -92,32 +98,40 @@ export interface ICompany {
   logo: string;
   coverImage: string;
   certificate: ICertificates[];
-  parentOrg: Entity[];
+  parentcom: Entity[];
+  announce: [];
+  products: Entity[];
+  totalMember: number;
+  totalAssociate: number;
 }
 
 const InitialState = {
   currentCompany: {
-    _id: "",
-    name: "",
-    type: "",
-    email: "",
-    address: "",
-    legalOwnerName: "",
-    legalOwnerMail: "",
+    _id: '',
+    name: '',
+    type: '',
+    email: '',
+    address: '',
+    legalOwnerName: '',
+    legalOwnerMail: '',
     members: [],
     pendingMembers: [],
     divisions: [{}],
     departments: [{}],
-    role: "",
-    about: "",
+    role: '',
+    about: '',
     skill: [{}],
-    logo: "",
-    coverImage: "",
+    logo: '',
+    coverImage: '',
     certificate: [],
-    parentOrg: []
+    parentcom: [],
+    announce: [],
+    products: [],
+    totalMember: 0,
+    totalAssociate: 0
   },
   createCompanyError: {
-    message: "",
+    message: '',
     network: false
   },
   loading: false,
@@ -125,7 +139,7 @@ const InitialState = {
   changeCompanyNameLoading: false,
   departmentNameLoading: false,
   designationLoading: false,
-  error: ""
+  error: ''
 };
 
 export const CompanyReducer = (state = InitialState, action: any) => {
@@ -143,10 +157,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case GET_COMPANY_DETAILS:
       return {
         ...state,
-        currentCompany: {
-          ...state.currentCompany,
-          ...action.payload
-        }
+        currentCompany: action.payload
       };
     case CREATE_COMPANY:
       return {
@@ -232,12 +243,12 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           ]
         },
         departmentNameLoading: false,
-        error: ""
+        error: ''
       };
     case CLEAR_ADD_DEPARTMENT_ERROR:
       return {
         ...state,
-        error: "",
+        error: '',
         departmentNameLoading: false
       };
     case GET_ALL_DEPARTMENT:
@@ -280,7 +291,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           name: action.payload
         },
         changeCompanyNameLoading: false,
-        error: ""
+        error: ''
       };
     case CHANGE_COMPANY_NAME_ERROR:
       return {
@@ -291,7 +302,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CLEAR_CHANGE_COMPANY_NAME_ERROR:
       return {
         ...state,
-        error: "",
+        error: '',
         changeCompanyNameLoading: false
       };
     case COMPANY_DESIGNATION_LOADING:
@@ -302,7 +313,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case ADD_DESIGNATION:
       return {
         ...state,
-        error: "",
+        error: '',
         designationLoading: false
       };
     case ADD_DESIGNATION_ERROR:
@@ -314,7 +325,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case EDIT_DESIGNATION:
       return {
         ...state,
-        error: "",
+        error: '',
         designationLoading: false
       };
     case EDIT_DESIGNATION_ERROR:
@@ -331,15 +342,15 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           logo: action.payload.link
         }
       };
-      case COVER_IMAGE_UPLOAD: {
-        return {
-          ...state,
-          currentCompany: {
-            ...state.currentCompany,
-            coverImage: action.payload.link
-          }
-        };
-      }
+    case COVER_IMAGE_UPLOAD_COMPANY: {
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          coverImage: action.payload.link
+        }
+      };
+    }
 
     case CHANGE_MEMBER_ROLE:
       return {
@@ -381,7 +392,64 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          organizations: [...state.currentCompany.parentOrg, action.payload]
+          parentcom: [...state.currentCompany.parentcom, action.payload]
+        }
+      };
+    case GET_ALL_COMPANY_ANNOUNCEMENT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          announce: action.payload
+        },
+        loading: false
+      };
+    case ADD_ANNOUNCEMENT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          announce: [...state.currentCompany.announce, action.payload]
+        }
+      };
+    case GET_ALL_PRODUCT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          products: action.payload
+        }
+      };
+    case ADD_PRODUCT:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          products: [
+            ...state.currentCompany.products,
+            {
+              _id: action.payload._id,
+              name: action.payload.name,
+            }
+          ]
+        },
+        departmentNameLoading: false,
+        error: ''
+      };
+    case ADD_TOTAL_ASSOCIATE:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          totalAssociate: action.payload
+        }
+      };
+    case ADD_TOTAL_MEMBER:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          totalMember: action.payload
         }
       };
     default:

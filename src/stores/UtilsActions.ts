@@ -11,38 +11,55 @@ export interface Entity {
   name: string;
 }
 export const tokenConfig = () => {
-  const token = typeof window !== undefined && localStorage.getItem('tigrow_acc_id') ?
-    JSON.parse(localStorage.getItem('tigrow_acc_id')!) : null;
-  if (!localStorage.getItem('tigrow_acc_id') || !localStorage.getItem('tigrow_real_id')) {
+  const token =
+    typeof window !== undefined && localStorage.getItem('tigrow_acc_id')
+      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+      : null;
+  if (
+    !localStorage.getItem('tigrow_acc_id') ||
+    !localStorage.getItem('tigrow_real_id')
+  ) {
     localStorage.removeItem('tigrow_acc_id');
     localStorage.removeItem('tigrow_real_id');
-    Toaster.create().show({ message: 'Token is invalid. Please sign in.', intent: 'danger' });
+    Toaster.create().show({
+      message: 'Token is invalid. Please sign in.',
+      intent: 'danger',
+    });
     History.push('/signin');
     window.location.reload(false);
   }
   return {
     headers: {
       'Content-type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+      ClientId: store.getState().notificationReducer.socketId,
+    },
   };
 };
 
 export const tokenConfigFIleUpload = () => {
-  const token = typeof window !== undefined && localStorage.getItem('tigrow_acc_id') ?
-    JSON.parse(localStorage.getItem('tigrow_acc_id')!) : null;
-  if (!localStorage.getItem('tigrow_acc_id') || !localStorage.getItem('tigrow_real_id')) {
+  const token =
+    typeof window !== undefined && localStorage.getItem('tigrow_acc_id')
+      ? JSON.parse(localStorage.getItem('tigrow_acc_id')!)
+      : null;
+  if (
+    !localStorage.getItem('tigrow_acc_id') ||
+    !localStorage.getItem('tigrow_real_id')
+  ) {
     localStorage.removeItem('tigrow_acc_id');
     localStorage.removeItem('tigrow_real_id');
-    Toaster.create().show({ message: 'Token is invalid. Please sign in.', intent: 'danger' });
+    Toaster.create().show({
+      message: 'Token is invalid. Please sign in.',
+      intent: 'danger',
+    });
     History.push('/signin');
     window.location.reload(false);
   }
   return {
     headers: {
       'Content-type': 'application/x-www-form-urlencoded',
-      'Authorization': `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    },
   };
 };
 
@@ -50,7 +67,10 @@ export const isAuthenticate = () => {
   if (typeof window === undefined) {
     return false;
   }
-  if (localStorage.getItem('tigrow_acc_id') && localStorage.getItem('tigrow_real_id')) {
+  if (
+    localStorage.getItem('tigrow_acc_id') &&
+    localStorage.getItem('tigrow_real_id')
+  ) {
     return JSON.parse(localStorage.getItem('tigrow_acc_id')!);
   } else {
     return false;
@@ -65,11 +85,21 @@ export const projectPermit = (companyRole: string): boolean => {
   }
 };
 
-type AdminOptionalPermissioRoles = 'cRUDAnnoucment' | 'editProfile' | 'archiveProject' | 'addRemoveModerator' |
-  'messageAssociate' | 'addAcceptRejectAssociate' | 'acceptRejectProjectFromAssociate';
+type AdminOptionalPermissioRoles =
+  | 'cRUDAnnoucment'
+  | 'editProfile'
+  | 'archiveProject'
+  | 'addRemoveModerator'
+  | 'messageAssociate'
+  | 'addAcceptRejectAssociate'
+  | 'acceptRejectProjectFromAssociate';
 
-export const companyPermit = (companyRole: string, optionalPermissions?: AdminOptionalPermissioRoles): boolean => {
-  const adminPermissions = store.getState().companyReducer.currentCompany.optionalRole;
+export const companyPermit = (
+  companyRole: string,
+  optionalPermissions?: AdminOptionalPermissioRoles
+): boolean => {
+  const adminPermissions = store.getState().companyReducer.currentCompany
+    .optionalRole;
   let permitStatus = false;
   switch (companyRole) {
     case 'superAdmin':
@@ -101,14 +131,14 @@ export const passwordValidation = (password: string) => {
   }
 };
 
-export const boardColor = [
+export const Color = [
   { code: 0, value: '#FA617F' },
   { code: 1, value: '#A8D16B' },
   { code: 2, value: '#FFD7D0' },
   { code: 3, value: '#FE5E41' },
   { code: 4, value: '#3F61C5' },
   { code: 5, value: '#11B468' },
-  { code: 6, value: '#5A1DD6' }
+  { code: 6, value: '#5A1DD6' },
 ];
 
 export const priorityColor = [
@@ -122,10 +152,15 @@ export const priorityColor = [
 export const parseJwt = (token: any) => {
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  const jsonPayload = decodeURIComponent(atob(base64).split('').map((c) => {
-    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  }).join(''));
-  const json = (JSON.parse(jsonPayload));
+  const jsonPayload = decodeURIComponent(
+    atob(base64)
+      .split('')
+      .map((c) => {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      })
+      .join('')
+  );
+  const json = JSON.parse(jsonPayload);
   return json.exp;
 };
 
@@ -137,8 +172,11 @@ export const isEmail = (email: string) => {
   return false;
 };
 
-export const unreadMessageNotification = (companyRooms: ICompanyRoom[], key: string, id: string)
-  : boolean => {
+export const unreadMessageNotification = (
+  companyRooms: ICompanyRoom[],
+  key: string,
+  id: string
+): boolean => {
   let unread = false;
   if (companyRooms.length > 0) {
     for (const room of companyRooms) {
