@@ -13,23 +13,18 @@ interface ICompanyCoverUploadViewProps {
 
 const CompanyCoverPhotoComponent = (props: ICompanyCoverUploadViewProps) => {
   const [showDialogPicture, setShowDialogPicture] = useState(false);
-  // const [showDialogPosition, setShowDialogPosition] = useState(false);
 
   return (
     <>
       <div
         // className="relative cover br4 w-100"
-        className="relative hide-child cover bg-center br4"
+        className="relative hide-child cover bg-center br4 companyCover-ns companyCoverMobile"
         style={{
           backgroundImage: `url(${
             props.currentCompany.coverImage
               ? props.currentCompany.coverImage
               : coverPic
-            })`,
-          height: "340px",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          objectFit: "cover"
+            })`
         }}
       >
         {/* <div className="absolute flex" style={{ left: "40px", top: "63%" }}>
