@@ -7,6 +7,7 @@ import { LayoutReducer } from './layout/Reducer';
 import { BoardIndexReducer } from './boardIndexReducer';
 import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
+import { PusherReducer } from './pusher/Reducer';
 
 export const rootReducer = combineReducers({
   layoutReducer: LayoutReducer,
@@ -16,5 +17,6 @@ export const rootReducer = combineReducers({
   boardIndexReducer: BoardIndexReducer,
   associateReducer: AssociateReducer,
   projectReducer: ProjectReducer,
-  notificationReducer
+  notificationReducer,
+  pusherReducer: PusherReducer,
 });

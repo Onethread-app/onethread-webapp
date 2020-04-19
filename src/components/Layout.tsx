@@ -5,13 +5,11 @@ import { useState, useEffect } from 'react';
 import { Loading } from './Loading';
 import { connect } from 'react-redux';
 import { User } from 'stores/user/Reducer';
-import { useLocation } from 'react-router';
 import { isEmpty, isEqual } from 'lodash';
-import { withRouter, RouteComponentProps, match, Link } from 'react-router-dom';
+import { withRouter, RouteComponentProps, match, Link, useLocation } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
 import { ICompany } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
-import { InstanceLocator, TokenUrlServer } from 'config';
 import { getSelectedBoard, getSelectedTaskDetails } from 'stores/board/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
@@ -20,41 +18,30 @@ import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
 
-// tslint:disable-next-line: no-var-requires
-const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
-
-const tokenProvider = new TokenProvider({ url: TokenUrlServer });
-
 const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
   getCompanyInformation: (companyName: string) => any,
   getSelectedBoardDetails: (boardId: string) => any,
-  getSelectedTask: (taskId: string) => any
+  getSelectedTask: (taskId: string) => any,
 ) => {
   await fetchUser();
   if (isEmpty((reactRouterMatch.params as any).cname) === false) {
-    const response = await getCompanyInformation(
-      (reactRouterMatch.params as any).cname
-    );
+    const response = await getCompanyInformation((reactRouterMatch.params as any).cname);
     // only handled for 404 error status
     if (response.status === 404) {
       return response.status;
     }
   }
   if (isEmpty((reactRouterMatch.params as any).boardId) === false) {
-    const responseStatus = await getSelectedBoardDetails(
-      (reactRouterMatch.params as any).boardId
-    );
+    const responseStatus = await getSelectedBoardDetails((reactRouterMatch.params as any).boardId);
     // only handled for 404 error status
     if (responseStatus === 404) {
       return responseStatus;
     }
   }
   if (isEmpty((reactRouterMatch.params as any).taskId) === false) {
-    const responseStatus = await getSelectedTask(
-      (reactRouterMatch.params as any).taskId
-    );
+    const responseStatus = await getSelectedTask((reactRouterMatch.params as any).taskId);
     // only handled for 404 error status
     if (responseStatus === 404) {
       return responseStatus;
@@ -82,7 +69,8 @@ interface LayoutInternalProps extends LayoutProps, RouteComponentProps {
 const LayoutComponent = (props: LayoutInternalProps) => {
   const [loading, setLoading] = useState(true);
   const [queries, setQueries] = useState<RoomQueries>({
-    view: 'default', roomId: ''
+    view: 'default',
+    roomId: '',
   });
   const location = useLocation();
 
@@ -102,16 +90,15 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     }
     if (
       isEmpty(props.user._id) === true ||
-      (isEmpty((props.match.params as any).cname) === false &&
-        isEmpty(props.company._id) === true)
+      (isEmpty((props.match.params as any).cname) === false && isEmpty(props.company._id) === true)
     ) {
       load(
         props.match,
         props.fetchUserAction,
         props.getCompanyDetails,
         props.getSelectedBoard,
-        props.getSelectedTaskDetails
-      ).then(response => {
+        props.getSelectedTaskDetails,
+      ).then((response) => {
         setLoading(false);
         if (response === 404) {
           props.history.push(`/notFound`);
@@ -135,11 +122,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     <div
       className="cf vh-100"
       style={{ background: '#060517' }}
-      onScroll={() =>
-        scrollRef &&
-        scrollRef.current &&
-        setScrollTop(scrollRef.current.scrollTop)
-      }
+      onScroll={() => scrollRef && scrollRef.current && setScrollTop(scrollRef.current.scrollTop)}
     >
       {loading === true ? (
         <Loading />
@@ -158,108 +141,89 @@ const LayoutComponent = (props: LayoutInternalProps) => {
           </Link>
         </p>
       ) : (
-            <ChatkitProvider
-              instanceLocator={InstanceLocator}
-              tokenProvider={tokenProvider}
-              userId={props.user._id}
-            >
-              {queries.view === 'default' ? <div
-                id="main-layout"
-                className={`flex relative h-100 ${props.rightSidebarOpen &&
-                  'main-layout-overlay'}`}
+        <>
+          {queries.view === 'default' ? (
+            <div id="main-layout" className={`flex relative h-100 ${props.rightSidebarOpen && 'main-layout-overlay'}`}>
+              <div
+                className={`relative`}
+                style={{
+                  transition: 'width 0.4s',
+                  width: leftOpen ? '15%' : '4%',
+                }}
+              >
+                <div>
+                  <Sidebar
+                    user={props.user}
+                    company={props.company}
+                    type={(props.match.params as any).cname ? 'company' : 'default'}
+                    leftOpen={leftOpen}
+                    project={props.project}
+                    companyRooms={props.companyRooms}
+                  />
+                </div>
+              </div>
+              <div
+                className="relative br3 pv1"
+                style={{
+                  transition: 'width 0.4s',
+                  width: leftOpen ? (props.rightSidebarOpen ? '55%' : '85%') : props.rightSidebarOpen ? '66%' : '96%',
+                }}
+              >
+                <span className="pointer absolute bp3-icon z-3 top-1 left--1" onClick={() => setLeftOpen(!leftOpen)}>
+                  <img src={leftOpen ? arrowLeft : arrowRight} className="br2 w2" color="#0FA3A3" />
+                </span>
+                <div className="flex flex-column h-100">
+                  <NavbarTop scrollTop={scrollTop} type={(props.match.params as any).cname ? 'company' : 'default'} />
+                  <div
+                    ref={scrollRef}
+                    className="flex-grow-1 overflow-y-auto bg-white"
+                    style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}
+                  >
+                    <SecondaryLayout Component={props.Component} />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="relative h-100"
+                style={{
+                  transition: 'width 0.4s',
+                  width: props.rightSidebarOpen ? '30%' : '0%',
+                  zIndex: 5,
+                }}
               >
                 <div
-                  className={`relative`}
+                  id="rightSidebar"
+                  className="h-100 c-tigrowWhite"
                   style={{
-                    transition: 'width 0.4s',
-                    width: leftOpen ? '15%' : '4%'
+                    background: 'rgb(6, 5, 23)',
                   }}
-                >
-                  <div>
-                    <Sidebar
-                      user={props.user}
-                      company={props.company}
-                      type={(props.match.params as any).cname ? 'company' : 'default'}
-                      leftOpen={leftOpen}
-                      project={props.project}
-                      companyRooms={props.companyRooms}
-                    />
-                  </div>
-                </div>
-                <div
-                  className="relative br3 pv1"
-                  style={{
-                    transition: 'width 0.4s',
-                    width: leftOpen
-                      ? props.rightSidebarOpen
-                        ? '55%'
-                        : '85%'
-                      : props.rightSidebarOpen
-                        ? '66%'
-                        : '96%'
-                  }}
-                >
-                  <span
-                    className="pointer absolute bp3-icon z-3 top-1 left--1"
-                    onClick={() => setLeftOpen(!leftOpen)}
-                  >
-                    <img
-                      src={leftOpen ? arrowLeft : arrowRight}
-                      className="br2 w2"
-                      color="#0FA3A3"
-                    />
-                  </span>
-                  <div className="flex flex-column h-100">
-                    <NavbarTop
-                      scrollTop={scrollTop}
-                      type={(props.match.params as any).cname ? 'company' : 'default'}
-                    />
-                    <div
-                      ref={scrollRef}
-                      className="flex-grow-1 overflow-y-auto bg-white"
-                      style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
-                      <SecondaryLayout Component={props.Component} />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="relative h-100"
-                  style={{
-                    transition: 'width 0.4s',
-                    width: props.rightSidebarOpen ? '30%' : '0%',
-                    zIndex: 5
-                  }}
-                >
-                  <div
-                    id="rightSidebar"
-                    className="h-100 c-tigrowWhite"
-                    style={{
-                      background: 'rgb(6, 5, 23)'
-                    }}
-                  ></div>
-                </div>
-              </div> :
-                <div className="vh-100 bg-white"
-                // style={{ borderRadius: '0.5rem 0.5rem 0.5rem 0.5rem' }}
-                >
-                  <SecondaryLayout Component={props.Component} />
-                </div>
-                // <div className="flex flex-column h-100">
-                //   <NavbarTop
-                //     scrollTop={scrollTop}
-                //     type={(props.match.params as any).cname ? 'company' : 'default'}
-                //   />
-                //   <div
-                //     ref={scrollRef}
-                //     className="flex-grow-1 overflow-y-auto bg-white"
-                //     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
-                //     <SecondaryLayout Component={props.Component} />
-                //   </div>
-                // </div>
-              }
-            </ChatkitProvider>
-          )}
-    </div >
+                ></div>
+              </div>
+            </div>
+          ) : (
+            <div
+              className="vh-100 bg-white"
+              // style={{ borderRadius: '0.5rem 0.5rem 0.5rem 0.5rem' }}
+            >
+              <SecondaryLayout Component={props.Component} />
+            </div>
+          )
+          // <div className="flex flex-column h-100">
+          //   <NavbarTop
+          //     scrollTop={scrollTop}
+          //     type={(props.match.params as any).cname ? 'company' : 'default'}
+          //   />
+          //   <div
+          //     ref={scrollRef}
+          //     className="flex-grow-1 overflow-y-auto bg-white"
+          //     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+          //     <SecondaryLayout Component={props.Component} />
+          //   </div>
+          // </div>
+          }
+        </>
+      )}
+    </div>
   );
 };
 
@@ -273,12 +237,9 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const Layout = connect(
-  mapStateToProps,
-  {
-    fetchUserAction,
-    getCompanyDetails,
-    getSelectedBoard,
-    getSelectedTaskDetails
-  }
-)(withRouter(LayoutComponent));
+export const Layout = connect(mapStateToProps, {
+  fetchUserAction,
+  getCompanyDetails,
+  getSelectedBoard,
+  getSelectedTaskDetails,
+})(withRouter(LayoutComponent));
