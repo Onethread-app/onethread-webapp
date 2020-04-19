@@ -79,15 +79,6 @@ const changeName = async (req, res, next) => {
     //   account: req.user._id,
     //   company: req.company._id,
     // });
-<<<<<<< HEAD
-=======
-    let usersNotification = members.map((m) => {
-      return {
-        notification: notification._id,
-        account: m.account,
-      };
-    });
->>>>>>> 071e74a6b71f3c67aedac99a964e88e14d48aa00
 
     // // const userNotification = new UserNotification({
     // //   notification: notification._id,
