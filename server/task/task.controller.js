@@ -1,0 +1,339 @@
+const httpStatus = require('http-status');
+const Task = require('./task.model');
+const BoardColumn = require('./../boardColumn/boardColumn.model');
+const ActivityCtrl = require('./../activity/activity.controller');
+const logger = require('../../config/winston');
+const { APIError, BadRequestError } = require('../helpers/APIError');
+const TaskAssign = require('./taskAssign.model');
+const { Member } = require('../company/member/member.model');
+const Board = require('../board/board.model');
+var _ = require('lodash');
+const {sendErrorResponse} = require('../helpers/jsonResponse');
+const {
+  createCompanyRoleNotification
+} = require('../notification/notification.controller');
+const { Team } = require('../team-member/team.model');
+
+const load = (req, res, next, id) => {
+  Task.findById(id)
+    .populate('account', '_id firstName lastName')
+    .populate('columnId', '_id name')
+    .exec()
+    .then(result => {
+        req.task = result;
+        return next();
+    })
+    .catch(err => {
+      return sendErrorResponse(res,404,'Idisnotexits',{
+        success: false,
+        message: 'No valid entry found for provided Task ID',
+      })
+    });
+};
+
+const create = async (req, res, next) => {
+  try {
+    const task = new Task({
+      name: req.body.name,
+      // description: req.body.description,
+      account: req.user._id,
+      columnId: req.body.columnId,
+      boardId: req.body.boardId,
+    });
+    const createdTask = await task.save();
+
+    // TODO: should use update function
+    const column = await BoardColumn.findOne({
+      _id: req.body.columnId,
+    }).populate({ 
+      path: 'boardId',
+      populate: {
+        path: 'project',
+        model: 'Project',
+        select: 'name company'
+      } 
+   });
+
+    const text =`${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
+    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'task' );
+       
+    column.tasks.push(createdTask._id);
+    await column.save();
+
+    await ActivityCtrl.create(
+      `added this card to ${column.name}`,
+      'create',
+      createdTask._id,
+      req.user,
+    );
+
+    const responseData = {
+      _id: createdTask._id,
+      name: createdTask.name,
+      description: createdTask.description,
+      dueDate: createdTask.dueDate,
+    };
+    logger.info(`Task column create`);
+    res.status(201).send(responseData);
+  } catch (error) {
+    logger.error(`Task: ${error}`);
+    // const err = new BadRequestError(
+    //   'task data is invalid.',
+    //   httpStatus.BAD_REQUEST,
+    // );
+    next(error);
+  }
+};
+
+const get = (req, res, next) => {
+  return res.json(req.task);
+};
+
+const getMembers = async (req, res, next) => {
+  TaskAssign.find({
+    taskId: req.task._id,
+  })
+    .select('_id assignedPerson account')
+    .populate([
+      {
+        path: 'assignedPerson account',
+        select: '_id firstName lastName profileImage'
+      },
+    ])
+    .exec()
+    .then(result => {
+      res.status(200).send(result);
+    })
+    .catch(error => {
+      next(error);
+    });
+};
+
+const addMember = async (req, res, next) => {
+  const requestedMembers = req.body.assignmembers;
+  const boardID = req.task.boardId;
+
+
+  //get current task board to check members in board
+
+  const currentTaskBoard = await Board.findOne({
+    _id: boardID,
+  });
+
+  //convert current taskbaord members to check the difference between them
+
+  const Members = currentTaskBoard.members.map(member =>
+    member.toString(),
+  );
+
+  //new members who are  not in baord
+
+  const newBoardmember = _.difference(requestedMembers, Members);
+
+  //new members to add in task 
+
+  const newMembers = requestedMembers.map(memberId => {
+    return {
+      taskId: req.task._id,
+      account: req.user._id,
+      assignedPerson: memberId,
+    };
+  });
+
+  //check the difference's 
+  //if new member who is already in board , just add in task
+  //others add them in baord first
+
+  if (_.isEmpty(newBoardmember)) {
+    TaskAssign.insertMany(newMembers).then(taskMember => {
+      TaskAssign.find({
+        taskId: req.task._id,
+        assignedPerson: {
+          $in: requestedMembers,
+        },
+      })
+        .select('_id assignedPerson account')
+        .populate([
+          {
+            path: 'assignedPerson account',
+            select: '_id firstName lastName profileImage'
+          }
+        ])
+        .exec()
+        .then(result => {
+          res.status(201).send(result);
+        });
+    });
+  } else {
+    await Board.updateOne(
+      { _id: boardID },
+      { $addToSet: { members: newBoardmember } },
+      { safe: true, upsert: true, new: true },
+    );
+
+    TaskAssign.insertMany(newMembers).then(taskMember => {
+      TaskAssign.find({
+        taskId: req.task._id,
+        assignedPerson: {
+          $in: requestedMembers,
+        },
+      })
+        .select('_id assignedPerson account')
+        .populate([
+          {
+            path: 'assignedPerson account',
+            select: '_id firstName lastName profileImage'
+          },
+        ])
+        .exec()
+        .then(result => {
+          res.status(201).send(result);
+        });
+    });
+  }
+};
+
+const suggestMember = async (req, res, next) => {
+  try {
+    let taskMembers = await TaskAssign.find({
+      taskId: req.params.taskId,
+    })
+      .select('-_id assignedPerson')
+      .populate('assignedPerson', '_id name')
+      .exec();
+      let projectMembers = await Team.find({
+        project : req.query.projectId,
+      })
+        .select('_id account')
+        .populate('account', '_id name')
+        .exec();
+
+    let members = projectMembers.filter(({ account }) => {
+      return !taskMembers.some(existingMember => {
+        return (
+          existingMember.assignedPerson._id.toString() ===
+          account._id.toString()
+        );
+      });
+    });
+
+    members = members.map( (m) => m.account );
+    return res.status(200).json({
+      members,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteMember = async (req, res, next) => {
+  try {
+    await TaskAssign.findByIdAndDelete(req.query.assignedMemberid);
+    res.status(200).json({ message: 'MEMBER DELETED' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const update = async (req, res, next) => {
+  Task.findByIdAndUpdate({ _id: req.task._id }, req.body, {
+    new: true,
+  })
+    .populate('account', '_id firstName lastName')
+    .populate('columnId', '_id name')
+    .exec()
+    .then(result => {
+      res.status(200).send(result);
+    })
+    .catch(error => {
+      next(error);
+    });
+};
+
+const list = (req, res, next) => {};
+
+const dragTask = async (req, res, next) => {
+  try {
+    const task = await Task.findByIdAndUpdate(req.body.taskId, {
+      $set: { columnId: req.body.destinationColumnId },
+    }).exec();
+
+    // TODO: avoid task population
+    const sourceColumn = await BoardColumn.findByIdAndUpdate(
+      req.body.sourceColumnId,
+      { $pull: { tasks: req.body.taskId } },
+      { new: true },
+    )
+      .populate('tasks', '_id name description dueDate')
+      .exec();
+
+    // TODO: avoid task population
+    const destinationColumn = await BoardColumn.findByIdAndUpdate(
+      req.body.destinationColumnId,
+      {
+        $push: {
+          tasks: {
+            $each: [req.body.taskId],
+            $position: req.body.taskIndexOfDestinationColumn,
+          },
+        },
+      },
+      { new: true },
+    )
+      .populate('tasks', '_id name description dueDate')
+      .exec();
+
+      const column = await BoardColumn.findOne({
+        _id: req.body.destinationColumnId,
+      }).populate({ 
+        path: 'boardId',
+        populate: {
+          path: 'project',
+          model: 'Project',
+          select: 'name company'
+        } 
+     });
+
+    const text =`${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
+    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'task' );
+    
+    
+    await ActivityCtrl.create(
+      `moved this card from ${sourceColumn.name} to ${destinationColumn.name}`,
+      'move',
+      req.body.taskId,
+      req.user,
+    );
+
+    const responseData = {
+      sourceColumn: {
+        _id: sourceColumn._id,
+        tasks: sourceColumn.tasks,
+      },
+      destinationColumn: {
+        _id: destinationColumn._id,
+        tasks: destinationColumn.tasks,
+      },
+    };
+
+    res.status(200).send(responseData);
+  } catch (error) {
+    
+    logger.error(`Board column create: ${error}`);
+    
+    next(error);
+  }
+};
+
+module.exports = {
+  create,
+  get,
+  update,
+  list,
+  load,
+  dragTask,
+  addMember,
+  getMembers,
+  deleteMember,
+  suggestMember,
+};
