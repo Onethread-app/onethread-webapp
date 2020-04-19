@@ -24,14 +24,7 @@ export const MessageListComponent = (props: MessageListProps) => {
   const scrollToBottom = () => {
     // TODO send message read trigger
     // if (props.messages.length) {
-    // 	props.chatkit.currentUser.setReadCursor({
-    // 		roomId: props.currentRoom._id,
-    // 		position: props.messages[props.messages.length - 1].chatkitId
-    // 	})
-    // 		.then()
-    // 		.catch((err: any) => {
-    // 			console.log(`Error setting cursor: ${err}`);
-    // 		});
+    // 	put you code here!!
     // }
 
     // On new message, scroll to bottom

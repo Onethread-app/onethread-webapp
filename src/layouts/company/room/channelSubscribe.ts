@@ -1,5 +1,5 @@
 import Pusher from 'pusher-js';
-import { channelAuthEndPoint } from 'config';
+import { PUSHER_CHANNEL_AUTH_END_POINT, PUSHER_CHANNEL_CLUSTER, PUSHER_CHANNEL_KEY } from 'config';
 import { User } from 'stores/user/Reducer';
 import { UPDATE_PUSHER_INSTANCE, NEW_MESSAGE, ON_USER_STARTED_TYPING, ON_USER_STOPPED_TYPING } from 'stores/room/Types';
 import { IRoomMessage, IRoomMember, IRoomFile, ITypingUsers } from 'stores/room/Reducer';
@@ -38,10 +38,10 @@ export const userSubscriber = async () => {
 
   const user: User = await store.getState().userReducer.user;
 
-  const pusher = new Pusher('7e706af4c123d518ccb5', {
-    cluster: 'ap1',
+  const pusher = new Pusher(PUSHER_CHANNEL_KEY!, {
+    cluster: PUSHER_CHANNEL_CLUSTER!,
     forceTLS: true,
-    authEndpoint: channelAuthEndPoint,
+    authEndpoint: PUSHER_CHANNEL_AUTH_END_POINT!,
     auth: {
       headers: {
         Authorization: `Bearer ${token}`,
