@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { User } from 'stores/user/Reducer';
 import { useLocation } from 'react-router';
 import { isEmpty, isEqual } from 'lodash';
-import { withRouter, RouteComponentProps, match, Link } from 'react-router-dom';
+import { withRouter, RouteComponentProps, match, Link, NavLink } from 'react-router-dom';
 import { fetchUserAction } from 'stores/auth/Actions';
 import { ICompany } from 'stores/company/Reducer';
 import { getCompanyDetails } from 'stores/company/Actions';
@@ -16,12 +16,16 @@ import { getSelectedBoard, getSelectedTaskDetails } from 'stores/board/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
+import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
+import dashboard from '../resources/images/sideBarDashboard.svg';
+import project from '../resources/images/ProjectsIcon.svg';
+import team from '../resources/images/sidebarTeam.svg';
 import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
 
 import { CustomView, MobileOnlyView, isMobileOnly } from 'react-device-detect';
-import { Navbar, Alignment, Button } from '@blueprintjs/core';
+import { Navbar } from '@blueprintjs/core';
 
 // tslint:disable-next-line: no-var-requires
 const { ChatkitProvider, TokenProvider } = require('@pusher/chatkit-client-react');
@@ -170,7 +174,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 >
                   {queries.view === 'default' ? <div
                     id="main-layout"
-                    className={`flex relative h-100 ${props.rightSidebarOpen &&
+                    className={`flex relative vh-100 ${props.rightSidebarOpen &&
                       'main-layout-overlay'}`}
                   >
                     <div
@@ -285,24 +289,60 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       }}
                     >
                       <div className="flex flex-column h-100">
-                        {/* <NavbarTop
-                          scrollTop={scrollTop}
-                          type={(props.match.params as any).cname ? 'company' : 'default'}
-                        /> */}
                         <div
                           ref={scrollRef}
                           className="flex-grow-1 overflow-y-auto bg-white"
                           style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
                           <SecondaryLayout Component={props.Component} />
                         </div>
-                       { props.rightSidebarOpen ? undefined : <Navbar style={{position: 'fixed', bottom: '0'}}>
-                          <Navbar.Group align={Alignment.LEFT} >
-                            <Navbar.Heading>Blueprint</Navbar.Heading>
-                            <Navbar.Divider />
-                            <Button className="bp3-minimal" icon="home" text="Home" />
-                            <Button className="bp3-minimal" icon="document" text="Files" />
-                          </Navbar.Group>
-                        </Navbar>}
+                        {props.rightSidebarOpen ? undefined :
+                          <Navbar className="flex justify-around" style={{ position: 'fixed', bottom: '0', height: '65px' }}>
+                            <NavLink
+                              to={`/company/${props.company.name}`}
+                              className="ma2 flex flex-column items-center"
+                            >
+                              <span className="">
+                                <img src={companyProfile} className="w2 br3" />
+                              </span>
+                              <small className="blue" style={{ fontWeight: 1000 }}>Profile</small>
+                            </NavLink>
+                            <NavLink
+                              to={`/company/${props.company.name}/dashboard`}
+                              className="ma2 flex flex-column items-center"
+                            >
+                              <span className="">
+                                <img src={dashboard} className="w2 br3" />
+                              </span>
+                              <small className="blue" style={{ fontWeight: 1000 }}>Dashboard</small>
+                            </NavLink>
+                            <NavLink
+                              to={`/company/${props.company.name}/project`}
+                              className="ma2 flex flex-column items-center"
+                            >
+                              <span className="">
+                                <img src={project} className="w2 br3" />
+                              </span>
+                              <small className="blue" style={{ fontWeight: 1000 }}>Project</small>
+                            </NavLink>
+                            <NavLink
+                              to={`/company/${props.company.name}/colleague`}
+                              className="ma2 flex flex-column items-center"
+                            >
+                              <span className="">
+                                <img src={team} className="w2 br3" />
+                              </span>
+                              <small className="blue" style={{ fontWeight: 1000 }}>Colleagues</small>
+                            </NavLink>
+                            <NavLink
+                              to={`/company/${props.company.name}/settings`}
+                              className="ma2 flex flex-column items-center"
+                            >
+                              <span className="">
+                                <img src={team} className="w2 br3" />
+                              </span>
+                              <small className="blue" style={{ fontWeight: 1000 }}>Settings</small>
+                            </NavLink>
+                          </Navbar>}
                       </div>
                     </div>
                     <div
