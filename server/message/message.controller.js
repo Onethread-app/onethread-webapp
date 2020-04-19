@@ -1,10 +1,7 @@
 const { Message } = require('./message.model');
 const { Room } = require('./../room/room.model');
 const Account = require('./../account/account.model');
-const {
-  chatkit,
-  pusherChannel,
-} = require('../services/pusher.services');
+const { pusherChannel } = require('../services/pusher.services');
 const File = require('./../file/file.model');
 // const ElasticsearchService  = require('../../index.elasticsearch');
 // const { messageMapping , messageStructure } = require('../services/elastic.services');

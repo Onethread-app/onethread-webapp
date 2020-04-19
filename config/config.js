@@ -42,13 +42,6 @@ const envVarsSchema = Joi.object({
   EMAIL_PASSWORD: Joi.string()
     .required()
     .description('password required'),
-
-  INSTANCE_LOCATOR: Joi.string()
-    .required()
-    .description('INSTANCE_LOCATOR required'),
-  PUSHER_KEY: Joi.string()
-    .required()
-    .description('PUSHER_KEY required'),
   AWS_ACCESS_KEY: Joi.string()
     .required()
     .description('AWS credential required'),
@@ -61,6 +54,24 @@ const envVarsSchema = Joi.object({
   BUCKET_NAME: Joi.string()
     .required()
     .description('Bucket Name required'),
+  //   INSTANCE_LOCATOR: Joi.string()
+  //   .required()
+  //   .description('INSTANCE_LOCATOR required'),
+  // PUSHER_KEY: Joi.string()
+  //   .required()
+  //   .description('PUSHER_KEY required'),
+  PUSHER_CHANNEL_APP_ID: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_APP_ID required'),
+  PUSHER_CHANNEL_KEY: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_KEY required'),
+  PUSHER_CHANNEL_SECRET: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_SECRET required'),
+  PUSHER_CHANNEL_CLUSTER: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_CLUSTER required'),
 })
   .unknown()
   .required();
@@ -92,12 +103,16 @@ const config = {
   },
   emailAddress: envVars.EMAIL_ADDRESS,
   emailPassword: envVars.EMAIL_PASSWORD,
-  instanceLocator: envVars.INSTANCE_LOCATOR,
-  pusherKey: envVars.PUSHER_KEY,
   awsAccessKey: envVars.AWS_ACCESS_KEY,
   awsSecretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
   s3Region: envVars.S3_REGION,
   bucketName: envVars.BUCKET_NAME,
+  // instanceLocator: envVars.INSTANCE_LOCATOR,
+  // pusherKey: envVars.PUSHER_KEY,
+  PUSHER_CHANNEL_APP_ID: envVars.PUSHER_CHANNEL_APP_ID,
+  PUSHER_CHANNEL_KEY: envVars.PUSHER_CHANNEL_KEY,
+  PUSHER_CHANNEL_SECRET: envVars.PUSHER_CHANNEL_SECRET,
+  PUSHER_CHANNEL_CLUSTER: envVars.PUSHER_CHANNEL_CLUSTER,
 };
 
 module.exports = config;

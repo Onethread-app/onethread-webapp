@@ -4,7 +4,8 @@ const channel = require('./channel.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-// authenticate a user with chatkit
+
+// authenticate a user with pusher-channel
 router
   .route('/authenticate')
   .post(authorization, channel.authenticate);
