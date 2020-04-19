@@ -340,3 +340,17 @@ a:hover {
 	font-size: 18px;
 	padding-bottom: 10px;
 }
+.companyCover{
+	height: 340px;
+  background-position : center;
+  background-repeat: no-repeat;
+  object-fit: cover;
+
+}
+.companyCoverMobile{
+	height: 185px;
+  background-position : center;
+  background-repeat: no-repeat;
+  object-fit: cover;
+
+}
