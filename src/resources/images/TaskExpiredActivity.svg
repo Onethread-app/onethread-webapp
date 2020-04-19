@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="63" height="63" viewBox="0 0 63 63">
+  <g id="Task_Expired" data-name="Task Expired" transform="translate(-737 -419)">
+    <rect id="Rectangle_1793" data-name="Rectangle 1793" width="63" height="63" rx="31.5" transform="translate(737 419)" fill="#bb1717"/>
+    <path id="Path_6801" data-name="Path 6801" d="M0,0H32.1V32.1H0Z" transform="translate(752.075 434.192)" fill="none"/>
+    <g id="baseline-assignment_late-24px" transform="translate(756 439)">
+      <path id="Path_156" data-name="Path 156" d="M0,0H24V24H0Z" fill="none"/>
+      <path id="Path_157" data-name="Path 157" d="M19,3H14.82A2.988,2.988,0,0,0,9.18,3H5A2.006,2.006,0,0,0,3,5V19a2.006,2.006,0,0,0,2,2H19a2.006,2.006,0,0,0,2-2V5A2.006,2.006,0,0,0,19,3ZM13,18H11V16h2Zm0-4H11V8h2ZM12,5a1,1,0,1,1,1-1A1,1,0,0,1,12,5Z" fill="#fff"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="88" height="85" viewBox="0 0 88 85">
+  <g id="Group_1128" data-name="Group 1128" transform="translate(-1165 -1744)">
+    <rect id="Rectangle_1187" data-name="Rectangle 1187" width="88" height="85" rx="3" transform="translate(1165 1744)" fill="#a8d16b"/>
+    <g id="baseline-folder_shared-24px" transform="translate(1186 1764)">
+      <path id="Path_1376" data-name="Path 1376" d="M35.75,7.75h-15L17,4H5.75A3.745,3.745,0,0,0,2.019,7.75L2,30.25A3.761,3.761,0,0,0,5.75,34h30a3.761,3.761,0,0,0,3.75-3.75V11.5A3.761,3.761,0,0,0,35.75,7.75Zm-9.375,5.625a3.75,3.75,0,1,1-3.75,3.75A3.761,3.761,0,0,1,26.375,13.375Zm7.5,15h-15V26.5c0-2.494,5.006-3.75,7.5-3.75s7.5,1.256,7.5,3.75Z" transform="translate(1.75 3.5)" fill="#fff"/>
+      <path id="Path_1377" data-name="Path 1377" d="M0,0H45V45H0Z" fill="none"/>
+    </g>
+    <rect id="Rectangle_2286" data-name="Rectangle 2286" width="88" height="85" rx="3" transform="translate(1165 1744)" fill="#a8d16b"/>
+    <g id="baseline-folder_shared-24px-2" data-name="baseline-folder_shared-24px" transform="translate(1186 1764)">
+      <path id="Path_1376-2" data-name="Path 1376" d="M35.75,7.75h-15L17,4H5.75A3.745,3.745,0,0,0,2.019,7.75L2,30.25A3.761,3.761,0,0,0,5.75,34h30a3.761,3.761,0,0,0,3.75-3.75V11.5A3.761,3.761,0,0,0,35.75,7.75Zm-9.375,5.625a3.75,3.75,0,1,1-3.75,3.75A3.761,3.761,0,0,1,26.375,13.375Zm7.5,15h-15V26.5c0-2.494,5.006-3.75,7.5-3.75s7.5,1.256,7.5,3.75Z" transform="translate(1.75 3.5)" fill="#fff"/>
+      <path id="Path_1377-2" data-name="Path 1377" d="M0,0H45V45H0Z" fill="none"/>
+    </g>
+  </g>
+</svg>
