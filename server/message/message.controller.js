@@ -1,7 +1,7 @@
 const { Message } = require('./message.model');
 const { Room } = require('./../room/room.model');
 const Account = require('./../account/account.model');
-const { chatkit } = require('../services/pusher.services');
+const { pusherChannel } = require('../services/pusher.services');
 const File = require('./../file/file.model');
 // const ElasticsearchService  = require('../../index.elasticsearch');
 // const { messageMapping , messageStructure } = require('../services/elastic.services');
@@ -29,9 +29,9 @@ const create = async (req, res, next) => {
       });
     }
 
-    let files = req.body.files.map(file => file._id);
+    let files = req.body.files.map((file) => file._id);
 
-    const message = new Message({
+    const newMessage = new Message({
       text: req.body.text,
       room: req.body.room,
       type: req.body.type,
@@ -43,28 +43,13 @@ const create = async (req, res, next) => {
       'name firstName lastName email profileImage',
     );
 
-    //send to chatkit-server
-    let msg = await chatkit.sendMultipartMessage({
-      userId: message.account,
-      roomId: message.room,
-      parts: [
-        {
-          type: 'text/plain',
-          content: JSON.stringify({
-            message,
-            account,
-            files: req.body.files,
-          }),
-        },
-      ],
+    const message = await newMessage.save();
+
+    pusherChannel.trigger(`private-${req.body.room}`, 'new_message', {
+      message,
+      account,
+      files: req.body.files,
     });
-
-    // save ref of chatkit
-    if (msg) {
-      message.chatkitId = msg.message_id;
-    }
-
-    const mes = await message.save();
 
     await File.updateMany(
       { _id: { $in: files } },
@@ -78,13 +63,10 @@ const create = async (req, res, next) => {
     //   mongo_id: message._id.toString(),
     //   room: message.room,
     //   account: message.account,
-    //   chatkitId: message.chatkitId,
     //   text: message.text,
     //   type: message.type,
     //   files: req.body.files
     // });
-
-    // logger.info(` ✔ ️Elasticsearch document ${response.result}`);
 
     return res.status(201).json({
       message,
@@ -192,7 +174,7 @@ const getRoomDiscussion = async (req, res, next) => {
       discussion: true,
       removed: false,
     })
-      .select('text room chatkitId createdAt updatedAt')
+      .select('text room createdAt updatedAt')
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit);

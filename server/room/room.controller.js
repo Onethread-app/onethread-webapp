@@ -1,6 +1,5 @@
 const { Room } = require('./room.model');
 const { Team } = require('../team-member/team.model');
-const { chatkit } = require('../services/pusher.services');
 const logger = require('../../config/winston');
 const _ = require('lodash');
 const {
@@ -29,16 +28,6 @@ const create = async (req, res, next) => {
     });
     await room.save();
 
-    await chatkit.createRoom({
-      id: room._id,
-      creatorId: req.user._id,
-      name: room.name,
-      isPrivate: true,
-      customData: {
-        company: req.body.company,
-        project: req.body.project,
-      },
-    });
     return sendJSONresponse(res, 201, { room });
   } catch (e) {
     next(e);
@@ -55,25 +44,16 @@ const addMembers = async (req, res) => {
     },
   )
     .exec()
-    .then(result => {
-      if (result) {
-        chatkit
-          .addUsersToRoom({
-            roomId: req.body.room,
-            userIds: req.body.members,
-          })
-          .then(() =>
-            res.status(201).json({
-              message: 'new members added into room',
-            }),
-          )
-          .catch(err => res.status(500).json({ error: err }));
-      } else {
-        res.status(404).json({ message: 'No room found' });
+    .then((result) => {
+      if (!result) {
+        return res.status(404).json({ message: 'No room found' });
       }
+      return res.status(201).json({
+        message: 'new members added into room',
+      });
     })
-    .catch(err => {
-      res.status(500).json({ error: err });
+    .catch((err) => {
+      return res.status(500).json({ error: err });
     });
 };
 
@@ -87,7 +67,7 @@ const memberList = async (req, res, next) => {
     ])
     .exec()
     .then(({ members }) => res.json({ members: members }))
-    .catch(e => next(e));
+    .catch((e) => next(e));
 };
 
 const suggestMember = async (req, res, next) => {
@@ -103,13 +83,13 @@ const suggestMember = async (req, res, next) => {
       .populate('account', '_id name firstName lastName email')
       .exec();
 
-    let members = projectMembers.filter(pm => {
-      return !roomMembers.members.some(rm => {
+    let members = projectMembers.filter((pm) => {
+      return !roomMembers.members.some((rm) => {
         return rm._id.toString() === pm.account._id.toString();
       });
     });
 
-    members = members.map(m => m.account);
+    members = members.map((m) => m.account);
 
     return res.status(200).json({
       members,
@@ -153,12 +133,12 @@ const list = async (req, res, next) => {
     .limit(+limit)
     .select('-__v -members')
     .exec()
-    .then(rooms =>
+    .then((rooms) =>
       res.status(200).json({
         rooms,
       }),
     )
-    .catch(e => next(e));
+    .catch((e) => next(e));
 };
 
 const archiveRoom = async (req, res, next) => {
@@ -186,46 +166,6 @@ const archiveRoom = async (req, res, next) => {
   }
 };
 
-const recheckMembersWithChatkit = async (req, res) => {
-  let rooms = await Room.find({
-    company: req.body.company,
-    removed: false,
-  });
-
-  if (!rooms) {
-    return res.status(400).json({
-      message: 'No rooms found',
-    });
-  }
-
-  logger.info(`Company : ${req.body.company}`);
-
-  rooms.forEach(room => {
-    let chunkMembers = _.chunk(room.members, 10);
-    chunkMembers.forEach(members => {
-      chatkit
-        .addUsersToRoom({
-          roomId: room._id,
-          userIds: members,
-        })
-        .then(() =>
-          logger.info(
-            `${members.length} Chunk members added in Room: ${room.name}`,
-          ),
-        )
-        .catch(err =>
-          logger.error(
-            `Failed to add members in chatkit for ${members.length} Chunk members while added in Room: ${room.name}`,
-          ),
-        );
-    });
-  });
-
-  return res.status(200).json({
-    rooms,
-  });
-};
-
 module.exports = {
   create,
   list,
@@ -233,6 +173,5 @@ module.exports = {
   addMembers,
   suggestMember,
   memberList,
-  recheckMembersWithChatkit,
   archiveRoom,
 };

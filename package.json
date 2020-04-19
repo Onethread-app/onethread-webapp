@@ -34,7 +34,6 @@
   ],
   "dependencies": {
     "@hapi/joi": "^15.1.1",
-    "@pusher/chatkit-server": "^2.1.1",
     "@slack/web-api": "^5.2.1",
     "@slack/webhook": "^5.0.2",
     "aws-sdk": "^2.538.0",

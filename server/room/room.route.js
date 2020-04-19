@@ -32,15 +32,6 @@ router
     roomCtrl.archiveRoom,
   );
 
-// recheck mongodb room users with chatkit room users
-router
-  .route('/chatkit/hot-fix')
-  .post(
-    authorization,
-    SchemaValidator(joiSchema.recheckMembersWithChatkit),
-    roomCtrl.recheckMembersWithChatkit,
-  );
-
 // get members for a room
 router
   .route('/members/:roomId')

@@ -2,7 +2,6 @@ const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
 const { Room } = require('./../../room/room.model');
 const { Company } = require('../../company/company.model');
-const { chatkit } = require('../../services/pusher.services');
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -17,7 +16,7 @@ const {
 } = require('../../services/elastic.services');
 const chalk = require('chalk');
 const {
-  createMemberAddNotification
+  createMemberAddNotification,
 } = require('../../notification/notification.controller');
 
 const { PendingMember } = require('./pendingMember.model');
@@ -75,7 +74,7 @@ const addMember = async (req, res, next) => {
     if (req.body.members.length) {
       let newMembers = req.body.members;
 
-      accounts = newMembers.map(member => member.account);
+      accounts = newMembers.map((member) => member.account);
 
       // find previous members
       let prevMembers = await Member.find({
@@ -84,11 +83,11 @@ const addMember = async (req, res, next) => {
         removed: true,
       }).select('account');
 
-      prevMembers = prevMembers.map(member => member.account);
+      prevMembers = prevMembers.map((member) => member.account);
 
       // filter new members
-      newMembers = newMembers.filter(newMember => {
-        return !prevMembers.some(prevMemberAccount => {
+      newMembers = newMembers.filter((newMember) => {
+        return !prevMembers.some((prevMemberAccount) => {
           return (
             prevMemberAccount.toString() ===
             newMember.account.toString()
@@ -109,8 +108,6 @@ const addMember = async (req, res, next) => {
       // add new members in company
       members = await Member.create(newMembers);
 
-      
-
       const elasticSearchIndexedMembers = await Member.find({
         account: { $in: accounts },
         company: req.company._id,
@@ -118,7 +115,7 @@ const addMember = async (req, res, next) => {
         path: 'account',
         select: '_id name firstName lastName email',
       });
-      
+
       // console.log(elasticSearchIndexedMembers);
       // //notification need account info
       // newMembersForNotification = await elasticSearchIndexedMembers.filter(newMember => {
@@ -133,7 +130,7 @@ const addMember = async (req, res, next) => {
 
       createMemberAddNotification(req.company._id, elasticSearchIndexedMembers, {_id:req.user._id, name: req.user.name,  pusherSock: req.headers.clientid } );
 
-      const memberStructure = data => {
+      const memberStructure = (data) => {
         return {
           mongo_id: data._id,
           account: data.account,
@@ -155,9 +152,11 @@ const addMember = async (req, res, next) => {
 
     // invite new members in company
     if (req.body.pendingTeamMembers.length) {
-      let pendingMembersInfo = req.body.pendingTeamMembers.map(m => {
-        return { email: m, company: req.company._id };
-      });
+      let pendingMembersInfo = req.body.pendingTeamMembers.map(
+        (m) => {
+          return { email: m, company: req.company._id };
+        },
+      );
       pendingMembers = await PendingMember.create(pendingMembersInfo);
 
       sendInviteColleague(
@@ -340,7 +339,7 @@ const searchMember = async (req, res, next) => {
     }).select('account');
 
     const existingMembersAccounts = existingMembers.map(
-      member => member.account,
+      (member) => member.account,
     );
 
     if (name) {
