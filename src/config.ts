@@ -12,7 +12,7 @@ export const nizam = 'http://ad2ebf71.ngrok.io/api/v1/';
 export const omer = 'http://192.168.8.67:4044/api/v1/';
 export const orvi = 'https://aa645456.ngrok.io/api/v1/';
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
-export const server = nizam;
+export const server = test2;
 
 export const TokenUrlServer = `${server}chatkit/authenticate`;
 
