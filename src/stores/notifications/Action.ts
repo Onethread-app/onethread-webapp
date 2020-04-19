@@ -43,7 +43,6 @@ export const readNotification = (notificationId: any) => async (
   dispatch: any
 ) => {
   try {
-    console.log('notification......');
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(

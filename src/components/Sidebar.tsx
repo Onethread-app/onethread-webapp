@@ -45,7 +45,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
         background: '#060517',
       }}
     >
-      {console.log(props)}
       <div
         className={`${props.leftOpen ? 'db ml4 mv3' : 'dn'} `}
         style={{ width: '6rem' }}
