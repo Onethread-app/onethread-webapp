@@ -8,7 +8,9 @@ const {
 const newCategory = async (req, res) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
   // fetch the request data
   const category = new Category({
@@ -18,13 +20,13 @@ const newCategory = async (req, res) => {
 
   category
     .save()
-    .then(result => {
+    .then((result) => {
       res.status(201).json({
         message: 'New category created',
         newCategory: result,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({
         error: err,
       });
@@ -34,7 +36,9 @@ const newCategory = async (req, res) => {
 const newSubCategory = async (req, res) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
   // category
   const category = await Category.findById(req.params.cid);
@@ -44,25 +48,25 @@ const newSubCategory = async (req, res) => {
   subcategory.cid = category;
   subcategory
     .save()
-    .then(subcategory => {
+    .then((subcategory) => {
       // save ref of sub-category in category
       category.subcategories.push(subcategory._id);
       category
         .save()
-        .then(result => {
+        .then((result) => {
           res.status(201).json({
             message: `New sub-category created under Category: ${category.name}`,
             newSubCategory: subcategory,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           res.status(500).json({
             message: '====Level-two ERROR====',
             error: err,
           });
         });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({
         error: err,
       });
@@ -71,7 +75,9 @@ const newSubCategory = async (req, res) => {
 const newSubSubCategory = async (req, res) => {
   // Check for JSON
   if (!req.is('application/json')) {
-    return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
   }
   // sub-category
   const subcategory = await SubCategory.findById(req.params.sid);
@@ -81,24 +87,24 @@ const newSubSubCategory = async (req, res) => {
   subsubcategory.sid = subcategory;
   subsubcategory
     .save()
-    .then(subsubcategory => {
+    .then((subsubcategory) => {
       // save ref of sub-sub-category in sub-category
       subcategory.subsubcategories.push(subsubcategory._id);
       subcategory
         .save()
-        .then(result => {
+        .then((result) => {
           res.status(201).json({
             message: `New sub-sub-category created under Sub-Category: ${subcategory.name}`,
             newSubSubCategory: subsubcategory,
           });
         })
-        .catch(err => {
+        .catch((err) => {
           res.status(500).json({
             error: err,
           });
         });
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({
         error: err,
       });
@@ -111,10 +117,10 @@ const getCategory = (req, res, next) => {
     .sort('name')
     .select('_id name')
     .exec()
-    .then(categories => {
+    .then((categories) => {
       const response = {
         type: req.query.type,
-        categories: categories.map(doc => {
+        categories: categories.map((doc) => {
           let result = {
             _id: doc._id,
             name: doc.name,
@@ -131,7 +137,7 @@ const getCategory = (req, res, next) => {
       };
       res.status(200).json(response);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({
         error: err,
       });
@@ -142,13 +148,13 @@ const getSubCategory = (req, res, next) => {
     .select('_id name subcategories')
     .populate('subcategories', '_id name')
     .exec()
-    .then(result => {
+    .then((result) => {
       if (!result) {
         res.status(200).json({ message: `Invalid ID` });
       }
       res.status(200).json(result);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({
         error: err,
       });
@@ -156,18 +162,18 @@ const getSubCategory = (req, res, next) => {
 };
 const getSubSubCategory = (req, res, next) => {
   SubSubCategory.find({
-    company: req.params.companyId
+    company: req.params.companyId,
   })
     .select('_id name subsubcategories')
     .populate('subsubcategories', '_id name')
     .exec()
-    .then(result => {
+    .then((result) => {
       if (!result) {
         res.status(200).json({ message: `Invalid ID` });
       }
       res.status(200).json(result);
     })
-    .catch(err => {
+    .catch((err) => {
       res.status(500).json({
         error: err,
       });

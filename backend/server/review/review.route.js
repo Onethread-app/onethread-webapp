@@ -17,8 +17,7 @@ router
     requireAuth,
     permit('user', 'admin'),
     validate(paramValidation.createSave),
-    reviewCtrl.create
+    reviewCtrl.create,
   );
-
 
 module.exports = router;

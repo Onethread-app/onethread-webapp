@@ -17,10 +17,8 @@ router
     requireAuth,
     permit('user', 'admin'),
     validate(paramValidation.createSave),
-    reactCtrl.create
+    reactCtrl.create,
   );
-
-  
 
 router
   .route('/:reactId')

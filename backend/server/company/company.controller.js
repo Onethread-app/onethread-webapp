@@ -65,7 +65,11 @@ const changeName = async (req, res, next) => {
     const text = `company name has been updated by ${req.user.name}`;
     createCompanyRoleNotification(
       req.company,
-      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
       text,
       'companyProfile',
     );
@@ -260,7 +264,11 @@ const updateBasicInfo = async (req, res, next) => {
     const text = `company profile has been updated by ${req.user.name}`;
     createCompanyRoleNotification(
       req.company,
-      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
       text,
       'companyProfile',
     );
@@ -293,7 +301,11 @@ const updateAbout = async (req, res, next) => {
     const text = `company profile has been updated by ${req.user.name}`;
     createCompanyRoleNotification(
       req.company,
-      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
       text,
       'companyProfile',
     );
@@ -587,7 +599,11 @@ const noticePostByCompany = async (req, res, next) => {
     const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
     createCompanyRoleNotification(
       { _id: req.params.companyId },
-      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
       text,
       'announcement',
     );

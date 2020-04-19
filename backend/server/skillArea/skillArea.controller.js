@@ -31,7 +31,7 @@ const createSkill = async (req, res, next) => {
   newSkill.account.push(req.user._id);
   newSkill
     .save()
-    .then(async skill => {
+    .then(async (skill) => {
       const skillInfo = {};
       skillInfo._id = skill._id;
       skillInfo.name = skill.name;
@@ -46,7 +46,7 @@ const createSkill = async (req, res, next) => {
         skillInfo,
       });
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`${err}`);
       next(err);
     });
@@ -100,7 +100,7 @@ const getSkillInfo = async (req, res) => {
   SkillArea.findOne({ _id: skill })
     .populate('accountId')
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         return sendJSONresponse(res, 200, {
           success: true,
@@ -114,7 +114,7 @@ const getSkillInfo = async (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`error : ${err}`);
       return sendJSONresponse(res, 400, {
         success: false,
@@ -129,7 +129,7 @@ const getAllSkill = async (req, res) => {
 
     .skip(+skip)
     .limit(+limit)
-    .then(results => {
+    .then((results) => {
       if (results) {
         return sendJSONresponse(res, 200, {
           success: true,
@@ -139,7 +139,7 @@ const getAllSkill = async (req, res) => {
         res.status(404).json({ message: 'No Basic-info found' });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -153,7 +153,7 @@ const updateSkillInfo = async (req, res) => {
 
   SkillArea.findOneAndUpdate({ _id: req.params.skill })
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         return sendJSONresponse(res, 201, {
           success: true,
@@ -168,7 +168,7 @@ const updateSkillInfo = async (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -176,7 +176,7 @@ const updateSkillInfo = async (req, res) => {
 const skillLoad = async (req, res, next, id) => {
   SkillArea.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.skill = result;
 
@@ -187,7 +187,7 @@ const skillLoad = async (req, res, next, id) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       return next(err);
     });
 };
@@ -210,7 +210,7 @@ const searchSkillSet = async (req, res, next) => {
       ],
     })
       .select('-accountId')
-      .then(data => {
+      .then((data) => {
         logger.info(`Search complete ${name}`);
         return sendJSONresponse(res, 200, {
           success: true,
@@ -218,7 +218,7 @@ const searchSkillSet = async (req, res, next) => {
           data,
         });
       })
-      .catch(err => {
+      .catch((err) => {
         logger.error(`${err}`);
         console.log(err);
         return next(err);

@@ -1,11 +1,10 @@
 # Tigrow
 
-A social platform for the professionals. Every feed will be unique according to the differnet professions. 
-
+A social platform for the professionals. Every feed will be unique according to the differnet professions.
 
 ### Prerequisites
 
-You should install `Node`, `git` 
+You should install `Node`, `git`
 
 ### Installing
 
@@ -14,19 +13,15 @@ You should install `Node`, `git`
 `cd this_url`
 `yarn install`
 `yarn start`
+
 ## Running the tests
 
 For running the test case use `yarn test`
-
-
 
 ### And coding style tests
 
 run `yarn lint` to match with the coding style.
 
-
 ## Authors
 
-* **Orvi** - *Initial work* 
-
-
+- **Orvi** - _Initial work_

@@ -18,7 +18,7 @@ module.exports.authorization = async (req, res, next) => {
   let bearerToken = parts.split(' ')[1];
   let multi = client.multi();
   multi.get(`BlackList:${bearerToken}`);
-  multi.exec(function(err, data) {
+  multi.exec(function (err, data) {
     // if data object is null token is not blacklisted
     if (data[0] === null) {
       isBlackListed = false;
@@ -31,7 +31,7 @@ module.exports.authorization = async (req, res, next) => {
       message: 'invalid token',
     });
   }
-  jwt.verify(bearerToken, config.accessTokenSecret, function(
+  jwt.verify(bearerToken, config.accessTokenSecret, function (
     err,
     decoded,
   ) {

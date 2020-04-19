@@ -1,5 +1,5 @@
 const permit = (...allowed) => {
-  const isAllowed = role => allowed.indexOf(role) > -1; 
+  const isAllowed = (role) => allowed.indexOf(role) > -1;
 
   // return a middleware
   return (request, response, next) => {
@@ -13,7 +13,7 @@ const permit = (...allowed) => {
   };
 };
 
-const authSelf = content => {
+const authSelf = (content) => {
   // return a middleware
   return (request, response, next) => {
     if (

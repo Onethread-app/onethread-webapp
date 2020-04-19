@@ -5,31 +5,31 @@ const Schema = mongoose.Schema;
 const ReviewSchema = new mongoose.Schema({
   accountRef: {
     type: Schema.ObjectId,
-    ref: 'Account'
+    ref: 'Account',
   },
   text: {
     type: String,
-    trim: true
+    trim: true,
   },
   rating: {
     type: Number,
-    trim: true
+    trim: true,
   },
   updated: {
-    type: Date
+    type: Date,
   },
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   account: {
     type: Schema.ObjectId,
-    ref: 'Account'
-  }
+    ref: 'Account',
+  },
 });
 
 module.exports = mongoose.model('Review', ReviewSchema);

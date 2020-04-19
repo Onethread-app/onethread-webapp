@@ -17,13 +17,13 @@ const createJobExperience = async (req, res, next) => {
 
   await newJobExperience
     .save()
-    .then(async data => {
+    .then(async (data) => {
       account.jobExperience.push(data._id);
       await account.save();
       logger.info('job experience created');
       return sendJSONresponse(res, 201, { data });
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`Error: ${err}`);
       return next(err);
     });
@@ -32,7 +32,9 @@ const createJobExperience = async (req, res, next) => {
 const updateJobExperience = async (req, res, next) => {
   try {
     if (!req.is('application/json')) {
-      return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+      return sendErrorResponse(res, 406, 'ContentTypeError', {
+        message: "Expects 'application/json'",
+      });
     }
     const newJobExp = await JobExperience.findByIdAndUpdate(
       { _id: req.query.jobexperienceid },
@@ -48,10 +50,10 @@ const updateJobExperience = async (req, res, next) => {
 const getAllJobExperience = async (req, res) => {
   JobExperience.find({})
     .exec()
-    .then(data => {
+    .then((data) => {
       return sendJSONresponse(res, 200, { data });
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`Error: ${err}`);
       return next(err);
     });

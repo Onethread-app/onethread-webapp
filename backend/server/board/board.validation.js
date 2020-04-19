@@ -4,13 +4,12 @@ const Joi = require('joi');
 const idSchema = {
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
-    .error(errors => {
+    .error((errors) => {
       return {
         message: 'Invalid ID',
       };
     }),
 };
-
 
 const schema = {
   name: Joi.string(),
@@ -19,9 +18,8 @@ const schema = {
   project: idSchema.id,
   columns: Joi.array().items(idSchema.id),
   members: Joi.array().items(idSchema.id),
-  removed: Joi.boolean()
-}
-
+  removed: Joi.boolean(),
+};
 
 module.exports = {
   createBoard: Joi.object().keys({
@@ -29,10 +27,10 @@ module.exports = {
       name: schema.name.required(),
       department: schema.department,
       projectId: schema.project,
-      color : schema.color
+      color: schema.color,
     }),
   }),
   getAllBoards: Joi.object().keys({
-    params: schema.project
-  })
+    params: schema.project,
+  }),
 };

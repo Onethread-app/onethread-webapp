@@ -4,11 +4,10 @@ const chalk = require('chalk');
 const { isEmpty } = require('lodash');
 require('dotenv').config();
 
-
 const accountIndex = 'accounts';
 const memberIndex = 'members';
 const skillIndex = 'skillareas';
-const companyIndex = 'companies'
+const companyIndex = 'companies';
 
 const elasticUrl =
   process.env.ELASTIC_SEARCH_ADDRESS || 'http://localhost:9200';
@@ -56,7 +55,7 @@ async function createAccounts(index, mapping, model) {
     const dataset = await model.find({});
 
     if (!isEmpty(dataset)) {
-      dataset.forEach(data => {
+      dataset.forEach((data) => {
         bulk.push({
           index: { _index: index },
         });
@@ -111,7 +110,7 @@ async function createMembers(index, mapping, model) {
     });
 
     if (!isEmpty(dataset)) {
-      dataset.forEach(data => {
+      dataset.forEach((data) => {
         bulk.push({
           index: { _index: index },
         });
@@ -162,14 +161,14 @@ async function createSkillareas(index, mapping, model) {
     const dataset = await model.find({});
 
     if (!isEmpty(dataset)) {
-      dataset.forEach(data => {
+      dataset.forEach((data) => {
         bulk.push({
           index: { _index: index },
         });
         bulk.push({
           mongo_id: data._id.toString(),
           name: data.name,
-          accountId: data.accountId
+          accountId: data.accountId,
         });
       });
 
@@ -213,13 +212,13 @@ async function createCompany(index, mapping, model) {
     const dataset = await model.find({});
 
     if (!isEmpty(dataset)) {
-      dataset.forEach(data => {
+      dataset.forEach((data) => {
         bulk.push({
           index: { _index: index },
         });
         bulk.push({
           mongo_id: data._id.toString(),
-          name: data.name
+          name: data.name,
         });
       });
 
@@ -242,8 +241,6 @@ async function createCompany(index, mapping, model) {
   }
 }
 
-
-
 function setDocument(indexName, indexType, document) {
   return esclient.index({
     index: indexName,
@@ -263,7 +260,7 @@ function search(indexName, indexType, body) {
 
 function bulkInsert(indexName, dataset, structure) {
   let bulk = [];
-  dataset.forEach(data => {
+  dataset.forEach((data) => {
     bulk.push({
       index: { _index: indexName },
     });
@@ -332,7 +329,7 @@ const skillMapping = {
     properties: {
       mongo_id: { type: 'text' },
       name: { type: 'text' },
-      accountId: { type: 'text' }
+      accountId: { type: 'text' },
     },
   },
 };
@@ -341,10 +338,10 @@ const companyMappnig = {
   mappings: {
     properties: {
       mongo_id: { type: 'text' },
-      name: { type: 'text' }
-    }
-  }
-}
+      name: { type: 'text' },
+    },
+  },
+};
 
 module.exports = {
   esclient,
@@ -365,7 +362,7 @@ module.exports = {
   companyIndex,
   createSkillareas,
   createCompany,
-  companyMappnig
+  companyMappnig,
 };
 
 // function createMessages(index,model,mapping, structure){

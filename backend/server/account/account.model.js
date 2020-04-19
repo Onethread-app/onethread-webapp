@@ -15,7 +15,7 @@ const accountsSchema = new mongoose.Schema({
   },
   coverImage: {
     type: String,
-    trim: true
+    trim: true,
   },
   name: {
     type: String,
@@ -147,7 +147,7 @@ accountsSchema.index(
   { email: 1, secondaryEmail: 1 },
   { unique: true },
 );
-accountsSchema.pre('save', function(next) {
+accountsSchema.pre('save', function (next) {
   const account = this;
 
   // only hash the password if it has been modified (or is new)
@@ -178,7 +178,7 @@ accountsSchema.pre('save', function(next) {
 });
 
 // TODOS: Convert into promise based function
-accountsSchema.methods.comparePassword = function(
+accountsSchema.methods.comparePassword = function (
   candidatePassword,
   cb,
 ) {
@@ -205,7 +205,7 @@ accountsSchema.methods.comparePassword = function(
 };
 
 // generating jwt token
-accountsSchema.methods.generateJwt = function() {
+accountsSchema.methods.generateJwt = function () {
   // const token = new token();
   return jwt.sign(
     {

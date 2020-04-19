@@ -57,7 +57,9 @@ module.exports.createMemberAddNotification = async (
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
-    membersToSendNotification = membersToSendNotification.filter( m => m.account.toString() !== adminUser._id.toString() ); 
+    membersToSendNotification = membersToSendNotification.filter(
+      (m) => m.account.toString() !== adminUser._id.toString(),
+    );
 
     // let notification = new Notification({
     //   type: 'companyProfile',
@@ -65,9 +67,8 @@ module.exports.createMemberAddNotification = async (
     //   account: adminUser._id,
     //   company: company,
     // });
-    
 
-    let notifications = newMembers.map(m => {
+    let notifications = newMembers.map((m) => {
       return {
         type: 'colleague',
         text: `GA has added ${m.account.name}`,
@@ -97,7 +98,7 @@ module.exports.createMemberAddNotification = async (
 
     for (let i = 0; i < notifications.length; i += 1) {
       let usersNotifications = await membersToSendNotification.map(
-        m => {
+        (m) => {
           return {
             notification: notifications[i]._id,
             account: m.account,
@@ -136,7 +137,7 @@ module.exports.createTeamAddNotification = async (
     //   company: company,
     // });
 
-    let notifications = newMembers.map(m => {
+    let notifications = newMembers.map((m) => {
       return {
         type: 'team',
         text: `PA has added ${m.account.name}`,
@@ -165,11 +166,11 @@ module.exports.createTeamAddNotification = async (
 
     notifications = await Notification.create(notifications);
 
-    let usersAccountNotificationCollegue = members.map(m => {
+    let usersAccountNotificationCollegue = members.map((m) => {
       return m.account.toString();
     });
 
-    let usersAccountNotificationTeam = teamMembers.map(m => {
+    let usersAccountNotificationTeam = teamMembers.map((m) => {
       return m.account.toString();
     });
 
@@ -177,11 +178,12 @@ module.exports.createTeamAddNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
-    allNotificationReciver = allNotificationReciver.filter( m => m !== adminUser._id.toString() ); 
-
+    allNotificationReciver = allNotificationReciver.filter(
+      (m) => m !== adminUser._id.toString(),
+    );
 
     for (let i = 0; i < notifications.length; i += 1) {
-      let usersNotificationAll = allNotificationReciver.map(m => {
+      let usersNotificationAll = allNotificationReciver.map((m) => {
         return {
           notification: notifications[i]._id,
           account: m,
@@ -260,8 +262,10 @@ module.exports.createCompanyRoleNotification = async (
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
-    
-    members = members.filter( m => m.account.toString() !== adminUser._id.toString() ); 
+
+    members = members.filter(
+      (m) => m.account.toString() !== adminUser._id.toString(),
+    );
 
     let notification = new Notification({
       type: type,
@@ -270,7 +274,7 @@ module.exports.createCompanyRoleNotification = async (
       company: company,
     });
 
-    let usersNotification = members.map(m => {
+    let usersNotification = members.map((m) => {
       return {
         notification: notification._id,
         account: m.account,
@@ -289,7 +293,6 @@ module.exports.createCompanyRoleNotification = async (
     await UserNotification.create(usersNotification);
   } catch (error) {
     logger.error(`${error}`);
-    
   }
 };
 
@@ -318,11 +321,11 @@ module.exports.createBoardNotification = async (
       company: project.company,
     });
 
-    let usersAccountNotificationCollegue = members.map(m => {
+    let usersAccountNotificationCollegue = members.map((m) => {
       return m.account.toString();
     });
 
-    let usersAccountNotificationTeam = teamMembers.map(m => {
+    let usersAccountNotificationTeam = teamMembers.map((m) => {
       return m.account.toString();
     });
 
@@ -330,9 +333,11 @@ module.exports.createBoardNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
-    allNotificationReciver = allNotificationReciver.filter( m => m !== adminUser._id.toString() ); 
+    allNotificationReciver = allNotificationReciver.filter(
+      (m) => m !== adminUser._id.toString(),
+    );
 
-    let usersNotificationAll = allNotificationReciver.map(m => {
+    let usersNotificationAll = allNotificationReciver.map((m) => {
       return {
         notification: notification._id,
         account: m,
@@ -399,8 +404,7 @@ module.exports.list = async (req, res, next) => {
       .skip(+skip)
       .limit(+limit)
       .exec()
-      .then(result => {
-        
+      .then((result) => {
         return sendJSONresponse(res, 200, result);
       });
 
@@ -419,7 +423,6 @@ module.exports.list = async (req, res, next) => {
     //   return sendJSONresponse(res, 200, result);
     // });
   } catch (error) {
-    
     logger.error(`${error}`);
     next(error);
   }
@@ -431,11 +434,11 @@ module.exports.seen = async (req, res, next) => {
     { $set: { seen: true } },
   )
     .exec()
-    .then(result => {
+    .then((result) => {
       logger.info(`${result}`);
       return sendJSONresponse(res, 200, { seen: true });
     })
-    .catch(e => {
+    .catch((e) => {
       logger.error(`${e}`);
       next(e);
     });
@@ -450,11 +453,11 @@ module.exports.read = async (req, res, next) => {
     { $set: { read: true } },
   )
     .exec()
-    .then(result => {
+    .then((result) => {
       logger.info(`${result}`);
       return sendJSONresponse(res, 200, { read: true });
     })
-    .catch(e => {
+    .catch((e) => {
       logger.log(`${e}`);
       next(e);
     });

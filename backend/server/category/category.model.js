@@ -1,7 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-mongoose.plugin(schema => {
+mongoose.plugin((schema) => {
   schema.options.usePushEach = true;
 });
 //let timestamp = require("mongoose-timestamp");
@@ -11,19 +11,25 @@ let categorySchema = mongoose.Schema({
   name: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   subcategories: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'SubCategory'
-    }
+      ref: 'SubCategory',
+    },
   ],
   type: {
     type: String,
     required: true,
-    enum: ['company', 'business-category', 'business', 'emp', 'job-seeker']
-  }
+    enum: [
+      'company',
+      'business-category',
+      'business',
+      'emp',
+      'job-seeker',
+    ],
+  },
 });
 
 // defining all the fields of sub-category
@@ -31,18 +37,18 @@ let subCategorySchema = mongoose.Schema({
   cid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
-    required: true
+    required: true,
   },
   name: {
     type: String,
-    required: true
+    required: true,
   },
   subsubcategories: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'SubSubCategory'
-    }
-  ]
+      ref: 'SubSubCategory',
+    },
+  ],
 });
 
 // defining all the fields of sub-sub-category
@@ -56,35 +62,38 @@ let subSubCategorySchema = mongoose.Schema({
   cid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Category',
-    required: true
+    required: true,
   },
   sid: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'SubCategory',
-    required: true
+    required: true,
   },
   name: {
     type: String,
-    required: true
-  }
+    required: true,
+  },
 });
 
 // categorySchema.plugin(timestamp);
 // subCategorySchema.plugin(timestamp);
 // subSubCategorySchema.plugin(timestamp);
 
-let Category = (module.exports = mongoose.model('Category', categorySchema));
+let Category = (module.exports = mongoose.model(
+  'Category',
+  categorySchema,
+));
 let SubCategory = (module.exports = mongoose.model(
   'SubCategory',
-  subCategorySchema
+  subCategorySchema,
 ));
 let SubSubCategory = (module.exports = mongoose.model(
   'SubSubCategory',
-  subSubCategorySchema
+  subSubCategorySchema,
 ));
 
 module.exports = {
   Category,
   SubCategory,
-  SubSubCategory
+  SubSubCategory,
 };

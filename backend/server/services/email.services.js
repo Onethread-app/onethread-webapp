@@ -74,7 +74,7 @@ module.exports.sendEmailForVerifyAccount = async (
     `,
   };
 
-  return transporter.sendMail(mailOptions, function(err, res) {
+  return transporter.sendMail(mailOptions, function (err, res) {
     if (err) {
       logger.error(' Message send to failed ' + err);
     } else {

@@ -9,7 +9,7 @@ const logger = new winston.createLogger({
     winston.format.json(),
     winston.format.timestamp(),
     winston.format.prettyPrint(),
-    winston.format.printf(log => {
+    winston.format.printf((log) => {
       return `${log.level}: ${process.pid} ${log.message} ${log.timestamp} `;
     }),
   ),

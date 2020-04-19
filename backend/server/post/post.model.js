@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-let tagLimit = function(tagList) {
+let tagLimit = function (tagList) {
   return tagList.length <= 10;
 };
 
-let hashtagLimit = function(hashtagList) {
+let hashtagLimit = function (hashtagList) {
   return hashtagList.length <= 5;
 };
 
@@ -15,40 +15,38 @@ const PostSchema = new mongoose.Schema({
     type: [
       {
         type: String,
-        enum: ['public', 'private']
-      }
+        enum: ['public', 'private'],
+      },
     ],
-    default: ['private']
+    default: ['private'],
   },
   postType: {
     type: [
       {
         type: String,
-        enum: ['status', 'photo']
-      }
+        enum: ['status', 'photo'],
+      },
     ],
-    default: ['status']
+    default: ['status'],
   },
   text: {
     type: String,
     trim: true,
     maxlength: 200,
-    required: true
+    required: true,
   },
   location: {
     type: String,
     trim: true,
-    required: true
+    required: true,
   },
   respectCount: {
     type: Number,
     trim: true,
-    
   },
   likeCount: {
     type: Number,
     trim: true,
-   
   },
   // respect: [
   //   //will use count
@@ -68,40 +66,40 @@ const PostSchema = new mongoose.Schema({
     type: [
       {
         type: Schema.ObjectId,
-        ref: 'Hashtag'
-      }
+        ref: 'Hashtag',
+      },
     ],
-    validate: [hashtagLimit, '{PATH} user exceeds the limit of 5']
+    validate: [hashtagLimit, '{PATH} user exceeds the limit of 5'],
   },
   tag: {
     type: [
       {
         type: Schema.ObjectId,
-        ref: 'User'
-      }
+        ref: 'User',
+      },
     ],
-    validate: [tagLimit, '{PATH} user exceeds the limit of 10']
+    validate: [tagLimit, '{PATH} user exceeds the limit of 10'],
   },
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   blocked: {
     //after report admin
     type: Boolean,
-    default: false
+    default: false,
   },
   updated: {
-    type: Date
+    type: Date,
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   account: {
     type: Schema.ObjectId,
-    ref: 'Account'
-  }
+    ref: 'Account',
+  },
 });
 
 module.exports = mongoose.model('Post', PostSchema);

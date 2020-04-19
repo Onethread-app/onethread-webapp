@@ -128,7 +128,15 @@ const addMember = async (req, res, next) => {
       // });
       // console.log(newMembersForNotification);
 
-      createMemberAddNotification(req.company._id, elasticSearchIndexedMembers, {_id:req.user._id, name: req.user.name,  pusherSock: req.headers.clientid } );
+      createMemberAddNotification(
+        req.company._id,
+        elasticSearchIndexedMembers,
+        {
+          _id: req.user._id,
+          name: req.user.name,
+          pusherSock: req.headers.clientid,
+        },
+      );
 
       const memberStructure = (data) => {
         return {

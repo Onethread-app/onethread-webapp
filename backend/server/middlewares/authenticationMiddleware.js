@@ -1,7 +1,7 @@
 const passport = require('passport');
 const { sendErrorResponse } = require('../helpers/jsonResponse');
 module.exports.authentication = (req, res, next) => {
-  passport.authenticate('local', { session: false }, function(
+  passport.authenticate('local', { session: false }, function (
     err,
     user,
     info,

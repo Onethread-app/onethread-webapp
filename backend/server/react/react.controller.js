@@ -4,7 +4,7 @@ const serviceReact = require('./react.service');
 const load = (req, res, next, id) => {
   React.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.react = result;
         return next();
@@ -13,15 +13,15 @@ const load = (req, res, next, id) => {
         .status(400)
         .json({ message: 'No valid entry found for provided ID' });
     })
-    .catch(err => {
+    .catch((err) => {
       // console.log(err);
       next(err);
     });
-}
+};
 
 const get = (req, res) => {
   return res.json(req.save);
-}
+};
 
 //later will change to task manager
 const create = (req, res, next) => {
@@ -31,7 +31,7 @@ const create = (req, res, next) => {
     postRef: req.body.postRef,
     reactType: req.body.reactType,
     refType: req.body.refType,
-    account: req.user
+    account: req.user,
   });
 
   listPromise.push(react.save());
@@ -39,12 +39,12 @@ const create = (req, res, next) => {
     typeCount = 'respectCount';
   }
   listPromise.push(
-    serviceReact.reactCount(react.postRef, react.refType, typeCount)
+    serviceReact.reactCount(react.postRef, react.refType, typeCount),
   );
   Promise.all(listPromise)
-    .then(result => res.json(result[0]))
-    .catch(e => next(e));
-}
+    .then((result) => res.json(result[0]))
+    .catch((e) => next(e));
+};
 
 const list = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
@@ -53,9 +53,9 @@ const list = (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then(result => res.json(result))
-    .catch(e => next(e));
-}
+    .then((result) => res.json(result))
+    .catch((e) => next(e));
+};
 
 const listReference = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
@@ -64,10 +64,9 @@ const listReference = (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then(result => res.json(result))
-    .catch(e => next(e));
-}
-
+    .then((result) => res.json(result))
+    .catch((e) => next(e));
+};
 
 const remove = (req, res, next) => {
   const react = req.react;
@@ -75,8 +74,8 @@ const remove = (req, res, next) => {
 
   react
     .save()
-    .then(result => res.json(result))
-    .catch(e => next(e));
-}
+    .then((result) => res.json(result))
+    .catch((e) => next(e));
+};
 
 module.exports = { load, create, get, remove, listReference, list };

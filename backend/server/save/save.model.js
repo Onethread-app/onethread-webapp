@@ -7,23 +7,23 @@ const { Schema } = mongoose;
 const SaveSchema = new mongoose.Schema({
   postRef: {
     type: Schema.ObjectId,
-    ref: 'Post'
+    ref: 'Post',
   },
   updated: {
-    type: Date
+    type: Date,
   },
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   account: {
     type: Schema.ObjectId,
-    ref: 'Account'
-  }
+    ref: 'Account',
+  },
 });
 
 module.exports = mongoose.model('Save', SaveSchema);

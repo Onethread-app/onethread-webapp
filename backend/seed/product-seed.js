@@ -110,7 +110,7 @@ const levelTwo = {
 const url = 'http://127.0.0.1:4044/api/v1/category';
 
 function insert(levelOne, levelTwo) {
-  levelOne.forEach(data => {
+  levelOne.forEach((data) => {
     // format data
 
     let postData = {
@@ -125,19 +125,19 @@ function insert(levelOne, levelTwo) {
 
       .post(url, postData)
 
-      .then(res => {
+      .then((res) => {
         console.log('Level-one : ', res.data.newCategory._id);
 
         // insert level two
 
-        levelTwo[res.data.newCategory.name].forEach(element => {
+        levelTwo[res.data.newCategory.name].forEach((element) => {
           axios
 
             .post(`${url}/${res.data.newCategory._id}`, {
               name: element,
             })
 
-            .then(response => {
+            .then((response) => {
               console.log(
                 'Level-two : ',
 
@@ -147,13 +147,13 @@ function insert(levelOne, levelTwo) {
               );
             })
 
-            .catch(err => {
+            .catch((err) => {
               console.log('Level-two ERROR: ', err.message);
             });
         });
       })
 
-      .catch(err => {
+      .catch((err) => {
         console.log('Level-one ERROR: ', err);
       });
   });

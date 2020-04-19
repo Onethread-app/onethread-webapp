@@ -11,38 +11,33 @@ const Post = require('./post.model');
 //     })
 //     .catch(e => next(e));
 // }
-const load =  (req, res, next, id) => {
-
-
+const load = (req, res, next, id) => {
   Post.findById(id)
-   .exec()
-   .then(result => {
-     
-     if (result) {
-      req.post = result;
-      return next();
-    }  else {
-       
-      return res.status(400)
-        .json({ message: "No valid entry found for provided ID" });
-     }
-   })
-   .catch(err => {
-     // console.log(err);
-     next(err);
-   });
-}
+    .exec()
+    .then((result) => {
+      if (result) {
+        req.post = result;
+        return next();
+      } else {
+        return res
+          .status(400)
+          .json({ message: 'No valid entry found for provided ID' });
+      }
+    })
+    .catch((err) => {
+      // console.log(err);
+      next(err);
+    });
+};
 
 // const like =  (req, res, next) => {
 
-
 //   const id = req.params.postId;
-  
- 
+
 //   Post.findByIdAndUpdate(id,  {$push: {like : '5cdb98cdab24ca4b10407752'}}, {
 //     new: true } )
 //    .then(result => {
-     
+
 //      if (result) {
 //       res.json(result);
 //     }  else {
@@ -59,12 +54,11 @@ const load =  (req, res, next, id) => {
 // const respect = (req, res, next) => {
 
 //   const id = req.params.postId;
-  
- 
+
 //   Post.findByIdAndUpdate(id,  {$push: {respect : '5cdb98cdab24ca4b10407752'}}, {
 //     new: true } )
 //    .then(result => {
-     
+
 //      if (result) {
 //       res.json(result);
 //     }  else {
@@ -79,36 +73,37 @@ const load =  (req, res, next, id) => {
 // }
 
 const tag = (req, res, next) => {
-
   const id = req.params.postId;
-  
- 
-  Post.findByIdAndUpdate(id,  {$push: {tag : '5cdb98cdab24ca4b10407752'}}, {
-    new: true } )
-   .then(result => {
-     
-     if (result) {
-      res.json(result);
-    }  else {
-      return res.status(400)
-        .json({ message: "No valid entry found for provided ID" });
-     }
-   })
-   .catch(err => {
-     // console.log(err);
-     next(err);
-   });
-}
 
-
+  Post.findByIdAndUpdate(
+    id,
+    { $push: { tag: '5cdb98cdab24ca4b10407752' } },
+    {
+      new: true,
+    },
+  )
+    .then((result) => {
+      if (result) {
+        res.json(result);
+      } else {
+        return res
+          .status(400)
+          .json({ message: 'No valid entry found for provided ID' });
+      }
+    })
+    .catch((err) => {
+      // console.log(err);
+      next(err);
+    });
+};
 
 /**
  * Get post
  * @returns {post}
  */
-const  get =  (req, res) => {
+const get = (req, res) => {
   return res.json(req.post);
-}
+};
 
 /**
  * Create new post
@@ -117,17 +112,17 @@ const  get =  (req, res) => {
  * @returns {post}
  */
 const create = (req, res, next) => {
-  
   const post = new Post({
     text: req.body.text,
     location: req.body.location,
-    account: req.user
+    account: req.user,
   });
 
-  post.save()
-    .then(savePost => res.json(savePost))
-    .catch(e => next(e));
-}
+  post
+    .save()
+    .then((savePost) => res.json(savePost))
+    .catch((e) => next(e));
+};
 
 /**
  * Update existing post
@@ -135,16 +130,16 @@ const create = (req, res, next) => {
  * @property {string} req.body.mobileNumber - The mobileNumber of post.
  * @returns {post}
  */
-const  update = (req, res, next) => {
+const update = (req, res, next) => {
   const post = req.post;
   post.text = req.body.text;
   post.location = req.body.location;
-  
 
-  post.save()
-    .then(savedpost => res.json(savedpost))
-    .catch(e => next(e));
-}
+  post
+    .save()
+    .then((savedpost) => res.json(savedpost))
+    .catch((e) => next(e));
+};
 
 /**
  * Get post list.
@@ -154,20 +149,20 @@ const  update = (req, res, next) => {
  */
 const list = (req, res) => {
   const { limit = 50, skip = 0 } = req.query;
-  Post.find({removed: false})
-  .sort({ createdAt: -1 })
-  .skip(+skip)
-  .limit(+limit)
-  .exec( (err, posts) => {
-    if (err) {
-      return res.status(422).send({
-        message: err
-      });
-    } else {
-      res.json(posts);
-    }
-  });
-}
+  Post.find({ removed: false })
+    .sort({ createdAt: -1 })
+    .skip(+skip)
+    .limit(+limit)
+    .exec((err, posts) => {
+      if (err) {
+        return res.status(422).send({
+          message: err,
+        });
+      } else {
+        res.json(posts);
+      }
+    });
+};
 
 /**
  * Delete post.
@@ -180,13 +175,14 @@ const list = (req, res) => {
 //     .catch(e => next(e));
 // }
 
-const  remove = (req, res, next) => {
+const remove = (req, res, next) => {
   const post = req.post;
   post.removed = true;
 
-  post.save()
-    .then(result => res.json(result))
-    .catch(e => next(e));
-}
+  post
+    .save()
+    .then((result) => res.json(result))
+    .catch((e) => next(e));
+};
 
-module.exports = { load, get, create, update, list, remove,   tag };
+module.exports = { load, get, create, update, list, remove, tag };

@@ -90,21 +90,22 @@ const company = new Schema(
       required: true,
     },
     optionalRole: {
-      type: [{
-        type: String,
-        enum: [
-          'editProfile',
-          'cRUDAnnouncement',
-          'archiveProject',
-          'addRemoveModerator',
-          'messageAssociate',
-          'addAcceptRejectAssociate',
-          'acceptRejectProjectFromAssociate',
-        ]
-      }],
-      
+      type: [
+        {
+          type: String,
+          enum: [
+            'editProfile',
+            'cRUDAnnouncement',
+            'archiveProject',
+            'addRemoveModerator',
+            'messageAssociate',
+            'addAcceptRejectAssociate',
+            'acceptRejectProjectFromAssociate',
+          ],
+        },
+      ],
     },
-    
+
     address: {
       type: String,
       maxlength: 120,
@@ -149,8 +150,8 @@ const company = new Schema(
     ],
     registrationYear: {
       type: Number,
-      get: v => Number(v),
-      set: v => Number(v),
+      get: (v) => Number(v),
+      set: (v) => Number(v),
       min: 1800,
       max: new Date().getFullYear(),
     },

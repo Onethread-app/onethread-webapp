@@ -6,7 +6,7 @@ const projectRequestSchema = new Schema(
   {
     company: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company'
+      ref: 'Company',
     },
     associate: {
       type: mongoose.Schema.Types.ObjectId,

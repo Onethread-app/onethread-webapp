@@ -16,7 +16,7 @@ services:
 
     # Expose ports [HOST:CONTAINER}
     ports:
-      - "4040:4040"
+      - '4040:4040'
 
     # Set environment variables from this file
     env_file:
@@ -33,6 +33,6 @@ services:
     links:
       - mongo
   mongo:
-    image: "mongo:3.4"
+    image: 'mongo:3.4'
     ports:
-      - "27017:27017"
+      - '27017:27017'

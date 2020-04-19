@@ -34,7 +34,7 @@ const changeUserName = async (req, res, next) => {
       await Account.updateOne({ _id: id }, { name: name })
         .select('-password')
         .exec()
-        .then(user => {
+        .then((user) => {
           return sendJSONresponse(res, 200, {
             success: true,
             message: 'Username Changed',

@@ -2,10 +2,10 @@ engines:
   eslint:
     enabled: true
 ratings:
-   paths:
-   - server/**
-   - config/**
-   - "**.js"
+  paths:
+    - server/**
+    - config/**
+    - '**.js'
 exclude_paths:
-- node_modules/**/*
-- server/tests/**
+  - node_modules/**/*
+  - server/tests/**

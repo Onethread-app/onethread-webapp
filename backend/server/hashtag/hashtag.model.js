@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 //const Schema = mongoose.Schema;
 
 const HashtagSchema = new mongoose.Schema({
@@ -6,19 +6,19 @@ const HashtagSchema = new mongoose.Schema({
     //unique: true,
     type: String,
     trim: true,
-    required: true
+    required: true,
   },
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   updated: {
-    type: Date
+    type: Date,
   },
   created: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-module.exports = mongoose.model("Hashtag", HashtagSchema);
+module.exports = mongoose.model('Hashtag', HashtagSchema);

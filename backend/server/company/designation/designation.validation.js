@@ -3,7 +3,7 @@ const Joi = require('joi');
 const idSchema = {
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
-    .error(errors => {
+    .error((errors) => {
       return {
         message: 'Invalid ID',
       };

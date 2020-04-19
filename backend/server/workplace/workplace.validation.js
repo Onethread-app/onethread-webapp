@@ -7,6 +7,6 @@ module.exports = {
     body: {
       companyRef: Joi.string().regex(/^[0-9a-fA-F]{24}$/),
       name: Joi.string(),
-    }
-  }
+    },
+  },
 };

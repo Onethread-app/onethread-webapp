@@ -9,7 +9,7 @@ const {
 const load = (req, res, next, id) => {
   SubTask.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.SubTask = result;
         return next();
@@ -18,7 +18,7 @@ const load = (req, res, next, id) => {
         message: 'No valid entry found for provided SubTask ID',
       });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -61,7 +61,7 @@ const update = async (req, res, next) => {
 const deleteSubtask = async (req, res, next) => {
   try {
     await SubTask.findByIdAndDelete(req.SubTask._id);
-    res.status(200).json({ message : 'SUBTASK DELETED' })
+    res.status(200).json({ message: 'SUBTASK DELETED' });
   } catch (error) {
     next(error);
   }
@@ -78,10 +78,10 @@ const list = async (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then(result => {
+    .then((result) => {
       logger.info(`${result}`);
       res.status(200).send(result);
     })
-    .catch(e => next(e));
+    .catch((e) => next(e));
 };
-module.exports = { create, load, list, get, update , deleteSubtask };
+module.exports = { create, load, list, get, update, deleteSubtask };

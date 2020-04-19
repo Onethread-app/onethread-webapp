@@ -7,43 +7,43 @@ const NoticeSchema = new mongoose.Schema({
     type: String,
     trim: true,
     maxlength: 200,
-    required: true
+    required: true,
   },
   respectCount: {
     type: Number,
-    trim: true
+    trim: true,
   },
   likeCount: {
     type: Number,
-    trim: true
+    trim: true,
   },
   respect: [
     {
       type: Schema.ObjectId,
-      ref: 'User'
-    }
+      ref: 'User',
+    },
   ],
   like: [
     {
       type: Schema.ObjectId,
-      ref: 'User'
-    }
+      ref: 'User',
+    },
   ],
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   updated: {
-    type: Date
+    type: Date,
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   account: {
     type: Schema.ObjectId,
-    ref: 'Account'
-  }
+    ref: 'Account',
+  },
 });
 
 module.exports = mongoose.model('Notice', NoticeSchema);

@@ -9,7 +9,7 @@ const {
 } = require('../helpers/jsonResponse');
 
 const {
-  createTeamAddNotification
+  createTeamAddNotification,
 } = require('../notification/notification.controller');
 
 const changeRole = async (req, res, next) => {
@@ -42,7 +42,7 @@ const addTeamMember = async (req, res, next) => {
     });
     let members = req.body.members;
     if (projectOwner.company.toString() === req.params.companyId) {
-      let accounts = members.map(member => member.account);
+      let accounts = members.map((member) => member.account);
 
       // find previous members
       let prevMembers = await Team.find({
@@ -50,10 +50,10 @@ const addTeamMember = async (req, res, next) => {
         project: req.query.pid,
         removed: true,
       }).select('account');
-      prevMembers = prevMembers.map(member => member.account);
+      prevMembers = prevMembers.map((member) => member.account);
       // filter new members
-      members = members.filter(member => {
-        return !prevMembers.some(prevMemberAccount => {
+      members = members.filter((member) => {
+        return !prevMembers.some((prevMemberAccount) => {
           return (
             prevMemberAccount.toString() === member.account.toString()
           );
@@ -72,7 +72,7 @@ const addTeamMember = async (req, res, next) => {
 
       if (members.length) {
         // add new team members
-        members = members.map(e => {
+        members = members.map((e) => {
           return {
             account: e.account,
             project: req.query.pid,
@@ -104,17 +104,17 @@ const addTeamMember = async (req, res, next) => {
       const memberAllowNumber = await ProjectRequest.findOne({
         project: req.query.pid,
       }).select('size');
-      accounts = members.map(member => member.account);
+      accounts = members.map((member) => member.account);
       // find previous members
       let prevMembers = await Team.find({
         account: { $in: accounts },
         project: req.query.pid,
         removed: true,
       }).select('account');
-      prevMembers = prevMembers.map(member => member.account);
+      prevMembers = prevMembers.map((member) => member.account);
       // filter new members
-      members = members.filter(member => {
-        return !prevMembers.some(prevMemberAccount => {
+      members = members.filter((member) => {
+        return !prevMembers.some((prevMemberAccount) => {
           return (
             prevMemberAccount.toString() === member.account.toString()
           );
@@ -130,7 +130,7 @@ const addTeamMember = async (req, res, next) => {
       if (memberAllowNumber.size >= req.body.members.length) {
         // need to insertMany method later
         let members = req.body.members;
-        members.forEach(async account => {
+        members.forEach(async (account) => {
           await Team.insertMany({
             account: account.account,
             project: req.query.pid,
@@ -247,8 +247,8 @@ const searchTeamMember = async (req, res, next) => {
       .populate('account', '_id name firstName lastName email')
       .exec();
 
-    let teams = companyMembers.filter(cm => {
-      return !projectMembers.some(pm => {
+    let teams = companyMembers.filter((cm) => {
+      return !projectMembers.some((pm) => {
         return pm.member._id.toString() === cm._id.toString();
       });
     });

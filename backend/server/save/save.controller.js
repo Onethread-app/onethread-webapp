@@ -18,23 +18,23 @@ const load = (req, res, next, id) => {
       // console.log(err);
       next(err);
     });
-}
+};
 
 const get = (req, res) => {
   return res.json(req.save);
-}
+};
 
 const create = (req, res, next) => {
   const save = new Save({
     postRef: req.body.postRef,
-    account: req.user
+    account: req.user,
   });
 
   save
     .save()
-    .then(result => res.send(result))
-    .catch(e => next(e));
-}
+    .then((result) => res.send(result))
+    .catch((e) => next(e));
+};
 
 const list = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
@@ -43,9 +43,9 @@ const list = (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-     .then(result => res.json(result))
-    .catch(e => next(e));
-}
+    .then((result) => res.json(result))
+    .catch((e) => next(e));
+};
 
 const remove = (req, res, next) => {
   const save = req.save;
@@ -53,8 +53,8 @@ const remove = (req, res, next) => {
 
   save
     .remove()
-    .then(result => res.json(result))
-    .catch(e => next(e));
-}
+    .then((result) => res.json(result))
+    .catch((e) => next(e));
+};
 
 module.exports = { load, create, get, remove, list };

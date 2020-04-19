@@ -8,9 +8,9 @@ const TaskAssign = require('./taskAssign.model');
 const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
 var _ = require('lodash');
-const {sendErrorResponse} = require('../helpers/jsonResponse');
+const { sendErrorResponse } = require('../helpers/jsonResponse');
 const {
-  createCompanyRoleNotification
+  createCompanyRoleNotification,
 } = require('../notification/notification.controller');
 const { Team } = require('../team-member/team.model');
 
@@ -19,15 +19,15 @@ const load = (req, res, next, id) => {
     .populate('account', '_id firstName lastName')
     .populate('columnId', '_id name')
     .exec()
-    .then(result => {
-        req.task = result;
-        return next();
+    .then((result) => {
+      req.task = result;
+      return next();
     })
-    .catch(err => {
-      return sendErrorResponse(res,404,'Idisnotexits',{
+    .catch((err) => {
+      return sendErrorResponse(res, 404, 'Idisnotexits', {
         success: false,
         message: 'No valid entry found for provided Task ID',
-      })
+      });
     });
 };
 
@@ -45,18 +45,27 @@ const create = async (req, res, next) => {
     // TODO: should use update function
     const column = await BoardColumn.findOne({
       _id: req.body.columnId,
-    }).populate({ 
+    }).populate({
       path: 'boardId',
       populate: {
         path: 'project',
         model: 'Project',
-        select: 'name company'
-      } 
-   });
+        select: 'name company',
+      },
+    });
 
-    const text =`${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
-    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'task' );
-       
+    const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
+    createCompanyRoleNotification(
+      { _id: column.boardId.project.company },
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
+      text,
+      'task',
+    );
+
     column.tasks.push(createdTask._id);
     await column.save();
 
@@ -97,14 +106,14 @@ const getMembers = async (req, res, next) => {
     .populate([
       {
         path: 'assignedPerson account',
-        select: '_id firstName lastName profileImage'
+        select: '_id firstName lastName profileImage',
       },
     ])
     .exec()
-    .then(result => {
+    .then((result) => {
       res.status(200).send(result);
     })
-    .catch(error => {
+    .catch((error) => {
       next(error);
     });
 };
@@ -112,7 +121,6 @@ const getMembers = async (req, res, next) => {
 const addMember = async (req, res, next) => {
   const requestedMembers = req.body.assignmembers;
   const boardID = req.task.boardId;
-
 
   //get current task board to check members in board
 
@@ -122,7 +130,7 @@ const addMember = async (req, res, next) => {
 
   //convert current taskbaord members to check the difference between them
 
-  const Members = currentTaskBoard.members.map(member =>
+  const Members = currentTaskBoard.members.map((member) =>
     member.toString(),
   );
 
@@ -130,9 +138,9 @@ const addMember = async (req, res, next) => {
 
   const newBoardmember = _.difference(requestedMembers, Members);
 
-  //new members to add in task 
+  //new members to add in task
 
-  const newMembers = requestedMembers.map(memberId => {
+  const newMembers = requestedMembers.map((memberId) => {
     return {
       taskId: req.task._id,
       account: req.user._id,
@@ -140,12 +148,12 @@ const addMember = async (req, res, next) => {
     };
   });
 
-  //check the difference's 
+  //check the difference's
   //if new member who is already in board , just add in task
   //others add them in baord first
 
   if (_.isEmpty(newBoardmember)) {
-    TaskAssign.insertMany(newMembers).then(taskMember => {
+    TaskAssign.insertMany(newMembers).then((taskMember) => {
       TaskAssign.find({
         taskId: req.task._id,
         assignedPerson: {
@@ -156,11 +164,11 @@ const addMember = async (req, res, next) => {
         .populate([
           {
             path: 'assignedPerson account',
-            select: '_id firstName lastName profileImage'
-          }
+            select: '_id firstName lastName profileImage',
+          },
         ])
         .exec()
-        .then(result => {
+        .then((result) => {
           res.status(201).send(result);
         });
     });
@@ -171,7 +179,7 @@ const addMember = async (req, res, next) => {
       { safe: true, upsert: true, new: true },
     );
 
-    TaskAssign.insertMany(newMembers).then(taskMember => {
+    TaskAssign.insertMany(newMembers).then((taskMember) => {
       TaskAssign.find({
         taskId: req.task._id,
         assignedPerson: {
@@ -182,11 +190,11 @@ const addMember = async (req, res, next) => {
         .populate([
           {
             path: 'assignedPerson account',
-            select: '_id firstName lastName profileImage'
+            select: '_id firstName lastName profileImage',
           },
         ])
         .exec()
-        .then(result => {
+        .then((result) => {
           res.status(201).send(result);
         });
     });
@@ -201,15 +209,15 @@ const suggestMember = async (req, res, next) => {
       .select('-_id assignedPerson')
       .populate('assignedPerson', '_id name')
       .exec();
-      let projectMembers = await Team.find({
-        project : req.query.projectId,
-      })
-        .select('_id account')
-        .populate('account', '_id name')
-        .exec();
+    let projectMembers = await Team.find({
+      project: req.query.projectId,
+    })
+      .select('_id account')
+      .populate('account', '_id name')
+      .exec();
 
     let members = projectMembers.filter(({ account }) => {
-      return !taskMembers.some(existingMember => {
+      return !taskMembers.some((existingMember) => {
         return (
           existingMember.assignedPerson._id.toString() ===
           account._id.toString()
@@ -217,7 +225,7 @@ const suggestMember = async (req, res, next) => {
       });
     });
 
-    members = members.map( (m) => m.account );
+    members = members.map((m) => m.account);
     return res.status(200).json({
       members,
     });
@@ -242,10 +250,10 @@ const update = async (req, res, next) => {
     .populate('account', '_id firstName lastName')
     .populate('columnId', '_id name')
     .exec()
-    .then(result => {
+    .then((result) => {
       res.status(200).send(result);
     })
-    .catch(error => {
+    .catch((error) => {
       next(error);
     });
 };
@@ -283,21 +291,29 @@ const dragTask = async (req, res, next) => {
       .populate('tasks', '_id name description dueDate')
       .exec();
 
-      const column = await BoardColumn.findOne({
-        _id: req.body.destinationColumnId,
-      }).populate({ 
-        path: 'boardId',
-        populate: {
-          path: 'project',
-          model: 'Project',
-          select: 'name company'
-        } 
-     });
+    const column = await BoardColumn.findOne({
+      _id: req.body.destinationColumnId,
+    }).populate({
+      path: 'boardId',
+      populate: {
+        path: 'project',
+        model: 'Project',
+        select: 'name company',
+      },
+    });
 
-    const text =`${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
-    createCompanyRoleNotification({_id: column.boardId.project.company}, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'task' );
-    
-    
+    const text = `${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
+    createCompanyRoleNotification(
+      { _id: column.boardId.project.company },
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
+      text,
+      'task',
+    );
+
     await ActivityCtrl.create(
       `moved this card from ${sourceColumn.name} to ${destinationColumn.name}`,
       'move',
@@ -318,9 +334,8 @@ const dragTask = async (req, res, next) => {
 
     res.status(200).send(responseData);
   } catch (error) {
-    
     logger.error(`Board column create: ${error}`);
-    
+
     next(error);
   }
 };

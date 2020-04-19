@@ -8,7 +8,7 @@ module.exports = {
         .required()
         .min(2)
         .max(32)
-        .error(error => {
+        .error((error) => {
           return { success: false, message: `firstName Required` };
         }),
       lastName: Joi.string()
@@ -16,7 +16,7 @@ module.exports = {
         .lowercase()
         .min(2)
         .max(32)
-        .error(error => {
+        .error((error) => {
           return { success: false, message: `lastName Required` };
         }),
       email: Joi.string()
@@ -27,7 +27,7 @@ module.exports = {
         .min(3)
         .max(62)
         .required()
-        .error(error => {
+        .error((error) => {
           return {
             success: false,
             message: 'mail id is not valid format',
@@ -38,7 +38,7 @@ module.exports = {
           /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
         )
         .required()
-        .error(error => {
+        .error((error) => {
           return {
             success: false,
             message:
@@ -50,7 +50,7 @@ module.exports = {
         .required(),
       birthDate: Joi.date()
         .required()
-        .error(error => {
+        .error((error) => {
           return {
             success: false,
             message: 'BirthDate field required',
@@ -59,7 +59,7 @@ module.exports = {
       contactNo: Joi.string()
         .regex(/^(\+?(880)[0-9]{10})$/)
         .required()
-        .error(error => {
+        .error((error) => {
           return {
             message: 'contactNo is not a valid format',
           };
@@ -77,7 +77,7 @@ module.exports = {
         .max(62)
         .lowercase()
         .required()
-        .error(error => {
+        .error((error) => {
           return {
             success: false,
             message: 'mail id is not valid format',
@@ -91,15 +91,9 @@ module.exports = {
       contactNo: Joi.string().regex(/^(\+?(880)[0-9]{10})$/),
       birthDate: Joi.date(),
       bloodGroup: Joi.string(),
-      location: Joi.string()
-        .allow('')
-        .max(120),
-      position: Joi.string()
-        .allow('')
-        .max(32),
-      about: Joi.string()
-        .max(2000)
-        .allow(''),
+      location: Joi.string().allow('').max(120),
+      position: Joi.string().allow('').max(32),
+      about: Joi.string().max(2000).allow(''),
       gender: Joi.string().valid(['male', 'female', 'others']),
       secondaryEmail: Joi.string()
         .regex(
@@ -110,7 +104,7 @@ module.exports = {
         .max(62)
         .lowercase()
         .allow('')
-        .error(error => {
+        .error((error) => {
           return {
             success: false,
             message: 'mail id is not valid format',
@@ -125,7 +119,7 @@ module.exports = {
           /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
         )
         .required()
-        .error(error => {
+        .error((error) => {
           return {
             success: false,
             message:
@@ -144,7 +138,7 @@ module.exports = {
           /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
         )
         .required()
-        .error(error => {
+        .error((error) => {
           return {
             success: false,
             message:
@@ -156,7 +150,7 @@ module.exports = {
           /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
         )
         .required()
-        .error(error => {
+        .error((error) => {
           return {
             success: false,
             message:

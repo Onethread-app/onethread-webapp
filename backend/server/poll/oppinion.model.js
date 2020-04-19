@@ -2,44 +2,43 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 
-let tagLimit = function(tagList) {
+let tagLimit = function (tagList) {
   return tagList.length <= 10;
 };
-
 
 const OpinionSchema = new mongoose.Schema({
   text: {
     type: String,
     trim: true,
     maxlength: 200,
-    required: true
+    required: true,
   },
   accepted: [
     {
       type: Schema.ObjectId,
-      ref: 'User'
-    }
+      ref: 'User',
+    },
   ],
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   blocked: {
     //after report admin
     type: Boolean,
-    default: false
+    default: false,
   },
   updated: {
-    type: Date
+    type: Date,
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   poll: {
     type: Schema.ObjectId,
-    ref: 'Poll'
-  }
+    ref: 'Poll',
+  },
 });
 
 module.exports = mongoose.model('Opinion', OpinionSchema);

@@ -19,13 +19,13 @@ const addEducation = async (req, res, next) => {
   });
   await addEducation
     .save()
-    .then(async data => {
+    .then(async (data) => {
       account.education.push(data._id);
       await account.save();
       logger.info('new education for user created');
       return sendJSONresponse(res, 201, { data });
     })
-    .catch(err => {
+    .catch((err) => {
       logger.error(`Error: ${err}`);
       return next(err);
     });
@@ -34,7 +34,9 @@ const addEducation = async (req, res, next) => {
 const updateEducation = async (req, res, next) => {
   try {
     if (!req.is('application/json')) {
-      return sendErrorResponse(res, 406, 'ContentTypeError', {message:"Expects 'application/json'"})
+      return sendErrorResponse(res, 406, 'ContentTypeError', {
+        message: "Expects 'application/json'",
+      });
     }
     const updateEdu = await Education.findByIdAndUpdate(
       {

@@ -46,11 +46,11 @@ const localLogin = new LocalStrategy(
 // Tell passport to use this strategy
 passport.use(localLogin);
 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
   delete user.password;
   done(null, user);
 });
-passport.deserializeUser(function(user, done) {
+passport.deserializeUser(function (user, done) {
   done(null, user);
 });
 

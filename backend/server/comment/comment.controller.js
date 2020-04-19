@@ -4,7 +4,7 @@ const logger = require('../../config/winston');
 const load = (req, res, next, id) => {
   Comment.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.comment = result;
         return next();
@@ -13,7 +13,7 @@ const load = (req, res, next, id) => {
         .status(400)
         .json({ message: 'No valid entry found for provided ID' });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -25,14 +25,13 @@ const create = async (req, res, next) => {
     taskId: req.body.taskId,
   });
 
-  comment.save().then(result => {
-   res.status(201).send(result)
-  })
-  .catch((error)=>
-  next(error)
-  );
+  comment
+    .save()
+    .then((result) => {
+      res.status(201).send(result);
+    })
+    .catch((error) => next(error));
 };
-
 
 const list = (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
@@ -41,17 +40,17 @@ const list = (req, res, next) => {
     .populate([
       {
         path: 'account',
-        select: '_id firstName lastName profileImage position'
+        select: '_id firstName lastName profileImage position',
       },
     ])
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then(result => {
+    .then((result) => {
       res.status(200).send(result);
     })
-    .catch(error => {
+    .catch((error) => {
       next(error);
     });
 };

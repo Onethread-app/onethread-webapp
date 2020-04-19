@@ -38,23 +38,20 @@ router
     SchemaValidator(joiSchema.updateTask),
     taskCtrl.update,
   );
-  
-  router
+
+router
   .route('/member/:taskId')
-  .get(
-    authorization ,
-    taskCtrl.getMembers
-  )
+  .get(authorization, taskCtrl.getMembers)
   .post(
-    authorization ,
+    authorization,
     SchemaValidator(joiSchema.addMember),
-    taskCtrl.addMember
+    taskCtrl.addMember,
   )
   .delete(
     authorization,
     SchemaValidator(joiSchema.deleteMember),
-    taskCtrl.deleteMember
-  )
+    taskCtrl.deleteMember,
+  );
 
 router.route('/dragTask').post(
   authorization,

@@ -11,12 +11,12 @@ const BoardSchema = new mongoose.Schema(
     },
     department: {
       type: Schema.Types.ObjectId,
-      ref:'Department'
+      ref: 'Department',
     },
     color: {
-      type: Number ,
-      enum : [0,1,2,3 ,4 ,5,6],
-      default : 0
+      type: Number,
+      enum: [0, 1, 2, 3, 4, 5, 6],
+      default: 0,
     },
     account: {
       type: Schema.Types.ObjectId,
@@ -44,10 +44,10 @@ const BoardSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    version : {
-      type : Number,
-      default : 0
-    }
+    version: {
+      type: Number,
+      default: 0,
+    },
   },
   { timestamps: true },
 );

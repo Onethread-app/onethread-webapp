@@ -18,16 +18,16 @@ module.exports = (_schema, useJoiError = true) => {
   return (req, res, next) => {
     _schema
       .validate(req, _validationOptions)
-      .then(validatedChanges => {
+      .then((validatedChanges) => {
         req.body = validatedChanges.body;
         next();
         return null;
       })
-      .catch(validationError => {
+      .catch((validationError) => {
         const JoiError = {
           type: 'ValidationError',
           status: 400,
-          errors: validationError.details.map(d => {
+          errors: validationError.details.map((d) => {
             return {
               message: d.message.replace(/['"]/g, ''),
               fieldName: d.path[1],

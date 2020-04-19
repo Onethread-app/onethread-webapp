@@ -1,2354 +1,2437 @@
 {
-	"openapi": "3.0.0",
-	"info": {
-		"description": "This is an API documentation for TiGrow LTD",
-		"version": "1.0.0-oas3",
-		"title": "TiGrow LTD API",
-		"contact": {
-			"email": "alamariful1727@gmail.com"
-		},
-		"license": {
-			"name": "Apache 2.0",
-			"url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-		}
-	},
+  "openapi": "3.0.0",
+  "info": {
+    "description": "This is an API documentation for TiGrow LTD",
+    "version": "1.0.0-oas3",
+    "title": "TiGrow LTD API",
+    "contact": {
+      "email": "alamariful1727@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
 
-	"tags": [{
-			"name": "admins",
-			"description": "Secured Admin-only calls"
-		},
-		{
-			"name": "product",
-			"description": ""
-		},
-		{
-			"name": "User Auth",
-			"description": ""
-		},
-		{
-			"name": "Team",
-			"description": ""
-		}
-	],
-	"paths": {
-		"/company": {
-			"post": {
-				"tags": ["company"],
-				"description": "Send company info to the account",
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"description": "Required fields: name, type, address",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/createCompanyRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/createCompanyResponse"
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "You don't have permissions for the resource"
-					}
-				}
-			}
-		},
-		"/company/{companyName}/basic": {
-			"put": {
-				"tags": ["company"],
-				"description": "",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "companyName",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1
-					},
-					"description": "companyName"
-				}],
-				"requestBody": {
-					"description": "Required fields: name, type, address",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/updateCompanyRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Company updated",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/updateCompanyResponse"
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "You don't have permissions for the resource"
-					}
-				}
-			}
-		},
-		"/company/{companyName}": {
-			"get": {
-				"tags": ["company"],
-				"summary": "",
-				"operationId": "",
-				"description": "",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "companyName",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1
-					},
-					"description": "companyName"
-				}],
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/createCompanyResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "You don't have permissions for the resource"
-					}
-				}
-			}
-		},
+  "tags": [
+    {
+      "name": "admins",
+      "description": "Secured Admin-only calls"
+    },
+    {
+      "name": "product",
+      "description": ""
+    },
+    {
+      "name": "User Auth",
+      "description": ""
+    },
+    {
+      "name": "Team",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/company": {
+      "post": {
+        "tags": ["company"],
+        "description": "Send company info to the account",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: name, type, address",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createCompanyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createCompanyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You don't have permissions for the resource"
+          }
+        }
+      }
+    },
+    "/company/{companyName}/basic": {
+      "put": {
+        "tags": ["company"],
+        "description": "",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            },
+            "description": "companyName"
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: name, type, address",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateCompanyRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Company updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateCompanyResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You don't have permissions for the resource"
+          }
+        }
+      }
+    },
+    "/company/{companyName}": {
+      "get": {
+        "tags": ["company"],
+        "summary": "",
+        "operationId": "",
+        "description": "",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            },
+            "description": "companyName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createCompanyResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You don't have permissions for the resource"
+          }
+        }
+      }
+    },
 
-		"/company/{companyName}/about": {
-			"put": {
-				"tags": ["company"],
-				"description": "",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "companyName",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1,
-						"example": "Tigrows"
-					},
-					"description": "companyName"
-				}],
-				"requestBody": {
-					"description": "Required fields: name, type, address",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/updateCompanyRequestAbout"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Company updated",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/updateCompanyResponseAbout"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/rooms": {
-			"post": {
-				"tags": ["room"],
-				"description": "Create room",
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"description": "Required fields: name, company",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/createRoomRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/createRoomResponse"
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "You don't have permissions for the resource"
-					},
-					"409": {
-						"description": "",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"message": {
-											"type": "string",
-											"example": "Room already exists"
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/rooms/{companyID}": {
-			"get": {
-				"tags": ["room"],
-				"summary": "",
-				"operationId": "",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "companyID",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1,
-						"example": "5dee19468553ce1c4496e8b2"
-					},
-					"description": "Rooms"
-				}],
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/getRoomResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "You don't have permissions for the resource"
-					}
-				}
-			}
-		},
-		"/rooms/members/{roomID}": {
-			"get": {
-				"tags": ["room"],
-				"summary": "",
-				"operationId": "",
-				"description": "",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "roomID",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1,
-						"example": "5de63e5b515b8e4c6cc9cc4b"
-					},
-					"description": "Members of room"
-				}],
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/RoomMembersResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "You don't have permissions for the resource"
-					}
-				}
-			}
-		},
-		"/accounts/login": {
-			"post": {
-				"tags": ["User Auth"],
-				"summary": "Login information about account",
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"description": "Optional description in *Markdown*",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/loginRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/loginResponse"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/accounts/refresh": {
-			"post": {
-				"tags": ["User Auth"],
-				"summary": "refresh token information about account",
-				"requestBody": {
-					"description": "Optional description in *Markdown*",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/refreshRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/refreshResponse"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/rooms/suggest-member/{roomID}/{companyID}": {
-			"get": {
-				"tags": ["room"],
-				"summary": "",
-				"operationId": "",
-				"description": "",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-						"in": "path",
-						"name": "roomID",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1,
-							"example": "5de63e5b515b8e4c6cc9cc4b"
-						},
-						"description": "roomID"
-					},
-					{
-						"in": "path",
-						"name": "companyID",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1,
-							"example": "5de63e40515b8e4c6cc9cc46"
-						},
-						"description": "companyID"
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/RoomMembersResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "You don't have permissions for the resource"
-					}
-				}
-			}
-		},
-		"/rooms/addUser": {
-			"post": {
-				"tags": ["room"],
-				"description": "Add user for the room",
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"description": "Required fields: room, members",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/AdduserRoomRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AdduserRoomResponse"
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "You don't have permissions for the resource"
-					}
-				}
-			}
-		},
-		"/messages": {
-			"post": {
-				"tags": ["room"],
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"description": "Required fields: room, text",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/MessageRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/MessageResponse"
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "You don't have permissions for the resource"
-					},
-					"404": {
-						"description": "No room exists"
-					}
-				}
-			}
-		},
-		"/messages/room/{roomID}": {
-			"get": {
-				"tags": ["room"],
-				"description": "Get Room messages",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "roomID",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1,
-						"example": "5de63e5b515b8e4c6cc9cc4b"
-					}
-				}],
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/RoomMessageResponse"
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "You don't have permissions for the resource"
-					},
-					"404": {
-						"description": "No room exists"
-					}
-				}
-			}
-		},
-		"/company/{companyName}/members": {
-			"post": {
-				"tags": ["Team"],
-				"description": "Team member ADD",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "companyName",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1,
-						"example": "abc"
-					}
-				}],
-				"requestBody": {
-					"description": "Required fields: account, company",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/TeamMemberAddRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TeamMemberAddResponse"
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "You don't have permissions for the resource"
-					}
-				}
-			}
-		},
-		"/company/{companyName}/members/search?name": {
-			"get": {
-				"tags": ["Team"],
-				"description": "member search",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-						"in": "query",
-						"name": "name",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"example": "Arif"
-						},
-						"description": "The numbers of items to return"
-					},
-					{
-						"in": "path",
-						"name": "companyName",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1,
-							"example": "abc"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CompanyMemberSearch_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/company/{companyName}/members?limit=50&skip=0": {
-			"get": {
-				"tags": ["Team"],
-				"description": "Get team members",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-						"in": "query",
-						"name": "limit",
-						"required": false,
-						"schema": {
-							"type": "integer",
-							"default": 50
-						}
-					},
-					{
-						"in": "query",
-						"name": "skip",
-						"required": false,
-						"schema": {
-							"type": "integer",
-							"default": 0
-						}
-					},
-					{
-						"in": "path",
-						"name": "companyName",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1,
-							"example": "abc"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/TeamMemberAdd_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/company/{companyName}/departments": {
-			"get": {
-				"tags": ["Department"],
-				"description": "Company's Departments list",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "companyName",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1,
-						"example": "abc"
-					}
-				}],
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CompanyNameDepartmentsListResponses"
-								}
-							}
-						}
-					}
-				}
-			},
-			"post": {
-				"tags": ["Department"],
-				"description": "Comany's Department ADD",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "companyName",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1,
-						"example": "abc"
-					}
-				}],
-				"requestBody": {
-					"description": "Required fields: account, company",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/CompanyNameDepartmentsRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CompanyNameDepartmentsADDResponses"
-								}
-							}
-						}
-					},
-					"409": {
-						"description": "Department already exists"
-					}
-				}
-			}
-		},
-		"/company/individual/{accountId}": {
-			"get": {
-				"tags": ["company"],
-				"description": "companies list for individual user",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "accountId",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1,
-							"example":"5de607d02b40d224270fcf24"
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Company-individual_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/company/{companyName}/changeName": {
-			"put": {
-				"tags": ["company"],
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "companyName",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1,
-						"example": "abc"
-					}
-				}],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Company_ChangeName_Request"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Company_ChangeName_Response"
-								}
-							}
-						}
-					},
-					"403": {
-						"description": "Restricted"
-					},
-					"409": {
-						"description": "Name already exist"
-					}
-				}
-			}
-		},
-		"/company/{companyName}/designations/{memberID}": {
-			"post": {
-				"tags": ["Designations"],
-				"description": "Designation ADD",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-						"in": "path",
-						"name": "companyName",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1,
-							"example": "abc"
-						}
-					},
-					{
-						"in": "path",
-						"name": "memberID",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Required fields:  division , position",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Designation_Add_Request"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Designation_Add_Response"
-								}
-							}
-						}
-					}
-				}
-			},
-			"put": {
-				"tags": ["Designations"],
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-						"in": "path",
-						"name": "companyName",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1,
-							"example": "abc"
-						}
-					},
-					{
-						"in": "path",
-						"name": "memberID",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1
-						}
-					}
-				],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Designation_Edit_Request"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Designation_Edit_Response"
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "No designation found"
-					}
-				}
-			}
-		},
-		"/boards": {
-			"post": {
-				"tags": ["Board"],
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/BoardRequest"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/BoardResponse"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/boards?companyId": {
-			"get": {
-				"tags": ["Board"],
-				"description": "Get All Company's Board",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "query",
-					"name": "companyId",
-					"required": false,
-					"schema": {
-						"type": "string"
-					}
-				}],
-				"responses": {
-					"201": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Board_CompanyID_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/boards/{boardId}": {
-			"get": {
-				"tags": ["Board"],
-				"description": "Get Selected Company board Details",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "boardId",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1
-					}
-				}],
-				"responses": {
-					"200": {
-						"description": "Success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/CompanyBoard_details_Responses"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/boardColumns": {
-			"post": {
-				"tags": ["Board"],
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Board_column_Request"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Board_column_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/tasks": {
-			"post": {
-				"tags": ["Board"],
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Tasks_Request"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Tasks_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/tasks/dragTask": {
-			"post": {
-				"tags": ["Board"],
-				"security": [{
-					"JWT": []
-				}],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Drag_Tasks_Request"
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Drag_Tasks_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/boards/{boardId}/suggest-member": {
-			"get": {
-				"tags": ["Board"],
-				"description": "Get team members",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-						"in": "query",
-						"name": "companyId",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "path",
-						"name": "boardId",
-						"required": true,
-						"schema": {
-							"type": "string",
-							"minimum": 1
-						}
-					}
-				],
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuggestMember_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		},
-		"/boards/{boardId}/members": {
-			"put": {
-				"tags": ["Board"],
-				"description": "Add team member in board",
-				"security": [{
-					"JWT": []
-				}],
-				"parameters": [{
-					"in": "path",
-					"name": "boardId",
-					"required": true,
-					"schema": {
-						"type": "string",
-						"minimum": 1
-					}
-				}],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Task_Member_add_Request"
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "success",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/Task_Member_add_Response"
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	},
-	"servers": [{
-			"url": "http://192.168.8.103:4044/api/v1"
-		},
-		{
-			"url": "https://betaback.tigrow.co/api/v1",
-			"description": "Development server"
-		}
-	],
-	"components": {
-		"securitySchemes": {
-			"JWT": {
-				"type": "apiKey",
-				"name": "Authorization",
-				"in": "header"
-			}
-		},
-		"schemas": {
-			"loginRequest": {
-				"type": "object",
-				"required": ["email", "password"],
-				"properties": {
-					"email": {
-						"type": "string",
-						"example": "purbadasgupta66@gmail.com"
-					},
-					"password": {
-						"type": "string",
-						"example": "Purba12@#"
-					}
-				}
-			},
-				"loginResponse": {
-				"type": "object",
-				"properties": {
-					"success": {
-						"type": "string"
-					},
-					"user": {
-						"type": "object",
-						"properties": {
-							"role": {
-								"type": "string",
-								"example": "user"
-							},
-							"firstName": {
-								"type": "string",
-								"example": "orvi"
-							}
-						}
-					}
-				}
-			},
-			
-			"refreshRequest": {
-				"type": "object",
-				"required": ["refreshToken"],
-				"properties": {
-					"refreshToken": {
-						"type": "string",
-						"example": "dfadfkdkakdfftrett"
-					}
-				}
-			},
-			"refreshResponse": {
-				"type": "object",
-				"properties": {
-					"accessToken": {
-						"type": "string",
-						"example": "gfdsgsdgffdsggdsg"
-					},
-					"expires_in": {
-						"type": "string",
-						"example": "1d"
-					},
-					"token_type": {
-						"type": "string",
-						"example": "bearer"
-					},
-					"refreshToken": {
-						"type": "string",
-						"example": "safdsfsffhgtgty"
-					}
-				}
-			},
+    "/company/{companyName}/about": {
+      "put": {
+        "tags": ["company"],
+        "description": "",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "Tigrows"
+            },
+            "description": "companyName"
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: name, type, address",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updateCompanyRequestAbout"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Company updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/updateCompanyResponseAbout"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rooms": {
+      "post": {
+        "tags": ["room"],
+        "description": "Create room",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: name, company",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/createRoomRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/createRoomResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You don't have permissions for the resource"
+          },
+          "409": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Room already exists"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rooms/{companyID}": {
+      "get": {
+        "tags": ["room"],
+        "summary": "",
+        "operationId": "",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "5dee19468553ce1c4496e8b2"
+            },
+            "description": "Rooms"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getRoomResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You don't have permissions for the resource"
+          }
+        }
+      }
+    },
+    "/rooms/members/{roomID}": {
+      "get": {
+        "tags": ["room"],
+        "summary": "",
+        "operationId": "",
+        "description": "",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "5de63e5b515b8e4c6cc9cc4b"
+            },
+            "description": "Members of room"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomMembersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You don't have permissions for the resource"
+          }
+        }
+      }
+    },
+    "/accounts/login": {
+      "post": {
+        "tags": ["User Auth"],
+        "summary": "Login information about account",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "description": "Optional description in *Markdown*",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/loginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/loginResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/accounts/refresh": {
+      "post": {
+        "tags": ["User Auth"],
+        "summary": "refresh token information about account",
+        "requestBody": {
+          "description": "Optional description in *Markdown*",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/refreshRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/refreshResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rooms/suggest-member/{roomID}/{companyID}": {
+      "get": {
+        "tags": ["room"],
+        "summary": "",
+        "operationId": "",
+        "description": "",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "5de63e5b515b8e4c6cc9cc4b"
+            },
+            "description": "roomID"
+          },
+          {
+            "in": "path",
+            "name": "companyID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "5de63e40515b8e4c6cc9cc46"
+            },
+            "description": "companyID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomMembersResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You don't have permissions for the resource"
+          }
+        }
+      }
+    },
+    "/rooms/addUser": {
+      "post": {
+        "tags": ["room"],
+        "description": "Add user for the room",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: room, members",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdduserRoomRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdduserRoomResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You don't have permissions for the resource"
+          }
+        }
+      }
+    },
+    "/messages": {
+      "post": {
+        "tags": ["room"],
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: room, text",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MessageRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MessageResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You don't have permissions for the resource"
+          },
+          "404": {
+            "description": "No room exists"
+          }
+        }
+      }
+    },
+    "/messages/room/{roomID}": {
+      "get": {
+        "tags": ["room"],
+        "description": "Get Room messages",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "5de63e5b515b8e4c6cc9cc4b"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RoomMessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "You don't have permissions for the resource"
+          },
+          "404": {
+            "description": "No room exists"
+          }
+        }
+      }
+    },
+    "/company/{companyName}/members": {
+      "post": {
+        "tags": ["Team"],
+        "description": "Team member ADD",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "abc"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: account, company",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TeamMemberAddRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamMemberAddResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "You don't have permissions for the resource"
+          }
+        }
+      }
+    },
+    "/company/{companyName}/members/search?name": {
+      "get": {
+        "tags": ["Team"],
+        "description": "member search",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "Arif"
+            },
+            "description": "The numbers of items to return"
+          },
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "abc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyMemberSearch_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company/{companyName}/members?limit=50&skip=0": {
+      "get": {
+        "tags": ["Team"],
+        "description": "Get team members",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 50
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 0
+            }
+          },
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "abc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeamMemberAdd_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company/{companyName}/departments": {
+      "get": {
+        "tags": ["Department"],
+        "description": "Company's Departments list",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "abc"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyNameDepartmentsListResponses"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Department"],
+        "description": "Comany's Department ADD",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "abc"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields: account, company",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyNameDepartmentsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyNameDepartmentsADDResponses"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Department already exists"
+          }
+        }
+      }
+    },
+    "/company/individual/{accountId}": {
+      "get": {
+        "tags": ["company"],
+        "description": "companies list for individual user",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "accountId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "5de607d02b40d224270fcf24"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company-individual_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/company/{companyName}/changeName": {
+      "put": {
+        "tags": ["company"],
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "abc"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Company_ChangeName_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Company_ChangeName_Response"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Restricted"
+          },
+          "409": {
+            "description": "Name already exist"
+          }
+        }
+      }
+    },
+    "/company/{companyName}/designations/{memberID}": {
+      "post": {
+        "tags": ["Designations"],
+        "description": "Designation ADD",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "abc"
+            }
+          },
+          {
+            "in": "path",
+            "name": "memberID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "Required fields:  division , position",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Designation_Add_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Designation_Add_Response"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Designations"],
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "companyName",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1,
+              "example": "abc"
+            }
+          },
+          {
+            "in": "path",
+            "name": "memberID",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Designation_Edit_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Designation_Edit_Response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No designation found"
+          }
+        }
+      }
+    },
+    "/boards": {
+      "post": {
+        "tags": ["Board"],
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BoardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BoardResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/boards?companyId": {
+      "get": {
+        "tags": ["Board"],
+        "description": "Get All Company's Board",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "companyId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board_CompanyID_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/boards/{boardId}": {
+      "get": {
+        "tags": ["Board"],
+        "description": "Get Selected Company board Details",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyBoard_details_Responses"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/boardColumns": {
+      "post": {
+        "tags": ["Board"],
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Board_column_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Board_column_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks": {
+      "post": {
+        "tags": ["Board"],
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Tasks_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Tasks_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tasks/dragTask": {
+      "post": {
+        "tags": ["Board"],
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Drag_Tasks_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Drag_Tasks_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/boards/{boardId}/suggest-member": {
+      "get": {
+        "tags": ["Board"],
+        "description": "Get team members",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "companyId",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuggestMember_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/boards/{boardId}/members": {
+      "put": {
+        "tags": ["Board"],
+        "description": "Add team member in board",
+        "security": [
+          {
+            "JWT": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "boardId",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minimum": 1
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Task_Member_add_Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task_Member_add_Response"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "http://192.168.8.103:4044/api/v1"
+    },
+    {
+      "url": "https://betaback.tigrow.co/api/v1",
+      "description": "Development server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    },
+    "schemas": {
+      "loginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "purbadasgupta66@gmail.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "Purba12@#"
+          }
+        }
+      },
+      "loginResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "role": {
+                "type": "string",
+                "example": "user"
+              },
+              "firstName": {
+                "type": "string",
+                "example": "orvi"
+              }
+            }
+          }
+        }
+      },
 
-		
-			"createCompanyRequest": {
-				"type": "object",
-				"required": ["name", "type", "address"],
-				"properties": {
-					"name": {
-						"type": "string",
-						"example": "Tigrows"
-					},
-					"type": {
-						"type": "string",
-						"enum": [
-							"Manufacturer",
-							"Trading Company",
-							"Buying Office",
-							"Agent",
-							"Distributor/Wholesaler",
-							"Government ministry/Bureau/Commission",
-							"Association",
-							"Business Service (Transportation, finance, travel, Ads, etc)",
-							"Other"
-						],
-						"example": "Manufacturer"
-					},
-					"address": {
-						"type": "string",
-						"example": "acx"
-					},
-					"email": {
-						"type": "string",
-						"example": "abc@gmail.com"
-					},
-					"legalOwnerName": {
-						"type": "string",
-						"example": "SRK"
-					},
-					"legalOwnerMail": {
-						"type": "string",
-						"example": "abc1@gmail.com"
-					}
-				}
-			},
-			"createCompanyResponse": {
-				"type": "object",
-				"properties": {
-					"_id": {
-						"type": "string",
-						"example": "5cf367d2c8ec086b7c98a52f"
-					},
-					"name": {
-						"type": "string",
-						"example": "TiGrow"
-					},
-					"type": {
-						"type": "string",
-						"example": "Manufacturer"
-					},
-					"address": {
-						"type": "string",
-						"example": "Mohakhali"
-					},
-					"email": {
-						"type": "string",
-						"example": "test@tigrow.co"
-					},
-					"legalOwnerName": {
-						"type": "string",
-						"example": "test name"
-					},
-					"legalOwnerMail": {
-						"type": "string",
-						"example": "test@gmail.com"
-					},
-					"role": {
-						"type": "string",
-						"default": "superAdmin"
-					}
-				}
-			},
-			"CompanyMemberSearch_Response": {
-				"type": "object",
-				"properties": {
-					"employees": {
-						"type": "object",
-						"properties": {
-							"message": {
-								"type": "string",
-								"example": "Search complete Arif"
-							},
-							"data": {
-								"type": "object",
-								"properties": {
-									"_id": {
-										"type": "string",
-										"example": "5db93ed0546b803eff0173d3"
-									},
-									"email": {
-										"type": "string",
-										"example": "alamariful1727@gmail.com"
-									},
-									"firstName": {
-										"type": "string",
-										"example": "arti"
-									},
-									"lastName": {
-										"type": "string",
-										"example": "nazat"
-									},
-									"name": {
-										"type": "string",
-										"example": "arti4A65_aZ"
-									}
+      "refreshRequest": {
+        "type": "object",
+        "required": ["refreshToken"],
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "example": "dfadfkdkakdfftrett"
+          }
+        }
+      },
+      "refreshResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "example": "gfdsgsdgffdsggdsg"
+          },
+          "expires_in": {
+            "type": "string",
+            "example": "1d"
+          },
+          "token_type": {
+            "type": "string",
+            "example": "bearer"
+          },
+          "refreshToken": {
+            "type": "string",
+            "example": "safdsfsffhgtgty"
+          }
+        }
+      },
 
-								}
-							}
-						}
-					}
-				}
-			},
-			"updateCompanyRequest": {
-				"type": "object",
-				"required": ["address"],
-				"properties": {
+      "createCompanyRequest": {
+        "type": "object",
+        "required": ["name", "type", "address"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Tigrows"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "Manufacturer",
+              "Trading Company",
+              "Buying Office",
+              "Agent",
+              "Distributor/Wholesaler",
+              "Government ministry/Bureau/Commission",
+              "Association",
+              "Business Service (Transportation, finance, travel, Ads, etc)",
+              "Other"
+            ],
+            "example": "Manufacturer"
+          },
+          "address": {
+            "type": "string",
+            "example": "acx"
+          },
+          "email": {
+            "type": "string",
+            "example": "abc@gmail.com"
+          },
+          "legalOwnerName": {
+            "type": "string",
+            "example": "SRK"
+          },
+          "legalOwnerMail": {
+            "type": "string",
+            "example": "abc1@gmail.com"
+          }
+        }
+      },
+      "createCompanyResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "5cf367d2c8ec086b7c98a52f"
+          },
+          "name": {
+            "type": "string",
+            "example": "TiGrow"
+          },
+          "type": {
+            "type": "string",
+            "example": "Manufacturer"
+          },
+          "address": {
+            "type": "string",
+            "example": "Mohakhali"
+          },
+          "email": {
+            "type": "string",
+            "example": "test@tigrow.co"
+          },
+          "legalOwnerName": {
+            "type": "string",
+            "example": "test name"
+          },
+          "legalOwnerMail": {
+            "type": "string",
+            "example": "test@gmail.com"
+          },
+          "role": {
+            "type": "string",
+            "default": "superAdmin"
+          }
+        }
+      },
+      "CompanyMemberSearch_Response": {
+        "type": "object",
+        "properties": {
+          "employees": {
+            "type": "object",
+            "properties": {
+              "message": {
+                "type": "string",
+                "example": "Search complete Arif"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "example": "5db93ed0546b803eff0173d3"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "alamariful1727@gmail.com"
+                  },
+                  "firstName": {
+                    "type": "string",
+                    "example": "arti"
+                  },
+                  "lastName": {
+                    "type": "string",
+                    "example": "nazat"
+                  },
+                  "name": {
+                    "type": "string",
+                    "example": "arti4A65_aZ"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "updateCompanyRequest": {
+        "type": "object",
+        "required": ["address"],
+        "properties": {
+          "address": {
+            "type": "string",
+            "example": "Mohakhali"
+          },
+          "email": {
+            "type": "string",
+            "example": "purba@gmail.com"
+          },
+          "legalOwnerName": {
+            "type": "string",
+            "example": "abc"
+          },
+          "legalOwnerMail": {
+            "type": "string",
+            "example": "purba1@gmail.com"
+          }
+        }
+      },
 
-					"address": {
-						"type": "string",
-						"example": "Mohakhali"
-					},
-					"email": {
-						"type": "string",
-						"example": "purba@gmail.com"
-					},
-					"legalOwnerName": {
-						"type": "string",
-						"example": "abc"
-					},
-					"legalOwnerMail": {
-						"type": "string",
-						"example": "purba1@gmail.com"
-					}
-				}
-			},
+      "updateCompanyResponse": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "example": "Dhaka"
+          },
+          "email": {
+            "example": "test@tigrow.co"
+          },
+          "legalOwnerName": {
+            "example": "abc"
+          },
+          "legalOwnerMail": {
+            "example": "abc@tigrow.co"
+          }
+        }
+      },
+      "updateCompanyRequestAbout": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "about": {
+            "type": "string",
+            "example": "abcd"
+          }
+        }
+      },
+      "updateCompanyResponseAbout": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Company's about updated"
+          }
+        }
+      },
 
-			"updateCompanyResponse": {
-				"type": "object",
-				"properties": {
-					"address": {
-						"example": "Dhaka"
-					},
-					"email": {
-						"example": "test@tigrow.co"
-					},
-					"legalOwnerName": {
-						"example": "abc"
-					},
-					"legalOwnerMail": {
-						"example": "abc@tigrow.co"
-					}
-				}
-			},
-			"updateCompanyRequestAbout": {
-				"type": "object",
-				"required": ["name"],
-				"properties": {
-					"about": {
-						"type": "string",
-						"example": "abcd"
-					}
-				}
-			},
-			"updateCompanyResponseAbout": {
-				"type": "object",
-				"properties": {
-					"message": {
-						"type": "string",
-						"example": "Company's about updated"
-					}
-				}
-			},
+      "createRoomRequest": {
+        "type": "object",
+        "required": ["name", "company"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "SQA"
+          },
+          "company": {
+            "type": "string",
+            "example": "5dee19468553ce1c4496e8b2"
+          }
+        }
+      },
+      "createRoomResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "5dee20d28553ce1c4496e8b8"
+          },
+          "name": {
+            "type": "string",
+            "example": "test-room"
+          },
+          "company": {
+            "type": "string",
+            "example": "5dee19468553ce1c4496e8b2"
+          },
+          "account": {
+            "type": "string",
+            "example": "5de607d02b40d224270fcf24"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2019-12-09T10:24:18.675Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2019-12-09T10:24:18.675Z"
+          }
+        }
+      },
+      "RoomMembersResponse": {
+        "type": "object",
+        "properties": {
+          "member": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "5dc6c54074e7d563bcad23cf"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Purbahcjhscbh"
+                }
+              }
+            }
+          }
+        }
+      },
+      "AdduserRoomRequest": {
+        "type": "object",
+        "required": ["room", "members"],
+        "properties": {
+          "room": {
+            "type": "string",
+            "example": "5de63e5b515b8e4c6cc9cc4b"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "5dc6c54074e7d563bcad23cf"
+            }
+          }
+        }
+      },
 
-			"createRoomRequest": {
-				"type": "object",
-				"required": ["name", "company"],
-				"properties": {
-					"name": {
-						"type": "string",
-						"example": "SQA"
-					},
-					"company": {
-						"type": "string",
-						"example": "5dee19468553ce1c4496e8b2"
-					}
-				}
-			},
-			"createRoomResponse": {
-				"type": "object",
-				"properties": {
-					"id": {
-						"type": "string",
-						"example": "5dee20d28553ce1c4496e8b8"
-					},
-					"name": {
-						"type": "string",
-						"example": "test-room"
-					},
-					"company": {
-						"type": "string",
-						"example": "5dee19468553ce1c4496e8b2"
-					},
-					"account": {
-						"type": "string",
-						"example": "5de607d02b40d224270fcf24"
-					},
-					"createdAt": {
-						"type": "string",
-						"example": "2019-12-09T10:24:18.675Z"
-					},
-					"updatedAt": {
-						"type": "string",
-						"example": "2019-12-09T10:24:18.675Z"
-					}
-				}
-			},
-			"RoomMembersResponse": {
-				"type": "object",
-				"properties": {
-					"member": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"id": {
-									"type": "string",
-									"example": "5dc6c54074e7d563bcad23cf"
-								},
-								"name": {
-									"type": "string",
-									"example": "Purbahcjhscbh"
-								}
-
-							}
-						}
-
-					}
-				}
-			},
-			"AdduserRoomRequest": {
-				"type": "object",
-				"required": ["room", "members"],
-				"properties": {
-					"room": {
-						"type": "string",
-						"example": "5de63e5b515b8e4c6cc9cc4b"
-					},
-					"members": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"example": "5dc6c54074e7d563bcad23cf"
-						}
-					}
-				}
-			},
-
-			"AdduserRoomResponse": {
-				"type": "object",
-				"properties": {
-					"message": {
-						"type": "string",
-						"example": "New members added into a room"
-					}
-				}
-
-			},
-			"getRoomResponse": {
-				"type": "object",
-				"properties": {
-					"_id": {
-						"example": "5dc6ce5674e7d563bcad23d8"
-					},
-					"name": {
-						"example": "General"
-					},
-					"company": {
-						"example": "5dc6ce5674e7d563bcad23d7"
-					},
-					"account": {
-						"example": "5dc6c54074e7d563bcad23cf"
-					},
-					"created": {
-						"example": "2019-11-09T14:33:58.152Z"
-					}
-				}
-			},
-			"RoomMessageResponse": {
-				"type": "object",
-				"properties": {
-					"messages": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"type": {
-									"type": "string",
-									"example": "text"
-								},
-								"removed": {
-									"type": "boolean",
-									"example": false
-								},
-								"_id": {
-									"type": "string",
-									"example": "5def57538e01666f1ff5d1f6"
-								},
-								"text": {
-									"type": "string",
-									"example": "hey bro"
-								},
-								"room": {
-									"type": "string",
-									"example": "5de63e40515b8e4c6cc9cc47"
-								},
-								"account": {
-									"type": "string",
-									"example": "5de607d02b40d224270fcf24"
-								},
-								"createdAt": {
-									"type": "string",
-									"example": "2019-12-10T08:29:07.528Z"
-								},
-								"updatedAt": {
-									"type": "string",
-									"example": "2019-12-10T08:29:07.528Z"
-								}
-
-							}
-						}
-					}
-				}
-			},
-			"MessageRequest": {
-				"type": "object",
-				"properties": {
-					"text": {
-						"type": "string",
-						"example": "Hi"
-					},
-					"room": {
-						"type": "string",
-						"example": "5de63e40515b8e4c6cc9cc47"
-					},
-					"type": {
-						"type": "string",
-						"example": "text",
-						"enum": ["text", "url", "file"],
-						"default": "text"
-					}
-				}
-			},
-			"MessageResponse": {
-				"type": "object",
-				"properties": {
-					"messages": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"type": {
-									"type": "string",
-									"example": "text"
-								},
-								"removed": {
-									"type": "boolean",
-									"example": false
-								},
-								"_id": {
-									"type": "string",
-									"example": "5def57538e01666f1ff5d1f6"
-								},
-								"text": {
-									"type": "string",
-									"example": "hey bro"
-								},
-								"room": {
-									"type": "string",
-									"example": "5de63e40515b8e4c6cc9cc47"
-								},
-								"account": {
-									"type": "string",
-									"example": "5de607d02b40d224270fcf24"
-								},
-								"createdAt": {
-									"type": "string",
-									"example": "2019-12-10T08:29:07.528Z"
-								},
-								"updatedAt": {
-									"type": "string",
-									"example": "2019-12-10T08:29:07.528Z"
-								}
-
-							}
-						}
-					}
-				}
-			},
-			"TeamMemberAddRequest": {
-				"type": "object",
-				"properties": {
-					"members": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"account": {
-									"type": "string",
-									"example": "5dc120c65e531f6e63271f50"
-								},
-								"company": {
-									"type": "string",
-									"example": "5dc120247f8852184e03be2a"
-
-								}
-							}
-
-						}
-
-
-					}
-				}
-			},
-			"TeamMemberAddResponse": {
-				"type": "object",
-				"properties": {
-					"members": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"role": {
-									"type": "string",
-									"example": "employee"
-								},
-								"designations": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"example": []
-									}
-								},
-								"_id": {
-									"type": "string",
-									"example": "5dc296edb7de603c5ef2d56d"
-								},
-								"account": {
-									"type": "string",
-									"example": "5de607d02b40d224270fcf24"
-								},
-								"company": {
-									"type": "string",
-									"example": "5de607d02b40d224270fcf24"
-								},
-								"createdAt": {
-									"type": "string",
-									"example": "2019-12-09T10:24:18.675Z"
-								},
-								"updatedAt": {
-									"type": "string",
-									"example": "2019-12-09T10:24:18.675Z"
-								}
-							}
-						}
-					}
-				}
-			},
-			"TeamMemberAdd_Response": {
-				"type": "object",
-				"properties": {
-					"members": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"role": {
-									"type": "string",
-									"example": "employee"
-								},
-								"designations": {
-									"type": "array",
-									"items": {
-										"type": "object",
-										"example": []
-									}
-								},
-								"_id": {
-									"type": "string",
-									"example": "5dc296edb7de603c5ef2d56d"
-								},
-								"account": {
-									"type": "string",
-									"example": "5de607d02b40d224270fcf24"
-								},
-								"company": {
-									"type": "string",
-									"example": "5de607d02b40d224270fcf24"
-								},
-								"createdAt": {
-									"type": "string",
-									"example": "2019-12-09T10:24:18.675Z"
-								},
-								"updatedAt": {
-									"type": "string",
-									"example": "2019-12-09T10:24:18.675Z"
-								}
-							}
-						}
-					}
-				}
-			},
-			"CompanyNameDepartmentsRequest": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string",
-						"example": "test"
-					}
-				}
-			},
-			"CompanyNameDepartmentsADDResponses": {
-				"type": "object",
-				"properties": {
-					"department": {
-						"type": "object",
-						"properties": {
-							"_id": {
-								"type": "string",
-								"example": "5dc120c65e531f6e63271f50"
-							},
-							"name": {
-								"type": "string",
-								"example": "FrontEnd"
-							}
-						}
-					}
-				}
-			},
-			"CompanyNameDepartmentsListResponses": {
-				"type": "object",
-				"properties": {
-					"departments": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"_id": {
-									"type": "string",
-									"example": "5dc296edb7de603c5ef2d56d"
-								},
-								"name": {
-									"type": "string",
-									"example": "FrontEnd"
-								}
-							}
-
-						}
-
-					}
-				}
-			},
-			"Company-individual_Response": {
-				"type": "object",
-				"properties": {
-					"companies": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"role": {
-									"type": "string",
-									"example": "superAdmin",
-									"enum": ["superAdmin", "admin", "manager", "moderator", "employee"]
-								},
-								"company": {
-									"properties": {
-										"_id": {
-											"type": "string",
-											"example": "5dc296edb7de603c5ef2d56d"
-										},
-										"name": {
-											"type": "string",
-											"example": "FrontEnd"
-										}
-									}
-								}
-
-							}
-
-						}
-					}
-				}
-			},
-			"Company_ChangeName_Request": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string",
-						"example": "test"
-					}
-				}
-			},
-			"Company_ChangeName_Response": {
-				"type": "object",
-				"properties": {
-					"message": {
-						"type": "string",
-						"example": "Company's name updated"
-					}
-				}
-			},
-			"BoardRequest": {
-				"type": "object",
-				"properties": {
-					"companyId": {
-						"type": "string",
-						"example": "5de60eb22b40d224270fcf27"
-					},
-					"description": {
-						"type": "string",
-						"example": "something description"
-					},
-					"name": {
-						"type": "string",
-						"example": "new company board"
-					}
-				}
-			},
-			"BoardResponse": {
-				"type": "object",
-				"properties": {
-					"account": {
-						"type": "string",
-						"example": "5de60ea12b40d224270fcf26"
-					},
-					"columns": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"example": []
-						}
-					},
-					"company": {
-						"type": "string",
-						"example": "5de60eb22b40d224270fcf27"
-					},
-					"createdAt": {
-						"type": "string",
-						"example": "2019-12-10T07:17:14.392Z"
-					},
-					"description": {
-						"type": "string",
-						"example": "something description"
-					},
-					"members": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"example": ["5de60ea12b40d224270fcf26"]
-						}
-					},
-					"name": {
-						"type": "string",
-						"example": "new company board"
-					},
-					"removed": {
-						"type": "boolean",
-						"example": false
-					},
-					"updatedAt": {
-						"type": "string",
-						"example": "2019-12-10T07:17:14.392Z"
-					},
-					"id": {
-						"type": "string",
-						"example": "5def467a23249e0f0f18ada4"
-					}
-				}
-			},
-			"Board_CompanyID_Response": {
-				"type": "object",
-				"properties": {
-					"_Id": {
-						"type": "string",
-						"example": "5de60eb22b40d224270fcf27"
-					},
-					"description": {
-						"type": "string",
-						"example": "something description"
-					},
-					"name": {
-						"type": "string",
-						"example": "new company board"
-					}
-				}
-			},
-			"CompanyBoard_details_Responses": {
-				"type": "object",
-				"properties": {
-					"columns": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"example": []
-						}
-					},
-					"description": {
-						"type": "string",
-						"example": "something description"
-					},
-					"members": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"id": {
-									"type": "string",
-									"example": "5de60ea12b40d224270fcf26"
-								},
-								"name": {
-									"type": "string",
-									"example": "shahGoTVaC5_"
-								}
-							}
-						}
-					},
-					"name": {
-						"type": "string",
-						"example": "new company board"
-					},
-					"id": {
-						"type": "string",
-						"example": "5def467a23249e0f0f18ada4"
-					}
-				}
-			},
-			"Board_column_Request": {
-				"type": "object",
-				"properties": {
-					"_boardId": {
-						"type": "string",
-						"example": "5de60eb22b40d224270fcf27"
-					},
-					"positionInBoard:": {
-						"type": "integer",
-						"example": 1
-					},
-					"name": {
-						"type": "string",
-						"example": "board column"
-					},
-					"_id": {
-						"type": "string",
-						"example": "undefined"
-					}
-				}
-			},
-			"Board_column_Response": {
-				"type": "object",
-				"properties": {
-					"name": {
-						"type": "string",
-						"example": "board column"
-					},
-					"positionInBoard": {
-						"type": "integer",
-						"example": 1
-					},
-					"tasks": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"example": []
-						}
-					},
-					"_id": {
-						"type": "string",
-						"example": "5def4cfb21d20368f9930984"
-					}
-				}
-			},
-			"Tasks_Request": {
-				"type": "object",
-				"properties": {
-					"_boardId": {
-						"type": "string",
-						"example": "5de60eb22b40d224270fcf27"
-					},
-					"columnId": {
-						"type": "string",
-						"example": "5def4cfb21d20368f9930984"
-					},
-					"description": {
-						"type": "string",
-						"example": "task description"
-					},
-					"name": {
-						"type": "string",
-						"example": "first task"
-					}
-				}
-			},
-			"Tasks_Response": {
-				"type": "object",
-				"properties": {
-					"description": {
-						"type": "string",
-						"example": "task description"
-					},
-					"name": {
-						"type": "string",
-						"example": "first task"
-					},
-					"_id": {
-						"type": "string",
-						"example": "5def639b21d20368f9930985"
-					}
-				}
-			},
-			"Drag_Tasks_Request": {
-				"type": "object",
-				"properties": {
-					"destinationColumnId": {
-						"type": "string",
-						"example": "5def649f21d20368f9930987"
-					},
-					"sourceColumnId": {
-						"type": "string",
-						"example": "5def4cfb21d20368f9930984"
-					},
-					"taskId": {
-						"type": "string",
-						"example": "5def4cfb21d20368f9930985"
-					},
-					"taskIndexOfDestinationColumn": {
-						"type": "integer",
-						"example": 0
-					}
-				}
-			},
-			"Drag_Tasks_Response": {
-				"type": "object",
-				"properties": {
-					"destinationColumn": {
-						"type": "object",
-						"properties": {
-							"tasks": {
-								"type": "array",
-								"items": {
-									"properties": {
-										"description": {
-											"type": "string",
-											"example": "task description"
-										},
-										"name": {
-											"type": "string",
-											"example": "first task"
-										},
-										"_id": {
-											"type": "string",
-											"example": "5def639b21d20368f9930985"
-										}
-									}
-								}
-							},
-							"_id": {
-								"type": "string",
-								"example": "5def649f21d20368f9930987"
-							}
-						}
-					},
-					"sourceColumn": {
-						"type": "object",
-						"properties": {
-							"tasks": {
-								"type": "array",
-								"items": {
-									"type": "string",
-									"example": []
-								}
-							},
-							"_id": {
-								"type": "string",
-								"example": "5def649f21d20368f9930987"
-							}
-						}
-
-					}
-				}
-			},
-			"Task_Member_add_Request": {
-				"type": "object",
-				"properties": {
-					"memberId": {
-						"type": "array",
-						"items": {
-							"type": "string",
-							"example": ["5de608bc2b40d224270fcf25"]
-						}
-					}
-				}
-			},
-			"Task_Member_add_Response": {
-				"type": "object",
-				"properties": {
-					"member": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"_id": {
-									"type": "string",
-									"example": "5dc6c54074e7d563bcad23cf"
-								},
-								"name": {
-									"type": "string",
-									"example": "Purbahcjhscbh"
-								}
-
-							}
-						}
-
-					}
-				}
-			},
-			"SuggestMember_Response": {
-				"type": "object",
-				"properties": {
-					"member": {
-						"type": "array",
-						"items": {
-							"type": "object",
-							"properties": {
-								"_id": {
-									"type": "string",
-									"example": "5dc6c54074e7d563bcad23cf"
-								},
-								"name": {
-									"type": "string",
-									"example": "Purbahcjhscbh"
-								}
-							}
-						}
-					}
-				}
-			},
-			"Designation_Add_Request": {
-				"type": "object",
-				"properties": {
-					"division": {
-						"type": "string",
-						"example": "seniorManager",
-						"enum": ["director", "cxo", "seniorManager", "middleManager", "operationalEmployee"]
-					},
-					"department": {
-						"type": "string",
-						"example": "5de64317515b8e4c6cc9cc57"
-					},
-					"position": {
-						"type": "string",
-						"example": "Lead"
-					}
-				}
-			},
-			"Designation_Add_Response": {
-				"type": "object",
-				"properties": {
-					"designation": {
-						"type": "object",
-						"properties": {
-							"removed": {
-								"type": "boolean",
-								"example": false
-							},
-							"_id": {
-								"type": "string",
-								"example": "5def57538e01666f1ff5d1f6"
-							},
-							"department": {
-								"type": "string",
-								"example": "5de64317515b8e4c6cc9cc57"
-							},
-							"position": {
-								"type": "string",
-								"example": "Lead"
-							},
-							"member": {
-								"type": "string",
-								"example": "5de64068515b8e4c6cc9cc4f"
-							},
-							"account": {
-								"type": "string",
-								"example": "5de607d02b40d224270fcf24"
-							},
-							"createdAt": {
-								"type": "string",
-								"example": "2019-12-10T08:29:07.528Z"
-							},
-							"updatedAt": {
-								"type": "string",
-								"example": "2019-12-10T08:29:07.528Z"
-							}
-
-						}
-					}
-				}
-			},
-			"Designation_Edit_Request": {
-				"type": "object",
-				"properties": {
-					"designation": {
-						"type": "string",
-						"example": "5def57538e01666f1ff5d1f6"
-					},
-					"division": {
-						"type": "string",
-						"example": "seniorManager"
-					},
-					"department": {
-						"type": "string",
-						"example": "5de64317515b8e4c6cc9cc57"
-					},
-					"position": {
-						"type": "string",
-						"example": "Lead"
-					}
-				}
-			},
-			"Designation_Edit_Response": {
-				"type": "object",
-				"properties": {
-					"designation": {
-						"type": "object",
-						"properties": {
-							"removed": {
-								"type": "boolean",
-								"example": false
-							},
-							"_id": {
-								"type": "string",
-								"example": "5def57538e01666f1ff5d1f6"
-							},
-							"department": {
-								"type": "string",
-								"example": "5de64317515b8e4c6cc9cc57"
-							},
-							"position": {
-								"type": "string",
-								"example": "Lead"
-							},
-							"member": {
-								"type": "string",
-								"example": "5de64068515b8e4c6cc9cc4f"
-							},
-							"account": {
-								"type": "string",
-								"example": "5de607d02b40d224270fcf24"
-							},
-							"createdAt": {
-								"type": "string",
-								"example": "2019-12-10T08:29:07.528Z"
-							},
-							"updatedAt": {
-								"type": "string",
-								"example": "2019-12-10T08:29:07.528Z"
-							}
-
-						}
-					}
-				}
-			}
-		}
-	}
+      "AdduserRoomResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "New members added into a room"
+          }
+        }
+      },
+      "getRoomResponse": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "example": "5dc6ce5674e7d563bcad23d8"
+          },
+          "name": {
+            "example": "General"
+          },
+          "company": {
+            "example": "5dc6ce5674e7d563bcad23d7"
+          },
+          "account": {
+            "example": "5dc6c54074e7d563bcad23cf"
+          },
+          "created": {
+            "example": "2019-11-09T14:33:58.152Z"
+          }
+        }
+      },
+      "RoomMessageResponse": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "text"
+                },
+                "removed": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "_id": {
+                  "type": "string",
+                  "example": "5def57538e01666f1ff5d1f6"
+                },
+                "text": {
+                  "type": "string",
+                  "example": "hey bro"
+                },
+                "room": {
+                  "type": "string",
+                  "example": "5de63e40515b8e4c6cc9cc47"
+                },
+                "account": {
+                  "type": "string",
+                  "example": "5de607d02b40d224270fcf24"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2019-12-10T08:29:07.528Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2019-12-10T08:29:07.528Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "MessageRequest": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "example": "Hi"
+          },
+          "room": {
+            "type": "string",
+            "example": "5de63e40515b8e4c6cc9cc47"
+          },
+          "type": {
+            "type": "string",
+            "example": "text",
+            "enum": ["text", "url", "file"],
+            "default": "text"
+          }
+        }
+      },
+      "MessageResponse": {
+        "type": "object",
+        "properties": {
+          "messages": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "example": "text"
+                },
+                "removed": {
+                  "type": "boolean",
+                  "example": false
+                },
+                "_id": {
+                  "type": "string",
+                  "example": "5def57538e01666f1ff5d1f6"
+                },
+                "text": {
+                  "type": "string",
+                  "example": "hey bro"
+                },
+                "room": {
+                  "type": "string",
+                  "example": "5de63e40515b8e4c6cc9cc47"
+                },
+                "account": {
+                  "type": "string",
+                  "example": "5de607d02b40d224270fcf24"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2019-12-10T08:29:07.528Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2019-12-10T08:29:07.528Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TeamMemberAddRequest": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "account": {
+                  "type": "string",
+                  "example": "5dc120c65e531f6e63271f50"
+                },
+                "company": {
+                  "type": "string",
+                  "example": "5dc120247f8852184e03be2a"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TeamMemberAddResponse": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "example": "employee"
+                },
+                "designations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "example": []
+                  }
+                },
+                "_id": {
+                  "type": "string",
+                  "example": "5dc296edb7de603c5ef2d56d"
+                },
+                "account": {
+                  "type": "string",
+                  "example": "5de607d02b40d224270fcf24"
+                },
+                "company": {
+                  "type": "string",
+                  "example": "5de607d02b40d224270fcf24"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2019-12-09T10:24:18.675Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2019-12-09T10:24:18.675Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "TeamMemberAdd_Response": {
+        "type": "object",
+        "properties": {
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "example": "employee"
+                },
+                "designations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "example": []
+                  }
+                },
+                "_id": {
+                  "type": "string",
+                  "example": "5dc296edb7de603c5ef2d56d"
+                },
+                "account": {
+                  "type": "string",
+                  "example": "5de607d02b40d224270fcf24"
+                },
+                "company": {
+                  "type": "string",
+                  "example": "5de607d02b40d224270fcf24"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "example": "2019-12-09T10:24:18.675Z"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "example": "2019-12-09T10:24:18.675Z"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CompanyNameDepartmentsRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "test"
+          }
+        }
+      },
+      "CompanyNameDepartmentsADDResponses": {
+        "type": "object",
+        "properties": {
+          "department": {
+            "type": "object",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "example": "5dc120c65e531f6e63271f50"
+              },
+              "name": {
+                "type": "string",
+                "example": "FrontEnd"
+              }
+            }
+          }
+        }
+      },
+      "CompanyNameDepartmentsListResponses": {
+        "type": "object",
+        "properties": {
+          "departments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "example": "5dc296edb7de603c5ef2d56d"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "FrontEnd"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Company-individual_Response": {
+        "type": "object",
+        "properties": {
+          "companies": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "example": "superAdmin",
+                  "enum": [
+                    "superAdmin",
+                    "admin",
+                    "manager",
+                    "moderator",
+                    "employee"
+                  ]
+                },
+                "company": {
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "example": "5dc296edb7de603c5ef2d56d"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "FrontEnd"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Company_ChangeName_Request": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "test"
+          }
+        }
+      },
+      "Company_ChangeName_Response": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Company's name updated"
+          }
+        }
+      },
+      "BoardRequest": {
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "example": "5de60eb22b40d224270fcf27"
+          },
+          "description": {
+            "type": "string",
+            "example": "something description"
+          },
+          "name": {
+            "type": "string",
+            "example": "new company board"
+          }
+        }
+      },
+      "BoardResponse": {
+        "type": "object",
+        "properties": {
+          "account": {
+            "type": "string",
+            "example": "5de60ea12b40d224270fcf26"
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": []
+            }
+          },
+          "company": {
+            "type": "string",
+            "example": "5de60eb22b40d224270fcf27"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "2019-12-10T07:17:14.392Z"
+          },
+          "description": {
+            "type": "string",
+            "example": "something description"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": ["5de60ea12b40d224270fcf26"]
+            }
+          },
+          "name": {
+            "type": "string",
+            "example": "new company board"
+          },
+          "removed": {
+            "type": "boolean",
+            "example": false
+          },
+          "updatedAt": {
+            "type": "string",
+            "example": "2019-12-10T07:17:14.392Z"
+          },
+          "id": {
+            "type": "string",
+            "example": "5def467a23249e0f0f18ada4"
+          }
+        }
+      },
+      "Board_CompanyID_Response": {
+        "type": "object",
+        "properties": {
+          "_Id": {
+            "type": "string",
+            "example": "5de60eb22b40d224270fcf27"
+          },
+          "description": {
+            "type": "string",
+            "example": "something description"
+          },
+          "name": {
+            "type": "string",
+            "example": "new company board"
+          }
+        }
+      },
+      "CompanyBoard_details_Responses": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": []
+            }
+          },
+          "description": {
+            "type": "string",
+            "example": "something description"
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "example": "5de60ea12b40d224270fcf26"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "shahGoTVaC5_"
+                }
+              }
+            }
+          },
+          "name": {
+            "type": "string",
+            "example": "new company board"
+          },
+          "id": {
+            "type": "string",
+            "example": "5def467a23249e0f0f18ada4"
+          }
+        }
+      },
+      "Board_column_Request": {
+        "type": "object",
+        "properties": {
+          "_boardId": {
+            "type": "string",
+            "example": "5de60eb22b40d224270fcf27"
+          },
+          "positionInBoard:": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "board column"
+          },
+          "_id": {
+            "type": "string",
+            "example": "undefined"
+          }
+        }
+      },
+      "Board_column_Response": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "board column"
+          },
+          "positionInBoard": {
+            "type": "integer",
+            "example": 1
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": []
+            }
+          },
+          "_id": {
+            "type": "string",
+            "example": "5def4cfb21d20368f9930984"
+          }
+        }
+      },
+      "Tasks_Request": {
+        "type": "object",
+        "properties": {
+          "_boardId": {
+            "type": "string",
+            "example": "5de60eb22b40d224270fcf27"
+          },
+          "columnId": {
+            "type": "string",
+            "example": "5def4cfb21d20368f9930984"
+          },
+          "description": {
+            "type": "string",
+            "example": "task description"
+          },
+          "name": {
+            "type": "string",
+            "example": "first task"
+          }
+        }
+      },
+      "Tasks_Response": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "example": "task description"
+          },
+          "name": {
+            "type": "string",
+            "example": "first task"
+          },
+          "_id": {
+            "type": "string",
+            "example": "5def639b21d20368f9930985"
+          }
+        }
+      },
+      "Drag_Tasks_Request": {
+        "type": "object",
+        "properties": {
+          "destinationColumnId": {
+            "type": "string",
+            "example": "5def649f21d20368f9930987"
+          },
+          "sourceColumnId": {
+            "type": "string",
+            "example": "5def4cfb21d20368f9930984"
+          },
+          "taskId": {
+            "type": "string",
+            "example": "5def4cfb21d20368f9930985"
+          },
+          "taskIndexOfDestinationColumn": {
+            "type": "integer",
+            "example": 0
+          }
+        }
+      },
+      "Drag_Tasks_Response": {
+        "type": "object",
+        "properties": {
+          "destinationColumn": {
+            "type": "object",
+            "properties": {
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "properties": {
+                    "description": {
+                      "type": "string",
+                      "example": "task description"
+                    },
+                    "name": {
+                      "type": "string",
+                      "example": "first task"
+                    },
+                    "_id": {
+                      "type": "string",
+                      "example": "5def639b21d20368f9930985"
+                    }
+                  }
+                }
+              },
+              "_id": {
+                "type": "string",
+                "example": "5def649f21d20368f9930987"
+              }
+            }
+          },
+          "sourceColumn": {
+            "type": "object",
+            "properties": {
+              "tasks": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "example": []
+                }
+              },
+              "_id": {
+                "type": "string",
+                "example": "5def649f21d20368f9930987"
+              }
+            }
+          }
+        }
+      },
+      "Task_Member_add_Request": {
+        "type": "object",
+        "properties": {
+          "memberId": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": ["5de608bc2b40d224270fcf25"]
+            }
+          }
+        }
+      },
+      "Task_Member_add_Response": {
+        "type": "object",
+        "properties": {
+          "member": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "example": "5dc6c54074e7d563bcad23cf"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Purbahcjhscbh"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SuggestMember_Response": {
+        "type": "object",
+        "properties": {
+          "member": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "example": "5dc6c54074e7d563bcad23cf"
+                },
+                "name": {
+                  "type": "string",
+                  "example": "Purbahcjhscbh"
+                }
+              }
+            }
+          }
+        }
+      },
+      "Designation_Add_Request": {
+        "type": "object",
+        "properties": {
+          "division": {
+            "type": "string",
+            "example": "seniorManager",
+            "enum": [
+              "director",
+              "cxo",
+              "seniorManager",
+              "middleManager",
+              "operationalEmployee"
+            ]
+          },
+          "department": {
+            "type": "string",
+            "example": "5de64317515b8e4c6cc9cc57"
+          },
+          "position": {
+            "type": "string",
+            "example": "Lead"
+          }
+        }
+      },
+      "Designation_Add_Response": {
+        "type": "object",
+        "properties": {
+          "designation": {
+            "type": "object",
+            "properties": {
+              "removed": {
+                "type": "boolean",
+                "example": false
+              },
+              "_id": {
+                "type": "string",
+                "example": "5def57538e01666f1ff5d1f6"
+              },
+              "department": {
+                "type": "string",
+                "example": "5de64317515b8e4c6cc9cc57"
+              },
+              "position": {
+                "type": "string",
+                "example": "Lead"
+              },
+              "member": {
+                "type": "string",
+                "example": "5de64068515b8e4c6cc9cc4f"
+              },
+              "account": {
+                "type": "string",
+                "example": "5de607d02b40d224270fcf24"
+              },
+              "createdAt": {
+                "type": "string",
+                "example": "2019-12-10T08:29:07.528Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "example": "2019-12-10T08:29:07.528Z"
+              }
+            }
+          }
+        }
+      },
+      "Designation_Edit_Request": {
+        "type": "object",
+        "properties": {
+          "designation": {
+            "type": "string",
+            "example": "5def57538e01666f1ff5d1f6"
+          },
+          "division": {
+            "type": "string",
+            "example": "seniorManager"
+          },
+          "department": {
+            "type": "string",
+            "example": "5de64317515b8e4c6cc9cc57"
+          },
+          "position": {
+            "type": "string",
+            "example": "Lead"
+          }
+        }
+      },
+      "Designation_Edit_Response": {
+        "type": "object",
+        "properties": {
+          "designation": {
+            "type": "object",
+            "properties": {
+              "removed": {
+                "type": "boolean",
+                "example": false
+              },
+              "_id": {
+                "type": "string",
+                "example": "5def57538e01666f1ff5d1f6"
+              },
+              "department": {
+                "type": "string",
+                "example": "5de64317515b8e4c6cc9cc57"
+              },
+              "position": {
+                "type": "string",
+                "example": "Lead"
+              },
+              "member": {
+                "type": "string",
+                "example": "5de64068515b8e4c6cc9cc4f"
+              },
+              "account": {
+                "type": "string",
+                "example": "5de607d02b40d224270fcf24"
+              },
+              "createdAt": {
+                "type": "string",
+                "example": "2019-12-10T08:29:07.528Z"
+              },
+              "updatedAt": {
+                "type": "string",
+                "example": "2019-12-10T08:29:07.528Z"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -34,7 +34,7 @@
 //       console.log(err);
 //     })
 //     .catch(done);
-  
+
 // describe("## Company USER APIs", () => {
 //   let companyInfo = {
 //    companyName : "tigrow",
@@ -87,8 +87,6 @@
 //   });
 // });
 // });
-
-
 
 // after(done => {
 //   // required because https://github.com/Automattic/mongoose/issues/1251#issuecomment-65793092

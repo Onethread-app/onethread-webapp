@@ -1,7 +1,6 @@
-const Pusher = require("pusher");
+const Pusher = require('pusher');
 const config = require('../../config/config');
 const _ = require('lodash');
-
 
 const channels_client = new Pusher({
   appId: config.pusherChanel.appid,
@@ -11,7 +10,6 @@ const channels_client = new Pusher({
   useTLS: true,
 });
 
-
 // const channels_client = new Pusher({
 //     appId: '858307',
 //     key: '2d2483157c37a8782f19',
@@ -20,122 +18,102 @@ const channels_client = new Pusher({
 //     useTLS: true,
 //   });
 
-
 module.exports.sendCompanyNotification = async (
-  company,//fromHeader
+  company, //fromHeader
   adminUser,
   userNoti,
 ) => {
   let userNotification = userNoti;
 
-  userNotification = { notification: userNotification,
-    read: false
-  };
-  
-  channels_client.trigger(
-    company.toString(), 
-    `${company}-superAdmin`,
-     userNotification,
-     adminUser.pusherSock
-     );
+  userNotification = { notification: userNotification, read: false };
 
+  channels_client.trigger(
+    company.toString(),
+    `${company}-superAdmin`,
+    userNotification,
+    adminUser.pusherSock,
+  );
 };
 
 module.exports.sendCompanyRoleNotification = async (
-  company,//fromHeader
+  company, //fromHeader
   companyChannels,
   adminUser,
   userNoti,
 ) => {
-  let companyChannelsPusher = companyChannels.map(c => {
+  let companyChannelsPusher = companyChannels.map((c) => {
     return `${company.toString()}-${c}`;
   });
 
   let userNotification = userNoti;
 
-  userNotification = { notification: userNotification,
-    read: false
-  };
-  
-  channels_client.trigger(
-    companyChannelsPusher, 
-    company.toString(), 
-     [userNotification],
-     adminUser.pusherSock
-     );
+  userNotification = { notification: userNotification, read: false };
 
+  channels_client.trigger(
+    companyChannelsPusher,
+    company.toString(),
+    [userNotification],
+    adminUser.pusherSock,
+  );
 };
 
 module.exports.sendMultipleNotification = async (
-  company,//fromHeader
+  company, //fromHeader
   companyChannels,
   adminUser,
   userNoties,
 ) => {
-  let userNotifications = userNoties.map(c => {
-    return  { notification: c, read: false};
+  let userNotifications = userNoties.map((c) => {
+    return { notification: c, read: false };
   });
 
-  let companyChannelsPusher = companyChannels.map(c => {
+  let companyChannelsPusher = companyChannels.map((c) => {
     return `${company.toString()}-${c}`;
   });
 
-  
- 
   channels_client.trigger(
-    companyChannelsPusher, 
+    companyChannelsPusher,
     company.toString(),
-    userNotifications,//ARRAY
-    adminUser.pusherSock
-     );
-
+    userNotifications, //ARRAY
+    adminUser.pusherSock,
+  );
 };
 
 module.exports.sendCompanyAndProjectNotification = async (
-  
   project,
   companyChannels,
   projectChannel,
   adminUser,
   userNoti,
 ) => {
-
-  let companyChannelsPusher = companyChannels.map(c => {
+  let companyChannelsPusher = companyChannels.map((c) => {
     return `${project.company.toString()}-${c}`;
   });
 
-  let projectChannelPusher = projectChannel.map(p => {
+  let projectChannelPusher = projectChannel.map((p) => {
     return `${project._id.toString()}-${p}`;
   });
 
-  let allChannel = _.union(companyChannelsPusher, projectChannelPusher);
+  let allChannel = _.union(
+    companyChannelsPusher,
+    projectChannelPusher,
+  );
 
   let userNotification = userNoti;
-  if(Array.isArray(userNotification)){
-
-    userNotification = userNoti.map(c => { //multiple
-      return  { notification: c,
-      read: false};
+  if (Array.isArray(userNotification)) {
+    userNotification = userNoti.map((c) => {
+      //multiple
+      return { notification: c, read: false };
     });
-    
-  }else{
-    userNotification = { notification: userNoti,
-    read: false };
+  } else {
+    userNotification = { notification: userNoti, read: false };
     userNotification = [userNotification];
-
   }
-  
-  
- 
-  
+
   channels_client.trigger(
-    allChannel, 
-    project.company.toString(), 
-     userNotification,
-     adminUser.pusherSock
-     );
-
+    allChannel,
+    project.company.toString(),
+    userNotification,
+    adminUser.pusherSock,
+  );
 };
-
-
-

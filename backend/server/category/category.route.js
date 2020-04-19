@@ -13,41 +13,43 @@ const {
 // authentication
 router
   .route('/')
-  .get(authorization,validate(paramValidation.getCategory), categoryCtrl.getCategory)
+  .get(
+    authorization,
+    validate(paramValidation.getCategory),
+    categoryCtrl.getCategory,
+  )
   .post(
     authorization,
     // requireAuth,
     // permit('admin'),
     validate(paramValidation.newCategory),
-    categoryCtrl.newCategory
+    categoryCtrl.newCategory,
   );
 router
   .route('/:cid')
-  .get(authorization,categoryCtrl.getSubCategory)
+  .get(authorization, categoryCtrl.getSubCategory)
   .post(
     authorization,
     // requireAuth,
     // permit('admin'),
     validate(paramValidation.newSubCategory),
-    categoryCtrl.newSubCategory
+    categoryCtrl.newSubCategory,
   )
   .delete(
     requireAuth,
     permit('admin'),
     validate(paramValidation.deleteCategory),
-    categoryCtrl.deleteCategory
+    categoryCtrl.deleteCategory,
   );
+router.route('/sub-category/:sid').post(
+  authorization,
+  // requireAuth,
+  // permit('admin'),
+  validate(paramValidation.newSubSubCategory),
+  categoryCtrl.newSubSubCategory,
+);
 router
-  .route('/sub-category/:sid')
-  .post(
-    authorization,
-    // requireAuth,
-    // permit('admin'),
-    validate(paramValidation.newSubSubCategory),
-    categoryCtrl.newSubSubCategory
-  );
-router
-    .route('/products/:companyId')
-    .get(authorization,categoryCtrl.getSubSubCategory)
+  .route('/products/:companyId')
+  .get(authorization, categoryCtrl.getSubSubCategory);
 
 module.exports = router;

@@ -5,7 +5,7 @@ const { APIError, BadRequestError } = require('../helpers/APIError');
 const load = async (req, res, next, id) => {
   await BoardColumn.findById(id)
     .exec()
-    .then(result => {
+    .then((result) => {
       if (result) {
         req.boardColumn = result;
         return next();
@@ -14,7 +14,7 @@ const load = async (req, res, next, id) => {
         message: 'No valid entry found for provided Board ID',
       });
     })
-    .catch(err => {
+    .catch((err) => {
       next(err);
     });
 };
@@ -28,7 +28,7 @@ const create = async (req, res, next) => {
     });
     await boardColumn
       .save()
-      .then(createdColumn => {
+      .then((createdColumn) => {
         const resposneObj = {
           _id: createdColumn._id,
           name: createdColumn.name,
@@ -37,7 +37,7 @@ const create = async (req, res, next) => {
         };
         res.status(201).send(resposneObj);
       })
-      .catch(e => next(e));
+      .catch((e) => next(e));
   } catch (error) {
     logger.error(`Board column create: ${error}`);
     const err = new BadRequestError(
@@ -56,8 +56,8 @@ const list = async (req, res, next) => {
   })
     // .populate('tasks')
     .exec()
-    .then(result => res.status(200).send(result))
-    .catch(e => next(e));
+    .then((result) => res.status(200).send(result))
+    .catch((e) => next(e));
 };
 
 const update = (req, res, next) => {

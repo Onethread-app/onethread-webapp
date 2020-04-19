@@ -1,52 +1,53 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ReportSchema = new mongoose.Schema({
-  text: { //reason repor deatils
+  text: {
+    //reason repor deatils
     type: String,
     trim: true,
-    required: true
+    required: true,
   },
   reportContent: {
     type: [
       {
         type: String,
-        enum: ["post", "comment", "user", "others"]
-      }
-    ]
+        enum: ['post', 'comment', 'user', 'others'],
+      },
+    ],
   },
   reportType: {
     type: [
       {
         type: String,
         enum: [
-          "harmful",
-          "violence",
-          "threat",
-          "annoying",
-          "gross",
-          "false",
-          "abusive",
-          "pornography",
-          "spam",
-          "compromise",
-          "offensive",
-          "disrespectful",
-          "privateExposed",
-          "others"
-        ]
-      }
+          'harmful',
+          'violence',
+          'threat',
+          'annoying',
+          'gross',
+          'false',
+          'abusive',
+          'pornography',
+          'spam',
+          'compromise',
+          'offensive',
+          'disrespectful',
+          'privateExposed',
+          'others',
+        ],
+      },
     ],
-    default: ["others"]
+    default: ['others'],
   },
   reviewStatus: {
     type: [
       {
         type: String,
-        enum: ["block", "noofense", "others", "notresoolved"]
-      }
+        enum: ['block', 'noofense', 'others', 'notresoolved'],
+      },
     ],
-    default: ["notresoolved"]
+    default: ['notresoolved'],
   },
   reviewText: {
     type: String,
@@ -54,31 +55,31 @@ const ReportSchema = new mongoose.Schema({
   },
   post: {
     type: Schema.ObjectId,
-    ref: "Post"
+    ref: 'Post',
   },
   user: {
     type: Schema.ObjectId,
-    ref: "User"
+    ref: 'User',
   },
   comment: {
     type: Schema.ObjectId,
-    ref: "Comment"
+    ref: 'Comment',
   },
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   updated: {
-    type: Date
+    type: Date,
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   account: {
     type: Schema.ObjectId,
-    ref: "Account"
-  }
+    ref: 'Account',
+  },
 });
 
-module.exports = mongoose.model("Report", ReportSchema);
+module.exports = mongoose.model('Report', ReportSchema);

@@ -40,8 +40,8 @@ router
   .delete(
     authorization,
     SchemaValidator(joiSchema.deleteSubtask),
-    subTaskCtrl.deleteSubtask
-  );  
+    subTaskCtrl.deleteSubtask,
+  );
 
 router.param('subTaskId', subTaskCtrl.load);
 

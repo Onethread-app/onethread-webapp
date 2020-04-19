@@ -27,7 +27,7 @@
 //       token = res.body.token;
 //       done();
 //     })
-    
+
 //     .catch(done);
 // });
 // after(done => {
@@ -67,7 +67,7 @@
 //           comment = res.body;
 //           done();
 //         })
-        
+
 //         .catch(done);
 //     });
 //   });

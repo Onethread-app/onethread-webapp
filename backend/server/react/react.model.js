@@ -5,41 +5,41 @@ const Schema = mongoose.Schema;
 const ReactSchema = new mongoose.Schema({
   postRef: {
     type: Schema.ObjectId,
-    ref: 'Post'
+    ref: 'Post',
   },
   reactType: {
     type: [
       {
         type: String,
-        enum: ['like', 'respect']
-      }
+        enum: ['like', 'respect'],
+      },
     ],
-    default: ['like']
+    default: ['like'],
   },
   refType: {
     type: [
       {
         type: String,
-        enum: ['post', 'comment']
-      }
+        enum: ['post', 'comment'],
+      },
     ],
-    default: ['post']
+    default: ['post'],
   },
   updated: {
-    type: Date
+    type: Date,
   },
   removed: {
     type: Boolean,
-    default: false
+    default: false,
   },
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
   account: {
     type: Schema.ObjectId,
-    ref: 'Account'
-  }
+    ref: 'Account',
+  },
 });
 
 module.exports = mongoose.model('React', ReactSchema);

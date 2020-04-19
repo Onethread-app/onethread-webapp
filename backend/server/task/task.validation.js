@@ -4,7 +4,7 @@ const Joi = require('joi');
 const idSchema = {
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
-    .error(errors => {
+    .error((errors) => {
       return {
         message: 'Invalid ID',
       };
@@ -12,9 +12,8 @@ const idSchema = {
 };
 
 const taskId = Joi.object().keys({
-  taskId : idSchema.id.required(),
+  taskId: idSchema.id.required(),
 });
-
 
 const taskSchema = {
   name: Joi.string(),
@@ -54,11 +53,11 @@ module.exports = {
   }),
   addMember: Joi.object().keys({
     body: Joi.object().keys({
-      assignmembers: Joi.array().items(idSchema.id).required()
+      assignmembers: Joi.array().items(idSchema.id).required(),
     }),
-    params: taskId
+    params: taskId,
   }),
   deleteMember: Joi.object().keys({
-    params: taskId
-  })
+    params: taskId,
+  }),
 };

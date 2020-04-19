@@ -15,7 +15,7 @@ router
     requireAuth,
     permit('user', 'admin'),
     validate(paramValidation.createSave),
-    reportCtrl.create
+    reportCtrl.create,
   );
 router
   .route('/block/:reportId')

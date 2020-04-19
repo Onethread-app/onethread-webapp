@@ -80,8 +80,6 @@ if (!module.parent) {
   // 	}
   // }
 
-  
-
   // listen on port config.port
   app.listen(config.port, () => {
     logger.info(
@@ -98,7 +96,7 @@ process.on('unhandledRejection', async (err, promise) => {
   });
 });
 
-process.on('uncaughtException', err => {
+process.on('uncaughtException', (err) => {
   logger.error(
     err,
     { dispatcher: loggerDispatcher, from: 'uncaughtException event' },
@@ -107,11 +105,11 @@ process.on('uncaughtException', err => {
     },
   );
 });
-process.on('exit', async code => {
+process.on('exit', async (code) => {
   mongoose.connection.close();
   logger.info(`About to exit with code: ${code}`);
 });
-process.on('SIGINT', function() {
+process.on('SIGINT', function () {
   logger.info('Caught interrupt signal');
   process.exit();
 });

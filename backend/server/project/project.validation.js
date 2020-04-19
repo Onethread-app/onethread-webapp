@@ -4,7 +4,7 @@ const Joi = require('joi');
 const idSchema = {
   id: Joi.string()
     .regex(/^[a-fA-F0-9]{24}$/)
-    .error(errors => {
+    .error((errors) => {
       return {
         message: 'Invalid ID',
       };
@@ -25,12 +25,8 @@ const schema = {
   type: Joi.string(),
   pid: idSchema.id,
   memberId: idSchema.id,
-  description: Joi.string()
-    .max(2500)
-    .allow(''),
-  outline: Joi.string()
-    .max(5000)
-    .allow(''),
+  description: Joi.string().max(2500).allow(''),
+  outline: Joi.string().max(5000).allow(''),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
   color: Joi.number(),
