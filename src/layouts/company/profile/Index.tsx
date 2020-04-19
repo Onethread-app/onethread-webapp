@@ -5,9 +5,9 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import { AdvancedInfo } from './AdvancedInfoView';
 
 export const CompanyProfilePage = () => (
-  <div className="w-100 pa4">
+  <div className="w-100 pa4-ns pa2">
     <CoverPhotoView />
-    <Tabs id="TabsExample" className="mt7 ph5">
+    <Tabs id="TabsExample" className="mt6 ph5">
       <Tab
         id="basic_info"
         title="Basic Information"

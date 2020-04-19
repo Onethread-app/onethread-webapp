@@ -5,8 +5,7 @@ import {
   Popover,
   Button,
   Menu,
-  MenuItem,
-  HTMLSelect,
+  MenuItem
 } from '@blueprintjs/core';
 
 import Snackbar from '@material-ui/core/Snackbar';
@@ -57,20 +56,20 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     props.role === 'admin'
       ? setShowUpdateNameDialog(true)
       : projectRules(props.optionalRole)[props.role].includes(
-          'updateProjectPreface'
-        )
-      ? setShowUpdateNameDialog(true)
-      : setOpen(true);
+        'updateProjectPreface'
+      )
+        ? setShowUpdateNameDialog(true)
+        : setOpen(true);
   };
 
   const checkRoleForArchiveProject = (projectId: string) => {
     props.role === 'admin'
       ? projectArchive(projectId)
       : projectRules(props.optionalRole)[props.role].includes(
-          'updateProjectPreface'
-        )
-      ? projectArchive(projectId)
-      : setOpen(true);
+        'updateProjectPreface'
+      )
+        ? projectArchive(projectId)
+        : setOpen(true);
   };
   useEffect(() => {
     props.getAllProjects();
@@ -82,27 +81,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   }, []);
   return (
     <>
-      {' '}
-      <div className="flex justify-end">
-        <p className="pr3 fw7 mt1">Filter By</p>
-        <div style={{ width: '200px' }}>
-          {/* TODO: Use common dropdown component */}
-          <HTMLSelect
-            fill={true}
-            minimal={true}
-            style={{
-              outline: 'none',
-              border: '1px solid #E1E1E1',
-              fontWeight: 600,
-              textAlignLast: 'center',
-            }}
-          >
-            <option selected value="">
-              All
-            </option>
-          </HTMLSelect>
-        </div>
-      </div>
       <div>
         <h3 className="f3">My Projects</h3>
         <div className="overflow-auto">
@@ -128,10 +106,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       style={{
                         borderLeft: `5px solid 
                     ${
-                      find(Color, ['code', project.color])
-                        ? find(Color, ['code', project.color])!.value
-                        : 'white'
-                    }`,
+                          find(Color, ['code', project.color])
+                            ? find(Color, ['code', project.color])!.value
+                            : 'white'
+                          }`,
                         // TODO use dictionary
                         // borderLeft: '5px solid',
                         paddingLeft: '20px',
@@ -145,11 +123,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             singleProjectOnClick(project._id);
                             e.preventDefault();
                           }}
-                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5 hover-dark-blue pointer"
+                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
                           style={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            width: '220px'
                           }}
                         >
                           {project.name}
@@ -173,8 +151,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                 />
                               </Menu>
                             ) : (
-                              'Loading..'
-                            )
+                                'Loading..'
+                              )
                           }
                           target={
                             <Button
@@ -192,23 +170,23 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           }
                         />
                         {props.companyRooms &&
-                        unreadMessageNotification(
-                          props.companyRooms,
-                          'project',
-                          project._id
-                        ) ? (
-                          <span
-                            className="ml1 br-100 bg-red"
-                            style={{ width: '7px', height: '7px' }}
-                          ></span>
-                        ) : null}
+                          unreadMessageNotification(
+                            props.companyRooms,
+                            'project',
+                            project._id
+                          ) ? (
+                            <span
+                              className="ml1 br-100 bg-red"
+                              style={{ width: '7px', height: '7px' }}
+                            ></span>
+                          ) : null}
                       </div>
                       <h3
-                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
+                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
                         style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                          width: '220px'
                         }}
                       >
                         {project.departments &&
@@ -258,10 +236,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       style={{
                         borderLeft: `5px solid 
                       ${
-                        find(Color, ['code', archProject.color])
-                          ? find(Color, ['code', archProject.color])!.value
-                          : 'red'
-                      }`,
+                          find(Color, ['code', archProject.color])
+                            ? find(Color, ['code', archProject.color])!.value
+                            : 'red'
+                          }`,
                         // TODO use dictionary
                         // borderLeft: '5px solid red',
                         paddingLeft: '20px',
@@ -271,11 +249,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                     >
                       <div className="flex">
                         <h3
-                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f5"
+                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
                           style={{
-                            display: '-webkit-box',
-                            WebkitLineClamp: 2,
-                            WebkitBoxOrient: 'vertical',
+                            whiteSpace: 'nowrap',
+                            textOverflow: 'ellipsis',
+                            width: '220px'
                           }}
                         >
                           {archProject.name}
@@ -310,11 +288,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       /> */}
                       </div>
                       <h3
-                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f7 silver"
+                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
                         style={{
-                          display: '-webkit-box',
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: 'vertical',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                          width: '220px'
                         }}
                       >
                         {archProject.departments.map((dep: any) => (

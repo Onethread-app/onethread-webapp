@@ -15,7 +15,7 @@ export const LandingPage = (props: { user: User }) => {
       <div className="w-100 bg-white ph4">
         <CoverPhotoView />
         <div className="w-100 relative">
-          <div className="flex-l w-100 mt6 ph4">
+          <div className="flex-l w-100 mt5 ph4">
             <div className="mt3 ph1 w-15-l w-100"
               style={{ minWidth: '235px' }}
             >

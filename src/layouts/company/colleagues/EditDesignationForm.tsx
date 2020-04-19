@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Icon } from "@blueprintjs/core";
+import { Icon, Button } from "@blueprintjs/core";
 import { ICompanyMembers } from "stores/company/Reducer";
 import { Entity } from "stores/UtilsActions";
 import { Form, Field } from "react-final-form";
 import { IconNames } from "@blueprintjs/icons";
 import { required, checkError } from "components/final-form/utils";
 import { Condition } from "components/final-form/Condition";
-import { SubmitAndResetButtons } from "components/final-form/SubmitResetButtons";
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { DropdownFieldWithError } from 'components/fields/DropdownField';
 interface EditDesignationFormProps {
@@ -150,13 +149,21 @@ export const EditDesignationForm = (
 								/>
 							}
 						/>
-						<SubmitAndResetButtons
-							reset={form.reset}
-							submitting={submitting}
-							pristine={pristine}
-							resetBtnName="Reset"
-							submitBtnName="Save"
-						/>
+						<div className="tc">
+							<Button
+								className="grow h2 pointer white bp3-minimal w4 mt4"
+								style={{
+									background: '#0fa3a3',
+									outline: 'none',
+									color: 'white'
+								}}
+								loading={submitting}
+								type="submit"
+								disabled={submitting || pristine}
+							>
+								Save
+						</Button>
+						</div>
 					</form>
 				</div>
 			)}

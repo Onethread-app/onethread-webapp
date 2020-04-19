@@ -12,7 +12,7 @@ interface notification {
 export default function index(props: notification) {
   return (
     <main
-      className={`mw6 center ${
+      className={`mw6 center pv1 ${
         props.read ? 'bg-near-white' : ''
       } ba b--near-white`}
     >

@@ -49,7 +49,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
         className={`${props.leftOpen ? 'db ml4 mv3' : 'dn'} `}
         style={{ width: '6rem' }}
       >
-        <NavLink to={`/company/${props.company.name}`}>
+        <NavLink to={`/${props.user.name}`}>
           {props.leftOpen ? <img src={logo} /> : <img src={tigrowLogo} />}
         </NavLink>
       </div>
@@ -263,8 +263,13 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
               {/*  */}
               {props.projectFileOpen && (
                 <div className="bg-white-10">
-                  <h1
-                    className="f7 fw4 white pl4 pv2 pointer"
+                  {props.leftOpen ? <h1
+                    className="f7 fw4 white pl4 pv2 pointer overflow-hidden"
+                    style={{
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      width: '230px'
+                    }}
                     onClick={async () => {
                       await dispatch({
                         type: PROJECT.PROJECT_FILE_OPEN,
@@ -276,7 +281,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     }}
                   >
                     {props.project.name}
-                  </h1>
+                  </h1> : undefined}
                   <Divider
                     style={{
                       borderRight: '1px groove darkgray',
