@@ -1,13 +1,24 @@
 const Pusher = require("pusher");
+const config = require('../../config/config');
 const _ = require('lodash');
 
-let channels_client = new Pusher({
-    appId: '858307',
-    key: '2d2483157c37a8782f19',
-    secret: '45076d25b7f1dad63f12',
-    cluster: 'ap2',
-    useTLS: true,
-  });
+
+const channels_client = new Pusher({
+  appId: config.pusherChanel.appid,
+  key: config.pusherChanel.key,
+  secret: config.pusherChanel.secret,
+  cluster: config.pusherChanel.cluster,
+  useTLS: true,
+});
+
+
+// const channels_client = new Pusher({
+//     appId: '858307',
+//     key: '2d2483157c37a8782f19',
+//     secret: '45076d25b7f1dad63f12',
+//     cluster: 'ap2',
+//     useTLS: true,
+//   });
 
 
 module.exports.sendCompanyNotification = async (
@@ -24,7 +35,8 @@ module.exports.sendCompanyNotification = async (
   channels_client.trigger(
     company.toString(), 
     `${company}-superAdmin`,
-     userNotification
+     userNotification,
+     adminUser.pusherSock
      );
 
 };
@@ -48,7 +60,8 @@ module.exports.sendCompanyRoleNotification = async (
   channels_client.trigger(
     companyChannelsPusher, 
     company.toString(), 
-     [userNotification]
+     [userNotification],
+     adminUser.pusherSock
      );
 
 };
@@ -67,15 +80,13 @@ module.exports.sendMultipleNotification = async (
     return `${company.toString()}-${c}`;
   });
 
-  //let userNotifications = userNoties;
-
-  // userNotification = { notification: userNotification
-  // };
+  
  
   channels_client.trigger(
     companyChannelsPusher, 
     company.toString(),
-    userNotifications//ARRAY
+    userNotifications,//ARRAY
+    adminUser.pusherSock
      );
 
 };
@@ -120,27 +131,11 @@ module.exports.sendCompanyAndProjectNotification = async (
   channels_client.trigger(
     allChannel, 
     project.company.toString(), 
-     userNotification
+     userNotification,
+     adminUser.pusherSock
      );
 
 };
 
-// module.exports.sendMultiChannelNotification = async (
-//   companyChannels,//fromHeader
-//   adminUser,
-//   userNoti,
-// ) => {
-//   let userNotification = userNoti;
 
-//   userNotification = { notification: userNotification
-//   };
-//   console.log(1,company);
-//   channels_client.trigger(
-//     companyChannels,// `${company}-superAdmin` this type chennel
-    
-//     company,
-//      userNotification
-//      );
-
-// };
 

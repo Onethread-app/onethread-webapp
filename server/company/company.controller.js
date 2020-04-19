@@ -4,6 +4,8 @@ const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
+const { chatkit } = require('../services/pusher.services');
+
 const {
   sendCompanyNotification,
 } = require('../services/notification.services');
@@ -60,30 +62,46 @@ const changeName = async (req, res, next) => {
 
     //notification
 
-    sendCompanyNotification(req.company._id, {
-      _id: req.user._id,
-      name: req.user.name,
-    });
+    const text = `company name has been updated by ${req.user.name}`;
+    createCompanyRoleNotification(
+      req.company,
+      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
+      text,
+      'companyProfile',
+    );
+    // sendCompanyNotification(req.company._id, {
+    //   _id: req.user._id,
+    //   name: req.user.name,
+    // });
 
-    const notification = new Notification({
-      type: 'companyProfile',
-      account: req.user._id,
-      company: req.company._id,
-    });
-
-    // const userNotification = new UserNotification({
-    //   notification: notification._id,
+    // const notification = new Notification({
+    //   type: 'companyProfile',
+    //   account: req.user._id,
     //   company: req.company._id,
     // });
+<<<<<<< HEAD
+=======
     let usersNotification = members.map((m) => {
       return {
         notification: notification._id,
         account: m.account,
       };
     });
+>>>>>>> 071e74a6b71f3c67aedac99a964e88e14d48aa00
 
-    await notification.save();
-    await UserNotification.create(usersNotification);
+    // // const userNotification = new UserNotification({
+    // //   notification: notification._id,
+    // //   company: req.company._id,
+    // // });
+    // let usersNotification = members.map(m => {
+    //   return {
+    //     notification: notification._id,
+    //     account: m.account,
+    //   };
+    // });
+
+    // await notification.save();
+    // await UserNotification.create(usersNotification);
 
     return res.status(200).json({
       message: `Company's name updated`,
@@ -251,7 +269,7 @@ const updateBasicInfo = async (req, res, next) => {
     const text = `company profile has been updated by ${req.user.name}`;
     createCompanyRoleNotification(
       req.company,
-      { _id: req.user._id, name: req.user.name },
+      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
       text,
       'companyProfile',
     );
@@ -284,7 +302,7 @@ const updateAbout = async (req, res, next) => {
     const text = `company profile has been updated by ${req.user.name}`;
     createCompanyRoleNotification(
       req.company,
-      { _id: req.user._id, name: req.user.name },
+      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
       text,
       'companyProfile',
     );
@@ -578,7 +596,7 @@ const noticePostByCompany = async (req, res, next) => {
     const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
     createCompanyRoleNotification(
       { _id: req.params.companyId },
-      { _id: req.user._id, name: req.user.name },
+      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
       text,
       'announcement',
     );

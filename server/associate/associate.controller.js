@@ -71,7 +71,7 @@ const createPending = async (req, res, next) => {
 
       const text =`${req.body.associateCompany.name} wants to add you as their associate`;
       
-    createCompanyRoleNotification(req.body.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
+    createCompanyRoleNotification(req.body.associateCompany, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'associate' );
       await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
       //await associate.populate('associateCompany', '_id name type').execPopulate;
       
@@ -97,7 +97,7 @@ const acceptPending = async (req, res, next) => {
     associate = await Associate.populate(associate, { path: 'associateCompany', select: '_id name type'});
     const text =`${associate.associateCompany.name} accepted you as their associate`;
     
-    createCompanyRoleNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
+    createCompanyRoleNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'associate' );
     
    
     //associate = await Associate.populate(associate, { path: 'company', select: '_id name type'});
@@ -124,7 +124,7 @@ const rejectPending = async (req, res, next) => {
     const text =`${associate.associateCompany.name} rejected you as their associate`;
     
     
-    createCompanyRoleNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name}, text, 'associate' );
+    createCompanyRoleNotification(associate.associateCompany, {_id:req.user._id, name: req.user.name, pusherSock: req.headers.clientid}, text, 'associate' );
     return res.status(200).json({   remove: true  });
   } catch (error) {
     

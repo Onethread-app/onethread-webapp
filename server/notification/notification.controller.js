@@ -18,34 +18,34 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 
-module.exports.createCompanyNotification = async (
-  company, //fromHeader
-  adminUser,
-) => {
-  const members = await Member.find({
-    $or: [{ role: 'superAdmin' }, { role: 'admin' }],
-    company: company,
-  });
+// module.exports.createCompanyNotification = async (
+//   company, //fromHeader
+//   adminUser,
+// ) => {
+//   const members = await Member.find({
+//     $or: [{ role: 'superAdmin' }, { role: 'admin' }],
+//     company: company,
+//   });
 
-  let notification = new Notification({
-    type: 'companyProfile',
-    text: `company profile has been updated by ${adminUser.name}`,
-    account: adminUser._id,
-    company: company,
-  });
+//   let notification = new Notification({
+//     type: 'companyProfile',
+//     text: `company profile has been updated by ${adminUser.name}`,
+//     account: adminUser._id,
+//     company: company,
+//   });
 
-  let usersNotifications = members.map(m => {
-    return {
-      notification: notification._id,
-      account: m.account,
-    };
-  });
+//   let usersNotifications = members.map(m => {
+//     return {
+//       notification: notification._id,
+//       account: m.account,
+//     };
+//   });
 
-  sendCompanyNotification(company, adminUser, notification);
+//   sendCompanyNotification(company, adminUser, notification);
 
-  await notification.save();
-  await UserNotification.create(usersNotifications);
-};
+//   await notification.save();
+//   await UserNotification.create(usersNotifications);
+// };
 
 module.exports.createMemberAddNotification = async (
   company, //fromHeader
@@ -53,10 +53,11 @@ module.exports.createMemberAddNotification = async (
   adminUser,
 ) => {
   try {
-    const membersToSendNotification = await Member.find({
+    let membersToSendNotification = await Member.find({
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
+    membersToSendNotification = membersToSendNotification.filter( m => m.account.toString() !== adminUser._id.toString() ); 
 
     // let notification = new Notification({
     //   type: 'companyProfile',
@@ -64,6 +65,7 @@ module.exports.createMemberAddNotification = async (
     //   account: adminUser._id,
     //   company: company,
     // });
+    
 
     let notifications = newMembers.map(m => {
       return {
@@ -175,6 +177,8 @@ module.exports.createTeamAddNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
+    allNotificationReciver = allNotificationReciver.filter( m => m !== adminUser._id.toString() ); 
+
 
     for (let i = 0; i < notifications.length; i += 1) {
       let usersNotificationAll = allNotificationReciver.map(m => {
@@ -206,43 +210,43 @@ module.exports.createTeamAddNotification = async (
   }
 };
 
-module.exports.createAssociateNotification = async (
-  company,
-  adminUser,
-  text,
-) => {
-  //sendCompanyNotification(company, adminUser, usersNotification);
+// module.exports.createAssociateNotification = async (
+//   company,
+//   adminUser,
+//   text,
+// ) => {
+//   //sendCompanyNotification(company, adminUser, usersNotification);
 
-  const members = await Member.find({
-    $or: [{ role: 'superAdmin' }, { role: 'admin' }],
-    company: company,
-  });
+//   const members = await Member.find({
+//     $or: [{ role: 'superAdmin' }, { role: 'admin' }],
+//     company: company,
+//   });
 
-  let notification = new Notification({
-    type: 'associate',
-    text: text,
-    account: adminUser._id,
-    company: company,
-  });
+//   let notification = new Notification({
+//     type: 'associate',
+//     text: text,
+//     account: adminUser._id,
+//     company: company,
+//   });
 
-  let usersNotification = members.map(m => {
-    return {
-      notification: notification._id,
-      account: m.account,
-    };
-  });
+//   let usersNotification = members.map(m => {
+//     return {
+//       notification: notification._id,
+//       account: m.account,
+//     };
+//   });
 
-  const companyRoleReciver = ['superAdmin', 'admin'];
-  sendCompanyRoleNotification(
-    company._id,
-    companyRoleReciver,
-    adminUser,
-    notification,
-  );
+//   const companyRoleReciver = ['superAdmin', 'admin'];
+//   sendCompanyRoleNotification(
+//     company._id,
+//     companyRoleReciver,
+//     adminUser,
+//     notification,
+//   );
 
-  await notification.save();
-  await UserNotification.create(usersNotification);
-};
+//   await notification.save();
+//   await UserNotification.create(usersNotification);
+// };
 
 module.exports.createCompanyRoleNotification = async (
   company,
@@ -252,10 +256,12 @@ module.exports.createCompanyRoleNotification = async (
 ) => {
   //sendCompanyNotification(company, adminUser, usersNotification);
   try {
-    const members = await Member.find({
+    let members = await Member.find({
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
+    
+    members = members.filter( m => m.account.toString() !== adminUser._id.toString() ); 
 
     let notification = new Notification({
       type: type,
@@ -283,7 +289,7 @@ module.exports.createCompanyRoleNotification = async (
     await UserNotification.create(usersNotification);
   } catch (error) {
     logger.error(`${error}`);
-    next(error);
+    
   }
 };
 
@@ -324,6 +330,8 @@ module.exports.createBoardNotification = async (
       usersAccountNotificationCollegue,
       usersAccountNotificationTeam,
     );
+    allNotificationReciver = allNotificationReciver.filter( m => m !== adminUser._id.toString() ); 
+
     let usersNotificationAll = allNotificationReciver.map(m => {
       return {
         notification: notification._id,
@@ -385,14 +393,14 @@ module.exports.list = async (req, res, next) => {
     await UserNotification.find({
       account: req.user._id,
     })
-      .select('_id read notification account')
+      .select('_id read notification account createdAt')
       .populate(option)
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
       .exec()
       .then(result => {
-        logger.info(`${result}`);
+        
         return sendJSONresponse(res, 200, result);
       });
 
@@ -411,7 +419,7 @@ module.exports.list = async (req, res, next) => {
     //   return sendJSONresponse(res, 200, result);
     // });
   } catch (error) {
-    console.log(error);
+    
     logger.error(`${error}`);
     next(error);
   }

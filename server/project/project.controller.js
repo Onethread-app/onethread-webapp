@@ -90,7 +90,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         const text = `${associate.company.name} wants to create a associate project ${project.name} with your ${associate.associateCompany.name} `;
         createCompanyRoleNotification(
           associate.company._id,
-          { _id: req.user._id, name: req.user.name },
+          { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
           text,
           'project',
         );
@@ -139,7 +139,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       const text = `${req.user.name} has created a project ${project.name} `;
       createCompanyRoleNotification(
         { _id: req.body.companyId },
-        { _id: req.user._id, name: req.user.name },
+        { _id: req.user._id, name: req.user.name,pusherSock: req.headers.clientid },
         text,
         'project',
       );
@@ -276,7 +276,7 @@ const acceptProjectRequest = async (req, res, next) => {
     const text = `${asso.company.name} has accepted request `;
     createCompanyRoleNotification(
       asso.company._id,
-      { _id: req.user._id, name: req.user.name },
+      { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
       text,
       'project',
     );
@@ -467,7 +467,7 @@ const archiveProject = async (req, res, next) => {
 
       createCompanyRoleNotification(
         { _id: project.company },
-        { _id: req.user._id, name: req.user.name },
+        { _id: req.user._id, name: req.user.name, pusherSock: req.headers.clientid },
         text,
         'project',
       );

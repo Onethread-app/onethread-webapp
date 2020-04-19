@@ -42,6 +42,25 @@ const envVarsSchema = Joi.object({
   EMAIL_PASSWORD: Joi.string()
     .required()
     .description('password required'),
+
+  INSTANCE_LOCATOR: Joi.string()
+    .required()
+    .description('INSTANCE_LOCATOR required'),
+  PUSHER_KEY: Joi.string()
+    .required()
+    .description('PUSHER_KEY required'),
+  PUSHER_CHANNEL_APPID: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_APPID required'),
+  PUSHER_CHANNEL_KEY: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_KEY required'),
+  PUSHER_CHANNEL_SECRET: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_SECRET required'),
+  PUSHER_CHANNEL_CLUSTER: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_CLUSTER required'),
   AWS_ACCESS_KEY: Joi.string()
     .required()
     .description('AWS credential required'),
@@ -100,6 +119,12 @@ const config = {
     host: envVars.REDIS_HOST,
     port: envVars.REDIS_PORT,
     password: envVars.REDIS_PASSWORD,
+  },
+  pusherChanel: {
+    appid: envVars.PUSHER_CHANNEL_APPID,
+    key: envVars.PUSHER_CHANNEL_KEY,
+    secret: envVars.PUSHER_CHANNEL_SECRET,
+    cluster: envVars.PUSHER_CHANNEL_CLUSTER,
   },
   emailAddress: envVars.EMAIL_ADDRESS,
   emailPassword: envVars.EMAIL_PASSWORD,
