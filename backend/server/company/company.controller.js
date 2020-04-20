@@ -621,7 +621,7 @@ const allNoticesForCompany = async (req, res, next) => {
   try {
     const announce = await Announcement.find({
       company: req.params.companyId,
-    });
+    }).sort({createdAt: 'desc'});
 
     logger.info(`announcement show for company`);
     return sendJSONresponse(res, 200, {
