@@ -3,6 +3,7 @@ import axios from 'axios';
 export const test = 'https://test.tigrow.co/api/v1/';
 export const prod = 'https://api.tigrow.co/api/v1/';
 export const dev = 'http://localhost:4044/api/v1/';
+export const orvi = 'https://aa645456.ngrok.io/api/v1/';
 
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
 export const server = process.env.REACT_APP_API_URL;
