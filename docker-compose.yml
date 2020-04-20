@@ -1,0 +1,43 @@
+version: "3.3"
+services:
+    mongo:
+        image: bitnami/mongodb:latest
+        restart: always
+        container_name: mongodb
+        volumes:
+            - ./mongodb:/data/db/
+        networks:
+            - backend
+        ports: 
+            - '27017:27017'
+        environment: 
+            - MONGODB_DATABASE=tigrowdev
+        logging:
+            driver: "json-file"
+            options:
+               max-size: "100MB"
+               max-file: "3"  
+    backend:
+        image: backend:2.0.0
+        restart: always
+        ports:
+            - "4044:4044"
+        environment: 
+             -  MONGO_HOST=mongodb://mongo:27017/tigrowdev
+        depends_on:
+            - mongo
+        networks:
+            - backend
+    client: 
+        image: client:2.0.0
+        restart: always
+        ports:
+            - "3000:3000"
+        links:
+            - backend
+        networks:
+            - backend
+
+networks:
+    backend:
+        driver: bridge
