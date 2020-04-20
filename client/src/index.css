@@ -694,11 +694,6 @@ a:hover {
   right: 7rem;
   width: 5rem;
 }
-.addButtonMobile{
-  bottom: 5rem;
-  right: 3rem;
-  width: 4rem;
-}
 
 @media only screen and (min-width: 361px) and (max-width: 450px) {
   .displayNone{
@@ -726,6 +721,11 @@ a:hover {
     margin-top: 130px;
     margin-right: 15px;
   }
+  .addButton{
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
 }
 @media only screen and (max-width: 360px) {
   .displayNone{
@@ -752,5 +752,10 @@ a:hover {
     background-position: center;
     background-repeat: no-repeat;
     object-fit: cover;
+  }
+  .addButton{
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
   }
 }
