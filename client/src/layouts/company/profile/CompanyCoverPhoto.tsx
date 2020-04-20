@@ -31,7 +31,7 @@ const CompanyCoverPhotoComponent = (
             props.currentCompany.coverImage
               ? props.currentCompany.coverImage
               : coverPic
-          })`,
+            })`,
         }}
       >
         {/* <div className="absolute flex" style={{ left: "40px", top: "63%" }}>
