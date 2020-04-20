@@ -19,7 +19,15 @@ interface RoomMembersViewProps {
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
   // tslint:disable-next-line: max-line-length
   addRoomMembers: (
-    members: { room: string; members: Array<string | undefined> },
+    members: {
+      room: string;
+      company: string;
+      project: string;
+      members: Array<{
+        account: any;
+        team: any;
+      }>;
+    },
     selectedRoomMember: ItemEntityProps[],
   ) => void;
   currentRoom: IRoomReducer['currentRoom'];
@@ -137,7 +145,14 @@ const AddMemberFormComponent = (
           onClick={async () => {
             const data = {
               room: props.currentRoom._id,
-              members: selectedRoomMember.map((m) => m._id),
+              company: props.companyId,
+              project: props.projectId,
+              members: selectedRoomMember.map((m: any) => {
+                return {
+                  account: m._id,
+                  team: m.teamId,
+                };
+              }),
             };
             const response: any = await props.addRoomMembers(
               data,

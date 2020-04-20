@@ -10,6 +10,7 @@ import {
   NEW_MESSAGE,
   ON_USER_STARTED_TYPING,
   ON_USER_STOPPED_TYPING,
+  INCREMENT_UNREAD_COUNT_FOR_SINGLE_ROOM,
 } from 'stores/room/Types';
 import {
   IRoomMessage,
@@ -23,6 +24,7 @@ import {
   CHANNEL_USER_JOINED,
   CHANNEL_USER_LEAVED,
 } from 'stores/pusher/Types';
+import { isEqual } from 'lodash';
 
 export interface IChannelMember {
   id: string;
@@ -136,41 +138,65 @@ export const roomSubscribe = async (roomId: string) => {
   //     console.log('leave', member);
   //   });
   // });
-
-  // new message hook
-  channel.bind('new_message', async (data: INewMessagePayload) => {
-    const formatMessage: IRoomMessage = {
-      ...data.message,
-      account: data.account,
-      files: data.files,
-    };
-    await store.dispatch({
-      type: NEW_MESSAGE,
-      payload: formatMessage,
+  channel.bind('pusher:subscription_succeeded', async () => {
+    // new message hook
+    channel.bind('new_message', async (data: INewMessagePayload) => {
+      const currentRoomId = await store.getState().roomReducer
+        .currentRoom._id;
+      if (isEqual(data.message.room, currentRoomId)) {
+        await store.dispatch({
+          type: ON_USER_STOPPED_TYPING,
+          payload: data,
+        });
+        const formatMessage: IRoomMessage = {
+          ...data.message,
+          account: data.account,
+          files: data.files,
+        };
+        await store.dispatch({
+          type: NEW_MESSAGE,
+          payload: formatMessage,
+        });
+      } else {
+        await store.dispatch({
+          type: INCREMENT_UNREAD_COUNT_FOR_SINGLE_ROOM,
+          payload: data.message.room,
+        });
+      }
     });
+
+    // user start typing hook
+    channel.bind(
+      'client-user-start-typing',
+      async (data: ITypingUsers) => {
+        const currentRoomId = await store.getState().roomReducer
+          .currentRoom._id;
+
+        if (isEqual(data.roomId, currentRoomId)) {
+          await store.dispatch({
+            type: ON_USER_STARTED_TYPING,
+            payload: data,
+          });
+        }
+      },
+    );
+
+    // user stop typing hook
+    channel.bind(
+      'client-user-stop-typing',
+      async (data: ITypingUsers) => {
+        const currentRoomId = await store.getState().roomReducer
+          .currentRoom._id;
+
+        if (isEqual(data.roomId, currentRoomId)) {
+          await store.dispatch({
+            type: ON_USER_STOPPED_TYPING,
+            payload: data,
+          });
+        }
+      },
+    );
   });
-
-  // user start typing hook
-  channel.bind(
-    'client-user-start-typing',
-    async (data: ITypingUsers) => {
-      await store.dispatch({
-        type: ON_USER_STARTED_TYPING,
-        payload: data,
-      });
-    },
-  );
-
-  // user stop typing hook
-  channel.bind(
-    'client-user-stop-typing',
-    async (data: ITypingUsers) => {
-      await store.dispatch({
-        type: ON_USER_STOPPED_TYPING,
-        payload: data,
-      });
-    },
-  );
 };
 
 export const isTypingStartTrigger = async (

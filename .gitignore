@@ -22,7 +22,6 @@
 /client/.env.development.local
 /client/.env.test.local
 /client/.env.production.local
-/client/yarn.lock
 
 /backend/.env
 /backend/.env.prod

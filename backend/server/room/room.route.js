@@ -37,6 +37,15 @@ router
   .route('/members/:roomId')
   .get(authorization, roomCtrl.memberList);
 
+// update last seen for member in a room
+router
+  .route('/last-seen/:roomId')
+  .put(
+    authorization,
+    SchemaValidator(joiSchema.updateLastSeen),
+    roomCtrl.updateLastSeen,
+  );
+
 // add user into a company's room
 router
   .route('/addUser')
