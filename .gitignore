@@ -22,6 +22,8 @@
 /client/.env.production.local
 /client/yarn.lock
 
+/backend/.env.prod
+
 /backend/yarn.lock 
 /backend/yarn-error.log*
 /backend/package-lock.json
