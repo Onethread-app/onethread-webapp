@@ -220,7 +220,8 @@ export const SignUpPageComponent = (
 
                         <div style={{ width: '50px' }}>
                           <Field<string>
-                            name="countryCode"
+                            name="birthDate"
+                            validate={required}
                             render={({ input, meta }) => (
                               <div
                                 className={` ${
@@ -229,9 +230,8 @@ export const SignUpPageComponent = (
                                     : 'mb4-ns mb3'
                                 }`}
                               >
-                                <InputGroupFieldWithError
-                                  id="countryCode"
-                                  className={`bw1 pb2 br0 bb ${
+                                <div
+                                  className={`flex bw1 pb1 br0 bb ${
                                     checkError(meta)
                                       ? 'b--red'
                                       : 'b--lightBlue'
@@ -380,62 +380,131 @@ export const SignUpPageComponent = (
                       </div>
 
                         <div>
-                          <div>
-                            <Field<string>
-                              name="password"
-                              validate={composeValidators(
-                                required,
-                                passwordValidation,
-                              )}
-                              render={({ input, meta }) => (
-                                <div
-                                  className={` ${
-                                    checkError(meta) ? 'mb3-ns mb2' : 'mb4-ns mb3'
-                                    }`}
-                                >
-                                  <InputGroupFieldWithError
-                                    id="password"
-                                    className={`bw1 pb2 br0 bb ${
-                                      checkError(meta)
-                                        ? 'b--red'
-                                        : 'b--lightBlue'
-                                      }`}
-                                    value={input.value}
-                                    onChange={input.onChange}
-                                    type={`${
-                                      showPassword ? 'text' : 'password'
-                                      }`}
-                                    leftIcon={
-                                      <span className="bp3-icon">
-                                        <img
-                                          src={lockIcon}
-                                          width="20px"
-                                          height="20px"
-                                          color="#0fa3a3"
-                                        />
-                                      </span>
-                                    }
-                                    rightElement={
-                                      <span
-                                        className="bp3-icon"
-                                        style={{
-                                          paddingTop: '5px',
-                                          paddingRight: '5px',
-                                        }}
-                                      >
-                                        <img
-                                          onMouseDown={() =>
-                                            setShowPassword(true)
-                                          }
-                                          onMouseUp={() =>
-                                            setShowPassword(false)
-                                          }
-                                          src={eyeIcon}
-                                          width="15px"
-                                          height="15px"
-                                          color="#0fa3a3"
-                                        />
-                                        {/* <Tooltip content={
+                          <Field<string>
+                            name="email"
+                            validate={composeValidators(
+                              required,
+                              isEmail,
+                            )}
+                            render={({ input, meta }) => (
+                              <div
+                                className={` ${
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
+                                }`}
+                              >
+                                <InputGroupFieldWithError
+                                  id="email"
+                                  className={`bw1 pb2 br0 bb ${
+                                    checkError(meta)
+                                      ? 'b--red'
+                                      : 'b--lightBlue'
+                                  }`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={emailIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  rightElement={
+                                    <span
+                                      className="bp3-icon"
+                                      style={{
+                                        paddingTop: '10px',
+                                        paddingRight: '5px',
+                                      }}
+                                    >
+                                      <img
+                                        src={greyLockIcon}
+                                        width="15px"
+                                        height="15px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px',
+                                    paddingLeft: '40px',
+                                  }}
+                                  placeHolder="Email Address"
+                                  error={
+                                    checkError(meta) &&
+                                    (meta.error || meta.submitError)
+                                  }
+                                  disabled={isEmpty(email) === false}
+                                />
+                              </div>
+                            )}
+                          />
+                        </div>
+                      </div>
+
+                        <div>
+                          <Field<string>
+                            name="password"
+                            validate={composeValidators(
+                              required,
+                              passwordValidation,
+                            )}
+                            render={({ input, meta }) => (
+                              <div
+                                className={` ${
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
+                                }`}
+                              >
+                                <InputGroupFieldWithError
+                                  id="password"
+                                  className={`bw1 pb2 br0 bb ${
+                                    checkError(meta)
+                                      ? 'b--red'
+                                      : 'b--lightBlue'
+                                  }`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  type={`${
+                                    showPassword ? 'text' : 'password'
+                                  }`}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={lockIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  rightElement={
+                                    <span
+                                      className="bp3-icon"
+                                      style={{
+                                        paddingTop: '5px',
+                                        paddingRight: '5px',
+                                      }}
+                                    >
+                                      <img
+                                        onMouseDown={() =>
+                                          setShowPassword(true)
+                                        }
+                                        onMouseUp={() =>
+                                          setShowPassword(false)
+                                        }
+                                        src={eyeIcon}
+                                        width="15px"
+                                        height="15px"
+                                        color="#0fa3a3"
+                                      />
+                                      {/* <Tooltip content={
                                           <p style={{ width: '400px' }}>
                                             Password should contain at least 1 capital letter, 1 small letter,
                                             1 special character and 1 numeric value and should be atleast 8 character long!
