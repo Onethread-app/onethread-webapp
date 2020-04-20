@@ -195,7 +195,8 @@ export const SignUpPageComponent = (
 
                         <div style={{ width: '50px' }}>
                           <Field<string>
-                            name="countryCode"
+                            name="birthDate"
+                            validate={required}
                             render={({ input, meta }) => (
                               <div
                                 className={` ${

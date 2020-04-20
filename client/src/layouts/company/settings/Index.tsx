@@ -3,7 +3,6 @@ import { Tabs, Tab, Navbar, Drawer } from '@blueprintjs/core';
 import { GeneralView } from './companyName/General';
 import { DepartmentView } from './department/View';
 import { AdminRoleView } from './adminRole/View';
-<<<<<<< HEAD
 import { isMobileOnly } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
@@ -35,48 +34,6 @@ const SettingsPagComponent = (
           {isMobileOnly ? undefined : (
             <h3 className="f3 b">Settings</h3>
           )}
-=======
-import { MobileView } from 'react-device-detect';
-import user from './../../../resources/images/profilePhoto.svg';
-import { User } from 'stores/user/Reducer';
-import { connect } from 'react-redux';
-import { MobileListView } from '../MobileListView';
-
-interface SettingsPageProps {
-  user: User;
-}
-
-const SettingsPagComponent = (props: SettingsPageProps) => {
-
-  const [showDialog, setShowDialog] = useState(false);
-
-  return (
-    <>
-      <MobileView>
-        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
-          <h1 className="f3">My Settings</h1>
-          <img
-            src={
-              props.user.profileImage
-                ? props.user.profileImage
-                : user
-            }
-            className="dim v-mid dib br-100 pointer"
-            style={{
-              width: '2rem',
-              height: '2rem',
-              objectFit: 'cover',
-            }}
-            alt="user"
-            onClick={() => setShowDialog(true)}
-
-          />
-        </Navbar>
-      </MobileView>
-      <div className="fl w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns">
-        <div className="fl w-100">
-          <h3 className="f3 b">Settings</h3>
->>>>>>> b9e80fb9... mobile responsive for project preface
         </div>
         <Tabs
           id="TabsExample"
@@ -104,7 +61,6 @@ const SettingsPagComponent = (props: SettingsPageProps) => {
             panel={<DepartmentView />}
             className="outline-0 f6-ns f7"
           />
-<<<<<<< HEAD
           {props.companyRole === 'superAdmin' && (
             <Tab
               id="subscription"
@@ -116,25 +72,6 @@ const SettingsPagComponent = (props: SettingsPageProps) => {
           )}
         </Tabs>
       </div>
-=======
-        </Tabs>
-      </div>
-      {showDialog && (
-        <Drawer
-          onClose={() => setShowDialog(!showDialog)}
-          isOpen={showDialog}
-          canOutsideClickClose={false}
-          style={{ width: '70%' }}
-        >
-          <div>
-            <MobileListView
-              showDialog={showDialog}
-              setShowDialog={setShowDialog}
-            />
-          </div>
-        </Drawer>
-      )}
->>>>>>> b9e80fb9... mobile responsive for project preface
     </>
   );
 };
@@ -159,5 +96,11 @@ export const SettingsPage = connect(mapStateToProps, {
   };
 };
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
+=======
+>>>>>>> 2f39e87c... accouncement sorted in FIFO order
 export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
 >>>>>>> b9e80fb9... mobile responsive for project preface
