@@ -548,10 +548,10 @@ const parentOrg = async (req, res, next) => {
     return sendJSONresponse(res, 200, {
       success: true,
       message: `parentOrg updated`,
-      data: user
+      data: user,
     });
   } catch (error) {
-    logger.error(`Compnay: ${error}`)
+    logger.error(`Compnay: ${error}`);
     next(error);
   }
 };
