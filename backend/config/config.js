@@ -81,9 +81,7 @@ const envVarsSchema = Joi.object({
   APM_TOKEN: Joi.string()
     .required()
     .description('APM_TOKEN required'),
-  APM_URL: Joi.string()
-    .required()
-    .description('APM_URL required')
+  APM_URL: Joi.string().required().description('APM_URL required'),
 })
   .unknown()
   .required();
@@ -122,7 +120,7 @@ const config = {
   PUSHER_CHANNEL_CLUSTER: envVars.PUSHER_CHANNEL_CLUSTER,
   APM_SERVICE_NAME: envVars.APM_SERVICE_NAME,
   APM_TOKEN: envVars.APM_TOKEN,
-  APM_URL: envVars.APM_URL
+  APM_URL: envVars.APM_URL,
 };
 
 module.exports = config;
