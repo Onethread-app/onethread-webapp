@@ -644,10 +644,7 @@ const allNoticesForCompany = async (req, res, next) => {
 
     const announce = await Announcement.find({
       company: req.params.companyId,
-    })
-      .select('_id memberId text createdAt memberId')
-      .populate(options)
-      .sort({ createdAt: 'desc' });
+    }).sort({createdAt: 'desc'});
 
     logger.info(`announcement show for company`);
     return sendJSONresponse(res, 200, {
