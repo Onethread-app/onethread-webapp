@@ -1,0 +1,16 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.13.5
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
+ignore:
+  SNYK-JS-BCRYPT-174521:
+    - bcrypt:
+        reason: None given
+        expires: '2019-06-12T08:40:38.395Z'
+  'npm:braces:20180219':
+    - braces:
+        reason: None given
+        expires: '2019-06-12T08:40:38.396Z'
+    - micromatch > braces:
+        reason: s
+        expires: '2019-06-12T08:40:38.396Z'
+patch: {}

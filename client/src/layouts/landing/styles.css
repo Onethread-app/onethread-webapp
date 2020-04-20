@@ -1,0 +1,355 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Muli:200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+.companyLogo {
+  width: 36rem;
+  margin-left: -13.5rem;
+  margin-top: -4rem;
+}
+
+.tryLink {
+  background: #43466d 0% 0% no-repeat padding-box;
+  border-radius: 100px;
+  outline: none;
+  font-family: 'Montserrat';
+  color: white;
+  font-size: 1rem;
+  padding: 1.2rem 1.9rem;
+  font-weight: bold;
+  min-width: 140px;
+  text-align: center;
+}
+
+.tryLink.light {
+  background: #ffffff 0% 0% no-repeat padding-box;
+  color: #3e5578;
+  opacity: 1;
+}
+
+.demoLink {
+  padding: 2rem 0rem;
+}
+
+.tryLink:hover {
+  outline: none;
+  color: white;
+}
+
+.tryLink.light:hover {
+  color: #3e5578;
+}
+
+.primeText {
+  font-family: 'Muli';
+  font-size: 4.688rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.secondaryText {
+  font-family: 'Muli';
+  font-size: 3.15rem;
+  font-weight: 200;
+  letter-spacing: -0.35px;
+  color: #1e1c24;
+}
+
+.titleText {
+  font-family: 'Muli';
+  font-size: 2rem;
+  font-weight: bold;
+  letter-spacing: -0.35px;
+  color: #1e1c24;
+}
+
+.homeUl {
+  list-style: none;
+  padding-left: 2.5rem;
+  padding-right: 1rem;
+}
+
+.homeUl.light > .featureTitle {
+  font-weight: 400;
+  color: #707070;
+}
+
+.homeUl > .featureTitle::before {
+  content: '';
+  display: inline-block;
+  height: 1.3rem;
+  width: 1.3rem;
+  background-image: url('./../../resources/homepageImages/check-primary.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-left: -2rem;
+  margin-right: 0.5rem;
+}
+
+.homeUl.light > .featureTitle::before {
+  background-image: url('./../../resources/homepageImages/check.png');
+}
+
+.featureTitle {
+  font-weight: bold;
+  font-size: 2rem;
+  line-height: 1.5;
+  font-family: 'Muli';
+  letter-spacing: 0.3px;
+  color: #356e8d;
+  text-align: left;
+}
+
+.chatIntro {
+  background-color: #f4f6fc;
+  border-radius: 10px;
+}
+
+.carousel {
+  position: relative;
+}
+
+.react-multi-carousel-dot button {
+  background: #000;
+  border-width: 1px;
+}
+
+.react-multi-carousel-dot--active button {
+  background: #fff;
+}
+
+.footerText {
+  font: bold 1.2rem/1.4rem Muli;
+  letter-spacing: 0.96px;
+  color: #ffffff;
+}
+
+@media (max-width: 1366px) {
+  .primeText {
+    font-size: 3rem;
+  }
+
+  .secondaryText {
+    font-size: 2rem;
+  }
+
+  .titleText {
+    font-size: 1.55rem;
+  }
+
+  .featureTitle {
+    font-size: 1.3rem;
+  }
+
+  .homeUl > .featureTitle::before {
+    height: 1.1rem;
+    width: 1.1rem;
+  }
+
+  .footerText {
+    font-size: 0.9rem;
+    line-height: 1rem;
+  }
+}
+
+@media (max-width: 1112px) {
+  .primeText {
+    font-size: 2.5rem;
+  }
+
+  .secondaryText {
+    font-size: 1.6rem;
+  }
+
+  .titleText {
+    font-size: 1.17rem;
+  }
+
+  .featureTitle {
+    font-size: 0.93rem;
+  }
+
+  .homeUl {
+    padding-left: 2rem;
+  }
+
+  .homeUl > .featureTitle::before {
+    height: 0.7rem;
+    width: 0.7rem;
+  }
+
+  .footerText {
+    font-size: 0.6rem;
+    line-height: 1.1;
+  }
+}
+
+@media (max-width: 834px) {
+  .primeText {
+    font-size: 1.8rem;
+  }
+
+  .secondaryText {
+    font-size: 1.2rem;
+  }
+
+  .titleText {
+    font-size: 0.9rem;
+  }
+
+  .featureTitle {
+    font-size: 0.71rem;
+  }
+
+  .homeUl {
+    padding-left: 2rem;
+  }
+
+  .homeUl > .featureTitle::before {
+    height: 0.7rem;
+    width: 0.7rem;
+  }
+
+  .footerText {
+    font-size: 0.48rem;
+    line-height: 1.1;
+  }
+}
+
+@media only screen and (max-width: 824px) {
+  .companyLogo {
+    margin-left: -14.5rem;
+  }
+
+  .tryLink {
+    padding: 0.5rem 1rem;
+    min-width: 110px;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .tryLink.light {
+    font-size: 0.8rem;
+  }
+
+  .demoLink {
+    padding: 0rem;
+    justify-content: center;
+  }
+
+  .primeText {
+    font-size: 1.7rem;
+  }
+
+  .secondaryText {
+    font-size: 1.5rem;
+  }
+
+  .titleText {
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .featureTitle {
+    font-size: 0.9rem;
+    flex: 1;
+    padding: 1rem;
+  }
+
+  .light .featureTitle {
+    padding: 0;
+  }
+
+  .homeUl.light {
+    margin-left: 2rem;
+  }
+
+  .homeUl {
+    padding-left: 2.5rem;
+    align-items: flex-start;
+  }
+
+  .homeUl > .featureTitle::before {
+    margin-left: -1.5rem;
+    height: 0.9rem;
+    width: 0.9rem;
+  }
+
+  .footerText {
+    font-size: 0.48rem;
+    line-height: 1.1;
+  }
+}
+
+@media only screen and (max-width: 505px) {
+  .companyLogo {
+    margin-left: -9.5rem;
+  }
+
+  .tryLink {
+    padding: 0.5rem 1rem;
+    min-width: 110px;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  .tryLink.light {
+    font-size: 0.8rem;
+  }
+
+  .demoLink {
+    padding: 0rem;
+    justify-content: center;
+  }
+
+  .primeText {
+    font-size: 1.5rem;
+  }
+
+  .secondaryText {
+    font-size: 1.5rem;
+    font-weight: 300;
+  }
+
+  .titleText {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5rem;
+    letter-spacing: normal;
+  }
+
+  .featureTitle {
+    font-size: 0.9rem;
+    flex: 1;
+    padding: 1rem;
+  }
+
+  .light .featureTitle {
+    padding: 0;
+  }
+
+  .homeUl.light {
+    margin-left: 2rem;
+  }
+
+  .homeUl {
+    padding-left: 2rem;
+    align-items: flex-start;
+  }
+
+  .homeUl > .featureTitle::before {
+    margin-left: -1.5rem;
+    height: 0.9rem;
+    width: 0.9rem;
+  }
+
+  .footerText {
+    font-size: 0.48rem;
+    line-height: 1.1;
+  }
+}
+
+@media only screen and (max-width: 320px) {
+  .companyLogo {
+    margin-left: -7rem;
+  }
+}
