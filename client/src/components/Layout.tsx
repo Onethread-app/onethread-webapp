@@ -259,7 +259,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
                 </div>
                 <div
-                  className="relative h-100"
+                  className="relative h-100 vh-100"
                   style={{
                     transition: 'width 0.4s',
                     width: props.rightSidebarOpen ? '30%' : '0%',
@@ -301,7 +301,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
             {queries.view === 'default' ? (
               <div
                 id="main-layout"
-                className={`flex relative h-100 ${
+                className={`flex relative h-100 vh-100 ${
                   props.rightSidebarOpen && 'main-layout-overlay'
                 }`}
               >
@@ -409,7 +409,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
                 </div>
                 <div
-                  className="relative h-100"
+                  className="relative h-100 vh-100"
                   style={{
                     transition: 'width 0.4s',
                     width: props.rightSidebarOpen ? '100%' : '0%',
@@ -418,7 +418,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 >
                   <div
                     id="rightSidebar"
-                    className="h-100 c-tigrowWhite"
+                    className="h-100 c-tigrowWhite vh-100"
                     style={{
                       background: 'rgb(6, 5, 23)',
                     }}
