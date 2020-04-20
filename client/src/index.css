@@ -353,8 +353,6 @@ a:hover {
   object-fit: cover;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 .companyProfilepicOuter {
   width: 235px;
   height: 235px;
@@ -517,176 +515,6 @@ a:hover {
   margin-right: 45px;
 }
 
-=======
->>>>>>> d0b80317... ready for pre-release v2.3.1
-.companyProfilepicOuter {
-  width: 235px;
-  height: 235px;
-}
-.companyProfilepic {
-  width: 220px;
-  height: 220px;
-}
-.companyProfilepicOuterOuter {
-  margin-top: -120px;
-  margin-left: 50px;
-}
-.addButton {
-  bottom: 5rem;
-  right: 7rem;
-  width: 5rem;
-}
-.individualcover {
-  height: 340px;
-}
-.changecompanybutton {
-  font-size: 16px;
-}
-.addDepartment {
-  font-size: 16px;
-}
-.changepass {
-  font-size: 16px;
-}
-@media only screen and (max-width: 360px) {
-  .displayNone {
-    display: none;
-  }
-  .companyProfilepicOuterOuter {
-    margin-top: -72px;
-    margin-left: 30%;
-    width: 130px;
-    height: 130px;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 12px;
-  }
-  .changepass {
-    font-size: 12px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-}
-
-@media only screen and (min-width: 361px) and (max-width: 450px) {
-  .displayNone {
-    display: none;
-  }
-  .companyProfilepicOuterOuter {
-    margin-top: -72px;
-    margin-left: 32%;
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 14px;
-  }
-  .changepass {
-    font-size: 14px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-}
-
-.companyCoverButton{
-<<<<<<< HEAD
-=======
-.companyCoverButton {
->>>>>>> d06346b0... code style issue fixed
-=======
->>>>>>> d0b80317... ready for pre-release v2.3.1
-  margin-top: 265px;
-  margin-right: 45px;
-}
-
 .companyProfilepicOuter {
   width: 235px;
   height: 235px;
@@ -848,56 +676,160 @@ a:hover {
   margin-top: 265px;
   margin-right: 45px;
 }
-.companyCoverButtonMobile{
-  margin-top: 130px;
-  margin-right: 15px;
-}
-.companyProfilepicOuter{
+
+.companyProfilepicOuter {
   width: 235px;
   height: 235px;
 }
-.companyProfilepic{
+.companyProfilepic {
   width: 220px;
   height: 220px;
 }
-.companyProfilepicOuterOuter{
+.companyProfilepicOuterOuter {
   margin-top: -120px;
   margin-left: 50px;
 }
-
-.addButton{
+.addButton {
   bottom: 5rem;
   right: 7rem;
   width: 5rem;
 }
-.addButtonMobile{
-  bottom: 5rem;
-  right: 3rem;
-  width: 4rem;
+.individualcover {
+  height: 340px;
 }
-
-@media only screen and (max-width: 450px) {
-  .displayNone{
+.changecompanybutton {
+  font-size: 16px;
+}
+.addDepartment {
+  font-size: 16px;
+}
+.changepass {
+  font-size: 16px;
+}
+@media only screen and (max-width: 360px) {
+  .displayNone {
     display: none;
   }
-  .companyProfilepicOuterOuter{
+  .companyProfilepicOuterOuter {
     margin-top: -72px;
-    margin-left: 113px;
-  }
-  .companyProfilepicOuter{
+    margin-left: 30%;
     width: 130px;
     height: 130px;
   }
-  .companyProfilepic{
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
     width: 120px;
     height: 115px;
   }
-}
-@media only screen and (max-width: 340px) {
-  .companyProfilepicOuterOuter{
-    margin-left: 70px;
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
   }
-  .companyCoverButtonMobile{
-    margin-right: 3px;
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+  .changecompanybutton {
+    font-size: 11px;
+  }
+  .addDepartment {
+    font-size: 12px;
+  }
+  .changepass {
+    font-size: 12px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+}
+
+@media only screen and (min-width: 361px) and (max-width: 450px) {
+  .displayNone {
+    display: none;
+  }
+  .companyProfilepicOuterOuter {
+    margin-top: -72px;
+    margin-left: 32%;
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+  .changecompanybutton {
+    font-size: 11px;
+  }
+  .addDepartment {
+    font-size: 14px;
+  }
+  .changepass {
+    font-size: 14px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
   }
 }

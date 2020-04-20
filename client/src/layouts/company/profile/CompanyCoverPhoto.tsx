@@ -95,11 +95,7 @@ const CompanyCoverPhotoComponent = (
                 className="ml4 ml1-m"
                 style={{ marginTop: '10rem' }}
               >
-<<<<<<< HEAD
                 <h1 className="f6 ma0 ws-break ttc">Total Associates</h1>
-=======
-                <h1 className="f6 ma0 ws-break ttc">Associates</h1>
->>>>>>> d06346b0... code style issue fixed
                 <h1 className="f3-l f4 fw4 ma0 ws-break tc ">
                   {props.currentCompany.totalAssociate
                     ? props.currentCompany.totalAssociate
