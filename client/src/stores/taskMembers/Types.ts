@@ -1,0 +1,3 @@
+export const GET_ALL_MEMBER = 'GET_ALL_MEMBER';
+export const DELETE_MEMBER = 'DELETE_MEMBER';
+export const ASSIGN_MEMBER = 'ASSIGN_MEMBER';

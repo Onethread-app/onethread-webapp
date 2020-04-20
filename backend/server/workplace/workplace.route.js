@@ -1,0 +1,25 @@
+'use strict';
+
+const express = require('express');
+const validate = require('express-validation');
+const passport = require('passport');
+const paramValidation = require('./workplace.validation');
+const workplaceCtrl = require('./workplace.controller');
+// const passportService = require('../account/services/passport');
+const requireAuth = passport.authenticate('jwt', { session: false });
+const { permit, authSelf } = require('../helpers/permission');
+// const accCtrl = require("../../account/save.controller");
+
+const router = express.Router(); // eslint-disable-line new-cap
+
+router
+  .route('/')
+  //.get(requireAuth, permit('user', 'admin'), workplaceCtrl.list)
+  .post(
+    requireAuth,
+    permit('user', 'admin'),
+    validate(paramValidation.createSave),
+    workplaceCtrl.create,
+  );
+
+module.exports = router;

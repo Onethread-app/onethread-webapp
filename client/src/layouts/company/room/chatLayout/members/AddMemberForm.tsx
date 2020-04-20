@@ -1,0 +1,173 @@
+import React, { useState, useEffect } from 'react';
+import {
+  SuggestField,
+  ItemEntityProps,
+} from 'components/fields/SuggestField';
+import { connect } from 'react-redux';
+import { tokenConfig } from 'stores/UtilsActions';
+import { isEqual, isEmpty } from 'lodash';
+import { Button, Tag } from '@blueprintjs/core';
+import { addRoomMembers } from 'stores/room/Actions';
+import { tigrowApi } from 'config';
+import { IRoomReducer } from 'stores/room/Reducer';
+
+interface RoomMembersViewProps {
+  showDialog: boolean;
+  setShowDialog: (val: boolean) => void;
+}
+
+interface RoomMembersViewInternalProps extends RoomMembersViewProps {
+  // tslint:disable-next-line: max-line-length
+  addRoomMembers: (
+    members: { room: string; members: Array<string | undefined> },
+    selectedRoomMember: ItemEntityProps[],
+  ) => void;
+  currentRoom: IRoomReducer['currentRoom'];
+  companyId: string;
+  projectId: string;
+}
+
+const AddMemberFormComponent = (
+  props: RoomMembersViewInternalProps,
+) => {
+  // const store = useStore();
+  const [suggestedMembers, setSuggestedMembers]: any = useState([]);
+  const [selectedRoomMember, setSelectedRoomMember] = useState(
+    [] as ItemEntityProps[],
+  );
+  const [error, setError] = useState('');
+
+  const getSuggestionsForRoomMembers = async () => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        // tslint:disable-next-line:max-line-length
+        const response = await tigrowApi.get(
+          `/rooms/suggest-member?projectId=${props.projectId}&roomId=${props.currentRoom._id}`,
+          headers,
+        );
+        setSuggestedMembers(response.data.members);
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log('no headers');
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log(error.response);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (
+      isEmpty(props.currentRoom._id) === false &&
+      isEmpty(props.companyId) === false
+    ) {
+      getSuggestionsForRoomMembers();
+    }
+  }, []);
+
+  return (
+    <div className="pa3">
+      <div className="w-100">
+        <h1 className="f5 tigrow-darkBlue">Add Members</h1>
+        <SuggestField
+          items={suggestedMembers}
+          selectedItems={selectedRoomMember}
+          setSelectedItems={setSelectedRoomMember}
+          multipleItemSelect={true}
+        />
+        <small
+          className={`${
+            error || selectedRoomMember.length > 10 ? 'red' : 'black'
+          }`}
+        >
+          {error
+            ? error
+            : selectedRoomMember.length > 10
+            ? 'Could not add more than 10 members at a time'
+            : 'Max user at a time : 10'}
+        </small>
+      </div>
+
+      <div className="w-100 mb2">
+        {selectedRoomMember.map((item) => (
+          <Tag
+            key={item._id}
+            className="ma1 pa2"
+            style={{ backgroundColor: '#3b5998', color: 'white' }}
+            interactive={true}
+            onRemove={(e) => {
+              const filteredItems = selectedRoomMember.filter(
+                (selectedItem) => item.name !== selectedItem.name,
+              );
+              setSelectedRoomMember([...filteredItems]);
+            }}
+            large={true}
+          >
+            {item.name}
+          </Tag>
+        ))}
+      </div>
+
+      <div className="flex justify-end mt3">
+        <Button
+          className="grow h2 pointer white bp3-minimal w4 mr3"
+          style={{
+            background: '#fff',
+            outline: 'none',
+            border: '1px solid #3b5998',
+            color: '#3b5998',
+          }}
+          onClick={(e: any) => props.setShowDialog(!props.showDialog)}
+        >
+          Cancel
+        </Button>
+        <Button
+          className="grow h2 pointer white bp3-minimal w4 outline-0"
+          style={{ backgroundColor: '#3b5998', color: 'white' }}
+          disabled={
+            selectedRoomMember.length === 0 ||
+            selectedRoomMember.length > 10
+          }
+          onClick={async () => {
+            const data = {
+              room: props.currentRoom._id,
+              members: selectedRoomMember.map((m) => m._id),
+            };
+            const response: any = await props.addRoomMembers(
+              data,
+              selectedRoomMember,
+            );
+
+            if (response.status === 201) {
+              props.setShowDialog(!props.showDialog);
+            } else if (response.status === 400) {
+              setError('Could not add more than 10 members at time');
+            } else {
+              setError('Network Error');
+            }
+          }}
+        >
+          Add
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const mapStateToProps = (state: any) => {
+  return {
+    currentRoom: state.roomReducer.currentRoom,
+    companyId: state.companyReducer.currentCompany._id,
+    projectId: state.projectReducer.projectDetails._id,
+  };
+};
+
+export const AddMemberForm = connect(mapStateToProps, {
+  addRoomMembers,
+})(AddMemberFormComponent);
