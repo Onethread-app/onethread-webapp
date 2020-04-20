@@ -28,7 +28,6 @@
 
 /backend/.env
 /backend/.env.prod
-/backend/.env
 
 /backend/yarn.lock 
 /backend/yarn-error.log*
