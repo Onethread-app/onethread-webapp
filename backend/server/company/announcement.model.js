@@ -3,7 +3,11 @@ const Schema = mongoose.Schema;
 
 const announcement = new Schema(
   {
+<<<<<<< HEAD
     memberId: {
+=======
+    memberId : {
+>>>>>>> b7ca03f4... member added in company
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Member',
     },

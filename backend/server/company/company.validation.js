@@ -1,7 +1,11 @@
 const Joi = require('@hapi/joi');
 
 // id
+<<<<<<< HEAD
 const idSchema = {
+=======
+const idSchema = Joi.object().keys({
+>>>>>>> b7ca03f4... member added in company
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .error((errors) => {
@@ -152,6 +156,7 @@ module.exports = {
     params: companyId,
     body: Joi.object().keys({
       text: schema.announcement,
+      memberId: idSchema.id.required()
     }),
   }),
   allNoticesForCompany: Joi.object().keys({
