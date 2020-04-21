@@ -11,7 +11,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
     <>
       <div className="relative">
         <div className="flex-ns justify-between w-100 mb5-ns mb6">
-          <div className="w-50 pr4">
+          <div className="w-50-ns w-100 pr4">
             <div className="bg-white h-auto">
               <h1 className="f6 lh-copy">Company Name</h1>
               <p className="f5">{props.company.name}</p>
@@ -25,7 +25,7 @@ const BasicInfoDetailsViewComponent = (props: any) => {
               <p className="f5">{props.company.address}</p>
             </div>
           </div>
-          <div className="w-50">
+          <div className="w-50-ns w-100">
             <div className="bg-white h-auto">
               <h1 className="f6 lh-copy">Company Mail Address</h1>
               <p className="f5">{props.company.email}</p>
