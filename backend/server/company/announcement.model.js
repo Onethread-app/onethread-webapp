@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const announcement = new Schema(
   {
-    memberId: {
+    memberId : {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Member',
     },

@@ -591,10 +591,7 @@ const dashBoard = async (req, res, next) => {
 const noticePostByCompany = async (req, res, next) => {
   try {
     const NewNotice = req.body.text;
-    const memberId = await Member.findOne({
-      account: req.user._id,
-      company: req.params.companyId,
-    });
+    const memberId = req.body.memberId;
     const announcement = new Announcement({
       memberId,
       text: NewNotice,
