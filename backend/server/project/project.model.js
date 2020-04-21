@@ -56,7 +56,6 @@ const projectSchema = new Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Department',
-        required: true,
       },
     ],
     files: [
