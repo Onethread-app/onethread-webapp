@@ -80,11 +80,7 @@ export const getCompanyDetails = (name: string) => async (
         type: CREATE_COMPANY_ERROR,
         payload: 'Network error',
       });
-      // tslint:disable-next-line: no-console
-      console.log('network error');
     } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
       return error.response.status;
     }
   }

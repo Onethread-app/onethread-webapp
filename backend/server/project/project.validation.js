@@ -41,7 +41,7 @@ module.exports = {
       type: schema.type.required(),
       concernedAdmin: schema.type.required(),
       companyId: schema.company.required(),
-      departments: schema.departments.required(),
+      departments: schema.departments,
       color: schema.color,
     }),
   }),
