@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 // id
-const id = Joi.object().keys({
+const idSchema = Joi.object().keys({
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required()
@@ -144,6 +144,7 @@ module.exports = {
     params: companyId,
     body: Joi.object().keys({
       text: schema.announcement,
+      memberId: idSchema.id.required()
     }),
   }),
   allNoticesForCompany: Joi.object().keys({
