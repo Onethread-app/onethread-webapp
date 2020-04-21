@@ -369,38 +369,8 @@ a:hover {
   right: 7rem;
   width: 5rem;
 }
-
-@media only screen and (min-width: 361px) and (max-width: 450px) {
-  .displayNone{
-    display: none;
-  }
-  .companyProfilepicOuterOuter{
-    margin-top: -72px;
-    margin-left: 113px;
-  }
-  .companyProfilepicOuter{
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic{
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton{
-    margin-top: 130px;
-    margin-right: 15px;
-  }
-  .addButton{
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
+.individualcover{
+  height: 340px;
 }
 @media only screen and (max-width: 360px) {
   .displayNone{
@@ -408,11 +378,13 @@ a:hover {
   }
   .companyProfilepicOuterOuter{
     margin-top: -72px;
-    margin-left: 70px ;
+    margin-left: 30% ;
+    width: 130px;
+    height: 130px;
   }
   .companyCoverButton{
-    margin-top: 130px;
-    margin-right: 3px;
+    margin-top: 10px;
+    margin-right: 10px;
   }
   .companyProfilepicOuter{
     width: 130px;
@@ -433,4 +405,46 @@ a:hover {
     right: 3rem;
     width: 4rem;
   }
+  .individualcover{
+    height: 185px;
+  }
 }
+
+@media only screen and (min-width: 361px) and (max-width: 450px) {
+  .displayNone{
+    display: none;
+  }
+  .companyProfilepicOuterOuter{
+    margin-top: -72px;
+    margin-left: 32%;
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepicOuter{
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic{
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .companyCoverButton{
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .addButton{
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover{
+    height: 185px;
+  }
+}
+
