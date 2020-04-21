@@ -29,7 +29,7 @@ const createNewProjectForCompany = async (req, res, next) => {
   try {
     let associates = req.body.associates;
     let concernedAdmin = req.body.concernedAdmin;
-
+    console.log(req.user.id);
     const member = await Member.findOne({
       account: req.user._id,
     });
