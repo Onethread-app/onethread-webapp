@@ -1,6 +1,6 @@
 # Tigrow
 
-A social platform for the professionals. Every feed will be unique according to the differnet professions.
+TiGrow is a cloud software suite for businesses. It includes an enterprise connectivity and team collaboration tool, a lead generation & sourcing tool and an AI for Digital Marketing & Market Research. 
 
 ### Prerequisites
 
@@ -8,20 +8,27 @@ You should install `Node`, `git`
 
 ### Installing
 
-`git clone this_url`
+`git clone url`
 
-`cd this_url`
-`yarn install`
-`yarn start`
+`cd url`
+`npm install`
+
+For development:
+`cp .env.dev .env`
+
+`npm start`
 
 ## Running the tests
 
-For running the test case use `yarn test`
+For running the test case use `npm test`
 
 ### And coding style tests
 
-run `yarn lint` to match with the coding style.
+run `npm lint` to match with the coding style.
 
 ## Authors
 
 - **Orvi** - _Initial work_
+- **Nizam** - Senior Backend Engineer
+- **Arif** - Full Stack Engineer
+- **Omer** - Full Stack Engineer
