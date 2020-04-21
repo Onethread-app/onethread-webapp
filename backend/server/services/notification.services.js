@@ -1,14 +1,15 @@
-const Pusher = require('pusher');
-const config = require('../../config/config');
+//const Pusher = require('pusher');
+//const config = require('../../config/config');
 const _ = require('lodash');
+const { pusherChannel } = require('./pusher.services');
 
-const channels_client = new Pusher({
-  appId: config.pusherChanel.appid,
-  key: config.pusherChanel.key,
-  secret: config.pusherChanel.secret,
-  cluster: config.pusherChanel.cluster,
-  useTLS: true,
-});
+// const channels_client = new Pusher({
+//   appId: config.pusherChanel.appid,
+//   key: config.pusherChanel.key,
+//   secret: config.pusherChanel.secret,
+//   cluster: config.pusherChanel.cluster,
+//   useTLS: true,
+// });
 
 // const channels_client = new Pusher({
 //     appId: '858307',
@@ -27,7 +28,7 @@ module.exports.sendCompanyNotification = async (
 
   userNotification = { notification: userNotification, read: false };
 
-  channels_client.trigger(
+  pusherChannel.trigger(
     company.toString(),
     `${company}-superAdmin`,
     userNotification,
@@ -49,7 +50,7 @@ module.exports.sendCompanyRoleNotification = async (
 
   userNotification = { notification: userNotification, read: false };
 
-  channels_client.trigger(
+  pusherChannel.trigger(
     companyChannelsPusher,
     company.toString(),
     [userNotification],
@@ -71,7 +72,7 @@ module.exports.sendMultipleNotification = async (
     return `${company.toString()}-${c}`;
   });
 
-  channels_client.trigger(
+  pusherChannel.trigger(
     companyChannelsPusher,
     company.toString(),
     userNotifications, //ARRAY
@@ -110,7 +111,7 @@ module.exports.sendCompanyAndProjectNotification = async (
     userNotification = [userNotification];
   }
 
-  channels_client.trigger(
+  pusherChannel.trigger(
     allChannel,
     project.company.toString(),
     userNotification,
