@@ -9,7 +9,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig, companyPermit } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
-import { makeStyles } from '@material-ui/core/styles';
+// import { Text } from '@blueprintjs/core';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -166,6 +166,30 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                   ))
                 ) : (
                   <small>No Announcement.</small>
+                )}
+              </Card>
+              <div className="w-50 ma2">
+                <h1 className="f5">Company Announcement</h1>
+                {props.company.announce &&
+                props.company.announce.length > 0 ? (
+                  props.company.announce.map((announcement: any) => (
+                    <ExpansionPanel>
+                      <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography className="">
+                          Expansion Panel 1
+                        </Typography>
+                      </ExpansionPanelSummary>
+                      <ExpansionPanelDetails>
+                        <Typography>{announcement.text}</Typography>
+                      </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                  ))
+                ) : (
+                  <small>No announcements.</small>
                 )}
               </div>
             </div>
