@@ -10,6 +10,13 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
 // import { Text } from '@blueprintjs/core';
+
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
 import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
@@ -103,6 +110,30 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                   <small>No announcements.</small>
                 )}
               </Card>
+              <div className="w-50 ma2">
+                <h1 className="f5">Company Announcement</h1>
+                {props.company.announce &&
+                props.company.announce.length > 0 ? (
+                  props.company.announce.map((announcement: any) => (
+                    <ExpansionPanel>
+                      <ExpansionPanelSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                      >
+                        <Typography className="">
+                          Expansion Panel 1
+                        </Typography>
+                      </ExpansionPanelSummary>
+                      <ExpansionPanelDetails>
+                        <Typography>{announcement.text}</Typography>
+                      </ExpansionPanelDetails>
+                    </ExpansionPanel>
+                  ))
+                ) : (
+                  <small>No announcements.</small>
+                )}
+              </div>
             </div>
           </div>
           <div>
