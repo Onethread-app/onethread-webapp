@@ -116,8 +116,8 @@ export const PendingAssociateListComponent = (
               </>
             ))
           ) : (
-            <p>No pending request available</p>
-          )}
+                <p>No pending request available</p>
+              )}
         </div>
       </div>
     </>
