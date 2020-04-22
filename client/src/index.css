@@ -697,6 +697,15 @@ a:hover {
 .individualcover{
   height: 340px;
 }
+.changecompanybutton{
+  font-size: 16px;
+}
+.addDepartment{
+  font-size: 16px;
+}
+.changepass{
+  font-size: 16px;
+}
 @media only screen and (max-width: 360px) {
   .displayNone{
     display: none;
@@ -732,6 +741,15 @@ a:hover {
   }
   .individualcover{
     height: 185px;
+  }
+  .changecompanybutton{
+    font-size: 11px;
+  }
+  .addDepartment{
+    font-size: 12px;
+  }
+  .changepass{
+    font-size: 12px;
   }
 }
 
@@ -770,6 +788,15 @@ a:hover {
   }
   .individualcover{
     height: 185px;
+  }
+  .changecompanybutton{
+    font-size: 11px;
+  }
+  .addDepartment{
+    font-size: 14px;
+  }
+  .changepass{
+    font-size: 14px;
   }
 }
 
