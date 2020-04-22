@@ -82,10 +82,7 @@ const mapStateToProps = (state: any) => {
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
     read: state.notificationReducer.read,
-<<<<<<< HEAD
     companyRole: state.companyReducer.currentCompany.role,
-=======
->>>>>>> 750029e8... Release/v2.2.0 (#183)
   };
 };
 export const SettingsPage = connect(mapStateToProps, {
