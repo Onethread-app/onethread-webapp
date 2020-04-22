@@ -1,7 +1,7 @@
 const Joi = require('@hapi/joi');
 
 // id
-const idSchema = Joi.object().keys({
+const idSchema = {
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .error((errors) => {
@@ -13,7 +13,7 @@ const idSchema = Joi.object().keys({
 
 // company-id
 const companyId = Joi.object().keys({
-  companyId: idSchema.id.required(),
+  companyId: idSchema.id.required()
 });
 
 const cname = Joi.object().keys({
