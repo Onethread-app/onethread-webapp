@@ -148,7 +148,6 @@ const addTeamMember = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
@@ -185,7 +184,14 @@ const list = async (req, res, next) => {
           path: 'project',
           select: 'company associate',
           populate: [
-            { path: 'associate', select: 'associateCompany' },
+            {
+              path: 'associate',
+              select: 'associateCompany',
+              populate: {
+                path: 'associateCompany',
+                select: '_id name type',
+              },
+            },
           ],
         },
       ]);
