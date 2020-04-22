@@ -1,20 +1,19 @@
 const Joi = require('joi');
 
 // id
-const id = Joi.object().keys({
+const idSchema = {
   id: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
-    .required()
     .error((errors) => {
       return {
         message: 'Invalid ID',
       };
     }),
-});
+};
 
-// company-name
+// company-id
 const companyId = Joi.object().keys({
-  companyId: Joi.string().required(),
+  companyId: idSchema.id.required()
 });
 
 const cname = Joi.object().keys({
