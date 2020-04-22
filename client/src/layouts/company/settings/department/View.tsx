@@ -30,16 +30,15 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
   return (
     <>
       <div>
-        <div className="flex justify-between">
+        <div className="flex-ns justify-between">
           <h1 className="f6 lh-copy">Departments</h1>
           <Button
             type="submit"
-            className="grow pointer"
+            className="grow pointer addDepartment"
             style={{
               background: '#0fa3a3',
               outline: 'none',
-              color: 'white',
-              fontSize: '16px',
+              color: 'white'
             }}
             onClick={() => setShowDialogDepartment(true)}
           >
@@ -60,7 +59,7 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
         </div>
       </div>
       {showDialogDepartment && (
-        <Dialog isOpen style={{ background: '#fff' }}>
+        <Dialog isOpen style={{ background: '#fff' }} className="pa2">
           <DepartmentEditor setShowDialog={setShowDialogDepartment} />
         </Dialog>
       )}
