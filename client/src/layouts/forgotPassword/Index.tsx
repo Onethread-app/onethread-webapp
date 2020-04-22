@@ -58,47 +58,47 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
             pristine,
             submitError,
           }) => (
-            <form
-              className="w-25-l w-50-m center mt4-ns"
-              onSubmit={handleSubmit}
-            >
-              <SubmitError errorMessage={submitError} />
-              <h1 className="f4 lh-copy">Email</h1>
-              <Field<string>
-                name="email"
-                validate={composeValidators(required, isEmail)}
-                render={({ input, meta }) => (
-                  <InputGroupFieldWithError
-                    className="ba b--black-40"
-                    id={input.name}
-                    placeHolder="Enter your email address"
-                    value={input.value}
-                    onChange={input.onChange}
-                    style={{ boxShadow: 'none', height: '42px' }}
-                    error={
-                      checkError(meta) &&
-                      (meta.error || meta.submitError)
-                    }
-                  />
-                )}
-              />
-              <Button
-                className="grow pointer white bp3-minimal w-100 mt3"
-                style={{
-                  background: '#0fa3a3',
-                  outline: 'none',
-                  color: 'white',
-                  height: '42px',
-                  fontSize: '1rem',
-                }}
-                loading={submitting}
-                type="submit"
-                disabled={submitting || pristine}
+              <form
+                className="w-25-l w-50-m center mt4-ns"
+                onSubmit={handleSubmit}
               >
-                Send
+                <SubmitError errorMessage={submitError} />
+                <h1 className="f4 lh-copy">Email</h1>
+                <Field<string>
+                  name="email"
+                  validate={composeValidators(required, isEmail)}
+                  render={({ input, meta }) => (
+                    <InputGroupFieldWithError
+                      className="ba b--black-40"
+                      id={input.name}
+                      placeHolder="Enter your email address"
+                      value={input.value}
+                      onChange={input.onChange}
+                      style={{ boxShadow: 'none', height: '42px' }}
+                      error={
+                        checkError(meta) &&
+                        (meta.error || meta.submitError)
+                      }
+                    />
+                  )}
+                />
+                <Button
+                  className="grow pointer white bp3-minimal w-100 mt3"
+                  style={{
+                    background: '#0fa3a3',
+                    outline: 'none',
+                    color: 'white',
+                    height: '42px',
+                    fontSize: '1rem',
+                  }}
+                  loading={submitting}
+                  type="submit"
+                  disabled={submitting || pristine}
+                >
+                  Send
               </Button>
-            </form>
-          )}
+              </form>
+            )}
         />
         <div className="center w-15-ns tc mv3 fw6">
           <a
@@ -144,6 +144,6 @@ export const ForgotPasswordPage = () => {
       setEmailComponentView={setEmailComponentView}
     />
   ) : (
-    <RouteToEmailConfirmation />
-  );
+      <RouteToEmailConfirmation />
+    );
 };
