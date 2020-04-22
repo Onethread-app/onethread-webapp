@@ -29,7 +29,6 @@ import dashboard from '../resources/images/sideBarDashboard.svg';
 import project from '../resources/images/ProjectsIcon.svg';
 import team from '../resources/images/sidebarTeam.svg';
 import associate from '../resources/images/sideBarAssociates.svg';
-import settings from '../resources/images/sidebarSettings.svg';
 import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
@@ -87,7 +86,7 @@ interface LayoutProps {
 
 interface LayoutInternalProps
   extends LayoutProps,
-    RouteComponentProps {
+  RouteComponentProps {
   user: User;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => any;
@@ -247,26 +246,11 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     className="pointer absolute bp3-icon z-3 top-1 left--1"
                     onClick={() => setLeftOpen(!leftOpen)}
                   >
-                    <img
-                      src={leftOpen ? arrowLeft : arrowRight}
-                      className="br2 w2"
-                      color="#0FA3A3"
-                    />
-                  </span>
-                  <div className="flex flex-column h-100">
-                    <NavbarTop
-                      scrollTop={scrollTop}
-                      type={
-                        (props.match.params as any).cname
-                          ? 'company'
-                          : 'default'
-                      }
-                    />
                     <div
-                      ref={scrollRef}
-                      className="flex-grow-1 overflow-y-auto bg-white"
+                      className={`relative`}
                       style={{
-                        borderRadius: '0px 0px 0.5rem 0.5rem',
+                        transition: 'width 0.4s',
+                        width: leftOpen ? '15%' : '4%',
                       }}
                     >
                       <div>
@@ -418,117 +402,120 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 >
                   <div className="flex flex-column h-100">
                     <div
-                      ref={scrollRef}
-                      className="flex-grow-1 overflow-y-auto bg-white"
+                      className="relative br3 pv1"
                       style={{
-                        borderRadius: '0px 0px 0.5rem 0.5rem',
+                        transition: 'width 0.4s',
+                        width: leftOpen
+                          ? props.rightSidebarOpen
+                            ? '55%'
+                            : '85%'
+                          : props.rightSidebarOpen
+                            ? '66%'
+                            : '96%',
                       }}
+                    >
+                      <span
+                        className="pointer absolute bp3-icon z-3 top-1 left--1"
+                        onClick={() => setLeftOpen(!leftOpen)}
+                      >
+                        <img
+                          src={leftOpen ? arrowLeft : arrowRight}
+                          className="br2 w2"
+                          color="#0FA3A3"
+                        />
+                      </span>
+                      <div className="flex flex-column h-100">
+                        <NavbarTop
+                          scrollTop={scrollTop}
+                          type={
+                            (props.match.params as any).cname
+                              ? 'company'
+                              : 'default'
+                          }
+                        />
+                        <div
+                          ref={scrollRef}
+                          className="flex-grow-1 overflow-y-auto bg-white"
+                          style={{
+                            borderRadius: '0px 0px 0.5rem 0.5rem',
+                          }}
+                        >
+                          <SecondaryLayout Component={props.Component} />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="relative h-100 vh-100"
+                      style={{
+                        transition: 'width 0.4s',
+                        width: props.rightSidebarOpen ? '30%' : '0%',
+                        zIndex: 5,
+                      }}
+                    >
+                      <div
+                        id="rightSidebar"
+                        className="h-100 c-tigrowWhite"
+                        style={{
+                          background: 'rgb(6, 5, 23)',
+                        }}
+                      ></div>
+                    </div>
+                  </div>
+                ) : (
+                    <div
+                      className="vh-100 bg-white"
+                    // style={{ borderRadius: '0.5rem 0.5rem 0.5rem 0.5rem' }}
                     >
                       <SecondaryLayout Component={props.Component} />
                     </div>
-                    {(props.match.params as any).cname ? (
-                      props.rightSidebarOpen ? undefined : (
-                        <Navbar
-                          className="flex justify-around"
+                  )
+                  // <div className="flex flex-column h-100">
+                  //   <NavbarTop
+                  //     scrollTop={scrollTop}
+                  //     type={(props.match.params as any).cname ? 'company' : 'default'}
+                  //   />
+                  //   <div
+                  //     ref={scrollRef}
+                  //     className="flex-grow-1 overflow-y-auto bg-white"
+                  //     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+                  //     <SecondaryLayout Component={props.Component} />
+                  //   </div>
+                  // </div>
+                }
+              </CustomView>
+              <MobileOnlyView>
+                {queries.view === 'default' ? (
+                  <div
+                    id="main-layout"
+                    className={`flex relative h-100 vh-100 ${
+                      props.rightSidebarOpen && 'main-layout-overlay'
+                      }`}
+                  >
+                    <div
+                      className="relative br3 pv1"
+                      style={{
+                        transition: 'width 0.4s',
+                        width: props.rightSidebarOpen ? '0%' : '100%',
+                      }}
+                    >
+                      <div className="flex flex-column h-100">
+                        <div
+                          ref={scrollRef}
+                          className="flex-grow-1 overflow-y-auto bg-white"
                           style={{
-                            position: 'fixed',
-                            bottom: '0',
-                            height: '65px',
+                            borderRadius: '0px 0px 0.5rem 0.5rem',
                           }}
                         >
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#3F61C5',
-                              color: 'white',
+                          <SecondaryLayout Component={props.Component} />
+                        </div>
+                        {props.rightSidebarOpen ? undefined : (
+                          <Navbar
+                            className="flex justify-around"
+                            style={{
+                              position: 'fixed',
+                              bottom: '0',
+                              height: '65px',
                             }}
-                            style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={companyProfile}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              Profile
-                            </small>
-                          </NavLink>
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#3F61C5',
-                              color: 'white',
-                            }}
-                            style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/dashboard`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={dashboard}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              Dashboard
-                            </small>
-                          </NavLink>
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#3F61C5',
-                              color: 'white',
-                            }}
-                            style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/project`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={project}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              Project
-                            </small>
-                          </NavLink>
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#3F61C5',
-                              color: 'white',
-                            }}
-                            style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/colleague`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                src={team}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              Colleagues
-                            </small>
-                          </NavLink>
-                          <NavLink
-                            exact
-                            activeStyle={{
-                              background: '#3F61C5',
-                              color: 'white',
-                            }}
-                            style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/associates`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
                             <span className="">
                               <img
