@@ -85,8 +85,8 @@ export const createComment = (text: Icomment['text']) => async (
         name: currentUser.firstName + ' ' + currentUser.lastName,
         profileImage:
           currentUser.profileImage &&
-          isEmpty(currentUser.profileImage.link) === false
-            ? currentUser.profileImage.link
+          isEmpty(currentUser.profileImage) === false
+            ? currentUser.profileImage
             : '',
         position: currentUser.position,
         text: response.data.text,
