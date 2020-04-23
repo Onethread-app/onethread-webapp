@@ -1,12 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { MessageItem } from 'layouts/company/room/chatLayout/messages/MessageItem';
 import { connect, useDispatch } from 'react-redux';
-import { getRoomMessages } from '../../../../../stores/room/Actions';
+import {
+  getRoomMessages,
+  updateLastSeen,
+} from '../../../../../stores/room/Actions';
 import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
 import { Icon } from '@blueprintjs/core';
 
 interface MessageListProps {
+  updateLastSeen: (roomId: string) => void;
   getRoomMessages: (
     roomId: string,
     limit?: number,
@@ -25,11 +29,15 @@ export const MessageListComponent = (props: MessageListProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
 
+  const callUpdateLastSeen = async (roomId: string) => {
+    await props.updateLastSeen(roomId);
+  };
+
   const scrollToBottom = () => {
     // TODO send message read trigger
-    // if (props.messages.length) {
-    // 	put you code here!!
-    // }
+    if (props.messages.length) {
+      callUpdateLastSeen(props.currentRoom._id);
+    }
 
     // On new message, scroll to bottom
     if (
@@ -40,13 +48,12 @@ export const MessageListComponent = (props: MessageListProps) => {
         messagesEndRef.current.clientHeight * 0.3 >=
         messagesEndRef.current.scrollHeight
     ) {
-      // On new message, scroll to bottom
       messagesEndRef.current.scrollTop =
         messagesEndRef.current.scrollHeight;
     }
 
+    // On enter the room, scroll to bottom
     if (messagesEndRef && messagesEndRef.current && !first) {
-      // On enter the room, scroll to bottom
       messagesEndRef.current.scrollTop =
         messagesEndRef.current.scrollHeight;
       setFirst(true);
@@ -157,4 +164,5 @@ const mapStateToProps = (state: any) => {
 
 export const MessageList = connect(mapStateToProps, {
   getRoomMessages,
+  updateLastSeen,
 })(MessageListComponent);

@@ -1,5 +1,7 @@
+const mongoose = require('mongoose');
 const { Message } = require('./message.model');
 const { Room } = require('./../room/room.model');
+const { RoomMember } = require('../room/roomMember.model');
 const Account = require('./../account/account.model');
 const { pusherChannel } = require('../services/pusher.services');
 const File = require('./../file/file.model');
@@ -12,6 +14,53 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
+
+const unreadMessageCounts = async (req, res, next) => {
+  try {
+    const rooms = await RoomMember.find({
+      account: req.user._id,
+      removed: false,
+    }).select('-_id room lastSeen');
+
+    const roomsUnreadCount = {};
+    for (const e of rooms) {
+      const results = await Message.aggregate([
+        {
+          $match: {
+            removed: false,
+            room: mongoose.Types.ObjectId(e.room),
+            // room: {
+            //   $in: roomObjectIDs,
+            // },
+            createdAt: {
+              $gt: new Date(e.lastSeen),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$room',
+            count: {
+              $sum: 1,
+            },
+          },
+        },
+      ]);
+
+      if (results.length > 0) {
+        roomsUnreadCount[results[0]._id] = results[0].count;
+      } else {
+        roomsUnreadCount[e.room._id] = 0;
+      }
+    }
+
+    res.status(200).json({
+      roomsUnreadCount,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
 const create = async (req, res, next) => {
   // Check for JSON
@@ -274,4 +323,5 @@ module.exports = {
   getRoomDiscussion,
   toggleDiscussion,
   searchMessage,
+  unreadMessageCounts,
 };

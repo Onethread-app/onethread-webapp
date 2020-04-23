@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Icon } from '@blueprintjs/core';
 import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { IRoomReducer, IRoom } from 'stores/room/Reducer';
-import { isEmpty } from 'lodash';
+import { isEmpty, isEqual } from 'lodash';
 import { RoomRightSidebar } from './rightSIdebar/Index';
 import {
   getRoomMembers,
@@ -12,11 +12,11 @@ import {
   getRooms,
   getRoomSharedFiles,
   getRoomDiscussions,
-  getRoom,
+  updateLastSeen,
 } from 'stores/room/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
-import { roomSubscribe } from './channelSubscribe';
 import Pusher from 'pusher-js';
+import { CURRENT_ROOM } from 'stores/room/Types';
 
 export interface RoomQueries {
   view: 'default' | 'mobile';
@@ -28,8 +28,8 @@ interface RoomPageComponentProps extends RouteComponentProps {
   companyId: string;
   projectId: string;
   rooms: IRoom[];
-  getRoom: (roomId: string) => void;
   getRooms: () => void;
+  updateLastSeen: (roomId: string) => void;
   getRoomMembers: (roomId: string) => void;
   getRoomMessages: (
     roomId: string,
@@ -56,19 +56,22 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     view: 'default',
     roomId: '',
   });
+  const dispatch = useDispatch();
 
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
 
   const roomSwitch = async (roomId: string) => {
-    const status: any = await props.getRoom(roomId);
-    if (status === 200) {
+    const currentRoom = props.rooms.filter((room) =>
+      isEqual(room._id, roomId),
+    );
+    if (currentRoom.length > 0) {
+      dispatch({ type: CURRENT_ROOM, payload: currentRoom[0] });
       await props.getRoomMessages(roomId);
       await props.getRoomMembers(roomId);
       await props.getRoomSharedFiles(roomId);
       await props.getRoomDiscussions(roomId);
-      await roomSubscribe(roomId);
     }
   };
 
@@ -90,21 +93,25 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     setQueries({ view, roomId });
   }, [props.location.search]);
 
+  const callUpdateLastSeen = async (roomId: string) => {
+    await props.updateLastSeen(roomId);
+  };
+
   // fetch room infos
   useEffect(() => {
     if (
       !isEmpty(queries.roomId) &&
-      props.pusherInstance !== undefined
+      props.pusherInstance !== undefined &&
+      props.rooms.length > 0
     ) {
       if (!isEmpty(props.currentRoom._id)) {
-        props.pusherInstance.unsubscribe(props.currentRoom._id);
-        props.pusherInstance.unsubscribe(
-          `presence-${props.currentRoom._id}`,
-        );
+        callUpdateLastSeen(props.currentRoom._id);
+        // props.pusherInstance.unsubscribe(`private-${props.currentRoom._id}`);
+        // props.pusherInstance.unsubscribe(`presence-${props.currentRoom._id}`);
       }
       roomSwitch(queries.roomId);
     }
-  }, [queries.roomId, props.pusherInstance]);
+  }, [queries.roomId, props.pusherInstance, props.rooms]);
 
   return (
     <div className="flex h-100 w-100">
@@ -178,5 +185,5 @@ export const RoomPage = connect(mapStateToProps, {
   getRooms,
   getRoomSharedFiles,
   getRoomDiscussions,
-  getRoom,
+  updateLastSeen,
 })(withRouter(RoomPageComponent));
