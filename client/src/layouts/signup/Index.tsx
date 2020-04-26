@@ -311,6 +311,7 @@ export const SignUpPageComponent = (
                                   onChange={input.onChange}
                                   leftIcon={
                                     <span className="bp3-icon">
+                                      Ex
                                       <img
                                         src={phoneIcon}
                                         width="20px"
