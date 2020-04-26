@@ -29,6 +29,7 @@ import dashboard from '../resources/images/sideBarDashboard.svg';
 import project from '../resources/images/ProjectsIcon.svg';
 import team from '../resources/images/sidebarTeam.svg';
 import associate from '../resources/images/sideBarAssociates.svg';
+import settings from '../resources/images/sidebarSettings.svg';
 import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
@@ -335,101 +336,123 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         >
                           <SecondaryLayout Component={props.Component} />
                         </div>
-                        {props.rightSidebarOpen ? undefined : (
-                          <Navbar
-                            className="flex justify-around"
-                            style={{
-                              position: 'fixed',
-                              bottom: '0',
-                              height: '65px',
-                            }}
-                          >
-                            <NavLink
-                              exact
-                              activeStyle={{ background: '#3F61C5', color: 'white' }}
-                              style={{ color: 'blue' }}
-                              to={`/company/${props.company.name}`}
-                              className="hover-bg-black-20 pa2 ph3 flex flex-column items-center"
-                            >
-                              <span className="">
-                                <img
-                                  src={companyProfile}
-                                  className="w2 br3"
-                                />
-                              </span>
-                              <small
+                        {
+                          (props.match.params as any).cname ?
+                            props.rightSidebarOpen ? undefined : (
+                              <Navbar
+                                className="flex justify-around"
+                                style={{
+                                  position: 'fixed',
+                                  bottom: '0',
+                                  height: '65px',
+                                }}
 
-                                style={{ fontWeight: 1000, color: 'inherit' }}
                               >
-                                Profile
+                                <NavLink
+                                  exact
+                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
+                                  style={{ color: 'blue' }}
+                                  to={`/company/${props.company.name}`}
+                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
+                                >
+                                  <span className="">
+                                    <img
+                                      src={companyProfile}
+                                      className="br3" style={{ width: '1.5rem' }}
+                                    />
+                                  </span>
+                                  <small
+
+                                    style={{ fontWeight: 1000, color: 'inherit' }}
+                                  >
+                                    Profile
                           </small>
-                            </NavLink>
-                            <NavLink
-                              exact
-                              activeStyle={{ background: '#3F61C5', color: 'white' }}
-                              style={{ color: 'blue' }}
-                              to={`/company/${props.company.name}/dashboard`}
-                              className="hover-bg-black-20 pa2 flex flex-column items-center"
-                            >
-                              <span className="">
-                                <img src={dashboard} className="w2 br3" />
-                              </span>
-                              <small
-                                style={{ fontWeight: 1000, color: 'inherit' }}
-                              >
-                                Dashboard
+                                </NavLink>
+                                <NavLink
+                                  exact
+                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
+                                  style={{ color: 'blue' }}
+                                  to={`/company/${props.company.name}/dashboard`}
+                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
+                                >
+                                  <span className="">
+                                    <img src={dashboard} className="br3" style={{ width: '1.5rem' }} />
+                                  </span>
+                                  <small
+                                    style={{ fontWeight: 1000, color: 'inherit' }}
+                                  >
+                                    Dashboard
                           </small>
-                            </NavLink>
-                            <NavLink
-                              exact
-                              activeStyle={{ background: '#3F61C5', color: 'white' }}
-                              style={{ color: 'blue' }}
-                              to={`/company/${props.company.name}/project`}
-                              className="hover-bg-black-20 pa2 ph3 flex flex-column items-center"
-                            >
-                              <span className="">
-                                <img src={project} className="w2 br3" />
-                              </span>
-                              <small
-                                style={{ fontWeight: 1000, color: 'inherit' }}
-                              >
-                                Project
+                                </NavLink>
+                                <NavLink
+                                  exact
+                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
+                                  style={{ color: 'blue' }}
+                                  to={`/company/${props.company.name}/project`}
+                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
+                                >
+                                  <span className="">
+                                    <img src={project} className="br3" style={{ width: '1.5rem' }} />
+                                  </span>
+                                  <small
+                                    style={{ fontWeight: 1000, color: 'inherit' }}
+                                  >
+                                    Project
                           </small>
-                            </NavLink>
-                            <NavLink
-                              exact
-                              activeStyle={{ background: '#3F61C5', color: 'white' }}
-                              style={{ color: 'blue' }}
-                              to={`/company/${props.company.name}/colleague`}
-                              className="hover-bg-black-20 pa2 flex flex-column items-center"
-                            >
-                              <span className="">
-                                <img src={team} className="w2 br3" />
-                              </span>
-                              <small
-                                style={{ fontWeight: 1000, color: 'inherit' }}
-                              >
-                                Colleagues
+                                </NavLink>
+                                <NavLink
+                                  exact
+                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
+                                  style={{ color: 'blue' }}
+                                  to={`/company/${props.company.name}/colleague`}
+                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
+                                >
+                                  <span className="">
+                                    <img src={team} className="br3" style={{ width: '1.5rem' }} />
+                                  </span>
+                                  <small
+                                    style={{ fontWeight: 1000, color: 'inherit' }}
+                                  >
+                                    Colleagues
                           </small>
-                            </NavLink>
-                            <NavLink
-                              exact
-                              activeStyle={{ background: '#3F61C5', color: 'white' }}
-                              style={{ color: 'blue' }}
-                              to={`/company/${props.company.name}/associates`}
-                              className="hover-bg-black-20 pa2 flex flex-column items-center"
-                            >
-                              <span className="">
-                                <img src={associate} className="w2 br3" />
-                              </span>
-                              <small
-                                style={{ fontWeight: 1000, color: 'inherit' }}
-                              >
-                                Associates
+                                </NavLink>
+                                <NavLink
+                                  exact
+                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
+                                  style={{ color: 'blue' }}
+                                  to={`/company/${props.company.name}/associates`}
+                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
+                                >
+                                  <span className="">
+                                    <img src={associate} className="br3" style={{ width: '1.5rem' }} />
+                                  </span>
+                                  <small
+                                    style={{ fontWeight: 1000, color: 'inherit' }}
+                                  >
+                                    Associates
                           </small>
-                            </NavLink>
-                          </Navbar>
-                        )}
+                                </NavLink>
+                                <NavLink
+                                  exact
+                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
+                                  style={{ color: 'blue' }}
+                                  to={`/company/${props.company.name}/settings`}
+                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
+                                >
+                                  <span className="">
+                                    <img src={settings} className="br3" style={{ width: '1.5rem' }} />
+                                  </span>
+                                  <small
+                                    style={{ fontWeight: 1000, color: 'inherit' }}
+                                  >
+                                    Settings
+                          </small>
+                                </NavLink>
+                              </Navbar>
+                            )
+                            :
+                            <NavbarIndividual showDialog={showMenu} setShowDialog={setShowMenu} />
+                        }
                       </div>
                     </div>
                     <div

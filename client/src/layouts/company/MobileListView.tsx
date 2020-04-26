@@ -48,10 +48,7 @@ export const ListViewComponent = (
     <>
       <div>
         <div style={{ backgroundColor: '#3F61C5' }}>
-          <Icon
-            icon="delete"
-            iconSize={20}
-            className="white ma3 fr"
+          <Icon icon="delete" iconSize={20} className="white ma3 fr"
             onClick={() => props.setShowDialog(false)}
           />
           <Button
@@ -59,7 +56,8 @@ export const ListViewComponent = (
             onClick={() => {
               props.history.push(`/${props.user.name}`);
               props.setShowDialog(false);
-            }}
+            }
+            }
           >
             <div className="dtc w2">
               <img
@@ -71,12 +69,12 @@ export const ListViewComponent = (
                 className="db w2 h2 br-100 ba b--white-90 "
               />
             </div>
-            <div className="dtc v-mid pl3 pt2">
+            <div className="dtc v-mid pl3">
               <h1 className="f6 white ma0">
                 {`${props.user.firstName} ${props.user.lastName}`}
               </h1>
               <h1 className="f7 white ma0 fw4 mb4">
-                {props.user.position}
+                {props.user.position} 
               </h1>
             </div>
           </Button>
@@ -89,16 +87,14 @@ export const ListViewComponent = (
           to={`/${props.user.name}/settings`}
           onClick={() => props.setShowDialog(false)}
         >
-          <Icon
-            icon="cog"
-            className="pr3"
-            style={{ color: '#787e8d' }}
-          />
-          Profile Settings
+          <Icon icon="cog" className="pr3" style={{ color: '#787e8d' }} />
+            Profile Settings
         </NavLink>
         <Button
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
-          onClick={(e: any) => props.logoutAction(props.history)}
+          onClick={(e: any) =>
+            props.logoutAction(props.history)
+          }
           icon="log-in"
           alignText="left"
         >
@@ -122,7 +118,7 @@ export const ListViewComponent = (
                       props.currentCompany === c.company._id
                         ? 'bg-black-10'
                         : ''
-                    } mt1 pointer bp3-popover-dismiss`}
+                      } mt1 pointer bp3-popover-dismiss`}
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -130,38 +126,32 @@ export const ListViewComponent = (
                         props.history,
                       )) as any;
                       if (response.status === 200) {
-                        dispatch({
-                          type: CLEAR_PROJECT_REDUCER_STATE,
-                        });
+                        dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                         props.history.push(
                           `/company/${
-                            (response as any).data.company.name
+                          (response as any).data.company.name
                           }/dashboard`,
                         );
                       }
                     }}
                   >
-                    <div className="flex justify-between">
-                      <img
-                        src={
-                          c.company.logo
-                            ? c.company.logo
-                            : CompanyIcon
-                        }
-                        className="v-mid dib br-100 w-10"
-                        alt="user"
-                        style={{
-                          width: '32px',
-                          height: '32px',
-                          objectFit: 'cover',
-                        }}
-                      />
-                      <div className="dtc v-mid pl3 w-90">
-                        <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">
-                          {c.company.name}{' '}
-                        </h1>
-                        <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
-                      </div>
+                    <img
+                      src={
+                        c.company.logo ? c.company.logo : CompanyIcon
+                      }
+                      className="v-mid dib br-100"
+                      alt="user"
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        objectFit: 'cover',
+                      }}
+                    />
+                    <div className="dtc v-mid pl3">
+                      <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">
+                        {c.company.name}{' '}
+                      </h1>
+                      <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
                     </div>
                   </article>
                 ),
@@ -172,24 +162,27 @@ export const ListViewComponent = (
           onClick={() => {
             setShowButton(true);
             // props.setShowDialog(!props.showDialog);
-          }}
+          }
+          }
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
           Create Company
-        </button>
+      </button>
       </div>
-      {showButton && (
-        <Dialog
-          onClose={() => setShowButton(!showButton)}
-          isOpen={showButton}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
-        >
-          <div>
-            <CompanySignupForm setShowDialog={props.setShowDialog} />
-          </div>
-        </Dialog>
-      )}
+      {
+        showButton && (
+          <Dialog
+            onClose={() => setShowButton(!showButton)}
+            isOpen={showButton}
+            style={{ background: '#fff' }}
+            canOutsideClickClose={false}
+          >
+            <div>
+              <CompanySignupForm setShowDialog={props.setShowDialog} />
+            </div>
+          </Dialog>
+        )
+      }
     </>
   );
 };
