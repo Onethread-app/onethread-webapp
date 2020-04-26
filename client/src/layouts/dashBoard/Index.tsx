@@ -9,6 +9,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
+import { makeStyles } from '@material-ui/core/styles';
 // import { Text } from '@blueprintjs/core';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -16,13 +17,13 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Paper from '@material-ui/core/Paper';
 
 import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
 } from 'stores/company/Types';
 import moment from 'moment';
-import { NavbarCompany } from 'components/NavbarCompany';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -123,9 +124,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                           >
                             <Typography className="">
                               {`From ${
-                                announcement.memberId &&
-                                announcement.memberId.designations
-                                  .length > 0
+                                announcement.memberId
                                   ? announcement.memberId
                                       .designations[0].division
                                   : 'Admin'
@@ -136,6 +135,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                             className={classes.secondaryHeading}
                             elevation={0}
                           >
+                            {/* <Typography className="">Date</Typography> */}
                             <Typography className="">
                               {announcement.createdAt &&
                                 moment(
@@ -149,30 +149,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         </ExpansionPanelDetails>
                       </ExpansionPanel>
                     </div>
-                  ))
-                ) : (
-                  <small>No announcements.</small>
-                )}
-              </Card>
-              <div className="w-50 ma2">
-                <h1 className="f5">Company Announcement</h1>
-                {props.company.announce &&
-                props.company.announce.length > 0 ? (
-                  props.company.announce.map((announcement: any) => (
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                      >
-                        <Typography className="">
-                          Expansion Panel 1
-                        </Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <Typography>{announcement.text}</Typography>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
                   ))
                 ) : (
                   <small>No announcements.</small>

@@ -52,8 +52,13 @@ const customStyles = {
   content: {
     top: '50%',
     left: '50%',
+    // right: 'auto',
     bottom: 'auto',
+    // marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
+  },
+  overlay: {
+    // backgroundColor: '#ececec',
   },
 };
 
@@ -62,7 +67,6 @@ export const HomePage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [subject, setSubject] = useState('');
   const [error, setError] = useState('');
   const handleSubmit = () => {
     // console.log(name, email, message);
@@ -72,7 +76,6 @@ export const HomePage = () => {
       const reqBody = {
         name,
         email,
-        subject,
         message,
       };
       store.dispatch(saveContactForm(reqBody));
@@ -88,11 +91,11 @@ export const HomePage = () => {
   }
 
   const getChatUserInfo = (name: String, email: String) => {
+    // console.log(name, email);
     if (name !== '' && email !== '') {
       const reqBody = {
         name,
         email,
-        subject: 'N/A',
         message: 'N/A',
       };
       store.dispatch(saveContactForm(reqBody));
@@ -482,16 +485,13 @@ export const HomePage = () => {
                 id="contactForm"
                 className="w-30-ns center"
               >
-                <img
-                  className="w-100 pointer"
-                  src={pack3}
-                  alt="packages"
-                />
+                <img className="w-100" src={pack3} alt="packages" />
               </div>
             </div>
           </CustomView>
           <Modal
             isOpen={modalIsOpen}
+            // onAfterOpen={afterOpenModal}
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="TigrowModal"
@@ -521,20 +521,7 @@ export const HomePage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     fullWidth={true}
                     id="outlined-basic"
-                    label="Your Email"
-                    variant="outlined"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  />
-                </div>
-
-                <div className="mb4">
-                  <TextField
-                    onChange={(e) => setSubject(e.target.value)}
-                    fullWidth={true}
-                    id="outlined-basic"
-                    label="Subject"
+                    label="Email"
                     variant="outlined"
                     InputLabelProps={{
                       shrink: true,
