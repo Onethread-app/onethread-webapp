@@ -201,9 +201,7 @@ const list = async (req, res, next) => {
       })
       .skip(+skip)
       .limit(+limit)
-      .select(
-        '-concernedAdmin -description -outline -room -departments -optionalRole -files -members -createdAt -updatedAt -company -__v -removed -rooms',
-      )
+      .select('associate')
       .populate({
         path: 'associate',
         select: 'associateCompany',
