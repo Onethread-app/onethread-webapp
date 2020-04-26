@@ -42,7 +42,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #f0f0f0;
+  background-color: darkgrey;
+  opacity: 97%;
 }
 .demoLink {
   padding: 2rem 0rem;

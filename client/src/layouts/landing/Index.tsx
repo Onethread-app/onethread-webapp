@@ -54,8 +54,13 @@ const customStyles = {
   content: {
     top: '50%',
     left: '50%',
+    // right: 'auto',
     bottom: 'auto',
+    // marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
+  },
+  overlay: {
+    // backgroundColor: '#ececec',
   },
 };
 
@@ -64,7 +69,6 @@ export const HomePage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
-  const [subject, setSubject] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
@@ -75,7 +79,6 @@ export const HomePage = () => {
       const reqBody = {
         name,
         email,
-        subject,
         message,
       };
       if (error === '') {
@@ -93,6 +96,7 @@ export const HomePage = () => {
   }
 
   const getChatUserInfo = (name: String, email: String) => {
+    // console.log(name, email);
     if (name !== '' && email !== '') {
       const reqBody = {
         name,
@@ -487,16 +491,13 @@ export const HomePage = () => {
                 id="contactForm"
                 className="w-30-ns center"
               >
-                <img
-                  className="w-100 pointer"
-                  src={pack3}
-                  alt="packages"
-                />
+                <img className="w-100" src={pack3} alt="packages" />
               </div>
             </div>
           </CustomView>
           <Modal
             isOpen={modalIsOpen}
+            // onAfterOpen={afterOpenModal}
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="TigrowModal"
