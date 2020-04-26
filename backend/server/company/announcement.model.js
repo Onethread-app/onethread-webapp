@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const announcement = new Schema(
   {
+    memberId : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Member',
+    },
     text: {
       type: String,
       trim: true,

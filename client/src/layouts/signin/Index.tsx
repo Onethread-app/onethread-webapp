@@ -103,12 +103,12 @@ export const SignInPageComponent = (
               <img width="200px" src={logo} />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
-              TiGrow is a professional network crafted for Business
-              Professionals, where they can trade between each other,
-              find nearest suppliers, create workplaces in which they
-              can maintain not only intra company communications but
-              also external communications with organizations where
-              they can create smart contracts between them.
+              TiGrow is designed keeping in mind that Ease of
+              Communication is the key to success for any enterprise.
+              TiGrow’s architecture has the key unique element of
+              containerization with its feature called Project which
+              ensures privacy within it, and fluidity to collaborate
+              with external and internal stakeholders.
             </h3>
           </div>
         </div>
