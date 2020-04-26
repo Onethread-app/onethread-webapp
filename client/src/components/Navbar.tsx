@@ -108,12 +108,15 @@ const NavbarTopComponent = (
                       </div>
                     ))
                   ) : (
-                    <div
-                      style={{ maxHeight: '300px' }}
-                      className="pa3 overflow-y-auto"
+                    <h2
+                      style={{
+                        maxHeight: '300px',
+                        textAlign: 'center',
+                      }}
+                      className="pa3 overflow-y-auto moon-gray"
                     >
-                      Loading..
-                    </div>
+                      No Notification TO Show
+                    </h2>
                   )}
                 </div>
               }

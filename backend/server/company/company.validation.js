@@ -13,7 +13,7 @@ const idSchema = {
 
 // company-id
 const companyId = Joi.object().keys({
-  companyId: idSchema.id.required()
+  companyId: idSchema.id.required(),
 });
 
 const cname = Joi.object().keys({
@@ -84,7 +84,7 @@ const schema = {
     '1001 -2000 square meters',
     'above 2000 square meters',
   ]),
-  announcement: Joi.string().max(500)
+  announcement: Joi.string().max(500),
 };
 
 module.exports = {
@@ -142,7 +142,7 @@ module.exports = {
   createNotice: Joi.object().keys({
     params: companyId,
     body: Joi.object().keys({
-      text: schema.announcement.required()
+      text: schema.announcement.required(),
     }),
   }),
   allNoticesForCompany: Joi.object().keys({

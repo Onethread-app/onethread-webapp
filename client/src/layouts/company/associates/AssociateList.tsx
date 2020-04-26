@@ -10,6 +10,11 @@ import { RightSidebar } from 'components/RightSidebar';
 import { AssociateFormEditor } from './AssociateFormEditor';
 import { ICompany } from 'stores/company/Reducer';
 import { Associate } from 'stores/associate/Reducer';
+import {
+  CustomView,
+  MobileOnlyView,
+  isMobileOnly,
+} from 'react-device-detect';
 
 interface AssociatesPageComponentProps {
   company: ICompany;
@@ -35,74 +40,128 @@ export const AssociateListComponent = (
   }, []);
 
   return (
-    <>
-      <div className="br3 bg-white pa4-ns pa2 cf flex w-100">
+    <div>
+      <div className="br3 bg-white cf flex w-100">
         <div className="overflow-auto w-100">
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fit, minmax(200px, 280px))',
-              gridTemplateRows: 'repeat(2, 270px)',
-            }}
-          >
-            {loading ? (
-              <Loading />
-            ) : props.associates.length > 0 ? (
-              props.associates.map((associate: Associate) => (
-                <Card
-                  className="ba b--black-20 br4 pa4 ma2"
-                  interactive={true}
-                  onClick={async (e) => {
-                    e.preventDefault();
-                    props.history.push(
-                      `/company/${props.company.name}/associate/${associate._id}`,
-                    );
-                  }}
-                >
-                  {associate.associateCompany.logo ? (
-                    <img
-                      src={`${associate.associateCompany.logo}`}
-                      alt="company logo"
-                    />
-                  ) : (
-                    <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
-                      {associate.associateCompany
-                        ? associate.associateCompany.name.charAt(0)
-                        : 'Demo'}
+          <CustomView condition={!isMobileOnly}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns:
+                  'repeat(auto-fit, minmax(200px, 280px))',
+                gridTemplateRows: 'repeat(2, 270px)',
+              }}
+            >
+              {loading ? (
+                <Loading />
+              ) : props.associates.length > 0 ? (
+                props.associates.map((associate: Associate) => (
+                  <Card
+                    className="ba b--black-20 br4 pa4 ma2"
+                    interactive={true}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      props.history.push(
+                        `/company/${props.company.name}/associate/${associate._id}`,
+                      );
+                    }}
+                  >
+                    {associate.associateCompany.logo ? (
+                      <img
+                        src={`${associate.associateCompany.logo}`}
+                        alt="company logo"
+                      />
+                    ) : (
+                        <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
+                          {associate.associateCompany
+                            ? associate.associateCompany.name.charAt(0)
+                            : 'Demo'}
+                        </h1>
+                      )}
+                    <h1 className="tc black f4 mv0">
+                      {associate.associateCompany.name}
                     </h1>
+                    <h1 className="tc silver f7 mv0">
+                      {associate.associateCompany.type}
+                    </h1>
+                    <h1 className="tc black f7 mt3">
+                      Added on{' '}
+                      {moment(associate.createdAt).format(
+                        'MMMM Do YYYY',
+                      )}
+                    </h1>
+                  </Card>
+                ))
+              ) : (
+                    <p>No associates available</p>
                   )}
-                  <h1 className="tc black f4 mv0">
-                    {associate.associateCompany.name}
-                  </h1>
-                  <h1 className="tc silver f7 mv0">
-                    {associate.associateCompany.type}
-                  </h1>
-                  <h1 className="tc black f7 mt3">
-                    Added on{' '}
-                    {moment(associate.createdAt).format(
-                      'MMMM Do YYYY',
-                    )}
-                  </h1>
-                </Card>
-              ))
-            ) : (
-              <p>No associates available</p>
-            )}
-          </div>
+            </div>
+          </CustomView>
+          <MobileOnlyView>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns:
+                  'repeat(auto-fit, minmax(160px, 170px))',
+                gridTemplateRows: 'repeat(2, 170px)',
+              }}
+            >
+              {loading ? (
+                <Loading />
+              ) : props.associates.length > 0 ? (
+                props.associates.map((associate: Associate) => (
+                  <Card
+                    className="ba b--black-0125 br4 ma1"
+                    interactive={true}
+                    onClick={async (e) => {
+                      e.preventDefault();
+                      props.history.push(
+                        `/company/${props.company.name}/associate/${associate._id}`,
+                      );
+                    }}
+                  >
+                    {associate.associateCompany.logo ? (
+                      <img
+                        src={`${associate.associateCompany.logo}`}
+                        alt="company logo"
+                      />
+                    ) : (
+                        <h1 className="center white f4 fw6 bg-green tc br3 pt2 ma0"
+                          style={{ width: '3rem', height: '3rem' }}>
+                          {associate.associateCompany
+                            ? associate.associateCompany.name.charAt(0)
+                            : 'Demo'}
+                        </h1>
+                      )}
+                    <h1 className="tc black f4-ns f5 fw6 mt2 mb0">
+                      {associate.associateCompany.name}
+                    </h1>
+                    <h1 className="tc silver f7 mv0">
+                      {associate.associateCompany.type}
+                    </h1>
+                    <h1 className="tc black f7 fw6 mt2">
+                      Added on{' '}
+                      {moment(associate.createdAt).format(
+                        'MMMM Do YYYY',
+                      )}
+                    </h1>
+                  </Card>
+                ))
+              ) : (
+                    <p>No associates available</p>
+                  )}
+            </div>
+          </MobileOnlyView>
           <div>
             <img
               onClick={() =>
                 setShowAssociateDialog(!showAssociateDialog)
               }
               src={addIcon}
-              className={`fixed pointer ${
+              className={`fixed pointer addButton ${
                 showAssociateDialog ? 'dn' : 'db'
-              }`}
+                }`}
               style={{
-                bottom: '5rem',
-                right: '7rem',
-                width: '5rem',
                 boxShadow: '0px 6px 6px #00000029',
                 borderRadius: '50%',
               }}
@@ -123,7 +182,7 @@ export const AssociateListComponent = (
           />
         </RightSidebar>
       )}
-    </>
+    </div>
   );
 };
 

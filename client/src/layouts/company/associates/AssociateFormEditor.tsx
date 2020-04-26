@@ -57,7 +57,7 @@ const AssociateFormEditorComponent = (
   }, [result]);
 
   return (
-    <div className="pa3">
+    <div className="pa3 mt5 mt0-ns">
       <div className=" w-100">
         <h1 className="f5 tigrow-lightBlue">Add Associate</h1>
         <SuggestField

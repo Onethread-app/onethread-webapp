@@ -589,12 +589,11 @@ const dashBoard = async (req, res, next) => {
 
 const noticePostByCompany = async (req, res, next) => {
   try {
-
     const NewNotice = req.body.text;
     const memberId = await Member.findOne({
       account: req.user._id,
-      company: req.params.companyId
-    })
+      company: req.params.companyId,
+    });
     const announcement = new Announcement({
       memberId,
       text: NewNotice,
@@ -605,13 +604,13 @@ const noticePostByCompany = async (req, res, next) => {
       {
         path: 'memberId',
         select: 'designations',
-        populate: 'designations'
+        populate: 'designations',
       },
     ];
 
     logger.info(`new notice created`);
     const newAnnouncement = await announcement.save();
-    await Announcement.populate(newAnnouncement,options);
+    await Announcement.populate(newAnnouncement, options);
     const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
     createCompanyRoleNotification(
       { _id: req.params.companyId },
@@ -635,21 +634,20 @@ const noticePostByCompany = async (req, res, next) => {
 
 const allNoticesForCompany = async (req, res, next) => {
   try {
-
     const options = [
       {
         path: 'memberId',
         select: 'designations',
-        populate: 'designations'
+        populate: 'designations',
       },
     ];
 
     const announce = await Announcement.find({
       company: req.params.companyId,
     })
-    .select('_id memberId text createdAt memberId')
-    .populate(options)
-    .sort({createdAt: 'desc'});
+      .select('_id memberId text createdAt memberId')
+      .populate(options)
+      .sort({ createdAt: 'desc' });
 
     logger.info(`announcement show for company`);
     return sendJSONresponse(res, 200, {
