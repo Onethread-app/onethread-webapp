@@ -6,7 +6,6 @@ import {
   checkError,
   composeValidators,
   isEmail,
-  phoneNoValidation,
   passwordValidation,
   maxValue,
 } from 'components/final-form/utils';
@@ -195,8 +194,7 @@ export const SignUpPageComponent = (
                                       ? 'b--red'
                                       : 'b--lightBlue'
                                   }`}
-                                  value="+88"
-                                  readOnly={true}
+                                  value={input.value}
                                   onChange={input.onChange}
                                   leftIcon={
                                     <span className="bp3-icon">
@@ -213,10 +211,6 @@ export const SignUpPageComponent = (
                                     fontSize: '18px',
                                     paddingLeft: '40px',
                                   }}
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
                                 />
                               </div>
                             )}
@@ -227,10 +221,6 @@ export const SignUpPageComponent = (
                           <div className="w-100">
                             <Field<string>
                               name="contactNo"
-                              validate={composeValidators(
-                                required,
-                                phoneNoValidation,
-                              )}
                               render={({ input, meta }) => (
                                 <div
                                   className={` ${
@@ -259,10 +249,6 @@ export const SignUpPageComponent = (
                                         e.preventDefault();
                                       }
                                     }}
-                                    error={
-                                      checkError(meta) &&
-                                      (meta.error || meta.submitError)
-                                    }
                                   />
                                 </div>
                               )}
