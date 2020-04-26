@@ -166,11 +166,8 @@ const ExperienceViewComponent = (props: IExperienceViewProps) => {
       )}
       <div>
         <img
-          className="fixed pointer"
+          className="fixed pointer addButton"
           style={{
-            bottom: '5rem',
-            right: '7rem',
-            width: '5rem',
             boxShadow: '0px 6px 6px #00000029',
             borderRadius: '50%',
           }}
