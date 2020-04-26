@@ -9,6 +9,7 @@ import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
+import { makeStyles } from '@material-ui/core/styles';
 // import { Text } from '@blueprintjs/core';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
@@ -16,11 +17,28 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Paper from '@material-ui/core/Paper';
 
 import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
 } from 'stores/company/Types';
+import moment from 'moment';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    width: '100%',
+  },
+  heading: {
+    fontSize: theme.typography.pxToRem(15),
+    flexBasis: '50%',
+    flexShrink: 0,
+  },
+  secondaryHeading: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
+  },
+}));
 
 interface DashBoardViewProps {
   user: User;
@@ -36,6 +54,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
   const dispatch = useDispatch();
+  const classes = useStyles();
   useEffect(() => {
     async function getAPI() {
       const headers = tokenConfig();
@@ -86,49 +105,49 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               </Card>
             </div>
             <div>
-              <Card className="w-50 ma2">
+              <div className="w-50-l ma2">
                 <h1 className="f5">Company Announcement</h1>
                 {props.company.announce &&
                 props.company.announce.length > 0 ? (
                   props.company.announce.map((announcement: any) => (
-                    <div className="flex items-center">
-                      <div
-                        className="w2 h2 bg-red br2 mv1"
-                        style={{ width: '35px', height: '35px' }}
-                      ></div>
-                      {/* <Text ellipsize={true} className="f5 fw4 mh3 ws-normal"> */}
-                      <h1
-                        className="w-90 f5 fw4 mh3 tj break-word"
-                        style={{ lineHeight: '25px' }}
-                      >
-                        {announcement.text}
-                      </h1>
-                      {/* </Text> */}
+                    <div className="mt2">
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                        >
+                          <Paper
+                            className={classes.heading}
+                            elevation={0}
+                          >
+                            <Typography className="">
+                              {`From ${
+                                announcement.memberId
+                                  ? announcement.memberId
+                                      .designations[0].division
+                                  : 'Admin'
+                              }`}
+                            </Typography>
+                          </Paper>
+                          <Paper
+                            className={classes.secondaryHeading}
+                            elevation={0}
+                          >
+                            {/* <Typography className="">Date</Typography> */}
+                            <Typography className="">
+                              {announcement.createdAt &&
+                                moment(
+                                  announcement.createdAt,
+                                ).calendar()}
+                            </Typography>
+                          </Paper>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <Typography>{announcement.text}</Typography>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
                     </div>
-                  ))
-                ) : (
-                  <small>No announcements.</small>
-                )}
-              </Card>
-              <div className="w-50 ma2">
-                <h1 className="f5">Company Announcement</h1>
-                {props.company.announce &&
-                props.company.announce.length > 0 ? (
-                  props.company.announce.map((announcement: any) => (
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                      >
-                        <Typography className="">
-                          Expansion Panel 1
-                        </Typography>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails>
-                        <Typography>{announcement.text}</Typography>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
                   ))
                 ) : (
                   <small>No announcements.</small>
