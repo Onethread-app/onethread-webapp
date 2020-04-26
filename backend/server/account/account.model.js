@@ -2,147 +2,133 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
 const SALT_WORK_FACTOR = 10;
-const jwt = require('jsonwebtoken');
-const config = require('../../config/config');
-
-const { Schema } = mongoose;
 
 // defining all the fields of individual account
-const accountsSchema = new mongoose.Schema({
-  profileImage: {
-    type: String,
-    trim: true,
-  },
-  coverImage: {
-    type: String,
-    trim: true,
-  },
-  name: {
-    type: String,
-    trim: true,
-    unique: true,
-  },
-  firstName: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    trim: true,
-    required: true,
-  },
-  position: {
-    type: String,
-    trim: true,
-    max: 32,
-  },
-  email: {
-    type: String,
-    unique: true,
-    required: true,
-    lowercase: true,
-    trim: true,
-  },
-  birthDate: {
-    type: Date,
-    required: true,
-  },
-  hash: String,
-  salt: String,
-  password: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    enum: ['guest', 'admin', 'company', 'user'],
-    default: 'user',
-  },
-  accountType: {
-    type: String,
-    enum: ['premium', 'normal'],
-    default: 'normal',
-  },
-  contactNo: {
-    type: String,
-    required: false,
-    unique: true,
-  },
-  gender: {
-    type: String,
-    description: 'can be male,female & others',
-    enum: ['male', 'female', 'others'],
-  },
-  // it must be empty
-  // if null, it will create an duplicateError
-  secondaryEmail: {
-    type: String,
-    lowercase: true,
-    unique: false,
-    trim: true,
-  },
-  bloodGroup: {
-    type: String,
-    enum: ['A+', 'A-', 'O+', 'O-', 'AB+', 'AB-', 'B+', 'B-'],
-  },
-  location: {
-    type: String,
-    trim: true,
-  },
-  about: {
-    type: String,
-    max: 250,
-    trim: true,
-  },
-  skillArea: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'SkillArea',
+const accountsSchema = new mongoose.Schema(
+  {
+    profileImage: {
+      type: String,
+      trim: true,
     },
-  ],
-  companies: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Company',
+    coverImage: {
+      type: String,
+      trim: true,
     },
-  ],
-  // token: {
-  //   type: String,
-  // },
-  // resetPasswordToken: {
-  //   type: String,
-  // },
-  // resetPasswordTokenExpiration: {
-  //   type: String,
-  // },
-  // verifyAccountToken: {
-  //   type: String,
-  // },
-  // verifyAccountTokenExpiration: {
-  //   type: String,
-  // },
-  isAccountVerified: {
-    type: Boolean,
-    default: false,
+    name: {
+      type: String,
+      trim: true,
+      unique: true,
+    },
+    firstName: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+      required: true,
+    },
+    position: {
+      type: String,
+      trim: true,
+      max: 32,
+    },
+    email: {
+      type: String,
+      unique: true,
+      required: true,
+      lowercase: true,
+      trim: true,
+    },
+    birthDate: {
+      type: Date,
+      required: true,
+    },
+    hash: String,
+    salt: String,
+    password: {
+      type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ['guest', 'admin', 'company', 'user'],
+      default: 'user',
+    },
+    accountType: {
+      type: String,
+      enum: ['premium', 'normal'],
+      default: 'normal',
+    },
+    contactNo: {
+      type: String,
+      required: false,
+      unique: true,
+    },
+    gender: {
+      type: String,
+      description: 'can be male,female & others',
+      enum: ['male', 'female', 'others'],
+    },
+    // it must be empty
+    // if null, it will create an duplicateError
+    secondaryEmail: {
+      type: String,
+      lowercase: true,
+      unique: false,
+      trim: true,
+    },
+    bloodGroup: {
+      type: String,
+      enum: ['A+', 'A-', 'O+', 'O-', 'AB+', 'AB-', 'B+', 'B-'],
+    },
+    location: {
+      type: String,
+      trim: true,
+    },
+    about: {
+      type: String,
+      max: 250,
+      trim: true,
+    },
+    skillArea: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SkillArea',
+      },
+    ],
+    companies: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Company',
+      },
+    ],
+    isAccountVerified: {
+      type: Boolean,
+      default: false,
+    },
+    jobExperience: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Jobexperience',
+      },
+    ],
+    education: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Education',
+      },
+    ],
+    version: {
+      type: Number,
+      default: 0,
+    },
   },
-  jobExperience: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Jobexperience',
-    },
-  ],
-  education: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Education',
-    },
-  ],
-  version: {
-    type: Number,
-    default: 0,
+  {
+    timestamps: true,
   },
-});
+);
 accountsSchema.index(
   { email: 1, secondaryEmail: 1 },
   { unique: true },
@@ -202,21 +188,6 @@ accountsSchema.methods.comparePassword = function (
     }
     cb(null, isMatch);
   });
-};
-
-// generating jwt token
-accountsSchema.methods.generateJwt = function () {
-  // const token = new token();
-  return jwt.sign(
-    {
-      _id: this._id,
-      role: this.role,
-    },
-    config.jwtSecret,
-    {
-      expiresIn: 60 * 60 * 60 * 24,
-    },
-  );
 };
 
 module.exports = mongoose.model('Account', accountsSchema);

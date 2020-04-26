@@ -1,10 +1,13 @@
 const nodemailer = require('nodemailer');
+const AWS = require('aws-sdk');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const { capitalizeName } = require('../helpers/capitalizeLetter');
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 465,
+  secure: true,
   auth: {
     user: config.emailAddress,
     pass: config.emailPassword,
@@ -107,4 +110,59 @@ module.exports.sendInviteColleague = async (
     logger.info(`send company invitation mail to users successfully`);
     return info;
   });
+};
+
+module.exports.contactSaleMail = async (email, subject, message) => {
+  const sesConfig = {
+    apiVersion: '2010-12-01',
+    accessKeyId: config.awsSesAccessKey,
+    secretAccessKey: config.awsSesSecretKey,
+    region: config.sesRegion,
+  };
+  const params = {
+    Destination: {
+      /* required */
+      CcAddresses: [
+        'sales@tigrow.co',
+        /* more items */
+      ],
+      ToAddresses: [
+        'sales@tigrow.co',
+        /* more items */
+      ],
+    },
+    Message: {
+      /* required */
+      Body: {
+        /* required */
+        Text: {
+          Charset: 'UTF-8',
+          Data: `${message}`,
+        },
+      },
+      Subject: {
+        Charset: 'UTF-8',
+        Data: `${subject}`,
+      },
+    },
+    Source: email /* required */,
+    ReplyToAddresses: [
+      email,
+      /* more items */
+    ],
+  };
+
+  // Create the promise and SES service object
+  const sendPromise = new AWS.SES(sesConfig)
+    .sendEmail(params)
+    .promise();
+
+  // Handle promise's fulfilled/rejected states
+  sendPromise
+    .then((data) => {
+      logger.info(data.MessageId);
+    })
+    .catch((err) => {
+      logger.error(err, err.stack);
+    });
 };

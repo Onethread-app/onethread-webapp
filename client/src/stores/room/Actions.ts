@@ -27,8 +27,11 @@ import {
   TOGGLE_ROOM_DISCUSSIONS_ERROR,
   REMOVE_ROOM_DISCUSSIONS,
   CURRENT_ROOM,
+  CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
 } from './Types';
 import { tigrowApi } from 'config';
+import { roomSubscribe } from 'layouts/company/room/channelSubscribe';
+import { IRoom } from './Reducer';
 
 export const createRoomAction = (roomData: any) => async (
   dispatch: any,
@@ -53,6 +56,7 @@ export const createRoomAction = (roomData: any) => async (
         type: CREATE_ROOM_FROM_SERVER,
         payload: response.data.room,
       });
+      await roomSubscribe(response.data.room._id);
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
@@ -93,7 +97,11 @@ export const getRooms = () => async (
         }`,
         headers,
       );
-      dispatch({ type: GET_ROOMS, payload: response.data.rooms });
+      dispatch({ type: GET_ROOMS, payload: response.data });
+      const rooms = response.data.rooms as IRoom[];
+      rooms.forEach(async (room) => {
+        await roomSubscribe(room._id);
+      });
     } else {
       // tslint:disable-next-line: no-console
       console.log('error in rooms fetching');
@@ -164,7 +172,7 @@ export const getRoomMembers = (roomId: string) => async (
       });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in room's members fetching");
+      console.log('error in rooms members fetching');
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
@@ -187,7 +195,12 @@ export const getRoomMembers = (roomId: string) => async (
 export const addRoomMembers = (
   data: {
     room: string;
-    members: Array<string | undefined>;
+    company: string;
+    project: string;
+    members: Array<{
+      account: any;
+      team: any;
+    }>;
   },
   selectedRoomMember: any,
 ) => async (dispatch: any, getState: any) => {
@@ -289,7 +302,7 @@ export const getRoomMessages = (
       });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in room's message fetching");
+      console.log('error in rooms message fetching');
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
@@ -398,7 +411,7 @@ export const getRoomSharedFiles = (
       });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in room's file fetching");
+      console.log('error in rooms file fetching');
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
@@ -434,7 +447,7 @@ export const getRoomDiscussions = (
       });
     } else {
       // tslint:disable-next-line: no-console
-      console.log("error in room's discussion fetching");
+      console.log('error in rooms discussion fetching');
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
@@ -497,5 +510,34 @@ export const toggleDiscussionRoom = (
       console.log(error.response);
     }
     return error.response.status;
+  }
+};
+
+export const updateLastSeen = (roomId: string) => async (
+  dispatch: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.put(
+        `rooms/last-seen/${roomId}`,
+        null,
+        headers,
+      );
+      if (response.status === 200) {
+        dispatch({
+          type: CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
+          payload: roomId,
+        });
+      }
+      return response;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in creation of company');
+    }
+  } catch (error) {
+    // tslint:disable-next-line: no-console
+    console.log(error.response);
+    return error.response;
   }
 };
