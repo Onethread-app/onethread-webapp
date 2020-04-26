@@ -9,7 +9,6 @@ export const companySubscriber = (companyId: string) => {
     forceTLS: true,
   });
   pusher.connection.bind('connected', function () {
-    console.log(pusher.connection.socket_id);
     store.dispatch({
       type: NOTIFICATION.SET_SOCKET_ID,
       payload: pusher.connection.socket_id,
@@ -21,7 +20,6 @@ export const companySubscriber = (companyId: string) => {
     }`,
   );
   channel.bind(companyId, async (data: any) => {
-    console.log('ffffffffff', data);
     let count = 0;
     await store.dispatch({
       type: NOTIFICATION.GET_SUBSCRIBED_NOTIFICATIONS,
