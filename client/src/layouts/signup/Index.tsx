@@ -306,48 +306,25 @@ export const SignUpPageComponent = (
                                     checkError(meta)
                                       ? 'b--red'
                                       : 'b--lightBlue'
-                                    }`}
-                                >
-                                  <div>
-                                    <Icon
-                                      icon="calendar"
-                                      className="pl2"
-                                      style={{ color: '#0fa3a3' }}
-                                    />
-                                  </div>
-                                  <DateInput
-                                    className={`  birthdatePicker `}
-                                    formatDate={(date: Date) =>
-                                      date.toLocaleDateString()
-                                    }
-                                    parseDate={(str: string) =>
-                                      new Date(str)
-                                    }
-                                    onChange={input.onChange}
-                                    canClearSelection={false}
-                                    value={
-                                      input.value
-                                        ? new Date(input.value)
-                                        : null
-                                    }
-                                    popoverProps={{
-                                      targetClassName: 'w-100',
-                                    }}
-                                    minDate={new Date('1800-01-01')}
-                                    placeholder="Birth Date"
-                                    maxDate={moment(new Date())
-                                      .subtract(13, 'years')
-                                      .toDate()}
-                                  />
-                                </div>
-                                {checkError(meta) && (
-                                  <small
-                                    className="mv3-ns mv2"
-                                    style={{ color: 'red' }}
-                                  >
-                                    {meta.error || meta.submitError}
-                                  </small>
-                                )}
+                                  }`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={phoneIcon}
+                                        width="20px"
+                                        height="20px"
+                                        color="#0fa3a3"
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px',
+                                    paddingLeft: '40px',
+                                  }}
+                                />
                               </div>
                             )}
                           />
@@ -356,11 +333,7 @@ export const SignUpPageComponent = (
                         <div>
                           <div>
                             <Field<string>
-                              name="email"
-                              validate={composeValidators(
-                                required,
-                                isEmail,
-                              )}
+                              name="contactNo"
                               render={({ input, meta }) => (
                                 <div
                                   className={` ${
@@ -407,12 +380,15 @@ export const SignUpPageComponent = (
                                       fontSize: '18px',
                                       paddingLeft: '40px',
                                     }}
-                                    placeHolder="Email Address"
-                                    error={
-                                      checkError(meta) &&
-                                      (meta.error || meta.submitError)
-                                    }
-                                    disabled={isEmpty(email) === false}
+                                    placeHolder="Contact Number"
+                                    keypress={(e) => {
+                                      if (
+                                        e.which < 48 ||
+                                        e.which > 57
+                                      ) {
+                                        e.preventDefault();
+                                      }
+                                    }}
                                   />
                                 </div>
                               )}
