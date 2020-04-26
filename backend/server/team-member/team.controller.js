@@ -195,9 +195,28 @@ const list = async (req, res, next) => {
           ],
         },
       ]);
+    const associateList = await Project.find({ _id: pid })
+      .sort({
+        createdAt: 1,
+      })
+      .skip(+skip)
+      .limit(+limit)
+      .select(
+        '-concernedAdmin -description -outline -room -departments -optionalRole -files -members -createdAt -updatedAt -company -__v -removed -rooms',
+      )
+      .populate({
+        path: 'associate',
+        select: 'associateCompany',
+        populate: {
+          path: 'associateCompany',
+          select: '_id name type',
+        },
+      });
 
+    // members.push({ associateList });
     return res.status(200).json({
       memberList: members,
+      associateList,
     });
   } catch (error) {
     logger.error(`${error}`);
