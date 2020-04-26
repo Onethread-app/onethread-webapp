@@ -86,7 +86,7 @@ const create = async (req, res, next) => {
     );
     const createdBoard = await board.save();
 
-    return res.status(201).json(req.headers);
+    return res.status(201).json(createdBoard);
   } catch (error) {
     logger.error(`Board create: ${error}`);
 

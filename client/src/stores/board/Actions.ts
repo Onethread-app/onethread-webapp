@@ -274,18 +274,11 @@ export const dragAndDropTask = (
         addedTask,
       );
       dispatch({ type: DRAG_AND_DROP_TASK, payload: allColumns });
-      const response = await tigrowApi.post(
+      await tigrowApi.post(
         `tasks/dragTask`,
         requestData,
         headers,
       );
-      if (response.status === 200) {
-        Toaster.create().show({
-          message: 'Dragged successfully',
-          timeout: 3000,
-          intent: 'success',
-        });
-      }
     }
   } catch (error) {
     Toaster.create().show({

@@ -11,10 +11,10 @@ import { CoverPhotoView } from './CoverPhotoView';
 export const LandingPage = (props: { user: User }) => {
   return (
     <>
-      <div className="w-100 bg-white ph4">
+      <div className="w-100 bg-white ph4-ns ph2" style={{marginTop: '3.2rem'}}>
         <CoverPhotoView />
         <div className="w-100 relative">
-          <div className="flex-l w-100 mt5 ph4">
+          <div className="flex-l w-100 mt5-ns mt4 ph4-ns ph3">
             <div
               className="mt3 ph1 w-15-l w-100"
               style={{ minWidth: '235px' }}
@@ -27,7 +27,7 @@ export const LandingPage = (props: { user: User }) => {
               </div>
             </div>
             <div className="w-85-l w-100 mt4 ml5-tigrow-l ph2-m mb6">
-              <Tabs id="TabsExample" className="w-85">
+              <Tabs id="TabsExample" className="w-85-ns">
                 <Tab
                   id="Experience"
                   title="Experience"

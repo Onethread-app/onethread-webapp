@@ -32,19 +32,18 @@ const GeneralViewComponent = (
       <div className="fl w-100 pr3">
         <div className="fl w-100 w-50-m w-60-l">
           <p className="b">Company Name</p>
-          <p className="mb0 f4 fw3">{props.company.name}</p>
+          <p className="mb0 f4-ns f6">{props.company.name}</p>
         </div>
         {companyPermit(props.company.role) &&
           isEqual(props.company.role, 'superAdmin') && (
-            <div className="fl w-100 w-50-m w-40-l">
+            <div className="fl w-100 w-50-m w-40-l mv4">
               <Button
                 type="submit"
-                className="grow pointer outline-0 shadow-0 h2"
+                className="grow pointer outline-0 shadow-0 h2 changecompanybutton"
                 text="Change Company Name"
                 style={{
                   background: '#0fa3a3',
-                  color: 'white',
-                  fontSize: '16px',
+                  color: 'white'
                 }}
                 onClick={() => setShowDialog(true)}
               />
@@ -58,6 +57,7 @@ const GeneralViewComponent = (
           isOpen
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
+          className="ma2"
         >
           <form className="pa4">
             <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">

@@ -13,7 +13,7 @@ export const ExperienceEditor = (props: ExperienceEditorProps) => {
 
   return (
     <div className="mt5">
-      <div className="flex-ns ph4">
+      <div className="flex ph4">
         <Button
           active={selectedJob}
           className="ba bw1 pa2 w-30-ns w-100 bp3-minimal"

@@ -37,7 +37,7 @@ const AssociatesDetailsViewComponent = (
       {loading === true || isEmpty(props.associate._id) === true ? (
         <Loading />
       ) : (
-        <div className="bg-white br3 ph5">
+        <div className="bg-white br3 ph5-ns ph4">
           <div className="pv4">
             <BreadCrumbs
               items={[
