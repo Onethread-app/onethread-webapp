@@ -1,6 +1,8 @@
 # dependencies
 /backend/node_modules
 /client/node_modules
+/mongodb
+/redis-data
 
 /client/.pnp
 /client/.pnp.js
@@ -20,8 +22,8 @@
 /client/.env.development.local
 /client/.env.test.local
 /client/.env.production.local
-#/client/yarn.lock
 
+/backend/.env
 /backend/.env.prod
 /backend/.env
 

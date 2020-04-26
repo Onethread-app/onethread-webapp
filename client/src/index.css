@@ -20,6 +20,12 @@ body {
 .c-tigrowWhite {
   color: #ffffff;
 }
+.c-tigrowViolet {
+  color: #4a5b9d;
+}
+.b--tigrowGray {
+  color: #707070;
+}
 .c-message-from {
   color: rgb(74, 73, 73);
 }

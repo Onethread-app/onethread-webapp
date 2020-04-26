@@ -15,6 +15,10 @@ router
   .get(authorization, messageCtrl.searchMessage);
 
 router
+  .route('/unread-messages')
+  .get(authorization, messageCtrl.unreadMessageCounts);
+
+router
   .route('/')
   .post(
     authorization,

@@ -25,6 +25,7 @@ const teamCreate = (account, member, project, role) => {
   });
   newTeam.save();
 };
+
 const createNewProjectForCompany = async (req, res, next) => {
   try {
     let associates = req.body.associates;
@@ -57,7 +58,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       // // assoId = assosiate id
       let projectReq = [];
       // create an id of map array
-      let reqObjectMap = associates.map(async (data) => {
+      associates.map(async (data) => {
         let reqObject = {};
         reqObject.company = req.params.companyId;
         reqObject.associate = data._id;
@@ -65,9 +66,8 @@ const createNewProjectForCompany = async (req, res, next) => {
         reqObject.project = project._id;
         reqObject.size = data.size;
         projectReq.push(reqObject);
-        return reqObject;
       });
-      let sendProjectReq = await ProjectRequest.create(projectReq);
+      await ProjectRequest.create(projectReq);
       let associateId = [];
       associateId = associates.map((data) => {
         return data._id;
@@ -252,7 +252,7 @@ const projectPendingRequest = async (req, res, next) => {
 
 const acceptProjectRequest = async (req, res, next) => {
   try {
-    let projectReq = await ProjectRequest.updateOne(
+    await ProjectRequest.updateOne(
       { project: req.query.pid },
       {
         $set: {
@@ -263,7 +263,7 @@ const acceptProjectRequest = async (req, res, next) => {
       { safe: true, new: true, upsert: true },
     );
     logger.info(`project request accept for ${req.query.pid}`);
-    let associate = await Associate.findOneAndUpdate(
+    await Associate.findOneAndUpdate(
       {
         $or: [
           { company: req.params.companyId },
@@ -369,9 +369,9 @@ const showAllProjectsForCompany = async (req, res, next) => {
       .then((result) => {
         return sendJSONresponse(res, 200, result);
       })
-      .catch((e) => {
+      .catch((error) => {
         logger.error(`${error}`);
-        next(e);
+        next(error);
       });
   } catch (error) {
     logger.error(`${error}`);
@@ -390,7 +390,7 @@ const updateProjectDescription = async (req, res, next) => {
     { safe: true, upsert: true, new: true },
   )
     .exec()
-    .then((result) => {
+    .then(() => {
       logger.info(`Description addeed for ${req.params.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
@@ -414,7 +414,7 @@ const updateProjectOutline = async (req, res, next) => {
     { safe: true, upsert: true, new: true },
   )
     .exec()
-    .then((result) => {
+    .then(() => {
       logger.info(`Outline addeed for ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
@@ -461,7 +461,7 @@ const changeTitleProject = async (req, res, next) => {
   }
 };
 
-const archiveProject = async (req, res, next) => {
+const archiveProject = async (req, res) => {
   try {
     const projectExist = await Project.findOne(
       {
