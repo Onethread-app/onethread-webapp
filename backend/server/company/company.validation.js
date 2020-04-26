@@ -142,7 +142,8 @@ module.exports = {
   createNotice: Joi.object().keys({
     params: companyId,
     body: Joi.object().keys({
-      text: schema.announcement.required(),
+      text: schema.announcement,
+      memberId: idSchema.id.required(),
     }),
   }),
   allNoticesForCompany: Joi.object().keys({
