@@ -25,7 +25,26 @@
   color: #3e5578;
   opacity: 1;
 }
+.Modal {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  right: 40px;
+  bottom: 40px;
+  border-radius: 5px;
+  width: 30%;
+  background-color: white;
+}
 
+.Overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: darkgrey;
+  opacity: 97%;
+}
 .demoLink {
   padding: 2rem 0rem;
 }
@@ -278,6 +297,9 @@
     font-size: 0.48rem;
     line-height: 1.1;
   }
+  .Modal {
+    width: 60%;
+  }
 }
 
 @media only screen and (max-width: 505px) {
@@ -346,10 +368,16 @@
     font-size: 0.48rem;
     line-height: 1.1;
   }
+  .Modal {
+    width: 100%;
+  }
 }
 
 @media only screen and (max-width: 320px) {
   .companyLogo {
     margin-left: -7rem;
+  }
+  .Modal {
+    width: 100%;
   }
 }

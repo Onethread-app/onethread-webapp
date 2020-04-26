@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   CustomView,
   MobileOnlyView,
@@ -35,8 +35,72 @@ import offer2 from './../../resources/homepageImages/offerbags.svg';
 import offer3 from './../../resources/homepageImages/offerjackets.svg';
 import offer4 from './../../resources/homepageImages/offerlining.svg';
 import offer5 from './../../resources/homepageImages/offerdyes.svg';
+import CustomChatbot from './autoChatWindow/customChat';
+import Modal from 'react-modal';
+import TextField from '@material-ui/core/TextField';
+import TextareaAutosize from '@material-ui/core/TextareaAutosize';
+import Button from '@material-ui/core/Button';
+import { store } from 'Store';
+import { saveContactForm } from '../../stores/landing/Actions';
+
+// import contactImage from '../../resources/homepageImages/contact.png';
+
+Modal.setAppElement('#root');
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    // right: 'auto',
+    bottom: 'auto',
+    // marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  overlay: {
+    // backgroundColor: '#ececec',
+  },
+};
 
 export const HomePage = () => {
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const handleSubmit = () => {
+    // console.log(name, email, message);
+    if (name === '' || email === '' || message === '') {
+      setError('Please fill all the information');
+    } else {
+      const reqBody = {
+        name,
+        email,
+        message,
+      };
+      store.dispatch(saveContactForm(reqBody));
+      setIsOpen(false);
+    }
+  };
+  function openModal() {
+    setIsOpen(true);
+  }
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const getChatUserInfo = (name: String, email: String) => {
+    // console.log(name, email);
+    if (name !== '' && email !== '') {
+      const reqBody = {
+        name,
+        email,
+        message: 'N/A',
+      };
+      store.dispatch(saveContactForm(reqBody));
+    }
+  };
+
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
@@ -78,6 +142,7 @@ export const HomePage = () => {
           </Navbar.Group>
         </Navbar>
       </div>
+      <CustomChatbot getChatUserInfo={getChatUserInfo} />
       <div className="pl5-l pt6-ns pt5 pb4">
         <CustomView condition={!isMobileOnly}>
           <div className="flex-ns items-center pl5-ns">
@@ -408,11 +473,77 @@ export const HomePage = () => {
               <a href="/signup" className="w-30-ns center">
                 <img className="w-100" src={pack2} alt="packages" />
               </a>
-              <a href="#footer" className="w-30-ns center">
+              <div
+                onClick={openModal}
+                id="contactForm"
+                className="w-30-ns center"
+              >
                 <img className="w-100" src={pack3} alt="packages" />
-              </a>
+              </div>
             </div>
           </CustomView>
+          <Modal
+            isOpen={modalIsOpen}
+            // onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel="TigrowModal"
+            className="Modal"
+            overlayClassName="Overlay"
+          >
+            <div className="flex ma5 mt3 mb4 justify-center flex-column">
+              <label className="b blue center mt4 mb3 f3 lh-title">
+                Contact Us
+              </label>
+              <div className="flex  justify-center flex-column">
+                <div className="mb3">
+                  <TextField
+                    onChange={(e) => setName(e.target.value)}
+                    fullWidth={true}
+                    id="standard-basic"
+                    label="Name"
+                    variant="outlined"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </div>
+
+                <div className="mb4">
+                  <TextField
+                    onChange={(e) => setEmail(e.target.value)}
+                    fullWidth={true}
+                    id="outlined-basic"
+                    label="Email"
+                    variant="outlined"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </div>
+
+                <label className="mb2">Message</label>
+                <TextareaAutosize
+                  onChange={(e) => setMessage(e.target.value)}
+                  rowsMin={4}
+                  aria-label="maximum height"
+                  placeholder="Share your valuable thoughts"
+                />
+                {error && (
+                  <label className="red ma2 f5-l">{error}</label>
+                )}
+                <div className="mt3 center">
+                  <Button
+                    onClick={handleSubmit}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Submit
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </Modal>
           <MobileOnlyView>
             <div className="carousel">
               <Carousel
