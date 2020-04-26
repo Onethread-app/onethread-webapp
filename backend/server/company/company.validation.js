@@ -84,7 +84,7 @@ const schema = {
     '1001 -2000 square meters',
     'above 2000 square meters',
   ]),
-  announcement: Joi.string().max(500),
+  announcement: Joi.string().max(500)
 };
 
 module.exports = {
@@ -142,8 +142,7 @@ module.exports = {
   createNotice: Joi.object().keys({
     params: companyId,
     body: Joi.object().keys({
-      text: schema.announcement,
-      memberId: idSchema.id.required()
+      text: schema.announcement.required()
     }),
   }),
   allNoticesForCompany: Joi.object().keys({
