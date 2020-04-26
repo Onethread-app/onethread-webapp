@@ -9,6 +9,11 @@ import { RightSidebar } from 'components/RightSidebar';
 import editIcon from '../../../resources/images/editIcon.png';
 import coverPic from 'resources/images/coverPhoto.png';
 import { ImageEdit } from './ImageEditor';
+import {
+  CustomView,
+  MobileOnlyView,
+  isMobileOnly,
+} from 'react-device-detect';
 interface IImageUploadViewProps {
   user: User;
 }
@@ -20,12 +25,11 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
   return (
     <>
       <div
-        className="relative hide-child cover bg-center br4"
+        className="relative hide-child cover bg-center br4 individualcover"
         style={{
           backgroundImage: `url(${
             props.user.coverImage ? props.user.coverImage : coverPic
-          })`,
-          height: '340px',
+            })`,
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           objectFit: 'cover',
@@ -33,10 +37,8 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
       >
         <div className="h-100 child bg-black-40 br4">
           <Button
-            className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3"
+            className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3 companyCoverButton f7 f5-ns"
             style={{
-              marginTop: '265px',
-              marginRight: '45px',
               color: 'white',
             }}
             onClick={() => setShowDialogPicture(true)}
@@ -45,19 +47,54 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
           </Button>
         </div>
       </div>
-      <div
-        className="relative flex"
-        style={{ marginTop: '-120px', marginLeft: '50px' }}
-      >
+      <CustomView condition={!isMobileOnly}>
         <div
-          className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray"
-          style={{ width: '235px', height: '235px' }}
+          className="relative flex"
+          style={{ marginTop: '-120px', marginLeft: '50px' }}
         >
-          <ProfilePictureView />
+          <div
+            className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray"
+            style={{ width: '235px', height: '235px' }}
+          >
+            <ProfilePictureView />
+          </div>
+          <div
+            className="ml5-tigrow-l ml1-m"
+            style={{ marginTop: '9rem' }}
+          >
+            <h1 className="f3-l f4 ma0 ws-break ttc">
+              {props.user.firstName} {props.user.lastName}
+            </h1>
+            <div className="cf ">
+              <h1 className="f5 dib ws-break black-70 ttc">
+                {props.user.position
+                  ? props.user.position
+                  : 'No designation'}
+              </h1>
+              <img
+                src={editIcon}
+                width="30"
+                height="30"
+                className="br2 pointer fr mv1"
+                onClick={() => setShowDialogPosition(true)}
+              />
+            </div>
+          </div>
+        </div>
+      </CustomView>
+      <MobileOnlyView>
+        <div
+          className="relative flex companyProfilepicOuterOuter"
+        >
+          <div
+            className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter"
+          >
+            <ProfilePictureView />
+          </div>
         </div>
         <div
-          className="ml5-tigrow-l ml1-m"
-          style={{ marginTop: '9rem' }}
+          className="mw5 center"
+          style={{ marginTop: '3rem' }}
         >
           <h1 className="f3-l f4 ma0 ws-break ttc">
             {props.user.firstName} {props.user.lastName}
@@ -77,7 +114,7 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
             />
           </div>
         </div>
-      </div>
+      </MobileOnlyView>
       {showDialogPicture && (
         <Dialog
           icon="briefcase"

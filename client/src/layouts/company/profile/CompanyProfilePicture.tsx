@@ -11,18 +11,16 @@ const CompanyProfilePictureComponent = (props: any) => {
     <>
       <div>
         <img
-          className=""
+          className="companyProfilepic"
           style={{
-            objectFit: 'cover',
-            width: '220px',
-            height: '220px',
+            objectFit: 'cover'
           }}
           src={
             props.company.logo ? props.company.logo : DefaultUserImage
           }
           onClick={() => setShowDialogPicture(true)}
         />
-        <h1 className="ma1 ws-break ttc"> {props.company.name} </h1>
+        <h1 className="ma1 ws-break ttc f3-ns f4"> {props.company.name} </h1>
         <h1 className="f6 fw6 ma1 ws-break">{props.company.type}</h1>
       </div>
       {showDialogPicture && (

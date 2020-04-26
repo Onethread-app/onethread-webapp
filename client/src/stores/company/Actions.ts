@@ -38,7 +38,7 @@ import {
   ADD_ORGANIZATION,
   COVER_IMAGE_UPLOAD_COMPANY,
   GET_ALL_COMPANY_ANNOUNCEMENT,
-  ADD_ANNOUNCEMENT,
+  // ADD_ANNOUNCEMENT,
   GET_ALL_PRODUCT,
   // ADD_ANNOUNCEMENT
 } from './Types';
@@ -743,10 +743,7 @@ export const addAnnouncement = (announcement: any) => async (
         announce,
         headers,
       );
-      dispatch({
-        type: ADD_ANNOUNCEMENT,
-        payload: response.data.announcement,
-      });
+      dispatch(getCompanyAnnouncement());
       return response.status;
     } else {
       // tslint:disable-next-line: no-console

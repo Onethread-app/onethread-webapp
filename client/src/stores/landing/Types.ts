@@ -1,0 +1,3 @@
+export const LANDING_APIS = {
+  SAVE_CONTACT_FORM: 'SAVE_CONTACT_FORM',
+};
