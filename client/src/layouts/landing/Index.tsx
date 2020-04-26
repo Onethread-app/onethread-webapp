@@ -96,7 +96,6 @@ export const HomePage = () => {
   }
 
   const getChatUserInfo = (name: String, email: String) => {
-    // console.log(name, email);
     if (name !== '' && email !== '') {
       const reqBody = {
         name,
