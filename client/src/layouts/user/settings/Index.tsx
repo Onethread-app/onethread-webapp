@@ -7,14 +7,13 @@ export const ProfileSettingsComponent = () => {
   const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <div className="bl b--black-05 bw1 pl3 vh-50">
+    <div className="bl b--black-05 bw1 pl3-ns pl1 vh-50">
       <Button
         type="submit"
-        className="grow pointer outline-0 shadow-0 h2"
+        className="grow pointer outline-0 shadow-0-ns h2 changepass"
         style={{
           background: '#0fa3a3',
-          color: 'white',
-          fontSize: '16px',
+          color: 'white'
         }}
         onClick={() => setShowDialog(true)}
       >
@@ -26,6 +25,7 @@ export const ProfileSettingsComponent = () => {
           isOpen
           style={{ background: '#fff' }}
           canOutsideClickClose={false}
+          className="ma2"
         >
           <div>
             <ChangePasswordComponent setShowDialog={setShowDialog} />
@@ -37,7 +37,7 @@ export const ProfileSettingsComponent = () => {
 };
 
 const ProfileSettingsPageComponent = () => (
-  <div className="bg-white mh4 mv5 br3 pa4 h-75 shadow-4 w-90">
+  <div className="bg-white mh4 mv5 br3 pa4-ns h-75 shadow-4-ns w-90-ns">
     <Tabs id="TabsExample" vertical={true}>
       <Tab
         id="profile_settings"

@@ -1,4 +1,4 @@
-const Joi = require('joi');
+const Joi = require('@hapi/joi');
 
 // require and configure dotenv, will load vars in .env in PROCESS.ENV
 require('dotenv').config();
@@ -49,15 +49,15 @@ const envVarsSchema = Joi.object({
   PUSHER_KEY: Joi.string()
     .required()
     .description('PUSHER_KEY required'),
-  PUSHER_CHANNEL_APPID: Joi.string()
-    .required()
-    .description('PUSHER_CHANNEL_APPID required'),
-  PUSHER_CHANNEL_KEY: Joi.string()
-    .required()
-    .description('PUSHER_CHANNEL_KEY required'),
-  PUSHER_CHANNEL_SECRET: Joi.string()
-    .required()
-    .description('PUSHER_CHANNEL_SECRET required'),
+  // PUSHER_CHANNEL_APPID: Joi.string()
+  //   .required()
+  //   .description('PUSHER_CHANNEL_APPID required'),
+  // PUSHER_CHANNEL_KEY: Joi.string()
+  //   .required()
+  //   .description('PUSHER_CHANNEL_KEY required'),
+  // PUSHER_CHANNEL_SECRET: Joi.string()
+  //   .required()
+  //   .description('PUSHER_CHANNEL_SECRET required'),
   PUSHER_CHANNEL_CLUSTER: Joi.string()
     .required()
     .description('PUSHER_CHANNEL_CLUSTER required'),
@@ -120,12 +120,12 @@ const config = {
     port: envVars.REDIS_PORT,
     password: envVars.REDIS_PASSWORD,
   },
-  pusherChanel: {
-    appid: envVars.PUSHER_CHANNEL_APPID,
-    key: envVars.PUSHER_CHANNEL_KEY,
-    secret: envVars.PUSHER_CHANNEL_SECRET,
-    cluster: envVars.PUSHER_CHANNEL_CLUSTER,
-  },
+  // pusherChanel: {
+  //   appid: envVars.PUSHER_CHANNEL_APPID,
+  //   key: envVars.PUSHER_CHANNEL_KEY,
+  //   secret: envVars.PUSHER_CHANNEL_SECRET,
+  //   cluster: envVars.PUSHER_CHANNEL_CLUSTER,
+  // },
   emailAddress: envVars.EMAIL_ADDRESS,
   emailPassword: envVars.EMAIL_PASSWORD,
   awsAccessKey: envVars.AWS_ACCESS_KEY,

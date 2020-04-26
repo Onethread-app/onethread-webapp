@@ -65,7 +65,7 @@ export const SignUpPageComponent = (
   return (
     <div className="cf ph2-ns">
       <div
-        className="fl w-100 w-50-ns dt vh-100"
+        className="fl w-100 w-50-ns dt vh-100 ph3 ph0-ns"
         style={{ backgroundColor: 'white' }}
       >
         <div className="v-mid dtc">
@@ -91,7 +91,7 @@ export const SignUpPageComponent = (
                 ...rest
               }) => (
                 <>
-                  <h1 className="pl3">Sign Up</h1>
+                  <h1 className="pl3-ns">Sign Up</h1>
                   <form className="dt fl cf" onSubmit={handleSubmit}>
                     <div className="mw9 center ph3-ns v-mid dtc">
                       <SubmitError errorMessage={submitError} />
@@ -106,7 +106,9 @@ export const SignUpPageComponent = (
                             render={({ input, meta }) => (
                               <div
                                 className={` ${
-                                  checkError(meta) ? 'mb3' : 'mb4'
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
                                 }`}
                               >
                                 <InputGroupFieldWithError
@@ -184,7 +186,9 @@ export const SignUpPageComponent = (
                             render={({ input, meta }) => (
                               <div
                                 className={` ${
-                                  checkError(meta) ? 'mb3' : 'mb4'
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
                                 }`}
                               >
                                 <InputGroupFieldWithError
@@ -225,7 +229,9 @@ export const SignUpPageComponent = (
                               render={({ input, meta }) => (
                                 <div
                                   className={` ${
-                                    checkError(meta) ? 'mb3' : 'mb4'
+                                    checkError(meta)
+                                      ? 'mb3-ns mb2'
+                                      : 'mb4-ns mb3'
                                   }`}
                                 >
                                   <InputGroupFieldWithError
@@ -264,7 +270,9 @@ export const SignUpPageComponent = (
                           render={({ input, meta }) => (
                             <div
                               className={` ${
-                                checkError(meta) ? 'mb3' : 'mb4 '
+                                checkError(meta)
+                                  ? 'mb3-ns mb2'
+                                  : 'mb4-ns mb3'
                               }`}
                             >
                               <div
@@ -308,7 +316,7 @@ export const SignUpPageComponent = (
                               </div>
                               {checkError(meta) && (
                                 <small
-                                  className="mv3"
+                                  className="mv3-ns mv2"
                                   style={{ color: 'red' }}
                                 >
                                   {meta.error || meta.submitError}
@@ -330,7 +338,9 @@ export const SignUpPageComponent = (
                             render={({ input, meta }) => (
                               <div
                                 className={` ${
-                                  checkError(meta) ? 'mb3' : 'mb4'
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
                                 }`}
                               >
                                 <InputGroupFieldWithError
@@ -397,7 +407,9 @@ export const SignUpPageComponent = (
                             render={({ input, meta }) => (
                               <div
                                 className={` ${
-                                  checkError(meta) ? 'mb3' : 'mb4'
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
                                 }`}
                               >
                                 <InputGroupFieldWithError
@@ -481,7 +493,9 @@ export const SignUpPageComponent = (
                             render={({ input, meta }) => (
                               <div
                                 className={` ${
-                                  checkError(meta) ? 'mb3' : 'mb4'
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
                                 }`}
                               >
                                 <InputGroupFieldWithError
@@ -566,7 +580,7 @@ export const SignUpPageComponent = (
                         Sign up
                       </Button>
                       <NavLink
-                        className="fw9 dt center tigrow-lightBlue pt4"
+                        className="fw9 dt center tigrow-lightBlue pt4-ns pt2"
                         to="/signin"
                       >
                         Already have an account?
@@ -580,7 +594,7 @@ export const SignUpPageComponent = (
         </div>
       </div>
       <div
-        className="fl w-100 w-50-ns dt vh-100 animated slideInLeft fast absolute-l"
+        className="fl w-100 w-50-ns dt vh-100 animated slideInLeft fast absolute-l displayNone"
         style={{
           zIndex: 9999,
           left: '50%',

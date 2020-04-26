@@ -86,7 +86,7 @@ export const SignInPageComponent = (
   return (
     <div className="cf">
       <div
-        className="fl w-100 w-50-ns dt vh-100"
+        className="fl w-100 w-50-ns dt vh-100 displayNone"
         style={{
           zIndex: 9999,
           left: '50%',
@@ -115,7 +115,7 @@ export const SignInPageComponent = (
       </div>
 
       <div
-        className="fl w-100 w-50-ns dt vh-100"
+        className="fl w-100 w-50-ns dt vh-100 pa4 pa0-ns"
         style={{ backgroundColor: 'white' }}
       >
         <div className="v-mid dtc">
