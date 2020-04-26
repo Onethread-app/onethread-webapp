@@ -29,6 +29,7 @@ import dashboard from '../resources/images/sideBarDashboard.svg';
 import project from '../resources/images/ProjectsIcon.svg';
 import team from '../resources/images/sidebarTeam.svg';
 import associate from '../resources/images/sideBarAssociates.svg';
+import settings from '../resources/images/sidebarSettings.svg';
 import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';

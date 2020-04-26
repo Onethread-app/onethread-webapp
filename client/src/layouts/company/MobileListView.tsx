@@ -50,6 +50,7 @@ export const ListViewComponent = (
         <div style={{ backgroundColor: '#3F61C5' }}>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d06346b0... code style issue fixed
           <Icon
@@ -62,6 +63,9 @@ export const ListViewComponent = (
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
 >>>>>>> d06346b0... code style issue fixed
+=======
+          <Icon icon="delete" iconSize={20} className="white ma3 fr"
+>>>>>>> 05623007... mobile responsive for project preface
             onClick={() => props.setShowDialog(false)}
           />
           <Button
@@ -69,6 +73,7 @@ export const ListViewComponent = (
             onClick={() => {
               props.history.push(`/${props.user.name}`);
               props.setShowDialog(false);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             }}
@@ -79,6 +84,10 @@ export const ListViewComponent = (
 =======
             }}
 >>>>>>> d06346b0... code style issue fixed
+=======
+            }
+            }
+>>>>>>> 05623007... mobile responsive for project preface
           >
             <div className="dtc w2">
               <img
@@ -92,6 +101,7 @@ export const ListViewComponent = (
             </div>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <div className="dtc v-mid pl3 pt2">
 =======
             <div className="dtc v-mid pl3">
@@ -99,10 +109,14 @@ export const ListViewComponent = (
 =======
             <div className="dtc v-mid pl3 pt2">
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+            <div className="dtc v-mid pl3">
+>>>>>>> 05623007... mobile responsive for project preface
               <h1 className="f6 white ma0">
                 {`${props.user.firstName} ${props.user.lastName}`}
               </h1>
               <h1 className="f7 white ma0 fw4 mb4">
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 {props.user.position}
@@ -112,6 +126,9 @@ export const ListViewComponent = (
 =======
                 {props.user.position}
 >>>>>>> d06346b0... code style issue fixed
+=======
+                {props.user.position} 
+>>>>>>> 05623007... mobile responsive for project preface
               </h1>
             </div>
           </Button>
@@ -124,6 +141,7 @@ export const ListViewComponent = (
           to={`/${props.user.name}/settings`}
           onClick={() => props.setShowDialog(false)}
         >
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -170,6 +188,16 @@ export const ListViewComponent = (
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
           onClick={(e: any) => props.logoutAction(props.history)}
 >>>>>>> d06346b0... code style issue fixed
+=======
+          <Icon icon="cog" className="pr3" style={{ color: '#787e8d' }} />
+            Profile Settings
+        </NavLink>
+        <Button
+          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
+          onClick={(e: any) =>
+            props.logoutAction(props.history)
+          }
+>>>>>>> 05623007... mobile responsive for project preface
           icon="log-in"
           alignText="left"
         >
@@ -197,6 +225,7 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     } mt1 pointer bp3-popover-dismiss`}
 =======
                       } mt1 pointer bp3-popover-dismiss`}
@@ -210,6 +239,9 @@ export const ListViewComponent = (
 =======
                     } mt1 pointer bp3-popover-dismiss`}
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+                      } mt1 pointer bp3-popover-dismiss`}
+>>>>>>> 05623007... mobile responsive for project preface
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -217,6 +249,7 @@ export const ListViewComponent = (
                         props.history,
                       )) as any;
                       if (response.status === 200) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                         dispatch({
@@ -246,11 +279,18 @@ export const ListViewComponent = (
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+                        dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+                        props.history.push(
+                          `/company/${
+                          (response as any).data.company.name
+>>>>>>> 05623007... mobile responsive for project preface
                           }/dashboard`,
                         );
                       }
                     }}
                   >
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                     <div className="flex justify-between">
@@ -288,6 +328,8 @@ export const ListViewComponent = (
                       </div>
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> 05623007... mobile responsive for project preface
                     <img
                       src={
                         c.company.logo ? c.company.logo : CompanyIcon
@@ -305,9 +347,12 @@ export const ListViewComponent = (
                         {c.company.name}{' '}
                       </h1>
                       <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
+<<<<<<< HEAD
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+>>>>>>> 05623007... mobile responsive for project preface
                     </div>
                   </article>
                 ),
@@ -320,12 +365,18 @@ export const ListViewComponent = (
             // props.setShowDialog(!props.showDialog);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           }}
+=======
+          }
+          }
+>>>>>>> 05623007... mobile responsive for project preface
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
           Create Company
-        </button>
+      </button>
       </div>
+<<<<<<< HEAD
       {showButton && (
         <Dialog
           onClose={() => setShowButton(!showButton)}
@@ -350,6 +401,8 @@ export const ListViewComponent = (
         </button>
       </div>
 <<<<<<< HEAD
+=======
+>>>>>>> 05623007... mobile responsive for project preface
       {
         showButton && (
           <Dialog
@@ -364,6 +417,7 @@ export const ListViewComponent = (
           </Dialog>
         )
       }
+<<<<<<< HEAD
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
       {showButton && (
@@ -379,6 +433,8 @@ export const ListViewComponent = (
         </Dialog>
       )}
 >>>>>>> d06346b0... code style issue fixed
+=======
+>>>>>>> 05623007... mobile responsive for project preface
     </>
   );
 };

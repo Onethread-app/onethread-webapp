@@ -8,6 +8,8 @@ import {
   Icon,
   ButtonGroup,
   Alignment,
+  Navbar,
+  Drawer,
 } from '@blueprintjs/core';
 import { AddColleaguesForm } from 'layouts/company/colleagues/AddColleaguesForm';
 import { connect } from 'react-redux';
@@ -32,8 +34,9 @@ import { EditDesignationForm } from 'layouts/company/colleagues/EditDesignationF
 import { isEqual, upperFirst, chunk } from 'lodash';
 import { User } from 'stores/user/Reducer';
 import { IProjectTeam } from 'stores/project/Reducer';
-import { isMobileOnly } from 'react-device-detect';
-import { NavbarCompany } from 'components/NavbarCompany';
+import { MobileView } from 'react-device-detect';
+import user from './../../../resources/images/profilePhoto.svg';
+import { MobileListView } from '../MobileListView';
 interface Colleagues {
   company: ICompany;
   user: User;
@@ -100,6 +103,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
   const [showDialog, setShowDialog] = useState(false);
   const [showDialogAdd, setShowDialogAdd] = useState(false);
   const [showDialogEdit, setShowDialogEdit] = useState(false);
+  const [showAvatarDialog, setShowAvatarDialog] = useState(false);
   const [editMember, setEditMember] = useState<
     ICompanyMembers | undefined
   >(undefined);
@@ -147,7 +151,28 @@ const ColleaguesPageComponent = (props: Colleagues) => {
 
   return (
     <>
-      <div className="ph5-ns ph3 pb5">
+      <MobileView>
+        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+          <h1 className="f3">My Colleagues</h1>
+          <img
+            src={
+              props.user.profileImage
+                ? props.user.profileImage
+                : user
+            }
+            className="dim v-mid dib br-100 pointer"
+            style={{
+              width: '2rem',
+              height: '2rem',
+              objectFit: 'cover',
+            }}
+            alt="user"
+            onClick={() => setShowAvatarDialog(true)}
+
+          />
+        </Navbar>
+      </MobileView>
+      <div className="ph5-ns ph3 pb5 pt5 pt0-ns">
         <div className="flex justify-between items-center">
           {isMobileOnly ? undefined : (
             <h1 className="tigrow-lightGray-1">Colleagues</h1>
@@ -554,6 +579,21 @@ const ColleaguesPageComponent = (props: Colleagues) => {
             }
           />
         </Dialog>
+      )}
+      {showAvatarDialog && (
+        <Drawer
+          onClose={() => setShowDialog(!showAvatarDialog)}
+          isOpen={showAvatarDialog}
+          canOutsideClickClose={false}
+          style={{ width: '70%' }}
+        >
+          <div>
+            <MobileListView
+              showDialog={showAvatarDialog}
+              setShowDialog={setShowAvatarDialog}
+            />
+          </div>
+        </Drawer>
       )}
     </>
   );

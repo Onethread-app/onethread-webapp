@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ProjectDescriptionView } from './ProjectDescriptionView';
 import DownloadIcon from './../../../resources/images/Download.svg';
-import { Button, Dialog } from '@blueprintjs/core';
+import { Button, Dialog, Navbar, Drawer } from '@blueprintjs/core';
 import user from '../../../resources/images/profilePhoto.svg';
 import { useState } from 'react';
 import { FileUpload } from './fileUpload';
@@ -13,6 +13,7 @@ import { MobileView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { NavbarCompany } from 'components/NavbarCompany';
 =======
 import { MobileListView } from '../MobileListView';
@@ -20,6 +21,9 @@ import { MobileListView } from '../MobileListView';
 =======
 import { NavbarCompany } from 'components/NavbarCompany';
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+import { MobileListView } from '../MobileListView';
+>>>>>>> 05623007... mobile responsive for project preface
 
 interface ProjectPrefaceProps {
   description: string;
@@ -39,6 +43,7 @@ export const ProjectPrefaceViewComponent = (
   const [showFileDialog, setShowFileDialog] = useState(false);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
@@ -47,10 +52,14 @@ export const ProjectPrefaceViewComponent = (
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+  const [showDialog, setShowDialog] = useState(false);
+>>>>>>> 05623007... mobile responsive for project preface
 
   return (
     <>
       <MobileView>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -68,6 +77,15 @@ export const ProjectPrefaceViewComponent = (
           <img
             src={
               props.user.profileImage ? props.user.profileImage : user
+=======
+        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+          <h1 className="f3">My Projects</h1>
+          <img
+            src={
+              props.user.profileImage
+                ? props.user.profileImage
+                : user
+>>>>>>> 05623007... mobile responsive for project preface
             }
             className="dim v-mid dib br-100 pointer"
             style={{
@@ -77,12 +95,18 @@ export const ProjectPrefaceViewComponent = (
             }}
             alt="user"
             onClick={() => setShowDialog(true)}
+<<<<<<< HEAD
           />
         </Navbar>
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
         <NavbarCompany title="Project" />
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+
+          />
+        </Navbar>
+>>>>>>> 05623007... mobile responsive for project preface
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -147,6 +171,7 @@ export const ProjectPrefaceViewComponent = (
         </div>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div className="w-30-ns pa4 pb5">
 =======
         <div className="w-30-ns pa4">
@@ -154,6 +179,9 @@ export const ProjectPrefaceViewComponent = (
 =======
         <div className="w-30-ns pa4 pb5">
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+        <div className="w-30-ns pa4">
+>>>>>>> 05623007... mobile responsive for project preface
           {props.role === 'admin' ? (
             <div>
               <h1 className="f6">Shared Files</h1>
@@ -195,6 +223,7 @@ export const ProjectPrefaceViewComponent = (
               </Button>
             </div>
           ) : (
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -250,6 +279,8 @@ export const ProjectPrefaceViewComponent = (
 =======
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+>>>>>>> 05623007... mobile responsive for project preface
               projectRules(props.optionalRole)[props.role].includes(
                 'addFileProject',
               ) && (
@@ -291,6 +322,7 @@ export const ProjectPrefaceViewComponent = (
                   >
                     Upload Files
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
 >>>>>>> d06346b0... code style issue fixed
@@ -298,10 +330,12 @@ export const ProjectPrefaceViewComponent = (
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+>>>>>>> 05623007... mobile responsive for project preface
                 </Button>
-              </div>
-            )
-          )}
+                </div>
+              )
+            )}
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})
@@ -343,6 +377,21 @@ export const ProjectPrefaceViewComponent = (
           <FileUpload setShowDialog={setShowFileDialog} />
         </Dialog>
       )}
+      {showDialog && (
+        <Drawer
+          onClose={() => setShowDialog(!showDialog)}
+          isOpen={showDialog}
+          canOutsideClickClose={false}
+          style={{ width: '70%' }}
+        >
+          <div>
+            <MobileListView
+              showDialog={showDialog}
+              setShowDialog={setShowDialog}
+            />
+          </div>
+        </Drawer>
+      )}
     </>
   );
 };
@@ -365,6 +414,7 @@ const mapStateToProps = (state: any) => ({
   company: state.companyReducer.currentCompany,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   user: state.userReducer.user,
 =======
   user: state.userReducer.user
@@ -372,6 +422,9 @@ const mapStateToProps = (state: any) => ({
 =======
   user: state.userReducer.user,
 >>>>>>> d06346b0... code style issue fixed
+=======
+  user: state.userReducer.user
+>>>>>>> 05623007... mobile responsive for project preface
 });
 
 export const ProjectPrefaceView = connect(
