@@ -241,7 +241,7 @@ export const SignUpPageComponent = (
                                       boxShadow: 'none',
                                       fontSize: '18px',
                                     }}
-                                    placeHolder="Contact Number"
+                                    placeHolder="Contact Number (optional)"
                                     keypress={(e) => {
                                       if (
                                         e.which < 48 ||
