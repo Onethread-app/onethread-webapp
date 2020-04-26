@@ -4,11 +4,6 @@ const paramValidation = require('./account.validation');
 const router = express.Router();
 
 const accountCtrl = require('./account.controller');
-const {
-  permit,
-  authSelf,
-  hasAuthorization,
-} = require('../helpers/permission');
 const schemaValidator = require('../helpers/joiSchemaValidator');
 const {
   authorization,
