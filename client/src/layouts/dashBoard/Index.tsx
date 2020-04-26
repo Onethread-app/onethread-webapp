@@ -63,7 +63,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       {loading === false ? (
         <>
           <MobileView>
-            <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+            <Navbar
+              fixedToTop
+              className="flex justify-between items-center shadow-4"
+              style={{ height: '55px' }}
+            >
               <h1 className="f3">My Dashboard</h1>
               <img
                 src={
@@ -79,7 +83,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 }}
                 alt="user"
                 onClick={() => setShowDialog(true)}
-
               />
             </Navbar>
           </MobileView>
@@ -118,15 +121,44 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                           className="w-90 f5 fw4 mh3 tj break-word"
                           style={{ lineHeight: '25px' }}
                         >
-                          {announcement.text}
-                        </h1>
-                        {/* </Text> */}
-                      </div>
-                    ))
-                  ) : (
-                    <small>No announcements.</small>
-                  )}
-              </Card>
+                          <Paper
+                            className={classes.heading}
+                            elevation={0}
+                          >
+                            <Typography className="">
+                              {`From ${
+                                announcement.memberId &&
+                                announcement.memberId.designations
+                                  .length > 0
+                                  ? announcement.memberId
+                                      .designations[0].division
+                                  : 'Admin'
+                              }`}
+                            </Typography>
+                          </Paper>
+                          <Paper
+                            className={classes.secondaryHeading}
+                            elevation={0}
+                          >
+                            {/* <Typography className="">Date</Typography> */}
+                            <Typography className="">
+                              {announcement.createdAt &&
+                                moment(
+                                  announcement.createdAt,
+                                ).calendar()}
+                            </Typography>
+                          </Paper>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <Typography>{announcement.text}</Typography>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </div>
+                  ))
+                ) : (
+                  <small>No announcements.</small>
+                )}
+              </div>
             </div>
           </div>
           <div>
@@ -144,8 +176,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           </div>
         </>
       ) : (
-          <Loading />
-        )}
+        <Loading />
+      )}
       {showAnnouncementDialog && (
         <Dialog
           onClose={() =>
