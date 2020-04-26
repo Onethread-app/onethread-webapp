@@ -72,7 +72,7 @@ export const HomePage = () => {
             />
           </Navbar.Group>
           <Navbar.Group align={Alignment.RIGHT} className="mt3-ns">
-            <a href="/signin" className="tryLink">
+            <a href="/signup" className="tryLink">
               Try for free
             </a>
           </Navbar.Group>
@@ -96,7 +96,7 @@ export const HomePage = () => {
                 </li>
               </ul>
               <div className="demoLink">
-                <a href="#" className="tryLink">
+                <a href="https://www.youtube.com/watch?v=Jqscj2N5F4g&feature=youtu.be" className="tryLink">
                   See The Demo
                 </a>
               </div>
@@ -116,7 +116,7 @@ export const HomePage = () => {
                 </li>
               </ul>
               <div className="demoLink" style={{ marginTop: '25px' }}>
-                <a href="/signin" className="tryLink">
+                <a href="/signup" className="tryLink">
                   Try for free
                 </a>
               </div>
