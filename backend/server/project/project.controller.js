@@ -25,6 +25,7 @@ const teamCreate = (account, member, project, role) => {
   });
   newTeam.save();
 };
+
 const createNewProjectForCompany = async (req, res, next) => {
   try {
     let associates = req.body.associates;
@@ -57,7 +58,7 @@ const createNewProjectForCompany = async (req, res, next) => {
       // // assoId = assosiate id
       let projectReq = [];
       // create an id of map array
-      let reqObjectMap = associates.map(async (data) => {
+      associates.map(async (data) => {
         let reqObject = {};
         reqObject.company = req.params.companyId;
         reqObject.associate = data._id;
@@ -65,9 +66,8 @@ const createNewProjectForCompany = async (req, res, next) => {
         reqObject.project = project._id;
         reqObject.size = data.size;
         projectReq.push(reqObject);
-        return reqObject;
       });
-      let sendProjectReq = await ProjectRequest.create(projectReq);
+      await ProjectRequest.create(projectReq);
       let associateId = [];
       associateId = associates.map((data) => {
         return data._id;

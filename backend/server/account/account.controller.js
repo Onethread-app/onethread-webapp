@@ -573,6 +573,7 @@ const tokenRefresh = async (req, res, next) => {
           const payLoad = {
             email: user.email,
             _id: user._id,
+            name: user.name,
           };
           // convert to msec
           // add local time zone offset
@@ -657,6 +658,7 @@ const tokenRefresh = async (req, res, next) => {
       );
     }
   } catch (err) {
+    logger.error(`${err}`);
     next(err);
   }
 };
