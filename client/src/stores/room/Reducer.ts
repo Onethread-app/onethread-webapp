@@ -23,7 +23,6 @@ import {
   CLEAR_FILE_UPLOAD,
   DELETE_ONE_PENDING_FILE,
   ALL_MESSAGE_RECEIVED,
-  UNREAD_COUNT_ROOMS,
   ARCHIVE_ROOM,
   GET_ROOM_SHARED_FILES_ERROR,
   GET_ROOM_SHARED_FILES,
@@ -35,6 +34,9 @@ import {
   GET_COMPANY_ROOMS,
   CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
   CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY,
+  UPDATE_UNREAD_COUNT_ROOMS,
+  CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
+  INCREMENT_UNREAD_COUNT_FOR_SINGLE_ROOM,
 } from './Types';
 
 export interface IRoom {
@@ -119,7 +121,6 @@ export interface IRoomReducer {
     users: ITypingUsers[];
   };
   users: IRoomMember[];
-  roomMembers: any[];
   discussions: IRoomDiscussion[];
   sharedFileMessages: IRoomMessage[];
   rooms: IRoom[];
@@ -149,7 +150,6 @@ const InitialState: IRoomReducer = {
     users: [],
   },
   users: [],
-  roomMembers: [],
   discussions: [],
   sharedFileMessages: [],
   rooms: [],
@@ -180,11 +180,26 @@ export const sortRooms = (a: IRoom, b: IRoom) => {
     : 0;
 };
 
+const clearUnreadCountForSingleRoom = (
+  roomsUnreadCount: any,
+  roomId: any,
+) => {
+  roomsUnreadCount[roomId] = 0;
+  return roomsUnreadCount;
+};
+const incrementUnreadCountForSingleRoom = (
+  roomsUnreadCount: any,
+  roomId: any,
+) => {
+  roomsUnreadCount[roomId] = roomsUnreadCount[roomId] + 1;
+  return roomsUnreadCount;
+};
+
 const updateUnreadCount = (
   roomsUnreadCount: any,
   updatedRoom: any,
 ) => {
-  roomsUnreadCount[updatedRoom.id] = updatedRoom.unreadCount;
+  roomsUnreadCount[updatedRoom._id] = updatedRoom.unreadCount;
   return roomsUnreadCount;
 };
 
@@ -204,6 +219,16 @@ const updateCompanyRooms = (
     }
     return room;
   });
+};
+
+const onUserStartedTyping = (state: IRoomReducer, action: any) => {
+  return {
+    ...state,
+    typing: {
+      users: [...state.typing.users, action.payload],
+    },
+    loading: false,
+  };
 };
 
 export const RoomReducer = (state = InitialState, action: any) => {
@@ -226,10 +251,31 @@ export const RoomReducer = (state = InitialState, action: any) => {
         companyRooms: action.payload,
       };
     }
-    case UNREAD_COUNT_ROOMS: {
+    case UPDATE_UNREAD_COUNT_ROOMS: {
       return {
         ...state,
-        roomsUnreadCount: action.payload,
+        roomsUnreadCount: updateUnreadCount(
+          state.roomsUnreadCount,
+          action.payload,
+        ),
+      };
+    }
+    case CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM: {
+      return {
+        ...state,
+        roomsUnreadCount: clearUnreadCountForSingleRoom(
+          state.roomsUnreadCount,
+          action.payload,
+        ),
+      };
+    }
+    case INCREMENT_UNREAD_COUNT_FOR_SINGLE_ROOM: {
+      return {
+        ...state,
+        roomsUnreadCount: incrementUnreadCountForSingleRoom(
+          state.roomsUnreadCount,
+          action.payload,
+        ),
       };
     }
     case DELETE_ONE_PENDING_FILE: {
@@ -249,13 +295,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
       };
     }
     case ON_USER_STARTED_TYPING:
-      return {
-        ...state,
-        typing: {
-          users: [...state.typing.users, action.payload],
-        },
-        loading: false,
-      };
+      return onUserStartedTyping(state, action);
     case ON_USER_STOPPED_TYPING:
       return {
         ...state,
@@ -384,7 +424,8 @@ export const RoomReducer = (state = InitialState, action: any) => {
     case GET_ROOMS:
       return {
         ...state,
-        rooms: action.payload.sort(sortRooms),
+        rooms: action.payload.rooms.sort(sortRooms),
+        roomsUnreadCount: action.payload.roomsUnreadCount,
         loading: false,
       };
     case CREATE_ROOM_FROM_SERVER:

@@ -1,15 +1,4 @@
-const Joi = require('joi');
-
-const id = Joi.object().keys({
-  id: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required()
-    .error((errors) => {
-      return {
-        message: 'Invalid ID',
-      };
-    }),
-});
+const Joi = require('@hapi/joi');
 
 module.exports = {
   createRoom: Joi.object().keys({
@@ -18,7 +7,7 @@ module.exports = {
       company: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error((errors) => {
+        .error(() => {
           return {
             message: 'Invalid Company ID',
           };
@@ -26,7 +15,7 @@ module.exports = {
       project: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error((errors) => {
+        .error(() => {
           return {
             message: 'Invalid Project ID',
           };
@@ -38,13 +27,24 @@ module.exports = {
       room: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required(),
+      company: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
+      project: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required(),
       members: Joi.array()
         .min(1)
         .max(10)
         .items(
-          Joi.string()
-            .regex(/^[0-9a-fA-F]{24}$/)
-            .required(),
+          Joi.object().keys({
+            account: Joi.string()
+              .regex(/^[0-9a-fA-F]{24}$/)
+              .required(),
+            team: Joi.string()
+              .regex(/^[0-9a-fA-F]{24}$/)
+              .required(),
+          }),
         )
         .required(),
     }),
@@ -54,7 +54,7 @@ module.exports = {
       roomId: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error((errors) => {
+        .error(() => {
           return {
             message: 'Invalid Room ID',
           };
@@ -69,7 +69,19 @@ module.exports = {
       roomId: Joi.string()
         .regex(/^[0-9a-fA-F]{24}$/)
         .required()
-        .error((errors) => {
+        .error(() => {
+          return {
+            message: 'Invalid Room ID',
+          };
+        }),
+    }),
+  }),
+  updateLastSeen: Joi.object().keys({
+    params: Joi.object().keys({
+      roomId: Joi.string()
+        .regex(/^[0-9a-fA-F]{24}$/)
+        .required()
+        .error(() => {
           return {
             message: 'Invalid Room ID',
           };
