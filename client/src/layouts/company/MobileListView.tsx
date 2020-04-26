@@ -48,10 +48,14 @@ export const ListViewComponent = (
     <>
       <div>
         <div style={{ backgroundColor: '#3F61C5' }}>
+<<<<<<< HEAD
           <Icon
             icon="delete"
             iconSize={20}
             className="white ma3 fr"
+=======
+          <Icon icon="delete" iconSize={20} className="white ma3 fr"
+>>>>>>> b9e80fb9... mobile responsive for project preface
             onClick={() => props.setShowDialog(false)}
           />
           <Button
@@ -59,7 +63,12 @@ export const ListViewComponent = (
             onClick={() => {
               props.history.push(`/${props.user.name}`);
               props.setShowDialog(false);
+<<<<<<< HEAD
             }}
+=======
+            }
+            }
+>>>>>>> b9e80fb9... mobile responsive for project preface
           >
             <div className="dtc w2">
               <img
@@ -71,12 +80,20 @@ export const ListViewComponent = (
                 className="db w2 h2 br-100 ba b--white-90 "
               />
             </div>
+<<<<<<< HEAD
             <div className="dtc v-mid pl3 pt2">
+=======
+            <div className="dtc v-mid pl3">
+>>>>>>> b9e80fb9... mobile responsive for project preface
               <h1 className="f6 white ma0">
                 {`${props.user.firstName} ${props.user.lastName}`}
               </h1>
               <h1 className="f7 white ma0 fw4 mb4">
+<<<<<<< HEAD
                 {props.user.position}
+=======
+                {props.user.position} 
+>>>>>>> b9e80fb9... mobile responsive for project preface
               </h1>
             </div>
           </Button>
@@ -89,6 +106,7 @@ export const ListViewComponent = (
           to={`/${props.user.name}/settings`}
           onClick={() => props.setShowDialog(false)}
         >
+<<<<<<< HEAD
           <Icon
             icon="cog"
             className="pr3"
@@ -114,6 +132,16 @@ export const ListViewComponent = (
         <Button
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
           onClick={(e: any) => props.logoutAction(props.history)}
+=======
+          <Icon icon="cog" className="pr3" style={{ color: '#787e8d' }} />
+            Profile Settings
+        </NavLink>
+        <Button
+          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
+          onClick={(e: any) =>
+            props.logoutAction(props.history)
+          }
+>>>>>>> b9e80fb9... mobile responsive for project preface
           icon="log-in"
           alignText="left"
         >
@@ -137,7 +165,11 @@ export const ListViewComponent = (
                       props.currentCompany === c.company._id
                         ? 'bg-black-10'
                         : ''
+<<<<<<< HEAD
                     } mt1 pointer bp3-popover-dismiss`}
+=======
+                      } mt1 pointer bp3-popover-dismiss`}
+>>>>>>> b9e80fb9... mobile responsive for project preface
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -145,17 +177,25 @@ export const ListViewComponent = (
                         props.history,
                       )) as any;
                       if (response.status === 200) {
+<<<<<<< HEAD
                         dispatch({
                           type: CLEAR_PROJECT_REDUCER_STATE,
                         });
                         props.history.push(
                           `/company/${
                             (response as any).data.company.name
+=======
+                        dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+                        props.history.push(
+                          `/company/${
+                          (response as any).data.company.name
+>>>>>>> b9e80fb9... mobile responsive for project preface
                           }/dashboard`,
                         );
                       }
                     }}
                   >
+<<<<<<< HEAD
                     <div className="flex justify-between">
                       <img
                         src={
@@ -177,6 +217,25 @@ export const ListViewComponent = (
                         </h1>
                         <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
                       </div>
+=======
+                    <img
+                      src={
+                        c.company.logo ? c.company.logo : CompanyIcon
+                      }
+                      className="v-mid dib br-100"
+                      alt="user"
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        objectFit: 'cover',
+                      }}
+                    />
+                    <div className="dtc v-mid pl3">
+                      <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">
+                        {c.company.name}{' '}
+                      </h1>
+                      <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
+>>>>>>> b9e80fb9... mobile responsive for project preface
                     </div>
                   </article>
                 ),
@@ -187,6 +246,7 @@ export const ListViewComponent = (
           onClick={() => {
             setShowButton(true);
             // props.setShowDialog(!props.showDialog);
+<<<<<<< HEAD
           }}
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
@@ -205,6 +265,29 @@ export const ListViewComponent = (
           </div>
         </Dialog>
       )}
+=======
+          }
+          }
+          className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
+        >
+          Create Company
+      </button>
+      </div>
+      {
+        showButton && (
+          <Dialog
+            onClose={() => setShowButton(!showButton)}
+            isOpen={showButton}
+            style={{ background: '#fff' }}
+            canOutsideClickClose={false}
+          >
+            <div>
+              <CompanySignupForm setShowDialog={props.setShowDialog} />
+            </div>
+          </Dialog>
+        )
+      }
+>>>>>>> b9e80fb9... mobile responsive for project preface
     </>
   );
 };
