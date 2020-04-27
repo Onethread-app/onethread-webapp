@@ -1,20 +1,3 @@
-const config = require('./config');
-
-if( config.env === 'production' ){
-
-const apm = require('elastic-apm-node');
-apm.start({
-  // Override service name from package.json
-  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-  serviceName: 'tigrowProduction',
-
-  // Use if APM Server requires a token
-  secretToken: 'PSsBuM57LOO1CP4lMP',
-
-  serverUrl:
-    'https://359bff683ecf425192a1e1fbe2c457a3.apm.ap-southeast-1.aws.cloud.es.io',
-});
-}
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -28,6 +11,7 @@ const expressWinston = require('express-winston');
 const expressValidation = require('express-validation');
 const helmet = require('helmet');
 const winstonInstance = require('./winston');
+const config = require('./config');
 
 const routes = require('../index.route');
 const { APIError } = require('../server/helpers/APIError');
