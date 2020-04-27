@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const validate = require('express-validation');
+const {validate} = require('express-validation');
 const passport = require('passport');
 const paramValidation = require('./save.validation');
 const saveCtrl = require('./save.controller');
