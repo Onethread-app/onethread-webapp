@@ -1,20 +1,19 @@
 const config = require('./config');
 
-if( config.env === 'production' ){
+require('elastic-apm-node').start({
+    // Override service name from package.json
+    // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+    serviceName: config.APM_SERVICE_NAME,
+  
+    // Use if APM Server requires a token
+    secretToken: config.APM_TOKEN,
+  
+    // Set custom APM Server URL (default: http://localhost:8200)
+    serverUrl: config.APM_URL,
 
-const apm = require('elastic-apm-node');
-apm.start({
-  // Override service name from package.json
-  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-  serviceName: 'tigrowProduction',
+    active: config.env === 'production'
+  })
 
-  // Use if APM Server requires a token
-  secretToken: 'PSsBuM57LOO1CP4lMP',
-
-  serverUrl:
-    'https://359bff683ecf425192a1e1fbe2c457a3.apm.ap-southeast-1.aws.cloud.es.io',
-});
-}
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');

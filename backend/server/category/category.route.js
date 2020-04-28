@@ -1,6 +1,6 @@
 'use strict';
 const express = require('express');
-const validate = require('express-validation');
+const {validate} = require('express-validation');
 const paramValidation = require('./category.validation');
 const router = express.Router();
 const categoryCtrl = require('./category.controller');

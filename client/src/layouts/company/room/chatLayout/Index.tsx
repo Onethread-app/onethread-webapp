@@ -14,7 +14,6 @@ import addMemberIcon from './../../../../resources/images/addMemberIcon.png';
 import settingsIcon from './../../../../resources/images/settings.svg';
 import videoCallIcon from './../../../../resources/images/video-call.png';
 import { VideoCallRequest } from './VideoCallRequest';
-import { Link } from 'react-router-dom';
 
 interface ChatLayoutComponentProps {
   getRoomMembers: (roomId: string) => void;
@@ -157,13 +156,10 @@ export const ChatLayoutComponent = (
                     popoverClassName="bg-white pa3"
                     content={
                       <div>
-                        <Link to="https://8x8.vc">
                           <div
                             className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
                             onClick={() => {
-                              window.location.assign(
-                                'https://8x8.vc',
-                              );
+                              window.open('https://8x8.vc', '_blank');
                             }}
                           >
                             <h4 className="mv0">Basic</h4>
@@ -171,7 +167,6 @@ export const ChatLayoutComponent = (
                               with our partner 8x8
                             </h5>
                           </div>
-                        </Link>
                         <div
                           className="br3 ba b--gray gray pointer bp3-popover-dismiss mt2 pa2 tc"
                           onClick={() =>

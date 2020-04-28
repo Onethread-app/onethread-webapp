@@ -1,5 +1,5 @@
 const express = require('express');
-const validate = require('express-validation');
+const {validate} = require('express-validation');
 const paramValidation = require('./review.validation');
 const reviewCtrl = require('./review.controller');
 const passport = require('passport');
