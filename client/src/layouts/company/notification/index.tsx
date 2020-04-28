@@ -16,8 +16,8 @@ export default function index(props: notification) {
         props.read ? 'bg-near-white' : ''
       } ba b--near-white`}
     >
-      <article className="dt w-100 p2 pl2">
-        <div style={{ width: '20px' }}>
+      <article className="flex dt w-100 p2 pl2">
+        <div className="w-10" style={{ width: '20px' }}>
           {props.type && (
             <img
               src={notificationType[props.type].img}
@@ -25,8 +25,8 @@ export default function index(props: notification) {
             />
           )}
         </div>
-        <div className="dtc v-mid p10 pl2 link dim black hide-child pointer">
-          <p className="f6 lh-copy mv0">{props.text} </p>
+        <div className="w-90 dtc v-mid p10 pl2 link dim black hide-child pointer">
+          <p className="tl f6 lh-copy mv0">{props.text} </p>
         </div>
       </article>
     </main>
