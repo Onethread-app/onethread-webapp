@@ -12,7 +12,6 @@ import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { isEqual, isEmpty } from 'lodash';
 import { Form, Field } from 'react-final-form';
 import {
-  required,
   checkError,
   isEmail,
   maxValue,
@@ -125,7 +124,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
               </div>
             )}
           />
-          <label>Contact No</label>
+          {/* <label>Contact No</label>
           <Field<string>
             name="contactNo"
             validate={required}
@@ -150,7 +149,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
                 />
               </div>
             )}
-          />
+          /> */}
           <Field<string>
             name="location"
             validate={maxValue(120)}
