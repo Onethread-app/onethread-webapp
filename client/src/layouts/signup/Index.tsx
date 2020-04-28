@@ -22,7 +22,7 @@ import { isEmpty } from 'lodash';
 
 import logo from './../../resources/images/TiGrowLogoFinal.png';
 import nameTagIcon from './../../resources/images/nameTag.png';
-import phoneIcon from './../../resources/images/phone.png';
+// import phoneIcon from './../../resources/images/phone.png';
 import emailIcon from './../../resources/images/email.png';
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
@@ -32,6 +32,9 @@ import backgroundImage from './../../resources/images/Bg-png.png';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
+// import ReactFlagsSelect from 'react-flags-select';
+import 'react-flags-select/css/react-flags-select.css';
+// import { allCountryList } from './countryCode';
 
 interface SignUpPageInternalProps {
   userSignupAction: (user: UserModel) => any;
@@ -44,8 +47,23 @@ export const SignUpPageComponent = (
   const [showConfirmPassword, setShowConfirmPassword] = useState(
     false,
   );
+  // const [countryCode] = useState('+880');
+
+  // const onSelectFlag = (countryCodeA: any) => {
+  //   allCountryList.map((country) => {
+  //     console.log(country.code === countryCodeA);
+  //     country.code === countryCodeA &&
+  //       setCountryCode(country.dial_code);
+  //   });
+  // };
 
   const onSubmit = async (values: any) => {
+    // const reqBody = {
+    //   ...values,
+    //   contactNo: `${countryCode}-${
+    //     values.contactNo ? values.contactNo : '0000'
+    //   }`,
+    // };
     const response = await props.userSignupAction(values);
     if (response.message === 200) {
       props.history.push(`/signup-confirmation`);
@@ -179,8 +197,31 @@ export const SignUpPageComponent = (
                         />
                       </div>
 
-                      <div className={`flex justify-content`}>
-                        <div style={{ width: '114px' }}>
+                      {/* <div className={`flex justify-content`}>
+                        <div style={{ width: '90px' }}>
+                          <Field<string>
+                            name="countryCode"
+                            render={({ input, meta }) => (
+                              <div
+                                className={` ${
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
+                                }`}
+                              >
+                                <ReactFlagsSelect
+                                  onSelect={onSelectFlag}
+                                  defaultCountry="BD"
+                                  showSelectedLabel={false}
+                                  selectedSize={20}
+                                  // optionsSize={14}
+                                />
+                              </div>
+                            )}
+                          />
+                        </div>
+
+                        <div style={{ width: '50px' }}>
                           <Field<string>
                             name="countryCode"
                             render={({ input, meta }) => (
@@ -198,23 +239,12 @@ export const SignUpPageComponent = (
                                       ? 'b--red'
                                       : 'b--lightBlue'
                                   }`}
-                                  value={input.value}
                                   onChange={input.onChange}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      Ex
-                                      <img
-                                        src={phoneIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
+                                  value={countryCode}
+                                  readOnly={true}
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
+                                    fontSize: '12px',
                                   }}
                                 />
                               </div>
@@ -262,7 +292,7 @@ export const SignUpPageComponent = (
                             />
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                       <div>
                         <Field<string>
                           name="birthDate"
@@ -611,12 +641,12 @@ export const SignUpPageComponent = (
               <img width="150px" height="70px" src={logo} />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
-              TiGrow is a professional network crafted for Business
-              Professionals, where they can trade between each other,
-              find nearest suppliers, create workplaces in which they
-              can maintain not only intra company communications but
-              also external communications with organizations where
-              they can create smart contracts between them.
+              TiGrow is designed keeping in mind that Ease of
+              Communication is the key to success for any enterprise.
+              TiGrow’s architecture has the key unique element of
+              containerization with its feature called Project which
+              ensures privacy within it, and fluidity to collaborate
+              with external and internal stakeholders.
             </h3>
           </div>
         </div>

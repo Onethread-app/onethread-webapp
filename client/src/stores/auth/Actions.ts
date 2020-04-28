@@ -88,13 +88,13 @@ export const userSignupAction = (newUser: UserModel) => async (
   dispatch: any,
 ) => {
   try {
-    const user = {
-      ...newUser,
-      contactNo: `+88${newUser.contactNo}`,
-    };
-    const response = await tigrowApi.post('accounts/signup', user, {
-      'Content-Type': 'application/json',
-    } as AxiosRequestConfig);
+    const response = await tigrowApi.post(
+      'accounts/signup',
+      newUser,
+      {
+        'Content-Type': 'application/json',
+      } as AxiosRequestConfig,
+    );
     if (response.status === 201) {
       localStorage.setItem('email', JSON.stringify(newUser.email));
     }

@@ -58,7 +58,7 @@ module.exports = {
         }),
       contactNo: Joi.string()
         .regex(/^(\+?(880)[0-9]{10})$/)
-        .required()
+        // .required()
         .error((error) => {
           return {
             message: 'contactNo is not a valid format',

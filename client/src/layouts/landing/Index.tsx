@@ -51,13 +51,8 @@ const customStyles = {
   content: {
     top: '50%',
     left: '50%',
-    // right: 'auto',
     bottom: 'auto',
-    // marginRight: '-50%',
     transform: 'translate(-50%, -50%)',
-  },
-  overlay: {
-    // backgroundColor: '#ececec',
   },
 };
 
@@ -160,7 +155,10 @@ export const HomePage = () => {
                 </li>
               </ul>
               <div className="demoLink">
-                <a href="https://www.youtube.com/watch?v=Jqscj2N5F4g&feature=youtu.be" className="tryLink">
+                <a
+                  href="https://www.youtube.com/watch?v=Jqscj2N5F4g&feature=youtu.be"
+                  className="tryLink"
+                >
                   See The Demo
                 </a>
               </div>
@@ -477,13 +475,16 @@ export const HomePage = () => {
                 id="contactForm"
                 className="w-30-ns center"
               >
-                <img className="w-100" src={pack3} alt="packages" />
+                <img
+                  className="w-100 pointer"
+                  src={pack3}
+                  alt="packages"
+                />
               </div>
             </div>
           </CustomView>
           <Modal
             isOpen={modalIsOpen}
-            // onAfterOpen={afterOpenModal}
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="TigrowModal"
@@ -594,7 +595,7 @@ export const HomePage = () => {
           <EmailVerificationForm />
         </div>
         <div className="dt center w-34-ns w-80 mb5-ns mb3 footerText">
-          Contact us at rubaiyat@tigrow.co for Enterprise Solution
+          Contact us at sales@tigrow.co for Enterprise Solution
         </div>
         <small className="white footerText">
           © {new Date().getFullYear()} TiGrow Inc. - House 208, Road
