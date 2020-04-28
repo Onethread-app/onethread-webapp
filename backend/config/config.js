@@ -42,6 +42,16 @@ const envVarsSchema = Joi.object({
   EMAIL_PASSWORD: Joi.string()
     .required()
     .description('password required'),
+
+  INSTANCE_LOCATOR: Joi.string()
+    .required()
+    .description('INSTANCE_LOCATOR required'),
+  PUSHER_KEY: Joi.string()
+    .required()
+    .description('PUSHER_KEY required'),
+  PUSHER_CHANNEL_CLUSTER: Joi.string()
+    .required()
+    .description('PUSHER_CHANNEL_CLUSTER required'),
   AWS_ACCESS_KEY: Joi.string()
     .required()
     .description('AWS credential required'),
@@ -81,9 +91,7 @@ const envVarsSchema = Joi.object({
   APM_TOKEN: Joi.string()
     .required()
     .description('APM_TOKEN required'),
-  APM_URL: Joi.string()
-    .required()
-    .description('APM_URL required')
+  APM_URL: Joi.string().required().description('APM_URL required'),
 })
   .unknown()
   .required();
@@ -122,7 +130,7 @@ const config = {
   PUSHER_CHANNEL_CLUSTER: envVars.PUSHER_CHANNEL_CLUSTER,
   APM_SERVICE_NAME: envVars.APM_SERVICE_NAME,
   APM_TOKEN: envVars.APM_TOKEN,
-  APM_URL: envVars.APM_URL
+  APM_URL: envVars.APM_URL,
 };
 
 module.exports = config;
