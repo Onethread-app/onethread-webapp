@@ -200,8 +200,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           </div>
         </>
       ) : (
-          <Loading />
-        )}
+        <Loading />
+      )}
       {showAnnouncementDialog && (
         <Dialog
           onClose={() =>
