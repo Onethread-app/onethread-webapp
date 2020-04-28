@@ -1,4 +1,3 @@
-'use strict';
 const express = require('express');
 const { validate } = require('express-validation');
 const paramValidation = require('./category.validation');
@@ -27,7 +26,10 @@ router
   );
 router
   .route('/:cid')
-  .get(authorization, categoryCtrl.getSubCategory)
+  .get(
+    //authorization,
+    categoryCtrl.getSubCategory,
+  )
   .post(
     // authorization,
     // // requireAuth,
