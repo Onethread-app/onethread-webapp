@@ -33,11 +33,11 @@ const BasicInfoDetailsViewComponent = (
             </p>
           </div>
           <Divider />
-          <div className="flex justify-between items-center">
+          {/* <div className="flex justify-between items-center">
             <h1 className="f6">Contact Number</h1>
-            <p className="black-60 fw4">{props.user.contactNo}</p>
+            <p className="black-60 fw4">{props.us</p>
           </div>
-          <Divider />
+          <Divider /> */}
           <div className="flex justify-between items-center">
             <h1 className="f6">Address</h1>
             <p className="black-60 fw4">{props.user.location}</p>
