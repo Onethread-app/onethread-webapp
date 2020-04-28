@@ -98,7 +98,6 @@ const NotFound = () => (
   </article>
 );
 
-
 export const App = () => (
 		<BrowserRouter>  
     <Switch>
