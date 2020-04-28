@@ -9804,6 +9804,7 @@ prompts@^2.0.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
 =======
 prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
@@ -9820,6 +9821,9 @@ prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
 =======
 prop-types@^15.5.10, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+prop-types@^15.5.10, prop-types@^15.5.8, prop-types@^15.6.0, prop-types@^15.6.1, prop-types@^15.6.2, prop-types@^15.7.2:
+>>>>>>> 214cbebc... google analytics on index.html, confis, email to help tigrow, contact commented on signup
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -10116,14 +10120,18 @@ react-final-form@^6.3.2:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 4997b780... google analytics on index.html, confis, email to help tigrow, contact commented on signup
+=======
+>>>>>>> 214cbebc... google analytics on index.html, confis, email to help tigrow, contact commented on signup
 react-flags-select@^1.1.12:
   version "1.1.12"
   resolved "https://registry.yarnpkg.com/react-flags-select/-/react-flags-select-1.1.12.tgz#428b34f928eab875e8e0296046410d30d75cb818"
   integrity sha512-icWC8pHdfTQTIqpLTgPcd4tFlfgUdiwzUJaSkPMzP6BEMRrh8yAJC55IkgmJV8PIX8qTUrEETZ6+6115hGjR7g==
   dependencies:
     prop-types "^15.5.8"
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 =======
@@ -10134,6 +10142,8 @@ react-ga@^2.7.0:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.7.0.tgz#24328f157f31e8cffbf4de74a3396536679d8d7c"
   integrity sha512-AjC7UOZMvygrWTc2hKxTDvlMXEtbmA0IgJjmkhgmQQ3RkXrWR11xEagLGFGaNyaPnmg24oaIiaNPnEoftUhfXA==
+=======
+>>>>>>> 214cbebc... google analytics on index.html, confis, email to help tigrow, contact commented on signup
 
 <<<<<<< HEAD
 <<<<<<< HEAD
