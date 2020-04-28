@@ -64,11 +64,7 @@ export const SignUpPageComponent = (
     //     values.contactNo ? values.contactNo : '0000'
     //   }`,
     // };
-
-    const response = await props.userSignupAction({
-      ...values,
-      email: values.email.trim(),
-    });
+    const response = await props.userSignupAction(values);
     if (response.message === 200) {
       props.history.push(`/signup-confirmation`);
       return true;
@@ -199,99 +195,8 @@ export const SignUpPageComponent = (
                           />
                         </div>
 
-                        <div className={`flex justify-content`}>
-                          <div style={{ width: '114px' }}>
-                            <Field<string>
-                              name="countryCode"
-                              render={({ input, meta }) => (
-                                <div
-                                  className={` ${
-                                    checkError(meta) ? 'mb3-ns mb2' : 'mb4-ns mb3'
-                                    }`}
-                                >
-                                  <InputGroupFieldWithError
-                                    id="countryCode"
-                                    className={`bw1 pb2 br0 bb ${
-                                      checkError(meta)
-                                        ? 'b--red'
-                                        : 'b--lightBlue'
-                                      }`}
-                                    value="+88"
-                                    readOnly={true}
-                                    onChange={input.onChange}
-                                    leftIcon={
-                                      <span className="bp3-icon">
-                                        <img
-                                          src={phoneIcon}
-                                          width="20px"
-                                          height="20px"
-                                          color="#0fa3a3"
-                                        />
-                                      </span>
-                                    }
-                                    style={{
-                                      boxShadow: 'none',
-                                      fontSize: '18px',
-                                      paddingLeft: '40px',
-                                    }}
-                                    error={
-                                      checkError(meta) &&
-                                      (meta.error || meta.submitError)
-                                    }
-                                  />
-                                </div>
-                              )}
-                            />
-                          </div>
-
-                          <div className="ml3 ml1-m flex-auto">
-                            <div className="w-100">
-                              <Field<string>
-                                name="contactNo"
-                                validate={composeValidators(
-                                  required,
-                                  phoneNoValidation,
-                                )}
-                                render={({ input, meta }) => (
-                                  <div
-                                    className={` ${
-                                      checkError(meta) ? 'mb3-ns mb2' : 'mb4-ns mb3'
-                                      }`}
-                                  >
-                                    <InputGroupFieldWithError
-                                      id="contactNo"
-                                      className={`bw1 pb2 br0 bb ${
-                                        checkError(meta)
-                                          ? 'b--red'
-                                          : 'b--lightBlue'
-                                        }`}
-                                      value={input.value}
-                                      onChange={input.onChange}
-                                      style={{
-                                        boxShadow: 'none',
-                                        fontSize: '18px',
-                                      }}
-                                      placeHolder="Contact Number"
-                                      keypress={(e) => {
-                                        if (
-                                          e.which < 48 ||
-                                          e.which > 57
-                                        ) {
-                                          e.preventDefault();
-                                        }
-                                      }}
-                                      error={
-                                        checkError(meta) &&
-                                        (meta.error || meta.submitError)
-                                      }
-                                    />
-                                  </div>
-                                )}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div>
+                      {/* <div className={`flex justify-content`}>
+                        <div style={{ width: '90px' }}>
                           <Field<string>
                             name="birthDate"
                             validate={required}
@@ -301,29 +206,42 @@ export const SignUpPageComponent = (
                                   checkError(meta) ? 'mb3-ns mb2' : 'mb4-ns mb3'
                                   }`}
                               >
-                                <div
-                                  className={`flex bw1 pb1 br0 bb ${
+                                <ReactFlagsSelect
+                                  onSelect={onSelectFlag}
+                                  defaultCountry="BD"
+                                  showSelectedLabel={false}
+                                  selectedSize={20}
+                                  // optionsSize={14}
+                                />
+                              </div>
+                            )}
+                          />
+                        </div>
+
+                        <div style={{ width: '50px' }}>
+                          <Field<string>
+                            name="countryCode"
+                            render={({ input, meta }) => (
+                              <div
+                                className={` ${
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
+                                }`}
+                              >
+                                <InputGroupFieldWithError
+                                  id="countryCode"
+                                  className={`bw1 pb2 br0 bb ${
                                     checkError(meta)
                                       ? 'b--red'
                                       : 'b--lightBlue'
                                   }`}
-                                  value={input.value}
                                   onChange={input.onChange}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      Ex
-                                      <img
-                                        src={phoneIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
+                                  value={countryCode}
+                                  readOnly={true}
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
+                                    fontSize: '12px',
                                   }}
                                 />
                               </div>
@@ -396,6 +314,70 @@ export const SignUpPageComponent = (
                             />
                           </div>
                         </div>
+                      </div> */}
+                      <div>
+                        <Field<string>
+                          name="birthDate"
+                          validate={required}
+                          render={({ input, meta }) => (
+                            <div
+                              className={` ${
+                                checkError(meta)
+                                  ? 'mb3-ns mb2'
+                                  : 'mb4-ns mb3'
+                              }`}
+                            >
+                              <div
+                                className={`flex bw1 pb1 br0 bb ${
+                                  checkError(meta)
+                                    ? 'b--red'
+                                    : 'b--lightBlue'
+                                }`}
+                              >
+                                <div>
+                                  <Icon
+                                    icon="calendar"
+                                    className="pl2"
+                                    style={{ color: '#0fa3a3' }}
+                                  />
+                                </div>
+                                <DateInput
+                                  className={`  birthdatePicker `}
+                                  formatDate={(date: Date) =>
+                                    date.toLocaleDateString()
+                                  }
+                                  parseDate={(str: string) =>
+                                    new Date(str)
+                                  }
+                                  onChange={input.onChange}
+                                  canClearSelection={false}
+                                  value={
+                                    input.value
+                                      ? new Date(input.value)
+                                      : null
+                                  }
+                                  popoverProps={{
+                                    targetClassName: 'w-100',
+                                  }}
+                                  minDate={new Date('1800-01-01')}
+                                  placeholder="Birth Date"
+                                  maxDate={moment(new Date())
+                                    .subtract(13, 'years')
+                                    .toDate()}
+                                />
+                              </div>
+                              {checkError(meta) && (
+                                <small
+                                  className="mv3-ns mv2"
+                                  style={{ color: 'red' }}
+                                >
+                                  {meta.error || meta.submitError}
+                                </small>
+                              )}
+                            </div>
+                          )}
+                        />
+                      </div>
 
                         <div>
                           <div>
