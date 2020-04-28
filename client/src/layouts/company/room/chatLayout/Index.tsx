@@ -170,6 +170,17 @@ export const ChatLayoutComponent = (
                     popoverClassName="bg-white pa3"
                     content={
                       <div>
+                          <div
+                            className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
+                            onClick={() => {
+                              window.open('https://8x8.vc', '_blank');
+                            }}
+                          >
+                            <h4 className="mv0">Basic</h4>
+                            <h5 className="mv0">
+                              with our partner 8x8
+                            </h5>
+                          </div>
                         <div
                           className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
                           onClick={() => {
