@@ -68,7 +68,7 @@ const register = async (req, res, next) => {
     firstName: data.firstName,
     lastName: data.lastName,
     name: name,
-    contactNo: data.contactNo,
+    contactNo: Date.now(),
     password: data.password,
     birthDate: data.birthDate,
   });
