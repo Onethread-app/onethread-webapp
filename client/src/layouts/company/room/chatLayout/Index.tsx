@@ -9,10 +9,11 @@ import { isEmpty } from 'lodash';
 import { projectPermit } from 'stores/UtilsActions';
 import { MembersList } from './members/MembersList';
 import { IRoomReducer } from 'stores/room/Reducer';
-
 import memberListIcon from './../../../../resources/images/member-list.svg';
 import addMemberIcon from './../../../../resources/images/addMemberIcon.png';
 import settingsIcon from './../../../../resources/images/settings.svg';
+import videoCallIcon from './../../../../resources/images/video-call.png';
+import { VideoCallRequest } from './VideoCallRequest';
 
 interface ChatLayoutComponentProps {
   getRoomMembers: (roomId: string) => void;
@@ -32,15 +33,15 @@ export const ChatLayoutComponent = (
   const [showMemberListDialog, setShowMemberListDialog] = useState(
     false,
   );
+  const [showVideoCallDialog, setShowVideoCallDialog] = useState(
+    false,
+  );
 
   return (
     <>
       {isEmpty(props.currentRoom.name) === false &&
       isEmpty(props.currentRoom._id) === false ? (
-        <div
-          className="flex flex-column h-100 w-100"
-          // style={{ height: "calc(100vh - 50px)" }}
-        >
+        <div className="flex flex-column h-100 w-100">
           {/* chat heading starts */}
           <div className="flex justify-between items-center ph4 pv2 bb b--tigrowLightGray-1">
             <div>
@@ -65,7 +66,7 @@ export const ChatLayoutComponent = (
               </div>
             </div>
             <div className="flex">
-              <div>
+              <div className="pointer">
                 <Popover
                   minimal={true}
                   // isOpen={true}
@@ -134,7 +135,7 @@ export const ChatLayoutComponent = (
               {projectPermit(props.companyRole) &&
               props.currentRoom.archive === false ? (
                 <div
-                  className="ml2"
+                  className="pointer ml3"
                   onClick={() =>
                     setShowMemberFormDialog(!showMemberFormDialog)
                   }
@@ -147,6 +148,52 @@ export const ChatLayoutComponent = (
                   />
                 </div>
               ) : null}
+              {props.currentRoom.archive === false && (
+                <div className="pointer ml3">
+                  <Popover
+                    minimal={true}
+                    position={Position.BOTTOM}
+                    popoverClassName="bg-white pa3"
+                    content={
+                      <div>
+                          <div
+                            className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
+                            onClick={() => {
+                              window.open('https://8x8.vc', '_blank');
+                            }}
+                          >
+                            <h4 className="mv0">Basic</h4>
+                            <h5 className="mv0">
+                              with our partner 8x8
+                            </h5>
+                          </div>
+                        <div
+                          className="br3 ba b--gray gray pointer bp3-popover-dismiss mt2 pa2 tc"
+                          onClick={() =>
+                            setShowVideoCallDialog(
+                              !showVideoCallDialog,
+                            )
+                          }
+                        >
+                          <h4 className="mv0 c-tigrowViolet">
+                            Enterprise
+                          </h4>
+                        </div>
+                      </div>
+                    }
+                    target={
+                      <div>
+                        <img
+                          className="grow"
+                          src={videoCallIcon}
+                          width="30px"
+                          height="30px"
+                        />
+                      </div>
+                    }
+                  />
+                </div>
+              )}
             </div>
           </div>
           {/* chat heading ends */}
@@ -162,6 +209,20 @@ export const ChatLayoutComponent = (
       ) : (
         <h2>Please, select a room !!</h2>
       )}
+
+      {showVideoCallDialog && (
+        <Dialog
+          onClose={() => setShowVideoCallDialog(!showVideoCallDialog)}
+          isOpen={showVideoCallDialog}
+          canOutsideClickClose={false}
+          style={{ background: '#fff' }}
+        >
+          <VideoCallRequest
+            setShowVideoCallDialog={setShowVideoCallDialog}
+          />
+        </Dialog>
+      )}
+
       {showMemberListDialog && (
         <Dialog
           onClose={() =>

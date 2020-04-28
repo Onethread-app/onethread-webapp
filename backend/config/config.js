@@ -42,43 +42,27 @@ const envVarsSchema = Joi.object({
   EMAIL_PASSWORD: Joi.string()
     .required()
     .description('password required'),
-
-  INSTANCE_LOCATOR: Joi.string()
-    .required()
-    .description('INSTANCE_LOCATOR required'),
-  PUSHER_KEY: Joi.string()
-    .required()
-    .description('PUSHER_KEY required'),
-  // PUSHER_CHANNEL_APPID: Joi.string()
-  //   .required()
-  //   .description('PUSHER_CHANNEL_APPID required'),
-  // PUSHER_CHANNEL_KEY: Joi.string()
-  //   .required()
-  //   .description('PUSHER_CHANNEL_KEY required'),
-  // PUSHER_CHANNEL_SECRET: Joi.string()
-  //   .required()
-  //   .description('PUSHER_CHANNEL_SECRET required'),
-  PUSHER_CHANNEL_CLUSTER: Joi.string()
-    .required()
-    .description('PUSHER_CHANNEL_CLUSTER required'),
   AWS_ACCESS_KEY: Joi.string()
     .required()
     .description('AWS credential required'),
   AWS_SECRET_ACCESS_KEY: Joi.string()
     .required()
     .description('AWS secret key required'),
+  AWS_SES_KEY: Joi.string()
+    .required()
+    .description('AWS IAM SES key requires'),
+  AWS_SES_ACCESS_KEY: Joi.string()
+    .required()
+    .description('AWS IAM SES secret key required'),
+  SES_REGION: Joi.string()
+    .required()
+    .description('SES region required'),
   S3_REGION: Joi.string()
     .required()
     .description('S3 region required'),
   BUCKET_NAME: Joi.string()
     .required()
     .description('Bucket Name required'),
-  //   INSTANCE_LOCATOR: Joi.string()
-  //   .required()
-  //   .description('INSTANCE_LOCATOR required'),
-  // PUSHER_KEY: Joi.string()
-  //   .required()
-  //   .description('PUSHER_KEY required'),
   PUSHER_CHANNEL_APP_ID: Joi.string()
     .required()
     .description('PUSHER_CHANNEL_APP_ID required'),
@@ -91,17 +75,20 @@ const envVarsSchema = Joi.object({
   PUSHER_CHANNEL_CLUSTER: Joi.string()
     .required()
     .description('PUSHER_CHANNEL_CLUSTER required'),
+  APM_SERVICE_NAME: Joi.string()
+    .required()
+    .description('APM_SERVICE_NAME required'),
+  APM_TOKEN: Joi.string()
+    .required()
+    .description('APM_TOKEN required'),
+  APM_URL: Joi.string()
+    .required()
+    .description('APM_URL required')
 })
   .unknown()
   .required();
 
-const { error, value: envVars } = Joi.validate(
-  process.env,
-  envVarsSchema,
-);
-// if (error) {
-//   throw new Error(`Config validation error: ${error.message}`);
-// }
+const { value: envVars } = Joi.validate(process.env, envVarsSchema);
 
 const config = {
   env: envVars.NODE_ENV,
@@ -120,24 +107,22 @@ const config = {
     port: envVars.REDIS_PORT,
     password: envVars.REDIS_PASSWORD,
   },
-  // pusherChanel: {
-  //   appid: envVars.PUSHER_CHANNEL_APPID,
-  //   key: envVars.PUSHER_CHANNEL_KEY,
-  //   secret: envVars.PUSHER_CHANNEL_SECRET,
-  //   cluster: envVars.PUSHER_CHANNEL_CLUSTER,
-  // },
   emailAddress: envVars.EMAIL_ADDRESS,
   emailPassword: envVars.EMAIL_PASSWORD,
   awsAccessKey: envVars.AWS_ACCESS_KEY,
   awsSecretAccessKey: envVars.AWS_SECRET_ACCESS_KEY,
+  awsSesAccessKey: envVars.AWS_SES_KEY,
+  awsSesSecretKey: envVars.AWS_SES_ACCESS_KEY,
+  sesRegion: envVars.SES_REGION,
   s3Region: envVars.S3_REGION,
   bucketName: envVars.BUCKET_NAME,
-  // instanceLocator: envVars.INSTANCE_LOCATOR,
-  // pusherKey: envVars.PUSHER_KEY,
   PUSHER_CHANNEL_APP_ID: envVars.PUSHER_CHANNEL_APP_ID,
   PUSHER_CHANNEL_KEY: envVars.PUSHER_CHANNEL_KEY,
   PUSHER_CHANNEL_SECRET: envVars.PUSHER_CHANNEL_SECRET,
   PUSHER_CHANNEL_CLUSTER: envVars.PUSHER_CHANNEL_CLUSTER,
+  APM_SERVICE_NAME: envVars.APM_SERVICE_NAME,
+  APM_TOKEN: envVars.APM_TOKEN,
+  APM_URL: envVars.APM_URL
 };
 
 module.exports = config;

@@ -39,7 +39,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
 
   return (
     <>
-      <div className="w-100">
+      <div className="w-100 mb6">
         <div>
           <div className="flex justify-between">
             <h1 className="f5">Products/Services</h1>

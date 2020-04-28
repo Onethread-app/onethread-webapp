@@ -11,8 +11,6 @@ const app = require('./config/express');
 const logger = require('./config/winston');
 const { IndexElasticSearch } = require('./index.elasticsearch');
 
-const { webhook } = require('./server/services/slack.services.js');
-
 // plugin bluebird promise in mongoose
 mongoose.Promise = Promise;
 
