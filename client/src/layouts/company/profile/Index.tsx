@@ -42,4 +42,12 @@ const mapStateToProps = (state: any) => {
   };
 };
 
+<<<<<<< HEAD
 export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);
+=======
+<<<<<<< HEAD
+export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);
+=======
+export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);
+>>>>>>> b9e80fb9... mobile responsive for project preface
+>>>>>>> bd529096... accouncement sorted in FIFO order

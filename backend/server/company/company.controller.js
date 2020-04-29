@@ -590,7 +590,10 @@ const dashBoard = async (req, res, next) => {
 const noticePostByCompany = async (req, res, next) => {
   try {
     const NewNotice = req.body.text;
-    const memberId = req.body.memberId;
+    const memberId = await Member.findOne({
+      account: req.user._id,
+      company: req.params.companyId,
+    });
     const announcement = new Announcement({
       memberId,
       text: NewNotice,
@@ -641,7 +644,10 @@ const allNoticesForCompany = async (req, res, next) => {
 
     const announce = await Announcement.find({
       company: req.params.companyId,
-    }).sort({createdAt: 'desc'});
+    })
+      .select('_id memberId text createdAt memberId')
+      .populate(options)
+      .sort({ createdAt: 'desc' });
 
     logger.info(`announcement show for company`);
     return sendJSONresponse(res, 200, {
