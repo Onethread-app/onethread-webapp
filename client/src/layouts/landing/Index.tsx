@@ -51,17 +51,32 @@ const customStyles = {
   content: {
     top: '50%',
     left: '50%',
+<<<<<<< HEAD
     bottom: 'auto',
     transform: 'translate(-50%, -50%)',
   },
+=======
+    // right: 'auto',
+    bottom: 'auto',
+    // marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+  overlay: {
+    // backgroundColor: '#ececec',
+  },
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
 };
 
 export const HomePage = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+<<<<<<< HEAD
 		const [message, setMessage] = useState('');
 		const [subject, setSubject] = useState('');
+=======
+  const [message, setMessage] = useState('');
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
   const [error, setError] = useState('');
   const handleSubmit = () => {
     // console.log(name, email, message);
@@ -70,8 +85,12 @@ export const HomePage = () => {
     } else {
       const reqBody = {
         name,
+<<<<<<< HEAD
 								email,
 								subject,
+=======
+        email,
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
         message,
       };
       store.dispatch(saveContactForm(reqBody));
@@ -91,8 +110,12 @@ export const HomePage = () => {
       const reqBody = {
         name,
         email,
+<<<<<<< HEAD
 								subject: 'N/A',
 								message
+=======
+        message: 'N/A',
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
       };
       store.dispatch(saveContactForm(reqBody));
     }
@@ -478,16 +501,24 @@ export const HomePage = () => {
                 id="contactForm"
                 className="w-30-ns center"
               >
+<<<<<<< HEAD
                 <img
                   className="w-100 pointer"
                   src={pack3}
                   alt="packages"
                 />
+=======
+                <img className="w-100" src={pack3} alt="packages" />
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
               </div>
             </div>
           </CustomView>
           <Modal
             isOpen={modalIsOpen}
+<<<<<<< HEAD
+=======
+            // onAfterOpen={afterOpenModal}
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
             onRequestClose={closeModal}
             style={customStyles}
             contentLabel="TigrowModal"
@@ -517,6 +548,7 @@ export const HomePage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     fullWidth={true}
                     id="outlined-basic"
+<<<<<<< HEAD
                     label="Your Email"
                     variant="outlined"
                     InputLabelProps={{
@@ -531,6 +563,9 @@ export const HomePage = () => {
                     fullWidth={true}
                     id="outlined-basic"
                     label="Subject"
+=======
+                    label="Email"
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
                     variant="outlined"
                     InputLabelProps={{
                       shrink: true,

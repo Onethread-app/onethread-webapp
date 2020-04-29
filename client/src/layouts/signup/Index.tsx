@@ -116,7 +116,7 @@ export const SignUpPageComponent = (
                       <div className="flex pt3 justify-content">
                         <div>
                           <Field<string>
-                            name="firstName"
+                            name="lastName"
                             validate={composeValidators(
                               required,
                               maxValue(32),
@@ -163,39 +163,6 @@ export const SignUpPageComponent = (
                             )}
                           />
                         </div>
-                        <Field<string>
-                          name="lastName"
-                          validate={composeValidators(
-                            required,
-                            maxValue(32),
-                          )}
-                          render={({ input, meta }) => (
-                            <div className="ml3">
-                              <div>
-                                <InputGroupFieldWithError
-                                  id="lastName"
-                                  className={`bw1 pb2 br0 bb ${
-                                    checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                  }}
-                                  placeHolder="Last Name"
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-                        />
-                      </div>
 
                       {/* <div className={`flex justify-content`}>
                         <div style={{ width: '90px' }}>
@@ -223,7 +190,8 @@ export const SignUpPageComponent = (
 
                         <div style={{ width: '50px' }}>
                           <Field<string>
-                            name="countryCode"
+                            name="birthDate"
+                            validate={required}
                             render={({ input, meta }) => (
                               <div
                                 className={` ${
@@ -232,9 +200,8 @@ export const SignUpPageComponent = (
                                     : 'mb4-ns mb3'
                                 }`}
                               >
-                                <InputGroupFieldWithError
-                                  id="countryCode"
-                                  className={`bw1 pb2 br0 bb ${
+                                <div
+                                  className={`flex bw1 pb1 br0 bb ${
                                     checkError(meta)
                                       ? 'b--red'
                                       : 'b--lightBlue'
@@ -252,8 +219,8 @@ export const SignUpPageComponent = (
                           />
                         </div>
 
-                        <div className="ml3 ml1-m flex-auto">
-                          <div className="w-100">
+                        <div>
+                          <div>
                             <Field<string>
                               name="contactNo"
                               render={({ input, meta }) => (
@@ -265,17 +232,44 @@ export const SignUpPageComponent = (
                                   }`}
                                 >
                                   <InputGroupFieldWithError
-                                    id="contactNo"
+                                    id="email"
                                     className={`bw1 pb2 br0 bb ${
                                       checkError(meta)
                                         ? 'b--red'
                                         : 'b--lightBlue'
-                                    }`}
+                                      }`}
                                     value={input.value}
                                     onChange={input.onChange}
+                                    leftIcon={
+                                      <span className="bp3-icon">
+                                        <img
+                                          src={emailIcon}
+                                          width="20px"
+                                          height="20px"
+                                          color="#0fa3a3"
+                                        />
+                                      </span>
+                                    }
+                                    rightElement={
+                                      <span
+                                        className="bp3-icon"
+                                        style={{
+                                          paddingTop: '10px',
+                                          paddingRight: '5px',
+                                        }}
+                                      >
+                                        <img
+                                          src={greyLockIcon}
+                                          width="15px"
+                                          height="15px"
+                                          color="#0fa3a3"
+                                        />
+                                      </span>
+                                    }
                                     style={{
                                       boxShadow: 'none',
                                       fontSize: '18px',
+                                      paddingLeft: '40px',
                                     }}
                                     placeHolder="Contact Number (optional)"
                                     keypress={(e) => {
@@ -426,7 +420,6 @@ export const SignUpPageComponent = (
                         </div>
                       </div>
 
-                      <div>
                         <div>
                           <Field<string>
                             name="password"
@@ -497,25 +490,24 @@ export const SignUpPageComponent = (
                                             color="#0fa3a3"
                                           />
                                         </Tooltip> */}
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
-                                  }}
-                                  placeHolder="Password"
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              </div>
-                            )}
-                          />
+                                      </span>
+                                    }
+                                    style={{
+                                      boxShadow: 'none',
+                                      fontSize: '18px',
+                                      paddingLeft: '40px',
+                                    }}
+                                    placeHolder="Password"
+                                    error={
+                                      checkError(meta) &&
+                                      (meta.error || meta.submitError)
+                                    }
+                                  />
+                                </div>
+                              )}
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div>
                         <div>
                           <Field<string>
                             name="confirmPassword"
@@ -591,23 +583,22 @@ export const SignUpPageComponent = (
                             )}
                           />
                         </div>
-                      </div>
-                      <Button
-                        className="grow h2 pointer white bp3-minimal w4"
-                        style={{
-                          background: '#0FA3A3',
-                          outline: 'none',
-                          color: 'white',
-                          width: '100%',
-                          height: '45px',
-                          fontWeight: 'bold',
-                          fontSize: '1.2rem',
-                        }}
-                        loading={submitting}
-                        type="submit"
-                        disabled={submitting || pristine}
-                      >
-                        Sign up
+                        <Button
+                          className="grow h2 pointer white bp3-minimal w4"
+                          style={{
+                            background: '#0FA3A3',
+                            outline: 'none',
+                            color: 'white',
+                            width: '100%',
+                            height: '45px',
+                            fontWeight: 'bold',
+                            fontSize: '1.2rem',
+                          }}
+                          loading={submitting}
+                          type="submit"
+                          disabled={submitting || pristine}
+                        >
+                          Sign up
                       </Button>
                       <NavLink
                         className="fw9 dt center tigrow-lightBlue pt4-ns pt2"
@@ -615,10 +606,10 @@ export const SignUpPageComponent = (
                       >
                         Already have an account?
                       </NavLink>
-                    </div>
-                  </form>
-                </>
-              )}
+                      </div>
+                    </form>
+                  </>
+                )}
             />
           </div>
         </div>

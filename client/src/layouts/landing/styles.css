@@ -42,7 +42,12 @@
   left: 0;
   right: 0;
   bottom: 0;
+<<<<<<< HEAD
   background-color: #f0f0f0;
+=======
+  background-color: darkgrey;
+  opacity: 97%;
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
 }
 .demoLink {
   padding: 2rem 0rem;

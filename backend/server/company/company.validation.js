@@ -143,6 +143,7 @@ module.exports = {
     params: companyId,
     body: Joi.object().keys({
       text: schema.announcement,
+      memberId: idSchema.id.required(),
     }),
   }),
   allNoticesForCompany: Joi.object().keys({

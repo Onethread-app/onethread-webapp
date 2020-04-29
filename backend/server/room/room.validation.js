@@ -1,4 +1,18 @@
 const Joi = require('@hapi/joi');
+<<<<<<< HEAD
+=======
+
+const id = Joi.object().keys({
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required()
+    .error((errors) => {
+      return {
+        message: 'Invalid ID',
+      };
+    }),
+});
+>>>>>>> efb547681b3856b9d6bb529ba2db3a32e0e525da
 
 module.exports = {
   createRoom: Joi.object().keys({
