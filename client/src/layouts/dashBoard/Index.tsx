@@ -90,7 +90,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       {loading === false ? (
         <>
           <MobileView>
-            <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+            <Navbar
+              fixedToTop
+              className="flex justify-between items-center shadow-4"
+              style={{ height: '55px' }}
+            >
               <h1 className="f3">My Dashboard</h1>
               <img
                 src={
@@ -106,7 +110,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 }}
                 alt="user"
                 onClick={() => setShowDialog(true)}
-
               />
             </Navbar>
           </MobileView>
@@ -148,7 +151,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                           >
                             <Typography className="">
                               {`From ${
-                                announcement.memberId
+                                announcement.memberId &&
+                                announcement.memberId.designations
+                                  .length > 0
                                   ? announcement.memberId
                                       .designations[0].division
                                   : 'Admin'
@@ -195,8 +200,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           </div>
         </>
       ) : (
-          <Loading />
-        )}
+        <Loading />
+      )}
       {showAnnouncementDialog && (
         <Dialog
           onClose={() =>

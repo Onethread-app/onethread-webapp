@@ -94,6 +94,7 @@ router
   .route('/:companyId/announcements')
   .post(
     authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.createNotice),
     companyCtrl.noticePostByCompany,
   );
