@@ -69,7 +69,7 @@ export default function CustomChatbot(props) {
         },
         {
           value: 2,
-          label: 'Setuo a meeting with our sales team',
+          label: 'Setup a meeting with our sales team',
           trigger: 'emailAsk',
         },
       ],

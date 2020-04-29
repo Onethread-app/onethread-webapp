@@ -76,23 +76,25 @@ export const ListViewComponent = (
                     // }
                   }}
                 >
-                  <img
-                    src={
-                      c.company.logo ? c.company.logo : CompanyIcon
-                    }
-                    className="v-mid dib br-100"
-                    alt="user"
-                    style={{
-                      width: '32px',
-                      height: '32px',
-                      objectFit: 'cover',
-                    }}
-                  />
-                  <div className="dtc v-mid pl3">
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">
-                      {c.company.name}{' '}
-                    </h1>
-                    <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
+                  <div className="flex justify-between">
+                    <img
+                      src={
+                        c.company.logo ? c.company.logo : CompanyIcon
+                      }
+                      className="v-mid dib br-100 w-10"
+                      alt="user"
+                      style={{
+                        width: '32px',
+                        height: '32px',
+                        objectFit: 'cover',
+                      }}
+                    />
+                    <div className="tl dtc v-mid pl3 w-90">
+                      <h1 className="tl f7 f6-ns fw4 lh-title black mv0 ws-break">
+                        {c.company.name}{' '}
+                      </h1>
+                      <h2 className="tl f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
+                    </div>
                   </div>
                 </article>
               ),
