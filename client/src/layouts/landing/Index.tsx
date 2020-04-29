@@ -60,7 +60,8 @@ export const HomePage = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
+		const [message, setMessage] = useState('');
+		const [subject, setSubject] = useState('');
   const [error, setError] = useState('');
   const handleSubmit = () => {
     // console.log(name, email, message);
@@ -69,7 +70,8 @@ export const HomePage = () => {
     } else {
       const reqBody = {
         name,
-        email,
+								email,
+								subject,
         message,
       };
       store.dispatch(saveContactForm(reqBody));
@@ -89,7 +91,8 @@ export const HomePage = () => {
       const reqBody = {
         name,
         email,
-        message: 'N/A',
+								subject: 'N/A',
+								message
       };
       store.dispatch(saveContactForm(reqBody));
     }
@@ -514,7 +517,20 @@ export const HomePage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     fullWidth={true}
                     id="outlined-basic"
-                    label="Email"
+                    label="Your Email"
+                    variant="outlined"
+                    InputLabelProps={{
+                      shrink: true,
+                    }}
+                  />
+                </div>
+
+																<div className="mb4">
+                  <TextField
+                    onChange={(e) => setSubject(e.target.value)}
+                    fullWidth={true}
+                    id="outlined-basic"
+                    label="Subject"
                     variant="outlined"
                     InputLabelProps={{
                       shrink: true,
