@@ -81,9 +81,4 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user
   };
 };
-
-<<<<<<< HEAD
 export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);
-=======
-export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);
->>>>>>> b9e80fb9... mobile responsive for project preface
