@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Tabs, Tab, Navbar, Drawer } from '@blueprintjs/core';
+import React from 'react';
+import { Tabs, Tab } from '@blueprintjs/core';
 import { GeneralView } from './companyName/General';
 import { DepartmentView } from './department/View';
 import { AdminRoleView } from './adminRole/View';
@@ -78,7 +78,6 @@ const SettingsPagComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-<<<<<<< HEAD
     user: state.userReducer.user,
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
@@ -91,16 +90,3 @@ export const SettingsPage = connect(mapStateToProps, {
   readNotification,
   getNotifications,
 })(withRouter(SettingsPagComponent));
-=======
-    user: state.userReducer.user
-  };
-};
-
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
-=======
->>>>>>> 2f39e87c... accouncement sorted in FIFO order
-export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
->>>>>>> b9e80fb9... mobile responsive for project preface
