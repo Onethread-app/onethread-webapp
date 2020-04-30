@@ -59,6 +59,7 @@ const createNewProjectForCompany = async (req, res, next) => {
     if (req.body.type === 'associates') {
       const project = new Project({
         name: req.body.name,
+        type: req.body.type,
         concernedAdmin: concernedAdmin.accountId,
         account: req.user._id,
         departments: req.body.departments,
@@ -145,6 +146,7 @@ const createNewProjectForCompany = async (req, res, next) => {
     } else {
       const project = new Project({
         name: req.body.name,
+        type: req.body.type,
         concernedAdmin: concernedAdmin.accountId,
         account: req.user._id,
         departments: req.body.departments,

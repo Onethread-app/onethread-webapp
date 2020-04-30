@@ -26,9 +26,12 @@ import {
 } from 'layouts/company/colleagues/Index';
 import { isEmpty, isEqual } from 'lodash';
 import { Associate } from 'stores/associate/Reducer';
+<<<<<<< HEAD
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
+=======
+>>>>>>> c885f026... add associates in the project (#19)
 
 interface TeamMember {
   company: ICompany;
@@ -53,9 +56,13 @@ const load = async (_getProjectTeams: () => void) => {
 
 const ProjectTeamPageComponent = (props: TeamMember) => {
   const [showDialog, setShowDialog] = useState(false);
+<<<<<<< HEAD
   const [showAssociateDialog, setShowAssociateDialog] = useState(
     false,
   );
+=======
+  const [showAssociateDialog, setShowAssociateDialog] = useState(false);
+>>>>>>> c885f026... add associates in the project (#19)
   const [adminList, setAdminList] = useState<IProjectTeam[]>([]);
   const [moderatorList, setModeratorList] = useState<IProjectTeam[]>(
     [],
@@ -88,6 +95,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 
   return (
     <>
+<<<<<<< HEAD
       <MobileView>
         <NavbarCompany title="Team Members" />
         <div className="flex justify-between mt5">
@@ -143,6 +151,11 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           {isMobileOnly ? undefined : (
             <h1 className="f3">Team Members</h1>
           )}
+=======
+      <div className="ph5">
+        <div className="flex justify-between items-center">
+          <h1 className="f3">Team Members</h1>
+>>>>>>> c885f026... add associates in the project (#19)
           <div>
             <Button
               className="grow fr h2 pointer white bp3-minimal"
@@ -155,6 +168,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             >
               Add Team Members
             </Button>
+<<<<<<< HEAD
             {props.projectList &&
               props.projectList.map((project) =>
                 props.project._id === project._id ? (
@@ -177,6 +191,21 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                   ) : undefined
                 ) : undefined,
               )}
+=======
+            <Button
+              className="grow fr h2 pointer white bp3-minimal mr1-ns"
+              style={{
+                background: 'none',
+                border: '#0fa3a3',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                color: '#0fa3a3',
+              }}
+              onClick={() => setShowAssociateDialog(!showAssociateDialog)}
+            >
+              Add Associates
+            </Button>
+>>>>>>> c885f026... add associates in the project (#19)
           </div>
         </div>
         {/* Admins list starts */}
@@ -436,7 +465,10 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             )}
           </tbody>
         </HTMLTable>
+<<<<<<< HEAD
         <h1 className="f4 mv4">Project Associates</h1>
+=======
+>>>>>>> c885f026... add associates in the project (#19)
         <AssociateList />
       </div>
 
@@ -463,9 +495,13 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         >
           <AddProjectAssociateForm
             showDialog={showAssociateDialog}
+<<<<<<< HEAD
             setShowDialog={(e) =>
               setShowAssociateDialog(!showAssociateDialog)
             }
+=======
+            setShowDialog={(e) => setShowAssociateDialog(!showAssociateDialog)}
+>>>>>>> c885f026... add associates in the project (#19)
           />
         </Dialog>
       )}
@@ -477,6 +513,7 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     teams: state.projectReducer.teams,
+    associates: state.projectReducer.associates,
     projectRole:
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.role,

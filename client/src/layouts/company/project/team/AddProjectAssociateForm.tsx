@@ -1,4 +1,8 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
+=======
+// import Select from 'react-select';
+>>>>>>> c885f026... add associates in the project (#19)
 import {
   SuggestField,
   ItemEntityProps,
@@ -8,9 +12,13 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { Button, Tag } from '@blueprintjs/core';
 import { addProjectAssociate } from 'stores/project/Actions';
 import { tigrowApi } from 'config';
+<<<<<<< HEAD
 import { ICompany } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEqual } from 'lodash';
+=======
+import { isEmpty, isEqual } from 'lodash';
+>>>>>>> c885f026... add associates in the project (#19)
 
 interface ProjectAssociateProps {
   showDialog: boolean;
@@ -19,14 +27,22 @@ interface ProjectAssociateProps {
 
 interface ProjectAssociateInternalProps
   extends ProjectAssociateProps {
+<<<<<<< HEAD
   company: ICompany;
+=======
+  companyId: string;
+>>>>>>> c885f026... add associates in the project (#19)
   projectId: string;
   // tslint:disable-next-line: max-line-length
   addProjectAssociate: (
     data: {
       project: string;
       company: string;
+<<<<<<< HEAD
       associates: Array<{ _id: string; size: number }>;
+=======
+      associates: Array<{ _id:string, size:number }>;
+>>>>>>> c885f026... add associates in the project (#19)
     },
     selectedAssociate: any,
   ) => void;
@@ -35,6 +51,7 @@ interface ProjectAssociateInternalProps
 const AddProjectAssociateFormComponent = (
   props: ProjectAssociateInternalProps,
 ) => {
+<<<<<<< HEAD
   const [associates, setAssociates] = useState([]);
   const [selectedAssociate, setSelectedAssociate] = useState(
     [] as ItemEntityProps[],
@@ -118,6 +135,58 @@ const AddProjectAssociateFormComponent = (
   useEffect(() => {
     setAssociates(resultAssociate);
   }, [resultAssociate]);
+=======
+  const [suggestedAssociate, setSuggestedAssociate]: any = useState([]);
+  const [selectedAssociate, setSelectedAssociate] = useState(
+    [] as ItemEntityProps[],
+  );
+
+  const getSuggestionsForProjectAssociate = async () => {
+    try {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const response = await tigrowApi.get(
+          `/associate/${props.companyId}`,
+          headers,
+        );
+        const formatResponse = response.data.map((assoc: any) => 
+          isEqual(props.companyId, assoc.company._id) === true
+          ? {
+              ...assoc.associateCompany,
+              createdAt: assoc.createdAt,
+              size: 5,
+            }
+          : {
+              ...assoc.company,
+              createdAt: assoc.createdAt,
+              size: 5,
+            }
+        );
+        setSuggestedAssociate(formatResponse);
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log('no headers');
+      }
+    } catch (error) {
+      if (isEqual(error.message, 'Network Error')) {
+        // tslint:disable-next-line: no-console
+        console.log('network error');
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log(error.response);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (
+      isEmpty(props.projectId) === false &&
+      isEmpty(props.companyId) === false
+    ) {
+      getSuggestionsForProjectAssociate();
+    }
+  }, []);
+>>>>>>> c885f026... add associates in the project (#19)
 
   const teamSizes = [
     { value: 5, label: '1-5' },
@@ -130,10 +199,14 @@ const AddProjectAssociateFormComponent = (
       <div className="w-100">
         <h1 className="f5 tigrow-darkBlue">Add Associates</h1>
         <SuggestField
+<<<<<<< HEAD
           onChange={(query: string) => {
             setSearchAssociate(query);
           }}
           items={associates}
+=======
+          items={suggestedAssociate}
+>>>>>>> c885f026... add associates in the project (#19)
           selectedItems={selectedAssociate}
           setSelectedItems={setSelectedAssociate}
           multipleItemSelect={true}
@@ -155,6 +228,7 @@ const AddProjectAssociateFormComponent = (
             }}
             large={true}
           >
+<<<<<<< HEAD
             <span
               style={{
                 display: 'flex',
@@ -182,6 +256,29 @@ const AddProjectAssociateFormComponent = (
                 </select>
               </span>
             </span>
+=======
+            <span style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+              <span>
+                {item.name}
+              </span>
+              <span style={{padding: 3}}>
+                <select value={item['size']} onChange={(e:any) => {
+                  let sa = [...selectedAssociate];
+                  sa[index]['size'] = e.target.value;
+                  console.log(sa);
+                  setSelectedAssociate(sa);
+                }}>
+                  {
+                    teamSizes.map(t=>{
+                      return <option key={t.label+t.value} value={t.value}>{t.label}</option>
+                    })
+                  }
+                </select>
+              </span>
+            </span>
+
+            
+>>>>>>> c885f026... add associates in the project (#19)
           </Tag>
         ))}
       </div>
@@ -206,15 +303,26 @@ const AddProjectAssociateFormComponent = (
           onClick={async () => {
             const data = {
               project: props.projectId,
+<<<<<<< HEAD
               company: props.company._id,
+=======
+              company: props.companyId,
+>>>>>>> c885f026... add associates in the project (#19)
               associates: selectedAssociate.map((m: any) => {
                 return {
                   _id: m._id,
                   size: m.size,
+<<<<<<< HEAD
                   name: m.name
                 };
               }),
             };
+=======
+                };
+              }),
+            };
+
+>>>>>>> c885f026... add associates in the project (#19)
             const response: any = await props.addProjectAssociate(
               data,
               selectedAssociate,
@@ -234,7 +342,11 @@ const AddProjectAssociateFormComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
+<<<<<<< HEAD
     company: state.companyReducer.currentCompany,
+=======
+    companyId: state.companyReducer.currentCompany._id,
+>>>>>>> c885f026... add associates in the project (#19)
     projectId: state.projectReducer.pid,
     associates: state.associateReducer.associatesList,
   };

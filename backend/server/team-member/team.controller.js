@@ -186,18 +186,46 @@ const list = async (req, res, next) => {
           populate: [
             {
               path: 'associate',
+<<<<<<< HEAD
               select: 'associateCompany company',
               populate: {
                 path: 'associateCompany company',
                 select: '_id name type _id name type',
+=======
+              select: 'associateCompany',
+              populate: {
+                path: 'associateCompany',
+                select: '_id name type',
+>>>>>>> c885f026... add associates in the project (#19)
               },
             },
           ],
         },
       ]);
+    const associateList = await Project.find({ _id: pid })
+      .sort({
+        createdAt: 1,
+      })
+      .skip(+skip)
+      .limit(+limit)
+      .select('associate')
+      .populate({
+        path: 'associate',
+        select: 'associateCompany',
+        populate: {
+          path: 'associateCompany',
+          select: '_id name type',
+        },
+      });
 
+<<<<<<< HEAD
     return sendJSONresponse(res, 200, {
+=======
+    // members.push({ associateList });
+    return res.status(200).json({
+>>>>>>> c885f026... add associates in the project (#19)
       memberList: members,
+      associateList,
     });
   } catch (error) {
     logger.error(`Team: ${error}`);

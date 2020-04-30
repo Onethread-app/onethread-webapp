@@ -573,6 +573,10 @@ export const getProjectTeams = () => async (
         type: PROJECT.PROJECT_GET_TEAMS,
         payload: response.data.memberList,
       });
+      await dispatch({
+        type: PROJECT.PROJECT_GET_ASSOCIATES,
+        payload: response.data.associateList.associate,
+      });
       return response.data;
     }
   } catch (error) {
@@ -631,6 +635,7 @@ export const addProjectTeams = (
   }
 };
 
+<<<<<<< HEAD
 export const getProjectAssociates = () => async (
   dispatch: any,
   getState: any,
@@ -664,16 +669,26 @@ export const getProjectAssociates = () => async (
   }
 };
 
+=======
+>>>>>>> c885f026... add associates in the project (#19)
 export const addProjectAssociate = (
   data: {
     project: string;
     company: String;
+<<<<<<< HEAD
     associates: Array<{ _id: string; size: number }>;
+=======
+    associates: Array<{ _id:string, size:number }>;
+>>>>>>> c885f026... add associates in the project (#19)
   },
   selectedAssociate: {
     _id: string;
     size: number;
+<<<<<<< HEAD
   },
+=======
+  }
+>>>>>>> c885f026... add associates in the project (#19)
 ) => async (dispatch: any) => {
   try {
     const headers = tokenConfig();
@@ -681,6 +696,7 @@ export const addProjectAssociate = (
       const response = await tigrowApi.put(
         `/projects/${data.company}/add-associates?pid=${data.project}`,
         {
+<<<<<<< HEAD
           associates: data.associates,
         },
         headers,
@@ -689,6 +705,12 @@ export const addProjectAssociate = (
       if (response.status === 200) {
         dispatch(getProjectAssociates());
       }
+=======
+          associates: data.associates
+        },
+        headers,
+      );
+>>>>>>> c885f026... add associates in the project (#19)
       // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
       return response;
     } else {

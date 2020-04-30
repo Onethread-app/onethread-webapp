@@ -24,8 +24,11 @@ const schema = {
   concernedAdmin: idSchema.id,
   color: Joi.number(),
   company: idSchema.id,
+<<<<<<< HEAD
   size: Joi.number().required(),
   associate: idSchema.id,
+=======
+>>>>>>> c885f026... add associates in the project (#19)
   associates: Joi.array().items(
     Joi.object().keys({
       _id: idSchema.id.required(),
@@ -48,12 +51,15 @@ module.exports = {
       associates: schema.associates,
     }),
   }),
+<<<<<<< HEAD
   createProjectFromHome: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       companyId: schema.company.required(),
     }),
   }),
+=======
+>>>>>>> c885f026... add associates in the project (#19)
   addAssociate: Joi.object().keys({
     body: Joi.object().keys({
       associates: schema.associates,

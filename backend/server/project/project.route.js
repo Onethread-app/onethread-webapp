@@ -121,19 +121,18 @@ router
     schemaValidator(projectValidation.rejectProject),
     projectCtrl.rejectProjectRequest,
   );
-router
-  .route('/')
-  .get(
-    authorization,
-    subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
-    projectCtrl.getProjectDetails,
-  );
+router.route('/').get(
+  authorization,
+  subCtrl.subscriptionExpireCheck(),
+  projectCtrl.authorizeProjectRole(
+    'all',
+    'admin',
+    'projectModerator',
+    'member',
+  ),
+
+  projectCtrl.getProjectDetails,
+);
 router
   .route('/outline')
   .put(
