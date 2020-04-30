@@ -94,27 +94,9 @@ const NotFound = () => (
 export const App = () => (
   <BrowserRouter>
     <Switch>
-      <Route
-        exact
-        path="/"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <HomePage />
-        }
-      />
-      <Route
-        exact
-        path="/signin"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <SignInPage />
-        }
-      />
-      <Route
-        exact
-        path="/signup"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
-        }
-      />
+      <Route exact path="/" render={() => <HomePage />} />
+      <Route exact path="/signin" render={() => <SignInPage />} />
+      <Route exact path="/signup" render={() => <SignUpPage />} />
       <Route
         exact
         path="/forgot-password"

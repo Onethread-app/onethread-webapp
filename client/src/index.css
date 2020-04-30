@@ -432,6 +432,14 @@ a:hover {
   .changepass{
     font-size: 12px;
   }
+  .addButton{
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover{
+    height: 185px;
+  }
 }
 
 @media only screen and (min-width: 361px) and (max-width: 450px) {
@@ -478,6 +486,32 @@ a:hover {
   }
   .changepass{
     font-size: 14px;
+  }
+  .companyProfilepicOuter{
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic{
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .companyCoverButton{
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .addButton{
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover{
+    height: 185px;
   }
 }
 

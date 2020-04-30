@@ -8,7 +8,7 @@ export const nizam = 'http://32f0bfb0.ngrok.io/api/v1/';
 export const omer = 'http://c5c3e23d.ngrok.io/api/v1/';
 
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
-export const server = nizam;
+export const server = dev;
 
 export const PUSHER_CHANNEL_AUTH_END_POINT = `${server}channel/authenticate`;
 export const PUSHER_CHANNEL_KEY =
