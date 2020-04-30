@@ -6,6 +6,10 @@ import {
   // ADD_ASSOCIATE,
   SELECT_ASSOCIATE,
   GET_ALL_PENDING_ASSOCIATE,
+<<<<<<< HEAD
+=======
+  GET_PROJECT_ASSOCIATES
+>>>>>>> f4601c6e... add associates in the project (#19)
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { Associate } from './Reducer';

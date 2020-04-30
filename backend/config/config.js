@@ -49,15 +49,6 @@ const envVarsSchema = Joi.object({
   PUSHER_KEY: Joi.string()
     .required()
     .description('PUSHER_KEY required'),
-  // PUSHER_CHANNEL_APPID: Joi.string()
-  //   .required()
-  //   .description('PUSHER_CHANNEL_APPID required'),
-  // PUSHER_CHANNEL_KEY: Joi.string()
-  //   .required()
-  //   .description('PUSHER_CHANNEL_KEY required'),
-  // PUSHER_CHANNEL_SECRET: Joi.string()
-  //   .required()
-  //   .description('PUSHER_CHANNEL_SECRET required'),
   PUSHER_CHANNEL_CLUSTER: Joi.string()
     .required()
     .description('PUSHER_CHANNEL_CLUSTER required'),

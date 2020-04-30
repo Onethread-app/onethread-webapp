@@ -699,6 +699,7 @@ export const addProjectAssociate = (
     company: String;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     associates: Array<{ _id: string; size: number }>;
 =======
     associates: Array<{ _id:string, size:number }>;
@@ -706,10 +707,14 @@ export const addProjectAssociate = (
 =======
     associates: Array<{ _id: string; size: number }>;
 >>>>>>> d06346b0... code style issue fixed
+=======
+    associates: Array<{ _id:string, size:number }>;
+>>>>>>> f4601c6e... add associates in the project (#19)
   },
   selectedAssociate: {
     _id: string;
     size: number;
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   },
@@ -719,6 +724,9 @@ export const addProjectAssociate = (
 =======
   },
 >>>>>>> d06346b0... code style issue fixed
+=======
+  }
+>>>>>>> f4601c6e... add associates in the project (#19)
 ) => async (dispatch: any) => {
   try {
     const headers = tokenConfig();
@@ -728,7 +736,11 @@ export const addProjectAssociate = (
         {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           associates: data.associates,
+=======
+          associates: data.associates
+>>>>>>> f4601c6e... add associates in the project (#19)
         },
         headers,
       );

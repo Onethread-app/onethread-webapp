@@ -28,6 +28,7 @@ import { isEmpty, isEqual } from 'lodash';
 import { Associate } from 'stores/associate/Reducer';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
@@ -38,6 +39,8 @@ import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+>>>>>>> f4601c6e... add associates in the project (#19)
 
 interface TeamMember {
   company: ICompany;
@@ -67,6 +70,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   const [showDialog, setShowDialog] = useState(false);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [showAssociateDialog, setShowAssociateDialog] = useState(
     false,
   );
@@ -78,6 +82,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
     false,
   );
 >>>>>>> d06346b0... code style issue fixed
+=======
+  const [showAssociateDialog, setShowAssociateDialog] = useState(false);
+>>>>>>> f4601c6e... add associates in the project (#19)
   const [adminList, setAdminList] = useState<IProjectTeam[]>([]);
   const [moderatorList, setModeratorList] = useState<IProjectTeam[]>(
     [],
@@ -110,6 +117,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 
   return (
     <>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -162,6 +170,37 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           >
             <small style={{ color: 'inherit' }}>Settings</small>
           </NavLink>
+=======
+      <div className="ph5">
+        <div className="flex justify-between items-center">
+          <h1 className="f3">Team Members</h1>
+          <div>
+            <Button
+              className="grow fr h2 pointer white bp3-minimal"
+              style={{
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }}
+              onClick={() => setShowDialog(!showDialog)}
+            >
+              Add Team Members
+            </Button>
+            <Button
+              className="grow fr h2 pointer white bp3-minimal mr1-ns"
+              style={{
+                background: 'none',
+                border: '#0fa3a3',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                color: '#0fa3a3',
+              }}
+              onClick={() => setShowAssociateDialog(!showAssociateDialog)}
+            >
+              Add Associates
+            </Button>
+          </div>
+>>>>>>> f4601c6e... add associates in the project (#19)
         </div>
       </MobileView>
       <div className="ph5-ns ph3 pv4">
@@ -529,12 +568,15 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         </HTMLTable>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <h1 className="f4 mv4">Project Associates</h1>
 =======
 >>>>>>> c885f026... add associates in the project (#19)
 =======
         <h1 className="f4 mv4">Project Associates</h1>
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+>>>>>>> f4601c6e... add associates in the project (#19)
         <AssociateList />
       </div>
 
@@ -563,6 +605,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             showDialog={showAssociateDialog}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             setShowDialog={(e) =>
               setShowAssociateDialog(!showAssociateDialog)
             }
@@ -574,6 +617,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               setShowAssociateDialog(!showAssociateDialog)
             }
 >>>>>>> d06346b0... code style issue fixed
+=======
+            setShowDialog={(e) => setShowAssociateDialog(!showAssociateDialog)}
+>>>>>>> f4601c6e... add associates in the project (#19)
           />
         </Dialog>
       )}

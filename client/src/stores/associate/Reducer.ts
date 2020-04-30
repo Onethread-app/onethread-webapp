@@ -176,11 +176,19 @@ export const AssociateReducer = (
         ...state,
         associateRejected: true,
       };
+<<<<<<< HEAD
     case associate.GET_PROJECT_ASSOCIATES_SUCCESS:
       return {
         ...state,
         projectAssociates: action.payload,
       };
+=======
+    case GET_PROJECT_ASSOCIATES:
+    return {
+      ...state,
+      projectAssociates: action.payload,
+    };
+>>>>>>> f4601c6e... add associates in the project (#19)
     default:
       return state;
   }
