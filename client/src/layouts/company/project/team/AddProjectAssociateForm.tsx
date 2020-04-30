@@ -25,7 +25,7 @@ interface ProjectAssociateInternalProps
     data: {
       project: string;
       company: string;
-      associates: Array<{ _id: string; size: number }>;
+      associates: Array<{ _id:string, size:number }>;
     },
     selectedAssociate: any,
   ) => void;
@@ -34,9 +34,7 @@ interface ProjectAssociateInternalProps
 const AddProjectAssociateFormComponent = (
   props: ProjectAssociateInternalProps,
 ) => {
-  const [suggestedAssociate, setSuggestedAssociate]: any = useState(
-    [],
-  );
+  const [suggestedAssociate, setSuggestedAssociate]: any = useState([]);
   const [selectedAssociate, setSelectedAssociate] = useState(
     [] as ItemEntityProps[],
   );
@@ -49,18 +47,18 @@ const AddProjectAssociateFormComponent = (
           `/associate/${props.companyId}`,
           headers,
         );
-        const formatResponse = response.data.map((assoc: any) =>
+        const formatResponse = response.data.map((assoc: any) => 
           isEqual(props.companyId, assoc.company._id) === true
-            ? {
-                ...assoc.associateCompany,
-                createdAt: assoc.createdAt,
-                size: 5,
-              }
-            : {
-                ...assoc.company,
-                createdAt: assoc.createdAt,
-                size: 5,
-              },
+          ? {
+              ...assoc.associateCompany,
+              createdAt: assoc.createdAt,
+              size: 5,
+            }
+          : {
+              ...assoc.company,
+              createdAt: assoc.createdAt,
+              size: 5,
+            }
         );
         setSuggestedAssociate(formatResponse);
       } else {
@@ -120,34 +118,27 @@ const AddProjectAssociateFormComponent = (
             }}
             large={true}
           >
-            <span
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-            >
-              <span>{item.name}</span>
-              <span style={{ padding: 3 }}>
-                <select
-                  value={item['size']}
-                  onChange={(e: any) => {
-                    let sa = [...selectedAssociate];
-                    sa[index]['size'] = e.target.value;
-                    console.log(sa);
-                    setSelectedAssociate(sa);
-                  }}
-                >
-                  {teamSizes.map((t) => {
-                    return (
-                      <option key={t.label + t.value} value={t.value}>
-                        {t.label}
-                      </option>
-                    );
-                  })}
+            <span style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+              <span>
+                {item.name}
+              </span>
+              <span style={{padding: 3}}>
+                <select value={item['size']} onChange={(e:any) => {
+                  let sa = [...selectedAssociate];
+                  sa[index]['size'] = e.target.value;
+                  console.log(sa);
+                  setSelectedAssociate(sa);
+                }}>
+                  {
+                    teamSizes.map(t=>{
+                      return <option key={t.label+t.value} value={t.value}>{t.label}</option>
+                    })
+                  }
                 </select>
               </span>
             </span>
+
+            
           </Tag>
         ))}
       </div>

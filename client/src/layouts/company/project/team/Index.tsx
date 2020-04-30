@@ -26,9 +26,6 @@ import {
 } from 'layouts/company/colleagues/Index';
 import { isEmpty, isEqual } from 'lodash';
 import { Associate } from 'stores/associate/Reducer';
-import { MobileView, isMobileOnly } from 'react-device-detect';
-import { NavLink } from 'react-router-dom';
-import { NavbarCompany } from 'components/NavbarCompany';
 
 interface TeamMember {
   company: ICompany;
@@ -52,9 +49,7 @@ const load = async (_getProjectTeams: () => void) => {
 
 const ProjectTeamPageComponent = (props: TeamMember) => {
   const [showDialog, setShowDialog] = useState(false);
-  const [showAssociateDialog, setShowAssociateDialog] = useState(
-    false,
-  );
+  const [showAssociateDialog, setShowAssociateDialog] = useState(false);
   const [adminList, setAdminList] = useState<IProjectTeam[]>([]);
   const [moderatorList, setModeratorList] = useState<IProjectTeam[]>(
     [],
@@ -87,54 +82,35 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 
   return (
     <>
-      <MobileView>
-        <NavbarCompany title="Team Members" />
-        <div className="flex justify-between mt5">
-          <NavLink
-            exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
-            style={{ color: 'darkGray' }}
-          >
-            <small style={{ color: 'inherit' }}>Preface</small>
-          </NavLink>
-          <NavLink
-            exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/room`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
-            style={{ color: 'darkGray' }}
-          >
-            <small style={{ color: 'inherit' }}>Room</small>
-          </NavLink>
-          <NavLink
-            exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/board`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
-            style={{ color: 'darkGray' }}
-          >
-            <small style={{ color: 'inherit' }}>Board</small>
-          </NavLink>
-          <NavLink
-            exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/team`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
-            style={{ color: 'darkGray' }}
-          >
-            <small style={{ color: 'inherit' }}>Team</small>
-          </NavLink>
-          <NavLink
-            exact
-            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/settings`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
-            style={{ color: 'darkGray' }}
-          >
-            <small style={{ color: 'inherit' }}>Settings</small>
-          </NavLink>
+      <div className="ph5">
+        <div className="flex justify-between items-center">
+          <h1 className="f3">Team Members</h1>
+          <div>
+            <Button
+              className="grow fr h2 pointer white bp3-minimal"
+              style={{
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }}
+              onClick={() => setShowDialog(!showDialog)}
+            >
+              Add Team Members
+            </Button>
+            <Button
+              className="grow fr h2 pointer white bp3-minimal mr1-ns"
+              style={{
+                background: 'none',
+                border: '#0fa3a3',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                color: '#0fa3a3',
+              }}
+              onClick={() => setShowAssociateDialog(!showAssociateDialog)}
+            >
+              Add Associates
+            </Button>
+          </div>
         </div>
       </MobileView>
       <div className="ph5-ns ph3 pv4">
@@ -428,7 +404,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             )}
           </tbody>
         </HTMLTable>
-        <h1 className="f4 mv4">Project Associates</h1>
         <AssociateList />
       </div>
 
@@ -455,9 +430,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
         >
           <AddProjectAssociateForm
             showDialog={showAssociateDialog}
-            setShowDialog={(e) =>
-              setShowAssociateDialog(!showAssociateDialog)
-            }
+            setShowDialog={(e) => setShowAssociateDialog(!showAssociateDialog)}
           />
         </Dialog>
       )}

@@ -6,7 +6,7 @@ import {
   ADD_ASSOCIATE,
   SELECT_ASSOCIATE,
   GET_ALL_PENDING_ASSOCIATE,
-  GET_PROJECT_ASSOCIATES,
+  GET_PROJECT_ASSOCIATES
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { Associate } from './Reducer';
