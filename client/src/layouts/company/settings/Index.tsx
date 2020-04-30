@@ -85,17 +85,8 @@ const mapStateToProps = (state: any) => {
     companyRole: state.companyReducer.currentCompany.role,
   };
 };
-<<<<<<< HEAD
 export const SettingsPage = connect(mapStateToProps, {
   companySubscriber,
   readNotification,
   getNotifications,
 })(withRouter(SettingsPagComponent));
-=======
-
-<<<<<<< HEAD
-export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
-=======
-export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
->>>>>>> b9e80fb9... mobile responsive for project preface
->>>>>>> bd529096... accouncement sorted in FIFO order
