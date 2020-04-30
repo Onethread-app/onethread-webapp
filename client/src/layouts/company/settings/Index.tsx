@@ -97,4 +97,8 @@ const mapStateToProps = (state: any) => {
   };
 };
 
+<<<<<<< HEAD
 export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
+=======
+export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
+>>>>>>> b9e80fb9... mobile responsive for project preface

@@ -197,6 +197,78 @@ const createNewProjectForCompany = async (req, res, next) => {
     next(error);
   }
 };
+
+// add associate in a project
+const addAssociateInProject = async (req, res, next) => {
+  try {
+    let associates = req.body.associates;
+    const pid = req.query.pid;
+    let project = await Project.findByIdAndUpdate(
+      { _id: pid },
+      {
+        $set: {
+          associate: associates,
+          type: 'associates',
+        },
+      },
+      { safe: true, upsert: true, new: true },
+    );
+    let projectReq = [];
+    associates.map(async (data) => {
+      let reqObject = {};
+      reqObject.company = req.params.companyId;
+      reqObject.associate = data._id;
+      reqObject.isAccepted = false;
+      reqObject.project = project._id;
+      reqObject.size = data.size;
+      projectReq.push(reqObject);
+      return reqObject;
+    });
+    await ProjectRequest.create(projectReq);
+    let associateId = [];
+    associateId = associates.map((data) => {
+      return data._id;
+    });
+    // // Insert project request
+    associateId.forEach(async (data) => {
+      let associate = await Associate.findOne({
+        $or: [
+          {
+            company: data,
+            associateCompany: { $in: data },
+          },
+          { isAccepted: true, isRejected: false },
+        ],
+      })
+        .populate('associateCompany', '_id name type')
+        .populate('company', '_id name type')
+        .exec();
+
+      const text = `${associate.company.name} wants to collaborate ${project.name} with your ${associate.associateCompany.name} `;
+      createCompanyRoleNotification(
+        associate.company._id,
+        {
+          _id: req.user._id,
+          name: req.user.name,
+          pusherSock: req.headers.clientid,
+        },
+        text,
+        'project',
+      );
+    });
+    logger.info(
+      `${req.params.companyId} company send a project request to its associate`,
+    );
+
+    return sendJSONresponse(res, 200, {
+      message: 'associate list update',
+    });
+  } catch (error) {
+    logger.error(`${error}`);
+    next(error);
+  }
+};
+
 // update a company role
 const updateRole = async (req, res, next) => {
   // Check for JSON
@@ -662,6 +734,7 @@ const getProjectIndividual = async (req, res, next) => {
 };
 module.exports = {
   createNewProjectForCompany,
+  addAssociateInProject,
   showAllProjectsForCompany,
   updateProjectDescription,
   updateProjectOutline,
