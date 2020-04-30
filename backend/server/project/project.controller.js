@@ -409,20 +409,21 @@ const showAllProjectsForCompany = async (req, res, next) => {
     let pendingProject = await ProjectRequest.find({
       $and: [{ isAccepted: false }, { associate: companyId }],
     }).populate('project', '_id');
-    let memberExistInProject = await Team.find({
-      $and: [{ account: req.user._id }, { removed: false }],
-    }).populate('project', '_id');
+    // let memberExistInProject = await Team.find({
+    //   $and: [{ account: req.user._id }, { removed: false }],
+    // }).populate('project', '_id');
+
     pendingProject = pendingProject.map((data) => {
       return data.project._id;
     });
-    memberExistInProject = memberExistInProject.map((data) => {
-      return data.project._id;
-    });
+    // memberExistInProject = memberExistInProject.map((data) => {
+    //   return data.project._id;
+    // });
 
     await Project.find({
       $and: [
         { _id: { $nin: pendingProject } },
-        { _id: { $in: memberExistInProject } },
+        // { _id: { $in: memberExistInProject } },
         {
           $or: [
             { company: companyId },

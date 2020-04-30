@@ -97,5 +97,5 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user
   };
 };
-
 export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
+
