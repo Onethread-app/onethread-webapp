@@ -31,7 +31,12 @@ const schema = {
   concernedAdmin: idSchema.id,
   color: Joi.number(),
   company: idSchema.id,
-  associates: Joi.array().items(idSchema.id),
+  associates: Joi.array().items(
+    Joi.object().keys({
+      _id: idSchema.id.required(),
+      size: Joi.number().required(),
+    }),
+  ),
 };
 
 module.exports = {
@@ -41,8 +46,14 @@ module.exports = {
       type: schema.type.required(),
       concernedAdmin: schema.type.required(),
       companyId: schema.company.required(),
-      departments: schema.departments.required(),
+      departments: schema.departments,
       color: schema.color,
+      associates: schema.associates,
+    }),
+  }),
+  addAssociate: Joi.object().keys({
+    body: Joi.object().keys({
+      associates: schema.associates,
     }),
   }),
   updateProjectOutline: Joi.object().keys({

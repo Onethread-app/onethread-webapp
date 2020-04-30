@@ -71,12 +71,6 @@ const projectSchema = new Schema(
         ref: 'Team',
       },
     ],
-    projectRequest: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'ProjectRequest',
-      },
-    ],
     rooms: [
       {
         type: mongoose.Schema.Types.ObjectId,
