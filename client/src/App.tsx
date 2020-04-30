@@ -63,7 +63,7 @@ const PrivateRoute = (props: {
     <Route
       path={props.path}
       exact={props.exact}
-						render={() =>
+      render={() =>
         isAuthenticate() ? (
           <Layout Component={props.component} />
         ) : (
@@ -99,7 +99,7 @@ const NotFound = () => (
 );
 
 export const App = () => (
-		<BrowserRouter>  
+  <BrowserRouter>
     <Switch>
       {!isAuthenticate() && (
         <Route exact path="/" component={HomePage} />
