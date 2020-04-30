@@ -1,18 +1,18 @@
 const config = require('./config');
 
 require('elastic-apm-node').start({
-    // Override service name from package.json
-    // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-    serviceName: config.APM_SERVICE_NAME,
-  
-    // Use if APM Server requires a token
-    secretToken: config.APM_TOKEN,
-  
-    // Set custom APM Server URL (default: http://localhost:8200)
-    serverUrl: config.APM_URL,
+  // Override service name from package.json
+  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+  serviceName: config.APM_SERVICE_NAME,
 
-    active: config.env === 'production'
-  })
+  // Use if APM Server requires a token
+  secretToken: config.APM_TOKEN,
+
+  // Set custom APM Server URL (default: http://localhost:8200)
+  serverUrl: config.APM_URL,
+
+  active: config.env === 'production',
+});
 
 const express = require('express');
 const logger = require('morgan');

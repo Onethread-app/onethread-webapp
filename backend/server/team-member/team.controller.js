@@ -148,7 +148,6 @@ const addTeamMember = async (req, res, next) => {
       }
     }
   } catch (error) {
-    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
@@ -185,13 +184,37 @@ const list = async (req, res, next) => {
           path: 'project',
           select: 'company associate',
           populate: [
-            { path: 'associate', select: 'associateCompany' },
+            {
+              path: 'associate',
+              select: 'associateCompany',
+              populate: {
+                path: 'associateCompany',
+                select: '_id name type',
+              },
+            },
           ],
         },
       ]);
+    const associateList = await Project.find({ _id: pid })
+      .sort({
+        createdAt: 1,
+      })
+      .skip(+skip)
+      .limit(+limit)
+      .select('associate')
+      .populate({
+        path: 'associate',
+        select: 'associateCompany',
+        populate: {
+          path: 'associateCompany',
+          select: '_id name type',
+        },
+      });
 
+    // members.push({ associateList });
     return res.status(200).json({
       memberList: members,
+      associateList,
     });
   } catch (error) {
     logger.error(`${error}`);

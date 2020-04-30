@@ -61,6 +61,7 @@ const initialState = {
     outline: '',
   },
   teams: [],
+  associates: [],
   pid: '',
   projectRole: {},
   projectFileOpen: false,
@@ -109,6 +110,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         teams: action.payload,
+      };
+      case PROJECT.PROJECT_GET_ASSOCIATES:
+      return {
+        ...state,
+        associates: action.payload,
       };
     case PROJECT.PROJECT_GET_ROLES:
       return {
