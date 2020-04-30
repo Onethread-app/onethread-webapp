@@ -99,7 +99,7 @@ export const SignInPageComponent = (
       >
         <div className="v-mid dtc">
           <div className="w-50 center">
-            <Link to="/home">
+            <Link to="/">
               <img width="200px" src={logo} />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
