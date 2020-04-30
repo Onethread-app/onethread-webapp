@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, Tab, Navbar, Drawer } from '@blueprintjs/core';
 import { GeneralView } from './companyName/General';
@@ -97,8 +98,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-<<<<<<< HEAD
 export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
-=======
-export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
->>>>>>> b9e80fb9... mobile responsive for project preface
