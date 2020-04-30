@@ -27,6 +27,16 @@ router.route('/:companyId/create').post(
   // schemaValidator(projectValidation.createNewProjectForCompany),
   projectCtrl.createNewProjectForCompany,
 );
+
+router
+  .route('/:companyId/add-associates')
+  .put(
+    authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    projectCtrl.authorizeProjectRole('all', 'admin'),
+    schemaValidator(projectValidation.addAssociate),
+    projectCtrl.addAssociateInProject,
+  );
 router.route('/:companyId/lists').get(
   authorization,
   companyCtrl.authorizeUser('all', 'admin', 'superAdmin', 'employee'),

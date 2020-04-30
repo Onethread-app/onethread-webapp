@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Tabs, Tab, Navbar, Drawer } from '@blueprintjs/core';
 import { GeneralView } from './companyName/General';
@@ -96,5 +97,5 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user
   };
 };
-
 export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);
+

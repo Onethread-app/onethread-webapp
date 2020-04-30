@@ -1,3 +1,19 @@
+const config = require('./config');
+
+require('elastic-apm-node').start({
+  // Override service name from package.json
+  // Allowed characters: a-z, A-Z, 0-9, -, _, and space
+  serviceName: config.APM_SERVICE_NAME,
+
+  // Use if APM Server requires a token
+  secretToken: config.APM_TOKEN,
+
+  // Set custom APM Server URL (default: http://localhost:8200)
+  serverUrl: config.APM_URL,
+
+  active: config.env === 'production',
+});
+
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -11,7 +27,6 @@ const expressWinston = require('express-winston');
 const expressValidation = require('express-validation');
 const helmet = require('helmet');
 const winstonInstance = require('./winston');
-const config = require('./config');
 
 const routes = require('../index.route');
 const { APIError } = require('../server/helpers/APIError');

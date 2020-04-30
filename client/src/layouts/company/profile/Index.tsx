@@ -81,5 +81,4 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user
   };
 };
-
 export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);

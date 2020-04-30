@@ -56,14 +56,14 @@ module.exports = {
             message: 'BirthDate field required',
           };
         }),
-      contactNo: Joi.string()
-        .regex(/^(\+?(880)[0-9]{10})$/)
-        .required()
-        .error((error) => {
-          return {
-            message: 'contactNo is not a valid format',
-          };
-        }),
+      contactNo: Joi.string(),
+      // .regex(/^(\+?(880)[0-9]{10})$/)
+      // // .required()
+      // .error((error) => {
+      //   return {
+      //     message: 'contactNo is not a valid format',
+      //   };
+      // }),
     }),
   }),
   login: Joi.object().keys({

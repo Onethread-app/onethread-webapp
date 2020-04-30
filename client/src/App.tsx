@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import {
   BrowserRouter,
   Route,
@@ -6,6 +7,7 @@ import {
   Redirect,
   Link,
 } from 'react-router-dom';
+import ReactGA from 'react-ga';
 import { SignUpPage } from './layouts/signup/Index';
 import { SignInPage } from 'layouts/signin/Index';
 import { isAuthenticate } from 'stores/UtilsActions';
@@ -38,11 +40,21 @@ const PrivateRoute = (props: {
   path: string;
   exact: boolean;
 }) => {
+	useEffect(() => {
+		ReactGA.initialize('UA-164759422-1', {
+			debug: true,
+			gaOptions: {
+    cookieDomain: 'none'
+  }
+		});
+		// To Report Page View 
+		ReactGA.pageview(window.location.pathname + window.location.search);
+	}, []);
   return (
     <Route
       path={props.path}
       exact={props.exact}
-      render={() =>
+						render={() =>
         isAuthenticate() ? (
           <Layout Component={props.component} />
         ) : (
@@ -78,7 +90,7 @@ const NotFound = () => (
 );
 
 export const App = () => (
-  <BrowserRouter>
+		<BrowserRouter>  
     <Switch>
       <Route
         exact
