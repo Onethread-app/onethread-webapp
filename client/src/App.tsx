@@ -47,21 +47,23 @@ const PrivateRoute = (props: {
   path: string;
   exact: boolean;
 }) => {
-	useEffect(() => {
-		ReactGA.initialize('UA-164759422-1', {
-			debug: true,
-			gaOptions: {
-    cookieDomain: 'none'
-  }
-		});
-		// To Report Page View 
-		ReactGA.pageview(window.location.pathname + window.location.search);
-	}, []);
+  useEffect(() => {
+    ReactGA.initialize('UA-164759422-1', {
+      debug: true,
+      gaOptions: {
+        cookieDomain: 'none',
+      },
+    });
+    // To Report Page View
+    ReactGA.pageview(
+      window.location.pathname + window.location.search,
+    );
+  }, []);
   return (
     <Route
       path={props.path}
       exact={props.exact}
-						render={() =>
+      render={() =>
         isAuthenticate() ? (
           <Layout Component={props.component} />
         ) : (
@@ -97,11 +99,15 @@ const NotFound = () => (
 );
 
 export const App = () => (
-		<BrowserRouter>  
+  <BrowserRouter>
     <Switch>
-      {!isAuthenticate() && (
-        <Route exact path="/" component={HomePage} />
-      )}
+      <Route
+        exact
+        path="/"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <HomePage />
+        }
+      />
       <Route
         exact
         path="/signin"
