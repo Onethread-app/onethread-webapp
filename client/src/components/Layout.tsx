@@ -41,10 +41,7 @@ import {
 } from 'react-device-detect';
 import { Navbar } from '@blueprintjs/core';
 import { NavbarIndividual } from './NavbarIndividual';
-<<<<<<< HEAD
 import { companyPermit } from 'stores/UtilsActions';
-=======
->>>>>>> b9e80fb9... mobile responsive for project preface
 
 const load = async (
   reactRouterMatch: match,
@@ -379,7 +376,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             height: '65px',
                           }}
                         >
-<<<<<<< HEAD
                           <NavLink
                             exact
                             activeStyle={{
@@ -515,145 +511,6 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                         setShowDialog={setShowMenu}
                       />
                     )}
-=======
-                          <SecondaryLayout Component={props.Component} />
-                        </div>
-                        {
-                          (props.match.params as any).cname ?
-                            props.rightSidebarOpen ? undefined : (
-                              <Navbar
-                                className="flex justify-around"
-                                style={{
-                                  position: 'fixed',
-                                  bottom: '0',
-                                  height: '65px',
-                                }}
-
-                              >
-                                <NavLink
-                                  exact
-                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
-                                  style={{ color: 'blue' }}
-                                  to={`/company/${props.company.name}`}
-                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
-                                >
-                                  <span className="">
-                                    <img
-                                      src={companyProfile}
-                                      className="br3" style={{ width: '1.5rem' }}
-                                    />
-                                  </span>
-                                  <small
-
-                                    style={{ fontWeight: 1000, color: 'inherit' }}
-                                  >
-                                    Profile
-                          </small>
-                                </NavLink>
-                                <NavLink
-                                  exact
-                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
-                                  style={{ color: 'blue' }}
-                                  to={`/company/${props.company.name}/dashboard`}
-                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
-                                >
-                                  <span className="">
-                                    <img src={dashboard} className="br3" style={{ width: '1.5rem' }} />
-                                  </span>
-                                  <small
-                                    style={{ fontWeight: 1000, color: 'inherit' }}
-                                  >
-                                    Dashboard
-                          </small>
-                                </NavLink>
-                                <NavLink
-                                  exact
-                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
-                                  style={{ color: 'blue' }}
-                                  to={`/company/${props.company.name}/project`}
-                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
-                                >
-                                  <span className="">
-                                    <img src={project} className="br3" style={{ width: '1.5rem' }} />
-                                  </span>
-                                  <small
-                                    style={{ fontWeight: 1000, color: 'inherit' }}
-                                  >
-                                    Project
-                          </small>
-                                </NavLink>
-                                <NavLink
-                                  exact
-                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
-                                  style={{ color: 'blue' }}
-                                  to={`/company/${props.company.name}/colleague`}
-                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
-                                >
-                                  <span className="">
-                                    <img src={team} className="br3" style={{ width: '1.5rem' }} />
-                                  </span>
-                                  <small
-                                    style={{ fontWeight: 1000, color: 'inherit' }}
-                                  >
-                                    Colleagues
-                          </small>
-                                </NavLink>
-                                <NavLink
-                                  exact
-                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
-                                  style={{ color: 'blue' }}
-                                  to={`/company/${props.company.name}/associates`}
-                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
-                                >
-                                  <span className="">
-                                    <img src={associate} className="br3" style={{ width: '1.5rem' }} />
-                                  </span>
-                                  <small
-                                    style={{ fontWeight: 1000, color: 'inherit' }}
-                                  >
-                                    Associates
-                          </small>
-                                </NavLink>
-                                <NavLink
-                                  exact
-                                  activeStyle={{ background: '#3F61C5', color: 'white' }}
-                                  style={{ color: 'blue' }}
-                                  to={`/company/${props.company.name}/settings`}
-                                  className="hover-bg-black-20 pa2 flex flex-column items-center"
-                                >
-                                  <span className="">
-                                    <img src={settings} className="br3" style={{ width: '1.5rem' }} />
-                                  </span>
-                                  <small
-                                    style={{ fontWeight: 1000, color: 'inherit' }}
-                                  >
-                                    Settings
-                          </small>
-                                </NavLink>
-                              </Navbar>
-                            )
-                            :
-                            <NavbarIndividual showDialog={showMenu} setShowDialog={setShowMenu} />
-                        }
-                      </div>
-                    </div>
-                    <div
-                      className="relative h-100 vh-100"
-                      style={{
-                        transition: 'width 0.4s',
-                        width: props.rightSidebarOpen ? '100%' : '0%',
-                        zIndex: 5,
-                      }}
-                    >
-                      <div
-                        id="rightSidebar"
-                        className="h-100 c-tigrowWhite vh-100"
-                        style={{
-                          background: 'rgb(6, 5, 23)',
-                        }}
-                      ></div>
-                    </div>
->>>>>>> b9e80fb9... mobile responsive for project preface
                   </div>
                 ) : (
                     <div className="vh-100 bg-white">
