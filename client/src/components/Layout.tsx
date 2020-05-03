@@ -172,8 +172,15 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         setScrollTop(scrollRef.current.scrollTop)
       }
     >
-      {loading === true ? (
-        <Loading />
+      {true === true ? (
+          <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            //   height: '100vh'
+          }}>
+                <Loading />
+          </div>
       ) : isEmpty(props.user._id) === true ? (
         <p className="f3 tc fw5 pt4 white">
           Your Session is expired. Please
