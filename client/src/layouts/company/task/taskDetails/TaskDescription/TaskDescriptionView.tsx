@@ -30,10 +30,10 @@ export const TaskDescriptionViewComponent = (
           {props.company && projectPermit(props.company.role) ? (
             <Icon
               className={
-                editDescriptionDialog
-                  ? 'fr tigrow-lightBlue pointer'
-                  : 'fr silver pointer'
-              }
+                editDescriptionDialog ? 
+                'fr tigrow-lightBlue pointer' : 
+                'fr silver pointer'
+            }
               icon="edit"
               onClick={() => {
                 setEditDescriptionDialog(!editDescriptionDialog);
