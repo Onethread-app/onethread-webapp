@@ -6,6 +6,7 @@ import {
 } from 'react-device-detect';
 import { Navbar, Alignment } from '@blueprintjs/core';
 import { EmailVerificationForm } from './EmailVerificationForm';
+
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import './styles.css';
@@ -611,7 +612,7 @@ export const HomePage = () => {
           <EmailVerificationForm />
         </div>
         <div className="dt center w-34-ns w-80 mb5-ns mb3 footerText">
-          Contact us at sales@tigrow.co for Enterprise Solution
+          Contact us at sales@tigrow.info for Enterprise Solution
         </div>
         <small className="white footerText">
           © {new Date().getFullYear()} TiGrow Inc. - House 208, Road
@@ -621,3 +622,4 @@ export const HomePage = () => {
     </div>
   );
 };
+  
