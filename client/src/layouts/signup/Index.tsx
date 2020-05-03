@@ -480,7 +480,7 @@ export const SignUpPageComponent = (
                                       }}
                                     >
                                       <img
-                                        title={showPassword ? "Don't show password" : "Show password"}
+                                        title={showPassword ? 'Don\'t show password' : 'Show password'}
                                         onClick={() => setShowPassword(!showPassword)}
                                         src={showPassword ? eyeClose : eyeIcon}
                                         style={{
@@ -568,7 +568,7 @@ export const SignUpPageComponent = (
                                       }}
                                     >
                                       <img
-                                        title={showConfirmPassword ? "Don't show password" : "Show password"}
+                                        title={showConfirmPassword ? 'Don\'t show password' : 'Show password'}
                                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                                         src={showConfirmPassword ? eyeClose : eyeIcon}
                                         style={{
