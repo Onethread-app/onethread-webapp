@@ -126,6 +126,7 @@ export const EditDesignationForm = (
                   <Field<string>
                     name="department"
                     validate={required}
+                    
                     render={({ input, meta }) => (
                       <>
                         <DropdownFieldWithError
