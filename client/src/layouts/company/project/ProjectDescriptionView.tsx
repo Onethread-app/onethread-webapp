@@ -58,6 +58,7 @@ export const _ProjectDescriptionView = (
       {editDescriptionDialog ? (
         <ProjectDescriptionEditor
           // projectPrefaceDescriptionUpdate={projectPrefaceDescriptionUpdate}
+          editableDescription={props.description}
           editDescriptionDialog={editDescriptionDialog}
           setEditDescriptionDialog={() =>
             setEditDescriptionDialog(!editDescriptionDialog)
