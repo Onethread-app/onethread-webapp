@@ -637,7 +637,7 @@ export const SignUpPageComponent = (
       >
         <div className="v-mid dtc">
           <div className="w-50 center">
-            <Link to="/home">
+            <Link to="/">
               <img width="150px" height="70px" src={logo} />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>

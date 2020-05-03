@@ -6,7 +6,7 @@ const pusherChannel = new Pusher({
   key: config.PUSHER_CHANNEL_KEY,
   secret: config.PUSHER_CHANNEL_SECRET,
   cluster: config.PUSHER_CHANNEL_CLUSTER,
-  useTLS: true,
+  encrypted: true,
 });
 
 module.exports = {

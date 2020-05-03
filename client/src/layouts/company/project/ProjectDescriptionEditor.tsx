@@ -1,12 +1,13 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
+import TextareaAutosize from 'react-textarea-autosize';
 import {
   required,
   checkError,
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { Button, Icon, EditableText } from '@blueprintjs/core';
+import { Button, Icon } from '@blueprintjs/core';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { connect } from 'react-redux';
 import {
@@ -14,9 +15,12 @@ import {
   getSingleProject,
 } from '../../../stores/project/Actions';
 
+import './textArea.css';
+
 interface IProjectDescriptionFormProps {
   getSingleProject: (pid: string) => void;
   setEditDescriptionDialog: (val: boolean) => void;
+  editableDescription: string;
   editDescriptionDialog: boolean;
   projectPrefaceDescriptionUpdate: any;
   pid: string;
@@ -38,7 +42,7 @@ export const ProjectDescriptionEditorComponent = (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{ description: '' }}
+        initialValues={{ description: props.editableDescription ? props.editableDescription : '' }}
         render={({
           handleSubmit,
           form,
@@ -59,15 +63,14 @@ export const ProjectDescriptionEditorComponent = (
                 validate={composeValidators(required, maxValue(5000))}
                 render={({ input, meta }) => (
                   <div>
-                    <EditableText
-                      multiline={true}
-                      minLines={3}
-                      maxLines={5}
-                      value={input.value}
-                      onChange={input.onChange}
-                      className="outline"
-                      placeholder=""
-                    />
+                      <TextareaAutosize
+					    value={input.value}
+                        onChange={input.onChange}
+                        className="description-area"
+					    placeholder="Write the project description here"
+					    minRows={5}
+					    useCacheForDOMMeasurements
+					/>
                     {checkError(meta) && (
                       <p className="mv2" style={{ color: 'red' }}>
                         {meta.error || meta.submitError}
