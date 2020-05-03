@@ -57,11 +57,12 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
             name="dueDate"
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}>
-                <label>Due Date</label>
+                <label style={{ marginBottom: '5px', display: 'inline-block' }}>Due Date</label>
                 <DateInput
                   formatDate={(date: Date) =>
                     date.toLocaleDateString()
                   }
+                  placeholder="Select a date"
                   parseDate={(str: string) => new Date(str)}
                   onChange={input.onChange}
                   canClearSelection={false}
