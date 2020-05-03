@@ -46,7 +46,7 @@ export const ProjectOutlineEditorComponent = (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{ description: props.editableOutline ? props.editableOutline : "" }}
+        initialValues={{ description: props.editableOutline ? props.editableOutline : '' }}
         render={({
           handleSubmit,
           form,
