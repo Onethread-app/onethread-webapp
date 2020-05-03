@@ -1118,6 +1118,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
 "@emotion/serialize@^0.11.15", "@emotion/serialize@^0.11.16":
   version "0.11.16"
   resolved "https://registry.yarnpkg.com/@emotion/serialize/-/serialize-0.11.16.tgz#dee05f9e96ad2fb25a5206b6d759b2d1ed3379ad"
@@ -1135,6 +1138,7 @@
   integrity sha512-zM9PFmgVSqBw4zL101Q0HrBVTGmpAxFZH/pYx/cjJT5advXguvcgjHFTCaIO3enL/xr89vK2bh0Mfyj9aa0ANA==
 
 "@emotion/stylis@0.8.5", "@emotion/stylis@^0.8.4":
+<<<<<<< HEAD
 =======
 "@emotion/stylis@^0.8.4":
 >>>>>>> 13e4934a... contact form, chat bot, announcement, signin text
@@ -1147,10 +1151,13 @@
 =======
 "@emotion/stylis@^0.8.4":
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/@emotion/stylis/-/stylis-0.8.5.tgz#deacb389bd6ee77d1e7fcaccce9e16c5c7e78e04"
   integrity sha512-h6KtPihKFn3T9fuIrwvXXUOwlx3rfUvfZIcP5a6rh8Y7zjE3O06hT5Ss4S/YI1AYhuZ1kjaE/5EaOOI2NqSylQ==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -1168,6 +1175,9 @@
 =======
 "@emotion/unitless@^0.7.4":
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+"@emotion/unitless@0.7.5", "@emotion/unitless@^0.7.4":
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
   version "0.7.5"
   resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
   integrity sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==
@@ -1176,6 +1186,9 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
 "@emotion/utils@0.11.3":
   version "0.11.3"
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-0.11.3.tgz#a759863867befa7e583400d322652a3f44820924"
@@ -1186,6 +1199,7 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
+<<<<<<< HEAD
 "@firebase/analytics-types@0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@firebase/analytics-types/-/analytics-types-0.3.0.tgz#33c3f695313b561d48d18d663a20f20362d3ee7c"
@@ -1437,6 +1451,8 @@
 >>>>>>> 02441785... work in progress announcement
 =======
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -10228,6 +10244,7 @@ react-input-autosize@^2.2.2:
   dependencies:
     prop-types "^15.5.8"
 
+<<<<<<< HEAD
 =======
 >>>>>>> fb05257d... google analytics add
 =======
@@ -10236,6 +10253,20 @@ react-input-autosize@^2.2.2:
 >>>>>>> 02441785... work in progress announcement
 =======
 >>>>>>> ad6f72c9... google analytics add
+=======
+react-ga@^2.7.0:
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/react-ga/-/react-ga-2.7.0.tgz#24328f157f31e8cffbf4de74a3396536679d8d7c"
+  integrity sha512-AjC7UOZMvygrWTc2hKxTDvlMXEtbmA0IgJjmkhgmQQ3RkXrWR11xEagLGFGaNyaPnmg24oaIiaNPnEoftUhfXA==
+
+react-input-autosize@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.2.2.tgz#fcaa7020568ec206bc04be36f4eb68e647c4d8c2"
+  integrity sha512-jQJgYCA3S0j+cuOwzuCd1OjmBmnZLdqQdiLKRYrsMMzbjUrVDS5RvJUDwJqA7sKuksDuzFtm6hZGKFu7Mjk5aw==
+  dependencies:
+    prop-types "^15.5.8"
+
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
 react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.0, react-is@^16.8.1, react-is@^16.8.4, react-is@^16.9.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
@@ -10386,6 +10417,9 @@ react-scripts@3.4.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
 react-select@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/react-select/-/react-select-3.1.0.tgz#ab098720b2e9fe275047c993f0d0caf5ded17c27"
@@ -10400,6 +10434,7 @@ react-select@^3.1.0:
     react-input-autosize "^2.2.2"
     react-transition-group "^4.3.0"
 
+<<<<<<< HEAD
 =======
 >>>>>>> 13e4934a... contact form, chat bot, announcement, signin text
 =======
@@ -10408,6 +10443,8 @@ react-select@^3.1.0:
 >>>>>>> 4997b780... google analytics on index.html, confis, email to help tigrow, contact commented on signup
 =======
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
 react-simple-chatbot@^0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/react-simple-chatbot/-/react-simple-chatbot-0.6.1.tgz#30d08083e0b0283b78b84312df674e2cd6ac6703"
@@ -10427,6 +10464,9 @@ react-simple-chatbot@^0.6.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
 react-textarea-autosize@^7.1.2:
   version "7.1.2"
   resolved "https://registry.yarnpkg.com/react-textarea-autosize/-/react-textarea-autosize-7.1.2.tgz#70fdb333ef86bcca72717e25e623e90c336e2cda"
@@ -10435,6 +10475,7 @@ react-textarea-autosize@^7.1.2:
     "@babel/runtime" "^7.1.2"
     prop-types "^15.6.0"
 
+<<<<<<< HEAD
 react-toastify@^6.0.8:
   version "6.0.8"
   resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-6.0.8.tgz#84625d81d0fd01902a7f4c6f317eb074cb3bba67"
@@ -10454,6 +10495,8 @@ react-toastify@^6.0.8:
 >>>>>>> 02441785... work in progress announcement
 =======
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+>>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
 react-transition-group@^2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"

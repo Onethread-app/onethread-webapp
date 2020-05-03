@@ -61,6 +61,7 @@ export const _ProjectOutlineView = (
       {editDescriptionDialog ? (
         <ProjectOutlineEditor
           editableOutline={props.projectOutline}
+          editableOutline={props.projectOutline}
           editDescriptionDialog={editDescriptionDialog}
           setEditDescriptionDialog={() =>
             setEditDescriptionDialog(!editDescriptionDialog)

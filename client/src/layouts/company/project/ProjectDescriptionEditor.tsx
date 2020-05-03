@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
-import TextareaAutosize from 'react-textarea-autosize';
+import TextareaAutosize from "react-textarea-autosize";
 import {
   required,
   checkError,
@@ -15,12 +15,12 @@ import {
   getSingleProject,
 } from '../../../stores/project/Actions';
 
-import './textArea.css';
+import "./textArea.css";
 
 interface IProjectDescriptionFormProps {
   getSingleProject: (pid: string) => void;
   setEditDescriptionDialog: (val: boolean) => void;
-  editableDescription: string;
+  editableDescription: string,
   editDescriptionDialog: boolean;
   projectPrefaceDescriptionUpdate: any;
   pid: string;
@@ -42,11 +42,7 @@ export const ProjectDescriptionEditorComponent = (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{
-          description: props.editableDescription
-            ? props.editableDescription
-            : '',
-        }}
+        initialValues={{ description: props.editableDescription ? props.editableDescription : "" }}
         render={({
           handleSubmit,
           form,
@@ -67,14 +63,23 @@ export const ProjectDescriptionEditorComponent = (
                 validate={composeValidators(required, maxValue(5000))}
                 render={({ input, meta }) => (
                   <div>
-                    <TextareaAutosize
+                      <TextareaAutosize
+					    value={input.value}
+                        onChange={input.onChange}
+                        className="description-area"
+					    placeholder="Write the project description here"
+					    minRows={5}
+					    useCacheForDOMMeasurements
+					/>
+                    {/* <EditableText
+                      multiline={true}
+                      minLines={3}
+                      maxLines={5}
                       value={input.value}
                       onChange={input.onChange}
-                      className="description-area"
-                      placeholder="Write the project description here"
-                      minRows={5}
-                      useCacheForDOMMeasurements
-                    />
+                      className="outline"
+                      placeholder=""
+                    /> */}
                     {checkError(meta) && (
                       <p className="mv2" style={{ color: 'red' }}>
                         {meta.error || meta.submitError}
