@@ -38,7 +38,11 @@ export const SignInPageComponent = (
   props: SignInPageInternalProps & RouteComponentProps,
 ) => {
   const onSubmit = async (values: LoginModel) => {
-    const response = await props.loginAction(values);
+
+    const response = await props.loginAction({
+        email: values.email.trim(),
+        password: values.password
+    });
     if (response.message === 200) {
       props.history.push(`/${response.payload.data.user.name}`);
       return true;
