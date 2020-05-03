@@ -173,7 +173,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       }
     >
       {loading === true ? (
-        <Loading />
+          <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100vh'
+          }}>
+                <Loading />
+          </div>
       ) : isEmpty(props.user._id) === true ? (
         <p className="f3 tc fw5 pt4 white">
           Your Session is expired. Please

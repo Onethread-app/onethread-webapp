@@ -5,6 +5,8 @@ import { store } from 'Store';
 import { includes } from 'lodash';
 import { ICompanyRoom } from './room/Reducer';
 
+const toaster = Toaster.create();
+
 const History = createBrowserHistory();
 export interface Entity {
   _id?: string;
@@ -22,7 +24,7 @@ export const tokenConfig = () => {
   ) {
     localStorage.removeItem('tigrow_acc_id');
     localStorage.removeItem('tigrow_real_id');
-    Toaster.create().show({
+    toaster.show({
       message: 'Token is invalid. Please sign in.',
       intent: 'danger',
     });
@@ -50,7 +52,7 @@ export const tokenConfigFIleUpload = () => {
   ) {
     localStorage.removeItem('tigrow_acc_id');
     localStorage.removeItem('tigrow_real_id');
-    Toaster.create().show({
+    toaster.show({
       message: 'Token is invalid. Please sign in.',
       intent: 'danger',
     });
@@ -66,9 +68,11 @@ export const tokenConfigFIleUpload = () => {
 };
 
 export const isAuthenticate = () => {
+
   if (typeof window === undefined) {
     return false;
   }
+
   if (
     localStorage.getItem('tigrow_acc_id') &&
     localStorage.getItem('tigrow_real_id')
@@ -77,6 +81,7 @@ export const isAuthenticate = () => {
   } else {
     return false;
   }
+
 };
 
 export const projectPermit = (companyRole: string): boolean => {
