@@ -64,7 +64,11 @@ export const SignUpPageComponent = (
     //     values.contactNo ? values.contactNo : '0000'
     //   }`,
     // };
-    const response = await props.userSignupAction(values);
+
+    const response = await props.userSignupAction({
+        ...values,
+        email: values.email.trim()
+    });
     if (response.message === 200) {
       props.history.push(`/signup-confirmation`);
       return true;
