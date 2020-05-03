@@ -413,22 +413,6 @@ export const SignUpPageComponent = (
                                       />
                                     </span>
                                   }
-                                  rightElement={
-                                    <span
-                                      className="bp3-icon"
-                                      style={{
-                                        paddingTop: '10px',
-                                        paddingRight: '5px',
-                                      }}
-                                    >
-                                      <img
-                                        src={greyLockIcon}
-                                        width="15px"
-                                        height="15px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
                                   style={{
                                     boxShadow: 'none',
                                     fontSize: '18px',
@@ -478,9 +462,11 @@ export const SignUpPageComponent = (
                                     <span className="bp3-icon">
                                       <img
                                         src={lockIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
+                                        style={{
+                                            width: '20px',
+                                            height: '20px',
+                                            color: '#0fa3a3'
+                                        }}
                                       />
                                     </span>
                                   }
@@ -490,19 +476,18 @@ export const SignUpPageComponent = (
                                       style={{
                                         paddingTop: '5px',
                                         paddingRight: '5px',
+                                        cursor: 'pointer'
                                       }}
                                     >
                                       <img
-                                        onMouseDown={() =>
-                                          setShowPassword(true)
-                                        }
-                                        onMouseUp={() =>
-                                          setShowPassword(false)
-                                        }
-                                        src={eyeIcon}
-                                        width="15px"
-                                        height="15px"
-                                        color="#0fa3a3"
+                                        title={showPassword ? "Don't show password" : "Show password"}
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        src={showPassword ? eyeClose : eyeIcon}
+                                        style={{
+                                            width: '15px',
+                                            height: '15px',
+                                            color: '#0fa3a3'
+                                        }}
                                       />
                                       {/* <Tooltip content={
                                           <p style={{ width: '400px' }}>
@@ -536,79 +521,78 @@ export const SignUpPageComponent = (
                           </div>
                         </div>
                         <div>
-                          <div>
-                            <Field<string>
-                              name="confirmPassword"
-                              validate={composeValidators(required)}
-                              render={({ input, meta }) => (
-                                <div
-                                  className={` ${
-                                    checkError(meta) ? 'mb3-ns mb2' : 'mb4-ns mb3'
-                                    }`}
-                                >
-                                  <InputGroupFieldWithError
-                                    id="confirmPassword"
-                                    className={`bw1 pb2 br0 bb ${
-                                      checkError(meta)
-                                        ? 'b--red'
-                                        : 'b--lightBlue'
-                                      }`}
-                                    value={input.value}
-                                    onChange={input.onChange}
-                                    type={`${
-                                      showConfirmPassword
-                                        ? 'text'
-                                        : 'password'
-                                      }`}
-                                    leftIcon={
-                                      <span className="bp3-icon">
-                                        <img
-                                          src={lockIcon}
-                                          width="20px"
-                                          height="20px"
-                                          color="#0fa3a3"
-                                        />
-                                      </span>
-                                    }
-                                    rightElement={
-                                      <span
-                                        className="bp3-icon"
+                          <Field<string>
+                            name="confirmPassword"
+                            validate={composeValidators(required)}
+                            render={({ input, meta }) => (
+                              <div
+                                className={` ${
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
+                                }`}
+                              >
+                                <InputGroupFieldWithError
+                                  id="confirmPassword"
+                                  className={`bw1 pb2 br0 bb ${
+                                    checkError(meta)
+                                      ? 'b--red'
+                                      : 'b--lightBlue'
+                                  }`}
+                                  value={input.value}
+                                  onChange={input.onChange}
+                                  type={`${
+                                    showConfirmPassword
+                                      ? 'text'
+                                      : 'password'
+                                  }`}
+                                  leftIcon={
+                                    <span className="bp3-icon">
+                                      <img
+                                        src={lockIcon}
                                         style={{
-                                          paddingTop: '10px',
-                                          paddingRight: '5px',
+                                            width: '20px',
+                                            height: '20px',
+                                            color: '#0fa3a3'
                                         }}
-                                      >
-                                        <img
-                                          onMouseDown={() =>
-                                            setShowConfirmPassword(true)
-                                          }
-                                          onMouseUp={() =>
-                                            setShowConfirmPassword(
-                                              false,
-                                            )
-                                          }
-                                          src={eyeIcon}
-                                          width="15px"
-                                          height="15px"
-                                          color="#0fa3a3"
-                                        />
-                                      </span>
-                                    }
-                                    style={{
-                                      boxShadow: 'none',
-                                      fontSize: '18px',
-                                      paddingLeft: '40px',
-                                    }}
-                                    placeHolder="Confirm Password"
-                                    error={
-                                      checkError(meta) &&
-                                      (meta.error || meta.submitError)
-                                    }
-                                  />
-                                </div>
-                              )}
-                            />
-                          </div>
+                                      />
+                                    </span>
+                                  }
+                                  rightElement={
+                                    <span
+                                      className="bp3-icon"
+                                      style={{
+                                        paddingTop: '10px',
+                                        paddingRight: '5px',
+                                        cursor: 'pointer'
+                                      }}
+                                    >
+                                      <img
+                                        title={showConfirmPassword ? "Don't show password" : "Show password"}
+                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                        src={showConfirmPassword ? eyeClose : eyeIcon}
+                                        style={{
+                                            width: '15px',
+                                            height: '15px',
+                                            color: '#0fa3a3'
+                                        }}
+                                      />
+                                    </span>
+                                  }
+                                  style={{
+                                    boxShadow: 'none',
+                                    fontSize: '18px',
+                                    paddingLeft: '40px',
+                                  }}
+                                  placeHolder="Confirm Password"
+                                  error={
+                                    checkError(meta) &&
+                                    (meta.error || meta.submitError)
+                                  }
+                                />
+                              </div>
+                            )}
+                          />
                         </div>
                         <Button
                           className="grow h2 pointer white bp3-minimal w4"
