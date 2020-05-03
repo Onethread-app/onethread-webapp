@@ -7,7 +7,7 @@ import {
   Dialog,
 } from '@blueprintjs/core';
 import { connect } from 'react-redux';
-import { upperFirst } from "lodash";
+import { upperFirst } from 'lodash';
 import { NavLink } from 'react-router-dom';
 import { logoutAction } from 'stores/auth/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
