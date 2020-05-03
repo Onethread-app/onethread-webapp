@@ -242,7 +242,7 @@ export const SignInPageComponent = (
                                     }}
                                   >
                                     <img
-                                      title={showPassword ? "Don't show password" : "Show password"}
+                                      title={showPassword ? 'Don\'t show password' : 'Show password'}
                                       onClick={() => setShowPassword(!showPassword)}
                                       src={showPassword ? eyeClose : eyeIcon}
                                       style={{
