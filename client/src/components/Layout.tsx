@@ -22,6 +22,7 @@ import {
   getSelectedTaskDetails,
 } from 'stores/board/Actions';
 
+
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
 import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
