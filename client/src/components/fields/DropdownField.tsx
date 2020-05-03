@@ -11,7 +11,7 @@ import { isEqual } from 'lodash';
 interface DropdownFieldProps {
   id: string;
   selectedValue: string;
-  placeholder?: string,
+  placeholder?: string;
   options: Entity[];
   onChange: (value: any) => void;
   leftIcon?: IconName;
