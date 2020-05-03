@@ -172,7 +172,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
         setScrollTop(scrollRef.current.scrollTop)
       }
     >
-      {true === true ? (
+      {loading === true ? (
           <div style={{
               display: 'flex',
               justifyContent: 'center',
