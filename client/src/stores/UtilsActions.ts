@@ -68,9 +68,11 @@ export const tokenConfigFIleUpload = () => {
 };
 
 export const isAuthenticate = () => {
+
   if (typeof window === undefined) {
     return false;
   }
+
   if (
     localStorage.getItem('tigrow_acc_id') &&
     localStorage.getItem('tigrow_real_id')
@@ -79,6 +81,7 @@ export const isAuthenticate = () => {
   } else {
     return false;
   }
+
 };
 
 export const projectPermit = (companyRole: string): boolean => {
