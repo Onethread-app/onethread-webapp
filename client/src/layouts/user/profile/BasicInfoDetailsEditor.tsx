@@ -64,9 +64,9 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
           errors.secondaryEmail =
             "You can't use same Primary Email and Secondary Email";
         }
-        if (values.contactNo && values.contactNo.length !== 11) {
-          errors.contactNo = 'Not more or less than 11 character';
-        }
+        // if (values.contactNo && values.contactNo.length !== 11) {
+        //   errors.contactNo = 'Not more or less than 11 character';
+        // }
         return errors;
       }}
       render={({
