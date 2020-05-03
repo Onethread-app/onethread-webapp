@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
-import TextareaAutosize from "react-textarea-autosize";
+import TextareaAutosize from 'react-textarea-autosize';
 
 import {
   required,
@@ -16,7 +16,7 @@ import {
   getSingleProject,
 } from '../../../stores/project/Actions';
 
-import "./textArea.css";
+import './textArea.css';
 
 interface IProjectOutlineEditorFormProps {
   projectPrefaceOutlineUpdate: (
@@ -71,7 +71,7 @@ export const ProjectOutlineEditorComponent = (
 					    value={input.value}
                         onChange={input.onChange}
                         className="description-area"
-					    placeholder="Write the project description here"
+					    placeholder="Write the project outline here"
 					    minRows={5}
 					    useCacheForDOMMeasurements
 					/>
