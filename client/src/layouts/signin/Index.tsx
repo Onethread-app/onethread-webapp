@@ -241,6 +241,7 @@ export const SignInPageComponent = (
                                     style={{
                                       paddingTop: '10px',
                                       paddingRight: '5px',
+<<<<<<< HEAD
                                       cursor: 'pointer',
                                     }}
                                   >
@@ -262,6 +263,19 @@ export const SignInPageComponent = (
                                         width: '15px',
                                         height: '15px',
                                         color: '#0fa3a3',
+=======
+                                      cursor: 'pointer'
+                                    }}
+                                  >
+                                    <img
+                                      title={showPassword ? 'Don\'t show password' : 'Show password'}
+                                      onClick={() => setShowPassword(!showPassword)}
+                                      src={showPassword ? eyeClose : eyeIcon}
+                                      style={{
+                                        width: '15px',
+                                        height: '15px',
+                                        color: '#0fa3a3'
+>>>>>>> 37c07efb... onClick to show password, hide/show password icon and title added for usability
                                       }}
                                     />
                                   </span>
@@ -325,7 +339,11 @@ export const SignInPageComponent = (
                           border: '2px solid #0fa3a3',
                           color: '#0fa3a3',
                           fontSize: '18px',
+<<<<<<< HEAD
                           padding: '10px 0px',
+=======
+                          padding: '10px 0px'
+>>>>>>> 37c07efb... onClick to show password, hide/show password icon and title added for usability
                         }}
                       >
                         Sign Up here
