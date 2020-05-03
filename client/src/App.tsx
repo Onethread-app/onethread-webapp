@@ -101,13 +101,14 @@ const NotFound = () => (
 export const App = () => (
   <BrowserRouter>
     <Switch>
-      <Route
-        exact
-        path="/"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <HomePage />
+        {
+            !isAuthenticate() &&
+            <Route
+                exact
+                path="/"
+                component={HomePage}
+            />
         }
-      />
       <Route
         exact
         path="/signin"
