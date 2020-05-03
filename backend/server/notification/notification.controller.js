@@ -424,6 +424,7 @@ module.exports.list = async (req, res, next) => {
     //   return sendJSONresponse(res, 200, result);
     // });
   } catch (error) {
+    console.log(error);
     logger.error(`${error}`);
     next(error);
   }
