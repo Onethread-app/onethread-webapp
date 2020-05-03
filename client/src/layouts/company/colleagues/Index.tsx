@@ -212,8 +212,10 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                 <tr className="hide-child" key={member._id}>
                   <td>
                     <span className="mr2-ns mr1 f7 f6-ns">
-                      {upperFirst(member.account.firstName)}{' '}
-                      {upperFirst(member.account.lastName)}
+                        {
+                            member.account &&
+                            `${upperFirst(member.account.firstName)} ${upperFirst(member.account.lastName)}`
+                        }
                     </span>
                     {companyPermit(member.role) ? (
                       member.role === 'superAdmin' ? (
@@ -359,10 +361,10 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                 <tr className="hide-child" key={member._id}>
                   <td>
                     <span className="mr2-ns mr1 f7 f6-ns">
-                      {member.account &&
-                        `${upperFirst(
-                          member.account.firstName,
-                        )} ${upperFirst(member.account.lastName)}`}
+                        {
+                            member.account &&
+                            `${upperFirst(member.account.firstName)} ${upperFirst(member.account.lastName)}`
+                        }
                     </span>
                     {companyPermit(member.role) ? (
                       member.role === 'superAdmin' ? (
