@@ -24,7 +24,8 @@ export const TaskTitleViewComponent = (
         />
       ) : (
         <h3
-          className="f4 mb0 overflow-hidden w-100 mb1"
+          title="Click to edit title"
+          className="f4 mb0 overflow-hidden w-100 mb1 dim"
           style={{
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
