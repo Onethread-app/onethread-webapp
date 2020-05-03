@@ -8,6 +8,8 @@ import { tigrowApi } from 'config';
 
 const toaster = Toaster.create();
 
+const toaster = Toaster.create();
+
 const History = createBrowserHistory();
 export interface Entity {
   _id?: string;
