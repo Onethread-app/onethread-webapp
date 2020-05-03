@@ -22,6 +22,7 @@ import {
   getSelectedTaskDetails,
 } from 'stores/board/Actions';
 
+
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
 import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
@@ -174,16 +175,14 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       }
     >
       {loading === true ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '100vh',
-          }}
-        >
-          <Loading />
-        </div>
+          <div style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: '100vh'
+          }}>
+                <Loading />
+          </div>
       ) : isEmpty(props.user._id) === true ? (
         <p className="f3 tc fw5 pt4 white">
           Your Session is expired. Please
