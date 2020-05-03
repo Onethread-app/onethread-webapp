@@ -330,9 +330,7 @@ const NavbarTopComponent = (
                   </div>
                   <div className="dtc v-mid pl3">
                     <h1 className="f7 f6-ns fw4 lh-title black mv0">
-                      {`${upperFirst(
-                        props.user.firstName,
-                      )} ${upperFirst(props.user.lastName)}`}
+                      {`${upperFirst(props.user.firstName)} ${upperFirst(props.user.lastName)}`}
                     </h1>
                   </div>
                 </Button>
