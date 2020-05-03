@@ -57,14 +57,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
             name="dueDate"
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}>
-                <label
-                  style={{
-                    marginBottom: '5px',
-                    display: 'inline-block',
-                  }}
-                >
-                  Due Date
-                </label>
+                <label style={{ marginBottom: '5px', display: 'inline-block' }}>Due Date</label>
                 <DateInput
                   formatDate={(date: Date) =>
                     date.toLocaleDateString()
