@@ -34,14 +34,8 @@ import { EditDesignationForm } from 'layouts/company/colleagues/EditDesignationF
 import { isEqual, upperFirst, chunk } from 'lodash';
 import { User } from 'stores/user/Reducer';
 import { IProjectTeam } from 'stores/project/Reducer';
-<<<<<<< HEAD
 import { isMobileOnly } from 'react-device-detect';
 import { NavbarCompany } from 'components/NavbarCompany';
-=======
-import { MobileView } from 'react-device-detect';
-import user from './../../../resources/images/profilePhoto.svg';
-import { MobileListView } from '../MobileListView';
->>>>>>> b9e80fb9... mobile responsive for project preface
 interface Colleagues {
   company: ICompany;
   user: User;
@@ -156,31 +150,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
 
   return (
     <>
-<<<<<<< HEAD
       <NavbarCompany title="My Colleagues" />
-=======
-      <MobileView>
-        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
-          <h1 className="f3">My Colleagues</h1>
-          <img
-            src={
-              props.user.profileImage
-                ? props.user.profileImage
-                : user
-            }
-            className="dim v-mid dib br-100 pointer"
-            style={{
-              width: '2rem',
-              height: '2rem',
-              objectFit: 'cover',
-            }}
-            alt="user"
-            onClick={() => setShowAvatarDialog(true)}
-
-          />
-        </Navbar>
-      </MobileView>
->>>>>>> b9e80fb9... mobile responsive for project preface
       <div className="ph5-ns ph3 pb5 pt5 pt0-ns">
         <div className="flex justify-between items-center">
           {isMobileOnly ? undefined : (
