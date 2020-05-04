@@ -1,7 +1,5 @@
 {
   "name": "tigrow_frontend",
-		"version": "2.1.0",
-		"homepage":"https://www.tigrow.co",
   "version": "2.1.0",
   "homepage": "https://www.tigrow.co",
   "private": true,
