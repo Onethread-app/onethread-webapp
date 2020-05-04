@@ -561,8 +561,8 @@ const dashBoard = async (req, res, next) => {
   try {
     const companyId = req.params.companyId;
     const totalProject = await Project.find({
-      $or: [{company: companyId},{ associate : companyId}],
-      removed: false
+      $or: [{ company: companyId }, { associate: companyId }],
+      removed: false,
     }).countDocuments();
     const totalEmployee = await Member.find({
       company: companyId,

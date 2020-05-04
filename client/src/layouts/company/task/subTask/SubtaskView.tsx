@@ -136,23 +136,22 @@ export const SubTaskViewPageComponent = (
             />
           )}
           <div>
-              {
-                  !showSubtaskForm &&
-                <Button
+            {!showSubtaskForm && (
+              <Button
                 type="submit"
                 text="Add SubTask"
                 className="grow h2 pointer dib"
                 style={{
-                    background: '#0FA3A3',
-                    outline: 'none',
-                    color: 'white',
-                    borderRadius: '0px',
-                    boxShadow: 'none',
+                  background: '#0FA3A3',
+                  outline: 'none',
+                  color: 'white',
+                  borderRadius: '0px',
+                  boxShadow: 'none',
                 }}
                 onClick={() => setShowSubTaskForm(true)}
                 disabled={showSubtaskForm}
-                />
-              }
+              />
+            )}
           </div>
         </div>
       ) : (

@@ -1,15 +1,15 @@
-.description-area{
-    width: 100%;
-    resize: none;
-    outline: none;
-    font-size: 16px;
-    letter-spacing: 0.8px;
-    border: 1px solid #ced4da;
-    transition: all 0.2s;
-    padding: 5px;
+.description-area {
+  width: 100%;
+  resize: none;
+  outline: none;
+  font-size: 16px;
+  letter-spacing: 0.8px;
+  border: 1px solid #ced4da;
+  transition: all 0.2s;
+  padding: 5px;
 }
 
-.description-area:focus{
-    border-color: #80bdff;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+.description-area:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
