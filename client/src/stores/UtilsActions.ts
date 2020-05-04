@@ -72,7 +72,6 @@ export const tokenConfigFIleUpload = () => {
 };
 
 export const isAuthenticate = () => {
-
   if (typeof window === undefined) {
     return false;
   }
@@ -85,7 +84,6 @@ export const isAuthenticate = () => {
   } else {
     return false;
   }
-
 };
 
 export const projectPermit = (companyRole: string): boolean => {

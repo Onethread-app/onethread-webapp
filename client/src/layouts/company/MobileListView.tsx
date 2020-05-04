@@ -51,12 +51,16 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d06346b0... code style issue fixed
+=======
+>>>>>>> 4e99f05f... code style issue fixed
           <Icon
             icon="delete"
             iconSize={20}
             className="white ma3 fr"
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
           <Icon icon="delete" iconSize={20} className="white ma3 fr"
@@ -66,6 +70,8 @@ export const ListViewComponent = (
 =======
           <Icon icon="delete" iconSize={20} className="white ma3 fr"
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+>>>>>>> 4e99f05f... code style issue fixed
             onClick={() => props.setShowDialog(false)}
           />
           <Button
@@ -76,6 +82,7 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             }}
 =======
             }
@@ -88,6 +95,9 @@ export const ListViewComponent = (
             }
             }
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+            }}
+>>>>>>> 4e99f05f... code style issue fixed
           >
             <div className="dtc w2">
               <img
@@ -119,6 +129,7 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 {props.user.position}
 =======
                 {props.user.position} 
@@ -129,6 +140,9 @@ export const ListViewComponent = (
 =======
                 {props.user.position} 
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+                {props.user.position}
+>>>>>>> 4e99f05f... code style issue fixed
               </h1>
             </div>
           </Button>
@@ -144,14 +158,18 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d06346b0... code style issue fixed
+=======
+>>>>>>> 4e99f05f... code style issue fixed
           <Icon
             icon="cog"
             className="pr3"
             style={{ color: '#787e8d' }}
           />
           Profile Settings
+<<<<<<< HEAD
 <<<<<<< HEAD
         </NavLink>
         <NavLink
@@ -198,6 +216,12 @@ export const ListViewComponent = (
             props.logoutAction(props.history)
           }
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+        </NavLink>
+        <Button
+          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
+          onClick={(e: any) => props.logoutAction(props.history)}
+>>>>>>> 4e99f05f... code style issue fixed
           icon="log-in"
           alignText="left"
         >
@@ -226,6 +250,7 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     } mt1 pointer bp3-popover-dismiss`}
 =======
                       } mt1 pointer bp3-popover-dismiss`}
@@ -242,6 +267,9 @@ export const ListViewComponent = (
 =======
                       } mt1 pointer bp3-popover-dismiss`}
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+                    } mt1 pointer bp3-popover-dismiss`}
+>>>>>>> 4e99f05f... code style issue fixed
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -252,6 +280,7 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         dispatch({
                           type: CLEAR_PROJECT_REDUCER_STATE,
                         });
@@ -285,6 +314,14 @@ export const ListViewComponent = (
                           `/company/${
                           (response as any).data.company.name
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+                        dispatch({
+                          type: CLEAR_PROJECT_REDUCER_STATE,
+                        });
+                        props.history.push(
+                          `/company/${
+                            (response as any).data.company.name
+>>>>>>> 4e99f05f... code style issue fixed
                           }/dashboard`,
                         );
                       }
@@ -366,17 +403,24 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           }}
 =======
           }
           }
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+          }}
+>>>>>>> 4e99f05f... code style issue fixed
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
           Create Company
-      </button>
+        </button>
       </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4e99f05f... code style issue fixed
       {showButton && (
         <Dialog
           onClose={() => setShowButton(!showButton)}
@@ -389,6 +433,7 @@ export const ListViewComponent = (
           </div>
         </Dialog>
       )}
+<<<<<<< HEAD
 =======
           }
           }
@@ -435,6 +480,8 @@ export const ListViewComponent = (
 >>>>>>> d06346b0... code style issue fixed
 =======
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+>>>>>>> 4e99f05f... code style issue fixed
     </>
   );
 };

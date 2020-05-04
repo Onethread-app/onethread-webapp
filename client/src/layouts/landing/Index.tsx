@@ -63,8 +63,8 @@ export const HomePage = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-		const [message, setMessage] = useState('');
-		const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [subject, setSubject] = useState('');
   const [error, setError] = useState('');
 
   const handleSubmit = () => {
@@ -74,8 +74,8 @@ export const HomePage = () => {
     } else {
       const reqBody = {
         name,
-								email,
-								subject,
+        email,
+        subject,
         message,
       };
       if (error === '') {
@@ -635,4 +635,3 @@ export const HomePage = () => {
     </div>
   );
 };
-  

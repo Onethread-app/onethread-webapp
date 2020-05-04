@@ -101,14 +101,9 @@ const NotFound = () => (
 export const App = () => (
   <BrowserRouter>
     <Switch>
-        {
-            !isAuthenticate() &&
-            <Route
-                exact
-                path="/"
-                component={HomePage}
-            />
-        }
+      {!isAuthenticate() && (
+        <Route exact path="/" component={HomePage} />
+      )}
       <Route
         exact
         path="/signin"

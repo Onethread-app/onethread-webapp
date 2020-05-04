@@ -184,11 +184,18 @@ export const AssociateReducer = (
       };
 =======
     case GET_PROJECT_ASSOCIATES:
+<<<<<<< HEAD
     return {
       ...state,
       projectAssociates: action.payload,
     };
 >>>>>>> f4601c6e... add associates in the project (#19)
+=======
+      return {
+        ...state,
+        projectAssociates: action.payload,
+      };
+>>>>>>> 4e99f05f... code style issue fixed
     default:
       return state;
   }

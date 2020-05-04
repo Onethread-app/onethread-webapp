@@ -63,15 +63,19 @@ export const ProjectPrefaceViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <NavbarCompany title="Project" />
 =======
         <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
 =======
+=======
+>>>>>>> 4e99f05f... code style issue fixed
         <Navbar
           fixedToTop
           className="flex justify-between items-center shadow-4"
           style={{ height: '55px' }}
         >
+<<<<<<< HEAD
 >>>>>>> d06346b0... code style issue fixed
           <h1 className="f3">My Projects</h1>
           <img
@@ -86,6 +90,12 @@ export const ProjectPrefaceViewComponent = (
                 ? props.user.profileImage
                 : user
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+          <h1 className="f3">My Projects</h1>
+          <img
+            src={
+              props.user.profileImage ? props.user.profileImage : user
+>>>>>>> 4e99f05f... code style issue fixed
             }
             className="dim v-mid dib br-100 pointer"
             style={{
@@ -96,6 +106,7 @@ export const ProjectPrefaceViewComponent = (
             alt="user"
             onClick={() => setShowDialog(true)}
 <<<<<<< HEAD
+<<<<<<< HEAD
           />
         </Navbar>
 >>>>>>> b9e80fb9... mobile responsive for project preface
@@ -104,6 +115,8 @@ export const ProjectPrefaceViewComponent = (
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
 
+=======
+>>>>>>> 4e99f05f... code style issue fixed
           />
         </Navbar>
 >>>>>>> 05623007... mobile responsive for project preface
@@ -228,12 +241,15 @@ export const ProjectPrefaceViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             props.optionalRole &&
             props.role &&
 =======
 >>>>>>> d06346b0... code style issue fixed
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+>>>>>>> 4e99f05f... code style issue fixed
             projectRules(props.optionalRole)[props.role].includes(
               'addFileProject',
             ) && (
@@ -274,6 +290,7 @@ export const ProjectPrefaceViewComponent = (
                   onClick={() => setShowFileDialog(true)}
                 >
                   Upload Files
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -332,10 +349,12 @@ export const ProjectPrefaceViewComponent = (
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
 =======
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+>>>>>>> 4e99f05f... code style issue fixed
                 </Button>
-                </div>
-              )
-            )}
+              </div>
+            )
+          )}
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})
@@ -415,6 +434,7 @@ const mapStateToProps = (state: any) => ({
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   user: state.userReducer.user,
 =======
   user: state.userReducer.user
@@ -425,6 +445,9 @@ const mapStateToProps = (state: any) => ({
 =======
   user: state.userReducer.user
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+  user: state.userReducer.user,
+>>>>>>> 4e99f05f... code style issue fixed
 });
 
 export const ProjectPrefaceView = connect(

@@ -42,7 +42,11 @@ export const ProjectDescriptionEditorComponent = (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{ description: props.editableDescription ? props.editableDescription : '' }}
+        initialValues={{
+          description: props.editableDescription
+            ? props.editableDescription
+            : '',
+        }}
         render={({
           handleSubmit,
           form,
@@ -63,14 +67,14 @@ export const ProjectDescriptionEditorComponent = (
                 validate={composeValidators(required, maxValue(5000))}
                 render={({ input, meta }) => (
                   <div>
-                      <TextareaAutosize
-					    value={input.value}
-                        onChange={input.onChange}
-                        className="description-area"
-					    placeholder="Write the project description here"
-					    minRows={5}
-					    useCacheForDOMMeasurements
-					/>
+                    <TextareaAutosize
+                      value={input.value}
+                      onChange={input.onChange}
+                      className="description-area"
+                      placeholder="Write the project description here"
+                      minRows={5}
+                      useCacheForDOMMeasurements
+                    />
                     {checkError(meta) && (
                       <p className="mv2" style={{ color: 'red' }}>
                         {meta.error || meta.submitError}

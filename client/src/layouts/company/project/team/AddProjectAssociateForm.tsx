@@ -41,6 +41,7 @@ interface ProjectAssociateInternalProps
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       associates: Array<{ _id: string; size: number }>;
 =======
       associates: Array<{ _id:string, size:number }>;
@@ -51,6 +52,9 @@ interface ProjectAssociateInternalProps
 =======
       associates: Array<{ _id:string, size:number }>;
 >>>>>>> f4601c6e... add associates in the project (#19)
+=======
+      associates: Array<{ _id: string; size: number }>;
+>>>>>>> 4e99f05f... code style issue fixed
     },
     selectedAssociate: any,
   ) => void;
@@ -59,6 +63,7 @@ interface ProjectAssociateInternalProps
 const AddProjectAssociateFormComponent = (
   props: ProjectAssociateInternalProps,
 ) => {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -155,6 +160,11 @@ const AddProjectAssociateFormComponent = (
 =======
   const [suggestedAssociate, setSuggestedAssociate]: any = useState([]);
 >>>>>>> f4601c6e... add associates in the project (#19)
+=======
+  const [suggestedAssociate, setSuggestedAssociate]: any = useState(
+    [],
+  );
+>>>>>>> 4e99f05f... code style issue fixed
   const [selectedAssociate, setSelectedAssociate] = useState(
     [] as ItemEntityProps[],
   );
@@ -167,18 +177,18 @@ const AddProjectAssociateFormComponent = (
           `/associate/${props.companyId}`,
           headers,
         );
-        const formatResponse = response.data.map((assoc: any) => 
+        const formatResponse = response.data.map((assoc: any) =>
           isEqual(props.companyId, assoc.company._id) === true
-          ? {
-              ...assoc.associateCompany,
-              createdAt: assoc.createdAt,
-              size: 5,
-            }
-          : {
-              ...assoc.company,
-              createdAt: assoc.createdAt,
-              size: 5,
-            }
+            ? {
+                ...assoc.associateCompany,
+                createdAt: assoc.createdAt,
+                size: 5,
+              }
+            : {
+                ...assoc.company,
+                createdAt: assoc.createdAt,
+                size: 5,
+              },
         );
         setSuggestedAssociate(formatResponse);
       } else {
@@ -249,8 +259,11 @@ const AddProjectAssociateFormComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d06346b0... code style issue fixed
+=======
+>>>>>>> 4e99f05f... code style issue fixed
             <span
               style={{
                 display: 'flex',
@@ -266,9 +279,13 @@ const AddProjectAssociateFormComponent = (
                     let sa = [...selectedAssociate];
                     sa[index]['size'] = e.target.value;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     console.log(sa);
 >>>>>>> d06346b0... code style issue fixed
+=======
+                    console.log(sa);
+>>>>>>> 4e99f05f... code style issue fixed
                     setSelectedAssociate(sa);
                   }}
                 >
@@ -279,6 +296,7 @@ const AddProjectAssociateFormComponent = (
                       </option>
                     );
                   })}
+<<<<<<< HEAD
 <<<<<<< HEAD
                 </select>
               </span>
@@ -321,6 +339,11 @@ const AddProjectAssociateFormComponent = (
 
             
 >>>>>>> f4601c6e... add associates in the project (#19)
+=======
+                </select>
+              </span>
+            </span>
+>>>>>>> 4e99f05f... code style issue fixed
           </Tag>
         ))}
       </div>

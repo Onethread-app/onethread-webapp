@@ -11,6 +11,7 @@ const NavbarIndividualComponent = (props: NavbarProps) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   return (
     <>
       <Navbar fixedToTop className="flex justify-end items-center">
@@ -35,13 +36,20 @@ const NavbarIndividualComponent = (props: NavbarProps) => {
 =======
   return (
     <>
+=======
+  return (
+    <>
+>>>>>>> 4e99f05f... code style issue fixed
       <Navbar fixedToTop className="flex justify-end items-center">
         <Icon
           icon="menu"
           iconSize={25}
+<<<<<<< HEAD
 >>>>>>> d06346b0... code style issue fixed
 =======
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+>>>>>>> 4e99f05f... code style issue fixed
           className="blue"
           onClick={() => props.setShowDialog(true)}
         />
@@ -74,6 +82,7 @@ const mapStateToProps = (state: any) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const NavbarIndividual = connect(mapStateToProps)(
   NavbarIndividualComponent,
 );
@@ -88,3 +97,8 @@ export const NavbarIndividual = connect(mapStateToProps)(
 =======
 export const NavbarIndividual = connect(mapStateToProps)(NavbarIndividualComponent);
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+export const NavbarIndividual = connect(mapStateToProps)(
+  NavbarIndividualComponent,
+);
+>>>>>>> 4e99f05f... code style issue fixed

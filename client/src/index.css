@@ -759,21 +759,21 @@ a:hover {
   .individualcover {
     height: 185px;
   }
-  .changecompanybutton{
+  .changecompanybutton {
     font-size: 11px;
   }
-  .addDepartment{
+  .addDepartment {
     font-size: 12px;
   }
-  .changepass{
+  .changepass {
     font-size: 12px;
   }
-  .addButton{
+  .addButton {
     bottom: 5rem;
     right: 3rem;
     width: 4rem;
   }
-  .individualcover{
+  .individualcover {
     height: 185px;
   }
 }
@@ -849,20 +849,20 @@ a:hover {
   .individualcover {
     height: 185px;
   }
-  .changecompanybutton{
+  .changecompanybutton {
     font-size: 11px;
   }
-  .addDepartment{
+  .addDepartment {
     font-size: 14px;
   }
-  .changepass{
+  .changepass {
     font-size: 14px;
   }
-  .companyProfilepicOuter{
+  .companyProfilepicOuter {
     width: 130px;
     height: 130px;
   }
-  .companyProfilepic{
+  .companyProfilepic {
     width: 120px;
     height: 115px;
   }
@@ -872,17 +872,16 @@ a:hover {
     background-repeat: no-repeat;
     object-fit: cover;
   }
-  .companyCoverButton{
+  .companyCoverButton {
     margin-top: 10px;
     margin-right: 10px;
   }
-  .addButton{
+  .addButton {
     bottom: 5rem;
     right: 3rem;
     width: 4rem;
   }
-  .individualcover{
+  .individualcover {
     height: 185px;
   }
 }
-

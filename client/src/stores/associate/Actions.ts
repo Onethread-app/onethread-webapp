@@ -7,9 +7,13 @@ import {
   SELECT_ASSOCIATE,
   GET_ALL_PENDING_ASSOCIATE,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   GET_PROJECT_ASSOCIATES
 >>>>>>> f4601c6e... add associates in the project (#19)
+=======
+  GET_PROJECT_ASSOCIATES,
+>>>>>>> 4e99f05f... code style issue fixed
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { Associate } from './Reducer';

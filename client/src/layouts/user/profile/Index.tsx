@@ -12,7 +12,10 @@ export const LandingPage = (props: { user: User }) => {
   React.useEffect(() => {}, []);
   return (
     <>
-      <div className="w-100 bg-white ph4-ns ph2" style={{marginTop: '3.2rem'}}>
+      <div
+        className="w-100 bg-white ph4-ns ph2"
+        style={{ marginTop: '3.2rem' }}
+      >
         <CoverPhotoView />
         <div className="w-100 relative">
           <div className="flex-l w-100 mt5-ns mt4 ph4-ns ph3">

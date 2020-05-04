@@ -71,6 +71,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [showAssociateDialog, setShowAssociateDialog] = useState(
     false,
   );
@@ -85,6 +86,11 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 =======
   const [showAssociateDialog, setShowAssociateDialog] = useState(false);
 >>>>>>> f4601c6e... add associates in the project (#19)
+=======
+  const [showAssociateDialog, setShowAssociateDialog] = useState(
+    false,
+  );
+>>>>>>> 4e99f05f... code style issue fixed
   const [adminList, setAdminList] = useState<IProjectTeam[]>([]);
   const [moderatorList, setModeratorList] = useState<IProjectTeam[]>(
     [],
@@ -195,7 +201,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                 borderStyle: 'solid',
                 color: '#0fa3a3',
               }}
-              onClick={() => setShowAssociateDialog(!showAssociateDialog)}
+              onClick={() =>
+                setShowAssociateDialog(!showAssociateDialog)
+              }
             >
               Add Associates
             </Button>
@@ -606,6 +614,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             setShowDialog={(e) =>
               setShowAssociateDialog(!showAssociateDialog)
             }
@@ -620,6 +629,11 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 =======
             setShowDialog={(e) => setShowAssociateDialog(!showAssociateDialog)}
 >>>>>>> f4601c6e... add associates in the project (#19)
+=======
+            setShowDialog={(e) =>
+              setShowAssociateDialog(!showAssociateDialog)
+            }
+>>>>>>> 4e99f05f... code style issue fixed
           />
         </Dialog>
       )}

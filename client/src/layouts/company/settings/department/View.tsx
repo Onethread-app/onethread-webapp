@@ -38,7 +38,7 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
             style={{
               background: '#0fa3a3',
               outline: 'none',
-              color: 'white'
+              color: 'white',
             }}
             onClick={() => setShowDialogDepartment(true)}
           >

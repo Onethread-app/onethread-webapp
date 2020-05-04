@@ -87,7 +87,7 @@ interface LayoutProps {
 
 interface LayoutInternalProps
   extends LayoutProps,
-  RouteComponentProps {
+    RouteComponentProps {
   user: User;
   fetchUserAction: () => void;
   getCompanyDetails: (companyName: string) => any;
@@ -174,14 +174,16 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       }
     >
       {loading === true ? (
-          <div style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: '100vh'
-          }}>
-                <Loading />
-          </div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+          }}
+        >
+          <Loading />
+        </div>
       ) : isEmpty(props.user._id) === true ? (
         <p className="f3 tc fw5 pt4 white">
           Your Session is expired. Please
@@ -245,11 +247,26 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     className="pointer absolute bp3-icon z-3 top-1 left--1"
                     onClick={() => setLeftOpen(!leftOpen)}
                   >
+                    <img
+                      src={leftOpen ? arrowLeft : arrowRight}
+                      className="br2 w2"
+                      color="#0FA3A3"
+                    />
+                  </span>
+                  <div className="flex flex-column h-100">
+                    <NavbarTop
+                      scrollTop={scrollTop}
+                      type={
+                        (props.match.params as any).cname
+                          ? 'company'
+                          : 'default'
+                      }
+                    />
                     <div
-                      className={`relative`}
+                      ref={scrollRef}
+                      className="flex-grow-1 overflow-y-auto bg-white"
                       style={{
-                        transition: 'width 0.4s',
-                        width: leftOpen ? '15%' : '4%',
+                        borderRadius: '0px 0px 0.5rem 0.5rem',
                       }}
                     >
                       <div>
@@ -467,42 +484,80 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     >
                       <SecondaryLayout Component={props.Component} />
                     </div>
-                  )
-                  // <div className="flex flex-column h-100">
-                  //   <NavbarTop
-                  //     scrollTop={scrollTop}
-                  //     type={(props.match.params as any).cname ? 'company' : 'default'}
-                  //   />
-                  //   <div
-                  //     ref={scrollRef}
-                  //     className="flex-grow-1 overflow-y-auto bg-white"
-                  //     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
-                  //     <SecondaryLayout Component={props.Component} />
-                  //   </div>
-                  // </div>
-                }
-              </CustomView>
-              <MobileOnlyView>
-                {queries.view === 'default' ? (
+                  </div>
+                </div>
+                <div
+                  className="relative h-100 vh-100"
+                  style={{
+                    transition: 'width 0.4s',
+                    width: props.rightSidebarOpen ? '30%' : '0%',
+                    zIndex: 5,
+                  }}
+                >
                   <div
-                    id="main-layout"
-                    className={`flex relative h-100 vh-100 ${
-                      props.rightSidebarOpen && 'main-layout-overlay'
-                      }`}
-                  >
+                    id="rightSidebar"
+                    className="h-100 c-tigrowWhite"
+                    style={{
+                      background: 'rgb(6, 5, 23)',
+                    }}
+                  ></div>
+                </div>
+              </div>
+            ) : (
+              <div
+                className="vh-100 bg-white"
+                // style={{ borderRadius: '0.5rem 0.5rem 0.5rem 0.5rem' }}
+              >
+                <SecondaryLayout Component={props.Component} />
+              </div>
+            )
+            // <div className="flex flex-column h-100">
+            //   <NavbarTop
+            //     scrollTop={scrollTop}
+            //     type={(props.match.params as any).cname ? 'company' : 'default'}
+            //   />
+            //   <div
+            //     ref={scrollRef}
+            //     className="flex-grow-1 overflow-y-auto bg-white"
+            //     style={{ borderRadius: '0px 0px 0.5rem 0.5rem' }}>
+            //     <SecondaryLayout Component={props.Component} />
+            //   </div>
+            // </div>
+            }
+          </CustomView>
+          <MobileOnlyView>
+            {queries.view === 'default' ? (
+              <div
+                id="main-layout"
+                className={`flex relative h-100 vh-100 ${
+                  props.rightSidebarOpen && 'main-layout-overlay'
+                }`}
+              >
+                <div
+                  className="relative br3 pv1"
+                  style={{
+                    transition: 'width 0.4s',
+                    width: props.rightSidebarOpen ? '0%' : '100%',
+                  }}
+                >
+                  <div className="flex flex-column h-100">
                     <div
-                      className="relative br3 pv1"
+                      ref={scrollRef}
+                      className="flex-grow-1 overflow-y-auto bg-white"
                       style={{
-                        transition: 'width 0.4s',
-                        width: props.rightSidebarOpen ? '0%' : '100%',
+                        borderRadius: '0px 0px 0.5rem 0.5rem',
                       }}
                     >
-                      <div className="flex flex-column h-100">
-                        <div
-                          ref={scrollRef}
-                          className="flex-grow-1 overflow-y-auto bg-white"
+                      <SecondaryLayout Component={props.Component} />
+                    </div>
+                    {(props.match.params as any).cname ? (
+                      props.rightSidebarOpen ? undefined : (
+                        <Navbar
+                          className="flex justify-around"
                           style={{
-                            borderRadius: '0px 0px 0.5rem 0.5rem',
+                            position: 'fixed',
+                            bottom: '0',
+                            height: '65px',
                           }}
                         >
                           <SecondaryLayout Component={props.Component} />

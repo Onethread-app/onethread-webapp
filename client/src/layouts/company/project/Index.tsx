@@ -17,20 +17,21 @@ import { MobileView } from 'react-device-detect';
 import { MobileListView } from '../MobileListView';
 
 const _ProjectPage = (props: any) => {
-
   const [showDialog, setShowDialog] = useState(false);
 
 >>>>>>> 05623007... mobile responsive for project preface
   return (
     <>
       <MobileView>
-        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+        <Navbar
+          fixedToTop
+          className="flex justify-between items-center shadow-4"
+          style={{ height: '55px' }}
+        >
           <h1 className="f3">My Projects</h1>
           <img
             src={
-              props.user.profileImage
-                ? props.user.profileImage
-                : user
+              props.user.profileImage ? props.user.profileImage : user
             }
             className="dim v-mid dib br-100 pointer"
             style={{
@@ -40,7 +41,6 @@ const _ProjectPage = (props: any) => {
             }}
             alt="user"
             onClick={() => setShowDialog(true)}
-
           />
         </Navbar>
       </MobileView>
@@ -124,6 +124,7 @@ const mapStateToProps = (state: any) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     user: state.userReducer.user,
 =======
     user: state.userReducer.user
@@ -134,6 +135,9 @@ const mapStateToProps = (state: any) => {
 =======
     user: state.userReducer.user
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+    user: state.userReducer.user,
+>>>>>>> 4e99f05f... code style issue fixed
   };
 };
 
