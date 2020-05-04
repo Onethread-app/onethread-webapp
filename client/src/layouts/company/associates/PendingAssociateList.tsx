@@ -53,12 +53,12 @@ export const PendingAssociateListComponent = (
                         className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns"
                       />
                     ) : (
-                        <h1 className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns tc pt2-ns bg-green white f4 f3-ns">
-                          {associate.associateCompany
-                            ? associate.associateCompany.name.charAt(0)
-                            : 'Demo'}
-                        </h1>
-                      )}
+                      <h1 className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns tc pt2-ns bg-green white f4 f3-ns">
+                        {associate.associateCompany
+                          ? associate.associateCompany.name.charAt(0)
+                          : 'Demo'}
+                      </h1>
+                    )}
                   </div>
                   <div className="dtc v-mid pl3 mw6">
                     <h1 className="f5 black mv0">
@@ -116,8 +116,8 @@ export const PendingAssociateListComponent = (
               </>
             ))
           ) : (
-                <p>No pending request available</p>
-              )}
+            <p>No pending request available</p>
+          )}
         </div>
       </div>
     </>

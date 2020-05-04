@@ -59,10 +59,10 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
                     <EditableText
                       multiline={true}
                       minLines={3}
-                      maxLines={5}
+                      maxLines={10}
                       value={input.value}
                       onChange={input.onChange}
-                      className="outline"
+                      className="outline pa1"
                       placeholder=""
                     />
                     {checkError(meta) && (

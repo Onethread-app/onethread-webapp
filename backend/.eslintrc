@@ -15,9 +15,8 @@
     "promise/no-promise-in-callback": "error",
     "promise/no-callback-in-promise": "error",
     "promise/no-return-in-finally": "error",
-				"prefer-arrow-callback": "error",
-				"import/no-unresolved": "off",
-				"object-shorthand": [2, "never", { "ignoreConstructors": true }]
-
+    "prefer-arrow-callback": "error",
+    "import/no-unresolved": "off",
+    "object-shorthand": [2, "never", { "ignoreConstructors": true }]
   }
 }

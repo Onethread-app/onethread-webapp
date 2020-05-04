@@ -43,7 +43,7 @@ const GeneralViewComponent = (
                 text="Change Company Name"
                 style={{
                   background: '#0fa3a3',
-                  color: 'white'
+                  color: 'white',
                 }}
                 onClick={() => setShowDialog(true)}
               />

@@ -31,10 +31,14 @@ export const _ProjectDescriptionView = (
         {props.role === 'admin' ? (
           <div className="pr2" style={{ paddingTop: '10px' }}>
             <Icon
-              className="fr silver pointer"
+              className={
+                editDescriptionDialog
+                  ? 'fr tigrow-lightBlue pointer'
+                  : 'fr silver pointer'
+              }
               icon="edit"
               onClick={() => {
-                setEditDescriptionDialog(true);
+                setEditDescriptionDialog(!editDescriptionDialog);
               }}
             />
           </div>
@@ -58,6 +62,7 @@ export const _ProjectDescriptionView = (
       {editDescriptionDialog ? (
         <ProjectDescriptionEditor
           // projectPrefaceDescriptionUpdate={projectPrefaceDescriptionUpdate}
+          editableDescription={props.description}
           editDescriptionDialog={editDescriptionDialog}
           setEditDescriptionDialog={() =>
             setEditDescriptionDialog(!editDescriptionDialog)

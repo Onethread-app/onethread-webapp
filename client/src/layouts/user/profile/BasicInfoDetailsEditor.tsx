@@ -52,7 +52,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
       initialValues={{
         email: props.userInfo.email,
         secondaryEmail: props.userInfo.secondaryEmail,
-        contactNo: props.userInfo.contactNo.substring(3),
+        // contactNo: props.userInfo.contactNo.substring(3),
         location: props.userInfo.location,
         gender: props.userInfo.gender,
         birthDate: props.userInfo.birthDate,

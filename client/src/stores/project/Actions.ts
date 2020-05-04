@@ -598,12 +598,12 @@ export const addProjectAssociate = (
   data: {
     project: string;
     company: String;
-    associates: Array<{ _id:string, size:number }>;
+    associates: Array<{ _id: string; size: number }>;
   },
   selectedAssociate: {
     _id: string;
     size: number;
-  }
+  },
 ) => async (dispatch: any) => {
   try {
     const headers = tokenConfig();
@@ -611,7 +611,7 @@ export const addProjectAssociate = (
       const response = await tigrowApi.put(
         `/projects/${data.company}/add-associates?pid=${data.project}`,
         {
-          associates: data.associates
+          associates: data.associates,
         },
         headers,
       );

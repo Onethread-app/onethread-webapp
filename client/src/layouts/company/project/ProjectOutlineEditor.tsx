@@ -1,12 +1,14 @@
 import React from 'react';
 import { Form, Field } from 'react-final-form';
+import TextareaAutosize from 'react-textarea-autosize';
+
 import {
   required,
   checkError,
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { Button, Icon, EditableText } from '@blueprintjs/core';
+import { Button, Icon } from '@blueprintjs/core';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { connect } from 'react-redux';
 import {
@@ -14,11 +16,14 @@ import {
   getSingleProject,
 } from '../../../stores/project/Actions';
 
+import './textArea.css';
+
 interface IProjectOutlineEditorFormProps {
   projectPrefaceOutlineUpdate: (
     pid: string,
     description: any,
   ) => void;
+  editableOutline: string;
   getSingleProject: (pid: string) => void;
   setEditDescriptionDialog: (val: boolean) => void;
   editDescriptionDialog: boolean;
@@ -41,7 +46,11 @@ export const ProjectOutlineEditorComponent = (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{ description: '' }}
+        initialValues={{
+          description: props.editableOutline
+            ? props.editableOutline
+            : '',
+        }}
         render={({
           handleSubmit,
           form,
@@ -62,14 +71,13 @@ export const ProjectOutlineEditorComponent = (
                 validate={composeValidators(required, maxValue(5000))}
                 render={({ input, meta }) => (
                   <div>
-                    <EditableText
-                      multiline={true}
-                      minLines={3}
-                      maxLines={5}
+                    <TextareaAutosize
                       value={input.value}
                       onChange={input.onChange}
-                      className="outline"
-                      placeholder=""
+                      className="description-area"
+                      placeholder="Write the project outline here"
+                      minRows={5}
+                      useCacheForDOMMeasurements
                     />
                     {checkError(meta) && (
                       <p className="mv2" style={{ color: 'red' }}>

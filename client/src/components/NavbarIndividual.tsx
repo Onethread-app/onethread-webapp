@@ -8,13 +8,12 @@ interface NavbarProps {
 }
 
 const NavbarIndividualComponent = (props: NavbarProps) => {
-
   return (
     <>
-      <Navbar fixedToTop
-        className="flex justify-end items-center"
-      >
-        <Icon icon="menu" iconSize={25}
+      <Navbar fixedToTop className="flex justify-end items-center">
+        <Icon
+          icon="menu"
+          iconSize={25}
           className="blue"
           onClick={() => props.setShowDialog(true)}
         />
@@ -44,4 +43,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const NavbarIndividual = connect(mapStateToProps)(NavbarIndividualComponent);
+export const NavbarIndividual = connect(mapStateToProps)(
+  NavbarIndividualComponent,
+);
