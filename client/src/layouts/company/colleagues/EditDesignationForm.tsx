@@ -93,6 +93,7 @@ export const EditDesignationForm = (
                   validate={required}
                   render={({ input, meta }) => (
                     <DropdownFieldWithError
+                      placeholder="Please select a division"
                       id={input.name}
                       selectedValue={input.value}
                       options={
@@ -128,6 +129,7 @@ export const EditDesignationForm = (
                     render={({ input, meta }) => (
                       <>
                         <DropdownFieldWithError
+                          placeholder="Please select a department"
                           id={input.name}
                           selectedValue={input.value}
                           options={

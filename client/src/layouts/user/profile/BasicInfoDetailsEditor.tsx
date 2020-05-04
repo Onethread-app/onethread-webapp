@@ -52,7 +52,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
       initialValues={{
         email: props.userInfo.email,
         secondaryEmail: props.userInfo.secondaryEmail,
-        contactNo: props.userInfo.contactNo.substring(3),
+        // contactNo: props.userInfo.contactNo.substring(3),
         location: props.userInfo.location,
         gender: props.userInfo.gender,
         birthDate: props.userInfo.birthDate,
@@ -64,9 +64,9 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
           errors.secondaryEmail =
             "You can't use same Primary Email and Secondary Email";
         }
-        if (values.contactNo && values.contactNo.length !== 11) {
-          errors.contactNo = 'Not more or less than 11 character';
-        }
+        // if (values.contactNo && values.contactNo.length !== 11) {
+        //   errors.contactNo = 'Not more or less than 11 character';
+        // }
         return errors;
       }}
       render={({

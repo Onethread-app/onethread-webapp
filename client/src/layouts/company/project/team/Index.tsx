@@ -14,6 +14,8 @@ import { connect } from 'react-redux';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 import { AddProjectMemberForm } from './AddProjectMemberForm';
+import { AddProjectAssociateForm } from './AddProjectAssociateForm';
+import { AssociateList } from './AssociateList';
 import {
   getProjectTeams,
   changeProjectMemberRole,
@@ -24,11 +26,13 @@ import {
   showDepartment,
 } from 'layouts/company/colleagues/Index';
 import { isEmpty, isEqual } from 'lodash';
+import { Associate } from 'stores/associate/Reducer';
 
 interface TeamMember {
   company: ICompany;
   user: User;
   teams: IProjectTeam[];
+  associates: Associate[];
   companyRole: string;
   projectRole: string;
   getProjectTeams: () => void;
@@ -45,6 +49,9 @@ const load = async (_getProjectTeams: () => void) => {
 
 const ProjectTeamPageComponent = (props: TeamMember) => {
   const [showDialog, setShowDialog] = useState(false);
+  const [showAssociateDialog, setShowAssociateDialog] = useState(
+    false,
+  );
   const [adminList, setAdminList] = useState<IProjectTeam[]>([]);
   const [moderatorList, setModeratorList] = useState<IProjectTeam[]>(
     [],
@@ -80,17 +87,34 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
       <div className="ph5">
         <div className="flex justify-between items-center">
           <h1 className="f3">Team Members</h1>
-          <Button
-            className="grow fr h2 pointer white bp3-minimal"
-            style={{
-              background: '#0fa3a3',
-              outline: 'none',
-              color: 'white',
-            }}
-            onClick={() => setShowDialog(!showDialog)}
-          >
-            Add Team Members
-          </Button>
+          <div>
+            <Button
+              className="grow fr h2 pointer white bp3-minimal"
+              style={{
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }}
+              onClick={() => setShowDialog(!showDialog)}
+            >
+              Add Team Members
+            </Button>
+            <Button
+              className="grow fr h2 pointer white bp3-minimal mr1-ns"
+              style={{
+                background: 'none',
+                border: '#0fa3a3',
+                borderWidth: 1,
+                borderStyle: 'solid',
+                color: '#0fa3a3',
+              }}
+              onClick={() =>
+                setShowAssociateDialog(!showAssociateDialog)
+              }
+            >
+              Add Associates
+            </Button>
+          </div>
         </div>
         {/* Admins list starts */}
         <h1 className="f4 mt4">Admins</h1>
@@ -419,6 +443,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             )}
           </tbody>
         </HTMLTable>
+        <AssociateList />
       </div>
 
       {showDialog && (
@@ -434,6 +459,22 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           />
         </Dialog>
       )}
+
+      {showAssociateDialog && (
+        <Dialog
+          onClose={() => setShowAssociateDialog(!showAssociateDialog)}
+          isOpen={showAssociateDialog}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+        >
+          <AddProjectAssociateForm
+            showDialog={showAssociateDialog}
+            setShowDialog={(e) =>
+              setShowAssociateDialog(!showAssociateDialog)
+            }
+          />
+        </Dialog>
+      )}
     </>
   );
 };
@@ -442,6 +483,7 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     teams: state.projectReducer.teams,
+    associates: state.projectReducer.associates,
     projectRole:
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.role,

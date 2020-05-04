@@ -1,8 +1,8 @@
 {
   "name": "tigrow",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "A comunity for business people",
-  "author": "rubyat farhan <tigrowtecheven@gmail.com>",
+  "author": "Rubaiyat Farhan <tigrowtecheven@gmail.com>",
   "main": "index.js",
   "private": true,
   "engines": {

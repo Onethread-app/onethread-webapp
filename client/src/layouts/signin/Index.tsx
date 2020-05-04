@@ -27,7 +27,7 @@ import logo from './../../resources/images/TiGrowLogoFinal.png';
 import emailIcon from './../../resources/images/email.png';
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
-import greyLockIcon from './../../resources/images/lock-grey.png';
+import eyeClose from './../../resources/images/eyeClose.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
 
 interface SignInPageInternalProps {
@@ -38,7 +38,10 @@ export const SignInPageComponent = (
   props: SignInPageInternalProps & RouteComponentProps,
 ) => {
   const onSubmit = async (values: LoginModel) => {
-    const response = await props.loginAction(values);
+    const response = await props.loginAction({
+      email: values.email.trim(),
+      password: values.password,
+    });
     if (response.message === 200) {
       props.history.push(`/${response.payload.data.user.name}`);
       return true;
@@ -99,7 +102,7 @@ export const SignInPageComponent = (
       >
         <div className="v-mid dtc">
           <div className="w-50 center">
-            <Link to="/home">
+            <Link to="/">
               <img width="200px" src={logo} />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
@@ -182,22 +185,6 @@ export const SignInPageComponent = (
                                     />
                                   </span>
                                 }
-                                rightElement={
-                                  <span
-                                    className="bp3-icon"
-                                    style={{
-                                      paddingTop: '10px',
-                                      paddingRight: '5px',
-                                    }}
-                                  >
-                                    <img
-                                      src={greyLockIcon}
-                                      width="15px"
-                                      height="15px"
-                                      color="#0fa3a3"
-                                    />
-                                  </span>
-                                }
                                 style={{
                                   boxShadow: 'none',
                                   fontSize: '18px',
@@ -254,19 +241,28 @@ export const SignInPageComponent = (
                                     style={{
                                       paddingTop: '10px',
                                       paddingRight: '5px',
+                                      cursor: 'pointer',
                                     }}
                                   >
                                     <img
-                                      onMouseDown={() =>
-                                        setShowPassword(true)
+                                      title={
+                                        showPassword
+                                          ? "Don't show password"
+                                          : 'Show password'
                                       }
-                                      onMouseUp={() =>
-                                        setShowPassword(false)
+                                      onClick={() =>
+                                        setShowPassword(!showPassword)
                                       }
-                                      src={eyeIcon}
-                                      width="15px"
-                                      height="15px"
-                                      color="#0fa3a3"
+                                      src={
+                                        showPassword
+                                          ? eyeClose
+                                          : eyeIcon
+                                      }
+                                      style={{
+                                        width: '15px',
+                                        height: '15px',
+                                        color: '#0fa3a3',
+                                      }}
                                     />
                                   </span>
                                 }
@@ -309,7 +305,7 @@ export const SignInPageComponent = (
                         className="fw9 dt center tigrow-lightBlue"
                         to="/forgot-password"
                       >
-                        Forget Password ?
+                        Forget Password?
                       </NavLink>
                     </div>
                     <div className="tc mv4">
@@ -329,6 +325,7 @@ export const SignInPageComponent = (
                           border: '2px solid #0fa3a3',
                           color: '#0fa3a3',
                           fontSize: '18px',
+                          padding: '10px 0px',
                         }}
                       >
                         Sign Up here

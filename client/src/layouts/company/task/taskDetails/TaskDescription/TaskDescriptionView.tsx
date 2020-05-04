@@ -29,10 +29,14 @@ export const TaskDescriptionViewComponent = (
         <div className="pr2" style={{ paddingTop: '10px' }}>
           {props.company && projectPermit(props.company.role) ? (
             <Icon
-              className="fr tigrow-lightBlue pointer"
+              className={
+                editDescriptionDialog
+                  ? 'fr tigrow-lightBlue pointer'
+                  : 'fr silver pointer'
+              }
               icon="edit"
               onClick={() => {
-                setEditDescriptionDialog(true);
+                setEditDescriptionDialog(!editDescriptionDialog);
               }}
             />
           ) : undefined}

@@ -40,25 +40,27 @@ const PrivateRoute = (props: {
   path: string;
   exact: boolean;
 }) => {
-	useEffect(() => {
-		ReactGA.initialize('UA-164759422-1', {
-			debug: true,
-			gaOptions: {
-    cookieDomain: 'none'
-  }
-		});
-		// To Report Page View 
-		ReactGA.pageview(window.location.pathname + window.location.search);
-	}, []);
+  useEffect(() => {
+    ReactGA.initialize('UA-164759422-1', {
+      debug: true,
+      gaOptions: {
+        cookieDomain: 'none',
+      },
+    });
+    // To Report Page View
+    ReactGA.pageview(
+      window.location.pathname + window.location.search,
+    );
+  }, []);
   return (
     <Route
       path={props.path}
       exact={props.exact}
-						render={() =>
+      render={() =>
         isAuthenticate() ? (
           <Layout Component={props.component} />
         ) : (
-          <Redirect to="/home" />
+          <Redirect to="/" />
         )
       }
     />
@@ -82,7 +84,7 @@ const NotFound = () => (
       <h1 className="tc black">
         WE ARE SORRY, BUT THE PAGE YOU REQUESTED WAS <br /> NOT FOUND
       </h1>
-      <Link className="fw6 f4" to="/home">
+      <Link className="fw6 f4" to="/">
         Back to Profile
       </Link>
     </div>
@@ -90,15 +92,11 @@ const NotFound = () => (
 );
 
 export const App = () => (
-		<BrowserRouter>  
+  <BrowserRouter>
     <Switch>
-      <Route
-        exact
-        path="/home"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <HomePage />
-        }
-      />
+      {!isAuthenticate() && (
+        <Route exact path="/" component={HomePage} />
+      )}
       <Route
         exact
         path="/signin"

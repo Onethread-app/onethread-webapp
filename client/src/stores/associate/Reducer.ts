@@ -3,6 +3,7 @@ import {
   SELECT_ASSOCIATE,
   ADD_ASSOCIATE,
   GET_ALL_PENDING_ASSOCIATE,
+  GET_PROJECT_ASSOCIATES,
 } from './Types';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
@@ -18,11 +19,13 @@ export interface AssociateModel {
   currentAssociate: Associate;
   associatesList: Associate[];
   pendingAssociates: Associate[];
+  projectAssociates: Associate[];
 }
 
 const InitialState = {
   associatesList: [],
   pendingAssociates: [],
+  projectAssociates: [],
   currentAssociate: {
     _id: '',
     associateCompany: {
@@ -76,6 +79,11 @@ export const AssociateReducer = (
       return {
         ...state,
         currentAssociate: action.payload,
+      };
+    case GET_PROJECT_ASSOCIATES:
+      return {
+        ...state,
+        projectAssociates: action.payload,
       };
     default:
       return state;

@@ -14,19 +14,20 @@ interface ProfilePageProps {
 }
 
 const CompanyProfilePageComponent = (props: ProfilePageProps) => {
-
   const [showDialog, setShowDialog] = useState(false);
 
   return (
     <>
       <MobileView>
-        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+        <Navbar
+          fixedToTop
+          className="flex justify-between items-center shadow-4"
+          style={{ height: '55px' }}
+        >
           <h1 className="f3">Company Profile</h1>
           <img
             src={
-              props.user.profileImage
-                ? props.user.profileImage
-                : user
+              props.user.profileImage ? props.user.profileImage : user
             }
             className="dim v-mid dib br-100 pointer"
             style={{
@@ -36,7 +37,6 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
             }}
             alt="user"
             onClick={() => setShowDialog(true)}
-
           />
         </Navbar>
       </MobileView>
@@ -78,8 +78,10 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user
+    user: state.userReducer.user,
   };
 };
-
-export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);
+export const CompanyProfilePage = connect(
+  mapStateToProps,
+  null,
+)(CompanyProfilePageComponent);

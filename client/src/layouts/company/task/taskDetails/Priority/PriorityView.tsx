@@ -18,8 +18,13 @@ export const PriorityViewComponent = (
       {props.priority! > -1 && (
         <p
           style={{
-            color: find(priorityColor, ['code', props.priority])!
+            background: find(priorityColor, ['code', props.priority])!
               .value,
+            color: '#fff',
+            padding: '4px',
+            width: '40%',
+            textAlign: 'center',
+            borderRadius: '2px',
           }}
         >
           {find(priorityColor, ['code', props.priority])!.name}

@@ -532,6 +532,10 @@ export const getProjectTeams = () => async (
         type: PROJECT.PROJECT_GET_TEAMS,
         payload: response.data.memberList,
       });
+      await dispatch({
+        type: PROJECT.PROJECT_GET_ASSOCIATES,
+        payload: response.data.associateList.associate,
+      });
       return response.data;
     }
   } catch (error) {
@@ -587,6 +591,45 @@ export const addProjectTeams = (
       console.log(error.response);
     }
     return error.response;
+  }
+};
+
+export const addProjectAssociate = (
+  data: {
+    project: string;
+    company: String;
+    associates: Array<{ _id: string; size: number }>;
+  },
+  selectedAssociate: {
+    _id: string;
+    size: number;
+  },
+) => async (dispatch: any) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.put(
+        `/projects/${data.company}/add-associates?pid=${data.project}`,
+        {
+          associates: data.associates,
+        },
+        headers,
+      );
+      // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
+      return response;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in selection of company fetching');
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      return error.response;
+    }
   }
 };
 

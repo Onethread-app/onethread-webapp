@@ -6,6 +6,7 @@ import {
 } from 'react-device-detect';
 import { Navbar, Alignment } from '@blueprintjs/core';
 import { EmailVerificationForm } from './EmailVerificationForm';
+
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import './styles.css';
@@ -60,8 +61,8 @@ export const HomePage = () => {
   const [modalIsOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-		const [message, setMessage] = useState('');
-		const [subject, setSubject] = useState('');
+  const [message, setMessage] = useState('');
+  const [subject, setSubject] = useState('');
   const [error, setError] = useState('');
   const handleSubmit = () => {
     // console.log(name, email, message);
@@ -70,8 +71,8 @@ export const HomePage = () => {
     } else {
       const reqBody = {
         name,
-								email,
-								subject,
+        email,
+        subject,
         message,
       };
       store.dispatch(saveContactForm(reqBody));
@@ -91,8 +92,8 @@ export const HomePage = () => {
       const reqBody = {
         name,
         email,
-								subject: 'N/A',
-								message
+        subject: 'N/A',
+        message: 'N/A',
       };
       store.dispatch(saveContactForm(reqBody));
     }
@@ -525,7 +526,7 @@ export const HomePage = () => {
                   />
                 </div>
 
-																<div className="mb4">
+                <div className="mb4">
                   <TextField
                     onChange={(e) => setSubject(e.target.value)}
                     fullWidth={true}
@@ -611,7 +612,7 @@ export const HomePage = () => {
           <EmailVerificationForm />
         </div>
         <div className="dt center w-34-ns w-80 mb5-ns mb3 footerText">
-          Contact us at sales@tigrow.co for Enterprise Solution
+          Contact us at sales@tigrow.info for Enterprise Solution
         </div>
         <small className="white footerText">
           © {new Date().getFullYear()} TiGrow Inc. - House 208, Road
