@@ -134,12 +134,16 @@ export const ProjectReducer = (state = initialState, action: any) => {
         teams: action.payload,
       };
 <<<<<<< HEAD
+<<<<<<< HEAD
     case PROJECT.PROJECT_GET_ASSOCIATES:
       return {
         ...state,
         projectAssociates: action.payload,
 =======
       case PROJECT.PROJECT_GET_ASSOCIATES:
+=======
+    case PROJECT.PROJECT_GET_ASSOCIATES:
+>>>>>>> d06346b0... code style issue fixed
       return {
         ...state,
         associates: action.payload,

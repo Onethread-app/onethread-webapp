@@ -162,7 +162,7 @@ export const AssociateListComponent = (
               src={addIcon}
               className={`fixed pointer addButton ${
                 showAssociateDialog ? 'dn' : 'db'
-                }`}
+              }`}
               style={{
                 boxShadow: '0px 6px 6px #00000029',
                 borderRadius: '50%',

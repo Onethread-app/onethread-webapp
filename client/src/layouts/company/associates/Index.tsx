@@ -20,6 +20,7 @@ interface AssociatesPageProps {
 
 const AssociatesPageComponent = (props: AssociatesPageProps) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
   return (
     <>
       <NavbarCompany title="My Associates" />
@@ -42,18 +43,22 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
     </>
 =======
 
+=======
+>>>>>>> d06346b0... code style issue fixed
   const [showDialog, setShowDialog] = useState(false);
 
   return (
     <div className="ph4 w-100">
       <MobileView>
-        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+        <Navbar
+          fixedToTop
+          className="flex justify-between items-center shadow-4"
+          style={{ height: '55px' }}
+        >
           <h1 className="f3">My Associates</h1>
           <img
             src={
-              props.user.profileImage
-                ? props.user.profileImage
-                : user
+              props.user.profileImage ? props.user.profileImage : user
             }
             className="dim v-mid dib br-100 pointer"
             style={{
@@ -63,7 +68,6 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
             }}
             alt="user"
             onClick={() => setShowDialog(true)}
-
           />
         </Navbar>
       </MobileView>
@@ -104,6 +108,7 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 const mapStateToProps = (state: any) => {
   return {
 <<<<<<< HEAD
+<<<<<<< HEAD
     user: state.userReducer.user,
   };
 };
@@ -119,3 +124,13 @@ export const AssociatesPage = connect(
 
 export const AssociatesPage = connect(mapStateToProps, null)(AssociatesPageComponent);
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+    user: state.userReducer.user,
+  };
+};
+
+export const AssociatesPage = connect(
+  mapStateToProps,
+  null,
+)(AssociatesPageComponent);
+>>>>>>> d06346b0... code style issue fixed

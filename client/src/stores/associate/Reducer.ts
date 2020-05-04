@@ -152,10 +152,10 @@ export const AssociateReducer = (
         currentAssociate: action.payload,
       };
     case GET_PROJECT_ASSOCIATES:
-    return {
-      ...state,
-      projectAssociates: action.payload,
-    };
+      return {
+        ...state,
+        projectAssociates: action.payload,
+      };
     default:
       return state;
   }

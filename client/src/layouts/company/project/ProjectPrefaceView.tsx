@@ -45,15 +45,21 @@ export const ProjectPrefaceViewComponent = (
     <>
       <MobileView>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <NavbarCompany title="Project" />
 =======
         <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+=======
+        <Navbar
+          fixedToTop
+          className="flex justify-between items-center shadow-4"
+          style={{ height: '55px' }}
+        >
+>>>>>>> d06346b0... code style issue fixed
           <h1 className="f3">My Projects</h1>
           <img
             src={
-              props.user.profileImage
-                ? props.user.profileImage
-                : user
+              props.user.profileImage ? props.user.profileImage : user
             }
             className="dim v-mid dib br-100 pointer"
             style={{
@@ -63,7 +69,6 @@ export const ProjectPrefaceViewComponent = (
             }}
             alt="user"
             onClick={() => setShowDialog(true)}
-
           />
         </Navbar>
 >>>>>>> b9e80fb9... mobile responsive for project preface
@@ -176,8 +181,11 @@ export const ProjectPrefaceViewComponent = (
             </div>
           ) : (
 <<<<<<< HEAD
+<<<<<<< HEAD
             props.optionalRole &&
             props.role &&
+=======
+>>>>>>> d06346b0... code style issue fixed
             projectRules(props.optionalRole)[props.role].includes(
               'addFileProject',
             ) && (
@@ -218,6 +226,7 @@ export const ProjectPrefaceViewComponent = (
                   onClick={() => setShowFileDialog(true)}
                 >
                   Upload Files
+<<<<<<< HEAD
 =======
               projectRules(props.optionalRole)[props.role].includes(
                 'addFileProject',
@@ -260,10 +269,12 @@ export const ProjectPrefaceViewComponent = (
                   >
                     Upload Files
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+>>>>>>> d06346b0... code style issue fixed
                 </Button>
-                </div>
-              )
-            )}
+              </div>
+            )
+          )}
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})
@@ -341,10 +352,14 @@ const mapStateToProps = (state: any) => ({
   project: state.projectReducer.projectDetails,
   company: state.companyReducer.currentCompany,
 <<<<<<< HEAD
+<<<<<<< HEAD
   user: state.userReducer.user,
 =======
   user: state.userReducer.user
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+  user: state.userReducer.user,
+>>>>>>> d06346b0... code style issue fixed
 });
 
 export const ProjectPrefaceView = connect(

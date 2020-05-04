@@ -49,13 +49,19 @@ export const ListViewComponent = (
       <div>
         <div style={{ backgroundColor: '#3F61C5' }}>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d06346b0... code style issue fixed
           <Icon
             icon="delete"
             iconSize={20}
             className="white ma3 fr"
+<<<<<<< HEAD
 =======
           <Icon icon="delete" iconSize={20} className="white ma3 fr"
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+>>>>>>> d06346b0... code style issue fixed
             onClick={() => props.setShowDialog(false)}
           />
           <Button
@@ -64,11 +70,15 @@ export const ListViewComponent = (
               props.history.push(`/${props.user.name}`);
               props.setShowDialog(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
             }}
 =======
             }
             }
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+            }}
+>>>>>>> d06346b0... code style issue fixed
           >
             <div className="dtc w2">
               <img
@@ -90,10 +100,14 @@ export const ListViewComponent = (
               </h1>
               <h1 className="f7 white ma0 fw4 mb4">
 <<<<<<< HEAD
+<<<<<<< HEAD
                 {props.user.position}
 =======
                 {props.user.position} 
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+                {props.user.position}
+>>>>>>> d06346b0... code style issue fixed
               </h1>
             </div>
           </Button>
@@ -107,12 +121,16 @@ export const ListViewComponent = (
           onClick={() => props.setShowDialog(false)}
         >
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d06346b0... code style issue fixed
           <Icon
             icon="cog"
             className="pr3"
             style={{ color: '#787e8d' }}
           />
           Profile Settings
+<<<<<<< HEAD
         </NavLink>
         <NavLink
           exact
@@ -142,6 +160,12 @@ export const ListViewComponent = (
             props.logoutAction(props.history)
           }
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+        </NavLink>
+        <Button
+          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
+          onClick={(e: any) => props.logoutAction(props.history)}
+>>>>>>> d06346b0... code style issue fixed
           icon="log-in"
           alignText="left"
         >
@@ -166,10 +190,14 @@ export const ListViewComponent = (
                         ? 'bg-black-10'
                         : ''
 <<<<<<< HEAD
+<<<<<<< HEAD
                     } mt1 pointer bp3-popover-dismiss`}
 =======
                       } mt1 pointer bp3-popover-dismiss`}
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+                    } mt1 pointer bp3-popover-dismiss`}
+>>>>>>> d06346b0... code style issue fixed
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -177,6 +205,7 @@ export const ListViewComponent = (
                         props.history,
                       )) as any;
                       if (response.status === 200) {
+<<<<<<< HEAD
 <<<<<<< HEAD
                         dispatch({
                           type: CLEAR_PROJECT_REDUCER_STATE,
@@ -190,6 +219,14 @@ export const ListViewComponent = (
                           `/company/${
                           (response as any).data.company.name
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+                        dispatch({
+                          type: CLEAR_PROJECT_REDUCER_STATE,
+                        });
+                        props.history.push(
+                          `/company/${
+                            (response as any).data.company.name
+>>>>>>> d06346b0... code style issue fixed
                           }/dashboard`,
                         );
                       }
@@ -247,6 +284,7 @@ export const ListViewComponent = (
             setShowButton(true);
             // props.setShowDialog(!props.showDialog);
 <<<<<<< HEAD
+<<<<<<< HEAD
           }}
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
@@ -268,11 +306,15 @@ export const ListViewComponent = (
 =======
           }
           }
+=======
+          }}
+>>>>>>> d06346b0... code style issue fixed
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
           Create Company
-      </button>
+        </button>
       </div>
+<<<<<<< HEAD
       {
         showButton && (
           <Dialog
@@ -288,6 +330,20 @@ export const ListViewComponent = (
         )
       }
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+      {showButton && (
+        <Dialog
+          onClose={() => setShowButton(!showButton)}
+          isOpen={showButton}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+        >
+          <div>
+            <CompanySignupForm setShowDialog={props.setShowDialog} />
+          </div>
+        </Dialog>
+      )}
+>>>>>>> d06346b0... code style issue fixed
     </>
   );
 };

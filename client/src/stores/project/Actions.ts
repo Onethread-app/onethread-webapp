@@ -676,19 +676,27 @@ export const addProjectAssociate = (
     project: string;
     company: String;
 <<<<<<< HEAD
+<<<<<<< HEAD
     associates: Array<{ _id: string; size: number }>;
 =======
     associates: Array<{ _id:string, size:number }>;
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+    associates: Array<{ _id: string; size: number }>;
+>>>>>>> d06346b0... code style issue fixed
   },
   selectedAssociate: {
     _id: string;
     size: number;
 <<<<<<< HEAD
+<<<<<<< HEAD
   },
 =======
   }
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+  },
+>>>>>>> d06346b0... code style issue fixed
 ) => async (dispatch: any) => {
   try {
     const headers = tokenConfig();
@@ -696,6 +704,7 @@ export const addProjectAssociate = (
       const response = await tigrowApi.put(
         `/projects/${data.company}/add-associates?pid=${data.project}`,
         {
+<<<<<<< HEAD
 <<<<<<< HEAD
           associates: data.associates,
         },
@@ -707,6 +716,9 @@ export const addProjectAssociate = (
       }
 =======
           associates: data.associates
+=======
+          associates: data.associates,
+>>>>>>> d06346b0... code style issue fixed
         },
         headers,
       );

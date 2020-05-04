@@ -4,10 +4,14 @@ const Schema = mongoose.Schema;
 const announcement = new Schema(
   {
 <<<<<<< HEAD
+<<<<<<< HEAD
     memberId: {
 =======
     memberId : {
 >>>>>>> b7ca03f4... member added in company
+=======
+    memberId: {
+>>>>>>> d06346b0... code style issue fixed
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Member',
     },

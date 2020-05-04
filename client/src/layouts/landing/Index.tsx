@@ -635,4 +635,3 @@ export const HomePage = () => {
     </div>
   );
 };
-  

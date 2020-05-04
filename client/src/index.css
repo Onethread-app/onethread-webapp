@@ -353,6 +353,7 @@ a:hover {
   object-fit: cover;
 }
 
+<<<<<<< HEAD
 .companyProfilepicOuter {
   width: 235px;
   height: 235px;
@@ -673,58 +674,61 @@ a:hover {
 }
 
 .companyCoverButton{
+=======
+.companyCoverButton {
+>>>>>>> d06346b0... code style issue fixed
   margin-top: 265px;
   margin-right: 45px;
 }
 
-.companyProfilepicOuter{
+.companyProfilepicOuter {
   width: 235px;
   height: 235px;
 }
-.companyProfilepic{
+.companyProfilepic {
   width: 220px;
   height: 220px;
 }
-.companyProfilepicOuterOuter{
+.companyProfilepicOuterOuter {
   margin-top: -120px;
   margin-left: 50px;
 }
-.addButton{
+.addButton {
   bottom: 5rem;
   right: 7rem;
   width: 5rem;
 }
-.individualcover{
+.individualcover {
   height: 340px;
 }
-.changecompanybutton{
+.changecompanybutton {
   font-size: 16px;
 }
-.addDepartment{
+.addDepartment {
   font-size: 16px;
 }
-.changepass{
+.changepass {
   font-size: 16px;
 }
 @media only screen and (max-width: 360px) {
-  .displayNone{
+  .displayNone {
     display: none;
   }
-  .companyProfilepicOuterOuter{
+  .companyProfilepicOuterOuter {
     margin-top: -72px;
-    margin-left: 30% ;
+    margin-left: 30%;
     width: 130px;
     height: 130px;
   }
-  .companyCoverButton{
+  .companyCoverButton {
     margin-top: 10px;
     margin-right: 10px;
   }
-  .companyProfilepicOuter{
+  .companyProfilepicOuter {
     width: 130px;
     height: 130px;
   }
-  .companyProfilepic{
+  .companyProfilepic {
     width: 120px;
     height: 115px;
   }
@@ -734,48 +738,48 @@ a:hover {
     background-repeat: no-repeat;
     object-fit: cover;
   }
-  .addButton{
+  .addButton {
     bottom: 5rem;
     right: 3rem;
     width: 4rem;
   }
-  .individualcover{
+  .individualcover {
     height: 185px;
   }
-  .changecompanybutton{
+  .changecompanybutton {
     font-size: 11px;
   }
-  .addDepartment{
+  .addDepartment {
     font-size: 12px;
   }
-  .changepass{
+  .changepass {
     font-size: 12px;
   }
-  .addButton{
+  .addButton {
     bottom: 5rem;
     right: 3rem;
     width: 4rem;
   }
-  .individualcover{
+  .individualcover {
     height: 185px;
   }
 }
 
 @media only screen and (min-width: 361px) and (max-width: 450px) {
-  .displayNone{
+  .displayNone {
     display: none;
   }
-  .companyProfilepicOuterOuter{
+  .companyProfilepicOuterOuter {
     margin-top: -72px;
     margin-left: 32%;
     width: 130px;
     height: 130px;
   }
-  .companyProfilepicOuter{
+  .companyProfilepicOuter {
     width: 130px;
     height: 130px;
   }
-  .companyProfilepic{
+  .companyProfilepic {
     width: 120px;
     height: 115px;
   }
@@ -785,32 +789,32 @@ a:hover {
     background-repeat: no-repeat;
     object-fit: cover;
   }
-  .companyCoverButton{
+  .companyCoverButton {
     margin-top: 10px;
     margin-right: 10px;
   }
-  .addButton{
+  .addButton {
     bottom: 5rem;
     right: 3rem;
     width: 4rem;
   }
-  .individualcover{
+  .individualcover {
     height: 185px;
   }
-  .changecompanybutton{
+  .changecompanybutton {
     font-size: 11px;
   }
-  .addDepartment{
+  .addDepartment {
     font-size: 14px;
   }
-  .changepass{
+  .changepass {
     font-size: 14px;
   }
-  .companyProfilepicOuter{
+  .companyProfilepicOuter {
     width: 130px;
     height: 130px;
   }
-  .companyProfilepic{
+  .companyProfilepic {
     width: 120px;
     height: 115px;
   }
@@ -820,17 +824,16 @@ a:hover {
     background-repeat: no-repeat;
     object-fit: cover;
   }
-  .companyCoverButton{
+  .companyCoverButton {
     margin-top: 10px;
     margin-right: 10px;
   }
-  .addButton{
+  .addButton {
     bottom: 5rem;
     right: 3rem;
     width: 4rem;
   }
-  .individualcover{
+  .individualcover {
     height: 185px;
   }
 }
-

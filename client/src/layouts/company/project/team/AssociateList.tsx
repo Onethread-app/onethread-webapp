@@ -113,12 +113,12 @@ export const AssociateListComponent = (
                         alt="company logo"
                       />
                     ) : (
-                        <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
-                          {associate.associateCompany
-                            ? associate.associateCompany.name.charAt(0)
-                            : 'Demo'}
-                        </h1>
-                      )}
+                      <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
+                        {associate.associateCompany
+                          ? associate.associateCompany.name.charAt(0)
+                          : 'Demo'}
+                      </h1>
+                    )}
                     <h1 className="tc black f4 mv0">
                       {associate.associateCompany.name}
                     </h1>
@@ -134,9 +134,14 @@ export const AssociateListComponent = (
                   </Card>
                 ))
               ) : (
+<<<<<<< HEAD
                     <p>No associates available</p>
                   )}
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+                <p>No associates available</p>
+              )}
+>>>>>>> d06346b0... code style issue fixed
             </div>
           </CustomView>
           <MobileOnlyView>
@@ -209,13 +214,15 @@ export const AssociateListComponent = (
                         alt="company logo"
                       />
                     ) : (
-                        <h1 className="center white f4 fw6 bg-green tc br3 pt2 ma0"
-                          style={{ width: '3rem', height: '3rem' }}>
-                          {associate.associateCompany
-                            ? associate.associateCompany.name.charAt(0)
-                            : 'Demo'}
-                        </h1>
-                      )}
+                      <h1
+                        className="center white f4 fw6 bg-green tc br3 pt2 ma0"
+                        style={{ width: '3rem', height: '3rem' }}
+                      >
+                        {associate.associateCompany
+                          ? associate.associateCompany.name.charAt(0)
+                          : 'Demo'}
+                      </h1>
+                    )}
                     <h1 className="tc black f4-ns f5 fw6 mt2 mb0">
                       {associate.associateCompany.name}
                     </h1>
@@ -231,9 +238,14 @@ export const AssociateListComponent = (
                   </Card>
                 ))
               ) : (
+<<<<<<< HEAD
                     <p>No associates available</p>
                   )}
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+                <p>No associates available</p>
+              )}
+>>>>>>> d06346b0... code style issue fixed
             </div>
           </MobileOnlyView>
         </div>
