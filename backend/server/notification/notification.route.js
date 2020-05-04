@@ -6,8 +6,7 @@ const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
 
- router.route('/').get(authorization, notificationCtrl.list);
-
+router.route('/').get(authorization, notificationCtrl.list);
 
 // router
 // .route('/test')

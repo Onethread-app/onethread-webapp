@@ -66,8 +66,8 @@ export const SignUpPageComponent = (
     // };
 
     const response = await props.userSignupAction({
-        ...values,
-        email: values.email.trim()
+      ...values,
+      email: values.email.trim(),
     });
     if (response.message === 200) {
       props.history.push(`/signup-confirmation`);
@@ -467,9 +467,9 @@ export const SignUpPageComponent = (
                                       <img
                                         src={lockIcon}
                                         style={{
-                                            width: '20px',
-                                            height: '20px',
-                                            color: '#0fa3a3'
+                                          width: '20px',
+                                          height: '20px',
+                                          color: '#0fa3a3',
                                         }}
                                       />
                                     </span>
@@ -480,17 +480,29 @@ export const SignUpPageComponent = (
                                       style={{
                                         paddingTop: '5px',
                                         paddingRight: '5px',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
                                       }}
                                     >
                                       <img
-                                        title={showPassword ? 'Don\'t show password' : 'Show password'}
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        src={showPassword ? eyeClose : eyeIcon}
+                                        title={
+                                          showPassword
+                                            ? "Don't show password"
+                                            : 'Show password'
+                                        }
+                                        onClick={() =>
+                                          setShowPassword(
+                                            !showPassword,
+                                          )
+                                        }
+                                        src={
+                                          showPassword
+                                            ? eyeClose
+                                            : eyeIcon
+                                        }
                                         style={{
-                                            width: '15px',
-                                            height: '15px',
-                                            color: '#0fa3a3'
+                                          width: '15px',
+                                          height: '15px',
+                                          color: '#0fa3a3',
                                         }}
                                       />
                                       {/* <Tooltip content={
@@ -555,9 +567,9 @@ export const SignUpPageComponent = (
                                       <img
                                         src={lockIcon}
                                         style={{
-                                            width: '20px',
-                                            height: '20px',
-                                            color: '#0fa3a3'
+                                          width: '20px',
+                                          height: '20px',
+                                          color: '#0fa3a3',
                                         }}
                                       />
                                     </span>
@@ -568,17 +580,29 @@ export const SignUpPageComponent = (
                                       style={{
                                         paddingTop: '10px',
                                         paddingRight: '5px',
-                                        cursor: 'pointer'
+                                        cursor: 'pointer',
                                       }}
                                     >
                                       <img
-                                        title={showConfirmPassword ? 'Don\'t show password' : 'Show password'}
-                                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                        src={showConfirmPassword ? eyeClose : eyeIcon}
+                                        title={
+                                          showConfirmPassword
+                                            ? "Don't show password"
+                                            : 'Show password'
+                                        }
+                                        onClick={() =>
+                                          setShowConfirmPassword(
+                                            !showConfirmPassword,
+                                          )
+                                        }
+                                        src={
+                                          showConfirmPassword
+                                            ? eyeClose
+                                            : eyeIcon
+                                        }
                                         style={{
-                                            width: '15px',
-                                            height: '15px',
-                                            color: '#0fa3a3'
+                                          width: '15px',
+                                          height: '15px',
+                                          color: '#0fa3a3',
                                         }}
                                       />
                                     </span>

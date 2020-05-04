@@ -30,7 +30,7 @@ const CompanyCoverPhotoComponent = (
             props.currentCompany.coverImage
               ? props.currentCompany.coverImage
               : coverPic
-            })`,
+          })`,
         }}
       >
         {/* <div className="absolute flex" style={{ left: "40px", top: "63%" }}>
@@ -57,7 +57,7 @@ const CompanyCoverPhotoComponent = (
           <Button
             className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3 child f7 f5-ns companyCoverButton"
             style={{
-              color: 'white'
+              color: 'white',
             }}
             onClick={() => setShowDialogPicture(true)}
           >
@@ -65,26 +65,30 @@ const CompanyCoverPhotoComponent = (
           </Button>
         </div>
       </div>
-      <div
-        className="relative flex companyProfilepicOuterOuter "
-      >
-        <div
-          className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter"
-        >
+      <div className="relative flex companyProfilepicOuterOuter ">
+        <div className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter">
           <CompanyProfilePicture />
         </div>
         <CustomView condition={!isMobileOnly}>
           <div className="flex flex-grow-1 justify-between">
             <div className="flex">
-              <div className="ml5 ml1-m" style={{ marginTop: '10rem' }}>
-                <h1 className="f6 ma0 ws-break ttc">Total Employee</h1>
+              <div
+                className="ml5 ml1-m"
+                style={{ marginTop: '10rem' }}
+              >
+                <h1 className="f6 ma0 ws-break ttc">
+                  Total Employee
+                </h1>
                 <h1 className="f3-l f4 fw4 ma0 ws-break tc">
                   {props.currentCompany.totalMember
                     ? props.currentCompany.totalMember
                     : 0}
                 </h1>
               </div>
-              <div className="ml4 ml1-m" style={{ marginTop: '10rem' }}>
+              <div
+                className="ml4 ml1-m"
+                style={{ marginTop: '10rem' }}
+              >
                 <h1 className="f6 ma0 ws-break ttc">Associates</h1>
                 <h1 className="f3-l f4 fw4 ma0 ws-break tc ">
                   {props.currentCompany.totalAssociate
@@ -97,8 +101,11 @@ const CompanyCoverPhotoComponent = (
         </CustomView>
       </div>
       <MobileOnlyView>
-        <div className="flex  justify-between mh4" style={{ marginTop: '5rem' }}>
-          <div className="" >
+        <div
+          className="flex  justify-between mh4"
+          style={{ marginTop: '5rem' }}
+        >
+          <div className="">
             <h1 className="f7 ma0 ws-break ttc">Total Employee</h1>
             <h1 className="fw4 ma0 ws-break tc">
               {props.currentCompany.totalMember

@@ -113,7 +113,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         teams: action.payload,
       };
-      case PROJECT.PROJECT_GET_ASSOCIATES:
+    case PROJECT.PROJECT_GET_ASSOCIATES:
       return {
         ...state,
         associates: action.payload,

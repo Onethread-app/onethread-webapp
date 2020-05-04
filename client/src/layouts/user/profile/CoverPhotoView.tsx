@@ -29,7 +29,7 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
         style={{
           backgroundImage: `url(${
             props.user.coverImage ? props.user.coverImage : coverPic
-            })`,
+          })`,
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
           objectFit: 'cover',
@@ -83,19 +83,12 @@ const CoverPhotoViewComponent = (props: IImageUploadViewProps) => {
         </div>
       </CustomView>
       <MobileOnlyView>
-        <div
-          className="relative flex companyProfilepicOuterOuter"
-        >
-          <div
-            className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter"
-          >
+        <div className="relative flex companyProfilepicOuterOuter">
+          <div className="pa2 bg-white cf tc shadow-4 br2  pointer hover-bg-dark-gray companyProfilepicOuter">
             <ProfilePictureView />
           </div>
         </div>
-        <div
-          className="mw5 center"
-          style={{ marginTop: '3rem' }}
-        >
+        <div className="mw5 center" style={{ marginTop: '3rem' }}>
           <h1 className="f3-l f4 ma0 ws-break ttc">
             {props.user.firstName} {props.user.lastName}
           </h1>

@@ -46,7 +46,11 @@ export const ProjectOutlineEditorComponent = (
     <div>
       <Form
         onSubmit={onSubmit}
-        initialValues={{ description: props.editableOutline ? props.editableOutline : '' }}
+        initialValues={{
+          description: props.editableOutline
+            ? props.editableOutline
+            : '',
+        }}
         render={({
           handleSubmit,
           form,
@@ -68,13 +72,13 @@ export const ProjectOutlineEditorComponent = (
                 render={({ input, meta }) => (
                   <div>
                     <TextareaAutosize
-					    value={input.value}
-                        onChange={input.onChange}
-                        className="description-area"
-					    placeholder="Write the project outline here"
-					    minRows={5}
-					    useCacheForDOMMeasurements
-					/>
+                      value={input.value}
+                      onChange={input.onChange}
+                      className="description-area"
+                      placeholder="Write the project outline here"
+                      minRows={5}
+                      useCacheForDOMMeasurements
+                    />
                     {checkError(meta) && (
                       <p className="mv2" style={{ color: 'red' }}>
                         {meta.error || meta.submitError}
