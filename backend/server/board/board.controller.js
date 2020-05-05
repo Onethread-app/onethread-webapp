@@ -1,9 +1,7 @@
-const httpStatus = require('http-status');
 const Board = require('./board.model');
 const BoardColumn = require('./../boardColumn/boardColumn.model');
 const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
-const { APIError, BadRequestError } = require('../helpers/APIError');
 const {
   sendErrorResponse,
   sendJSONresponse,
@@ -137,8 +135,7 @@ const list = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
 
   await Board.find({
-    project: req.params.projectId,
-    members: req.user._id,
+    project: req.query.pid,
   })
     .select('_id name color department members')
     .sort({ createdAt: -1 })
@@ -146,7 +143,7 @@ const list = async (req, res, next) => {
     .limit(+limit)
     .exec()
     .then((result) => {
-      logger.info(`${result}`);
+      logger.info(`successfully board list show to board team`);
       return sendJSONresponse(res, 200, result);
     })
     .catch((e) => {
