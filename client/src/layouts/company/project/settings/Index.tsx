@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useState } from "react";
+import { Snackbar } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
 import { Tabs, Tab } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { GeneralPage } from './General';
@@ -10,21 +12,44 @@ import { updateProjectRole } from '../../../../stores/project/Actions';
 const ProjectSettingsPageComponent = (props: any) => {
   // const [allValues, setAllvalues] = React.useState([] as any);
 
-//   const [toastState, setToastState] = useState({
-//       open
-//   });
+  const [error, setError] = useState({ severity: '', msg: '' });
+  const [toastOpen, setToastOpen] = useState(false);
 
   const onSubmit = async (values: any) => {
     const response = await props.updateProjectRole(values.optionalRole);
-    
+
     if (response.status === 200) {
+        setError({
+            severity: 'success', 
+            msg: response.message
+        });
+        setToastOpen(true);
 
     } else {
-
+        setError({
+            severity: 'error', 
+            msg: response.message
+        });
+        setToastOpen(true);
     }
   };
   return (
     <div className="bg-white pa5">
+        <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            key="top"
+            open={toastOpen}
+            onClose={() => setToastOpen(false)}
+        >
+            <Alert
+                elevation={6}
+                variant="filled"
+                onClose={() => setToastOpen(false)}
+                severity={error.severity === 'error' ? 'error' : 'success'}
+            >
+                {error.msg}
+            </Alert>
+        </Snackbar>
       <h3 className="f3 ma0">Project Settings</h3>
       <h3 className="f5 mv4">Project Moderator</h3>
       {/* <h3 className='f6 mv4'>Permission</h3> */}

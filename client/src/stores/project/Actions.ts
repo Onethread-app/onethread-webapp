@@ -473,7 +473,7 @@ export const updateProjectRole = (optionalRole: any) => async (
       dispatch({
         type: PROJECT.PROJECT_UPDATE_ROLE,
       });
-      return { msg: response.data.message, status: response.status };
+      return { message: response.data.message, status: response.status };
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
