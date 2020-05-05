@@ -1,14 +1,13 @@
 const express = require('express');
 const boardCtrl = require('./board.controller');
-const passport = require('passport');
-const joiSchema = require('./board.validation');
+const projectCtrl = require('../project/project.controller');
+const boardSchema = require('./board.validation');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
 // const authorization = passport.authenticate('jwt', { session: false });
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-const { permit, authSelf } = require('./../helpers/permission');
 
 const router = express.Router();
 
@@ -18,13 +17,19 @@ router
   .post(
     authorization,
     // permit('user', 'admin'),
-    SchemaValidator(joiSchema.createBoard),
+    SchemaValidator(boardSchema.createBoard),
     boardCtrl.create,
   );
 
-router.route('/boardProject/:projectId').get(
+router.route('/boardProject').get(
   authorization,
-  // permit('user', 'admin'),
+  // projectCtrl.authorizeProjectRole(
+  //   'all',
+  //   'admin',
+  //   'projectModerator',
+  //   'member',
+  // ),
+  SchemaValidator(boardSchema.listAllBoards),
   boardCtrl.list,
 );
 
@@ -33,7 +38,13 @@ router
   .route('/:boardId')
   .get(
     authorization,
-    // permit('user', 'admin'),
+    // projectCtrl.authorizeProjectRole(
+    //   'all',
+    //   'admin',
+    //   'projectModerator',
+    //   'member',
+    // ),
+    SchemaValidator(boardSchema.singleBoard),
     boardCtrl.get,
   )
   .put(
