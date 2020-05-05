@@ -455,7 +455,7 @@ export const rejectPendingProject = (projectId: string) => async (
 export const updateProjectRole = (optionalRole: any) => async (
   dispatch: any,
   getState: any,
-) : Promise<any> => {
+): Promise<any> => {
   try {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
