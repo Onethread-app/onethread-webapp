@@ -455,7 +455,7 @@ export const rejectPendingProject = (projectId: string) => async (
 export const updateProjectRole = (optionalRole: any) => async (
   dispatch: any,
   getState: any,
-) => {
+) : Promise<any> => {
   try {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
@@ -464,7 +464,8 @@ export const updateProjectRole = (optionalRole: any) => async (
       const reqBody = {
         optionalRole,
       };
-      await tigrowApi.put(
+
+      const response = await tigrowApi.put(
         `projects/${companyId}/role?pid=${projectId}`,
         reqBody,
         headers,
@@ -472,6 +473,7 @@ export const updateProjectRole = (optionalRole: any) => async (
       dispatch({
         type: PROJECT.PROJECT_UPDATE_ROLE,
       });
+      return { msg: response.data.message, status: response.status };
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {

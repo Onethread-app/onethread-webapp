@@ -9,8 +9,19 @@ import { updateProjectRole } from '../../../../stores/project/Actions';
 
 const ProjectSettingsPageComponent = (props: any) => {
   // const [allValues, setAllvalues] = React.useState([] as any);
+
+//   const [toastState, setToastState] = useState({
+//       open
+//   });
+
   const onSubmit = async (values: any) => {
-    await props.updateProjectRole(values.optionalRole);
+    const response = await props.updateProjectRole(values.optionalRole);
+    
+    if (response.status === 200) {
+
+    } else {
+
+    }
   };
   return (
     <div className="bg-white pa5">
