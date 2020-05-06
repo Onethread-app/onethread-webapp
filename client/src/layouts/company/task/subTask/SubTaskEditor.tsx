@@ -150,7 +150,7 @@ export const SubTaskDelete = (
         <div className="pa3 cf bg-white" style={{ width: '350px' }}>
           <h1 className="f5">Delete</h1>
           <div>
-            <p>Are you sure want to permanently remove X from Y? </p>
+            <p>Are you sure about that ? </p>
             <div className="flex justify-end mt4">
               <Button
                 className="grow h2 pointer white bp3-minimal w4 mr3"
