@@ -11,6 +11,7 @@ import { isEqual } from 'lodash';
 interface DropdownFieldProps {
   id: string;
   selectedValue: string;
+  placeholder?: string;
   options: Entity[];
   onChange: (value: any) => void;
   leftIcon?: IconName;
@@ -33,6 +34,7 @@ export const DropdownField = (props: DropdownFieldProps) => (
       fill={true}
       minimal={true}
       onChange={props.onChange}
+      placeholder={props.placeholder}
       className={`${
         props.error
           ? 'bb b--red'

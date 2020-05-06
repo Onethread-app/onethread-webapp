@@ -20,7 +20,7 @@ const ProfilePictureViewComponent = (
           onClick={() => setShowDialogPicture(true)}
           className="companyProfilepic"
           style={{
-            objectFit: 'cover'
+            objectFit: 'cover',
           }}
           src={
             props.user.profileImage

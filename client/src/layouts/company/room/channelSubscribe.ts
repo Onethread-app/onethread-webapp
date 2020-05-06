@@ -61,7 +61,7 @@ export const userSubscriber = async () => {
 
   const pusher = new Pusher(PUSHER_CHANNEL_KEY!, {
     cluster: PUSHER_CHANNEL_CLUSTER!,
-    encrypted: true,
+    forceTLS: true,
     authEndpoint: PUSHER_CHANNEL_AUTH_END_POINT!,
     auth: {
       headers: {

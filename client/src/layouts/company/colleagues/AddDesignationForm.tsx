@@ -106,6 +106,7 @@ export const AddDesignationForm = (
                       <DropdownFieldWithError
                         id={input.name}
                         selectedValue={input.value}
+                        placeholder="Select Department"
                         options={
                           props.departments &&
                           props.departments.length > 0

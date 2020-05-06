@@ -18,7 +18,7 @@ import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 export interface UserModel {
   firstName: string;
   lastName: string;
-  contactNo: string;
+  // contactNo: string;
   email: string;
   password: string;
   confirmPassword: string;
