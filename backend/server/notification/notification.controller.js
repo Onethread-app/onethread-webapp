@@ -396,7 +396,7 @@ module.exports.list = async (req, res, next) => {
     };
 
     await UserNotification.find({
-      account: req.user._id
+      account: req.user._id,
       // 'notification.company' : new ObjectId(req.params.companyId)
     })
       .select('_id read notification account createdAt')
@@ -424,7 +424,6 @@ module.exports.list = async (req, res, next) => {
     //   return sendJSONresponse(res, 200, result);
     // });
   } catch (error) {
-    console.log(error);
     logger.error(`${error}`);
     next(error);
   }

@@ -30,7 +30,11 @@ export const _ProjectOutlineView = (
         {props.role === 'admin' ? (
           <div className="pr2" style={{ paddingTop: '10px' }}>
             <Icon
-              className={editDescriptionDialog ? 'fr tigrow-lightBlue pointer' : 'fr silver pointer'}
+              className={
+                editDescriptionDialog
+                  ? 'fr tigrow-lightBlue pointer'
+                  : 'fr silver pointer'
+              }
               icon="edit"
               onClick={() => {
                 setEditDescriptionDialog(!editDescriptionDialog);
@@ -56,7 +60,7 @@ export const _ProjectOutlineView = (
       </div>
       {editDescriptionDialog ? (
         <ProjectOutlineEditor
-            editableOutline={props.projectOutline}
+          editableOutline={props.projectOutline}
           editDescriptionDialog={editDescriptionDialog}
           setEditDescriptionDialog={() =>
             setEditDescriptionDialog(!editDescriptionDialog)

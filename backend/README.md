@@ -1,6 +1,6 @@
 # Tigrow
 
-TiGrow is a cloud software suite for businesses. It includes an enterprise connectivity and team collaboration tool, a lead generation & sourcing tool and an AI for Digital Marketing & Market Research. 
+TiGrow is a cloud software suite for businesses. It includes an enterprise connectivity and team collaboration tool, a lead generation & sourcing tool and an AI for Digital Marketing & Market Research.
 
 ### Prerequisites
 

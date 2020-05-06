@@ -21,26 +21,30 @@ router
     boardCtrl.create,
   );
 
-router
-  .route('/boardProject')
-  .get(
-    authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
-    SchemaValidator(boardSchema.listAllBoards),
-    boardCtrl.list,
-  );
+router.route('/boardProject').get(
+  authorization,
+  // projectCtrl.authorizeProjectRole(
+  //   'all',
+  //   'admin',
+  //   'projectModerator',
+  //   'member',
+  // ),
+  SchemaValidator(boardSchema.listAllBoards),
+  boardCtrl.list,
+);
 
 // get specific board details
 router
   .route('/:boardId')
   .get(
     authorization,
-    // permit('user', 'admin'),
+    // projectCtrl.authorizeProjectRole(
+    //   'all',
+    //   'admin',
+    //   'projectModerator',
+    //   'member',
+    // ),
+    SchemaValidator(boardSchema.singleBoard),
     boardCtrl.get,
   )
   .put(

@@ -50,9 +50,12 @@ const get = async (req, res, next) => {
         members: boardObj.members,
         columns: colResult,
       };
-      res.json(responseResult);
+      return sendJSONresponse(res, 200, responseResult);
     })
-    .catch((e) => next(e));
+    .catch((e) => {
+      logger.error(`${e}`);
+      next(e);
+    });
 };
 
 const create = async (req, res, next) => {
