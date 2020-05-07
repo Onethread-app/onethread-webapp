@@ -8,7 +8,7 @@ import {
   MenuItem,
 } from '@blueprintjs/core';
 
-import Snackbar from '@material-ui/core/Snackbar';
+import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import addIcon from '../../../resources/images/addIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
@@ -39,6 +39,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   );
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [projectsLoaded, setProjectsLoaded] = useState(false);
 
   const projectArchive = async (pid: string) => {
     await props.archiveProject(pid);
@@ -78,13 +79,40 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
       ? projectArchive(projectId)
       : setOpen(true);
   };
+
+  const noProjectsFound = (
+    <div onClick={() => setShowProjectDialog(true)} className="tc pointer dim mb6">
+        <h1 style={{ color: '#34495E' }}>No Projects Found</h1>
+        <p 
+          className="f5-l f4-ns f6 tc" 
+          style={{ color: '#85929E', display: 'inline-block' }}
+      >
+          Click here to create a project or click on the <img 
+              src={addIcon} 
+              style={{ 
+                  display: 'inline-block',
+                  height: '20px', 
+              }} /> icon below
+        </p>
+    </div>
+  );
+
   useEffect(() => {
-    props.getAllProjects();
-    if (props.company.role !== 'employee') {
-      props.getAllDepartments();
-      props.getProjectArchive();
-      props.getAllAssociates();
+
+    async function loadProjects() {
+
+        await props.getAllProjects();
+        setProjectsLoaded(true);
+
+        if (props.company.role !== 'employee') {
+          props.getAllDepartments();
+          props.getProjectArchive();
+          props.getAllAssociates();
+        }
     }
+
+    loadProjects();
+
   }, []);
   return (
     <>
@@ -92,15 +120,18 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
         <h3 className="f3">My Projects</h3>
         <div className="overflow-auto">
           <div
-            style={{
+            style={(projectsLoaded && props.projects.length > 0) ? {
               display: 'grid',
               gridTemplateColumns:
                 'repeat(auto-fit, minmax(200px, 265px))',
               gridTemplateRows: 'repeat(2, 135px)',
               gridGap: '10px 10px',
-            }}
+            } : {}}
           >
-            {props.projects &&
+            {
+              !projectsLoaded ?
+              <CircularProgress /> :
+              props.projects.length > 0 ?
               props.projects.map((project: any) => (
                 <div>
                   <Card
@@ -229,7 +260,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                     </RightSidebar>
                   )}
                 </div>
-              ))}
+              )) : noProjectsFound
+            }
           </div>
           {props.company.role !== 'employee' && (
             <div>
