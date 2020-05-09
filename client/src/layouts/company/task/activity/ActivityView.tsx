@@ -27,7 +27,7 @@ export const ActivityViewPageComponent = (
   }, []);
 
   return (
-    <div className="flex flex-column h-100 pl2">
+    <div className="flex flex-column h-100 pl2 mb5 mb0-ns">
       <div className="pl3">
         <h1 className="f5 fw7 lh-title black">Activity</h1>
       </div>

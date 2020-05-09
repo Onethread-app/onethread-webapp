@@ -151,7 +151,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 }}
               >
                 <h4
-                  className="mv0 flex justify-center items-center"
+                  className="mv0 flex justify-center items-center break-word"
                   style={{
                     color: currentUser ? 'white' : 'rgb(74, 73, 73)',
                     whiteSpace: 'pre-wrap',
