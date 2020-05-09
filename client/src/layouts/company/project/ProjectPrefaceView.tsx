@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ProjectDescriptionView } from './ProjectDescriptionView';
 import DownloadIcon from './../../../resources/images/Download.svg';
-import { Button, Dialog, Navbar, Drawer } from '@blueprintjs/core';
+import { Button, Dialog } from '@blueprintjs/core';
 import user from '../../../resources/images/profilePhoto.svg';
 import { useState } from 'react';
 import { FileUpload } from './fileUpload';
@@ -12,10 +12,14 @@ import { NavLink } from 'react-router-dom';
 import { MobileView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { NavbarCompany } from 'components/NavbarCompany';
 =======
 import { MobileListView } from '../MobileListView';
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+import { NavbarCompany } from 'components/NavbarCompany';
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
 
 interface ProjectPrefaceProps {
   description: string;
@@ -34,16 +38,20 @@ export const ProjectPrefaceViewComponent = (
 ) => {
   const [showFileDialog, setShowFileDialog] = useState(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 =======
   const [showDialog, setShowDialog] = useState(false);
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
 
   return (
     <>
       <MobileView>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         <NavbarCompany title="Project" />
@@ -72,6 +80,9 @@ export const ProjectPrefaceViewComponent = (
           />
         </Navbar>
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+        <NavbarCompany title="Project" />
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -135,10 +146,14 @@ export const ProjectPrefaceViewComponent = (
           </div>
         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div className="w-30-ns pa4 pb5">
 =======
         <div className="w-30-ns pa4">
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+        <div className="w-30-ns pa4 pb5">
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
           {props.role === 'admin' ? (
             <div>
               <h1 className="f6">Shared Files</h1>
@@ -180,6 +195,7 @@ export const ProjectPrefaceViewComponent = (
               </Button>
             </div>
           ) : (
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             props.optionalRole &&
@@ -228,6 +244,8 @@ export const ProjectPrefaceViewComponent = (
                   Upload Files
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
               projectRules(props.optionalRole)[props.role].includes(
                 'addFileProject',
               ) && (
@@ -268,13 +286,16 @@ export const ProjectPrefaceViewComponent = (
                     onClick={() => setShowFileDialog(true)}
                   >
                     Upload Files
+<<<<<<< HEAD
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
 >>>>>>> d06346b0... code style issue fixed
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
                 </Button>
-              </div>
-            )
-          )}
+                </div>
+              )
+            )}
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})
@@ -315,21 +336,6 @@ export const ProjectPrefaceViewComponent = (
         >
           <FileUpload setShowDialog={setShowFileDialog} />
         </Dialog>
-      )}
-      {showDialog && (
-        <Drawer
-          onClose={() => setShowDialog(!showDialog)}
-          isOpen={showDialog}
-          canOutsideClickClose={false}
-          style={{ width: '70%' }}
-        >
-          <div>
-            <MobileListView
-              showDialog={showDialog}
-              setShowDialog={setShowDialog}
-            />
-          </div>
-        </Drawer>
       )}
     </>
   );

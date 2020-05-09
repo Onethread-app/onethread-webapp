@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 import { Icon, Drawer } from '@blueprintjs/core';
+=======
+import { Icon, Drawer, Button } from '@blueprintjs/core';
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
 import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
 import { connect, useDispatch } from 'react-redux';
@@ -21,11 +25,15 @@ import {
 } from '../../../stores/project/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Pusher from 'pusher-js';
+<<<<<<< HEAD
 import {
   isMobileOnly,
   CustomView,
   MobileView,
 } from 'react-device-detect';
+=======
+import { isMobileOnly, CustomView, MobileView } from 'react-device-detect';
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
 import { CURRENT_ROOM } from 'stores/room/Types';
 
 export interface RoomQueries {
@@ -59,9 +67,12 @@ interface RoomPageComponentProps extends RouteComponentProps {
   ) => void;
   pusherInstance: Pusher | undefined;
   setShowDialog?: (val: boolean) => void;
+<<<<<<< HEAD
   getSingleProject: (pid: string) => void;
   setCurrentProjectId: (pid: string) => void;
   getRoleForProject: (pid: string) => void;
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
 }
 
 const RoomPageComponent = (props: RoomPageComponentProps) => {
@@ -99,7 +110,11 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
 
   // get all rooms
   useEffect(() => {
+<<<<<<< HEAD
     if (!isMobileOnly && props.companyId && props.projectId) {
+=======
+    if ( !isMobileOnly && props.companyId && props.projectId) {
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
       load(props.getRooms);
     }
   }, [props.companyId, props.projectId]);
@@ -150,9 +165,15 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 borderBottomLeftRadius: '0.5rem',
                 width: isOpenLeftSidebar ? '220px' : '16px',
               }}
+<<<<<<< HEAD
               // TODO: mouse active
               // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
               // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
+=======
+            // TODO: mouse active
+            // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
+            // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
             >
               <RoomSideBar isOpen={isOpenLeftSidebar} />
             </div>
@@ -163,6 +184,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             {queries.view === 'default' && (
               <Icon
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
+<<<<<<< HEAD
                 icon={
                   isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'
                 }
@@ -170,10 +192,16 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 onClick={() =>
                   setIsOpenLeftSidebar(!isOpenLeftSidebar)
                 }
+=======
+                icon={isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'}
+                iconSize={17}
+                onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)}
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
               />
             )}
           </CustomView>
           <MobileView>
+<<<<<<< HEAD
             <Icon
               className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left-0 pointer"
               icon='arrow-left'
@@ -192,6 +220,25 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               <Icon
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
                 icon='arrow-right'
+=======
+            <Button
+              className="absolute top-0 bp3-minimal outline-0 shadow-0 underline"
+              onClick={() => {
+                // tslint:disable-next-line: no-unused-expression
+                props.setShowDialog && props.setShowDialog(false);
+                props.history.push(`/company/${props.companyName}/project/${props.projectId}/room`);
+              }}
+            >
+              Back
+            </Button>
+          </MobileView>
+          {isEmpty(props.currentRoom.name) === false &&
+            isEmpty(props.currentRoom._id) === false &&
+            queries.view === 'default' && (
+              <Icon
+                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
+                icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
                 iconSize={17}
                 onClick={() => {
                   setIsOpenRightSidebar(!isOpenRightSidebar);
@@ -202,11 +249,17 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
           <ChatLayout />
         </div>
         {isEmpty(props.currentRoom.name) === false &&
+<<<<<<< HEAD
           isEmpty(props.currentRoom._id) === false && (
+=======
+          isEmpty(props.currentRoom._id) === false &&
+          queries.view === 'default' && (
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
             <div
               className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
               style={{
                 borderBottomRightRadius: '0.5rem',
+<<<<<<< HEAD
                 width: isOpenRightSidebar 
                   ? isMobileOnly 
                     ? '0px' 
@@ -217,6 +270,12 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               }}
             >
               {isMobileOnly ? (
+=======
+                width: isOpenRightSidebar ? isMobileOnly ? '16px' : '400px' : '16px',
+              }}
+            >
+              {isMobileOnly ?
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
                 <Drawer
                   onClose={() => setShowDialog(!showDialog)}
                   isOpen={showDialog}
@@ -228,9 +287,14 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                     <RoomRightSidebar isOpen={isOpenRightSidebar} />
                   </div>
                 </Drawer>
+<<<<<<< HEAD
               ) : (
                 <RoomRightSidebar isOpen={isOpenRightSidebar} />
               )}
+=======
+                :
+                <RoomRightSidebar isOpen={isOpenRightSidebar} />}
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
             </div>
           )}
       </div>
@@ -245,7 +309,11 @@ const mapStateToProps = (state: any) => {
     projectId: state.projectReducer.projectDetails._id,
     rooms: state.roomReducer.rooms,
     pusherInstance: state.pusherReducer.pusherInstance,
+<<<<<<< HEAD
     companyName: state.companyReducer.currentCompany.name,
+=======
+    companyName: state.companyReducer.currentCompany.name
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
   };
 };
 

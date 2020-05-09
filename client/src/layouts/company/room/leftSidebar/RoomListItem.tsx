@@ -17,9 +17,12 @@ interface RoomListItemProps {
 
 export const RoomListItem = (props: RoomListItemProps) => {
   const [showDialog, setShowDialog] = useState(false);
+<<<<<<< HEAD
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
   const unreadCount = useSelector(
     (state: any) =>
       state.roomReducer.roomNotification.roomsUnreadCount &&
@@ -45,7 +48,11 @@ export const RoomListItem = (props: RoomListItemProps) => {
 
   return (
     <>
+<<<<<<< HEAD
       <div
+=======
+      <li
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
         id="roomListItem"
         className="pointer br1"
         style={{
@@ -58,6 +65,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
             if (!props.active) {
               dispatch({ type: CHANGE_ROOM });
               // tslint:disable-next-line: max-line-length
+<<<<<<< HEAD
               props.currentCompany?
                 history.push(
                   `/company/${props.currentCompany}/project/${props.room.project}/room?roomId=${props.room._id}${
@@ -70,6 +78,13 @@ export const RoomListItem = (props: RoomListItemProps) => {
                     queries.view ? '&view=' + queries.view : ''
                   }`,
                 );
+=======
+              history.push(
+                `${location.pathname}?roomId=${props.room._id}${
+                queries.view ? '&view=' + queries.view : ''
+                }`,
+              );
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
             }
             if (isMobileOnly) {
               setShowDialog(true);
@@ -77,11 +92,16 @@ export const RoomListItem = (props: RoomListItemProps) => {
           }}
           className={`flex items-center ph2 pv2 bb b--black-10 ${
             props.lastChild ? 'bn' : ''
+<<<<<<< HEAD
           }`}
+=======
+            }`}
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
         >
           <div className="db pr3">
             <span
               className="ttc ba b--black-10 db w2 h2 br3 tc lh-2 bg-light-gray"
+<<<<<<< HEAD
               style={{
                 backgroundColor: props.room.archive
                   ? 'rgb(215, 215, 215)'
@@ -101,6 +121,27 @@ export const RoomListItem = (props: RoomListItemProps) => {
                   : 'black',
               }}
             >
+=======
+              style={{
+                backgroundColor: props.room.archive
+                  ? 'rgb(215, 215, 215)'
+                  : props.iconBgColor,
+                color: '#FFFFFF',
+              }}
+            >
+              {props.room.name[0]}
+            </span>
+          </div>
+          <div className="flex justify-around items-center">
+            <h1
+              className="f6 fw4 mv0 break-word"
+              style={{
+                color: props.room.archive
+                  ? 'rgb(141, 141, 141)'
+                  : 'black',
+              }}
+            >
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
               {props.room.name}
             </h1>
             {unreadCount > 0 ? (
@@ -116,6 +157,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
             ) : null}
           </div>
         </article>
+<<<<<<< HEAD
       </div>
       {showDialog && (
         <Drawer
@@ -128,6 +170,20 @@ export const RoomListItem = (props: RoomListItemProps) => {
             <RoomPage setShowDialog={setShowDialog} />
           </div>
         </Drawer>
+=======
+      </li>
+      {showDialog && (
+        <Drawer
+        onClose={() => setShowDialog(!showDialog)}
+        isOpen={showDialog}
+        canOutsideClickClose={false}
+        style={{ width: '100%' }}
+      >
+        <div>
+          <RoomPage setShowDialog={setShowDialog}/>
+        </div>
+      </Drawer>
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
       )}
     </>
   );

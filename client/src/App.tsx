@@ -36,11 +36,14 @@ import { ProjectSettingsPage } from 'layouts/company/project/settings/Index';
 import { ProjectTeamPage } from 'layouts/company/project/team/Index';
 import { isMobileOnly } from 'react-device-detect';
 import { RoomPageMobile } from 'layouts/company/room/IndexMobile';
+<<<<<<< HEAD
 import { AutoLoginPage } from 'components/AutoLogin';
 import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
 import { HomePageNew } from 'layouts/home/Index';
 import Success from './components/Success';
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
 
 const PrivateRoute = (props: {
   component: any;
@@ -190,7 +193,11 @@ export const App = () => (
       <PrivateRoute
         path="/company/:cname/project/:projectId/room"
         exact={true}
+<<<<<<< HEAD
         component={isMobileOnly ? RoomPageMobile : RoomPage}
+=======
+        component={ isMobileOnly ? RoomPageMobile : RoomPage}
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
       />
       <PrivateRoute
         path="/company/:cname/project/:projectId/board"

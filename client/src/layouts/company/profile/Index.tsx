@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BasicInfoDetailsView } from 'layouts/company/profile/BasicInformationView';
 import { CoverPhotoView } from './CompanyCoverPhoto';
-import { Tabs, Tab, Navbar, Drawer } from '@blueprintjs/core';
+import { Tabs, Tab } from '@blueprintjs/core';
 import { AdvancedInfo } from './AdvancedInfoView';
+<<<<<<< HEAD
 <<<<<<< HEAD
 import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
@@ -10,16 +11,22 @@ import { NavbarCompany } from 'components/NavbarCompany';
 =======
 import { MobileView } from 'react-device-detect';
 import { MobileListView } from '../MobileListView';
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
 import { User } from 'stores/user/Reducer';
-import user from './../../../resources/images/profilePhoto.svg';
 import { connect } from 'react-redux';
+<<<<<<< HEAD
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+import { NavbarCompany } from 'components/NavbarCompany';
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
 
 interface ProfilePageProps {
   user: User;
 }
 
 const CompanyProfilePageComponent = (props: ProfilePageProps) => {
+<<<<<<< HEAD
 <<<<<<< HEAD
   return (
     <>
@@ -52,6 +59,12 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
         </Navbar>
       </MobileView>
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+
+  return (
+    <>
+      <NavbarCompany title="Company Profile" />
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
       <div className="w-100 pa4-ns pa2 mt5 mt0-ns">
         <CoverPhotoView />
         <Tabs id="TabsExample" className="mt6-ns mt5 ph5-ns ph3">
@@ -70,6 +83,7 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
         </Tabs>
       </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       {showDialog && (
         <Drawer
@@ -87,6 +101,8 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
         </Drawer>
       )}
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
     </>
   );
 };

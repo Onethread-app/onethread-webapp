@@ -91,10 +91,14 @@ export const ListViewComponent = (
               />
             </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
             <div className="dtc v-mid pl3 pt2">
 =======
             <div className="dtc v-mid pl3">
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+            <div className="dtc v-mid pl3 pt2">
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
               <h1 className="f6 white ma0">
                 {`${props.user.firstName} ${props.user.lastName}`}
               </h1>
@@ -191,6 +195,7 @@ export const ListViewComponent = (
                         : ''
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     } mt1 pointer bp3-popover-dismiss`}
 =======
                       } mt1 pointer bp3-popover-dismiss`}
@@ -198,6 +203,9 @@ export const ListViewComponent = (
 =======
                     } mt1 pointer bp3-popover-dismiss`}
 >>>>>>> d06346b0... code style issue fixed
+=======
+                      } mt1 pointer bp3-popover-dismiss`}
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -225,13 +233,18 @@ export const ListViewComponent = (
                         });
                         props.history.push(
                           `/company/${
+<<<<<<< HEAD
                             (response as any).data.company.name
 >>>>>>> d06346b0... code style issue fixed
+=======
+                          (response as any).data.company.name
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
                           }/dashboard`,
                         );
                       }
                     }}
                   >
+<<<<<<< HEAD
 <<<<<<< HEAD
                     <div className="flex justify-between">
                       <img
@@ -239,6 +252,12 @@ export const ListViewComponent = (
                           c.company.logo
                             ? c.company.logo
                             : CompanyIcon
+=======
+                    <div className="flex justify-between">
+                      <img
+                        src={
+                          c.company.logo ? c.company.logo : CompanyIcon
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
                         }
                         className="v-mid dib br-100 w-10"
                         alt="user"
@@ -254,6 +273,7 @@ export const ListViewComponent = (
                         </h1>
                         <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
                       </div>
+<<<<<<< HEAD
 =======
                     <img
                       src={
@@ -273,6 +293,8 @@ export const ListViewComponent = (
                       </h1>
                       <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
 >>>>>>> b9e80fb9... mobile responsive for project preface
+=======
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
                     </div>
                   </article>
                 ),

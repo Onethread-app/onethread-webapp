@@ -24,6 +24,7 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
     <>
       <main className="mw6" id="roomList">
         <ul className="list pa0 mh2-ns">
+<<<<<<< HEAD
           {props.rooms && props.rooms.length ? props.search ?
             (
               props.rooms.filter(item => !item.name.indexOf(props.search)).map(
@@ -41,6 +42,9 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
             )
           :
           (
+=======
+          {props.rooms && props.rooms.length ? (
+>>>>>>> a51ad486... Feature/mobile responsive (#148)
             props.rooms.map((room: IRoom, i: number, arr: any) => {
               return (
                 <RoomListItem
