@@ -1,49 +1,34 @@
-
-import React, { useState } from 'react';
-import { Tabs, Tab, Navbar, Drawer } from '@blueprintjs/core';
+import React from 'react';
+import { Tabs, Tab } from '@blueprintjs/core';
 import { GeneralView } from './companyName/General';
 import { DepartmentView } from './department/View';
 import { AdminRoleView } from './adminRole/View';
-import { MobileView } from 'react-device-detect';
-import user from './../../../resources/images/profilePhoto.svg';
+import { isMobileOnly } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
-import { MobileListView } from '../MobileListView';
+import { companySubscriber } from 'layouts/company/notification/subscribers';
+import { readNotification } from '../../../stores/notifications/Action';
+import { getNotifications } from '../../../stores/notifications/Action';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { NavbarCompany } from 'components/NavbarCompany';
 
 interface SettingsPageProps {
   user: User;
+  notifications: any;
+  read: number;
+  companyId: string;
+  readNotification: any;
+  getNotifications: any;
 }
 
-const SettingsPagComponent = (props: SettingsPageProps) => {
-
-  const [showDialog, setShowDialog] = useState(false);
+const SettingsPagComponent = (props: SettingsPageProps & RouteComponentProps) => {
 
   return (
     <>
-      <MobileView>
-        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
-          <h1 className="f3">My Settings</h1>
-          <img
-            src={
-              props.user.profileImage
-                ? props.user.profileImage
-                : user
-            }
-            className="dim v-mid dib br-100 pointer"
-            style={{
-              width: '2rem',
-              height: '2rem',
-              objectFit: 'cover',
-            }}
-            alt="user"
-            onClick={() => setShowDialog(true)}
-
-          />
-        </Navbar>
-      </MobileView>
+      <NavbarCompany title="My Settings" />
       <div className="fl w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns">
         <div className="fl w-100">
-          <h3 className="f3 b">Settings</h3>
+          {isMobileOnly ? undefined : <h3 className="f3 b">Settings</h3>}
         </div>
         <Tabs
           id="TabsExample"
@@ -73,29 +58,23 @@ const SettingsPagComponent = (props: SettingsPageProps) => {
           />
         </Tabs>
       </div>
-      {showDialog && (
-        <Drawer
-          onClose={() => setShowDialog(!showDialog)}
-          isOpen={showDialog}
-          canOutsideClickClose={false}
-          style={{ width: '70%' }}
-        >
-          <div>
-            <MobileListView
-              showDialog={showDialog}
-              setShowDialog={setShowDialog}
-            />
-          </div>
-        </Drawer>
-      )}
     </>
   );
 };
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user
+    user: state.userReducer.user,
+    companyId: state.companyReducer.currentCompany._id,
+    notifications: state.notificationReducer.allNotifications,
+    read: state.notificationReducer.read
   };
 };
+export const SettingsPage = connect(mapStateToProps,
+  {
+    companySubscriber,
+    readNotification,
+    getNotifications
+  })(withRouter(SettingsPagComponent));
 
 export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);

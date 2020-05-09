@@ -65,9 +65,7 @@ const ProjectSettingsPageComponent = (props: any) => {
         </div>
       </MobileView>
       <div className="bg-white pa5-ns ph3 mb6">
-        {isMobileOnly ? undefined : (
-          <h3 className="f3 ma0">Project Settings</h3>
-        )}
+        {isMobileOnly ? undefined : <h3 className="f3 ma0">Project Settings</h3>}
         <h3 className="f5 mv4">Project Moderator</h3>
         <Tabs id="TabsExample" vertical={true}>
           <Tab

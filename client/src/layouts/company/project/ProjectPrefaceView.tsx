@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ProjectDescriptionView } from './ProjectDescriptionView';
 import DownloadIcon from './../../../resources/images/Download.svg';
-import { Button, Dialog, Navbar, Drawer } from '@blueprintjs/core';
+import { Button, Dialog } from '@blueprintjs/core';
 import user from '../../../resources/images/profilePhoto.svg';
 import { useState } from 'react';
 import { FileUpload } from './fileUpload';
@@ -11,7 +11,7 @@ import { projectRules } from './settings/projectrules';
 import { NavLink } from 'react-router-dom';
 import { MobileView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
-import { MobileListView } from '../MobileListView';
+import { NavbarCompany } from 'components/NavbarCompany';
 
 interface ProjectPrefaceProps {
   description: string;
@@ -29,31 +29,11 @@ export const ProjectPrefaceViewComponent = (
   props: ProjectPrefaceProps,
 ) => {
   const [showFileDialog, setShowFileDialog] = useState(false);
-  const [showDialog, setShowDialog] = useState(false);
 
   return (
     <>
       <MobileView>
-        <Navbar
-          fixedToTop
-          className="flex justify-between items-center shadow-4"
-          style={{ height: '55px' }}
-        >
-          <h1 className="f3">My Projects</h1>
-          <img
-            src={
-              props.user.profileImage ? props.user.profileImage : user
-            }
-            className="dim v-mid dib br-100 pointer"
-            style={{
-              width: '2rem',
-              height: '2rem',
-              objectFit: 'cover',
-            }}
-            alt="user"
-            onClick={() => setShowDialog(true)}
-          />
-        </Navbar>
+        <NavbarCompany title="Project" />
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -116,7 +96,7 @@ export const ProjectPrefaceViewComponent = (
             />
           </div>
         </div>
-        <div className="w-30-ns pa4">
+        <div className="w-30-ns pa4 pb5">
           {props.role === 'admin' ? (
             <div>
               <h1 className="f6">Shared Files</h1>
@@ -158,50 +138,50 @@ export const ProjectPrefaceViewComponent = (
               </Button>
             </div>
           ) : (
-            projectRules(props.optionalRole)[props.role].includes(
-              'addFileProject',
-            ) && (
-              <div>
-                <h1 className="f6">Shared Files</h1>
-                {props.files.map((file: any) => (
-                  <div className="flex items-center justify-between">
-                    <h1 className="f6 fw6 blue">
-                      {file.s3Key.split('/')[1]}
-                    </h1>
-                    <a
-                      href={file.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      download
-                    >
-                      <span className="flex pl3">
-                        <img
-                          src={DownloadIcon}
-                          alt="Download icon"
-                          style={{
-                            width: '23px',
-                            height: '23px',
-                          }}
-                        />
-                      </span>
-                    </a>
-                  </div>
-                ))}
-                <Button
-                  className="pointer w4 pa2 flex flex-column center mb5 mt4"
-                  style={{
-                    background: '#fff',
-                    outline: 'none',
-                    border: '2px solid blue',
-                    color: 'blue',
-                  }}
-                  onClick={() => setShowFileDialog(true)}
-                >
-                  Upload Files
+              projectRules(props.optionalRole)[props.role].includes(
+                'addFileProject',
+              ) && (
+                <div>
+                  <h1 className="f6">Shared Files</h1>
+                  {props.files.map((file: any) => (
+                    <div className="flex items-center justify-between">
+                      <h1 className="f6 fw6 blue">
+                        {file.s3Key.split('/')[1]}
+                      </h1>
+                      <a
+                        href={file.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        download
+                      >
+                        <span className="flex pl3">
+                          <img
+                            src={DownloadIcon}
+                            alt="Download icon"
+                            style={{
+                              width: '23px',
+                              height: '23px',
+                            }}
+                          />
+                        </span>
+                      </a>
+                    </div>
+                  ))}
+                  <Button
+                    className="pointer w4 pa2 flex flex-column center mb5 mt4"
+                    style={{
+                      background: '#fff',
+                      outline: 'none',
+                      border: '2px solid blue',
+                      color: 'blue',
+                    }}
+                    onClick={() => setShowFileDialog(true)}
+                  >
+                    Upload Files
                 </Button>
-              </div>
-            )
-          )}
+                </div>
+              )
+            )}
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})
@@ -240,21 +220,6 @@ export const ProjectPrefaceViewComponent = (
         >
           <FileUpload setShowDialog={setShowFileDialog} />
         </Dialog>
-      )}
-      {showDialog && (
-        <Drawer
-          onClose={() => setShowDialog(!showDialog)}
-          isOpen={showDialog}
-          canOutsideClickClose={false}
-          style={{ width: '70%' }}
-        >
-          <div>
-            <MobileListView
-              showDialog={showDialog}
-              setShowDialog={setShowDialog}
-            />
-          </div>
-        </Drawer>
       )}
     </>
   );

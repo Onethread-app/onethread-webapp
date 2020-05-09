@@ -56,7 +56,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
               // tslint:disable-next-line: max-line-length
               history.push(
                 `${location.pathname}?roomId=${props.room._id}${
-                  queries.view ? '&view=' + queries.view : ''
+                queries.view ? '&view=' + queries.view : ''
                 }`,
               );
             }
@@ -66,7 +66,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
           }}
           className={`flex items-center ph2 pv2 bb b--black-10 ${
             props.lastChild ? 'bn' : ''
-          }`}
+            }`}
         >
           <div className="db pr3">
             <span
@@ -108,15 +108,15 @@ export const RoomListItem = (props: RoomListItemProps) => {
       </li>
       {showDialog && (
         <Drawer
-          onClose={() => setShowDialog(!showDialog)}
-          isOpen={showDialog}
-          canOutsideClickClose={false}
-          style={{ width: '100%' }}
-        >
-          <div>
-            <RoomPage setShowDialog={setShowDialog} />
-          </div>
-        </Drawer>
+        onClose={() => setShowDialog(!showDialog)}
+        isOpen={showDialog}
+        canOutsideClickClose={false}
+        style={{ width: '100%' }}
+      >
+        <div>
+          <RoomPage setShowDialog={setShowDialog}/>
+        </div>
+      </Drawer>
       )}
     </>
   );
