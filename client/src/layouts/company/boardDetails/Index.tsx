@@ -4,7 +4,6 @@ import { TaskManagementLayout } from './TaskManagementLayout';
 import { connect } from 'react-redux';
 import { TaskBoard } from 'stores/board/Reducer';
 import { AddTeamMemberForm } from './members/AddTeamMemberForm';
-// import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import addMemberIcon from 'resources/images/addMemberIcon.png';
@@ -35,7 +34,7 @@ const BoardDetailsViewComponent = (
       className="br3 h-100 ph3 cf flex flex-column"
       style={{ background: 'white' }}
     >
-      <div className="flex">
+      <div className="flex mt2">
         <BreadCrumbs
           items={[
             {
@@ -58,18 +57,12 @@ const BoardDetailsViewComponent = (
         style={{ justifyContent: 'space-between' }}
       >
         <h3 className="w-100 ma0 f3">{props.currentBoard!.name}</h3>
-        <div className="flex mh3">
+        <div className="flex mh3-ns">
           {props.role === 'admin' ||
           projectRules(props.optionalRole)[props.role].includes(
             'assignDeleteMemberBoard',
           ) ? (
             <>
-              {/* <img
-                className="mr3 br2 pointer"
-                style={{ height: '1.8rem', width: '1.8rem' }}
-                src={settingIcon}
-                alt="Setting icon"
-              /> */}
               <img
                 className="br2 pointer"
                 style={{ height: '1.8rem', width: '1.8rem' }}

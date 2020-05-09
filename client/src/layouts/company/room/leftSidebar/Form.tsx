@@ -39,7 +39,7 @@ const CreateFormComponent: React.FC<any> = (
       render={({ handleSubmit, submitting, pristine }) => (
         <>
           <form
-            className="fl w-100 pa4 pt0 mt4"
+            className="fl w-100 pa4 pt0 mt4-ns mt5"
             onSubmit={handleSubmit}
           >
             <h1 className="f5 tigrow-lightBlue">Create Room</h1>

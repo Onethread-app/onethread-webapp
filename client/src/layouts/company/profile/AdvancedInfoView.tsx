@@ -102,13 +102,6 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           )}
         </div>
         <div className="mt4">
-          <div className="flex w-100">
-            <h1 className="f5">Team Size</h1>
-          </div>
-          <Divider />
-          <p className="f5">50-100</p>
-        </div>
-        <div className="mt4">
           <div className="flex justify-between">
             <h1 className="f5">Member of Parent Organizations</h1>
             <img
