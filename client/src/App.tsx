@@ -34,6 +34,8 @@ import { ProjectPrefaceView } from 'layouts/company/project/ProjectPrefaceView';
 import { DashboardView } from 'layouts/dashBoard/Index';
 import { ProjectSettingsPage } from 'layouts/company/project/settings/Index';
 import { ProjectTeamPage } from 'layouts/company/project/team/Index';
+import { isMobileOnly } from 'react-device-detect';
+import { RoomPageMobile } from 'layouts/company/room/IndexMobile';
 
 const PrivateRoute = (props: {
   component: any;
@@ -182,7 +184,7 @@ export const App = () => (
       <PrivateRoute
         path="/company/:cname/project/:projectId/room"
         exact={true}
-        component={RoomPage}
+        component={ isMobileOnly ? RoomPageMobile : RoomPage}
       />
       <PrivateRoute
         path="/company/:cname/project/:projectId/board"

@@ -14,7 +14,7 @@ const DiscussionComponent = (props: DiscussionComponentProps) => {
         maxHeight: '50%',
       }}
     >
-      <h3 className="mv2">Highlighted Discussions</h3>
+      <h3 className="mv2 f6 f5-ns">Highlighted Discussions</h3>
       <div className="overflow-y-auto flex-grow-1 pr3">
         {props.discussions && props.discussions.length > 0 ? (
           props.discussions.map((d) => (
@@ -27,7 +27,7 @@ const DiscussionComponent = (props: DiscussionComponentProps) => {
             </p>
           ))
         ) : (
-          <h4 className="mv0 gray">No discussions.</h4>
+          <h4 className="mv0 gray f7 f5-ns">No discussions.</h4>
         )}
       </div>
     </div>

@@ -15,7 +15,7 @@ const SharedFileComponent = (props: SharedFileComponentProps) => {
         maxHeight: '50%',
       }}
     >
-      <h3 className="mv2">Shared Files</h3>
+      <h3 className="mv2 f6 f5-ns">Shared Files</h3>
       <div className="overflow-y-auto flex-grow-1">
         {props.sharedFileMessages &&
         props.sharedFileMessages.length > 0 ? (
@@ -25,7 +25,7 @@ const SharedFileComponent = (props: SharedFileComponentProps) => {
             });
           })
         ) : (
-          <h4 className="mv0 gray">No files.</h4>
+          <h4 className="mv0 gray f5-ns f7">No files.</h4>
         )}
       </div>
     </div>

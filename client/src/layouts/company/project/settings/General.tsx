@@ -13,8 +13,7 @@ interface IProjectRole {
 const GeneralPageComponent = (props: IProjectRole) => {
   const [disabled] = React.useState(false);
   return (
-    <div className="bl b--black-05 bw1 pl5 ml5 h5">
-      {/* <p>general</p> */}
+    <div className="bl b--black-05 bw1 pl5-ns pl2 ml5-ns h-100">
       <Form
         onSubmit={props.onSubmit}
         initialValues={{ optionalRole: props.optionalRole }}
