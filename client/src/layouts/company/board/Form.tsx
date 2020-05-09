@@ -51,6 +51,7 @@ const FormComponent = (props: {
         }) => (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
           <form onSubmit={handleSubmit}>
@@ -113,38 +114,101 @@ const FormComponent = (props: {
                       className="fw5 mb3"
                       style={{ fontSize: '.8rem' }}
 <<<<<<< HEAD
+=======
+            <form onSubmit={handleSubmit}>
+              <div className="pa3-ns pa2 justify-content w-100">
+                <Field<string>
+                  name="name"
+                  validate={composeValidators(required, maxValue(32))}
+                  render={({ input, meta }) => (
+                    <div
+                      className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
                     >
-                      Label
-                    </p>
-                    <div className="flex">
-                      {Color.map((color) => (
-                        <div className="pr2" key={color.code}>
-                          <Icon
-                            className="br2"
-                            icon={
-                              isEqual(color.code, labelColor) === true
-                                ? 'tick'
-                                : 'blank'
-                            }
-                            onClick={(e) => {
-                              e.preventDefault();
-                              input.onChange(color.code);
-                              setLabelColor(color.code);
-                            }}
-                            style={{
-                              backgroundColor: color.value,
-                              border:
-                                isEqual(color.code, labelColor) ===
-                                true
-                                  ? '3px solid #ffffff'
-                                  : 'none',
-                              height: '3rem',
-                              padding: '0.8rem',
-                            }}
-                          />
-                        </div>
-                      ))}
+                      <InputGroupFieldWithLabel
+                        id="name"
+                        value={input.value}
+                        onChange={input.onChange}
+                        style={{
+                          boxShadow: 'none',
+                          fontSize: '18px',
+                        }}
+                        error={
+                          checkError(meta) &&
+                          (meta.error || meta.submitError)
+                        }
+                        label="Board Name*"
+                      />
                     </div>
+                  )}
+                />
+                <Field<string>
+                  name="department"
+                  render={({ input, meta }) => (
+                    <div
+                      className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
+                    >
+                      <DropdownFieldErrorWithLabel
+                        id={input.name}
+                        selectedValue={input.value}
+                        options={
+                          props.departments &&
+                            props.departments.length > 0
+                            ? props.departments
+                            : ([] as any)
+                        }
+                        onChange={input.onChange}
+                        error={
+                          checkError(meta) &&
+                          (meta.error || meta.submitError)
+                        }
+                        label="Department"
+                        className="bn"
+                      />
+                    </div>
+                  )}
+                />
+                <Field<string>
+                  name="color"
+                  render={({ input, meta }) => (
+                    <div className="mb3">
+                      <p
+                        className="fw5 mb3"
+                        style={{ fontSize: '.8rem' }}
+                      >
+                        Label
+                    </p>
+                      <div className="flex">
+                        {Color.map((color) => (
+                          <div className="pr2" key={color.code}>
+                            <Icon
+                              className="br2"
+                              icon={
+                                isEqual(color.code, labelColor) === true
+                                  ? 'tick'
+                                  : 'blank'
+                              }
+                              onClick={(e) => {
+                                e.preventDefault();
+                                input.onChange(color.code);
+                                setLabelColor(color.code);
+                              }}
+                              style={{
+                                backgroundColor: color.value,
+                                border:
+                                  isEqual(color.code, labelColor) ===
+                                    true
+                                    ? '3px solid #ffffff'
+                                    : 'none',
+                                height: '3rem',
+                                padding: '0.8rem',
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+<<<<<<< HEAD
                   </div>
                 )}
               />
@@ -244,6 +308,8 @@ const FormComponent = (props: {
                       ))}
                     </div>
 <<<<<<< HEAD
+=======
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
                   )}
                 />
                 <div className="fr">
@@ -275,6 +341,7 @@ const FormComponent = (props: {
                     disabled={submitting || pristine}
                   >
                     Create
+<<<<<<< HEAD
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
                   </div>
@@ -310,11 +377,13 @@ const FormComponent = (props: {
                 >
                   Create
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
                 </Button>
+                </div>
               </div>
-            </div>
-          </form>
-        )}
+            </form>
+          )}
       />
     </>
   );

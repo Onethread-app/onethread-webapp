@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ProjectDescriptionView } from './ProjectDescriptionView';
 import DownloadIcon from './../../../resources/images/Download.svg';
-import { Button, Dialog, Navbar, Drawer } from '@blueprintjs/core';
+import { Button, Dialog } from '@blueprintjs/core';
 import user from '../../../resources/images/profilePhoto.svg';
 import { useState } from 'react';
 import { FileUpload } from './fileUpload';
@@ -11,6 +11,7 @@ import { projectRules } from './settings/projectrules';
 import { NavLink } from 'react-router-dom';
 import { MobileView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -24,6 +25,9 @@ import { NavbarCompany } from 'components/NavbarCompany';
 =======
 import { MobileListView } from '../MobileListView';
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+import { NavbarCompany } from 'components/NavbarCompany';
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
 
 interface ProjectPrefaceProps {
   description: string;
@@ -44,6 +48,7 @@ export const ProjectPrefaceViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
@@ -55,10 +60,13 @@ export const ProjectPrefaceViewComponent = (
 =======
   const [showDialog, setShowDialog] = useState(false);
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
 
   return (
     <>
       <MobileView>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -120,6 +128,9 @@ export const ProjectPrefaceViewComponent = (
           />
         </Navbar>
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+        <NavbarCompany title="Project" />
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -185,6 +196,7 @@ export const ProjectPrefaceViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         <div className="w-30-ns pa4 pb5">
 =======
         <div className="w-30-ns pa4">
@@ -195,6 +207,9 @@ export const ProjectPrefaceViewComponent = (
 =======
         <div className="w-30-ns pa4">
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+        <div className="w-30-ns pa4 pb5">
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
           {props.role === 'admin' ? (
             <div>
               <h1 className="f6">Shared Files</h1>
@@ -236,6 +251,7 @@ export const ProjectPrefaceViewComponent = (
               </Button>
             </div>
           ) : (
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -298,6 +314,8 @@ export const ProjectPrefaceViewComponent = (
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
               projectRules(props.optionalRole)[props.role].includes(
                 'addFileProject',
               ) && (
@@ -340,6 +358,7 @@ export const ProjectPrefaceViewComponent = (
                     Upload Files
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
 >>>>>>> d06346b0... code style issue fixed
@@ -351,10 +370,12 @@ export const ProjectPrefaceViewComponent = (
 >>>>>>> 05623007... mobile responsive for project preface
 =======
 >>>>>>> 4e99f05f... code style issue fixed
+=======
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
                 </Button>
-              </div>
-            )
-          )}
+                </div>
+              )
+            )}
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})
@@ -395,21 +416,6 @@ export const ProjectPrefaceViewComponent = (
         >
           <FileUpload setShowDialog={setShowFileDialog} />
         </Dialog>
-      )}
-      {showDialog && (
-        <Drawer
-          onClose={() => setShowDialog(!showDialog)}
-          isOpen={showDialog}
-          canOutsideClickClose={false}
-          style={{ width: '70%' }}
-        >
-          <div>
-            <MobileListView
-              showDialog={showDialog}
-              setShowDialog={setShowDialog}
-            />
-          </div>
-        </Drawer>
       )}
     </>
   );

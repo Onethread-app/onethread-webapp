@@ -112,6 +112,7 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <div className="dtc v-mid pl3 pt2">
 =======
             <div className="dtc v-mid pl3">
@@ -122,6 +123,9 @@ export const ListViewComponent = (
 =======
             <div className="dtc v-mid pl3">
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+            <div className="dtc v-mid pl3 pt2">
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
               <h1 className="f6 white ma0">
                 {`${props.user.firstName} ${props.user.lastName}`}
               </h1>
@@ -251,6 +255,7 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     } mt1 pointer bp3-popover-dismiss`}
 =======
                       } mt1 pointer bp3-popover-dismiss`}
@@ -270,6 +275,9 @@ export const ListViewComponent = (
 =======
                     } mt1 pointer bp3-popover-dismiss`}
 >>>>>>> 4e99f05f... code style issue fixed
+=======
+                      } mt1 pointer bp3-popover-dismiss`}
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -286,6 +294,7 @@ export const ListViewComponent = (
                         });
                         props.history.push(
                           `/company/${
+<<<<<<< HEAD
                             (response as any).data.company.name
 <<<<<<< HEAD
 =======
@@ -322,11 +331,15 @@ export const ListViewComponent = (
                           `/company/${
                             (response as any).data.company.name
 >>>>>>> 4e99f05f... code style issue fixed
+=======
+                          (response as any).data.company.name
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
                           }/dashboard`,
                         );
                       }
                     }}
                   >
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -348,6 +361,12 @@ export const ListViewComponent = (
                             ? c.company.logo
                             : CompanyIcon
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+                    <div className="flex justify-between">
+                      <img
+                        src={
+                          c.company.logo ? c.company.logo : CompanyIcon
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
                         }
                         className="v-mid dib br-100 w-10"
                         alt="user"
@@ -363,6 +382,7 @@ export const ListViewComponent = (
                         </h1>
                         <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
                       </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 =======
@@ -390,6 +410,8 @@ export const ListViewComponent = (
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
                     </div>
                   </article>
                 ),

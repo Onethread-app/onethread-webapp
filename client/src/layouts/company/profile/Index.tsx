@@ -12,6 +12,10 @@ interface ProfilePageProps {
 }
 
 const CompanyProfilePageComponent = (props: ProfilePageProps) => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
   return (
     <>
       <NavbarCompany title="Company Profile" />

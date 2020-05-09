@@ -33,8 +33,8 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
         props.column && isEmpty(props.column.name) === false
           ? props.column.positionInBoard
           : props.currentBoard.columns
-          ? props.currentBoard.columns.length + 1
-          : 1,
+            ? props.currentBoard.columns.length + 1
+            : 1,
       boardId: props.currentBoard._id,
     };
     if (props.column && isEmpty(props.column.name) === false) {
@@ -71,6 +71,9 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
           ...rest
         }) => (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
             <form onSubmit={handleSubmit}>
               <div className="pv3 justify-content w-100">
                 <Field<string>
@@ -110,6 +113,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                     onClick={(e: any) => {
                       if (props.setShowColumnFormDialog) {
                         props.setShowColumnFormDialog(false);
+<<<<<<< HEAD
                       }
 <<<<<<< HEAD
                       label="Column Name"
@@ -227,10 +231,30 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                   {props.column ? 'Update' : 'Create'}
                 </Button>
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+                      }
+                    }}
+                  >
+                    cancel
+                  </Button>
+                  <Button
+                    className="grow pointer white bp3-minimal w4 mt2"
+                    style={{
+                      background: '#0FA3A3',
+                      outline: 'none',
+                      color: 'white',
+                    }}
+                    loading={submitting}
+                    type="submit"
+                    disabled={submitting || pristine}
+                  >
+                    {props.column ? 'Update' : 'Create'}
+                  </Button>
+                </div>
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
               </div>
-            </div>
-          </form>
-        )}
+            </form>
+          )}
       />
     </div>
   );

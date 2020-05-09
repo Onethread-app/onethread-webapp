@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import { Tabs, Tab, Navbar, Drawer } from '@blueprintjs/core';
+import React from 'react';
+import { Tabs, Tab } from '@blueprintjs/core';
 import { AssociateList } from './AssociateList';
 import { PendingAssociateList } from './PendingAssociateList';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -27,12 +28,18 @@ import { User } from 'stores/user/Reducer';
 import { MobileView } from 'react-device-detect';
 import { MobileListView } from '../MobileListView';
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+import { connect } from 'react-redux';
+import { User } from 'stores/user/Reducer';
+import { NavbarCompany } from 'components/NavbarCompany';
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
 
 interface AssociatesPageProps {
   user: User;
 }
 
 const AssociatesPageComponent = (props: AssociatesPageProps) => {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -130,29 +137,21 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 =======
 >>>>>>> 4e99f05f... code style issue fixed
   const [showDialog, setShowDialog] = useState(false);
+=======
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
 
   return (
-    <div className="ph4 w-100">
-      <MobileView>
-        <Navbar
-          fixedToTop
-          className="flex justify-between items-center shadow-4"
-          style={{ height: '55px' }}
-        >
-          <h1 className="f3">My Associates</h1>
-          <img
-            src={
-              props.user.profileImage ? props.user.profileImage : user
-            }
-            className="dim v-mid dib br-100 pointer"
-            style={{
-              width: '2rem',
-              height: '2rem',
-              objectFit: 'cover',
-            }}
-            alt="user"
-            onClick={() => setShowDialog(true)}
+    <>
+      <NavbarCompany title="My Associates" />
+      <div className="ph4 w-100">
+        <Tabs id="associatesTab" className="mt5 mt0-ns">
+          <Tab
+            id="associates"
+            title="Associates"
+            panel={<AssociateList />}
+            className="outline-0"
           />
+<<<<<<< HEAD
         </Navbar>
       </MobileView>
       <Tabs id="associatesTab" className="mt5 mt0-ns">
@@ -186,6 +185,17 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
       )}
     </div>
 >>>>>>> 05623007... mobile responsive for project preface
+=======
+          <Tab
+            id="pending_associates"
+            title="Pending Associates"
+            panel={<PendingAssociateList />}
+            className="outline-0"
+          />
+        </Tabs>
+      </div>
+    </>
+>>>>>>> 2650e2be... Feature/mobile responsive (#148)
   );
 };
 

@@ -149,68 +149,84 @@ export const ChatLayoutComponent = (
                 )) &&
               props.currentRoom.archive === false ? (
                 <div
-                  className="pointer ml3-ns ml1"
                   onClick={() =>
-                    setShowMemberFormDialog(!showMemberFormDialog)
+                    setShowMemberListDialog(!showMemberListDialog)
                   }
+                  className="ma0 pointer dim flex items-center"
                 >
                   <img
-                    className="grow"
-                    src={addMemberIcon}
-                    width="30px"
-                    height="30px"
+                    className=""
+                    src={memberListIcon}
+                    width="20px"
+                    height="20px"
+                    style={{}}
+                    color="#0FA3A3"
                   />
+                  <span className="f5 ml2 fw7">
+                    {props.users.length}
+                  </span>
                 </div>
-              ) : null}
-              {props.currentRoom.archive === false && (
-                <div className="pointer ml3-ns ml1">
+              </div>
+              <div className="flex">
+                <div className="pointer">
                   <Popover
                     minimal={true}
+                    // isOpen={true}
                     position={Position.BOTTOM}
                     popoverClassName="bg-white pa3"
                     content={
                       <div>
-                        <div
-                          className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
-                          onClick={() => {
-                            window.open('https://8x8.vc', '_blank');
-                          }}
-                        >
-                          <h4 className="mv0">Basic</h4>
-                          <h5 className="mv0">
-                            with our partner 8x8
+                        {props.currentRoom.archive ? (
+                          <>
+                            {projectPermit(props.companyRole) ? (
+                              <h5
+                                className="ma0 pointer bp3-popover-dismiss"
+                                onClick={async () => {
+                                  await props.archiveRoom(
+                                    {
+                                      archive: false,
+                                    },
+                                    props.currentRoom._id,
+                                  );
+                                }}
+                              >
+                                Activate Room
+                              </h5>
+                            ) : (
+                                <h5 className="ma0 pointer bp3-popover-dismiss gray">
+                                  No settings
+                                </h5>
+                              )}
+                          </>
+                        ) : (
+                            <>
+                              <h5 className="gray ma0 mb2 pointer bp3-popover-dismiss">
+                                Mute Conversation
                           </h5>
-                        </div>
-                        <div
-                          className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
-                          onClick={() => {
-                            window.open('https://8x8.vc', '_blank');
-                          }}
-                        >
-                          <h4 className="mv0">Basic</h4>
-                          <h5 className="mv0">
-                            with our partner 8x8
-                          </h5>
-                        </div>
-                        <div
-                          className="br3 ba b--gray gray pointer bp3-popover-dismiss mt2 pa2 tc"
-                          onClick={() =>
-                            setShowVideoCallDialog(
-                              !showVideoCallDialog,
-                            )
-                          }
-                        >
-                          <h4 className="mv0 c-tigrowViolet">
-                            Enterprise
-                          </h4>
-                        </div>
+                              {projectPermit(props.companyRole) && (
+                                <h5
+                                  className="red ma0 pointer bp3-popover-dismiss"
+                                  onClick={async () => {
+                                    await props.archiveRoom(
+                                      {
+                                        archive: true,
+                                      },
+                                      props.currentRoom._id,
+                                    );
+                                  }}
+                                >
+                                  Archive Room
+                                </h5>
+                              )}
+                            </>
+                          )}
                       </div>
                     }
                     target={
                       <div>
                         <img
                           className="grow"
-                          src={videoCallIcon}
+                          src={settingsIcon}
                           width="30px"
                           height="30px"
                         />
@@ -218,22 +234,83 @@ export const ChatLayoutComponent = (
                     }
                   />
                 </div>
+                {projectPermit(props.companyRole) &&
+                  props.currentRoom.archive === false ? (
+                    <div
+                      className="pointer ml3-ns ml1"
+                      onClick={() =>
+                        setShowMemberFormDialog(!showMemberFormDialog)
+                      }
+                    >
+                      <img
+                        className="grow"
+                        src={addMemberIcon}
+                        width="30px"
+                        height="30px"
+                      />
+                    </div>
+                  ) : null}
+                {props.currentRoom.archive === false && (
+                  <div className="pointer ml3-ns ml1">
+                    <Popover
+                      minimal={true}
+                      position={Position.BOTTOM}
+                      popoverClassName="bg-white pa3"
+                      content={
+                        <div>
+                          <div
+                            className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
+                            onClick={() => {
+                              window.open('https://8x8.vc', '_blank');
+                            }}
+                          >
+                            <h4 className="mv0">Basic</h4>
+                            <h5 className="mv0">
+                              with our partner 8x8
+                          </h5>
+                          </div>
+                          <div
+                            className="br3 ba b--gray gray pointer bp3-popover-dismiss mt2 pa2 tc"
+                            onClick={() =>
+                              setShowVideoCallDialog(
+                                !showVideoCallDialog,
+                              )
+                            }
+                          >
+                            <h4 className="mv0 c-tigrowViolet">
+                              Enterprise
+                          </h4>
+                          </div>
+                        </div>
+                      }
+                      target={
+                        <div>
+                          <img
+                            className="grow"
+                            src={videoCallIcon}
+                            width="30px"
+                            height="30px"
+                          />
+                        </div>
+                      }
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+            {/* chat heading ends */}
+            <MessageList />
+            {props.currentRoom.archive === false ? (
+              <SendMessageForm />
+            ) : (
+                <div className="flex justify-center items-center h4">
+                  <h3 className="fw5 f3">The Room is archived</h3>
+                </div>
               )}
-            </div>
           </div>
-          {/* chat heading ends */}
-          <MessageList />
-          {props.currentRoom.archive === false ? (
-            <SendMessageForm />
-          ) : (
-            <div className="flex justify-center items-center h4">
-              <h3 className="fw5 f3">The Room is archived</h3>
-            </div>
-          )}
-        </div>
-      ) : (
-        <h2>Please, select a room !!</h2>
-      )}
+        ) : (
+          <h2>Please, select a room !!</h2>
+        )}
 
       {showVideoCallDialog && (
         <Dialog
