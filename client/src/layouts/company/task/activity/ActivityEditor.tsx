@@ -40,10 +40,10 @@ export const ActivityEditorPageComponent = (
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="pl4">
+            <div>
               <SubmitError errorMessage={submitError} />
             </div>
-            <div className="pl4 pt2 w-100 flex">
+            <div className="pl2 pt2 w-100 flex">
               <Field<string>
                 name="text"
                 validate={required}

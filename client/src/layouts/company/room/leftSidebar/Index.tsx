@@ -10,10 +10,11 @@ import { InputGroupField } from 'components/fields/InputGroupField';
 
 import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
+import { isMobileOnly } from 'react-device-detect';
 
 interface RoomSideBarComponentProps {
   companyRole?: string;
-  isOpen: boolean;
+  isOpen?: boolean;
 }
 interface RoomSideBarInternalProps
   extends RoomSideBarComponentProps,
@@ -27,11 +28,11 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   return (
     <>
       <div
-        className={`flex flex-column h-100 t-25-a pt4 ${
+        className={`flex flex-column h-100 t-25-a pt4-ns pt2 mh2 mh0-ns ${
           props.isOpen ? 'db' : 'dn overflow-hidden'
         }`}
       >
-        <div className="flex justify-between items-center ph3">
+        <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
           {props.companyRole && projectPermit(props.companyRole) ? (
             <span
@@ -47,7 +48,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
             </span>
           ) : undefined}
         </div>
-        <div className="flex items-center ph3 relative">
+        <div className="flex items-center ph3-ns relative">
           <InputGroupField
             id="companyName"
             value={searchKeyword}
@@ -73,7 +74,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           />
         </div>
         <div className="flex-grow-1 overflow-y-auto">
-          {props.isOpen ? <RoomList /> : null}
+          {props.isOpen || isMobileOnly ? <RoomList /> : null}
         </div>
       </div>
       {showDialog && (

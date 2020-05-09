@@ -148,7 +148,7 @@ const TaskManagementLayoutComponent = (
                           props.columns && props.columns.length > 0
                             ? 'dib'
                             : 'tc'
-                        } pr2  w-23-l w-50-m br3`}
+                        } pr2  w-23-l w-50-m w-50 br3`}
                         style={{ margin: '0 auto' }}
                       >
                         <Button
