@@ -82,11 +82,10 @@ export const isAuthenticate = () => {
   }
 };
 
-export const projectPermit = (companyRole: string, projectRole?: string): boolean => {
+export const projectPermit = (companyRole: string): boolean => {
   if (
     isEqual(companyRole, 'superAdmin') ||
-    isEqual(projectRole, 'admin') ||
-    isEqual(projectRole, 'projectModerator')
+    isEqual(companyRole, 'admin')
   ) {
     return true;
   } else {

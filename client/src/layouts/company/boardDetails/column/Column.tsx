@@ -35,6 +35,7 @@ interface ColumnProps {
 interface ColumnInternalProps extends ColumnProps {
   loading?: boolean;
   company?: ICompany;
+  optionalRole?: any;
   projectRole?: string;
   createTask: (task: any) => void;
   currentBoard?: TaskBoard;
@@ -46,8 +47,6 @@ const ColumnComponent = (props: ColumnInternalProps) => {
   );
   const [showTaskFormDialog, setShowTaskFormDialog] = useState(false);
   const [showTaskInput, setShowTaskInput] = useState(false);
-
-    console.log(props.projectRole);
 
   const onSubmit = async (values: any) => {
     const modifiedTask = {
@@ -92,7 +91,12 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 }
               />
               {props.company &&
-              projectPermit(props.company.role, props.projectRole) === true ? (
+              (projectPermit(props.company.role) ||
+                (
+                    props.projectRole === "projectModerator" && 
+                    props.optionalRole.includes("createUpdateBoard")
+                )
+              ) && (
                 <Popover
                   className="w-10"
                   content={
@@ -118,10 +122,15 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     />
                   }
                 />
-              ) : undefined}
+              ) }
             </div>
             {props.company &&
-            projectPermit(props.company.role, props.projectRole) === true ? (
+            (projectPermit(props.company.role) ||
+              (
+                props.projectRole === "projectModerator" && 
+                props.optionalRole.includes("createUpdateBoard")
+              )
+            ) && (
               <div
                 className="overflow-hidden ph2 pt2"
                 style={{
@@ -141,7 +150,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   onClick={() => setShowTaskInput(!showTaskInput)}
                 />
               </div>
-            ) : undefined}
+            )}
             <div>
               {showTaskInput && (
                 <div className="overflow-hidden">
@@ -298,6 +307,7 @@ const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
     projectRole: state.projectReducer.projectRole.projects.role,
+    optionalRole: state.projectReducer.projectRole.projects.project.optionalRole,
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
   };
 };
