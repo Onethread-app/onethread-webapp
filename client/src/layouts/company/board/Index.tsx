@@ -14,6 +14,10 @@ import { find } from 'lodash';
 import { projectRules } from '../project/settings/projectrules';
 
 import addIcon from '../../../resources/images/addIcon.png';
+import { MobileView, isMobileOnly } from 'react-device-detect';
+import { NavLink } from 'react-router-dom';
+import { User } from 'stores/user/Reducer';
+import { NavbarCompany } from 'components/NavbarCompany';
 
 interface IBoardCardComponent {
   boardList: TaskBoard[];
@@ -48,10 +52,10 @@ const BoardCard = withRouter(
               style={{
                 borderLeft: `5px solid 
 							${
-                find(Color, ['code', board.color])
-                  ? find(Color, ['code', board.color])!.value
-                  : 'white'
-              }`, // TODO use dictionary
+                  find(Color, ['code', board.color])
+                    ? find(Color, ['code', board.color])!.value
+                    : 'white'
+                  }`, // TODO use dictionary
                 paddingLeft: '20px',
                 marginLeft: '-2px',
                 borderRadius: '3px',
@@ -68,29 +72,6 @@ const BoardCard = withRouter(
               >
                 {board.name}
               </h3>
-              {/* <Popover
-							content={
-								<Menu>
-									<MenuItem
-										text="Edit"
-									// onClick={(e: any) => setShowColumnFormDialog(true)}
-									/>
-								</Menu>
-							}
-							target={
-								<Button
-									style={{
-										transform: 'rotate(90deg)',
-										OTransform: 'rotate(90deg)',
-										msTransform: 'rotate(90deg)',
-										WebkitTransform: 'rotate(90deg)'
-									}}
-									icon="more"
-									minimal={true}
-									small={true}
-								/>
-							}
-						/> */}
             </div>
             <div
               className="flex pt3 pr3"
@@ -99,14 +80,6 @@ const BoardCard = withRouter(
                 paddingLeft: '20px',
               }}
             >
-              {/* <div>
-							<p className="mb0 ws-break" style={{ fontSize: '0.7rem' }}>
-								Total task
-							</p>
-							<p className="fw8">
-								0
-							</p>
-						</div> */}
               <div>
                 <p
                   className="mb0 ws-break"
@@ -134,6 +107,8 @@ interface IBoardListViewInternalProps {
   getSelectedBoard: (boardId: string | undefined) => Promise<number>;
   role: string;
   optionalRole: any;
+  user: User;
+  project: any;
 }
 
 const TaskPageComponent = (
@@ -157,115 +132,164 @@ const TaskPageComponent = (
   );
 
   return (
-    <div className="h-100">
-      <div className="br3 bg-white h-100 pa4-ns pa2 cf flex flex-column">
-        <div className="pl2 flex-ns justify-between">
-          <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
-            Board
-          </h3>
-          <div className="flex">
-            <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
-              Filter By
+    <>
+      <MobileView>
+        <NavbarCompany title="Board" />
+        <div className="flex justify-between mt5">
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.name}/project/${props.project._id}`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Preface</small>
+          </NavLink>
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.name}/project/${props.project._id}/room`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Room</small>
+          </NavLink>
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.name}/project/${props.project._id}/board`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Board</small>
+          </NavLink>
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.name}/project/${props.project._id}/team`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Team</small>
+          </NavLink>
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.name}/project/${props.project._id}/settings`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Settings</small>
+          </NavLink>
+        </div>
+      </MobileView>
+      <div className="h-100">
+        <div className="br3 bg-white h-100 pa4-ns pa2 cf flex flex-column">
+          <div className="pl2 flex-ns justify-between">
+            {isMobileOnly ? undefined : <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
+              Board
+          </h3>}
+            <div className="flex">
+              <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
+                Filter By
             </p>
-            <div className="mt2" style={{ width: '200px' }}>
-              <HTMLSelect
-                fill={true}
-                minimal={true}
-                onChange={(event: any) => {
-                  setDepartment(event.currentTarget.value);
-                }}
-                style={{
-                  outline: 'none',
-                  border: '1px solid #E1E1E1',
-                  fontWeight: 600,
-                  textAlignLast: 'center',
-                }}
-              >
-                <option selected value="">
-                  All
+              <div className="mt2" style={{ width: '200px' }}>
+                <HTMLSelect
+                  fill={true}
+                  minimal={true}
+                  onChange={(event: any) => {
+                    setDepartment(event.currentTarget.value);
+                  }}
+                  style={{
+                    outline: 'none',
+                    border: '1px solid #E1E1E1',
+                    fontWeight: 600,
+                    textAlignLast: 'center',
+                  }}
+                >
+                  <option selected value="">
+                    All
                 </option>
-                {props.company.departments
-                  ? props.company.departments.map((d) => (
+                  {props.company.departments
+                    ? props.company.departments.map((d) => (
                       <option value={d._id}>{d.name}</option>
                     ))
-                  : undefined}
-              </HTMLSelect>
+                    : undefined}
+                </HTMLSelect>
+              </div>
             </div>
           </div>
-        </div>
-        <p className="pl2 mt3" style={{ color: '#6B6B6B' }}>
-          My Boards
+          <p className="pl2 mt3" style={{ color: '#6B6B6B' }}>
+            My Boards
         </p>
-        <div className="overflow-auto">
-          {loading === false ? (
-            props.boardList.length > 0 ? (
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns:
-                    'repeat(auto-fit, minmax(200px, 270px))',
-                  gridTemplateRows: 'repeat(2, 150px)',
-                }}
-              >
-                {/* TODO make one */}
-                {department ? (
-                  <BoardCard
-                    boardList={boards}
-                    company={props.company}
-                    getSelectedBoard={props.getSelectedBoard}
-                  />
-                ) : (
-                  <BoardCard
-                    boardList={props.boardList}
-                    company={props.company}
-                    getSelectedBoard={props.getSelectedBoard}
-                  />
-                )}
-              </div>
+          <div className="overflow-auto">
+            {loading === false ? (
+              props.boardList.length > 0 ? (
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns:
+                      'repeat(auto-fit, minmax(200px, 270px))',
+                    gridTemplateRows: 'repeat(2, 150px)',
+                  }}
+                >
+                  {/* TODO make one */}
+                  {department ? (
+                    <BoardCard
+                      boardList={boards}
+                      company={props.company}
+                      getSelectedBoard={props.getSelectedBoard}
+                    />
+                  ) : (
+                      <BoardCard
+                        boardList={props.boardList}
+                        company={props.company}
+                        getSelectedBoard={props.getSelectedBoard}
+                      />
+                    )}
+                </div>
+              ) : (
+                  <p>No boards</p>
+                )
             ) : (
-              <p>No boards</p>
-            )
-          ) : (
-            <Loading />
-          )}
-          <div>
-            {props.role &&
-            (props.role === 'admin' ||
-              projectRules(props.optionalRole)[props.role].includes(
-                'createUpdateBoard',
-              )) ? (
-              <img
-                onClick={() =>
-                  setShowTaskBoardDialog(!showTaskBoardDialog)
-                }
-                src={addIcon}
-                className={`fixed pointer ${
-                  showTaskBoardDialog ? 'dn' : 'db'
-                }`}
-                style={{
-                  bottom: '5rem',
-                  right: '7rem',
-                  width: '5rem',
-                  boxShadow: '0px 6px 6px #00000029',
-                  borderRadius: '50%',
-                }}
-              />
-            ) : undefined}
+                <Loading />
+              )}
+            <div>
+              {props.role &&
+                (props.role === 'admin' ||
+                  projectRules(props.optionalRole)[props.role].includes(
+                    'createUpdateBoard',
+                  )) ? (
+                  <img
+                    onClick={() =>
+                      setShowTaskBoardDialog(!showTaskBoardDialog)
+                    }
+                    src={addIcon}
+                    className={`fixed pointer addButton ${
+                      showTaskBoardDialog ? 'dn' : 'db'
+                      }`}
+                    style={{
+                      boxShadow: '0px 6px 6px #00000029',
+                      borderRadius: '50%',
+                    }}
+                  />
+                ) : undefined}
+            </div>
           </div>
+          {showTaskBoardDialog && (
+            <RightSidebar
+              onClose={() =>
+                setShowTaskBoardDialog(!showTaskBoardDialog)
+              }
+            >
+              <FormBoard
+                setShowTaskBoardDialog={setShowTaskBoardDialog}
+              />
+            </RightSidebar>
+          )}
         </div>
-        {showTaskBoardDialog && (
-          <RightSidebar
-            onClose={() =>
-              setShowTaskBoardDialog(!showTaskBoardDialog)
-            }
-          >
-            <FormBoard
-              setShowTaskBoardDialog={setShowTaskBoardDialog}
-            />
-          </RightSidebar>
-        )}
       </div>
-    </div>
+    </>
   );
 };
 
@@ -279,6 +303,8 @@ const mapStateToProps = (state: any) => {
     optionalRole:
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.project.optionalRole,
+    user: state.userReducer.user,
+    project: state.projectReducer.projectDetails,
   };
 };
 

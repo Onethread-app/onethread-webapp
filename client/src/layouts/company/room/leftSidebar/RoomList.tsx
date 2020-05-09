@@ -22,7 +22,7 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
   return (
     <>
       <main className="mw6" id="roomList">
-        <ul className="list pa0 mh2">
+        <ul className="list pa0 mh2-ns">
           {props.rooms && props.rooms.length ? (
             props.rooms.map((room: IRoom, i: number, arr: any) => {
               return (

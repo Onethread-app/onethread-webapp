@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Icon } from '@blueprintjs/core';
+import { Icon, Drawer, Button } from '@blueprintjs/core';
 import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
 import { connect, useDispatch } from 'react-redux';
@@ -16,6 +16,7 @@ import {
 } from 'stores/room/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Pusher from 'pusher-js';
+import { isMobileOnly, CustomView, MobileView } from 'react-device-detect';
 import { CURRENT_ROOM } from 'stores/room/Types';
 
 export interface RoomQueries {
@@ -26,6 +27,7 @@ export interface RoomQueries {
 interface RoomPageComponentProps extends RouteComponentProps {
   currentRoom: IRoomReducer['currentRoom'];
   companyId: string;
+  companyName: string;
   projectId: string;
   rooms: IRoom[];
   getRooms: () => void;
@@ -47,6 +49,7 @@ interface RoomPageComponentProps extends RouteComponentProps {
     skip?: number,
   ) => void;
   pusherInstance: Pusher | undefined;
+  setShowDialog?: (val: boolean) => void;
 }
 
 const RoomPageComponent = (props: RoomPageComponentProps) => {
@@ -77,7 +80,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
 
   // get all rooms
   useEffect(() => {
-    if (props.companyId && props.projectId) {
+    if ( !isMobileOnly && props.companyId && props.projectId) {
       load(props.getRooms);
     }
   }, [props.companyId, props.projectId]);
@@ -113,59 +116,95 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     }
   }, [queries.roomId, props.pusherInstance, props.rooms]);
 
+  const [showDialog, setShowDialog] = useState(false);
+
   return (
-    <div className="flex h-100 w-100">
-      {queries.view === 'default' && (
-        <div
-          className="overflow-hidden t-25-a bg-white br b--tigrowLightGray-1"
-          style={{
-            borderBottomLeftRadius: '0.5rem',
-            width: isOpenLeftSidebar ? '220px' : '16px',
-          }}
-          // TODO: mouse active
-          // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
-          // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
-        >
-          <RoomSideBar isOpen={isOpenLeftSidebar} />
+    <>
+      <div
+        className={`flex h-100 w-100 ${isMobileOnly ? 'vh-100' : ''}`}
+      >
+        <CustomView condition={!isMobileOnly}>
+          {queries.view === 'default' && (
+            <div
+              className="overflow-hidden t-25-a bg-white br b--tigrowLightGray-1 h-100"
+              style={{
+                borderBottomLeftRadius: '0.5rem',
+                width: isOpenLeftSidebar ? '220px' : '16px',
+              }}
+            // TODO: mouse active
+            // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
+            // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
+            >
+              <RoomSideBar isOpen={isOpenLeftSidebar} />
+            </div>
+          )}
+        </CustomView>
+        <div className="relative flex justify-center items-center flex-grow-1">
+          <CustomView condition={!isMobileOnly}>
+            {queries.view === 'default' && (
+              <Icon
+                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
+                icon={isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'}
+                iconSize={17}
+                onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)}
+              />
+            )}
+          </CustomView>
+          <MobileView>
+            <Button
+              className="absolute top-0 bp3-minimal outline-0 shadow-0 underline"
+              onClick={() => {
+                // tslint:disable-next-line: no-unused-expression
+                props.setShowDialog && props.setShowDialog(false);
+                props.history.push(`/company/${props.companyName}/project/${props.projectId}/room`);
+              }}
+            >
+              Back
+            </Button>
+          </MobileView>
+          {isEmpty(props.currentRoom.name) === false &&
+            isEmpty(props.currentRoom._id) === false &&
+            queries.view === 'default' && (
+              <Icon
+                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
+                icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
+                iconSize={17}
+                onClick={() => {
+                  setIsOpenRightSidebar(!isOpenRightSidebar);
+                  setShowDialog(!showDialog);
+                }}
+              />
+            )}
+          <ChatLayout />
         </div>
-      )}
-      <div className="relative flex justify-center items-center flex-grow-1">
-        {queries.view === 'default' && (
-          <Icon
-            className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
-            icon={isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'}
-            iconSize={17}
-            onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)}
-          />
-        )}
         {isEmpty(props.currentRoom.name) === false &&
           isEmpty(props.currentRoom._id) === false &&
           queries.view === 'default' && (
-            <Icon
-              className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
-              icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
-              iconSize={17}
-              onClick={() =>
-                setIsOpenRightSidebar(!isOpenRightSidebar)
-              }
-            />
+            <div
+              className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
+              style={{
+                borderBottomRightRadius: '0.5rem',
+                width: isOpenRightSidebar ? isMobileOnly ? '16px' : '400px' : '16px',
+              }}
+            >
+              {isMobileOnly ?
+                <Drawer
+                  onClose={() => setShowDialog(!showDialog)}
+                  isOpen={showDialog}
+                  canOutsideClickClose={false}
+                  style={{ width: '100%' }}
+                  title=""
+                >
+                  <div>
+                    <RoomRightSidebar isOpen={isOpenRightSidebar} />
+                  </div>
+                </Drawer>
+                :
+                <RoomRightSidebar isOpen={isOpenRightSidebar} />}
+            </div>
           )}
-        <ChatLayout />
       </div>
-      {isEmpty(props.currentRoom.name) === false &&
-        isEmpty(props.currentRoom._id) === false &&
-        queries.view === 'default' && (
-          <div
-            className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
-            style={{
-              borderBottomRightRadius: '0.5rem',
-              width: isOpenRightSidebar ? '400px' : '16px',
-            }}
-          >
-            <RoomRightSidebar isOpen={isOpenRightSidebar} />
-          </div>
-        )}
-    </div>
+    </>
   );
 };
 
@@ -176,6 +215,7 @@ const mapStateToProps = (state: any) => {
     projectId: state.projectReducer.projectDetails._id,
     rooms: state.roomReducer.rooms,
     pusherInstance: state.pusherReducer.pusherInstance,
+    companyName: state.companyReducer.currentCompany.name
   };
 };
 
