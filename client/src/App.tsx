@@ -36,13 +36,22 @@ import { ProjectSettingsPage } from 'layouts/company/project/settings/Index';
 import { ProjectTeamPage } from 'layouts/company/project/team/Index';
 import { isMobileOnly } from 'react-device-detect';
 import { RoomPageMobile } from 'layouts/company/room/IndexMobile';
-
+import firebase from './firebase';
 const PrivateRoute = (props: {
   component: any;
   path: string;
   exact: boolean;
 }) => {
+  const getTokenFromGCM = () => {
+    const messaging = firebase.messaging();
+    messaging
+      .requestPermission()
+      .then(() => messaging.getToken())
+      .then((token: string) => console.log(token))
+      .catch((err: string) => console.log(err));
+  };
   useEffect(() => {
+    getTokenFromGCM();
     ReactGA.initialize('UA-164759422-1', {
       debug: true,
       gaOptions: {
@@ -184,7 +193,7 @@ export const App = () => (
       <PrivateRoute
         path="/company/:cname/project/:projectId/room"
         exact={true}
-        component={ isMobileOnly ? RoomPageMobile : RoomPage}
+        component={isMobileOnly ? RoomPageMobile : RoomPage}
       />
       <PrivateRoute
         path="/company/:cname/project/:projectId/board"
