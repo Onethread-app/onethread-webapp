@@ -89,7 +89,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   return (
     <>
       <div>
-        <h3 className="f3">My Projects</h3>
         <div className="overflow-auto">
           <div
             style={{
@@ -233,7 +232,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
           </div>
           {props.company.role !== 'employee' && (
             <div>
-              <h3 className="f3">Archieved Projects</h3>
+              <h3 className="f3-ns f4">Archieved Projects</h3>
               <div
                 style={{
                   display: 'grid',

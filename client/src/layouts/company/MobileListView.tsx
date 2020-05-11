@@ -71,7 +71,7 @@ export const ListViewComponent = (
                 className="db w2 h2 br-100 ba b--white-90 "
               />
             </div>
-            <div className="dtc v-mid pl3">
+            <div className="dtc v-mid pl3 pt2">
               <h1 className="f6 white ma0">
                 {`${props.user.firstName} ${props.user.lastName}`}
               </h1>
@@ -122,7 +122,7 @@ export const ListViewComponent = (
                       props.currentCompany === c.company._id
                         ? 'bg-black-10'
                         : ''
-                    } mt1 pointer bp3-popover-dismiss`}
+                      } mt1 pointer bp3-popover-dismiss`}
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -135,29 +135,31 @@ export const ListViewComponent = (
                         });
                         props.history.push(
                           `/company/${
-                            (response as any).data.company.name
+                          (response as any).data.company.name
                           }/dashboard`,
                         );
                       }
                     }}
                   >
-                    <img
-                      src={
-                        c.company.logo ? c.company.logo : CompanyIcon
-                      }
-                      className="v-mid dib br-100"
-                      alt="user"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        objectFit: 'cover',
-                      }}
-                    />
-                    <div className="dtc v-mid pl3">
-                      <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">
-                        {c.company.name}{' '}
-                      </h1>
-                      <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
+                    <div className="flex justify-between">
+                      <img
+                        src={
+                          c.company.logo ? c.company.logo : CompanyIcon
+                        }
+                        className="v-mid dib br-100 w-10"
+                        alt="user"
+                        style={{
+                          width: '32px',
+                          height: '32px',
+                          objectFit: 'cover',
+                        }}
+                      />
+                      <div className="dtc v-mid pl3 w-90">
+                        <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">
+                          {c.company.name}{' '}
+                        </h1>
+                        <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
+                      </div>
                     </div>
                   </article>
                 ),

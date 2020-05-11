@@ -19,7 +19,6 @@ import { CompanySignupForm } from '../layouts/company/Form';
 import Notification from '../layouts/company/notification/index';
 import { companySubscriber } from '../layouts/company/notification/subscribers';
 import { notificationType } from '../layouts/company/notification/rule';
-// import { store } from 'Store';
 import { readNotification } from '../stores/notifications/Action';
 import { Badge } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
@@ -88,7 +87,6 @@ const NavbarTopComponent = (
             <Popover
               popoverClassName="bg-white"
               position={Position.BOTTOM}
-              // inline={true}
               content={
                 <div
                   style={{ maxHeight: '300px', width: '500px' }}

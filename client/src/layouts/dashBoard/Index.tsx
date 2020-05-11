@@ -1,7 +1,7 @@
 import { User } from 'stores/user/Reducer';
 import React, { useState, useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
-import { Card, Dialog, Navbar, Drawer } from '@blueprintjs/core';
+import { Card, Dialog } from '@blueprintjs/core';
 import addIcon from '../../resources/images/addIcon.png';
 import { AnnouncementEditor } from './announcementEditor';
 import { tigrowApi } from 'config';
@@ -10,7 +10,6 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
 import { makeStyles } from '@material-ui/core/styles';
-// import { Text } from '@blueprintjs/core';
 
 import ExpansionPanel from '@material-ui/core/ExpansionPanel';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
@@ -23,10 +22,8 @@ import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
 } from 'stores/company/Types';
-import { MobileView } from 'react-device-detect';
-import { MobileListView } from 'layouts/company/MobileListView';
-import user from './../../resources/images/profilePhoto.svg';
 import moment from 'moment';
+import { NavbarCompany } from 'components/NavbarCompany';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -56,7 +53,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   ] = useState(false);
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
-  const [showDialog, setShowDialog] = useState(false);
   const dispatch = useDispatch();
   const classes = useStyles();
   useEffect(() => {
@@ -89,30 +85,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     <>
       {loading === false ? (
         <>
-          <MobileView>
-            <Navbar
-              fixedToTop
-              className="flex justify-between items-center shadow-4"
-              style={{ height: '55px' }}
-            >
-              <h1 className="f3">My Dashboard</h1>
-              <img
-                src={
-                  props.user.profileImage
-                    ? props.user.profileImage
-                    : user
-                }
-                className="dim v-mid dib br-100 pointer"
-                style={{
-                  width: '2rem',
-                  height: '2rem',
-                  objectFit: 'cover',
-                }}
-                alt="user"
-                onClick={() => setShowDialog(true)}
-              />
-            </Navbar>
-          </MobileView>
+          <NavbarCompany title="My Dashboard" />
           <div className="mh4-ns mh2 mt5 mt0-ns pb6 pb0-ns">
             <div className="flex-ns justify-between">
               <Card className="w-25-ns w-90 ma2">
@@ -136,52 +109,51 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               <div className="w-50-l ma2">
                 <h1 className="f5">Company Announcement</h1>
                 {props.company.announce &&
-                props.company.announce.length > 0 ? (
-                  props.company.announce.map((announcement: any) => (
-                    <div className="mt2">
-                      <ExpansionPanel>
-                        <ExpansionPanelSummary
-                          expandIcon={<ExpandMoreIcon />}
-                          aria-controls="panel1a-content"
-                          id="panel1a-header"
-                        >
-                          <Paper
-                            className={classes.heading}
-                            elevation={0}
+                  props.company.announce.length > 0 ? (
+                    props.company.announce.map((announcement: any) => (
+                      <div className="mt2">
+                        <ExpansionPanel>
+                          <ExpansionPanelSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
                           >
-                            <Typography className="">
-                              {`From ${
-                                announcement.memberId &&
-                                announcement.memberId.designations
-                                  .length > 0
-                                  ? announcement.memberId
+                            <Paper
+                              className={classes.heading}
+                              elevation={0}
+                            >
+                              <Typography className="">
+                                {`From ${
+                                  announcement.memberId &&
+                                    announcement.memberId.designations
+                                      .length > 0
+                                    ? announcement.memberId
                                       .designations[0].division
-                                  : 'Admin'
-                              }`}
-                            </Typography>
-                          </Paper>
-                          <Paper
-                            className={classes.secondaryHeading}
-                            elevation={0}
-                          >
-                            {/* <Typography className="">Date</Typography> */}
-                            <Typography className="">
-                              {announcement.createdAt &&
-                                moment(
-                                  announcement.createdAt,
-                                ).calendar()}
-                            </Typography>
-                          </Paper>
-                        </ExpansionPanelSummary>
-                        <ExpansionPanelDetails>
-                          <Typography>{announcement.text}</Typography>
-                        </ExpansionPanelDetails>
-                      </ExpansionPanel>
-                    </div>
-                  ))
-                ) : (
-                  <small>No announcements.</small>
-                )}
+                                    : 'Admin'
+                                  }`}
+                              </Typography>
+                            </Paper>
+                            <Paper
+                              className={classes.secondaryHeading}
+                              elevation={0}
+                            >
+                              <Typography className="">
+                                {announcement.createdAt &&
+                                  moment(
+                                    announcement.createdAt,
+                                  ).calendar()}
+                              </Typography>
+                            </Paper>
+                          </ExpansionPanelSummary>
+                          <ExpansionPanelDetails>
+                            <Typography>{announcement.text}</Typography>
+                          </ExpansionPanelDetails>
+                        </ExpansionPanel>
+                      </div>
+                    ))
+                  ) : (
+                    <small>No announcements.</small>
+                  )}
               </div>
             </div>
           </div>
@@ -200,8 +172,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           </div>
         </>
       ) : (
-        <Loading />
-      )}
+          <Loading />
+        )}
       {showAnnouncementDialog && (
         <Dialog
           onClose={() =>
@@ -217,21 +189,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             />
           </div>
         </Dialog>
-      )}
-      {showDialog && (
-        <Drawer
-          onClose={() => setShowDialog(!showDialog)}
-          isOpen={showDialog}
-          canOutsideClickClose={false}
-          style={{ width: '70%' }}
-        >
-          <div>
-            <MobileListView
-              showDialog={showDialog}
-              setShowDialog={setShowDialog}
-            />
-          </div>
-        </Drawer>
       )}
     </>
   );
