@@ -5,6 +5,7 @@ import { IRoomReducer, IRoom } from 'stores/room/Reducer';
 import {
   getRooms
 } from 'stores/room/Actions';
+import { getSingleProject, setCurrentProjectId, getRoleForProject } from 'stores/project/Actions';
 import { withRouter, RouteComponentProps, NavLink } from 'react-router-dom';
 import Pusher from 'pusher-js';
 import { NavbarCompany } from 'components/NavbarCompany';
@@ -24,6 +25,9 @@ interface RoomPageComponentProps extends RouteComponentProps {
   pusherInstance: Pusher | undefined;
   company: ICompany;
   project: any;
+  getSingleProject: (pid: string) => void;
+  getRoleForProject: (pid: string) => void;
+  setCurrentProjectId: (pid: string) => void;
 }
 
 const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
@@ -36,6 +40,10 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
   useEffect(() => {
     if (props.companyId && props.projectId) {
       load(props.getRooms);
+    }else{
+      props.getSingleProject(props.match.params['projectId']);
+      props.getRoleForProject(props.match.params['projectId']);
+      props.setCurrentProjectId(props.match.params['projectId']);
     }
   }, [props.companyId, props.projectId]);
 
@@ -113,5 +121,8 @@ const mapStateToProps = (state: any) => {
 };
 
 export const RoomPageMobile = connect(mapStateToProps, {
-  getRooms
+  getRooms,
+  getSingleProject,
+  getRoleForProject,
+  setCurrentProjectId
 })(withRouter(RoomPageMobileComponent));

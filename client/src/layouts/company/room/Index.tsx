@@ -14,6 +14,7 @@ import {
   getRoomDiscussions,
   updateLastSeen,
 } from 'stores/room/Actions';
+import { getSingleProject, setCurrentProjectId, getRoleForProject } from 'stores/project/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Pusher from 'pusher-js';
 import { isMobileOnly, CustomView, MobileView } from 'react-device-detect';
@@ -50,9 +51,12 @@ interface RoomPageComponentProps extends RouteComponentProps {
   ) => void;
   pusherInstance: Pusher | undefined;
   setShowDialog?: (val: boolean) => void;
+  getSingleProject: (pid: string) => void;
+  getRoleForProject: (pid: string) => void;
+  setCurrentProjectId: (pid: string) => void;
 }
 
-const RoomPageComponent = (props: RoomPageComponentProps) => {
+const RoomPageComponent = (props: RoomPageComponentProps & RouteComponentProps) => {
   const [isOpenLeftSidebar, setIsOpenLeftSidebar] = useState(true);
   const [isOpenRightSidebar, setIsOpenRightSidebar] = useState(false);
   const [queries, setQueries] = useState<RoomQueries>({
@@ -82,6 +86,10 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
   useEffect(() => {
     if ( !isMobileOnly && props.companyId && props.projectId) {
       load(props.getRooms);
+    }else{
+      props.getSingleProject(props.match.params['projectId']);
+      props.getRoleForProject(props.match.params['projectId']);
+      props.setCurrentProjectId(props.match.params['projectId']);
     }
   }, [props.companyId, props.projectId]);
 
@@ -226,4 +234,7 @@ export const RoomPage = connect(mapStateToProps, {
   getRoomSharedFiles,
   getRoomDiscussions,
   updateLastSeen,
+  getSingleProject,
+  getRoleForProject,
+  setCurrentProjectId,
 })(withRouter(RoomPageComponent));
