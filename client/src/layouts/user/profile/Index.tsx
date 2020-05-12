@@ -7,8 +7,29 @@ import { BasicInfoDetailsView } from './BasicInfoDetailsView';
 import { Tabs, Tab } from '@blueprintjs/core';
 import { User } from 'stores/user/Reducer';
 import { CoverPhotoView } from './CoverPhotoView';
+import firebase from '../../../firebase';
+import axios from 'axios';
+import { tokenConfig } from 'stores/UtilsActions';
 
 export const LandingPage = (props: { user: User }) => {
+  const getTokenFromGCM = () => {
+    const messaging = firebase.messaging();
+    const headers = tokenConfig();
+    messaging
+      .requestPermission()
+      .then(() => messaging.getToken())
+      .then((token: string) =>
+        axios.post(
+          'http://72ccc083.ngrok.io/api/v1/notifications/webpush',
+          { token },
+          headers,
+        ),
+      )
+      .catch((err: string) => console.log(err));
+  };
+  React.useEffect(() => {
+    getTokenFromGCM();
+  }, []);
   return (
     <>
       <div
