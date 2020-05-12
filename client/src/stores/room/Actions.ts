@@ -1,22 +1,22 @@
 import { isEqual } from 'lodash';
 import { tokenConfig } from '../UtilsActions';
 import {
-  CREATE_ROOM_FROM_SERVER,
-  CREATE_ROOM_ERROR,
+  // CREATE_ROOM_FROM_SERVER,
+  // CREATE_ROOM_ERROR,
   GET_ROOM_ERROR,
   LOADING_ROOM,
   ADD_MEMBER_IN_ROOM_ERROR,
   ADD_MEMBER_IN_ROOM,
-  GET_ROOM_MEMBERS,
-  GET_ROOM_MEMBERS_ERROR,
+  // GET_ROOM_MEMBERS,
+  // GET_ROOM_MEMBERS_ERROR,
   CLEAR_ROOMS_ERROR,
-  SEND_MESSAGE,
-  SEND_MESSAGE_ERROR,
-  GET_ROOM_MESSAGES,
-  GET_ROOM_MESSAGES_ERROR,
-  FILE_UPLOAD,
-  ALL_MESSAGE_RECEIVED,
-  GET_ROOMS,
+  // SEND_MESSAGE,
+  // SEND_MESSAGE_ERROR,
+  // GET_ROOM_MESSAGES,
+  // GET_ROOM_MESSAGES_ERROR,
+  // FILE_UPLOAD,
+  // ALL_MESSAGE_RECEIVED,
+  // GET_ROOMS,
   ARCHIVE_ROOM_ERROR,
   ARCHIVE_ROOM,
   GET_ROOM_SHARED_FILES,
@@ -28,97 +28,99 @@ import {
   REMOVE_ROOM_DISCUSSIONS,
   CURRENT_ROOM,
   CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
+  room,
 } from './Types';
 import { tigrowApi } from 'config';
-import { roomSubscribe } from 'layouts/company/room/channelSubscribe';
-import { IRoom } from './Reducer';
+// import { roomSubscribe } from 'layouts/company/room/channelSubscribe';
+// import { IRoom } from './Reducer';
 
-export const createRoomAction = (roomData: any) => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const company = getState().companyReducer.currentCompany._id;
-      const project = getState().projectReducer.projectDetails._id;
-      dispatch({ type: LOADING_ROOM });
-      const response = await tigrowApi.post(
-        `rooms?pid=${project}`,
-        {
-          ...roomData,
-          company,
-          project,
-        },
-        headers,
-      );
-      await dispatch({
-        type: CREATE_ROOM_FROM_SERVER,
-        payload: response.data.room,
-      });
-      await roomSubscribe(response.data.room._id);
-      return response.status;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in creation of company');
-    }
-  } catch (error) {
-    if (error.response.status === 409) {
-      dispatch({
-        type: CREATE_ROOM_ERROR,
-        payload: 'Room already exists',
-      });
-    } else if (error.response.status === 401) {
-      dispatch({
-        type: CREATE_ROOM_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: CREATE_ROOM_ERROR, payload: 'Network error' });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response.status;
-  }
+export const createRoomAction = (roomData: any)  => {
+  return {
+    type: room.CREATE_ROOM_LOAD,
+    roomData
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   if ((headers as any).headers.Authorization) {
+  //     const company = getState().companyReducer.currentCompany._id;
+  //     const project = getState().projectReducer.projectDetails._id;
+  //     dispatch({ type: LOADING_ROOM });
+  //     const response = await tigrowApi.post(
+  //       `rooms?pid=${project}`,
+  //       {
+  //         ...roomData,
+  //         company,
+  //         project,
+  //       },
+  //       headers,
+  //     );
+  //     await dispatch({
+  //       type: CREATE_ROOM_FROM_SERVER,
+  //       payload: response.data.room,
+  //     });
+  //     await roomSubscribe(response.data.room._id);
+  //     return response.status;
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('error in creation of company');
+  //   }
+  // } catch (error) {
+  //   if (error.response.status === 409) {
+  //     dispatch({
+  //       type: CREATE_ROOM_ERROR,
+  //       payload: 'Room already exists',
+  //     });
+  //   } else if (error.response.status === 401) {
+  //     dispatch({
+  //       type: CREATE_ROOM_ERROR,
+  //       payload: 'Unauthorized user',
+  //     });
+  //   } else if (isEqual(error.message, 'Network Error')) {
+  //     dispatch({ type: CREATE_ROOM_ERROR, payload: 'Network error' });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log(error.response);
+  //   }
+  //   return error.response.status;
+  // }
 };
 
-export const getRooms = () => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      dispatch({ type: LOADING_ROOM });
-      const response = await tigrowApi.get(
-        `rooms/${getState().companyReducer.currentCompany._id}/${
-          getState().projectReducer.projectDetails._id
-        }`,
-        headers,
-      );
-      dispatch({ type: GET_ROOMS, payload: response.data });
-      const rooms = response.data.rooms as IRoom[];
-      rooms.forEach(async (room) => {
-        await roomSubscribe(room._id);
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in rooms fetching');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: GET_ROOM_ERROR, payload: 'Network error' });
-    } else if (error.response.status === 401) {
-      dispatch({
-        type: GET_ROOM_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-  }
+export const getRooms = () =>  {
+  return {
+    type: room.GET_ROOMS_LOAD
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   if ((headers as any).headers.Authorization) {
+  //     dispatch({ type: LOADING_ROOM });
+  //     const response = await tigrowApi.get(
+  //       `rooms/${getState().companyReducer.currentCompany._id}/${
+  //         getState().projectReducer.projectDetails._id
+  //       }`,
+  //       headers,
+  //     );
+  //     dispatch({ type: GET_ROOMS, payload: response.data });
+  //     const rooms = response.data.rooms as IRoom[];
+  //     rooms.forEach(async (room) => {
+  //       await roomSubscribe(room._id);
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('error in rooms fetching');
+  //   }
+  // } catch (error) {
+  //   if (isEqual(error.message, 'Network Error')) {
+  //     dispatch({ type: GET_ROOM_ERROR, payload: 'Network error' });
+  //   } else if (error.response.status === 401) {
+  //     dispatch({
+  //       type: GET_ROOM_ERROR,
+  //       payload: 'Unauthorized user',
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log(error.response);
+  //   }
+  // }
 };
 
 export const getRoom = (roomId: string) => async (
@@ -155,41 +157,42 @@ export const getRoom = (roomId: string) => async (
   }
 };
 
-export const getRoomMembers = (roomId: string) => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(
-        `rooms/members/${roomId}`,
-        headers,
-      );
-      dispatch({
-        type: GET_ROOM_MEMBERS,
-        payload: response.data.members,
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in rooms members fetching');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      dispatch({
-        type: GET_ROOM_MEMBERS_ERROR,
-        payload: 'Network error',
-      });
-    } else if (error.response.status === 401) {
-      dispatch({
-        type: GET_ROOM_MEMBERS_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-  }
+export const getRoomMembers = (roomId: string) =>  {
+  return {
+    type: room.GET_ROOM_MEMBERS_LOAD,
+    roomId
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   if ((headers as any).headers.Authorization) {
+  //     const response = await tigrowApi.get(
+  //       `rooms/members/${roomId}`,
+  //       headers,
+  //     );
+  //     dispatch({
+  //       type: GET_ROOM_MEMBERS,
+  //       payload: response.data.members,
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('error in rooms members fetching');
+  //   }
+  // } catch (error) {
+  //   if (isEqual(error.message, 'Network Error')) {
+  //     dispatch({
+  //       type: GET_ROOM_MEMBERS_ERROR,
+  //       payload: 'Network error',
+  //     });
+  //   } else if (error.response.status === 401) {
+  //     dispatch({
+  //       type: GET_ROOM_MEMBERS_ERROR,
+  //       payload: 'Unauthorized user',
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log(error.response);
+  //   }
+  // }
 };
 
 export const addRoomMembers = (
@@ -247,104 +250,119 @@ export const sendRoomMessage = (data: {
   room: string;
   files: any[];
   type?: string;
-}) => async (dispatch: any) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.post(
-        `messages`,
-        data,
-        headers,
-      );
-      await dispatch({ type: SEND_MESSAGE });
-      return response.status;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in sending a room message');
-    }
-  } catch (error) {
-    if (error.response.status === 401) {
-      dispatch({
-        type: SEND_MESSAGE_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else if (isEqual(error.message, 'Network Error')) {
-      dispatch({
-        type: SEND_MESSAGE_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response.status;
-  }
+}) => {
+  return {
+    type: room.SEND_MESSAGE_LOAD,
+    data
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   if ((headers as any).headers.Authorization) {
+  //     const response = await tigrowApi.post(
+  //       `messages`,
+  //       data,
+  //       headers,
+  //     );
+  //     await dispatch({ type: SEND_MESSAGE });
+  //     return response.status;
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('error in sending a room message');
+  //   }
+  // } catch (error) {
+  //   if (error.response.status === 401) {
+  //     dispatch({
+  //       type: SEND_MESSAGE_ERROR,
+  //       payload: 'Unauthorized user',
+  //     });
+  //   } else if (isEqual(error.message, 'Network Error')) {
+  //     dispatch({
+  //       type: SEND_MESSAGE_ERROR,
+  //       payload: 'Network error',
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log(error.response);
+  //   }
+  //   return error.response.status;
+  // }
 };
 
 export const getRoomMessages = (
   roomId: string,
   limit: number = 15,
-  skip: number = 0,
-) => async (dispatch: any) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(
-        `messages/room/${roomId}?limit=${limit}&skip=${skip}`,
-        headers,
-      );
-      if (response.data.count < limit) {
-        dispatch({ type: ALL_MESSAGE_RECEIVED, payload: true });
-      }
-      dispatch({
-        type: GET_ROOM_MESSAGES,
-        payload: response.data.messages.reverse(),
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in rooms message fetching');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      dispatch({
-        type: GET_ROOM_MESSAGES_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-  }
+  skip: number = 0
+) => {
+  return {
+    type: room.GET_ROOM_MESSAGES_LOAD,
+    roomId,
+    limit,
+    skip
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   if ((headers as any).headers.Authorization) {
+  //     const response = await tigrowApi.get(
+  //       `messages/room/${roomId}?limit=${limit}&skip=${skip}`,
+  //       headers,
+  //     );
+  //     if (response.data.count < limit) {
+  //       dispatch({ type: ALL_MESSAGE_RECEIVED, payload: true });
+  //     }
+  //     dispatch({
+  //       type: GET_ROOM_MESSAGES,
+  //       payload: response.data.messages.reverse(),
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('error in rooms message fetching');
+  //   }
+  // } catch (error) {
+  //   if (isEqual(error.message, 'Network Error')) {
+  //     dispatch({
+  //       type: GET_ROOM_MESSAGES_ERROR,
+  //       payload: 'Network error',
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log(error.response);
+  //   }
+  // }
 };
 
 export const fileUploadAction = (
   imageSelected: any,
   roomID: string,
-) => async (dispatch: any, getState: any) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.post(
-        `files/file-upload-room?roomID=${roomID}`,
-        imageSelected,
-        headers,
-      );
-      dispatch({ type: FILE_UPLOAD, payload: response.data.newFile });
-      return response;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('no headers');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response;
-  }
+) => {
+  return {
+    type: room.FILE_UPLOAD_LOAD,
+    imageSelected,
+    roomID
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   if ((headers as any).headers.Authorization) {
+  //     const response = await tigrowApi.post(
+  //       `files/file-upload-room?roomID=${roomID}`,
+  //       imageSelected,
+  //       headers,
+  //     );
+  //     dispatch({ type: FILE_UPLOAD, payload: response.data.newFile });
+  //     return response;
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('no headers');
+  //   }
+  // } catch (error) {
+  //   if (isEqual(error.message, 'Network Error')) {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('network error');
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log(error.response);
+  //   }
+  //   return error.response;
+  // }
 };
 
 export const archiveRoom = (
