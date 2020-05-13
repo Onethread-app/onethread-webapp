@@ -1,30 +1,28 @@
-import { all, put, select, takeLatest } from 'redux-saga/effects';
+import { all, put, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
-import { room, LOADING_ROOM, CREATE_ROOM_FROM_SERVER_SUCCESS, 
+import {
+  room, LOADING_ROOM, CREATE_ROOM_FROM_SERVER_SUCCESS,
   GET_ROOMS, GET_ROOM_ERROR, GET_ROOM_MEMBERS,
-   GET_ROOM_MEMBERS_ERROR, SEND_MESSAGE, SEND_MESSAGE_ERROR,
-    ALL_MESSAGE_RECEIVED, GET_ROOM_MESSAGES, GET_ROOM_MESSAGES_ERROR, FILE_UPLOAD } from './Types';
+  GET_ROOM_MEMBERS_ERROR, SEND_MESSAGE, SEND_MESSAGE_ERROR,
+  ALL_MESSAGE_RECEIVED, GET_ROOM_MESSAGES,
+  GET_ROOM_MESSAGES_ERROR, FILE_UPLOAD,
+  ARCHIVE_ROOM, ARCHIVE_ROOM_ERROR, GET_ROOM_SHARED_FILES,
+  GET_ROOM_SHARED_FILES_ERROR, GET_ROOM_DISCUSSIONS,
+  GET_ROOM_DISCUSSIONS_ERROR, SET_ROOM_DISCUSSIONS,
+  REMOVE_ROOM_DISCUSSIONS, TOGGLE_ROOM_DISCUSSIONS_ERROR,
+  CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM, ADD_MEMBER_IN_ROOM,
+  ADD_MEMBER_IN_ROOM_ERROR
+} from './Types';
 import { tigrowApi } from 'config';
-// import { isEqual } from 'lodash';
 import { tokenConfig } from 'stores/UtilsActions';
-// import { combineReducers } from 'redux';
-// import { isEqual } from 'lodash';
-// import { Associate } from './Reducer';
-// import { Toaster } from '@blueprintjs/core';
 import { roomSubscribe } from 'layouts/company/room/channelSubscribe';
-// import { getRooms } from './Actions';
 import { IRoom } from './Reducer';
 import { isEqual } from 'lodash';
-// import { type } from 'os';
-// import { ItemEntityProps } from 'components/fields/SuggestField';
-// import { Associate } from './Reducer';
-// import { Toaster } from '@blueprintjs/core';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
-// const takeLatest: any = Eff.takeLatest;
+const takeLatest: any = Eff.takeLatest;
 
 function* createRoomAction(action) {
-  console.log('room', action);
   try {
     const selectCompanyId = (state) =>
       state.companyReducer.currentCompany._id;
@@ -72,10 +70,10 @@ function* getRooms() {
   try {
     const selectCompanyId = (state) =>
       state.companyReducer.currentCompany._id;
-      const selectProjectId = (state) =>
+    const selectProjectId = (state) =>
       state.projectReducer.projectDetails._id;
-      const company = yield select(selectCompanyId);
-      const project = yield select(selectProjectId);
+    const company = yield select(selectCompanyId);
+    const project = yield select(selectProjectId);
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       yield put({ type: LOADING_ROOM });
@@ -138,6 +136,49 @@ function* getRoomMembers(action) {
       // tslint:disable-next-line: no-console
       console.log(error.response);
     }
+  }
+}
+
+function* addRoomMembers(action) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      yield put({ type: LOADING_ROOM });
+      const response = yield tigrowApi.post(
+        `rooms/addUser`,
+        action.data,
+        headers,
+      );
+      if (response.status === 201) {
+        yield put({
+          type: ADD_MEMBER_IN_ROOM,
+          payload: action.selectedRoomMember,
+        });
+      }
+      yield put({
+        type: room.RESPONSE_STATUS_CODE,
+        payload: response.status
+      });
+      return response;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in adding members in a room');
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      yield put({
+        type: ADD_MEMBER_IN_ROOM_ERROR,
+        payload: 'Network error',
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+    yield put({
+      type: room.RESPONSE_STATUS_CODE,
+      payload: error.response.status
+    });
+    return error.response;
   }
 }
 
@@ -234,6 +275,179 @@ function* fileUploadAction(action) {
   }
 }
 
+function* archiveRoom(action) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.put(
+        `rooms/${action.roomId}/archive`,
+        action.data,
+        headers,
+      );
+      yield put({
+        type: ARCHIVE_ROOM,
+        payload: {
+          roomId: action.roomId,
+          archive: action.data.archive,
+        },
+      });
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in creation of company');
+    }
+  } catch (error) {
+    if (error.response.status === 401) {
+      yield put({
+        type: ARCHIVE_ROOM_ERROR,
+        payload: 'Unauthorized user',
+      });
+    } else if (isEqual(error.message, 'Network Error')) {
+      yield put({
+        type: ARCHIVE_ROOM_ERROR,
+        payload: 'Network error',
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+    return error.response.status;
+  }
+}
+
+function* getRoomSharedFiles(action) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(
+        `messages/room/${action.roomId}/files?limit=${action.limit}&skip=${action.skip}`,
+        headers,
+      );
+      yield put({
+        type: GET_ROOM_SHARED_FILES,
+        payload: response.data.files,
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in rooms file fetching');
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      yield put({
+        type: GET_ROOM_SHARED_FILES_ERROR,
+        payload: 'Network error',
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+  }
+}
+
+function* getRoomDiscussions(action) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(
+        `messages/room/${action.roomId}/discussion?limit=${action.limit}&skip=${action.skip}`,
+        headers,
+      );
+      yield put({
+        type: GET_ROOM_DISCUSSIONS,
+        payload: response.data.discussion,
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in rooms discussion fetching');
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      yield put({
+        type: GET_ROOM_DISCUSSIONS_ERROR,
+        payload: 'Network error',
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+  }
+}
+
+function* toggleDiscussionRoom(action) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.put(
+        `messages/${action.messageId}/discussion`,
+        action.data,
+        headers,
+      );
+      yield put({
+        type: response.data.discussion.discussion
+          ? SET_ROOM_DISCUSSIONS
+          : REMOVE_ROOM_DISCUSSIONS,
+        payload: {
+          data: {
+            _id: response.data.discussion._id,
+            text: response.data.discussion.text,
+            room: response.data.discussion.room,
+            createdAt: response.data.discussion.createdAt,
+            updatedAt: response.data.discussion.updatedAt,
+          },
+          discussion: response.data.discussion.discussion,
+        },
+      });
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in creation of company');
+    }
+  } catch (error) {
+    if (error.response.status === 401) {
+      yield put({
+        type: TOGGLE_ROOM_DISCUSSIONS_ERROR,
+        payload: 'Unauthorized user',
+      });
+    } else if (isEqual(error.message, 'Network Error')) {
+      yield put({
+        type: TOGGLE_ROOM_DISCUSSIONS_ERROR,
+        payload: 'Network error',
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+    return error.response.status;
+  }
+}
+
+function* updateLastSeen(action) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.put(
+        `rooms/last-seen/${action.roomId}`,
+        null,
+        headers,
+      );
+      if (response.status === 200) {
+        yield put({
+          type: CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
+          payload: action.roomId,
+        });
+      }
+      return response;
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in creation of company');
+    }
+  } catch (error) {
+    // tslint:disable-next-line: no-console
+    console.log(error.response);
+    return error.response;
+  }
+}
+
 export default function* roomSaga() {
   yield all([
     takeEvery(room.CREATE_ROOM_LOAD, createRoomAction),
@@ -242,6 +456,11 @@ export default function* roomSaga() {
     takeLatest(room.SEND_MESSAGE_LOAD, sendRoomMessage),
     takeLatest(room.GET_ROOM_MESSAGES_LOAD, getRoomMessages),
     takeLatest(room.FILE_UPLOAD_LOAD, fileUploadAction),
-
+    takeLatest(room.ARCHIVE_ROOM_LOAD, archiveRoom),
+    takeLatest(room.GET_ROOM_SHARED_FILES_LOAD, getRoomSharedFiles),
+    takeLatest(room.GET_ROOM_DISCUSSIONS_LOAD, getRoomDiscussions),
+    takeLatest(room.TOGGLE_ROOM_DISCUSSIONS_LOAD, toggleDiscussionRoom),
+    takeLatest(room.CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM_LOAD, updateLastSeen),
+    takeLatest(room.ADD_MEMBER_IN_ROOM_LOAD, addRoomMembers),
   ]);
 }
