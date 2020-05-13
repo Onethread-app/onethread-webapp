@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@blueprintjs/core';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { createRoomAction } from 'stores/room/Actions';
 import { Form, Field } from 'react-final-form';
 import {
@@ -10,6 +10,7 @@ import {
 } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
+import { room } from 'stores/room/Types';
 
 interface ICreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -24,23 +25,24 @@ const CreateFormComponent: React.FC<any> = (
   props: ICreateFormInternalProps,
 ) => {
 
+  const [showDialog, setShowDialog] = useState('');
+  const dispatch = useDispatch();
   const onSubmit: any = async (values: any) => {
-    // const status: any = await props.createRoomAction(values);
     await props.createRoomAction(values);
-
-    console.log(props.roomStatus);
-
-    if (await props.roomStatus === 409) {
-      return { name: 'Duplicate name' };
-    } else if (await props.roomStatus === 201) {
-      props.setShowDialog(false);
-    }
-    return {};
   };
 
-  useEffect(() => {
-    console.log(props.roomStatus);
-  }, [props.roomStatus]);
+  const errorHandling: any = (status: number) => {
+
+    setShowDialog('');
+    if (status === 409) {
+      setShowDialog('Duplicate name');
+    } else if (status === 201) {
+      setShowDialog('');
+      props.setShowDialog(false);
+    }
+    return;
+
+  };
 
   return (
     <Form
@@ -78,6 +80,8 @@ const CreateFormComponent: React.FC<any> = (
                 />
               )}
             />
+            {errorHandling(props.roomStatus)}
+            <small className="red">{showDialog}</small>
             <div className="flex justify-end mt4">
               <Button
                 className="grow h2 pointer white bp3-minimal w4 mr3"
@@ -87,7 +91,10 @@ const CreateFormComponent: React.FC<any> = (
                   border: '1px solid #0fa3a3',
                   color: '#0fa3a3',
                 }}
-                onClick={() => props.setShowDialog(false)}
+                onClick={() => {
+                  props.setShowDialog(false);
+                  dispatch({ type: room.CLEAR_STATUS_CODE });
+                }}
               >
                 Cancel
               </Button>
