@@ -7,7 +7,6 @@ import {
   NEW_MESSAGE,
   CLEAR_ROOMS_REDUCER_STATE,
   CREATE_ROOM_FROM_SERVER_SUCCESS,
-  // CREATE_ROOM_ERROR,
   GET_ROOM_ERROR,
   GET_ROOM_MEMBERS,
   GET_ROOM_MEMBERS_ERROR,
@@ -434,6 +433,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
     case CREATE_ROOM_FROM_SERVER_SUCCESS:
       return {
         ...state,
+        responseCode: 0,
         rooms: [
           ...state.rooms,
           {
@@ -456,6 +456,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         responseCode: action.payload
+      };
+
+    case room.CLEAR_STATUS_CODE:
+      return {
+        ...state,
+        responseCode: 0
       };
 
     case TOGGLE_EMOJI_PICKER:
