@@ -100,10 +100,10 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
     const files =
       props.pendingFiles && props.pendingFiles.length
         ? props.pendingFiles.map((file) => ({
-            _id: file._id,
-            link: file.link,
-            s3Key: file.s3Key,
-          }))
+          _id: file._id,
+          link: file.link,
+          s3Key: file.s3Key,
+        }))
         : [];
 
     dispatch({ type: CLEAR_FILE_UPLOAD });
@@ -188,18 +188,18 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
       {/* typing indicator */}
       {props.typingUsers.length
         ? props.typingUsers.map((user, i: number) => {
-            if (
-              isEmpty(props.currentRoom._id) === false &&
-              isEqual(props.currentRoom._id, user.roomId) === true
-            ) {
-              return (
-                <h6 key={i} className="mv1 pl1">
-                  {user.name} is typing ...
-                </h6>
-              );
-            }
-            return null;
-          })
+          if (
+            isEmpty(props.currentRoom._id) === false &&
+            isEqual(props.currentRoom._id, user.roomId) === true
+          ) {
+            return (
+              <h6 key={i} className="mv1 pl1">
+                {user.name} is typing ...
+              </h6>
+            );
+          }
+          return null;
+        })
         : ''}
 
       {/* Emoji picker */}
@@ -214,35 +214,32 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
           ref={emojiRef}
         />
       ) : null}
-      <div
-        className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}
-        style={{ width: isMobileOnly ? '100%' : '' }}
-      >
+      <div className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`} style={{ width: isMobileOnly ? '100%' : '' }}>
         {/* pendingFiles */}
         <div className="flex w-100 flex-wrap b--black-10 ba">
           {props.pendingFiles && props.pendingFiles.length
             ? props.pendingFiles.map((file) => (
-                <div className="bg-tigrowLightBlue flex pa3 ma1 br-pill justify-center items-center">
-                  <p className="white ma0">
-                    {file.s3Key.split('/')[1]}
-                  </p>
-                  <span
-                    className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
-                    style={{
-                      backgroundColor: 'white',
-                      color: '#0fa3a3',
-                      borderRadius: '30px',
-                      paddingTop: '1px',
-                    }}
-                    onClick={() => {
-                      dispatch({
-                        type: DELETE_ONE_PENDING_FILE,
-                        payload: file._id,
-                      });
-                    }}
-                  ></span>
-                </div>
-              ))
+              <div className="bg-tigrowLightBlue flex pa3 ma1 br-pill justify-center items-center">
+                <p className="white ma0">
+                  {file.s3Key.split('/')[1]}
+                </p>
+                <span
+                  className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
+                  style={{
+                    backgroundColor: 'white',
+                    color: '#0fa3a3',
+                    borderRadius: '30px',
+                    paddingTop: '1px',
+                  }}
+                  onClick={() => {
+                    dispatch({
+                      type: DELETE_ONE_PENDING_FILE,
+                      payload: file._id,
+                    });
+                  }}
+                ></span>
+              </div>
+            ))
             : null}
         </div>
 
@@ -250,8 +247,8 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
         {isEmpty(textError) === false ? (
           <h6 className="mv0 pl1 red">{textError}</h6>
         ) : (
-          ''
-        )}
+            ''
+          )}
         <div className="sendMessage flex w-100 justify-around">
           <div
             className="w-100 mv2 mh1 br3 flex"
@@ -278,9 +275,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
               onChange={onChange}
               onKeyPress={handleKeyPress}
               onKeyUp={() => {
-                setTypingTimer(
-                  setTimeout(doneTyping, typingInterval),
-                );
+                setTypingTimer(setTimeout(doneTyping, typingInterval));
                 clearTimeout(typingTimer);
               }}
               onKeyDown={() => {
