@@ -18,6 +18,9 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
 
+import firebase from '../../firebase';
+import axios from 'axios';
+
 import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
@@ -55,7 +58,30 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [dashboard, setDashboard] = useState(Object);
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  const getTokenFromGCM = () => {
+    const messaging = firebase.messaging();
+    const headers = tokenConfig();
+    messaging
+      .requestPermission()
+      .then(() => messaging.getToken())
+      .then((token: string) =>
+        axios.post(
+          'http://b8d7c7e0.ngrok.io/api/v1/notifications/webpush',
+          {
+            token,
+            role: props.company.role,
+            company: props.company._id,
+          },
+          headers,
+        ),
+      )
+      .then((data) => console.log(data))
+      .catch((err: string) => console.log(err));
+  };
   useEffect(() => {
+    console.log(props.company);
+    getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();
       try {
@@ -109,51 +135,51 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               <div className="w-50-l ma2">
                 <h1 className="f5">Company Announcement</h1>
                 {props.company.announce &&
-                  props.company.announce.length > 0 ? (
-                    props.company.announce.map((announcement: any) => (
-                      <div className="mt2">
-                        <ExpansionPanel>
-                          <ExpansionPanelSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
+                props.company.announce.length > 0 ? (
+                  props.company.announce.map((announcement: any) => (
+                    <div className="mt2">
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                        >
+                          <Paper
+                            className={classes.heading}
+                            elevation={0}
                           >
-                            <Paper
-                              className={classes.heading}
-                              elevation={0}
-                            >
-                              <Typography className="">
-                                {`From ${
-                                  announcement.memberId &&
-                                    announcement.memberId.designations
-                                      .length > 0
-                                    ? announcement.memberId
+                            <Typography className="">
+                              {`From ${
+                                announcement.memberId &&
+                                announcement.memberId.designations
+                                  .length > 0
+                                  ? announcement.memberId
                                       .designations[0].division
-                                    : 'Admin'
-                                  }`}
-                              </Typography>
-                            </Paper>
-                            <Paper
-                              className={classes.secondaryHeading}
-                              elevation={0}
-                            >
-                              <Typography className="">
-                                {announcement.createdAt &&
-                                  moment(
-                                    announcement.createdAt,
-                                  ).calendar()}
-                              </Typography>
-                            </Paper>
-                          </ExpansionPanelSummary>
-                          <ExpansionPanelDetails>
-                            <Typography>{announcement.text}</Typography>
-                          </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                      </div>
-                    ))
-                  ) : (
-                    <small>No announcements.</small>
-                  )}
+                                  : 'Admin'
+                              }`}
+                            </Typography>
+                          </Paper>
+                          <Paper
+                            className={classes.secondaryHeading}
+                            elevation={0}
+                          >
+                            <Typography className="">
+                              {announcement.createdAt &&
+                                moment(
+                                  announcement.createdAt,
+                                ).calendar()}
+                            </Typography>
+                          </Paper>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <Typography>{announcement.text}</Typography>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </div>
+                  ))
+                ) : (
+                  <small>No announcements.</small>
+                )}
               </div>
             </div>
           </div>
@@ -172,8 +198,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           </div>
         </>
       ) : (
-          <Loading />
-        )}
+        <Loading />
+      )}
       {showAnnouncementDialog && (
         <Dialog
           onClose={() =>

@@ -11,7 +11,7 @@ export const notificationReducer = (
   action: any,
 ) => {
   switch (action.type) {
-    case NOTIFICATION.GET_NOTIFICATIONS:
+    case NOTIFICATION.GET_NOTIFICATIONS_SUCCSESS:
       return {
         ...state,
         allNotifications: action.payload,

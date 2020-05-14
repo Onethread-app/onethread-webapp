@@ -31,7 +31,7 @@ interface NavbarTopInternalProps {
   companyName: string;
   type: string;
   companyId: string;
-  getNotifications: any;
+  getNotifications: () => void;
   notifications: any;
   readNotification: any;
   read: number;
