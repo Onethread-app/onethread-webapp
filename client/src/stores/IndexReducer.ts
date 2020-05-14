@@ -9,6 +9,20 @@ import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 import { PusherReducer } from './pusher/Reducer';
 
+import { AssociateModel } from './associate/Reducer';
+
+export interface AppState {
+  layoutReducer: any;
+  roomReducer: any;
+  userReducer: any;
+  companyReducer: any;
+  boardIndexReducer: any;
+  associateReducer: AssociateModel;
+  projectReducer: any;
+  notificationReducer: any;
+  pusherReducer: any;
+}
+
 export const rootReducer = combineReducers({
   layoutReducer: LayoutReducer,
   roomReducer: RoomReducer,

@@ -25,6 +25,7 @@ const AssociatesDetailsViewComponent = (
 
   useEffect(() => {
     async function loadAssociate() {
+      console.log('kkkkkkkkkk');
       setLoading(true);
       await props.getSelectedAssociate(associateId);
       setLoading(false);
