@@ -214,18 +214,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
           ref={emojiRef}
         />
       ) : null}
-<<<<<<< HEAD
-<<<<<<< HEAD
       <div className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`} style={{ width: isMobileOnly ? '100%' : '' }}>
-=======
-      <div
-        className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}
-        style={{ width: isMobileOnly ? '95%' : '' }}
-      >
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-      <div className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`} style={{ width: isMobileOnly ? '100%' : '' }}>
->>>>>>> d0b80317... ready for pre-release v2.3.1
         {/* pendingFiles */}
         <div className="flex w-100 flex-wrap b--black-10 ba">
           {props.pendingFiles && props.pendingFiles.length
