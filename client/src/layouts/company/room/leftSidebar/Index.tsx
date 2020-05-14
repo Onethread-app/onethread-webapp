@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RoomList } from './RoomList';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { CreateForm } from './Form';
 import { projectPermit } from 'stores/UtilsActions';
@@ -11,6 +11,7 @@ import { InputGroupField } from 'components/fields/InputGroupField';
 import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
+import { room } from 'stores/room/Types';
 
 interface RoomSideBarComponentProps {
   companyRole?: string;
@@ -24,6 +25,7 @@ interface RoomSideBarInternalProps
 const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -37,7 +39,10 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           {props.companyRole && projectPermit(props.companyRole) ? (
             <span
               className="bp3-icon grow pointer"
-              onClick={() => setShowDialog(!showDialog)}
+              onClick={() => { 
+                setShowDialog(!showDialog);
+                dispatch({ type: room.CLEAR_STATUS_CODE });
+              }}
             >
               <img
                 src={createIcon}
