@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { TaskDescriptionEditor } from './TaskDescriptionEditor';
 import { Icon } from '@blueprintjs/core';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
+import { board } from 'stores/board/Types';
 
 interface TaskDescriptionViewInternalProps {
   description?: ITask['description'];
@@ -17,6 +18,7 @@ export const TaskDescriptionViewComponent = (
   const [editDescriptionDialog, setEditDescriptionDialog] = useState(
     false,
   );
+  const dispatch = useDispatch();
   return (
     <>
       <div
@@ -36,6 +38,7 @@ export const TaskDescriptionViewComponent = (
               }
               icon="edit"
               onClick={() => {
+                dispatch({type: board.CLEAR_STATUS_CODE});
                 setEditDescriptionDialog(!editDescriptionDialog);
               }}
             />
