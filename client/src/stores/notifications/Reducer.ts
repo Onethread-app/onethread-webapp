@@ -24,10 +24,10 @@ export const notificationReducer = (
           ...state.allNotifications,
         ],
       };
-    case NOTIFICATION.SET_READ_COUNT:
+    case NOTIFICATION.SET_SEEN_COUNT:
       return {
         ...state,
-        read: action.payload,
+        seen: action.payload,
       };
     case NOTIFICATION.SET_SOCKET_ID:
       return {

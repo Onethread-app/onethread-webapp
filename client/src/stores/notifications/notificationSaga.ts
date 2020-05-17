@@ -14,21 +14,15 @@ function* getNotifications() {
     const selectCompanyId = (state) =>
       state.companyReducer.currentCompany._id;
     const headers = tokenConfig();
-    const companyId = select(selectCompanyId);
+    const companyId = yield select(selectCompanyId);
+    console.log(companyId);
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
         `notifications/${companyId}`,
         headers,
       );
-      let count = 0;
-      console.log(response);
-      response.data.result.map((notification: any) => {
-        if (notification.read === false) {
-          count = count + 1;
-        }
-      });
       yield put({
-        type: NOTIFICATION.SET_READ_COUNT,
+        type: NOTIFICATION.SET_SEEN_COUNT,
         payload: response.data.unseenCount,
       });
       yield put({
@@ -42,20 +36,11 @@ function* getNotifications() {
   }
 }
 
-export const readNotification = (notificationId: any) => async (
-  dispatch: any,
-) => {
+function* readNotification(action) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(
-        `notifications/${notificationId}`,
-        headers,
-      );
-      dispatch({
-        type: NOTIFICATION.READ_NOTIFICATION,
-      });
-      return response.data;
+      yield tigrowApi.get(`reed/${action.notificationId}`, headers);
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
@@ -64,10 +49,32 @@ export const readNotification = (notificationId: any) => async (
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
+      put({ type: NOTIFICATION.READ_NOTIFICATION_FAIL });
       // return error.response;
     }
   }
-};
+}
+function* seenNotification() {
+  try {
+    const selectCompanyId = (state) =>
+      state.companyReducer.currentCompany._id;
+    const headers = tokenConfig();
+    const companyId = yield select(selectCompanyId);
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.get(`notification/seen/${companyId}`, headers);
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      put({ type: NOTIFICATION.SEEN_NOTIFICATION_FAIL });
+      // return error.response;
+    }
+  }
+}
 
 export default function* notificationSaga() {
   yield all([
@@ -76,5 +83,6 @@ export default function* notificationSaga() {
       getNotifications,
     ),
     takeLatest(NOTIFICATION.READ_NOTIFICATION, readNotification),
+    takeLatest(NOTIFICATION.SEEN_NOTIFICATION, seenNotification),
   ]);
 }

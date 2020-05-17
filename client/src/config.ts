@@ -3,7 +3,7 @@ import axios from 'axios';
 export const test = 'https://test.tigrow.co/api/v1/';
 export const prod = 'https://api.tigrow.co/api/v1/';
 export const dev = 'http://52.221.186.32:4046/api/v1/';
-export const nizam = 'http://b768375b.ngrok.io/api/v1/';
+export const nizam = 'http://a6c5f168.ngrok.io/api/v1/';
 
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
 export const server = nizam;

@@ -35,7 +35,7 @@ export const companySubscriber = (companyId: string) => {
         },
       );
     store.dispatch({
-      type: NOTIFICATION.SET_READ_COUNT,
+      type: NOTIFICATION.SET_SEEN_COUNT,
       payload: count,
     });
   });

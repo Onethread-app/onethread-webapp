@@ -19,7 +19,11 @@ import { CompanySignupForm } from '../layouts/company/Form';
 import Notification from '../layouts/company/notification/index';
 import { companySubscriber } from '../layouts/company/notification/subscribers';
 import { notificationType } from '../layouts/company/notification/rule';
-import { readNotification } from '../stores/notifications/Action';
+import {
+  readNotification,
+  seenNotification,
+  clearSeen,
+} from '../stores/notifications/Action';
 import { Badge } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { getNotifications } from '../stores/notifications/Action';
@@ -32,9 +36,12 @@ interface NavbarTopInternalProps {
   type: string;
   companyId: string;
   getNotifications: () => void;
+  seenNotification: () => void;
+  clearSeen: () => void;
   notifications: any;
   readNotification: any;
   read: number;
+  seen: number;
 }
 
 const NavbarTopComponent = (
@@ -54,6 +61,11 @@ const NavbarTopComponent = (
     ].path(sNotification.notification);
     props.getNotifications();
     props.history.push(url);
+  };
+
+  const handleSeenNotifications = async () => {
+    props.seen !== 0 && (await props.seenNotification());
+    props.getNotifications();
   };
 
   return (
@@ -92,7 +104,8 @@ const NavbarTopComponent = (
                   style={{ maxHeight: '300px', width: '500px' }}
                   className="pa3 overflow-y-auto"
                 >
-                  {props.notifications.length > 0 ? (
+                  {props.notifications &&
+                  props.notifications.length > 0 ? (
                     props.notifications.map((sNotification: any) => (
                       <div
                         onClick={() => {
@@ -122,14 +135,16 @@ const NavbarTopComponent = (
               target={
                 <div className="mh4 pointer">
                   <Badge
-                    badgeContent={props.read}
+                    badgeContent={props.seen}
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
                     }}
                     color="secondary"
                   >
-                    <NotificationsIcon />
+                    <NotificationsIcon
+                      onClick={handleSeenNotifications}
+                    />
                   </Badge>
                 </div>
               }
@@ -251,6 +266,7 @@ const mapStateToProps = (state: any) => {
     companyName: state.companyReducer.currentCompany.name,
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
+    seen: state.notificationReducer.seen,
     read: state.notificationReducer.read,
   };
 };
@@ -260,4 +276,6 @@ export const NavbarTop = connect(mapStateToProps, {
   companySubscriber,
   readNotification,
   getNotifications,
+  seenNotification,
+  clearSeen,
 })(withRouter(NavbarTopComponent));
