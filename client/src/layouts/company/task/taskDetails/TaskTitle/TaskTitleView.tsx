@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
 import { TaskTitleEditor } from './TaskTitleEditor';
 import { ICompany } from 'stores/company/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
+import { board } from 'stores/board/Types';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
@@ -14,6 +15,7 @@ export const TaskTitleViewComponent = (
   props: TaskDetailsInternalProps,
 ) => {
   const [nameEdit, setNameEdit] = useState(false);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -32,6 +34,7 @@ export const TaskTitleViewComponent = (
             cursor: 'text',
           }}
           onClick={() => {
+            dispatch({type: board.CLEAR_STATUS_CODE});
             props.company && projectPermit(props.company.role)
               ? setNameEdit(true)
               : setNameEdit(false);
