@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import {
   required,
@@ -16,20 +16,33 @@ interface ITaskDescriptionFormProps {
   description: ITask['description'];
   setEditDescriptionDialog: (val: boolean) => void;
   editDescriptionDialog: boolean;
-  updateTask: (task: ITask) => Promise<any>;
+  updateTask: (task: ITask) => any;
+  roomStatus: number;
 }
 
 export const TaskDescriptionEditorComponent = (
   props: ITaskDescriptionFormProps,
 ) => {
+
+  const [showDialog, setShowDialog] = useState('');
+
   const onSubmit = async (values: any) => {
-    const response = await props.updateTask(values);
-    if (response.message === 200) {
-      props.setEditDescriptionDialog(false);
-      return true;
-    }
-    return { [response.fieldName]: response.message };
+    await props.updateTask(values);
+    // if (response.message === 200) {
+    //   props.setEditDescriptionDialog(false);
+    //   return true;
+    // }
+    // return { [response.fieldName]: response.message };
   };
+
+  const errorHandling = (status: number) => {
+    setShowDialog('');
+    if (status === 200) {
+      setShowDialog('');
+      props.setEditDescriptionDialog(false);
+    }
+  };
+
   return (
     <div>
       <Form
@@ -64,9 +77,10 @@ export const TaskDescriptionEditorComponent = (
                       className="outline"
                       placeholder=""
                     />
+                    {errorHandling(props.roomStatus)}
                     {checkError(meta) && (
                       <p className="mv2" style={{ color: 'red' }}>
-                        {meta.error || meta.submitError}
+                        {meta.error || meta.submitError || showDialog}
                       </p>
                     )}
                   </div>
@@ -109,6 +123,7 @@ const mapStateToProps = (state: any) => {
   return {
     description:
       state.boardIndexReducer.boardReducer.currentTask.description,
+      roomStatus: state.boardIndexReducer.boardReducer.responseCode
   };
 };
 
