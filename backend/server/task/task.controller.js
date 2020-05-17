@@ -24,6 +24,7 @@ const load = (req, res, next, id) => {
       return next();
     })
     .catch((err) => {
+      logger.error(`${err}`);
       return sendErrorResponse(res, 404, 'Idisnotexits', {
         success: false,
         message: 'No valid entry found for provided Task ID',
@@ -85,11 +86,7 @@ const create = async (req, res, next) => {
     logger.info(`Task column create`);
     res.status(201).send(responseData);
   } catch (error) {
-    logger.error(`Task: ${error}`);
-    // const err = new BadRequestError(
-    //   'task data is invalid.',
-    //   httpStatus.BAD_REQUEST,
-    // );
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -114,12 +111,15 @@ const getMembers = async (req, res, next) => {
       res.status(200).send(result);
     })
     .catch((error) => {
+      logger.error(`${error}`);
       next(error);
     });
 };
 
 const addMember = async (req, res, next) => {
-  const requestedMembers = req.body.assignmembers;
+  try {
+
+    const requestedMembers = req.body.assignmembers;
   const boardID = req.task.boardId;
 
   //get current task board to check members in board
@@ -197,8 +197,16 @@ const addMember = async (req, res, next) => {
         .then((result) => {
           res.status(201).send(result);
         });
-    });
+    }).catch((err)=>{
+      logger.error(`${err}`);
+    })
   }
+  
+  } catch (err) {
+    logger.error(`${err}`);
+    next(err);
+  }
+  
 };
 
 const suggestMember = async (req, res, next) => {
@@ -230,6 +238,7 @@ const suggestMember = async (req, res, next) => {
       members,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -239,6 +248,7 @@ const deleteMember = async (req, res, next) => {
     await TaskAssign.findByIdAndDelete(req.query.assignedMemberid);
     res.status(200).json({ message: 'MEMBER DELETED' });
   } catch (error) {
+    logger.error(`deleteMember : ${error}`);
     next(error);
   }
 };
@@ -254,6 +264,7 @@ const update = async (req, res, next) => {
       res.status(200).send(result);
     })
     .catch((error) => {
+      logger.error(`${error}`)
       next(error);
     });
 };
@@ -334,8 +345,7 @@ const dragTask = async (req, res, next) => {
 
     res.status(200).send(responseData);
   } catch (error) {
-    logger.error(`Board column create: ${error}`);
-
+    logger.error(`${error}`);
     next(error);
   }
 };

@@ -18,6 +18,7 @@ const EmailIDExist = async (req, res, next) => {
       });
     }
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -42,6 +43,7 @@ const changeUserName = async (req, res, next) => {
         });
     }
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };

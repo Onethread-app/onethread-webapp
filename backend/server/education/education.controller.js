@@ -47,6 +47,7 @@ const updateEducation = async (req, res, next) => {
     );
     return sendJSONresponse(res, 200, { data: updateEdu });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };

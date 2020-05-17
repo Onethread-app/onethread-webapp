@@ -14,8 +14,9 @@ const load = async (req, res, next, id) => {
         message: 'No valid entry found for provided Board ID',
       });
     })
-    .catch((err) => {
-      next(err);
+    .catch((error) => {
+      logger.error(`${error}`);
+      next(error);
     });
 };
 
@@ -39,7 +40,7 @@ const create = async (req, res, next) => {
       })
       .catch((e) => next(e));
   } catch (error) {
-    logger.error(`Board column create: ${error}`);
+    logger.error(`${error}`);
     const err = new BadRequestError(
       'board column data is invalid.',
       httpStatus.BAD_REQUEST,
@@ -57,7 +58,10 @@ const list = async (req, res, next) => {
     // .populate('tasks')
     .exec()
     .then((result) => res.status(200).send(result))
-    .catch((e) => next(e));
+    .catch((error) =>{
+      logger.error(`${error}`);
+      next(error);
+    });
 };
 
 const update = (req, res, next) => {
@@ -67,7 +71,7 @@ const update = (req, res, next) => {
     { new: true },
     (error, updatedColumn) => {
       if (error) {
-        logger.error(`Board column update: ${error}`);
+        logger.error(`${error}`);
         const err = new BadRequestError(
           'board column updated data is invalid.',
           httpStatus.BAD_REQUEST,

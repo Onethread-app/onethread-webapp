@@ -36,9 +36,9 @@ const get = async (req, res, next) => {
 
       res.json(colResult);
     })
-    .catch((e) => {
-      logger.error(`Associate create: ${e}`);
-      next(e);
+    .catch((error) => {
+      logger.error(`${error}`);
+      next(error);
     });
 };
 
@@ -84,8 +84,7 @@ const createPending = async (req, res, next) => {
 
     return res.status(201).json(associate);
   } catch (error) {
-    logger.error(`Associate pending: ${error}`);
-
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -119,8 +118,7 @@ const acceptPending = async (req, res, next) => {
 
     return res.status(200).json(associate);
   } catch (error) {
-    logger.error(`Associate accept: ${error}`);
-
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -152,8 +150,7 @@ const rejectPending = async (req, res, next) => {
     );
     return res.status(200).json({ remove: true });
   } catch (error) {
-    logger.error(`Associate accept: ${error}`);
-
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -180,7 +177,10 @@ const list = async (req, res, next) => {
     .then((result) => {
       return sendJSONresponse(res, 200, result);
     })
-    .catch((e) => next(e));
+    .catch((error) =>{
+      logger.error(`${error}`)
+      next(error)
+    });
 };
 
 const listPending = async (req, res, next) => {
@@ -202,8 +202,9 @@ const listPending = async (req, res, next) => {
     .then((result) => {
       return sendJSONresponse(res, 200, result);
     })
-    .catch((e) => {
-      next(e);
+    .catch((error) => {
+      logger.error(`${error}`);
+      next(error);
     });
 };
 

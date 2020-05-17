@@ -229,6 +229,7 @@ const getMember = (req, res, next) => {
       member: req.member,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };

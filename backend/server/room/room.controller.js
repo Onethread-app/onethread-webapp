@@ -7,6 +7,7 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
+const logger = require('../../config/winston');
 
 const create = async (req, res, next) => {
   try {
@@ -43,6 +44,7 @@ const create = async (req, res, next) => {
 
     return sendJSONresponse(res, 201, { room, roomMember });
   } catch (e) {
+    logger.error(`${e}`);
     next(e);
   }
 };
@@ -69,6 +71,7 @@ const addMembers = async (req, res, next) => {
       message: 'new members added into room',
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -96,6 +99,7 @@ const memberList = async (req, res, next) => {
       members,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -139,6 +143,7 @@ const suggestMember = async (req, res, next) => {
       members,
     });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -160,6 +165,7 @@ const getRoom = async (req, res, next) => {
       room,
     });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -228,6 +234,7 @@ const list = async (req, res, next) => {
       roomsUnreadCount,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -253,6 +260,7 @@ const archiveRoom = async (req, res, next) => {
       message: `Room ${req.body.archive ? 'archived' : 'activated'}.`,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -279,6 +287,7 @@ const updateLastSeen = async (req, res, next) => {
       message: 'Last seen updated',
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };

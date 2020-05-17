@@ -19,7 +19,8 @@ const load = (req, res, next, id) => {
       req.board = result;
       return next();
     })
-    .catch((err) => {
+    .catch((error) => {
+      logger.error(`${error}`);
       return sendErrorResponse(res, 404, 'Idisnotexits', {
         success: false,
         message: 'No valid entry found for provided Board ID',
@@ -52,8 +53,8 @@ const get = async (req, res, next) => {
       };
       return sendJSONresponse(res, 200, responseResult);
     })
-    .catch((e) => {
-      logger.error(`${e}`);
+    .catch((error) => {
+      logger.error(`${error}`);
       next(e);
     });
 };
@@ -89,8 +90,7 @@ const create = async (req, res, next) => {
 
     return res.status(201).json(createdBoard);
   } catch (error) {
-    logger.error(`Board create: ${error}`);
-
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -128,6 +128,7 @@ const addBoardMembers = async (req, res, next) => {
     const memberList = board.members;
     return sendJSONresponse(res, 200, memberList);
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -149,9 +150,9 @@ const list = async (req, res, next) => {
       logger.info(`successfully board list show to board team`);
       return sendJSONresponse(res, 200, result);
     })
-    .catch((e) => {
-      logger.error(e);
-      next(e);
+    .catch((error) => {
+      logger.error(`${error}`);
+      next(error);
     });
 };
 
@@ -188,6 +189,7 @@ const suggestMember = async (req, res, next) => {
       members,
     });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };

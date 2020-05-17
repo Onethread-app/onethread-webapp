@@ -41,7 +41,7 @@ const create = async (req, res) => {
       },
     });
   } catch (err) {
-    logger.error(` process:${process.pid} Bad request : ${err}`);
+    logger.error(`${err}`);
     return sendErrorResponse(res, 400, '', {
       message: 'Failed to create new department',
       fieldName: 'name',
@@ -66,6 +66,7 @@ const list = async (req, res) => {
       message: 'No departments found.',
     });
   } catch (error) {
+    logger.error(`${error}`);
     return res.status(500).json({
       error: error,
     });

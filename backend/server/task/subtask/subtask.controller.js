@@ -19,6 +19,7 @@ const load = (req, res, next, id) => {
       });
     })
     .catch((err) => {
+      logger.error(`load : ${err}`)
       next(err);
     });
 };
@@ -36,7 +37,7 @@ const create = async (req, res, next) => {
     const createdSubTask = await subTask.save();
     res.status(201).send(createdSubTask);
   } catch (error) {
-    logger.error(`SubTask create: ${error}`);
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -54,6 +55,7 @@ const update = async (req, res, next) => {
     );
     res.status(200).send(newSubTask);
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -63,6 +65,7 @@ const deleteSubtask = async (req, res, next) => {
     await SubTask.findByIdAndDelete(req.SubTask._id);
     res.status(200).json({ message: 'SUBTASK DELETED' });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -82,6 +85,9 @@ const list = async (req, res, next) => {
       logger.info(`${result}`);
       res.status(200).send(result);
     })
-    .catch((e) => next(e));
+    .catch((error) =>{
+      logger.error(`${error}`);
+      next(error);
+    });
 };
 module.exports = { create, load, list, get, update, deleteSubtask };

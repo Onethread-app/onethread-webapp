@@ -58,6 +58,7 @@ const unreadMessageCounts = async (req, res, next) => {
       roomsUnreadCount,
     });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -121,6 +122,7 @@ const create = async (req, res, next) => {
       message,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -161,6 +163,7 @@ const getRoomMessages = async (req, res, next) => {
       messages,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -202,6 +205,7 @@ const getRoomFiles = async (req, res, next) => {
       files,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -265,6 +269,7 @@ const toggleDiscussion = async (req, res, next) => {
       discussion,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };

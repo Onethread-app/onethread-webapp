@@ -115,7 +115,7 @@ const getSkillInfo = async (req, res) => {
       }
     })
     .catch((err) => {
-      logger.error(`error : ${err}`);
+      logger.error(`${err}`);
       return sendJSONresponse(res, 400, {
         success: false,
         error: err,
@@ -140,6 +140,7 @@ const getAllSkill = async (req, res) => {
       }
     })
     .catch((err) => {
+      logger.error(`${err}`);
       next(err);
     });
 };
@@ -169,6 +170,7 @@ const updateSkillInfo = async (req, res) => {
       }
     })
     .catch((err) => {
+      logger.error(`${err}`);
       next(err);
     });
 };
@@ -188,6 +190,7 @@ const skillLoad = async (req, res, next, id) => {
       }
     })
     .catch((err) => {
+      logger.error(`${err}`);
       return next(err);
     });
 };
@@ -220,7 +223,6 @@ const searchSkillSet = async (req, res, next) => {
       })
       .catch((err) => {
         logger.error(`${err}`);
-        console.log(err);
         return next(err);
       });
     // console.log(userSkill);
@@ -290,7 +292,7 @@ const searchSkillSet = async (req, res, next) => {
     //   }
     // }
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -309,6 +311,7 @@ const updateUserSkillInfo = async (req, res, next) => {
     const skillList = userSkill.skillArea;
     return sendJSONresponse(res, 200, { skillList });
   } catch (error) {
+    logger.error(`${error}`)
     return sendJSONresponse(res, 400, { error });
   }
 };
@@ -347,6 +350,7 @@ const deleteSkillInfoFromAccount = async (req, res, next) => {
     const skillArea = user.skillArea;
     return sendJSONresponse(res, 200, { skillArea });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };

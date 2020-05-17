@@ -4,6 +4,7 @@ const {
   SubCategory,
   SubSubCategory,
 } = require('./category.model');
+const logger = require('../../config/winston');
 // Create
 const newCategory = async (req, res) => {
   // Check for JSON
@@ -26,7 +27,8 @@ const newCategory = async (req, res) => {
         newCategory: result,
       });
     })
-    .catch((err) => {
+    .catch((error) => {
+      logger.error(`${error}`);
       res.status(500).json({
         error: err,
       });
@@ -60,6 +62,7 @@ const newSubCategory = async (req, res) => {
           });
         })
         .catch((err) => {
+          logger.error(`${err}`);
           res.status(500).json({
             message: '====Level-two ERROR====',
             error: err,
@@ -67,6 +70,7 @@ const newSubCategory = async (req, res) => {
         });
     })
     .catch((err) => {
+      logger.error(`${err}`);
       res.status(500).json({
         error: err,
       });
@@ -99,12 +103,14 @@ const newSubSubCategory = async (req, res) => {
           });
         })
         .catch((err) => {
+          logger.error(`${err}`);
           res.status(500).json({
             error: err,
           });
         });
     })
     .catch((err) => {
+      logger.error(`${err}`);
       res.status(500).json({
         error: err,
       });
@@ -138,6 +144,7 @@ const getCategory = (req, res, next) => {
       res.status(200).json(response);
     })
     .catch((err) => {
+      logger.error(`${err}`);
       res.status(500).json({
         error: err,
       });
@@ -155,6 +162,7 @@ const getSubCategory = (req, res, next) => {
       res.status(200).json(result);
     })
     .catch((err) => {
+      logger.error(`${err}`);
       res.status(500).json({
         error: err,
       });
@@ -174,6 +182,7 @@ const getSubSubCategory = (req, res, next) => {
       res.status(200).json(result);
     })
     .catch((err) => {
+      logger.error(`${err}`);
       res.status(500).json({
         error: err,
       });
@@ -215,18 +224,21 @@ const deleteCategory = async (req, res, next) => {
               });
             }
           } catch (err) {
+            logger.error(`${err}`);
             res.status(500).json({
               error: err,
             });
           }
         }
       } catch (err) {
+        logger.error(`${err}`);
         res.status(500).json({
           error: err,
         });
       }
     }
   } catch (err) {
+    logger.error(`${err}`);
     res.status(500).json({
       error: err,
     });

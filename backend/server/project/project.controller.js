@@ -673,6 +673,7 @@ const archiveProjectList = async (req, res, next) => {
       return sendJSONresponse(res, 200, result);
     })
     .catch((err) => {
+      logger.error(`${err}`)
       next(err);
     });
 };
@@ -729,6 +730,7 @@ const getProjectIndividual = async (req, res, next) => {
       projects,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };

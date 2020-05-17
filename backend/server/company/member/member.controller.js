@@ -151,11 +151,13 @@ const addMember = async (req, res, next) => {
         elasticSearchIndexedMembers,
         memberStructure,
       );
+
       logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully Elasticsearch documented with bulk on ${memberIndex}`,
-        ),
-      );
+          chalk.blueBright(
+            `ElasticSearch successfully Elasticsearch documented with bulk on ${memberIndex}`,
+          ),
+        );
+      
     }
 
     // invite new members in company
@@ -180,8 +182,7 @@ const addMember = async (req, res, next) => {
       pendingMembers,
     });
   } catch (error) {
-    console.log(error);
-    logger.error(error);
+    logger.error(`${error}`);
     next(error);
   }
 };

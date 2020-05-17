@@ -14,6 +14,7 @@ const load = (req, res, next, id) => {
         .json({ message: 'No valid entry found for provided ID' });
     })
     .catch((err) => {
+      logger.error(`${err}`);
       next(err);
     });
 };
@@ -30,7 +31,10 @@ const create = async (req, res, next) => {
     .then((result) => {
       res.status(201).send(result);
     })
-    .catch((error) => next(error));
+    .catch((error) =>{
+      logger.error(`${error}`);
+      next(error);
+    });
 };
 
 const list = (req, res, next) => {
@@ -51,6 +55,7 @@ const list = (req, res, next) => {
       res.status(200).send(result);
     })
     .catch((error) => {
+      logger.error(`${error}`);
       next(error);
     });
 };

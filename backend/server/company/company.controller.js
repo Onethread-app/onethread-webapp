@@ -102,6 +102,7 @@ const changeName = async (req, res, next) => {
       message: `Company's name updated`,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -138,10 +139,10 @@ const createCompany = async (req, res, next) => {
     });
 
     logger.info(
-      chalk.blueBright(
-        `Elasticsearch document added on ${companyIndex}`,
-      ),
-    );
+        chalk.blueBright(
+          `Elasticsearch document added on ${companyIndex}`,
+        ),
+      );
 
     const elasticMember = await newMember.save();
 
@@ -179,7 +180,7 @@ const createCompany = async (req, res, next) => {
     });
   } catch (error) {
     logger.error(`${error}`);
-    return next(error);
+    next(error);
   }
 };
 
@@ -205,7 +206,7 @@ const getCompanyIndividual = async (req, res, next) => {
       companies,
     });
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -240,6 +241,7 @@ const getCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -316,6 +318,7 @@ const updateAbout = async (req, res, next) => {
       message: `Company's about updated`,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -348,6 +351,7 @@ const updateRole = async (req, res, next) => {
       data: company.optionalRole,
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -368,6 +372,7 @@ const getCompanyLoad = async (req, res, next) => {
       });
     }
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -394,6 +399,7 @@ const deleteCompany = async (req, res, next) => {
             });
           })
           .catch((err) => {
+            logger.error(`${err}`);
             res.status(500).json({
               error: err,
             });
@@ -403,6 +409,7 @@ const deleteCompany = async (req, res, next) => {
       }
     })
     .catch((err) => {
+      logger.error(`${err}`)
       res.status(500).json({ error: err });
     });
 };
@@ -438,6 +445,7 @@ const authorizeUser = (functionalRole, ...userRoles) => {
 
       next();
     } catch (error) {
+      logger.error(`${error}`)
       next(error);
     }
   };
@@ -495,22 +503,8 @@ const searchCompany = async (req, res, next) => {
         message: `query error`,
       });
     }
-
-    // await Company.find({
-    //   name: { $regex: new RegExp(name), $options: 'i' },
-    //   _id: { $nin: associateCompanyId },
-    // })
-    //   .select('name')
-    //   .skip(+skip)
-    //   .limit(+limit)
-    //   .then(data => {
-    //     return sendJSONresponse(res, 200, {
-    //       success: true,
-    //       message: `Search complete for ${name}`,
-    //       data,
-    //     });
-    //   });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -527,6 +521,7 @@ const addCertifications = async (req, res, next) => {
       message: 'Certification add',
     });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -553,6 +548,7 @@ const parentOrg = async (req, res, next) => {
       message: `parentOrg updated`,
     });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -583,7 +579,7 @@ const dashBoard = async (req, res, next) => {
       },
     });
   } catch (error) {
-    logger.error(error);
+    logger.error(`${error}`);
     next(error);
   }
 };

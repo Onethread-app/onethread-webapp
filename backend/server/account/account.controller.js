@@ -121,12 +121,12 @@ const register = async (req, res, next) => {
           elasticIndexedMembers,
           memberStructure,
         );
-        logger.info(
-          chalk.blueBright(
-            `ElasticSearch successfully documented with bulk on ${memberIndex}`,
-          ),
-        );
 
+        logger.info(
+            chalk.blueBright(
+              `ElasticSearch successfully documented with bulk on ${memberIndex}`,
+            ),
+          );
         await PendingMember.updateMany(
           { email: account.email },
           {
@@ -151,6 +151,7 @@ const register = async (req, res, next) => {
       });
     })
     .catch((err) => {
+      logger.error(`${err}`);
       next(err);
     });
 };
@@ -339,7 +340,8 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
           { safe: true, upsert: true, new: true },
         ).exec();
         client.del(`verifyAccountToken:${req.params.token}`);
-        await setDocument(accountIndex, '_doc', {
+
+        await setDocument( accountIndex ,'_doc', {
           mongo_id: user._id,
           name: user.name,
           email: user.email,
@@ -347,11 +349,12 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
           lastName: user.lastName,
         });
 
-        logger.info(
-          chalk.blueBright(
-            `ElasticSearch document added on ${accountIndex}`,
-          ),
-        );
+          logger.info(
+            chalk.blueBright(
+              `ElasticSearch document added on ${accountIndex}`,
+            ),
+          );
+        
         return sendJSONresponse(res, 200, {
           isAccountVerified: true,
           message: 'Account Verified Successfully',
@@ -364,6 +367,7 @@ const getAccessTokenForVerifyAccount = async (req, res, next) => {
       }
     });
   } catch (err) {
+    logger.error(`${err}`);
     next(err);
   }
 };
@@ -465,6 +469,7 @@ const logout = async (req, res, next) => {
       );
     }
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -501,6 +506,7 @@ const sendEmailForForgetPassword = async (req, res, next) => {
       message: 'Mail send successfully',
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -535,7 +541,7 @@ const resetPassword = async (req, res, next) => {
       }
     });
   } catch (err) {
-    logger.error(`password does not change`);
+    logger.error(`${err}`);
     next(err);
   }
 };
@@ -701,6 +707,7 @@ const changePassword = async (req, res, next) => {
       });
     });
   } catch (err) {
+    logger.error(`${err}`);
     next(err);
   }
 };
@@ -740,6 +747,7 @@ const resendEmail = async (req, res, next) => {
       message: 'resend email successfully',
     });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };

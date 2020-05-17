@@ -24,7 +24,7 @@ const createJobExperience = async (req, res, next) => {
       return sendJSONresponse(res, 201, { data });
     })
     .catch((err) => {
-      logger.error(`Error: ${err}`);
+      logger.error(`${err}`);
       return next(err);
     });
 };
@@ -43,6 +43,7 @@ const updateJobExperience = async (req, res, next) => {
     );
     return sendJSONresponse(res, 200, { data: newJobExp });
   } catch (error) {
+    logger.error(`${error}`)
     next(error);
   }
 };
@@ -54,7 +55,7 @@ const getAllJobExperience = async (req, res) => {
       return sendJSONresponse(res, 200, { data });
     })
     .catch((err) => {
-      logger.error(`Error: ${err}`);
+      logger.error(`${err}`);
       return next(err);
     });
 };
