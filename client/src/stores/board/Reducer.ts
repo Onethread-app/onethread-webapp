@@ -12,6 +12,7 @@ import {
   ADD_TEAM_MEMBER_IN_BOARD,
   SELECT_TASK,
   UPDATE_TASK,
+  board,
 } from './Types';
 import { isEqual } from 'lodash';
 
@@ -68,6 +69,8 @@ const InitialState = {
   boardError: '',
   boardColumnError: '',
   boardTaskError: '',
+  // responseBoardId: 0,
+  responseCode: 0
 };
 
 export const BoardReducer = (state = InitialState, action: any) => {
@@ -86,6 +89,11 @@ export const BoardReducer = (state = InitialState, action: any) => {
           ...state.boardList,
         ],
       };
+    // case board.RESPONSE_BOARD_ID:
+    //   return {
+    //     ...state,
+    //     responseBoardId: action.payload
+    //   };
     case CREATE_BOARD_ERROR:
       return {
         ...state,
@@ -131,9 +139,9 @@ export const BoardReducer = (state = InitialState, action: any) => {
             (column: IColumn, i) =>
               isEqual(column._id, action.payload._id)
                 ? {
-                    ...column,
-                    name: action.payload.name,
-                  }
+                  ...column,
+                  name: action.payload.name,
+                }
                 : column,
           ),
         },
@@ -147,9 +155,9 @@ export const BoardReducer = (state = InitialState, action: any) => {
             (column: IColumn, i) =>
               isEqual(column._id, action.payload.columnId)
                 ? {
-                    ...column,
-                    tasks: [...column.tasks!, action.payload],
-                  }
+                  ...column,
+                  tasks: [...column.tasks!, action.payload],
+                }
                 : column,
           ),
         },
@@ -181,24 +189,34 @@ export const BoardReducer = (state = InitialState, action: any) => {
             (column: IColumn) =>
               isEqual(column._id, action.payload.columnId._id)
                 ? {
-                    ...column,
-                    tasks:
-                      column.tasks && column.tasks.length > 0
-                        ? column.tasks!.map((task: ITask) =>
-                            isEqual(task._id, action.payload._id)
-                              ? {
-                                  ...task,
-                                  name: action.payload.name,
-                                  dueDate: action.payload.dueDate,
-                                }
-                              : task,
-                          )
-                        : [],
-                  }
+                  ...column,
+                  tasks:
+                    column.tasks && column.tasks.length > 0
+                      ? column.tasks!.map((task: ITask) =>
+                        isEqual(task._id, action.payload._id)
+                          ? {
+                            ...task,
+                            name: action.payload.name,
+                            dueDate: action.payload.dueDate,
+                          }
+                          : task,
+                      )
+                      : [],
+                }
                 : column,
           ),
         },
         currentTask: action.payload,
+      };
+    case board.RESPONSE_STATUS_CODE:
+      return {
+        ...state,
+        responseCode: action.payload
+      };
+    case board.CLEAR_STATUS_CODE:
+      return {
+        ...state,
+        responseCode: 0
       };
     default:
       return state;
