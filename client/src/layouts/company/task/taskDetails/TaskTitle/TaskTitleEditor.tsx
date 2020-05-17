@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import {
@@ -16,17 +16,30 @@ interface ITaskTitleFormProps {
   setNameEdit: (val: boolean) => void;
   nameEdit: boolean;
   currentTask?: ITask;
-  updateTask: (task: ITask) => Promise<any>;
+  updateTask: (task: ITask) => any;
+  roomStatus: number;
 }
 
 const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
+
+  const [showDialog, setShowDialog] = useState('');
+
   const onSubmit = async (values: any) => {
-    const response = await props.updateTask(values);
-    if (response.message === 200) {
+    await props.updateTask(values);
+    
+    // if (response.message === 200) {
+    //   props.setNameEdit(false);
+    //   return true;
+    // }
+    // return { [response.fieldName]: response.message };
+  };
+
+  const errorHandling = (status: number) => {
+    setShowDialog('');
+    if (status === 200) {
+      setShowDialog('');
       props.setNameEdit(false);
-      return true;
     }
-    return { [response.fieldName]: response.message };
   };
 
   return (
@@ -65,9 +78,10 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
                       className="outline pa1"
                       placeholder=""
                     />
+                    {errorHandling(props.roomStatus)}
                     {checkError(meta) && (
                       <small className="mv3" style={{ color: 'red' }}>
-                        {meta.error || meta.submitError}
+                        {meta.error || meta.submitError || showDialog}
                       </small>
                     )}
                   </div>
@@ -104,6 +118,7 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
 const mapStateToProps = (state: any) => {
   return {
     currentTask: state.boardIndexReducer.boardReducer.currentTask,
+    roomStatus: state.boardIndexReducer.boardReducer.responseCode
   };
 };
 
