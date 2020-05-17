@@ -11,20 +11,32 @@ import { ITask } from 'stores/board/Reducer';
 
 interface IPriorityEditorProps {
   setPriorityPopover: (val: boolean) => void;
-  updateTask: (task: ITask) => Promise<any>;
+  updateTask: (task: ITask) => any;
   colorCode: Number;
+  roomStatus: number;
 }
 
 export const PriorityEditorComponent = (
   props: IPriorityEditorProps,
 ) => {
+
+  const [showDialog, setShowDialog] = useState('');
+
   const onSubmit = async (values: any) => {
-    const response = await props.updateTask(values);
-    if (response.message === 200) {
+    await props.updateTask(values);
+    // if (response.message === 200) {
+    //   props.setPriorityPopover(false);
+    //   return true;
+    // }
+    // return { [response.fieldName]: response.message };
+  };
+
+  const errorHandling = (status: number) => {
+    setShowDialog('');
+    if (status === 200) {
+      setShowDialog('');
       props.setPriorityPopover(false);
-      return true;
     }
-    return { [response.fieldName]: response.message };
   };
 
   const [labelColor, setLabelColor] = useState(props.colorCode);
@@ -116,6 +128,8 @@ export const PriorityEditorComponent = (
                   </div>
                 )}
               />
+              {errorHandling(props.roomStatus)}
+              <small className="red">{showDialog}</small>
               <div className="fr">
                 <Button
                   className="grow pointer white bp3-minimal w4 mt2"
@@ -143,6 +157,7 @@ const mapStateToProps = (state: any) => {
   return {
     colorCode:
       state.boardIndexReducer.boardReducer.currentTask.priority,
+      roomStatus: state.boardIndexReducer.boardReducer.responseCode
   };
 };
 
