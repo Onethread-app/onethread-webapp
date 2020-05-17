@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { checkError } from 'components/final-form/utils';
@@ -11,18 +11,30 @@ import { ITask } from 'stores/board/Reducer';
 
 interface IDueDateFormProps {
   setDatePopover: (val: boolean) => void;
-  updateTask: (task: ITask) => Promise<any>;
+  updateTask: (task: ITask) => any;
   dueDate: Date;
+  roomStatus: number;
 }
 
 export const DueDateEditorComponent = (props: IDueDateFormProps) => {
+
+  const [showDialog, setShowDialog] = useState('');
+
   const onSubmit = async (values: any) => {
-    const response = await props.updateTask(values);
-    if (response.message === 200) {
-      await props.setDatePopover(false);
-      return true;
+    await props.updateTask(values);
+    // if (response.message === 200) {
+    //   await props.setDatePopover(false);
+    //   return true;
+    // }
+    // return { [response.fieldName]: response.message };
+  };
+
+  const errorHandling = (status: number) => {
+    setShowDialog('');
+    if (status === 200) {
+      setShowDialog('');
+      props.setDatePopover(false);
     }
-    return { [response.fieldName]: response.message };
   };
 
   return (
@@ -41,73 +53,74 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
         hasValidationErrors,
         ...rest
       }) => (
-        <form className="fl w-100 ph2 pt2" onSubmit={handleSubmit}>
-          <div className="flex justify-end">
-            <Icon
-              icon={IconNames.CROSS}
-              iconSize={20}
-              className="grow pointer"
-              onClick={(e: any) => props.setDatePopover(false)}
-            />
-          </div>
-          <div>
-            <SubmitError errorMessage={submitError} />
-          </div>
-          <Field<string>
-            name="dueDate"
-            render={({ input, meta }) => (
-              <div className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}>
-                <label
-                  style={{
-                    marginBottom: '5px',
-                    display: 'inline-block',
-                  }}
-                >
-                  Due Date
+          <form className="fl w-100 ph2 pt2" onSubmit={handleSubmit}>
+            <div className="flex justify-end">
+              <Icon
+                icon={IconNames.CROSS}
+                iconSize={20}
+                className="grow pointer"
+                onClick={(e: any) => props.setDatePopover(false)}
+              />
+            </div>
+            <div>
+              <SubmitError errorMessage={submitError} />
+            </div>
+            <Field<string>
+              name="dueDate"
+              render={({ input, meta }) => (
+                <div className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}>
+                  <label
+                    style={{
+                      marginBottom: '5px',
+                      display: 'inline-block',
+                    }}
+                  >
+                    Due Date
                 </label>
-                <DateInput
-                  formatDate={(date: Date) =>
-                    date.toLocaleDateString()
-                  }
-                  placeholder="Select a date"
-                  parseDate={(str: string) => new Date(str)}
-                  onChange={input.onChange}
-                  canClearSelection={false}
-                  value={input.value ? new Date(input.value) : null}
-                  popoverProps={{
-                    targetClassName: 'w-100',
-                  }}
-                  minDate={
-                    new Date() > new Date(props.dueDate)
-                      ? new Date(props.dueDate)
-                      : new Date()
-                  }
-                />
-                {checkError(meta) && (
-                  <small className="mv3" style={{ color: 'red' }}>
-                    {meta.error || meta.submitError}
-                  </small>
-                )}
-              </div>
-            )}
-          />
-          <div className="fr">
-            <Button
-              className="grow pointer white bp3-minimal w4 mt2"
-              style={{
-                background: '#0FA3A3',
-                outline: 'none',
-                color: 'white',
-              }}
-              loading={submitting}
-              type="submit"
-              disabled={submitting || pristine}
-            >
-              Submit
+                  <DateInput
+                    formatDate={(date: Date) =>
+                      date.toLocaleDateString()
+                    }
+                    placeholder="Select a date"
+                    parseDate={(str: string) => new Date(str)}
+                    onChange={input.onChange}
+                    canClearSelection={false}
+                    value={input.value ? new Date(input.value) : null}
+                    popoverProps={{
+                      targetClassName: 'w-100',
+                    }}
+                    minDate={
+                      new Date() > new Date(props.dueDate)
+                        ? new Date(props.dueDate)
+                        : new Date()
+                    }
+                  />
+                  {errorHandling(props.roomStatus)}
+                  {checkError(meta) && (
+                    <small className="mv3" style={{ color: 'red' }}>
+                      {meta.error || meta.submitError || showDialog}
+                    </small>
+                  )}
+                </div>
+              )}
+            />
+            <div className="fr">
+              <Button
+                className="grow pointer white bp3-minimal w4 mt2"
+                style={{
+                  background: '#0FA3A3',
+                  outline: 'none',
+                  color: 'white',
+                }}
+                loading={submitting}
+                type="submit"
+                disabled={submitting || pristine}
+              >
+                Submit
             </Button>
-          </div>
-        </form>
-      )}
+            </div>
+          </form>
+        )}
     />
   );
 };
@@ -115,6 +128,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
 const mapStateToProps = (state: any) => {
   return {
     dueDate: state.boardIndexReducer.boardReducer.currentTask.dueDate,
+    roomStatus: state.boardIndexReducer.boardReducer.responseCode
   };
 };
 
