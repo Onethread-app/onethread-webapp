@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SendMessageForm } from './messages/SendMessageForm';
 import { MessageList } from './messages/MessageList';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Dialog, Position, Popover } from '@blueprintjs/core';
 import { AddMemberForm } from './members/AddMemberForm';
 import { getRoomMembers, archiveRoom } from 'stores/room/Actions';
@@ -14,6 +14,7 @@ import addMemberIcon from './../../../../resources/images/addMemberIcon.png';
 import settingsIcon from './../../../../resources/images/settings.svg';
 import videoCallIcon from './../../../../resources/images/video-call.png';
 import { VideoCallRequest } from './VideoCallRequest';
+import { room } from 'stores/room/Types';
 
 interface ChatLayoutComponentProps {
   getRoomMembers: (roomId: string) => void;
@@ -36,6 +37,7 @@ export const ChatLayoutComponent = (
   const [showVideoCallDialog, setShowVideoCallDialog] = useState(
     false,
   );
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -136,9 +138,10 @@ export const ChatLayoutComponent = (
                   props.currentRoom.archive === false ? (
                     <div
                       className="pointer ml3-ns ml1"
-                      onClick={() =>
-                        setShowMemberFormDialog(!showMemberFormDialog)
-                      }
+                      onClick={() =>{
+                        setShowMemberFormDialog(!showMemberFormDialog);
+                        dispatch({ type: room.CLEAR_STATUS_CODE });
+                      }}
                     >
                       <img
                         className="grow"
