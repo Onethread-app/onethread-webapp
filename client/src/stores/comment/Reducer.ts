@@ -15,6 +15,7 @@ export interface Icomment {
 
 const InitialState = {
   commentList: [] as any,
+  // responseCode: 0
 };
 
 export const CommentReducer = (state = InitialState, action: any) => {
@@ -39,6 +40,11 @@ export const CommentReducer = (state = InitialState, action: any) => {
           ...state.commentList,
         ],
       };
+    // case comment.RESPONSE_STATUS_CODE:
+    //   return {
+    //     ...state,
+    //     responseCode: action.payload
+    //   };
     // case COMPLETE_SUBTASK:
     //   return {
     //     ...state,
