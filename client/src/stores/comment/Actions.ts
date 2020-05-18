@@ -1,67 +1,67 @@
 import { tokenConfig } from 'stores/UtilsActions';
-import { GET_ALL_COMMENT, CREATE_COMMENT } from './Types';
+import { CREATE_COMMENT, comment } from './Types';
 import { isEmpty } from 'lodash';
 import { Icomment } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 
-export const getAllComments = () => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    const taskId = getState().boardIndexReducer.boardReducer
-      .currentTask._id;
-    if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(
-        `comments?taskId=${taskId}`,
-        headers,
-      );
+export const getAllComments = () => {
+  return{
+    type: comment.GET_ALL_COMMENT_LOAD
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   const taskId = getState().boardIndexReducer.boardReducer
+  //     .currentTask._id;
+  //   if ((headers as any).headers.Authorization) {
+  //     const response = await tigrowApi.get(
+  //       `comments?taskId=${taskId}`,
+  //       headers,
+  //     );
 
-      const responseData = response.data.map((comment: any) => {
-        if (isEmpty(comment.account.profileImage)) {
-          return {
-            _id: comment._id,
-            name:
-              comment.account.firstName +
-              ' ' +
-              comment.account.lastName,
-            profileImage: '',
-            position: comment.account.position,
-            text: comment.text,
-            createdAt: comment.createdAt,
-          };
-        } else {
-          return {
-            _id: comment._id,
-            name:
-              comment.account.firstName +
-              ' ' +
-              comment.account.lastName,
-            profileImage: comment.account.profileImage,
-            position: comment.account.position,
-            text: comment.text,
-            createdAt: comment.createdAt,
-          };
-        }
-      });
+  //     const responseData = response.data.map((comment: any) => {
+  //       if (isEmpty(comment.account.profileImage)) {
+  //         return {
+  //           _id: comment._id,
+  //           name:
+  //             comment.account.firstName +
+  //             ' ' +
+  //             comment.account.lastName,
+  //           profileImage: '',
+  //           position: comment.account.position,
+  //           text: comment.text,
+  //           createdAt: comment.createdAt,
+  //         };
+  //       } else {
+  //         return {
+  //           _id: comment._id,
+  //           name:
+  //             comment.account.firstName +
+  //             ' ' +
+  //             comment.account.lastName,
+  //           profileImage: comment.account.profileImage,
+  //           position: comment.account.position,
+  //           text: comment.text,
+  //           createdAt: comment.createdAt,
+  //         };
+  //       }
+  //     });
 
-      dispatch({ type: GET_ALL_COMMENT, payload: responseData });
-    }
-  } catch (error) {
-    // tslint:disable-next-line: no-console
-    console.log(error);
-    // if (isEqual(error.message, 'Network Error')) {
-    //   // dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
-    // } else if (error.response.status === 401) {
-    //   dispatch({ type: CREATE_BOARD_ERROR,
-    //      payload: 'Unauthorized user. Please enter valid email and password.' });
-    // } else {
-    //   // tslint:disable-next-line: no-console
-    //   console.log(error.response);
-    // }
-  }
+  //     dispatch({ type: GET_ALL_COMMENT, payload: responseData });
+  //   }
+  // } catch (error) {
+  //   // tslint:disable-next-line: no-console
+  //   console.log(error);
+  //   // if (isEqual(error.message, 'Network Error')) {
+  //   //   // dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
+  //   // } else if (error.response.status === 401) {
+  //   //   dispatch({ type: CREATE_BOARD_ERROR,
+  //   //      payload: 'Unauthorized user. Please enter valid email and password.' });
+  //   // } else {
+  //   //   // tslint:disable-next-line: no-console
+  //   //   console.log(error.response);
+  //   // }
+  // }
 };
 
 export const createComment = (text: Icomment['text']) => async (
