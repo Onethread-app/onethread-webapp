@@ -3,7 +3,8 @@ import getAllProject from './project/sagas/getProjectSaga';
 import associateSaga from './associate/associateSaga';
 import roomSaga from './room/roomSaga';
 import boardSaga from './board/boardSaga';
+import commentSaga from './comment/commentSaga';
 
 export default function* rootSaga() {
-  yield all([getAllProject(), associateSaga(), roomSaga(), boardSaga()]);
+  yield all([getAllProject(), associateSaga(), roomSaga(), boardSaga(), commentSaga()]);
 }
