@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Icon, Drawer, Button } from '@blueprintjs/core';
+import { Icon, Drawer } from '@blueprintjs/core';
 import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
 import { connect, useDispatch } from 'react-redux';
@@ -73,16 +73,23 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     await _getRooms();
   };
 
+  if(isEmpty(props.projectId)){
+    const { projectId } = (props.match.params as any);
+    props.getSingleProject(projectId);
+    props.setCurrentProjectId(projectId);
+    props.getRoleForProject(projectId);
+  }
+
   const roomSwitch = async (roomId: string) => {
     const currentRoom = props.rooms.filter((room) =>
       isEqual(room._id, roomId),
     );
     if (currentRoom.length > 0) {
       dispatch({ type: CURRENT_ROOM, payload: currentRoom[0] });
-      props.getRoomMessages(roomId);
-      props.getRoomMembers(roomId);
-      props.getRoomSharedFiles(roomId);
-      props.getRoomDiscussions(roomId);
+      await props.getRoomMessages(roomId);
+      await props.getRoomMembers(roomId);
+      await props.getRoomSharedFiles(roomId);
+      await props.getRoomDiscussions(roomId);
     }
   };
 
@@ -126,13 +133,6 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
 
   const [showDialog, setShowDialog] = useState(false);
 
-  if(isEmpty(props.projectId)){
-    const { projectId } = (props.match.params as any);
-      props.getSingleProject(projectId);
-      props.setCurrentProjectId(projectId);
-      props.getRoleForProject(projectId);
-  }
-
   return (
     <>
       <div
@@ -163,10 +163,20 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 iconSize={17}
                 onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)}
               />
-            )}
+              )}
           </CustomView>
           <MobileView>
-            <Button
+              <Icon
+                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left-0 pointer"
+                icon='arrow-left'
+                iconSize={17}
+                onClick={() => {
+                  // tslint:disable-next-line: no-unused-expression
+                  props.setShowDialog && props.setShowDialog(false);
+                  props.history.push(`/company/${props.companyName}/project/${props.projectId}/room?view=${queries.view}`);
+                }}
+              />
+            {/* <Button
               className="absolute top-0 bp3-minimal outline-0 shadow-0 underline"
               onClick={() => {
                 // tslint:disable-next-line: no-unused-expression
@@ -175,14 +185,13 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               }}
             >
               Back
-            </Button>
+            </Button> */}
           </MobileView>
           {isEmpty(props.currentRoom.name) === false &&
-            isEmpty(props.currentRoom._id) === false &&
-            queries.view === 'default' && (
+            isEmpty(props.currentRoom._id) === false && (
               <Icon
-                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
-                icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
+                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
+                icon='arrow-right'
                 iconSize={17}
                 onClick={() => {
                   setIsOpenRightSidebar(!isOpenRightSidebar);
@@ -193,13 +202,12 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
           <ChatLayout />
         </div>
         {isEmpty(props.currentRoom.name) === false &&
-          isEmpty(props.currentRoom._id) === false &&
-          queries.view === 'default' && (
+          isEmpty(props.currentRoom._id) === false && (
             <div
               className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
               style={{
                 borderBottomRightRadius: '0.5rem',
-                width: isOpenRightSidebar ? isMobileOnly ? '16px' : '400px' : '16px',
+                width: isOpenRightSidebar ? isMobileOnly ? '0px' : '400px' : isMobileOnly ? '0px' : '16px',
               }}
             >
               {isMobileOnly ?

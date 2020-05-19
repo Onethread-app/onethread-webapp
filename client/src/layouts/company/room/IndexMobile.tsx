@@ -44,7 +44,6 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
 
   // get all rooms
   useEffect(() => {
-    console.log(props.companyId, props.projectId)
     if (props.companyId && props.projectId) {
       load(props.getRooms);
     }
