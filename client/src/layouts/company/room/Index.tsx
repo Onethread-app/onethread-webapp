@@ -156,7 +156,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               onClick={() => {
                 // tslint:disable-next-line: no-unused-expression
                 props.setShowDialog && props.setShowDialog(false);
-                props.history.push(`/company/${props.companyName}/project/${props.projectId}/room`);
+                props.history.push(`/company/${props.companyName}/project/${props.projectId}/room?view=${queries.view}`);
               }}
             >
               Back

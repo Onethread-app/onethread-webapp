@@ -28,6 +28,8 @@ interface RoomPageComponentProps extends RouteComponentProps {
 
 const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
 
+  const query = new URLSearchParams(props.location.search);
+  const view = query.get('view');
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
@@ -41,7 +43,8 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
 
   return (
     <>
-      <NavbarCompany title="Rooms" />
+      <NavbarCompany title="Rooms"/>
+      { !(view && view=== 'mobile') && 
       <div className="flex justify-between mt5">
         <NavLink
           exact
@@ -88,7 +91,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
         >
           <small style={{ color: 'inherit' }}>Settings</small>
         </NavLink>
-      </div>
+      </div>}
       <div className="flex h-100 w-100">
         <div
           className="w-100"
