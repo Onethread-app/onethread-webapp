@@ -44,7 +44,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
   return (
     <>
       <NavbarCompany title="Rooms"/>
-      { !(view && view=== 'mobile') && 
+      { !(view && view === 'mobile') && 
       <div className="flex justify-between mt5">
         <NavLink
           exact

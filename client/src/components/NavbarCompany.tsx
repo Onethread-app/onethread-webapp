@@ -47,7 +47,7 @@ const NavbarCompanyComponent = (props: NavbarProps & RouteComponentProps) => {
 
   return (
     <>
-      {!(view && view==='mobile') &&<MobileView>
+      {!(view && view === 'mobile') && <MobileView>
         <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
           <h1 className="f4">{props.title}</h1>
           <div className="flex justify-end items-center">
