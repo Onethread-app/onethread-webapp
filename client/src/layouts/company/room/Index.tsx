@@ -14,7 +14,11 @@ import {
   getRoomDiscussions,
   updateLastSeen,
 } from 'stores/room/Actions';
-import { getSingleProject, setCurrentProjectId, getRoleForProject } from 'stores/project/Actions';
+import { 
+  getSingleProject,
+  setCurrentProjectId,
+  getRoleForProject,
+} from '../../../stores/project/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Pusher from 'pusher-js';
 import { isMobileOnly, CustomView, MobileView } from 'react-device-detect';
@@ -52,11 +56,11 @@ interface RoomPageComponentProps extends RouteComponentProps {
   pusherInstance: Pusher | undefined;
   setShowDialog?: (val: boolean) => void;
   getSingleProject: (pid: string) => void;
-  getRoleForProject: (pid: string) => void;
   setCurrentProjectId: (pid: string) => void;
+  getRoleForProject: (pid: string) => void;
 }
 
-const RoomPageComponent = (props: RoomPageComponentProps & RouteComponentProps) => {
+const RoomPageComponent = (props: RoomPageComponentProps) => {
   const [isOpenLeftSidebar, setIsOpenLeftSidebar] = useState(true);
   const [isOpenRightSidebar, setIsOpenRightSidebar] = useState(false);
   const [queries, setQueries] = useState<RoomQueries>({
@@ -86,11 +90,6 @@ const RoomPageComponent = (props: RoomPageComponentProps & RouteComponentProps) 
   useEffect(() => {
     if ( !isMobileOnly && props.companyId && props.projectId) {
       load(props.getRooms);
-    }else if(isEmpty(props.currentRoom)){
-      console.log(props)
-      props.getSingleProject(props.match.params['projectId']);
-      props.getRoleForProject(props.match.params['projectId']);
-      props.setCurrentProjectId(props.match.params['projectId']);
     }
   }, [props.companyId, props.projectId]);
 
@@ -126,6 +125,13 @@ const RoomPageComponent = (props: RoomPageComponentProps & RouteComponentProps) 
   }, [queries.roomId, props.pusherInstance, props.rooms]);
 
   const [showDialog, setShowDialog] = useState(false);
+
+  if(isEmpty(props.projectId)){
+    const { projectId } = (props.match.params as any);
+      props.getSingleProject(projectId);
+      props.setCurrentProjectId(projectId);
+      props.getRoleForProject(projectId);
+  }
 
   return (
     <>
@@ -234,8 +240,7 @@ export const RoomPage = connect(mapStateToProps, {
   getRooms,
   getRoomSharedFiles,
   getRoomDiscussions,
-  updateLastSeen,
-  getSingleProject,
-  getRoleForProject,
+  updateLastSeen,getSingleProject,
   setCurrentProjectId,
+  getRoleForProject,
 })(withRouter(RoomPageComponent));
