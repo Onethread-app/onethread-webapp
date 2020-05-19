@@ -6,16 +6,16 @@ const AutoLogin =  (props: RouteComponentProps) => {
   const token = JSON.stringify(query.get('token'));
   const refreshToken = JSON.stringify(query.get('refreshToken'));
   const view = query.get('view');
-  const redirectURL = query.get('redirectURL') + (view === "mobile" ? "&view="+view : "");
+  const redirectPath = query.get('redirectPath');
   localStorage.setItem('tigrow_acc_id', token);
   localStorage.setItem('tigrow_real_id', refreshToken);
 
   return (
     <>
-      { redirectURL ? 
-        <Redirect to={redirectURL} />
+      { redirectPath ? 
+        <Redirect to={ redirectPath + ( view === 'mobile' ? '&view=' + view : '' ) } />
         : 
-        <Redirect to="/" />
+        <Redirect to={ '/' + ( view === 'mobile' ? '&view=' + view : '' ) } />
       }
     </>
   );
