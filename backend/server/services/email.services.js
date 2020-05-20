@@ -1,5 +1,7 @@
 const nodemailer = require('nodemailer');
 const AWS = require('aws-sdk');
+const hbs = require('nodemailer-express-handlebars');
+
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const { capitalizeName } = require('../helpers/capitalizeLetter');
@@ -14,7 +16,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const { port } = config;
 let host = ``;
 if (config.env === 'production') {
   host = `https://www.tigrow.co`;
@@ -29,7 +30,16 @@ if (config.env === 'production') {
 } else {
   host = `http://localhost:3000`;
 }
-
+const options = {
+  viewEngine: {
+    extName: '.handlebars',
+    partialsDir: 'templates',
+    layoutsDir: 'templates',
+    defaultLayout: false,
+  },
+  viewPath: 'templates',
+};
+transporter.use('compile', hbs(options));
 module.exports.sendEmailForResetPassword = async (
   firstName,
   lastName,
@@ -42,11 +52,11 @@ module.exports.sendEmailForResetPassword = async (
   const mailOptions = {
     to: emailID,
     subject: 'Generated Token For Reset Password',
-    html: `
-      <h1> Hi ${fullName}, </h1>
-      <h2> Please Reset Your password from following <a href="${link}"> Link </a> </h2>
-  
-    `,
+    template: 'resetPassword-confirmation',
+    context: {
+      name: fullName,
+      link: link,
+    },
   };
 
   return transporter.sendMail(mailOptions, (err, info) => {
@@ -70,11 +80,11 @@ module.exports.sendEmailForVerifyAccount = async (
   const mailOptions = {
     to: emailID,
     subject: 'Please confirm your Email account',
-    html: `
-      <h1> Hi ${fullName}, </h1>
-      <h2> Please Click on the link to verify your email <a href="${link}"> click here to verify </a> </h2>
-  
-    `,
+    template: 'signup-confirmation',
+    context: {
+      name: fullName,
+      link: link,
+    },
   };
 
   return transporter.sendMail(mailOptions, function (err, res) {
