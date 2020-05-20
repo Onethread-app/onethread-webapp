@@ -138,50 +138,50 @@ export const ProjectPrefaceViewComponent = (
               </Button>
             </div>
           ) : (
-              projectRules(props.optionalRole)[props.role].includes(
-                'addFileProject',
-              ) && (
-                <div>
-                  <h1 className="f6">Shared Files</h1>
-                  {props.files.map((file: any) => (
-                    <div className="flex items-center justify-between">
-                      <h1 className="f6 fw6 blue">
-                        {file.s3Key.split('/')[1]}
-                      </h1>
-                      <a
-                        href={file.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        download
-                      >
-                        <span className="flex pl3">
-                          <img
-                            src={DownloadIcon}
-                            alt="Download icon"
-                            style={{
-                              width: '23px',
-                              height: '23px',
-                            }}
-                          />
-                        </span>
-                      </a>
-                    </div>
-                  ))}
-                  <Button
-                    className="pointer w4 pa2 flex flex-column center mb5 mt4"
-                    style={{
-                      background: '#fff',
-                      outline: 'none',
-                      border: '2px solid blue',
-                      color: 'blue',
-                    }}
-                    onClick={() => setShowFileDialog(true)}
-                  >
-                    Upload Files
+            projectRules(props.optionalRole)[props.role].includes(
+              'addFileProject',
+            ) && (
+              <div>
+                <h1 className="f6">Shared Files</h1>
+                {props.files.map((file: any) => (
+                  <div className="flex items-center justify-between">
+                    <h1 className="f6 fw6 blue">
+                      {file.s3Key.split('/')[1]}
+                    </h1>
+                    <a
+                      href={file.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download
+                    >
+                      <span className="flex pl3">
+                        <img
+                          src={DownloadIcon}
+                          alt="Download icon"
+                          style={{
+                            width: '23px',
+                            height: '23px',
+                          }}
+                        />
+                      </span>
+                    </a>
+                  </div>
+                ))}
+                <Button
+                  className="pointer w4 pa2 flex flex-column center mb5 mt4"
+                  style={{
+                    background: '#fff',
+                    outline: 'none',
+                    border: '2px solid blue',
+                    color: 'blue',
+                  }}
+                  onClick={() => setShowFileDialog(true)}
+                >
+                  Upload Files
                 </Button>
-                </div>
-              )
-            )}
+              </div>
+            )
+          )}
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})
