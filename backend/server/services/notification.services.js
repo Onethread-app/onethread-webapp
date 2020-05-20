@@ -59,7 +59,6 @@ module.exports.sendCompanyRoleNotification = async (
   );
 
   // var message = [{
-
   //   webpush: {
   //     notification: {
   //       title: userNoti.type,

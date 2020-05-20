@@ -203,8 +203,13 @@ const addMember = async (req, res, next) => {
 >>>>>>> d0b80317... ready for pre-release v2.3.1
 =======
     
+
     logger.error(`${error}`);
+<<<<<<< HEAD
 >>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
+=======
+
+>>>>>>> fb4e4471... Wip/backend/announcement (#171) (#185)
     next(error);
   }
 };
