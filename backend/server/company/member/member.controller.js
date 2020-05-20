@@ -185,7 +185,12 @@ const addMember = async (req, res, next) => {
       pendingMembers,
     });
   } catch (error) {
+<<<<<<< HEAD
     logger.error(`Colleague: ${error}`);
+=======
+    
+    logger.error(`${error}`);
+>>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
     next(error);
   }
 };

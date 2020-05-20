@@ -54,11 +54,20 @@ const create = async (req, res, next) => {
     const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
     createCompanyRoleNotification(
       {
+<<<<<<< HEAD
         _id: column.boardId.project.company,
         project: column.boardId.project._id,
         board: column.boardId,
         task: createdTask._id,
       },
+=======
+         _id: column.boardId.project.company ,
+         project: column.boardId.project._id,
+         board: column.boardId,
+         task: createdTask._id,
+
+        },
+>>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
       {
         _id: req.user._id,
         name: req.user.name,
@@ -303,11 +312,20 @@ const dragTask = async (req, res, next) => {
     const text = `${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
     createCompanyRoleNotification(
       {
+<<<<<<< HEAD
         _id: column.boardId.project.company,
         project: column.boardId.project._id,
         board: column.boardId,
         task: task._id,
       },
+=======
+        _id: column.boardId.project.company ,
+        project: column.boardId.project._id,
+        board: column.boardId,
+        task: createdTask._id,
+
+       },
+>>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
       {
         _id: req.user._id,
         name: req.user.name,
