@@ -21,12 +21,14 @@ router
     projectCtrl.changeTitleProject,
   );
 // authentication
-router.route('/:companyId/create').post(
-  authorization,
-  companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-  // schemaValidator(projectValidation.createNewProjectForCompany),
-  projectCtrl.createNewProjectForCompany,
-);
+router
+  .route('/:companyId/create')
+  .post(
+    authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.createNewProjectForCompany),
+    projectCtrl.createNewProjectForCompany,
+  );
 
 router
   .route('/:companyId/add-associates')
@@ -37,13 +39,19 @@ router
     schemaValidator(projectValidation.addAssociate),
     projectCtrl.addAssociateInProject,
   );
-router.route('/:companyId/lists').get(
-  authorization,
-  companyCtrl.authorizeUser('all', 'admin', 'superAdmin', 'employee'),
-  // projectCtrl.authorizeProjectRole('all', 'admin'),
-  schemaValidator(projectValidation.showProjectList),
-  projectCtrl.showAllProjectsForCompany,
-);
+router
+  .route('/:companyId/lists')
+  .get(
+    authorization,
+    companyCtrl.authorizeUser(
+      'all',
+      'admin',
+      'superAdmin',
+      'employee',
+    ),
+    schemaValidator(projectValidation.showProjectList),
+    projectCtrl.showAllProjectsForCompany,
+  );
 
 router
   .route('/concern-admin-search/:companyId')
@@ -52,6 +60,15 @@ router
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     schemaValidator(projectValidation.searchConcernAdmin),
     projectCtrl.suggestConcernAdmin,
+  );
+
+router
+  .route('/associate-company-search/:companyId')
+  .get(
+    authorization,
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.searchAssociateCompany),
+    projectCtrl.suggestAssociateCompany,
   );
 router
   .route('/:companyId/archive-list')
@@ -66,6 +83,7 @@ router
   .get(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.pendingList),
     projectCtrl.projectPendingRequest,
   );
 router
@@ -73,6 +91,7 @@ router
   .put(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.acceptProject),
     projectCtrl.acceptProjectRequest,
   );
 router
@@ -80,6 +99,7 @@ router
   .put(
     authorization,
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.rejectProject),
     projectCtrl.rejectProjectRequest,
   );
 router

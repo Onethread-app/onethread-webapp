@@ -8,6 +8,7 @@ const logger = require('../../config/winston');
 const {
   search,
   memberIndex,
+  associateIndex,
 } = require('../services/elastic.services');
 const {
   sendErrorResponse,
@@ -16,14 +17,28 @@ const {
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
-const teamCreate = (account, member, project, role) => {
+const teamCreate = async (account, member, project, role) => {
   let newTeam = new Team({
     account,
     member,
     project,
     role,
   });
-  newTeam.save();
+  await newTeam.save();
+};
+
+const projectRequestUpdate = async (pid, size) => {
+  await ProjectRequest.updateOne(
+    { project: pid },
+    {
+      $set: {
+        isAccepted: true,
+        isRejected: false,
+        size: size,
+      },
+    },
+    { safe: true, new: true, upsert: true },
+  );
 };
 
 const createNewProjectForCompany = async (req, res, next) => {
@@ -188,12 +203,12 @@ const createNewProjectForCompany = async (req, res, next) => {
           });
         })
         .catch((error) => {
-          logger.error(`${error}`);
+          logger.error(`Project: ${error}`);
           next(error);
         });
     }
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Project: ${error}`);
     next(error);
   }
 };
@@ -264,7 +279,7 @@ const addAssociateInProject = async (req, res, next) => {
       message: 'associate list update',
     });
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Project: ${error}`);
     next(error);
   }
 };
@@ -295,7 +310,7 @@ const updateRole = async (req, res, next) => {
       data: project.optionalRole,
     });
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Project: ${error}`);
     next(error);
   }
 };
@@ -306,7 +321,7 @@ const projectPendingRequest = async (req, res, next) => {
   ProjectRequest.find({
     $and: [{ isAccepted: false }, { associate: companyId }],
   })
-    .select('company project')
+    .select('company project size')
     .populate('company project')
     .sort({ createdAt: -1 })
     .skip(+skip)
@@ -317,33 +332,25 @@ const projectPendingRequest = async (req, res, next) => {
       return sendJSONresponse(res, 200, result);
     })
     .catch((e) => {
-      logger.error(`${e}`);
+      logger.error(`Project: ${e}`);
       next(e);
     });
 };
 
 const acceptProjectRequest = async (req, res, next) => {
   try {
-    await ProjectRequest.updateOne(
-      { project: req.query.pid },
-      {
-        $set: {
-          isAccepted: true,
-          isRejected: false,
-        },
-      },
-      { safe: true, new: true, upsert: true },
-    );
-    logger.info(`project request accept for ${req.query.pid}`);
+    const pid = req.query.pid;
+    const companyId = req.params.companyId;
+    const teamSize = req.body.size;
     await Associate.findOneAndUpdate(
       {
         $or: [
-          { company: req.params.companyId },
-          { associateCompany: { $in: req.params.companyId } },
+          { company: companyId },
+          { associateCompany: { $in: companyId } },
         ],
       },
       {
-        $push: { project: req.query.pid },
+        $push: { project: pid },
       },
       { new: true, upsert: true },
     );
@@ -365,17 +372,65 @@ const acceptProjectRequest = async (req, res, next) => {
       'project',
     );
     await Project.updateOne(
-      { _id: req.query.pid },
+      { _id: pid },
       {
-        $push: { associate: req.params.companyId },
+        $push: { associate: companyId },
       },
       { new: true, upsert: true },
     );
+    const isSuperAdmin = await Member.findOne({
+      $and: [
+        {
+          company: req.params.companyId,
+          role: 'superAdmin',
+        },
+      ],
+    }).select('_id account');
+    const isAdmin = await Member.findOne({
+      $and: [
+        {
+          account: req.user._id,
+          company: req.params.companyId,
+          role: 'admin',
+        },
+      ],
+    }).select('_id account');
+    if (isSuperAdmin.account.toString() === req.user._id) {
+      teamCreate(
+        isSuperAdmin.account,
+        isSuperAdmin._id,
+        pid,
+        'member',
+      );
+      logger.info(
+        `Associate superAdmin join as team member in the project`,
+      );
+      projectRequestUpdate(pid, teamSize - 1);
+      logger.info(`project request accept for ${pid}`);
+    }
+    if (isAdmin.account.toString() === req.user._id) {
+      teamCreate(
+        isSuperAdmin.account,
+        isSuperAdmin._id,
+        pid,
+        'member',
+      );
+      logger.info(
+        `Associate superAdmin join as team member in the project`,
+      );
+      teamCreate(isAdmin.account, isAdmin._id, pid, 'member');
+      logger.info(
+        `Associate admin join as team member in the project`,
+      );
+      projectRequestUpdate(pid, teamSize - 2);
+      logger.info(`project request accept for ${pid}`);
+    }
+
     return sendJSONresponse(res, 200, {
       message: `${req.query.pid} accepted by ${req.params.companyId}`,
     });
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Project: ${error}`);
     next(error);
   }
 };
@@ -409,21 +464,21 @@ const showAllProjectsForCompany = async (req, res, next) => {
     let pendingProject = await ProjectRequest.find({
       $and: [{ isAccepted: false }, { associate: companyId }],
     }).populate('project', '_id');
-    // let memberExistInProject = await Team.find({
-    //   $and: [{ account: req.user._id }, { removed: false }],
-    // }).populate('project', '_id');
+    let memberExistInProject = await Team.find({
+      $and: [{ account: req.user._id }, { removed: false }],
+    }).populate('project', '_id');
 
     pendingProject = pendingProject.map((data) => {
       return data.project._id;
     });
-    // memberExistInProject = memberExistInProject.map((data) => {
-    //   return data.project._id;
-    // });
+    memberExistInProject = memberExistInProject.map((data) => {
+      return data.project._id;
+    });
 
     await Project.find({
       $and: [
         { _id: { $nin: pendingProject } },
-        // { _id: { $in: memberExistInProject } },
+        { _id: { $in: memberExistInProject } },
         {
           $or: [
             { company: companyId },
@@ -447,7 +502,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
         next(error);
       });
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Project: ${error}`);
     next(error);
   }
 };
@@ -471,7 +526,7 @@ const updateProjectDescription = async (req, res, next) => {
       });
     })
     .catch((err) => {
-      logger.error(`${err}`);
+      logger.error(`Project: ${err}`);
       next(err);
     });
 };
@@ -508,11 +563,12 @@ const getProjectDetails = async (req, res, next) => {
       .populate('files', 'link s3Key')
       .select('outline description color name');
     const memberList = await Team.find({
-      project: req.query.pid,
+      $and: [{ project: req.query.pid }, { removed: false }],
     }).populate('account', 'name profileImage');
     project.members = memberList;
     return sendJSONresponse(res, 200, project);
   } catch (error) {
+    logger.error(`Project: ${error}`);
     next(error);
   }
 };
@@ -572,7 +628,7 @@ const archiveProject = async (req, res) => {
       });
     }
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Project: ${error}`);
     return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
       message: 'Project id is not found',
     });
@@ -592,7 +648,7 @@ const showAllFilesForProject = async (req, res, next) => {
       return sendJSONresponse(res, 200, { success: true, result });
     })
     .catch((err) => {
-      logger.error(`${err}`);
+      logger.error(`Project: ${err}`);
       next(err);
     });
 };
@@ -645,6 +701,62 @@ const suggestConcernAdmin = async (req, res, next) => {
       });
     }
   } catch (error) {
+    logger.error(`Project: ${error}`);
+    next(error);
+  }
+};
+
+const suggestAssociateCompany = async (req, res, next) => {
+  try {
+    const name = req.query.name;
+    const companyId = req.params.companyId;
+    const companyName = req.query.companyName;
+
+    if (name) {
+      let body = {
+        size: 200,
+        from: 0,
+        query: {
+          bool: {
+            must: [
+              {
+                multi_match: {
+                  query: companyId,
+                  fields: ['company_id', 'associateCompany_id'],
+                },
+              },
+              {
+                multi_match: {
+                  query: name,
+                  type: 'phrase_prefix',
+                  fields: ['companyName', 'associateCompanyName'],
+                },
+              },
+              {
+                multi_match: {
+                  query: companyName,
+                  type: 'phrase_prefix',
+                  fields: ['companyName', 'associateCompanyName'],
+                },
+              },
+            ],
+          },
+        },
+      };
+
+      const response = await search(associateIndex, '_doc', body);
+
+      return sendJSONresponse(res, 200, {
+        success: true,
+        message: `Search complete for ${name}`,
+        data: response.hits.hits,
+      });
+    } else {
+      return sendErrorResponse(res, 400, 'EmptySearchError', {
+        message: `query error`,
+      });
+    }
+  } catch (error) {
     logger.error(`${error}`);
     next(error);
   }
@@ -673,6 +785,7 @@ const archiveProjectList = async (req, res, next) => {
       return sendJSONresponse(res, 200, result);
     })
     .catch((err) => {
+      logger.error(`Project: ${err}`);
       next(err);
     });
 };
@@ -698,7 +811,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
       req.team = team;
       next();
     } catch (error) {
-      logger.error(`${error}`);
+      logger.error(`Project: ${error}`);
       next(error);
     }
   };
@@ -744,6 +857,7 @@ module.exports = {
   archiveProject,
   showAllFilesForProject,
   suggestConcernAdmin,
+  suggestAssociateCompany,
   archiveProjectList,
   projectPendingRequest,
   acceptProjectRequest,

@@ -9,6 +9,11 @@ const _ = require('lodash');
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
+const {
+  associateIndex,
+  setDocument
+} = require('../services/elastic.services');
+const chalk = require('chalk');
 
 const get = async (req, res, next) => {
   await Associate.findOne({
@@ -49,7 +54,9 @@ const createPending = async (req, res, next) => {
       associateCompany: req.body.associateCompany,
       isAccepted: false,
       isRejected: true,
-    }).exec();
+    })
+      .populate('company name')
+      .exec();
 
     if (_.isEmpty(associate)) {
       associate = new Associate({
@@ -63,9 +70,7 @@ const createPending = async (req, res, next) => {
       associate.isRejected = false;
     }
     await associate.save();
-
-    const text = `${req.body.associateCompany.name} wants to add you as their associate`;
-
+    const text = `${associate.company.name} wants to add you as their associate`;
     createCompanyRoleNotification(
       req.body.associateCompany,
       {
@@ -99,9 +104,24 @@ const acceptPending = async (req, res, next) => {
     ).exec();
 
     associate = await Associate.populate(associate, {
-      path: 'associateCompany',
+      path: 'company associateCompany',
       select: '_id name type',
     });
+
+    await setDocument(associateIndex,'_doc',{
+      mongo_id: associate._id,
+      company_id: associate.company._id,
+      companyName: associate.company.name,
+      associateCompany_id: associate.associateCompany._id,
+      associateCompanyName: associate.associateCompany.name
+    })
+
+    logger.info(
+      chalk.blueBright(
+        `Elasticsearch document added on ${associateIndex}`,
+      ),
+    );
+
     const text = `${associate.associateCompany.name} accepted you as their associate`;
 
     createCompanyRoleNotification(

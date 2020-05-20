@@ -45,6 +45,11 @@ const FormComponent = (props: {
   const [search, setSearch] = useState('');
 
   const onSubmit = async (values: any) => {
+
+    if (values.department ? values.department.length > 1 : undefined) {
+      values.projectType = 'md' ;
+    }
+    
     await props.createProject(values, selectedAdmins);
     if (props.setShowProjectDialog) {
       props.setShowProjectDialog(false);
@@ -212,6 +217,41 @@ const FormComponent = (props: {
               </div>
               <div className="flex flex-column">
                 <Field<string>
+                  name="projectType"
+                  validate={required}
+                  render={({ input, meta }) => (
+                    <div
+                      className={` ${
+                        checkError(meta) ? 'mb2' : 'mb3'
+                      }`}
+                    >
+                      <DropdownFieldErrorWithLabel
+                        id={input.name}
+                        selectedValue={input.value}
+                        options={[
+                          { _id: 'associates', name: 'Associates' },
+                          { _id: 'sd', name: 'Department' }
+                        ]}
+                        onChange={input.onChange}
+                        error={
+                          checkError(meta) &&
+                          (meta.error || meta.submitError)
+                        }
+                        label="ProjectType"
+                        className="bn"
+                      />
+                    </div>
+                  )}
+                />
+              </div>
+
+              <Condition
+                when="projectType"
+                validate={(value) => {
+                  return ['sd'].includes(value);
+                }}
+              >
+                <Field<string>
                   name="department"
                   validate={required}
                   render={({ meta, input }) => (
@@ -297,35 +337,7 @@ const FormComponent = (props: {
                     </div>
                   )}
                 />
-                <Field<string>
-                  name="projectType"
-                  validate={required}
-                  render={({ input, meta }) => (
-                    <div
-                      className={` ${
-                        checkError(meta) ? 'mb2' : 'mb3'
-                      }`}
-                    >
-                      <DropdownFieldErrorWithLabel
-                        id={input.name}
-                        selectedValue={input.value}
-                        options={[
-                          { _id: 'associates', name: 'Associates' },
-                          { _id: 'sd', name: 'Single Department' },
-                          { _id: 'md', name: 'Multiple Department' },
-                        ]}
-                        onChange={input.onChange}
-                        error={
-                          checkError(meta) &&
-                          (meta.error || meta.submitError)
-                        }
-                        label="ProjectType"
-                        className="bn"
-                      />
-                    </div>
-                  )}
-                />
-              </div>
+                </Condition>
 
               <Condition
                 when="projectType"
@@ -367,7 +379,9 @@ const FormComponent = (props: {
                               name={`${name}.size`}
                               component="select"
                               placeholder="size"
+                              validate={required}
                             >
+                              <option>select team size</option>
                               <option value="5">1-5</option>
                               <option value="10">6-10</option>
                               <option value="15">11-15</option>

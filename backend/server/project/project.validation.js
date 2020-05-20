@@ -31,6 +31,7 @@ const schema = {
   concernedAdmin: idSchema.id,
   color: Joi.number(),
   company: idSchema.id,
+  size: Joi.number().required(),
   associates: Joi.array().items(
     Joi.object().keys({
       _id: idSchema.id.required(),
@@ -44,7 +45,10 @@ module.exports = {
     body: Joi.object().keys({
       name: schema.name.required(),
       type: schema.type.required(),
-      concernedAdmin: schema.type.required(),
+      concernedAdmin: Joi.object().keys({
+        memberId: schema.memberId.required(),
+        accountId: idSchema.id,
+      }),
       companyId: schema.company.required(),
       departments: schema.departments,
       color: schema.color,
@@ -69,6 +73,24 @@ module.exports = {
   getProject: Joi.object().keys({
     params: pid.required(),
   }),
+  pendingList: Joi.object().keys({
+    params: companyId.required(),
+  }),
+  acceptProject: Joi.object().keys({
+    params: companyId.required(),
+    query: Joi.object().keys({
+      pid: schema.pid.required(),
+    }),
+    body: Joi.object().keys({
+      size: schema.size.required(),
+    }),
+  }),
+  rejectProject: Joi.object().keys({
+    params: companyId.required(),
+    query: Joi.object().keys({
+      pid: schema.pid.required(),
+    }),
+  }),
   changeNameProject: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
@@ -85,5 +107,12 @@ module.exports = {
   }),
   searchConcernAdmin: Joi.object().keys({
     params: companyId.required(),
+  }),
+  searchAssociateCompany: Joi.object().keys({
+    params: companyId.required(),
+    query: Joi.object().keys({
+      companyName: schema.name.required(),
+      name: schema.name.required()
+    }),
   }),
 };

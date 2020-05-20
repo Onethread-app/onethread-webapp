@@ -27,7 +27,9 @@
     "object-literal-sort-keys": false,
     "no-any": false,
     "no-arg": true,
-    "no-bitwise": true,
+				"no-bitwise": true,
+				"no-shadowed-variable": false,
+				"array-type": false,
     "no-console": [
       true,
       "log",
