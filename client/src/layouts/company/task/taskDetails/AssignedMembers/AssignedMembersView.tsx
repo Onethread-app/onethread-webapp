@@ -37,7 +37,7 @@ export const AssignedMembersViewComponent = (
                 src={
                   list.profileImage
                     ? list.profileImage
-                    : 'http://tachyons.io/img/logo.jpg'
+                    : 'https://tigrowresources.s3-ap-southeast-1.amazonaws.com/profilePhoto.svg'
                 }
                 className="br2 h2 w2 pointer"
                 alt="avatar"

@@ -160,7 +160,7 @@ export const HomePage = () => {
               </ul>
               <div className="demoLink">
                 <a
-                  href="https://www.youtube.com/watch?v=Jqscj2N5F4g&feature=youtu.be"
+                  href="https://www.youtube.com/watch?v=3jIaHDeZ2Is&feature=youtu.be"
                   className="tryLink"
                 >
                   See The Demo
@@ -218,7 +218,10 @@ export const HomePage = () => {
                 </li>
               </ul>
               <div className="demoLink flex items-center">
-                <a href="https://www.youtube.com/watch?v=Jqscj2N5F4g&feature=youtu.be" className="tryLink">
+                <a
+                  href="https://www.youtube.com/watch?v=3jIaHDeZ2Is&feature=youtu.be"
+                  className="tryLink"
+                >
                   See The Demo
                 </a>
               </div>

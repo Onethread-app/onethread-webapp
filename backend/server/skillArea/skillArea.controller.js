@@ -290,7 +290,7 @@ const searchSkillSet = async (req, res, next) => {
     //   }
     // }
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`);
     next(error);
   }
 };

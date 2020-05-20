@@ -184,7 +184,7 @@ export const App = () => (
       <PrivateRoute
         path="/company/:cname/project/:projectId/room"
         exact={true}
-        component={ isMobileOnly ? RoomPageMobile : RoomPage}
+        component={isMobileOnly ? RoomPageMobile : RoomPage}
       />
       <PrivateRoute
         path="/company/:cname/project/:projectId/board"

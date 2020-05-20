@@ -28,7 +28,7 @@ export const AssignedMemberListViewComponent = (
             src={
               list.profileImage
                 ? list.profileImage
-                : 'https://robohash.org/VLSI'
+                : 'https://tigrowresources.s3-ap-southeast-1.amazonaws.com/profilePhoto.svg'
             }
           />
           <div

@@ -6,21 +6,23 @@ const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
 
-router.route('/').get(authorization, notificationCtrl.list);
+
+
+router.route('/:companyId').get(authorization, notificationCtrl.list);
 
 router.route('/webpush').post(authorization, notificationCtrl.userTokenFCM);
 
 // router
-// .route('/test')
+// .route('/test/:companyId')
 // .get(
-
-//   notificationCtrl.listtest,
+//   authorization,
+//   notificationCtrl.test,
 // );
 
 router
-  .route('/:userNotificationId')
+  .route('/read/:userNotificationId')
   .get(authorization, notificationCtrl.read);
 
-router.route('/seen').get(authorization, notificationCtrl.seen);
+router.route('/seen/:companyId').get(authorization, notificationCtrl.seen);
 
 module.exports = router;
