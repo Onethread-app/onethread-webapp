@@ -356,7 +356,7 @@ const dragTask = async (req, res, next) => {
         _id: column.boardId.project.company ,
         project: column.boardId.project._id,
         board: column.boardId,
-        task: createdTask._id,
+        task: task._id,
 
        },
 >>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
