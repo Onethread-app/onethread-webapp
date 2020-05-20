@@ -8,12 +8,12 @@ import {
   GET_COMPANY_DETAILS,
   ADD_TEAM_MEMBERS_ERROR,
   ADD_DEPARTMENT,
-  ADD_DEPARTMENT_ERROR,
-  COMPANY_DEPARTMENT_LOADING,
-  GET_ALL_COMPANY_MEMBERS,
+  // ADD_DEPARTMENT_ERROR,
+  // COMPANY_DEPARTMENT_LOADING,
+  // GET_ALL_COMPANY_MEMBERS,
   COMPANY_REDUCER_LOADING,
   COMPANY_REDUCER_LOADING_FALSE,
-  GET_ALL_DEPARTMENT,
+  // GET_ALL_DEPARTMENT,
   EDIT_COMPANY_INFO,
   CHANGE_COMPANY_NAME_ERROR,
   CHANGE_COMPANY_NAME,
@@ -40,6 +40,7 @@ import {
   GET_ALL_COMPANY_ANNOUNCEMENT,
   // ADD_ANNOUNCEMENT,
   GET_ALL_PRODUCT,
+  company,
   // ADD_ANNOUNCEMENT
 } from './Types';
 import {
@@ -137,38 +138,38 @@ export const createCompanyAction = (
   }
 };
 
-export const getCompanyMembers = () => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const companyId = getState().companyReducer.currentCompany._id;
-      dispatch({ type: COMPANY_REDUCER_LOADING });
-      const response = await tigrowApi.get(
-        `company/${companyId}/members?limit=100`,
-        headers,
-      );
-      dispatch({
-        type: GET_ALL_COMPANY_MEMBERS,
-        payload: response.data,
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in selection of company fetching');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      dispatch({
-        type: ADD_TEAM_MEMBERS_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-  }
+export const getCompanyMembers = () => {
+  return {
+    type: company.GET_ALL_COMPANY_MEMBERS_LOADING
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   if ((headers as any).headers.Authorization) {
+  //     const companyId = getState().companyReducer.currentCompany._id;
+  //     dispatch({ type: COMPANY_REDUCER_LOADING });
+  //     const response = await tigrowApi.get(
+  //       `company/${companyId}/members?limit=100`,
+  //       headers,
+  //     );
+  //     dispatch({
+  //       type: GET_ALL_COMPANY_MEMBERS,
+  //       payload: response.data,
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('error in selection of company fetching');
+  //   }
+  // } catch (error) {
+  //   if (isEqual(error.message, 'Network Error')) {
+  //     dispatch({
+  //       type: ADD_TEAM_MEMBERS_ERROR,
+  //       payload: 'Network error',
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log(error.response);
+  //   }
+  // }
 };
 
 export const addTeamMembers = (
@@ -272,40 +273,40 @@ export const clearAddDepartmentError = () => async (
   dispatch({ type: CLEAR_ADD_DEPARTMENT_ERROR });
 };
 
-export const getAllDepartments = () => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      dispatch({ type: COMPANY_DEPARTMENT_LOADING });
-      const companyId = getState().companyReducer.currentCompany._id;
-      const response = await tigrowApi.get(
-        `company/${companyId}/departments`,
-        headers,
-      );
-      dispatch({ type: GET_ALL_DEPARTMENT, payload: response.data });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in adding department');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      dispatch({
-        type: ADD_DEPARTMENT_ERROR,
-        payload: 'Network error',
-      });
-    } else if (error.response.status === 401) {
-      dispatch({
-        type: ADD_DEPARTMENT_ERROR,
-        payload: 'Unauthorized user.',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-  }
+export const getAllDepartments = () => {
+  return {
+    type: company.GET_ALL_DEPARTMENT_LOADING
+  };
+  // try {
+  //   const headers = tokenConfig();
+  //   if ((headers as any).headers.Authorization) {
+  //     dispatch({ type: COMPANY_DEPARTMENT_LOADING });
+  //     const companyId = getState().companyReducer.currentCompany._id;
+  //     const response = await tigrowApi.get(
+  //       `company/${companyId}/departments`,
+  //       headers,
+  //     );
+  //     dispatch({ type: GET_ALL_DEPARTMENT, payload: response.data });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log('error in adding department');
+  //   }
+  // } catch (error) {
+  //   if (isEqual(error.message, 'Network Error')) {
+  //     dispatch({
+  //       type: ADD_DEPARTMENT_ERROR,
+  //       payload: 'Network error',
+  //     });
+  //   } else if (error.response.status === 401) {
+  //     dispatch({
+  //       type: ADD_DEPARTMENT_ERROR,
+  //       payload: 'Unauthorized user.',
+  //     });
+  //   } else {
+  //     // tslint:disable-next-line: no-console
+  //     console.log(error.response);
+  //   }
+  // }
 };
 
 export const editCompanyInfoAction = (
