@@ -641,3 +641,8 @@ module.exports.read = async (req, res, next) => {
       next(e);
     });
 };
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> b5ba006a... Wip/backend/announcement (#171) (#185)

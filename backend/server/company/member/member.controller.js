@@ -189,8 +189,13 @@ const addMember = async (req, res, next) => {
     logger.error(`Colleague: ${error}`);
 =======
     
+
     logger.error(`${error}`);
+<<<<<<< HEAD
 >>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
+=======
+
+>>>>>>> b5ba006a... Wip/backend/announcement (#171) (#185)
     next(error);
   }
 };
