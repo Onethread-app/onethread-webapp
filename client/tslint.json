@@ -28,6 +28,7 @@
     "no-any": false,
     "no-arg": true,
 <<<<<<< HEAD
+<<<<<<< HEAD
     "no-bitwise": true,
     "no-shadowed-variable": false,
     "array-type": false,
@@ -36,6 +37,11 @@
 				"no-shadowed-variable": false,
 				"array-type": false,
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+				"no-bitwise": true,
+				"no-shadowed-variable": false,
+				"array-type": false,
+>>>>>>> 380328e7... Feature/role access (#187)
     "no-console": [
       true,
       "log",

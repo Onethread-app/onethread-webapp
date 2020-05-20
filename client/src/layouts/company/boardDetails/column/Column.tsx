@@ -96,6 +96,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     props.projectRole === "projectModerator" && 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     props.optionalRole!.includes("createUpdateBoard")
 =======
                     props.optionalRole.includes("createUpdateBoard")
@@ -103,6 +104,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 =======
                     props.optionalRole!.includes("createUpdateBoard")
 >>>>>>> d0b80317... ready for pre-release v2.3.1
+=======
+                    props.optionalRole.includes("createUpdateBoard")
+>>>>>>> 380328e7... Feature/role access (#187)
                 )
               ) && (
                 <Popover
@@ -138,6 +142,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 props.projectRole === "projectModerator" && 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 props.optionalRole!.includes("createUpdateBoard")
 =======
                 props.optionalRole.includes("createUpdateBoard")
@@ -145,6 +150,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 =======
                 props.optionalRole!.includes("createUpdateBoard")
 >>>>>>> d0b80317... ready for pre-release v2.3.1
+=======
+                props.optionalRole.includes("createUpdateBoard")
+>>>>>>> 380328e7... Feature/role access (#187)
               )
             ) && (
               <div

@@ -595,6 +595,7 @@ const FormComponent = (props: {
                     </div>
                   )}
                 />
+<<<<<<< HEAD
                 <div className="flex justify-end mt4">
                   <Button
                     className="w4 grow h2 pointer mr3"
@@ -608,6 +609,8 @@ const FormComponent = (props: {
                     </div>
                   )}
                 />
+=======
+>>>>>>> 380328e7... Feature/role access (#187)
                 </Condition>
 
               <Condition

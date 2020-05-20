@@ -388,6 +388,7 @@ export const getAllPendingProjects = () => async (
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const acceptPendingProject = (
   pending: IPendingProject,
 ) => async (dispatch: any, getState: any) => {
@@ -398,6 +399,8 @@ export const acceptPendingProject = (
       pending.project._id
     ) {
 =======
+=======
+>>>>>>> 380328e7... Feature/role access (#187)
 export const acceptPendingProject = (pending: IPendingProject) => async (
   dispatch: any,
   getState: any,
@@ -405,37 +408,52 @@ export const acceptPendingProject = (pending: IPendingProject) => async (
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization && pending.project._id) {
+<<<<<<< HEAD
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+>>>>>>> 380328e7... Feature/role access (#187)
       const companyID = getState().companyReducer.currentCompany._id;
       const pendingProjects = getState().projectReducer
         .pendingProjects;
       const reqBody = {
+<<<<<<< HEAD
 <<<<<<< HEAD
         size: pending.size,
         associate: pending.associate,
 =======
         size: pending.size
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+        size: pending.size
+>>>>>>> 380328e7... Feature/role access (#187)
       };
       const response = await tigrowApi.put(
         `projects/${companyID}/accept-request?pid=${pending.project._id}`,
         reqBody,
 <<<<<<< HEAD
+<<<<<<< HEAD
         headers,
 =======
         headers
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+        headers
+>>>>>>> 380328e7... Feature/role access (#187)
       );
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
           (pending: IPendingProject) =>
 <<<<<<< HEAD
+<<<<<<< HEAD
             isEqual(pending.project._id, pending.project._id) ===
             false,
 =======
             isEqual(pending.project._id, pending.project._id) === false,
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+            isEqual(pending.project._id, pending.project._id) === false,
+>>>>>>> 380328e7... Feature/role access (#187)
         );
         dispatch({
           type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT,

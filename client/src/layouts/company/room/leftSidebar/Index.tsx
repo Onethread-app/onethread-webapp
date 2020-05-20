@@ -46,6 +46,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           <h3 className="tigrow-darkGray">Rooms</h3>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           { props.projectRole && 
             props.optionalRole && 
             (projectRules(props.optionalRole)[props.projectRole] === true || 
@@ -72,6 +73,8 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           {props.companyRole && projectPermit(props.companyRole) ? (
 =======
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+>>>>>>> 380328e7... Feature/role access (#187)
             <span
               className="bp3-icon grow pointer"
               onClick={() => { 

@@ -26,6 +26,7 @@ const schema = {
   company: idSchema.id,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   size: Joi.number().required(),
   associate: idSchema.id,
 =======
@@ -33,6 +34,9 @@ const schema = {
 =======
   size: Joi.number().required(),
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+  size: Joi.number().required(),
+>>>>>>> 380328e7... Feature/role access (#187)
   associates: Joi.array().items(
     Joi.object().keys({
       _id: idSchema.id.required(),
@@ -48,7 +52,10 @@ module.exports = {
 <<<<<<< HEAD
 =======
       type: schema.type.required(),
+<<<<<<< HEAD
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+>>>>>>> 380328e7... Feature/role access (#187)
       concernedAdmin: Joi.object().keys({
         memberId: schema.memberId.required(),
         accountId: idSchema.id,
@@ -97,9 +104,12 @@ module.exports = {
     body: Joi.object().keys({
       size: schema.size.required(),
 <<<<<<< HEAD
+<<<<<<< HEAD
       associate: schema.associate.required(),
 =======
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+>>>>>>> 380328e7... Feature/role access (#187)
     }),
   }),
   rejectProject: Joi.object().keys({
@@ -130,10 +140,14 @@ module.exports = {
     query: Joi.object().keys({
       companyName: schema.name.required(),
 <<<<<<< HEAD
+<<<<<<< HEAD
       name: schema.name.required(),
 =======
       name: schema.name.required()
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+      name: schema.name.required()
+>>>>>>> 380328e7... Feature/role access (#187)
     }),
   }),
 };

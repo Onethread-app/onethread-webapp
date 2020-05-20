@@ -56,10 +56,15 @@ const createPending = async (req, res, next) => {
       isRejected: true,
     })
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       .populate('company name')
       .exec();
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+      .populate('company name')
+      .exec();
+>>>>>>> 380328e7... Feature/role access (#187)
 
     if (_.isEmpty(associate)) {
       associate = new Associate({
@@ -75,10 +80,14 @@ const createPending = async (req, res, next) => {
     
     await associate.save();
 <<<<<<< HEAD
+<<<<<<< HEAD
     const text = `${req.body.company.name} wants to add you as their associate`;
 =======
     const text = `${associate.company.name} wants to add you as their associate`;
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+    const text = `${associate.company.name} wants to add you as their associate`;
+>>>>>>> 380328e7... Feature/role access (#187)
     createCompanyRoleNotification(
       req.body.associateCompany,
       {

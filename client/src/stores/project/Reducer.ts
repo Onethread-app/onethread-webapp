@@ -33,8 +33,11 @@ export interface IPendingProject {
   project: IProject;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+>>>>>>> 380328e7... Feature/role access (#187)
   size: string;
   company: ICompany;
   associate: string;
