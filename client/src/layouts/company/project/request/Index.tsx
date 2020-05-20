@@ -44,15 +44,17 @@ const ProjectRequestComponent = (
       {loading === false ? (
         props.PendingProjects.map((pending) => (
           <main className="">
+              {console.log(pending)}
             <article className="dt w-100 pv4 mt2">
               <div className="dtc w2 w3-ns v-mid">
                 <img
-                  src="http://mrmrs.github.io/photos/p/2.jpg"
-                  className="ba b--black-10 db br-100 w2 w3-ns h2 h3-ns"
+                  style={{ height: '40px' }}
+                  src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/files-and-folders.svg"
+                  className="db h2 h3-ns"
                 />
               </div>
               <div className="dtc v-mid pl3 mw6">
-                <h1 className="f5 black mv0">Pratidin</h1>
+                <h1 className="f5 black mv0">{pending.company.name}</h1>
                 <h1 className="f6 f5-ns fw6 lh-title black mt3 mb0">
                   {pending.project.name}
                 </h1>

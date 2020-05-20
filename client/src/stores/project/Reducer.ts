@@ -2,6 +2,7 @@ import { PROJECT, CLEAR_PROJECT_REDUCER_STATE } from './Types';
 import { Entity } from 'stores/UtilsActions';
 import { User } from 'stores/user/Reducer';
 import { IDesignations } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 
 export interface IProject {
   _id: string;
@@ -18,6 +19,7 @@ export interface IProject {
 export interface IPendingProject {
   _id: string;
   project: IProject;
+  company: ICompany;
 }
 
 export interface ProjectModel {
