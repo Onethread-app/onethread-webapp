@@ -187,6 +187,7 @@ const addMember = async (req, res, next) => {
   } catch (error) {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     logger.error(`Colleague: ${error}`);
 =======
     
@@ -200,6 +201,10 @@ const addMember = async (req, res, next) => {
 =======
     logger.error(`${error}`);
 >>>>>>> d0b80317... ready for pre-release v2.3.1
+=======
+    
+    logger.error(`${error}`);
+>>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
     next(error);
   }
 };

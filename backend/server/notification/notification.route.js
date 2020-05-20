@@ -6,15 +6,11 @@ const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
 
-<<<<<<< HEAD
 router.route('/:companyId').get(authorization, notificationCtrl.list);
 
 router
   .route('/webpush')
   .post(authorization, notificationCtrl.userTokenFCM);
-=======
-router.route('/').get(authorization, notificationCtrl.list);
->>>>>>> 4e99f05f... code style issue fixed
 
 // router
 // .route('/test/:companyId')
