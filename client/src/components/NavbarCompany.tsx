@@ -24,8 +24,9 @@ interface NavbarProps {
   getNotifications: any;
 }
 
-const NavbarCompanyComponent = (props: NavbarProps & RouteComponentProps) => {
-
+const NavbarCompanyComponent = (
+  props: NavbarProps & RouteComponentProps,
+) => {
   const [showDialog, setShowDialog] = useState(false);
 
   React.useEffect(() => {
@@ -46,7 +47,11 @@ const NavbarCompanyComponent = (props: NavbarProps & RouteComponentProps) => {
   return (
     <>
       <MobileView>
-        <Navbar fixedToTop className="flex justify-between items-center shadow-4" style={{ height: '55px' }}>
+        <Navbar
+          fixedToTop
+          className="flex justify-between items-center shadow-4"
+          style={{ height: '55px' }}
+        >
           <h1 className="f4">{props.title}</h1>
           <div className="flex justify-end items-center">
             {props.match.path !== '/:username' && (
@@ -59,30 +64,32 @@ const NavbarCompanyComponent = (props: NavbarProps & RouteComponentProps) => {
                     className="pa3 overflow-y-auto"
                   >
                     {props.notifications.length > 0 ? (
-                      props.notifications.map((sNotification: any) => (
-                        <div
-                          onClick={() => {
-                            onCLickNotification(sNotification);
-                          }}
-                        >
-                          <Notification
-                            type={sNotification.notification.type}
-                            text={sNotification.notification.text}
-                            read={sNotification.read}
-                          />
-                        </div>
-                      ))
+                      props.notifications.map(
+                        (sNotification: any) => (
+                          <div
+                            onClick={() => {
+                              onCLickNotification(sNotification);
+                            }}
+                          >
+                            <Notification
+                              type={sNotification.notification.type}
+                              text={sNotification.notification.text}
+                              read={sNotification.read}
+                            />
+                          </div>
+                        ),
+                      )
                     ) : (
-                        <h2
-                          style={{
-                            maxHeight: '300px',
-                            textAlign: 'center',
-                          }}
-                          className="pa3 overflow-y-auto moon-gray"
-                        >
-                          No Notification TO Show
-                        </h2>
-                      )}
+                      <h2
+                        style={{
+                          maxHeight: '300px',
+                          textAlign: 'center',
+                        }}
+                        className="pa3 overflow-y-auto moon-gray"
+                      >
+                        No Notification TO Show
+                      </h2>
+                    )}
                   </div>
                 }
                 target={
@@ -103,7 +110,9 @@ const NavbarCompanyComponent = (props: NavbarProps & RouteComponentProps) => {
             )}
             <img
               src={
-                props.user.profileImage ? props.user.profileImage : user
+                props.user.profileImage
+                  ? props.user.profileImage
+                  : user
               }
               className="dim v-mid dib br-100 pointer"
               style={{
@@ -141,12 +150,11 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
-    read: state.notificationReducer.read
+    read: state.notificationReducer.read,
   };
 };
-export const NavbarCompany = connect(mapStateToProps,
-  {
-    companySubscriber,
-    readNotification,
-    getNotifications
-  })(withRouter(NavbarCompanyComponent));
+export const NavbarCompany = connect(mapStateToProps, {
+  companySubscriber,
+  readNotification,
+  getNotifications,
+})(withRouter(NavbarCompanyComponent));

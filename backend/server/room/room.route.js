@@ -19,6 +19,7 @@ router
       'all',
       'admin',
       'projectModerator',
+      'member',
     ),
     SchemaValidator(joiSchema.createRoom),
     roomCtrl.create,
@@ -68,6 +69,12 @@ router
   .route('/:roomId')
   .get(
     authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     SchemaValidator(joiSchema.getRoom),
     roomCtrl.getRoom,
   );

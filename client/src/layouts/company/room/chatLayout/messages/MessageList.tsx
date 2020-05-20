@@ -8,6 +8,7 @@ import {
 import { IRoomMessage, IRoomReducer } from 'stores/room/Reducer';
 import { ALL_MESSAGE_RECEIVED } from 'stores/room/Types';
 import { Icon } from '@blueprintjs/core';
+import { isMobileOnly } from 'react-device-detect';
 
 interface MessageListProps {
   updateLastSeen: (roomId: string) => void;
@@ -104,11 +105,10 @@ export const MessageListComponent = (props: MessageListProps) => {
 
   return (
     <div
-      // className="overflow-y-auto ph1 pt2"
       id="message-container"
       className="flex flex-column flex-grow-1 overflow-y-auto ph1 pt2"
       ref={messagesEndRef}
-      // style={{ height: "calc(100vh - 186px)" }}
+      style={{ marginBottom: isMobileOnly ? '4.5rem' : '' }}
     >
       {props.allMessages === false && props.messages.length > 0 ? (
         <div

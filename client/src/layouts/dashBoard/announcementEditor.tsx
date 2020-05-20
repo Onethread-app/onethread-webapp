@@ -16,16 +16,20 @@ const AnnouncementEditorComponent = (
 ) => {
   const [inputValues, setInputValues] = useState('');
   const [error, setError] = useState(false);
-  const [massage] = useState(
-    'Empty announcement can not be created ! !',
+  const [massage, setMessage] = useState(
+    'Empty announcement can not be created',
   );
 
   const validateInput = async () => {
-    if (!isEmpty(inputValues)) {
+    if (!isEmpty(inputValues) && inputValues.length <= 500) {
       await props.addAnnouncement(inputValues);
       props.setShowDialog(false);
     } else {
       setError(true);
+
+      if (inputValues.length >= 500) {
+        setMessage('Announcement can not exceed 500 characters');
+      }
     }
   };
 
