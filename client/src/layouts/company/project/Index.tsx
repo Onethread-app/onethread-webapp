@@ -9,6 +9,7 @@ import { withRouter } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
 
 const _ProjectPage = (props: any) => {
+<<<<<<< HEAD
   return (
     <>
       <NavbarCompany title="My Projects" />
@@ -23,6 +24,8 @@ import { NavbarCompany } from 'components/NavbarCompany';
 
 const _ProjectPage = (props: any) => {
 
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
   return (
     <>
       <NavbarCompany title="My Projects" />

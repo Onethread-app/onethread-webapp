@@ -52,10 +52,10 @@ const BoardCard = withRouter(
               style={{
                 borderLeft: `5px solid 
 							${
-                  find(Color, ['code', board.color])
-                    ? find(Color, ['code', board.color])!.value
-                    : 'white'
-                  }`, // TODO use dictionary
+                find(Color, ['code', board.color])
+                  ? find(Color, ['code', board.color])!.value
+                  : 'white'
+              }`, // TODO use dictionary
                 paddingLeft: '20px',
                 marginLeft: '-2px',
                 borderRadius: '3px',
@@ -210,11 +210,15 @@ const TaskPageComponent = (
         <div className="br3 bg-white h-100 pa4-ns pa2 cf flex flex-column">
           <div className="pl2 flex-ns justify-between">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
             {isMobileOnly ? undefined : (
               <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
                 Board
               </h3>
             )}
+<<<<<<< HEAD
             <div className="flex">
               <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
                 Filter By
@@ -228,6 +232,12 @@ const TaskPageComponent = (
                 Filter By
             </p>
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+            <div className="flex">
+              <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
+                Filter By
+              </p>
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
               <div className="mt2" style={{ width: '200px' }}>
                 <HTMLSelect
                   fill={true}
@@ -245,6 +255,7 @@ const TaskPageComponent = (
                   <option selected value="">
                     All
 <<<<<<< HEAD
+<<<<<<< HEAD
                   </option>
                   {props.company.departments
                     ? props.company.departments.map((d) => (
@@ -257,11 +268,19 @@ const TaskPageComponent = (
                       <option value={d._id}>{d.name}</option>
                     ))
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+                  </option>
+                  {props.company.departments
+                    ? props.company.departments.map((d) => (
+                        <option value={d._id}>{d.name}</option>
+                      ))
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                     : undefined}
                 </HTMLSelect>
               </div>
             </div>
           </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
           <p
             className="pl2 mt3"
@@ -382,6 +401,70 @@ const TaskPageComponent = (
                 ) : undefined}
             </div>
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+        </div>
+        <p
+          className="pl2 mt3"
+          style={{ color: '#6B6B6B', fontSize: '18px' }}
+        >
+          My Boards
+        </p>
+        <div className="overflow-auto">
+          {loading === false ? (
+            props.boardList.length > 0 ? (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns:
+                    'repeat(auto-fit, minmax(200px, 270px))',
+                  gridTemplateRows: 'repeat(2, 150px)',
+                }}
+              >
+                {/* TODO make one */}
+                {department ? (
+                  <BoardCard
+                    boardList={boards}
+                    company={props.company}
+                    getSelectedBoard={props.getSelectedBoard}
+                  />
+                ) : (
+                  <BoardCard
+                    boardList={props.boardList}
+                    company={props.company}
+                    getSelectedBoard={props.getSelectedBoard}
+                  />
+                )}
+              </div>
+            ) : (
+              noBoardsFound
+            )
+          ) : (
+            <Loading />
+          )}
+          <div>
+            {props.role &&
+            (props.role === 'admin' ||
+              projectRules(props.optionalRole)[props.role].includes(
+                'createUpdateBoard',
+              )) ? (
+              <img
+                onClick={() =>
+                  setShowTaskBoardDialog(!showTaskBoardDialog)
+                }
+                src={addIcon}
+                className={`fixed pointer ${
+                  showTaskBoardDialog ? 'dn' : 'db'
+                }`}
+                style={{
+                  bottom: '5rem',
+                  right: '7rem',
+                  width: '5rem',
+                  boxShadow: '0px 6px 6px #00000029',
+                  borderRadius: '50%',
+                }}
+              />
+            ) : undefined}
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
           </div>
           {showTaskBoardDialog && (
             <RightSidebar

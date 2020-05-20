@@ -100,10 +100,10 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
     const files =
       props.pendingFiles && props.pendingFiles.length
         ? props.pendingFiles.map((file) => ({
-          _id: file._id,
-          link: file.link,
-          s3Key: file.s3Key,
-        }))
+            _id: file._id,
+            link: file.link,
+            s3Key: file.s3Key,
+          }))
         : [];
 
     dispatch({ type: CLEAR_FILE_UPLOAD });
@@ -188,18 +188,18 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
       {/* typing indicator */}
       {props.typingUsers.length
         ? props.typingUsers.map((user, i: number) => {
-          if (
-            isEmpty(props.currentRoom._id) === false &&
-            isEqual(props.currentRoom._id, user.roomId) === true
-          ) {
-            return (
-              <h6 key={i} className="mv1 pl1">
-                {user.name} is typing ...
-              </h6>
-            );
-          }
-          return null;
-        })
+            if (
+              isEmpty(props.currentRoom._id) === false &&
+              isEqual(props.currentRoom._id, user.roomId) === true
+            ) {
+              return (
+                <h6 key={i} className="mv1 pl1">
+                  {user.name} is typing ...
+                </h6>
+              );
+            }
+            return null;
+          })
         : ''}
 
       {/* Emoji picker */}
@@ -214,7 +214,14 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
           ref={emojiRef}
         />
       ) : null}
+<<<<<<< HEAD
       <div className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`} style={{ width: isMobileOnly ? '100%' : '' }}>
+=======
+      <div
+        className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}
+        style={{ width: isMobileOnly ? '95%' : '' }}
+      >
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
         {/* pendingFiles */}
         <div className="flex w-100 flex-wrap b--black-10 ba">
           {props.pendingFiles && props.pendingFiles.length

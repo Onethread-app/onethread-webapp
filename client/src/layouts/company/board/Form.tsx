@@ -50,6 +50,9 @@ const FormComponent = (props: {
           ...rest
         }) => (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
           <form onSubmit={handleSubmit}>
             <div className="pa3-ns pa2 justify-content w-100">
               <Field<string>
@@ -109,6 +112,7 @@ const FormComponent = (props: {
                     <p
                       className="fw5 mb3"
                       style={{ fontSize: '.8rem' }}
+<<<<<<< HEAD
                     >
                       Label
                     </p>
@@ -205,67 +209,41 @@ const FormComponent = (props: {
                   render={({ input, meta }) => (
                     <div
                       className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                     >
-                      <DropdownFieldErrorWithLabel
-                        id={input.name}
-                        selectedValue={input.value}
-                        options={
-                          props.departments &&
-                            props.departments.length > 0
-                            ? props.departments
-                            : ([] as any)
-                        }
-                        onChange={input.onChange}
-                        error={
-                          checkError(meta) &&
-                          (meta.error || meta.submitError)
-                        }
-                        label="Department"
-                        className="bn"
-                      />
-                    </div>
-                  )}
-                />
-                <Field<string>
-                  name="color"
-                  render={({ input, meta }) => (
-                    <div className="mb3">
-                      <p
-                        className="fw5 mb3"
-                        style={{ fontSize: '.8rem' }}
-                      >
-                        Label
+                      Label
                     </p>
-                      <div className="flex">
-                        {Color.map((color) => (
-                          <div className="pr2" key={color.code}>
-                            <Icon
-                              className="br2"
-                              icon={
-                                isEqual(color.code, labelColor) === true
-                                  ? 'tick'
-                                  : 'blank'
-                              }
-                              onClick={(e) => {
-                                e.preventDefault();
-                                input.onChange(color.code);
-                                setLabelColor(color.code);
-                              }}
-                              style={{
-                                backgroundColor: color.value,
-                                border:
-                                  isEqual(color.code, labelColor) ===
-                                    true
-                                    ? '3px solid #ffffff'
-                                    : 'none',
-                                height: '3rem',
-                                padding: '0.8rem',
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
+                    <div className="flex">
+                      {Color.map((color) => (
+                        <div className="pr2" key={color.code}>
+                          <Icon
+                            className="br2"
+                            icon={
+                              isEqual(color.code, labelColor) === true
+                                ? 'tick'
+                                : 'blank'
+                            }
+                            onClick={(e) => {
+                              e.preventDefault();
+                              input.onChange(color.code);
+                              setLabelColor(color.code);
+                            }}
+                            style={{
+                              backgroundColor: color.value,
+                              border:
+                                isEqual(color.code, labelColor) ===
+                                true
+                                  ? '3px solid #ffffff'
+                                  : 'none',
+                              height: '3rem',
+                              padding: '0.8rem',
+                            }}
+                          />
+                        </div>
+                      ))}
                     </div>
+<<<<<<< HEAD
                   )}
                 />
                 <div className="fr">
@@ -298,11 +276,45 @@ const FormComponent = (props: {
                   >
                     Create
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+                  </div>
+                )}
+              />
+              <div className="fr">
+                <Button
+                  className="w4 grow h2 pointer mr3"
+                  style={{
+                    background: '#fff',
+                    outline: 'none',
+                    border: '1px solid #0fa3a3',
+                    color: '#0fa3a3',
+                  }}
+                  onClick={(e: any) => {
+                    if (props.setShowTaskBoardDialog) {
+                      props.setShowTaskBoardDialog(false);
+                    }
+                  }}
+                >
+                  cancel
                 </Button>
-                </div>
+                <Button
+                  className="grow pointer white bp3-minimal w4 mt2"
+                  style={{
+                    background: '#0FA3A3',
+                    outline: 'none',
+                    color: 'white',
+                  }}
+                  loading={submitting}
+                  type="submit"
+                  disabled={submitting || pristine}
+                >
+                  Create
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
+                </Button>
               </div>
-            </form>
-          )}
+            </div>
+          </form>
+        )}
       />
     </>
   );

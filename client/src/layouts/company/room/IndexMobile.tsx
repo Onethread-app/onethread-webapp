@@ -3,6 +3,7 @@ import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import { connect } from 'react-redux';
 import { IRoomReducer, IRoom } from 'stores/room/Reducer';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getRooms } from 'stores/room/Actions';
 import {
   withRouter,
@@ -20,6 +21,14 @@ import {
 } from 'stores/room/Actions';
 import { withRouter, RouteComponentProps, NavLink } from 'react-router-dom';
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+import { getRooms } from 'stores/room/Actions';
+import {
+  withRouter,
+  RouteComponentProps,
+  NavLink,
+} from 'react-router-dom';
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
 import Pusher from 'pusher-js';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { ICompany } from 'stores/company/Reducer';
@@ -51,8 +60,11 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
 }
 
 const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
+<<<<<<< HEAD
 
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
@@ -135,10 +147,14 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
 =======
       </div>
       <div className="flex h-100 w-100">
+<<<<<<< HEAD
         <div
           className="w-100"
         >
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+        <div className="w-100">
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
           <RoomSideBar />
         </div>
       </div>
@@ -155,14 +171,19 @@ const mapStateToProps = (state: any) => {
     pusherInstance: state.pusherReducer.pusherInstance,
     company: state.companyReducer.currentCompany,
 <<<<<<< HEAD
+<<<<<<< HEAD
     project: state.projectReducer.projectDetails,
 =======
     project: state.projectReducer.projectDetails
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+    project: state.projectReducer.projectDetails,
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
   };
 };
 
 export const RoomPageMobile = connect(mapStateToProps, {
+<<<<<<< HEAD
 <<<<<<< HEAD
   getRooms,
   getSingleProject,
@@ -171,4 +192,7 @@ export const RoomPageMobile = connect(mapStateToProps, {
 =======
   getRooms
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+  getRooms,
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
 })(withRouter(RoomPageMobileComponent));

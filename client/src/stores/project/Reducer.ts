@@ -31,9 +31,13 @@ export interface IProject {
 export interface IPendingProject {
   _id: string;
   project: IProject;
+<<<<<<< HEAD
   size: string;
   company: ICompany;
   associate: string;
+=======
+  company: ICompany;
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
 }
 
 export interface ProjectModel {

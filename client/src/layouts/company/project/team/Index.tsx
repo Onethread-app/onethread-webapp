@@ -7,7 +7,7 @@ import {
   Icon,
   Dialog,
   ButtonGroup,
-  Alignment
+  Alignment,
 } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ICompany } from 'stores/company/Reducer';
@@ -177,8 +177,14 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 >>>>>>> c885f026... add associates in the project (#19)
 =======
         <div className="flex justify-between items-center">
+<<<<<<< HEAD
           {isMobileOnly ? undefined : <h1 className="f3">Team Members</h1>}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+          {isMobileOnly ? undefined : (
+            <h1 className="f3">Team Members</h1>
+          )}
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
           <div>
             <Button
               className="grow fr h2 pointer white bp3-minimal"
@@ -255,8 +261,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                   <td style={{ width: '24%' }}>
                     {member.designations.length
                       ? getDivisionName[
-                      member.designations[0].division
-                      ]
+                          member.designations[0].division
+                        ]
                       : null}
                   </td>
                   <td style={{ width: '24%' }}>
@@ -269,48 +275,48 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                   </td>
                   <td style={{ width: '4%' }}>
                     {isEqual(props.companyRole, 'superAdmin') ||
-                      (!isEmpty(props.projectRole) &&
-                        isEqual(props.projectRole, 'admin')) ? (
-                        <Popover
-                          className="fr"
-                          position={Position.BOTTOM}
-                          popoverClassName="bp3-popover-content-sizing bg-white"
-                          content={
-                            <ButtonGroup
-                              alignText={Alignment.LEFT}
-                              className="bp3-minimal bp3-vertical bp3-fill"
+                    (!isEmpty(props.projectRole) &&
+                      isEqual(props.projectRole, 'admin')) ? (
+                      <Popover
+                        className="fr"
+                        position={Position.BOTTOM}
+                        popoverClassName="bp3-popover-content-sizing bg-white"
+                        content={
+                          <ButtonGroup
+                            alignText={Alignment.LEFT}
+                            className="bp3-minimal bp3-vertical bp3-fill"
+                          >
+                            <Button
+                              className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
+                              style={{ color: 'red' }}
+                              onClick={async () => {
+                                await props.changeProjectMemberRole(
+                                  { role: 'projectModerator' },
+                                  member._id,
+                                  member.account._id,
+                                );
+                              }}
                             >
-                              <Button
-                                className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                                style={{ color: 'red' }}
-                                onClick={async () => {
-                                  await props.changeProjectMemberRole(
-                                    { role: 'projectModerator' },
-                                    member._id,
-                                    member.account._id,
-                                  );
-                                }}
-                              >
-                                <span>Remove from Admin</span>
-                              </Button>
-                            </ButtonGroup>
-                          }
-                          target={
-                            <Icon
-                              className=" pointer"
-                              icon="drag-handle-vertical"
-                            />
-                          }
-                        />
-                      ) : null}
+                              <span>Remove from Admin</span>
+                            </Button>
+                          </ButtonGroup>
+                        }
+                        target={
+                          <Icon
+                            className=" pointer"
+                            icon="drag-handle-vertical"
+                          />
+                        }
+                      />
+                    ) : null}
                   </td>
                 </tr>
               ))
             ) : (
-                <tr>
-                  <td colSpan={5}>No admins</td>
-                </tr>
-              )}
+              <tr>
+                <td colSpan={5}>No admins</td>
+              </tr>
+            )}
           </tbody>
         </HTMLTable>
         {/* Admins list ends */}
@@ -337,8 +343,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                   <td style={{ width: '24%' }}>
                     {member.designations.length
                       ? getDivisionName[
-                      member.designations[0].division
-                      ]
+                          member.designations[0].division
+                        ]
                       : null}
                   </td>
                   <td style={{ width: '24%' }}>
@@ -351,60 +357,60 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                   </td>
                   <td style={{ width: '4%' }}>
                     {isEqual(props.companyRole, 'superAdmin') ||
-                      (!isEmpty(props.projectRole) &&
-                        isEqual(props.projectRole, 'admin')) ? (
-                        <Popover
-                          className="fr"
-                          position={Position.BOTTOM}
-                          popoverClassName="bp3-popover-content-sizing bg-white"
-                          content={
-                            <ButtonGroup
-                              alignText={Alignment.LEFT}
-                              className="bp3-minimal bp3-vertical bp3-fill"
+                    (!isEmpty(props.projectRole) &&
+                      isEqual(props.projectRole, 'admin')) ? (
+                      <Popover
+                        className="fr"
+                        position={Position.BOTTOM}
+                        popoverClassName="bp3-popover-content-sizing bg-white"
+                        content={
+                          <ButtonGroup
+                            alignText={Alignment.LEFT}
+                            className="bp3-minimal bp3-vertical bp3-fill"
+                          >
+                            <Button
+                              className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
+                              onClick={async () => {
+                                await props.changeProjectMemberRole(
+                                  { role: 'admin' },
+                                  member._id,
+                                  member.account._id,
+                                );
+                              }}
                             >
-                              <Button
-                                className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                                onClick={async () => {
-                                  await props.changeProjectMemberRole(
-                                    { role: 'admin' },
-                                    member._id,
-                                    member.account._id,
-                                  );
-                                }}
-                              >
-                                <span>Make Admin</span>
-                              </Button>
-                              <Button
-                                className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
-                                style={{ color: 'red' }}
-                                onClick={async () => {
-                                  await props.changeProjectMemberRole(
-                                    { role: 'member' },
-                                    member._id,
-                                    member.account._id,
-                                  );
-                                }}
-                              >
-                                <span>Remove from Moderator</span>
-                              </Button>
-                            </ButtonGroup>
-                          }
-                          target={
-                            <Icon
-                              className=" pointer"
-                              icon="drag-handle-vertical"
-                            />
-                          }
-                        />
-                      ) : null}
+                              <span>Make Admin</span>
+                            </Button>
+                            <Button
+                              className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
+                              style={{ color: 'red' }}
+                              onClick={async () => {
+                                await props.changeProjectMemberRole(
+                                  { role: 'member' },
+                                  member._id,
+                                  member.account._id,
+                                );
+                              }}
+                            >
+                              <span>Remove from Moderator</span>
+                            </Button>
+                          </ButtonGroup>
+                        }
+                        target={
+                          <Icon
+                            className=" pointer"
+                            icon="drag-handle-vertical"
+                          />
+                        }
+                      />
+                    ) : null}
                   </td>
                 </tr>
               ))
             ) : (
-                <tr>
-                  <td colSpan={5}>No Moderators</td>
-                </tr>
-              )}
+              <tr>
+                <td colSpan={5}>No Moderators</td>
+              </tr>
+            )}
           </tbody>
         </HTMLTable>
         {/* Project Moderators list ends */}
@@ -433,8 +439,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                   <td style={{ width: '24%' }}>
                     {member.designations.length
                       ? getDivisionName[
-                      member.designations[0].division
-                      ]
+                          member.designations[0].division
+                        ]
                       : null}
                   </td>
                   <td style={{ width: '24%' }}>
@@ -447,18 +453,31 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                   </td>
                   <td style={{ width: '4%' }}>
                     {isEqual(props.companyRole, 'superAdmin') ||
-                      (!isEmpty(props.projectRole) &&
-                        isEqual(props.projectRole, 'admin')) ? (
-                        <Popover
-                          className="fr"
-                          position={Position.BOTTOM}
-                          popoverClassName="bp3-popover-content-sizing bg-white"
-                          content={
-                            <ButtonGroup
-                              alignText={Alignment.LEFT}
-                              className="bp3-minimal bp3-vertical bp3-fill"
+                    (!isEmpty(props.projectRole) &&
+                      isEqual(props.projectRole, 'admin')) ? (
+                      <Popover
+                        className="fr"
+                        position={Position.BOTTOM}
+                        popoverClassName="bp3-popover-content-sizing bg-white"
+                        content={
+                          <ButtonGroup
+                            alignText={Alignment.LEFT}
+                            className="bp3-minimal bp3-vertical bp3-fill"
+                          >
+                            <Button
+                              className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
+                              onClick={async () => {
+                                await props.changeProjectMemberRole(
+                                  { role: 'projectModerator' },
+                                  member._id,
+                                  member.account._id,
+                                );
+                              }}
                             >
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                               <span>Make Moderator</span>
                             </Button>
                           </ButtonGroup>
@@ -471,6 +490,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                         }
                       />
                     ) : null}
+<<<<<<< HEAD
 =======
                               <Button
                                 className="outline-0 bp3-large bp3-popover-dismiss bp3-minimal"
@@ -495,14 +515,16 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                         />
                       ) : null}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                   </td>
                 </tr>
               ))
             ) : (
-                <tr>
-                  <td colSpan={5}>No Teammates</td>
-                </tr>
-              )}
+              <tr>
+                <td colSpan={5}>No Teammates</td>
+              </tr>
+            )}
           </tbody>
         </HTMLTable>
 <<<<<<< HEAD

@@ -28,6 +28,7 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   return (
     <>
       <NavbarCompany title="My Associates" />
@@ -56,6 +57,8 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
   return (
     <>
       <NavbarCompany title="My Associates" />

@@ -81,7 +81,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
 =======
               history.push(
                 `${location.pathname}?roomId=${props.room._id}${
-                queries.view ? '&view=' + queries.view : ''
+                  queries.view ? '&view=' + queries.view : ''
                 }`,
               );
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
@@ -93,10 +93,14 @@ export const RoomListItem = (props: RoomListItemProps) => {
           className={`flex items-center ph2 pv2 bb b--black-10 ${
             props.lastChild ? 'bn' : ''
 <<<<<<< HEAD
+<<<<<<< HEAD
           }`}
 =======
             }`}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+          }`}
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
         >
           <div className="db pr3">
             <span
@@ -174,6 +178,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
       </li>
       {showDialog && (
         <Drawer
+<<<<<<< HEAD
         onClose={() => setShowDialog(!showDialog)}
         isOpen={showDialog}
         canOutsideClickClose={false}
@@ -184,6 +189,17 @@ export const RoomListItem = (props: RoomListItemProps) => {
         </div>
       </Drawer>
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+          onClose={() => setShowDialog(!showDialog)}
+          isOpen={showDialog}
+          canOutsideClickClose={false}
+          style={{ width: '100%' }}
+        >
+          <div>
+            <RoomPage setShowDialog={setShowDialog} />
+          </div>
+        </Drawer>
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
       )}
     </>
   );

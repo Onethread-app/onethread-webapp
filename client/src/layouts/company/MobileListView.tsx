@@ -196,6 +196,7 @@ export const ListViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     } mt1 pointer bp3-popover-dismiss`}
 =======
                       } mt1 pointer bp3-popover-dismiss`}
@@ -206,6 +207,9 @@ export const ListViewComponent = (
 =======
                       } mt1 pointer bp3-popover-dismiss`}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+                    } mt1 pointer bp3-popover-dismiss`}
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -221,6 +225,7 @@ export const ListViewComponent = (
                         props.history.push(
                           `/company/${
                             (response as any).data.company.name
+<<<<<<< HEAD
 =======
                         dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                         props.history.push(
@@ -239,6 +244,8 @@ export const ListViewComponent = (
 =======
                           (response as any).data.company.name
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                           }/dashboard`,
                         );
                       }
@@ -256,8 +263,14 @@ export const ListViewComponent = (
                     <div className="flex justify-between">
                       <img
                         src={
+<<<<<<< HEAD
                           c.company.logo ? c.company.logo : CompanyIcon
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+                          c.company.logo
+                            ? c.company.logo
+                            : CompanyIcon
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                         }
                         className="v-mid dib br-100 w-10"
                         alt="user"

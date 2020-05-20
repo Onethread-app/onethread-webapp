@@ -26,14 +26,20 @@ import {
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Pusher from 'pusher-js';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
 import {
   isMobileOnly,
   CustomView,
   MobileView,
 } from 'react-device-detect';
+<<<<<<< HEAD
 =======
 import { isMobileOnly, CustomView, MobileView } from 'react-device-detect';
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
 import { CURRENT_ROOM } from 'stores/room/Types';
 
 export interface RoomQueries {
@@ -111,10 +117,14 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
   // get all rooms
   useEffect(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (!isMobileOnly && props.companyId && props.projectId) {
 =======
     if ( !isMobileOnly && props.companyId && props.projectId) {
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+    if (!isMobileOnly && props.companyId && props.projectId) {
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
       load(props.getRooms);
     }
   }, [props.companyId, props.projectId]);
@@ -166,6 +176,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 width: isOpenLeftSidebar ? '220px' : '16px',
               }}
 <<<<<<< HEAD
+<<<<<<< HEAD
               // TODO: mouse active
               // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
               // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
@@ -174,6 +185,11 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
             // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+              // TODO: mouse active
+              // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
+              // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
             >
               <RoomSideBar isOpen={isOpenLeftSidebar} />
             </div>
@@ -184,6 +200,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             {queries.view === 'default' && (
               <Icon
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
+<<<<<<< HEAD
 <<<<<<< HEAD
                 icon={
                   isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'
@@ -197,6 +214,15 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 iconSize={17}
                 onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+                icon={
+                  isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'
+                }
+                iconSize={17}
+                onClick={() =>
+                  setIsOpenLeftSidebar(!isOpenLeftSidebar)
+                }
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
               />
             )}
           </CustomView>
@@ -226,7 +252,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               onClick={() => {
                 // tslint:disable-next-line: no-unused-expression
                 props.setShowDialog && props.setShowDialog(false);
-                props.history.push(`/company/${props.companyName}/project/${props.projectId}/room`);
+                props.history.push(
+                  `/company/${props.companyName}/project/${props.projectId}/room`,
+                );
               }}
             >
               Back
@@ -237,8 +265,14 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             queries.view === 'default' && (
               <Icon
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
+<<<<<<< HEAD
                 icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+                icon={
+                  isOpenRightSidebar ? 'arrow-right' : 'arrow-left'
+                }
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                 iconSize={17}
                 onClick={() => {
                   setIsOpenRightSidebar(!isOpenRightSidebar);
@@ -260,6 +294,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               style={{
                 borderBottomRightRadius: '0.5rem',
 <<<<<<< HEAD
+<<<<<<< HEAD
                 width: isOpenRightSidebar 
                   ? isMobileOnly 
                     ? '0px' 
@@ -276,6 +311,16 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             >
               {isMobileOnly ?
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+                width: isOpenRightSidebar
+                  ? isMobileOnly
+                    ? '16px'
+                    : '400px'
+                  : '16px',
+              }}
+            >
+              {isMobileOnly ? (
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
                 <Drawer
                   onClose={() => setShowDialog(!showDialog)}
                   isOpen={showDialog}
@@ -288,6 +333,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                   </div>
                 </Drawer>
 <<<<<<< HEAD
+<<<<<<< HEAD
               ) : (
                 <RoomRightSidebar isOpen={isOpenRightSidebar} />
               )}
@@ -295,6 +341,11 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 :
                 <RoomRightSidebar isOpen={isOpenRightSidebar} />}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+              ) : (
+                <RoomRightSidebar isOpen={isOpenRightSidebar} />
+              )}
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
             </div>
           )}
       </div>
@@ -310,10 +361,14 @@ const mapStateToProps = (state: any) => {
     rooms: state.roomReducer.rooms,
     pusherInstance: state.pusherReducer.pusherInstance,
 <<<<<<< HEAD
+<<<<<<< HEAD
     companyName: state.companyReducer.currentCompany.name,
 =======
     companyName: state.companyReducer.currentCompany.name
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+    companyName: state.companyReducer.currentCompany.name,
+>>>>>>> 750029e8... Release/v2.2.0 (#183)
   };
 };
 
