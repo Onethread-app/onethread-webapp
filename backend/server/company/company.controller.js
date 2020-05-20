@@ -205,7 +205,7 @@ const getCompanyIndividual = async (req, res, next) => {
       companies,
     });
   } catch (error) {
-    console.log(error);
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -240,6 +240,7 @@ const getCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
