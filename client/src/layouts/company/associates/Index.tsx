@@ -11,7 +11,6 @@ interface AssociatesPageProps {
 }
 
 const AssociatesPageComponent = (props: AssociatesPageProps) => {
-
   return (
     <>
       <NavbarCompany title="My Associates" />

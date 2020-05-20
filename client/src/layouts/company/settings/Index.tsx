@@ -21,14 +21,17 @@ interface SettingsPageProps {
   getNotifications: any;
 }
 
-const SettingsPagComponent = (props: SettingsPageProps & RouteComponentProps) => {
-
+const SettingsPagComponent = (
+  props: SettingsPageProps & RouteComponentProps,
+) => {
   return (
     <>
       <NavbarCompany title="My Settings" />
       <div className="fl w-100 pl4-ns pr2-ns ph3 pb4 mt5 mt0-ns">
         <div className="fl w-100">
-          {isMobileOnly ? undefined : <h3 className="f3 b">Settings</h3>}
+          {isMobileOnly ? undefined : (
+            <h3 className="f3 b">Settings</h3>
+          )}
         </div>
         <Tabs
           id="TabsExample"
@@ -67,12 +70,11 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
-    read: state.notificationReducer.read
+    read: state.notificationReducer.read,
   };
 };
-export const SettingsPage = connect(mapStateToProps,
-  {
-    companySubscriber,
-    readNotification,
-    getNotifications
-  })(withRouter(SettingsPagComponent));
+export const SettingsPage = connect(mapStateToProps, {
+  companySubscriber,
+  readNotification,
+  getNotifications,
+})(withRouter(SettingsPagComponent));

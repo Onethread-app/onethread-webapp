@@ -16,7 +16,11 @@ import {
 } from 'stores/room/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Pusher from 'pusher-js';
-import { isMobileOnly, CustomView, MobileView } from 'react-device-detect';
+import {
+  isMobileOnly,
+  CustomView,
+  MobileView,
+} from 'react-device-detect';
 import { CURRENT_ROOM } from 'stores/room/Types';
 
 export interface RoomQueries {
@@ -80,7 +84,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
 
   // get all rooms
   useEffect(() => {
-    if ( !isMobileOnly && props.companyId && props.projectId) {
+    if (!isMobileOnly && props.companyId && props.projectId) {
       load(props.getRooms);
     }
   }, [props.companyId, props.projectId]);
@@ -131,9 +135,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 borderBottomLeftRadius: '0.5rem',
                 width: isOpenLeftSidebar ? '220px' : '16px',
               }}
-            // TODO: mouse active
-            // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
-            // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
+              // TODO: mouse active
+              // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
+              // onMouseLeave={() => isOpenLeftSidebar && setIsOpenLeftSidebar(false)}
             >
               <RoomSideBar isOpen={isOpenLeftSidebar} />
             </div>
@@ -144,9 +148,13 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             {queries.view === 'default' && (
               <Icon
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left--12 pointer"
-                icon={isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'}
+                icon={
+                  isOpenLeftSidebar ? 'arrow-left' : 'arrow-right'
+                }
                 iconSize={17}
-                onClick={() => setIsOpenLeftSidebar(!isOpenLeftSidebar)}
+                onClick={() =>
+                  setIsOpenLeftSidebar(!isOpenLeftSidebar)
+                }
               />
             )}
           </CustomView>
@@ -156,7 +164,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               onClick={() => {
                 // tslint:disable-next-line: no-unused-expression
                 props.setShowDialog && props.setShowDialog(false);
-                props.history.push(`/company/${props.companyName}/project/${props.projectId}/room`);
+                props.history.push(
+                  `/company/${props.companyName}/project/${props.projectId}/room`,
+                );
               }}
             >
               Back
@@ -167,7 +177,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             queries.view === 'default' && (
               <Icon
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
-                icon={isOpenRightSidebar ? 'arrow-right' : 'arrow-left'}
+                icon={
+                  isOpenRightSidebar ? 'arrow-right' : 'arrow-left'
+                }
                 iconSize={17}
                 onClick={() => {
                   setIsOpenRightSidebar(!isOpenRightSidebar);
@@ -184,10 +196,14 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
               style={{
                 borderBottomRightRadius: '0.5rem',
-                width: isOpenRightSidebar ? isMobileOnly ? '16px' : '400px' : '16px',
+                width: isOpenRightSidebar
+                  ? isMobileOnly
+                    ? '16px'
+                    : '400px'
+                  : '16px',
               }}
             >
-              {isMobileOnly ?
+              {isMobileOnly ? (
                 <Drawer
                   onClose={() => setShowDialog(!showDialog)}
                   isOpen={showDialog}
@@ -199,8 +215,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                     <RoomRightSidebar isOpen={isOpenRightSidebar} />
                   </div>
                 </Drawer>
-                :
-                <RoomRightSidebar isOpen={isOpenRightSidebar} />}
+              ) : (
+                <RoomRightSidebar isOpen={isOpenRightSidebar} />
+              )}
             </div>
           )}
       </div>
@@ -215,7 +232,7 @@ const mapStateToProps = (state: any) => {
     projectId: state.projectReducer.projectDetails._id,
     rooms: state.roomReducer.rooms,
     pusherInstance: state.pusherReducer.pusherInstance,
-    companyName: state.companyReducer.currentCompany.name
+    companyName: state.companyReducer.currentCompany.name,
   };
 };
 

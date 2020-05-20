@@ -122,7 +122,7 @@ export const ListViewComponent = (
                       props.currentCompany === c.company._id
                         ? 'bg-black-10'
                         : ''
-                      } mt1 pointer bp3-popover-dismiss`}
+                    } mt1 pointer bp3-popover-dismiss`}
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -135,7 +135,7 @@ export const ListViewComponent = (
                         });
                         props.history.push(
                           `/company/${
-                          (response as any).data.company.name
+                            (response as any).data.company.name
                           }/dashboard`,
                         );
                       }
@@ -144,7 +144,9 @@ export const ListViewComponent = (
                     <div className="flex justify-between">
                       <img
                         src={
-                          c.company.logo ? c.company.logo : CompanyIcon
+                          c.company.logo
+                            ? c.company.logo
+                            : CompanyIcon
                         }
                         className="v-mid dib br-100 w-10"
                         alt="user"

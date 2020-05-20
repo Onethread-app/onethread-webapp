@@ -32,19 +32,19 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
     setDatePopover(true);
     setMembersPopover(false);
     setPriorityPopover(false);
-  }
+  };
 
   const openMembersPopOver = () => {
     setMembersPopover(true);
     setDatePopover(false);
     setPriorityPopover(false);
-  }
+  };
 
   const openPriorityPopOver = () => {
     setPriorityPopover(true);
     setDatePopover(false);
     setMembersPopover(false);
-  }
+  };
 
   return (
     <div className="fl w-100">
