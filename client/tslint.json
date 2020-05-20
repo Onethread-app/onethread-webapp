@@ -27,9 +27,15 @@
     "object-literal-sort-keys": false,
     "no-any": false,
     "no-arg": true,
+<<<<<<< HEAD
     "no-bitwise": true,
     "no-shadowed-variable": false,
     "array-type": false,
+=======
+				"no-bitwise": true,
+				"no-shadowed-variable": false,
+				"array-type": false,
+>>>>>>> e5e8ab62... Feature/role access (#187)
     "no-console": [
       true,
       "log",

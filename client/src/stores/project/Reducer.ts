@@ -32,6 +32,9 @@ export interface IPendingProject {
   _id: string;
   project: IProject;
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e5e8ab62... Feature/role access (#187)
   size: string;
   company: ICompany;
   associate: string;

@@ -54,12 +54,22 @@ const FormComponent = (props: {
   );
   const [search, setSearch] = useState('');
 
+<<<<<<< HEAD
   const onSubmit = async (values: IProject) => {
     if (values.department ? values.department.length > 1 : undefined) {
       values.projectType = 'md';
     }
 
     await props.createProjectInCompany(values);
+=======
+  const onSubmit = async (values: any) => {
+
+    if (values.department ? values.department.length > 1 : undefined) {
+      values.projectType = 'md' ;
+    }
+    
+    await props.createProject(values, selectedAdmins);
+>>>>>>> e5e8ab62... Feature/role access (#187)
     if (props.setShowProjectDialog) {
       props.setShowProjectDialog(false);
     }
@@ -246,6 +256,7 @@ const FormComponent = (props: {
                               ))}
                             </div>
                           </div>
+<<<<<<< HEAD
                         )}
                       </div>
                     )}
@@ -269,6 +280,82 @@ const FormComponent = (props: {
                             { _id: 'sd', name: 'Department' }
                           ]}
                           onChange={input.onChange}
+=======
+                        </div>
+                      )}
+                    </div>
+                  )}
+                />
+              </div>
+              <div className="flex flex-column">
+                <Field<string>
+                  name="projectType"
+                  validate={required}
+                  render={({ input, meta }) => (
+                    <div
+                      className={` ${
+                        checkError(meta) ? 'mb2' : 'mb3'
+                      }`}
+                    >
+                      <DropdownFieldErrorWithLabel
+                        id={input.name}
+                        selectedValue={input.value}
+                        options={[
+                          { _id: 'associates', name: 'Associates' },
+                          { _id: 'sd', name: 'Department' }
+                        ]}
+                        onChange={input.onChange}
+                        error={
+                          checkError(meta) &&
+                          (meta.error || meta.submitError)
+                        }
+                        label="ProjectType"
+                        className="bn"
+                      />
+                    </div>
+                  )}
+                />
+              </div>
+
+              <Condition
+                when="projectType"
+                validate={(value) => {
+                  return ['sd'].includes(value);
+                }}
+              >
+                <Field<string>
+                  name="department"
+                  validate={required}
+                  render={({ meta, input }) => (
+                    <div
+                      className={` ${
+                        checkError(meta) ? 'mb3' : 'mb4'
+                      }`}
+                    >
+                      <div className="fl w-100 pb2">
+                        <div className="mb1">
+                          <p
+                            className="fw5"
+                            style={{ fontSize: '.8rem' }}
+                          >
+                            Select Departments
+                          </p>
+                        </div>
+                        <SuggestFieldWithError
+                          onChange={(query: string) => {
+                            // setSearch(query);
+                          }}
+                          items={props.departments}
+                          selectedItems={selectedDepartment}
+                          setSelectedItems={(item) => {
+                            // input.onChange(item);
+                            setSelectedDepartment(item);
+                            input.onChange(
+                              item.map((dept: any) => dept._id),
+                            );
+                          }}
+                          multipleItemSelect={true}
+>>>>>>> e5e8ab62... Feature/role access (#187)
                           error={
                             checkError(meta) &&
                             (meta.error || meta.submitError)
@@ -369,6 +456,7 @@ const FormComponent = (props: {
                               ))}
                             </div>
                           </div>
+<<<<<<< HEAD
                         )}
                       </div>
                     )}
@@ -514,6 +602,28 @@ const FormComponent = (props: {
                       background: 'white',
                       outline: 'none',
                       color: 'black',
+=======
+                        </div>
+                      )}
+                    </div>
+                  )}
+                />
+                </Condition>
+
+              <Condition
+                when="projectType"
+                validate={(value) => {
+                  return ['associates'].includes(value);
+                }}
+              >
+                <div>
+                  <p className="fw5" style={{ fontSize: '.8rem' }}>
+                    Select Your Associate Companies
+                  </p>
+                  <SuggestFieldWithError
+                    onChange={(query: string) => {
+                      setSearch(query);
+>>>>>>> e5e8ab62... Feature/role access (#187)
                     }}
                     onClick={(e: any) => {
                       e.preventDefault();
@@ -533,6 +643,40 @@ const FormComponent = (props: {
                     disabled={submitting || pristine}
                     text="Create"
                   />
+<<<<<<< HEAD
+=======
+                  <FieldArray name="associates">
+                    {({ fields }) =>
+                      fields.map((name, index) => (
+                        <div className="flex justify-between mt1">
+                          <div style={{ marginRight: '2px' }}>
+                            {fields.value[index].name}
+                          </div>
+                          <div>
+                            <Field<string>
+                              name={`${name}.size`}
+                              component="select"
+                              placeholder="size"
+                              validate={required}
+                            >
+                              <option>select team size</option>
+                              <option value="5">1-5</option>
+                              <option value="10">6-10</option>
+                              <option value="15">11-15</option>
+                            </Field>
+
+                            <span
+                              onClick={() => fields.remove(index)}
+                              style={{ cursor: 'pointer' }}
+                            >
+                              ❌
+                            </span>
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </FieldArray>
+>>>>>>> e5e8ab62... Feature/role access (#187)
                 </div>
               </div>
             </form>

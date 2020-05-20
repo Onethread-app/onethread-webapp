@@ -41,6 +41,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
         <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
 <<<<<<< HEAD
+<<<<<<< HEAD
           { props.projectRole && 
             props.optionalRole && 
             (projectRules(props.optionalRole)[props.projectRole] === true || 
@@ -65,6 +66,8 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       </div>
 =======
           {props.companyRole && projectPermit(props.companyRole) ? (
+=======
+>>>>>>> e5e8ab62... Feature/role access (#187)
             <span
               className="bp3-icon grow pointer"
               onClick={() => setShowDialog(!showDialog)}
@@ -76,7 +79,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
                 color="#0FA3A3"
               />
             </span>
-          ) : undefined}
         </div>
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
         <div className="flex items-center ph3-ns relative">

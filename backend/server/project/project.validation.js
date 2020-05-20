@@ -25,10 +25,14 @@ const schema = {
   color: Joi.number(),
   company: idSchema.id,
 <<<<<<< HEAD
+<<<<<<< HEAD
   size: Joi.number().required(),
   associate: idSchema.id,
 =======
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+  size: Joi.number().required(),
+>>>>>>> e5e8ab62... Feature/role access (#187)
   associates: Joi.array().items(
     Joi.object().keys({
       _id: idSchema.id.required(),
@@ -41,6 +45,10 @@ module.exports = {
   createNewProjectForCompany: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
+<<<<<<< HEAD
+=======
+      type: schema.type.required(),
+>>>>>>> e5e8ab62... Feature/role access (#187)
       concernedAdmin: Joi.object().keys({
         memberId: schema.memberId.required(),
         accountId: idSchema.id,
@@ -88,7 +96,10 @@ module.exports = {
     }),
     body: Joi.object().keys({
       size: schema.size.required(),
+<<<<<<< HEAD
       associate: schema.associate.required(),
+=======
+>>>>>>> e5e8ab62... Feature/role access (#187)
     }),
   }),
   rejectProject: Joi.object().keys({
@@ -118,7 +129,11 @@ module.exports = {
     params: companyId.required(),
     query: Joi.object().keys({
       companyName: schema.name.required(),
+<<<<<<< HEAD
       name: schema.name.required(),
+=======
+      name: schema.name.required()
+>>>>>>> e5e8ab62... Feature/role access (#187)
     }),
   }),
 };

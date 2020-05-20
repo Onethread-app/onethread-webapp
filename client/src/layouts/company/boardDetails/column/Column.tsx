@@ -94,7 +94,11 @@ const ColumnComponent = (props: ColumnInternalProps) => {
               (projectPermit(props.company.role) ||
                 (
                     props.projectRole === "projectModerator" && 
+<<<<<<< HEAD
                     props.optionalRole!.includes("createUpdateBoard")
+=======
+                    props.optionalRole.includes("createUpdateBoard")
+>>>>>>> e5e8ab62... Feature/role access (#187)
                 )
               ) && (
                 <Popover
@@ -128,7 +132,11 @@ const ColumnComponent = (props: ColumnInternalProps) => {
             (projectPermit(props.company.role) ||
               (
                 props.projectRole === "projectModerator" && 
+<<<<<<< HEAD
                 props.optionalRole!.includes("createUpdateBoard")
+=======
+                props.optionalRole.includes("createUpdateBoard")
+>>>>>>> e5e8ab62... Feature/role access (#187)
               )
             ) && (
               <div
