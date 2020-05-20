@@ -171,41 +171,6 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             </Button>
           </div>
         </div>
-      </MobileView>
-      <div className="ph5-ns ph3 pv4">
-        <div className="flex justify-between items-center">
-          {isMobileOnly ? undefined : (
-            <h1 className="f3">Team Members</h1>
-          )}
-          <div>
-            <Button
-              className="grow fr h2 pointer white bp3-minimal"
-              style={{
-                background: '#0fa3a3',
-                outline: 'none',
-                color: 'white',
-              }}
-              onClick={() => setShowDialog(!showDialog)}
-            >
-              Add Team Members
-            </Button>
-            <Button
-              className="grow fr h2 pointer white bp3-minimal mr2"
-              style={{
-                background: 'none',
-                border: '#0fa3a3',
-                borderWidth: 1,
-                borderStyle: 'solid',
-                color: '#0fa3a3',
-              }}
-              onClick={() =>
-                setShowAssociateDialog(!showAssociateDialog)
-              }
-            >
-              Add Associates
-            </Button>
-          </div>
-        </div>
         {/* Admins list starts */}
         <h1 className="f4 mt4">Admins</h1>
         <HTMLTable className="w-100 mv3" striped={true}>

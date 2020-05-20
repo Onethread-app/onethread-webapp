@@ -78,5 +78,3 @@ export const SettingsPage = connect(mapStateToProps, {
   readNotification,
   getNotifications,
 })(withRouter(SettingsPagComponent));
-
-export const SettingsPage = connect(mapStateToProps, null)(SettingsPagComponent);

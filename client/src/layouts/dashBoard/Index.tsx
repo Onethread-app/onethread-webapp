@@ -106,7 +106,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               </Card>
             </div>
             <div>
-              <Card className="w-50-ns w-90 ma2">
+              <div className="w-50-l ma2">
                 <h1 className="f5">Company Announcement</h1>
                 {props.company.announce &&
                 props.company.announce.length > 0 ? (
