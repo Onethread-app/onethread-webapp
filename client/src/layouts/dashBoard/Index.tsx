@@ -6,7 +6,7 @@ import addIcon from '../../resources/images/addIcon.png';
 import { AnnouncementEditor } from './announcementEditor';
 import { tigrowApi } from 'config';
 import { ICompany } from 'stores/company/Reducer';
-import { tokenConfig } from 'stores/UtilsActions';
+import { tokenConfig, companyPermit } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
 import { makeStyles } from '@material-ui/core/styles';
@@ -158,7 +158,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             </div>
           </div>
           <div>
-            <img
+            {
+              companyPermit(props.company.role) && (
+                <img
               onClick={() =>
                 setShowAnnouncementDialog(!showAnnouncementDialog)
               }
@@ -169,6 +171,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 borderRadius: '50%',
               }}
             />
+              )
+            }
+            
           </div>
         </>
       ) : (

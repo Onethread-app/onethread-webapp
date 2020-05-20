@@ -19,6 +19,7 @@ export interface IProject {
 export interface IPendingProject {
   _id: string;
   project: IProject;
+  size: string;
   company: ICompany;
 }
 

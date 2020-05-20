@@ -7,13 +7,13 @@ import {
   acceptPendingProject,
   rejectPendingProject,
 } from 'stores/project/Actions';
-import { IPendingProject, IProject } from 'stores/project/Reducer';
+import { IPendingProject } from 'stores/project/Reducer';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 interface IProjectRequestComponent {
   PendingProjects: IPendingProject[];
   getAllPendingProjects: () => void;
-  acceptPendingProject: (project: IProject) => void;
+  acceptPendingProject: (project: IPendingProject) => void;
   rejectPendingProject: (projectId: string) => void;
   companyRole: string;
 }
@@ -96,7 +96,7 @@ const ProjectRequestComponent = (
                     onClick={async () => {
                       setAcceptLoading(true);
                       await props.acceptPendingProject(
-                        pending.project,
+                        pending
                       );
                       setAcceptLoading(false);
                     }}

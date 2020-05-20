@@ -35,6 +35,8 @@ interface ColumnProps {
 interface ColumnInternalProps extends ColumnProps {
   loading?: boolean;
   company?: ICompany;
+  optionalRole?: Array<string>;
+  projectRole?: string;
   createTask: (task: any) => void;
   currentBoard?: TaskBoard;
 }
@@ -89,7 +91,12 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 }
               />
               {props.company &&
-              projectPermit(props.company.role) === true ? (
+              (projectPermit(props.company.role) ||
+                (
+                    props.projectRole === "projectModerator" && 
+                    props.optionalRole.includes("createUpdateBoard")
+                )
+              ) && (
                 <Popover
                   className="w-10"
                   content={
@@ -115,10 +122,15 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     />
                   }
                 />
-              ) : undefined}
+              ) }
             </div>
             {props.company &&
-            projectPermit(props.company.role) === true ? (
+            (projectPermit(props.company.role) ||
+              (
+                props.projectRole === "projectModerator" && 
+                props.optionalRole.includes("createUpdateBoard")
+              )
+            ) && (
               <div
                 className="overflow-hidden ph2 pt2"
                 style={{
@@ -138,7 +150,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   onClick={() => setShowTaskInput(!showTaskInput)}
                 />
               </div>
-            ) : undefined}
+            )}
             <div>
               {showTaskInput && (
                 <div className="overflow-hidden">
@@ -294,6 +306,8 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
+    projectRole: state.projectReducer.projectRole.projects.role,
+    optionalRole: state.projectReducer.projectRole.projects.project.optionalRole,
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
   };
 };

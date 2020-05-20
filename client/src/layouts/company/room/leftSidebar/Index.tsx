@@ -3,7 +3,6 @@ import { RoomList } from './RoomList';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { CreateForm } from './Form';
-import { projectPermit } from 'stores/UtilsActions';
 import { clearRoomError } from 'stores/room/Actions';
 import { RightSidebar } from 'components/RightSidebar';
 import { InputGroupField } from 'components/fields/InputGroupField';
@@ -34,7 +33,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       >
         <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
-          {props.companyRole && projectPermit(props.companyRole) ? (
             <span
               className="bp3-icon grow pointer"
               onClick={() => setShowDialog(!showDialog)}
@@ -46,7 +44,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
                 color="#0FA3A3"
               />
             </span>
-          ) : undefined}
         </div>
         <div className="flex items-center ph3-ns relative">
           <InputGroupField

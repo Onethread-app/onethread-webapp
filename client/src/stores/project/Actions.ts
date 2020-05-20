@@ -6,7 +6,7 @@ import {
 } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
 import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
-import { IPendingProject, IProject } from './Reducer';
+import { IPendingProject } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
 
 export const getAllProjects = () => async (
@@ -354,26 +354,29 @@ export const getAllPendingProjects = () => async (
   }
 };
 
-export const acceptPendingProject = (project: IProject) => async (
+export const acceptPendingProject = (pending: IPendingProject) => async (
   dispatch: any,
   getState: any,
 ) => {
   try {
     const headers = tokenConfig();
-    if ((headers as any).headers.Authorization && project._id) {
+    if ((headers as any).headers.Authorization && pending.project._id) {
       const companyID = getState().companyReducer.currentCompany._id;
       const pendingProjects = getState().projectReducer
         .pendingProjects;
+      const reqBody = {
+        size: pending.size
+      };
       const response = await tigrowApi.put(
-        `projects/${companyID}/accept-request?pid=${project._id}`,
-        null,
-        headers,
+        `projects/${companyID}/accept-request?pid=${pending.project._id}`,
+        reqBody,
+        headers
       );
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
           (pending: IPendingProject) =>
-            isEqual(pending.project._id, project._id) === false,
+            isEqual(pending.project._id, pending.project._id) === false,
         );
         dispatch({
           type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT,
@@ -381,7 +384,7 @@ export const acceptPendingProject = (project: IProject) => async (
         });
         dispatch({
           type: PROJECT.PROJECT_ADD_PROJECT,
-          payload: project,
+          payload: pending.project,
         });
         Toaster.create().show({
           message: `Successfully accepted`,
