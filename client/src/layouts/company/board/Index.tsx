@@ -131,6 +131,23 @@ const TaskPageComponent = (
     (board) => board.department === department,
   );
 
+  const noBoardsFound = (
+      <div onClick={() => setShowTaskBoardDialog(true)} className="tc pointer dim">
+          <h1 style={{ color: '#34495E' }}>No Boards Found</h1>
+          <p 
+            className="f5-l f4-ns f6 tc" 
+            style={{ color: '#85929E', display: 'inline-block' }}
+        >
+            Click here to create a board or click on the <img 
+                src={addIcon} 
+                style={{ 
+                    display: 'inline-block',
+                    height: '20px', 
+                }} /> icon below
+          </p>
+      </div>
+  );
+
   return (
     <>
       <MobileView>
@@ -219,62 +236,63 @@ const TaskPageComponent = (
               </div>
             </div>
           </div>
-          <p className="pl2 mt3" style={{ color: '#6B6B6B' }}>
-            My Boards
+        </div>
+        <p className="pl2 mt3" style={{ color: '#6B6B6B', fontSize: '18px' }}>
+          My Boards
         </p>
-          <div className="overflow-auto">
-            {loading === false ? (
-              props.boardList.length > 0 ? (
-                <div
-                  style={{
-                    display: 'grid',
-                    gridTemplateColumns:
-                      'repeat(auto-fit, minmax(200px, 270px))',
-                    gridTemplateRows: 'repeat(2, 150px)',
-                  }}
-                >
-                  {/* TODO make one */}
-                  {department ? (
-                    <BoardCard
-                      boardList={boards}
-                      company={props.company}
-                      getSelectedBoard={props.getSelectedBoard}
-                    />
-                  ) : (
-                      <BoardCard
-                        boardList={props.boardList}
-                        company={props.company}
-                        getSelectedBoard={props.getSelectedBoard}
-                      />
-                    )}
-                </div>
-              ) : (
-                  <p>No boards</p>
-                )
-            ) : (
-                <Loading />
-              )}
-            <div>
-              {props.role &&
-                (props.role === 'admin' ||
-                  projectRules(props.optionalRole)[props.role].includes(
-                    'createUpdateBoard',
-                  )) ? (
-                  <img
-                    onClick={() =>
-                      setShowTaskBoardDialog(!showTaskBoardDialog)
-                    }
-                    src={addIcon}
-                    className={`fixed pointer addButton ${
-                      showTaskBoardDialog ? 'dn' : 'db'
-                      }`}
-                    style={{
-                      boxShadow: '0px 6px 6px #00000029',
-                      borderRadius: '50%',
-                    }}
+        <div className="overflow-auto">
+          {loading === false ? (
+            props.boardList.length > 0 ? (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns:
+                    'repeat(auto-fit, minmax(200px, 270px))',
+                  gridTemplateRows: 'repeat(2, 150px)',
+                }}
+              >
+                {/* TODO make one */}
+                {department ? (
+                  <BoardCard
+                    boardList={boards}
+                    company={props.company}
+                    getSelectedBoard={props.getSelectedBoard}
                   />
-                ) : undefined}
-            </div>
+                ) : (
+                  <BoardCard
+                    boardList={props.boardList}
+                    company={props.company}
+                    getSelectedBoard={props.getSelectedBoard}
+                  />
+                )}
+              </div>
+            ) : ( noBoardsFound )
+          ) : (
+            <Loading />
+          )}
+          <div>
+            {props.role &&
+            (props.role === 'admin' ||
+              projectRules(props.optionalRole)[props.role].includes(
+                'createUpdateBoard',
+              )) ? (
+              <img
+                onClick={() =>
+                  setShowTaskBoardDialog(!showTaskBoardDialog)
+                }
+                src={addIcon}
+                className={`fixed pointer ${
+                  showTaskBoardDialog ? 'dn' : 'db'
+                }`}
+                style={{
+                  bottom: '5rem',
+                  right: '7rem',
+                  width: '5rem',
+                  boxShadow: '0px 6px 6px #00000029',
+                  borderRadius: '50%',
+                }}
+              />
+            ) : undefined}
           </div>
           {showTaskBoardDialog && (
             <RightSidebar
