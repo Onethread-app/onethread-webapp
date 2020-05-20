@@ -71,13 +71,17 @@ const create = async (req, res, next) => {
 
     const project = await Project.findOne({
       _id: req.body.projectId,
-    }).select('_id name company');
+    }).select('_id name company');  //company name in header can remove that
 
     //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
 
     const text = `${req.user.name} has created a board ${req.body.name} from ${project.name}`;
     createBoardNotification(
-      project,
+      {
+        project: project._id,
+        company: project.company,
+        _id : board._id,
+      },
       {
         _id: req.user._id,
         name: req.user.name,
@@ -117,7 +121,11 @@ const addBoardMembers = async (req, res, next) => {
 
     const text = `${req.user.name} has added  ${board.members[index].name} in ${board.name} from ${board.project.name}`;
     createBoardNotification(
-      board.project,
+      {
+        project: board.project._id,
+        company: board.project.company,
+        _id : board._id,
+      },
       {
         _id: req.user._id,
         name: req.user.name,
