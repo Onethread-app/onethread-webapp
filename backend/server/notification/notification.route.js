@@ -8,6 +8,8 @@ const {
 
 router.route('/').get(authorization, notificationCtrl.list);
 
+router.route('/webpush').post(authorization, notificationCtrl.userTokenFCM);
+
 // router
 // .route('/test')
 // .get(

@@ -18,6 +18,28 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 
+
+const { adminFirebase } = require('./../services/firebase.services');
+
+module.exports.userTokenFCM = async (req, res, next) => {
+
+  let topic = `${req.body.company}-${req.body.role}`;
+  adminFirebase.messaging().subscribeToTopic(req.body.token, topic)
+  .then(function(response) {
+    // See the MessagingTopicManagementResponse reference documentation
+    // for the contents of response.
+    //console.log('Successfully subscribed to topic:', response);
+    return res
+          .status(200)
+          .json({ message: 'success' });
+  })
+  .catch(function(error) {
+  
+    logger.error(`${error}`);
+    //next(error);
+  });
+};
+
 // module.exports.createCompanyNotification = async (
 //   company, //fromHeader
 //   adminUser,
@@ -463,3 +485,5 @@ module.exports.read = async (req, res, next) => {
       next(e);
     });
 };
+
+
