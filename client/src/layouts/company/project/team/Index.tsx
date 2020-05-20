@@ -227,6 +227,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           </div>
 >>>>>>> f4601c6e... add associates in the project (#19)
         </div>
+<<<<<<< HEAD
       </MobileView>
       <div className="ph5-ns ph3 pv4">
 <<<<<<< HEAD
@@ -303,6 +304,8 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 >>>>>>> c885f026... add associates in the project (#19)
           </div>
         </div>
+=======
+>>>>>>> 6123380c... Wip/signup confirmation template (#163) (#188)
         {/* Admins list starts */}
         <h1 className="f4 mt4">Admins</h1>
         <HTMLTable className="w-100 mv3" striped={true}>
