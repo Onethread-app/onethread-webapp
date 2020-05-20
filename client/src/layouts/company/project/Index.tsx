@@ -7,7 +7,6 @@ import { withRouter } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
 
 const _ProjectPage = (props: any) => {
-
   return (
     <>
       <NavbarCompany title="My Projects" />

@@ -109,51 +109,51 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               <Card className="w-50-ns w-90 ma2">
                 <h1 className="f5">Company Announcement</h1>
                 {props.company.announce &&
-                  props.company.announce.length > 0 ? (
-                    props.company.announce.map((announcement: any) => (
-                      <div className="mt2">
-                        <ExpansionPanel>
-                          <ExpansionPanelSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
+                props.company.announce.length > 0 ? (
+                  props.company.announce.map((announcement: any) => (
+                    <div className="mt2">
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
+                        >
+                          <Paper
+                            className={classes.heading}
+                            elevation={0}
                           >
-                            <Paper
-                              className={classes.heading}
-                              elevation={0}
-                            >
-                              <Typography className="">
-                                {`From ${
-                                  announcement.memberId &&
-                                    announcement.memberId.designations
-                                      .length > 0
-                                    ? announcement.memberId
+                            <Typography className="">
+                              {`From ${
+                                announcement.memberId &&
+                                announcement.memberId.designations
+                                  .length > 0
+                                  ? announcement.memberId
                                       .designations[0].division
-                                    : 'Admin'
-                                  }`}
-                              </Typography>
-                            </Paper>
-                            <Paper
-                              className={classes.secondaryHeading}
-                              elevation={0}
-                            >
-                              <Typography className="">
-                                {announcement.createdAt &&
-                                  moment(
-                                    announcement.createdAt,
-                                  ).calendar()}
-                              </Typography>
-                            </Paper>
-                          </ExpansionPanelSummary>
-                          <ExpansionPanelDetails>
-                            <Typography>{announcement.text}</Typography>
-                          </ExpansionPanelDetails>
-                        </ExpansionPanel>
-                      </div>
-                    ))
-                  ) : (
-                    <small>No announcements.</small>
-                  )}
+                                  : 'Admin'
+                              }`}
+                            </Typography>
+                          </Paper>
+                          <Paper
+                            className={classes.secondaryHeading}
+                            elevation={0}
+                          >
+                            <Typography className="">
+                              {announcement.createdAt &&
+                                moment(
+                                  announcement.createdAt,
+                                ).calendar()}
+                            </Typography>
+                          </Paper>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails>
+                          <Typography>{announcement.text}</Typography>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </div>
+                  ))
+                ) : (
+                  <small>No announcements.</small>
+                )}
               </div>
             </div>
           </div>
@@ -172,8 +172,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           </div>
         </>
       ) : (
-          <Loading />
-        )}
+        <Loading />
+      )}
       {showAnnouncementDialog && (
         <Dialog
           onClose={() =>
