@@ -52,10 +52,10 @@ const BoardCard = withRouter(
               style={{
                 borderLeft: `5px solid 
 							${
-                  find(Color, ['code', board.color])
-                    ? find(Color, ['code', board.color])!.value
-                    : 'white'
-                  }`, // TODO use dictionary
+                find(Color, ['code', board.color])
+                  ? find(Color, ['code', board.color])!.value
+                  : 'white'
+              }`, // TODO use dictionary
                 paddingLeft: '20px',
                 marginLeft: '-2px',
                 borderRadius: '3px',
@@ -132,20 +132,26 @@ const TaskPageComponent = (
   );
 
   const noBoardsFound = (
-      <div onClick={() => setShowTaskBoardDialog(true)} className="tc pointer dim">
-          <h1 style={{ color: '#34495E' }}>No Boards Found</h1>
-          <p 
-            className="f5-l f4-ns f6 tc" 
-            style={{ color: '#85929E', display: 'inline-block' }}
-        >
-            Click here to create a board or click on the <img 
-                src={addIcon} 
-                style={{ 
-                    display: 'inline-block',
-                    height: '20px', 
-                }} /> icon below
-          </p>
-      </div>
+    <div
+      onClick={() => setShowTaskBoardDialog(true)}
+      className="tc pointer dim"
+    >
+      <h1 style={{ color: '#34495E' }}>No Boards Found</h1>
+      <p
+        className="f5-l f4-ns f6 tc"
+        style={{ color: '#85929E', display: 'inline-block' }}
+      >
+        Click here to create a board or click on the{' '}
+        <img
+          src={addIcon}
+          style={{
+            display: 'inline-block',
+            height: '20px',
+          }}
+        />{' '}
+        icon below
+      </p>
+    </div>
   );
 
   return (
@@ -203,13 +209,15 @@ const TaskPageComponent = (
       <div className="h-100">
         <div className="br3 bg-white h-100 pa4-ns pa2 cf flex flex-column">
           <div className="pl2 flex-ns justify-between">
-            {isMobileOnly ? undefined : <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
-              Board
-          </h3>}
+            {isMobileOnly ? undefined : (
+              <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
+                Board
+              </h3>
+            )}
             <div className="flex">
               <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
                 Filter By
-            </p>
+              </p>
               <div className="mt2" style={{ width: '200px' }}>
                 <HTMLSelect
                   fill={true}
@@ -226,18 +234,21 @@ const TaskPageComponent = (
                 >
                   <option selected value="">
                     All
-                </option>
+                  </option>
                   {props.company.departments
                     ? props.company.departments.map((d) => (
-                      <option value={d._id}>{d.name}</option>
-                    ))
+                        <option value={d._id}>{d.name}</option>
+                      ))
                     : undefined}
                 </HTMLSelect>
               </div>
             </div>
           </div>
         </div>
-        <p className="pl2 mt3" style={{ color: '#6B6B6B', fontSize: '18px' }}>
+        <p
+          className="pl2 mt3"
+          style={{ color: '#6B6B6B', fontSize: '18px' }}
+        >
           My Boards
         </p>
         <div className="overflow-auto">
@@ -266,7 +277,9 @@ const TaskPageComponent = (
                   />
                 )}
               </div>
-            ) : ( noBoardsFound )
+            ) : (
+              noBoardsFound
+            )
           ) : (
             <Loading />
           )}

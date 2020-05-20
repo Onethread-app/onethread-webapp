@@ -12,7 +12,6 @@ interface ProfilePageProps {
 }
 
 const CompanyProfilePageComponent = (props: ProfilePageProps) => {
-
   return (
     <>
       <NavbarCompany title="Company Profile" />

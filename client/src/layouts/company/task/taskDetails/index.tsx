@@ -28,6 +28,24 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   const [membersPopover, setMembersPopover] = useState(false);
   const [priorityPopover, setPriorityPopover] = useState(false);
 
+  const openDatePopOver = () => {
+    setDatePopover(true);
+    setMembersPopover(false);
+    setPriorityPopover(false);
+  };
+
+  const openMembersPopOver = () => {
+    setMembersPopover(true);
+    setDatePopover(false);
+    setPriorityPopover(false);
+  };
+
+  const openPriorityPopOver = () => {
+    setPriorityPopover(true);
+    setDatePopover(false);
+    setMembersPopover(false);
+  };
+
   return (
     <div className="fl w-100">
       <div className="fl w-100">
@@ -159,14 +177,14 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         background: '#C1DEDE',
                         width: '130px',
                       }}
-                      onClick={() => setDatePopover(true)}
+                      onClick={openDatePopOver}
                     >
                       <img style={{ height: '15px' }} src={dueDate} />
                       <p className="pl3 f7">Due Date</p>
                     </div>
                   }
                 />
-              ) : undefined}
+              ) : null}
             </div>
             {/* <div>
               <Popover
@@ -213,7 +231,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         background: '#C1DEDE',
                         width: '130px',
                       }}
-                      onClick={() => setMembersPopover(true)}
+                      onClick={openMembersPopOver}
                     >
                       <img
                         style={{ height: '15px' }}
@@ -242,7 +260,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                   target={
                     <div
                       className="flex br2 mb2 pt2 ph3 pointer"
-                      onClick={() => setPriorityPopover(true)}
+                      onClick={openPriorityPopOver}
                       style={{
                         background: '#C1DEDE',
                         width: '130px',
@@ -256,7 +274,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                     </div>
                   }
                 />
-              ) : undefined}
+              ) : null}
             </div>
           </div>
         </div>
