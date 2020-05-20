@@ -33,8 +33,8 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
         props.column && isEmpty(props.column.name) === false
           ? props.column.positionInBoard
           : props.currentBoard.columns
-            ? props.currentBoard.columns.length + 1
-            : 1,
+          ? props.currentBoard.columns.length + 1
+          : 1,
       boardId: props.currentBoard._id,
     };
     if (props.column && isEmpty(props.column.name) === false) {
@@ -70,6 +70,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
           hasValidationErrors,
           ...rest
         }) => (
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -182,6 +183,17 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                   <div
                     className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
                   >
+=======
+          <form onSubmit={handleSubmit}>
+            <div className="pv3 justify-content w-100">
+              <Field<string>
+                name="name"
+                validate={composeValidators(required, maxValue(60))}
+                render={({ input, meta }) => (
+                  <div
+                    className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
+                  >
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
                     <InputGroupFieldWithLabel
                       id="name"
                       value={input.value}
@@ -230,6 +242,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                 >
                   {props.column ? 'Update' : 'Create'}
                 </Button>
+<<<<<<< HEAD
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
 =======
                       }
@@ -252,9 +265,12 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                   </Button>
                 </div>
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
               </div>
-            </form>
-          )}
+            </div>
+          </form>
+        )}
       />
     </div>
   );

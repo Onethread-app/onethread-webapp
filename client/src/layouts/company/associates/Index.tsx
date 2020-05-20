@@ -46,6 +46,7 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   return (
     <>
       <NavbarCompany title="My Associates" />
@@ -76,6 +77,8 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
   return (
     <>
       <NavbarCompany title="My Associates" />

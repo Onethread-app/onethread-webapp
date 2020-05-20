@@ -85,7 +85,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
 =======
               history.push(
                 `${location.pathname}?roomId=${props.room._id}${
-                queries.view ? '&view=' + queries.view : ''
+                  queries.view ? '&view=' + queries.view : ''
                 }`,
               );
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
@@ -99,6 +99,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           }`}
 =======
             }`}
@@ -109,6 +110,9 @@ export const RoomListItem = (props: RoomListItemProps) => {
 =======
             }`}
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+          }`}
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
         >
           <div className="db pr3">
             <span
@@ -192,6 +196,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
         <Drawer
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
         onClose={() => setShowDialog(!showDialog)}
@@ -206,6 +211,8 @@ export const RoomListItem = (props: RoomListItemProps) => {
 <<<<<<< HEAD
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
           onClose={() => setShowDialog(!showDialog)}
           isOpen={showDialog}
           canOutsideClickClose={false}
@@ -215,9 +222,12 @@ export const RoomListItem = (props: RoomListItemProps) => {
             <RoomPage setShowDialog={setShowDialog} />
           </div>
         </Drawer>
+<<<<<<< HEAD
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
 =======
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
       )}
     </>
   );

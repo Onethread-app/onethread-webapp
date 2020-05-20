@@ -52,10 +52,10 @@ const BoardCard = withRouter(
               style={{
                 borderLeft: `5px solid 
 							${
-                  find(Color, ['code', board.color])
-                    ? find(Color, ['code', board.color])!.value
-                    : 'white'
-                  }`, // TODO use dictionary
+                find(Color, ['code', board.color])
+                  ? find(Color, ['code', board.color])!.value
+                  : 'white'
+              }`, // TODO use dictionary
                 paddingLeft: '20px',
                 marginLeft: '-2px',
                 borderRadius: '3px',
@@ -212,13 +212,17 @@ const TaskPageComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
             {isMobileOnly ? undefined : (
               <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
                 Board
               </h3>
             )}
+<<<<<<< HEAD
 <<<<<<< HEAD
             <div className="flex">
               <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
@@ -248,6 +252,12 @@ const TaskPageComponent = (
                 Filter By
             </p>
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+            <div className="flex">
+              <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
+                Filter By
+              </p>
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
               <div className="mt2" style={{ width: '200px' }}>
                 <HTMLSelect
                   fill={true}
@@ -267,6 +277,7 @@ const TaskPageComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   </option>
                   {props.company.departments
                     ? props.company.departments.map((d) => (
@@ -293,11 +304,19 @@ const TaskPageComponent = (
                       <option value={d._id}>{d.name}</option>
                     ))
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+                  </option>
+                  {props.company.departments
+                    ? props.company.departments.map((d) => (
+                        <option value={d._id}>{d.name}</option>
+                      ))
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
                     : undefined}
                 </HTMLSelect>
               </div>
             </div>
           </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -465,6 +484,33 @@ const TaskPageComponent = (
                     company={props.company}
                     getSelectedBoard={props.getSelectedBoard}
                   />
+=======
+        </div>
+        <p
+          className="pl2 mt3"
+          style={{ color: '#6B6B6B', fontSize: '18px' }}
+        >
+          My Boards
+        </p>
+        <div className="overflow-auto">
+          {loading === false ? (
+            props.boardList.length > 0 ? (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns:
+                    'repeat(auto-fit, minmax(200px, 270px))',
+                  gridTemplateRows: 'repeat(2, 150px)',
+                }}
+              >
+                {/* TODO make one */}
+                {department ? (
+                  <BoardCard
+                    boardList={boards}
+                    company={props.company}
+                    getSelectedBoard={props.getSelectedBoard}
+                  />
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
                 ) : (
                   <BoardCard
                     boardList={props.boardList}
@@ -502,6 +548,7 @@ const TaskPageComponent = (
                 }}
               />
             ) : undefined}
+<<<<<<< HEAD
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
 =======
                 (props.role === 'admin' ||
@@ -524,6 +571,8 @@ const TaskPageComponent = (
                 ) : undefined}
             </div>
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
           </div>
           {showTaskBoardDialog && (
             <RightSidebar

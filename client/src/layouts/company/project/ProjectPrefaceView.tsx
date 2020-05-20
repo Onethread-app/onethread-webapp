@@ -258,6 +258,7 @@ export const ProjectPrefaceViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             props.optionalRole &&
             props.role &&
 =======
@@ -266,6 +267,8 @@ export const ProjectPrefaceViewComponent = (
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
 =======
 >>>>>>> 4e99f05f... code style issue fixed
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
             projectRules(props.optionalRole)[props.role].includes(
               'addFileProject',
             ) && (
@@ -306,6 +309,7 @@ export const ProjectPrefaceViewComponent = (
                   onClick={() => setShowFileDialog(true)}
                 >
                   Upload Files
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -372,10 +376,12 @@ export const ProjectPrefaceViewComponent = (
 >>>>>>> 4e99f05f... code style issue fixed
 =======
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
                 </Button>
-                </div>
-              )
-            )}
+              </div>
+            )
+          )}
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})

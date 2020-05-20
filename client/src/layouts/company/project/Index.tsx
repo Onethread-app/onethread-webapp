@@ -12,6 +12,7 @@ import { NavbarCompany } from 'components/NavbarCompany';
 
 const _ProjectPage = (props: any) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import user from './../../../resources/images/profilePhoto.svg';
 import { MobileView } from 'react-device-detect';
@@ -41,6 +42,8 @@ const _ProjectPage = (props: any) => {
 
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
   return (
     <>
       <NavbarCompany title="My Projects" />

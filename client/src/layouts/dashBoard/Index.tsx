@@ -135,16 +135,12 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                             className={classes.heading}
                             elevation={0}
                           >
-                            <Paper
-                              className={classes.heading}
-                              elevation={0}
-                            >
-                              <Typography className="">
-                                {`From ${
-                                  announcement.memberId &&
-                                    announcement.memberId.designations
-                                      .length > 0
-                                    ? announcement.memberId
+                            <Typography className="">
+                              {`From ${
+                                announcement.memberId &&
+                                announcement.memberId.designations
+                                  .length > 0
+                                  ? announcement.memberId
                                       .designations[0].division
                                   : 'Admin'
                               }`}
@@ -191,8 +187,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           </div>
         </>
       ) : (
-          <Loading />
-        )}
+        <Loading />
+      )}
       {showAnnouncementDialog && (
         <Dialog
           onClose={() =>

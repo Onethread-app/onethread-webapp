@@ -52,8 +52,11 @@ const FormComponent = (props: {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
           <form onSubmit={handleSubmit}>
             <div className="pa3-ns pa2 justify-content w-100">
               <Field<string>
@@ -114,6 +117,7 @@ const FormComponent = (props: {
                       className="fw5 mb3"
                       style={{ fontSize: '.8rem' }}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
             <form onSubmit={handleSubmit}>
               <div className="pa3-ns pa2 justify-content w-100">
@@ -147,68 +151,44 @@ const FormComponent = (props: {
                     <div
                       className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
                     >
-                      <DropdownFieldErrorWithLabel
-                        id={input.name}
-                        selectedValue={input.value}
-                        options={
-                          props.departments &&
-                            props.departments.length > 0
-                            ? props.departments
-                            : ([] as any)
-                        }
-                        onChange={input.onChange}
-                        error={
-                          checkError(meta) &&
-                          (meta.error || meta.submitError)
-                        }
-                        label="Department"
-                        className="bn"
-                      />
-                    </div>
-                  )}
-                />
-                <Field<string>
-                  name="color"
-                  render={({ input, meta }) => (
-                    <div className="mb3">
-                      <p
-                        className="fw5 mb3"
-                        style={{ fontSize: '.8rem' }}
-                      >
-                        Label
+                      Label
                     </p>
-                      <div className="flex">
-                        {Color.map((color) => (
-                          <div className="pr2" key={color.code}>
-                            <Icon
-                              className="br2"
-                              icon={
-                                isEqual(color.code, labelColor) === true
-                                  ? 'tick'
-                                  : 'blank'
-                              }
-                              onClick={(e) => {
-                                e.preventDefault();
-                                input.onChange(color.code);
-                                setLabelColor(color.code);
-                              }}
-                              style={{
-                                backgroundColor: color.value,
-                                border:
-                                  isEqual(color.code, labelColor) ===
-                                    true
-                                    ? '3px solid #ffffff'
-                                    : 'none',
-                                height: '3rem',
-                                padding: '0.8rem',
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
+                    <div className="flex">
+                      {Color.map((color) => (
+                        <div className="pr2" key={color.code}>
+                          <Icon
+                            className="br2"
+                            icon={
+                              isEqual(color.code, labelColor) === true
+                                ? 'tick'
+                                : 'blank'
+                            }
+                            onClick={(e) => {
+                              e.preventDefault();
+                              input.onChange(color.code);
+                              setLabelColor(color.code);
+                            }}
+                            style={{
+                              backgroundColor: color.value,
+                              border:
+                                isEqual(color.code, labelColor) ===
+                                true
+                                  ? '3px solid #ffffff'
+                                  : 'none',
+                              height: '3rem',
+                              padding: '0.8rem',
+                            }}
+                          />
+                        </div>
+                      ))}
                     </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
                   </div>
                 )}
               />
@@ -241,6 +221,7 @@ const FormComponent = (props: {
                   disabled={submitting || pristine}
                 >
                   Create
+<<<<<<< HEAD
 =======
             <form onSubmit={handleSubmit}>
               <div className="pa3-ns pa2 justify-content w-100">
@@ -379,11 +360,13 @@ const FormComponent = (props: {
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
 =======
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+>>>>>>> a26cd117... Release/v2.2.0 (#183)
                 </Button>
-                </div>
               </div>
-            </form>
-          )}
+            </div>
+          </form>
+        )}
       />
     </>
   );

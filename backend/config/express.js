@@ -13,7 +13,6 @@ require('elastic-apm-node').start({
 
   active: config.env === 'production',
 });
-
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
