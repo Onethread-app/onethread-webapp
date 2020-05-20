@@ -314,7 +314,7 @@ const dragTask = async (req, res, next) => {
         _id: column.boardId.project.company ,
         project: column.boardId.project._id,
         board: column.boardId,
-        task: createdTask._id,
+        task: task._id,
 
        },
       {
@@ -346,6 +346,7 @@ const dragTask = async (req, res, next) => {
 
     res.status(200).send(responseData);
   } catch (error) {
+    
     logger.error(`Board column create: ${error}`);
 
     next(error);
