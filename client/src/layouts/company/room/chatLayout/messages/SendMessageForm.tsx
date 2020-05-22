@@ -216,7 +216,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
       ) : null}
       <div
         className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}
-        style={{ width: isMobileOnly ? '95%' : '' }}
+        style={{ width: isMobileOnly ? '100%' : '' }}
       >
         {/* pendingFiles */}
         <div className="flex w-100 flex-wrap b--black-10 ba">

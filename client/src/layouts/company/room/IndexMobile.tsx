@@ -8,6 +8,11 @@ import {
   RouteComponentProps,
   NavLink,
 } from 'react-router-dom';
+import {
+  getSingleProject,
+  setCurrentProjectId,
+  getRoleForProject,
+} from '../../../stores/project/Actions';
 import Pusher from 'pusher-js';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { ICompany } from 'stores/company/Reducer';
@@ -26,9 +31,14 @@ interface RoomPageComponentProps extends RouteComponentProps {
   pusherInstance: Pusher | undefined;
   company: ICompany;
   project: any;
+  getSingleProject: (pid: string) => void;
+  setCurrentProjectId: (pid: string) => void;
+  getRoleForProject: (pid: string) => void;
 }
 
 const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
+  const query = new URLSearchParams(props.location.search);
+  const view = query.get('view');
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
@@ -40,9 +50,18 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
     }
   }, [props.companyId, props.projectId]);
 
+
+  if(props.projectId===''){
+    const { projectId } = (props.match.params as any);
+      props.getSingleProject(projectId);
+      props.setCurrentProjectId(projectId);
+      props.getRoleForProject(projectId);
+  }
+
   return (
     <>
       <NavbarCompany title="Rooms" />
+      { !(view && view === 'mobile') && 
       <div className="flex justify-between mt5">
         <NavLink
           exact
@@ -89,7 +108,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
         >
           <small style={{ color: 'inherit' }}>Settings</small>
         </NavLink>
-      </div>
+      </div>}
       <div className="flex h-100 w-100">
         <div className="w-100">
           <RoomSideBar />
@@ -113,4 +132,7 @@ const mapStateToProps = (state: any) => {
 
 export const RoomPageMobile = connect(mapStateToProps, {
   getRooms,
+  getSingleProject,
+  setCurrentProjectId,
+  getRoleForProject,
 })(withRouter(RoomPageMobileComponent));
