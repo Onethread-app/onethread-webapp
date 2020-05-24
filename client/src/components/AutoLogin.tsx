@@ -13,9 +13,9 @@ const AutoLogin =  (props: RouteComponentProps) => {
   return (
     <>
       { redirectPath ? 
-        <Redirect to={ redirectPath + ( view === 'mobile' ? '&view=' + view : '' ) } />
+        <Redirect to={ redirectPath + ( view === 'mobile' ? '?view=' + view : '' ) } />
         : 
-        <Redirect to={ '/' + ( view === 'mobile' ? '&view=' + view : '' ) } />
+        <Redirect to={ '/' + ( view === 'mobile' ? '?view=' + view : '' ) } />
       }
     </>
   );
