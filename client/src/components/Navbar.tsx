@@ -48,6 +48,34 @@ const NavbarTopComponent = (
   props: NavbarTopInternalProps & RouteComponentProps,
 ) => {
   const [showDialog, setShowDialog] = React.useState(false);
+  const [loading] = React.useState(true);
+  const observer = React.useRef(
+    new IntersectionObserver(
+      (entries) => {
+        const first = entries[0];
+        props.getNotifications();
+        console.log(first);
+      },
+      { threshold: 1 },
+    ),
+  );
+  const [
+    element,
+    setElement,
+  ] = React.useState<null | HTMLUnknownElement>(null);
+  React.useEffect(() => {
+    const currentElement = element;
+    const currentObserver = observer.current;
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [element]);
 
   React.useEffect(() => {
     props.match.path !== '/:username' && props.getNotifications();
@@ -117,6 +145,9 @@ const NavbarTopComponent = (
                           text={sNotification.notification.text}
                           read={sNotification.read}
                         />
+                        {loading && (
+                          <div ref={setElement}>Load More</div>
+                        )}
                       </div>
                     ))
                   ) : (

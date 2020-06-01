@@ -61,8 +61,42 @@ function* seenNotification() {
     const headers = tokenConfig();
     const companyId = yield select(selectCompanyId);
     if ((headers as any).headers.Authorization) {
-      yield tigrowApi.get(`notification/seen/${companyId}`, headers);
+      yield tigrowApi.get(`notifications/seen/${companyId}`, headers);
     }
+    // put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      put({ type: NOTIFICATION.SEEN_NOTIFICATION_FAIL });
+      // return error.response;
+    }
+  }
+}
+
+function* webPushNotification(action) {
+  try {
+    const selectCompanyId = (state) =>
+      state.companyReducer.currentCompany._id;
+    const selectRole = (state) => state.userReducer.user;
+    const headers = tokenConfig();
+    const companyId = yield select(selectCompanyId);
+    const role = yield select(selectRole);
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.post(
+        'notifications/webpush',
+        {
+          token: action.token,
+          role,
+          company: companyId,
+        },
+        headers,
+      );
+    }
+    put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
@@ -84,5 +118,6 @@ export default function* notificationSaga() {
     ),
     takeLatest(NOTIFICATION.READ_NOTIFICATION, readNotification),
     takeLatest(NOTIFICATION.SEEN_NOTIFICATION, seenNotification),
+    takeLatest(NOTIFICATION.WEB_PUSH_LOAD, webPushNotification),
   ]);
 }

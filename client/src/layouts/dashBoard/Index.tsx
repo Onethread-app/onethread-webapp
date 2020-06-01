@@ -17,10 +17,9 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
+import { webPush } from '../../stores/notifications/Action';
 
 import firebase from '../../firebase';
-import axios from 'axios';
-
 import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
@@ -47,6 +46,7 @@ interface DashBoardViewProps {
   user: User;
   company: ICompany;
   getCompanyAnnouncement: () => void;
+  webPush: (token) => void;
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
@@ -61,22 +61,10 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
 
   const getTokenFromGCM = () => {
     const messaging = firebase.messaging();
-    const headers = tokenConfig();
     messaging
       .requestPermission()
       .then(() => messaging.getToken())
-      .then((token: string) =>
-        axios.post(
-          'http://b8d7c7e0.ngrok.io/api/v1/notifications/webpush',
-          {
-            token,
-            role: props.company.role,
-            company: props.company._id,
-          },
-          headers,
-        ),
-      )
-      .then((data) => console.log(data))
+      .then((token: string) => props.webPush(token))
       .catch((err: string) => console.log(err));
   };
   useEffect(() => {
@@ -229,4 +217,5 @@ const mapStateToProps = (state: any) => {
 
 export const DashboardView = connect(mapStateToProps, {
   getCompanyAnnouncement,
+  webPush,
 })(DashboardViewComponent);

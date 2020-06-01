@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import { connect } from 'react-redux';
 import { IRoomReducer, IRoom } from 'stores/room/Reducer';
+import { getRooms } from 'stores/room/Actions';
 import {
-  getRooms
-} from 'stores/room/Actions';
-import { withRouter, RouteComponentProps, NavLink } from 'react-router-dom';
+  withRouter,
+  RouteComponentProps,
+  NavLink,
+} from 'react-router-dom';
 import Pusher from 'pusher-js';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { ICompany } from 'stores/company/Reducer';
@@ -27,7 +29,6 @@ interface RoomPageComponentProps extends RouteComponentProps {
 }
 
 const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
-
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
@@ -90,9 +91,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
         </NavLink>
       </div>
       <div className="flex h-100 w-100">
-        <div
-          className="w-100"
-        >
+        <div className="w-100">
           <RoomSideBar />
         </div>
       </div>
@@ -108,10 +107,10 @@ const mapStateToProps = (state: any) => {
     rooms: state.roomReducer.rooms,
     pusherInstance: state.pusherReducer.pusherInstance,
     company: state.companyReducer.currentCompany,
-    project: state.projectReducer.projectDetails
+    project: state.projectReducer.projectDetails,
   };
 };
 
 export const RoomPageMobile = connect(mapStateToProps, {
-  getRooms
+  getRooms,
 })(withRouter(RoomPageMobileComponent));

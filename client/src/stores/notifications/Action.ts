@@ -4,7 +4,7 @@ export const getNotifications = () => ({
   type: NOTIFICATION.GET_NOTIFICATIONS_LOADING,
 });
 
-export const readNotification = (notificationId: any) => ({
+export const readNotification = (notificationId: String) => ({
   type: NOTIFICATION.READ_NOTIFICATION,
   notificationId,
 });
@@ -15,4 +15,9 @@ export const seenNotification = () => ({
 
 export const clearSeen = () => ({
   type: NOTIFICATION.CLEAR_SEEN,
+});
+
+export const webPush = (token: String) => ({
+  type: NOTIFICATION.WEB_PUSH_LOAD,
+  token,
 });

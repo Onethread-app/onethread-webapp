@@ -25,6 +25,7 @@ import {
   isTypingStopTrigger,
 } from '../../channelSubscribe';
 import { User } from 'stores/user/Reducer';
+import { isMobileOnly } from 'react-device-detect';
 
 interface SendMessageFormProps {
   sendRoomMessage: (data: {
@@ -213,90 +214,114 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
           ref={emojiRef}
         />
       ) : null}
+      <div
+        className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}
+        style={{ width: isMobileOnly ? '95%' : '' }}
+      >
+        {/* pendingFiles */}
+        <div className="flex w-100 flex-wrap b--black-10 ba">
+          {props.pendingFiles && props.pendingFiles.length
+            ? props.pendingFiles.map((file) => (
+                <div className="bg-tigrowLightBlue flex pa3 ma1 br-pill justify-center items-center">
+                  <p className="white ma0">
+                    {file.s3Key.split('/')[1]}
+                  </p>
+                  <span
+                    className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
+                    style={{
+                      backgroundColor: 'white',
+                      color: '#0fa3a3',
+                      borderRadius: '30px',
+                      paddingTop: '1px',
+                    }}
+                    onClick={() => {
+                      dispatch({
+                        type: DELETE_ONE_PENDING_FILE,
+                        payload: file._id,
+                      });
+                    }}
+                  ></span>
+                </div>
+              ))
+            : null}
+        </div>
 
-      {/* pendingFiles */}
-      <div className="flex w-100 flex-wrap b--black-10 ba">
-        {props.pendingFiles && props.pendingFiles.length
-          ? props.pendingFiles.map((file) => (
-              <div className="bg-tigrowLightBlue flex pa3 ma1 br-pill justify-center items-center">
-                <p className="white ma0">
-                  {file.s3Key.split('/')[1]}
-                </p>
-                <span
-                  className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
-                  style={{
-                    backgroundColor: 'white',
-                    color: '#0fa3a3',
-                    borderRadius: '30px',
-                    paddingTop: '1px',
-                  }}
-                  onClick={() => {
-                    dispatch({
-                      type: DELETE_ONE_PENDING_FILE,
-                      payload: file._id,
-                    });
-                  }}
-                ></span>
-              </div>
-            ))
-          : null}
-      </div>
-
-      {/* message error */}
-      {isEmpty(textError) === false ? (
-        <h6 className="mv0 pl1 red">{textError}</h6>
-      ) : (
-        ''
-      )}
-      <div className="sendMessage flex w-100 justify-around">
-        {/* <div className="flex items-center mh1" style={{ width: "42px" }}>
-					<img
-						src={props.profileImage ? props.profileImage.imageSource : UserIcon}
-						className="db br-100"
-						style={{ width: "40px", height: "40px", objectFit: "cover" }}
-						alt="user"
-					/>
-				</div> */}
-        <div
-          className="w-100 mv2 mh1 br3 flex"
-          style={{
-            backgroundColor: '#d4d4d47a',
-            borderColor: '#d4d4d4ad',
-          }}
-        >
-          <textarea
-            autoFocus={true}
-            ref={inputMessageRef}
-            className="w-100 pl3 pt3"
+        {/* message error */}
+        {isEmpty(textError) === false ? (
+          <h6 className="mv0 pl1 red">{textError}</h6>
+        ) : (
+          ''
+        )}
+        <div className="sendMessage flex w-100 justify-around">
+          <div
+            className="w-100 mv2 mh1 br3 flex"
             style={{
-              resize: 'none',
-              outline: 'none',
-              border: 'none',
-              backgroundColor: 'rgb(232, 232, 232)',
+              backgroundColor: '#d4d4d47a',
+              borderColor: '#d4d4d4ad',
             }}
-            value={
-              isEqual(text.length, 1) && isEqual(text, '\n')
-                ? resetMessage(text)
-                : text
-            }
-            onChange={onChange}
-            onKeyPress={handleKeyPress}
-            onKeyUp={() => {
-              setTypingTimer(setTimeout(doneTyping, typingInterval));
-              clearTimeout(typingTimer);
-            }}
-            onKeyDown={() => {
-              clearTimeout(typingTimer);
-            }}
-            placeholder="Type your message and hit ENTER to send"
-          ></textarea>
+          >
+            <textarea
+              autoFocus={true}
+              ref={inputMessageRef}
+              className="w-100 pl3 pt3-ns pt2"
+              style={{
+                resize: 'none',
+                outline: 'none',
+                border: 'none',
+                backgroundColor: 'rgb(232, 232, 232)',
+              }}
+              value={
+                isEqual(text.length, 1) && isEqual(text, '\n')
+                  ? resetMessage(text)
+                  : text
+              }
+              onChange={onChange}
+              onKeyPress={handleKeyPress}
+              onKeyUp={() => {
+                setTypingTimer(
+                  setTimeout(doneTyping, typingInterval),
+                );
+                clearTimeout(typingTimer);
+              }}
+              onKeyDown={() => {
+                clearTimeout(typingTimer);
+              }}
+              placeholder="Type your message and hit ENTER to send"
+            ></textarea>
+            <Button
+              className="bp3-minimal outline-0 toggle-emoji"
+              onClick={toggleEmojiPicker}
+            >
+              <span className="bp3-icon">
+                <img
+                  src={SmileIcon}
+                  width="30px"
+                  height="30px"
+                  color="#0FA3A3"
+                />
+              </span>
+            </Button>
+          </div>
           <Button
-            className="bp3-minimal outline-0 toggle-emoji"
-            onClick={toggleEmojiPicker}
+            className="bp3-minimal outline-0"
+            onClick={handleMessageSend}
           >
             <span className="bp3-icon">
               <img
-                src={SmileIcon}
+                src={SendIcon}
+                width="30px"
+                height="30px"
+                color="#0FA3A3"
+              />
+            </span>
+          </Button>
+          <Button
+            className="bp3-minimal outline-0"
+            onClick={() => setShowFileDialog(true)}
+          >
+            <span className="bp3-icon">
+              <img
+                src={AttachmentIcon}
                 width="30px"
                 height="30px"
                 color="#0FA3A3"
@@ -304,32 +329,6 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
             </span>
           </Button>
         </div>
-        <Button
-          className="bp3-minimal outline-0"
-          onClick={handleMessageSend}
-        >
-          <span className="bp3-icon">
-            <img
-              src={SendIcon}
-              width="30px"
-              height="30px"
-              color="#0FA3A3"
-            />
-          </span>
-        </Button>
-        <Button
-          className="bp3-minimal outline-0"
-          onClick={() => setShowFileDialog(true)}
-        >
-          <span className="bp3-icon">
-            <img
-              src={AttachmentIcon}
-              width="30px"
-              height="30px"
-              color="#0FA3A3"
-            />
-          </span>
-        </Button>
       </div>
       {showFileDialog && (
         <Dialog
