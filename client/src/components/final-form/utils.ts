@@ -40,11 +40,12 @@ export const isEmail = (email: string) => {
 };
 
 export const phoneNoValidation = (phone: string) => {
-  const regexForPhoneNoValidation = /^(?:\+?88)?01[1-9]\d{8}$/;
+  // const regexForPhoneNoValidation = /^(?:\+?88)?01[1-9]\d{8}$/;
+  const regexForPhoneNoValidation = /^\+[0-9]{1,3}\-[0-9]{4,14}?$/;
   if (phone.match(regexForPhoneNoValidation)) {
     return undefined;
   }
-  return 'Please enter a 11 digit no e.g. 01711111111';
+  return 'Please enter a valid number';
 };
 
 export const passwordValidation = (password: string) => {
