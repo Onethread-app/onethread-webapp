@@ -14,7 +14,7 @@ import { User } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
 
-export const editUserInfoAction = (basicInfo: User) => async (
+export const editUserInfoAction = (user: User) => async (
   dispatch: any,
   getState: any,
 ) => {
@@ -22,15 +22,15 @@ export const editUserInfoAction = (basicInfo: User) => async (
     const headers = tokenConfig();
     let response;
     if ((headers as any).headers.Authorization) {
-      let user = {};
-      if (basicInfo.contactNo) {
-        user = {
-          ...basicInfo,
-          contactNo: `+88${basicInfo.contactNo}`,
-        };
-      } else {
-        user = basicInfo;
-      }
+      // let user = {};
+      // if (basicInfo.contactNo) {
+      //   user = {
+      //     ...basicInfo,
+      //     contactNo: `+88${basicInfo.contactNo}`,
+      //   };
+      // } else {
+      //   user = basicInfo;
+      // }
       response = await tigrowApi.put(
         `accounts/update`,
         user,
