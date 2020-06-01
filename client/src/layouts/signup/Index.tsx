@@ -7,7 +7,7 @@ import {
   composeValidators,
   isEmail,
   passwordValidation,
-  maxValue,
+  maxValue
 } from 'components/final-form/utils';
 import {
   Link,
@@ -22,7 +22,6 @@ import { isEmpty } from 'lodash';
 
 import logo from './../../resources/images/TiGrowLogoFinal.png';
 import nameTagIcon from './../../resources/images/nameTag.png';
-// import phoneIcon from './../../resources/images/phone.png';
 import emailIcon from './../../resources/images/email.png';
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
@@ -32,9 +31,7 @@ import backgroundImage from './../../resources/images/Bg-png.png';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
-// import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
-// import { allCountryList } from './countryCode';
 
 interface SignUpPageInternalProps {
   userSignupAction: (user: UserModel) => any;
@@ -47,23 +44,8 @@ export const SignUpPageComponent = (
   const [showConfirmPassword, setShowConfirmPassword] = useState(
     false,
   );
-  // const [countryCode] = useState('+880');
-
-  // const onSelectFlag = (countryCodeA: any) => {
-  //   allCountryList.map((country) => {
-  //     console.log(country.code === countryCodeA);
-  //     country.code === countryCodeA &&
-  //       setCountryCode(country.dial_code);
-  //   });
-  // };
 
   const onSubmit = async (values: any) => {
-    // const reqBody = {
-    //   ...values,
-    //   contactNo: `${countryCode}-${
-    //     values.contactNo ? values.contactNo : '0000'
-    //   }`,
-    // };
 
     const response = await props.userSignupAction({
       ...values,
@@ -97,6 +79,7 @@ export const SignUpPageComponent = (
               initialValues={{ email: email ? email : '' }}
               validate={(values: any) => {
                 const errors = {} as any;
+
                 if (values.password !== values.confirmPassword) {
                   errors.confirmPassword = 'Password does not match';
                 }
@@ -112,380 +95,284 @@ export const SignUpPageComponent = (
                 hasValidationErrors,
                 ...rest
               }) => (
-                <>
-                  <h1 className="pl3-ns">Sign Up</h1>
-                  <form className="dt fl cf" onSubmit={handleSubmit}>
-                    <div className="mw9 center ph3-ns v-mid dtc">
-                      <SubmitError errorMessage={submitError} />
-                      <div className="flex pt3 justify-content">
-                        <div>
-                          <Field<string>
-                            name="firstName"
-                            validate={composeValidators(
-                              required,
-                              maxValue(32),
-                            )}
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                }`}
-                              >
-                                <InputGroupFieldWithError
-                                  id="firstName"
-                                  className={`bw1 pb2 br0 bb ${
-                                    checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <img
-                                        src={nameTagIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
-                                  }}
-                                  placeHolder="First Name"
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-                        <Field<string>
-                          name="lastName"
-                          validate={composeValidators(
-                            required,
-                            maxValue(32),
-                          )}
-                          render={({ input, meta }) => (
-                            <div className="ml3">
-                              <div>
-                                <InputGroupFieldWithError
-                                  id="lastName"
-                                  className={`bw1 pb2 br0 bb ${
-                                    checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                  }}
-                                  placeHolder="Last Name"
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              </div>
-                            </div>
-                          )}
-                        />
-                      </div>
-
-                      {/* <div className={`flex justify-content`}>
-                        <div style={{ width: '90px' }}>
-                          <Field<string>
-                            name="countryCode"
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                }`}
-                              >
-                                <ReactFlagsSelect
-                                  onSelect={onSelectFlag}
-                                  defaultCountry="BD"
-                                  showSelectedLabel={false}
-                                  selectedSize={20}
-                                  // optionsSize={14}
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-
-                        <div style={{ width: '50px' }}>
-                          <Field<string>
-                            name="countryCode"
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                }`}
-                              >
-                                <InputGroupFieldWithError
-                                  id="countryCode"
-                                  className={`bw1 pb2 br0 bb ${
-                                    checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  onChange={input.onChange}
-                                  value={countryCode}
-                                  readOnly={true}
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '12px',
-                                  }}
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-
-                        <div className="ml3 ml1-m flex-auto">
-                          <div className="w-100">
+                  <>
+                    <h1 className="pl3-ns">Sign Up</h1>
+                    <form className="dt fl cf" onSubmit={handleSubmit}>
+                      <div className="mw9 center ph3-ns v-mid dtc">
+                        <SubmitError errorMessage={submitError} />
+                        <div className="flex pt3 justify-content">
+                          <div>
                             <Field<string>
-                              name="contactNo"
+                              name="firstName"
+                              validate={composeValidators(
+                                required,
+                                maxValue(32),
+                              )}
                               render={({ input, meta }) => (
                                 <div
                                   className={` ${
                                     checkError(meta)
                                       ? 'mb3-ns mb2'
                                       : 'mb4-ns mb3'
-                                  }`}
+                                    }`}
                                 >
                                   <InputGroupFieldWithError
-                                    id="contactNo"
+                                    id="firstName"
                                     className={`bw1 pb2 br0 bb ${
                                       checkError(meta)
                                         ? 'b--red'
                                         : 'b--lightBlue'
-                                    }`}
+                                      }`}
+                                    value={input.value}
+                                    onChange={input.onChange}
+                                    leftIcon={
+                                      <span className="bp3-icon">
+                                        <img
+                                          src={nameTagIcon}
+                                          width="20px"
+                                          height="20px"
+                                          color="#0fa3a3"
+                                        />
+                                      </span>
+                                    }
+                                    style={{
+                                      boxShadow: 'none',
+                                      fontSize: '18px',
+                                      paddingLeft: '40px',
+                                    }}
+                                    placeHolder="First Name"
+                                    error={
+                                      checkError(meta) &&
+                                      (meta.error || meta.submitError)
+                                    }
+                                  />
+                                </div>
+                              )}
+                            />
+                          </div>
+                          <Field<string>
+                            name="lastName"
+                            validate={composeValidators(
+                              required,
+                              maxValue(32),
+                            )}
+                            render={({ input, meta }) => (
+                              <div className="ml3">
+                                <div>
+                                  <InputGroupFieldWithError
+                                    id="lastName"
+                                    className={`bw1 pb2 br0 bb ${
+                                      checkError(meta)
+                                        ? 'b--red'
+                                        : 'b--lightBlue'
+                                      }`}
                                     value={input.value}
                                     onChange={input.onChange}
                                     style={{
                                       boxShadow: 'none',
                                       fontSize: '18px',
                                     }}
-                                    placeHolder="Contact Number (optional)"
-                                    keypress={(e) => {
-                                      if (
-                                        e.which < 48 ||
-                                        e.which > 57
-                                      ) {
-                                        e.preventDefault();
-                                      }
+                                    placeHolder="Last Name"
+                                    error={
+                                      checkError(meta) &&
+                                      (meta.error || meta.submitError)
+                                    }
+                                  />
+                                </div>
+                              </div>
+                            )}
+                          />
+                        </div>
+
+                        <div>
+                          <Field<string>
+                            name="birthDate"
+                            validate={required}
+                            render={({ input, meta }) => (
+                              <div
+                                className={` ${
+                                  checkError(meta)
+                                    ? 'mb3-ns mb2'
+                                    : 'mb4-ns mb3'
+                                  }`}
+                              >
+                                <div
+                                  className={`flex bw1 pb1 br0 bb ${
+                                    checkError(meta)
+                                      ? 'b--red'
+                                      : 'b--lightBlue'
+                                    }`}
+                                >
+                                  <div>
+                                    <Icon
+                                      icon="calendar"
+                                      className="pl2"
+                                      style={{ color: '#0fa3a3' }}
+                                    />
+                                  </div>
+                                  <DateInput
+                                    className={`  birthdatePicker `}
+                                    formatDate={(date: Date) =>
+                                      date.toLocaleDateString()
+                                    }
+                                    parseDate={(str: string) =>
+                                      new Date(str)
+                                    }
+                                    onChange={input.onChange}
+                                    canClearSelection={false}
+                                    value={
+                                      input.value
+                                        ? new Date(input.value)
+                                        : null
+                                    }
+                                    popoverProps={{
+                                      targetClassName: 'w-100',
                                     }}
+                                    minDate={new Date('1800-01-01')}
+                                    placeholder="Birth Date"
+                                    maxDate={moment(new Date())
+                                      .subtract(13, 'years')
+                                      .toDate()}
+                                  />
+                                </div>
+                                {checkError(meta) && (
+                                  <small
+                                    className="mv3-ns mv2"
+                                    style={{ color: 'red' }}
+                                  >
+                                    {meta.error || meta.submitError}
+                                  </small>
+                                )}
+                              </div>
+                            )}
+                          />
+                        </div>
+
+                        <div>
+                          <div>
+                            <Field<string>
+                              name="email"
+                              validate={composeValidators(
+                                required,
+                                isEmail,
+                              )}
+                              render={({ input, meta }) => (
+                                <div
+                                  className={` ${
+                                    checkError(meta)
+                                      ? 'mb3-ns mb2'
+                                      : 'mb4-ns mb3'
+                                    }`}
+                                >
+                                  <InputGroupFieldWithError
+                                    id="email"
+                                    className={`bw1 pb2 br0 bb ${
+                                      checkError(meta)
+                                        ? 'b--red'
+                                        : 'b--lightBlue'
+                                      }`}
+                                    value={input.value}
+                                    onChange={input.onChange}
+                                    leftIcon={
+                                      <span className="bp3-icon">
+                                        <img
+                                          src={emailIcon}
+                                          width="20px"
+                                          height="20px"
+                                          color="#0fa3a3"
+                                        />
+                                      </span>
+                                    }
+                                    style={{
+                                      boxShadow: 'none',
+                                      fontSize: '18px',
+                                      paddingLeft: '40px',
+                                    }}
+                                    placeHolder="Email Address"
+                                    error={
+                                      checkError(meta) &&
+                                      (meta.error || meta.submitError)
+                                    }
+                                    disabled={isEmpty(email) === false}
                                   />
                                 </div>
                               )}
                             />
                           </div>
                         </div>
-                      </div> */}
-                      <div>
-                        <Field<string>
-                          name="birthDate"
-                          validate={required}
-                          render={({ input, meta }) => (
-                            <div
-                              className={` ${
-                                checkError(meta)
-                                  ? 'mb3-ns mb2'
-                                  : 'mb4-ns mb3'
-                              }`}
-                            >
-                              <div
-                                className={`flex bw1 pb1 br0 bb ${
-                                  checkError(meta)
-                                    ? 'b--red'
-                                    : 'b--lightBlue'
-                                }`}
-                              >
-                                <div>
-                                  <Icon
-                                    icon="calendar"
-                                    className="pl2"
-                                    style={{ color: '#0fa3a3' }}
-                                  />
-                                </div>
-                                <DateInput
-                                  className={`  birthdatePicker `}
-                                  formatDate={(date: Date) =>
-                                    date.toLocaleDateString()
-                                  }
-                                  parseDate={(str: string) =>
-                                    new Date(str)
-                                  }
-                                  onChange={input.onChange}
-                                  canClearSelection={false}
-                                  value={
-                                    input.value
-                                      ? new Date(input.value)
-                                      : null
-                                  }
-                                  popoverProps={{
-                                    targetClassName: 'w-100',
-                                  }}
-                                  minDate={new Date('1800-01-01')}
-                                  placeholder="Birth Date"
-                                  maxDate={moment(new Date())
-                                    .subtract(13, 'years')
-                                    .toDate()}
-                                />
-                              </div>
-                              {checkError(meta) && (
-                                <small
-                                  className="mv3-ns mv2"
-                                  style={{ color: 'red' }}
-                                >
-                                  {meta.error || meta.submitError}
-                                </small>
+
+                        <div>
+                          <div>
+                            <Field<string>
+                              name="password"
+                              validate={composeValidators(
+                                required,
+                                passwordValidation,
                               )}
-                            </div>
-                          )}
-                        />
-                      </div>
-
-                      <div>
-                        <div>
-                          <Field<string>
-                            name="email"
-                            validate={composeValidators(
-                              required,
-                              isEmail,
-                            )}
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                }`}
-                              >
-                                <InputGroupFieldWithError
-                                  id="email"
-                                  className={`bw1 pb2 br0 bb ${
+                              render={({ input, meta }) => (
+                                <div
+                                  className={` ${
                                     checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <img
-                                        src={emailIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
-                                      />
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
-                                  }}
-                                  placeHolder="Email Address"
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                  disabled={isEmpty(email) === false}
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-                      </div>
-
-                      <div>
-                        <div>
-                          <Field<string>
-                            name="password"
-                            validate={composeValidators(
-                              required,
-                              passwordValidation,
-                            )}
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                }`}
-                              >
-                                <InputGroupFieldWithError
-                                  id="password"
-                                  className={`bw1 pb2 br0 bb ${
-                                    checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  type={`${
-                                    showPassword ? 'text' : 'password'
-                                  }`}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <img
-                                        src={lockIcon}
+                                      ? 'mb3-ns mb2'
+                                      : 'mb4-ns mb3'
+                                    }`}
+                                >
+                                  <InputGroupFieldWithError
+                                    id="password"
+                                    className={`bw1 pb2 br0 bb ${
+                                      checkError(meta)
+                                        ? 'b--red'
+                                        : 'b--lightBlue'
+                                      }`}
+                                    value={input.value}
+                                    onChange={input.onChange}
+                                    type={`${
+                                      showPassword ? 'text' : 'password'
+                                      }`}
+                                    leftIcon={
+                                      <span className="bp3-icon">
+                                        <img
+                                          src={lockIcon}
+                                          style={{
+                                            width: '20px',
+                                            height: '20px',
+                                            color: '#0fa3a3',
+                                          }}
+                                        />
+                                      </span>
+                                    }
+                                    rightElement={
+                                      <span
+                                        className="bp3-icon"
                                         style={{
-                                          width: '20px',
-                                          height: '20px',
-                                          color: '#0fa3a3',
+                                          paddingTop: '5px',
+                                          paddingRight: '5px',
+                                          cursor: 'pointer',
                                         }}
-                                      />
-                                    </span>
-                                  }
-                                  rightElement={
-                                    <span
-                                      className="bp3-icon"
-                                      style={{
-                                        paddingTop: '5px',
-                                        paddingRight: '5px',
-                                        cursor: 'pointer',
-                                      }}
-                                    >
-                                      <img
-                                        title={
-                                          showPassword
-                                            ? "Don't show password"
-                                            : 'Show password'
-                                        }
-                                        onClick={() =>
-                                          setShowPassword(
-                                            !showPassword,
-                                          )
-                                        }
-                                        src={
-                                          showPassword
-                                            ? eyeClose
-                                            : eyeIcon
-                                        }
-                                        style={{
-                                          width: '15px',
-                                          height: '15px',
-                                          color: '#0fa3a3',
-                                        }}
-                                      />
-                                      {/* <Tooltip content={
+                                      >
+                                        <img
+                                          title={
+                                            showPassword
+                                              ? "Don't show password"
+                                              : 'Show password'
+                                          }
+                                          onClick={() =>
+                                            setShowPassword(
+                                              !showPassword,
+                                            )
+                                          }
+                                          src={
+                                            showPassword
+                                              ? eyeClose
+                                              : eyeIcon
+                                          }
+                                          style={{
+                                            width: '15px',
+                                            height: '15px',
+                                            color: '#0fa3a3',
+                                          }}
+                                        />
+                                        {/* <Tooltip content={
                                           <p style={{ width: '400px' }}>
                                             Password should contain at least 1 capital letter, 1 small letter,
                                             1 special character and 1 numeric value and should be atleast 8 character long!
@@ -498,139 +385,139 @@ export const SignUpPageComponent = (
                                             color="#0fa3a3"
                                           />
                                         </Tooltip> */}
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
-                                  }}
-                                  placeHolder="Password"
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              </div>
-                            )}
-                          />
+                                      </span>
+                                    }
+                                    style={{
+                                      boxShadow: 'none',
+                                      fontSize: '18px',
+                                      paddingLeft: '40px',
+                                    }}
+                                    placeHolder="Password"
+                                    error={
+                                      checkError(meta) &&
+                                      (meta.error || meta.submitError)
+                                    }
+                                  />
+                                </div>
+                              )}
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <div>
                         <div>
-                          <Field<string>
-                            name="confirmPassword"
-                            validate={composeValidators(required)}
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                }`}
-                              >
-                                <InputGroupFieldWithError
-                                  id="confirmPassword"
-                                  className={`bw1 pb2 br0 bb ${
+                          <div>
+                            <Field<string>
+                              name="confirmPassword"
+                              validate={composeValidators(required)}
+                              render={({ input, meta }) => (
+                                <div
+                                  className={` ${
                                     checkError(meta)
-                                      ? 'b--red'
-                                      : 'b--lightBlue'
-                                  }`}
-                                  value={input.value}
-                                  onChange={input.onChange}
-                                  type={`${
-                                    showConfirmPassword
-                                      ? 'text'
-                                      : 'password'
-                                  }`}
-                                  leftIcon={
-                                    <span className="bp3-icon">
-                                      <img
-                                        src={lockIcon}
+                                      ? 'mb3-ns mb2'
+                                      : 'mb4-ns mb3'
+                                    }`}
+                                >
+                                  <InputGroupFieldWithError
+                                    id="confirmPassword"
+                                    className={`bw1 pb2 br0 bb ${
+                                      checkError(meta)
+                                        ? 'b--red'
+                                        : 'b--lightBlue'
+                                      }`}
+                                    value={input.value}
+                                    onChange={input.onChange}
+                                    type={`${
+                                      showConfirmPassword
+                                        ? 'text'
+                                        : 'password'
+                                      }`}
+                                    leftIcon={
+                                      <span className="bp3-icon">
+                                        <img
+                                          src={lockIcon}
+                                          style={{
+                                            width: '20px',
+                                            height: '20px',
+                                            color: '#0fa3a3',
+                                          }}
+                                        />
+                                      </span>
+                                    }
+                                    rightElement={
+                                      <span
+                                        className="bp3-icon"
                                         style={{
-                                          width: '20px',
-                                          height: '20px',
-                                          color: '#0fa3a3',
+                                          paddingTop: '10px',
+                                          paddingRight: '5px',
+                                          cursor: 'pointer',
                                         }}
-                                      />
-                                    </span>
-                                  }
-                                  rightElement={
-                                    <span
-                                      className="bp3-icon"
-                                      style={{
-                                        paddingTop: '10px',
-                                        paddingRight: '5px',
-                                        cursor: 'pointer',
-                                      }}
-                                    >
-                                      <img
-                                        title={
-                                          showConfirmPassword
-                                            ? "Don't show password"
-                                            : 'Show password'
-                                        }
-                                        onClick={() =>
-                                          setShowConfirmPassword(
-                                            !showConfirmPassword,
-                                          )
-                                        }
-                                        src={
-                                          showConfirmPassword
-                                            ? eyeClose
-                                            : eyeIcon
-                                        }
-                                        style={{
-                                          width: '15px',
-                                          height: '15px',
-                                          color: '#0fa3a3',
-                                        }}
-                                      />
-                                    </span>
-                                  }
-                                  style={{
-                                    boxShadow: 'none',
-                                    fontSize: '18px',
-                                    paddingLeft: '40px',
-                                  }}
-                                  placeHolder="Confirm Password"
-                                  error={
-                                    checkError(meta) &&
-                                    (meta.error || meta.submitError)
-                                  }
-                                />
-                              </div>
-                            )}
-                          />
+                                      >
+                                        <img
+                                          title={
+                                            showConfirmPassword
+                                              ? "Don't show password"
+                                              : 'Show password'
+                                          }
+                                          onClick={() =>
+                                            setShowConfirmPassword(
+                                              !showConfirmPassword,
+                                            )
+                                          }
+                                          src={
+                                            showConfirmPassword
+                                              ? eyeClose
+                                              : eyeIcon
+                                          }
+                                          style={{
+                                            width: '15px',
+                                            height: '15px',
+                                            color: '#0fa3a3',
+                                          }}
+                                        />
+                                      </span>
+                                    }
+                                    style={{
+                                      boxShadow: 'none',
+                                      fontSize: '18px',
+                                      paddingLeft: '40px',
+                                    }}
+                                    placeHolder="Confirm Password"
+                                    error={
+                                      checkError(meta) &&
+                                      (meta.error || meta.submitError)
+                                    }
+                                  />
+                                </div>
+                              )}
+                            />
+                          </div>
                         </div>
-                      </div>
-                      <Button
-                        className="grow h2 pointer white bp3-minimal w4"
-                        style={{
-                          background: '#0FA3A3',
-                          outline: 'none',
-                          color: 'white',
-                          width: '100%',
-                          height: '45px',
-                          fontWeight: 'bold',
-                          fontSize: '1.2rem',
-                        }}
-                        loading={submitting}
-                        type="submit"
-                        disabled={submitting || pristine}
-                      >
-                        Sign up
+                        <Button
+                          className="grow h2 pointer white bp3-minimal w4"
+                          style={{
+                            background: '#0FA3A3',
+                            outline: 'none',
+                            color: 'white',
+                            width: '100%',
+                            height: '45px',
+                            fontWeight: 'bold',
+                            fontSize: '1.2rem',
+                          }}
+                          loading={submitting}
+                          type="submit"
+                          disabled={submitting || pristine}
+                        >
+                          Sign up
                       </Button>
-                      <NavLink
-                        className="fw9 dt center tigrow-lightBlue pt4-ns pt2"
-                        to="/signin"
-                      >
-                        Already have an account?
+                        <NavLink
+                          className="fw9 dt center tigrow-lightBlue pt4-ns pt2"
+                          to="/signin"
+                        >
+                          Already have an account?
                       </NavLink>
-                    </div>
-                  </form>
-                </>
-              )}
+                      </div>
+                    </form>
+                  </>
+                )}
             />
           </div>
         </div>
