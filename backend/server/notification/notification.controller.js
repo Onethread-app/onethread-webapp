@@ -26,7 +26,7 @@ module.exports.userTokenFCM = async (req, res, next) => {
 
   let topic = `${req.body.company}-${req.body.role}`;
   adminFirebase.messaging().subscribeToTopic(req.body.token, topic)
-  .then((response) => {
+  .then(function(response) {
     // See the MessagingTopicManagementResponse reference documentation
     // for the contents of response.
     //console.log('Successfully subscribed to topic:', response);
@@ -34,8 +34,7 @@ module.exports.userTokenFCM = async (req, res, next) => {
           .status(200)
           .json({ message: 'success' });
   })
-  .catch((error) => {
-  
+  .catch(function(error) {
     logger.error(`${error}`);
     //next(error);
   });
@@ -463,10 +462,9 @@ module.exports.list = async (req, res, next) => {
           { "$limit": +limit },
           { "$skip": +skip }
       ]
-  );
 let unseenCount = count.length < 2 ? 0 :  count[0]._id ? count[1].count : count[0].count;
-  
   return sendJSONresponse(res, 200, {result:resultCompany, unseenCount: unseenCount});
+
     // let option = {
     //   path: 'notification',
     //   select: '_id text type company',
@@ -546,8 +544,65 @@ let seenNoti = result.map((c) => {
     });
 };
 
+module.exports.test = async (req, res, next) => {
+  //  UserNotification.aggregate()
+  //   //.project('notification')
+  //   .match({'account' : new ObjectId(req.user._id)})
+  //   //.unwind('notification')
+  //   //.unwind('$notification.company')
+  //   //.match({'notification.company' : new ObjectId(req.params.companyId)})
+  //   .exec()
+  //   .then(result => {
+  //     console.log(result);
+  //     logger.info(`${result}`);
+  //     return sendJSONresponse(res, 200, result);
+  //   });
+  let count = await UserNotification.aggregate(
+    [
+        { '$match': {'account' : new ObjectId(req.user._id)}},
+         
+        { "$lookup": {     
+                "from": "notifications",     
+                "localField": "notification",     
+                "foreignField": "_id",     
+                "as": "notification"   
+        }}, 
+        {"$unwind": {
+                "path": "$notification"
+            }
+        },
+        { '$match': { "notification.company": new ObjectId(req.params.companyId)}},
+        {'$group':{'_id': '$read', 'count':{'$sum':1}} }
+        
+    ]
+);
+    
+let resultCompany = await UserNotification.aggregate(
+    [
+        { '$match': {'account' : new ObjectId(req.user._id)}},
+         
+        { "$lookup": {     
+                "from": "notifications",     
+                "localField": "notification",     
+                "foreignField": "_id",     
+                "as": "notification"   
+        }}, 
+        {"$unwind": {
+                "path": "$notification"
+            }
+        },
+        { '$match': { "notification.company": new ObjectId(req.params.companyId)}},
+       // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
+        //{ "$unwind": "$docs" },
+        
+        { "$limit": 5 },
+        { "$skip": 0 }
+    ]
+)
 
-
+return sendJSONresponse(res, 200, {result:resultCompany, unreadCount: count[1].count});
+   
+};
 
 module.exports.read = async (req, res, next) => {
   await UserNotification.updateOne(

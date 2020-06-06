@@ -2,6 +2,7 @@
 //const config = require('../../config/config');
 const _ = require('lodash');
 const { pusherChannel } = require('./pusher.services');
+const { adminFirebase } = require('./firebase.services');
 
 
 // const channels_client = new Pusher({
