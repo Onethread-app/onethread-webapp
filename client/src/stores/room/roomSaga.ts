@@ -65,6 +65,10 @@ function* createRoomAction(action) {
         payload: response.status,
       });
       yield roomSubscribe(response.data.room._id);
+<<<<<<< HEAD
+=======
+      console.log(response.status);
+>>>>>>> 0db3de3c... Feat/notification (#198)
 
       // return response.status;
     }
@@ -84,15 +88,27 @@ function* createRoomAction(action) {
 
 function* getRooms() {
   try {
+<<<<<<< HEAD
 
     const selectProjectId = (state) =>
       state.projectReducer.projectDetails._id;
+=======
+    const selectCompanyId = (state) =>
+      state.companyReducer.currentCompany._id;
+    const selectProjectId = (state) =>
+      state.projectReducer.projectDetails._id;
+    const company = yield select(selectCompanyId);
+>>>>>>> 0db3de3c... Feat/notification (#198)
     const project = yield select(selectProjectId);
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       yield put({ type: LOADING_ROOM });
       const response = yield tigrowApi.get(
+<<<<<<< HEAD
         `rooms/list?pid=${project}`,
+=======
+        `rooms/${company}/${project}`,
+>>>>>>> 0db3de3c... Feat/notification (#198)
         headers,
       );
       yield put({ type: GET_ROOMS, payload: response.data });
@@ -155,14 +171,21 @@ function* getRoomMembers(action) {
 
 function* addRoomMembers(action) {
   try {
+<<<<<<< HEAD
     const selectProjectId = (state) =>
       state.projectReducer.projectDetails._id;
     const project = yield select(selectProjectId);
+=======
+>>>>>>> 0db3de3c... Feat/notification (#198)
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       yield put({ type: LOADING_ROOM });
       const response = yield tigrowApi.post(
+<<<<<<< HEAD
         `rooms/addUser?pid=${project}`,
+=======
+        `rooms/addUser`,
+>>>>>>> 0db3de3c... Feat/notification (#198)
         action.data,
         headers,
       );
@@ -297,6 +320,7 @@ function* fileUploadAction(action) {
 
 function* archiveRoom(action) {
   try {
+<<<<<<< HEAD
     const selectProjectId = (state) =>
       state.projectReducer.projectDetails._id;
     const project = yield select(selectProjectId);
@@ -304,6 +328,12 @@ function* archiveRoom(action) {
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.put(
         `rooms/${action.roomId}/archive?pid=${project}`,
+=======
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.put(
+        `rooms/${action.roomId}/archive`,
+>>>>>>> 0db3de3c... Feat/notification (#198)
         action.data,
         headers,
       );
@@ -488,6 +518,7 @@ function* fethRooms() {
           payload: response.data,
         });
       }
+<<<<<<< HEAD
       const unreadCount = yield response.data.rooms.map(
         (room: any) => response.data.roomsUnreadCount[room._id],
       );
@@ -499,6 +530,9 @@ function* fethRooms() {
         type: room.COUNT_TOTAL_REED_COUNT,
         payload: totalUnread,
       });
+=======
+
+>>>>>>> 0db3de3c... Feat/notification (#198)
       return response;
     } else {
       // tslint:disable-next-line: no-console

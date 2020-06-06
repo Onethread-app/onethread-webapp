@@ -49,10 +49,14 @@ export const RoomListItem = (props: RoomListItemProps) => {
   return (
     <>
 <<<<<<< HEAD
+<<<<<<< HEAD
       <div
 =======
       <li
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+      <div
+>>>>>>> 0db3de3c... Feat/notification (#198)
         id="roomListItem"
         className="pointer br1"
         style={{
@@ -162,6 +166,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
           </div>
         </article>
 <<<<<<< HEAD
+<<<<<<< HEAD
       </div>
       {showDialog && (
         <Drawer
@@ -176,6 +181,9 @@ export const RoomListItem = (props: RoomListItemProps) => {
         </Drawer>
 =======
       </li>
+=======
+      </div>
+>>>>>>> 0db3de3c... Feat/notification (#198)
       {showDialog && (
         <Drawer
 <<<<<<< HEAD

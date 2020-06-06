@@ -18,7 +18,10 @@ export const room = {
   ADD_MEMBER_IN_ROOM_LOAD: 'ADD_MEMBER_IN_ROOM_LOAD',
   FETCH_ROOMS_LOAD: 'FETCH_ROOMS_LOAD',
   FETCH_ROOMS_SUCCESS: 'FETCH_ROOMS_SUCCESS',
+<<<<<<< HEAD
   COUNT_TOTAL_REED_COUNT: 'COUNT_TOTAL_REED_COUNT',
+=======
+>>>>>>> 0db3de3c... Feat/notification (#198)
 };
 export const LOADING_ROOM = 'LOADING_ROOM';
 export const CURRENT_ROOM = 'CURRENT_ROOM';

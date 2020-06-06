@@ -99,6 +99,7 @@ const AssociateFormEditorComponent = (
           disabled={isEmpty(selectedAssociate)}
           onClick={async () => {
             if (isEmpty(selectedAssociate) === false) {
+<<<<<<< HEAD
               const response = await props.addAssociate(
                 selectedAssociate,
                 props.company,
@@ -106,6 +107,9 @@ const AssociateFormEditorComponent = (
               if (response === 201) {
                 props.setShowDialog(!props.showDialog);
               }
+=======
+              props.addAssociate(selectedAssociate, props.companyId);
+>>>>>>> 0db3de3c... Feat/notification (#198)
             }
           }}
         >

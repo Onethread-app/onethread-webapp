@@ -22,20 +22,19 @@ const { adminFirebase } = require('./../services/firebase.services');
 
 module.exports.userTokenFCM = async (req, res, next) => {
   let topic = `${req.body.company}-${req.body.role}`;
-  adminFirebase.messaging()
-  .subscribeToTopic(req.body.token, topic)
-  .then((response) => {
-    // See the MessagingTopicManagementResponse reference documentation
-    // for the contents of response.
-    //console.log('Successfully subscribed to topic:', response);
-    return res
-          .status(200)
-          .json({ message: 'success' });
-  })
-  .catch((error) => {
-    logger.error(`${error}`);
-    //next(error);
-  });
+  adminFirebase
+    .messaging()
+    .subscribeToTopic(req.body.token, topic)
+    .then(function (response) {
+      // See the MessagingTopicManagementResponse reference documentation
+      // for the contents of response.
+      //console.log('Successfully subscribed to topic:', response);
+      return res.status(200).json({ message: 'success' });
+    })
+    .catch(function (error) {
+      logger.error(`${error}`);
+      //next(error);
+    });
 };
 
 // module.exports.createCompanyNotification = async (
@@ -642,11 +641,3 @@ module.exports.read = async (req, res, next) => {
       next(e);
     });
 };
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
-
->>>>>>> b5ba006a... Wip/backend/announcement (#171) (#185)
-=======
->>>>>>> d0b80317... ready for pre-release v2.3.1

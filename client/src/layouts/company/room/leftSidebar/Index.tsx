@@ -11,9 +11,13 @@ import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { room } from 'stores/room/Types';
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+import { room } from 'stores/room/Types';
+>>>>>>> 0db3de3c... Feat/notification (#198)
 
 interface RoomSideBarComponentProps {
   projectRole?: string;
@@ -70,7 +74,10 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 >>>>>>> e5e8ab62... Feature/role access (#187)
             <span
               className="bp3-icon grow pointer"
-              onClick={() => setShowDialog(!showDialog)}
+              onClick={() => { 
+                setShowDialog(!showDialog);
+                dispatch({ type: room.CLEAR_STATUS_CODE });
+              }}
             >
               <img
                 src={createIcon}

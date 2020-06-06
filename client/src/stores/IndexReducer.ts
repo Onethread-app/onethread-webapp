@@ -27,6 +27,20 @@ export interface AppState {
   toasterReducer: any;
 }
 
+import { AssociateModel } from './associate/Reducer';
+
+export interface AppState {
+  layoutReducer: any;
+  roomReducer: any;
+  userReducer: any;
+  companyReducer: any;
+  boardIndexReducer: any;
+  associateReducer: AssociateModel;
+  projectReducer: any;
+  notificationReducer: any;
+  pusherReducer: any;
+}
+
 export const rootReducer = combineReducers({
   layoutReducer: LayoutReducer,
   roomReducer: RoomReducer,

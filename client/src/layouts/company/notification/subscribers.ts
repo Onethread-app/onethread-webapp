@@ -5,10 +5,17 @@ import { INotification } from 'stores/notifications/Reducer';
 import { NOTIFICATION_KEY, NOTIFICATION_CLUSTER } from '../../../config';
 // import {setSocketId} from '../../../stores/notifications/Action'
 
+<<<<<<< HEAD
 export const companySubscriber = async (companyId: string) => {
   const pusher = new Pusher(NOTIFICATION_KEY!, {
     cluster: NOTIFICATION_CLUSTER!,
     forceTLS: true,
+=======
+export const companySubscriber = (companyId: string) => {
+  const pusher = new Pusher('1743ba5fa64dd023e3dc', {
+    cluster: 'ap1',
+    encrypted: true,
+>>>>>>> 0db3de3c... Feat/notification (#198)
   });
   pusher.connection.bind('connected', function () {
     store.dispatch({

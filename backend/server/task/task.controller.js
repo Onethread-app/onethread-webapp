@@ -338,8 +338,13 @@ const dragTask = async (req, res, next) => {
         project: column.boardId.project._id,
         board: column.boardId,
         task: task._id,
+<<<<<<< HEAD
       },
 >>>>>>> d0b80317... ready for pre-release v2.3.1
+=======
+
+       },
+>>>>>>> 0db3de3c... Feat/notification (#198)
       {
         _id: req.user._id,
         name: req.user.name,
@@ -369,6 +374,7 @@ const dragTask = async (req, res, next) => {
 
     res.status(200).send(responseData);
   } catch (error) {
+    
     logger.error(`Board column create: ${error}`);
 
     next(error);

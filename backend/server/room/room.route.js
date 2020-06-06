@@ -82,6 +82,8 @@ router
   .route('/list/:company')
   .get(authorization, roomCtrl.listCompany);
 
+  router.route('/list/:company').get(authorization, roomCtrl.listCompany);
+
 // get rooms for a company
 router
   .route('/list')
@@ -95,6 +97,7 @@ router
     ),
     roomCtrl.list,
   );
+
 
 // get single room
 router

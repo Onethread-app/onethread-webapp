@@ -59,6 +59,7 @@ module.exports.sendCompanyRoleNotification = async (
   );
 
   // var message = [{
+
   //   webpush: {
   //     notification: {
   //       title: userNoti.type,
@@ -81,17 +82,10 @@ module.exports.sendCompanyRoleNotification = async (
           ...notification,
         },
       },
-<<<<<<< HEAD
       topic: topic,
     };
   });
 
-=======
-
-      topic: topic,
-    };
-  });
->>>>>>> d0b80317... ready for pre-release v2.3.1
   adminFirebase.messaging().sendAll(messages);
 };
 

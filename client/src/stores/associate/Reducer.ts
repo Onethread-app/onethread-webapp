@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import {
 <<<<<<< HEAD
 	GET_ALL_ASSOCIATE,
@@ -12,6 +13,9 @@ import {
   GET_PROJECT_ASSOCIATES,
 >>>>>>> c885f026... add associates in the project (#19)
 } from './Types';
+=======
+import { associate } from './Types';
+>>>>>>> 0db3de3c... Feat/notification (#198)
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 
@@ -56,6 +60,8 @@ const InitialState = {
   associatesList: Associate[];
   pendingAssociates: Associate[];
   projectAssociates: Associate[];
+  sendingRequestSuccess: boolean;
+  error: String;
 }
 
 const InitialState = {
@@ -81,7 +87,14 @@ const InitialState = {
     },
     createdAt: '',
   },
+<<<<<<< HEAD
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+  sendingRequestSuccess: false,
+  associateAdded: false,
+  associateRejected: false,
+  error: '',
+>>>>>>> 0db3de3c... Feat/notification (#198)
 };
 
 export const AssociateReducer = (
@@ -123,35 +136,47 @@ export const AssociateReducer = (
 	}
 =======
   switch (action.type) {
-    case GET_ALL_ASSOCIATE:
+    case associate.GET_ASSOCIATE_SUCCSESS:
       return {
         ...state,
         associatesList: action.payload,
       };
-    case GET_ALL_PENDING_ASSOCIATE:
+    case associate.GET_ASSOCIATE_FAIL:
+      return {
+        ...state,
+        error: action.error,
+      };
+    case associate.GET_ALL_PENDING_ASSOCIATE_SUCCSESS:
       return {
         ...state,
         pendingAssociates: action.payload,
       };
-    case ADD_ASSOCIATE:
+    case associate.SEND_REQUEST_SUCCESS:
       return {
         ...state,
-        associatesList: [...state.associatesList, action.payload],
+        sendingRequestSuccess: true,
       };
-    // case ADD_ASSOCIATE_IN_PENDING_LIST:
-    //   return {
-    //     ...state,
-    //     pendingAssociates: [
-    //       ...state.pendingAssociates,
-    //       action.payload
-    //     ]
-    //   };
-    case SELECT_ASSOCIATE:
+    case associate.CLOSE_TOASTER:
       return {
         ...state,
-        currentAssociate: action.payload,
+        sendingRequestSuccess: false,
       };
-    case GET_PROJECT_ASSOCIATES:
+    case associate.SEND_REQUEST_ERROR:
+      return {
+        ...state,
+        error: action.error,
+      };
+    case associate.ACCEPT_ASSOCIATE_REQUEST_SUCCESS:
+      return {
+        ...state,
+        associateAdded: true,
+      };
+    case associate.REJECT_ASSOCIATE_REQUEST_SUCCESS:
+      return {
+        ...state,
+        associateRejected: true,
+      };
+    case associate.GET_PROJECT_ASSOCIATES_SUCCESS:
       return {
         ...state,
         projectAssociates: action.payload,
