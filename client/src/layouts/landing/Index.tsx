@@ -93,7 +93,7 @@ export const HomePage = () => {
         name,
         email,
         subject: 'N/A',
-        message: 'N/A',
+        message,
       };
       store.dispatch(saveContactForm(reqBody));
     }

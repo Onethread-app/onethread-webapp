@@ -96,6 +96,7 @@ export default function CustomChatbot(props) {
       id: 'Done',
       message: ({ previousValue, steps }) => {
         setEmail(previousValue);
+        console.log(steps);
         return `Thanks ${steps.name.message}, Glad to know you !!`;
       },
       end: true,

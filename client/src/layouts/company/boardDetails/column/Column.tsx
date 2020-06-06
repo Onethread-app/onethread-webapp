@@ -94,7 +94,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
               (projectPermit(props.company.role) ||
                 (
                     props.projectRole === "projectModerator" && 
-                    props.optionalRole.includes("createUpdateBoard")
+                    props.optionalRole!.includes("createUpdateBoard")
                 )
               ) && (
                 <Popover
@@ -128,7 +128,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
             (projectPermit(props.company.role) ||
               (
                 props.projectRole === "projectModerator" && 
-                props.optionalRole.includes("createUpdateBoard")
+                props.optionalRole!.includes("createUpdateBoard")
               )
             ) && (
               <div

@@ -38,10 +38,8 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user,
+    user: state.userReducer.user
   };
 };
-export const CompanyProfilePage = connect(
-  mapStateToProps,
-  null,
-)(CompanyProfilePageComponent);
+
+export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);

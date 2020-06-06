@@ -36,6 +36,7 @@ import { ProjectSettingsPage } from 'layouts/company/project/settings/Index';
 import { ProjectTeamPage } from 'layouts/company/project/team/Index';
 import { isMobileOnly } from 'react-device-detect';
 import { RoomPageMobile } from 'layouts/company/room/IndexMobile';
+import { AutoLoginPage } from 'components/AutoLogin';
 
 const PrivateRoute = (props: {
   component: any;
@@ -158,6 +159,12 @@ export const App = () => (
         path="/notFound"
         render={() =>
           isAuthenticate() ? <NotFound /> : <Redirect to="/" />
+        }
+      />
+      <Route
+        path="/autologin"
+        render={() =>
+          <AutoLoginPage/>
         }
       />
       <PrivateRoute exact path="/" component={Demo} />
