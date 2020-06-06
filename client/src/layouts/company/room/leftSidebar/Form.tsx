@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@blueprintjs/core';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { createRoomAction } from 'stores/room/Actions';
 import { Form, Field } from 'react-final-form';
 import {
@@ -10,6 +10,7 @@ import {
 } from 'components/final-form/utils';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
+import { room } from 'stores/room/Types';
 
 interface ICreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -17,19 +18,30 @@ interface ICreateFormProps {
 
 interface ICreateFormInternalProps extends ICreateFormProps {
   createRoomAction: (val: any) => void;
+  roomStatus: number;
 }
 
 const CreateFormComponent: React.FC<any> = (
   props: ICreateFormInternalProps,
 ) => {
+
+  const [showDialog, setShowDialog] = useState('');
+  const dispatch = useDispatch();
   const onSubmit: any = async (values: any) => {
-    const status: any = await props.createRoomAction(values);
+    await props.createRoomAction(values);
+  };
+
+  const errorHandling: any = (status: number) => {
+
+    setShowDialog('');
     if (status === 409) {
-      return { name: 'Duplicate name' };
+      setShowDialog('Duplicate name');
     } else if (status === 201) {
+      setShowDialog('');
       props.setShowDialog(false);
     }
-    return {};
+    return;
+
   };
 
   return (
@@ -52,14 +64,14 @@ const CreateFormComponent: React.FC<any> = (
                   autoFocus={true}
                   className={`br0 ${
                     checkError(meta) ? 'bb b--red' : 'bb b--lightBlue'
-                  }`}
+                    }`}
                   placeHolder="Room name"
                   value={input.value}
                   onChange={input.onChange}
                   leftIcon="layout-balloon"
                   leftIconColor={`${
                     checkError(meta) ? 'red' : '#0fa3a3'
-                  }`}
+                    }`}
                   style={{ boxShadow: 'none' }}
                   error={
                     checkError(meta) &&
@@ -68,6 +80,8 @@ const CreateFormComponent: React.FC<any> = (
                 />
               )}
             />
+            {errorHandling(props.roomStatus)}
+            <small className="red">{showDialog}</small>
             <div className="flex justify-end mt4">
               <Button
                 className="grow h2 pointer white bp3-minimal w4 mr3"
@@ -77,7 +91,10 @@ const CreateFormComponent: React.FC<any> = (
                   border: '1px solid #0fa3a3',
                   color: '#0fa3a3',
                 }}
-                onClick={() => props.setShowDialog(false)}
+                onClick={() => {
+                  props.setShowDialog(false);
+                  dispatch({ type: room.CLEAR_STATUS_CODE });
+                }}
               >
                 Cancel
               </Button>
@@ -102,6 +119,12 @@ const CreateFormComponent: React.FC<any> = (
   );
 };
 
-export const CreateForm = connect(null, {
+const mapStateToProps = (state: any) => {
+  return {
+    roomStatus: state.roomReducer.responseCode
+  };
+};
+
+export const CreateForm = connect(mapStateToProps, {
   createRoomAction,
 })(CreateFormComponent);

@@ -18,7 +18,10 @@ export const RoomListItem = (props: RoomListItemProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const unreadCount = useSelector(
     (state: any) =>
-      state.roomReducer.roomsUnreadCount[props.room._id],
+      state.roomReducer.roomNotification.roomsUnreadCount &&
+      state.roomReducer.roomNotification.roomsUnreadCount[
+        props.room._id
+      ],
   );
   const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
@@ -41,7 +44,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
 
   return (
     <>
-      <li
+      <div
         id="roomListItem"
         className="pointer br1"
         style={{
@@ -105,7 +108,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
             ) : null}
           </div>
         </article>
-      </li>
+      </div>
       {showDialog && (
         <Drawer
           onClose={() => setShowDialog(!showDialog)}

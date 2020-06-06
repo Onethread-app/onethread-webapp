@@ -17,7 +17,9 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
+import { webPush } from '../../stores/notifications/Action';
 
+import firebase from '../../firebase';
 import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
@@ -44,6 +46,7 @@ interface DashBoardViewProps {
   user: User;
   company: ICompany;
   getCompanyAnnouncement: () => void;
+  webPush: (token) => void;
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
@@ -55,7 +58,18 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [dashboard, setDashboard] = useState(Object);
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  const getTokenFromGCM = () => {
+    const messaging = firebase.messaging();
+    messaging
+      .requestPermission()
+      .then(() => messaging.getToken())
+      .then((token: string) => props.webPush(token))
+      .catch((err: string) => console.log(err));
+  };
   useEffect(() => {
+    console.log(props.company);
+    getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();
       try {
@@ -208,4 +222,5 @@ const mapStateToProps = (state: any) => {
 
 export const DashboardView = connect(mapStateToProps, {
   getCompanyAnnouncement,
+  webPush,
 })(DashboardViewComponent);

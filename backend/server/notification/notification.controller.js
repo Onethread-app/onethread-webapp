@@ -18,12 +18,14 @@ const {
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
 
+
+
 const { adminFirebase } = require('./../services/firebase.services');
 
 module.exports.userTokenFCM = async (req, res, next) => {
+
   let topic = `${req.body.company}-${req.body.role}`;
-  adminFirebase.messaging()
-  .subscribeToTopic(req.body.token, topic)
+  adminFirebase.messaging().subscribeToTopic(req.body.token, topic)
   .then((response) => {
     // See the MessagingTopicManagementResponse reference documentation
     // for the contents of response.
@@ -33,6 +35,7 @@ module.exports.userTokenFCM = async (req, res, next) => {
           .json({ message: 'success' });
   })
   .catch((error) => {
+  
     logger.error(`${error}`);
     //next(error);
   });
@@ -287,24 +290,27 @@ module.exports.createCompanyRoleNotification = async (
       (m) => m.account.toString() !== adminUser._id.toString(),
     );
     let notification = {};
-    if (type === 'task') {
+    if(type === 'task'){
       notification = new Notification({
         type: type,
         text: text,
         account: adminUser._id,
         company: company._id,
         task: company.task,
-        board: company.board,
-        project: company.project,
+        board:company.board,
+        project:company.project,
       });
-    } else {
-      notification = new Notification({
+
+    }else{
+       notification = new Notification({
         type: type,
         text: text,
         account: adminUser._id,
         company: company,
       });
+
     }
+    
 
     let usersNotification = members.map((m) => {
       return {
@@ -344,7 +350,7 @@ module.exports.createBoardNotification = async (
       $or: [{ role: 'projectModerator' }, { role: 'admin' }],
       project: board.project,
     });
-
+    
     let notification = new Notification({
       type: 'board',
       text: text,
@@ -354,6 +360,7 @@ module.exports.createBoardNotification = async (
       company: board.company,
     });
 
+    
     let usersAccountNotificationCollegue = members.map((m) => {
       return m.account.toString();
     });
@@ -393,7 +400,7 @@ module.exports.createBoardNotification = async (
     // let projectEvent =  project._id; //
 
     sendCompanyAndProjectNotification(
-      { company: board.company, _id: board.project },
+      {company:board.company, _id:board.project},
       companyRoleReciver,
       projectRoleReciver,
       adminUser,
@@ -403,6 +410,7 @@ module.exports.createBoardNotification = async (
     await notification.save();
     await UserNotification.create(usersNotificationAll);
   } catch (error) {
+    
     logger.error(`Board notification: ${error}`);
 
     //next(error);
@@ -413,62 +421,52 @@ module.exports.list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
   try {
-    let count = await UserNotification.aggregate([
-      { $match: { account: new ObjectId(req.user._id) } },
 
-      {
-        $lookup: {
-          from: 'notifications',
-          localField: 'notification',
-          foreignField: '_id',
-          as: 'notification',
-        },
-      },
-      {
-        $unwind: {
-          path: '$notification',
-        },
-      },
-      {
-        $match: {
-          'notification.company': new ObjectId(req.params.companyId),
-        },
-      },
-      { $group: { _id: '$seen', count: { $sum: 1 } } },
-    ]);
-
-    let resultCompany = await UserNotification.aggregate([
-      { $match: { account: new ObjectId(req.user._id) } },
-
-      {
-        $lookup: {
-          from: 'notifications',
-          localField: 'notification',
-          foreignField: '_id',
-          as: 'notification',
-        },
-      },
-      {
-        $unwind: {
-          path: '$notification',
-        },
-      },
-      {
-        $match: {
-          'notification.company': new ObjectId(req.params.companyId),
-        },
-      },
-      // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
-      //{ "$unwind": "$docs" },
-
-      { $limit: +limit },
-      { $skip: +skip },
-    ]);
-
-    return sendJSONresponse(res, 200, {
-      result: resultCompany,
-      unseenCount: count[0].count,
-    });
+    let count = await UserNotification.aggregate(
+      [
+          { '$match': {'account' : new ObjectId(req.user._id)}},
+           
+          { "$lookup": {     
+                  "from": "notifications",     
+                  "localField": "notification",     
+                  "foreignField": "_id",     
+                  "as": "notification"   
+          }}, 
+          {"$unwind": {
+                  "path": "$notification"
+              }
+          },
+          { '$match': { "notification.company": new ObjectId(req.params.companyId)}},
+          {'$group':{'_id': '$seen', 'count':{'$sum':1}} }
+          
+      ]
+  );
+      
+  let resultCompany = await UserNotification.aggregate(
+      [
+          { '$match': {'account' : new ObjectId(req.user._id)}},
+           
+          { "$lookup": {     
+                  "from": "notifications",     
+                  "localField": "notification",     
+                  "foreignField": "_id",     
+                  "as": "notification"   
+          }}, 
+          {"$unwind": {
+                  "path": "$notification"
+              }
+          },
+          { '$match': { "notification.company": new ObjectId(req.params.companyId)}},
+         // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
+          //{ "$unwind": "$docs" },
+          
+          { "$limit": +limit },
+          { "$skip": +skip }
+      ]
+  );
+let unseenCount = count.length < 2 ? 0 :  count[0]._id ? count[1].count : count[0].count;
+  
+  return sendJSONresponse(res, 200, {result:resultCompany, unseenCount: unseenCount});
     // let option = {
     //   path: 'notification',
     //   select: '_id text type company',
@@ -497,6 +495,8 @@ module.exports.list = async (req, res, next) => {
     //   .then((result) => {
     //     return sendJSONresponse(res, 200, result);
     //   });
+
+    
   } catch (error) {
     logger.error(`${error}`);
     next(error);
@@ -504,17 +504,41 @@ module.exports.list = async (req, res, next) => {
 };
 
 module.exports.seen = async (req, res, next) => {
+  let result = await UserNotification.aggregate(
+    [
+        { '$match': {'account' : new ObjectId(req.user._id)}},
+         
+        { "$lookup": {     
+                "from": "notifications",     
+                "localField": "notification",     
+                "foreignField": "_id",     
+                "as": "notification"   
+        }}, 
+        {"$unwind": {
+                "path": "$notification"
+            }
+        },
+        { '$match': { "notification.company": new ObjectId(req.params.companyId)}},
+       // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
+        //{ "$unwind": "$docs" },
+        
+       
+    ]
+);
+let seenNoti = result.map((c) => {
+  return c._id;
+});
+
   await UserNotification.updateMany(
-    {
-      account: req.user._id,
-      'notification.company': req.params.companyId,
-    },
+    { _id: { "$in" : seenNoti} },
     { $set: { seen: true } },
+    
   )
     .exec()
     .then((result) => {
+     
       logger.info(`${result}`);
-      return sendJSONresponse(res, 200, { seen: true });
+      return sendJSONresponse(res, 200, result);
     })
     .catch((e) => {
       logger.error(`${e}`);
@@ -522,76 +546,8 @@ module.exports.seen = async (req, res, next) => {
     });
 };
 
-module.exports.test = async (req, res, next) => {
-  //  UserNotification.aggregate()
-  //   //.project('notification')
-  //   .match({'account' : new ObjectId(req.user._id)})
-  //   //.unwind('notification')
-  //   //.unwind('$notification.company')
-  //   //.match({'notification.company' : new ObjectId(req.params.companyId)})
-  //   .exec()
-  //   .then(result => {
-  //     console.log(result);
-  //     logger.info(`${result}`);
-  //     return sendJSONresponse(res, 200, result);
-  //   });
-  let count = await UserNotification.aggregate([
-    { $match: { account: new ObjectId(req.user._id) } },
 
-    {
-      $lookup: {
-        from: 'notifications',
-        localField: 'notification',
-        foreignField: '_id',
-        as: 'notification',
-      },
-    },
-    {
-      $unwind: {
-        path: '$notification',
-      },
-    },
-    {
-      $match: {
-        'notification.company': new ObjectId(req.params.companyId),
-      },
-    },
-    { $group: { _id: '$read', count: { $sum: 1 } } },
-  ]);
 
-  let resultCompany = await UserNotification.aggregate([
-    { $match: { account: new ObjectId(req.user._id) } },
-
-    {
-      $lookup: {
-        from: 'notifications',
-        localField: 'notification',
-        foreignField: '_id',
-        as: 'notification',
-      },
-    },
-    {
-      $unwind: {
-        path: '$notification',
-      },
-    },
-    {
-      $match: {
-        'notification.company': new ObjectId(req.params.companyId),
-      },
-    },
-    // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
-    //{ "$unwind": "$docs" },
-
-    { $limit: 5 },
-    { $skip: 0 },
-  ]);
-
-  return sendJSONresponse(res, 200, {
-    result: resultCompany,
-    unreadCount: count[1].count,
-  });
-};
 
 module.exports.read = async (req, res, next) => {
   await UserNotification.updateOne(
@@ -611,3 +567,5 @@ module.exports.read = async (req, res, next) => {
       next(e);
     });
 };
+
+

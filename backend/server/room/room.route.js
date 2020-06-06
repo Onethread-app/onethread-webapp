@@ -61,8 +61,11 @@ router
   .route('/suggest-member')
   .get(authorization, roomCtrl.suggestMember);
 
+  router.route('/list/:company').get(authorization, roomCtrl.listCompany);
+
 // get rooms for a company
 router.route('/:company/:project').get(authorization, roomCtrl.list);
+
 
 // get single room
 router
