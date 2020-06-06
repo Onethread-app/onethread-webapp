@@ -314,7 +314,7 @@ const addAssociateInProject = async (req, res, next) => {
       message: 'associate list update',
     });
   } catch (error) {
-    logger.error(`Project: ${error}`);
+    logger.error(`${error}`);
     next(error);
   }
 };

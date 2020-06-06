@@ -187,6 +187,7 @@ const list = async (req, res, next) => {
             {
               path: 'associate',
 <<<<<<< HEAD
+<<<<<<< HEAD
               select: 'associateCompany company',
               populate: {
                 path: 'associateCompany company',
@@ -197,11 +198,18 @@ const list = async (req, res, next) => {
                 path: 'associateCompany',
                 select: '_id name type',
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+              select: 'associateCompany company',
+              populate: {
+                path: 'associateCompany company',
+                select: '_id name type _id name type',
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
               },
             },
           ],
         },
       ]);
+
     const associateList = await Project.find({ _id: pid })
       .sort({
         createdAt: 1,
@@ -211,12 +219,13 @@ const list = async (req, res, next) => {
       .select('associate')
       .populate({
         path: 'associate',
-        select: 'associateCompany',
+        select: 'associateCompany company',
         populate: {
-          path: 'associateCompany',
-          select: '_id name type',
+          path: 'associateCompany company',
+          select: '_id name type _id name type',
         },
       });
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     return sendJSONresponse(res, 200, {
@@ -224,6 +233,9 @@ const list = async (req, res, next) => {
     // members.push({ associateList });
     return res.status(200).json({
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+    return sendJSONresponse(res, 200, {
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
       memberList: members,
       associateList,
     });

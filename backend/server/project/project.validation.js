@@ -3,6 +3,14 @@ const Joi = require('@hapi/joi');
 // id
 const idSchema = {
   id: Joi.string().regex(/^[a-fA-F0-9]{24}$/),
+<<<<<<< HEAD
+=======
+  // .error((errors) => {
+  //   return {
+  //     message: 'Invalid ID',
+  //   };
+  // }),
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 };
 
 // project id
@@ -36,7 +44,11 @@ const schema = {
 >>>>>>> e5e8ab62... Feature/role access (#187)
 =======
   size: Joi.number().required(),
+<<<<<<< HEAD
 >>>>>>> 380328e7... Feature/role access (#187)
+=======
+  associate: idSchema.id,
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
   associates: Joi.array().items(
     Joi.object().keys({
       _id: idSchema.id.required(),
@@ -105,11 +117,15 @@ module.exports = {
       size: schema.size.required(),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       associate: schema.associate.required(),
 =======
 >>>>>>> e5e8ab62... Feature/role access (#187)
 =======
 >>>>>>> 380328e7... Feature/role access (#187)
+=======
+      associate: schema.associate.required(),
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
     }),
   }),
   rejectProject: Joi.object().keys({
@@ -141,6 +157,7 @@ module.exports = {
       companyName: schema.name.required(),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       name: schema.name.required(),
 =======
       name: schema.name.required()
@@ -148,6 +165,9 @@ module.exports = {
 =======
       name: schema.name.required()
 >>>>>>> 380328e7... Feature/role access (#187)
+=======
+      name: schema.name.required(),
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
     }),
   }),
 };

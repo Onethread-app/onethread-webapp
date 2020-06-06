@@ -320,12 +320,16 @@ const TaskPageComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
           <p
             className="pl2 mt3"
             style={{ color: '#6B6B6B', fontSize: '18px' }}
           >
             My Boards
           </p>
+<<<<<<< HEAD
 =======
           <p className="pl2 mt3" style={{ color: '#6B6B6B' }}>
             My Boards
@@ -336,6 +340,8 @@ const TaskPageComponent = (
             My Boards
         </p>
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
+=======
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
           <div className="overflow-auto">
             {loading === false ? (
               props.boardList.length > 0 ? (
@@ -357,6 +363,9 @@ const TaskPageComponent = (
                   ) : (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
                     <BoardCard
                       boardList={props.boardList}
                       company={props.company}
@@ -364,6 +373,7 @@ const TaskPageComponent = (
                     />
                   )}
                 </div>
+<<<<<<< HEAD
               ) : ( props.role && 
                 (props.role === 'admin' || projectRules(props.optionalRole)[props.role].includes('createUpdateBoard')) ?
                 noBoardsFound
@@ -519,22 +529,44 @@ const TaskPageComponent = (
                   />
                 )}
               </div>
+=======
+              ) : (
+                noBoardsFound
+              )
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
             ) : (
-              noBoardsFound
-            )
-          ) : (
-            <Loading />
-          )}
-          <div>
-            {props.role &&
-            (props.role === 'admin' ||
-              projectRules(props.optionalRole)[props.role].includes(
-                'createUpdateBoard',
-              )) ? (
-              <img
-                onClick={() =>
+              <Loading />
+            )}
+            <div>
+              {props.role &&
+              (props.role === 'admin' ||
+                projectRules(props.optionalRole)[props.role].includes(
+                  'createUpdateBoard',
+                )) ? (
+                <img
+                  onClick={() =>
+                    setShowTaskBoardDialog(!showTaskBoardDialog)
+                  }
+                  src={addIcon}
+                  className={`fixed pointer ${
+                    showTaskBoardDialog ? 'dn' : 'db'
+                  }`}
+                  style={{
+                    bottom: '5rem',
+                    right: '7rem',
+                    width: '5rem',
+                    boxShadow: '0px 6px 6px #00000029',
+                    borderRadius: '50%',
+                  }}
+                />
+              ) : undefined}
+            </div>
+            {showTaskBoardDialog && (
+              <RightSidebar
+                onClose={() =>
                   setShowTaskBoardDialog(!showTaskBoardDialog)
                 }
+<<<<<<< HEAD
                 src={addIcon}
                 className={`fixed pointer ${
                   showTaskBoardDialog ? 'dn' : 'db'
@@ -573,18 +605,15 @@ const TaskPageComponent = (
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
 =======
 >>>>>>> a26cd117... Release/v2.2.0 (#183)
+=======
+              >
+                <FormBoard
+                  setShowTaskBoardDialog={setShowTaskBoardDialog}
+                />
+              </RightSidebar>
+            )}
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
           </div>
-          {showTaskBoardDialog && (
-            <RightSidebar
-              onClose={() =>
-                setShowTaskBoardDialog(!showTaskBoardDialog)
-              }
-            >
-              <FormBoard
-                setShowTaskBoardDialog={setShowTaskBoardDialog}
-              />
-            </RightSidebar>
-          )}
         </div>
       </div>
     </>

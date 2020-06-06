@@ -1,10 +1,15 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import {
 <<<<<<< HEAD
+=======
+import {
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 	GET_ALL_ASSOCIATE,
 	SELECT_ASSOCIATE,
 	ADD_ASSOCIATE,
 	GET_ALL_PENDING_ASSOCIATE
+<<<<<<< HEAD
 =======
   GET_ALL_ASSOCIATE,
   SELECT_ASSOCIATE,
@@ -16,6 +21,9 @@ import {
 =======
 import { associate } from './Types';
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+} from './Types';
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
 
@@ -27,6 +35,7 @@ export interface Associate {
 	createdAt: string;
 }
 export interface AssociateModel {
+<<<<<<< HEAD
 <<<<<<< HEAD
 	currentAssociate: Associate;
 	associatesList: Associate[];
@@ -95,6 +104,35 @@ const InitialState = {
   associateRejected: false,
   error: '',
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+	currentAssociate: Associate;
+	associatesList: Associate[];
+	pendingAssociates: Associate[];
+}
+
+const InitialState = {
+	associatesList: [],
+	pendingAssociates: [],
+	currentAssociate: {
+			_id: '',
+			associateCompany: {
+					_id: '',
+					name: '',
+					type: '',
+					email: '',
+					address: '',
+					legalOwnerName: '',
+					legalOwnerMail: '',
+					logo: '',
+			},
+			account: {
+					_id: '',
+					firstName: '',
+					lastName: '',
+			},
+			createdAt: '',
+	},
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 };
 
 export const AssociateReducer = (
@@ -102,6 +140,9 @@ export const AssociateReducer = (
 	action: any,
 ) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 	switch (action.type) {
 			case GET_ALL_ASSOCIATE:
 					return {
@@ -134,6 +175,7 @@ export const AssociateReducer = (
 			default:
 					return state;
 	}
+<<<<<<< HEAD
 =======
   switch (action.type) {
     case associate.GET_ASSOCIATE_SUCCSESS:
@@ -200,4 +242,6 @@ export const AssociateReducer = (
       return state;
   }
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+>>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 };

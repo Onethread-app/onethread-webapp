@@ -3,10 +3,7 @@ import { Loading } from 'components/Loading';
 import { Card } from '@blueprintjs/core';
 import moment from 'moment';
 import addIcon from '../../../resources/images/addIcon.png';
-import {
-  getAllAssociates,
-  closeTaster,
-} from 'stores/associate/Actions';
+import { getAllAssociates } from 'stores/associate/Actions';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { RightSidebar } from 'components/RightSidebar';
@@ -18,19 +15,11 @@ import {
   MobileOnlyView,
   isMobileOnly,
 } from 'react-device-detect';
-import Snackbar from '@material-ui/core/Snackbar';
-import MuiAlert from '@material-ui/lab/Alert';
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 interface AssociatesPageComponentProps {
   company: ICompany;
   associates: Associate[];
   getAllAssociates: () => void;
-  sendingRequestSuccess: boolean;
-  closeTaster: () => void;
 }
 
 export const AssociateListComponent = (
@@ -40,13 +29,6 @@ export const AssociateListComponent = (
     false,
   );
   const [loading, setLoading] = useState(false);
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    props.closeTaster();
-  };
 
   useEffect(() => {
     async function loadAssociates(getAssociates: () => void) {
@@ -189,15 +171,6 @@ export const AssociateListComponent = (
           </div>
         </div>
       </div>
-      <Snackbar
-        open={props.sendingRequestSuccess}
-        autoHideDuration={2000}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity="success">
-          Request sent successfully !!
-        </Alert>
-      </Snackbar>
       {showAssociateDialog && (
         <RightSidebar
           onClose={() => setShowAssociateDialog(!showAssociateDialog)}
@@ -219,12 +192,9 @@ const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
     associates: state.associateReducer.associatesList,
-    sendingRequestSuccess:
-      state.associateReducer.sendingRequestSuccess,
   };
 };
 
 export const AssociateList = connect(mapStateToProps, {
   getAllAssociates,
-  closeTaster,
 })(withRouter(AssociateListComponent));
