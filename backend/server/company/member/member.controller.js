@@ -186,6 +186,7 @@ const addMember = async (req, res, next) => {
     });
   } catch (error) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     logger.error(`Colleague: ${error}`);
 =======
     
@@ -196,6 +197,9 @@ const addMember = async (req, res, next) => {
 =======
 
 >>>>>>> b5ba006a... Wip/backend/announcement (#171) (#185)
+=======
+    logger.error(`${error}`);
+>>>>>>> d0b80317... ready for pre-release v2.3.1
     next(error);
   }
 };

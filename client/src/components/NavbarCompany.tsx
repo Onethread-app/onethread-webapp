@@ -1,8 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from 'react';
 =======
 import React, { useState } from 'react';
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+import React, { useState, useEffect } from 'react';
+>>>>>>> d0b80317... ready for pre-release v2.3.1
 import { Navbar, Drawer, Popover, Position } from '@blueprintjs/core';
 import { MobileView } from 'react-device-detect';
 import user from '../resources/images/profilePhoto.svg';
@@ -113,8 +117,10 @@ const NavbarCompanyComponent = (
   props: NavbarProps & RouteComponentProps,
 ) => {
   const [showDialog, setShowDialog] = useState(false);
+  const query = new URLSearchParams(props.location.search);
+  const view = query.get('view');
 
-  React.useEffect(() => {
+  useEffect(() => {
     // tslint:disable-next-line: no-unused-expression
     props.match.path !== '/:username' && props.getNotifications();
     companySubscriber(props.companyId);
@@ -259,7 +265,7 @@ const NavbarCompanyComponent = (
 
   return (
     <>
-      <MobileView>
+      {!(view && view === 'mobile') && <MobileView>
         <Navbar
           fixedToTop
           className="flex justify-between items-center shadow-4"
@@ -394,8 +400,12 @@ const NavbarCompanyComponent = (
             />
           </div>
         </Navbar>
+<<<<<<< HEAD
       </MobileView>
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+      </MobileView>}
+>>>>>>> d0b80317... ready for pre-release v2.3.1
       {showDialog && (
         <Drawer
           onClose={() => setShowDialog(!showDialog)}

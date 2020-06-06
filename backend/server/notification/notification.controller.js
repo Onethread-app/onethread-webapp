@@ -642,7 +642,10 @@ module.exports.read = async (req, res, next) => {
     });
 };
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 
 >>>>>>> b5ba006a... Wip/backend/announcement (#171) (#185)
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1

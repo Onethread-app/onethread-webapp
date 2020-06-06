@@ -32,7 +32,10 @@ router
   .route('/boardProject')
   .get(
     authorization,
+<<<<<<< HEAD
     subCtrl.subscriptionExpireCheck(),
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',

@@ -354,6 +354,7 @@ a:hover {
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .companyProfilepicOuter {
   width: 235px;
   height: 235px;
@@ -516,6 +517,8 @@ a:hover {
   margin-right: 45px;
 }
 
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1
 .companyProfilepicOuter {
   width: 235px;
   height: 235px;
@@ -674,9 +677,12 @@ a:hover {
 }
 
 .companyCoverButton{
+<<<<<<< HEAD
 =======
 .companyCoverButton {
 >>>>>>> d06346b0... code style issue fixed
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1
   margin-top: 265px;
   margin-right: 45px;
 }

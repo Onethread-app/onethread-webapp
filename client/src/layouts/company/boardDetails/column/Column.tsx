@@ -95,10 +95,14 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 (
                     props.projectRole === "projectModerator" && 
 <<<<<<< HEAD
+<<<<<<< HEAD
                     props.optionalRole!.includes("createUpdateBoard")
 =======
                     props.optionalRole.includes("createUpdateBoard")
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+                    props.optionalRole!.includes("createUpdateBoard")
+>>>>>>> d0b80317... ready for pre-release v2.3.1
                 )
               ) && (
                 <Popover
@@ -133,10 +137,14 @@ const ColumnComponent = (props: ColumnInternalProps) => {
               (
                 props.projectRole === "projectModerator" && 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 props.optionalRole!.includes("createUpdateBoard")
 =======
                 props.optionalRole.includes("createUpdateBoard")
 >>>>>>> e5e8ab62... Feature/role access (#187)
+=======
+                props.optionalRole!.includes("createUpdateBoard")
+>>>>>>> d0b80317... ready for pre-release v2.3.1
               )
             ) && (
               <div

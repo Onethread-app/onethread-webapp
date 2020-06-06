@@ -55,11 +55,15 @@ const create = async (req, res, next) => {
     createCompanyRoleNotification(
       {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1
         _id: column.boardId.project.company,
         project: column.boardId.project._id,
         board: column.boardId,
         task: createdTask._id,
       },
+<<<<<<< HEAD
 =======
          _id: column.boardId.project.company ,
          project: column.boardId.project._id,
@@ -68,6 +72,8 @@ const create = async (req, res, next) => {
 
         },
 >>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1
       {
         _id: req.user._id,
         name: req.user.name,
@@ -313,6 +319,7 @@ const dragTask = async (req, res, next) => {
     createCompanyRoleNotification(
       {
 <<<<<<< HEAD
+<<<<<<< HEAD
         _id: column.boardId.project.company,
         project: column.boardId.project._id,
         board: column.boardId,
@@ -326,6 +333,13 @@ const dragTask = async (req, res, next) => {
 
        },
 >>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
+=======
+        _id: column.boardId.project.company,
+        project: column.boardId.project._id,
+        board: column.boardId,
+        task: task._id,
+      },
+>>>>>>> d0b80317... ready for pre-release v2.3.1
       {
         _id: req.user._id,
         name: req.user.name,
@@ -355,7 +369,6 @@ const dragTask = async (req, res, next) => {
 
     res.status(200).send(responseData);
   } catch (error) {
-    
     logger.error(`Board column create: ${error}`);
 
     next(error);

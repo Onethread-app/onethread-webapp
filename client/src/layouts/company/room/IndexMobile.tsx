@@ -15,6 +15,7 @@ import {
   setCurrentProjectId,
   getRoleForProject,
 } from '../../../stores/project/Actions';
+<<<<<<< HEAD
 =======
 import {
   getRooms
@@ -29,6 +30,8 @@ import {
   NavLink,
 } from 'react-router-dom';
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1
 import Pusher from 'pusher-js';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { ICompany } from 'stores/company/Reducer';
@@ -48,6 +51,7 @@ interface RoomPageComponentProps extends RouteComponentProps {
   company: ICompany;
   project: any;
 <<<<<<< HEAD
+<<<<<<< HEAD
   getSingleProject: (pid: string) => void;
   setCurrentProjectId: (pid: string) => void;
   getRoleForProject: (pid: string) => void;
@@ -65,6 +69,16 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+  getSingleProject: (pid: string) => void;
+  setCurrentProjectId: (pid: string) => void;
+  getRoleForProject: (pid: string) => void;
+}
+
+const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
+  const query = new URLSearchParams(props.location.search);
+  const view = query.get('view');
+>>>>>>> d0b80317... ready for pre-release v2.3.1
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
@@ -77,6 +91,9 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
   }, [props.companyId, props.projectId]);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1
 
   if(props.projectId===''){
     const { projectId } = (props.match.params as any);
@@ -85,6 +102,7 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
       props.getRoleForProject(projectId);
   }
 
+<<<<<<< HEAD
   return (
     <>
       <NavbarCompany title="Rooms" />
@@ -94,6 +112,12 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
     <>
       <NavbarCompany title="Rooms" />
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+  return (
+    <>
+      <NavbarCompany title="Rooms" />
+      { !(view && view === 'mobile') && 
+>>>>>>> d0b80317... ready for pre-release v2.3.1
       <div className="flex justify-between mt5">
         <NavLink
           exact
@@ -141,11 +165,15 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
           <small style={{ color: 'inherit' }}>Settings</small>
         </NavLink>
 <<<<<<< HEAD
+<<<<<<< HEAD
       </div>}
       <div className="flex h-100 w-100">
         <div className="w-100">
 =======
       </div>
+=======
+      </div>}
+>>>>>>> d0b80317... ready for pre-release v2.3.1
       <div className="flex h-100 w-100">
 <<<<<<< HEAD
         <div
@@ -194,5 +222,11 @@ export const RoomPageMobile = connect(mapStateToProps, {
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
   getRooms,
+<<<<<<< HEAD
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
+=======
+  getSingleProject,
+  setCurrentProjectId,
+  getRoleForProject,
+>>>>>>> d0b80317... ready for pre-release v2.3.1
 })(withRouter(RoomPageMobileComponent));

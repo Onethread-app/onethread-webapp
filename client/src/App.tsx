@@ -37,10 +37,13 @@ import { ProjectTeamPage } from 'layouts/company/project/team/Index';
 import { isMobileOnly } from 'react-device-detect';
 import { RoomPageMobile } from 'layouts/company/room/IndexMobile';
 import { AutoLoginPage } from 'components/AutoLogin';
+<<<<<<< HEAD
 import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
 import { HomePageNew } from 'layouts/home/Index';
 import Success from './components/Success';
+=======
+>>>>>>> d0b80317... ready for pre-release v2.3.1
 
 const PrivateRoute = (props: {
   component: any;
@@ -165,7 +168,16 @@ export const App = () => (
           isAuthenticate() ? <NotFound /> : <Redirect to="/" />
         }
       />
+<<<<<<< HEAD
       <Route path="/autologin" render={() => <AutoLoginPage />} />
+=======
+      <Route
+        path="/autologin"
+        render={() =>
+          <AutoLoginPage/>
+        }
+      />
+>>>>>>> d0b80317... ready for pre-release v2.3.1
       <PrivateRoute exact path="/" component={Demo} />
       <PrivateRoute
         path="/:username"
