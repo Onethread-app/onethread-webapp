@@ -19,6 +19,7 @@ router
       'all',
       'admin',
       'projectModerator',
+      'member',
     ),
     SchemaValidator(joiSchema.createRoom),
     roomCtrl.create,
@@ -60,14 +61,23 @@ router
   .route('/suggest-member')
   .get(authorization, roomCtrl.suggestMember);
 
+  router.route('/list/:company').get(authorization, roomCtrl.listCompany);
+
 // get rooms for a company
 router.route('/:company/:project').get(authorization, roomCtrl.list);
+
 
 // get single room
 router
   .route('/:roomId')
   .get(
     authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     SchemaValidator(joiSchema.getRoom),
     roomCtrl.getRoom,
   );

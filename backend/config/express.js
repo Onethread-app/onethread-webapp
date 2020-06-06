@@ -64,7 +64,11 @@ app.use(cors());
 
 // TODO: cors customize
 // enable detailed API logging in dev env
-if (config.env === 'development' || config.env === 'test') {
+if (
+  config.env === 'development' ||
+  config.env === 'test' ||
+  config.env === 'local'
+) {
   expressWinston.requestWhitelist.push('body');
   expressWinston.responseWhitelist.push('body');
   app.use(

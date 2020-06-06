@@ -68,6 +68,7 @@ export const createProject = (payload: any, admin: any) => async (
         reqBody,
         headers,
       );
+      
       await dispatch({
         type: PROJECT.PROJECT_CREATE,
         payload: response.data,
@@ -203,6 +204,7 @@ export const getSingleProject = (pid: string) => async (
         type: PROJECT.PROJECT_SINGLE_VIEW,
         payload: response.data,
       });
+      // tslint:disable-next-line: no-unused-expression
       getState().projectReducer.projectDetails._id !== '' &&
         dispatch({
           type: PROJECT.PROJECT_FILE_OPEN,
@@ -531,13 +533,10 @@ export const getProjectTeams = () => async (
         `/teams/member-list?pid=${pid}`,
         headers,
       );
+      
       await dispatch({
         type: PROJECT.PROJECT_GET_TEAMS,
         payload: response.data.memberList,
-      });
-      await dispatch({
-        type: PROJECT.PROJECT_GET_ASSOCIATES,
-        payload: response.data.associateList.associate,
       });
       return response.data;
     }
@@ -597,6 +596,37 @@ export const addProjectTeams = (
   }
 };
 
+export const getProjectAssociates = () => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const pid = getState().projectReducer.pid;
+      const response = await tigrowApi.get(
+        `/teams/member-list?pid=${pid}`,
+        headers,
+      );
+      console.log(response);
+      await dispatch({
+        type: PROJECT.PROJECT_GET_ASSOCIATES,
+        payload: response.data.associateList[0].associate,
+      });
+      return response.data;
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      // return error.response;
+    }
+  }
+};
+
 export const addProjectAssociate = (
   data: {
     project: string;
@@ -618,6 +648,11 @@ export const addProjectAssociate = (
         },
         headers,
       );
+      console.log(response);
+      if (response.status === 200) {
+        dispatch(getProjectAssociates());
+      }
+      
       // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
       return response;
     } else {

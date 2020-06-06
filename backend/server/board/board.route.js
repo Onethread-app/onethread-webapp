@@ -40,7 +40,13 @@ router
   .route('/:boardId')
   .get(
     authorization,
-    // permit('user', 'admin'),
+    // projectCtrl.authorizeProjectRole(
+    //   'all',
+    //   'admin',
+    //   'projectModerator',
+    //   'member',
+    // ),
+    SchemaValidator(boardSchema.singleBoard),
     boardCtrl.get,
   )
   .put(
