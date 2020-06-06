@@ -8,12 +8,15 @@ import {
   GET_ALL_PENDING_ASSOCIATE,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   GET_PROJECT_ASSOCIATES
 >>>>>>> f4601c6e... add associates in the project (#19)
 =======
   GET_PROJECT_ASSOCIATES,
 >>>>>>> 4e99f05f... code style issue fixed
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { Associate } from './Reducer';
@@ -105,6 +108,7 @@ export const getAllAssociates = () => async (
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 };
 
+<<<<<<< HEAD
 export const getAllAssociates = () => async (
   dispatch: any,
   getState: any,
@@ -147,6 +151,8 @@ export const getAllAssociates = () => async (
   }
 };
 
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 export const getAllPendingAssociates = () => async (
   dispatch: any,
   getState: any,

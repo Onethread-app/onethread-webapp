@@ -14,6 +14,7 @@ function* getNotifications() {
     const selectCompanyId = (state) =>
       state.companyReducer.currentCompany._id;
 <<<<<<< HEAD
+<<<<<<< HEAD
     // const selectPageNumber = (state) =>
     //   state.notificationReducer.pageNumber;
     // const selectAllNotificatons = (state) =>
@@ -28,6 +29,8 @@ function* getNotifications() {
       const response = yield tigrowApi.get(
         `notifications/${companyId}`,
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
     const selectPageNumber = (state) =>
       state.notificationReducer.pageNumber;
     const selectAllNotificatons = (state) =>
@@ -41,7 +44,10 @@ function* getNotifications() {
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
         `notifications/${companyId}?limit=30&skip=${skip}`,
+<<<<<<< HEAD
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
         headers,
       );
       yield put({
@@ -51,10 +57,14 @@ function* getNotifications() {
       yield put({
         type: NOTIFICATION.GET_NOTIFICATIONS_SUCCSESS,
 <<<<<<< HEAD
+<<<<<<< HEAD
         payload: response.data.result,
 =======
         payload: [...stateNotifications, ...response.data.result],
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+        payload: [...stateNotifications, ...response.data.result],
+>>>>>>> 6d92f22e... Dev (#202)
       });
       return response.data;
     }

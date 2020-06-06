@@ -321,14 +321,18 @@ const TaskPageComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
           <p
             className="pl2 mt3"
             style={{ color: '#6B6B6B', fontSize: '18px' }}
           >
             My Boards
           </p>
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
           <p className="pl2 mt3" style={{ color: '#6B6B6B' }}>
@@ -342,6 +346,8 @@ const TaskPageComponent = (
 >>>>>>> 2650e2be... Feature/mobile responsive (#148)
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
           <div className="overflow-auto">
             {loading === false ? (
               props.boardList.length > 0 ? (
@@ -364,8 +370,11 @@ const TaskPageComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                     <BoardCard
                       boardList={props.boardList}
                       company={props.company}
@@ -373,6 +382,7 @@ const TaskPageComponent = (
                     />
                   )}
                 </div>
+<<<<<<< HEAD
 <<<<<<< HEAD
               ) : ( props.role && 
                 (props.role === 'admin' || projectRules(props.optionalRole)[props.role].includes('createUpdateBoard')) ?
@@ -534,6 +544,11 @@ const TaskPageComponent = (
                 noBoardsFound
               )
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+              ) : (
+                noBoardsFound
+              )
+>>>>>>> 6d92f22e... Dev (#202)
             ) : (
               <Loading />
             )}
@@ -566,6 +581,7 @@ const TaskPageComponent = (
                 onClose={() =>
                   setShowTaskBoardDialog(!showTaskBoardDialog)
                 }
+<<<<<<< HEAD
 <<<<<<< HEAD
                 src={addIcon}
                 className={`fixed pointer ${
@@ -606,13 +622,18 @@ const TaskPageComponent = (
 =======
 >>>>>>> a26cd117... Release/v2.2.0 (#183)
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
               >
                 <FormBoard
                   setShowTaskBoardDialog={setShowTaskBoardDialog}
                 />
               </RightSidebar>
             )}
+<<<<<<< HEAD
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
           </div>
         </div>
       </div>

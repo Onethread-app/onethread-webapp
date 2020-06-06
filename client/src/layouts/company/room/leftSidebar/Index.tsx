@@ -12,12 +12,16 @@ import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { room } from 'stores/room/Types';
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
 =======
 import { room } from 'stores/room/Types';
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+import { room } from 'stores/room/Types';
+>>>>>>> 6d92f22e... Dev (#202)
 
 interface RoomSideBarComponentProps {
   projectRole?: string;

@@ -1200,6 +1200,9 @@
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 "@firebase/analytics-types@0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@firebase/analytics-types/-/analytics-types-0.3.0.tgz#33c3f695313b561d48d18d663a20f20362d3ee7c"
@@ -1439,6 +1442,7 @@
     protobufjs "^6.8.6"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 13e4934a... contact form, chat bot, announcement, signin text
 =======
@@ -1453,6 +1457,8 @@
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
 =======
 >>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -10656,6 +10662,7 @@ recursive-readdir@2.2.2:
     minimatch "3.0.4"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 redent@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/redent/-/redent-1.0.0.tgz#cf916ab1fd5f1f16dfb20822dd6ec7f730c2afde"
@@ -10666,6 +10673,8 @@ redent@^1.0.0:
 
 =======
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 redux-devtools-extension@^2.13.8:
   version "2.13.8"
   resolved "https://registry.yarnpkg.com/redux-devtools-extension/-/redux-devtools-extension-2.13.8.tgz#37b982688626e5e4993ff87220c9bbb7cd2d96e1"

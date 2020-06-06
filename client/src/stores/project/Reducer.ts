@@ -42,11 +42,14 @@ export interface IPendingProject {
   company: ICompany;
   associate: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   company: ICompany;
 >>>>>>> 750029e8... Release/v2.2.0 (#183)
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 }
 
 export interface ProjectModel {
@@ -92,6 +95,7 @@ const initialState = {
   teams: [],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   projectAssociates: [],
 =======
   associates: [],
@@ -99,6 +103,9 @@ const initialState = {
 =======
   projectAssociates: [],
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+  projectAssociates: [],
+>>>>>>> 6d92f22e... Dev (#202)
   pid: '',
   projectRole: {},
   projectFileOpen: false,
@@ -172,11 +179,15 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
 <<<<<<< HEAD
+<<<<<<< HEAD
         associates: action.payload,
 >>>>>>> c885f026... add associates in the project (#19)
 =======
         projectAssociates: action.payload,
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+        projectAssociates: action.payload,
+>>>>>>> 6d92f22e... Dev (#202)
       };
     case PROJECT.PROJECT_GET_ROLES:
       return {

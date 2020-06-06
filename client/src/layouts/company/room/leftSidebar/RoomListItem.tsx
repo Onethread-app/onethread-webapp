@@ -50,6 +50,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
     <>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       <div
 =======
       <li
@@ -57,6 +58,9 @@ export const RoomListItem = (props: RoomListItemProps) => {
 =======
       <div
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+      <div
+>>>>>>> 6d92f22e... Dev (#202)
         id="roomListItem"
         className="pointer br1"
         style={{
@@ -175,6 +179,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
         </article>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       </div>
       {showDialog && (
         <Drawer
@@ -192,6 +197,9 @@ export const RoomListItem = (props: RoomListItemProps) => {
 =======
       </div>
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+      </div>
+>>>>>>> 6d92f22e... Dev (#202)
       {showDialog && (
         <Drawer
 <<<<<<< HEAD

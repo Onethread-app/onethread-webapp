@@ -188,6 +188,7 @@ const list = async (req, res, next) => {
               path: 'associate',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               select: 'associateCompany company',
               populate: {
                 path: 'associateCompany company',
@@ -204,6 +205,12 @@ const list = async (req, res, next) => {
                 path: 'associateCompany company',
                 select: '_id name type _id name type',
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+              select: 'associateCompany company',
+              populate: {
+                path: 'associateCompany company',
+                select: '_id name type _id name type',
+>>>>>>> 6d92f22e... Dev (#202)
               },
             },
           ],
@@ -226,6 +233,7 @@ const list = async (req, res, next) => {
         },
       });
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 <<<<<<< HEAD
     return sendJSONresponse(res, 200, {
@@ -236,6 +244,9 @@ const list = async (req, res, next) => {
 =======
     return sendJSONresponse(res, 200, {
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+    return sendJSONresponse(res, 200, {
+>>>>>>> 6d92f22e... Dev (#202)
       memberList: members,
       associateList,
     });

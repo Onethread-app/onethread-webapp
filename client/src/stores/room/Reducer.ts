@@ -133,9 +133,12 @@ export interface IRoomReducer {
   responseCode: number;
   roomNotification: {};
 <<<<<<< HEAD
+<<<<<<< HEAD
   totalUnread: number;
 =======
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 }
 const InitialState: IRoomReducer = {
   activeRoom: {},
@@ -168,9 +171,12 @@ const InitialState: IRoomReducer = {
   responseCode: 0,
   roomNotification: {},
 <<<<<<< HEAD
+<<<<<<< HEAD
   totalUnread: 0,
 =======
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 };
 
 export const sortRooms = (a: IRoom, b: IRoom) => {

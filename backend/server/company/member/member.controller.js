@@ -188,6 +188,7 @@ const addMember = async (req, res, next) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     logger.error(`Colleague: ${error}`);
 =======
     
@@ -210,6 +211,9 @@ const addMember = async (req, res, next) => {
 =======
 
 >>>>>>> fb4e4471... Wip/backend/announcement (#171) (#185)
+=======
+    logger.error(`${error}`);
+>>>>>>> 6d92f22e... Dev (#202)
     next(error);
   }
 };

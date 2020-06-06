@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 if ('function' === typeof importScripts) {
   importScripts(
     'https://www.gstatic.com/firebasejs/3.5.0/firebase-app.js',
@@ -12,6 +13,8 @@ if ('function' === typeof importScripts) {
   });
 }
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 importScripts(
   'https://www.gstatic.com/firebasejs/3.5.0/firebase-app.js',
 );
@@ -24,4 +27,7 @@ firebase.initializeApp({
 });
 
 const initMessaging = firebase.messaging();
+<<<<<<< HEAD
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+>>>>>>> 6d92f22e... Dev (#202)

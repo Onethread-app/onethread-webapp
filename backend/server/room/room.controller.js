@@ -236,6 +236,75 @@ const listCompany = async (req, res, next) => {
   }
 };
 
+const listCompany = async (req, res, next) => {
+  
+  const { limit = 50, skip = 0 } = req.query;
+  try {
+    const rooms = await RoomMember.find({
+      account: req.user._id,
+      company: req.params.company,
+      removed: false,
+    })
+      .skip(+skip)
+      .limit(+limit)
+      .select('-_id room lastSeen')
+      .populate([
+        {
+          path: 'room',
+          select:
+            'archive removed _id name company project account createdAt updatedAt',
+        },
+      ]);
+
+    // unread count
+    const roomsUnreadCount = {};
+    for (const e of rooms) {
+      const results = await Message.aggregate([
+        {
+          $match: {
+            removed: false,
+            room: mongoose.Types.ObjectId(e.room._id),
+            // room: {
+            //   $in: roomObjectIDs,
+            // },
+            createdAt: {
+              $gt: new Date(e.lastSeen),
+            },
+          },
+        },
+        {
+          $group: {
+            _id: '$room',
+            count: {
+              $sum: 1,
+            },
+          },
+        },
+      ]);
+
+      if (results.length > 0) {
+        roomsUnreadCount[results[0]._id] = results[0].count;
+      } else {
+        roomsUnreadCount[e.room._id] = 0;
+      }
+    }
+
+    const filterRooms = rooms.map(({ room }) => {
+      return {
+        ...room._doc,
+      };
+    });
+
+    return res.status(200).json({
+      rooms: filterRooms,
+      roomsUnreadCount,
+    });
+  } catch (error) {
+   
+    next(error);
+  }
+};
+
 const list = async (req, res, next) => {
 >>>>>>> 0db3de3c... Feat/notification (#198)
   const { limit = 50, skip = 0 } = req.query;

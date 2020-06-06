@@ -32,8 +32,11 @@ import { getNotifications } from '../stores/notifications/Action';
 import { fethcRooms } from '../stores/room/Actions';
 import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
 import { IRoom } from '../stores/room/Reducer';
+<<<<<<< HEAD
 import logo from '../resources/images/TiGrowLogoFinal.png';
 
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 interface NavbarTopInternalProps {
   user: User;
   logoutAction: (history: History) => void;
@@ -50,9 +53,14 @@ interface NavbarTopInternalProps {
   readNotification: any;
   read: number;
   seen: number;
+<<<<<<< HEAD
   rooms: [IRoom];
   totalRoomUnread: number;
   currentRoom: IRoom;
+=======
+  rooms: any;
+  currentRoom: any;
+>>>>>>> 6d92f22e... Dev (#202)
 }
 const roomBgColor = [
   '#D8315B',
@@ -87,6 +95,7 @@ const NavbarTopComponent = (
   useEffect(() => {
     const currentElement = lastNotificationElement;
     const currentObserver = observer.current;
+<<<<<<< HEAD
 
     if (currentElement) {
       currentObserver.observe(currentElement);
@@ -98,6 +107,19 @@ const NavbarTopComponent = (
     };
   }, [lastNotificationElement]);
 
+=======
+
+    if (currentElement) {
+      currentObserver.observe(currentElement);
+    }
+    return () => {
+      if (currentElement) {
+        currentObserver.unobserve(currentElement);
+      }
+    };
+  }, [lastNotificationElement]);
+
+>>>>>>> 6d92f22e... Dev (#202)
   useEffect(() => {
     props.match.path !== '/:username' && props.getNotifications();
     companySubscriber(props.companyId);
@@ -267,16 +289,78 @@ const NavbarTopComponent = (
               target={
                 <div className="mr3 pointer">
                   <Badge
+<<<<<<< HEAD
                     badgeContent={props.totalRoomUnread}
+=======
+                    badgeContent={props.seen}
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
                     }}
                     color="secondary"
                   >
+                    <NotificationsIcon
+                      onClick={handleSeenNotifications}
+                    />
+                  </Badge>
+                </div>
+              }
+            />
+          )}
+          {props.match.path !== '/:username' && (
+            <Popover
+              popoverClassName="bg-white"
+              position={Position.BOTTOM}
+              content={
+                <div
+                  style={{ maxHeight: '300px', width: '500px' }}
+                  className="pa3 overflow-y-auto"
+                >
+                  {props.rooms && props.rooms.length ? (
+                    props.rooms.map(
+                      (room: IRoom, i: number, arr: any) => {
+                        return (
+                          <RoomListItem
+                            key={room._id}
+                            room={room}
+                            lastChild={isEqual(
+                              room._id,
+                              arr[props.rooms!.length - 1].id,
+                            )}
+                            active={
+                              props.currentRoom !== undefined &&
+                              room._id === props.currentRoom._id
+                            }
+                            iconBgColor={
+                              roomBgColor[i % roomBgColor.length]
+                            }
+                          />
+                        );
+                      },
+                    )
+                  ) : (
+                    <p className="ph2">No rooms</p>
+                  )}
+                </div>
+              }
+              target={
+                <div className="mh4 pointer">
+                  <Badge
+                    badgeContent={props.seen}
+>>>>>>> 6d92f22e... Dev (#202)
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    color="secondary"
+                  >
+<<<<<<< HEAD
                     <ChatIcon
                     style={{color: props.type === 'home' ? 'white' : 'dark-gray'}}
                      onClick={handleSeenNotifications} />
+=======
+                    <ChatIcon onClick={handleSeenNotifications} />
+>>>>>>> 6d92f22e... Dev (#202)
                   </Badge>
                 </div>
               }
@@ -403,7 +487,10 @@ const mapStateToProps = (state: any) => {
     read: state.notificationReducer.read,
     rooms: state.roomReducer.roomNotification.rooms,
     currentRoom: state.roomReducer.currentRoom,
+<<<<<<< HEAD
     totalRoomUnread: state.roomReducer.totalUnread,
+=======
+>>>>>>> 6d92f22e... Dev (#202)
   };
 };
 

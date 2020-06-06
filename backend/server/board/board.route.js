@@ -48,6 +48,7 @@ router
   .route('/:boardId')
   .get(
     authorization,
+<<<<<<< HEAD
     subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
@@ -55,6 +56,14 @@ router
       'projectModerator',
       'member',
     ),
+=======
+    // projectCtrl.authorizeProjectRole(
+    //   'all',
+    //   'admin',
+    //   'projectModerator',
+    //   'member',
+    // ),
+>>>>>>> 6d92f22e... Dev (#202)
     SchemaValidator(boardSchema.singleBoard),
     boardCtrl.get,
   )

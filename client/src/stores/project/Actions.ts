@@ -675,8 +675,11 @@ export const addProjectTeams = (
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 export const getProjectAssociates = () => async (
   dispatch: any,
   getState: any,
@@ -685,6 +688,7 @@ export const getProjectAssociates = () => async (
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const pid = getState().projectReducer.pid;
+<<<<<<< HEAD
 <<<<<<< HEAD
       const companyId = getState().companyReducer.currentCompany._id;
       headers['companyid'] = companyId;
@@ -697,6 +701,8 @@ export const getProjectAssociates = () => async (
         type: PROJECT.PROJECT_GET_ASSOCIATES,
         payload: response.data,
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
       const response = await tigrowApi.get(
         `/teams/member-list?pid=${pid}`,
         headers,
@@ -705,7 +711,10 @@ export const getProjectAssociates = () => async (
       await dispatch({
         type: PROJECT.PROJECT_GET_ASSOCIATES,
         payload: response.data.associateList[0].associate,
+<<<<<<< HEAD
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
       });
       return response.data;
     }
@@ -722,10 +731,13 @@ export const getProjectAssociates = () => async (
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> c885f026... add associates in the project (#19)
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 export const addProjectAssociate = (
   data: {
     project: string;
@@ -793,6 +805,7 @@ export const addProjectAssociate = (
       if (response.status === 200) {
         dispatch(getProjectAssociates());
       }
+<<<<<<< HEAD
 =======
           associates: data.associates
 =======
@@ -810,6 +823,9 @@ export const addProjectAssociate = (
       }
       
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+      
+>>>>>>> 6d92f22e... Dev (#202)
       // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
       return response;
     } else {

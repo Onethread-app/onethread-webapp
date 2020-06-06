@@ -29,15 +29,11 @@ router
   .route('/:companyId/create')
   .post(
     authorization,
-<<<<<<< HEAD
     subCtrl.subscriptionExpireCheck(),
-=======
->>>>>>> 380328e7... Feature/role access (#187)
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     schemaValidator(projectValidation.createNewProjectForCompany),
     projectCtrl.createNewProjectForCompany,
   );
-<<<<<<< HEAD
 router
   .route('/:companyId/create-project')
   .post(
@@ -45,9 +41,6 @@ router
     schemaValidator(projectValidation.createProjectFromHome),
     projectCtrl.createNewProjectFromHome,
   );
-=======
-
->>>>>>> 380328e7... Feature/role access (#187)
 router
   .route('/:companyId/add-associates')
   .put(
@@ -62,10 +55,7 @@ router
   .route('/:companyId/lists')
   .get(
     authorization,
-<<<<<<< HEAD
     subCtrl.subscriptionExpireCheck(),
-=======
->>>>>>> 380328e7... Feature/role access (#187)
     companyCtrl.authorizeUser(
       'all',
       'admin',
@@ -90,10 +80,7 @@ router
   .route('/associate-company-search/:companyId')
   .get(
     authorization,
-<<<<<<< HEAD
     subCtrl.subscriptionExpireCheck(),
-=======
->>>>>>> 380328e7... Feature/role access (#187)
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     schemaValidator(projectValidation.searchAssociateCompany),
     projectCtrl.suggestAssociateCompany,

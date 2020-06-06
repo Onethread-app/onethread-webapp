@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // import Select from 'react-select';
 >>>>>>> c885f026... add associates in the project (#19)
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 import {
   SuggestField,
   ItemEntityProps,
@@ -15,6 +18,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { Button, Tag } from '@blueprintjs/core';
 import { addProjectAssociate } from 'stores/project/Actions';
 import { tigrowApi } from 'config';
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 import { ICompany } from 'stores/company/Reducer';
@@ -28,6 +32,11 @@ import { ICompany } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEqual } from 'lodash';
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+import { ICompany } from 'stores/company/Reducer';
+import { useLiveSearch } from 'components/useLiveSearch';
+import { isEqual } from 'lodash';
+>>>>>>> 6d92f22e... Dev (#202)
 
 interface ProjectAssociateProps {
   showDialog: boolean;
@@ -38,6 +47,7 @@ interface ProjectAssociateInternalProps
   extends ProjectAssociateProps {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   company: ICompany;
 =======
   companyId: string;
@@ -45,6 +55,9 @@ interface ProjectAssociateInternalProps
 =======
   company: ICompany;
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+  company: ICompany;
+>>>>>>> 6d92f22e... Dev (#202)
   projectId: string;
   // tslint:disable-next-line: max-line-length
   addProjectAssociate: (
@@ -81,6 +94,7 @@ const AddProjectAssociateFormComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   const [associates, setAssociates] = useState([]);
   const [selectedAssociate, setSelectedAssociate] = useState(
     [] as ItemEntityProps[],
@@ -182,10 +196,14 @@ const AddProjectAssociateFormComponent = (
 =======
   const [associates, setAssociates] = useState([]);
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+  const [associates, setAssociates] = useState([]);
+>>>>>>> 6d92f22e... Dev (#202)
   const [selectedAssociate, setSelectedAssociate] = useState(
     [] as ItemEntityProps[],
   );
   const [searchAssociate, setSearchAssociate] = useState('');
+<<<<<<< HEAD
 
   const userRequestFactoryAssociate = async (userName: string) => {
     const headers = tokenConfig();
@@ -196,6 +214,18 @@ const AddProjectAssociateFormComponent = (
       headers,
     );
 
+=======
+
+  const userRequestFactoryAssociate = async (userName: string) => {
+    const headers = tokenConfig();
+    const response = await tigrowApi.get(
+      `projects/associate-company-search/${
+      props.company._id
+      }?name=${searchAssociate}&companyName=${props.company.name}`,
+      headers,
+    );
+
+>>>>>>> 6d92f22e... Dev (#202)
     // return response.data.data.map((e: any) => {
     //   return {
     //     _id: e._source.mongo_id,
@@ -263,6 +293,7 @@ const AddProjectAssociateFormComponent = (
 
   useEffect(() => {
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (
       isEmpty(props.projectId) === false &&
       isEmpty(props.companyId) === false
@@ -275,6 +306,10 @@ const AddProjectAssociateFormComponent = (
     setAssociates(resultAssociate);
   }, [resultAssociate]);
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+    setAssociates(resultAssociate);
+  }, [resultAssociate]);
+>>>>>>> 6d92f22e... Dev (#202)
 
   const teamSizes = [
     { value: 5, label: '1-5' },
@@ -289,18 +324,24 @@ const AddProjectAssociateFormComponent = (
         <SuggestField
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
           onChange={(query: string) => {
             setSearchAssociate(query);
           }}
           items={associates}
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
           items={suggestedAssociate}
 >>>>>>> c885f026... add associates in the project (#19)
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
           selectedItems={selectedAssociate}
           setSelectedItems={setSelectedAssociate}
           multipleItemSelect={true}
@@ -347,6 +388,7 @@ const AddProjectAssociateFormComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                     console.log(sa);
 >>>>>>> d06346b0... code style issue fixed
@@ -355,6 +397,8 @@ const AddProjectAssociateFormComponent = (
 >>>>>>> 4e99f05f... code style issue fixed
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                     setSelectedAssociate(sa);
                   }}
                 >
@@ -439,6 +483,7 @@ const AddProjectAssociateFormComponent = (
               project: props.projectId,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
               company: props.company._id,
 =======
               company: props.companyId,
@@ -446,10 +491,14 @@ const AddProjectAssociateFormComponent = (
 =======
               company: props.company._id,
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+              company: props.company._id,
+>>>>>>> 6d92f22e... Dev (#202)
               associates: selectedAssociate.map((m: any) => {
                 return {
                   _id: m._id,
                   size: m.size,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                   name: m.name
@@ -468,6 +517,12 @@ const AddProjectAssociateFormComponent = (
               }),
             };
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+                  name: m.name
+                };
+              }),
+            };
+>>>>>>> 6d92f22e... Dev (#202)
             const response: any = await props.addProjectAssociate(
               data,
               selectedAssociate,
@@ -489,6 +544,7 @@ const mapStateToProps = (state: any) => {
   return {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     company: state.companyReducer.currentCompany,
 =======
     companyId: state.companyReducer.currentCompany._id,
@@ -496,6 +552,9 @@ const mapStateToProps = (state: any) => {
 =======
     company: state.companyReducer.currentCompany,
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+    company: state.companyReducer.currentCompany,
+>>>>>>> 6d92f22e... Dev (#202)
     projectId: state.projectReducer.pid,
     associates: state.associateReducer.associatesList,
   };

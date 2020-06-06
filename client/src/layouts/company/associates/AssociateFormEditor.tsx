@@ -100,6 +100,7 @@ const AssociateFormEditorComponent = (
           onClick={async () => {
             if (isEmpty(selectedAssociate) === false) {
 <<<<<<< HEAD
+<<<<<<< HEAD
               const response = await props.addAssociate(
                 selectedAssociate,
                 props.company,
@@ -110,6 +111,9 @@ const AssociateFormEditorComponent = (
 =======
               props.addAssociate(selectedAssociate, props.companyId);
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+              props.addAssociate(selectedAssociate, props.companyId);
+>>>>>>> 6d92f22e... Dev (#202)
             }
           }}
         >

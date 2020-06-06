@@ -15,7 +15,10 @@ export const companySubscriber = (companyId: string) => {
   const pusher = new Pusher('1743ba5fa64dd023e3dc', {
     cluster: 'ap1',
     encrypted: true,
+<<<<<<< HEAD
 >>>>>>> 0db3de3c... Feat/notification (#198)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
   });
   pusher.connection.bind('connected', function () {
     store.dispatch({

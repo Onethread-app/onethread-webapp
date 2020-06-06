@@ -103,6 +103,7 @@ const FormComponent = (props: {
     );
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     const asso = response.data.data.map((e: any) =>
       isEqual(props.company._id, e._source.company_id) === true ?
         {
@@ -115,6 +116,8 @@ const FormComponent = (props: {
           name: e._source.companyName
         }
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
     const asso = response.data.data.map((e: any) => 
       isEqual(props.company._id, e._source.company_id ) === true ?
       {
@@ -126,7 +129,10 @@ const FormComponent = (props: {
         _id: e._source.mongo_id,
         name: e._source.companyName
       }
+<<<<<<< HEAD
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
     );
     return asso;
   };
@@ -176,6 +182,7 @@ const FormComponent = (props: {
                       <InputGroupFieldWithLabel
                         id="name"
                         value={input.value}
+<<<<<<< HEAD
 <<<<<<< HEAD
                         onChange={input.onChange}
                         style={{
@@ -321,6 +328,8 @@ const FormComponent = (props: {
                         ]}
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                         onChange={input.onChange}
                         style={{
                           boxShadow: 'none',
@@ -372,6 +381,7 @@ const FormComponent = (props: {
                           />
                         </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <SuggestFieldWithError
                           onChange={(query: string) => {
                             // setSearch(query);
@@ -388,6 +398,8 @@ const FormComponent = (props: {
                           multipleItemSelect={true}
 >>>>>>> e5e8ab62... Feature/role access (#187)
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                         {selectedAdmins.length > 0 && (
                           <div className="w-100">
                             <div
@@ -455,16 +467,23 @@ const FormComponent = (props: {
                             { _id: 'sd', name: 'Department' }
                           ]}
                           onChange={input.onChange}
+<<<<<<< HEAD
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                           error={
                             checkError(meta) &&
                             (meta.error || meta.submitError)
                           }
 <<<<<<< HEAD
+<<<<<<< HEAD
                           label="Project Type*"
 =======
                           label="ProjectType"
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+                          label="ProjectType"
+>>>>>>> 6d92f22e... Dev (#202)
                           className="bn"
                         />
                       </div>
@@ -474,10 +493,14 @@ const FormComponent = (props: {
 
                 <Condition
 <<<<<<< HEAD
+<<<<<<< HEAD
                   when="type"
 =======
                   when="projectType"
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+                  when="projectType"
+>>>>>>> 6d92f22e... Dev (#202)
                   validate={(value) => {
                     return ['sd'].includes(value);
                   }}
@@ -504,6 +527,9 @@ const FormComponent = (props: {
                             onChange={(query: string) => {
                               // setSearch(query);
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                             }}
                             items={props.departments}
                             selectedItems={selectedDepartment}
@@ -513,6 +539,7 @@ const FormComponent = (props: {
                               input.onChange(
                                 item.map((dept: any) => dept._id),
                               );
+<<<<<<< HEAD
                             }}
 =======
                             }}
@@ -526,6 +553,9 @@ const FormComponent = (props: {
                               );
                             }}
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+                            }}
+>>>>>>> 6d92f22e... Dev (#202)
                             multipleItemSelect={true}
                             error={
                               checkError(meta) &&
@@ -576,6 +606,7 @@ const FormComponent = (props: {
                                 </div>
                               ))}
                             </div>
+<<<<<<< HEAD
                           </div>
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -738,6 +769,13 @@ const FormComponent = (props: {
 >>>>>>> 380328e7... Feature/role access (#187)
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  />
+>>>>>>> 6d92f22e... Dev (#202)
                 </Condition>
 
                 <Condition
@@ -750,6 +788,7 @@ const FormComponent = (props: {
                     <p className="fw5" style={{ fontSize: '.8rem' }}>
                       Select Your Associate Companies
                   </p>
+<<<<<<< HEAD
 <<<<<<< HEAD
                   <SuggestFieldWithError
                     onChange={(query: string) => {
@@ -796,6 +835,8 @@ const FormComponent = (props: {
                               <option value="15">11-15</option>
                             </Field>
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                     <SuggestFieldWithError
                       onChange={(query: string) => {
                         setSearchAssociate(query);
@@ -833,7 +874,10 @@ const FormComponent = (props: {
                                 <option value="10">6-10</option>
                                 <option value="15">11-15</option>
                               </Field>
+<<<<<<< HEAD
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 
                               <span
                                 onClick={() => fields.remove(index)}
@@ -844,12 +888,15 @@ const FormComponent = (props: {
                             </div>
                           </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
                         </div>
                       ))
                     }
                   </FieldArray>
 >>>>>>> e5e8ab62... Feature/role access (#187)
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                         ))
                       }
                     </FieldArray>
@@ -923,7 +970,10 @@ const FormComponent = (props: {
                     disabled={submitting || pristine}
                     text="Create"
                   />
+<<<<<<< HEAD
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                 </div>
               </div>
             </form>

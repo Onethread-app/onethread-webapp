@@ -31,6 +31,7 @@ export const _ProjectDescriptionView = (
         {props.role === 'admin' ? (
           <div className="pr2" style={{ paddingTop: '10px' }}>
             <Icon
+
               className={
                 editDescriptionDialog
                   ? 'fr tigrow-lightBlue pointer'

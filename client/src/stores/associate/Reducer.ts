@@ -2,13 +2,17 @@
 <<<<<<< HEAD
 import {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 import {
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 	GET_ALL_ASSOCIATE,
 	SELECT_ASSOCIATE,
 	ADD_ASSOCIATE,
 	GET_ALL_PENDING_ASSOCIATE
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   GET_ALL_ASSOCIATE,
@@ -22,6 +26,8 @@ import {
 import { associate } from './Types';
 >>>>>>> 0db3de3c... Feat/notification (#198)
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 } from './Types';
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 import { ICompany } from 'stores/company/Reducer';
@@ -35,6 +41,7 @@ export interface Associate {
 	createdAt: string;
 }
 export interface AssociateModel {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 	currentAssociate: Associate;
@@ -111,6 +118,14 @@ const InitialState = {
 }
 
 const InitialState = {
+=======
+	currentAssociate: Associate;
+	associatesList: Associate[];
+	pendingAssociates: Associate[];
+}
+
+const InitialState = {
+>>>>>>> 6d92f22e... Dev (#202)
 	associatesList: [],
 	pendingAssociates: [],
 	currentAssociate: {
@@ -132,7 +147,10 @@ const InitialState = {
 			},
 			createdAt: '',
 	},
+<<<<<<< HEAD
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 };
 
 export const AssociateReducer = (
@@ -141,8 +159,11 @@ export const AssociateReducer = (
 ) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 	switch (action.type) {
 			case GET_ALL_ASSOCIATE:
 					return {
@@ -175,6 +196,7 @@ export const AssociateReducer = (
 			default:
 					return state;
 	}
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
   switch (action.type) {
@@ -244,4 +266,6 @@ export const AssociateReducer = (
 >>>>>>> c885f026... add associates in the project (#19)
 =======
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+>>>>>>> 6d92f22e... Dev (#202)
 };

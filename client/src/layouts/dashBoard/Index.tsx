@@ -68,6 +68,10 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       .catch((err: string) => console.log(err));
   };
   useEffect(() => {
+<<<<<<< HEAD
+=======
+    console.log(props.company);
+>>>>>>> 6d92f22e... Dev (#202)
     getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();

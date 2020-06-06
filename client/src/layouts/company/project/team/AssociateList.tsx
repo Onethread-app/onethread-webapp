@@ -3,6 +3,7 @@ import { Loading } from 'components/Loading';
 import { Card } from '@blueprintjs/core';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { getProjectAssociates } from 'stores/project/Actions';
 =======
 import moment from 'moment';
@@ -11,6 +12,9 @@ import { getProjectAssociates } from 'stores/associate/Actions';
 =======
 import { getProjectAssociates } from 'stores/project/Actions';
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+import { getProjectAssociates } from 'stores/project/Actions';
+>>>>>>> 6d92f22e... Dev (#202)
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { ICompany } from 'stores/company/Reducer';
@@ -59,6 +63,7 @@ export const AssociateListComponent = (
               ) : props.associates.length > 0 ? (
                 props.associates.map((associate: Associate) => (
 <<<<<<< HEAD
+<<<<<<< HEAD
 
                   associate.hasOwnProperty('associateCompany') ? (
                     <>
@@ -101,6 +106,8 @@ export const AssociateListComponent = (
                 <p>No associates available</p>
               )}
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                   <Card
                     className="ba b--black-20 br4 pa4 ma2"
                     interactive={true}
@@ -119,6 +126,7 @@ export const AssociateListComponent = (
                   </Card>
                 ))
               ) : (
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -142,6 +150,10 @@ export const AssociateListComponent = (
                     <p>No associates available</p>
                   )}
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+                    <p>No associates available</p>
+                  )}
+>>>>>>> 6d92f22e... Dev (#202)
             </div>
           </CustomView>
           <MobileOnlyView>
@@ -157,6 +169,7 @@ export const AssociateListComponent = (
                 <Loading />
               ) : props.associates.length > 0 ? (
                 props.associates.map((associate: Associate) => (
+<<<<<<< HEAD
 <<<<<<< HEAD
                   associate.hasOwnProperty('associateCompany') ? (
                     <>
@@ -198,6 +211,8 @@ export const AssociateListComponent = (
                 <p>No associates available</p>
               )}
 =======
+=======
+>>>>>>> 6d92f22e... Dev (#202)
                   <Card
                     className="ba b--black-0125 br4 ma1"
                     interactive={true}
@@ -223,6 +238,7 @@ export const AssociateListComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                     <p>No associates available</p>
                   )}
 >>>>>>> c885f026... add associates in the project (#19)
@@ -242,6 +258,10 @@ export const AssociateListComponent = (
                     <p>No associates available</p>
                   )}
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+                    <p>No associates available</p>
+                  )}
+>>>>>>> 6d92f22e... Dev (#202)
             </div>
           </MobileOnlyView>
         </div>
@@ -255,6 +275,7 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     associates: state.projectReducer.projectAssociates,
 =======
     associates: state.associateReducer.associatesList,
@@ -262,6 +283,9 @@ const mapStateToProps = (state: any) => {
 =======
     associates: state.projectReducer.projectAssociates,
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
+=======
+    associates: state.projectReducer.projectAssociates,
+>>>>>>> 6d92f22e... Dev (#202)
   };
 };
 
