@@ -21,6 +21,7 @@ export interface IPendingProject {
   project: IProject;
   size: string;
   company: ICompany;
+  associate: string;
 }
 
 export interface ProjectModel {
@@ -64,7 +65,7 @@ const initialState = {
     outline: '',
   },
   teams: [],
-  associates: [],
+  projectAssociates: [],
   pid: '',
   projectRole: {},
   projectFileOpen: false,
@@ -117,7 +118,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case PROJECT.PROJECT_GET_ASSOCIATES:
       return {
         ...state,
-        associates: action.payload,
+        projectAssociates: action.payload,
       };
     case PROJECT.PROJECT_GET_ROLES:
       return {

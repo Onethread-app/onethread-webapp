@@ -244,80 +244,80 @@ const TaskPageComponent = (
               </div>
             </div>
           </div>
-        </div>
-        <p
-          className="pl2 mt3"
-          style={{ color: '#6B6B6B', fontSize: '18px' }}
-        >
-          My Boards
-        </p>
-        <div className="overflow-auto">
-          {loading === false ? (
-            props.boardList.length > 0 ? (
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns:
-                    'repeat(auto-fit, minmax(200px, 270px))',
-                  gridTemplateRows: 'repeat(2, 150px)',
-                }}
-              >
-                {/* TODO make one */}
-                {department ? (
-                  <BoardCard
-                    boardList={boards}
-                    company={props.company}
-                    getSelectedBoard={props.getSelectedBoard}
-                  />
-                ) : (
-                  <BoardCard
-                    boardList={props.boardList}
-                    company={props.company}
-                    getSelectedBoard={props.getSelectedBoard}
-                  />
-                )}
-              </div>
+          <p
+            className="pl2 mt3"
+            style={{ color: '#6B6B6B', fontSize: '18px' }}
+          >
+            My Boards
+          </p>
+          <div className="overflow-auto">
+            {loading === false ? (
+              props.boardList.length > 0 ? (
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns:
+                      'repeat(auto-fit, minmax(200px, 270px))',
+                    gridTemplateRows: 'repeat(2, 150px)',
+                  }}
+                >
+                  {/* TODO make one */}
+                  {department ? (
+                    <BoardCard
+                      boardList={boards}
+                      company={props.company}
+                      getSelectedBoard={props.getSelectedBoard}
+                    />
+                  ) : (
+                    <BoardCard
+                      boardList={props.boardList}
+                      company={props.company}
+                      getSelectedBoard={props.getSelectedBoard}
+                    />
+                  )}
+                </div>
+              ) : (
+                noBoardsFound
+              )
             ) : (
-              noBoardsFound
-            )
-          ) : (
-            <Loading />
-          )}
-          <div>
-            {props.role &&
-            (props.role === 'admin' ||
-              projectRules(props.optionalRole)[props.role].includes(
-                'createUpdateBoard',
-              )) ? (
-              <img
-                onClick={() =>
+              <Loading />
+            )}
+            <div>
+              {props.role &&
+              (props.role === 'admin' ||
+                projectRules(props.optionalRole)[props.role].includes(
+                  'createUpdateBoard',
+                )) ? (
+                <img
+                  onClick={() =>
+                    setShowTaskBoardDialog(!showTaskBoardDialog)
+                  }
+                  src={addIcon}
+                  className={`fixed pointer ${
+                    showTaskBoardDialog ? 'dn' : 'db'
+                  }`}
+                  style={{
+                    bottom: '5rem',
+                    right: '7rem',
+                    width: '5rem',
+                    boxShadow: '0px 6px 6px #00000029',
+                    borderRadius: '50%',
+                  }}
+                />
+              ) : undefined}
+            </div>
+            {showTaskBoardDialog && (
+              <RightSidebar
+                onClose={() =>
                   setShowTaskBoardDialog(!showTaskBoardDialog)
                 }
-                src={addIcon}
-                className={`fixed pointer ${
-                  showTaskBoardDialog ? 'dn' : 'db'
-                }`}
-                style={{
-                  bottom: '5rem',
-                  right: '7rem',
-                  width: '5rem',
-                  boxShadow: '0px 6px 6px #00000029',
-                  borderRadius: '50%',
-                }}
-              />
-            ) : undefined}
+              >
+                <FormBoard
+                  setShowTaskBoardDialog={setShowTaskBoardDialog}
+                />
+              </RightSidebar>
+            )}
           </div>
-          {showTaskBoardDialog && (
-            <RightSidebar
-              onClose={() =>
-                setShowTaskBoardDialog(!showTaskBoardDialog)
-              }
-            >
-              <FormBoard
-                setShowTaskBoardDialog={setShowTaskBoardDialog}
-              />
-            </RightSidebar>
-          )}
         </div>
       </div>
     </>

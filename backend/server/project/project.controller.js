@@ -62,7 +62,6 @@ const createNewProjectForCompany = async (req, res, next) => {
         type: req.body.type,
         concernedAdmin: concernedAdmin.accountId,
         departments: req.body.departments,
-        associate: req.body.associates,
         color: req.body.color,
         company: req.params.companyId,
         description: '',
@@ -81,6 +80,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         reqObject.project = project._id;
         reqObject.size = data.size;
         projectReq.push(reqObject);
+        return reqObject;
       });
       await ProjectRequest.create(projectReq);
       let associateId = [];
@@ -217,18 +217,22 @@ const createNewProjectForCompany = async (req, res, next) => {
 const addAssociateInProject = async (req, res, next) => {
   try {
     let associates = req.body.associates;
+    let projectReq = [];
+    let associateId = [];
+    associateId = associates.map((data) => {
+      return data._id;
+    });
     const pid = req.query.pid;
     let project = await Project.findByIdAndUpdate(
       { _id: pid },
       {
-        $set: {
-          associate: associates,
-          type: 'associates',
+        $addToSet: {
+          associate: associateId,
         },
       },
       { safe: true, upsert: true, new: true },
     );
-    let projectReq = [];
+
     associates.map(async (data) => {
       let reqObject = {};
       reqObject.company = req.params.companyId;
@@ -240,11 +244,7 @@ const addAssociateInProject = async (req, res, next) => {
       return reqObject;
     });
     await ProjectRequest.create(projectReq);
-    let associateId = [];
-    associateId = associates.map((data) => {
-      return data._id;
-    });
-    // // Insert project request
+    logger.info(`project request send to the associates`);
     associateId.forEach(async (data) => {
       let associate = await Associate.findOne({
         $or: [
@@ -258,6 +258,7 @@ const addAssociateInProject = async (req, res, next) => {
         .populate('associateCompany', '_id name type')
         .populate('company', '_id name type')
         .exec();
+      logger.info(`associates add into the project`);
 
       const text = `${associate.company.name} wants to collaborate ${project.name} with your ${associate.associateCompany.name} `;
       createCompanyRoleNotification(
@@ -271,15 +272,11 @@ const addAssociateInProject = async (req, res, next) => {
         'project',
       );
     });
-    logger.info(
-      `${req.params.companyId} company send a project request to its associate`,
-    );
-
     return sendJSONresponse(res, 200, {
       message: 'associate list update',
     });
   } catch (error) {
-    logger.error(`Project: ${error}`);
+    logger.error(`${error}`);
     next(error);
   }
 };
@@ -317,11 +314,20 @@ const updateRole = async (req, res, next) => {
 const projectPendingRequest = async (req, res, next) => {
   const { limit = 10, skip = 0 } = req.query;
   const companyId = req.params.companyId;
-
-  ProjectRequest.find({
-    $and: [{ isAccepted: false }, { associate: companyId }],
+  const associateId = await Associate.findOne({
+    $or: [{ company: companyId }, { associateCompany: companyId }],
+  });
+  await ProjectRequest.find({
+    $and: [
+      {
+        company: { $nin: { _id: companyId } },
+        associate: associateId,
+        isAccepted: false,
+        isRejected: true,
+      },
+    ],
   })
-    .select('company project size')
+    .select('company project associate size')
     .populate('company project')
     .sort({ createdAt: -1 })
     .skip(+skip)
@@ -340,13 +346,14 @@ const projectPendingRequest = async (req, res, next) => {
 const acceptProjectRequest = async (req, res, next) => {
   try {
     const pid = req.query.pid;
+    const associate = req.body.associate;
     const companyId = req.params.companyId;
     const teamSize = req.body.size;
     await Associate.findOneAndUpdate(
       {
         $or: [
           { company: companyId },
-          { associateCompany: { $in: companyId } },
+          { associateCompany: { $in: { _id: companyId } } },
         ],
       },
       {
@@ -357,7 +364,7 @@ const acceptProjectRequest = async (req, res, next) => {
     let asso = await Associate.findOne({
       $or: [
         { company: req.params.companyId },
-        { associateCompany: { $in: req.params.companyId } },
+        { associateCompany: { $in: { _id: req.params.companyId } } },
       ],
     }).populate('associateCompany', '_id name type');
     const text = `${asso.company.name} has accepted request `;
@@ -371,44 +378,39 @@ const acceptProjectRequest = async (req, res, next) => {
       text,
       'project',
     );
+    // console.log(asso);
     await Project.updateOne(
       { _id: pid },
       {
-        $push: { associate: companyId },
+        $push: { associate: associate },
       },
       { new: true, upsert: true },
     );
-    const isSuperAdmin = await Member.findOne({
+    const memberId = await Member.findOne({
       $and: [
         {
           company: req.params.companyId,
-          role: 'superAdmin',
-        },
-      ],
-    }).select('_id account');
-    const isAdmin = await Member.findOne({
-      $and: [
-        {
           account: req.user._id,
-          company: req.params.companyId,
-          role: 'admin',
         },
       ],
-    }).select('_id account');
-    if (isSuperAdmin.account.toString() === req.user._id) {
-      teamCreate(
-        isSuperAdmin.account,
-        isSuperAdmin._id,
-        pid,
-        'member',
-      );
+    }).select('_id account role');
+    if (memberId.role === 'superAdmin') {
+      teamCreate(memberId.account, memberId._id, pid, 'member');
       logger.info(
         `Associate superAdmin join as team member in the project`,
       );
       projectRequestUpdate(pid, teamSize - 1);
       logger.info(`project request accept for ${pid}`);
     }
-    if (isAdmin.account.toString() === req.user._id) {
+    if (memberId.role === 'Admin') {
+      const isSuperAdmin = await Member.findOne({
+        $and: [
+          {
+            company: req.params.companyId,
+            role: 'superAdmin',
+          },
+        ],
+      }).select('_id account');
       teamCreate(
         isSuperAdmin.account,
         isSuperAdmin._id,
@@ -425,7 +427,6 @@ const acceptProjectRequest = async (req, res, next) => {
       projectRequestUpdate(pid, teamSize - 2);
       logger.info(`project request accept for ${pid}`);
     }
-
     return sendJSONresponse(res, 200, {
       message: `${req.query.pid} accepted by ${req.params.companyId}`,
     });
@@ -461,8 +462,17 @@ const showAllProjectsForCompany = async (req, res, next) => {
   try {
     const { limit = 50, skip = 0 } = req.query;
     let companyId = req.params.companyId;
+    let associateId = await Associate.findOne({
+      $or: [
+        {
+          company: { $in: { _id: companyId } },
+          associateCompany: { $in: { _id: companyId } },
+        },
+        { isAccepted: true, isRejected: false },
+      ],
+    }).select('_id');
     let pendingProject = await ProjectRequest.find({
-      $and: [{ isAccepted: false }, { associate: companyId }],
+      $and: [{ isAccepted: false }, { associate: associateId }],
     }).populate('project', '_id');
     let memberExistInProject = await Team.find({
       $and: [{ account: req.user._id }, { removed: false }],
@@ -482,9 +492,14 @@ const showAllProjectsForCompany = async (req, res, next) => {
         {
           $or: [
             { company: companyId },
-            { associate: { $in: companyId } },
+            {
+              'associate.associateCompany': {
+                _id: companyId,
+              },
+            },
           ],
         },
+
         { removed: false },
       ],
     })

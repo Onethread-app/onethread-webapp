@@ -2,13 +2,12 @@ const Joi = require('@hapi/joi');
 
 // id
 const idSchema = {
-  id: Joi.string()
-    .regex(/^[a-fA-F0-9]{24}$/)
-    .error((errors) => {
-      return {
-        message: 'Invalid ID',
-      };
-    }),
+  id: Joi.string().regex(/^[a-fA-F0-9]{24}$/),
+  // .error((errors) => {
+  //   return {
+  //     message: 'Invalid ID',
+  //   };
+  // }),
 };
 
 // project id
@@ -32,6 +31,7 @@ const schema = {
   color: Joi.number(),
   company: idSchema.id,
   size: Joi.number().required(),
+  associate: idSchema.id,
   associates: Joi.array().items(
     Joi.object().keys({
       _id: idSchema.id.required(),
@@ -83,6 +83,7 @@ module.exports = {
     }),
     body: Joi.object().keys({
       size: schema.size.required(),
+      associate: schema.associate.required(),
     }),
   }),
   rejectProject: Joi.object().keys({
@@ -112,7 +113,7 @@ module.exports = {
     params: companyId.required(),
     query: Joi.object().keys({
       companyName: schema.name.required(),
-      name: schema.name.required()
+      name: schema.name.required(),
     }),
   }),
 };

@@ -186,15 +186,16 @@ const list = async (req, res, next) => {
           populate: [
             {
               path: 'associate',
-              select: 'associateCompany',
+              select: 'associateCompany company',
               populate: {
-                path: 'associateCompany',
-                select: '_id name type',
+                path: 'associateCompany company',
+                select: '_id name type _id name type',
               },
             },
           ],
         },
       ]);
+
     const associateList = await Project.find({ _id: pid })
       .sort({
         createdAt: 1,
@@ -204,15 +205,13 @@ const list = async (req, res, next) => {
       .select('associate')
       .populate({
         path: 'associate',
-        select: 'associateCompany',
+        select: 'associateCompany company',
         populate: {
-          path: 'associateCompany',
-          select: '_id name type',
+          path: 'associateCompany company',
+          select: '_id name type _id name type',
         },
       });
-
-    // members.push({ associateList });
-    return res.status(200).json({
+    return sendJSONresponse(res, 200, {
       memberList: members,
       associateList,
     });

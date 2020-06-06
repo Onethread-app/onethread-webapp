@@ -21,6 +21,7 @@ interface IProjectRequestComponent {
 const ProjectRequestComponent = (
   props: IProjectRequestComponent & RouteComponentProps,
 ) => {
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     // get all pending projects
 
@@ -28,14 +29,14 @@ const ProjectRequestComponent = (
       getAllPendingProjects: () => void,
     ) {
       setLoading(true);
-      props.companyRole !== 'employee' &&
-        (await getAllPendingProjects());
+      if (props.companyRole !== 'employee') {
+        getAllPendingProjects();
+      }
       setLoading(false);
     }
     loadPendingProjects(props.getAllPendingProjects);
   }, []);
 
-  const [loading, setLoading] = useState(true);
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
 
@@ -110,8 +111,8 @@ const ProjectRequestComponent = (
           </main>
         ))
       ) : (
-        <Loading />
-      )}
+          <Loading />
+        )}
     </div>
   );
 };
