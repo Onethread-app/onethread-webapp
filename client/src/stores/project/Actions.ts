@@ -100,7 +100,6 @@ export const createProjectInCompany = (payload: any) => async (
         reqBody,
         headers,
       );
-      
       await dispatch({
         type: PROJECT.PROJECT_CREATE,
         payload: response.data,
@@ -388,8 +387,6 @@ export const getAllPendingProjects = () => async (
   }
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 export const acceptPendingProject = (
   pending: IPendingProject,
 ) => async (dispatch: any, getState: any) => {
@@ -399,62 +396,24 @@ export const acceptPendingProject = (
       (headers as any).headers.Authorization &&
       pending.project._id
     ) {
-=======
-=======
->>>>>>> 380328e7... Feature/role access (#187)
-export const acceptPendingProject = (pending: IPendingProject) => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization && pending.project._id) {
-<<<<<<< HEAD
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
->>>>>>> 380328e7... Feature/role access (#187)
       const companyID = getState().companyReducer.currentCompany._id;
       const pendingProjects = getState().projectReducer
         .pendingProjects;
       const reqBody = {
-<<<<<<< HEAD
-<<<<<<< HEAD
         size: pending.size,
         associate: pending.associate,
-=======
-        size: pending.size
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
-        size: pending.size
->>>>>>> 380328e7... Feature/role access (#187)
       };
       const response = await tigrowApi.put(
         `projects/${companyID}/accept-request?pid=${pending.project._id}`,
         reqBody,
-<<<<<<< HEAD
-<<<<<<< HEAD
         headers,
-=======
-        headers
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
-        headers
->>>>>>> 380328e7... Feature/role access (#187)
       );
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
           (pending: IPendingProject) =>
-<<<<<<< HEAD
-<<<<<<< HEAD
             isEqual(pending.project._id, pending.project._id) ===
             false,
-=======
-            isEqual(pending.project._id, pending.project._id) === false,
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
-            isEqual(pending.project._id, pending.project._id) === false,
->>>>>>> 380328e7... Feature/role access (#187)
         );
         dispatch({
           type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT,
@@ -610,7 +569,6 @@ export const getProjectTeams = () => async (
         `/teams/member-list?pid=${pid}`,
         headers,
       );
-      
       await dispatch({
         type: PROJECT.PROJECT_GET_TEAMS,
         payload: response.data.memberList,
@@ -673,13 +631,6 @@ export const addProjectTeams = (
   }
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
 export const getProjectAssociates = () => async (
   dispatch: any,
   getState: any,
@@ -688,8 +639,6 @@ export const getProjectAssociates = () => async (
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const pid = getState().projectReducer.pid;
-<<<<<<< HEAD
-<<<<<<< HEAD
       const companyId = getState().companyReducer.currentCompany._id;
       headers['companyid'] = companyId;
       const response = await tigrowApi.get(
@@ -700,21 +649,6 @@ export const getProjectAssociates = () => async (
       await dispatch({
         type: PROJECT.PROJECT_GET_ASSOCIATES,
         payload: response.data,
-=======
-=======
->>>>>>> 6d92f22e... Dev (#202)
-      const response = await tigrowApi.get(
-        `/teams/member-list?pid=${pid}`,
-        headers,
-      );
-      console.log(response);
-      await dispatch({
-        type: PROJECT.PROJECT_GET_ASSOCIATES,
-        payload: response.data.associateList[0].associate,
-<<<<<<< HEAD
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
       });
       return response.data;
     }
@@ -730,56 +664,16 @@ export const getProjectAssociates = () => async (
   }
 };
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> c885f026... add associates in the project (#19)
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
 export const addProjectAssociate = (
   data: {
     project: string;
     company: String;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     associates: Array<{ _id: string; size: number }>;
-=======
-    associates: Array<{ _id:string, size:number }>;
->>>>>>> c885f026... add associates in the project (#19)
-=======
-    associates: Array<{ _id: string; size: number }>;
->>>>>>> d06346b0... code style issue fixed
-=======
-    associates: Array<{ _id:string, size:number }>;
->>>>>>> f4601c6e... add associates in the project (#19)
-=======
-    associates: Array<{ _id: string; size: number }>;
->>>>>>> 4e99f05f... code style issue fixed
   },
   selectedAssociate: {
     _id: string;
     size: number;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   },
-=======
-  }
->>>>>>> c885f026... add associates in the project (#19)
-=======
-  },
->>>>>>> d06346b0... code style issue fixed
-=======
-  }
->>>>>>> f4601c6e... add associates in the project (#19)
-=======
-  },
->>>>>>> 4e99f05f... code style issue fixed
 ) => async (dispatch: any) => {
   try {
     const headers = tokenConfig();
@@ -787,17 +681,7 @@ export const addProjectAssociate = (
       const response = await tigrowApi.put(
         `/projects/${data.company}/add-associates?pid=${data.project}`,
         {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
           associates: data.associates,
-=======
-          associates: data.associates
->>>>>>> f4601c6e... add associates in the project (#19)
-=======
-          associates: data.associates,
->>>>>>> 4e99f05f... code style issue fixed
         },
         headers,
       );
@@ -805,27 +689,6 @@ export const addProjectAssociate = (
       if (response.status === 200) {
         dispatch(getProjectAssociates());
       }
-<<<<<<< HEAD
-=======
-          associates: data.associates
-=======
-          associates: data.associates,
->>>>>>> d06346b0... code style issue fixed
-        },
-        headers,
-      );
-<<<<<<< HEAD
->>>>>>> c885f026... add associates in the project (#19)
-=======
-      console.log(response);
-      if (response.status === 200) {
-        dispatch(getProjectAssociates());
-      }
-      
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-      
->>>>>>> 6d92f22e... Dev (#202)
       // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
       return response;
     } else {
