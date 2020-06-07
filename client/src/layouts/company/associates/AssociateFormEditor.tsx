@@ -85,27 +85,28 @@ const AssociateFormEditorComponent = (
           style={
             isEmpty(selectedAssociate) === true
               ? {
-                  background: '#0fa3a3',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }
               : {
-                  background: '#0fa3a3',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }
           }
           disabled={isEmpty(selectedAssociate)}
           onClick={async () => {
             if (isEmpty(selectedAssociate) === false) {
-              props.addAssociate(selectedAssociate, props.companyId);
+              const response = await props.addAssociate(selectedAssociate, props.companyId);
+              if (response === 201) {
+                props.setShowDialog(!props.showDialog);
+              }
             }
           }}
         >
           Add
         </Button>
-        {props.sendingRequestSuccess &&
-          props.setShowDialog(!props.showDialog)}
       </div>
     </div>
   );

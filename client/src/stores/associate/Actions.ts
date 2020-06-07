@@ -30,7 +30,7 @@ export const addAssociate = (
         headers,
       );
       // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
-      return response;
+      return response.status;
     } else {
       // tslint:disable-next-line: no-console
       console.log('error in selection of company fetching');
@@ -62,15 +62,15 @@ export const getAllAssociates = () => async (
       const associates = response.data.map((associate: any) =>
         isEqual(companyId, associate.company._id) === true
           ? {
-              _id: associate._id,
-              associateCompany: associate.associateCompany,
-              createdAt: associate.createdAt,
-            }
+            _id: associate._id,
+            associateCompany: associate.associateCompany,
+            createdAt: associate.createdAt,
+          }
           : {
-              _id: associate._id,
-              associateCompany: associate.company,
-              createdAt: associate.createdAt,
-            },
+            _id: associate._id,
+            associateCompany: associate.company,
+            createdAt: associate.createdAt,
+          },
       );
       dispatch({ type: GET_ALL_ASSOCIATE, payload: associates });
     } else {
@@ -106,15 +106,15 @@ export const getAllPendingAssociates = () => async (
       const associates = response.data.map((associate: any) =>
         isEqual(companyId, associate.company._id) === true
           ? {
-              _id: associate._id,
-              associateCompany: associate.associateCompany,
-              createdAt: associate.createdAt,
-            }
+            _id: associate._id,
+            associateCompany: associate.associateCompany,
+            createdAt: associate.createdAt,
+          }
           : {
-              _id: associate._id,
-              associateCompany: associate.company,
-              createdAt: associate.createdAt,
-            },
+            _id: associate._id,
+            associateCompany: associate.company,
+            createdAt: associate.createdAt,
+          },
       );
       dispatch({
         type: GET_ALL_PENDING_ASSOCIATE,
@@ -193,15 +193,15 @@ export const acceptPendingAssociate = (associateID: string) => async (
         });
         const actualAssociate = response.data.company._id
           ? {
-              _id: response.data._id,
-              associateCompany: response.data.company,
-              createdAt: response.data.createdAt,
-            }
+            _id: response.data._id,
+            associateCompany: response.data.company,
+            createdAt: response.data.createdAt,
+          }
           : {
-              _id: response.data._id,
-              associateCompany: response.data.associateCompany,
-              createdAt: response.data.createdAt,
-            };
+            _id: response.data._id,
+            associateCompany: response.data.associateCompany,
+            createdAt: response.data.createdAt,
+          };
         dispatch({ type: ADD_ASSOCIATE, payload: actualAssociate });
         Toaster.create().show({
           message: `Successfully accepted`,
