@@ -65,7 +65,6 @@ function* createRoomAction(action) {
         payload: response.status,
       });
       yield roomSubscribe(response.data.room._id);
-      console.log(response.status);
 
       // return response.status;
     }
