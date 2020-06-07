@@ -67,12 +67,15 @@ function* createRoomAction(action) {
       yield roomSubscribe(response.data.room._id);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       console.log(response.status);
 >>>>>>> 0db3de3c... Feat/notification (#198)
 =======
       console.log(response.status);
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+>>>>>>> 80902700... console clear from roomSaga and dashboard (#208)
 
       // return response.status;
     }
