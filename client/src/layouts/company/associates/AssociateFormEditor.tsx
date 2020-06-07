@@ -86,19 +86,20 @@ const AssociateFormEditorComponent = (
           style={
             isEmpty(selectedAssociate) === true
               ? {
-                  background: '#0fa3a3',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }
               : {
-                  background: '#0fa3a3',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }
           }
           disabled={isEmpty(selectedAssociate)}
           onClick={async () => {
             if (isEmpty(selectedAssociate) === false) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
               const response = await props.addAssociate(
@@ -114,13 +115,17 @@ const AssociateFormEditorComponent = (
 =======
               props.addAssociate(selectedAssociate, props.companyId);
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+              const response = await props.addAssociate(selectedAssociate, props.companyId);
+              if (response === 201) {
+                props.setShowDialog(!props.showDialog);
+              }
+>>>>>>> 4917e158... Bug fix/associate right side bar (#206)
             }
           }}
         >
           Add
         </Button>
-        {props.sendingRequestSuccess &&
-          props.setShowDialog(!props.showDialog)}
       </div>
     </div>
   );
