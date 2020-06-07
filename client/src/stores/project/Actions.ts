@@ -367,7 +367,8 @@ export const acceptPendingProject = (pending: IPendingProject) => async (
       const pendingProjects = getState().projectReducer
         .pendingProjects;
       const reqBody = {
-        size: pending.size
+        size: pending.size,
+        associate: pending.associate
       };
       const response = await tigrowApi.put(
         `projects/${companyID}/accept-request?pid=${pending.project._id}`,
