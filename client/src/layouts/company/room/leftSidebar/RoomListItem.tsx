@@ -18,11 +18,17 @@ interface RoomListItemProps {
 export const RoomListItem = (props: RoomListItemProps) => {
   const [showDialog, setShowDialog] = useState(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const history = useHistory();
+>>>>>>> e898d038... Pusher channel auth and room notification count fix (#210)
   const unreadCount = useSelector(
     (state: any) =>
       state.roomReducer.roomNotification.roomsUnreadCount &&

@@ -134,11 +134,15 @@ export interface IRoomReducer {
   roomNotification: {};
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   totalUnread: number;
 =======
 >>>>>>> 0db3de3c... Feat/notification (#198)
 =======
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+  totalUnread: number;
+>>>>>>> e898d038... Pusher channel auth and room notification count fix (#210)
 }
 const InitialState: IRoomReducer = {
   activeRoom: {},
@@ -172,11 +176,15 @@ const InitialState: IRoomReducer = {
   roomNotification: {},
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   totalUnread: 0,
 =======
 >>>>>>> 0db3de3c... Feat/notification (#198)
 =======
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+  totalUnread: 0,
+>>>>>>> e898d038... Pusher channel auth and room notification count fix (#210)
 };
 
 export const sortRooms = (a: IRoom, b: IRoom) => {
@@ -570,7 +578,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
       };
     case room.COUNT_TOTAL_REED_COUNT:
       return {
+<<<<<<< HEAD
         ...state,
+=======
+        ...InitialState,
+>>>>>>> e898d038... Pusher channel auth and room notification count fix (#210)
         totalUnread: action.payload,
       };
     default:

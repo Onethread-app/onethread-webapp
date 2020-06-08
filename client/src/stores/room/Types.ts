@@ -20,11 +20,15 @@ export const room = {
   FETCH_ROOMS_SUCCESS: 'FETCH_ROOMS_SUCCESS',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   COUNT_TOTAL_REED_COUNT: 'COUNT_TOTAL_REED_COUNT',
 =======
 >>>>>>> 0db3de3c... Feat/notification (#198)
 =======
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+  COUNT_TOTAL_REED_COUNT: 'COUNT_TOTAL_REED_COUNT',
+>>>>>>> e898d038... Pusher channel auth and room notification count fix (#210)
 };
 export const LOADING_ROOM = 'LOADING_ROOM';
 export const CURRENT_ROOM = 'CURRENT_ROOM';

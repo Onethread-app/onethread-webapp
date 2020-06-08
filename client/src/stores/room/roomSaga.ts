@@ -550,6 +550,7 @@ function* fethRooms() {
       }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       const unreadCount = yield response.data.rooms.map(
         (room: any) => response.data.roomsUnreadCount[room._id],
       );
@@ -567,6 +568,19 @@ function* fethRooms() {
 =======
 
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+      const unreadCount = yield response.data.rooms.map(
+        (room: any) => response.data.roomsUnreadCount[room._id],
+      );
+
+      const totalUnread = yield unreadCount.reduce(
+        (accumulator, current) => accumulator + current,
+      );
+      yield put({
+        type: room.COUNT_TOTAL_REED_COUNT,
+        payload: totalUnread,
+      });
+>>>>>>> e898d038... Pusher channel auth and room notification count fix (#210)
       return response;
     } else {
       // tslint:disable-next-line: no-console
