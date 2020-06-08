@@ -48,8 +48,9 @@ interface NavbarTopInternalProps {
   readNotification: any;
   read: number;
   seen: number;
-  rooms: any;
-  currentRoom: any;
+  rooms: [IRoom];
+  totalRoomUnread: number;
+  currentRoom: IRoom;
 }
 const roomBgColor = [
   '#D8315B',
@@ -249,7 +250,7 @@ const NavbarTopComponent = (
               target={
                 <div className="mh4 pointer">
                   <Badge
-                    badgeContent={props.seen}
+                    badgeContent={props.totalRoomUnread}
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
@@ -382,6 +383,7 @@ const mapStateToProps = (state: any) => {
     read: state.notificationReducer.read,
     rooms: state.roomReducer.roomNotification.rooms,
     currentRoom: state.roomReducer.currentRoom,
+    totalRoomUnread: state.roomReducer.totalUnread,
   };
 };
 
