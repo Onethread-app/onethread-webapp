@@ -462,7 +462,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
   try {
     const { limit = 50, skip = 0 } = req.query;
     let companyId = req.params.companyId;
-    let associateId = await Associate.findOne({
+    let associateId = await Associate.find({
       $or: [
         {
           company: { $in: { _id: companyId } },
@@ -471,38 +471,34 @@ const showAllProjectsForCompany = async (req, res, next) => {
         { isAccepted: true, isRejected: false },
       ],
     }).select('_id');
-    let pendingProject = await ProjectRequest.find({
-      $and: [{ isAccepted: false }, { associate: associateId }],
+    associateId = associateId.map((data) => {
+      return data._id;
+    });
+    let acceptedProject = await ProjectRequest.find({
+      isAccepted: true,
+      associate: associateId,
     }).populate('project', '_id');
-    let memberExistInProject = await Team.find({
-      $and: [{ account: req.user._id }, { removed: false }],
-    }).populate('project', '_id');
+    // let memberExistInProject = await Team.find({
+    //   $and: [{ account: req.user._id }, { removed: false }],
+    // }).populate('project', '_id');
 
     pendingProject = pendingProject.map((data) => {
       return data.project._id;
     });
-    memberExistInProject = memberExistInProject.map((data) => {
-      return data.project._id;
-    });
-
+    // memberExistInProject = memberExistInProject.map((data) => {
+    //   return data.project._id;
+    // });
     await Project.find({
-      $and: [
-        { _id: { $nin: pendingProject } },
-        { _id: { $in: memberExistInProject } },
+      $or: [
+        { _id: { $in: acceptedProject } },
+        // { _id: { $in: memberExistInProject } },
         {
-          $or: [
-            { company: companyId },
-            {
-              'associate.associateCompany': {
-                _id: companyId,
-              },
-            },
-          ],
+          company: companyId,
         },
-
-        { removed: false },
       ],
     })
+      .where('removed')
+      .equals(false)
       .populate('departments', 'name _id ')
       .select('-type -__v  -files -version -optionalRole ')
       .sort({ createdAt: -1 })
