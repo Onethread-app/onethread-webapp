@@ -8,9 +8,9 @@ const passport = require('passport');
 
 const requireAuth = passport.authenticate('jwt', {session: false});
 router
-    .route('/')
-    .get(hashtagCtrl.suggest)
-    .post(requireAuth, hashtagCtrl.create); // validate(paramValidation.createSave),
+	.route('/')
+	.get(hashtagCtrl.suggest)
+	.post(requireAuth, hashtagCtrl.create); // validate(paramValidation.createSave),
 
 // router.param("commentId", commentCtrl.load);
 

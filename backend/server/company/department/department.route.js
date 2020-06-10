@@ -9,12 +9,12 @@ const joiSchema = require('./department.validation');
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
 
 router
-    .route('/')
-    .post(
-        authorization,
-        // SchemaValidator(joiSchema.create),
-        deptCtrl.create,
-    )
-    .get(authorization, deptCtrl.list);
+	.route('/')
+	.post(
+		authorization,
+		// SchemaValidator(joiSchema.create),
+		deptCtrl.create,
+	)
+	.get(authorization, deptCtrl.list);
 
 module.exports = router;

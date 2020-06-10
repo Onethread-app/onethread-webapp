@@ -11,8 +11,8 @@ const router = express.Router();
 router.route('/add-education').post(authorization, educationCtrl.addEducation);
 
 router
-    .route('/update-education')
-    .put(authorization, educationCtrl.updateEducation);
+	.route('/update-education')
+	.put(authorization, educationCtrl.updateEducation);
 // router
 //   .route('/:jobexperienceid')
 //   .get(authorization, jobCtrl.getJobExperience);

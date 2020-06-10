@@ -12,50 +12,50 @@ const router = express.Router();
 
 // get borad list
 router
-    .route('/:companyId') // companyId for authorization
-    .post(
-        authorization,
-        companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-        // SchemaValidator(joiSchema.createAssociate),
-        associateCtrl.createPending,
-    )
-    .get(
-        authorization,
-        companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-        associateCtrl.list,
-    );
+	.route('/:companyId') // companyId for authorization
+	.post(
+		authorization,
+		companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+		// SchemaValidator(joiSchema.createAssociate),
+		associateCtrl.createPending,
+	)
+	.get(
+		authorization,
+		companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+		associateCtrl.list,
+	);
 
 router
-    .route('/pending/:companyId')
-    .get(
-        authorization,
-        companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-        associateCtrl.listPending,
-    );
+	.route('/pending/:companyId')
+	.get(
+		authorization,
+		companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+		associateCtrl.listPending,
+	);
 
 router
-    .route('/accept/:companyId')
-    .post(
-        authorization,
-        companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-        associateCtrl.acceptPending,
-    );
+	.route('/accept/:companyId')
+	.post(
+		authorization,
+		companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+		associateCtrl.acceptPending,
+	);
 
 router
-    .route('/reject/:companyId')
-    .post(
-        authorization,
-        companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-        associateCtrl.rejectPending,
-    );
+	.route('/reject/:companyId')
+	.post(
+		authorization,
+		companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+		associateCtrl.rejectPending,
+	);
 
 router
-    .route('/:associateId/:companyId')
-    .get(
-        authorization,
-        companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-        associateCtrl.get,
-    );
+	.route('/:associateId/:companyId')
+	.get(
+		authorization,
+		companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+		associateCtrl.get,
+	);
 
 // router.param('boardId', boardCtrl.load);
 

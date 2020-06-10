@@ -48,15 +48,7 @@ const NavbarCompanyComponent = (
 
   return (
     <>
-<<<<<<< HEAD
-<<<<<<< HEAD
       {!(view && view === 'mobile') && <MobileView>
-=======
-      <MobileView>
->>>>>>> 9bf420fb... Release/v2.2.0 (#181)
-=======
-      {!(view && view === 'mobile') && <MobileView>
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
         <Navbar
           fixedToTop
           className="flex justify-between items-center shadow-4"

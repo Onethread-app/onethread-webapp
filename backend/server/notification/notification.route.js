@@ -18,8 +18,8 @@ router.route('/webpush').post(authorization, notificationCtrl.userTokenFCM);
 // );
 
 router
-    .route('/read/:userNotificationId')
-    .get(authorization, notificationCtrl.read);
+	.route('/read/:userNotificationId')
+	.get(authorization, notificationCtrl.read);
 
 router.route('/seen/:companyId').get(authorization, notificationCtrl.seen);
 

@@ -8,20 +8,11 @@ import {
   RouteComponentProps,
   NavLink,
 } from 'react-router-dom';
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
 import {
   getSingleProject,
   setCurrentProjectId,
   getRoleForProject,
 } from '../../../stores/project/Actions';
-<<<<<<< HEAD
-=======
->>>>>>> 9bf420fb... Release/v2.2.0 (#181)
-=======
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
 import Pusher from 'pusher-js';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { ICompany } from 'stores/company/Reducer';
@@ -46,16 +37,9 @@ interface RoomPageComponentProps extends RouteComponentProps {
 }
 
 const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
+
   const query = new URLSearchParams(props.location.search);
   const view = query.get('view');
-=======
->>>>>>> 9bf420fb... Release/v2.2.0 (#181)
-=======
-  const query = new URLSearchParams(props.location.search);
-  const view = query.get('view');
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
@@ -149,16 +133,8 @@ const mapStateToProps = (state: any) => {
 
 export const RoomPageMobile = connect(mapStateToProps, {
   getRooms,
-<<<<<<< HEAD
-<<<<<<< HEAD
   getSingleProject,
   setCurrentProjectId,
   getRoleForProject,
-=======
->>>>>>> 9bf420fb... Release/v2.2.0 (#181)
-=======
-  getSingleProject,
-  setCurrentProjectId,
-  getRoleForProject,
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
+
 })(withRouter(RoomPageMobileComponent));

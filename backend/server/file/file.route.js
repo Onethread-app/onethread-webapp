@@ -14,30 +14,30 @@ const upload = multer({storage: storage});
 const fileCtrl = require('./file.controller');
 
 router.post(
-    '/upload',
-    upload.single('file'),
-    authorization,
-    fileCtrl.profilePicture,
+	'/upload',
+	upload.single('file'),
+	authorization,
+	fileCtrl.profilePicture,
 );
 
 // router.get('/show-file', fileCtrl.displayProPic);
 router.post(
-    '/:companyId/upload',
-    upload.single('file'),
-    authorization,
-    fileCtrl.companyLogo,
+	'/:companyId/upload',
+	upload.single('file'),
+	authorization,
+	fileCtrl.companyLogo,
 );
 router.post(
-    '/file-upload-room',
-    upload.single('file'),
-    authorization,
-    fileCtrl.fileInRooms,
+	'/file-upload-room',
+	upload.single('file'),
+	authorization,
+	fileCtrl.fileInRooms,
 );
 router.post(
-    '/file-upload-project',
-    upload.single('file'),
-    authorization,
-    schemaValidator(fileValidation.fileInProject),
-    fileCtrl.fileInProject,
+	'/file-upload-project',
+	upload.single('file'),
+	authorization,
+	schemaValidator(fileValidation.fileInProject),
+	fileCtrl.fileInProject,
 );
 module.exports = router;

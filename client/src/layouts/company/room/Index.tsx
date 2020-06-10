@@ -182,15 +182,8 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 // tslint:disable-next-line: no-unused-expression
                 props.setShowDialog && props.setShowDialog(false);
                 props.history.push(
-<<<<<<< HEAD
-<<<<<<< HEAD
                   `/company/${props.companyName}/project/${props.projectId}/room?view=${queries.view}`,
-=======
-                  `/company/${props.companyName}/project/${props.projectId}/room`,
->>>>>>> 9bf420fb... Release/v2.2.0 (#181)
-=======
-                  `/company/${props.companyName}/project/${props.projectId}/room?view=${queries.view}`,
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
+
                 );
               }}
             />
@@ -198,20 +191,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
           {isEmpty(props.currentRoom.name) === false &&
             isEmpty(props.currentRoom._id) === false && (
               <Icon
-<<<<<<< HEAD
-<<<<<<< HEAD
+
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
                 icon='arrow-right'
-=======
-                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
-                icon={
-                  isOpenRightSidebar ? 'arrow-right' : 'arrow-left'
-                }
->>>>>>> 9bf420fb... Release/v2.2.0 (#181)
-=======
-                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
-                icon='arrow-right'
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
                 iconSize={17}
                 onClick={() => {
                   setIsOpenRightSidebar(!isOpenRightSidebar);
@@ -227,10 +209,6 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
               style={{
                 borderBottomRightRadius: '0.5rem',
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
                 width: isOpenRightSidebar 
                   ? isMobileOnly 
                     ? '0px' 
@@ -238,16 +216,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                   : isMobileOnly 
                     ? '0px' 
                     : '16px',
-<<<<<<< HEAD
-=======
-                width: isOpenRightSidebar
-                  ? isMobileOnly
-                    ? '16px'
-                    : '400px'
-                  : '16px',
->>>>>>> 9bf420fb... Release/v2.2.0 (#181)
-=======
->>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
+
               }}
             >
               {isMobileOnly ? (

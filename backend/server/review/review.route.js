@@ -11,13 +11,13 @@ const {permit, authSelf} = require('../helpers/permission');
 const router = express.Router(); // eslint-disable-line new-cap
 
 router
-    .route('/')
+	.route('/')
 
-    .post(
-        requireAuth,
-        permit('user', 'admin'),
-        validate(paramValidation.createSave),
-        reviewCtrl.create,
-    );
+	.post(
+		requireAuth,
+		permit('user', 'admin'),
+		validate(paramValidation.createSave),
+		reviewCtrl.create,
+	);
 
 module.exports = router;

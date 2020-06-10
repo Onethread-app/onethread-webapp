@@ -10,11 +10,25 @@
     "npm": ">=5.6.0",
     "yarn": ">=1.5.1"
   },
+  "lint-staged": {
+    "*.js": [
+      "prettylint --fix",
+      "./node_modules/.bin/eslint . --fix",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+					"pre-commit": "lint-staged",
+     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+      
+    }
+  },
   "scripts": {
     "start": "nodemon node index.js",
     "start:debug": "cross-env DEBUG=express-mongoose-es6-rest-api:* yarn start",
     "start:prod": "export NODE_ENV=production && pm2 start index.js",
-    "lint": "esw *.js server config --color",
+    "lint": "npm run lint-staged",
     "lint:watch": "yarn lint -- --watch",
     "test": "cross-env NODE_ENV=test mocha ./server/**/*.test.js  --ui bdd --reporter spec --colors server --recursive --timeout 40000 --exit",
     "test:watch": "yarn test -- --watch",
@@ -70,6 +84,7 @@
     "ms": "^2.1.2",
     "multer": "^1.4.2",
     "nodemailer": "^6.3.0",
+    "nodemailer-express-handlebars": "^4.0.0",
     "nodemailer-smtp-transport": "^2.7.4",
     "nodemon": "^1.19.1",
     "passport": "^0.4.0",
@@ -96,15 +111,23 @@
     "coveralls": "^3.0.5",
     "cross-env": "5.2.0",
     "cz-conventional-changelog": "2.1.0",
-    "eslint": "^6.2.2",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.1.0",
     "eslint-config-airbnb-base": "13.2.0",
     "eslint-config-prettier": "^6.1.0",
-    "eslint-plugin-import": "2.18.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^2.5.0",
     "eslint-watch": "^5.1.2",
-    "husky": "^3.0.0",
+    "husky": "^3.1.0",
     "istanbul": "1.1.0-alpha.1",
+    "lint-staged": "^10.2.9",
     "mocha": "^6.1.4",
     "nyc": "^15.0.0",
+    "prettier": "^2.0.5",
+    "prettylint": "^1.0.0",
     "should": "^13.2.3",
     "supertest": "4.0.2",
     "supertest-as-promised": "4.0.2",

@@ -1,17 +1,17 @@
 const config = require('./config');
 
 require('elastic-apm-node').start({
-    // Override service name from package.json
-    // Allowed characters: a-z, A-Z, 0-9, -, _, and space
-    serviceName: config.APM_SERVICE_NAME,
+	// Override service name from package.json
+	// Allowed characters: a-z, A-Z, 0-9, -, _, and space
+	serviceName: config.APM_SERVICE_NAME,
 
-    // Use if APM Server requires a token
-    secretToken: config.APM_TOKEN,
+	// Use if APM Server requires a token
+	secretToken: config.APM_TOKEN,
 
-    // Set custom APM Server URL (default: http://localhost:8200)
-    serverUrl: config.APM_URL,
+	// Set custom APM Server URL (default: http://localhost:8200)
+	serverUrl: config.APM_URL,
 
-    active: config.env === 'production',
+	active: config.env === 'production',
 });
 const express = require('express');
 const logger = require('morgan');
@@ -36,15 +36,15 @@ const mongoErrorHandler = require('../server/helpers/mongoErrorFormat');
 const app = express();
 
 if (config.env === 'development' || config.env === 'production') {
-    app.use(logger('dev') || logger('prod'));
+	app.use(logger('dev') || logger('prod'));
 }
 
 // parse body params and attache them to req.body
 app.use(bodyParser.json());
 app.use(
-    bodyParser.urlencoded({
-        extended: true,
-    }),
+	bodyParser.urlencoded({
+		extended: true,
+	}),
 );
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,39 +64,21 @@ app.use(cors());
 // TODO: cors customize
 // enable detailed API logging in dev env
 if (
-<<<<<<< HEAD
-    config.env === 'development' ||
-    config.env === 'test' ||
-    config.env === 'local'
-) {
-    expressWinston.requestWhitelist.push('body');
-    expressWinston.responseWhitelist.push('body');
-    app.use(
-        expressWinston.logger({
-            winstonInstance,
-            meta: true,
-            msg:
-                'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
-            colorStatus: true,
-        }),
-    );
-=======
-  config.env === 'development' ||
+	config.env === 'development' ||
   config.env === 'test' ||
   config.env === 'local'
 ) {
-  expressWinston.requestWhitelist.push('body');
-  expressWinston.responseWhitelist.push('body');
-  app.use(
-    expressWinston.logger({
-      winstonInstance,
-      meta: true,
-      msg:
+	expressWinston.requestWhitelist.push('body');
+	expressWinston.responseWhitelist.push('body');
+	app.use(
+		expressWinston.logger({
+			winstonInstance,
+			meta: true,
+			msg:
         'HTTP {{req.method}} {{req.url}} {{res.statusCode}} {{res.responseTime}}ms',
-      colorStatus: true,
-    }),
-  );
->>>>>>> 6d92f22e... Dev (#202)
+			colorStatus: true,
+		}),
+	);
 }
 
 // mount all routes on /api path
@@ -105,53 +87,53 @@ app.use('/api/v1', routes); // v1.0
 app.use(mongoErrorHandler);
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
-    if (err instanceof expressValidation.ValidationError) {
-        // validation error contains errors which is an array of error each containing message[]
-        const unifiedErrorMessage = err.errors
-            .map((error) => error.messages.join('. '))
-            .join(' and ');
-        const error = new APIError(unifiedErrorMessage, err.status, true);
-        return next(error);
-    }
-    if (!(err instanceof APIError)) {
-        logger.error(`${err.message}`);
-        const apiError = new APIError(err.message, err.status, err.isPublic);
-        return next(apiError);
-    }
-    return next(err);
+	if (err instanceof expressValidation.ValidationError) {
+		// validation error contains errors which is an array of error each containing message[]
+		const unifiedErrorMessage = err.errors
+			.map((error) => error.messages.join('. '))
+			.join(' and ');
+		const error = new APIError(unifiedErrorMessage, err.status, true);
+		return next(error);
+	}
+	if (!(err instanceof APIError)) {
+		logger.error(`${err.message}`);
+		const apiError = new APIError(err.message, err.status, err.isPublic);
+		return next(apiError);
+	}
+	return next(err);
 });
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
-    return sendErrorResponse(res, 404, 'MethodNotFoundError', {
-        message: 'API not found',
-    });
+	return sendErrorResponse(res, 404, 'MethodNotFoundError', {
+		message: 'API not found',
+	});
 });
 
 // log error in winston transports except when executing test suite
 if (config.env !== 'test') {
-    app.use(
-        expressWinston.errorLogger({
-            winstonInstance,
-        }),
-    );
+	app.use(
+		expressWinston.errorLogger({
+			winstonInstance,
+		}),
+	);
 }
 
 // // error handler, send stacktrace only during development
 app.use((err, req, res, next) => {
-    const stack = config.env === 'development' ? err.stack.split('\n') : {};
-    const frame = err.stack;
-    const lineNumber = frame.split(':')[1];
-    const response = {
-        message: err.isPublic ? err.message : httpStatus[err.status],
-        stack,
-        lineNumber,
-        frame,
-    };
-    winstonInstance.info(`${response}`);
-    res.status(err.status).json({
-        message: err.isPublic ? err.message : httpStatus[err.status],
-    });
+	const stack = config.env === 'development' ? err.stack.split('\n') : {};
+	const frame = err.stack;
+	const lineNumber = frame.split(':')[1];
+	const response = {
+		message: err.isPublic ? err.message : httpStatus[err.status],
+		stack,
+		lineNumber,
+		frame,
+	};
+	winstonInstance.info(`${response}`);
+	res.status(err.status).json({
+		message: err.isPublic ? err.message : httpStatus[err.status],
+	});
 });
 
 module.exports = app;

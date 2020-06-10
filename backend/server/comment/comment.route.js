@@ -12,9 +12,9 @@ const joiSchema = require('./comment.validation');
 const router = express.Router();
 
 router
-    .route('/')
-    .get(authorization, commentCtrl.list)
-    .post(authorization, SchemaValidator(joiSchema.create), commentCtrl.create);
+	.route('/')
+	.get(authorization, commentCtrl.list)
+	.post(authorization, SchemaValidator(joiSchema.create), commentCtrl.create);
 
 router.param('commentId', commentCtrl.load);
 

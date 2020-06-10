@@ -4,7 +4,6 @@ const _ = require('lodash');
 const {pusherChannel} = require('./pusher.services');
 const {adminFirebase} = require('./firebase.services');
 
-
 // const channels_client = new Pusher({
 //   appId: config.pusherChanel.appid,
 //   key: config.pusherChanel.key,
@@ -22,127 +21,127 @@ const {adminFirebase} = require('./firebase.services');
 //   });
 
 module.exports.sendCompanyNotification = async (
-    company, // fromHeader
-    adminUser,
-    userNoti,
+	company, // fromHeader
+	adminUser,
+	userNoti,
 ) => {
-    let userNotification = userNoti;
+	let userNotification = userNoti;
 
-    userNotification = {notification: userNotification, read: false};
+	userNotification = {notification: userNotification, read: false};
 
-    pusherChannel.trigger(
-        company.toString(),
-        `${company}-superAdmin`,
-        userNotification,
-        adminUser.pusherSock,
-    );
+	pusherChannel.trigger(
+		company.toString(),
+		`${company}-superAdmin`,
+		userNotification,
+		adminUser.pusherSock,
+	);
 };
 
 module.exports.sendCompanyRoleNotification = async (
-    company, // fromHeader
-    companyChannels,
-    adminUser,
-    userNoti,
+	company, // fromHeader
+	companyChannels,
+	adminUser,
+	userNoti,
 ) => {
-    const companyChannelsPusher = companyChannels.map((c) => {
-        return `${company.toString()}-${c}`;
-    });
+	const companyChannelsPusher = companyChannels.map((c) => {
+		return `${company.toString()}-${c}`;
+	});
 
-    let userNotification = userNoti;
+	let userNotification = userNoti;
 
-    userNotification = {notification: userNotification, read: false};
+	userNotification = {notification: userNotification, read: false};
 
-    pusherChannel.trigger(
-        companyChannelsPusher,
-        company.toString(),
-        [userNotification],
-        adminUser.pusherSock,
-    );
+	pusherChannel.trigger(
+		companyChannelsPusher,
+		company.toString(),
+		[userNotification],
+		adminUser.pusherSock,
+	);
 
-    // var message = [{
+	// var message = [{
 
-    //   webpush: {
-    //     notification: {
-    //       title: userNoti.type,
-    //       body: userNoti.text,
-    //       icon: "https://www.tigrow.co/static/media/TiGrowLogoFinal.2668af93.png"
-    //     }
-    //   },
-    //   topic:topic
-    // }];
-    const notification = {
-        title: userNoti.type,
-        body: userNoti.text,
-        icon: 'https://www.tigrow.co/static/media/TiGrowLogoFinal.2668af93.png',
-    };
-    const messages = companyChannelsPusher.map((topic) => {
-        return {
-            webpush: {
-                notification: {
-                    ...notification,
-                },
-            },
-            topic: topic,
-        };
-    });
+	//   webpush: {
+	//     notification: {
+	//       title: userNoti.type,
+	//       body: userNoti.text,
+	//       icon: "https://www.tigrow.co/static/media/TiGrowLogoFinal.2668af93.png"
+	//     }
+	//   },
+	//   topic:topic
+	// }];
+	const notification = {
+		title: userNoti.type,
+		body: userNoti.text,
+		icon: 'https://www.tigrow.co/static/media/TiGrowLogoFinal.2668af93.png',
+	};
+	const messages = companyChannelsPusher.map((topic) => {
+		return {
+			webpush: {
+				notification: {
+					...notification,
+				},
+			},
+			topic: topic,
+		};
+	});
 
-    adminFirebase.messaging().sendAll(messages);
+	adminFirebase.messaging().sendAll(messages);
 };
 
 module.exports.sendMultipleNotification = async (
-    company, // fromHeader
-    companyChannels,
-    adminUser,
-    userNoties,
+	company, // fromHeader
+	companyChannels,
+	adminUser,
+	userNoties,
 ) => {
-    const userNotifications = userNoties.map((c) => {
-        return {notification: c, read: false};
-    });
+	const userNotifications = userNoties.map((c) => {
+		return {notification: c, read: false};
+	});
 
-    const companyChannelsPusher = companyChannels.map((c) => {
-        return `${company.toString()}-${c}`;
-    });
+	const companyChannelsPusher = companyChannels.map((c) => {
+		return `${company.toString()}-${c}`;
+	});
 
-    pusherChannel.trigger(
-        companyChannelsPusher,
-        company.toString(),
-        userNotifications, // ARRAY
-        adminUser.pusherSock,
-    );
+	pusherChannel.trigger(
+		companyChannelsPusher,
+		company.toString(),
+		userNotifications, // ARRAY
+		adminUser.pusherSock,
+	);
 };
 
 module.exports.sendCompanyAndProjectNotification = async (
-    project,
-    companyChannels,
-    projectChannel,
-    adminUser,
-    userNoti,
+	project,
+	companyChannels,
+	projectChannel,
+	adminUser,
+	userNoti,
 ) => {
-    const companyChannelsPusher = companyChannels.map((c) => {
-        return `${project.company.toString()}-${c}`;
-    });
+	const companyChannelsPusher = companyChannels.map((c) => {
+		return `${project.company.toString()}-${c}`;
+	});
 
-    const projectChannelPusher = projectChannel.map((p) => {
-        return `${project._id.toString()}-${p}`;
-    });
+	const projectChannelPusher = projectChannel.map((p) => {
+		return `${project._id.toString()}-${p}`;
+	});
 
-    const allChannel = _.union(companyChannelsPusher, projectChannelPusher);
+	const allChannel = _.union(companyChannelsPusher, projectChannelPusher);
 
-    let userNotification = userNoti;
-    if (Array.isArray(userNotification)) {
-        userNotification = userNoti.map((c) => {
-            // multiple
-            return {notification: c, read: false};
-        });
-    } else {
-        userNotification = {notification: userNoti, read: false};
-        userNotification = [userNotification];
-    }
+	let userNotification = userNoti;
+	if (Array.isArray(userNotification)) {
+		userNotification = userNoti.map((c) => {
+			// multiple
+			return {notification: c, read: false};
+		});
+	} else {
+		userNotification = {notification: userNoti, read: false};
+		userNotification = [userNotification];
+	}
 
-    pusherChannel.trigger(
-        allChannel,
-        project.company.toString(),
-        userNotification,
-        adminUser.pusherSock,
-    );
+	pusherChannel.trigger(
+		allChannel,
+		project.company.toString(),
+		userNotification,
+		adminUser.pusherSock,
+	);
 };

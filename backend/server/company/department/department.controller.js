@@ -1,78 +1,78 @@
 const Department = require('./department.model');
 const logger = require('../../../config/winston.js');
 const {
-    sendJSONresponse,
-    sendErrorResponse,
+	sendJSONresponse,
+	sendErrorResponse,
 } = require('../../helpers/jsonResponse');
 
 const create = async (req, res) => {
-    if (!req.is('application/json')) {
-        logger.error("'Expects 'application/json'");
-        return sendErrorResponse(res, 406, 'ContentTypeError', {
-            message: "Expects 'application/json'",
-        });
-    }
-    try {
-        // check Department already exists with same company
-        const duplicate = await Department.findOne({
-            name: req.body.name,
-            company: req.company._id,
-        });
-        if (duplicate) {
-            logger.info('Department already exist');
-            return sendErrorResponse(res, 409, 'DuplicateKeyError', {
-                message: 'Department already exists',
-                fieldName: 'name',
-            });
-        }
+	if (!req.is('application/json')) {
+		logger.error('\'Expects \'application/json\'');
+		return sendErrorResponse(res, 406, 'ContentTypeError', {
+			message: 'Expects \'application/json\'',
+		});
+	}
+	try {
+		// check Department already exists with same company
+		const duplicate = await Department.findOne({
+			name: req.body.name,
+			company: req.company._id,
+		});
+		if (duplicate) {
+			logger.info('Department already exist');
+			return sendErrorResponse(res, 409, 'DuplicateKeyError', {
+				message: 'Department already exists',
+				fieldName: 'name',
+			});
+		}
 
-        req.body.company = req.company._id;
-        const newDepartment = new Department(req.body);
-        const department = await newDepartment.save();
+		req.body.company = req.company._id;
+		const newDepartment = new Department(req.body);
+		const department = await newDepartment.save();
 
-        // save ref in company
-        req.company.departments.push(department._id);
-        await req.company.save();
+		// save ref in company
+		req.company.departments.push(department._id);
+		await req.company.save();
 
-        return sendJSONresponse(res, 201, {
-            department: {
-                _id: department._id,
-                name: department.name,
-            },
-        });
-    } catch (err) {
-        logger.error(` process:${process.pid} Bad request : ${err}`);
-        return sendErrorResponse(res, 400, '', {
-            message: 'Failed to create new department',
-            fieldName: 'name',
-        });
-    }
+		return sendJSONresponse(res, 201, {
+			department: {
+				_id: department._id,
+				name: department.name,
+			},
+		});
+	} catch (err) {
+		logger.error(` process:${process.pid} Bad request : ${err}`);
+		return sendErrorResponse(res, 400, '', {
+			message: 'Failed to create new department',
+			fieldName: 'name',
+		});
+	}
 };
 
 const list = async (req, res) => {
-    try {
-        const departments = await Department.find({
-            company: req.company._id,
-            removed: false,
-        }).select('_id name');
+	try {
+		const departments = await Department.find({
+			company: req.company._id,
+			removed: false,
+		}).select('_id name');
 
-        if (departments) {
-            return sendJSONresponse(res, 200, {
-                departments,
-            });
-        }
+		if (departments) {
+			return sendJSONresponse(res, 200, {
+				departments,
+			});
+		}
 
-        return res.status(404).json({
-            message: 'No departments found.',
-        });
-    } catch (error) {
-        return res.status(500).json({
-            error: error,
-        });
-    }
+		return res.status(404).json({
+			message: 'No departments found.',
+		});
+	} catch (error) {
+		return res.status(500).json({
+			error: error,
+		});
+	}
 };
 
 module.exports = {
-    create,
-    list,
+	create,
+	list,
 };
