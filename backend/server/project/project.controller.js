@@ -482,7 +482,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
     //   $and: [{ account: req.user._id }, { removed: false }],
     // }).populate('project', '_id');
 
-    pendingProject = pendingProject.map((data) => {
+    acceptedProject = acceptedProject.map((data) => {
       return data.project._id;
     });
     // memberExistInProject = memberExistInProject.map((data) => {
@@ -499,6 +499,22 @@ const showAllProjectsForCompany = async (req, res, next) => {
     })
       .where('removed')
       .equals(false)
+      .populate([
+        {
+          path: 'associate',
+          select: 'company associateCompany',
+          populate: [
+            {
+              path: 'company',
+              select: '_id',
+            },
+            {
+              path: 'associateCompany',
+              select: '_id',
+            },
+          ],
+        },
+      ])
       .populate('departments', 'name _id ')
       .select('-type -__v  -files -version -optionalRole ')
       .sort({ createdAt: -1 })
