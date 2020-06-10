@@ -68,7 +68,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
       .catch((err: string) => console.log(err));
   };
   useEffect(() => {
-    console.log(props.company);
     getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();
@@ -172,22 +171,19 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             </div>
           </div>
           <div>
-            {
-              companyPermit(props.company.role) && (
-                <img
-              onClick={() =>
-                setShowAnnouncementDialog(!showAnnouncementDialog)
-              }
-              src={addIcon}
-              className={`fixed pointer addButton`}
-              style={{
-                boxShadow: '0px 6px 6px #00000029',
-                borderRadius: '50%',
-              }}
-            />
-              )
-            }
-            
+            {companyPermit(props.company.role) && (
+              <img
+                onClick={() =>
+                  setShowAnnouncementDialog(!showAnnouncementDialog)
+                }
+                src={addIcon}
+                className={`fixed pointer addButton`}
+                style={{
+                  boxShadow: '0px 6px 6px #00000029',
+                  borderRadius: '50%',
+                }}
+              />
+            )}
           </div>
         </>
       ) : (

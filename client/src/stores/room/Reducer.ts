@@ -132,6 +132,7 @@ export interface IRoomReducer {
   roomError: string;
   responseCode: number;
   roomNotification: {};
+  totalUnread: number;
 }
 const InitialState: IRoomReducer = {
   activeRoom: {},
@@ -163,6 +164,7 @@ const InitialState: IRoomReducer = {
   roomError: '',
   responseCode: 0,
   roomNotification: {},
+  totalUnread: 0,
 };
 
 export const sortRooms = (a: IRoom, b: IRoom) => {
@@ -553,6 +555,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
       return {
         ...InitialState,
         companyRooms: state.companyRooms,
+      };
+    case room.COUNT_TOTAL_REED_COUNT:
+      return {
+        ...InitialState,
+        totalUnread: action.payload,
       };
     default:
       return state;

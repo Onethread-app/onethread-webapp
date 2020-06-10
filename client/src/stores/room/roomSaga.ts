@@ -65,7 +65,6 @@ function* createRoomAction(action) {
         payload: response.status,
       });
       yield roomSubscribe(response.data.room._id);
-      console.log(response.status);
 
       // return response.status;
     }
@@ -485,7 +484,17 @@ function* fethRooms() {
           payload: response.data,
         });
       }
+      const unreadCount = yield response.data.rooms.map(
+        (room: any) => response.data.roomsUnreadCount[room._id],
+      );
 
+      const totalUnread = yield unreadCount.reduce(
+        (accumulator, current) => accumulator + current,
+      );
+      yield put({
+        type: room.COUNT_TOTAL_REED_COUNT,
+        payload: totalUnread,
+      });
       return response;
     } else {
       // tslint:disable-next-line: no-console

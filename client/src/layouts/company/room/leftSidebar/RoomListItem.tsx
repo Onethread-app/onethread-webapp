@@ -16,6 +16,9 @@ interface RoomListItemProps {
 
 export const RoomListItem = (props: RoomListItemProps) => {
   const [showDialog, setShowDialog] = useState(false);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const history = useHistory();
   const unreadCount = useSelector(
     (state: any) =>
       state.roomReducer.roomNotification.roomsUnreadCount &&
@@ -23,14 +26,11 @@ export const RoomListItem = (props: RoomListItemProps) => {
         props.room._id
       ],
   );
+
   const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
     roomId: '',
   });
-
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const history = useHistory();
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
