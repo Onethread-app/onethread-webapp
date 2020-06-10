@@ -14,7 +14,7 @@
     "*.js": [
       "prettylint --fix",
       "./node_modules/.bin/eslint . --fix",
-      "git add"
+      "git add -u"
     ]
   },
   "husky": {
