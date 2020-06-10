@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Drawer, Popover, Position } from '@blueprintjs/core';
 import { MobileView } from 'react-device-detect';
 import user from '../resources/images/profilePhoto.svg';
@@ -28,8 +28,10 @@ const NavbarCompanyComponent = (
   props: NavbarProps & RouteComponentProps,
 ) => {
   const [showDialog, setShowDialog] = useState(false);
+  const query = new URLSearchParams(props.location.search);
+  const view = query.get('view');
 
-  React.useEffect(() => {
+  useEffect(() => {
     // tslint:disable-next-line: no-unused-expression
     props.match.path !== '/:username' && props.getNotifications();
     companySubscriber(props.companyId);
@@ -46,7 +48,15 @@ const NavbarCompanyComponent = (
 
   return (
     <>
+<<<<<<< HEAD
+<<<<<<< HEAD
+      {!(view && view === 'mobile') && <MobileView>
+=======
       <MobileView>
+>>>>>>> 9bf420fb... Release/v2.2.0 (#181)
+=======
+      {!(view && view === 'mobile') && <MobileView>
+>>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
         <Navbar
           fixedToTop
           className="flex justify-between items-center shadow-4"
@@ -125,7 +135,7 @@ const NavbarCompanyComponent = (
             />
           </div>
         </Navbar>
-      </MobileView>
+      </MobileView>}
       {showDialog && (
         <Drawer
           onClose={() => setShowDialog(!showDialog)}

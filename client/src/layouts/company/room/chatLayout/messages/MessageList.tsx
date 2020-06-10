@@ -108,7 +108,15 @@ export const MessageListComponent = (props: MessageListProps) => {
       id="message-container"
       className="flex flex-column flex-grow-1 overflow-y-auto ph1 pt2"
       ref={messagesEndRef}
+<<<<<<< HEAD
+<<<<<<< HEAD
       style={{ marginBottom: isMobileOnly ? '4.5rem' : '' }}
+=======
+      style={{marginBottom: isMobileOnly ? '4.5rem' : ''}}
+>>>>>>> d7f68799... Release/v2.2.0 (#173)
+=======
+      style={{ marginBottom: isMobileOnly ? '4.5rem' : '' }}
+>>>>>>> 9bf420fb... Release/v2.2.0 (#181)
     >
       {props.allMessages === false && props.messages.length > 0 ? (
         <div

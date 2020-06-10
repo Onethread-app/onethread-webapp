@@ -353,12 +353,331 @@ a:hover {
   object-fit: cover;
 }
 
-.companyCoverButton {
+.companyProfilepicOuter {
+  width: 235px;
+  height: 235px;
+}
+.companyProfilepic {
+  width: 220px;
+  height: 220px;
+}
+.companyProfilepicOuterOuter {
+  margin-top: -120px;
+  margin-left: 50px;
+}
+.addButton {
+  bottom: 5rem;
+  right: 7rem;
+  width: 5rem;
+}
+.individualcover {
+  height: 340px;
+}
+.changecompanybutton {
+  font-size: 16px;
+}
+.addDepartment {
+  font-size: 16px;
+}
+.changepass {
+  font-size: 16px;
+}
+@media only screen and (max-width: 360px) {
+  .displayNone {
+    display: none;
+  }
+  .companyProfilepicOuterOuter {
+    margin-top: -72px;
+    margin-left: 30%;
+    width: 130px;
+    height: 130px;
+  }
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+  .changecompanybutton {
+    font-size: 11px;
+  }
+  .addDepartment {
+    font-size: 12px;
+  }
+  .changepass {
+    font-size: 12px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+}
+
+@media only screen and (min-width: 361px) and (max-width: 450px) {
+  .displayNone {
+    display: none;
+  }
+  .companyProfilepicOuterOuter {
+    margin-top: -72px;
+    margin-left: 32%;
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+  .changecompanybutton {
+    font-size: 11px;
+  }
+  .addDepartment {
+    font-size: 14px;
+  }
+  .changepass {
+    font-size: 14px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+}
+
+.companyCoverButton{
   margin-top: 265px;
   margin-right: 45px;
 }
 
 .companyProfilepicOuter {
+  width: 235px;
+  height: 235px;
+}
+.companyProfilepic {
+  width: 220px;
+  height: 220px;
+}
+.companyProfilepicOuterOuter {
+  margin-top: -120px;
+  margin-left: 50px;
+}
+.addButton {
+  bottom: 5rem;
+  right: 7rem;
+  width: 5rem;
+}
+.individualcover {
+  height: 340px;
+}
+.changecompanybutton {
+  font-size: 16px;
+}
+.addDepartment {
+  font-size: 16px;
+}
+.changepass {
+  font-size: 16px;
+}
+@media only screen and (max-width: 360px) {
+  .displayNone {
+    display: none;
+  }
+  .companyProfilepicOuterOuter {
+    margin-top: -72px;
+    margin-left: 30%;
+    width: 130px;
+    height: 130px;
+  }
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+  .changecompanybutton {
+    font-size: 11px;
+  }
+  .addDepartment {
+    font-size: 12px;
+  }
+  .changepass {
+    font-size: 12px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+}
+
+@media only screen and (min-width: 361px) and (max-width: 450px) {
+  .displayNone {
+    display: none;
+  }
+  .companyProfilepicOuterOuter {
+    margin-top: -72px;
+    margin-left: 32%;
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+  .changecompanybutton {
+    font-size: 11px;
+  }
+  .addDepartment {
+    font-size: 14px;
+  }
+  .changepass {
+    font-size: 14px;
+  }
+  .companyProfilepicOuter {
+    width: 130px;
+    height: 130px;
+  }
+  .companyProfilepic {
+    width: 120px;
+    height: 115px;
+  }
+  .companyCover {
+    height: 185px;
+    background-position: center;
+    background-repeat: no-repeat;
+    object-fit: cover;
+  }
+  .companyCoverButton {
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  .addButton {
+    bottom: 5rem;
+    right: 3rem;
+    width: 4rem;
+  }
+  .individualcover {
+    height: 185px;
+  }
+}
+
+.companyCoverButton{
+  margin-top: 265px;
+  margin-right: 45px;
+}
+
+.companyProfilepicOuter{
   width: 235px;
   height: 235px;
 }

@@ -1,162 +1,162 @@
 const axios = require('axios');
 
 const levelOne = [
-  'Agriculture & Food',
+    'Agriculture & Food',
 
-  'Apparel,Textiles & Accessories',
+    'Apparel,Textiles & Accessories',
 
-  'Auto & Transportation',
+    'Auto & Transportation',
 
-  'Bags, Shoes & Accessories',
+    'Bags, Shoes & Accessories',
 
-  'Electronics',
+    'Electronics',
 
-  'Electrical Equipment, Components & Telecom',
+    'Electrical Equipment, Components & Telecom',
 
-  'Gifts, Sports & Toys',
+    'Gifts, Sports & Toys',
 
-  'Health & Beauty',
+    'Health & Beauty',
 
-  'Home, Lights & Construction',
+    'Home, Lights & Construction',
 
-  'Machinery, Industrial Parts & Tools',
+    'Machinery, Industrial Parts & Tools',
 
-  'Metallurgy, Chemicals, Rubber & Plastics',
+    'Metallurgy, Chemicals, Rubber & Plastics',
 
-  'Packaging, Advertising & Office',
+    'Packaging, Advertising & Office',
 ];
 
 const levelTwo = {
-  'Agriculture & Food': ['Agriculture', 'Food & Beverage'],
+    'Agriculture & Food': ['Agriculture', 'Food & Beverage'],
 
-  'Apparel,Textiles & Accessories': [
-    'Apparel',
+    'Apparel,Textiles & Accessories': [
+        'Apparel',
 
-    'Textile & Leather Product',
+        'Textile & Leather Product',
 
-    'Fashion Accessories',
+        'Fashion Accessories',
 
-    'Timepieces, Jewelry, Eyewear',
-  ],
+        'Timepieces, Jewelry, Eyewear',
+    ],
 
-  'Auto & Transportation': ['Vehicles & Accessories'],
+    'Auto & Transportation': ['Vehicles & Accessories'],
 
-  'Bags, Shoes & Accessories': [
-    'Luggage, Bags & Cases',
-    'Shoes & Accessories',
-  ],
+    'Bags, Shoes & Accessories': [
+        'Luggage, Bags & Cases',
+        'Shoes & Accessories',
+    ],
 
-  Electronics: [
-    'Consumer Electronic',
+    Electronics: [
+        'Consumer Electronic',
 
-    'Home Appliance',
+        'Home Appliance',
 
-    'Security & Protection',
-  ],
+        'Security & Protection',
+    ],
 
-  'Electrical Equipment, Components & Telecom': [
-    'Electrical Equipment & Supplies',
+    'Electrical Equipment, Components & Telecom': [
+        'Electrical Equipment & Supplies',
 
-    'Telecommunication',
-  ],
+        'Telecommunication',
+    ],
 
-  'Gifts, Sports & Toys': [
-    'Sports & Entertainment',
+    'Gifts, Sports & Toys': [
+        'Sports & Entertainment',
 
-    'Gifts & Crafts',
+        'Gifts & Crafts',
 
-    'Toys & Hobbies',
-  ],
+        'Toys & Hobbies',
+    ],
 
-  'Health & Beauty': ['Health & Medical', 'Beauty & Personal Care'],
+    'Health & Beauty': ['Health & Medical', 'Beauty & Personal Care'],
 
-  'Home, Lights & Construction': [
-    'Construction & Real Estate',
+    'Home, Lights & Construction': [
+        'Construction & Real Estate',
 
-    'Home & Garden',
+        'Home & Garden',
 
-    'Lights & Lighting',
+        'Lights & Lighting',
 
-    'Furniture',
-  ],
+        'Furniture',
+    ],
 
-  'Machinery, Industrial Parts & Tools': [
-    'Machinery',
+    'Machinery, Industrial Parts & Tools': [
+        'Machinery',
 
-    'Fabrication Services',
+        'Fabrication Services',
 
-    'Tools & Hardware',
-  ],
+        'Tools & Hardware',
+    ],
 
-  'Metallurgy, Chemicals, Rubber & Plastics': [
-    'Minerals & Metallurgy',
+    'Metallurgy, Chemicals, Rubber & Plastics': [
+        'Minerals & Metallurgy',
 
-    'Chemicals',
+        'Chemicals',
 
-    'Rubber & Plastics',
+        'Rubber & Plastics',
 
-    'Energy',
-  ],
+        'Energy',
+    ],
 
-  'Packaging, Advertising & Office': [
-    'Packaging & Printing',
+    'Packaging, Advertising & Office': [
+        'Packaging & Printing',
 
-    'Office & School Supplies',
+        'Office & School Supplies',
 
-    'Service Equipment',
-  ],
+        'Service Equipment',
+    ],
 };
 
 const url = 'http://127.0.0.1:4044/api/v1/category';
 
 function insert(levelOne, levelTwo) {
-  levelOne.forEach((data) => {
-    // format data
+    levelOne.forEach((data) => {
+        // format data
 
-    let postData = {
-      name: data,
+        const postData = {
+            name: data,
 
-      type: 'business-category',
-    };
+            type: 'business-category',
+        };
 
-    //post data
+        // post data
 
-    axios
+        axios
 
-      .post(url, postData)
+            .post(url, postData)
 
-      .then((res) => {
-        console.log('Level-one : ', res.data.newCategory._id);
+            .then((res) => {
+                console.log('Level-one : ', res.data.newCategory._id);
 
-        // insert level two
+                // insert level two
 
-        levelTwo[res.data.newCategory.name].forEach((element) => {
-          axios
+                levelTwo[res.data.newCategory.name].forEach((element) => {
+                    axios
 
-            .post(`${url}/${res.data.newCategory._id}`, {
-              name: element,
-            })
+                        .post(`${url}/${res.data.newCategory._id}`, {
+                            name: element,
+                        })
 
-            .then((response) => {
-              console.log(
-                'Level-two : ',
+                        .then((response) => {
+                            console.log(
+                                'Level-two : ',
 
-                response.data.newSubCategory._id,
+                                response.data.newSubCategory._id,
 
-                response.data.newSubCategory.name,
-              );
+                                response.data.newSubCategory.name,
+                            );
+                        })
+
+                        .catch((err) => {
+                            console.log('Level-two ERROR: ', err.message);
+                        });
+                });
             })
 
             .catch((err) => {
-              console.log('Level-two ERROR: ', err.message);
+                console.log('Level-one ERROR: ', err);
             });
-        });
-      })
-
-      .catch((err) => {
-        console.log('Level-one ERROR: ', err);
-      });
-  });
+    });
 }
 
 insert(levelOne, levelTwo);

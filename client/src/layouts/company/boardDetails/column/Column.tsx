@@ -35,6 +35,8 @@ interface ColumnProps {
 interface ColumnInternalProps extends ColumnProps {
   loading?: boolean;
   company?: ICompany;
+  optionalRole?: Array<string>;
+  projectRole?: string;
   createTask: (task: any) => void;
   currentBoard?: TaskBoard;
 }
@@ -89,7 +91,20 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 }
               />
               {props.company &&
-              projectPermit(props.company.role) === true ? (
+              (projectPermit(props.company.role) ||
+                (
+                    props.projectRole === "projectModerator" && 
+<<<<<<< HEAD
+<<<<<<< HEAD
+                    props.optionalRole!.includes("createUpdateBoard")
+=======
+                    props.optionalRole.includes("createUpdateBoard")
+>>>>>>> 380328e7... Feature/role access (#187)
+=======
+                    props.optionalRole!.includes("createUpdateBoard")
+>>>>>>> 6123380c... Wip/signup confirmation template (#163) (#188)
+                )
+              ) && (
                 <Popover
                   className="w-10"
                   content={
@@ -115,10 +130,23 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     />
                   }
                 />
-              ) : undefined}
+              ) }
             </div>
             {props.company &&
-            projectPermit(props.company.role) === true ? (
+            (projectPermit(props.company.role) ||
+              (
+                props.projectRole === "projectModerator" && 
+<<<<<<< HEAD
+<<<<<<< HEAD
+                props.optionalRole!.includes("createUpdateBoard")
+=======
+                props.optionalRole.includes("createUpdateBoard")
+>>>>>>> 380328e7... Feature/role access (#187)
+=======
+                props.optionalRole!.includes("createUpdateBoard")
+>>>>>>> 6123380c... Wip/signup confirmation template (#163) (#188)
+              )
+            ) && (
               <div
                 className="overflow-hidden ph2 pt2"
                 style={{
@@ -138,7 +166,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   onClick={() => setShowTaskInput(!showTaskInput)}
                 />
               </div>
-            ) : undefined}
+            )}
             <div>
               {showTaskInput && (
                 <div className="overflow-hidden">
@@ -294,6 +322,8 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
+    projectRole: state.projectReducer.projectRole.projects.role,
+    optionalRole: state.projectReducer.projectRole.projects.project.optionalRole,
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
   };
 };

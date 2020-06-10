@@ -1,368 +1,549 @@
-var elasticsearch = require('elasticsearch');
-const logger = require('../../config/winston');
+const elasticsearch = require('elasticsearch');
 const chalk = require('chalk');
-const { isEmpty } = require('lodash');
+const {isEmpty} = require('lodash');
+const logger = require('../../config/winston');
 require('dotenv').config();
 
 const accountIndex = 'accounts';
 const memberIndex = 'members';
 const skillIndex = 'skillareas';
 const companyIndex = 'companies';
+const associateIndex = 'associates';
 
 const elasticUrl =
-  process.env.ELASTIC_SEARCH_ADDRESS || 'http://localhost:9200';
+    process.env.ELASTIC_SEARCH_ADDRESS || 'http://localhost:9200';
 
 const esclient = new elasticsearch.Client({
-  host: elasticUrl,
-  auth: {
-    username: 'elastic',
-    password: 'changeme',
-  },
+    host: elasticUrl,
+    auth: {
+        username: 'elastic',
+        password: 'changeme',
+    },
 });
 
 async function checkConnection() {
-  try {
-    const health = await esclient.cluster.health({});
-    logger.info(
-      chalk.keyword(health.status)(
-        `ElasticSearch cluster health is ${health.status}`,
-      ),
-    );
-    return true;
-  } catch (error) {
-    logger.error(error);
-  }
+    try {
+        const health = await esclient.cluster.health({});
+        logger.info(
+            chalk.keyword(health.status)(
+                `ElasticSearch cluster health is ${health.status}`,
+            ),
+        );
+        return true;
+    } catch (error) {
+        logger.error(error);
+    }
 }
 
 async function createAccounts(index, mapping, model) {
-  try {
-    if (await esclient.indices.exists({ index })) {
-      await esclient.indices.delete({ index });
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
-      );
-    }
+    try {
+        if (await esclient.indices.exists({index})) {
+            await esclient.indices.delete({index});
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch existing index ${index} is deleted`,
+                ),
+            );
+        }
 
-    await esclient.indices.create({
-      index: index,
-      body: mapping,
-    });
-
-    const bulk = [];
-
-    const dataset = await model.find({});
-
-    if (!isEmpty(dataset)) {
-      dataset.forEach((data) => {
-        bulk.push({
-          index: { _index: index },
+        await esclient.indices.create({
+            index: index,
+            body: mapping,
         });
-        bulk.push({
-          mongo_id: data._id.toString(),
-          name: data.name,
-          email: data.email,
-          firstName: data.firstName,
-          lastName: data.lastName,
-        });
-      });
-      await esclient.bulk({ body: bulk });
 
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index} with bulk`,
-        ),
-      );
-    } else {
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
-      );
+        const bulk = [];
+
+        const dataset = await model.find({});
+
+        if (!isEmpty(dataset)) {
+            dataset.forEach((data) => {
+                bulk.push({
+                    index: {_index: index},
+                });
+                bulk.push({
+                    mongo_id: data._id.toString(),
+                    name: data.name,
+                    email: data.email,
+                    firstName: data.firstName,
+                    lastName: data.lastName,
+                });
+            });
+            await esclient.bulk({body: bulk});
+
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index} with bulk`,
+                ),
+            );
+        } else {
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index}`,
+                ),
+            );
+        }
+    } catch (error) {
+        logger.error(chalk.redBright(error));
     }
-  } catch (error) {
-    logger.error(chalk.redBright(error));
-  }
 }
 
 async function createMembers(index, mapping, model) {
-  try {
-    if (await esclient.indices.exists({ index })) {
-      await esclient.indices.delete({ index });
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
-      );
-    }
+    try {
+        if (await esclient.indices.exists({index})) {
+            await esclient.indices.delete({index});
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch existing index ${index} is deleted`,
+                ),
+            );
+        }
 
-    await esclient.indices.create({
-      index: index,
-      body: mapping,
-    });
-
-    const bulk = [];
-
-    const dataset = await model.find({}).populate({
-      path: 'account',
-      select: '_id email firstName lastName name profileImage',
-    });
-
-    if (!isEmpty(dataset)) {
-      dataset.forEach((data) => {
-        bulk.push({
-          index: { _index: index },
+        await esclient.indices.create({
+            index: index,
+            body: mapping,
         });
-        bulk.push({
-          mongo_id: data._id.toString(),
-          account: data.account,
-          company: data.company,
+
+        const bulk = [];
+
+        const dataset = await model.find({}).populate({
+            path: 'account',
+            select: '_id email firstName lastName name profileImage',
         });
-      });
 
-      await esclient.bulk({ body: bulk });
+        if (!isEmpty(dataset)) {
+            dataset.forEach((data) => {
+                bulk.push({
+                    index: {_index: index},
+                });
+                bulk.push({
+                    mongo_id: data._id.toString(),
+                    account: data.account,
+                    company: data.company,
+                });
+            });
 
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index} with bulk`,
-        ),
-      );
-    } else {
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
-      );
+            await esclient.bulk({body: bulk});
+
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index} with bulk`,
+                ),
+            );
+        } else {
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index}`,
+                ),
+            );
+        }
+    } catch (error) {
+        logger.error(chalk.redBright(error));
     }
-  } catch (error) {
-    logger.error(chalk.redBright(error));
-  }
 }
 
 async function createSkillareas(index, mapping, model) {
-  try {
-    if (await esclient.indices.exists({ index })) {
-      await esclient.indices.delete({ index });
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
-      );
-    }
+    try {
+        if (await esclient.indices.exists({index})) {
+            await esclient.indices.delete({index});
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch existing index ${index} is deleted`,
+                ),
+            );
+        }
 
-    await esclient.indices.create({
-      index: index,
-      body: mapping,
-    });
-
-    const bulk = [];
-
-    const dataset = await model.find({});
-
-    if (!isEmpty(dataset)) {
-      dataset.forEach((data) => {
-        bulk.push({
-          index: { _index: index },
+        await esclient.indices.create({
+            index: index,
+            body: mapping,
         });
-        bulk.push({
-          mongo_id: data._id.toString(),
-          name: data.name,
-          accountId: data.accountId,
-        });
-      });
 
-      await esclient.bulk({ body: bulk });
+        const bulk = [];
 
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index} with bulk`,
-        ),
-      );
-    } else {
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
-      );
+        const dataset = await model.find({});
+
+        if (!isEmpty(dataset)) {
+            dataset.forEach((data) => {
+                bulk.push({
+                    index: {_index: index},
+                });
+                bulk.push({
+                    mongo_id: data._id.toString(),
+                    name: data.name,
+                    accountId: data.accountId,
+                });
+            });
+
+            await esclient.bulk({body: bulk});
+
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index} with bulk`,
+                ),
+            );
+        } else {
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index}`,
+                ),
+            );
+        }
+    } catch (error) {
+        logger.error(chalk.redBright(error));
     }
-  } catch (error) {
-    logger.error(chalk.redBright(error));
-  }
 }
 
 async function createCompany(index, mapping, model) {
-  try {
-    if (await esclient.indices.exists({ index })) {
-      await esclient.indices.delete({ index });
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch existing index ${index} is deleted`,
-        ),
-      );
-    }
+    try {
+        if (await esclient.indices.exists({index})) {
+            await esclient.indices.delete({index});
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch existing index ${index} is deleted`,
+                ),
+            );
+        }
 
-    await esclient.indices.create({
-      index: index,
-      body: mapping,
-    });
-
-    const bulk = [];
-
-    const dataset = await model.find({});
-
-    if (!isEmpty(dataset)) {
-      dataset.forEach((data) => {
-        bulk.push({
-          index: { _index: index },
+        await esclient.indices.create({
+            index: index,
+            body: mapping,
         });
-        bulk.push({
-          mongo_id: data._id.toString(),
-          name: data.name,
-        });
-      });
 
-      await esclient.bulk({ body: bulk });
+        const bulk = [];
 
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index} with bulk`,
-        ),
-      );
-    } else {
-      logger.info(
-        chalk.blueBright(
-          `ElasticSearch successfully created index ${index}`,
-        ),
-      );
+        const dataset = await model.find({});
+
+        if (!isEmpty(dataset)) {
+            dataset.forEach((data) => {
+                bulk.push({
+                    index: {_index: index},
+                });
+                bulk.push({
+                    mongo_id: data._id.toString(),
+                    name: data.name,
+                });
+            });
+
+            await esclient.bulk({body: bulk});
+
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index} with bulk`,
+                ),
+            );
+        } else {
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index}`,
+                ),
+            );
+        }
+    } catch (error) {
+        logger.error(chalk.redBright(error));
     }
-  } catch (error) {
-    logger.error(chalk.redBright(error));
-  }
+}
+
+async function createAssociate(index, mapping, model) {
+    try {
+        if (await esclient.indices.exists({index})) {
+            await esclient.indices.delete({index});
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch existing index ${index} is deleted`,
+                ),
+            );
+        }
+
+        await esclient.indices.create({
+            index: index,
+            body: mapping,
+        });
+
+        const bulk = [];
+
+        const dataset = await model.find({}).populate({
+            path: 'company associateCompany',
+            select: '_id name',
+        });
+
+        if (!isEmpty(dataset)) {
+            dataset.forEach((data) => {
+                bulk.push({
+                    index: {_index: index},
+                });
+                bulk.push({
+                    mongo_id: data._id.toString(),
+                    company_id: data.company._id,
+                    associateCompany_id: data.associateCompany._id,
+                    companyName: data.company.name,
+                    associateCompanyName: data.associateCompany.name,
+                });
+            });
+            await esclient.bulk({body: bulk});
+
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index} with bulk`,
+                ),
+            );
+        } else {
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index}`,
+                ),
+            );
+        }
+    } catch (error) {
+        logger.error(chalk.redBright(error));
+    }
+}
+
+async function createAssociate(index, mapping, model) {
+    try {
+        if (await esclient.indices.exists({index})) {
+            await esclient.indices.delete({index});
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch existing index ${index} is deleted`,
+                ),
+            );
+        }
+
+        await esclient.indices.create({
+            index: index,
+            body: mapping,
+        });
+
+        const bulk = [];
+
+        const dataset = await model.find({}).populate({
+            path: 'company associateCompany',
+            select: '_id name',
+        });
+
+        if (!isEmpty(dataset)) {
+            dataset.forEach((data) => {
+                bulk.push({
+                    index: {_index: index},
+                });
+                bulk.push({
+                    mongo_id: data._id.toString(),
+                    company_id: data.company._id,
+                    associateCompany_id: data.associateCompany._id,
+                    companyName: data.company.name,
+                    associateCompanyName: data.associateCompany.name,
+                });
+            });
+            await esclient.bulk({body: bulk});
+
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index} with bulk`,
+                ),
+            );
+        } else {
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index}`,
+                ),
+            );
+        }
+    } catch (error) {
+        logger.error(chalk.redBright(error));
+    }
+}
+
+async function createAssociate(index, mapping, model) {
+    try {
+        if (await esclient.indices.exists({index})) {
+            await esclient.indices.delete({index});
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch existing index ${index} is deleted`,
+                ),
+            );
+        }
+
+        await esclient.indices.create({
+            index: index,
+            body: mapping,
+        });
+
+        const bulk = [];
+
+        const dataset = await model.find({}).populate({
+            path: 'company associateCompany',
+            select: '_id name',
+        });
+
+        if (!isEmpty(dataset)) {
+            dataset.forEach((data) => {
+                bulk.push({
+                    index: {_index: index},
+                });
+                bulk.push({
+                    mongo_id: data._id.toString(),
+                    company_id: data.company._id,
+                    associateCompany_id: data.associateCompany._id,
+                    companyName: data.company.name,
+                    associateCompanyName: data.associateCompany.name,
+                });
+            });
+            await esclient.bulk({body: bulk});
+
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index} with bulk`,
+                ),
+            );
+        } else {
+            logger.info(
+                chalk.blueBright(
+                    `ElasticSearch successfully created index ${index}`,
+                ),
+            );
+        }
+    } catch (error) {
+        logger.error(chalk.redBright(error));
+    }
 }
 
 function setDocument(indexName, indexType, document) {
-  return esclient.index({
-    index: indexName,
-    type: indexType,
-    body: document,
-    refresh: 'true',
-  });
+    return esclient.index({
+        index: indexName,
+        type: indexType,
+        body: document,
+        refresh: 'true',
+    });
 }
 
 function search(indexName, indexType, body) {
-  return esclient.search({
-    index: indexName,
-    type: indexType,
-    body,
-  });
+    return esclient.search({
+        index: indexName,
+        type: indexType,
+        body,
+    });
 }
 
 function bulkInsert(indexName, dataset, structure) {
-  let bulk = [];
-  dataset.forEach((data) => {
-    bulk.push({
-      index: { _index: indexName },
+    const bulk = [];
+    dataset.forEach((data) => {
+        bulk.push({
+            index: {_index: indexName},
+        });
+        bulk.push(structure(data));
     });
-    bulk.push(structure(data));
-  });
-  return esclient.bulk({ body: bulk });
+    return esclient.bulk({body: bulk});
 }
 
 function deleteDocument(indexName, indexType, body) {
-  return esclient.deleteByQuery({
-    index: indexName,
-    type: indexType,
-    body: body,
-  });
+    return esclient.deleteByQuery({
+        index: indexName,
+        type: indexType,
+        body: body,
+    });
 }
 
-const memberMapping = {
-  mappings: {
-    properties: {
-      mongo_id: { type: 'text' },
-      account: { type: 'nested', include_in_parent: true },
-      company: { type: 'text' },
+const associateMapping = {
+    mappings: {
+        properties: {
+            mongo_id: {type: 'text'},
+            company_id: {type: 'text'},
+            companyName: {type: 'text'},
+            associateCompany_id: {type: 'text'},
+            associateCompanyName: {type: 'text'},
+        },
     },
-  },
+};
+
+const memberMapping = {
+    mappings: {
+        properties: {
+            mongo_id: {type: 'text'},
+            account: {type: 'nested', include_in_parent: true},
+            company: {type: 'text'},
+        },
+    },
 };
 
 const messageMapping = {
-  mappings: {
-    properties: {
-      mongo_id: { type: 'text' },
-      room: { type: 'text' },
-      account: { type: 'text' },
-      chatkitId: { type: 'text' },
-      text: { type: 'text' },
-      files: { type: 'nested', include_in_parent: true },
-      type: { type: 'text' },
+    mappings: {
+        properties: {
+            mongo_id: {type: 'text'},
+            room: {type: 'text'},
+            account: {type: 'text'},
+            chatkitId: {type: 'text'},
+            text: {type: 'text'},
+            files: {type: 'nested', include_in_parent: true},
+            type: {type: 'text'},
+        },
     },
-  },
 };
 
 const accountMapping = {
-  settings: {
-    analysis: {
-      analyzer: {
-        my_email_analyzer: {
-          type: 'custom',
-          tokenizer: 'uax_url_email',
-          filter: ['lowercase', 'stop'],
+    settings: {
+        analysis: {
+            analyzer: {
+                my_email_analyzer: {
+                    type: 'custom',
+                    tokenizer: 'uax_url_email',
+                    filter: ['lowercase', 'stop'],
+                },
+            },
         },
-      },
     },
-  },
-  mappings: {
-    properties: {
-      mongo_id: { type: 'text' },
-      name: { type: 'text' },
-      email: { type: 'text', analyzer: 'my_email_analyzer' },
-      firstName: { type: 'text' },
-      lastName: { type: 'text' },
+    mappings: {
+        properties: {
+            mongo_id: {type: 'text'},
+            name: {type: 'text'},
+            email: {type: 'text', analyzer: 'my_email_analyzer'},
+            firstName: {type: 'text'},
+            lastName: {type: 'text'},
+        },
     },
-  },
 };
 
 const skillMapping = {
-  mappings: {
-    properties: {
-      mongo_id: { type: 'text' },
-      name: { type: 'text' },
-      accountId: { type: 'text' },
+    mappings: {
+        properties: {
+            mongo_id: {type: 'text'},
+            name: {type: 'text'},
+            accountId: {type: 'text'},
+        },
     },
-  },
 };
 
 const companyMappnig = {
-  mappings: {
-    properties: {
-      mongo_id: { type: 'text' },
-      name: { type: 'text' },
+    mappings: {
+        properties: {
+            mongo_id: {type: 'text'},
+            name: {type: 'text'},
+        },
     },
-  },
 };
 
 module.exports = {
-  esclient,
-  checkConnection,
-  createAccounts,
-  createMembers,
-  accountIndex,
-  memberIndex,
-  accountMapping,
-  memberMapping,
-  messageMapping,
-  skillMapping,
-  setDocument,
-  search,
-  bulkInsert,
-  deleteDocument,
-  skillIndex,
-  companyIndex,
-  createSkillareas,
-  createCompany,
-  companyMappnig,
+    esclient,
+    checkConnection,
+    createAccounts,
+    createMembers,
+    accountIndex,
+    memberIndex,
+    accountMapping,
+    memberMapping,
+    messageMapping,
+    skillMapping,
+    setDocument,
+    search,
+    bulkInsert,
+    deleteDocument,
+    skillIndex,
+    companyIndex,
+    createSkillareas,
+    createCompany,
+    companyMappnig,
+    associateMapping,
+    associateIndex,
+    createAssociate,
 };
 
 // function createMessages(index,model,mapping, structure){

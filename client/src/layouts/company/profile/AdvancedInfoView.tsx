@@ -10,6 +10,7 @@ import { CertificateEdit } from './CertificateEditor';
 import { OrganizationEdit } from './ParentOrganizationEditor';
 import { ICompany } from 'stores/company/Reducer';
 import { getAllProduct } from 'stores/company/Actions';
+import { companyPermit } from 'stores/UtilsActions';
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
@@ -43,12 +44,16 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         <div>
           <div className="flex justify-between">
             <h1 className="f5">Products/Services</h1>
-            <img
+            {
+              companyPermit(props.company!.role) && (
+                <img
               src={addIcon}
               width="38"
               className="br2 pointer fr mv1"
               onClick={() => setShowProductDialog(true)}
             />
+              )
+            }  
           </div>
           <Divider />
           {props.company &&
@@ -66,12 +71,18 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         <div className="mt4">
           <div className="flex justify-between">
             <h1 className="f5">Certificates</h1>
-            <img
+            {
+              companyPermit(props.company!.role) && (
+                <img
               src={addIcon}
               width="38"
               className="br2 pointer fr mv1"
               onClick={() => setShowCertificateDialog(true)}
             />
+
+              )
+            }
+            
           </div>
           <Divider />
           {props.company &&
@@ -104,12 +115,18 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         <div className="mt4">
           <div className="flex justify-between">
             <h1 className="f5">Member of Parent Organizations</h1>
-            <img
+            {
+              companyPermit(props.company!.role) && (
+                <img
               src={addIcon}
               width="38"
               className="br2 pointer fr mv1"
               onClick={() => setShowOrganizationDialog(true)}
             />
+
+              )
+            }
+            
           </div>
           <Divider />
           <div className="outline-0">

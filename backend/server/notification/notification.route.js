@@ -1,14 +1,14 @@
 const express = require('express');
+
 const router = express.Router();
 
 const notificationCtrl = require('./notification.controller');
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
-
-
+const {authorization} = require('../middlewares/authorizationMiddleware');
 
 router.route('/:companyId').get(authorization, notificationCtrl.list);
+router.route('/webpush').post(authorization, notificationCtrl.userTokenFCM);
+
+router.route('/webpush').post(authorization, notificationCtrl.userTokenFCM);
 
 // router
 // .route('/test/:companyId')
@@ -18,8 +18,8 @@ router.route('/:companyId').get(authorization, notificationCtrl.list);
 // );
 
 router
-  .route('/read/:userNotificationId')
-  .get(authorization, notificationCtrl.read);
+    .route('/read/:userNotificationId')
+    .get(authorization, notificationCtrl.read);
 
 router.route('/seen/:companyId').get(authorization, notificationCtrl.seen);
 

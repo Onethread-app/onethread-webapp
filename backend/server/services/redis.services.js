@@ -1,16 +1,17 @@
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
+
 module.exports.addTokenToBlackList = async (token, tokenExpire) => {
-  await client.set(`BlackList:${token}`, token, 'PX', tokenExpire);
-  logger.info(`access and refresh token add to blacklist`);
+    await client.set(`BlackList:${token}`, token, 'PX', tokenExpire);
+    logger.info('access and refresh token add to blacklist');
 };
 module.exports.accountVerificationToken = async (
-  token,
-  userID,
-  tokenExpire,
+    token,
+    userID,
+    tokenExpire,
 ) => {
-  await client.set(token, JSON.stringify(userID), 'PX', tokenExpire);
-  logger.info(`token add into token verification key`);
+    await client.set(token, JSON.stringify(userID), 'PX', tokenExpire);
+    logger.info('token add into token verification key');
 };
 
 // module.exports.addImageDataIntoCache = async (

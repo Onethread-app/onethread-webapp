@@ -19,7 +19,16 @@ export interface IProject {
 export interface IPendingProject {
   _id: string;
   project: IProject;
+<<<<<<< HEAD
+<<<<<<< HEAD
+  size: string;
+=======
+>>>>>>> 9bf420fb... Release/v2.2.0 (#181)
+=======
+  size: string;
+>>>>>>> 380328e7... Feature/role access (#187)
   company: ICompany;
+  associate: string;
 }
 
 export interface ProjectModel {
@@ -63,7 +72,7 @@ const initialState = {
     outline: '',
   },
   teams: [],
-  associates: [],
+  projectAssociates: [],
   pid: '',
   projectRole: {},
   projectFileOpen: false,
@@ -116,7 +125,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case PROJECT.PROJECT_GET_ASSOCIATES:
       return {
         ...state,
-        associates: action.payload,
+        projectAssociates: action.payload,
       };
     case PROJECT.PROJECT_GET_ROLES:
       return {

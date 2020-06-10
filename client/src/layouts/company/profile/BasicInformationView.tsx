@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { CompanyInfoForm } from './BasicInformationEditor';
 import { companyLogoUploadAction } from 'stores/company/Actions';
 import addIcon from './../../../resources/images/addIcon.png';
+import { companyPermit } from 'stores/UtilsActions';
 
 const BasicInfoDetailsViewComponent = (props: any) => {
   const [showDialog, setShowDialog] = useState(false);
@@ -41,7 +42,9 @@ const BasicInfoDetailsViewComponent = (props: any) => {
           </div>
         </div>
         <div>
-          <img
+          {
+            companyPermit(props.company.role) && (
+              <img
             className="fixed pointer addButton"
             style={{
               boxShadow: '0px 6px 6px #00000029',
@@ -50,6 +53,9 @@ const BasicInfoDetailsViewComponent = (props: any) => {
             onClick={() => setShowDialog(true)}
             src={addIcon}
           />
+            )
+          }
+          
         </div>
       </div>
       {showDialog && (

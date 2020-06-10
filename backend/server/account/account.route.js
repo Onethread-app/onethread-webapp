@@ -1,63 +1,55 @@
 const express = require('express');
 const passportService = require('../services/passport.services');
 const paramValidation = require('./account.validation');
+
 const router = express.Router();
 
 const accountCtrl = require('./account.controller');
 const schemaValidator = require('../helpers/joiSchemaValidator');
-const {
-  authorization,
-} = require('../middlewares/authorizationMiddleware');
-const {
-  authentication,
-} = require('../middlewares/authenticationMiddleware');
+const {authorization} = require('../middlewares/authorizationMiddleware');
+const {authentication} = require('../middlewares/authenticationMiddleware');
 // authentication
 router
-  .route('/signup')
-  .post(
-    schemaValidator(paramValidation.register),
-    accountCtrl.register,
-  );
+    .route('/signup')
+    .post(schemaValidator(paramValidation.register), accountCtrl.register);
 router.route('/resend-email').post(accountCtrl.resendEmail);
 router.get(
-  '/verify-account/:token',
-  accountCtrl.getAccessTokenForVerifyAccount,
+    '/verify-account/:token',
+    accountCtrl.getAccessTokenForVerifyAccount,
 );
 router
-  .route('/login')
-  .post(
-    authentication,
-    schemaValidator(paramValidation.login),
-    accountCtrl.login,
-  );
+    .route('/login')
+    .post(
+        authentication,
+        schemaValidator(paramValidation.login),
+        accountCtrl.login,
+    );
 
 router.route('/').get(authorization, accountCtrl.getAccount);
 router.route('/skill-area').get(authorization, accountCtrl.skillArea);
 router.route('/timeline').get(authorization, accountCtrl.timeline);
 router
-  .route('/update')
-  .put(
-    authorization,
-    schemaValidator(paramValidation.update),
-    accountCtrl.accountUpdate,
-  );
+    .route('/update')
+    .put(
+        authorization,
+        schemaValidator(paramValidation.update),
+        accountCtrl.accountUpdate,
+    );
 router.route('/logout').post(authorization, accountCtrl.logout);
+router.route('/forget-password').post(accountCtrl.sendEmailForForgetPassword);
 router
-  .route('/forget-password')
-  .post(accountCtrl.sendEmailForForgetPassword);
+    .route('/reset-password/')
+    .put(
+        schemaValidator(paramValidation.resetPassword),
+        accountCtrl.resetPassword,
+    );
 router
-  .route('/reset-password/')
-  .put(
-    schemaValidator(paramValidation.resetPassword),
-    accountCtrl.resetPassword,
-  );
-router
-  .route('/change-password')
-  .put(
-    authorization,
-    schemaValidator(paramValidation.changePassword),
-    accountCtrl.changePassword,
-  );
+    .route('/change-password')
+    .put(
+        authorization,
+        schemaValidator(paramValidation.changePassword),
+        accountCtrl.changePassword,
+    );
 router.route('/refresh').post(accountCtrl.tokenRefresh);
 // for admin
 // router

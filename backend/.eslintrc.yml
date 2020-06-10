@@ -1,0 +1,89 @@
+env:
+  browser: true
+  commonjs: true
+  es6: true
+extends: ['eslint:recommended', 'airbnb', 'prettier']
+plugins:
+  - prettier
+globals:
+  Atomics: readonly
+  SharedArrayBuffer: readonly
+parserOptions:
+  ecmaVersion: 2018
+rules:
+  indent:
+    - error
+    - tab
+  linebreak-style:
+    - error
+    - unix
+  quotes:
+    - error
+    - single
+  semi:
+    - error
+    - always
+  no-console:
+    - off
+  no-unused-vars:
+    - warn
+  no-shadow:
+    - warn
+  consistent-return:
+    - warn
+  no-useless-escape:
+    - warn
+  no-undef:
+    - warn
+  no-await-in-loop:
+    - warn
+  no-param-reassign:
+    - warn
+  no-nested-ternary:
+    - warn
+  import/order:
+    - warn
+  no-restricted-syntax:
+    - warn
+  max-classes-per-file:
+    - warn
+  no-prototype-builtins:
+    - warn
+  no-multi-assign:
+    - warn
+  eqeqeq:
+    - warn
+  new-cap:
+    - warn
+  no-global-assign:
+    - warn
+  no-dupe-keys:
+    - warn 
+  promise/always-return:
+    - off
+    - always
+  promise/no-return-wrap:
+    - off
+    - always
+  promise/catch-or-return:
+    - off
+    - always
+  promise/no-native:
+    - off
+    - always
+  promise/no-nesting:
+    - off
+    - always
+  promise/no-return-in-finally:
+    - off
+    - always
+  object-shorthand:
+    - off
+    - always
+  no-underscore-dangle:
+    - off
+  accessor-pairs:
+    - error
+
+
+  

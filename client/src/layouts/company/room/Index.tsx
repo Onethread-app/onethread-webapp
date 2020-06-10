@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Icon, Drawer, Button } from '@blueprintjs/core';
+import { Icon, Drawer } from '@blueprintjs/core';
 import { RoomSideBar } from 'layouts/company/room/leftSidebar/Index';
 import { ChatLayout } from 'layouts/company/room/chatLayout/Index';
 import { connect, useDispatch } from 'react-redux';
@@ -14,6 +14,11 @@ import {
   getRoomDiscussions,
   updateLastSeen,
 } from 'stores/room/Actions';
+import { 
+  getSingleProject,
+  setCurrentProjectId,
+  getRoleForProject,
+} from '../../../stores/project/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import Pusher from 'pusher-js';
 import {
@@ -54,6 +59,9 @@ interface RoomPageComponentProps extends RouteComponentProps {
   ) => void;
   pusherInstance: Pusher | undefined;
   setShowDialog?: (val: boolean) => void;
+  getSingleProject: (pid: string) => void;
+  setCurrentProjectId: (pid: string) => void;
+  getRoleForProject: (pid: string) => void;
 }
 
 const RoomPageComponent = (props: RoomPageComponentProps) => {
@@ -68,6 +76,13 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
   const load = async (_getRooms: any) => {
     await _getRooms();
   };
+
+  if(isEmpty(props.projectId)){
+    const { projectId } = (props.match.params as any);
+    props.getSingleProject(projectId);
+    props.setCurrentProjectId(projectId);
+    props.getRoleForProject(projectId);
+  }
 
   const roomSwitch = async (roomId: string) => {
     const currentRoom = props.rooms.filter((room) =>
@@ -159,27 +174,44 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             )}
           </CustomView>
           <MobileView>
-            <Button
-              className="absolute top-0 bp3-minimal outline-0 shadow-0 underline"
+            <Icon
+              className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left-0 pointer"
+              icon='arrow-left'
+              iconSize={17}
               onClick={() => {
                 // tslint:disable-next-line: no-unused-expression
                 props.setShowDialog && props.setShowDialog(false);
                 props.history.push(
+<<<<<<< HEAD
+<<<<<<< HEAD
+                  `/company/${props.companyName}/project/${props.projectId}/room?view=${queries.view}`,
+=======
                   `/company/${props.companyName}/project/${props.projectId}/room`,
+>>>>>>> 9bf420fb... Release/v2.2.0 (#181)
+=======
+                  `/company/${props.companyName}/project/${props.projectId}/room?view=${queries.view}`,
+>>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
                 );
               }}
-            >
-              Back
-            </Button>
+            />
           </MobileView>
           {isEmpty(props.currentRoom.name) === false &&
-            isEmpty(props.currentRoom._id) === false &&
-            queries.view === 'default' && (
+            isEmpty(props.currentRoom._id) === false && (
               <Icon
+<<<<<<< HEAD
+<<<<<<< HEAD
+                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
+                icon='arrow-right'
+=======
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right--12 pointer"
                 icon={
                   isOpenRightSidebar ? 'arrow-right' : 'arrow-left'
                 }
+>>>>>>> 9bf420fb... Release/v2.2.0 (#181)
+=======
+                className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
+                icon='arrow-right'
+>>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
                 iconSize={17}
                 onClick={() => {
                   setIsOpenRightSidebar(!isOpenRightSidebar);
@@ -190,17 +222,32 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
           <ChatLayout />
         </div>
         {isEmpty(props.currentRoom.name) === false &&
-          isEmpty(props.currentRoom._id) === false &&
-          queries.view === 'default' && (
+          isEmpty(props.currentRoom._id) === false && (
             <div
               className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
               style={{
                 borderBottomRightRadius: '0.5rem',
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
+                width: isOpenRightSidebar 
+                  ? isMobileOnly 
+                    ? '0px' 
+                    : '400px' 
+                  : isMobileOnly 
+                    ? '0px' 
+                    : '16px',
+<<<<<<< HEAD
+=======
                 width: isOpenRightSidebar
                   ? isMobileOnly
                     ? '16px'
                     : '400px'
                   : '16px',
+>>>>>>> 9bf420fb... Release/v2.2.0 (#181)
+=======
+>>>>>>> 2e223ec5... Auto Login & Webview for app (#191)
               }}
             >
               {isMobileOnly ? (
@@ -243,4 +290,7 @@ export const RoomPage = connect(mapStateToProps, {
   getRoomSharedFiles,
   getRoomDiscussions,
   updateLastSeen,
+  getSingleProject,
+  setCurrentProjectId,
+  getRoleForProject,
 })(withRouter(RoomPageComponent));
