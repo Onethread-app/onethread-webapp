@@ -519,6 +519,9 @@ const showAllProjectsForCompany = async (req, res, next) => {
     let memberExistInProject = await Team.find({
       $and: [{ account: req.user._id }, { removed: false }],
     }).populate('project', '_id');
+    // let memberExistInProject = await Team.find({
+    //   $and: [{ account: req.user._id }, { removed: false }],
+    // }).populate('project', '_id');
 
     acceptedProject = acceptedProject.map((data) => {
       return data.project._id;
