@@ -61,3 +61,5 @@ rules:
     - warn
   no-dupe-keys:
     - warn
+  comma-dangle:
+    - warn
