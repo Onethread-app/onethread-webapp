@@ -464,12 +464,12 @@ const showAllProjectsForCompany = async (req, res, next) => {
     let companyId = req.params.companyId;
     let associateId = await Associate.find({
       $or: [
-        {
-          company: { $in: { _id: companyId } },
-          associateCompany: { $in: { _id: companyId } },
-        },
-        { isAccepted: true, isRejected: false },
+        { company: req.params.companyId },
+        { associateCompany: req.params.companyId },
       ],
+      isAccepted: true,
+      removed: false,
+      isRejected: false,
     }).select('_id');
     associateId = associateId.map((data) => {
       return data._id;
