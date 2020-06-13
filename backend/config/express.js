@@ -82,6 +82,13 @@ if (
   );
 }
 
+app.get('/', (req, res) => {
+  res.send({
+    version: '2.3.0',
+    android_app_link:
+      'https://play.google.com/store/apps/details?id=co.tigrow.tigrow_app',
+  });
+});
 // mount all routes on /api path
 
 app.use('/api/v1', routes); // v1.0
