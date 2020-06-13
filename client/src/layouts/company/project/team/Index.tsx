@@ -63,9 +63,13 @@ interface TeamMember {
   ) => void;
   project: any;
 <<<<<<< HEAD
+<<<<<<< HEAD
   projectList: Array<{ _id: string; company: string }>;
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+  projectList: Array<{_id: string, company: string}>;
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
 }
 
 const load = async (_getProjectTeams: () => void) => {
@@ -105,7 +109,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
 
   useEffect(() => {
     load(props.getProjectTeams);
-  }, []);
+  }, );
 
   useEffect(() => {
     if (props.teams.length) {
@@ -263,6 +267,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               Add Team Members
             </Button>
 <<<<<<< HEAD
+<<<<<<< HEAD
             {props.projectList &&
               props.projectList.map((project) =>
                 props.project._id === project._id ? (
@@ -287,6 +292,12 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               )}
 =======
             <Button
+=======
+            { props.projectList && props.projectList.map((project) => (
+              props.project._id === project._id ?
+              project.company === props.company._id ?
+              <Button
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
               className="grow fr h2 pointer white bp3-minimal mr2"
               style={{
                 background: 'none',
@@ -300,8 +311,12 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               }
             >
               Add Associates
+<<<<<<< HEAD
             </Button>
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+            </Button> : undefined : undefined))}
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
           </div>
         </div>
 =======
@@ -681,7 +696,6 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     teams: state.projectReducer.teams,
-    associates: state.projectReducer.associates,
     projectRole:
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.role,
@@ -689,9 +703,13 @@ const mapStateToProps = (state: any) => {
     project: state.projectReducer.projectDetails,
     company: state.companyReducer.currentCompany,
 <<<<<<< HEAD
+<<<<<<< HEAD
     projectList: state.projectReducer.allProjects,
 =======
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+    projectList: state.projectReducer.allProjects
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
   };
 };
 

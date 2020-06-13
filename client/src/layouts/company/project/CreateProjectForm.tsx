@@ -54,22 +54,12 @@ const FormComponent = (props: {
   );
   const [search, setSearch] = useState('');
 
-<<<<<<< HEAD
   const onSubmit = async (values: IProject) => {
     if (values.department ? values.department.length > 1 : undefined) {
       values.projectType = 'md';
     }
 
     await props.createProjectInCompany(values);
-=======
-  const onSubmit = async (values: any) => {
-
-    if (values.department ? values.department.length > 1 : undefined) {
-      values.projectType = 'md';
-    }
-
-    await props.createProject(values, selectedAdmins);
->>>>>>> e5e8ab62... Feature/role access (#187)
     if (props.setShowProjectDialog) {
       props.setShowProjectDialog(false);
     }
@@ -84,7 +74,7 @@ const FormComponent = (props: {
       }?name=${search}`,
       headers,
     );
-    
+
     return response.data.data.map((e: any) => {
       return {
         ...e._source.account,
@@ -102,8 +92,6 @@ const FormComponent = (props: {
       headers,
     );
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     const asso = response.data.data.map((e: any) =>
       isEqual(props.company._id, e._source.company_id) === true ?
         {
@@ -115,24 +103,6 @@ const FormComponent = (props: {
           _id: e._source.mongo_id,
           name: e._source.companyName
         }
-=======
-=======
->>>>>>> 6d92f22e... Dev (#202)
-    const asso = response.data.data.map((e: any) => 
-      isEqual(props.company._id, e._source.company_id ) === true ?
-      {
-        _id: e._source.mongo_id,
-        name: e._source.associateCompanyName
-      }
-      :
-      {
-        _id: e._source.mongo_id,
-        name: e._source.companyName
-      }
-<<<<<<< HEAD
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
     );
     return asso;
   };
@@ -182,8 +152,6 @@ const FormComponent = (props: {
                       <InputGroupFieldWithLabel
                         id="name"
                         value={input.value}
-<<<<<<< HEAD
-<<<<<<< HEAD
                         onChange={input.onChange}
                         style={{
                           boxShadow: 'none',
@@ -278,7 +246,6 @@ const FormComponent = (props: {
                               ))}
                             </div>
                           </div>
-<<<<<<< HEAD
                         )}
                       </div>
                     )}
@@ -302,188 +269,11 @@ const FormComponent = (props: {
                             { _id: 'sd', name: 'Department' }
                           ]}
                           onChange={input.onChange}
-=======
-                        </div>
-                      )}
-                    </div>
-                  )}
-                />
-              </div>
-              <div className="flex flex-column">
-                <Field<string>
-                  name="projectType"
-                  validate={required}
-                  render={({ input, meta }) => (
-                    <div
-                      className={` ${
-                        checkError(meta) ? 'mb2' : 'mb3'
-                      }`}
-                    >
-                      <DropdownFieldErrorWithLabel
-                        id={input.name}
-                        selectedValue={input.value}
-                        options={[
-                          { _id: 'associates', name: 'Associates' },
-                          { _id: 'sd', name: 'Department' }
-                        ]}
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
-                        onChange={input.onChange}
-                        style={{
-                          boxShadow: 'none',
-                          fontSize: '18px',
-                        }}
-                        error={
-                          checkError(meta) &&
-                          (meta.error || meta.submitError)
-                        }
-                        label="Project Name*"
-                      />
-                    </div>
-                  )}
-                />
-                <div>
-                  <Field<string>
-                    name="admin"
-                    validate={required}
-                    render={({ input, meta }) => (
-                      <div
-                        className={` ${
-                          checkError(meta) ? 'mb2' : 'mb3'
-                          }`}
-                      >
-                        <div className="w-100 pb2">
-                          <div className="mb1">
-                            <p
-                              className="fw5"
-                              style={{ fontSize: '.8rem' }}
-                            >
-                              Concerned Admin
-                          </p>
-                          </div>
-                          <SuggestFieldWithError
-                            onChange={(query: string) => {
-                              setSearch(query);
-                            }}
-                            items={admins}
-                            selectedItems={selectedAdmins}
-                            setSelectedItems={(item) => {
-                              input.onChange(item);
-                              setSelectedAdmins(item);
-                            }}
-                            multipleItemSelect={false}
-                            error={
-                              checkError(meta) &&
-                              (meta.error || meta.submitError)
-                            }
-                          />
-                        </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                        <SuggestFieldWithError
-                          onChange={(query: string) => {
-                            // setSearch(query);
-                          }}
-                          items={props.departments}
-                          selectedItems={selectedDepartment}
-                          setSelectedItems={(item) => {
-                            // input.onChange(item);
-                            setSelectedDepartment(item);
-                            input.onChange(
-                              item.map((dept: any) => dept._id),
-                            );
-                          }}
-                          multipleItemSelect={true}
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
-=======
->>>>>>> 6d92f22e... Dev (#202)
-                        {selectedAdmins.length > 0 && (
-                          <div className="w-100">
-                            <div
-                              className="overflow-auto br2"
-                              style={{
-                                border: '1px solid #707070',
-                                maxHeight: '120px',
-                                background: '#707070',
-                              }}
-                            >
-                              {selectedAdmins.map((item) => (
-                                <div>
-                                  <Tag
-                                    key={item._id}
-                                    className="pa1 ma1"
-                                    interactive={true}
-                                    style={{ background: '#0fa3a3' }}
-                                    onRemove={(e) => {
-                                      const filteredItems = selectedAdmins.filter(
-                                        (selectedItem) =>
-                                          item.name !==
-                                          selectedItem.name,
-                                      );
-                                      setSelectedAdmins([
-                                        ...filteredItems,
-                                      ]);
-                                      input.onChange(
-                                        isEmpty(filteredItems)
-                                          ? undefined
-                                          : filteredItems.map(
-                                            (admin: Entity) =>
-                                              admin._id,
-                                          ),
-                                      );
-                                    }}
-                                    large={true}
-                                    intent="primary"
-                                  >
-                                    {item.name}
-                                  </Tag>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  />
-                </div>
-                <div className="flex flex-column">
-                  <Field<string>
-                    name="projectType"
-                    validate={required}
-                    render={({ input, meta }) => (
-                      <div
-                        className={` ${
-                          checkError(meta) ? 'mb2' : 'mb3'
-                          }`}
-                      >
-                        <DropdownFieldErrorWithLabel
-                          id={input.name}
-                          selectedValue={input.value}
-                          options={[
-                            { _id: 'associates', name: 'Associates' },
-                            { _id: 'sd', name: 'Department' }
-                          ]}
-                          onChange={input.onChange}
-<<<<<<< HEAD
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
                           error={
                             checkError(meta) &&
                             (meta.error || meta.submitError)
                           }
-<<<<<<< HEAD
-<<<<<<< HEAD
                           label="Project Type*"
-=======
-                          label="ProjectType"
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-                          label="ProjectType"
->>>>>>> 6d92f22e... Dev (#202)
                           className="bn"
                         />
                       </div>
@@ -492,15 +282,7 @@ const FormComponent = (props: {
                 </div>
 
                 <Condition
-<<<<<<< HEAD
-<<<<<<< HEAD
                   when="type"
-=======
-                  when="projectType"
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-                  when="projectType"
->>>>>>> 6d92f22e... Dev (#202)
                   validate={(value) => {
                     return ['sd'].includes(value);
                   }}
@@ -526,22 +308,6 @@ const FormComponent = (props: {
                           <SuggestFieldWithError
                             onChange={(query: string) => {
                               // setSearch(query);
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 6d92f22e... Dev (#202)
-                            }}
-                            items={props.departments}
-                            selectedItems={selectedDepartment}
-                            setSelectedItems={(item) => {
-                              // input.onChange(item);
-                              setSelectedDepartment(item);
-                              input.onChange(
-                                item.map((dept: any) => dept._id),
-                              );
-<<<<<<< HEAD
-                            }}
-=======
                             }}
                             items={props.departments}
                             selectedItems={selectedDepartment}
@@ -552,10 +318,6 @@ const FormComponent = (props: {
                                 item.map((dept: any) => dept._id),
                               );
                             }}
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-                            }}
->>>>>>> 6d92f22e... Dev (#202)
                             multipleItemSelect={true}
                             error={
                               checkError(meta) &&
@@ -606,17 +368,11 @@ const FormComponent = (props: {
                                 </div>
                               ))}
                             </div>
-<<<<<<< HEAD
                           </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
                         )}
                       </div>
                     )}
                   />
-<<<<<<< HEAD
                 </Condition>
 
                 <Condition
@@ -751,7 +507,6 @@ const FormComponent = (props: {
                     </div>
                   )}
                 />
-<<<<<<< HEAD
                 <div className="flex justify-end mt4">
                   <Button
                     className="w4 grow h2 pointer mr3"
@@ -759,41 +514,6 @@ const FormComponent = (props: {
                       background: 'white',
                       outline: 'none',
                       color: 'black',
-=======
-                        </div>
-                      )}
-                    </div>
-                  )}
-                />
-=======
->>>>>>> 380328e7... Feature/role access (#187)
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  />
->>>>>>> 6d92f22e... Dev (#202)
-                </Condition>
-
-                <Condition
-                  when="projectType"
-                  validate={(value) => {
-                    return ['associates'].includes(value);
-                  }}
-                >
-                  <div>
-                    <p className="fw5" style={{ fontSize: '.8rem' }}>
-                      Select Your Associate Companies
-                  </p>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                  <SuggestFieldWithError
-                    onChange={(query: string) => {
-                      setSearch(query);
->>>>>>> e5e8ab62... Feature/role access (#187)
                     }}
                     onClick={(e: any) => {
                       e.preventDefault();
@@ -813,167 +533,6 @@ const FormComponent = (props: {
                     disabled={submitting || pristine}
                     text="Create"
                   />
-<<<<<<< HEAD
-=======
-                  <FieldArray name="associates">
-                    {({ fields }) =>
-                      fields.map((name, index) => (
-                        <div className="flex justify-between mt1">
-                          <div style={{ marginRight: '2px' }}>
-                            {fields.value[index].name}
-                          </div>
-                          <div>
-                            <Field<string>
-                              name={`${name}.size`}
-                              component="select"
-                              placeholder="size"
-                              validate={required}
-                            >
-                              <option>select team size</option>
-                              <option value="5">1-5</option>
-                              <option value="10">6-10</option>
-                              <option value="15">11-15</option>
-                            </Field>
-=======
-=======
->>>>>>> 6d92f22e... Dev (#202)
-                    <SuggestFieldWithError
-                      onChange={(query: string) => {
-                        setSearchAssociate(query);
-                      }}
-                      items={
-                        associates
-                      }
-                      selectedItems={selectedAssociates}
-                      setSelectedItems={(item) => {
-                        const c = item.pop();
-                        push('associates', {
-                          _id: c._id,
-                          name: c.name,
-                        });
-                        setSelectedAssociates(item);
-                      }}
-                      multipleItemSelect={true}
-                    />
-                    <FieldArray name="associates">
-                      {({ fields }) =>
-                        fields.map((name, index) => (
-                          <div className="flex justify-between mt1">
-                            <div style={{ marginRight: '2px' }}>
-                              {fields.value[index].name}
-                            </div>
-                            <div>
-                              <Field<string>
-                                name={`${name}.size`}
-                                component="select"
-                                placeholder="size"
-                                validate={required}
-                              >
-                                <option>select team size</option>
-                                <option value="5">1-5</option>
-                                <option value="10">6-10</option>
-                                <option value="15">11-15</option>
-                              </Field>
-<<<<<<< HEAD
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
-
-                              <span
-                                onClick={() => fields.remove(index)}
-                                style={{ cursor: 'pointer' }}
-                              >
-                                ❌
-                            </span>
-                            </div>
-                          </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-                        </div>
-                      ))
-                    }
-                  </FieldArray>
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
-=======
->>>>>>> 6d92f22e... Dev (#202)
-                        ))
-                      }
-                    </FieldArray>
-                  </div>
-                </Condition>
-                <Field<string>
-                  name="color"
-                  render={({ input, meta }) => (
-                    <div className="mb3 mt3">
-                      <p
-                        className="fw5 mb3"
-                        style={{ fontSize: '.8rem' }}
-                      >
-                        Label
-                    </p>
-                      <div className="flex">
-                        {Color.map((color) => (
-                          <div className="pr2" key={color.code}>
-                            <Icon
-                              className="br2"
-                              icon={
-                                isEqual(color.code, labelColor) === true
-                                  ? 'tick'
-                                  : 'blank'
-                              }
-                              onClick={(e) => {
-                                e.preventDefault();
-                                input.onChange(color.code);
-                                setLabelColor(color.code);
-                              }}
-                              style={{
-                                backgroundColor: color.value,
-                                border:
-                                  isEqual(color.code, labelColor) ===
-                                    true
-                                    ? '3px solid #ffffff'
-                                    : 'none',
-                                height: '3rem',
-                                padding: '0.8rem',
-                              }}
-                            />
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                />
-                <div className="flex justify-end mt4">
-                  <Button
-                    className="w4 grow h2 pointer mr3"
-                    style={{
-                      background: '#060517',
-                      outline: 'none',
-                      color: 'white',
-                    }}
-                    onClick={(e: any) => {
-                      e.preventDefault();
-                      props.setShowProjectDialog(false);
-                    }}
-                    text="Cancel"
-                  />
-                  <Button
-                    className="w4 grow h2 pointer br0"
-                    style={{
-                      background: '#0fa3a3',
-                      outline: 'none',
-                      color: 'white',
-                    }}
-                    loading={submitting}
-                    type="submit"
-                    disabled={submitting || pristine}
-                    text="Create"
-                  />
-<<<<<<< HEAD
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
                 </div>
               </div>
             </form>

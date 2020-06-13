@@ -64,10 +64,17 @@ export const AssociateListComponent = (
                 props.associates.map((associate: Associate) => (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
                   associate.hasOwnProperty('associateCompany') ? (
                     <>
                     <Card className="ba b--black-20 br4 pa4 ma2">
+=======
+                  <>
+                    <Card
+                      className="ba b--black-20 br4 pa4 ma2"
+                    >
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
                       <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
                         {associate.associateCompany
                           ? associate.associateCompany.name.charAt(0)
@@ -80,6 +87,7 @@ export const AssociateListComponent = (
                         {associate.associateCompany.type}
                       </h1>
                     </Card>
+<<<<<<< HEAD
                   </>
                   ) : 
                 (
@@ -124,6 +132,24 @@ export const AssociateListComponent = (
                       {associate.associateCompany.type}
                     </h1>
                   </Card>
+=======
+                    <Card
+                      className="ba b--black-20 br4 pa4 ma2"
+                    >
+                      <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
+                        {associate.company
+                          ? associate.company.name.charAt(0)
+                          : 'Demo'}
+                      </h1>
+                      <h1 className="tc black f4 mv0">
+                        {associate.company.name}
+                      </h1>
+                      <h1 className="tc silver f7 mv0">
+                        {associate.company.type}
+                      </h1>
+                    </Card>
+                  </>
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
                 ))
               ) : (
 <<<<<<< HEAD
@@ -171,21 +197,37 @@ export const AssociateListComponent = (
                 props.associates.map((associate: Associate) => (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                   associate.hasOwnProperty('associateCompany') ? (
                     <>
                     <Card className="ba b--black-20 br4 pa4 ma2">
                       <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
+=======
+                  <>
+                    <Card
+                      className="ba b--black-0125 br4 ma1"
+                    >
+                      <h1
+                        className="center white f4 fw6 bg-green tc br3 pt2 ma0"
+                        style={{ width: '3rem', height: '3rem' }}
+                      >
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
                         {associate.associateCompany
                           ? associate.associateCompany.name.charAt(0)
                           : 'Demo'}
                       </h1>
+<<<<<<< HEAD
                       <h1 className="tc black f4 mv0">
+=======
+                      <h1 className="tc black f4-ns f5 fw6 mt2 mb0">
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
                         {associate.associateCompany.name}
                       </h1>
                       <h1 className="tc silver f7 mv0">
                         {associate.associateCompany.type}
                       </h1>
                     </Card>
+<<<<<<< HEAD
                   </>
                   ) : 
                 (
@@ -220,18 +262,24 @@ export const AssociateListComponent = (
                     <h1
                       className="center white f4 fw6 bg-green tc br3 pt2 ma0"
                       style={{ width: '3rem', height: '3rem' }}
+=======
+                    <Card
+                      className="ba b--black-20 br4 pa4 ma2"
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
                     >
-                      {associate.associateCompany
-                        ? associate.associateCompany.name.charAt(0)
-                        : 'Demo'}
-                    </h1>
-                    <h1 className="tc black f4-ns f5 fw6 mt2 mb0">
-                      {associate.associateCompany.name}
-                    </h1>
-                    <h1 className="tc silver f7 mv0">
-                      {associate.associateCompany.type}
-                    </h1>
-                  </Card>
+                      <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
+                        {associate.company
+                          ? associate.company.name.charAt(0)
+                          : 'Demo'}
+                      </h1>
+                      <h1 className="tc black f4 mv0">
+                        {associate.company.name}
+                      </h1>
+                      <h1 className="tc silver f7 mv0">
+                        {associate.company.type}
+                      </h1>
+                    </Card>
+                  </>
                 ))
               ) : (
 <<<<<<< HEAD
@@ -276,6 +324,7 @@ const mapStateToProps = (state: any) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     associates: state.projectReducer.projectAssociates,
 =======
     associates: state.associateReducer.associatesList,
@@ -286,6 +335,9 @@ const mapStateToProps = (state: any) => {
 =======
     associates: state.projectReducer.projectAssociates,
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+    associates: state.projectReducer.projectAssociates
+>>>>>>> 06ed9e58... feat: app version inclued (#220)
   };
 };
 
