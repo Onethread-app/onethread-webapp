@@ -41,6 +41,7 @@ import {
 } from 'react-device-detect';
 import { Navbar } from '@blueprintjs/core';
 import { NavbarIndividual } from './NavbarIndividual';
+import { companyPermit } from 'stores/UtilsActions';
 
 const load = async (
   reactRouterMatch: match,
@@ -435,7 +436,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               Associates
                             </small>
                           </NavLink>
-                          <NavLink
+                          {(companyPermit(props.company.role) && props.company.role !== 'employee') && (<NavLink
                             exact
                             activeStyle={{
                               background: '#3F61C5',
@@ -447,6 +448,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           >
                             <span className="">
                               <img
+                                alt="settings icon"
                                 src={settings}
                                 className="br3"
                                 style={{ width: '1.4rem' }}
@@ -455,7 +457,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             <small style={{ color: 'inherit' }}>
                               Settings
                             </small>
-                          </NavLink>
+                          </NavLink>)}
                         </Navbar>
                       )
                     ) : (

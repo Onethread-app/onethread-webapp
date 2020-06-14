@@ -9,7 +9,7 @@ import {
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
+import { DropdownFieldErrorWithLabel, DropdownFieldWithError } from 'components/fields/DropdownField';
 import { Color, Entity } from 'stores/UtilsActions';
 import { isEqual, isEmpty } from 'lodash';
 import { Condition } from 'components/final-form/Condition';
@@ -70,7 +70,7 @@ const FormComponent = (props: {
       }?name=${search}`,
       headers,
     );
-    
+
     return response.data.data.map((e: any) => {
       return {
         ...e._source.account,
@@ -88,17 +88,17 @@ const FormComponent = (props: {
       headers,
     );
 
-    const asso = response.data.data.map((e: any) => 
-      isEqual(props.company._id, e._source.company_id ) === true ?
-      {
-        _id: e._source.mongo_id,
-        name: e._source.associateCompanyName
-      }
-      :
-      {
-        _id: e._source.mongo_id,
-        name: e._source.companyName
-      }
+    const asso = response.data.data.map((e: any) =>
+      isEqual(props.company._id, e._source.company_id) === true ?
+        {
+          _id: e._source.mongo_id,
+          name: e._source.associateCompanyName
+        }
+        :
+        {
+          _id: e._source.mongo_id,
+          name: e._source.companyName
+        }
     );
     return asso;
   };
@@ -403,11 +403,11 @@ const FormComponent = (props: {
                       {({ fields }) =>
                         fields.map((name, index) => (
                           <div className="flex justify-between mt1">
-                            <div style={{ marginRight: '2px' }}>
+                            <div className="bg-blue pa2 br2 mb3" style={{ marginRight: '2px' }}>
                               {fields.value[index].name}
                             </div>
-                            <div>
-                              <Field<string>
+                            <div className="flex items-baseline">
+                              {/* <Field<string>
                                 name={`${name}.size`}
                                 component="select"
                                 placeholder="size"
@@ -417,7 +417,36 @@ const FormComponent = (props: {
                                 <option value="5">1-5</option>
                                 <option value="10">6-10</option>
                                 <option value="15">11-15</option>
-                              </Field>
+                              </Field> */}
+                              <Field<string>
+                                id={`${name}.size`}
+                                name={`${name}.size`}
+                                validate={required}
+                                render={({ input, meta }) => (
+                                  <div
+                                    className={` ${
+                                      checkError(meta) ? 'mb2' : 'mb3'
+                                      }`}
+                                  >
+                                    <DropdownFieldWithError
+                                      id={input.name}
+                                      selectedValue={input.value}
+                                      options={[
+                                        { _id: '5', name: '1-5' },
+                                        { _id: '10', name: '6-10' },
+                                        { _id: '15', name: '11-15' }
+                                      ]}
+                                      onChange={input.onChange}
+                                      error={
+                                        checkError(meta) &&
+                                        (meta.error || meta.submitError)
+                                      }
+                                      className="bn"
+                                    />
+                                  </div>
+                                )}
+                              />
+
 
                               <span
                                 onClick={() => fields.remove(index)}
