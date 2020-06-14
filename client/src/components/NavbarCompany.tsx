@@ -112,6 +112,10 @@ const NavbarTopComponent = (
     props.getNotifications();
     props.history.push(url);
   };
+  const handleSeenNotifications = async () => {
+    // tslint:disable-next-line: no-unused-expression
+    props.seen !== 0 && (await props.seenNotification());
+  };
 
   const handleSeenNotifications = async () => {
     props.seen !== 0 && (await props.seenNotification());
