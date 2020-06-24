@@ -69,7 +69,7 @@ export const getAllBoards = () => async (
     const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(
-        `boards/boardProject/${projectId}`,
+        `boards/boardProject?pid=${projectId}`,
         headers,
       );
       dispatch({ type: GET_ALL_BOARDS, payload: response.data });
@@ -99,9 +99,10 @@ export const getSelectedBoard = (
 ) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization && boardId) {
       const response = await tigrowApi.get(
-        `boards/${boardId}`,
+        `boards/${boardId}?pid=${projectId}`,
         headers,
       );
       dispatch({ type: SELECT_BOARD, payload: response.data });

@@ -13,7 +13,7 @@ const idSchema = {
 
 // company-id
 const companyId = Joi.object().keys({
-  companyId: idSchema.id.required(),
+  companyId: idSchema.id.required()
 });
 
 const cname = Joi.object().keys({

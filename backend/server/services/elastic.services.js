@@ -8,6 +8,7 @@ const accountIndex = 'accounts';
 const memberIndex = 'members';
 const skillIndex = 'skillareas';
 const companyIndex = 'companies';
+const associateIndex = 'associates';
 
 const elasticUrl =
   process.env.ELASTIC_SEARCH_ADDRESS || 'http://localhost:9200';
@@ -241,6 +242,64 @@ async function createCompany(index, mapping, model) {
   }
 }
 
+
+async function createAssociate(index, mapping, model) {
+  try {
+    if (await esclient.indices.exists({ index })) {
+      await esclient.indices.delete({ index });
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch existing index ${index} is deleted`,
+        ),
+      );
+    }
+
+    
+
+    await esclient.indices.create({
+      index: index,
+      body: mapping,
+    });
+
+    const bulk = [];
+
+    const dataset = await model.find({}).populate({
+      path: 'company associateCompany',
+      select: '_id name'
+    })
+
+    if (!isEmpty(dataset)) {
+      dataset.forEach((data) => {
+        bulk.push({
+          index: { _index: index },
+        });
+        bulk.push({
+          mongo_id: data._id.toString(),
+          company_id: data.company._id,
+          associateCompany_id: data.associateCompany._id,
+          companyName: data.company.name,
+          associateCompanyName: data.associateCompany.name
+        });
+      });
+      await esclient.bulk({ body: bulk });
+
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch successfully created index ${index} with bulk`,
+        ),
+      );
+    } else {
+      logger.info(
+        chalk.blueBright(
+          `ElasticSearch successfully created index ${index}`,
+        ),
+      );
+    }
+  } catch (error) {
+    logger.error(chalk.redBright(error));
+  }
+}
+
 function setDocument(indexName, indexType, document) {
   return esclient.index({
     index: indexName,
@@ -276,6 +335,19 @@ function deleteDocument(indexName, indexType, body) {
     body: body,
   });
 }
+
+
+const associateMapping = {
+  mappings: {
+    properties: {
+        mongo_id : { "type": "text"},
+        company_id: { "type": "text"},
+        companyName : { "type": "text"},
+        associateCompany_id : { "type": "text"},
+        associateCompanyName : { "type": "text"}
+    },
+  },
+};
 
 const memberMapping = {
   mappings: {
@@ -363,6 +435,9 @@ module.exports = {
   createSkillareas,
   createCompany,
   companyMappnig,
+  associateMapping,
+  associateIndex,
+  createAssociate
 };
 
 // function createMessages(index,model,mapping, structure){

@@ -115,6 +115,12 @@ const config = {
     port: envVars.REDIS_PORT,
     password: envVars.REDIS_PASSWORD,
   },
+  // pusherChanel: {
+  //   appid: envVars.PUSHER_CHANNEL_APPID,
+  //   key: envVars.PUSHER_CHANNEL_KEY,
+  //   secret: envVars.PUSHER_CHANNEL_SECRET,
+  //   cluster: envVars.PUSHER_CHANNEL_CLUSTER,
+  // },
   emailAddress: envVars.EMAIL_ADDRESS,
   emailPassword: envVars.EMAIL_PASSWORD,
   awsAccessKey: envVars.AWS_ACCESS_KEY,

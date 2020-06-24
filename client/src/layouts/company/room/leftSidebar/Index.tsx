@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { RoomList } from './RoomList';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { CreateForm } from './Form';
-import { projectPermit } from 'stores/UtilsActions';
 import { clearRoomError } from 'stores/room/Actions';
 import { RightSidebar } from 'components/RightSidebar';
 import { InputGroupField } from 'components/fields/InputGroupField';
@@ -11,6 +10,7 @@ import { InputGroupField } from 'components/fields/InputGroupField';
 import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
+import { room } from 'stores/room/Types';
 
 interface RoomSideBarComponentProps {
   companyRole?: string;
@@ -24,6 +24,7 @@ interface RoomSideBarInternalProps
 const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -34,10 +35,12 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       >
         <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
-          {props.companyRole && projectPermit(props.companyRole) ? (
             <span
               className="bp3-icon grow pointer"
-              onClick={() => setShowDialog(!showDialog)}
+              onClick={() => { 
+                setShowDialog(!showDialog);
+                dispatch({ type: room.CLEAR_STATUS_CODE });
+              }}
             >
               <img
                 src={createIcon}
@@ -46,7 +49,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
                 color="#0FA3A3"
               />
             </span>
-          ) : undefined}
         </div>
         <div className="flex items-center ph3-ns relative">
           <InputGroupField

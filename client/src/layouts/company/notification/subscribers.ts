@@ -6,7 +6,7 @@ import Pusher from 'pusher-js';
 export const companySubscriber = (companyId: string) => {
   const pusher = new Pusher('1743ba5fa64dd023e3dc', {
     cluster: 'ap1',
-    forceTLS: true,
+    encrypted: true,
   });
   pusher.connection.bind('connected', function () {
     store.dispatch({
@@ -35,7 +35,7 @@ export const companySubscriber = (companyId: string) => {
         },
       );
     store.dispatch({
-      type: NOTIFICATION.SET_READ_COUNT,
+      type: NOTIFICATION.SET_SEEN_COUNT,
       payload: count,
     });
   });

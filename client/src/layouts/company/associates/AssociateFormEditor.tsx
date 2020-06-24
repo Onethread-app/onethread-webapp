@@ -5,7 +5,7 @@ import {
 } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import { Button, Toaster } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { addAssociate } from 'stores/associate/Actions';
 import { server } from 'config';
 import { useLiveSearch } from 'components/useLiveSearch';
@@ -15,6 +15,7 @@ interface AddAssociateEditorProps {
   companyId: string;
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
+  sendingRequestSuccess: boolean;
 }
 
 interface AddAssociateEditorInternalProps
@@ -29,15 +30,11 @@ const AssociateFormEditorComponent = (
   props: AddAssociateEditorInternalProps,
 ) => {
   const [associates, setAssociates]: any = useState([]);
-
   const [selectedAssociate, setSelectedAssociate] = useState(
     {} as ItemEntityProps,
   );
-
   const [query, setQuery] = useState('');
-
-  const [error, setError] = useState('');
-
+  const [error] = useState('');
   const userRequestFactory = (value: string): Promise<any> => {
     const headers = tokenConfig();
     return fetch(
@@ -88,43 +85,39 @@ const AssociateFormEditorComponent = (
           style={
             isEmpty(selectedAssociate) === true
               ? {
-                  background: '#0fa3a3',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }
               : {
-                  background: '#0fa3a3',
-                  outline: 'none',
-                  color: 'white',
-                }
+                background: '#0fa3a3',
+                outline: 'none',
+                color: 'white',
+              }
           }
           disabled={isEmpty(selectedAssociate)}
           onClick={async () => {
             if (isEmpty(selectedAssociate) === false) {
-              const response = await props.addAssociate(
-                selectedAssociate,
-                props.companyId,
-              );
-              if (response.status !== 201) {
-                setError(response.data.error);
-              } else {
+              const response = await props.addAssociate(selectedAssociate, props.companyId);
+              if (response === 201) {
                 props.setShowDialog(!props.showDialog);
-                Toaster.create().show({
-                  message: 'Request send successfully',
-                  timeout: 3000,
-                  intent: 'success',
-                });
               }
             }
           }}
         >
           Add
         </Button>
+        {props.sendingRequestSuccess &&
+          props.setShowDialog(!props.showDialog)}
       </div>
     </div>
   );
 };
 
-export const AssociateFormEditor = connect(null, { addAssociate })(
-  AssociateFormEditorComponent,
-);
+const mapStateToPropd = (state) => ({
+  sendingRequestSuccess: state.associateReducer.sendingRequestSuccess,
+});
+
+export const AssociateFormEditor = connect(mapStateToPropd, {
+  addAssociate,
+})(AssociateFormEditorComponent);

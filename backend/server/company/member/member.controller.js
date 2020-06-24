@@ -180,8 +180,7 @@ const addMember = async (req, res, next) => {
       pendingMembers,
     });
   } catch (error) {
-    console.log(error);
-    logger.error(error);
+    logger.error(`${error}`);
     next(error);
   }
 };

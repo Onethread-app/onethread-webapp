@@ -7,12 +7,15 @@ import { connect } from 'react-redux';
 import { MobileListView } from '../layouts/company/MobileListView';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { companySubscriber } from 'layouts/company/notification/subscribers';
-import { readNotification } from '../stores/notifications/Action';
-import { getNotifications } from '../stores/notifications/Action';
+import { readNotification, seenNotification, getNotifications } from '../stores/notifications/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Badge } from '@material-ui/core';
 import { notificationType } from '../layouts/company/notification/rule';
 import Notification from 'layouts/company/notification/index';
+import { IRoom } from 'stores/room/Reducer';
+import { isEqual } from 'lodash';
+import { RoomListItem } from 'layouts/company/room/leftSidebar/RoomListItem';
+import ChatIcon from '@material-ui/icons/Chat';
 
 interface NavbarProps {
   title: string;
@@ -22,7 +25,20 @@ interface NavbarProps {
   companyId: string;
   readNotification: any;
   getNotifications: any;
+  seenNotification: () => void;
+  rooms: [IRoom];
+  seen: number;
+  totalRoomUnread: number;
+  currentRoom: IRoom;
 }
+const roomBgColor = [
+  '#D8315B',
+  '#9F7DE8',
+  '#0FA3A3',
+  '#456990',
+  '#CDA2AB',
+  '#FE5E41',
+];
 
 const NavbarCompanyComponent = (
   props: NavbarProps & RouteComponentProps,
@@ -32,10 +48,11 @@ const NavbarCompanyComponent = (
   const view = query.get('view');
 
   useEffect(() => {
-    // tslint:disable-next-line: no-unused-expression
-    props.match.path !== '/:username' && props.getNotifications();
+    if ( props.match.path !== '/:username') {
+      props.getNotifications();
+    }
     companySubscriber(props.companyId);
-  }, []);
+  });
 
   const onCLickNotification = async (sNotification: any) => {
     await props.readNotification(sNotification.notification._id);
@@ -44,6 +61,10 @@ const NavbarCompanyComponent = (
     ].path(sNotification.notification);
     props.getNotifications();
     props.history.push(url);
+  };
+  const handleSeenNotifications = async () => {
+    // tslint:disable-next-line: no-unused-expression
+    props.seen !== 0 && (await props.seenNotification());
   };
 
   return (
@@ -82,16 +103,16 @@ const NavbarCompanyComponent = (
                         ),
                       )
                     ) : (
-                      <h2
-                        style={{
-                          maxHeight: '300px',
-                          textAlign: 'center',
-                        }}
-                        className="pa3 overflow-y-auto moon-gray"
-                      >
-                        No Notification TO Show
-                      </h2>
-                    )}
+                        <h2
+                          style={{
+                            maxHeight: '300px',
+                            textAlign: 'center',
+                          }}
+                          className="pa3 overflow-y-auto moon-gray"
+                        >
+                          No Notification TO Show
+                        </h2>
+                      )}
                   </div>
                 }
                 target={
@@ -105,6 +126,66 @@ const NavbarCompanyComponent = (
                       color="secondary"
                     >
                       <NotificationsIcon />
+                    </Badge>
+                  </div>
+                }
+              />
+            )}
+            {props.match.path !== '/:username' && (
+              <Popover
+                popoverClassName="bg-white"
+                position={Position.BOTTOM}
+                content={
+                  <div
+                    style={{ maxHeight: '300px' }}
+                    className="pa3 overflow-y-auto"
+                  >
+                    {props.rooms && props.rooms.length ? (
+                      props.rooms.map(
+                        (room: IRoom, i: number, arr: any) => {
+                          return (
+                            <RoomListItem
+                              key={room._id}
+                              room={room}
+                              lastChild={isEqual(
+                                room._id,
+                                arr[props.rooms!.length - 1].id,
+                              )}
+                              active={
+                                props.currentRoom !== undefined &&
+                                room._id === props.currentRoom._id
+                              }
+                              iconBgColor={
+                                roomBgColor[i % roomBgColor.length]
+                              }
+                            />
+                          );
+                        },
+                      )
+                    ) : (
+                        <h2
+                          style={{
+                            maxHeight: '300px',
+                            textAlign: 'center',
+                          }}
+                          className="pa3 overflow-y-auto moon-gray"
+                        >
+                          No Room
+                        </h2>
+                      )}
+                  </div>
+                }
+                target={
+                  <div className="mh4 pointer">
+                    <Badge
+                      badgeContent={props.totalRoomUnread}
+                      anchorOrigin={{
+                        vertical: 'top',
+                        horizontal: 'right',
+                      }}
+                      color="secondary"
+                    >
+                      <ChatIcon onClick={handleSeenNotifications} />
                     </Badge>
                   </div>
                 }
@@ -153,10 +234,15 @@ const mapStateToProps = (state: any) => {
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
     read: state.notificationReducer.read,
+    rooms: state.roomReducer.roomNotification.rooms,
+    currentRoom: state.roomReducer.currentRoom,
+    totalRoomUnread: state.roomReducer.totalUnread,
+    seen: state.notificationReducer.seen
   };
 };
 export const NavbarCompany = connect(mapStateToProps, {
   companySubscriber,
   readNotification,
   getNotifications,
+  seenNotification
 })(withRouter(NavbarCompanyComponent));

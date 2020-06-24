@@ -21,7 +21,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   user: User;
   getCompanyDetails: (companyId: string, history: History) => void;
   getAllCompaniesByUserId: (userId: string) => void;
-  getNotifications: (companyId: string) => void;
+  getNotifications: () => void;
 }
 
 export const ListViewComponent = (
@@ -58,7 +58,7 @@ export const ListViewComponent = (
                       : ''
                   } mt2 pointer bp3-popover-dismiss`}
                   onClick={async () => {
-                    props.getNotifications(c.company._id);
+                    props.getNotifications();
                     const response = (await props.getCompanyDetails(
                       c.company.name,
                       props.history,

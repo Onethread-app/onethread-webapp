@@ -15,6 +15,7 @@ const authenticate = async (req, res, next) => {
     channel,
     presenceData,
   );
+  
   res.send(auth);
 };
 

@@ -19,6 +19,7 @@ const schema = {
   columns: Joi.array().items(idSchema.id),
   members: Joi.array().items(idSchema.id),
   removed: Joi.boolean(),
+  boardId: idSchema.id,
 };
 
 module.exports = {
@@ -32,5 +33,15 @@ module.exports = {
   }),
   getAllBoards: Joi.object().keys({
     params: schema.project,
+  }),
+  listAllBoards: Joi.object().keys({
+    query: Joi.object().keys({
+      pid: schema.project.required(),
+    }),
+  }),
+  singleBoard: Joi.object().keys({
+    params: Joi.object().keys({
+      boardId: schema.boardId,
+    }),
   }),
 };

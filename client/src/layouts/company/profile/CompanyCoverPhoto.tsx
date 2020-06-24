@@ -10,6 +10,7 @@ import {
   MobileOnlyView,
   isMobileOnly,
 } from 'react-device-detect';
+import { companyPermit } from 'stores/UtilsActions';
 
 interface ICompanyCoverUploadViewProps {
   currentCompany: ICompany;
@@ -54,15 +55,20 @@ const CompanyCoverPhotoComponent = (
           </div>
         </div> */}
         <div className="h-100 child bg-black-40 br4">
-          <Button
+          {
+            companyPermit(props.currentCompany.role) && (
+              <Button
             className="fr ba bw1 pa2 w-15-l w-23-m bp3-minimal br3 child f7 f5-ns companyCoverButton"
             style={{
               color: 'white',
             }}
-            onClick={() => setShowDialogPicture(true)}
+            onClick={() => setShowDialogPicture(true) }
           >
             Change Cover
           </Button>
+            )
+          }
+          
         </div>
       </div>
       <div className="relative flex companyProfilepicOuterOuter ">

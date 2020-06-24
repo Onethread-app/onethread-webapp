@@ -214,10 +214,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
           ref={emojiRef}
         />
       ) : null}
-      <div
-        className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}
-        style={{ width: isMobileOnly ? '100%' : '' }}
-      >
+      <div className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`} style={{ width: isMobileOnly ? '100%' : '' }}>
         {/* pendingFiles */}
         <div className="flex w-100 flex-wrap b--black-10 ba">
           {props.pendingFiles && props.pendingFiles.length
