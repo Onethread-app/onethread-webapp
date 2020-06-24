@@ -1,12 +1,17 @@
 .video-conferences {
   height: 100%;
 <<<<<<< HEAD
+<<<<<<< HEAD
   background: white;
   color: #000000;
 =======
   background: blueviolet;
   color: #ffffff;
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+  background: blueviolet;
+  color: #ffffff;
+>>>>>>> 1059a963... implemented video conferences using agora
   width: 100%;
 }
 
@@ -15,28 +20,44 @@
   margin: 0 auto;
   text-align: center;
 <<<<<<< HEAD
+<<<<<<< HEAD
   padding: 50px 0;
 =======
   padding: 100px 0;
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+  padding: 100px 0;
+}
+
+.vc-login-wrapper {
+}
+
+.vc-login-header {
+>>>>>>> 1059a963... implemented video conferences using agora
 }
 
 .vc-login-title {
   font-size: 30px;
   line-height: 40px;
 <<<<<<< HEAD
+<<<<<<< HEAD
   color: #000;
 =======
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+>>>>>>> 1059a963... implemented video conferences using agora
 }
 
 .vc-login-subtitle {
   font-size: 20px;
   line-height: 25px;
 <<<<<<< HEAD
+<<<<<<< HEAD
   color: #000;
 =======
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+>>>>>>> 1059a963... implemented video conferences using agora
 }
 
 .vc-login-body {
@@ -44,18 +65,25 @@
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 .conf-link {
   color: blue;
 }
 
 =======
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+.vc-team-input {
+}
+
+>>>>>>> 1059a963... implemented video conferences using agora
 .ag-rounded {
   font-size: 20px;
   line-height: 25px;
   text-align: center;
 }
 
+<<<<<<< HEAD
 .vc-join-btn {
 <<<<<<< HEAD
   background: #060517;
@@ -65,10 +93,19 @@
   border-radius: 5px;
   cursor: pointer;
 =======
+=======
+.vc-login-footer {
+}
+
+.vc-join-btn {
+>>>>>>> 1059a963... implemented video conferences using agora
   background: #fff;
   padding: 5px 20px;
   font-size: 16px;
   color: #000;
   border-radius: 5px;
+<<<<<<< HEAD
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+>>>>>>> 1059a963... implemented video conferences using agora
 }

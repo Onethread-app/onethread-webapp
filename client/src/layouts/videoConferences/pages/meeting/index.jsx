@@ -1,22 +1,29 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { withRouter } from 'react-router';
 // import { connect } from 'react-redux';
 =======
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+>>>>>>> 1059a963... implemented video conferences using agora
 
 import './meeting.css';
 import AgoraVideoCall from '../../components/AgoraVideoCall';
 import { AGORA_APP_ID } from '../../agora.config';
 <<<<<<< HEAD
+<<<<<<< HEAD
 // import { getVideoConferencesJoinee } from 'stores/auth/Actions';
 =======
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+>>>>>>> 1059a963... implemented video conferences using agora
 
 class Meeting extends React.Component {
   constructor(props) {
     super(props);
+<<<<<<< HEAD
 <<<<<<< HEAD
     const query = new URLSearchParams(props.history.location.search);
     const room = query.get('conf');
@@ -31,6 +38,11 @@ class Meeting extends React.Component {
       Cookies.get('videoProfile').split(',')[0] || '480p_4';
     this.channel = Cookies.get('channel') || 'test';
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+    this.videoProfile =
+      Cookies.get('videoProfile').split(',')[0] || '480p_4';
+    this.channel = Cookies.get('channel') || 'test';
+>>>>>>> 1059a963... implemented video conferences using agora
     this.transcode = Cookies.get('transcode') || 'interop';
     this.attendeeMode = Cookies.get('attendeeMode') || 'video';
     this.baseMode = Cookies.get('baseMode') || 'avc';
@@ -39,6 +51,7 @@ class Meeting extends React.Component {
       return alert('Get App ID first!');
     }
     this.uid = undefined;
+<<<<<<< HEAD
 <<<<<<< HEAD
 
     this.state = {
@@ -86,6 +99,8 @@ class Meeting extends React.Component {
         </div>
       </>
 =======
+=======
+>>>>>>> 1059a963... implemented video conferences using agora
   }
 
   render() {
@@ -105,11 +120,15 @@ class Meeting extends React.Component {
           </div>
         </div>
       </div>
+<<<<<<< HEAD
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+>>>>>>> 1059a963... implemented video conferences using agora
     );
   }
 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 export default withRouter(Meeting);
 
@@ -125,3 +144,6 @@ export default withRouter(Meeting);
 =======
 export default Meeting;
 >>>>>>> d6893708... implemented video conferences using agora (#228)
+=======
+export default Meeting;
+>>>>>>> 1059a963... implemented video conferences using agora
