@@ -37,6 +37,8 @@ import { ProjectTeamPage } from 'layouts/company/project/team/Index';
 import { isMobileOnly } from 'react-device-detect';
 import { RoomPageMobile } from 'layouts/company/room/IndexMobile';
 import { AutoLoginPage } from 'components/AutoLogin';
+import VideoConferences from 'layouts/videoConferences/pages/index/index';
+import Meeting from 'layouts/videoConferences/pages/meeting';
 
 const PrivateRoute = (props: {
   component: any;
@@ -161,12 +163,7 @@ export const App = () => (
           isAuthenticate() ? <NotFound /> : <Redirect to="/" />
         }
       />
-      <Route
-        path="/autologin"
-        render={() =>
-          <AutoLoginPage/>
-        }
-      />
+      <Route path="/autologin" render={() => <AutoLoginPage />} />
       <PrivateRoute exact path="/" component={Demo} />
       <PrivateRoute
         path="/:username"
@@ -252,6 +249,16 @@ export const App = () => (
         path="/company/:cname/associate/:associateId"
         exact={true}
         component={AssociatesDetailsView}
+      />
+      <PrivateRoute
+        path="/video/conferences"
+        exact={true}
+        component={VideoConferences}
+      />
+      <PrivateRoute
+        path="/video/conferences/join"
+        exact={true}
+        component={Meeting}
       />
       <Route component={NoMatch} />
     </Switch>

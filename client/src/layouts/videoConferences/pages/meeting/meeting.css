@@ -1,0 +1,50 @@
+.meeting.wrapper {
+  background: blueviolet;
+  height: 100%;
+  color: #fff;
+}
+
+video {
+  max-width: unset;
+}
+
+.meeting .ag-header {
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ag-header-lead {
+  font-size: 24px;
+  line-height: 35px;
+}
+
+.meeting .ag-footer {
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+}
+
+.meeting .ag-main {
+  position: relative;
+  padding: 10px;
+}
+
+.meeting .ag-footer :first-child {
+  margin-right: 80px;
+}
+
+.header-logo {
+  width: 60px;
+  height: 35px;
+  margin-right: 12px;
+}
+
+.ag-container {
+  width: 1050px;
+  height: 85vh;
+  margin: 0 auto;
+  background: orange;
+  padding: 10px;
+}

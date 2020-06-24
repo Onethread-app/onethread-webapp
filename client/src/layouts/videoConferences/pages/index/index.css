@@ -1,0 +1,53 @@
+.video-conferences {
+  height: 100%;
+  background: blueviolet;
+  color: #ffffff;
+  width: 100%;
+}
+
+.vc-main {
+  width: 400px;
+  margin: 0 auto;
+  text-align: center;
+  padding: 100px 0;
+}
+
+.vc-login-wrapper {
+}
+
+.vc-login-header {
+}
+
+.vc-login-title {
+  font-size: 30px;
+  line-height: 40px;
+}
+
+.vc-login-subtitle {
+  font-size: 20px;
+  line-height: 25px;
+}
+
+.vc-login-body {
+  margin: 20px;
+}
+
+.vc-team-input {
+}
+
+.ag-rounded {
+  font-size: 20px;
+  line-height: 25px;
+  text-align: center;
+}
+
+.vc-login-footer {
+}
+
+.vc-join-btn {
+  background: #fff;
+  padding: 5px 20px;
+  font-size: 16px;
+  color: #000;
+  border-radius: 5px;
+}
