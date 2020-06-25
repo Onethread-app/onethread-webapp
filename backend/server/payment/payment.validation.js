@@ -16,7 +16,10 @@ const schema = {
   gateway: Joi.string(),
   company: idSchema.id,
   reference: Joi.string(),
+<<<<<<< HEAD
   statusPg: Joi.string(),
+=======
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
   currency: Joi.string(),
   amount: Joi.number(),
 };
@@ -28,7 +31,10 @@ module.exports = {
       gateway: schema.gateway.required(),
       company: schema.company,
       reference: schema.reference.required(),
+<<<<<<< HEAD
       statusPg: schema.statusPg,
+=======
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
       currency: schema.currency.required(),
       amount: schema.amount.required(),
     }),

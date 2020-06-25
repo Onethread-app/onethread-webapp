@@ -1,9 +1,12 @@
 const Payment = require('./payment.model');
 const logger = require('../../config/winston');
 const config = require('../../config/config');
+<<<<<<< HEAD
 const axios = require('axios');
 const crypto = require('crypto');
 const qs = require('qs');
+=======
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY, {apiVersion: ''});
 
 const {
@@ -13,6 +16,7 @@ const {
 const create = async (req, res, next) => {
 
   try{
+<<<<<<< HEAD
 
   // let ipn_body = {};
   // ipn_body['app_key'] = "9a78d14d58483269577bf112dd7a57e3";
@@ -26,6 +30,8 @@ const create = async (req, res, next) => {
   // const response = await axios(url, {method: 'POST', data: qs.stringify(ipn_body)}); 
 
 
+=======
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
   
       let payment = new Payment({
         amount: req.body.amount,
@@ -41,13 +47,19 @@ const create = async (req, res, next) => {
       return sendJSONresponse(res, 201, payment);
 
   } catch (e) {
+<<<<<<< HEAD
     
     logger.error(`Payment: ${e}`);
+=======
+    console.log(e)
+    logger.error(`Payment: ${error}`);
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
       next(e);
   }
       
 };
 
+<<<<<<< HEAD
 const initiateInvoice = async (req, res, next) => {
 
   try{
@@ -89,6 +101,8 @@ const initiateInvoice = async (req, res, next) => {
       
 };
 
+=======
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
 const paymentIntent = async (req, res, next) => {
 
   try{
@@ -102,7 +116,11 @@ const paymentIntent = async (req, res, next) => {
     return sendJSONresponse(res, 200, {client_secret: intent.client_secret});
 
   } catch (e) {
+<<<<<<< HEAD
     logger.error(`Payment: ${e}`);
+=======
+    logger.error(`Payment: ${error}`);
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
       next(e);
   }
       
@@ -110,7 +128,11 @@ const paymentIntent = async (req, res, next) => {
 
 const list = async (req, res, next) => {
   try {
+<<<<<<< HEAD
    
+=======
+    console.log(req.params.companyId)
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
     const { skip = 0, limit = 50 } = req.query;
     const payments = await Payment.find({company:req.params.companyId})
       .select('status amount currency refrence createdAt')
@@ -127,7 +149,10 @@ const list = async (req, res, next) => {
 };
 
   module.exports = {
+<<<<<<< HEAD
     initiateInvoice,
+=======
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
     paymentIntent,
     list,
     create,

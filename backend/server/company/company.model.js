@@ -53,7 +53,7 @@ const certificate = new Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
-  }
+  },
 });
 
 // company schema
@@ -101,7 +101,7 @@ const company = new Schema(
           type: String,
           enum: [
             'editProfile',
-            'cRUDAnnouncement',//cRUDAnnoucment
+            'cRUDAnnouncement', //cRUDAnnoucment
             'archiveProject',
             'addRemoveModerator',
             'messageAssociate',

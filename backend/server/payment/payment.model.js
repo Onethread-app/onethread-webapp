@@ -5,18 +5,25 @@ const paymentSchema = mongoose.Schema(
     gateway: {
       type: String,
       required: true,
+<<<<<<< HEAD
       enum: ['cash', 'stripe', 'portWallet'],
+=======
+      enum: ['cash', 'stripe', 'portwallet'],
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
     },
     status: {
       type: String,
       enum: ['success', 'pending', 'fail'],
       default: 'pending',
     },
+<<<<<<< HEAD
     statusPg: {
       type: String,
       enum: ['success', 'pending', 'fail'],
       default: 'pending',
     },
+=======
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
     currency: {
       type: String,
       required: true,

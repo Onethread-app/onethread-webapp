@@ -17,6 +17,7 @@ router
     paymentCtrl.paymentIntent,
   );
 
+<<<<<<< HEAD
   router
   .route('/portwallet/initiate')
   .post(
@@ -24,6 +25,8 @@ router
     paymentCtrl.initiateInvoice,
   );
 
+=======
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
 router
   .route('/:companyId')
   .post(

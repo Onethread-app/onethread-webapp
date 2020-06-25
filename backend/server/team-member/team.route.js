@@ -41,6 +41,7 @@ router
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
+<<<<<<< HEAD
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -64,6 +65,10 @@ router
     teamCtrl.associateListInProject,
   );
 
+=======
+    teamCtrl.list,
+  );
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
 router.route('/:memberId').get(
   authorization,
   // SchemaValidator(teamValidation.getMember),

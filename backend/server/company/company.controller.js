@@ -127,7 +127,6 @@ const createCompany = async (req, res, next) => {
     req.body.account = req.user._id;
     req.body.uniqueName = createSlug(req.body.name);
     const newCompany = new Company(req.body);
-
     const planId = await Plan.findOne({ name: 'trial' });
     if (!planId) {
       return sendErrorResponse(res, 404, 'PlanNotFoundError', {

@@ -1,5 +1,9 @@
 const { Member } = require('./member.model');
+<<<<<<< HEAD
 const { Subscription } = require('../../subscription/subscription.model');
+=======
+const Subscription = require('../../subscription/subscription.controller');
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -62,19 +66,30 @@ const addMember = async (req, res, next) => {
         message: `No members or newMembers found`,
       });
     }
+<<<<<<< HEAD
     const planMemberAllow = await Subscription.find({
       company: req.company._id,
       isActive: true,
     })
       .sort({ _id: -1 })
       .populate('plan', 'maxTier');
+=======
+    const planMemberAllow = await Subscription.findOne({
+      company: req.params.companyId,
+      isActive: true,
+    }).populate('plan', 'maxTier');
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
     let members = [];
 
     let accounts = [];
 
     let pendingMembers = [];
 
+<<<<<<< HEAD
     if (req.body.members.length <= planMemberAllow[0].plan.maxTier) {
+=======
+    if (req.body.members.length <= planMemberAllow.plan.maxTier) {
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
       let newMembers = req.body.members;
 
       accounts = newMembers.map((member) => member.account);
@@ -164,7 +179,11 @@ const addMember = async (req, res, next) => {
     // invite new members in company
     if (
       req.body.pendingTeamMembers.length <=
+<<<<<<< HEAD
       planMemberAllow[0].plan.maxTier
+=======
+      planMemberAllow.plan.maxTier
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
     ) {
       let pendingMembersInfo = req.body.pendingTeamMembers.map(
         (m) => {
@@ -185,6 +204,7 @@ const addMember = async (req, res, next) => {
       pendingMembers,
     });
   } catch (error) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -214,6 +234,9 @@ const addMember = async (req, res, next) => {
 =======
     logger.error(`${error}`);
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+    logger.error(`Colleague: ${error}`);
+>>>>>>> 3a98ae02... Wip/tig 229 (#232)
     next(error);
   }
 };
