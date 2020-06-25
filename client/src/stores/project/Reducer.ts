@@ -113,11 +113,16 @@ const initialState = {
   projectRole: {},
   projectFileOpen: false,
 <<<<<<< HEAD
+<<<<<<< HEAD
   projectList: [],
   error: ''
 =======
   projectList: []
 >>>>>>> 64cb9964... Wip/home page skeleton (#235)
+=======
+  projectList: [],
+  error: ''
+>>>>>>> 353e5819... console removed
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -231,13 +236,19 @@ export const ProjectReducer = (state = initialState, action: any) => {
             projectList: [],
           };
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 353e5819... console removed
       case PROJECT.PROJECT_ERROR:
         return {
             ...state,
             error: action.payload,
           };
+<<<<<<< HEAD
 =======
 >>>>>>> 64cb9964... Wip/home page skeleton (#235)
+=======
+>>>>>>> 353e5819... console removed
     default:
       return state;
   }
