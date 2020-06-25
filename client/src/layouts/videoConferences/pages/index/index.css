@@ -12,12 +12,6 @@
   padding: 100px 0;
 }
 
-.vc-login-wrapper {
-}
-
-.vc-login-header {
-}
-
 .vc-login-title {
   font-size: 30px;
   line-height: 40px;
@@ -32,16 +26,10 @@
   margin: 20px;
 }
 
-.vc-team-input {
-}
-
 .ag-rounded {
   font-size: 20px;
   line-height: 25px;
   text-align: center;
-}
-
-.vc-login-footer {
 }
 
 .vc-join-btn {
