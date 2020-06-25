@@ -40,7 +40,10 @@ import { AutoLoginPage } from 'components/AutoLogin';
 import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
 import { HomePageNew } from 'layouts/home/Index';
+<<<<<<< HEAD
 import Success from './components/Success';
+=======
+>>>>>>> 64cb9964... Wip/home page skeleton (#235)
 
 const PrivateRoute = (props: {
   component: any;
@@ -267,6 +270,11 @@ export const App = () => (
         path="/vc/join"
         exact={true}
         component={Meeting}
+        />
+        <PrivateRoute
+        path="/:username/home"
+        exact={true}
+        component={HomePageNew}
       />
       <PrivateRoute
         path="/:username/home"

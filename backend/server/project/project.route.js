@@ -202,11 +202,15 @@ router
   );
 router
   .route('/individual/:account')
+<<<<<<< HEAD
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
     projectCtrl.getProjectIndividual,
   );
+=======
+  .get(authorization, projectCtrl.getProjectIndividual);
+>>>>>>> 64cb9964... Wip/home page skeleton (#235)
 router
   .route('/project-list/:memberId')
   .get(authorization, projectCtrl.projectListForMember);

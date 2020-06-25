@@ -206,6 +206,21 @@ export const ListViewComponent = (
 >>>>>>> b9e80fb9... mobile responsive for project preface
 =======
         </NavLink>
+        <NavLink
+          exact
+          className="w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2"
+          activeStyle={{ background: '#3F61C5', color: 'white' }}
+          style={{ color: 'black' }}
+          to={`/${props.user.name}/home`}
+          onClick={() => props.setShowDialog(false)}
+        >
+          <Icon
+            icon="home"
+            className="pr3"
+            style={{ color: '#787e8d' }}
+          />
+          Home
+        </NavLink>
         <Button
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
           onClick={(e: any) => props.logoutAction(props.history)}

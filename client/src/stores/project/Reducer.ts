@@ -8,7 +8,10 @@ export interface IMember {
   concernedAdmin: {
     firstName: string;
     lastName: string;
+<<<<<<< HEAD
     name: string;
+=======
+>>>>>>> 64cb9964... Wip/home page skeleton (#235)
     _id: string;
   };
   name: string;
@@ -109,8 +112,12 @@ const initialState = {
   pid: '',
   projectRole: {},
   projectFileOpen: false,
+<<<<<<< HEAD
   projectList: [],
   error: ''
+=======
+  projectList: []
+>>>>>>> 64cb9964... Wip/home page skeleton (#235)
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -223,11 +230,14 @@ export const ProjectReducer = (state = initialState, action: any) => {
             ...state,
             projectList: [],
           };
+<<<<<<< HEAD
       case PROJECT.PROJECT_ERROR:
         return {
             ...state,
             error: action.payload,
           };
+=======
+>>>>>>> 64cb9964... Wip/home page skeleton (#235)
     default:
       return state;
   }
