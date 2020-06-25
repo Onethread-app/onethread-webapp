@@ -190,15 +190,7 @@ export const App = () => (
       <PrivateRoute
         path="/company/:cname/project/:projectId/room"
         exact={true}
-<<<<<<< HEAD
-<<<<<<< HEAD
         component={isMobileOnly ? RoomPageMobile : RoomPage}
-=======
-        component={ isMobileOnly ? RoomPageMobile : RoomPage}
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-        component={isMobileOnly ? RoomPageMobile : RoomPage}
->>>>>>> 750029e8... Release/v2.2.0 (#183)
       />
       <PrivateRoute
         path="/company/:cname/project/:projectId/board"

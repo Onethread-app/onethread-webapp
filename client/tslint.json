@@ -29,6 +29,7 @@
     "no-arg": true,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     "no-bitwise": true,
     "no-shadowed-variable": false,
     "array-type": false,
@@ -42,6 +43,11 @@
 				"no-shadowed-variable": false,
 				"array-type": false,
 >>>>>>> 380328e7... Feature/role access (#187)
+=======
+    "no-bitwise": true,
+    "no-shadowed-variable": false,
+    "array-type": false,
+>>>>>>> d6893708... implemented video conferences using agora (#228)
     "no-console": [
       true,
       "log",

@@ -1,14 +1,20 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
+<<<<<<< HEAD
 import Pusher from 'pusher-js';
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
 
 import '../../assets/fonts/css/icons.css';
 import Validator from '../../utils/Validator';
 import './index.css';
+<<<<<<< HEAD
 import Axios from 'axios';
 import { tokenConfig } from 'stores/UtilsActions';
 import { server } from 'config';
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
 
 class Index extends React.Component {
   constructor(props) {
@@ -20,7 +26,10 @@ class Index extends React.Component {
       transcode: 'interop',
       attendeeMode: 'video',
       videoProfile: '480p_4',
+<<<<<<< HEAD
       confLink: null,
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
     };
   }
 
@@ -46,6 +55,7 @@ class Index extends React.Component {
     Cookies.set('transcode', this.state.transcode);
     Cookies.set('attendeeMode', this.state.attendeeMode);
     Cookies.set('videoProfile', this.state.videoProfile);
+<<<<<<< HEAD
     const host =
       process.env.PUBLIC_URL || `${document.location.host}/`;
     const link =
@@ -66,6 +76,9 @@ class Index extends React.Component {
       });
 
     // this.props.history.push('/video/conferences/join');
+=======
+    this.props.history.push('/video/conferences/join');
+>>>>>>> d6893708... implemented video conferences using agora (#228)
   };
 
   render() {
@@ -74,9 +87,15 @@ class Index extends React.Component {
         <div className="vc-main">
           <section className="vc-login-wrapper">
             <div className="vc-login-header">
+<<<<<<< HEAD
               {/* <p className="vc-login-title">
                 <b>Video Conferences</b>
               </p> */}
+=======
+              <p className="vc-login-title">
+                <b>Video Conferences</b>
+              </p>
+>>>>>>> d6893708... implemented video conferences using agora (#228)
               <p className="vc-login-subtitle">
                 <b>Empowering remote teams</b>
               </p>
@@ -89,6 +108,7 @@ class Index extends React.Component {
                 ></InputChannel>
               </div>
             </div>
+<<<<<<< HEAD
             <div className="conf-link">
               {this.state.confLink && (
                 <h3>
@@ -102,6 +122,8 @@ class Index extends React.Component {
                 </h3>
               )}
             </div>
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
             <div className="vc-login-footer">
               <div
                 id="joinBtn"
@@ -110,7 +132,11 @@ class Index extends React.Component {
                 className="vc-join-btn"
                 href="button"
               >
+<<<<<<< HEAD
                 Create link
+=======
+                Join
+>>>>>>> d6893708... implemented video conferences using agora (#228)
               </div>
             </div>
           </section>

@@ -63,6 +63,7 @@ class AgoraCanvas extends React.Component {
   componentWillMount() {
     let $ = this.props;
     // init AgoraRTC local client
+<<<<<<< HEAD
     this.client = AgoraRTC.createClient({
       mode: $.transcode,
       codec: 'vp8',
@@ -70,6 +71,9 @@ class AgoraCanvas extends React.Component {
       video: false,
       screen: true,
     });
+=======
+    this.client = AgoraRTC.createClient({ mode: $.transcode });
+>>>>>>> d6893708... implemented video conferences using agora (#228)
     this.client.init($.appId, () => {
       // console.log('AgoraRTC client initialized');
       this.subscribeStreamEvents();
@@ -377,6 +381,7 @@ class AgoraCanvas extends React.Component {
     }
   };
 
+<<<<<<< HEAD
   handleShareScreen = () => {
     let screenStream = AgoraRTC.createStream({
       streamID: this.props.uid + '-screen',
@@ -407,6 +412,8 @@ class AgoraCanvas extends React.Component {
     }
   };
 
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
   render() {
     const style = {
       display: 'grid',
@@ -485,6 +492,7 @@ class AgoraCanvas extends React.Component {
       </span>
     );
 
+<<<<<<< HEAD
     const shareScreen = (
       <span
         onClick={this.handleShareScreen}
@@ -495,13 +503,18 @@ class AgoraCanvas extends React.Component {
       </span>
     );
 
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
     return (
       <div id="ag-canvas" style={style}>
         <div className="ag-btn-group">
           {exitBtn}
           {videoControlBtn}
           {audioControlBtn}
+<<<<<<< HEAD
           {shareScreen}
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
           {switchDisplayBtn}
           {hideRemoteBtn}
         </div>

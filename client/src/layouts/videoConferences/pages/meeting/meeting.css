@@ -1,5 +1,9 @@
 .meeting.wrapper {
+<<<<<<< HEAD
   background: #3a3b3c;
+=======
+  background: blueviolet;
+>>>>>>> d6893708... implemented video conferences using agora (#228)
   height: 100%;
   color: #fff;
 }
@@ -9,6 +13,10 @@ video {
 }
 
 .meeting .ag-header {
+<<<<<<< HEAD
+=======
+  padding: 20px 30px;
+>>>>>>> d6893708... implemented video conferences using agora (#228)
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,6 +33,14 @@ video {
   align-items: center;
 }
 
+<<<<<<< HEAD
+=======
+.meeting .ag-main {
+  position: relative;
+  padding: 10px;
+}
+
+>>>>>>> d6893708... implemented video conferences using agora (#228)
 .meeting .ag-footer :first-child {
   margin-right: 80px;
 }
@@ -36,6 +52,7 @@ video {
 }
 
 .ag-container {
+<<<<<<< HEAD
   height: calc(100vh - 70px);
 }
 
@@ -49,4 +66,11 @@ video {
   height: 30px;
   width: 300px;
   font-size: 16px;
+=======
+  width: 1050px;
+  height: 85vh;
+  margin: 0 auto;
+  background: orange;
+  padding: 10px;
+>>>>>>> d6893708... implemented video conferences using agora (#228)
 }

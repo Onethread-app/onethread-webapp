@@ -29,11 +29,20 @@
 /* button group */
 
 .ag-btn-group {
+<<<<<<< HEAD
   height: 50px;
   width: 100%;
   position: absolute;
   bottom: 0;
   background: #3a3a3a;
+=======
+  height: 70px;
+  width: 1040px;
+  margin: 10px auto;
+  position: absolute;
+  bottom: 0;
+  background: transparent;
+>>>>>>> d6893708... implemented video conferences using agora (#228)
   z-index: 11;
   display: flex;
   justify-content: space-around;
@@ -42,7 +51,11 @@
 
 .ag-btn-group:hover,
 .ag-btn-group.active {
+<<<<<<< HEAD
   /* background: orange; */
+=======
+  background: orange;
+>>>>>>> d6893708... implemented video conferences using agora (#228)
 }
 
 .ag-btn {
@@ -52,7 +65,11 @@
   /* width: 35px;
     height: 35px; */
   cursor: pointer;
+<<<<<<< HEAD
   font-size: 40px;
+=======
+  font-size: 60px;
+>>>>>>> d6893708... implemented video conferences using agora (#228)
   display: inline-flex;
   justify-content: center;
   align-items: center;

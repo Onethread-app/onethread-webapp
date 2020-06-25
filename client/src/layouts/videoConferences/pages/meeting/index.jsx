@@ -1,16 +1,23 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
+<<<<<<< HEAD
 import { withRouter } from 'react-router';
 // import { connect } from 'react-redux';
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
 
 import './meeting.css';
 import AgoraVideoCall from '../../components/AgoraVideoCall';
 import { AGORA_APP_ID } from '../../agora.config';
+<<<<<<< HEAD
 // import { getVideoConferencesJoinee } from 'stores/auth/Actions';
+=======
+>>>>>>> d6893708... implemented video conferences using agora (#228)
 
 class Meeting extends React.Component {
   constructor(props) {
     super(props);
+<<<<<<< HEAD
     const query = new URLSearchParams(props.history.location.search);
     const room = query.get('conf');
     this.videoProfile =
@@ -19,6 +26,11 @@ class Meeting extends React.Component {
       '480p_4';
     this.channel = window.atob(room);
 
+=======
+    this.videoProfile =
+      Cookies.get('videoProfile').split(',')[0] || '480p_4';
+    this.channel = Cookies.get('channel') || 'test';
+>>>>>>> d6893708... implemented video conferences using agora (#228)
     this.transcode = Cookies.get('transcode') || 'interop';
     this.attendeeMode = Cookies.get('attendeeMode') || 'video';
     this.baseMode = Cookies.get('baseMode') || 'avc';
@@ -27,6 +39,7 @@ class Meeting extends React.Component {
       return alert('Get App ID first!');
     }
     this.uid = undefined;
+<<<<<<< HEAD
 
     this.state = {
       showInvitaion: true,
@@ -72,10 +85,32 @@ class Meeting extends React.Component {
           {this.state.showInvitaion ? inviatationFrame : videoFrame}
         </div>
       </>
+=======
+  }
+
+  render() {
+    return (
+      <div className="wrapper meeting">
+        <div className="ag-main">
+          <div className="ag-container">
+            <AgoraVideoCall
+              videoProfile={this.videoProfile}
+              channel={this.channel}
+              transcode={this.transcode}
+              attendeeMode={this.attendeeMode}
+              baseMode={this.baseMode}
+              appId={this.appId}
+              uid={this.uid}
+            />
+          </div>
+        </div>
+      </div>
+>>>>>>> d6893708... implemented video conferences using agora (#228)
     );
   }
 }
 
+<<<<<<< HEAD
 export default withRouter(Meeting);
 
 // const mapStateToProps = (state) => {
@@ -87,3 +122,6 @@ export default withRouter(Meeting);
 // export default connect(mapStateToProps, {
 //   getVideoConferencesJoinee,
 // })(withRouter(Meeting));
+=======
+export default Meeting;
+>>>>>>> d6893708... implemented video conferences using agora (#228)
