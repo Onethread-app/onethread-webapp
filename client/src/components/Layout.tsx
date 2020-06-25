@@ -201,7 +201,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       ) : (
         <>
           <CustomView condition={!isMobileOnly}>
-            {queries.view === 'default' ? (
+            {props.match.url !== `/${props.user.name}/home` ? (
               <div
                 id="main-layout"
                 className={`flex relative vh-100 ${
@@ -291,9 +291,26 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 </div>
               </div>
             ) : (
-              <div className="vh-100 bg-white">
-                <SecondaryLayout Component={props.Component} />
-              </div>
+              <div
+                  className="relative"
+                >
+                  <div className="flex flex-column h-100">
+                    <NavbarTop
+                      scrollTop={scrollTop}
+                      type={
+                        (props.match.params as any).cname
+                          ? 'company'
+                          : 'default'
+                      }
+                    />
+                    <div
+                      ref={scrollRef}
+                      className="flex-grow-1 overflow-y-auto bg-white"
+                    >
+                      <SecondaryLayout Component={props.Component} />
+                    </div>
+                  </div>
+                </div>
             )}
           </CustomView>
           <MobileOnlyView>
