@@ -66,15 +66,15 @@ class Index extends React.Component {
               </div>
             </div>
             <div className="vc-login-footer">
-              <a
+              <div
                 id="joinBtn"
                 onClick={this.handleJoin}
                 disabled={!this.state.joinBtn}
                 className="vc-join-btn"
-                role="button"
+                href="button"
               >
                 Join
-              </a>
+              </div>
             </div>
           </section>
         </div>
