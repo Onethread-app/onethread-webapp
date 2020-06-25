@@ -178,4 +178,7 @@ router
 router
   .route('/individual/:account')
   .get(authorization, projectCtrl.getProjectIndividual);
+router
+  .route('/project-list/:memberId')
+  .get(authorization, projectCtrl.projectListForMember);
 module.exports = router;

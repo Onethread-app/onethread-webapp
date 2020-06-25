@@ -50,9 +50,9 @@ class Index extends React.Component {
         <div className="vc-main">
           <section className="vc-login-wrapper">
             <div className="vc-login-header">
-              <p className="vc-login-title">
+              {/* <p className="vc-login-title">
                 <b>Video Conferences</b>
-              </p>
+              </p> */}
               <p className="vc-login-subtitle">
                 <b>Empowering remote teams</b>
               </p>

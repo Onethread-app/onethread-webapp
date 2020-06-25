@@ -328,6 +328,16 @@ const NavbarTopComponent = (
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"
+                  icon="home"
+                  alignText="left"
+                  onClick={() =>
+                    props.history.push(`/${props.user.name}/home`)
+                  }
+                >
+                  Home
+                </Button>
+                <Button
+                  className="bp3-minimal outline-0 bp3-popover-dismiss"
                   onClick={(e: any) =>
                     props.logoutAction(props.history)
                   }
