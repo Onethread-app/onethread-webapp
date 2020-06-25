@@ -4,7 +4,10 @@ const initialState = {
   paymentHistory: [],
   subscriptions: [],
   currentSubscriptions: undefined,
+<<<<<<< HEAD
   subscriptionId: '',
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
 };
 export const SubscriptionReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -23,12 +26,15 @@ export const SubscriptionReducer = (state = initialState, action) => {
         ...state,
         currentSubscriptions: action.payload,
       };
+<<<<<<< HEAD
 
     case subscription.CREATE_SUBSCRIPTION_SUCESS:
       return {
         ...state,
         subscriptionId: action.payload,
       };
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
     default:
       return state;
   }

@@ -7,7 +7,10 @@ import Button from '@material-ui/core/Button';
 // import CheckIcon from '@material-ui/icons/Check';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 // import { makeStyles } from '@material-ui/core/styles';
+<<<<<<< HEAD
 import { createSubscription } from '../../../../stores/subscriptionBilling/Actions';
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -21,18 +24,27 @@ import {
 // import axios from 'axios';
 import Modal from 'react-modal';
 // import { getPaymentIntent } from '../../../../stores/subscriptionBilling/Actions';
+<<<<<<< HEAD
 import {
   tokenConfig,
   portWalletCheckout,
 } from '../../../../stores/UtilsActions';
+=======
+import { tokenConfig } from '../../../../stores/UtilsActions';
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
 import { tigrowApi } from '../../../../config';
 
 // import { StripeCardElementChangeEvent } from '@stripe/stripe-js';
 
+<<<<<<< HEAD
 import StripeCardSection from './StripeCardSection';
 import PortwalletCardSaction from './PortwalletCardSaction';
 import StripeSuccess from './StripeSuccess';
 import { stripeCheckout } from 'stores/UtilsActions';
+=======
+import CardSection from './CardSection';
+import Success from '../../../../components/Success';
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
 
 const customStyles = {
   content: {
@@ -58,6 +70,7 @@ interface ICheckout {
   changeComponentTo: (componentName: string) => any;
   company: string;
   plan: IPlan;
+<<<<<<< HEAD
   createSubscription: (subID) => void;
   companyName: string;
 }
@@ -74,10 +87,18 @@ function _Checkout(props: ICheckout) {
     state: '',
     house: '',
   });
+=======
+}
+
+function _Checkout(props: ICheckout) {
+  const [value, setValue] = React.useState('international');
+  const [success, setSuccess] = React.useState(false);
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
   const stripe = useStripe();
   const elements = useElements();
   const headers = tokenConfig();
 
+<<<<<<< HEAD
   //to-do add type
   const getPortWalletFormData = (e: any) => {
     const { id, value } = e.target;
@@ -87,6 +108,8 @@ function _Checkout(props: ICheckout) {
     }));
   };
 
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
   function closeModal() {
     setSuccess(false);
   }
@@ -100,12 +123,16 @@ function _Checkout(props: ICheckout) {
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
     const getSubscription = await tigrowApi.post(
       'subscriptions',
       { companyId: props.company, plan: props.plan._id },
       headers,
     );
+<<<<<<< HEAD
     props.createSubscription(getSubscription.data.subscription);
     const getway =
       value === 'international' ? 'stripe' : 'portwallet';
@@ -131,6 +158,56 @@ function _Checkout(props: ICheckout) {
         props.plan._id,
         props.companyName,
       );
+=======
+    const getway =
+      value === 'international' ? 'stripe' : 'portwallet';
+    const response = await tigrowApi.post(
+      'payments/stripe/intent',
+      { amount: props.plan.pricing },
+      headers,
+    );
+    const clientSecret = await response.data.client_secret;
+    // @ts-ignore: Unreachable code error
+    const result = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        // @ts-ignore: Unreachable code error
+        card: elements.getElement(CardElement),
+        billing_details: {
+          name: `${props.userFirstName} ${props.userLastName}`,
+        },
+      },
+    });
+
+    if (result.error) {
+      // Show error to your customer (e.g., insufficient funds)
+      // console.log(result.error.message);
+    } else {
+      // The payment has been processed!
+      if (
+        result.paymentIntent &&
+        result.paymentIntent!.status === 'succeeded'
+      ) {
+        setSuccess(true);
+        await tigrowApi.post(
+          `payments/${props.company}`,
+          {
+            amount: result.paymentIntent.amount,
+            currency: result.paymentIntent.currency,
+            reference: result.paymentIntent.id,
+            company: props.company,
+            gateway: getway,
+            subscription: getSubscription.data.subscription,
+          },
+          headers,
+        );
+        // Show a success message to your customer
+        // There's a risk of the customer closing the window before callback
+        // execution. Set up a webhook or plugin to listen for the
+        // payment_intent.succeeded event that handles any business critical
+        // post-payment actions.
+      }
+    }
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
   };
 
   const handleChange = (
@@ -254,7 +331,11 @@ function _Checkout(props: ICheckout) {
                   <Grid item xs={6}>
                     <Card style={{ marginTop: '10px' }}>
                       <CardContent style={{ marginTop: '12px' }}>
+<<<<<<< HEAD
                         <StripeCardSection />
+=======
+                        <CardSection />
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
                         <Button
                           style={{ marginTop: '15px' }}
                           fullWidth
@@ -271,12 +352,15 @@ function _Checkout(props: ICheckout) {
               </div>
             </div>
           )}
+<<<<<<< HEAD
           {value === 'bangladesh' && (
             <PortwalletCardSaction
               handleSubmit={handleSubmit}
               getPortWalletFormData={getPortWalletFormData}
             />
           )}
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
         </div>
       )}
       {success && (
@@ -287,7 +371,11 @@ function _Checkout(props: ICheckout) {
           style={customStyles}
           contentLabel="Example Modal"
         >
+<<<<<<< HEAD
           <StripeSuccess text="We have recieved your payment" />
+=======
+          <Success text="We have recieved your payment" />
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
         </Modal>
       )}
     </div>
@@ -299,11 +387,17 @@ const mapStateToProps = (state: any) => ({
   userFirstName: state.userReducer.user.firstName,
   userLastName: state.userReducer.user.lastName,
   company: state.companyReducer.currentCompany._id,
+<<<<<<< HEAD
   companyName: state.companyReducer.currentCompany.name,
 });
 
 const Checkout = connect(mapStateToProps, { createSubscription })(
   _Checkout,
 );
+=======
+});
+
+const Checkout = connect(mapStateToProps, {})(_Checkout);
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
 
 export default Checkout;

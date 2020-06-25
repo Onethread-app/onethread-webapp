@@ -43,6 +43,17 @@ const _SubscriptionList = (props: ISubscriptionList) => {
   const [dense] = React.useState(true);
   const classes = useStyles();
 
+<<<<<<< HEAD
+=======
+  // function generate(element) {
+  //   return [0, 1, 2].map((value) =>
+  //     React.cloneElement(element, {
+  //       key: value,
+  //     }),
+  //   );
+  // }
+
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
   React.useEffect(() => {
     props.getSubscription();
   }, []);
@@ -88,6 +99,11 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                             </ListItem>
                             ,
                           </List>
+<<<<<<< HEAD
+=======
+                          {/* <label>Less than 20 user</label>
+                    <label>Up to 5 user free</label> */}
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
                         </CardContent>
                       </Grid>
 
@@ -104,7 +120,11 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                                 props.changeComponentTo('checkOut');
                               }}
                             >
+<<<<<<< HEAD
                               Pay Bill
+=======
+                              Switch Plan
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
                             </Button>
                           </div>
                         </CardActions>
@@ -115,6 +135,7 @@ const _SubscriptionList = (props: ISubscriptionList) => {
               </Grid>
             );
           })}
+<<<<<<< HEAD
           <Grid container>
             <Grid item xs={4}>
               <Card style={{ marginBottom: '10px' }}>
@@ -128,6 +149,8 @@ const _SubscriptionList = (props: ISubscriptionList) => {
               </Card>
             </Grid>
           </Grid>
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
         </div>
       )}
     </div>

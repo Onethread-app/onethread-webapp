@@ -1,6 +1,7 @@
 import React from 'react';
 // import CheckIcon from '@material-ui/icons/Check';
 import successImage from '../resources/images/paymentSuccess.png';
+<<<<<<< HEAD
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
@@ -56,6 +57,15 @@ function _Success(props: ISuccess) {
         transform: 'translate(-50%, -50%)',
       }}
     >
+=======
+interface ISuccess {
+  text: string;
+}
+
+export default function Success(props: ISuccess) {
+  return (
+    <div>
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
       <img
         className="center"
         style={{
@@ -86,6 +96,7 @@ function _Success(props: ISuccess) {
         Thank you for your payment. An automated payment receipt will
         be sent to your registerd email
       </p>
+<<<<<<< HEAD
 
       {/* <Button
         style={{ marginTop: '10px' }}
@@ -106,3 +117,8 @@ const mapStateToProps = (state: any) => ({
 const Success = connect(mapStateToProps, {})(_Success);
 
 export default Success;
+=======
+    </div>
+  );
+}
+>>>>>>> cdf1363f... Feature/tig 224 (#231)

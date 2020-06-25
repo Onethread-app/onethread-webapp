@@ -5,7 +5,11 @@
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
+<<<<<<< HEAD
     "lib": ["es6", "dom", "esnext", "webworker"],
+=======
+				"lib": ["es6", "dom","esnext", "webworker"],
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
@@ -25,7 +29,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "noImplicitAny": false
+				"noImplicitAny": false
   },
   "exclude": [
     "node_modules",

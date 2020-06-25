@@ -9,6 +9,7 @@ import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 import { PusherReducer } from './pusher/Reducer';
 import { SubscriptionReducer } from './subscriptionBilling/Reducer';
+<<<<<<< HEAD
 import { AssociateModel } from './associate/Reducer';
 import { videoConferencesReducers } from './videoConferences/Reducer';
 import toasterReducer from './toast/Reducer';
@@ -40,6 +41,8 @@ export interface AppState {
   notificationReducer: any;
   pusherReducer: any;
 }
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
 
 import { AssociateModel } from './associate/Reducer';
 
@@ -53,6 +56,7 @@ export interface AppState {
   projectReducer: any;
   notificationReducer: any;
   pusherReducer: any;
+  SubscriptionReducer: any;
 }
 
 export const rootReducer = combineReducers({
@@ -66,6 +70,9 @@ export const rootReducer = combineReducers({
   notificationReducer,
   pusherReducer: PusherReducer,
   subscriptionReducer: SubscriptionReducer,
+<<<<<<< HEAD
   videoConferencesReducers: videoConferencesReducers,
   toasterReducer: toasterReducer,
+=======
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
 });

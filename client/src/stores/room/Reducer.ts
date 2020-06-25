@@ -579,10 +579,14 @@ export const RoomReducer = (state = InitialState, action: any) => {
     case room.COUNT_TOTAL_REED_COUNT:
       return {
 <<<<<<< HEAD
+<<<<<<< HEAD
         ...state,
 =======
         ...InitialState,
 >>>>>>> e898d038... Pusher channel auth and room notification count fix (#210)
+=======
+        ...state,
+>>>>>>> cdf1363f... Feature/tig 224 (#231)
         totalUnread: action.payload,
       };
     default:
