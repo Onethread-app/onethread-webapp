@@ -71,7 +71,7 @@ class Index extends React.Component {
                 onClick={this.handleJoin}
                 disabled={!this.state.joinBtn}
                 className="vc-join-btn"
-                role="button"
+                href="button"
               >
                 Join
               </div>
