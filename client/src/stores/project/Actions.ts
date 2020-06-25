@@ -739,6 +739,6 @@ export const getProjectsIndividual = () => async (
       console.log('error in project fetching');
     }
   } catch (error) {
-    console.log(error);
+    dispatch({type: PROJECT.PROJECT_ERROR, payload: error.response});
   }
 };

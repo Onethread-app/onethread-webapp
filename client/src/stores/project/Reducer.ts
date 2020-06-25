@@ -80,7 +80,8 @@ const initialState = {
   pid: '',
   projectRole: {},
   projectFileOpen: false,
-  projectList: []
+  projectList: [],
+  error: ''
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -165,6 +166,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
         return {
             ...state,
             projectList: [],
+          };
+      case PROJECT.PROJECT_ERROR:
+        return {
+            ...state,
+            error: action.payload,
           };
     default:
       return state;
