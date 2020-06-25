@@ -3,6 +3,7 @@ const boardCtrl = require('./board.controller');
 const projectCtrl = require('../project/project.controller');
 const boardSchema = require('./board.validation');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
+const {subscriptionExpireCheck} = require('../subscription/subscription.controller');
 
 // const authorization = passport.authenticate('jwt', { session: false });
 const {
@@ -10,6 +11,9 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 
 const router = express.Router();
+
+
+router.use('/',subscriptionExpireCheck);
 
 router
   .route('/')

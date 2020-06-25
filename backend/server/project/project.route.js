@@ -8,6 +8,10 @@ const companyCtrl = require('../company/company.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
+const {
+  subscriptionExpireCheck,
+} = require('../subscription/subscription.controller');
+router.use('/', subscriptionExpireCheck);
 router
   .route('/change-title')
   .put(

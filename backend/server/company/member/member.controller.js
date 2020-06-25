@@ -1,7 +1,5 @@
-const Account = require('../../account/account.model');
 const { Member } = require('./member.model');
-const { Room } = require('./../../room/room.model');
-const { Company } = require('../../company/company.model');
+const Subscription = require('../../subscription/subscription.controller');
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -60,18 +58,21 @@ const addMember = async (req, res, next) => {
   }
   try {
     if (!req.body.members.length && !req.body.pendingTeamMembers) {
-      return res.status(400).json({
+      return sendErrorResponse(res, 400, 'MemberNotFoundError', {
         message: `No members or newMembers found`,
       });
     }
-
+    const planMemberAllow = await Subscription.findOne({
+      company: req.params.companyId,
+      isActive: true,
+    }).populate('plan', 'maxTier');
     let members = [];
 
     let accounts = [];
 
     let pendingMembers = [];
 
-    if (req.body.members.length) {
+    if (req.body.members.length <= planMemberAllow.plan.maxTier) {
       let newMembers = req.body.members;
 
       accounts = newMembers.map((member) => member.account);
@@ -159,7 +160,10 @@ const addMember = async (req, res, next) => {
     }
 
     // invite new members in company
-    if (req.body.pendingTeamMembers.length) {
+    if (
+      req.body.pendingTeamMembers.length <=
+      planMemberAllow.plan.maxTier
+    ) {
       let pendingMembersInfo = req.body.pendingTeamMembers.map(
         (m) => {
           return { email: m, company: req.company._id };
@@ -173,14 +177,13 @@ const addMember = async (req, res, next) => {
         req.body.pendingTeamMembers,
       );
     }
-
-    return res.status(201).json({
+    return sendJSONresponse(res, 201, {
       message: 'New member created and invitation send',
       members,
       pendingMembers,
     });
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Colleague: ${error}`);
     next(error);
   }
 };

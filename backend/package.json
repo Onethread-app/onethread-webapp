@@ -70,8 +70,9 @@
     "ms": "^2.1.2",
     "multer": "^1.4.2",
     "nodemailer": "^6.3.0",
+    "nodemailer-express-handlebars": "^4.0.0",
     "nodemailer-smtp-transport": "^2.7.4",
-    "nodemon": "^1.19.1",
+    "nodemon": "^1.19.4",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth": "^2.0.0",
@@ -88,6 +89,7 @@
     "set-immediate-shim": "^2.0.0",
     "shortid": "^2.2.15",
     "slug": "^2.1.1",
+    "stripe": "^8.64.0",
     "winston": "3.2.1"
   },
   "devDependencies": {

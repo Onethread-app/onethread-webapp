@@ -85,6 +85,9 @@ const envVarsSchema = Joi.object({
   PUSHER_CHANNEL_CLUSTER: Joi.string()
     .required()
     .description('PUSHER_CHANNEL_CLUSTER required'),
+  STRIPE_SECRET_KEY: Joi.string()
+    .required()
+    .description('STRIPE secret key required'),
   APM_SERVICE_NAME: Joi.string()
     .required()
     .description('APM_SERVICE_NAME required'),
@@ -134,6 +137,7 @@ const config = {
   PUSHER_CHANNEL_KEY: envVars.PUSHER_CHANNEL_KEY,
   PUSHER_CHANNEL_SECRET: envVars.PUSHER_CHANNEL_SECRET,
   PUSHER_CHANNEL_CLUSTER: envVars.PUSHER_CHANNEL_CLUSTER,
+  STRIPE_SECRET_KEY: envVars.STRIPE_SECRET_KEY,
   APM_SERVICE_NAME: envVars.APM_SERVICE_NAME,
   APM_TOKEN: envVars.APM_TOKEN,
   APM_URL: envVars.APM_URL,

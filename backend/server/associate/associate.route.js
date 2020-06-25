@@ -1,17 +1,16 @@
 const express = require('express');
 const associateCtrl = require('./associate.controller');
 const companyCtrl = require('../company/company.controller');
-const passport = require('passport');
-const joiSchema = require('./associate.validation');
-const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-const { permit, authSelf } = require('./../helpers/permission');
 
 const router = express.Router();
-
+const {
+  subscriptionExpireCheck,
+} = require('../subscription/subscription.controller');
+router.use('/', subscriptionExpireCheck);
 // get borad list
 router
   .route('/:companyId') //companyId for authorization
@@ -58,7 +57,5 @@ router
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     associateCtrl.get,
   );
-
-//router.param('boardId', boardCtrl.load);
 
 module.exports = router;

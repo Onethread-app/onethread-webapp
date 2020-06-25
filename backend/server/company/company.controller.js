@@ -4,11 +4,12 @@ const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
+const Plan = require('../plan/plan.model');
+const {
+  Subscription,
+} = require('../subscription/subscription.model');
 const { chatkit } = require('../services/pusher.services');
 
-const {
-  sendCompanyNotification,
-} = require('../services/notification.services');
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
@@ -30,6 +31,7 @@ const { Project } = require('../project/project.model');
 const changeName = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
+    // return sendErrorResponse()
     return res.send("Expects 'application/json'");
   }
 
@@ -109,19 +111,23 @@ const changeName = async (req, res, next) => {
 // create a company profile
 const createCompany = async (req, res, next) => {
   try {
-    // check duplicate company name
-    const duplicate = await Company.findOne({
-      name: req.body.name,
-    });
-    if (duplicate) {
-      return res.status(409).json({
-        message: `Duplicate company name`,
-      });
-    }
-
     req.body.account = req.user._id;
     const newCompany = new Company(req.body);
-
+    const planId = await Plan.findOne({ name: 'trial' });
+    if (!planId) {
+      return sendErrorResponse(res, 404, 'PlanNotFoundError', {
+        message: 'Plan is not created',
+      });
+    }
+    await Subscription.create({
+      company: newCompany._id,
+      plan: planId._id,
+      expireAt: new Date().getTime() + 86400000 * planId.validity,
+      isActive: true,
+    });
+    logger.info(
+      `Subscription: Subscription create for company ${req.body.name}`,
+    );
     // create a default member
     const newMember = new Member({
       account: req.user._id,
@@ -410,9 +416,6 @@ const deleteCompany = async (req, res, next) => {
 
 const authorizeUser = (functionalRole, ...userRoles) => {
   return async function (req, res, next) {
-    // console.log(functionalRole)
-    // console.log(req)
-    // console.log(...userRoles)
     try {
       // const company =  await Company.findOne({
       //   _id: req.params.companyId,
@@ -496,22 +499,8 @@ const searchCompany = async (req, res, next) => {
         message: `query error`,
       });
     }
-
-    // await Company.find({
-    //   name: { $regex: new RegExp(name), $options: 'i' },
-    //   _id: { $nin: associateCompanyId },
-    // })
-    //   .select('name')
-    //   .skip(+skip)
-    //   .limit(+limit)
-    //   .then(data => {
-    //     return sendJSONresponse(res, 200, {
-    //       success: true,
-    //       message: `Search complete for ${name}`,
-    //       data,
-    //     });
-    //   });
   } catch (error) {
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };
