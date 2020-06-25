@@ -8,6 +8,7 @@ import { BoardIndexReducer } from './boardIndexReducer';
 import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 import { PusherReducer } from './pusher/Reducer';
+import { SubscriptionReducer } from './subscriptionBilling/Reducer';
 
 import { AssociateModel } from './associate/Reducer';
 
@@ -21,6 +22,7 @@ export interface AppState {
   projectReducer: any;
   notificationReducer: any;
   pusherReducer: any;
+  SubscriptionReducer: any;
 }
 
 export const rootReducer = combineReducers({
@@ -33,4 +35,5 @@ export const rootReducer = combineReducers({
   projectReducer: ProjectReducer,
   notificationReducer,
   pusherReducer: PusherReducer,
+  subscriptionReducer: SubscriptionReducer,
 });

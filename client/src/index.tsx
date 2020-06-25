@@ -9,16 +9,24 @@ import '@blueprintjs/icons/lib/css/blueprint-icons.css';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import 'animate.css/animate.min.css';
 import 'tachyons/css/tachyons.min.css';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import './index.css';
 import './style.css';
 import { App } from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { store, persistor } from 'Store';
+
+const PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY as string;
+const stripePromise = loadStripe(PUBLIC_KEY);
+
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <App />
+      <Elements stripe={stripePromise}>
+        <App />
+      </Elements>
     </PersistGate>
   </Provider>,
   document.getElementById('root'),

@@ -7,7 +7,12 @@ import { connect } from 'react-redux';
 import { MobileListView } from '../layouts/company/MobileListView';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { companySubscriber } from 'layouts/company/notification/subscribers';
-import { readNotification, seenNotification, getNotifications, incrementPageNumber } from '../stores/notifications/Action';
+import {
+  readNotification,
+  seenNotification,
+  getNotifications,
+  incrementPageNumber,
+} from '../stores/notifications/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Badge } from '@material-ui/core';
 import { notificationType } from '../layouts/company/notification/rule';
@@ -105,24 +110,25 @@ const NavbarCompanyComponent = (
 
   return (
     <>
-      {!(view && view === 'mobile') && <MobileView>
-        <Navbar
-          fixedToTop
-          className="flex justify-between items-center shadow-4"
-          style={{ height: '55px' }}
-        >
-          <h1 className="f4">{props.title}</h1>
-          <div className="flex justify-end items-center">
-            {props.match.path !== '/:username' && (
-              <Popover
-                popoverClassName="bg-white mh3"
-                position={Position.BOTTOM}
-                content={
-                  <div
-                    style={{ maxHeight: '300px' }}
-                    className="pa3 overflow-y-auto"
-                  >
-                    {props.notifications &&
+      {!(view && view === 'mobile') && (
+        <MobileView>
+          <Navbar
+            fixedToTop
+            className="flex justify-between items-center shadow-4"
+            style={{ height: '55px' }}
+          >
+            <h1 className="f4">{props.title}</h1>
+            <div className="flex justify-end items-center">
+              {props.match.path !== '/:username' && (
+                <Popover
+                  popoverClassName="bg-white mh3"
+                  position={Position.BOTTOM}
+                  content={
+                    <div
+                      style={{ maxHeight: '300px' }}
+                      className="pa3 overflow-y-auto"
+                    >
+                      {props.notifications &&
                       props.notifications.length > 0 ? (
                         props.notifications.map(
                           (sNotification: any, index) => (
@@ -132,21 +138,30 @@ const NavbarCompanyComponent = (
                               }}
                             >
                               {props.notifications &&
-                                props.notifications.length === index + 1 ? (
-                                  <div ref={setLastNotificationElement}>
-                                    <Notification
-                                      type={sNotification.notification.type}
-                                      text={sNotification.notification.text}
-                                      read={sNotification.read}
-                                    />
-                                  </div>
-                                ) : (
+                              props.notifications.length ===
+                                index + 1 ? (
+                                <div ref={setLastNotificationElement}>
                                   <Notification
-                                    type={sNotification.notification.type}
-                                    text={sNotification.notification.text}
+                                    type={
+                                      sNotification.notification.type
+                                    }
+                                    text={
+                                      sNotification.notification.text
+                                    }
                                     read={sNotification.read}
                                   />
-                                )}
+                                </div>
+                              ) : (
+                                <Notification
+                                  type={
+                                    sNotification.notification.type
+                                  }
+                                  text={
+                                    sNotification.notification.text
+                                  }
+                                  read={sNotification.read}
+                                />
+                              )}
                             </div>
                           ),
                         )
@@ -161,120 +176,120 @@ const NavbarCompanyComponent = (
                           No Notification TO Show
                         </h2>
                       )}
-                  </div>
-                }
-                target={
-            <div className="mh4 pointer">
-              <Badge
-                badgeContent={props.read}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right',
-                }}
-                color="secondary"
-              >
-                <NotificationsIcon
-                  onClick={handleSeenNotifications} />
-              </Badge>
-            </div>
-          }
-              />
-            )}
-            {props.match.path !== '/:username' && (
-            <Popover
-              popoverClassName="bg-white"
-              position={Position.BOTTOM}
-              content={
-                <div
-                  style={{ maxHeight: '300px' }}
-                  className="pa3 overflow-y-auto"
-                >
-                  {props.rooms && props.rooms.length ? (
-                    props.rooms.map(
-                      (room: IRoom, i: number, arr: any) => {
-                        return (
-                          <RoomListItem
-                            key={room._id}
-                            room={room}
-                            lastChild={isEqual(
-                              room._id,
-                              arr[props.rooms!.length - 1].id,
-                            )}
-                            active={
-                              props.currentRoom !== undefined &&
-                              room._id === props.currentRoom._id
-                            }
-                            iconBgColor={
-                              roomBgColor[i % roomBgColor.length]
-                            }
-                          />
-                        );
-                      },
-                    )
-                  ) : (
-                      <h2
-                        style={{
-                          maxHeight: '300px',
-                          textAlign: 'center',
+                    </div>
+                  }
+                  target={
+                    <div className="mh4 pointer">
+                      <Badge
+                        badgeContent={props.read}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
                         }}
-                        className="pa3 overflow-y-auto moon-gray"
+                        color="secondary"
                       >
-                        No Room
-                      </h2>
-                    )}
-                </div>
-              }
-              target={
-                <div className="mh4 pointer">
-                  <Badge
-                    badgeContent={props.totalRoomUnread}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    color="secondary"
-                  >
-                    <ChatIcon onClick={handleSeenNotifications} />
-                  </Badge>
-                </div>
-              }
+                        <NotificationsIcon
+                          onClick={handleSeenNotifications}
+                        />
+                      </Badge>
+                    </div>
+                  }
+                />
+              )}
+              {props.match.path !== '/:username' && (
+                <Popover
+                  popoverClassName="bg-white"
+                  position={Position.BOTTOM}
+                  content={
+                    <div
+                      style={{ maxHeight: '300px' }}
+                      className="pa3 overflow-y-auto"
+                    >
+                      {props.rooms && props.rooms.length ? (
+                        props.rooms.map(
+                          (room: IRoom, i: number, arr: any) => {
+                            return (
+                              <RoomListItem
+                                key={room._id}
+                                room={room}
+                                lastChild={isEqual(
+                                  room._id,
+                                  arr[props.rooms!.length - 1].id,
+                                )}
+                                active={
+                                  props.currentRoom !== undefined &&
+                                  room._id === props.currentRoom._id
+                                }
+                                iconBgColor={
+                                  roomBgColor[i % roomBgColor.length]
+                                }
+                              />
+                            );
+                          },
+                        )
+                      ) : (
+                        <h2
+                          style={{
+                            maxHeight: '300px',
+                            textAlign: 'center',
+                          }}
+                          className="pa3 overflow-y-auto moon-gray"
+                        >
+                          No Room
+                        </h2>
+                      )}
+                    </div>
+                  }
+                  target={
+                    <div className="mh4 pointer">
+                      <Badge
+                        badgeContent={props.totalRoomUnread}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                        color="secondary"
+                      >
+                        <ChatIcon onClick={handleSeenNotifications} />
+                      </Badge>
+                    </div>
+                  }
+                />
+              )}
+              <img
+                src={
+                  props.user.profileImage
+                    ? props.user.profileImage
+                    : user
+                }
+                className="dim v-mid dib br-100 pointer"
+                style={{
+                  width: '2rem',
+                  height: '2rem',
+                  objectFit: 'cover',
+                }}
+                alt="user"
+                onClick={() => setShowDialog(true)}
+              />
+            </div>
+          </Navbar>
+        </MobileView>
+      )}
+      {showDialog && (
+        <Drawer
+          onClose={() => setShowDialog(!showDialog)}
+          isOpen={showDialog}
+          canOutsideClickClose={false}
+          style={{ width: '70%' }}
+        >
+          <div>
+            <MobileListView
+              showDialog={showDialog}
+              setShowDialog={setShowDialog}
             />
-          )}
-          <img
-            src={
-              props.user.profileImage
-                ? props.user.profileImage
-                : user
-            }
-            className="dim v-mid dib br-100 pointer"
-            style={{
-              width: '2rem',
-              height: '2rem',
-              objectFit: 'cover',
-            }}
-            alt="user"
-            onClick={() => setShowDialog(true)}
-          />
           </div>
-        </Navbar>
-      </MobileView>}
-{
-  showDialog && (
-    <Drawer
-      onClose={() => setShowDialog(!showDialog)}
-      isOpen={showDialog}
-      canOutsideClickClose={false}
-      style={{ width: '70%' }}
-    >
-      <div>
-        <MobileListView
-          showDialog={showDialog}
-          setShowDialog={setShowDialog}
-        />
-      </div>
-    </Drawer>
-  )
-}
+        </Drawer>
+      )}
     </>
   );
 };
@@ -288,7 +303,7 @@ const mapStateToProps = (state: any) => {
     rooms: state.roomReducer.roomNotification.rooms,
     currentRoom: state.roomReducer.currentRoom,
     totalRoomUnread: state.roomReducer.totalUnread,
-    seen: state.notificationReducer.seen
+    seen: state.notificationReducer.seen,
   };
 };
 export const NavbarCompany = connect(mapStateToProps, {
@@ -297,5 +312,5 @@ export const NavbarCompany = connect(mapStateToProps, {
   getNotifications,
   seenNotification,
   incrementPageNumber,
-  fethcRooms
+  fethcRooms,
 })(withRouter(NavbarCompanyComponent));
