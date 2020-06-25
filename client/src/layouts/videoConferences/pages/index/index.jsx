@@ -17,7 +17,6 @@ class Index extends React.Component {
       attendeeMode: 'video',
       videoProfile: '480p_4',
     };
-    console.log(props);
   }
 
   componentDidMount() {
@@ -37,7 +36,6 @@ class Index extends React.Component {
     if (!this.state.joinBtn) {
       return;
     }
-    console.log(this.state);
     Cookies.set('channel', this.state.channel);
     Cookies.set('baseMode', this.state.baseMode);
     Cookies.set('transcode', this.state.transcode);

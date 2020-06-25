@@ -63,11 +63,11 @@ class AgoraCanvas extends React.Component {
     // init AgoraRTC local client
     this.client = AgoraRTC.createClient({ mode: $.transcode });
     this.client.init($.appId, () => {
-      console.log('AgoraRTC client initialized');
+      // console.log('AgoraRTC client initialized');
       this.subscribeStreamEvents();
       this.client.join($.appId, $.channel, $.uid, (uid) => {
-        console.log('User ' + uid + ' join channel successfully');
-        console.log('At ' + new Date().toLocaleTimeString());
+        // console.log('User ' + uid + ' join channel successfully');
+        // console.log('At ' + new Date().toLocaleTimeString());
         // create local stream
         // It is not recommended to setState in function addStream
         this.localStream = this.streamInit(
@@ -80,13 +80,13 @@ class AgoraCanvas extends React.Component {
             if ($.attendeeMode !== 'audience') {
               this.addStream(this.localStream, true);
               this.client.publish(this.localStream, (err) => {
-                console.log('Publish local stream error: ' + err);
+                // console.log('Publish local stream error: ' + err);
               });
             }
             this.setState({ readyState: true });
           },
           (err) => {
-            console.log('getUserMedia failed', err);
+            // console.log('getUserMedia failed', err);
             this.setState({ readyState: true });
           },
         );
@@ -186,10 +186,10 @@ class AgoraCanvas extends React.Component {
     this.client &&
       this.client.leave(
         () => {
-          console.log('Client succeed to leave.');
+          // console.log('Client succeed to leave.');
         },
         () => {
-          console.log('Client failed to leave.');
+          // console.log('Client failed to leave.');
         },
       );
   }
@@ -220,37 +220,37 @@ class AgoraCanvas extends React.Component {
     let rt = this;
     rt.client.on('stream-added', function (evt) {
       let stream = evt.stream;
-      console.log('New stream added: ' + stream.getId());
-      console.log('At ' + new Date().toLocaleTimeString());
-      console.log('Subscribe ', stream);
+      // console.log('New stream added: ' + stream.getId());
+      // console.log('At ' + new Date().toLocaleTimeString());
+      // console.log('Subscribe ', stream);
       rt.client.subscribe(stream, function (err) {
-        console.log('Subscribe stream failed', err);
+        // console.log('Subscribe stream failed', err);
       });
     });
 
     rt.client.on('peer-leave', function (evt) {
-      console.log('Peer has left: ' + evt.uid);
-      console.log(new Date().toLocaleTimeString());
-      console.log(evt);
+      // console.log('Peer has left: ' + evt.uid);
+      // console.log(new Date().toLocaleTimeString());
+      // console.log(evt);
       rt.removeStream(evt.uid);
     });
 
     rt.client.on('stream-subscribed', function (evt) {
       let stream = evt.stream;
-      console.log('Got stream-subscribed event');
-      console.log(new Date().toLocaleTimeString());
-      console.log(
-        'Subscribe remote stream successfully: ' + stream.getId(),
-      );
-      console.log(evt);
+      // console.log('Got stream-subscribed event');
+      // console.log(new Date().toLocaleTimeString());
+      // console.log(
+      //   'Subscribe remote stream successfully: ' + stream.getId(),
+      // );
+      // console.log(evt);
       rt.addStream(stream);
     });
 
     rt.client.on('stream-removed', function (evt) {
       let stream = evt.stream;
-      console.log('Stream removed: ' + stream.getId());
-      console.log(new Date().toLocaleTimeString());
-      console.log(evt);
+      // console.log('Stream removed: ' + stream.getId());
+      // console.log(new Date().toLocaleTimeString());
+      // console.log(evt);
       rt.removeStream(stream.getId());
     });
   };
@@ -318,7 +318,7 @@ class AgoraCanvas extends React.Component {
     } else if (this.state.displayMode === 'share') {
       // do nothing or alert, tbd
     } else {
-      console.error('Display Mode can only be tile/pip/share');
+      // console.error('Display Mode can only be tile/pip/share');
     }
   };
 
@@ -355,10 +355,10 @@ class AgoraCanvas extends React.Component {
       this.client &&
         this.client.leave(
           () => {
-            console.log('Client succeed to leave.');
+            // console.log('Client succeed to leave.');
           },
           () => {
-            console.log('Client failed to leave.');
+            // console.log('Client failed to leave.');
           },
         );
     } finally {
