@@ -1,5 +1,4 @@
 const express = require('express');
-const passport = require('passport');
 const boardColumnCtrl = require('./boardColumn.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 const joiSchema = require('./boardColumn.validation');
@@ -8,10 +7,12 @@ const joiSchema = require('./boardColumn.validation');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-const { permit } = require('./../helpers/permission');
 
 const router = express.Router();
-
+const {
+  subscriptionExpireCheck,
+} = require('../subscription/subscription.controller');
+router.use('/', subscriptionExpireCheck);
 router
   .route('/')
   .get(

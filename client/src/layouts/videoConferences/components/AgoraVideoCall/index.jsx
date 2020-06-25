@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import { merge } from 'lodash';
 import AgoraRTC from 'agora-rtc-sdk';

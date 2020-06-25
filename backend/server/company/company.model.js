@@ -74,6 +74,12 @@ const company = new Schema(
       maxlength: 32,
       required: true,
     },
+    // uniqueName: {
+    //   type: String,
+    //   unique: true,
+    //   trim: true,
+    //   required: true,
+    // },
     type: {
       type: String,
       enum: [

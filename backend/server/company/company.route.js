@@ -22,6 +22,9 @@ router
     SchemaValidator(joiSchema.newCompany),
     companyCtrl.createCompany,
   );
+// list all companies
+// create company
+// router.route('/list').get(companyCtrl.getAllCompanies);
 
 router
   .route('/search')
