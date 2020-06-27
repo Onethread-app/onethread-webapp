@@ -7,20 +7,8 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 
 const router = express.Router();
-<<<<<<< HEAD
-<<<<<<< HEAD
 const subCtrl = require('../subscription/subscription.controller');
 
-=======
-const {
-  subscriptionExpireCheck,
-} = require('../subscription/subscription.controller');
-router.use('/', subscriptionExpireCheck);
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
-=======
-const subCtrl = require('../subscription/subscription.controller');
-
->>>>>>> 1d9824de... Bugfix/controller (#259)
 // get borad list
 router
   .route('/:companyId') //companyId for authorization
