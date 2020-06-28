@@ -49,7 +49,7 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
               display: 'grid',
               gridAutoFlow: 'column'
             }}>
-            {props.user.companies.map((c) => (
+            {props.user.companies.length > 0 ? props.user.companies.map((c) => (
               <Card
                 className={`ma2 pointer ${
                   props.currentCompany === c.company._id
@@ -93,7 +93,13 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
                   </div>
                 </div>
               </Card>
-            ))
+            )) 
+            :
+            (
+              <h1 className="f5">
+                No Companies
+              </h1>
+            )
             }
           </div>
           <div className="pointer tc ma3-ns pl2-ns ma1 mt3 mt0-ns"
