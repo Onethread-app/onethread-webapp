@@ -56,7 +56,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
         className={`${props.leftOpen ? 'db ml4 mv3' : 'dn'} `}
         style={{ width: '6rem' }}
       >
-        <NavLink to={`/${props.user.name}`}>
+        <NavLink to={`/${props.user.name}/home`}>
           {props.leftOpen ? (
             <img src={logo} />
           ) : (
