@@ -200,7 +200,6 @@ router
   .route('/project-list/:memberId')
   .get(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     projectCtrl.projectListForMember,
   );
 module.exports = router;
