@@ -33,6 +33,7 @@ import settings from '../resources/images/sidebarSettings.svg';
 import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
 
 import {
   CustomView,
@@ -46,11 +47,13 @@ import { companyPermit } from 'stores/UtilsActions';
 const load = async (
   reactRouterMatch: match,
   fetchUser: () => void,
+  getAllCompaniesByUserId: (userId: string) => void,
   getCompanyInformation: (companyName: string) => any,
   getSelectedBoardDetails: (boardId: string) => any,
   getSelectedTask: (taskId: string) => any,
 ) => {
   await fetchUser();
+  await getAllCompaniesByUserId((reactRouterMatch.params as any).username)
   if (isEmpty((reactRouterMatch.params as any).cname) === false) {
     const response = await getCompanyInformation(
       (reactRouterMatch.params as any).cname,
@@ -90,6 +93,7 @@ interface LayoutInternalProps
     RouteComponentProps {
   user: User;
   fetchUserAction: () => void;
+  getAllCompaniesByUserId: (userId: string) => void;
   getCompanyDetails: (companyName: string) => any;
   getSelectedBoard: (boardId: string) => any;
   getSelectedTaskDetails: (taskId: string) => any;
@@ -137,6 +141,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       load(
         props.match,
         props.fetchUserAction,
+        props.getAllCompaniesByUserId,
         props.getCompanyDetails,
         props.getSelectedBoard,
         props.getSelectedTaskDetails,
@@ -297,11 +302,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   <div className="flex flex-column h-100">
                     <NavbarTop
                       scrollTop={scrollTop}
-                      type={
-                        (props.match.params as any).cname
-                          ? 'company'
-                          : 'default'
-                      }
+                      type={'home'}
                     />
                     <div
                       ref={scrollRef}
@@ -529,4 +530,5 @@ export const Layout = connect(mapStateToProps, {
   getCompanyDetails,
   getSelectedBoard,
   getSelectedTaskDetails,
+  getAllCompaniesByUserId
 })(withRouter(LayoutComponent));

@@ -32,6 +32,8 @@ import { getNotifications } from '../stores/notifications/Action';
 import { fethcRooms } from '../stores/room/Actions';
 import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
 import { IRoom } from '../stores/room/Reducer';
+import logo from '../resources/images/TiGrowLogoFinal.png';
+
 interface NavbarTopInternalProps {
   user: User;
   logoutAction: (history: History) => void;
@@ -128,19 +130,44 @@ const NavbarTopComponent = (
         }}
       >
         <div>
-          <NavLink
-            exact
-            to={`/company/${props.companyName}/dashboard`}
-          >
-            <div
-              className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
-              style={{
-                textOverflow: 'ellipsis',
-              }}
+          {props.type !== 'home' ? (
+            <NavLink
+              exact
+              to={`/company/${props.companyName}/dashboard`}
             >
-              {props.type === 'company' ? props.companyName : ''}
+              <div
+                className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
+                style={{
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {props.type === 'company' ? props.companyName : ''}
+              </div>
+            </NavLink>)
+            :
+            <div className="flex items-center ml4">
+              <div
+                style={{ width: '6rem' }}
+              >
+                <NavLink to={`/${props.user.name}/home`}>
+                  <img src={logo} className="br2" style={{ background: '#060517' }}/>
+                </NavLink>
+              </div>
+              <NavLink
+                exact
+                to={`/${props.user.name}/home`}
+              >
+                <div
+                  className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
+                  style={{
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {props.type === 'home' ? 'Home' : ''}
+                </div>
+              </NavLink>
             </div>
-          </NavLink>
+          }
         </div>
         <div className="flex items-center">
           {props.match.path !== '/:username' && (
@@ -153,44 +180,44 @@ const NavbarTopComponent = (
                   className="pa3 overflow-y-auto"
                 >
                   {props.notifications &&
-                  props.notifications.length > 0 ? (
-                    props.notifications.map(
-                      (sNotification: any, index) => (
-                        <div
-                          onClick={() => {
-                            onCLickNotification(sNotification);
-                          }}
-                        >
-                          {props.notifications &&
-                          props.notifications.length === index + 1 ? (
-                            <div ref={setLastNotificationElement}>
-                              <Notification
-                                type={sNotification.notification.type}
-                                text={sNotification.notification.text}
-                                read={sNotification.read}
-                              />
-                            </div>
-                          ) : (
-                            <Notification
-                              type={sNotification.notification.type}
-                              text={sNotification.notification.text}
-                              read={sNotification.read}
-                            />
-                          )}
-                        </div>
-                      ),
-                    )
-                  ) : (
-                    <h2
-                      style={{
-                        maxHeight: '300px',
-                        textAlign: 'center',
-                      }}
-                      className="pa3 overflow-y-auto moon-gray"
-                    >
-                      No Notification TO Show
-                    </h2>
-                  )}
+                    props.notifications.length > 0 ? (
+                      props.notifications.map(
+                        (sNotification: any, index) => (
+                          <div
+                            onClick={() => {
+                              onCLickNotification(sNotification);
+                            }}
+                          >
+                            {props.notifications &&
+                              props.notifications.length === index + 1 ? (
+                                <div ref={setLastNotificationElement}>
+                                  <Notification
+                                    type={sNotification.notification.type}
+                                    text={sNotification.notification.text}
+                                    read={sNotification.read}
+                                  />
+                                </div>
+                              ) : (
+                                <Notification
+                                  type={sNotification.notification.type}
+                                  text={sNotification.notification.text}
+                                  read={sNotification.read}
+                                />
+                              )}
+                          </div>
+                        ),
+                      )
+                    ) : (
+                      <h2
+                        style={{
+                          maxHeight: '300px',
+                          textAlign: 'center',
+                        }}
+                        className="pa3 overflow-y-auto moon-gray"
+                      >
+                        No Notification TO Show
+                      </h2>
+                    )}
                 </div>
               }
               target={
@@ -243,8 +270,8 @@ const NavbarTopComponent = (
                       },
                     )
                   ) : (
-                    <p className="ph2">No rooms</p>
-                  )}
+                      <p className="ph2">No rooms</p>
+                    )}
                 </div>
               }
               target={
