@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Card, HTMLTable, Icon, Dialog } from '@blueprintjs/core';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { getProjectsIndividual } from 'stores/project/Actions';
@@ -9,17 +9,26 @@ import { isMobileOnly } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 import { IMember } from 'stores/project/Reducer';
 import VideoConferences from 'layouts/videoConferences/pages/index/index';
+import { getNotifications } from '../../stores/notifications/Action';
+import { getCompanyDetails } from 'stores/company/Actions';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { History } from 'history';
+import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 
 interface HomePageComponentProps {
+  currentCompany: string;
   getAllCompaniesByUserId: (userId: string) => void;
   getProjectsIndividual: () => void;
+  getNotifications: () => void;
+  getCompanyDetails: (companyId: string, history: History) => void;
   user: User;
   project: IMember[];
 }
 
-export const HomePageComponent = (props: HomePageComponentProps) => {
+export const HomePageComponent = (props: HomePageComponentProps & RouteComponentProps) => {
 
   const [showDialog, setShowDialog] = useState(false);
+  const dispatch = useDispatch();
 
   const load = async () => {
     await props.getAllCompaniesByUserId(props.user._id);
@@ -42,8 +51,27 @@ export const HomePageComponent = (props: HomePageComponentProps) => {
             }}>
             {props.user.companies.map((c) => (
               <Card
-                className="ma2"
+                className={`ma2 pointer ${
+                  props.currentCompany === c.company._id
+                    ? 'bg-black-10'
+                    : ''
+                  }`}
                 style={{ width: '160px' }}
+                onClick={async () => {
+                  props.getNotifications();
+                  const response = (await props.getCompanyDetails(
+                    c.company.name,
+                    props.history,
+                  )) as any;
+                  if (response.status === 200) {
+                    dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+                    props.history.push(
+                      `/company/${
+                      (response as any).data.company.name
+                      }/dashboard`,
+                    );
+                  }
+                }}
               >
                 <div className="tc">
                   <img
@@ -91,7 +119,7 @@ export const HomePageComponent = (props: HomePageComponentProps) => {
               </tr>
             </thead>
             <tbody>
-              {props.project ? (
+              {props.project.length > 0 ? (
                 props.project.map((p) => (
                   <tr >
                     <td style={{ width: '25%' }}>
@@ -141,7 +169,7 @@ export const HomePageComponent = (props: HomePageComponentProps) => {
           </HTMLTable>
         </div> */}
         <h1 className="f3-ns f5">Video Conference</h1>
-        <VideoConferences/>
+        <VideoConferences />
         {/* <div className="overflow-y-auto h5">
           <HTMLTable className="w-100 mv3" striped={true}>
             <thead>
@@ -193,7 +221,8 @@ export const HomePageComponent = (props: HomePageComponentProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
-    project: state.projectReducer.projectList
+    project: state.projectReducer.projectList,
+    currentCompany: state.companyReducer.currentCompany._id
   };
 };
 
@@ -201,6 +230,8 @@ export const HomePageNew = connect(
   mapStateToProps,
   {
     getAllCompaniesByUserId,
-    getProjectsIndividual
+    getProjectsIndividual,
+    getNotifications,
+    getCompanyDetails,
   },
-)(HomePageComponent);
+)(withRouter(HomePageComponent));
