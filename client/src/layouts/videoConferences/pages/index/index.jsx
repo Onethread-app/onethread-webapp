@@ -16,6 +16,7 @@ class Index extends React.Component {
       transcode: 'interop',
       attendeeMode: 'video',
       videoProfile: '480p_4',
+      confLink: null,
     };
   }
 
@@ -41,7 +42,13 @@ class Index extends React.Component {
     Cookies.set('transcode', this.state.transcode);
     Cookies.set('attendeeMode', this.state.attendeeMode);
     Cookies.set('videoProfile', this.state.videoProfile);
-    this.props.history.push('/video/conferences/join');
+    const link =
+      process.env.PUBLIC_URL +
+      'vc/join/?conf=' +
+      window.btoa(this.state.channel);
+    this.setState({ confLink: link });
+
+    // this.props.history.push('/video/conferences/join');
   };
 
   render() {
@@ -50,9 +57,9 @@ class Index extends React.Component {
         <div className="vc-main">
           <section className="vc-login-wrapper">
             <div className="vc-login-header">
-              <p className="vc-login-title">
+              {/* <p className="vc-login-title">
                 <b>Video Conferences</b>
-              </p>
+              </p> */}
               <p className="vc-login-subtitle">
                 <b>Empowering remote teams</b>
               </p>
@@ -65,6 +72,19 @@ class Index extends React.Component {
                 ></InputChannel>
               </div>
             </div>
+            <div className="conf-link">
+              {this.state.confLink && (
+                <h3>
+                  <a
+                    href={this.state.confLink}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {this.state.confLink}
+                  </a>
+                </h3>
+              )}
+            </div>
             <div className="vc-login-footer">
               <div
                 id="joinBtn"
@@ -73,7 +93,7 @@ class Index extends React.Component {
                 className="vc-join-btn"
                 href="button"
               >
-                Join
+                Create link
               </div>
             </div>
           </section>

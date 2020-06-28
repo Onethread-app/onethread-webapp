@@ -371,6 +371,12 @@ class AgoraCanvas extends React.Component {
     }
   };
 
+  handleShareScreen = (e) => {
+    console.log(this.localStream);
+
+    this.localStream.setScreenProfile('720p_1');
+  };
+
   render() {
     const style = {
       display: 'grid',
@@ -449,12 +455,23 @@ class AgoraCanvas extends React.Component {
       </span>
     );
 
+    const shareScreen = (
+      <span
+        onClick={this.handleShareScreen}
+        className="ag-btn shareScreenBtn"
+        title="Share Screen"
+      >
+        <i className="ag-icon ag-icon-screen-share"></i>
+      </span>
+    );
+
     return (
       <div id="ag-canvas" style={style}>
         <div className="ag-btn-group">
           {exitBtn}
           {videoControlBtn}
           {audioControlBtn}
+          {/* {shareScreen} */}
           {switchDisplayBtn}
           {hideRemoteBtn}
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
+import { withRouter } from 'react-router';
 
 import './meeting.css';
 import AgoraVideoCall from '../../components/AgoraVideoCall';
@@ -8,9 +9,12 @@ import { AGORA_APP_ID } from '../../agora.config';
 class Meeting extends React.Component {
   constructor(props) {
     super(props);
+    const query = new URLSearchParams(props.history.location.search);
+    const room = query.get('conf');
     this.videoProfile =
       Cookies.get('videoProfile').split(',')[0] || '480p_4';
-    this.channel = Cookies.get('channel') || 'test';
+    this.channel = window.atob(room);
+
     this.transcode = Cookies.get('transcode') || 'interop';
     this.attendeeMode = Cookies.get('attendeeMode') || 'video';
     this.baseMode = Cookies.get('baseMode') || 'avc';
@@ -42,4 +46,4 @@ class Meeting extends React.Component {
   }
 }
 
-export default Meeting;
+export default withRouter(Meeting);

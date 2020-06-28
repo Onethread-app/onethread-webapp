@@ -11,6 +11,7 @@ import { readNotification } from '../../../stores/notifications/Action';
 import { getNotifications } from '../../../stores/notifications/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
+import Subscriptions from './subscriptions/Index';
 
 interface SettingsPageProps {
   user: User;
@@ -19,6 +20,7 @@ interface SettingsPageProps {
   companyId: string;
   readNotification: any;
   getNotifications: any;
+  companyRole: string;
 }
 
 const SettingsPagComponent = (
@@ -59,6 +61,15 @@ const SettingsPagComponent = (
             panel={<DepartmentView />}
             className="outline-0 f6-ns f7"
           />
+          {props.companyRole === 'superAdmin' && (
+            <Tab
+              id="subscription"
+              panelClassName="b--black-05 bl bw1 ml3-ns ml1 w-100"
+              title="Subscriptions and Billing"
+              panel={<Subscriptions />}
+              className="outline-0 f6-ns f7"
+            />
+          )}
         </Tabs>
       </div>
     </>
@@ -71,6 +82,7 @@ const mapStateToProps = (state: any) => {
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
     read: state.notificationReducer.read,
+    companyRole: state.companyReducer.currentCompany.role,
   };
 };
 export const SettingsPage = connect(mapStateToProps, {

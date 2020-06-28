@@ -558,7 +558,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
       };
     case room.COUNT_TOTAL_REED_COUNT:
       return {
-        ...InitialState,
+        ...state,
         totalUnread: action.payload,
       };
     default:

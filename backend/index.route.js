@@ -26,6 +26,9 @@ const associateRoutes = require('./server/associate/associate.route');
 const teamRoutes = require('./server/team-member/team.route');
 const channelRoutes = require('./server/channel/channel.route');
 const contactRoutes = require('./server/contact-us/contact.route');
+const planRoutes = require('./server/plan/plan.route');
+const subscriptionRoutes = require('./server/subscription/subscription.route');
+const paymentRoute = require('./server/payment/payment.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -59,4 +62,7 @@ router.use('/notifications', notificationRoutes);
 router.use('/channel', channelRoutes);
 router.use('/teams', teamRoutes);
 router.use('/contact', contactRoutes);
+router.use('/plans', planRoutes);
+router.use('/payments', paymentRoute);
+router.use('/subscriptions', subscriptionRoutes);
 module.exports = router;

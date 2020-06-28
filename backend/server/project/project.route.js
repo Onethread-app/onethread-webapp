@@ -8,6 +8,10 @@ const companyCtrl = require('../company/company.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
+const {
+  subscriptionExpireCheck,
+} = require('../subscription/subscription.controller');
+router.use('/', subscriptionExpireCheck);
 router
   .route('/change-title')
   .put(
@@ -174,4 +178,7 @@ router
 router
   .route('/individual/:account')
   .get(authorization, projectCtrl.getProjectIndividual);
+router
+  .route('/project-list/:memberId')
+  .get(authorization, projectCtrl.projectListForMember);
 module.exports = router;

@@ -68,7 +68,6 @@ export const createProject = (payload: any, admin: any) => async (
         reqBody,
         headers,
       );
-      
       await dispatch({
         type: PROJECT.PROJECT_CREATE,
         payload: response.data,
@@ -534,7 +533,6 @@ export const getProjectTeams = () => async (
         `/teams/member-list?pid=${pid}`,
         headers,
       );
-      
       await dispatch({
         type: PROJECT.PROJECT_GET_TEAMS,
         payload: response.data.memberList,
@@ -653,7 +651,6 @@ export const addProjectAssociate = (
       if (response.status === 200) {
         dispatch(getProjectAssociates());
       }
-      
       // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
       return response;
     } else {
@@ -708,5 +705,40 @@ export const changeProjectMemberRole = (
       console.log(error.response);
     }
     return error.response.status;
+  }
+};
+
+export const getProjectsIndividual = () => async (
+  dispatch: any,
+  getState: any,
+) => {
+
+  try {
+    await dispatch({
+      type: PROJECT.PROJECT_LIST_CLEAR,
+    });
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const list = getState().userReducer.user.companies;
+      list.map((l) => {
+        tigrowApi.get(
+          `projects/project-list/${l._id}`,
+          headers,
+        ).then((res) => {
+          res.data.map((m) => {
+            dispatch({
+              type: PROJECT.PROJECT_LIST_INDIVIDUAL,
+              payload: m.project,
+            });
+          });
+        }).catch((err) => []);
+
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in project fetching');
+    }
+  } catch (error) {
+    dispatch({type: PROJECT.PROJECT_ERROR, payload: error.response});
   }
 };
