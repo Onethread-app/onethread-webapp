@@ -13,7 +13,7 @@ router
   .route('/')
   .post(
     authorization,
-    // SchemaValidator(joiSchema.create),
+    SchemaValidator(joiSchema.create),
     deptCtrl.create,
   )
   .get(authorization, deptCtrl.list);

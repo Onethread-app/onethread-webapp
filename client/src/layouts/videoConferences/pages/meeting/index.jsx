@@ -12,7 +12,9 @@ class Meeting extends React.Component {
     const query = new URLSearchParams(props.history.location.search);
     const room = query.get('conf');
     this.videoProfile =
-      Cookies.get('videoProfile').split(',')[0] || '480p_4';
+      (Cookies.get('videoProfile') &&
+        Cookies.get('videoProfile').split(',')[0]) ||
+      '480p_4';
     this.channel = window.atob(room);
 
     this.transcode = Cookies.get('transcode') || 'interop';

@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router({ mergeParams: true });
-const passport = require('passport');
 
 // const auth = passport.authenticate('jwt', { session: false });
 const {
@@ -8,6 +7,7 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 const joiSchema = require('./company.validation');
 const companyCtrl = require('./company.controller');
+const subCtrl = require('../subscription/subscription.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 
 const memberRoutes = require('./member/member.route');
@@ -34,19 +34,19 @@ router
     companyCtrl.searchCompany,
   );
 // get company
-router
-  .route('/:cname')
-  .get(
-    authorization,
-    SchemaValidator(joiSchema.getCompany),
-    companyCtrl.getCompany,
-  );
+router.route('/:cname').get(
+  authorization,
+  // subCtrl.subscriptionExpireCheck(),
+  SchemaValidator(joiSchema.getCompany),
+  companyCtrl.getCompany,
+);
 
 // update basic info
 router
   .route('/:companyId/basic')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateBasicInfo),
     companyCtrl.updateBasicInfo,
@@ -57,6 +57,7 @@ router
   .route('/:companyId/about')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.updateAbout),
     companyCtrl.updateAbout,
@@ -65,11 +66,13 @@ router
   .route('/:companyId/certification')
   .post(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     companyCtrl.addCertifications,
   );
 router.route('/:companyId/parentorg').put(
   authorization,
+  subCtrl.subscriptionExpireCheck(),
   companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
   // SchemaValidator(joiSchema.parentOrg),
   companyCtrl.parentOrg,
@@ -80,6 +83,7 @@ router
   .route('/:companyId/changeName')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeName),
     companyCtrl.changeName,
@@ -89,6 +93,7 @@ router
   .route('/:companyId/role')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.changeRole),
     companyCtrl.updateRole,
@@ -97,6 +102,7 @@ router
   .route('/:companyId/announcements')
   .post(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     SchemaValidator(joiSchema.createNotice),
     companyCtrl.noticePostByCompany,
@@ -105,6 +111,7 @@ router
   .route('/:companyId/announcements')
   .get(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     SchemaValidator(joiSchema.allNoticesForCompany),
     companyCtrl.allNoticesForCompany,
   );
@@ -127,15 +134,10 @@ router
   .route('/:companyId/dashboard')
   .get(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     SchemaValidator(joiSchema.dashboard),
     companyCtrl.dashBoard,
   );
-
-// .delete(
-//   auth,
-//   // SchemaValidator(joiSchema.deleteCompany),
-//   companyCtrl.deleteCompany,
-// );
 
 // companies list for individual user
 router

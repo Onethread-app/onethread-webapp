@@ -42,10 +42,10 @@ class Index extends React.Component {
     Cookies.set('transcode', this.state.transcode);
     Cookies.set('attendeeMode', this.state.attendeeMode);
     Cookies.set('videoProfile', this.state.videoProfile);
+    const host =
+      process.env.PUBLIC_URL || `${document.location.host}/`;
     const link =
-      process.env.PUBLIC_URL +
-      'vc/join/?conf=' +
-      window.btoa(this.state.channel);
+      host + 'vc/join/?conf=' + window.btoa(this.state.channel);
     this.setState({ confLink: link });
 
     // this.props.history.push('/video/conferences/join');
@@ -90,7 +90,7 @@ class Index extends React.Component {
                 id="joinBtn"
                 onClick={this.handleJoin}
                 disabled={!this.state.joinBtn}
-                className="vc-join-btn"
+                className="vc-join-btn pointer"
                 href="button"
               >
                 Create link
