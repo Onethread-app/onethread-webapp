@@ -1,56 +1,41 @@
-import React, { useState, useRef, useEffect } from 'react';
-import {
-  Button,
-  Popover,
-  Position,
-  ButtonGroup,
-  Dialog,
-} from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { upperFirst, isEqual } from 'lodash';
-import { NavLink } from 'react-router-dom';
-import { logoutAction } from 'stores/auth/Actions';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { History } from 'history';
-import ChatIcon from '@material-ui/icons/Chat';
+import React, { useState, useEffect, useRef } from 'react';
+import { Navbar, Drawer, Popover, Position } from '@blueprintjs/core';
+import { MobileView } from 'react-device-detect';
 import user from '../resources/images/profilePhoto.svg';
 import { User } from 'stores/user/Reducer';
-import { CompanyListView } from '../layouts/company/ListView';
-import { CompanySignupForm } from '../layouts/company/Form';
-import Notification from '../layouts/company/notification/index';
-import { companySubscriber } from '../layouts/company/notification/subscribers';
-import { notificationType } from '../layouts/company/notification/rule';
+import { connect } from 'react-redux';
+import { MobileListView } from '../layouts/company/MobileListView';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { companySubscriber } from 'layouts/company/notification/subscribers';
 import {
   readNotification,
   seenNotification,
-  clearSeen,
+  getNotifications,
   incrementPageNumber,
 } from '../stores/notifications/Action';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Badge } from '@material-ui/core';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { getNotifications } from '../stores/notifications/Action';
+import { notificationType } from '../layouts/company/notification/rule';
+import Notification from 'layouts/company/notification/index';
+import { IRoom } from 'stores/room/Reducer';
+import { isEqual } from 'lodash';
+import { RoomListItem } from 'layouts/company/room/leftSidebar/RoomListItem';
+import ChatIcon from '@material-ui/icons/Chat';
 import { fethcRooms } from '../stores/room/Actions';
-import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
-import { IRoom } from '../stores/room/Reducer';
-import logo from '../resources/images/TiGrowLogoFinal.png';
 
-interface NavbarTopInternalProps {
+interface NavbarProps {
+  title: string;
   user: User;
-  logoutAction: (history: History) => void;
-  scrollTop: number;
-  companyName: string;
-  type: string;
-  companyId: string;
-  getNotifications: () => void;
-  seenNotification: () => void;
-  incrementPageNumber: () => void;
-  clearSeen: () => void;
-  fethcRooms: () => void;
   notifications: any;
-  readNotification: any;
   read: number;
-  seen: number;
+  companyId: string;
+  readNotification: any;
+  getNotifications: any;
+  seenNotification: () => void;
+  fethcRooms: () => void;
+  incrementPageNumber: () => void;
   rooms: [IRoom];
+  seen: number;
   totalRoomUnread: number;
   currentRoom: IRoom;
 }
@@ -62,11 +47,14 @@ const roomBgColor = [
   '#CDA2AB',
   '#FE5E41',
 ];
-const NavbarTopComponent = (
-  props: NavbarTopInternalProps & RouteComponentProps,
+
+const NavbarCompanyComponent = (
+  props: NavbarProps & RouteComponentProps,
 ) => {
   const [showDialog, setShowDialog] = useState(false);
-  // const [loading] = React.useState(true);
+  const query = new URLSearchParams(props.location.search);
+  const view = query.get('view');
+
   const observer = useRef(
     new IntersectionObserver(
       async (entries) => {
@@ -84,6 +72,7 @@ const NavbarTopComponent = (
     lastNotificationElement,
     setLastNotificationElement,
   ] = useState<null | HTMLUnknownElement>(null);
+
   useEffect(() => {
     const currentElement = lastNotificationElement;
     const currentObserver = observer.current;
@@ -99,7 +88,9 @@ const NavbarTopComponent = (
   }, [lastNotificationElement]);
 
   useEffect(() => {
-    props.match.path !== '/:username' && props.getNotifications();
+    if (props.match.path !== '/:username') {
+      props.getNotifications();
+    }
     companySubscriber(props.companyId);
     props.fethcRooms();
   }, []);
@@ -117,237 +108,71 @@ const NavbarTopComponent = (
     props.seen !== 0 && (await props.seenNotification());
   };
 
-  const handleSeenNotifications = async () => {
-    props.seen !== 0 && (await props.seenNotification());
-    // props.getNotifications();
-  };
-
   return (
     <>
-      <div
-        className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between"
-        style={{
-          height: '60px',
-          borderColor:  props.type === 'home' ? '#0F0C4E' : 'white' ,
-          position: 'sticky',
-          borderRadius: '0.5rem 0.5rem 0px 0px',
-          backgroundColor: props.type === 'home' ? '#0F0C4E' : 'white'
-        }}
-      >
-        <div>
-          {props.type !== 'home' ? (
-            <NavLink
-              exact
-              to={`/company/${props.companyName}/dashboard`}
-            >
-              <div
-                className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
-                style={{
-                  textOverflow: 'ellipsis',
-                }}
-              >
-                {props.type === 'company' ? props.companyName : ''}
-              </div>
-            </NavLink>)
-            :
-            <div className="flex items-center ml4">
-              <div
-                style={{ width: '6rem' }}
-              >
-                <NavLink to={`/${props.user.name}/home`}>
-                  <img src={logo} className="br2" style={{ background: '#0F0C4E' }} />
-                </NavLink>
-              </div>
-            </div>
-          }
-        </div>
-        <div className="flex items-center">
-          {props.match.path !== '/:username' && (
-            <Popover
-              popoverClassName="bg-white"
-              position={Position.BOTTOM}
-              content={
-                <div
-                  style={{ maxHeight: '300px', width: '500px' }}
-                  className="pa3 overflow-y-auto"
-                >
-                  {props.notifications &&
-                  props.notifications.length > 0 ? (
-                    props.notifications.map(
-                      (sNotification: any, index) => (
-                        <div
-                          onClick={() => {
-                            onCLickNotification(sNotification);
-                          }}
-                        >
-<<<<<<< HEAD
-                          {props.notifications &&
-                          props.notifications.length === index + 1 ? (
-                            <div ref={setLastNotificationElement}>
-                              <Notification
-                                type={sNotification.notification.type}
-                                text={sNotification.notification.text}
-                                read={sNotification.read}
-                              />
-                            </div>
-                          ) : (
-                            <Notification
-                              type={sNotification.notification.type}
-                              text={sNotification.notification.text}
-                              read={sNotification.read}
-                            />
-                          )}
-                        </div>
-                      ),
-                    )
-                  ) : (
-                    <h2
-                      style={{
-                        maxHeight: '300px',
-                        textAlign: 'center',
-                      }}
-                      className="pa3 overflow-y-auto moon-gray"
+      {!(view && view === 'mobile') && (
+        <MobileView>
+          <Navbar
+            fixedToTop
+            className="flex justify-between items-center shadow-4"
+            style={{ height: '55px' }}
+          >
+            <h1 className="f4">{props.title}</h1>
+            <div className="flex justify-end items-center">
+              {props.match.path !== '/:username' && (
+                <Popover
+                  popoverClassName="bg-white mh3"
+                  position={Position.BOTTOM}
+                  content={
+                    <div
+                      style={{ maxHeight: '300px' }}
+                      className="pa3 overflow-y-auto"
                     >
-                      No Notification To Show
-                    </h2>
-                  )}
-                </div>
-              }
-              target={
-                <div className="mr2 pointer">
-                  <Badge
-                    badgeContent={props.seen}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    color="secondary"
-                  >
-                    <NotificationsIcon
-                      style={{color: props.type === 'home' ? 'white' : 'dark-gray'}}
-                      onClick={handleSeenNotifications}
-                    />
-                  </Badge>
-                </div>
-              }
-            />
-          )}
-          {props.match.path !== '/:username' && (
-            <Popover
-              popoverClassName="bg-white"
-              position={Position.BOTTOM}
-              content={
-                <div
-                  style={{ maxHeight: '300px', width: '500px' }}
-                  className="pa3 overflow-y-auto"
-                >
-                  {props.rooms && props.rooms.length ? (
-                    props.rooms.map(
-                      (room: IRoom, i: number, arr: any) => {
-                        return (
-                          <RoomListItem
-                            key={room._id}
-                            room={room}
-                            lastChild={isEqual(
-                              room._id,
-                              arr[props.rooms!.length - 1].id,
-                            )}
-                            active={
-                              props.currentRoom !== undefined &&
-                              room._id === props.currentRoom._id
-                            }
-                            currentCompany={props.companyName}
-                            iconBgColor={
-                              roomBgColor[i % roomBgColor.length]
-                            }
-                          />
-                        );
-                      },
-                    )
-                  ) : (
-                    <p className="ph2">No room To Show</p>
-                  )}
-                </div>
-              }
-              target={
-                <div className="mr3 pointer">
-                  <Badge
-                    badgeContent={props.totalRoomUnread}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'right',
-                    }}
-                    color="secondary"
-                  >
-                    <ChatIcon
-                    style={{color: props.type === 'home' ? 'white' : 'dark-gray'}}
-                     onClick={handleSeenNotifications} />
-                  </Badge>
-                </div>
-              }
-            />
-          )}
-          <Popover
-            popoverClassName="bp3-popover-content-sizing bg-white"
-            position={Position.BOTTOM}
-            content={
-              <CompanyListView
-                showDialog={showDialog}
-                setShowDialog={setShowDialog}
-              />
-            }
-            target={
-              <Button
-                className="bp3-minimal dim f6 f5-l dib mr3 mr4-l outline-0"
-                style={{
-                  fontSize: '0.8rem',
-                  fontWeight: 600,
-                  border: '1px solid',
-                  color: props.type === 'home' ? 'white': 'dark-gray'
-                }}
-                text="My Companies"
-              />
-            }
-          />
-          <Popover
-            popoverClassName="bp3-popover-content-sizing"
-            position={Position.BOTTOM}
-            content={
-              <ButtonGroup
-                minimal={true}
-                className="bp3-vertical bp3-fill"
-              >
-                <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
-                  onClick={() =>
-                    props.history.push(`/${props.user.name}`)
-                  }
-                >
-                  <div className="dtc w1 w2-ns">
-                    <img
-                      src={
-                        props.user.profileImage
-                          ? props.user.profileImage
-                          : user
-                      }
-                      className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10 "
-                    />
-                  </div>
-                  <div className="dtc v-mid pl3">
-                    <h1 className="f7 f6-ns fw4 lh-title black mv0">
-                      {`${upperFirst(
-                        props.user.firstName,
-                      )} ${upperFirst(props.user.lastName)}`}
-                    </h1>
-                  </div>
-                </Button>
-                <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
-                  icon="cog"
-                  alignText="left"
-                  onClick={() =>
-                    props.history.push(`/${props.user.name}/settings`)
-=======
+                      {props.notifications &&
+                      props.notifications.length > 0 ? (
+                        props.notifications.map(
+                          (sNotification: any, index) => (
+                            <div
+                              onClick={() => {
+                                onCLickNotification(sNotification);
+                              }}
+                            >
+                              {props.notifications &&
+                              props.notifications.length ===
+                                index + 1 ? (
+                                <div ref={setLastNotificationElement}>
+                                  <Notification
+                                    type={
+                                      sNotification.notification.type
+                                    }
+                                    text={
+                                      sNotification.notification.text
+                                    }
+                                    read={sNotification.read}
+                                  />
+                                </div>
+                              ) : (
+                                <Notification
+                                  type={
+                                    sNotification.notification.type
+                                  }
+                                  text={
+                                    sNotification.notification.text
+                                  }
+                                  read={sNotification.read}
+                                />
+                              )}
+                            </div>
+                          ),
+                        )
+                      ) : (
+                        <h2
+                          style={{
+                            maxHeight: '300px',
+                            textAlign: 'center',
+                          }}
+                          className="pa3 overflow-y-auto moon-gray"
+                        >
                           No Notification To Show
                         </h2>
                       )}
@@ -414,24 +239,23 @@ const NavbarTopComponent = (
                         </h2>
                       )}
                     </div>
->>>>>>> 1d9824de... Bugfix/controller (#259)
                   }
-                >
-                  Settings
-                </Button>
-                <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
-                  onClick={(e: any) =>
-                    props.logoutAction(props.history)
+                  target={
+                    <div className="mh4 pointer">
+                      <Badge
+                        badgeContent={props.totalRoomUnread}
+                        anchorOrigin={{
+                          vertical: 'top',
+                          horizontal: 'right',
+                        }}
+                        color="secondary"
+                      >
+                        <ChatIcon onClick={handleSeenNotifications} />
+                      </Badge>
+                    </div>
                   }
-                  icon="log-in"
-                  alignText="left"
-                >
-                  Logout
-                </Button>
-              </ButtonGroup>
-            }
-            target={
+                />
+              )}
               <img
                 src={
                   props.user.profileImage
@@ -445,22 +269,26 @@ const NavbarTopComponent = (
                   objectFit: 'cover',
                 }}
                 alt="user"
+                onClick={() => setShowDialog(true)}
               />
-            }
-          />
-        </div>
-      </div>
+            </div>
+          </Navbar>
+        </MobileView>
+      )}
       {showDialog && (
-        <Dialog
+        <Drawer
           onClose={() => setShowDialog(!showDialog)}
           isOpen={showDialog}
-          style={{ background: '#fff' }}
           canOutsideClickClose={false}
+          style={{ width: '70%' }}
         >
           <div>
-            <CompanySignupForm setShowDialog={setShowDialog} />
+            <MobileListView
+              showDialog={showDialog}
+              setShowDialog={setShowDialog}
+            />
           </div>
-        </Dialog>
+        </Drawer>
       )}
     </>
   );
@@ -469,24 +297,20 @@ const NavbarTopComponent = (
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
-    companyName: state.companyReducer.currentCompany.name,
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
-    seen: state.notificationReducer.seen,
     read: state.notificationReducer.read,
     rooms: state.roomReducer.roomNotification.rooms,
     currentRoom: state.roomReducer.currentRoom,
     totalRoomUnread: state.roomReducer.totalUnread,
+    seen: state.notificationReducer.seen,
   };
 };
-
-export const NavbarTop = connect(mapStateToProps, {
-  logoutAction,
+export const NavbarCompany = connect(mapStateToProps, {
   companySubscriber,
   readNotification,
   getNotifications,
   seenNotification,
-  clearSeen,
   incrementPageNumber,
   fethcRooms,
-})(withRouter(NavbarTopComponent));
+})(withRouter(NavbarCompanyComponent));
