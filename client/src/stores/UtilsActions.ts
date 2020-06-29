@@ -201,3 +201,16 @@ export const unreadMessageNotification = (
   }
   return unread;
 };
+
+export const capitalizeName = (name: string) => {
+  return name
+    .toLowerCase()
+    .split(' ')
+    .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+    .join(' ');
+};
+
+export const addSpace = (name: string) => {
+  name = name.replace(/([A-Z])/g, ' $1').trim();
+  return capitalizeName(name);
+};

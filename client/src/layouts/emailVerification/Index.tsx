@@ -67,7 +67,7 @@ const EmailVerificationComponent = (props: RouteComponentProps) => {
         <p className="tc f3 fw5 red">{accountVerified.message}</p>
       ) : (
         <p className="tc f3 fw5 blue">
-          Your mail is verifing now....
+          Your mail is verifying now....
         </p>
       )}
     </div>

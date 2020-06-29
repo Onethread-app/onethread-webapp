@@ -14,7 +14,7 @@ import { getCompanyDetails } from 'stores/company/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
-
+import { addSpace } from 'stores/UtilsActions';
 interface HomePageComponentProps {
   currentCompany: string;
   getAllCompaniesByUserId: (userId: string) => void;
@@ -49,7 +49,7 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
               display: 'grid',
               gridAutoFlow: 'column'
             }}>
-            {props.user.companies.map((c) => (
+            {props.user.companies && props.user.companies.map((c) => (
               <Card
                 className={`ma2 pointer ${
                   props.currentCompany === c.company._id
@@ -89,7 +89,7 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
                     <h1 className="f7 f5-ns lh-title black ws-break">
                       {c.company.name}{' '}
                     </h1>
-                    <h2 className="f6 fw4 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
+                    <h2 className="f6 fw4 mt0 mb0 black-60 ws-break">{`Role: ${addSpace(c.role)}`}</h2>
                   </div>
                 </div>
               </Card>
@@ -119,7 +119,7 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
               </tr>
             </thead>
             <tbody>
-              {props.project.length > 0 ? (
+              {props.project && props.project.length > 0 ? (
                 props.project.map((p) => (
                   <tr >
                     <td style={{ width: '25%' }}>
@@ -168,7 +168,7 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
             </tbody>
           </HTMLTable>
         </div> */}
-        <h1 className="f3-ns f5">Video Conference</h1>
+        <h1 className="f3-ns f5">Video Conferences</h1>
         <VideoConferences />
         {/* <div className="overflow-y-auto h5">
           <HTMLTable className="w-100 mv3" striped={true}>

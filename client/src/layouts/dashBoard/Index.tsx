@@ -102,11 +102,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           <div className="mh4-ns mh2 mt5 mt0-ns pb6 pb0-ns">
             <div className="flex-ns justify-between">
               <Card className="w-25-ns w-90 ma2">
-                <h1 className="f6 fw6">Total running project</h1>
+                <h1 className="f6 fw6">Total Running Project</h1>
                 <h1 className="mv0">{dashboard.totalProject}</h1>
               </Card>
               <Card className="w-25-ns w-90 ma2">
-                <h1 className="f6 fw6">Completed project</h1>
+                <h1 className="f6 fw6">Completed Project</h1>
                 <h1 className="mv0">0</h1>
               </Card>
               <Card className="w-25-ns w-90 ma2">
@@ -165,7 +165,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     </div>
                   ))
                 ) : (
-                  <small>No announcements.</small>
+                  <small>No Announcement.</small>
                 )}
               </div>
             </div>
