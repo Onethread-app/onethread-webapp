@@ -63,7 +63,7 @@ const addMember = async (req, res, next) => {
       });
     }
     const planMemberAllow = await Subscription.find({
-      company: req.params.companyId,
+      company: req.company._id,
       isActive: true,
     })
       .sort({ _id: -1 })
