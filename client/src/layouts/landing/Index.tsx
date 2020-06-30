@@ -44,6 +44,7 @@ import Button from '@material-ui/core/Button';
 import { store } from 'Store';
 import { saveContactForm } from '../../stores/landing/Actions';
 import { isEmail } from 'components/final-form/utils';
+import _ from 'lodash';
 
 // import contactImage from '../../resources/homepageImages/contact.png';
 
@@ -68,7 +69,7 @@ export const HomePage = () => {
 
   const handleSubmit = () => {
 
-    if (name === '' || email === '' || message === '') {
+    if (_.isEmpty(name) || _.isEmpty(email) || _.isEmpty(message)) {
       setError('Please fill all the information');
     } else {
       const reqBody = {
@@ -524,7 +525,7 @@ export const HomePage = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     onBlur={() => {
                       const res = isEmail(email);
-                      if (res !== undefined) {
+                      if ( typeof res !== 'undefined') {
                         setError(res);
                       } else {
                         setError('');
