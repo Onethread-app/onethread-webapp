@@ -1,13 +1,7 @@
 const { Member } = require('./member.model');
-<<<<<<< HEAD
-<<<<<<< HEAD
-const { Subscription } = require('../../subscription/subscription.model');
-=======
-const Subscription = require('../../subscription/subscription.controller');
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
-=======
-const { Subscription } = require('../../subscription/subscription.model');
->>>>>>> 1d9824de... Bugfix/controller (#259)
+const {
+  Subscription,
+} = require('../../subscription/subscription.model');
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -70,43 +64,19 @@ const addMember = async (req, res, next) => {
         message: `No members or newMembers found`,
       });
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
     const planMemberAllow = await Subscription.find({
       company: req.company._id,
       isActive: true,
     })
       .sort({ _id: -1 })
       .populate('plan', 'maxTier');
-=======
-    const planMemberAllow = await Subscription.findOne({
-      company: req.params.companyId,
-      isActive: true,
-    }).populate('plan', 'maxTier');
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
-=======
-    const planMemberAllow = await Subscription.find({
-      company: req.company._id,
-      isActive: true,
-    })
-      .sort({ _id: -1 })
-      .populate('plan', 'maxTier');
->>>>>>> 1d9824de... Bugfix/controller (#259)
     let members = [];
 
     let accounts = [];
 
     let pendingMembers = [];
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     if (req.body.members.length <= planMemberAllow[0].plan.maxTier) {
-=======
-    if (req.body.members.length <= planMemberAllow.plan.maxTier) {
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
-=======
-    if (req.body.members.length <= planMemberAllow[0].plan.maxTier) {
->>>>>>> 1d9824de... Bugfix/controller (#259)
       let newMembers = req.body.members;
 
       accounts = newMembers.map((member) => member.account);
@@ -196,15 +166,7 @@ const addMember = async (req, res, next) => {
     // invite new members in company
     if (
       req.body.pendingTeamMembers.length <=
-<<<<<<< HEAD
-<<<<<<< HEAD
       planMemberAllow[0].plan.maxTier
-=======
-      planMemberAllow.plan.maxTier
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
-=======
-      planMemberAllow[0].plan.maxTier
->>>>>>> 1d9824de... Bugfix/controller (#259)
     ) {
       let pendingMembersInfo = req.body.pendingTeamMembers.map(
         (m) => {
@@ -225,39 +187,7 @@ const addMember = async (req, res, next) => {
       pendingMembers,
     });
   } catch (error) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     logger.error(`Colleague: ${error}`);
-=======
-    
-
-    logger.error(`${error}`);
-<<<<<<< HEAD
->>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
-=======
-
->>>>>>> b5ba006a... Wip/backend/announcement (#171) (#185)
-=======
-    logger.error(`${error}`);
->>>>>>> d0b80317... ready for pre-release v2.3.1
-=======
-    
-
-    logger.error(`${error}`);
-<<<<<<< HEAD
->>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
-=======
-
->>>>>>> fb4e4471... Wip/backend/announcement (#171) (#185)
-=======
-    logger.error(`${error}`);
->>>>>>> 6d92f22e... Dev (#202)
-=======
-    logger.error(`Colleague: ${error}`);
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
     next(error);
   }
 };
