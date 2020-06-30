@@ -6,7 +6,7 @@ import Pusher from 'pusher-js';
 export const companySubscriber = (companyId: string) => {
   const pusher = new Pusher('1743ba5fa64dd023e3dc', {
     cluster: 'ap1',
-    encrypted: true,
+    forceTLS: true,
   });
   pusher.connection.bind('connected', function () {
     store.dispatch({
