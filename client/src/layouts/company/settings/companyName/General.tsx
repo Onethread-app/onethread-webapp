@@ -149,11 +149,11 @@ const GeneralViewComponent = (
                     setShowDialog(false);
                   } else if (isEmpty(errors)) {
                     const response = (await props.changeCompanyName(
-                      companyName,
+                      companyName
                     )) as any;
                     if (response) {
                       props.history.push(
-                        `/company/${companyName}/settings`,
+                        `/company/${(response as any).data.company.uniqueName}/settings`,
                       );
                       setShowDialog(false);
                     }

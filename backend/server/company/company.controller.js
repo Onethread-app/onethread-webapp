@@ -1,5 +1,5 @@
+const slug = require('slug');
 const Account = require('../account/account.model');
-const mongoose = require('mongoose');
 const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
@@ -9,6 +9,7 @@ const {
   Subscription,
 } = require('../subscription/subscription.model');
 const { chatkit } = require('../services/pusher.services');
+
 
 const {
   createCompanyRoleNotification,
@@ -60,7 +61,15 @@ const changeName = async (req, res, next) => {
     }
 
     req.company.name = req.body.name;
-    await req.company.save();
+    req.company.uniqueName = slug(req.body.name, {
+      replacement: '-',
+      symbols: true,
+      remove: /[.]/g,
+      lower: false,
+      charmap: slug.charmap,
+      multicharmap: slug.multicharmap,
+    });
+    const company = await req.company.save();
 
     //notification
 
@@ -100,9 +109,20 @@ const changeName = async (req, res, next) => {
     // await notification.save();
     // await UserNotification.create(usersNotification);
 
-    return res.status(200).json({
+    return sendJSONresponse(res,200,{
       message: `Company's name updated`,
-    });
+      company: {
+        _id: company._id,
+        name: company.name,
+        uniqueName: company.uniqueName,
+        type: company.type,
+        email: company.email,
+        address: company.address,
+        legalOwnerName: company.legalOwnerName,
+        legalOwnerMail: company.legalOwnerMail,
+        role: 'superAdmin',
+      },
+    })
   } catch (error) {
     next(error);
   }
@@ -112,7 +132,16 @@ const changeName = async (req, res, next) => {
 const createCompany = async (req, res, next) => {
   try {
     req.body.account = req.user._id;
+    req.body.uniqueName = slug(req.body.name, {
+      replacement: '-',
+      symbols: true,
+      remove: /[.]/g,
+      lower: false,
+      charmap: slug.charmap,
+      multicharmap: slug.multicharmap,
+    });
     const newCompany = new Company(req.body);
+
     const planId = await Plan.findOne({ name: 'trial' });
     if (!planId) {
       return sendErrorResponse(res, 404, 'PlanNotFoundError', {
@@ -170,11 +199,12 @@ const createCompany = async (req, res, next) => {
       ),
     );
 
-    return res.status(201).json({
+    return sendJSONresponse(res,201,{
       message: 'New company created',
       company: {
         _id: company._id,
         name: company.name,
+        uniqueName: company.uniqueName,
         type: company.type,
         email: company.email,
         address: company.address,
@@ -184,8 +214,8 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
-    logger.error(`${error}`);
-    return next(error);
+    logger.error(`Company: ${error}`);
+    next(error);
   }
 };
 
@@ -196,7 +226,7 @@ const getCompanyIndividual = async (req, res, next) => {
     let options = [
       {
         path: 'company',
-        select: '_id name logo',
+        select: '_id name uniqueName logo',
       },
     ];
 
@@ -206,12 +236,12 @@ const getCompanyIndividual = async (req, res, next) => {
     })
       .select('_id company role')
       .populate(options);
-
-    return res.status(200).json({
+    
+    return sendJSONresponse(res,200,{
       companies,
     });
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };
@@ -221,7 +251,7 @@ const getCompany = async (req, res, next) => {
   try {
     // company details
     let company = await Company.findOne({
-      name: req.params.cname,
+      uniqueName: req.params.cname,
     }).select(
       '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
     );
@@ -237,16 +267,17 @@ const getCompany = async (req, res, next) => {
     let memberCount = await Member.find({
       company: company._id,
     }).countDocuments();
-    return res.status(200).json({
+
+    return sendJSONresponse(res,200,{
       company: {
         ...company._doc,
         role: member.role,
         certificate: certificate,
         totalMember: memberCount,
       },
-    });
+    })
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };

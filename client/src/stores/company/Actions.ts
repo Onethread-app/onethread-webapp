@@ -383,26 +383,28 @@ export const changeCompanyName = (companyName: string) => async (
         { name: companyName },
         headers,
       );
-      if (isEqual(response.status, 200)) {
-        dispatch({ type: CHANGE_COMPANY_NAME, payload: companyName });
-        return response.data;
-      }
+      dispatch({ type: CHANGE_COMPANY_NAME, payload: response.data.company });
+      return response;
     } else {
       // tslint:disable-next-line: no-console
       console.log('error in changing Company Name');
+      return;
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
       console.log('Network error');
+      return;
     } else if (error.response.status === 409) {
       dispatch({
         type: CHANGE_COMPANY_NAME_ERROR,
         payload: 'Name already exist',
       });
+      return;
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
+      return;
     }
   }
 };
