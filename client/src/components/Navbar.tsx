@@ -212,7 +212,7 @@ const NavbarTopComponent = (
                       }}
                       className="pa3 overflow-y-auto moon-gray"
                     >
-                      No Notification TO Show
+                      No Notification To Show
                     </h2>
                   )}
                 </div>
@@ -267,7 +267,7 @@ const NavbarTopComponent = (
                       },
                     )
                   ) : (
-                    <p className="ph2">No rooms</p>
+                    <p className="ph2">No room To Show</p>
                   )}
                 </div>
               }

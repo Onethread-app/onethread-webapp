@@ -1,5 +1,5 @@
 import { User } from 'stores/user/Reducer';
-import { EditableText, Divider, Button } from '@blueprintjs/core';
+import { Divider, Button, TextArea } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { editUserInfoAction } from 'stores/user/Actions';
 import React from 'react';
@@ -52,15 +52,19 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
             validate={maxValue(2000)}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <EditableText
-                  className="mb4 bg-white black"
-                  multiline={true}
-                  minLines={3}
-                  maxLines={10}
-                  value={input.value}
-                  onChange={input.onChange}
-                  isEditing={true}
-                />
+                 <TextArea
+                    id="description"
+                    className="mt1"
+                    value={input.value}
+                    onChange={input.onChange}
+                    style={{
+                      resize: 'none',
+                      minHeight: '50px',
+                      maxHeight: '150px',
+                    }}
+                    fill={true}
+                    growVertically={true}
+                  />
                 {checkError(meta) && (
                   <small className="mv3" style={{ color: 'red' }}>
                     {meta.error || meta.submitError}

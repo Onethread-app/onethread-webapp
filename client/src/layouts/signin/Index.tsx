@@ -23,7 +23,7 @@ import {
 import { isEmpty, isEqual } from 'lodash';
 import { SubmitError } from 'components/final-form/SubmitError';
 
-import logo from './../../resources/images/TiGrowLogoFinal.png';
+import logo from './../../resources/images/logoFinal.svg';
 import emailIcon from './../../resources/images/email.png';
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';

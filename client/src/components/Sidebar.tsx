@@ -178,7 +178,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">Colleague</p>}
+                    content={<p className="mb0">Colleagues</p>}
                     position="right"
                   >
                     <span className="pl3">
@@ -191,7 +191,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Colleague
+                    Colleagues
                   </span>
                 )}
               </NavLink>
@@ -241,7 +241,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 </span>
               ) : (
                 <Tooltip
-                  content={<p className="mb0">Project</p>}
+                  content={<p className="mb0">Projects</p>}
                   position="right"
                 >
                   <span className="pl3">
@@ -255,7 +255,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Project
+                    Projects
                   </span>
                   {props.companyRooms &&
                   unreadMessageNotification(
@@ -356,7 +356,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Room</p>}
+                      content={<p className="mb0">Rooms</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -374,7 +374,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         className="outline-0 bp3-large pl4"
                         style={{ color: 'inherit' }}
                       >
-                        Room
+                        Rooms
                       </span>
                       {props.companyRooms &&
                       unreadMessageNotification(
@@ -408,7 +408,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Board</p>}
+                      content={<p className="mb0">Boards</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -425,7 +425,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       className="outline-0 bp3-large pl4"
                       style={{ color: 'inherit' }}
                     >
-                      Board
+                      Boards
                     </span>
                   )}
                 </NavLink>
@@ -526,7 +526,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     position="right"
                   >
                     <span className="pl3">
-                      <img src={settings} className="w2 pt1" />
+                      <img src={associates} className="w2 pt1" />
                     </span>
                   </Tooltip>
                 )}

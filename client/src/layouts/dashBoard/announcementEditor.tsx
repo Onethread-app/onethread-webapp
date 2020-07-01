@@ -68,7 +68,7 @@ const AnnouncementEditorComponent = (
               props.setShowDialog(false);
             }}
           >
-            cancel
+            Cancel
           </Button>
           <Button
             type="submit"
