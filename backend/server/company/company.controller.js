@@ -1,3 +1,4 @@
+const slug = require('slug');
 const Account = require('../account/account.model');
 const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');

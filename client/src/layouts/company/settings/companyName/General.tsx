@@ -153,7 +153,11 @@ const GeneralViewComponent = (
                     )) as any;
                     if (response) {
                       props.history.push(
+<<<<<<< HEAD
                         `/company/${(response as  ICompanyResponse).data.company.uniqueName}/settings`,
+=======
+                        `/company/${(response as any).data.company.uniqueName}/settings`,
+>>>>>>> 0784e5a5... company URL fixed
                       );
                       setShowDialog(false);
                     }

@@ -68,7 +68,11 @@ export const ListViewComponent = (
                       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                       props.history.push(
                         `/company/${
+<<<<<<< HEAD
                           (response as ICompanyResponse).data.company.uniqueName
+=======
+                          (response as any).data.company.uniqueName
+>>>>>>> 0784e5a5... company URL fixed
                         }/dashboard`,
                       );
                     }
