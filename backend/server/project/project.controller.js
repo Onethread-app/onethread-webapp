@@ -61,6 +61,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         name: req.body.name,
         type: req.body.type,
         concernedAdmin: concernedAdmin.accountId,
+        account: req.user._id,
         departments: req.body.departments,
         color: req.body.color,
         company: req.params.companyId,
@@ -68,8 +69,6 @@ const createNewProjectForCompany = async (req, res, next) => {
         outline: '',
       });
       await project.save();
-      // cid = company id
-      // // assoId = assosiate id
       let projectReq = [];
       // create an id of map array
       associates.map(async (data) => {
@@ -148,6 +147,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         name: req.body.name,
         type: req.body.type,
         concernedAdmin: concernedAdmin.accountId,
+        account: req.user._id,
         departments: req.body.departments,
         color: req.body.color,
         company: req.body.companyId,
@@ -236,6 +236,7 @@ const addAssociateInProject = async (req, res, next) => {
     associates.map(async (data) => {
       let reqObject = {};
       reqObject.company = req.params.companyId;
+      reqObject.account = req.user._id;
       reqObject.associate = data._id;
       reqObject.isAccepted = false;
       reqObject.project = project._id;
@@ -831,7 +832,7 @@ const authorizeProjectRole = (functionalRole, ...userRoles) => {
         !team ||
         (functionalRole === 'all' && !userRoles.includes(team.role))
       ) {
-        return res.status(403).json({
+        return sendErrorResponse(res, 403, 'AccessError', {
           message: `Restricted`,
         });
       }
@@ -865,10 +866,9 @@ const getProjectIndividual = async (req, res, next) => {
     })
       .select('-_id project role')
       .populate(options);
-    return res.status(200).json({
-      projects,
-    });
+    return sendJSONresponse(res, 200, { projects });
   } catch (error) {
+    logger.error(`Project: ${error}`);
     next(error);
   }
 };
@@ -876,29 +876,29 @@ const getProjectIndividual = async (req, res, next) => {
 //get project list for individual user
 const projectListForMember = async (req, res, next) => {
   try {
-    const {
-      limit = 50, skip = 0
-    } = req.query;
-    let options = [{
-      path: 'project',
-      select: '_id name type concernedAdmin optionalRole', 
-      populate: [{ path: 'concernedAdmin', select: 'firstName lastName' }]
-    },
-    
-  ];
+    const { limit = 50, skip = 0 } = req.query;
+    let options = [
+      {
+        path: 'project',
+        select: '_id name type concernedAdmin optionalRole',
+        populate: [
+          { path: 'concernedAdmin', select: 'firstName lastName' },
+        ],
+      },
+    ];
     let projects = await Team.find({
-        member: req.params.memberId
-      })
+      member: req.params.memberId,
+    })
       .populate(options)
       .sort({
-        createdAt: -1
+        createdAt: -1,
       })
       .skip(+skip)
       .limit(+limit)
       .exec()
       .then((result) => {
         return sendJSONresponse(res, 200, result);
-      })
+      });
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
