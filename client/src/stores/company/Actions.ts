@@ -386,8 +386,7 @@ export const changeCompanyName = (companyName: string) => async (
       dispatch({ type: CHANGE_COMPANY_NAME, payload: response.data.company });
       return response;
     } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in changing Company Name');
+      TODO//create a logger for client end
       return;
     }
   } catch (error) {

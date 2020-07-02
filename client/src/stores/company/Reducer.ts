@@ -106,6 +106,12 @@ export interface ICompany {
   totalAssociate: number;
 }
 
+export interface ICompanyResponse {
+  data : {
+    company : ICompany
+  }
+}
+
 const InitialState = {
   currentCompany: {
     _id: '',

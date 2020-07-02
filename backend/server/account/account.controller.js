@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const slug = require('slug');
 const Account = require('./account.model');
 const { Member } = require('../company/member/member.model');
 const {

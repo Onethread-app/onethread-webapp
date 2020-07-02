@@ -15,6 +15,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { addSpace } from 'stores/UtilsActions';
+import { ICompanyResponse } from 'stores/company/Reducer';
 interface HomePageComponentProps {
   currentCompany: string;
   getAllCompaniesByUserId: (userId: string) => void;
@@ -67,7 +68,7 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
                     dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                     props.history.push(
                       `/company/${
-                      (response as any).data.company.uniqueName
+                      (response as ICompanyResponse).data.company.uniqueName
                       }/dashboard`,
                     );
                   }
