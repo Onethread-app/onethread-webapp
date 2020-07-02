@@ -124,6 +124,7 @@ const changeName = async (req, res, next) => {
       },
     })
   } catch (error) {
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };
