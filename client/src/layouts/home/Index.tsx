@@ -26,6 +26,8 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
+import { getAllVideoHistory } from '../../stores/user/Actions';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -46,6 +48,7 @@ interface HomePageComponentProps {
   getProjectsIndividual: () => void;
   getNotifications: () => void;
   getCompanyDetails: (companyId: string, history: History) => void;
+  getAllVideoHistory: () => void;
   user: User;
   project: IMember[];
 }
@@ -65,6 +68,7 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
   };
 
   useEffect(() => {
+    props.getAllVideoHistory();
     load();
   }, []);
 
@@ -393,5 +397,6 @@ export const HomePageNew = connect(
     getProjectsIndividual,
     getNotifications,
     getCompanyDetails,
+    getAllVideoHistory
   },
 )(withRouter(HomePageComponent));

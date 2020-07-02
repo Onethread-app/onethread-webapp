@@ -294,3 +294,29 @@ export const imageUploadAction = (
     }
   }
 };
+export const getAllVideoHistory = () => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.get(
+        `video-conf/get-conferences`,
+        headers,
+      );
+      console.log(response);
+      
+      dispatch({
+        type: USER_COMPANIES_UPDATE,
+        payload: response.data,
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in get company list by user');
+    }
+  } catch (error) {
+    // tslint:disable-next-line: no-console
+    console.log(error.response);
+  }
+};
