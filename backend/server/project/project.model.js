@@ -12,8 +12,7 @@ const projectSchema = new Schema(
     },
     type: {
       type: String,
-      enum: ['sd', 'md', 'associates'], // sd = single department, md = multiple departments
-      required: true,
+      enum: ['department', 'associates'], // sd = single department, md = multiple departments
     },
     description: {
       type: String,
@@ -51,7 +50,11 @@ const projectSchema = new Schema(
         },
       ],
     },
-
+    account: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+      required: true,
+    },
     departments: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -81,6 +84,7 @@ const projectSchema = new Schema(
       // which company create the project // project owner
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
+      required: true,
     },
     version: {
       type: Number,
