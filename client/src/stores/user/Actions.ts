@@ -7,6 +7,7 @@ import {
   DELETE_SKILL,
   PROFILE_IMAGE_UPLOAD,
   COVER_IMAGE_UPLOAD,
+  VIDEO_CONFERENCE,
 } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
@@ -302,14 +303,12 @@ export const getAllVideoHistory = () => async (
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(
-        `video-conf/get-conferences`,
+        `video-conferences/get-conferences`,
         headers,
       );
-      console.log(response);
-      
       dispatch({
-        type: USER_COMPANIES_UPDATE,
-        payload: response.data,
+        type: VIDEO_CONFERENCE,
+        payload: response.data.records,
       });
     } else {
       // tslint:disable-next-line: no-console

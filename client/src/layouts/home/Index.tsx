@@ -51,6 +51,7 @@ interface HomePageComponentProps {
   getAllVideoHistory: () => void;
   user: User;
   project: IMember[];
+  
 }
 
 export const HomePageComponent = (props: HomePageComponentProps & RouteComponentProps) => {
@@ -327,18 +328,18 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
                   <div className="b">Scheduled Time</div>
                 </Grid>
               </Grid>
-              {props.project.map((p) => {
+              {props.user.videos.map((v: any) => {
                 return (
                   <Card style={{ marginTop: '10px', padding: '10px' }}>
                     <Grid container>
                       <Grid item xs>
-                        <div className="ml1">{p.name}</div>
+                        <div className="ml1">{v.room}</div>
                       </Grid>
                       <Grid item xs>
-                        <div className="ml1">{p.type}</div>
+                        <div className="ml1">{v.link}</div>
                       </Grid>
                       <Grid item xs>
-                        <div className="ml1">{p.concernedAdmin.firstName}</div>
+                        <div className="ml1">{v.createdAt}</div>
                       </Grid>
                     </Grid>
                   </Card>
