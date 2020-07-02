@@ -386,7 +386,7 @@ export const changeCompanyName = (companyName: string) => async (
       dispatch({ type: CHANGE_COMPANY_NAME, payload: response.data.company });
       return response;
     } else {
-      TODO//create a logger for client end
+      //TODOcreate a logger for client end
       return;
     }
   } catch (error) {
