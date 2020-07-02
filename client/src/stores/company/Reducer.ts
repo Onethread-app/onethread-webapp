@@ -116,8 +116,12 @@ export interface ICompany {
 export interface ICompanyResponse {
   data : {
     company : ICompany
+<<<<<<< HEAD
   },
   status: number;
+=======
+  }
+>>>>>>> 062adb3a... company name review fix
 }
 
 const InitialState = {

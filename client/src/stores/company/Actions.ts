@@ -388,11 +388,15 @@ export const changeCompanyName = (companyName: string) => async (
       return response;
     } else {
 <<<<<<< HEAD
+<<<<<<< HEAD
       //TODO create a logger for client end
 =======
       // tslint:disable-next-line: no-console
       console.log('error in changing Company Name');
 >>>>>>> 0784e5a5... company URL fixed
+=======
+      TODO//create a logger for client end
+>>>>>>> 062adb3a... company name review fix
       return;
     }
   } catch (error) {
