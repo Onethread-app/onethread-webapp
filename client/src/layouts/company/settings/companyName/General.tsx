@@ -6,7 +6,7 @@ import {
   changeCompanyName,
   clearChangeCompanyNameError,
 } from '../../../../stores/company/Actions';
-import { ICompany } from 'stores/company/Reducer';
+import { ICompany, ICompanyResponse } from 'stores/company/Reducer';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { isEqual, isEmpty } from 'lodash';
 import { History } from 'history';
@@ -149,11 +149,11 @@ const GeneralViewComponent = (
                     setShowDialog(false);
                   } else if (isEmpty(errors)) {
                     const response = (await props.changeCompanyName(
-                      companyName,
+                      companyName
                     )) as any;
                     if (response) {
                       props.history.push(
-                        `/company/${companyName}/settings`,
+                        `/company/${(response as  ICompanyResponse).data.company.uniqueName}/settings`,
                       );
                       setShowDialog(false);
                     }

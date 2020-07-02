@@ -10,6 +10,7 @@ import { getNotifications } from '../../stores/notifications/Action';
 
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+import { ICompanyResponse } from 'stores/company/Reducer';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -60,14 +61,14 @@ export const ListViewComponent = (
                   onClick={async () => {
                     props.getNotifications();
                     const response = (await props.getCompanyDetails(
-                      c.company.name,
+                      c.company.uniqueName,
                       props.history,
                     )) as any;
                     if (response.status === 200) {
                       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                       props.history.push(
                         `/company/${
-                          (response as any).data.company.name
+                          (response as ICompanyResponse).data.company.uniqueName
                         }/dashboard`,
                       );
                     }

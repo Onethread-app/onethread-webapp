@@ -83,6 +83,7 @@ export interface ICertificates {
 export interface ICompany {
   _id: string;
   name: string;
+  uniqueName: string;
   type: string;
   email: string;
   address: string;
@@ -103,6 +104,13 @@ export interface ICompany {
   products: Entity[];
   totalMember: number;
   totalAssociate: number;
+}
+
+export interface ICompanyResponse {
+  data : {
+    company : ICompany
+  },
+  status: number;
 }
 
 const InitialState = {
@@ -289,7 +297,8 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          name: action.payload,
+          name: action.payload.name,
+          uniqueName: action.payload.uniqueName
         },
         changeCompanyNameLoading: false,
         error: '',

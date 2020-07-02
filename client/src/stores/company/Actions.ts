@@ -106,7 +106,7 @@ export const createCompanyAction = (
       dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
       dispatch({ type: CREATE_COMPANY, payload: response.data });
       routeHistory.push(
-        `/company/${response.data.company.name}/dashboard`,
+        `/company/${response.data.company.uniqueName}/dashboard`,
       );
       return response.data;
     } else {
@@ -383,26 +383,25 @@ export const changeCompanyName = (companyName: string) => async (
         { name: companyName },
         headers,
       );
-      if (isEqual(response.status, 200)) {
-        dispatch({ type: CHANGE_COMPANY_NAME, payload: companyName });
-        return response.data;
-      }
+      dispatch({ type: CHANGE_COMPANY_NAME, payload: response.data.company });
+      return response;
     } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in changing Company Name');
+      //TODO create a logger for client end
+      return;
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('Network error');
+      //TODO create a logger for client end
+      return;
     } else if (error.response.status === 409) {
       dispatch({
         type: CHANGE_COMPANY_NAME_ERROR,
         payload: 'Name already exist',
       });
+      return;
     } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
+      //  TODO create a logger for client end
+      return;
     }
   }
 };

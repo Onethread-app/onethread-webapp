@@ -15,6 +15,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { addSpace } from 'stores/UtilsActions';
+import { ICompanyResponse } from 'stores/company/Reducer';
 interface HomePageComponentProps {
   currentCompany: string;
   getAllCompaniesByUserId: (userId: string) => void;
@@ -60,14 +61,14 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
                 onClick={async () => {
                   props.getNotifications();
                   const response = (await props.getCompanyDetails(
-                    c.company.name,
+                    c.company.uniqueName,
                     props.history,
                   )) as any;
                   if (response.status === 200) {
                     dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                     props.history.push(
                       `/company/${
-                      (response as any).data.company.name
+                      (response as ICompanyResponse).data.company.uniqueName
                       }/dashboard`,
                     );
                   }
