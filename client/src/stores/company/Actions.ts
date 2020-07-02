@@ -106,7 +106,7 @@ export const createCompanyAction = (
       dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
       dispatch({ type: CREATE_COMPANY, payload: response.data });
       routeHistory.push(
-        `/company/${response.data.company.name}/dashboard`,
+        `/company/${response.data.company.uniqueName}/dashboard`,
       );
       return response.data;
     } else {
