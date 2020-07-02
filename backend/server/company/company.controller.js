@@ -1,10 +1,11 @@
-const slug = require('slug');
 const Account = require('../account/account.model');
 const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
 const Plan = require('../plan/plan.model');
+const {createSlug} = require('../helpers/SlugCreator');
+
 const {
   Subscription,
 } = require('../subscription/subscription.model');
@@ -61,14 +62,7 @@ const changeName = async (req, res, next) => {
     }
 
     req.company.name = req.body.name;
-    req.company.uniqueName = slug(req.body.name, {
-      replacement: '-',
-      symbols: true,
-      remove: /[.]/g,
-      lower: false,
-      charmap: slug.charmap,
-      multicharmap: slug.multicharmap,
-    });
+    req.company.uniqueName = createSlug(req.body.name);
     const company = await req.company.save();
 
     //notification
@@ -133,14 +127,7 @@ const changeName = async (req, res, next) => {
 const createCompany = async (req, res, next) => {
   try {
     req.body.account = req.user._id;
-    req.body.uniqueName = slug(req.body.name, {
-      replacement: '-',
-      symbols: true,
-      remove: /[.]/g,
-      lower: false,
-      charmap: slug.charmap,
-      multicharmap: slug.multicharmap,
-    });
+    req.body.uniqueName = createSlug(req.body.name);
     const newCompany = new Company(req.body);
 
     const planId = await Plan.findOne({ name: 'trial' });
