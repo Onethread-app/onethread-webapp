@@ -58,6 +58,7 @@ export interface User {
   profileImage: string;
   coverImage: string;
   position: string;
+  videos: [];
 }
 
 const InitialState = {
@@ -85,6 +86,7 @@ const InitialState = {
     profileImage: '',
     coverImage: '',
     position: '',
+    videos: []
   },
   error: '',
 };

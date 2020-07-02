@@ -124,9 +124,10 @@ const NavbarTopComponent = (
         className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between"
         style={{
           height: '60px',
-          borderColor: props.scrollTop > 60 ? '#0fa3a3' : 'white',
+          borderColor:  props.type === 'home' ? '#0F0C4E' : 'white' ,
           position: 'sticky',
           borderRadius: '0.5rem 0.5rem 0px 0px',
+          backgroundColor: props.type === 'home' ? '#0F0C4E' : 'white'
         }}
       >
         <div>
@@ -150,7 +151,7 @@ const NavbarTopComponent = (
                 style={{ width: '6rem' }}
               >
                 <NavLink to={`/${props.user.name}/home`}>
-                  <img src={logo} className="br2" style={{ background: '#060517' }} />
+                  <img src={logo} className="br2" style={{ background: '#0F0C4E' }} />
                 </NavLink>
               </div>
               <NavLink
@@ -158,7 +159,7 @@ const NavbarTopComponent = (
                 to={`/${props.user.name}/home`}
               >
                 <div
-                  className="f4 fw6 tigrow-lightBlue ttc ws-break mh4"
+                  className="f4 fw6 white ttc ws-break mh4"
                 >
                   {props.type === 'home' ? 'Home' : ''}
                 </div>
@@ -228,6 +229,7 @@ const NavbarTopComponent = (
                     color="secondary"
                   >
                     <NotificationsIcon
+                      style={{color: props.type === 'home' ? 'white' : 'dark-gray'}}
                       onClick={handleSeenNotifications}
                     />
                   </Badge>
@@ -281,7 +283,9 @@ const NavbarTopComponent = (
                     }}
                     color="secondary"
                   >
-                    <ChatIcon onClick={handleSeenNotifications} />
+                    <ChatIcon
+                    style={{color: props.type === 'home' ? 'white' : 'dark-gray'}}
+                     onClick={handleSeenNotifications} />
                   </Badge>
                 </div>
               }
@@ -298,11 +302,12 @@ const NavbarTopComponent = (
             }
             target={
               <Button
-                className="bp3-minimal dim dark-gray f6 f5-l dib mr3 mr4-l outline-0"
+                className="bp3-minimal dim f6 f5-l dib mr3 mr4-l outline-0"
                 style={{
                   fontSize: '0.8rem',
                   fontWeight: 600,
                   border: '1px solid',
+                  color: props.type === 'home' ? 'white': 'dark-gray'
                 }}
                 text="My Companies"
               />
