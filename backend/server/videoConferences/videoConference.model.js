@@ -5,11 +5,13 @@ const VideoConferenceSchema = new Schema(
     link: {
       type: String,
       trim: true,
+      required: true,
       maxlength: 3500,
     },
     room: {
       type: String,
       trim: true,
+      required: true,
       maxlength: 3500,
     },
     account: {

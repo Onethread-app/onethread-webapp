@@ -53,7 +53,7 @@ class Index extends React.Component {
     const headers = tokenConfig();
 
     Axios.post(
-      `${server}video-conf/save-record`,
+      `${server}video-conferences/save-record`,
       { link: link, name: this.state.channel },
       headers,
     )
