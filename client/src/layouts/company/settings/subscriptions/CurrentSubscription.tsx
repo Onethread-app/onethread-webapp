@@ -13,6 +13,7 @@ import { History } from 'history';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { getCurrentSubscription } from '../../../../stores/subscriptionBilling/Actions';
+import moment from 'moment';
 
 // import { companyPermit } from 'stores/UtilsActions';
 
@@ -26,6 +27,7 @@ interface CurrentSubscription {
   changeComponentTo: (componentName: string) => any;
   getCurrentSubscription: () => void;
   currentSubscriptions: string;
+  dueDate: string;
 }
 
 const useStyles = makeStyles({
@@ -75,7 +77,10 @@ const _CurrentSubscription = (
           </div>
           <div>
             <h4>Payment Due Date</h4>
-            <label className="pl1">June 13 2020</label>
+            <label className="pl1">
+              {props.dueDate &&
+                moment(props.dueDate).format('MMMM Do YYYY')}
+            </label>
           </div>
           <div>
             <h4>Payment History</h4>
@@ -131,6 +136,9 @@ const mapStateToProps = (state: any) => {
     currentSubscriptions:
       state.subscriptionReducer.currentSubscriptions &&
       state.subscriptionReducer.currentSubscriptions.plan.name,
+    dueDate:
+      state.subscriptionReducer.currentSubscriptions &&
+      state.subscriptionReducer.currentSubscriptions.expireAt,
   };
 };
 

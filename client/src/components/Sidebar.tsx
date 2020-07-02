@@ -106,7 +106,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 className="flex items-center nowrap ma1 hover-bg-white-20"
                 style={{ color: 'white' }}
                 activeStyle={{ background: '#3F61C5' }}
-                to={`/company/${props.company.name}/dashboard`}
+                to={`/company/${props.company.uniqueName}/dashboard`}
               >
                 {props.leftOpen ? (
                   <span className="pl4">
@@ -138,7 +138,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 className="flex items-center nowrap ma1 hover-bg-white-20"
                 style={{ color: 'white' }}
                 activeStyle={{ background: '#3F61C5' }}
-                to={`/company/${props.company.name}`}
+                to={`/company/${props.company.uniqueName}`}
               >
                 {props.leftOpen ? (
                   <span className="pl4">
@@ -170,7 +170,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 className="flex items-center nowrap ma1 hover-bg-white-20"
                 style={{ color: 'white' }}
                 activeStyle={{ background: '#3F61C5' }}
-                to={`/company/${props.company.name}/colleague`}
+                to={`/company/${props.company.uniqueName}/colleague`}
               >
                 {props.leftOpen ? (
                   <span className="pl4">
@@ -202,7 +202,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
                 style={{ color: 'white' }}
                 activeStyle={{ background: '#3F61C5' }}
-                to={`/company/${props.company.name}/settings`}
+                to={`/company/${props.company.uniqueName}/settings`}
               >
                 {props.leftOpen ? (
                   <span className="pl4">
@@ -233,7 +233,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
               className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
               style={{ color: 'white' }}
               activeStyle={{ background: '#3F61C5' }}
-              to={`/company/${props.company.name}/project`}
+              to={`/company/${props.company.uniqueName}/project`}
             >
               {props.leftOpen ? (
                 <span className="pl4">
@@ -288,7 +288,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         payload: false,
                       });
                       props.history.push(
-                        `/company/${props.company.name}/project`,
+                        `/company/${props.company.uniqueName}/project`,
                       );
                     }}
                   >
@@ -306,7 +306,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
                   style={{ color: 'white' }}
                   activeStyle={{ background: '#3F61C5' }}
-                  to={`/company/${props.company.name}/project/${props.project._id}`}
+                  to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
                 >
                   {props.leftOpen ? (
                     <span className="pl4">
@@ -344,7 +344,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
                   style={{ color: 'white' }}
                   activeStyle={{ background: '#3F61C5' }}
-                  to={`/company/${props.company.name}/project/${props.project._id}/room`}
+                  to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
                 >
                   {props.leftOpen ? (
                     <span className="pl4">
@@ -396,7 +396,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   className="flex items-center nowrap ma1 hover-bg-white-20"
                   style={{ color: 'white' }}
                   activeStyle={{ background: '#3F61C5' }}
-                  to={`/company/${props.company.name}/project/${props.project._id}/board`}
+                  to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
                 >
                   {props.leftOpen ? (
                     <span className="pl4">
@@ -434,7 +434,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
                   style={{ color: 'white' }}
                   activeStyle={{ background: '#3F61C5' }}
-                  to={`/company/${props.company.name}/project/${props.project._id}/team`}
+                  to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
                 >
                   {props.leftOpen ? (
                     <span className="pl4">
@@ -472,7 +472,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
                   style={{ color: 'white' }}
                   activeStyle={{ background: '#3F61C5' }}
-                  to={`/company/${props.company.name}/project/${props.project._id}/settings`}
+                  to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
                 >
                   {props.leftOpen ? (
                     <span className="pl4">
@@ -514,7 +514,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
                 style={{ color: 'white' }}
                 activeStyle={{ background: '#3F61C5' }}
-                to={`/company/${props.company.name}/associates`}
+                to={`/company/${props.company.uniqueName}/associates`}
               >
                 {props.leftOpen ? (
                   <span className="pl4">

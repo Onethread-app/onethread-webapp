@@ -36,6 +36,7 @@ export const tokenConfig = () => {
       'Content-type': 'application/json',
       Authorization: `Bearer ${token}`,
       ClientId: store.getState().notificationReducer.socketId,
+      CompanyId: store.getState().companyReducer.currentCompany._id,
     },
   };
 };
