@@ -1,10 +1,14 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
+import Pusher from 'pusher-js';
 
 import '../../assets/fonts/css/icons.css';
 import Validator from '../../utils/Validator';
 import './index.css';
+import Axios from 'axios';
+import { tokenConfig } from 'stores/UtilsActions';
+import { server } from 'config';
 
 class Index extends React.Component {
   constructor(props) {
@@ -46,7 +50,18 @@ class Index extends React.Component {
       process.env.PUBLIC_URL || `${document.location.host}/`;
     const link =
       host + 'vc/join/?conf=' + window.btoa(this.state.channel);
-    this.setState({ confLink: link });
+
+    const headers = tokenConfig();
+
+    Axios.post(
+      `${server}video-conf/save-record`,
+      { link: link, name: this.state.channel },
+      headers,
+    )
+      .then((res) => {
+        this.setState({ confLink: link });
+      })
+      .catch((err) => console.log(err));
 
     // this.props.history.push('/video/conferences/join');
   };

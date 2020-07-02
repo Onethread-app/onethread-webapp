@@ -63,7 +63,13 @@ class AgoraCanvas extends React.Component {
   componentWillMount() {
     let $ = this.props;
     // init AgoraRTC local client
-    this.client = AgoraRTC.createClient({ mode: $.transcode });
+    this.client = AgoraRTC.createClient({
+      mode: $.transcode,
+      codec: 'vp8',
+      audio: false,
+      video: false,
+      screen: true,
+    });
     this.client.init($.appId, () => {
       // console.log('AgoraRTC client initialized');
       this.subscribeStreamEvents();
@@ -371,10 +377,11 @@ class AgoraCanvas extends React.Component {
     }
   };
 
-  handleShareScreen = (e) => {
-    console.log(this.localStream);
-
-    this.localStream.setScreenProfile('720p_1');
+  handleShareScreen = () => {
+    // this.localStream.setScreenProfile('720p_1');
+    AgoraRTC.getScreenSources(function (err, sources) {
+      console.log(sources);
+    });
   };
 
   render() {
