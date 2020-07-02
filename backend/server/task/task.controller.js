@@ -59,6 +59,7 @@ const create = async (req, res, next) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d0b80317... ready for pre-release v2.3.1
         _id: column.boardId.project.company,
@@ -96,6 +97,13 @@ const create = async (req, res, next) => {
         task: createdTask._id,
       },
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+        _id: column.boardId.project.company,
+        project: column.boardId.project._id,
+        board: column.boardId,
+        task: createdTask._id,
+      },
+>>>>>>> c447d3e7... fix: account field add into the collection & refactor some response
       {
         _id: req.user._id,
         name: req.user.name,
@@ -378,12 +386,16 @@ const dragTask = async (req, res, next) => {
         board: column.boardId,
         task: task._id,
 <<<<<<< HEAD
+<<<<<<< HEAD
 
        },
 >>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
 =======
       },
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+      },
+>>>>>>> c447d3e7... fix: account field add into the collection & refactor some response
       {
         _id: req.user._id,
         name: req.user.name,
