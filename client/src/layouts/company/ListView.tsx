@@ -10,6 +10,7 @@ import { getNotifications } from '../../stores/notifications/Action';
 
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+import { ICompanyResponse } from 'stores/company/Reducer';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -67,7 +68,7 @@ export const ListViewComponent = (
                       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                       props.history.push(
                         `/company/${
-                          (response as any).data.company.uniqueName
+                          (response as ICompanyResponse).data.company.uniqueName
                         }/dashboard`,
                       );
                     }

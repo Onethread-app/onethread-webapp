@@ -109,7 +109,8 @@ export interface ICompany {
 export interface ICompanyResponse {
   data : {
     company : ICompany
-  }
+  },
+  status: number;
 }
 
 const InitialState = {

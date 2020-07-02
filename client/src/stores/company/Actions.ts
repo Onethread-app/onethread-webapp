@@ -386,13 +386,12 @@ export const changeCompanyName = (companyName: string) => async (
       dispatch({ type: CHANGE_COMPANY_NAME, payload: response.data.company });
       return response;
     } else {
-      //TODOcreate a logger for client end
+      //TODO create a logger for client end
       return;
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('Network error');
+      //TODO create a logger for client end
       return;
     } else if (error.response.status === 409) {
       dispatch({
@@ -401,8 +400,7 @@ export const changeCompanyName = (companyName: string) => async (
       });
       return;
     } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
+      //  TODO create a logger for client end
       return;
     }
   }
