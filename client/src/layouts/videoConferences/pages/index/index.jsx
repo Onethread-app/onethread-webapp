@@ -1,10 +1,14 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
+import Pusher from 'pusher-js';
 
 import '../../assets/fonts/css/icons.css';
 import Validator from '../../utils/Validator';
 import './index.css';
+import Axios from 'axios';
+import { tokenConfig } from 'stores/UtilsActions';
+import { server } from 'config';
 
 class Index extends React.Component {
   constructor(props) {
@@ -41,7 +45,24 @@ class Index extends React.Component {
     Cookies.set('transcode', this.state.transcode);
     Cookies.set('attendeeMode', this.state.attendeeMode);
     Cookies.set('videoProfile', this.state.videoProfile);
-    this.props.history.push('/video/conferences/join');
+    const host =
+      process.env.PUBLIC_URL || `${document.location.host}/`;
+    const link =
+      host + 'vc/join/?conf=' + window.btoa(this.state.channel);
+
+    const headers = tokenConfig();
+
+    Axios.post(
+      `${server}video-conferences/save-record`,
+      { link: link, name: this.state.channel },
+      headers,
+    )
+      .then((res) => {
+        this.setState({ confLink: link });
+      })
+      .catch((err) => console.log(err));
+
+    // this.props.history.push('/video/conferences/join');
   };
 
   render() {
@@ -70,7 +91,7 @@ class Index extends React.Component {
                 id="joinBtn"
                 onClick={this.handleJoin}
                 disabled={!this.state.joinBtn}
-                className="vc-join-btn pointer"
+                className="vc-join-btn"
                 href="button"
               >
                 Join

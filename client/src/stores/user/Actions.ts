@@ -7,6 +7,7 @@ import {
   DELETE_SKILL,
   PROFILE_IMAGE_UPLOAD,
   COVER_IMAGE_UPLOAD,
+  VIDEO_CONFERENCE,
 } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
@@ -292,5 +293,29 @@ export const imageUploadAction = (
       // tslint:disable-next-line: no-console
       console.log(error.response);
     }
+  }
+};
+export const getAllVideoHistory = () => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = await tigrowApi.get(
+        `video-conferences/get-conferences`,
+        headers,
+      );
+      dispatch({
+        type: VIDEO_CONFERENCE,
+        payload: response.data.records,
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in get company list by user');
+    }
+  } catch (error) {
+    // tslint:disable-next-line: no-console
+    console.log(error.response);
   }
 };

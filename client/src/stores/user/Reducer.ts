@@ -11,6 +11,7 @@ import {
   DELETE_SKILL,
   PROFILE_IMAGE_UPLOAD,
   COVER_IMAGE_UPLOAD,
+  VIDEO_CONFERENCE,
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 export interface ICompanyByUser {
@@ -58,6 +59,7 @@ export interface User {
   profileImage: string;
   coverImage: string;
   position: string;
+  videos: [];
 }
 
 const InitialState = {
@@ -85,6 +87,7 @@ const InitialState = {
     profileImage: '',
     coverImage: '',
     position: '',
+    videos: []
   },
   error: '',
 };
@@ -175,6 +178,15 @@ export const UserReducer = (state = InitialState, action: any) => {
         user: {
           ...state.user,
           coverImage: action.payload.link,
+        },
+      };
+    }
+    case VIDEO_CONFERENCE: {
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          videos: action.payload,
         },
       };
     }
