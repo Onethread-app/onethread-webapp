@@ -1,6 +1,7 @@
 .meeting.wrapper {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   background: #3a3b3c;
 =======
   background: blueviolet;
@@ -8,6 +9,9 @@
 =======
   background: blueviolet;
 >>>>>>> 1059a963... implemented video conferences using agora
+=======
+  background: #3a3b3c;
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   height: 100%;
   color: #fff;
 }
@@ -19,12 +23,15 @@ video {
 .meeting .ag-header {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   padding: 20px 30px;
 >>>>>>> d6893708... implemented video conferences using agora (#228)
 =======
   padding: 20px 30px;
 >>>>>>> 1059a963... implemented video conferences using agora
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -43,6 +50,7 @@ video {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 1059a963... implemented video conferences using agora
@@ -55,6 +63,8 @@ video {
 >>>>>>> d6893708... implemented video conferences using agora (#228)
 =======
 >>>>>>> 1059a963... implemented video conferences using agora
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 .meeting .ag-footer :first-child {
   margin-right: 80px;
 }
@@ -68,10 +78,14 @@ video {
 .ag-container {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   height: calc(100vh - 70px);
 }
 
 .invitation-frame {
+<<<<<<< HEAD
   margin: 0 auto;
   width: 300px;
   padding: 100px 0;
@@ -93,4 +107,15 @@ video {
 >>>>>>> d6893708... implemented video conferences using agora (#228)
 =======
 >>>>>>> 1059a963... implemented video conferences using agora
+=======
+  margin: 0 auto;
+  width: 300px;
+  padding: 100px 0;
+}
+
+.invite-btn {
+  height: 30px;
+  width: 300px;
+  font-size: 16px;
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 }

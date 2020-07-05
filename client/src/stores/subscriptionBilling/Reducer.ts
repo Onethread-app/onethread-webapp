@@ -5,9 +5,13 @@ const initialState = {
   subscriptions: [],
   currentSubscriptions: undefined,
 <<<<<<< HEAD
+<<<<<<< HEAD
   subscriptionId: '',
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+  subscriptionId: '',
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 };
 export const SubscriptionReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -27,14 +31,20 @@ export const SubscriptionReducer = (state = initialState, action) => {
         currentSubscriptions: action.payload,
       };
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 
     case subscription.CREATE_SUBSCRIPTION_SUCESS:
       return {
         ...state,
         subscriptionId: action.payload,
       };
+<<<<<<< HEAD
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
     default:
       return state;
   }

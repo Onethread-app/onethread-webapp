@@ -12,6 +12,7 @@ const load = async (req, res, next, id) => {
       if (result) {
         req.boardColumn = result;
         next();
+<<<<<<< HEAD
       }else{
 
         return sendErrorResponse(res, 400, 'IdIsNotExits', {
@@ -19,6 +20,12 @@ const load = async (req, res, next, id) => {
         });
 
       }
+=======
+      }
+      return sendErrorResponse(res, 400, 'IdIsNotExits', {
+        message: 'No valid entry found for provided Board ID',
+      });
+>>>>>>> 1d9824de... Bugfix/controller (#259)
     })
     .catch((err) => {
       logger.error(`Board column: ${err}`);

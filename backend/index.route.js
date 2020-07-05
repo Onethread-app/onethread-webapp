@@ -29,9 +29,13 @@ const planRoutes = require('./server/plan/plan.route');
 const subscriptionRoutes = require('./server/subscription/subscription.route');
 const paymentRoute = require('./server/payment/payment.route');
 <<<<<<< HEAD
+<<<<<<< HEAD
 const videoConferencesRoute = require('./server/videoConferences/videoConferences.route');
 =======
 >>>>>>> 3a98ae02... Wip/tig 229 (#232)
+=======
+const videoConferencesRoute = require('./server/videoConferences/videoConferences.route');
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -68,7 +72,11 @@ router.use('/plans', planRoutes);
 router.use('/payments', paymentRoute);
 router.use('/subscriptions', subscriptionRoutes);
 <<<<<<< HEAD
+<<<<<<< HEAD
 router.use('/video-conferences', videoConferencesRoute);
 =======
 >>>>>>> 3a98ae02... Wip/tig 229 (#232)
+=======
+router.use('/video-conferences', videoConferencesRoute);
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 module.exports = router;

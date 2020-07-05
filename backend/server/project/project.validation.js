@@ -5,6 +5,7 @@ const idSchema = {
   id: Joi.string().regex(/^[a-fA-F0-9]{24}$/),
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> 6d92f22e... Dev (#202)
@@ -17,6 +18,8 @@ const idSchema = {
 >>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
 =======
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 };
 
 // project id
@@ -72,12 +75,15 @@ module.exports = {
     body: Joi.object().keys({
       name: schema.name.required(),
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       type: schema.type.required(),
 <<<<<<< HEAD
 >>>>>>> e5e8ab62... Feature/role access (#187)
 =======
 >>>>>>> 380328e7... Feature/role access (#187)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
       concernedAdmin: Joi.object().keys({
         memberId: schema.memberId.required(),
         accountId: idSchema.id,
@@ -89,14 +95,20 @@ module.exports = {
     }),
   }),
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   createProjectFromHome: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       companyId: schema.company.required(),
     }),
   }),
+<<<<<<< HEAD
 =======
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   addAssociate: Joi.object().keys({
     body: Joi.object().keys({
       associates: schema.associates,

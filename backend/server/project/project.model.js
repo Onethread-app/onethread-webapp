@@ -10,10 +10,17 @@ const projectSchema = new Schema(
       maxlength: 50,
       required: true,
     },
+<<<<<<< HEAD
     // type: {
     //   type: String,
     //   enum: ['department', 'associates'], // sd = single department, md = multiple departments
     // },
+=======
+    type: {
+      type: String,
+      enum: ['department', 'associates'], // sd = single department, md = multiple departments
+    },
+>>>>>>> 1d9824de... Bugfix/controller (#259)
     description: {
       type: String,
       maxlength: 2500,

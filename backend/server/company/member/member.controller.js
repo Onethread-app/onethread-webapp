@@ -1,9 +1,13 @@
 const { Member } = require('./member.model');
 <<<<<<< HEAD
+<<<<<<< HEAD
 const { Subscription } = require('../../subscription/subscription.model');
 =======
 const Subscription = require('../../subscription/subscription.controller');
 >>>>>>> 3a98ae02... Wip/tig 229 (#232)
+=======
+const { Subscription } = require('../../subscription/subscription.model');
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -67,6 +71,7 @@ const addMember = async (req, res, next) => {
       });
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
     const planMemberAllow = await Subscription.find({
       company: req.company._id,
       isActive: true,
@@ -79,6 +84,14 @@ const addMember = async (req, res, next) => {
       isActive: true,
     }).populate('plan', 'maxTier');
 >>>>>>> 3a98ae02... Wip/tig 229 (#232)
+=======
+    const planMemberAllow = await Subscription.find({
+      company: req.company._id,
+      isActive: true,
+    })
+      .sort({ _id: -1 })
+      .populate('plan', 'maxTier');
+>>>>>>> 1d9824de... Bugfix/controller (#259)
     let members = [];
 
     let accounts = [];
@@ -86,10 +99,14 @@ const addMember = async (req, res, next) => {
     let pendingMembers = [];
 
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (req.body.members.length <= planMemberAllow[0].plan.maxTier) {
 =======
     if (req.body.members.length <= planMemberAllow.plan.maxTier) {
 >>>>>>> 3a98ae02... Wip/tig 229 (#232)
+=======
+    if (req.body.members.length <= planMemberAllow[0].plan.maxTier) {
+>>>>>>> 1d9824de... Bugfix/controller (#259)
       let newMembers = req.body.members;
 
       accounts = newMembers.map((member) => member.account);
@@ -180,10 +197,14 @@ const addMember = async (req, res, next) => {
     if (
       req.body.pendingTeamMembers.length <=
 <<<<<<< HEAD
+<<<<<<< HEAD
       planMemberAllow[0].plan.maxTier
 =======
       planMemberAllow.plan.maxTier
 >>>>>>> 3a98ae02... Wip/tig 229 (#232)
+=======
+      planMemberAllow[0].plan.maxTier
+>>>>>>> 1d9824de... Bugfix/controller (#259)
     ) {
       let pendingMembersInfo = req.body.pendingTeamMembers.map(
         (m) => {

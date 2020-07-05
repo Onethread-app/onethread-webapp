@@ -151,9 +151,25 @@ const NavbarTopComponent = (
                 style={{ width: '6rem' }}
               >
                 <NavLink to={`/${props.user.name}/home`}>
+<<<<<<< HEAD
                   <img src={logo} className="br2" style={{ background: '#0F0C4E' }} />
                 </NavLink>
               </div>
+=======
+                  <img src={logo} className="br2" style={{ background: '#060517' }} />
+                </NavLink>
+              </div>
+              <NavLink
+                exact
+                to={`/${props.user.name}/home`}
+              >
+                <div
+                  className="f4 fw6 tigrow-lightBlue ttc ws-break mh4"
+                >
+                  {props.type === 'home' ? 'Home' : ''}
+                </div>
+              </NavLink>
+>>>>>>> 1d9824de... Bugfix/controller (#259)
             </div>
           }
         </div>
@@ -345,16 +361,6 @@ const NavbarTopComponent = (
                   }
                 >
                   Settings
-                </Button>
-                <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
-                  icon="home"
-                  alignText="left"
-                  onClick={() =>
-                    props.history.push(`/${props.user.name}/home`)
-                  }
-                >
-                  Home
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"

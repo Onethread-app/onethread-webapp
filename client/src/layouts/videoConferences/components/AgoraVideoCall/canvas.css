@@ -31,6 +31,7 @@
 .ag-btn-group {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   height: 50px;
   width: 100%;
   position: absolute;
@@ -49,6 +50,13 @@
 >>>>>>> d6893708... implemented video conferences using agora (#228)
 =======
 >>>>>>> 1059a963... implemented video conferences using agora
+=======
+  height: 50px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background: #3a3a3a;
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   z-index: 11;
   display: flex;
   justify-content: space-around;
@@ -59,6 +67,7 @@
 .ag-btn-group.active {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   /* background: orange; */
 =======
   background: orange;
@@ -66,6 +75,9 @@
 =======
   background: orange;
 >>>>>>> 1059a963... implemented video conferences using agora
+=======
+  /* background: orange; */
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 }
 
 .ag-btn {
@@ -77,6 +89,7 @@
   cursor: pointer;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   font-size: 40px;
 =======
   font-size: 60px;
@@ -84,6 +97,9 @@
 =======
   font-size: 60px;
 >>>>>>> 1059a963... implemented video conferences using agora
+=======
+  font-size: 40px;
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   display: inline-flex;
   justify-content: center;
   align-items: center;

@@ -8,9 +8,13 @@ import Button from '@material-ui/core/Button';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 // import { makeStyles } from '@material-ui/core/styles';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { createSubscription } from '../../../../stores/subscriptionBilling/Actions';
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+import { createSubscription } from '../../../../stores/subscriptionBilling/Actions';
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -25,26 +29,38 @@ import {
 import Modal from 'react-modal';
 // import { getPaymentIntent } from '../../../../stores/subscriptionBilling/Actions';
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 import {
   tokenConfig,
   portWalletCheckout,
 } from '../../../../stores/UtilsActions';
+<<<<<<< HEAD
 =======
 import { tokenConfig } from '../../../../stores/UtilsActions';
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 import { tigrowApi } from '../../../../config';
 
 // import { StripeCardElementChangeEvent } from '@stripe/stripe-js';
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 import StripeCardSection from './StripeCardSection';
 import PortwalletCardSaction from './PortwalletCardSaction';
 import StripeSuccess from './StripeSuccess';
 import { stripeCheckout } from 'stores/UtilsActions';
+<<<<<<< HEAD
 =======
 import CardSection from './CardSection';
 import Success from '../../../../components/Success';
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 
 const customStyles = {
   content: {
@@ -71,6 +87,7 @@ interface ICheckout {
   company: string;
   plan: IPlan;
 <<<<<<< HEAD
+<<<<<<< HEAD
   createSubscription: (subID) => void;
   companyName: string;
 }
@@ -88,17 +105,36 @@ function _Checkout(props: ICheckout) {
     house: '',
   });
 =======
+=======
+  createSubscription: (subID) => void;
+  companyName: string;
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 }
 
 function _Checkout(props: ICheckout) {
-  const [value, setValue] = React.useState('international');
+  const [value, setValue] = React.useState('bangladesh');
   const [success, setSuccess] = React.useState(false);
+<<<<<<< HEAD
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+  const [formValues, setFormValues] = React.useState({
+    name: '',
+    email: '',
+    phone: '',
+    zipCode: '',
+    city: '',
+    state: '',
+    house: '',
+  });
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   const stripe = useStripe();
   const elements = useElements();
   const headers = tokenConfig();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   //to-do add type
   const getPortWalletFormData = (e: any) => {
     const { id, value } = e.target;
@@ -108,8 +144,11 @@ function _Checkout(props: ICheckout) {
     }));
   };
 
+<<<<<<< HEAD
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   function closeModal() {
     setSuccess(false);
   }
@@ -132,6 +171,7 @@ function _Checkout(props: ICheckout) {
       { companyId: props.company, plan: props.plan._id },
       headers,
     );
+<<<<<<< HEAD
 <<<<<<< HEAD
     props.createSubscription(getSubscription.data.subscription);
     const getway =
@@ -159,25 +199,13 @@ function _Checkout(props: ICheckout) {
         props.companyName,
       );
 =======
+=======
+    props.createSubscription(getSubscription.data.subscription);
+>>>>>>> 1d9824de... Bugfix/controller (#259)
     const getway =
       value === 'international' ? 'stripe' : 'portwallet';
-    const response = await tigrowApi.post(
-      'payments/stripe/intent',
-      { amount: props.plan.pricing },
-      headers,
-    );
-    const clientSecret = await response.data.client_secret;
-    // @ts-ignore: Unreachable code error
-    const result = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        // @ts-ignore: Unreachable code error
-        card: elements.getElement(CardElement),
-        billing_details: {
-          name: `${props.userFirstName} ${props.userLastName}`,
-        },
-      },
-    });
 
+<<<<<<< HEAD
     if (result.error) {
       // Show error to your customer (e.g., insufficient funds)
       // console.log(result.error.message);
@@ -208,6 +236,29 @@ function _Checkout(props: ICheckout) {
       }
     }
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+    const stripeSuccess =
+      value === 'international' &&
+      (await stripeCheckout(
+        stripe,
+        props.company,
+        getway,
+        props.userLastName,
+        props.userFirstName,
+        CardElement,
+        elements,
+        getSubscription,
+        props.plan.pricing,
+      ));
+    stripeSuccess && setSuccess(stripeSuccess);
+    value === 'bangladesh' &&
+      portWalletCheckout(
+        formValues,
+        props.plan.pricing,
+        props.plan._id,
+        props.companyName,
+      );
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   };
 
   const handleChange = (
@@ -332,10 +383,14 @@ function _Checkout(props: ICheckout) {
                     <Card style={{ marginTop: '10px' }}>
                       <CardContent style={{ marginTop: '12px' }}>
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <StripeCardSection />
 =======
                         <CardSection />
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+                        <StripeCardSection />
+>>>>>>> 1d9824de... Bugfix/controller (#259)
                         <Button
                           style={{ marginTop: '15px' }}
                           fullWidth
@@ -353,14 +408,20 @@ function _Checkout(props: ICheckout) {
             </div>
           )}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
           {value === 'bangladesh' && (
             <PortwalletCardSaction
               handleSubmit={handleSubmit}
               getPortWalletFormData={getPortWalletFormData}
             />
           )}
+<<<<<<< HEAD
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
         </div>
       )}
       {success && (
@@ -372,10 +433,14 @@ function _Checkout(props: ICheckout) {
           contentLabel="Example Modal"
         >
 <<<<<<< HEAD
+<<<<<<< HEAD
           <StripeSuccess text="We have recieved your payment" />
 =======
           <Success text="We have recieved your payment" />
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+          <StripeSuccess text="We have recieved your payment" />
+>>>>>>> 1d9824de... Bugfix/controller (#259)
         </Modal>
       )}
     </div>
@@ -388,6 +453,7 @@ const mapStateToProps = (state: any) => ({
   userLastName: state.userReducer.user.lastName,
   company: state.companyReducer.currentCompany._id,
 <<<<<<< HEAD
+<<<<<<< HEAD
   companyName: state.companyReducer.currentCompany.name,
 });
 
@@ -399,5 +465,13 @@ const Checkout = connect(mapStateToProps, { createSubscription })(
 
 const Checkout = connect(mapStateToProps, {})(_Checkout);
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+  companyName: state.companyReducer.currentCompany.name,
+});
+
+const Checkout = connect(mapStateToProps, { createSubscription })(
+  _Checkout,
+);
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 
 export default Checkout;

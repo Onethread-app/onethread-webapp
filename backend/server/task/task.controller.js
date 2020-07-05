@@ -58,6 +58,7 @@ const create = async (req, res, next) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> d0b80317... ready for pre-release v2.3.1
         _id: column.boardId.project.company,
@@ -88,6 +89,13 @@ const create = async (req, res, next) => {
         task: createdTask._id,
        },
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+        _id: column.boardId.project.company,
+        project: column.boardId.project._id,
+        board: column.boardId,
+        task: createdTask._id,
+      },
+>>>>>>> 1d9824de... Bugfix/controller (#259)
       {
         _id: req.user._id,
         name: req.user.name,
@@ -369,9 +377,13 @@ const dragTask = async (req, res, next) => {
         project: column.boardId.project._id,
         board: column.boardId,
         task: task._id,
+<<<<<<< HEAD
 
        },
 >>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
+=======
+      },
+>>>>>>> 1d9824de... Bugfix/controller (#259)
       {
         _id: req.user._id,
         name: req.user.name,
@@ -401,7 +413,6 @@ const dragTask = async (req, res, next) => {
 
     res.status(200).send(responseData);
   } catch (error) {
-    
     logger.error(`Board column create: ${error}`);
 
     next(error);

@@ -14,10 +14,14 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { getCurrentSubscription } from '../../../../stores/subscriptionBilling/Actions';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import moment from 'moment';
 =======
 
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+import moment from 'moment';
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 // import { companyPermit } from 'stores/UtilsActions';
 
 interface CurrentSubscription {
@@ -31,10 +35,15 @@ interface CurrentSubscription {
   getCurrentSubscription: () => void;
   currentSubscriptions: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
   dueDate: string;
   lastPayment: string;
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+  dueDate: string;
+  lastPayment: string;
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 }
 
 const useStyles = makeStyles({
@@ -99,6 +108,9 @@ const _CurrentSubscription = (
               <Grid item xs={7}>
                 <label className="pl1">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
                   {props.lastPayment ? (
                     moment(props.lastPayment).format('MMMM Do YYYY')
                   ) : (
@@ -106,9 +118,12 @@ const _CurrentSubscription = (
                       No Payments Has Been Made
                     </label>
                   )}
+<<<<<<< HEAD
 =======
                   Last Charge April 3, 2020
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
                 </label>
               </Grid>
               <Grid item xs={5}>
@@ -158,14 +173,20 @@ const mapStateToProps = (state: any) => {
       state.subscriptionReducer.currentSubscriptions &&
       state.subscriptionReducer.currentSubscriptions.plan.name,
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
     dueDate:
       state.subscriptionReducer.currentSubscriptions &&
       state.subscriptionReducer.currentSubscriptions.expireAt,
     lastPayment:
       state.subscriptionReducer.paymentHistory[0] &&
       state.subscriptionReducer.paymentHistory[0].createdAt,
+<<<<<<< HEAD
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   };
 };
 

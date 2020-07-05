@@ -948,29 +948,29 @@ const projectListForMember = async (req, res, next) => {
 //get project list for individual user
 const projectListForMember = async (req, res, next) => {
   try {
-    const {
-      limit = 50, skip = 0
-    } = req.query;
-    let options = [{
-      path: 'project',
-      select: '_id name type concernedAdmin optionalRole', 
-      populate: [{ path: 'concernedAdmin', select: 'firstName lastName' }]
-    },
-    
-  ];
+    const { limit = 50, skip = 0 } = req.query;
+    let options = [
+      {
+        path: 'project',
+        select: '_id name type concernedAdmin optionalRole',
+        populate: [
+          { path: 'concernedAdmin', select: 'firstName lastName' },
+        ],
+      },
+    ];
     let projects = await Team.find({
-        member: req.params.memberId
-      })
+      member: req.params.memberId,
+    })
       .populate(options)
       .sort({
-        createdAt: -1
+        createdAt: -1,
       })
       .skip(+skip)
       .limit(+limit)
       .exec()
       .then((result) => {
         return sendJSONresponse(res, 200, result);
-      })
+      });
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);

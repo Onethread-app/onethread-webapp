@@ -44,6 +44,7 @@ const _SubscriptionList = (props: ISubscriptionList) => {
   const classes = useStyles();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
   // function generate(element) {
   //   return [0, 1, 2].map((value) =>
@@ -54,6 +55,8 @@ const _SubscriptionList = (props: ISubscriptionList) => {
   // }
 
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
   React.useEffect(() => {
     props.getSubscription();
   }, []);
@@ -100,10 +103,13 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                             ,
                           </List>
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
                           {/* <label>Less than 20 user</label>
                     <label>Up to 5 user free</label> */}
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
                         </CardContent>
                       </Grid>
 
@@ -121,10 +127,14 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                               }}
                             >
 <<<<<<< HEAD
+<<<<<<< HEAD
                               Pay Bill
 =======
                               Switch Plan
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+                              Pay Bill
+>>>>>>> 1d9824de... Bugfix/controller (#259)
                             </Button>
                           </div>
                         </CardActions>
@@ -136,6 +146,9 @@ const _SubscriptionList = (props: ISubscriptionList) => {
             );
           })}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
           <Grid container>
             <Grid item xs={4}>
               <Card style={{ marginBottom: '10px' }}>
@@ -149,8 +162,11 @@ const _SubscriptionList = (props: ISubscriptionList) => {
               </Card>
             </Grid>
           </Grid>
+<<<<<<< HEAD
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
         </div>
       )}
     </div>

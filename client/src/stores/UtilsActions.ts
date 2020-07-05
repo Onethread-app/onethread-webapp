@@ -5,8 +5,11 @@ import { store } from 'Store';
 import { includes } from 'lodash';
 import { ICompanyRoom } from './room/Reducer';
 import { tigrowApi } from 'config';
+<<<<<<< HEAD
 
 const toaster = Toaster.create();
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)
 
 const toaster = Toaster.create();
 
@@ -327,9 +330,12 @@ export const addSpace = (name: string) => {
   name = name.replace(/([A-Z])/g, ' $1').trim();
   return capitalizeName(name);
 };
+<<<<<<< HEAD
 
 
 
 
 
 
+=======
+>>>>>>> 1d9824de... Bugfix/controller (#259)

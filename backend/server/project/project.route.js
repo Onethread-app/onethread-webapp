@@ -121,18 +121,19 @@ router
     schemaValidator(projectValidation.rejectProject),
     projectCtrl.rejectProjectRequest,
   );
-router.route('/').get(
-  authorization,
-  subCtrl.subscriptionExpireCheck(),
-  projectCtrl.authorizeProjectRole(
-    'all',
-    'admin',
-    'projectModerator',
-    'member',
-  ),
-
-  projectCtrl.getProjectDetails,
-);
+router
+  .route('/')
+  .get(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    projectCtrl.getProjectDetails,
+  );
 router
   .route('/outline')
   .put(
@@ -202,15 +203,11 @@ router
   );
 router
   .route('/individual/:account')
-<<<<<<< HEAD
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
     projectCtrl.getProjectIndividual,
   );
-=======
-  .get(authorization, projectCtrl.getProjectIndividual);
->>>>>>> 64cb9964... Wip/home page skeleton (#235)
 router
   .route('/project-list/:memberId')
   .get(authorization, projectCtrl.projectListForMember);
