@@ -14,22 +14,10 @@ export const PUSHER_CHANNEL_KEY =
 export const PUSHER_CHANNEL_CLUSTER =
   process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER;
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 export const NOTIFICATION_KEY =
   process.env.REACT_APP_PUSHER_CHANNEL_KEY;
 export const NOTIFICATION_CLUSTER =
   process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER;
-=======
-
-export const NOTIFICATION_KEY = process.env.NOTIFICATION_PUSHER_CHANNEL_KEY;
-export const NOTIFICATION_CLUSTER = process.env.NOTIFICATION_PUSHER_CHANNEL_CLUSTER;
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
-
-export const NOTIFICATION_KEY = process.env.NOTIFICATION_PUSHER_CHANNEL_KEY;
-export const NOTIFICATION_CLUSTER = process.env.NOTIFICATION_PUSHER_CHANNEL_CLUSTER;
->>>>>>> 21b22403... notification issue fix (#244)
 
 export const tigrowApi = axios.create({
   baseURL: server,

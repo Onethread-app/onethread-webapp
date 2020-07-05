@@ -11,6 +11,7 @@ const {
 const router = express.Router();
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 const subCtrl = require('../subscription/subscription.controller');
 
 =======
@@ -23,6 +24,10 @@ router.use('/', subscriptionExpireCheck);
 const subCtrl = require('../subscription/subscription.controller');
 
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+const subCtrl = require('../subscription/subscription.controller');
+
+>>>>>>> 6d44004f... Dev (#258)
 router
   .route('/')
   .get(
