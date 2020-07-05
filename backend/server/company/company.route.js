@@ -25,9 +25,7 @@ router
 // list all companies
 // create company
 // router.route('/list').get(companyCtrl.getAllCompanies);
-router
-  .route('/user-role-company')
-  .get(authorization, companyCtrl.adminSuperAdminFinder);
+
 router
   .route('/search')
   .get(
@@ -117,7 +115,19 @@ router
     SchemaValidator(joiSchema.allNoticesForCompany),
     companyCtrl.allNoticesForCompany,
   );
-
+// 		router
+//   .route('/:companyId/announcements')
+//   .delete(
+//     authorization,
+//     SchemaValidator(),
+//     companyCtrl.removeNotice,
+// 		);
+// 		router
+//   .route('/:companyId/announcements')
+//   .put(
+//     authorization,
+//     SchemaValidator(),
+//     companyCtrl.removeNotice,
 // 		);
 
 router

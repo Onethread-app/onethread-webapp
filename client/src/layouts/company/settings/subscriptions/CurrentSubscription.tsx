@@ -88,6 +88,7 @@ const _CurrentSubscription = (
             <Grid container spacing={3}>
               <Grid item xs={7}>
                 <label className="pl1">
+                  {console.log(props.lastPayment)}
                   {props.lastPayment ? (
                     moment(props.lastPayment).format('MMMM Do YYYY')
                   ) : (

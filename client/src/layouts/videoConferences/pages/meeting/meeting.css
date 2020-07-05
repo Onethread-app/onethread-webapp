@@ -1,5 +1,5 @@
 .meeting.wrapper {
-  background: #3a3b3c;
+  background: blueviolet;
   height: 100%;
   color: #fff;
 }
@@ -9,6 +9,7 @@ video {
 }
 
 .meeting .ag-header {
+  padding: 20px 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,6 +26,11 @@ video {
   align-items: center;
 }
 
+.meeting .ag-main {
+  position: relative;
+  padding: 10px;
+}
+
 .meeting .ag-footer :first-child {
   margin-right: 80px;
 }
@@ -36,17 +42,9 @@ video {
 }
 
 .ag-container {
-  height: calc(100vh - 70px);
-}
-
-.invitation-frame {
+  width: 1050px;
+  height: 85vh;
   margin: 0 auto;
-  width: 300px;
-  padding: 100px 0;
-}
-
-.invite-btn {
-  height: 30px;
-  width: 300px;
-  font-size: 16px;
+  background: orange;
+  padding: 10px;
 }

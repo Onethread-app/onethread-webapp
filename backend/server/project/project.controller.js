@@ -213,42 +213,6 @@ const createNewProjectForCompany = async (req, res, next) => {
   }
 };
 
-const createNewProjectFromHome = async (req, res, next) => {
-  try {
-    const memberId = await Member.findOne({
-      account: req.user._id,
-      company: req.params.companyId,
-    }).select('role account');
-    if (memberId.role === 'admin' || memberId.role === 'superAdmin') {
-      const project = new Project({
-        name: req.body.name,
-        concernedAdmin: req.user._id,
-        account: req.user._id,
-        company: req.params.companyId,
-        description: '',
-        outline: '',
-      });
-      await project.save();
-      logger.info(`project create for ${req.params.companyId}`);
-
-      teamCreate(
-        memberId.account,
-        memberId._id,
-        project._id,
-        'admin',
-      );
-      logger.info(`${memberId.account} admin here`);
-      return sendJSONresponse(res, 201, project);
-    } else {
-      return sendErrorResponse(res, 403, 'PermissionError', {
-        message: `You are not authorized to create project`,
-      });
-    }
-  } catch (error) {
-    logger.error(`Project: ${error}`);
-    next(error);
-  }
-};
 // add associate in a project
 const addAssociateInProject = async (req, res, next) => {
   try {
@@ -942,7 +906,6 @@ const projectListForMember = async (req, res, next) => {
 };
 module.exports = {
   createNewProjectForCompany,
-  createNewProjectFromHome,
   addAssociateInProject,
   showAllProjectsForCompany,
   updateProjectDescription,

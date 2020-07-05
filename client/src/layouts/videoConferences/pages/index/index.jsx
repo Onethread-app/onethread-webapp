@@ -5,9 +5,6 @@ import { withRouter } from 'react-router';
 import '../../assets/fonts/css/icons.css';
 import Validator from '../../utils/Validator';
 import './index.css';
-import Axios from 'axios';
-import { tokenConfig } from 'stores/UtilsActions';
-import { server } from 'config';
 
 class Index extends React.Component {
   constructor(props) {
@@ -19,7 +16,6 @@ class Index extends React.Component {
       transcode: 'interop',
       attendeeMode: 'video',
       videoProfile: '480p_4',
-      confLink: null,
     };
   }
 
@@ -45,26 +41,7 @@ class Index extends React.Component {
     Cookies.set('transcode', this.state.transcode);
     Cookies.set('attendeeMode', this.state.attendeeMode);
     Cookies.set('videoProfile', this.state.videoProfile);
-    const host =
-      process.env.PUBLIC_URL || `${document.location.host}/`;
-    const link =
-      host + 'vc/join/?conf=' + window.btoa(this.state.channel);
-
-    const headers = tokenConfig();
-
-    Axios.post(
-      `${server}video-conferences/save-record`,
-      { link: link, name: this.state.channel },
-      headers,
-    )
-      .then((res) => {
-        this.setState({ confLink: link });
-      })
-      .catch((err) => {
-        // console.log(err)
-      });
-
-    // this.props.history.push('/video/conferences/join');
+    this.props.history.push('/video/conferences/join');
   };
 
   render() {
@@ -88,19 +65,6 @@ class Index extends React.Component {
                 ></InputChannel>
               </div>
             </div>
-            <div className="conf-link">
-              {this.state.confLink && (
-                <h3>
-                  <a
-                    href={this.state.confLink}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {this.state.confLink}
-                  </a>
-                </h3>
-              )}
-            </div>
             <div className="vc-login-footer">
               <div
                 id="joinBtn"
@@ -109,7 +73,7 @@ class Index extends React.Component {
                 className="vc-join-btn pointer"
                 href="button"
               >
-                Create link
+                Join
               </div>
             </div>
           </section>
