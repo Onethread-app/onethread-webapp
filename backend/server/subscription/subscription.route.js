@@ -14,7 +14,6 @@ router
   .route('/')
   .post(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('superAdmin'),
     SchemaValidator(subSchema.createSubscription),
     subCtrl.createSubscriptionForCompany,

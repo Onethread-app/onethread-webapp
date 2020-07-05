@@ -5,9 +5,14 @@ const paymentSchema = mongoose.Schema(
     gateway: {
       type: String,
       required: true,
-      enum: ['cash', 'stripe', 'portwallet'],
+      enum: ['cash', 'stripe', 'portWallet'],
     },
     status: {
+      type: String,
+      enum: ['success', 'pending', 'fail'],
+      default: 'pending',
+    },
+    statusPg: {
       type: String,
       enum: ['success', 'pending', 'fail'],
       default: 'pending',

@@ -15,7 +15,6 @@ const schema = {
 module.exports = {
   createSubscription: Joi.object().keys({
     body: Joi.object().keys({
-      companyId: schema.companyId,
       plan: schema.plan,
     }),
   }),

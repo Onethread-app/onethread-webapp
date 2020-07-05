@@ -4,6 +4,7 @@ const initialState = {
   paymentHistory: [],
   subscriptions: [],
   currentSubscriptions: undefined,
+  subscriptionId: '',
 };
 export const SubscriptionReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -21,6 +22,12 @@ export const SubscriptionReducer = (state = initialState, action) => {
       return {
         ...state,
         currentSubscriptions: action.payload,
+      };
+
+    case subscription.CREATE_SUBSCRIPTION_SUCESS:
+      return {
+        ...state,
+        subscriptionId: action.payload,
       };
     default:
       return state;

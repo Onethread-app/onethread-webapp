@@ -17,6 +17,13 @@ router
     paymentCtrl.paymentIntent,
   );
 
+  router
+  .route('/portwallet/initiate')
+  .post(
+    authorization,
+    paymentCtrl.initiateInvoice,
+  );
+
 router
   .route('/:companyId')
   .post(

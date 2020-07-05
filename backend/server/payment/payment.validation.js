@@ -16,6 +16,7 @@ const schema = {
   gateway: Joi.string(),
   company: idSchema.id,
   reference: Joi.string(),
+  statusPg: Joi.string(),
   currency: Joi.string(),
   amount: Joi.number(),
 };
@@ -27,6 +28,7 @@ module.exports = {
       gateway: schema.gateway.required(),
       company: schema.company,
       reference: schema.reference.required(),
+      statusPg: schema.statusPg,
       currency: schema.currency.required(),
       amount: schema.amount.required(),
     }),

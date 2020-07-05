@@ -20,7 +20,7 @@ const CARD_ELEMENT_OPTIONS = {
   },
 };
 
-function CardSection() {
+function StripeCardSection() {
   return (
     <label>
       <CardElement options={CARD_ELEMENT_OPTIONS} />
@@ -28,4 +28,4 @@ function CardSection() {
   );
 }
 
-export default CardSection;
+export default StripeCardSection;
