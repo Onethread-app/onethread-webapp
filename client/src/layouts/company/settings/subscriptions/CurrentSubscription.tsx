@@ -13,15 +13,7 @@ import { History } from 'history';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { getCurrentSubscription } from '../../../../stores/subscriptionBilling/Actions';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import moment from 'moment';
-=======
-
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
-import moment from 'moment';
->>>>>>> 1d9824de... Bugfix/controller (#259)
 // import { companyPermit } from 'stores/UtilsActions';
 
 interface CurrentSubscription {
@@ -34,19 +26,8 @@ interface CurrentSubscription {
   changeComponentTo: (componentName: string) => any;
   getCurrentSubscription: () => void;
   currentSubscriptions: string;
-<<<<<<< HEAD
-<<<<<<< HEAD
   dueDate: string;
   lastPayment: string;
-=======
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
-  dueDate: string;
-  lastPayment: string;
-<<<<<<< HEAD
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 4754c34c... Bug fix paymment (#250)
 }
 
 const useStyles = makeStyles({
@@ -96,25 +77,16 @@ const _CurrentSubscription = (
           </div>
           <div>
             <h4>Payment Due Date</h4>
-<<<<<<< HEAD
             <label className="pl1">
               {props.dueDate &&
                 moment(props.dueDate).format('MMMM Do YYYY')}
             </label>
-=======
-            <label className="pl1">June 13 2020</label>
->>>>>>> cdf1363f... Feature/tig 224 (#231)
           </div>
           <div>
             <h4>Payment History</h4>
             <Grid container spacing={3}>
               <Grid item xs={7}>
                 <label className="pl1">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
                   {props.lastPayment ? (
                     moment(props.lastPayment).format('MMMM Do YYYY')
                   ) : (
@@ -122,16 +94,6 @@ const _CurrentSubscription = (
                       No Payments Has Been Made
                     </label>
                   )}
-<<<<<<< HEAD
-=======
-                  Last Charge April 3, 2020
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
-                  {props.lastPayment &&
-                    moment(props.lastPayment).format('MMMM Do YYYY')}
->>>>>>> 4754c34c... Bug fix paymment (#250)
                 </label>
               </Grid>
               <Grid item xs={5}>
@@ -180,26 +142,12 @@ const mapStateToProps = (state: any) => {
     currentSubscriptions:
       state.subscriptionReducer.currentSubscriptions &&
       state.subscriptionReducer.currentSubscriptions.plan.name,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
     dueDate:
       state.subscriptionReducer.currentSubscriptions &&
       state.subscriptionReducer.currentSubscriptions.expireAt,
     lastPayment:
-<<<<<<< HEAD
       state.subscriptionReducer.paymentHistory[0] &&
       state.subscriptionReducer.paymentHistory[0].createdAt,
-<<<<<<< HEAD
-=======
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
-      state.subscriptionReducer.currentSubscriptions &&
-      state.subscriptionReducer.paymentHistory[0].createdAt,
->>>>>>> 4754c34c... Bug fix paymment (#250)
   };
 };
 
