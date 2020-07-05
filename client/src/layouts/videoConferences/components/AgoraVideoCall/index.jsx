@@ -63,7 +63,13 @@ class AgoraCanvas extends React.Component {
   componentWillMount() {
     let $ = this.props;
     // init AgoraRTC local client
-    this.client = AgoraRTC.createClient({ mode: $.transcode });
+    this.client = AgoraRTC.createClient({
+      mode: $.transcode,
+      codec: 'vp8',
+      audio: false,
+      video: false,
+      screen: true,
+    });
     this.client.init($.appId, () => {
       // console.log('AgoraRTC client initialized');
       this.subscribeStreamEvents();
@@ -371,6 +377,36 @@ class AgoraCanvas extends React.Component {
     }
   };
 
+  handleShareScreen = () => {
+    let screenStream = AgoraRTC.createStream({
+      streamID: this.props.uid + '-screen',
+      audio: false,
+      video: false,
+      screen: true,
+    });
+    if (!this.state.screenshare) {
+      screenStream.setScreenProfile('720p_2');
+
+      screenStream.init(
+        () => {
+          this.addStream(screenStream, true);
+          this.client.publish(screenStream, (err) => {
+            console.log(err);
+          });
+          this.setState({ screenshare: true });
+        },
+        (err) => {
+          // console.log('getUserMedia failed', err);
+          this.setState({ readyState: true });
+        },
+      );
+    } else {
+      this.client && this.client.unpublish(screenStream);
+      screenStream && this.removeStream(screenStream.getId());
+      this.setState({ screenshare: false });
+    }
+  };
+
   render() {
     const style = {
       display: 'grid',
@@ -449,12 +485,23 @@ class AgoraCanvas extends React.Component {
       </span>
     );
 
+    const shareScreen = (
+      <span
+        onClick={this.handleShareScreen}
+        className="ag-btn shareScreenBtn"
+        title="Share Screen"
+      >
+        <i className="ag-icon ag-icon-screen-share"></i>
+      </span>
+    );
+
     return (
       <div id="ag-canvas" style={style}>
         <div className="ag-btn-group">
           {exitBtn}
           {videoControlBtn}
           {audioControlBtn}
+          {shareScreen}
           {switchDisplayBtn}
           {hideRemoteBtn}
         </div>
