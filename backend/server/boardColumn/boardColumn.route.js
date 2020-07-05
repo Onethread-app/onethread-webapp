@@ -9,30 +9,48 @@ const {
 } = require('../middlewares/authorizationMiddleware');
 
 const router = express.Router();
-const {
-  subscriptionExpireCheck,
-} = require('../subscription/subscription.controller');
-router.use('/', subscriptionExpireCheck);
+const subCtrl = require('../subscription/subscription.controller');
+
 router
   .route('/')
   .get(
     authorization,
-    // permit('user', 'admin'),
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     boardColumnCtrl.list,
   )
   .post(
     authorization,
-    // permit('user', 'admin'),
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     SchemaValidator(joiSchema.createBoardColumn),
     boardColumnCtrl.create,
   );
 
-router.route('/:boardColumnId').put(
-  authorization,
-  // permit('user', 'admin'),
-  SchemaValidator(joiSchema.updateBoardColumn),
-  boardColumnCtrl.update,
-);
+router
+  .route('/:boardColumnId')
+  .put(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    SchemaValidator(joiSchema.updateBoardColumn),
+    boardColumnCtrl.update,
+  );
 
 router.param('boardColumnId', boardColumnCtrl.load);
 
