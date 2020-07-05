@@ -210,8 +210,5 @@ router
   );
 router
   .route('/project-list/:memberId')
-  .get(
-    authorization,
-    projectCtrl.projectListForMember,
-  );
+  .get(authorization, projectCtrl.projectListForMember);
 module.exports = router;
