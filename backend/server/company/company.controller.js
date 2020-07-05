@@ -9,7 +9,6 @@ const { createSlug } = require('../helpers/SlugCreator');
 const {
   Subscription,
 } = require('../subscription/subscription.model');
-const { chatkit } = require('../services/pusher.services');
 
 const {
   createCompanyRoleNotification,
