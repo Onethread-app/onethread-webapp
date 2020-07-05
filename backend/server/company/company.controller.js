@@ -663,14 +663,9 @@ const adminSuperAdminFinder = async (req, res, next) => {
   try {
     const companyList = await Member.find({
       account: req.user._id,
-    })
-      .populate('company', '_id name')
-      .select('role -_id');
-    let companies = companyList.filter(
-      (o) => o.role === 'admin' || o.role === 'superAdmin',
-    );
-
-    return sendJSONresponse(res, 200, companies);
+      role: { $in: ['superAdmin', 'admin'] },
+    }).populate('company', '_id name');
+    return sendJSONresponse(res, 200, companyList);
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
