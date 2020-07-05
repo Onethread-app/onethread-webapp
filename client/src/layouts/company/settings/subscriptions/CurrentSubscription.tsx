@@ -28,6 +28,7 @@ interface CurrentSubscription {
   getCurrentSubscription: () => void;
   currentSubscriptions: string;
   dueDate: string;
+  lastPayment: string;
 }
 
 const useStyles = makeStyles({
@@ -87,7 +88,8 @@ const _CurrentSubscription = (
             <Grid container spacing={3}>
               <Grid item xs={7}>
                 <label className="pl1">
-                  Last Charge April 3, 2020
+                  {props.lastPayment &&
+                    moment(props.lastPayment).format('MMMM Do YYYY')}
                 </label>
               </Grid>
               <Grid item xs={5}>
@@ -139,6 +141,9 @@ const mapStateToProps = (state: any) => {
     dueDate:
       state.subscriptionReducer.currentSubscriptions &&
       state.subscriptionReducer.currentSubscriptions.expireAt,
+    lastPayment:
+      state.subscriptionReducer.currentSubscriptions &&
+      state.subscriptionReducer.paymentHistory[0].createdAt,
   };
 };
 

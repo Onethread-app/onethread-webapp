@@ -12,7 +12,7 @@ import createSagaMiddleware from 'redux-saga';
 const persistConfig = {
   key: 'projectType',
   storage,
-  whitelist: ['projectReducer'], // which reducer want to store
+  whitelist: ['projectReducer', 'subscriptionReducer'], // which reducer want to store
 };
 
 const sagaMiddleware = createSagaMiddleware();

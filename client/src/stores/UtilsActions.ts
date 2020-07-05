@@ -4,6 +4,7 @@ import { Toaster } from '@blueprintjs/core';
 import { store } from 'Store';
 import { includes } from 'lodash';
 import { ICompanyRoom } from './room/Reducer';
+import { tigrowApi } from 'config';
 
 const toaster = Toaster.create();
 
@@ -203,6 +204,115 @@ export const unreadMessageNotification = (
   return unread;
 };
 
+export const stripeCheckout = async (
+  stripe: any,
+  companyId: string,
+  getway: string,
+  userLastName: string,
+  userFirstName: string,
+  CardElement: any,
+  elements,
+  getSubscription,
+  amount,
+) => {
+  // const getway =
+  //     value === 'international' ? 'stripe' : 'portwallet';
+  const headers = tokenConfig();
+  const response = await tigrowApi.post(
+    'payments/stripe/intent',
+    {
+      amount: amount,
+    },
+    headers,
+  );
+  const clientSecret = await response.data.client_secret;
+  // @ts-ignore: Unreachable code error
+  const result = await stripe.confirmCardPayment(clientSecret, {
+    payment_method: {
+      // @ts-ignore: Unreachable code error
+      card: elements.getElement(CardElement),
+      billing_details: {
+        name: `${userFirstName} ${userLastName}`,
+      },
+    },
+  });
+
+  if (result.error) {
+    // Show error to your customer (e.g., insufficient funds)
+    // console.log(result.error.message);
+    return false;
+  } else {
+    // The payment has been processed!
+    if (
+      result.paymentIntent &&
+      result.paymentIntent!.status === 'succeeded'
+    ) {
+      // setSuccess(true);
+      await tigrowApi.post(
+        `payments/${companyId}`,
+        {
+          amount: result.paymentIntent.amount,
+          currency: result.paymentIntent.currency,
+          reference: result.paymentIntent.id,
+          company: companyId,
+          gateway: getway,
+          subscription: getSubscription.data.subscription,
+        },
+        headers,
+      );
+      // Show a success message to your customer
+      // There's a risk of the customer closing the window before callback
+      // execution. Set up a webhook or plugin to listen for the
+      // payment_intent.succeeded event that handles any business critical
+      // post-payment actions.
+    }
+  }
+  return true;
+};
+
+interface IProtWalletForm {
+  name: string;
+  email: string;
+  phone: string;
+  zipCode: string;
+  city: string;
+  state: string;
+  house: string;
+}
+
+export const portWalletCheckout = async (
+  formData: IProtWalletForm,
+  amount,
+  productId,
+  companyName,
+) => {
+  // const getway =
+  //     value === 'international' ? 'stripe' : 'portwallet';
+  const headers = tokenConfig();
+  const response = await tigrowApi.post(
+    'payments/portwallet/initiate',
+    {
+      amount: amount,
+      redirect_url: `${window.location.origin}/company/${companyName}/settings/payment/success`,
+      name: formData.name,
+      phone: formData.phone,
+      email: formData.email,
+      city: formData.city,
+      state: formData.state,
+      country: 'BD',
+      zipcode: formData.zipCode,
+      adress: formData.house,
+      call: '',
+      currency: 'BDT',
+      product_name: productId,
+      product_description: 'Dummy',
+    },
+    headers,
+  );
+  const paymentUrl = response.data.paymentUrl;
+  window.location.replace(`${paymentUrl}`);
+  // @ts-ignore: Unreachable code error
+};
 export const capitalizeName = (name: string) => {
   return name
     .toLowerCase()
