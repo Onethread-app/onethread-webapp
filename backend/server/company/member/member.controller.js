@@ -1,5 +1,5 @@
 const { Member } = require('./member.model');
-const Subscription = require('../../subscription/subscription.controller');
+const { Subscription } = require('../../subscription/subscription.model');
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -62,17 +62,19 @@ const addMember = async (req, res, next) => {
         message: `No members or newMembers found`,
       });
     }
-    const planMemberAllow = await Subscription.findOne({
-      company: req.params.companyId,
+    const planMemberAllow = await Subscription.find({
+      company: req.company._id,
       isActive: true,
-    }).populate('plan', 'maxTier');
+    })
+      .sort({ _id: -1 })
+      .populate('plan', 'maxTier');
     let members = [];
 
     let accounts = [];
 
     let pendingMembers = [];
 
-    if (req.body.members.length <= planMemberAllow.plan.maxTier) {
+    if (req.body.members.length <= planMemberAllow[0].plan.maxTier) {
       let newMembers = req.body.members;
 
       accounts = newMembers.map((member) => member.account);
@@ -162,7 +164,7 @@ const addMember = async (req, res, next) => {
     // invite new members in company
     if (
       req.body.pendingTeamMembers.length <=
-      planMemberAllow.plan.maxTier
+      planMemberAllow[0].plan.maxTier
     ) {
       let pendingMembersInfo = req.body.pendingTeamMembers.map(
         (m) => {

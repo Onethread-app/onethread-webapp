@@ -29,12 +29,11 @@
 /* button group */
 
 .ag-btn-group {
-  height: 70px;
-  width: 1040px;
-  margin: 10px auto;
+  height: 50px;
+  width: 100%;
   position: absolute;
   bottom: 0;
-  background: transparent;
+  background: #3a3a3a;
   z-index: 11;
   display: flex;
   justify-content: space-around;
@@ -43,7 +42,7 @@
 
 .ag-btn-group:hover,
 .ag-btn-group.active {
-  background: orange;
+  /* background: orange; */
 }
 
 .ag-btn {
@@ -53,7 +52,7 @@
   /* width: 35px;
     height: 35px; */
   cursor: pointer;
-  font-size: 60px;
+  font-size: 40px;
   display: inline-flex;
   justify-content: center;
   align-items: center;

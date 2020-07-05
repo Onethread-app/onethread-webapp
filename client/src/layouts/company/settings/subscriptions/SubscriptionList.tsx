@@ -43,14 +43,6 @@ const _SubscriptionList = (props: ISubscriptionList) => {
   const [dense] = React.useState(true);
   const classes = useStyles();
 
-  // function generate(element) {
-  //   return [0, 1, 2].map((value) =>
-  //     React.cloneElement(element, {
-  //       key: value,
-  //     }),
-  //   );
-  // }
-
   React.useEffect(() => {
     props.getSubscription();
   }, []);
@@ -96,8 +88,6 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                             </ListItem>
                             ,
                           </List>
-                          {/* <label>Less than 20 user</label>
-                    <label>Up to 5 user free</label> */}
                         </CardContent>
                       </Grid>
 
@@ -114,7 +104,7 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                                 props.changeComponentTo('checkOut');
                               }}
                             >
-                              Switch Plan
+                              Pay Bill
                             </Button>
                           </div>
                         </CardActions>
@@ -125,6 +115,19 @@ const _SubscriptionList = (props: ISubscriptionList) => {
               </Grid>
             );
           })}
+          <Grid container>
+            <Grid item xs={4}>
+              <Card style={{ marginBottom: '10px' }}>
+                <CardContent>
+                  <h3>ENTERPRICE</h3>
+                </CardContent>
+                <CardContent>
+                  <h3>Sales</h3>
+                  <label>Contact us at sales@tigrow.info</label>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         </div>
       )}
     </div>

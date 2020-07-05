@@ -9,3 +9,8 @@ export const getSubscription = () => ({
 export const getCurrentSubscription = () => ({
   type: subscription.GET_CURRENT_SUBSCRIPTION,
 });
+
+export const createSubscription = (subscriptionId) => ({
+  type: subscription.CREATE_SUBSCRIPTION_SUCESS,
+  payload: subscriptionId,
+});

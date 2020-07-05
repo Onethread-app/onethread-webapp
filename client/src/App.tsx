@@ -40,6 +40,7 @@ import { AutoLoginPage } from 'components/AutoLogin';
 import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
 import { HomePageNew } from 'layouts/home/Index';
+import Success from './components/Success';
 
 const PrivateRoute = (props: {
   component: any;
@@ -217,6 +218,11 @@ export const App = () => (
         component={SettingsPage}
       />
       <PrivateRoute
+        path="/company/:cname/settings/payment/success"
+        exact={true}
+        component={Success}
+      />
+      <PrivateRoute
         path="/company/:cname/dashboard"
         exact={true}
         component={DashboardView}
@@ -256,12 +262,13 @@ export const App = () => (
         exact={true}
         component={VideoConferences}
       />
+
       <PrivateRoute
-        path="/video/conferences/join"
+        path="/vc/join"
         exact={true}
         component={Meeting}
-        />
-        <PrivateRoute
+      />
+      <PrivateRoute
         path="/:username/home"
         exact={true}
         component={HomePageNew}

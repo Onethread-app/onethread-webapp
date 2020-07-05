@@ -178,7 +178,7 @@ const FormComponent = (props: {
                               className="fw5"
                               style={{ fontSize: '.8rem' }}
                             >
-                              Concerned Admin
+                              Concerned Admin*
                           </p>
                           </div>
                           <SuggestFieldWithError
@@ -269,7 +269,7 @@ const FormComponent = (props: {
                             checkError(meta) &&
                             (meta.error || meta.submitError)
                           }
-                          label="ProjectType"
+                          label="Project Type*"
                           className="bn"
                         />
                       </div>
@@ -507,9 +507,9 @@ const FormComponent = (props: {
                   <Button
                     className="w4 grow h2 pointer mr3"
                     style={{
-                      background: '#060517',
+                      background: 'white',
                       outline: 'none',
-                      color: 'white',
+                      color: 'black',
                     }}
                     onClick={(e: any) => {
                       e.preventDefault();

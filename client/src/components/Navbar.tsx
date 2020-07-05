@@ -32,6 +32,8 @@ import { getNotifications } from '../stores/notifications/Action';
 import { fethcRooms } from '../stores/room/Actions';
 import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
 import { IRoom } from '../stores/room/Reducer';
+import logo from '../resources/images/TiGrowLogoFinal.png';
+
 interface NavbarTopInternalProps {
   user: User;
   logoutAction: (history: History) => void;
@@ -128,19 +130,41 @@ const NavbarTopComponent = (
         }}
       >
         <div>
-          <NavLink
-            exact
-            to={`/company/${props.companyName}/dashboard`}
-          >
-            <div
-              className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
-              style={{
-                textOverflow: 'ellipsis',
-              }}
+          {props.type !== 'home' ? (
+            <NavLink
+              exact
+              to={`/company/${props.companyName}/dashboard`}
             >
-              {props.type === 'company' ? props.companyName : ''}
+              <div
+                className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
+                style={{
+                  textOverflow: 'ellipsis',
+                }}
+              >
+                {props.type === 'company' ? props.companyName : ''}
+              </div>
+            </NavLink>)
+            :
+            <div className="flex items-center ml4">
+              <div
+                style={{ width: '6rem' }}
+              >
+                <NavLink to={`/${props.user.name}/home`}>
+                  <img src={logo} className="br2" style={{ background: '#060517' }} />
+                </NavLink>
+              </div>
+              <NavLink
+                exact
+                to={`/${props.user.name}/home`}
+              >
+                <div
+                  className="f4 fw6 tigrow-lightBlue ttc ws-break mh4"
+                >
+                  {props.type === 'home' ? 'Home' : ''}
+                </div>
+              </NavLink>
             </div>
-          </NavLink>
+          }
         </div>
         <div className="flex items-center">
           {props.match.path !== '/:username' && (
@@ -188,7 +212,7 @@ const NavbarTopComponent = (
                       }}
                       className="pa3 overflow-y-auto moon-gray"
                     >
-                      No Notification TO Show
+                      No Notification To Show
                     </h2>
                   )}
                 </div>
@@ -243,7 +267,7 @@ const NavbarTopComponent = (
                       },
                     )
                   ) : (
-                    <p className="ph2">No rooms</p>
+                    <p className="ph2">No room To Show</p>
                   )}
                 </div>
               }
@@ -325,16 +349,6 @@ const NavbarTopComponent = (
                   }
                 >
                   Settings
-                </Button>
-                <Button
-                  className="bp3-minimal outline-0 bp3-popover-dismiss"
-                  icon="home"
-                  alignText="left"
-                  onClick={() =>
-                    props.history.push(`/${props.user.name}/home`)
-                  }
-                >
-                  Home
                 </Button>
                 <Button
                   className="bp3-minimal outline-0 bp3-popover-dismiss"

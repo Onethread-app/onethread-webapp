@@ -12,6 +12,11 @@ const projectRequestSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Associate',
     },
+    account: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+      required: true,
+    },
     size: {
       type: Number,
       min: 1,

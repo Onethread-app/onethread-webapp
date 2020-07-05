@@ -43,6 +43,7 @@ const ProjectRequestComponent = (
   return (
     <div>
       {loading === false ? (
+        props.PendingProjects && props.PendingProjects.length > 0 ?
         props.PendingProjects.map((pending) => (
           <main className="">
             <article className="dt w-100 pv4 mt2">
@@ -110,6 +111,10 @@ const ProjectRequestComponent = (
             <Divider />
           </main>
         ))
+        :
+        (
+          <h1 className="f5 fw4">No pending Projects</h1>
+        )
       ) : (
           <Loading />
         )}

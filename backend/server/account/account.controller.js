@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const slug = require('slug');
 const Account = require('./account.model');
 const { Member } = require('../company/member/member.model');
 const {
@@ -28,6 +27,7 @@ const {
   memberIndex,
 } = require('../services/elastic.services');
 const chalk = require('chalk');
+const { createSlug } = require('../helpers/SlugCreator');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -43,22 +43,8 @@ const register = async (req, res, next) => {
   })
     .exec()
     .then((result) => {
-      let firstName = slug(data.firstName, {
-        replacement: '-',
-        symbols: true,
-        remove: /[.]/g,
-        lower: false,
-        charmap: slug.charmap,
-        multicharmap: slug.multicharmap,
-      });
-      let lastName = slug(data.lastName, {
-        replacement: '-',
-        symbols: true,
-        remove: /[.]/g,
-        lower: false,
-        charmap: slug.charmap,
-        multicharmap: slug.multicharmap,
-      });
+      let firstName = createSlug(data.firstName);
+      let lastName = createSlug(data.lastName);
       let uniqueId = result + 1;
       name = firstName + '-' + lastName + '-' + uniqueId;
     });
