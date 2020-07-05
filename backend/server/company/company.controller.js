@@ -436,31 +436,22 @@ const deleteCompany = async (req, res, next) => {
 const authorizeUser = (functionalRole, ...userRoles) => {
   return async function (req, res, next) {
     try {
-      // const company =  await Company.findOne({
-      //   _id: req.params.companyId,
-      // }).select('_id optionalRole').exec();
-
       const member = await Member.findOne({
         account: req.user._id,
-        company: req.params.companyId, //apatoto pore name or id hobe
+        company: req.headers.companyid, //apatoto pore name or id hobe
       }).exec();
-
-      // if (
-      //   !member ||
-      //   !userRoles.includes(member.role) ||
-      //   !company.optionalRole.includes(functionalRole)
-      // )
       if (
         !member ||
         (functionalRole === 'all' && !userRoles.includes(member.role))
       ) {
-        return res.status(403).json({
+        return sendErrorResponse(res, 403, 'PermissionError', {
           message: `Restricted`,
         });
       }
 
       next();
     } catch (error) {
+      logger.error(`Company: ${error}`);
       next(error);
     }
   };
