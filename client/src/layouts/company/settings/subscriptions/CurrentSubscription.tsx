@@ -43,7 +43,10 @@ interface CurrentSubscription {
 =======
   dueDate: string;
   lastPayment: string;
+<<<<<<< HEAD
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 }
 
 const useStyles = makeStyles({
@@ -109,6 +112,7 @@ const _CurrentSubscription = (
                 <label className="pl1">
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
                   {props.lastPayment ? (
@@ -124,6 +128,10 @@ const _CurrentSubscription = (
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+                  {props.lastPayment &&
+                    moment(props.lastPayment).format('MMMM Do YYYY')}
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                 </label>
               </Grid>
               <Grid item xs={5}>
@@ -180,6 +188,7 @@ const mapStateToProps = (state: any) => {
       state.subscriptionReducer.currentSubscriptions &&
       state.subscriptionReducer.currentSubscriptions.expireAt,
     lastPayment:
+<<<<<<< HEAD
       state.subscriptionReducer.paymentHistory[0] &&
       state.subscriptionReducer.paymentHistory[0].createdAt,
 <<<<<<< HEAD
@@ -187,6 +196,10 @@ const mapStateToProps = (state: any) => {
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+      state.subscriptionReducer.currentSubscriptions &&
+      state.subscriptionReducer.paymentHistory[0].createdAt,
+>>>>>>> 4754c34c... Bug fix paymment (#250)
   };
 };
 

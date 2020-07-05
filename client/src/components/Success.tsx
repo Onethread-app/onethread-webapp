@@ -3,8 +3,11 @@ import React from 'react';
 import successImage from '../resources/images/paymentSuccess.png';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
@@ -14,6 +17,7 @@ import { tigrowApi } from 'config';
 // const History = createBrowserHistory();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 interface ISuccess {
   text: string;
   subscriptionId: string;
@@ -64,6 +68,8 @@ function _Success(props: ISuccess) {
 =======
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 interface ISuccess {
   text: string;
   subscriptionId: string;
@@ -72,6 +78,7 @@ interface ISuccess {
 }
 function _Success(props: ISuccess) {
   const headers = tokenConfig();
+<<<<<<< HEAD
 
   React.useEffect(() => {
     async function successCall() {
@@ -86,6 +93,22 @@ function _Success(props: ISuccess) {
       // const username = params.get('username');
       // const currency = params.get('currency');
 
+=======
+
+  React.useEffect(() => {
+    async function successCall() {
+      let search = window.location.search;
+      let params = new URLSearchParams(search);
+      // const currency = params.get('currency');
+      const amount = params.get('amount');
+      const status = params.get('status');
+      // const invoice = params.get('invoice');
+      // const pan_id = params.get('pan_id');
+      const transaction_id = params.get('transaction_id');
+      // const username = params.get('username');
+      // const currency = params.get('currency');
+
+>>>>>>> 4754c34c... Bug fix paymment (#250)
       await tigrowApi.post(
         `payments/${props.companyId}`,
         {
@@ -104,9 +127,12 @@ function _Success(props: ISuccess) {
   }, []);
   return (
 <<<<<<< HEAD
+<<<<<<< HEAD
     <div>
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
     <div
       style={{
         position: 'absolute',
@@ -115,7 +141,10 @@ function _Success(props: ISuccess) {
         transform: 'translate(-50%, -50%)',
       }}
     >
+<<<<<<< HEAD
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
       <img
         className="center"
         style={{
@@ -148,8 +177,11 @@ function _Success(props: ISuccess) {
       </p>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 
       {/* <Button
         style={{ marginTop: '10px' }}
@@ -158,6 +190,9 @@ function _Success(props: ISuccess) {
         Back To Home
       </Button> */}
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
     </div>
   );
 }
@@ -171,6 +206,7 @@ const mapStateToProps = (state: any) => ({
 const Success = connect(mapStateToProps, {})(_Success);
 
 export default Success;
+<<<<<<< HEAD
 =======
     </div>
   );
@@ -191,3 +227,5 @@ const Success = connect(mapStateToProps, {})(_Success);
 
 export default Success;
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)

@@ -5,6 +5,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import NumberFormat from 'react-number-format';
 
 interface NumberFormatCustomProps {
@@ -111,6 +112,8 @@ export default function PortwalletCardSaction(
   }
 
 =======
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 
 interface IPortwalletCardSaction {
   handleSubmit: (e: any) => void;
@@ -123,7 +126,10 @@ export default function PortwalletCardSaction(
   const handleChange = (e) => {
     props.getPortWalletFormData(e);
   };
+<<<<<<< HEAD
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
   return (
     <div style={{ marginTop: '10px' }}>
       <label className="b mt5">Card Details</label>
@@ -143,15 +149,19 @@ export default function PortwalletCardSaction(
                           variant="outlined"
                         />
 <<<<<<< HEAD
+<<<<<<< HEAD
                         {error && formValues.name === '' && (
                           <ErrorLabel />
                         )}
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                       </div>
                       <div className="mb3">
                         <TextField
                           id="phone"
+<<<<<<< HEAD
 <<<<<<< HEAD
                           placeholder="Phone, Ex. 01700000000"
                           variant="outlined"
@@ -167,6 +177,11 @@ export default function PortwalletCardSaction(
                           variant="outlined"
                         />
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+                          placeholder="Phone"
+                          variant="outlined"
+                        />
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                       </div>
 
                       <div className="mb3">
@@ -176,11 +191,14 @@ export default function PortwalletCardSaction(
                           variant="outlined"
                         />
 <<<<<<< HEAD
+<<<<<<< HEAD
                         {error && formValues.city === '' && (
                           <ErrorLabel />
                         )}
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                       </div>
 
                       <div className="mb3">
@@ -190,17 +208,21 @@ export default function PortwalletCardSaction(
                           variant="outlined"
                         />
 <<<<<<< HEAD
+<<<<<<< HEAD
                         {error && formValues.state === '' && (
                           <ErrorLabel />
                         )}
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                       </div>
                     </div>
                     <div>
                       <div className="mb3">
                         <TextField
                           id="email"
+<<<<<<< HEAD
 <<<<<<< HEAD
                           placeholder="Email, Ex.jon@gmail.com"
                           variant="outlined"
@@ -220,11 +242,17 @@ export default function PortwalletCardSaction(
                           variant="outlined"
                         />
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+                          placeholder="Email"
+                          variant="outlined"
+                        />
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                       </div>
 
                       <div className="mb3">
                         <TextField
                           id="zipCode"
+<<<<<<< HEAD
 <<<<<<< HEAD
                           placeholder="ZipCode, Ex. 1207"
                           variant="outlined"
@@ -240,6 +268,11 @@ export default function PortwalletCardSaction(
                           variant="outlined"
                         />
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+                          placeholder="ZipCode"
+                          variant="outlined"
+                        />
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                       </div>
 
                       <div className="mb3">
@@ -249,11 +282,14 @@ export default function PortwalletCardSaction(
                           variant="outlined"
                         />
 <<<<<<< HEAD
+<<<<<<< HEAD
                         {error && formValues.house === '' && (
                           <ErrorLabel />
                         )}
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                       </div>
                     </div>
                   </div>
@@ -262,12 +298,16 @@ export default function PortwalletCardSaction(
                   style={{ marginTop: '15px' }}
                   fullWidth
 <<<<<<< HEAD
+<<<<<<< HEAD
                   onClick={(e) =>
                     checkAllInput() && props.handleSubmit(e)
                   }
 =======
                   onClick={(e) => props.handleSubmit(e)}
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+                  onClick={(e) => props.handleSubmit(e)}
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                   variant="contained"
                   color="primary"
                 >

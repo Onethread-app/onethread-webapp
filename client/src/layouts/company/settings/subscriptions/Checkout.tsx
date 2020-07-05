@@ -9,12 +9,16 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 // import { makeStyles } from '@material-ui/core/styles';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import { createSubscription } from '../../../../stores/subscriptionBilling/Actions';
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
 import { createSubscription } from '../../../../stores/subscriptionBilling/Actions';
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+import { createSubscription } from '../../../../stores/subscriptionBilling/Actions';
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 import TextField from '@material-ui/core/TextField';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
@@ -30,30 +34,40 @@ import Modal from 'react-modal';
 // import { getPaymentIntent } from '../../../../stores/subscriptionBilling/Actions';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 import {
   tokenConfig,
   portWalletCheckout,
 } from '../../../../stores/UtilsActions';
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 import { tokenConfig } from '../../../../stores/UtilsActions';
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 import { tigrowApi } from '../../../../config';
 
 // import { StripeCardElementChangeEvent } from '@stripe/stripe-js';
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 import StripeCardSection from './StripeCardSection';
 import PortwalletCardSaction from './PortwalletCardSaction';
 import StripeSuccess from './StripeSuccess';
 import { stripeCheckout } from 'stores/UtilsActions';
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 import CardSection from './CardSection';
@@ -61,6 +75,8 @@ import Success from '../../../../components/Success';
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 
 const customStyles = {
   content: {
@@ -88,6 +104,7 @@ interface ICheckout {
   plan: IPlan;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
   createSubscription: (subID) => void;
   companyName: string;
 }
@@ -109,14 +126,21 @@ function _Checkout(props: ICheckout) {
   createSubscription: (subID) => void;
   companyName: string;
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+  createSubscription: (subID) => void;
+  companyName: string;
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 }
 
 function _Checkout(props: ICheckout) {
   const [value, setValue] = React.useState('bangladesh');
   const [success, setSuccess] = React.useState(false);
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
   const [formValues, setFormValues] = React.useState({
     name: '',
     email: '',
@@ -126,15 +150,21 @@ function _Checkout(props: ICheckout) {
     state: '',
     house: '',
   });
+<<<<<<< HEAD
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
   const stripe = useStripe();
   const elements = useElements();
   const headers = tokenConfig();
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
   //to-do add type
   const getPortWalletFormData = (e: any) => {
     const { id, value } = e.target;
@@ -145,10 +175,13 @@ function _Checkout(props: ICheckout) {
   };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
   function closeModal() {
     setSuccess(false);
   }
@@ -173,6 +206,9 @@ function _Checkout(props: ICheckout) {
     );
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
     props.createSubscription(getSubscription.data.subscription);
     const getway =
       value === 'international' ? 'stripe' : 'portwallet';
@@ -198,6 +234,7 @@ function _Checkout(props: ICheckout) {
         props.plan._id,
         props.companyName,
       );
+<<<<<<< HEAD
 =======
 =======
     props.createSubscription(getSubscription.data.subscription);
@@ -259,6 +296,8 @@ function _Checkout(props: ICheckout) {
         props.companyName,
       );
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
   };
 
   const handleChange = (
@@ -384,6 +423,7 @@ function _Checkout(props: ICheckout) {
                       <CardContent style={{ marginTop: '12px' }}>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <StripeCardSection />
 =======
                         <CardSection />
@@ -391,6 +431,9 @@ function _Checkout(props: ICheckout) {
 =======
                         <StripeCardSection />
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+                        <StripeCardSection />
+>>>>>>> 4754c34c... Bug fix paymment (#250)
                         <Button
                           style={{ marginTop: '15px' }}
                           fullWidth
@@ -409,8 +452,11 @@ function _Checkout(props: ICheckout) {
           )}
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
           {value === 'bangladesh' && (
             <PortwalletCardSaction
               handleSubmit={handleSubmit}
@@ -418,10 +464,13 @@ function _Checkout(props: ICheckout) {
             />
           )}
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
 =======
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+>>>>>>> 4754c34c... Bug fix paymment (#250)
         </div>
       )}
       {success && (
@@ -434,6 +483,7 @@ function _Checkout(props: ICheckout) {
         >
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
           <StripeSuccess text="We have recieved your payment" />
 =======
           <Success text="We have recieved your payment" />
@@ -441,6 +491,9 @@ function _Checkout(props: ICheckout) {
 =======
           <StripeSuccess text="We have recieved your payment" />
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+          <StripeSuccess text="We have recieved your payment" />
+>>>>>>> 4754c34c... Bug fix paymment (#250)
         </Modal>
       )}
     </div>
@@ -452,6 +505,7 @@ const mapStateToProps = (state: any) => ({
   userFirstName: state.userReducer.user.firstName,
   userLastName: state.userReducer.user.lastName,
   company: state.companyReducer.currentCompany._id,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
   companyName: state.companyReducer.currentCompany.name,
@@ -473,5 +527,13 @@ const Checkout = connect(mapStateToProps, { createSubscription })(
   _Checkout,
 );
 >>>>>>> 1d9824de... Bugfix/controller (#259)
+=======
+  companyName: state.companyReducer.currentCompany.name,
+});
+
+const Checkout = connect(mapStateToProps, { createSubscription })(
+  _Checkout,
+);
+>>>>>>> 4754c34c... Bug fix paymment (#250)
 
 export default Checkout;

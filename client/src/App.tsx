@@ -267,8 +267,8 @@ export const App = () => (
         path="/vc/join"
         exact={true}
         component={Meeting}
-        />
-        <PrivateRoute
+      />
+      <PrivateRoute
         path="/:username/home"
         exact={true}
         component={HomePageNew}
