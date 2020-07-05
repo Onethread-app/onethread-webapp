@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Button, HTMLSelect , Icon, Tag} from '@blueprintjs/core';
+import React, { useState, useEffect } from 'react';
+import { Button, HTMLSelect , Icon} from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Field, Form } from 'react-final-form';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
-import { tokenConfig, Entity } from 'stores/UtilsActions';
-import { tigrowApi } from 'config';
-import { required, checkError } from 'components/final-form/utils';
+import { tokenConfig } from 'stores/UtilsActions';
+// import { tigrowApi } from 'config';
+import { required } from 'components/final-form/utils';
 import { User } from 'stores/user/Reducer';
-import { SuggestFieldWithError } from 'components/fields/SuggestField';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { isEmpty } from 'lodash';
+// import { SuggestFieldWithError } from 'components/fields/SuggestField';
+// import { useLiveSearch } from 'components/useLiveSearch';
+// import { isEmpty } from 'lodash';
 import { createProject } from '../../stores/project/Actions';
+import { tigrowApi } from 'config';
 
 interface ProjectAddProps {
   setShowDialog: (val: boolean) => void;
@@ -19,51 +20,69 @@ interface ProjectAddProps {
 
 interface ProjectAddInternalProps extends ProjectAddProps {
   user?: User;
-  createProject: (val: any, admin: any) => void;
+  createProject: (val: any) => void;
 }
 
 export const ProjectAddComponent = (
   props: ProjectAddInternalProps,
 ) => {
-  const [company, setCompany] = useState('');
 
-  const [admins, setAdmins] = useState([]);
-  const [selectedAdmins, setSelectedAdmins] = useState(
-    [] as Entity[],
-  );
+  // const [admins, setAdmins] = useState([]);
+  // const [selectedAdmins, setSelectedAdmins] = useState(
+  //   [] as Entity[],
+  // );
   
-  const [search, setSearch] = useState('');
+  // const [search, setSearch] = useState('');
 
-  const userRequestFactory = async (userName: string) => {
-    const headers = tokenConfig();
-    const response = await tigrowApi.get(
-      `projects/concern-admin-search/${
-      company
-      }?name=${search}`,
-      headers,
-    );
+  // const userRequestFactory = async (userName: string) => {
+  //   const headers = tokenConfig();
+  //   const response = await tigrowApi.get(
+  //     `projects/concern-admin-search/${
+  //     company
+  //     }?name=${search}`,
+  //     headers,
+  //   );
 
-    return response.data.data.map((e: any) => {
-      return {
-        ...e._source.account,
-        memberId: e._source.mongo_id,
-      };
-    });
-  };
-  let result: any = [];
-  result = useLiveSearch(search, userRequestFactory, 0);
+  //   return response.data.data.map((e: any) => {
+  //     return {
+  //       ...e._source.account,
+  //       memberId: e._source.mongo_id,
+  //     };
+  //   });
+  // };
+  // let result: any = [];
+  // result = useLiveSearch(search, userRequestFactory, 0);
 
   const onSubmit = async (values: any) => {
-    await props.createProject(values, selectedAdmins);
+    await props.createProject(values);
     if (props.setShowDialog) {
       props.setShowDialog(false);
     }
     return {};
   };
 
+  const [roleCompany,setRoleCompany] = useState([]);
+  const [, setCompany] = useState('');
+
   useEffect(() => {
-    setAdmins(result);
-  }, [result]);
+
+    let getCompanies = async()=>{
+      const headers = tokenConfig();
+      const response = await tigrowApi.get(
+        `company/user-role-company`,
+        headers,
+      );
+
+      setRoleCompany(response.data);
+
+      console.log(response.data)
+      return response.data ;
+    }
+
+    getCompanies();
+
+
+  }, []);
 
   return (
     <Form
@@ -97,7 +116,7 @@ export const ProjectAddComponent = (
                         boxShadow: 'none',
                       }}
                       leftIcon="document"
-                      placeHolder="Project Name*"
+                      placeHolder="Project Name (required)"
                     />
                   </div>
                 )}
@@ -132,7 +151,7 @@ export const ProjectAddComponent = (
                         <option selected value="">
                           Please select a company
                       </option>
-                        {props.user && props.user.companies.map((c) => (
+                        {props.user && roleCompany.map((c: any) => (
                           <option value={c.company._id}>{c.company.name}</option>
                         ))}
                       </HTMLSelect>
@@ -141,7 +160,7 @@ export const ProjectAddComponent = (
                 </div>
               </div>
               <div>
-                <Field<string>
+                {/* <Field<string>
                   name="admin"
                   validate={required}
                   render={({ input, meta }) => (
@@ -222,7 +241,7 @@ export const ProjectAddComponent = (
                       )}
                     </div>
                   )}
-                />
+                /> */}
               </div>
           </div>
           <div className="flex justify-end">
