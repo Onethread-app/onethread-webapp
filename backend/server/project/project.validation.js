@@ -3,11 +3,6 @@ const Joi = require('@hapi/joi');
 // id
 const idSchema = {
   id: Joi.string().regex(/^[a-fA-F0-9]{24}$/),
-  // .error((errors) => {
-  //   return {
-  //     message: 'Invalid ID',
-  //   };
-  // }),
 };
 
 // project id
@@ -44,7 +39,6 @@ module.exports = {
   createNewProjectForCompany: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      type: schema.type.required(),
       concernedAdmin: Joi.object().keys({
         memberId: schema.memberId.required(),
         accountId: idSchema.id,
@@ -53,6 +47,12 @@ module.exports = {
       departments: schema.departments,
       color: schema.color,
       associates: schema.associates,
+    }),
+  }),
+  createProjectFromHome: Joi.object().keys({
+    body: Joi.object().keys({
+      name: schema.name.required(),
+      companyId: schema.company.required(),
     }),
   }),
   addAssociate: Joi.object().keys({
