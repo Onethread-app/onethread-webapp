@@ -437,7 +437,7 @@ const authorizeUser = (functionalRole, ...userRoles) => {
     try {
       const member = await Member.findOne({
         account: req.user._id,
-        company: req.headers.companyid, //apatoto pore name or id hobe
+        company: req.headers.companyid || req.params.companyId, //apatoto pore name or id hobe
       }).exec();
       if (
         !member ||
