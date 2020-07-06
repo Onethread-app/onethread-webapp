@@ -25,16 +25,13 @@ const create = async (req, res) => {
         fieldName: 'name',
       });
     }
-
     req.body.company = req.company._id;
     req.body.account = req.user._id;
     const newDepartment = new Department(req.body);
     const department = await newDepartment.save();
-
     // save ref in company
     req.company.departments.push(department._id);
     await req.company.save();
-
     return sendJSONresponse(res, 201, {
       department: {
         _id: department._id,
@@ -43,10 +40,14 @@ const create = async (req, res) => {
     });
   } catch (err) {
     logger.error(` process:${process.pid} Bad request : ${err}`);
+<<<<<<< HEAD
     return sendErrorResponse(res, 400, 'ValidationError', {
       message: 'Failed to create new department',
       fieldName: 'name',
     });
+=======
+    next(err);
+>>>>>>> 4b6478ec... company, contact, department, designation, file, member, skillarea done
   }
 };
 
@@ -66,7 +67,11 @@ const list = async (req, res, next) => {
       departments,
     });
   } catch (error) {
+<<<<<<< HEAD
     logger.error(`Departments: ${error}`);
+=======
+    logger.error(`${error}`);
+>>>>>>> 4b6478ec... company, contact, department, designation, file, member, skillarea done
     next(error);
   }
 };

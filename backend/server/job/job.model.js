@@ -4,10 +4,12 @@ const jobExperienceSchema = new Schema({
   companyName: {
     type: String,
     required: true,
+    trim: true,
   },
   positionName: {
     type: String,
     required: true,
+    trim: true,
   },
   startYear: {
     type: Date,
@@ -20,11 +22,11 @@ const jobExperienceSchema = new Schema({
   },
   jobDescription: {
     type: String,
+    trim: true,
   },
   account: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Account',
-    required: true,
   },
 });
 module.exports = mongoose.model('Jobexperience', jobExperienceSchema);

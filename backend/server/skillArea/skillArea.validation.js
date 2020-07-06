@@ -1,15 +1,12 @@
 const Joi = require('@hapi/joi');
+
+const schema = {
+  name: Joi.string().trim().lowercase().min(1).max(80),
+};
 module.exports = {
   create: Joi.object().keys({
     body: Joi.object().keys({
-      name: Joi.string()
-        .required()
-        .lowercase()
-        .min(1)
-        .max(80)
-        .error((error) => {
-          return { success: false, message: `recheck` };
-        }),
+      name: schema.name.required(),
     }),
   }),
 

@@ -25,7 +25,7 @@ const createJobExperience = async (req, res, next) => {
     })
     .catch((err) => {
       logger.error(`Error: ${err}`);
-      return next(err);
+      next(err);
     });
 };
 
@@ -39,39 +39,27 @@ const updateJobExperience = async (req, res, next) => {
     const newJobExp = await JobExperience.findByIdAndUpdate(
       { _id: req.query.jobexperienceid },
       req.body,
-      { new: true },
+      { upsert: true, new: true },
     );
     return sendJSONresponse(res, 200, { data: newJobExp });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
 
-const getAllJobExperience = async (req, res) => {
-  JobExperience.find({})
+const getAllJobExperience = async (req, res, next) => {
+  await JobExperience.find({})
     .exec()
     .then((data) => {
       return sendJSONresponse(res, 200, { data });
     })
     .catch((err) => {
       logger.error(`Error: ${err}`);
-      return next(err);
+      next(err);
     });
 };
-// const getAllJobExpereicne = async (req, res) => {
-//   const userid = req.user.id;
-//   Account.find({ _id: userid })
-//     .populate(
-//       'jobExperience, companyName positionName startYear endingYear currentlyWork',
-//     )
-//     .exec()
-//     .then(data => {
-//       return sendJSONresponse(res, 200, { data });
-//     })
-//     .catch(err => {
-//       return next(err);
-//     });
-// };
+
 module.exports = {
   createJobExperience,
   updateJobExperience,

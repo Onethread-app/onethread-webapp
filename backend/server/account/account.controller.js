@@ -133,6 +133,7 @@ const register = async (req, res, next) => {
       );
       return sendJSONresponse(res, 201, {
         message: 'User created',
+        token: verifyToken,
       });
     })
     .catch((err) => {

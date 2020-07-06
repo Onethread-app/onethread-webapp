@@ -1,5 +1,7 @@
 const { Member } = require('./member.model');
-const { Subscription } = require('../../subscription/subscription.model');
+const {
+  Subscription,
+} = require('../../subscription/subscription.model');
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -265,7 +267,7 @@ const checkInvitedMemberStatus = async (req, res, next) => {
 };
 
 // get a member
-const getMember = (req, res, next) => {
+const getMember = (req, res) => {
   return res.status(200).json({
     member: req.member,
   });

@@ -11,10 +11,6 @@ const idSchema = {
     }),
 };
 
-// project id
-const pid = Joi.object().keys({
-  pid: idSchema.id,
-});
 const schema = {
   pid: idSchema.id,
 };

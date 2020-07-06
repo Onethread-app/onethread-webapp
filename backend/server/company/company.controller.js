@@ -55,9 +55,12 @@ const changeName = async (req, res, next) => {
       name: req.body.name,
     });
     if (duplicate) {
-      return res.status(409).json({
-        message: `Name already exist`,
-      });
+      return sendErrorResponse(
+        res,
+        409,
+        'DuplicateCompanyNameError',
+        { message: `Duplicate company name` },
+      );
     }
 
     req.company.name = req.body.name;
@@ -117,7 +120,11 @@ const changeName = async (req, res, next) => {
       },
     });
   } catch (error) {
+<<<<<<< HEAD
     logger.error(`Company: ${error}`);
+=======
+    logger.error(`company: ${error}`);
+>>>>>>> 4b6478ec... company, contact, department, designation, file, member, skillarea done
     next(error);
   }
 };
@@ -535,6 +542,7 @@ const addCertifications = async (req, res, next) => {
       message: 'Certification add',
     });
   } catch (error) {
+    logger.error(`${error}`);
     next(error);
   }
 };
