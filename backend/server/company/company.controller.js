@@ -4,13 +4,11 @@ const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
 const Plan = require('../plan/plan.model');
-const {createSlug} = require('../helpers/SlugCreator');
+const { createSlug } = require('../helpers/SlugCreator');
 
 const {
   Subscription,
 } = require('../subscription/subscription.model');
-const { chatkit } = require('../services/pusher.services');
-
 
 const {
   createCompanyRoleNotification,
@@ -103,7 +101,7 @@ const changeName = async (req, res, next) => {
     // await notification.save();
     // await UserNotification.create(usersNotification);
 
-    return sendJSONresponse(res,200,{
+    return sendJSONresponse(res, 200, {
       message: `Company's name updated`,
       company: {
         _id: company._id,
@@ -116,7 +114,7 @@ const changeName = async (req, res, next) => {
         legalOwnerMail: company.legalOwnerMail,
         role: 'superAdmin',
       },
-    })
+    });
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
@@ -187,7 +185,7 @@ const createCompany = async (req, res, next) => {
       ),
     );
 
-    return sendJSONresponse(res,201,{
+    return sendJSONresponse(res, 201, {
       message: 'New company created',
       company: {
         _id: company._id,
@@ -224,8 +222,8 @@ const getCompanyIndividual = async (req, res, next) => {
     })
       .select('_id company role')
       .populate(options);
-    
-    return sendJSONresponse(res,200,{
+
+    return sendJSONresponse(res, 200, {
       companies,
     });
   } catch (error) {
@@ -256,14 +254,14 @@ const getCompany = async (req, res, next) => {
       company: company._id,
     }).countDocuments();
 
-    return sendJSONresponse(res,200,{
+    return sendJSONresponse(res, 200, {
       company: {
         ...company._doc,
         role: member.role,
         certificate: certificate,
         totalMember: memberCount,
       },
-    })
+    });
   } catch (error) {
     logger.error(`Company: ${error}`);
     next(error);
@@ -438,7 +436,7 @@ const authorizeUser = (functionalRole, ...userRoles) => {
     try {
       const member = await Member.findOne({
         account: req.user._id,
-        company: req.headers.companyid, //apatoto pore name or id hobe
+        company: req.headers.companyid || req.params.companyId, //apatoto pore name or id hobe
       }).exec();
       if (
         !member ||
@@ -660,6 +658,18 @@ const allNoticesForCompany = async (req, res, next) => {
   }
 };
 
+const adminSuperAdminFinder = async (req, res, next) => {
+  try {
+    const companyList = await Member.find({
+      account: req.user._id,
+      role: { $in: ['superAdmin', 'admin'] },
+    }).populate('company', '_id name');
+    return sendJSONresponse(res, 200, companyList);
+  } catch (error) {
+    logger.error(`Company: ${error}`);
+    next(error);
+  }
+};
 module.exports = {
   authorizeUser,
   createCompany,
@@ -677,4 +687,5 @@ module.exports = {
   dashBoard,
   noticePostByCompany,
   allNoticesForCompany,
+  adminSuperAdminFinder,
 };

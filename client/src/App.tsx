@@ -262,8 +262,9 @@ export const App = () => (
         exact={true}
         component={VideoConferences}
       />
+
       <PrivateRoute
-        path="/video/conferences/join"
+        path="/vc/join"
         exact={true}
         component={Meeting}
       />

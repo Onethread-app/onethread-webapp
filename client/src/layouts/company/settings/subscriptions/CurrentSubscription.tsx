@@ -88,8 +88,13 @@ const _CurrentSubscription = (
             <Grid container spacing={3}>
               <Grid item xs={7}>
                 <label className="pl1">
-                  {props.lastPayment &&
-                    moment(props.lastPayment).format('MMMM Do YYYY')}
+                  {props.lastPayment ? (
+                    moment(props.lastPayment).format('MMMM Do YYYY')
+                  ) : (
+                    <label className="b moon-gray">
+                      No Payments Has Been Made
+                    </label>
+                  )}
                 </label>
               </Grid>
               <Grid item xs={5}>
@@ -142,7 +147,7 @@ const mapStateToProps = (state: any) => {
       state.subscriptionReducer.currentSubscriptions &&
       state.subscriptionReducer.currentSubscriptions.expireAt,
     lastPayment:
-      state.subscriptionReducer.currentSubscriptions &&
+      state.subscriptionReducer.paymentHistory[0] &&
       state.subscriptionReducer.paymentHistory[0].createdAt,
   };
 };

@@ -1,8 +1,15 @@
 import { NOTIFICATION } from './Types';
 
+export interface INotification {
+  read: Boolean;
+  seen: Number;
+  socketId: String;
+  pageNumber: Number;
+}
+
 const initialState = {
   allNotifications: [],
-  read: 0,
+  read: false,
   seen: 0,
   socketId: '',
   pageNumber: 0,
