@@ -120,11 +120,7 @@ const changeName = async (req, res, next) => {
       },
     });
   } catch (error) {
-<<<<<<< HEAD
-    logger.error(`Company: ${error}`);
-=======
     logger.error(`company: ${error}`);
->>>>>>> 4b6478ec... company, contact, department, designation, file, member, skillarea done
     next(error);
   }
 };
