@@ -178,7 +178,7 @@ const suggestMember = async (req, res, next) => {
       .exec();
     //now it will check form project team by projectId
     let projectMembers = await Team.find({
-      project: req.query.projectId,
+      project: req.query.pid
     })
       .select('-_id account')
       .populate('account', '_id name')
@@ -190,12 +190,12 @@ const suggestMember = async (req, res, next) => {
         );
       });
     });
-
+    
     members = members.map((m) => m.account);
-    return res.status(200).json({
-      members,
-    });
+
+    return sendJSONresponse(res,200,members);
   } catch (error) {
+    logger.error(`Board Details: ${error}`);
     next(error);
   }
 };

@@ -40,7 +40,7 @@ const TaskItemComponent = (
                 );
                 if (responseTask._id) {
                   props.history.push(
-                    `/company/${props.company!.name}/board/${
+                    `/company/${props.company!.uniqueName}/board/${
                       props.currentBoard!._id
                     }/task/${props.task._id}`,
                   );

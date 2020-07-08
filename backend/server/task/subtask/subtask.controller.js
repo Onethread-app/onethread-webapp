@@ -5,6 +5,7 @@ const {
   APIError,
   BadRequestError,
 } = require('../../helpers/APIError');
+const { sendJSONresponse } = require('../../helpers/jsonResponse');
 
 const load = (req, res, next, id) => {
   SubTask.findById(id)
@@ -68,20 +69,22 @@ const deleteSubtask = async (req, res, next) => {
 };
 
 const list = async (req, res, next) => {
+  try {
   const { limit = 50, skip = 0, taskId } = req.query;
 
-  await SubTask.find({
-    taskId: taskId,
-  })
-    .select('_id name done ')
-    .sort({ createdAt: -1 })
-    .skip(+skip)
-    .limit(+limit)
-    .exec()
-    .then((result) => {
-      logger.info(`${result}`);
-      res.status(200).send(result);
+  const subtasks =  await SubTask.find({
+      taskId: taskId,
     })
-    .catch((e) => next(e));
+      .select('_id name done ')
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit)
+      .exec()
+      return sendJSONresponse(res,200,subtasks);
+  } catch (error) {
+    logger.error(`Subtask: ${error}`) 
+    next(error)
+    
+  }
 };
 module.exports = { create, load, list, get, update, deleteSubtask };

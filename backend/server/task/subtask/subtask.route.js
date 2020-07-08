@@ -3,21 +3,19 @@ const passport = require('passport');
 const subTaskCtrl = require('./subtask.controller');
 const SchemaValidator = require('./../../helpers/joiSchemaValidator');
 const joiSchema = require('./subtask.validation');
-const {subscriptionExpireCheck} = require('../../subscription/subscription.controller');
-
+const subCtrl = require('../../subscription/subscription.controller');
 const {
   authorization,
 } = require('../../middlewares/authorizationMiddleware');
 const { permit } = require('./../../helpers/permission');
 const router = express.Router();
 
-router.use('/',subscriptionExpireCheck);
+router.use('/', subCtrl.subscriptionExpireCheck());
 
 router
   .route('/')
   .get(
     authorization,
-    // permit('user', 'admin'),
     subTaskCtrl.list,
   )
   .post(

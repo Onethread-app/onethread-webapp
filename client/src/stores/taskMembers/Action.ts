@@ -18,10 +18,11 @@ export const addTaskMember = (members: string[]) => async (
     let response;
     const taskId = getState().boardIndexReducer.boardReducer
       .currentTask._id;
+      const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       const reqBody = { assignmembers: members };
       response = await tigrowApi.post(
-        `tasks/member/${taskId}`,
+        `tasks/member/${taskId}?pid=${projectId}`,
         reqBody,
         headers,
       );
@@ -70,9 +71,10 @@ export const getAllMembers = () => async (
     const headers = tokenConfig();
     const taskId = getState().boardIndexReducer.boardReducer
       .currentTask._id;
+      const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(
-        `tasks/member/${taskId}`,
+        `tasks/member/${taskId}?pid=${projectId}`,
         headers,
       );
 
@@ -128,11 +130,12 @@ export const deleteMember = (memberId: ITaskMember['_id']) => async (
 ) => {
   try {
     const headers = tokenConfig();
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       const taskId = getState().boardIndexReducer.boardReducer
         .currentTask._id;
       await tigrowApi.delete(
-        `tasks/member/${taskId}?assignedMemberid=${memberId}`,
+        `tasks/member/${taskId}?assignedMemberid=${memberId}?pid=${projectId}`,
         headers,
       );
       dispatch({ type: DELETE_MEMBER, payload: memberId });
