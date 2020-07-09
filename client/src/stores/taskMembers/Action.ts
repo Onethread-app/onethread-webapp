@@ -135,7 +135,7 @@ export const deleteMember = (memberId: ITaskMember['_id']) => async (
       const taskId = getState().boardIndexReducer.boardReducer
         .currentTask._id;
       await tigrowApi.delete(
-        `tasks/member/${taskId}?assignedMemberid=${memberId}?pid=${projectId}`,
+        `tasks/member/${taskId}?assignedMemberid=${memberId}&pid=${projectId}`,
         headers,
       );
       dispatch({ type: DELETE_MEMBER, payload: memberId });
