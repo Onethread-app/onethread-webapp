@@ -101,7 +101,7 @@ const company = new Schema(
           type: String,
           enum: [
             'editProfile',
-            'cRUDAnnouncement',
+            'cRUDAnnouncement',//cRUDAnnoucment
             'archiveProject',
             'addRemoveModerator',
             'messageAssociate',
