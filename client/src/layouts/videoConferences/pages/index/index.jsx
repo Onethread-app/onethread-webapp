@@ -107,7 +107,7 @@ class Index extends React.Component {
                 id="joinBtn"
                 onClick={this.handleJoin}
                 disabled={!this.state.joinBtn}
-                className="vc-join-btn pointer"
+                className="vc-join-btn"
                 href="button"
               >
                 Create link

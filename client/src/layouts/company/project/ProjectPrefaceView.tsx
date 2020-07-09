@@ -259,6 +259,7 @@ export const ProjectPrefaceViewComponent = (
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             props.optionalRole &&
             props.role &&
 =======
@@ -270,6 +271,9 @@ export const ProjectPrefaceViewComponent = (
 =======
 >>>>>>> a26cd117... Release/v2.2.0 (#183)
             projectRules(props.optionalRole)[props.role].includes(
+=======
+            props.optionalRole && props.role && projectRules(props.optionalRole)[props.role].includes(
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
               'addFileProject',
             ) && (
               <div>
@@ -431,6 +435,7 @@ const mapStateToProps = (state: any) => ({
   description: state.projectReducer.projectDetails.description,
   outline: state.projectReducer.projectDetails.outline,
   files: state.projectReducer.projectDetails.files,
+<<<<<<< HEAD
   role:
     state.projectReducer.projectRole &&
     state.projectReducer.projectRole.projects &&
@@ -440,6 +445,12 @@ const mapStateToProps = (state: any) => ({
     state.projectReducer.projectRole.projects &&
     state.projectReducer.projectRole.projects.project &&
     state.projectReducer.projectRole.projects.project.optionalRole,
+=======
+  role: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
+   state.projectReducer.projectRole.projects.role,
+  optionalRole: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project && state.projectReducer.projectRole.projects.project.optionalRole,
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
   projectMembers: state.projectReducer.projectDetails.members,
   project: state.projectReducer.projectDetails,
   company: state.companyReducer.currentCompany,

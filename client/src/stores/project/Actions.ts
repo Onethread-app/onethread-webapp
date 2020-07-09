@@ -1,3 +1,5 @@
+
+
 import { PROJECT } from './Types';
 import { tigrowApi } from 'config';
 import {
@@ -96,7 +98,7 @@ export const createProjectInCompany = (payload: any) => async (
         companyId: companyId,
       };
       const response = await tigrowApi.post(
-        `projects/${companyId}/create`,
+        `projects/${payload.company}/create-project`,
         reqBody,
         headers,
       );

@@ -14,7 +14,11 @@ import { isEqual } from 'lodash';
 import { User } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
+<<<<<<< HEAD
 // import { SET_INITIAL_CURRENT_COMPANY } from 'stores/company/Types';
+=======
+import { SET_INITIAL_CURRENT_COMPANY } from 'stores/company/Types';
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
 
 export const editUserInfoAction = (basicInfo: User) => async (
   dispatch: any,
@@ -153,10 +157,17 @@ export const getAllCompaniesByUserId = (userId: string) => async (
         type: USER_COMPANIES_UPDATE,
         payload: response.data,
       });
+<<<<<<< HEAD
       // dispatch({
       //   type: SET_INITIAL_CURRENT_COMPANY,
       //   payload: response.data.companies[0]
       // });
+=======
+      dispatch({
+        type: SET_INITIAL_CURRENT_COMPANY,
+        payload: response.data.companies[0]
+      });
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
     } else {
       // tslint:disable-next-line: no-console
       // console.log('error in get company list by user');
@@ -323,4 +334,8 @@ export const getAllVideoHistory = () => async (
     // tslint:disable-next-line: no-console
     // console.log(error.response);
   }
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)

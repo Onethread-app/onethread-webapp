@@ -9,9 +9,13 @@ export interface IMember {
     firstName: string;
     lastName: string;
 <<<<<<< HEAD
+<<<<<<< HEAD
     name: string;
 =======
 >>>>>>> 64cb9964... Wip/home page skeleton (#235)
+=======
+    name: string;
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
     _id: string;
   };
   name: string;

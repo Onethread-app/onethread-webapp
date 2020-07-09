@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { connect } from 'react-redux';
+=======
+import { connect, useDispatch } from 'react-redux';
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
 import { Icon, Dialog, Button } from '@blueprintjs/core';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
@@ -10,7 +14,13 @@ import { getNotifications } from '../../stores/notifications/Action';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
+<<<<<<< HEAD
 import { addSpace } from 'stores/UtilsActions';
+=======
+import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+import { addSpace } from 'stores/UtilsActions';
+import { ICompanyResponse } from 'stores/company/Reducer';
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
 import company from './../../resources/images/noCompany.png';
 
 interface CompanyListProps {
@@ -25,6 +35,10 @@ interface CompanyListProps {
 export const CompanyListComponent = (props: CompanyListProps & RouteComponentProps) => {
 
   const [showDialog, setShowDialog] = useState(false);
+<<<<<<< HEAD
+=======
+  const dispatch = useDispatch();
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
 
   return (
     <>
@@ -33,7 +47,11 @@ export const CompanyListComponent = (props: CompanyListProps & RouteComponentPro
           <>
             <h1 className="f3-ns f5 white pt4">Places You Work</h1>
             <div className="flex">
+<<<<<<< HEAD
               <div className="overflow-x-auto w-85 pv1 justify-start"
+=======
+              <div className="overflow-x-auto w-85 pv1"
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
                 style={{
                   display: 'grid',
                   gridAutoFlow: 'column'
@@ -47,10 +65,25 @@ export const CompanyListComponent = (props: CompanyListProps & RouteComponentPro
                     style={{ width: isMobileOnly ? '160px' : '245px' }}
                     onClick={async () => {
                       props.getNotifications();
+<<<<<<< HEAD
                       await props.getCompanyDetails(
                         c.company.uniqueName,
                         props.history,
                       );
+=======
+                      const response = (await props.getCompanyDetails(
+                        c.company.uniqueName,
+                        props.history,
+                      )) as any;
+                      if (response.status === 200) {
+                        dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
+                        props.history.push(
+                          `/company/${
+                          (response as ICompanyResponse).data.company.uniqueName
+                          }/dashboard`,
+                        );
+                      }
+>>>>>>> 945955c5... project list filter, mobile responsive done (#248)
                     }}
                   >
                     <div className="bg-white pt3 tc"
