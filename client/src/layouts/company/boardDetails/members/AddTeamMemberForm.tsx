@@ -49,7 +49,7 @@ const AddTeamMemberFormComponent = (
             }/suggest-member?pid=${props.project!._id}`,
             headers,
           );
-          setTeamMembers(response.data.members);
+          setTeamMembers(response.data);
         }
       } else {
         // tslint:disable-next-line: no-console
@@ -77,6 +77,7 @@ const AddTeamMemberFormComponent = (
           selectedItems={selectedItems}
           setSelectedItems={setSelectedItems}
           multipleItemSelect={true}
+          isCreatable={false}
         />
       </div>
       <div className="fl w-100 mb2">
