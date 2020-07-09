@@ -39,13 +39,13 @@ const BoardDetailsViewComponent = (
           items={[
             {
               text: `Board`,
-              href: `/company/${props.company.name}/project/${
+              href: `/company/${props.company.uniqueName}/project/${
                 props.currentProject!._id
               }/board`,
             },
             {
               text: `${props.currentBoard!.name}`,
-              href: `/company/${props.company.name}/board/${
+              href: `/company/${props.company.uniqueName}/board/${
                 props.currentBoard!._id
               }`,
             },
