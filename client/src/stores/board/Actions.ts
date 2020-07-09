@@ -299,12 +299,13 @@ export const dragAndDropTask = (
 export const addTeamMembersIntoBoard = (
   members: Array<string | undefined>,
   boardId: string | undefined,
-) => async (dispatch: any) => {
+) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
+      const projectId = getState().projectReducer.projectDetails._id;
       const response = await tigrowApi.put(
-        `boards/${boardId}/members`,
+        `boards/${boardId}/members?pid=${projectId}`,
         { memberId: members },
         headers,
       );
