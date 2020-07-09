@@ -53,7 +53,7 @@ const certificate = new Schema({
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
-  }
+  },
 });
 
 // company schema
