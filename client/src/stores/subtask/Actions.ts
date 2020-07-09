@@ -18,9 +18,10 @@ export const getAllSubTask = () => async (
     const headers = tokenConfig();
     const taskId = getState().boardIndexReducer.boardReducer
       .currentTask._id;
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.get(
-        `subTasks?taskId=${taskId}`,
+        `subTasks?taskId=${taskId}&pid=${projectId}`,
         headers,
       );
       dispatch({ type: GET_ALL_SUBTASK, payload: response.data });
@@ -49,12 +50,13 @@ export const createSubTask = (subTask: ISubTask) => async (
     let response;
     const taskId = getState().boardIndexReducer.boardReducer
       .currentTask._id;
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         ...subTask,
         taskId,
       };
-      response = await tigrowApi.post(`subTasks`, reqBody, headers);
+      response = await tigrowApi.post(`subTasks?pid=${projectId}`, reqBody, headers);
       dispatch({ type: CREATE_SUBTASK, payload: response.data });
     }
     return errorMessgeHandler(response);
@@ -74,8 +76,9 @@ export const updateSubTask = (subTask: ISubTask) => async (
       const reqBody = {
         done: subTask.done,
       };
+    const projectId = getState().projectReducer.projectDetails._id;
       response = await tigrowApi.put(
-        `subTasks/${subTask._id}`,
+        `subTasks/${subTask._id}?pid=${projectId}`,
         reqBody,
         headers,
       );
@@ -98,8 +101,9 @@ export const updateSubTaskTitile = (subTask: ISubTask) => async (
       const reqBody = {
         name: subTask.name,
       };
+    const projectId = getState().projectReducer.projectDetails._id;
       response = await tigrowApi.put(
-        `subTasks/${subTask._id}`,
+        `subTasks/${subTask._id}?pid=${projectId}`,
         reqBody,
         headers,
       );
@@ -122,9 +126,10 @@ export const deleteSubTask = (subTask: ISubTask) => async (
     const headers = tokenConfig();
     let response;
     if ((headers as any).headers.Authorization) {
+      const projectId = getState().projectReducer.projectDetails._id;
       const subTaskId = subTask._id;
       response = await tigrowApi.delete(
-        `subTasks/${subTaskId}`,
+        `subTasks/${subTaskId}?pid=${projectId}`,
         headers,
       );
       dispatch({ type: DELETE_SUBTASK, payload: subTaskId });
