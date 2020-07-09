@@ -12,24 +12,11 @@ const load = async (req, res, next, id) => {
       if (result) {
         req.boardColumn = result;
         next();
-<<<<<<< HEAD
-<<<<<<< HEAD
-      }else{
-
+      } else {
         return sendErrorResponse(res, 400, 'IdIsNotExits', {
           message: 'No valid entry found for provided Board ID',
         });
-
       }
-=======
-      }
-=======
-      }
->>>>>>> c447d3e7... fix: account field add into the collection & refactor some response
-      return sendErrorResponse(res, 400, 'IdIsNotExits', {
-        message: 'No valid entry found for provided Board ID',
-      });
->>>>>>> 1d9824de... Bugfix/controller (#259)
     })
     .catch((err) => {
       logger.error(`Board column: ${err}`);

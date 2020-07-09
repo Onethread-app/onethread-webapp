@@ -104,27 +104,16 @@ router
     taskCtrl.dragTask,
   );
 
-router
-  .route('/:taskId/suggest-member')
-  .get(
-    authorization,
-<<<<<<< HEAD
-    // projectCtrl.authorizeProjectRole(
-    //   'all',
-    //   'admin',
-    //   'projectModerator',
-    //   'member',
-    // ),
-=======
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
-    taskCtrl.suggestMember,
-  );
+router.route('/:taskId/suggest-member').get(
+  authorization,
+  // projectCtrl.authorizeProjectRole(
+  //   'all',
+  //   'admin',
+  //   'projectModerator',
+  //   'member',
+  // ),
+  taskCtrl.suggestMember,
+);
 
 router.param('taskId', taskCtrl.load);
 
