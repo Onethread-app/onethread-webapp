@@ -8,6 +8,7 @@ export interface IMember {
   concernedAdmin: {
     firstName: string;
     lastName: string;
+    name: string;
     _id: string;
   };
   name: string;

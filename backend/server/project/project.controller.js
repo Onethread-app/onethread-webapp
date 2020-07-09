@@ -552,8 +552,8 @@ const showAllProjectsForCompany = async (req, res, next) => {
           ],
         },
       ])
-      .populate('departments', 'name _id ')
-      .select('-type -__v  -files -version -optionalRole ')
+      .populate('departments concernedAdmin', 'name _id ')
+      // .select('-type -__v  -files -version -optionalRole ')
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
