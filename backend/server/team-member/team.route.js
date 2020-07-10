@@ -25,12 +25,12 @@ router
 router.route('/:companyId/add-team-member').post(
   authorization,
   // TODO: member validations
-  // projectCtrl.authorizeProjectRole(
-  //   'all',
-  //   'admin',
-  //   'projectModerator',
-  //   'member',
-  // ),
+  projectCtrl.authorizeProjectRole(
+    'all',
+    'admin',
+    'projectModerator',
+    'member',
+  ),
   // SchemaValidator(joiSchema.newMember),
   subCtrl.subscriptionExpireCheck(),
   teamCtrl.addTeamMember,
@@ -41,8 +41,29 @@ router
   .get(
     authorization,
     subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     teamCtrl.list,
   );
+
+router
+  .route('/associate-list')
+  .get(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    teamCtrl.associateListInProject,
+  );
+
 router.route('/:memberId').get(
   authorization,
   // SchemaValidator(teamValidation.getMember),
