@@ -186,69 +186,18 @@ const list = async (req, res, next) => {
           populate: [
             {
               path: 'associate',
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
               select: 'associateCompany company',
               populate: {
                 path: 'associateCompany company',
                 select: '_id name type _id name type',
-=======
-              select: 'associateCompany',
-              populate: {
-                path: 'associateCompany',
-                select: '_id name type',
->>>>>>> c885f026... add associates in the project (#19)
-=======
-              select: 'associateCompany company',
-              populate: {
-                path: 'associateCompany company',
-                select: '_id name type _id name type',
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-              select: 'associateCompany company',
-              populate: {
-                path: 'associateCompany company',
-                select: '_id name type _id name type',
->>>>>>> 6d92f22e... Dev (#202)
               },
             },
           ],
         },
       ]);
 
-    const associateList = await Project.find({ _id: pid })
-      .sort({
-        createdAt: 1,
-      })
-      .skip(+skip)
-      .limit(+limit)
-      .select('associate')
-      .populate({
-        path: 'associate',
-        select: 'associateCompany company',
-        populate: {
-          path: 'associateCompany company',
-          select: '_id name type _id name type',
-        },
-      });
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-<<<<<<< HEAD
     return sendJSONresponse(res, 200, {
-=======
-    // members.push({ associateList });
-    return res.status(200).json({
->>>>>>> c885f026... add associates in the project (#19)
-=======
-    return sendJSONresponse(res, 200, {
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-    return sendJSONresponse(res, 200, {
->>>>>>> 6d92f22e... Dev (#202)
       memberList: members,
-      associateList,
     });
   } catch (error) {
     logger.error(`Team: ${error}`);
