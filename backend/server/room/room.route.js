@@ -19,7 +19,6 @@ router
       'all',
       'admin',
       'projectModerator',
-      'member',
     ),
     SchemaValidator(joiSchema.createRoom),
     roomCtrl.create,
@@ -29,6 +28,11 @@ router
   .route('/:roomId/archive')
   .put(
     authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     SchemaValidator(joiSchema.archiveRoom),
     roomCtrl.archiveRoom,
   );
@@ -52,6 +56,11 @@ router
   .route('/addUser')
   .post(
     authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     SchemaValidator(joiSchema.addMembers),
     roomCtrl.addMembers,
   );
@@ -59,13 +68,33 @@ router
 // get suggestions for adding members
 router
   .route('/suggest-member')
-  .get(authorization, roomCtrl.suggestMember);
+  .get(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
+    roomCtrl.suggestMember,
+  );
 
-  router.route('/list/:company').get(authorization, roomCtrl.listCompany);
+router
+  .route('/list/:company')
+  .get(authorization, roomCtrl.listCompany);
 
 // get rooms for a company
-router.route('/:company/:project').get(authorization, roomCtrl.list);
-
+router
+  .route('/:company/:project')
+  .get(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    roomCtrl.list,
+  );
 
 // get single room
 router

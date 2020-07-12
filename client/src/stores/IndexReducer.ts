@@ -9,9 +9,9 @@ import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 import { PusherReducer } from './pusher/Reducer';
 import { SubscriptionReducer } from './subscriptionBilling/Reducer';
-
 import { AssociateModel } from './associate/Reducer';
-
+import { videoConferencesReducers } from './videoConferences/Reducer';
+import toasterReducer from './toast/Reducer';
 export interface AppState {
   layoutReducer: any;
   roomReducer: any;
@@ -23,6 +23,8 @@ export interface AppState {
   notificationReducer: any;
   pusherReducer: any;
   SubscriptionReducer: any;
+  videoConferencesReducers: any;
+  toasterReducer: any;
 }
 
 export const rootReducer = combineReducers({
@@ -36,4 +38,6 @@ export const rootReducer = combineReducers({
   notificationReducer,
   pusherReducer: PusherReducer,
   subscriptionReducer: SubscriptionReducer,
+  videoConferencesReducers: videoConferencesReducers,
+  toasterReducer: toasterReducer,
 });

@@ -138,7 +138,7 @@ export const ProjectPrefaceViewComponent = (
               </Button>
             </div>
           ) : (
-            projectRules(props.optionalRole)[props.role].includes(
+            props.optionalRole && props.role && projectRules(props.optionalRole)[props.role].includes(
               'addFileProject',
             ) && (
               <div>
@@ -229,9 +229,10 @@ const mapStateToProps = (state: any) => ({
   description: state.projectReducer.projectDetails.description,
   outline: state.projectReducer.projectDetails.outline,
   files: state.projectReducer.projectDetails.files,
-  role: state.projectReducer.projectRole.projects.role,
-  optionalRole:
-    state.projectReducer.projectRole.projects.project.optionalRole,
+  role: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
+   state.projectReducer.projectRole.projects.role,
+  optionalRole: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project && state.projectReducer.projectRole.projects.project.optionalRole,
   projectMembers: state.projectReducer.projectDetails.members,
   project: state.projectReducer.projectDetails,
   company: state.companyReducer.currentCompany,

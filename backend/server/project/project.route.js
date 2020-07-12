@@ -9,6 +9,7 @@ const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
 const subCtrl = require('../subscription/subscription.controller');
+const { route } = require('../associate/associate.route');
 
 router
   .route('/change-title')
@@ -204,8 +205,5 @@ router
   );
 router
   .route('/project-list/:memberId')
-  .get(
-    authorization,
-    projectCtrl.projectListForMember,
-  );
+  .get(authorization, projectCtrl.projectListForMember);
 module.exports = router;

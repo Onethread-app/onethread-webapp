@@ -196,7 +196,20 @@ const list = async (req, res, next) => {
         },
       ]);
 
-    const associateList = await Project.find({ _id: pid })
+    return sendJSONresponse(res, 200, {
+      memberList: members,
+    });
+  } catch (error) {
+    logger.error(`Team: ${error}`);
+    next(error);
+  }
+};
+
+const associateListInProject = async (req, res, next) => {
+  try {
+    const companyId = req.headers.companyid;
+    const { limit = 50, skip = 0, pid } = req.query;
+    let associateList = await Project.findOne({ _id: pid })
       .sort({
         createdAt: 1,
       })
@@ -211,16 +224,22 @@ const list = async (req, res, next) => {
           select: '_id name type _id name type',
         },
       });
-    return sendJSONresponse(res, 200, {
-      memberList: members,
-      associateList,
+    let associate = associateList.associate;
+    associate.map((company) => {
+      if (company.company._id.toString() === companyId) {
+        company.company = undefined;
+      }
+      if (company.associateCompany._id.toString() === companyId) {
+        company.associateCompany = undefined;
+      }
+      return company;
     });
+    return sendJSONresponse(res, 200, associate);
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Team: ${error}`);
     next(error);
   }
 };
-
 // get a member
 const getMember = (req, res, next) => {
   try {
@@ -251,7 +270,7 @@ const getMemberLoad = async (req, res, next) => {
       });
     }
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Team: ${error}`);
     next(error);
   }
 };
@@ -291,4 +310,5 @@ module.exports = {
   getMemberLoad,
   searchTeamMember,
   changeRole,
+  associateListInProject,
 };

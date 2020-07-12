@@ -77,7 +77,10 @@ const _CurrentSubscription = (
           </div>
           <div>
             <h4>Payment Due Date</h4>
-            <label className="pl1">June 13 2020</label>
+            <label className="pl1">
+              {props.dueDate &&
+                moment(props.dueDate).format('MMMM Do YYYY')}
+            </label>
           </div>
           <div>
             <h4>Payment History</h4>

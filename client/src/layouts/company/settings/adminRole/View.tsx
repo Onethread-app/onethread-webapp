@@ -55,7 +55,7 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       className="mr2"
                       component="input"
                       type="checkbox"
-                      value="cRUDAnnoucment"
+                      value="cRUDAnnouncement"
                       disabled={disabled}
                     />
                     Create/Update/Delete Company Announcement

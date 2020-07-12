@@ -37,6 +37,7 @@ export const tokenConfig = () => {
       'Content-type': 'application/json',
       Authorization: `Bearer ${token}`,
       ClientId: store.getState().notificationReducer.socketId,
+      CompanyId: store.getState().companyReducer.currentCompany._id,
     },
   };
 };
@@ -95,8 +96,8 @@ export const projectPermit = (companyRole: string): boolean => {
 };
 
 type AdminOptionalPermissioRoles =
-  | 'cRUDAnnoucment'
   | 'editProfile'
+  | 'cRUDAnnouncement'
   | 'archiveProject'
   | 'addRemoveModerator'
   | 'messageAssociate'
@@ -324,3 +325,9 @@ export const addSpace = (name: string) => {
   name = name.replace(/([A-Z])/g, ' $1').trim();
   return capitalizeName(name);
 };
+
+
+
+
+
+

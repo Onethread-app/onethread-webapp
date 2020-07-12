@@ -1,6 +1,9 @@
 const Payment = require('./payment.model');
 const logger = require('../../config/winston');
 const config = require('../../config/config');
+const axios = require('axios');
+const crypto = require('crypto');
+const qs = require('qs');
 const stripe = require('stripe')(config.STRIPE_SECRET_KEY, {apiVersion: ''});
 
 const {
@@ -10,6 +13,19 @@ const {
 const create = async (req, res, next) => {
 
   try{
+
+  // let ipn_body = {};
+  // ipn_body['app_key'] = "9a78d14d58483269577bf112dd7a57e3";
+  // ipn_body['timestamp'] =  Date.now();
+  // ipn_body['token'] = md5sum.update( '1e2db2824da38d96082a7f521ac9b15c' +ipn_body['timestamp']).digest('hex') ;
+  // ipn_body['amount'] = 100.26;
+  // ipn_body['call'] = "ipn_validate";
+  // ipn_body['invoice'] =  '85EF827D83EB7931';
+
+  // const url = 'https://api-sandbox.portwallet.com/api/v1/';
+  // const response = await axios(url, {method: 'POST', data: qs.stringify(ipn_body)}); 
+
+
   
       let payment = new Payment({
         amount: req.body.amount,
@@ -25,9 +41,50 @@ const create = async (req, res, next) => {
       return sendJSONresponse(res, 201, payment);
 
   } catch (e) {
-    console.log(e)
-    logger.error(`Payment: ${error}`);
+    
+    logger.error(`Payment: ${e}`);
       next(e);
+  }
+      
+};
+
+const initiateInvoice = async (req, res, next) => {
+
+  try{
+    
+  const md5sum = crypto.createHash('md5');
+
+  let post_body = {};
+
+  post_body['app_key'] = "9a78d14d58483269577bf112dd7a57e3";
+  post_body['timestamp'] =  Date.now();
+  post_body['token'] = md5sum.update( '1e2db2824da38d96082a7f521ac9b15c' +post_body['timestamp']).digest('hex') ;
+  post_body['amount'] = req.body.amount;
+  post_body['call'] = 'gen_invoice';
+  post_body['currency'] = "BDT";
+  post_body['redirect_url'] = req.body.redirect_url;
+  post_body['product_name'] = "BDT";
+  post_body['product_description'] = "afd@ncn.co";
+  post_body['state'] = "BDT";
+  post_body['email'] = "afd@ncn.co";
+  post_body['name'] = "afd@ncn.co";
+  post_body['country'] = "BD";
+  post_body['phone'] = "+881234567890";
+  post_body['city'] = "BDT";
+  post_body['zipcode'] = "1234";
+  post_body['address'] = "https://476a00fea8a8.ngrok.io";
+
+
+  const url = 'https://api-sandbox.portwallet.com/api/v1/';
+  const response = await axios(url, {method: 'POST', data: qs.stringify(post_body)});  //qs.stringify(post_body)
+  const urlInvoice = 'https://payment-sandbox.portwallet.com/payment/?invoice='+response.data.data.invoice_id;
+
+    return sendJSONresponse(res, 200, {paymentUrl: urlInvoice});
+
+  } catch (e) {
+    
+    logger.error(`Payment: ${e}`);
+    next(e);
   }
       
 };
@@ -45,7 +102,7 @@ const paymentIntent = async (req, res, next) => {
     return sendJSONresponse(res, 200, {client_secret: intent.client_secret});
 
   } catch (e) {
-    logger.error(`Payment: ${error}`);
+    logger.error(`Payment: ${e}`);
       next(e);
   }
       
@@ -53,7 +110,7 @@ const paymentIntent = async (req, res, next) => {
 
 const list = async (req, res, next) => {
   try {
-    console.log(req.params.companyId)
+   
     const { skip = 0, limit = 50 } = req.query;
     const payments = await Payment.find({company:req.params.companyId})
       .select('status amount currency refrence createdAt')
@@ -70,6 +127,7 @@ const list = async (req, res, next) => {
 };
 
   module.exports = {
+    initiateInvoice,
     paymentIntent,
     list,
     create,

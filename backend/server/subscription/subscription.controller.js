@@ -1,7 +1,4 @@
-const {
-  Subscription,
-  SubscriptionHistory,
-} = require('./subscription.model');
+const { Subscription } = require('./subscription.model');
 
 const Plan = require('../plan/plan.model');
 const logger = require('../../config/winston.js');
@@ -13,7 +10,8 @@ const {
 
 const createSubscriptionForCompany = async (req, res, next) => {
   try {
-    const { companyId, plan } = req.body;
+    const companyId = req.headers.companyid;
+    const { plan } = req.body;
     const planValidation = await Plan.findById({ _id: plan }).select(
       'validity',
     );
@@ -26,11 +24,6 @@ const createSubscriptionForCompany = async (req, res, next) => {
     });
     await subscription.save();
     logger.info(`Subscription created for ${companyId}`);
-    await SubscriptionHistory.create({
-      subscription: subscription._id,
-      plan: plan,
-    });
-    logger.info(`Subscription History created for ${companyId}`);
     return sendJSONresponse(res, 201, {
       message: `New Subscription created`,
       subscription: subscription._id,
@@ -103,10 +96,10 @@ const renewSubscription = async (req, res, next) => {
 const subscriptionExpireCheck = () => {
   return async (req, res, next) => {
     try {
-      const subscribe = await Subscription.findOne({
-        company: req.params.companyId,
+      const subscribe = await Subscription.find({
+        company: req.headers.companyid,
         isActive: true,
-      });
+      }).sort({ _id: -1 });
       if (!subscribe) {
         return sendErrorResponse(res, 404, 'CompanyIdNotFoundError', {
           message: `companyId not found`,
@@ -114,8 +107,8 @@ const subscriptionExpireCheck = () => {
       }
       let today = new Date().getTime();
 
-      if (subscribe.expireAt > today) {
-        req.subscribe = subscribe.expireAt;
+      if (subscribe[0].expireAt > today) {
+        req.subscribe = subscribe[0].expireAt;
         next();
       } else {
         return sendErrorResponse(
