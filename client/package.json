@@ -73,7 +73,7 @@
     "typescript": "3.6.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node server.js",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "build:dev": "env-cmd -f .env.development react-scripts start",
