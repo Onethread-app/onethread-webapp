@@ -37,6 +37,7 @@ import {
   ADD_PRODUCT,
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
+  SET_INITIAL_CURRENT_COMPANY,
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
 
@@ -117,6 +118,7 @@ const InitialState = {
   currentCompany: {
     _id: '',
     name: '',
+    uniqueName: '',
     type: '',
     email: '',
     address: '',
@@ -471,6 +473,17 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           totalMember: action.payload,
         },
       };
+    case SET_INITIAL_CURRENT_COMPANY:
+        return {
+          ...state,
+          currentCompany: {
+            ...state.currentCompany,
+            _id: action.payload.company._id,
+            name: action.payload.company.name,
+            uniqueName: action.payload.company.uniqueName,
+            role: action.payload.role
+          },
+        };
     default:
       return state;
   }

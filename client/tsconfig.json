@@ -5,7 +5,7 @@
     "outDir": "build/dist",
     "module": "esnext",
     "target": "es5",
-				"lib": ["es6", "dom","esnext", "webworker"],
+    "lib": ["es6", "dom", "esnext", "webworker"],
     "sourceMap": true,
     "allowJs": true,
     "jsx": "react",
@@ -25,7 +25,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-				"noImplicitAny": false
+    "noImplicitAny": false
   },
   "exclude": [
     "node_modules",

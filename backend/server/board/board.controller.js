@@ -115,11 +115,14 @@ const addBoardMembers = async (req, res, next) => {
     })
       .populate('project', '_id name company')
       .populate('members', 'name');
-    const index = board.members.findIndex(
-      (x) => x._id.toString() == memberID,
-    );
+    
 
-    const text = `${req.user.name} has added  ${board.members[index].name} in ${board.name} from ${board.project.name}`;
+    const newBoardMember = board.members.filter((value)=> value._id.toString() === memberID[memberID.indexOf(value._id.toString())] ).map((m)=>m.name)
+
+    const text = `${req.user.name} has added  ${newBoardMember} in ${board.name} from ${board.project.name}`;
+
+    
+
     createBoardNotification(
       {
         project: board.project._id,
@@ -178,7 +181,7 @@ const suggestMember = async (req, res, next) => {
       .exec();
     //now it will check form project team by projectId
     let projectMembers = await Team.find({
-      project: req.query.projectId,
+      project: req.query.pid
     })
       .select('-_id account')
       .populate('account', '_id name')
@@ -190,12 +193,12 @@ const suggestMember = async (req, res, next) => {
         );
       });
     });
-
+    
     members = members.map((m) => m.account);
-    return res.status(200).json({
-      members,
-    });
+
+    return sendJSONresponse(res,200,members);
   } catch (error) {
+    logger.error(`Board Details: ${error}`);
     next(error);
   }
 };

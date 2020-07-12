@@ -77,9 +77,10 @@ export const _ProjectOutlineView = (
 };
 
 const mapStateToProps = (state: any) => ({
-  role: state.projectReducer.projectRole.projects.role,
-  optionalRole:
-    state.projectReducer.projectRole.projects.project.optionalRole,
+  role: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
+   state.projectReducer.projectRole.projects.role,
+  optionalRole: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project && state.projectReducer.projectRole.projects.project.optionalRole,
 });
 
 export const ProjectOutlineView = connect(

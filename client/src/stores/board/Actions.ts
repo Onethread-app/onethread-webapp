@@ -34,7 +34,7 @@ export const createBoard = (board: TaskBoard) => async (
         projectId,
       };
       const response = await tigrowApi.post(
-        `boards`,
+        `boards?pid=${projectId}`,
         reqBody,
         headers,
       );
@@ -137,10 +137,11 @@ export const createColumn = (columnName: any) => async (
   try {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       if (companyId) {
         const response = await tigrowApi.post(
-          `boardColumns`,
+          `boardColumns?pid=${projectId}`,
           columnName,
           headers,
         );
@@ -174,10 +175,11 @@ export const updateColumn = (columnInfo: any) => async (
   try {
     const headers = tokenConfig();
     const companyId = getState().companyReducer.currentCompany._id;
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
       if (companyId) {
         const response = await tigrowApi.put(
-          `boardColumns/${columnInfo._id}`,
+          `boardColumns/${columnInfo._id}?pid=${projectId}`,
           columnInfo,
           headers,
         );
@@ -210,8 +212,9 @@ export const createTask = (task: any) => async (
 ) => {
   try {
     const headers = tokenConfig();
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.post(`tasks`, task, headers);
+      const response = await tigrowApi.post(`tasks?pid=${projectId}`, task, headers);
       const responseValue = {
         ...response.data,
         columnId: task.columnId,
@@ -296,12 +299,13 @@ export const dragAndDropTask = (
 export const addTeamMembersIntoBoard = (
   members: Array<string | undefined>,
   boardId: string | undefined,
-) => async (dispatch: any) => {
+) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
+      const projectId = getState().projectReducer.projectDetails._id;
       const response = await tigrowApi.put(
-        `boards/${boardId}/members`,
+        `boards/${boardId}/members?pid=${projectId}`,
         { memberId: members },
         headers,
       );
@@ -327,12 +331,13 @@ export const addTeamMembersIntoBoard = (
 
 export const getSelectedTaskDetails = (
   taskId: string | undefined,
-) => async (dispatch: any) => {
+) => async (dispatch: any , getState: any) => {
   try {
     const headers = tokenConfig();
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization && taskId) {
       // dispatch({ type: BOARD_LOADING });
-      const res = await tigrowApi.get(`tasks/${taskId}`, headers);
+      const res = await tigrowApi.get(`tasks/${taskId}?pid=${projectId}`, headers);
       const response = {
         _id: res.data._id,
         name: res.data.name,
@@ -381,8 +386,9 @@ export const updateTask = (task: ITask) => async (
     let res;
     const taskId = getState().boardIndexReducer.boardReducer
       .currentTask._id;
+    const projectId = getState().projectReducer.projectDetails._id;
     if ((headers as any).headers.Authorization) {
-      res = await tigrowApi.put(`tasks/${taskId}`, task, headers);
+      res = await tigrowApi.put(`tasks/${taskId}?pid=${projectId}`, task, headers);
       const response = {
         _id: res.data._id,
         name: res.data.name,

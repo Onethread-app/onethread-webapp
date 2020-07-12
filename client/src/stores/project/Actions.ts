@@ -1,3 +1,5 @@
+
+
 import { PROJECT } from './Types';
 import { tigrowApi } from 'config';
 import {
@@ -39,32 +41,21 @@ export const getAllProjects = () => async (
   }
 };
 
-export const createProject = (payload: any, admin: any) => async (
+export const createProject = (payload: any) => async (
   dispatch: any,
   getState: any,
 ) => {
   try {
     const headers = tokenConfig();
-    const companyId = getState().companyReducer.currentCompany._id;
-    const userId = getState().userReducer.user._id;
 
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
-        type: payload.projectType,
-        account: userId,
-        concernedAdmin: {
-          memberId: admin.memberId,
-          accountId: admin._id,
-        },
-        companyId,
-        departments: payload.department,
-        associates: payload.associates,
-        color: payload.color,
+        companyId: payload.company
       };
 
       const response = await tigrowApi.post(
-        `projects/${companyId}/create`,
+        `projects/${payload.company}/create-project`,
         reqBody,
         headers,
       );

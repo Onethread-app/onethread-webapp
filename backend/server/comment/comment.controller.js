@@ -1,5 +1,6 @@
 const Comment = require('./comment.model');
 const logger = require('../../config/winston');
+const { sendJSONresponse } = require('../helpers/jsonResponse');
 
 const load = (req, res, next, id) => {
   Comment.findById(id)
@@ -33,9 +34,10 @@ const create = async (req, res, next) => {
     .catch((error) => next(error));
 };
 
-const list = (req, res, next) => {
+const list = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
-  Comment.find({ taskId: req.query.taskId })
+  try {
+    const comments = await Comment.find({ taskId: req.query.taskId })
     .select('_id text account createdAt')
     .populate([
       {
@@ -47,12 +49,13 @@ const list = (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then((result) => {
-      res.status(200).send(result);
-    })
-    .catch((error) => {
-      next(error);
-    });
+
+    return sendJSONresponse(res,200,comments);
+    
+  } catch (error) {
+    logger.error(`Comment: ${error}`);
+    next(error);
+  }
 };
 
 module.exports = {

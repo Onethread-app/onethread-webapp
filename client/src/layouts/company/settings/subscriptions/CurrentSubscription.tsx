@@ -14,7 +14,6 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { getCurrentSubscription } from '../../../../stores/subscriptionBilling/Actions';
 import moment from 'moment';
-
 // import { companyPermit } from 'stores/UtilsActions';
 
 interface CurrentSubscription {

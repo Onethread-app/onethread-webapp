@@ -22,6 +22,8 @@ interface SuggestFieldProps {
   isCreatableAPI?: (obj: { name: string }) => void;
   multipleItemSelect?: boolean;
   error?: string;
+  className?: string | '';
+
 }
 
 const SuggestInput = Suggest.ofType<ItemEntityProps>();
@@ -33,6 +35,7 @@ export const SuggestField = (props: SuggestFieldProps) => {
 
   return (
     <SuggestInput
+      className={props.className}
       initialContent={null}
       onQueryChange={props.onChange}
       items={props.items}

@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
+import Pusher from 'pusher-js';
 
 import '../../assets/fonts/css/icons.css';
 import Validator from '../../utils/Validator';
@@ -106,7 +107,7 @@ class Index extends React.Component {
                 id="joinBtn"
                 onClick={this.handleJoin}
                 disabled={!this.state.joinBtn}
-                className="vc-join-btn pointer"
+                className="vc-join-btn"
                 href="button"
               >
                 Create link

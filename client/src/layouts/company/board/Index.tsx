@@ -41,7 +41,7 @@ const BoardCard = withRouter(
               );
               if (currentBoard._id) {
                 props.history.push(
-                  `/company/${props.company.name}/board/${currentBoard._id}`,
+                  `/company/${props.company.uniqueName}/board/${currentBoard._id}`,
                 );
               }
             }}
