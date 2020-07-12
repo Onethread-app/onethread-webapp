@@ -12,7 +12,6 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { addSpace } from 'stores/UtilsActions';
-import { ICompanyResponse } from 'stores/company/Reducer';
 import company from './../../resources/images/noCompany.png';
 
 interface CompanyListProps {
@@ -56,11 +55,6 @@ export const CompanyListComponent = (props: CompanyListProps & RouteComponentPro
                       )) as any;
                       if (response.status === 200) {
                         dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
-                        props.history.push(
-                          `/company/${
-                          (response as ICompanyResponse).data.company.uniqueName
-                          }/dashboard`,
-                        );
                       }
                     }}
                   >

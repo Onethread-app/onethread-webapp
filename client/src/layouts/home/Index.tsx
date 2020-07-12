@@ -10,12 +10,10 @@ import { ProjectList } from './ProjectList';
 import { VideoConference } from './VideoList';
 import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
-import { getAllProjects } from 'stores/project/Actions';
 interface HomePageComponentProps {
   currentCompany: ICompany;
   getAllCompaniesByUserId: (userId: string) => void;
   getProjectsIndividual: () => void;
-  getAllProjects: () => void;
   user: User;
   project: IMember[];
 }
@@ -29,9 +27,7 @@ export const HomePageComponent = (
     setLoading(true);
     await props.getAllCompaniesByUserId(props.user._id);
     // await props.getProjectsIndividual();
-    if (props.currentCompany) {
-      await props.getAllProjects();
-    }
+    
     setLoading(false);
   };
 
@@ -72,5 +68,4 @@ const mapStateToProps = (state: any) => {
 export const HomePageNew = connect(mapStateToProps, {
   getAllCompaniesByUserId,
   getProjectsIndividual,
-  getAllProjects,
 })(withRouter(HomePageComponent));

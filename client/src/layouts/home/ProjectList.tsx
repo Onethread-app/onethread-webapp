@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dialog, Button, Popover } from '@blueprintjs/core';
 import { getProjectsIndividual } from 'stores/project/Actions';
@@ -19,6 +19,9 @@ import {
   getRoleForProject,
 } from 'stores/project/Actions';
 import { ICompany } from 'stores/company/Reducer';
+import { getAllProjects } from 'stores/project/Actions';
+import { Loading } from 'components/Loading';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -38,6 +41,7 @@ interface ProjectListProps {
   getSingleProject: (val: any) => void;
   setCurrentProjectId: (val: any) => void;
   getRoleForProject: (val: any) => void;
+  getAllProjects: () => void;
   project: IMember[];
   company: ICompany;
 }
@@ -47,6 +51,7 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
 
   const [searchProjects, setSearchProjects] = useState('');
   const [showProjectDialog, setShowProjectDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const singleProjectOnClick = async (pid: string) => {
     await props.getSingleProject(pid);
@@ -56,6 +61,18 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
       `/company/${props.company.name}/project/${pid}`,
     );
   };
+
+  const load = async () => {
+    setLoading(true);
+    if (props.company) {
+      await props.getAllProjects();
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    load();
+  }, [props.company.name]);
 
   return (
     <>
@@ -106,23 +123,25 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
               </Button>
         </div>
       </div>
-      {props.project && props.project.length > 0 ?
-        <div className="overflow-y-auto h5">
-          <CustomView condition={!isMobileOnly}>
-            <Grid container >
-              <Grid item xs>
-                <div className="b">Name</div>
+      {loading ? <Loading />
+        :
+        props.project && props.project.length > 0 ?
+          <div className="overflow-y-auto h5">
+            <CustomView condition={!isMobileOnly}>
+              <Grid container >
+                <Grid item xs>
+                  <div className="b">Name</div>
+                </Grid>
+                <Grid item xs>
+                  <div className="b">Type</div>
+                </Grid>
+                <Grid item xs>
+                  <div className="b">Lead</div>
+                </Grid>
               </Grid>
-              <Grid item xs>
-                <div className="b">Type</div>
-              </Grid>
-              <Grid item xs>
-                <div className="b">Lead</div>
-              </Grid>
-            </Grid>
-          </CustomView>
-          {searchProjects ?
-            (
+            </CustomView>
+            {searchProjects ?
+              (
                 props.project.filter(item => !item.name.indexOf(searchProjects)).map(
                   filteredProjects => (
                     <Card
@@ -131,7 +150,7 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
                         singleProjectOnClick(filteredProjects._id);
                         e.preventDefault();
                       }}>
-                      <Grid container style={{ cursor: 'pointer'}}>
+                      <Grid container style={{ cursor: 'pointer' }}>
                         <Grid item xs>
                           <div className="ml1">{filteredProjects.name}</div>
                         </Grid>
@@ -146,79 +165,79 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
                       </Grid>
                     </Card>
                   ))
-            )
-            : (props.project.map((p) => {
-              return (
-                isMobileOnly ?
-                  <div className="mt2 pointer">
-                    <ExpansionPanel>
-                      <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon />}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header"
-                      >
-                        <Paper
-                          className={classes.heading}
-                          elevation={0}
+              )
+              : (props.project.map((p) => {
+                return (
+                  isMobileOnly ?
+                    <div className="mt2 pointer">
+                      <ExpansionPanel>
+                        <ExpansionPanelSummary
+                          expandIcon={<ExpandMoreIcon />}
+                          aria-controls="panel1a-content"
+                          id="panel1a-header"
                         >
-                          <Typography className="">
-                            {p.name}
-                          </Typography>
-                        </Paper>
-                      </ExpansionPanelSummary>
-                      <ExpansionPanelDetails 
+                          <Paper
+                            className={classes.heading}
+                            elevation={0}
+                          >
+                            <Typography className="">
+                              {p.name}
+                            </Typography>
+                          </Paper>
+                        </ExpansionPanelSummary>
+                        <ExpansionPanelDetails
+                          onClick={(e) => {
+                            singleProjectOnClick(p._id);
+                            e.preventDefault();
+                          }}>
+                          <Paper
+                            className={classes.heading}
+                            elevation={0}
+                          >
+                            <Typography>Type: {p.type}</Typography>
+                          </Paper>
+                          <Paper
+                            className={classes.heading}
+                            elevation={0}
+                          >
+                            <Typography>Lead: {p.concernedAdmin.name}</Typography>
+                          </Paper>
+                        </ExpansionPanelDetails>
+                      </ExpansionPanel>
+                    </div>
+                    :
+                    <Card
+                      style={{ marginTop: '10px', padding: '10px' }}
                       onClick={(e) => {
                         singleProjectOnClick(p._id);
                         e.preventDefault();
-                      }}>
-                        <Paper
-                          className={classes.heading}
-                          elevation={0}
-                        >
-                          <Typography>Type: {p.type}</Typography>
-                        </Paper>
-                        <Paper
-                          className={classes.heading}
-                          elevation={0}
-                        >
-                          <Typography>Lead: {p.concernedAdmin.name}</Typography>
-                        </Paper>
-                      </ExpansionPanelDetails>
-                    </ExpansionPanel>
-                  </div>
-                  :
-                  <Card 
-                  style={{ marginTop: '10px', padding: '10px'}}
-                  onClick={(e) => {
-                    singleProjectOnClick(p._id);
-                    e.preventDefault();
-                  }}
-                  >
-                    <Grid container style={{ cursor: 'pointer'}}>
-                      <Grid item xs>
-                        <div className="ml1">{p.name}</div>
+                      }}
+                    >
+                      <Grid container style={{ cursor: 'pointer' }}>
+                        <Grid item xs>
+                          <div className="ml1">{p.name}</div>
+                        </Grid>
+                        <Grid item xs>
+                          <div className="ml1">{p.type}</div>
+                        </Grid>
+                        <Grid item xs>
+                          <div className="ml1">{p.concernedAdmin.name}</div>
+                        </Grid>
                       </Grid>
-                      <Grid item xs>
-                        <div className="ml1">{p.type}</div>
-                      </Grid>
-                      <Grid item xs>
-                        <div className="ml1">{p.concernedAdmin.name}</div>
-                      </Grid>
-                    </Grid>
-                  </Card>
-              );
-            }))}
-        </div>
-        :
-        (
-          <div className="white pv4 tc bg-white">
-            <img className={`${isMobileOnly && 'w4'}`} src={project} alt="project" />
-            <h1 className="light-silver fw4 f5 f3-ns">There's no existing project to show</h1>
-            <h2 className="light-silver fw4 f7 f4">
-              Simply click on 'Start a New Project' button to create a new one
-                </h2>
+                    </Card>
+                );
+              }))}
           </div>
-        )
+          :
+          (
+            <div className="white pv4 tc bg-white">
+              <img className={`${isMobileOnly && 'w4'}`} src={project} alt="project" />
+              <h1 className="light-silver fw4 f5 f3-ns">There's no existing project to show</h1>
+              <h2 className="light-silver fw4 f7 f4">
+                Simply click on 'Start a New Project' button to create a new one
+                </h2>
+            </div>
+          )
       }
       {showProjectDialog && (
         <Dialog
@@ -249,5 +268,6 @@ export const ProjectList = connect(
     getSingleProject,
     setCurrentProjectId,
     getRoleForProject,
+    getAllProjects
   },
 )(withRouter(ProjectListComponent));
