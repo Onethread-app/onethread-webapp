@@ -10,9 +10,7 @@ import { ProjectList } from './ProjectList';
 import { VideoConference } from './VideoList';
 import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
-import {
-  getAllProjects,
-} from 'stores/project/Actions';
+import { getAllProjects } from 'stores/project/Actions';
 interface HomePageComponentProps {
   currentCompany: ICompany;
   getAllCompaniesByUserId: (userId: string) => void;
@@ -22,7 +20,9 @@ interface HomePageComponentProps {
   project: IMember[];
 }
 
-export const HomePageComponent = (props: HomePageComponentProps & RouteComponentProps) => {
+export const HomePageComponent = (
+  props: HomePageComponentProps & RouteComponentProps,
+) => {
   const [loading, setLoading] = useState(false);
 
   const load = async () => {
@@ -42,17 +42,20 @@ export const HomePageComponent = (props: HomePageComponentProps & RouteComponent
   return (
     <>
       <div className="pt5 pt0-ns" style={{ background: '#0F0C4E' }}>
-        {loading ?
+        {loading ? (
           <Loading />
-          :
+        ) : (
           <>
             <CompanyList />
-            <div className="pa4-ns pa2 br4" style={{ background: '#F6F7FB' }}>
+            <div
+              className="pa4-ns pa2 br4"
+              style={{ background: '#F6F7FB' }}
+            >
               <ProjectList />
               <VideoConference />
             </div>
           </>
-          }
+        )}
       </div>
     </>
   );
@@ -62,15 +65,12 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     project: state.projectReducer.projectList,
-    currentCompany: state.companyReducer.currentCompany
+    currentCompany: state.companyReducer.currentCompany,
   };
 };
 
-export const HomePageNew = connect(
-  mapStateToProps,
-  {
-    getAllCompaniesByUserId,
-    getProjectsIndividual,
-    getAllProjects
-  },
-)(withRouter(HomePageComponent));
+export const HomePageNew = connect(mapStateToProps, {
+  getAllCompaniesByUserId,
+  getProjectsIndividual,
+  getAllProjects,
+})(withRouter(HomePageComponent));
