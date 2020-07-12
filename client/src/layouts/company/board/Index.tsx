@@ -209,55 +209,15 @@ const TaskPageComponent = (
       <div className="h-100">
         <div className="br3 bg-white h-100 pa4-ns pa2 cf flex flex-column">
           <div className="pl2 flex-ns justify-between">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
->>>>>>> a26cd117... Release/v2.2.0 (#183)
             {isMobileOnly ? undefined : (
               <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
                 Board
               </h3>
             )}
-<<<<<<< HEAD
-<<<<<<< HEAD
             <div className="flex">
               <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
                 Filter By
               </p>
-=======
-            {isMobileOnly ? undefined : <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
-              Board
-          </h3>}
-            <div className="flex">
-              <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
-                Filter By
-            </p>
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-            <div className="flex">
-              <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
-                Filter By
-              </p>
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-            {isMobileOnly ? undefined : <h3 className="f3 mt2 lh-title tigrow-lightGray-1 dib">
-              Board
-          </h3>}
-            <div className="flex">
-              <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
-                Filter By
-            </p>
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
-            <div className="flex">
-              <p className="pr3 fw7" style={{ marginTop: '.8rem' }}>
-                Filter By
-              </p>
->>>>>>> a26cd117... Release/v2.2.0 (#183)
               <div className="mt2" style={{ width: '200px' }}>
                 <HTMLSelect
                   fill={true}
@@ -274,80 +234,22 @@ const TaskPageComponent = (
                 >
                   <option selected value="">
                     All
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                   </option>
                   {props.company.departments
                     ? props.company.departments.map((d) => (
                         <option value={d._id}>{d.name}</option>
                       ))
-=======
-                </option>
-                  {props.company.departments
-                    ? props.company.departments.map((d) => (
-                      <option value={d._id}>{d.name}</option>
-                    ))
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-                  </option>
-                  {props.company.departments
-                    ? props.company.departments.map((d) => (
-                        <option value={d._id}>{d.name}</option>
-                      ))
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-                </option>
-                  {props.company.departments
-                    ? props.company.departments.map((d) => (
-                      <option value={d._id}>{d.name}</option>
-                    ))
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
-                  </option>
-                  {props.company.departments
-                    ? props.company.departments.map((d) => (
-                        <option value={d._id}>{d.name}</option>
-                      ))
->>>>>>> a26cd117... Release/v2.2.0 (#183)
                     : undefined}
                 </HTMLSelect>
               </div>
             </div>
           </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
           <p
             className="pl2 mt3"
             style={{ color: '#6B6B6B', fontSize: '18px' }}
           >
             My Boards
           </p>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          <p className="pl2 mt3" style={{ color: '#6B6B6B' }}>
-            My Boards
-        </p>
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-          <p className="pl2 mt3" style={{ color: '#6B6B6B' }}>
-            My Boards
-        </p>
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
           <div className="overflow-auto">
             {loading === false ? (
               props.boardList.length > 0 ? (
@@ -367,14 +269,6 @@ const TaskPageComponent = (
                       getSelectedBoard={props.getSelectedBoard}
                     />
                   ) : (
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
                     <BoardCard
                       boardList={props.boardList}
                       company={props.company}
@@ -382,32 +276,17 @@ const TaskPageComponent = (
                     />
                   )}
                 </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
               ) : ( props.role && 
                 (props.role === 'admin' || projectRules(props.optionalRole)[props.role].includes('createUpdateBoard')) ?
                 noBoardsFound
                 :
                 undefined
               )
-=======
-                      <BoardCard
-                        boardList={props.boardList}
-                        company={props.company}
-                        getSelectedBoard={props.getSelectedBoard}
-                      />
-                    )}
-                </div>
-              ) : (
-                  <p>No boards</p>
-                )
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
             ) : (
-                <Loading />
-              )}
+              <Loading />
+            )}
             <div>
               {props.role &&
-<<<<<<< HEAD
               (props.role === 'admin' ||
                 projectRules(props.optionalRole)[props.role].includes(
                   'createUpdateBoard',
@@ -442,198 +321,6 @@ const TaskPageComponent = (
                 />
               </RightSidebar>
             )}
-=======
-                      <BoardCard
-                        boardList={props.boardList}
-                        company={props.company}
-                        getSelectedBoard={props.getSelectedBoard}
-                      />
-                    )}
-                </div>
-              ) : (
-                  <p>No boards</p>
-                )
-            ) : (
-                <Loading />
-              )}
-            <div>
-              {props.role &&
-                (props.role === 'admin' ||
-                  projectRules(props.optionalRole)[props.role].includes(
-                    'createUpdateBoard',
-                  )) ? (
-                  <img
-                    onClick={() =>
-                      setShowTaskBoardDialog(!showTaskBoardDialog)
-                    }
-                    src={addIcon}
-                    className={`fixed pointer addButton ${
-                      showTaskBoardDialog ? 'dn' : 'db'
-                      }`}
-                    style={{
-                      boxShadow: '0px 6px 6px #00000029',
-                      borderRadius: '50%',
-                    }}
-                  />
-                ) : undefined}
-            </div>
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-        </div>
-        <p
-          className="pl2 mt3"
-          style={{ color: '#6B6B6B', fontSize: '18px' }}
-        >
-          My Boards
-        </p>
-        <div className="overflow-auto">
-          {loading === false ? (
-            props.boardList.length > 0 ? (
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns:
-                    'repeat(auto-fit, minmax(200px, 270px))',
-                  gridTemplateRows: 'repeat(2, 150px)',
-                }}
-              >
-                {/* TODO make one */}
-                {department ? (
-                  <BoardCard
-                    boardList={boards}
-                    company={props.company}
-                    getSelectedBoard={props.getSelectedBoard}
-                  />
-=======
-        </div>
-        <p
-          className="pl2 mt3"
-          style={{ color: '#6B6B6B', fontSize: '18px' }}
-        >
-          My Boards
-        </p>
-        <div className="overflow-auto">
-          {loading === false ? (
-            props.boardList.length > 0 ? (
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns:
-                    'repeat(auto-fit, minmax(200px, 270px))',
-                  gridTemplateRows: 'repeat(2, 150px)',
-                }}
-              >
-                {/* TODO make one */}
-                {department ? (
-                  <BoardCard
-                    boardList={boards}
-                    company={props.company}
-                    getSelectedBoard={props.getSelectedBoard}
-                  />
->>>>>>> a26cd117... Release/v2.2.0 (#183)
-                ) : (
-                  <BoardCard
-                    boardList={props.boardList}
-                    company={props.company}
-                    getSelectedBoard={props.getSelectedBoard}
-                  />
-                )}
-              </div>
-=======
-              ) : (
-                noBoardsFound
-              )
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-              ) : (
-                noBoardsFound
-              )
->>>>>>> 6d92f22e... Dev (#202)
-            ) : (
-              <Loading />
-            )}
-            <div>
-              {props.role &&
-              (props.role === 'admin' ||
-                projectRules(props.optionalRole)[props.role].includes(
-                  'createUpdateBoard',
-                )) ? (
-                <img
-                  onClick={() =>
-                    setShowTaskBoardDialog(!showTaskBoardDialog)
-                  }
-                  src={addIcon}
-                  className={`fixed pointer ${
-                    showTaskBoardDialog ? 'dn' : 'db'
-                  }`}
-                  style={{
-                    bottom: '5rem',
-                    right: '7rem',
-                    width: '5rem',
-                    boxShadow: '0px 6px 6px #00000029',
-                    borderRadius: '50%',
-                  }}
-                />
-              ) : undefined}
-            </div>
-            {showTaskBoardDialog && (
-              <RightSidebar
-                onClose={() =>
-                  setShowTaskBoardDialog(!showTaskBoardDialog)
-                }
-<<<<<<< HEAD
-<<<<<<< HEAD
-                src={addIcon}
-                className={`fixed pointer ${
-                  showTaskBoardDialog ? 'dn' : 'db'
-                }`}
-                style={{
-                  bottom: '5rem',
-                  right: '7rem',
-                  width: '5rem',
-                  boxShadow: '0px 6px 6px #00000029',
-                  borderRadius: '50%',
-                }}
-              />
-            ) : undefined}
-<<<<<<< HEAD
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-                (props.role === 'admin' ||
-                  projectRules(props.optionalRole)[props.role].includes(
-                    'createUpdateBoard',
-                  )) ? (
-                  <img
-                    onClick={() =>
-                      setShowTaskBoardDialog(!showTaskBoardDialog)
-                    }
-                    src={addIcon}
-                    className={`fixed pointer addButton ${
-                      showTaskBoardDialog ? 'dn' : 'db'
-                      }`}
-                    style={{
-                      boxShadow: '0px 6px 6px #00000029',
-                      borderRadius: '50%',
-                    }}
-                  />
-                ) : undefined}
-            </div>
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
->>>>>>> a26cd117... Release/v2.2.0 (#183)
-=======
-=======
->>>>>>> 6d92f22e... Dev (#202)
-              >
-                <FormBoard
-                  setShowTaskBoardDialog={setShowTaskBoardDialog}
-                />
-              </RightSidebar>
-            )}
-<<<<<<< HEAD
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
           </div>
         </div>
       </div>
