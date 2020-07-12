@@ -50,9 +50,7 @@ export const AssociateListComponent = (
               ) : props.associates.length > 0 ? (
                 props.associates.map((associate: Associate) => (
                   <>
-                    <Card
-                      className="ba b--black-20 br4 pa4 ma2"
-                    >
+                    <Card className="ba b--black-20 br4 pa4 ma2">
                       <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
                         {associate.associateCompany
                           ? associate.associateCompany.name.charAt(0)
@@ -65,9 +63,7 @@ export const AssociateListComponent = (
                         {associate.associateCompany.type}
                       </h1>
                     </Card>
-                    <Card
-                      className="ba b--black-20 br4 pa4 ma2"
-                    >
+                    <Card className="ba b--black-20 br4 pa4 ma2">
                       <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
                         {associate.company
                           ? associate.company.name.charAt(0)
@@ -83,8 +79,8 @@ export const AssociateListComponent = (
                   </>
                 ))
               ) : (
-                    <p>No associates available</p>
-                  )}
+                <p>No associates available</p>
+              )}
             </div>
           </CustomView>
           <MobileOnlyView>
@@ -101,9 +97,7 @@ export const AssociateListComponent = (
               ) : props.associates.length > 0 ? (
                 props.associates.map((associate: Associate) => (
                   <>
-                    <Card
-                      className="ba b--black-0125 br4 ma1"
-                    >
+                    <Card className="ba b--black-0125 br4 ma1">
                       <h1
                         className="center white f4 fw6 bg-green tc br3 pt2 ma0"
                         style={{ width: '3rem', height: '3rem' }}
@@ -119,9 +113,7 @@ export const AssociateListComponent = (
                         {associate.associateCompany.type}
                       </h1>
                     </Card>
-                    <Card
-                      className="ba b--black-20 br4 pa4 ma2"
-                    >
+                    <Card className="ba b--black-20 br4 pa4 ma2">
                       <h1 className="center white f3 bg-green w3 h3 tc pt3 br3">
                         {associate.company
                           ? associate.company.name.charAt(0)
@@ -137,8 +129,8 @@ export const AssociateListComponent = (
                   </>
                 ))
               ) : (
-                    <p>No associates available</p>
-                  )}
+                <p>No associates available</p>
+              )}
             </div>
           </MobileOnlyView>
         </div>
@@ -150,7 +142,7 @@ export const AssociateListComponent = (
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
-    associates: state.projectReducer.projectAssociates
+    associates: state.projectReducer.projectAssociates,
   };
 };
 
