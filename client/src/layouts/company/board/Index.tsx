@@ -277,7 +277,11 @@ const TaskPageComponent = (
                   )}
                 </div>
               ) : (
-                noBoardsFound
+                  props.role &&
+                    (props.role === 'admin' || projectRules(props.optionalRole)[props.role].includes('createUpdateBoard')) ?
+                    noBoardsFound
+                    :
+                    null
               )
             ) : (
               <Loading />
