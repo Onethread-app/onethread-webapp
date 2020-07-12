@@ -1,5 +1,3 @@
-
-
 import { PROJECT } from './Types';
 import { tigrowApi } from 'config';
 import {
@@ -51,7 +49,7 @@ export const createProject = (payload: any) => async (
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
-        companyId: payload.company
+        companyId: payload.company,
       };
 
       const response = await tigrowApi.post(
@@ -346,30 +344,33 @@ export const getAllPendingProjects = () => async (
   }
 };
 
-export const acceptPendingProject = (pending: IPendingProject) => async (
-  dispatch: any,
-  getState: any,
-) => {
+export const acceptPendingProject = (
+  pending: IPendingProject,
+) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
-    if ((headers as any).headers.Authorization && pending.project._id) {
+    if (
+      (headers as any).headers.Authorization &&
+      pending.project._id
+    ) {
       const companyID = getState().companyReducer.currentCompany._id;
       const pendingProjects = getState().projectReducer
         .pendingProjects;
       const reqBody = {
         size: pending.size,
-        associate: pending.associate
+        associate: pending.associate,
       };
       const response = await tigrowApi.put(
         `projects/${companyID}/accept-request?pid=${pending.project._id}`,
         reqBody,
-        headers
+        headers,
       );
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
           (pending: IPendingProject) =>
-            isEqual(pending.project._id, pending.project._id) === false,
+            isEqual(pending.project._id, pending.project._id) ===
+            false,
         );
         dispatch({
           type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT,
@@ -594,11 +595,13 @@ export const getProjectAssociates = () => async (
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const pid = getState().projectReducer.pid;
+      const companyId = getState().companyReducer.currentCompany._id;
+      headers['companyid'] = companyId;
       const response = await tigrowApi.get(
-        `/teams/member-list?pid=${pid}`,
+        `/teams/associate-list?pid=${pid}`,
         headers,
       );
-      console.log(response);
+
       await dispatch({
         type: PROJECT.PROJECT_GET_ASSOCIATES,
         payload: response.data.associateList[0].associate,
@@ -703,7 +706,6 @@ export const getProjectsIndividual = () => async (
   dispatch: any,
   getState: any,
 ) => {
-
   try {
     await dispatch({
       type: PROJECT.PROJECT_LIST_CLEAR,
@@ -712,24 +714,26 @@ export const getProjectsIndividual = () => async (
     if ((headers as any).headers.Authorization) {
       const list = getState().userReducer.user.companies;
       list.map((l) => {
-        tigrowApi.get(
-          `projects/project-list/${l._id}`,
-          headers,
-        ).then((res) => {
-          res.data.map((m) => {
-            dispatch({
-              type: PROJECT.PROJECT_LIST_INDIVIDUAL,
-              payload: m.project,
+        tigrowApi
+          .get(`projects/project-list/${l._id}`, headers)
+          .then((res) => {
+            res.data.map((m) => {
+              dispatch({
+                type: PROJECT.PROJECT_LIST_INDIVIDUAL,
+                payload: m.project,
+              });
             });
-          });
-        }).catch((err) => []);
-
+          })
+          .catch((err) => []);
       });
     } else {
       // tslint:disable-next-line: no-console
       console.log('error in project fetching');
     }
   } catch (error) {
-    dispatch({type: PROJECT.PROJECT_ERROR, payload: error.response});
+    dispatch({
+      type: PROJECT.PROJECT_ERROR,
+      payload: error.response,
+    });
   }
 };
