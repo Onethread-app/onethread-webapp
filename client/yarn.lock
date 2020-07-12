@@ -3486,11 +3486,15 @@ camelcase@5.3.1, camelcase@^5.0.0, camelcase@^5.3.1:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 camelcase@^2.0.0:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/camelcase/-/camelcase-2.1.1.tgz#7c1d16d679a1bbe59ca02cacecfb011e201f5a1f"
   integrity sha1-fB0W1nmhu+WcoCys7PsBHiAfWh8=
 
+<<<<<<< HEAD
 =======
 >>>>>>> 13e4934a... contact form, chat bot, announcement, signin text
 =======
@@ -3499,6 +3503,8 @@ camelcase@^2.0.0:
 >>>>>>> 4997b780... google analytics on index.html, confis, email to help tigrow, contact commented on signup
 =======
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 camelize@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/camelize/-/camelize-1.0.0.tgz#164a5483e630fa4321e5af07020e531831b2609b"
@@ -4342,6 +4348,9 @@ csstype@^2.5.7:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 currently-unhandled@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/currently-unhandled/-/currently-unhandled-0.4.1.tgz#988df33feab191ef799a61369dd76c17adf957ea"
@@ -4349,12 +4358,15 @@ currently-unhandled@^0.4.1:
   dependencies:
     array-find-index "^1.0.1"
 
+<<<<<<< HEAD
 =======
 >>>>>>> c885f026... add associates in the project (#19)
 =======
 >>>>>>> 02441785... work in progress announcement
 =======
 >>>>>>> f4601c6e... add associates in the project (#19)
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 custom-event@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/custom-event/-/custom-event-1.0.1.tgz#5d02a46850adf1b4a317946a3928fccb5bfd0425"
@@ -5810,11 +5822,15 @@ get-own-enumerable-property-symbols@^3.0.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 get-stdin@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-4.0.1.tgz#b968c6b0a04384324902e8bf1a5df32579a450fe"
   integrity sha1-uWjGsKBDhDJJAui/Gl3zJXmkUP4=
 
+<<<<<<< HEAD
 =======
 >>>>>>> 13e4934a... contact form, chat bot, announcement, signin text
 =======
@@ -5823,6 +5839,8 @@ get-stdin@^4.0.1:
 >>>>>>> 4997b780... google analytics on index.html, confis, email to help tigrow, contact commented on signup
 =======
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 get-stdin@^6.0.0:
   version "6.0.0"
   resolved "https://registry.yarnpkg.com/get-stdin/-/get-stdin-6.0.0.tgz#9e09bf712b360ab9225e812048f71fde9c89657b"
@@ -7315,15 +7333,21 @@ jest@24.9.0:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 js-base64@^2.1.8:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/js-base64/-/js-base64-2.6.2.tgz#cf9301bc5cc756892a9a6c8d7138322e5944fb0d"
   integrity sha512-1hgLrLIrmCgZG+ID3VoLNLOSwjGnoZa8tyrUdEteMeIzsT6PH7PMLyUvbDwzNE56P3PNxyvuIOx4Uh2E5rzQIw==
 
+<<<<<<< HEAD
 =======
 >>>>>>> d6893708... implemented video conferences using agora (#228)
 =======
 >>>>>>> 1059a963... implemented video conferences using agora
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 js-cookie@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/js-cookie/-/js-cookie-2.2.1.tgz#69e106dc5d5806894562902aa5baec3744e9b2b8"
@@ -10488,6 +10512,9 @@ react-textarea-autosize@^7.1.2:
     prop-types "^15.6.0"
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 react-toastify@^6.0.8:
   version "6.0.8"
   resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-6.0.8.tgz#84625d81d0fd01902a7f4c6f317eb074cb3bba67"
@@ -10497,6 +10524,7 @@ react-toastify@^6.0.8:
     prop-types "^15.7.2"
     react-transition-group "^4.4.1"
 
+<<<<<<< HEAD
 =======
 >>>>>>> 13e4934a... contact form, chat bot, announcement, signin text
 =======
@@ -10509,6 +10537,8 @@ react-toastify@^6.0.8:
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
 =======
 >>>>>>> f5d3b72a... project description and outline text area changed, existing description/outline is in textarea
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 react-transition-group@^2.9.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/react-transition-group/-/react-transition-group-2.9.0.tgz#df9cdb025796211151a436c69a8f3b97b5b07c8d"
@@ -10669,6 +10699,9 @@ recursive-readdir@2.2.2:
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 redent@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/redent/-/redent-1.0.0.tgz#cf916ab1fd5f1f16dfb20822dd6ec7f730c2afde"
@@ -10677,10 +10710,13 @@ redent@^1.0.0:
     indent-string "^2.1.0"
     strip-indent "^1.0.1"
 
+<<<<<<< HEAD
 =======
 >>>>>>> 0db3de3c... Feat/notification (#198)
 =======
 >>>>>>> 6d92f22e... Dev (#202)
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 redux-devtools-extension@^2.13.8:
   version "2.13.8"
   resolved "https://registry.yarnpkg.com/redux-devtools-extension/-/redux-devtools-extension-2.13.8.tgz#37b982688626e5e4993ff87220c9bbb7cd2d96e1"
@@ -11481,6 +11517,9 @@ source-map@0.6.1, source-map@^0.6.0, source-map@^0.6.1, source-map@~0.6.0, sourc
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 source-map@^0.4.2:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.4.4.tgz#eba4f5da9c0dc999de68032d8b4f76173652036b"
@@ -11488,8 +11527,11 @@ source-map@^0.4.2:
   dependencies:
     amdefine ">=0.0.4"
 
+<<<<<<< HEAD
 =======
 >>>>>>> c885f026... add associates in the project (#19)
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 source-map@^0.5.0, source-map@^0.5.6, source-map@^0.5.7:
 =======
 source-map@^0.5.0, source-map@^0.5.6:
@@ -12153,6 +12195,9 @@ tree-kill@^1.2.0:
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 trim-newlines@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/trim-newlines/-/trim-newlines-1.0.0.tgz#5887966bb582a4503a41eb524f7d35011815a613"
@@ -12165,6 +12210,7 @@ trim-newlines@^1.0.0:
   dependencies:
     glob "^7.1.2"
 
+<<<<<<< HEAD
 =======
 >>>>>>> 13e4934a... contact form, chat bot, announcement, signin text
 =======
@@ -12175,6 +12221,8 @@ trim-newlines@^1.0.0:
 >>>>>>> 02441785... work in progress announcement
 =======
 >>>>>>> 5967d917... contact form, chat bot, announcement, signin text
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 ts-essentials@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/ts-essentials/-/ts-essentials-5.0.0.tgz#531d590c9cd62652c9d96284904cbdb2a1dd5ca8"

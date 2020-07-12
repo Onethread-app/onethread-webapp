@@ -8,6 +8,7 @@ import notificationSaga from './notifications/notificationSaga';
 <<<<<<< HEAD
 import subscriptionSaga from './subscriptionBilling/subscriptionSaga';
 import videoConferencesSaga from './videoConferences/saga';
+<<<<<<< HEAD
 =======
 >>>>>>> 0db3de3c... Feat/notification (#198)
 =======
@@ -15,6 +16,8 @@ import videoConferencesSaga from './videoConferences/saga';
 =======
 import subscriptionSaga from './subscriptionBilling/subscriptionSaga';
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 
 export default function* rootSaga() {
   yield all([
@@ -33,6 +36,10 @@ export default function* rootSaga() {
 >>>>>>> 6d92f22e... Dev (#202)
 =======
     subscriptionSaga(),
+<<<<<<< HEAD
 >>>>>>> cdf1363f... Feature/tig 224 (#231)
+=======
+    videoConferencesSaga(),
+>>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
   ]);
 }

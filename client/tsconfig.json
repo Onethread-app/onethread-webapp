@@ -1,44 +1,40 @@
 {
-  "compilerOptions": {
-    "experimentalDecorators": true,
-    "baseUrl": "./src",
-    "outDir": "build/dist",
-    "module": "esnext",
-    "target": "es5",
-<<<<<<< HEAD
-    "lib": ["es6", "dom", "esnext", "webworker"],
-=======
-				"lib": ["es6", "dom","esnext", "webworker"],
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-    "sourceMap": true,
-    "allowJs": true,
-    "jsx": "react",
-    "moduleResolution": "node",
-    "rootDir": "src",
-    "forceConsistentCasingInFileNames": false,
-    "noImplicitReturns": true,
-    "noImplicitThis": true,
-    "importHelpers": true,
-    "strictNullChecks": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true,
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "strict": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "noEmit": true,
-				"noImplicitAny": false
-  },
-  "exclude": [
-    "node_modules",
-    "build",
-    "scripts",
-    "acceptance-tests",
-    "webpack",
-    "jest",
-    "src/setupTests.ts"
-  ],
-  "include": ["src"]
+	"compilerOptions": {
+			"experimentalDecorators": true,
+			"baseUrl": "./src",
+			"outDir": "build/dist",
+			"module": "esnext",
+			"target": "es5",
+			"lib": ["es6", "dom", "esnext", "webworker"],
+			"sourceMap": true,
+			"allowJs": true,
+			"jsx": "react",
+			"moduleResolution": "node",
+			"rootDir": "src",
+			"forceConsistentCasingInFileNames": false,
+			"noImplicitReturns": true,
+			"noImplicitThis": true,
+			"importHelpers": true,
+			"strictNullChecks": true,
+			"suppressImplicitAnyIndexErrors": true,
+			"noUnusedLocals": true,
+			"skipLibCheck": true,
+			"esModuleInterop": true,
+			"allowSyntheticDefaultImports": true,
+			"strict": true,
+			"resolveJsonModule": true,
+			"isolatedModules": true,
+			"noEmit": true,
+			"noImplicitAny": false
+	},
+	"exclude": [
+			"node_modules",
+			"build",
+			"scripts",
+			"acceptance-tests",
+			"webpack",
+			"jest",
+			"src/setupTests.ts"
+	],
+	"include": ["src"]
 }
