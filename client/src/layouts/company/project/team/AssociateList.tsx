@@ -21,8 +21,6 @@ interface AssociatesPageComponentProps {
 export const AssociateListComponent = (
   props: RouteComponentProps & AssociatesPageComponentProps,
 ) => {
-  console.log('associates props', props);
-
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
