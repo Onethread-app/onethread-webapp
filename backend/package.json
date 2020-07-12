@@ -1,6 +1,6 @@
 {
   "name": "tigrow",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "description": "A comunity for business people",
   "author": "Rubaiyat Farhan <tigrowtecheven@gmail.com>",
   "main": "index.js",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:BirUdaya/tigrowback.git"
+    "url": "https://github.com/TiGrow-Tech/TiGrowWebApp.git"
   },
   "keywords": [
     "server",
