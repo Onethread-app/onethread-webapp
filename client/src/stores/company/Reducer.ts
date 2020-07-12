@@ -37,6 +37,7 @@ import {
   ADD_PRODUCT,
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
+  EDIT_ORGANIZATION,
   SET_INITIAL_CURRENT_COMPANY,
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
@@ -100,7 +101,7 @@ export interface ICompany {
   logo: string;
   coverImage: string;
   certificate: ICertificates[];
-  parentcom: Entity[];
+  parentcom: [];
   announce: [];
   products: Entity[];
   totalMember: number;
@@ -411,6 +412,14 @@ export const CompanyReducer = (state = InitialState, action: any) => {
             ...state.currentCompany.parentcom,
             action.payload,
           ],
+        },
+      };
+    case EDIT_ORGANIZATION:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          parentcom: action.payload ,
         },
       };
     case GET_ALL_COMPANY_ANNOUNCEMENT:
