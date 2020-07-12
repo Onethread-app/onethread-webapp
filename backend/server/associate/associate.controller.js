@@ -70,7 +70,7 @@ const createPending = async (req, res, next) => {
       associate.isRejected = false;
     }
     await associate.save();
-    const text = `${associate.company.name} wants to add you as their associate`;
+    const text = `${req.body.associateCompany.name} wants to add you as their associate`;
     createCompanyRoleNotification(
       req.body.associateCompany,
       {
