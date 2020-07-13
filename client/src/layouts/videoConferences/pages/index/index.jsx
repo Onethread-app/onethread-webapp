@@ -46,8 +46,13 @@ class Index extends React.Component {
     Cookies.set('transcode', this.state.transcode);
     Cookies.set('attendeeMode', this.state.attendeeMode);
     Cookies.set('videoProfile', this.state.videoProfile);
-    const host =
-      process.env.PUBLIC_URL || `${document.location.host}/`;
+    let host =
+      process.env.REACT_APP_PUBLIC_URL || `${document.location.host}`;
+
+    if (host[host.length - 1] !== '/') {
+      host = host + '/';
+    }
+
     const link =
       host + 'vc/join/?conf=' + window.btoa(this.state.channel);
 

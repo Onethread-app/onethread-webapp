@@ -1,1 +1,1 @@
-export const AGORA_APP_ID = 'f17e692eeab24e559c735f1a9123a1c6';
+export const AGORA_APP_ID = process.env.REACT_APP_AGORA_APP_ID;
