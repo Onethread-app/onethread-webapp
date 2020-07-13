@@ -100,7 +100,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
           </NavLink>
         ) : (
           <>
-            {(companyPermit(props.company.role) || props.company.role === 'employee') && (
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
               <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"
@@ -132,7 +133,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
-            {(companyPermit(props.company.role) || props.company.role === 'employee') && (
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
               <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"
@@ -164,7 +166,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
-            {(companyPermit(props.company.role) || props.company.role === 'employee') && (
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
               <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"

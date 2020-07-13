@@ -103,6 +103,8 @@ class AgoraCanvas extends React.Component {
   }
 
   componentDidMount() {
+    this.loadAdditionalStyle();
+
     // add listener to control btn group
     let canvas = document.querySelector('#ag-canvas');
     let btnGroup = document.querySelector('.ag-btn-group');
@@ -115,6 +117,15 @@ class AgoraCanvas extends React.Component {
         btnGroup.classList.remove('active');
       }, 2000);
     });
+  }
+
+  loadAdditionalStyle() {
+    document.querySelector('.tigrow-left-sidebar').style.display =
+      'none';
+    document.querySelector('.pointer').style.display = 'none';
+    document.querySelector('.tigrow-navbar').style.display = 'none';
+    document.querySelector('.tigrow-main-content').style.width =
+      '100%';
   }
 
   // componentWillUnmount () {
