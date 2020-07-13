@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
-=======
-import React, { useState } from 'react';
->>>>>>> 945955c5... project list filter, mobile responsive done (#248)
 import { connect } from 'react-redux';
 import { Dialog, Button, Popover } from '@blueprintjs/core';
 import { getProjectsIndividual } from 'stores/project/Actions';
@@ -23,12 +19,9 @@ import {
   getRoleForProject,
 } from 'stores/project/Actions';
 import { ICompany } from 'stores/company/Reducer';
-<<<<<<< HEAD
 import { getAllProjects } from 'stores/project/Actions';
 import { Loading } from 'components/Loading';
 
-=======
->>>>>>> 945955c5... project list filter, mobile responsive done (#248)
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -48,10 +41,7 @@ interface ProjectListProps {
   getSingleProject: (val: any) => void;
   setCurrentProjectId: (val: any) => void;
   getRoleForProject: (val: any) => void;
-<<<<<<< HEAD
   getAllProjects: () => void;
-=======
->>>>>>> 945955c5... project list filter, mobile responsive done (#248)
   project: IMember[];
   company: ICompany;
 }
@@ -61,7 +51,6 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
 
   const [searchProjects, setSearchProjects] = useState('');
   const [showProjectDialog, setShowProjectDialog] = useState(false);
-<<<<<<< HEAD
   const [loading, setLoading] = useState(false);
 
   const load = async () => {
@@ -75,8 +64,6 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
   useEffect(() => {
     load();
   }, [props.company.name]);
-=======
->>>>>>> 945955c5... project list filter, mobile responsive done (#248)
 
   const singleProjectOnClick = async (pid: string) => {
     await props.getSingleProject(pid);
@@ -136,13 +123,9 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
               </Button>
         </div>
       </div>
-<<<<<<< HEAD
       { loading ? <Loading/>
       :
       props.project && props.project.length > 0 ?
-=======
-      {props.project && props.project.length > 0 ?
->>>>>>> 945955c5... project list filter, mobile responsive done (#248)
         <div className="overflow-y-auto h5">
           <CustomView condition={!isMobileOnly}>
             <Grid container >
@@ -285,9 +268,6 @@ export const ProjectList = connect(
     getSingleProject,
     setCurrentProjectId,
     getRoleForProject,
-<<<<<<< HEAD
     getAllProjects
-=======
->>>>>>> 945955c5... project list filter, mobile responsive done (#248)
   },
 )(withRouter(ProjectListComponent));
