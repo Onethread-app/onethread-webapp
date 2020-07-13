@@ -37,13 +37,15 @@ const schema = {
 
 module.exports = {
   createNewProjectForCompany: Joi.object().keys({
+    headers: Joi.object().keys({
+      companyid: schema.company.required(),
+    }),
     body: Joi.object().keys({
       name: schema.name.required(),
       concernedAdmin: Joi.object().keys({
         memberId: schema.memberId.required(),
         accountId: idSchema.id,
       }),
-      companyId: schema.company.required(),
       departments: schema.departments,
       color: schema.color,
       associates: schema.associates,

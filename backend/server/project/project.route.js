@@ -9,7 +9,6 @@ const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
 const subCtrl = require('../subscription/subscription.controller');
-const { route } = require('../associate/associate.route');
 
 router
   .route('/change-title')

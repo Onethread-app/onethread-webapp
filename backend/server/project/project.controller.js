@@ -17,14 +17,18 @@ const {
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
-const teamCreate = async (account, member, project, role) => {
-  let newTeam = new Team({
-    account,
-    member,
-    project,
-    role,
-  });
-  await newTeam.save();
+const teamCreate = async (account, member, project, role, next) => {
+  try {
+    let newTeam = new Team({
+      account,
+      member,
+      project,
+      role,
+    });
+    await newTeam.save();
+  } catch (error) {
+    next(error);
+  }
 };
 
 const projectRequestUpdate = async (pid, size) => {
@@ -41,10 +45,37 @@ const projectRequestUpdate = async (pid, size) => {
   );
 };
 
+const projectCreation = (
+  name,
+  type,
+  concernedAdmin,
+  accountId,
+  departments,
+  associates,
+  color,
+  company,
+) => {
+  let project = new Project({
+    name: name,
+    type: type,
+    concernedAdmin: concernedAdmin,
+    account: accountId,
+    departments: departments,
+    associate: associates,
+    color: color,
+    company: company,
+    description: '',
+    outline: '',
+  });
+  project.save();
+  logger.info(`Project has been created for ${company}`);
+  return project;
+};
 const createNewProjectForCompany = async (req, res, next) => {
   try {
     let associates = req.body.associates;
     let concernedAdmin = req.body.concernedAdmin;
+    let companyId = req.headers.companyid;
 
     const member = await Member.findOne({
       account: req.user._id,
@@ -57,18 +88,16 @@ const createNewProjectForCompany = async (req, res, next) => {
     }
 
     if (req.body.type === 'associates') {
-      const project = new Project({
-        name: req.body.name,
-        type: req.body.type,
-        concernedAdmin: concernedAdmin.accountId,
-        account: req.user._id,
-        departments: req.body.departments,
-        color: req.body.color,
-        company: req.params.companyId,
-        description: '',
-        outline: '',
-      });
-      await project.save();
+      let projectId = projectCreation(
+        req.body.name,
+        req.body.type,
+        concernedAdmin.accountId,
+        req.user._id,
+        req.body.departments,
+        associates,
+        req.body.color,
+        companyId,
+      );
       let projectReq = [];
       // create an id of map array
       associates.map(async (data) => {
@@ -76,7 +105,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         reqObject.company = req.params.companyId;
         reqObject.associate = data._id;
         reqObject.isAccepted = false;
-        reqObject.project = project._id;
+        reqObject.project = projectId;
         reqObject.size = data.size;
         projectReq.push(reqObject);
         return reqObject;
@@ -122,17 +151,17 @@ const createNewProjectForCompany = async (req, res, next) => {
         teamCreate(
           concernedAdmin.accountId,
           concernedAdmin.memberId,
-          project._id,
+          projectId,
           'admin',
         );
         logger.info(`project creator is the admin`);
       } else {
-        teamCreate(member.account, member._id, project._id, 'admin');
+        teamCreate(member.account, member._id, projectId, 'admin');
         logger.info(`project creator add as a member here`);
         teamCreate(
           concernedAdmin.accountId,
           concernedAdmin.memberId,
-          project._id,
+          projectId,
           'admin',
         );
         logger.info(`concern admin add as an admin here`);
@@ -143,21 +172,19 @@ const createNewProjectForCompany = async (req, res, next) => {
         project,
       });
     } else {
-      const project = new Project({
-        name: req.body.name,
-        type: req.body.type,
-        concernedAdmin: concernedAdmin.accountId,
-        account: req.user._id,
-        departments: req.body.departments,
-        color: req.body.color,
-        company: req.body.companyId,
-        description: '',
-        outline: '',
-      });
-
+      let project = projectCreation(
+        req.body.name,
+        req.body.type,
+        concernedAdmin.accountId,
+        req.user._id,
+        req.body.departments,
+        associates,
+        req.body.color,
+        companyId,
+      );
       const text = `${req.user.name} has created a project ${project.name} `;
       createCompanyRoleNotification(
-        { _id: req.body.companyId },
+        { _id: companyId },
         {
           _id: req.user._id,
           name: req.user.name,
@@ -166,46 +193,32 @@ const createNewProjectForCompany = async (req, res, next) => {
         text,
         'project',
       );
-
-      await project
-        .save()
-        .then((project) => {
-          logger.info(`new project created`);
-          if (req.user._id === concernedAdmin.accountId) {
-            teamCreate(
-              concernedAdmin.accountId,
-              concernedAdmin.memberId,
-              project._id,
-              'admin',
-            );
-            logger.info(`project creator add as a admin here`);
-          } else {
-            teamCreate(
-              member.account,
-              member._id,
-              project._id,
-              'admin',
-            );
-            teamCreate(
-              concernedAdmin.accountId,
-              concernedAdmin.memberId,
-              project._id,
-              'admin',
-            );
-            logger.info(
-              `${concernedAdmin.accountId} & ${member.account} admin here`,
-            );
-          }
-          return sendJSONresponse(res, 201, {
-            success: true,
-            message: 'New project created',
-            project,
-          });
-        })
-        .catch((error) => {
-          logger.error(`Project: ${error}`);
-          next(error);
-        });
+      logger.info(`new project created`);
+      if (req.user._id === concernedAdmin.accountId) {
+        teamCreate(
+          concernedAdmin.accountId,
+          concernedAdmin.memberId,
+          project._id,
+          'admin',
+        );
+        logger.info(`project creator add as a admin here`);
+      } else {
+        teamCreate(member.account, member._id, project._id, 'admin');
+        teamCreate(
+          concernedAdmin.accountId,
+          concernedAdmin.memberId,
+          project._id,
+          'admin',
+        );
+        logger.info(
+          `${concernedAdmin.accountId} & ${member.account} admin here`,
+        );
+      }
+      return sendJSONresponse(res, 201, {
+        success: true,
+        message: 'New project created',
+        project,
+      });
     }
   } catch (error) {
     logger.error(`Project: ${error}`);
@@ -271,7 +284,7 @@ const addAssociateInProject = async (req, res, next) => {
 
     associates.map(async (data) => {
       let reqObject = {};
-      reqObject.company = req.params.companyId;
+      reqObject.company = req.headers.companyid;
       reqObject.account = req.user._id;
       reqObject.associate = data._id;
       reqObject.isAccepted = false;
@@ -515,20 +528,13 @@ const showAllProjectsForCompany = async (req, res, next) => {
       isAccepted: true,
       associate: associateId,
     }).populate('project', '_id');
-    // let memberExistInProject = await Team.find({
-    //   $and: [{ account: req.user._id }, { removed: false }],
-    // }).populate('project', '_id');
 
     acceptedProject = acceptedProject.map((data) => {
       return data.project._id;
     });
-    // memberExistInProject = memberExistInProject.map((data) => {
-    //   return data.project._id;
-    // });
     await Project.find({
       $or: [
         { _id: { $in: acceptedProject } },
-        // { _id: { $in: memberExistInProject } },
         {
           company: companyId,
         },
@@ -553,7 +559,6 @@ const showAllProjectsForCompany = async (req, res, next) => {
         },
       ])
       .populate('departments concernedAdmin', 'name _id ')
-      // .select('-type -__v  -files -version -optionalRole ')
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
