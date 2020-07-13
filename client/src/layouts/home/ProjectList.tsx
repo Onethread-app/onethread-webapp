@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { Dialog, Button, Popover } from '@blueprintjs/core';
 import { getProjectsIndividual } from 'stores/project/Actions';
@@ -19,6 +19,9 @@ import {
   getRoleForProject,
 } from 'stores/project/Actions';
 import { ICompany } from 'stores/company/Reducer';
+import { getAllProjects } from 'stores/project/Actions';
+import { Loading } from 'components/Loading';
+
 const useStyles = makeStyles((theme) => ({
   root: {
     width: '100%',
@@ -38,6 +41,7 @@ interface ProjectListProps {
   getSingleProject: (val: any) => void;
   setCurrentProjectId: (val: any) => void;
   getRoleForProject: (val: any) => void;
+  getAllProjects: () => void;
   project: IMember[];
   company: ICompany;
 }
@@ -47,6 +51,19 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
 
   const [searchProjects, setSearchProjects] = useState('');
   const [showProjectDialog, setShowProjectDialog] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const load = async () => {
+    setLoading(true);
+    if (props.company) {
+      await props.getAllProjects();
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    load();
+  }, [props.company.name]);
 
   const singleProjectOnClick = async (pid: string) => {
     await props.getSingleProject(pid);
@@ -106,7 +123,9 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
               </Button>
         </div>
       </div>
-      {props.project && props.project.length > 0 ?
+      { loading ? <Loading/>
+      :
+      props.project && props.project.length > 0 ?
         <div className="overflow-y-auto h5">
           <CustomView condition={!isMobileOnly}>
             <Grid container >
@@ -249,5 +268,6 @@ export const ProjectList = connect(
     getSingleProject,
     setCurrentProjectId,
     getRoleForProject,
+    getAllProjects
   },
 )(withRouter(ProjectListComponent));

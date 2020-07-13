@@ -154,16 +154,6 @@ const NavbarTopComponent = (
                   <img src={logo} className="br2" style={{ background: '#0F0C4E' }} />
                 </NavLink>
               </div>
-              <NavLink
-                exact
-                to={`/${props.user.name}/home`}
-              >
-                <div
-                  className="f4 fw6 white ttc ws-break mh4"
-                >
-                  {props.type === 'home' ? 'Home' : ''}
-                </div>
-              </NavLink>
             </div>
           }
         </div>
