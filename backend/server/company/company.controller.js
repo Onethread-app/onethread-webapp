@@ -529,6 +529,25 @@ const addCertifications = async (req, res, next) => {
   }
 };
 
+const editCertification = async (req,res,next) => {
+  try {
+    const editedCertificate =  await Certificate.findOneAndUpdate(
+      { _id: req.query.certificateId },
+      { $set: req.body },
+      { safe: true, upsert: true, new: true },
+    ).exec();
+
+    return sendJSONresponse(res, 200, {
+      message: 'Certification edited',
+      data: editedCertificate
+    });
+    
+  } catch (error) {
+    logger.error(`Company: ${error}`)
+    next(error);
+  }
+}
+
 const parentOrg = async (req, res, next) => {
   try {
     const parentCom = req.body.parentcom;
@@ -688,4 +707,5 @@ module.exports = {
   noticePostByCompany,
   allNoticesForCompany,
   adminSuperAdminFinder,
+  editCertification
 };
