@@ -6,11 +6,12 @@ import editIcon from '../../../resources/images/editIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
 import { Divider } from '@blueprintjs/core';
 import { ProductEdit } from './ProductEditor';
-import { CertificateEdit } from './CertificateEditor';
+import { CertificateAdd } from './CertificateAddEditor';
 import { OrganizationEdit } from './ParentOrganizationEditor';
 import { ICompany } from 'stores/company/Reducer';
 import { getAllProduct } from 'stores/company/Actions';
 import { companyPermit } from 'stores/UtilsActions';
+import { CertificateEdit } from './CertificateEditEditor';
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
@@ -20,6 +21,9 @@ interface AdvancedInfoInternalProps {
 const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
   const [showProductDialog, setShowProductDialog] = useState(false);
   const [showCertificateDialog, setShowCertificateDialog] = useState(
+    false,
+  );
+  const [showCertificateEditDialog, setShowCertificateEditDialog] = useState(
     false,
   );
   const [
@@ -103,7 +107,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
                     src={editIcon}
                     width="38"
                     className="br2 pointer"
-                    onClick={() => setShowCertificateDialog(true)}
+                    onClick={() => setShowCertificateEditDialog(true)}
                   />
                 </div>
               </div>
@@ -163,8 +167,21 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           }
         >
           <div>
-            <CertificateEdit
+            <CertificateAdd
               setShowDialog={setShowCertificateDialog}
+            />
+          </div>
+        </RightSidebar>
+      )}
+      {showCertificateEditDialog && (
+        <RightSidebar
+          onClose={() =>
+            setShowCertificateEditDialog(!showCertificateEditDialog)
+          }
+        >
+          <div>
+            <CertificateEdit
+              setShowDialog={setShowCertificateEditDialog}
             />
           </div>
         </RightSidebar>
