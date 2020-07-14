@@ -10,18 +10,7 @@ import { projectRules } from './../../project/settings/projectrules';
 import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { room } from 'stores/room/Types';
-=======
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-import { room } from 'stores/room/Types';
->>>>>>> 0db3de3c... Feat/notification (#198)
-=======
-import { room } from 'stores/room/Types';
->>>>>>> 6d92f22e... Dev (#202)
 
 interface RoomSideBarComponentProps {
   projectRole?: string;
@@ -48,9 +37,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       >
         <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
           { props.projectRole && 
             props.optionalRole && 
             (projectRules(props.optionalRole)[props.projectRole] === true || 
@@ -73,28 +59,6 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           </span>
           }
       </div>
-=======
-          {props.companyRole && projectPermit(props.companyRole) ? (
-=======
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
->>>>>>> 380328e7... Feature/role access (#187)
-            <span
-              className="bp3-icon grow pointer"
-              onClick={() => { 
-                setShowDialog(!showDialog);
-                dispatch({ type: room.CLEAR_STATUS_CODE });
-              }}
-            >
-              <img
-                src={createIcon}
-                width="30px"
-                height="30px"
-                color="#0FA3A3"
-              />
-            </span>
-        </div>
->>>>>>> a51ad486... Feature/mobile responsive (#148)
         <div className="flex items-center ph3-ns relative">
           <InputGroupField
             id="roomName"
@@ -121,15 +85,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           />
         </div>
         <div className="flex-grow-1 overflow-y-auto">
-<<<<<<< HEAD
-<<<<<<< HEAD
           {props.isOpen || isMobileOnly ? <RoomList search={searchKeyword}/> : null}
-=======
-          {props.isOpen || isMobileOnly ? <RoomList /> : null}
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-          {props.isOpen || isMobileOnly ? <RoomList search={searchKeyword}/> : null}
->>>>>>> 33bfc7cc... room search added (#289)
         </div>
       </div>
       {showDialog && (
