@@ -13,6 +13,7 @@ import { isMobileOnly } from 'react-device-detect';
 import { room } from 'stores/room/Types';
 
 interface RoomSideBarComponentProps {
+  projectRole?: string;
   companyRole?: string;
   isOpen?: boolean;
 }
@@ -35,7 +36,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       >
         <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
-          {props.companyRole && projectPermit(props.companyRole) && 
+          {props.projectRole && projectPermit(props.projectRole) && 
           <span
             className="bp3-icon grow pointer"
             onClick={() => { 
@@ -96,6 +97,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     companyRole: state.companyReducer.currentCompany.role,
+    projectRole: state.projectReducer.projectRole && state.projectReducer.projectRole.projects && state.projectReducer.projectRole.projects.role
   };
 };
 
