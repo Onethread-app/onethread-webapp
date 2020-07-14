@@ -466,6 +466,7 @@ export const updateProjectRole = (optionalRole: any) => async (
         reqBody,
         headers,
       );
+      dispatch(getRoleForProject(projectId));
       dispatch({
         type: PROJECT.PROJECT_UPDATE_ROLE,
       });
@@ -473,10 +474,10 @@ export const updateProjectRole = (optionalRole: any) => async (
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      // console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      // console.log(error.response);
       // return error.response;
     }
   }
@@ -681,6 +682,7 @@ export const changeProjectMemberRole = (
       if (userId === accountId) {
         dispatch(getRoleForProject(projectId));
       }
+      dispatch(getSingleProject(projectId));
       dispatch({
         type: PROJECT.PROJECT_UPDATE_TEAM_ROLE,
         payload: { memberId, role: values.role },
@@ -688,15 +690,15 @@ export const changeProjectMemberRole = (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in changing team role');
+      // console.log('error in changing team role');
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      // console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      // console.log(error.response);
     }
     return error.response.status;
   }

@@ -4,14 +4,21 @@ import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { Button } from '@blueprintjs/core';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
+interface IOPtionalRole {
+  optionalRole?: [];
+}
 interface IProjectRole {
-  onSubmit: (values: any) => Promise<void>;
+  onSubmit: (values: IOPtionalRole) => Promise<void>;
   optionalRole?: [];
 }
 
 const GeneralPageComponent = (props: IProjectRole) => {
   const [disabled] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
   return (
     <div className="bl b--black-05 bw1 pl5-ns pl2 ml5-ns h-100">
       <Form
@@ -231,6 +238,19 @@ const GeneralPageComponent = (props: IProjectRole) => {
                   </label>
                 )}
               />
+              <Snackbar
+                open={open}
+                autoHideDuration={2000}
+                onClose={() => setOpen(false)}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <MuiAlert severity="success">
+                  Role Updated Successfully
+                </MuiAlert>
+              </Snackbar>
             </div>
             {disabled === false ? (
               <div>
@@ -244,6 +264,7 @@ const GeneralPageComponent = (props: IProjectRole) => {
                   loading={submitting}
                   type="submit"
                   disabled={submitting || pristine}
+                  onClick={() => setOpen(true)}
                 >
                   Save
                 </Button>
