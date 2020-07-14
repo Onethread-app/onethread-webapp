@@ -7,14 +7,15 @@ const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
+const logger = require('../../config/winston');
 
 const create = async (req, res, next) => {
   try {
     // check room already exists with same company
     const duplicate = await Room.findOne({
       name: req.body.name,
-      company: req.body.company,
-      project: req.body.project,
+      company: req.headers.companyid,
+      project: req.query.pid,
     });
     if (duplicate) {
       return sendErrorResponse(res, 409, 'DuplicateRoomError', {
@@ -23,8 +24,8 @@ const create = async (req, res, next) => {
     }
     const newRoom = new Room({
       name: req.body.name,
-      company: req.body.company,
-      project: req.body.project,
+      company: req.headers.companyid,
+      project: req.query.pid,
       // members: [req.user._id],
       account: req.user._id,
     });
@@ -34,8 +35,8 @@ const create = async (req, res, next) => {
     const newRoomMember = new RoomMember({
       account: req.user._id,
       team: req.team._id,
-      company: req.body.company,
-      project: req.body.project,
+      company: req.headers.companyid,
+      project: req.query.pid,
       room: room._id,
     });
 
@@ -43,6 +44,7 @@ const create = async (req, res, next) => {
 
     return sendJSONresponse(res, 201, { room, roomMember });
   } catch (e) {
+    logger.error(`Room: ${e}`);
     next(e);
   }
 };
@@ -53,8 +55,8 @@ const addMembers = async (req, res, next) => {
       return {
         account: member.account,
         team: member.team,
-        company: req.body.company,
-        project: req.body.project,
+        company: req.headers.companyid,
+        project: req.query.pid,
         room: req.body.room,
       };
     });
@@ -62,13 +64,15 @@ const addMembers = async (req, res, next) => {
     const result = await RoomMember.create(roomMembers);
 
     if (!result) {
-      return res.status(404).json({ message: 'No room found' });
+      return sendErrorResponse(res, 404, 'RoomNotFoundError', {
+        message: 'No room found',
+      });
     }
-
-    return res.status(201).json({
+    return sendJSONresponse(res, 201, {
       message: 'new members added into room',
     });
   } catch (error) {
+    logger.error(`Rooms: ${error}`);
     next(error);
   }
 };
@@ -101,7 +105,7 @@ const memberList = async (req, res, next) => {
 };
 
 const suggestMember = async (req, res, next) => {
-  const { projectId, roomId } = req.query;
+  const { pid, roomId } = req.query;
   try {
     const roomMembers = await RoomMember.find({
       room: roomId,
@@ -115,7 +119,7 @@ const suggestMember = async (req, res, next) => {
         },
       ]);
 
-    let projectMembers = await Team.find({ project: projectId })
+    let projectMembers = await Team.find({ project: pid })
       .select('_id account')
       .populate('account', '_id name firstName lastName email')
       .exec();
@@ -134,11 +138,9 @@ const suggestMember = async (req, res, next) => {
         teamId: tm._id,
       };
     });
-
-    return res.status(200).json({
-      members,
-    });
+    return sendJSONresponse(res, 200, { members });
   } catch (error) {
+    logger.error(`Rooms: ${error}`);
     next(error);
   }
 };
@@ -156,16 +158,14 @@ const getRoom = async (req, res, next) => {
         message: 'No room found.',
       });
     }
-    return res.status(200).json({
-      room,
-    });
+    return sendJSONresponse(res, 200, { room });
   } catch (error) {
+    logger.error(`Room: ${error}`);
     next(error);
   }
 };
 
 const listCompany = async (req, res, next) => {
-  
   const { limit = 50, skip = 0 } = req.query;
   try {
     const rooms = await RoomMember.find({
@@ -228,7 +228,6 @@ const listCompany = async (req, res, next) => {
       roomsUnreadCount,
     });
   } catch (error) {
-   
     next(error);
   }
 };
@@ -238,8 +237,8 @@ const list = async (req, res, next) => {
   try {
     const rooms = await RoomMember.find({
       account: req.user._id,
-      company: req.params.company,
-      project: req.params.project,
+      company: req.headers.companyid,
+      project: req.query.pid,
       removed: false,
     })
       .skip(+skip)
@@ -291,12 +290,12 @@ const list = async (req, res, next) => {
         ...room._doc,
       };
     });
-
-    return res.status(200).json({
+    return sendJSONresponse(res, 200, {
       rooms: filterRooms,
       roomsUnreadCount,
     });
   } catch (error) {
+    logger.error(`Room: ${error}`);
     next(error);
   }
 };

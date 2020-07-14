@@ -84,7 +84,7 @@ router
 
 // get rooms for a company
 router
-  .route('/:company/:project')
+  .route('/list')
   .get(
     authorization,
     projectCtrl.authorizeProjectRole(
