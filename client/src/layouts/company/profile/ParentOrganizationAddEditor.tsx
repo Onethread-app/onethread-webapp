@@ -18,7 +18,7 @@ interface IOrganizationEditProps {
   company: ICompany;
 }
 
-const OrganizationEditComponent = (props: IOrganizationEditProps) => {
+const OrganizationAddComponent = (props: IOrganizationEditProps) => {
   // useEffect(() => {
   //   async function loadOrganization(getCompanyDetails: (companyName: string) => void) {
   //     await getCompanyDetails(props.company.name);
@@ -118,7 +118,7 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const OrganizationEdit = connect(mapStateToProps, {
+export const OrganizationAdd = connect(mapStateToProps, {
   addOrganization,
   getCompanyDetails,
-})(OrganizationEditComponent);
+})(OrganizationAddComponent);
