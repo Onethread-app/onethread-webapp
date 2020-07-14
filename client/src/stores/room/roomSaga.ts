@@ -84,17 +84,15 @@ function* createRoomAction(action) {
 
 function* getRooms() {
   try {
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
+
     const selectProjectId = (state) =>
       state.projectReducer.projectDetails._id;
-    const company = yield select(selectCompanyId);
     const project = yield select(selectProjectId);
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       yield put({ type: LOADING_ROOM });
       const response = yield tigrowApi.get(
-        `rooms/${company}/${project}?pid=${project}`,
+        `rooms/list?pid=${project}`,
         headers,
       );
       yield put({ type: GET_ROOMS, payload: response.data });

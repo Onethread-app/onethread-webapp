@@ -251,6 +251,7 @@ const NavbarTopComponent = (
                               props.currentRoom !== undefined &&
                               room._id === props.currentRoom._id
                             }
+                            currentCompany={props.companyName}
                             iconBgColor={
                               roomBgColor[i % roomBgColor.length]
                             }
