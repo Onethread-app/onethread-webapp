@@ -14,13 +14,15 @@ const idSchema = {
 const schema = {
   company: idSchema.id,
   associateCompany: Joi.string(),
-  removed: Joi.boolean(),
 };
 
 module.exports = {
   createAssociate: Joi.object().keys({
     body: Joi.object().keys({
-      companyId: schema.company.required(),
+      company: Joi.object().keys({
+        _id: schema.company.required(),
+        name: schema.associateCompany.required(),
+      }),
       associateCompany: Joi.object().keys({
         _id: schema.company.required(),
         name: schema.associateCompany.required(),

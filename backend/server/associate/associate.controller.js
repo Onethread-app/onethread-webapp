@@ -50,17 +50,15 @@ const get = async (req, res, next) => {
 const createPending = async (req, res, next) => {
   try {
     let associate = await Associate.findOne({
-      company: req.body.companyId,
+      company: req.body.company.id,
       associateCompany: req.body.associateCompany,
       isAccepted: false,
       isRejected: true,
     })
-      .populate('company name')
-      .exec();
 
     if (_.isEmpty(associate)) {
       associate = new Associate({
-        company: req.body.companyId,
+        company: req.body.company,
         associateCompany: req.body.associateCompany,
         isAccepted: false,
         isRejected: false,
@@ -69,8 +67,9 @@ const createPending = async (req, res, next) => {
     } else {
       associate.isRejected = false;
     }
+    
     await associate.save();
-    const text = `${associate.company.name} wants to add you as their associate`;
+    const text = `${req.body.company.name} wants to add you as their associate`;
     createCompanyRoleNotification(
       req.body.associateCompany,
       {

@@ -10,9 +10,10 @@ import { addAssociate } from 'stores/associate/Actions';
 import { server } from 'config';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEmpty, map } from 'lodash';
+import { ICompany } from 'stores/company/Reducer';
 
 interface AddAssociateEditorProps {
-  companyId: string;
+  company: ICompany;
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
   sendingRequestSuccess: boolean;
@@ -22,7 +23,7 @@ interface AddAssociateEditorInternalProps
   extends AddAssociateEditorProps {
   addAssociate: (
     associateWith: ItemEntityProps,
-    companyId: string,
+    company: ICompany,
   ) => any;
 }
 
@@ -38,7 +39,7 @@ const AssociateFormEditorComponent = (
   const userRequestFactory = (value: string): Promise<any> => {
     const headers = tokenConfig();
     return fetch(
-      `${server}company/search?name=${value}&companyId=${props.companyId}`,
+      `${server}company/search?name=${value}&companyId=${props.company._id}`,
       headers,
     )
       .then((res) => res.json())
@@ -85,20 +86,23 @@ const AssociateFormEditorComponent = (
           style={
             isEmpty(selectedAssociate) === true
               ? {
-                background: '#0fa3a3',
-                outline: 'none',
-                color: 'white',
-              }
+                  background: '#0fa3a3',
+                  outline: 'none',
+                  color: 'white',
+                }
               : {
-                background: '#0fa3a3',
-                outline: 'none',
-                color: 'white',
-              }
+                  background: '#0fa3a3',
+                  outline: 'none',
+                  color: 'white',
+                }
           }
           disabled={isEmpty(selectedAssociate)}
           onClick={async () => {
             if (isEmpty(selectedAssociate) === false) {
-              const response = await props.addAssociate(selectedAssociate, props.companyId);
+              const response = await props.addAssociate(
+                selectedAssociate,
+                props.company,
+              );
               if (response === 201) {
                 props.setShowDialog(!props.showDialog);
               }
