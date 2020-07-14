@@ -11,13 +11,7 @@ import { OrganizationAdd } from './ParentOrganizationAddEditor';
 import { ICompany, IOrg } from 'stores/company/Reducer';
 import { getAllProduct } from 'stores/company/Actions';
 import { companyPermit } from 'stores/UtilsActions';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { OrganizationEditEditor } from './ParentOrganizationEditEditor';
-=======
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
->>>>>>> 380328e7... Feature/role access (#187)
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
