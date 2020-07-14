@@ -100,6 +100,7 @@ function _Checkout(props: ICheckout) {
       // Make sure to disable form submission until Stripe.js has loaded.
       return;
     }
+
     const getSubscription = await tigrowApi.post(
       'subscriptions',
       { companyId: props.company, plan: props.plan._id },
