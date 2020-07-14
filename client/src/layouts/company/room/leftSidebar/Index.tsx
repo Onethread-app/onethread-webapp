@@ -122,10 +122,14 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
         </div>
         <div className="flex-grow-1 overflow-y-auto">
 <<<<<<< HEAD
+<<<<<<< HEAD
           {props.isOpen || isMobileOnly ? <RoomList search={searchKeyword}/> : null}
 =======
           {props.isOpen || isMobileOnly ? <RoomList /> : null}
 >>>>>>> a51ad486... Feature/mobile responsive (#148)
+=======
+          {props.isOpen || isMobileOnly ? <RoomList search={searchKeyword}/> : null}
+>>>>>>> 33bfc7cc... room search added (#289)
         </div>
       </div>
       {showDialog && (
