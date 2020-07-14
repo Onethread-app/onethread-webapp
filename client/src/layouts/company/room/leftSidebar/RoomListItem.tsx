@@ -9,7 +9,7 @@ import { Drawer } from '@blueprintjs/core';
 
 interface RoomListItemProps {
   room: IRoom;
-  lastChild: boolean;
+  lastChild?: boolean;
   active: boolean;
   iconBgColor: string;
 }

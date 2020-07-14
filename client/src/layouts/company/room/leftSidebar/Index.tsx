@@ -52,7 +52,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
         </div>
         <div className="flex items-center ph3-ns relative">
           <InputGroupField
-            id="companyName"
+            id="roomName"
             value={searchKeyword}
             placeHolder="Search for Rooms"
             className="pv1 ba b--light-silver br3"
@@ -76,7 +76,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           />
         </div>
         <div className="flex-grow-1 overflow-y-auto">
-          {props.isOpen || isMobileOnly ? <RoomList /> : null}
+          {props.isOpen || isMobileOnly ? <RoomList search={searchKeyword}/> : null}
         </div>
       </div>
       {showDialog && (
