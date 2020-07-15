@@ -1,6 +1,6 @@
 {
   "name": "tigrow_frontend",
-  "version": "2.4.1",
+  "version": "2.4.2",
   "homepage": "https://tigrow.herokuapp.com",
   "private": true,
   "dependencies": {
