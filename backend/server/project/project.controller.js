@@ -75,6 +75,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         let reqObject = {};
         reqObject.company = req.params.companyId;
         reqObject.associate = data._id;
+        reqObject.account = req.user._id;
         reqObject.isAccepted = false;
         reqObject.project = project._id;
         reqObject.size = data.size;

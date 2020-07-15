@@ -649,7 +649,7 @@ export const getProjectAssociates = () => async (
 
       await dispatch({
         type: PROJECT.PROJECT_GET_ASSOCIATES,
-        payload: response.data.associateList[0].associate,
+        payload: response.data,
       });
       return response.data;
     }
