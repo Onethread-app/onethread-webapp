@@ -278,8 +278,11 @@ const GeneralPageComponent = (props: IProjectRole) => {
 };
 
 const mapStateToProps = (state: any) => ({
-  role: state.projectReducer.projectRole.projects.role,
+  role:
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.role,
   optionalRole:
+    state.projectReducer.projectRole.projects &&
     state.projectReducer.projectRole.projects.project.optionalRole,
 });
 export const GeneralPage = connect(
