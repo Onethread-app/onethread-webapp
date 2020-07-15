@@ -209,7 +209,7 @@ const NavbarTopComponent = (
                 </div>
               }
               target={
-                <div className="mh4 pointer">
+                <div className="mr2 pointer">
                   <Badge
                     badgeContent={props.seen}
                     anchorOrigin={{
@@ -251,6 +251,7 @@ const NavbarTopComponent = (
                               props.currentRoom !== undefined &&
                               room._id === props.currentRoom._id
                             }
+                            currentCompany={props.companyName}
                             iconBgColor={
                               roomBgColor[i % roomBgColor.length]
                             }
@@ -264,7 +265,7 @@ const NavbarTopComponent = (
                 </div>
               }
               target={
-                <div className="mh4 pointer">
+                <div className="mr3 pointer">
                   <Badge
                     badgeContent={props.totalRoomUnread}
                     anchorOrigin={{
