@@ -49,7 +49,7 @@ class Index extends React.Component {
     const host =
       process.env.PUBLIC_URL || `${document.location.host}/`;
     const link =
-      host + 'vc/join/?conf=' + window.btoa(this.state.channel);
+      host + '/vc/join/?conf=' + window.btoa(this.state.channel);
 
     const headers = tokenConfig();
 
