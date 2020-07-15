@@ -55,7 +55,7 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
 
   const load = async () => {
     setLoading(true);
-    if (props.company) {
+    if (props.company.name) {
       await props.getAllProjects();
     }
     setLoading(false);

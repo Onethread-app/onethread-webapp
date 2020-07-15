@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { Icon, Dialog, Button } from '@blueprintjs/core';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
@@ -10,7 +10,6 @@ import { getNotifications } from '../../stores/notifications/Action';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
-import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { addSpace } from 'stores/UtilsActions';
 import company from './../../resources/images/noCompany.png';
 
@@ -26,7 +25,6 @@ interface CompanyListProps {
 export const CompanyListComponent = (props: CompanyListProps & RouteComponentProps) => {
 
   const [showDialog, setShowDialog] = useState(false);
-  const dispatch = useDispatch();
 
   return (
     <>
@@ -49,13 +47,10 @@ export const CompanyListComponent = (props: CompanyListProps & RouteComponentPro
                     style={{ width: isMobileOnly ? '160px' : '245px' }}
                     onClick={async () => {
                       props.getNotifications();
-                      const response = (await props.getCompanyDetails(
+                      await props.getCompanyDetails(
                         c.company.uniqueName,
                         props.history,
-                      )) as any;
-                      if (response.status === 200) {
-                        dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
-                      }
+                      );
                     }}
                   >
                     <div className="bg-white pt3 tc"
