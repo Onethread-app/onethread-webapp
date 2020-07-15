@@ -194,6 +194,11 @@ router
     authorization,
     subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     projectCtrl.updateRole,
   );
 router
