@@ -38,7 +38,6 @@ import {
   ADD_ORGANIZATION,
   COVER_IMAGE_UPLOAD_COMPANY,
   GET_ALL_COMPANY_ANNOUNCEMENT,
-  // ADD_ANNOUNCEMENT,
   GET_ALL_PRODUCT,
   EDIT_ORGANIZATION,
   // ADD_ANNOUNCEMENT
@@ -659,11 +658,39 @@ export const addCertificate = (certificate: any) => async (
         certificate,
         headers,
       );
-      dispatch({ type: ADD_CERTIFICATE, payload: certificate });
+
+      dispatch({ type: ADD_CERTIFICATE, payload: response.data.certificate });
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
       console.log('error in adding certificate');
+    }
+    return;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const editCertificate = (certificate: any, id: string) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    let response;
+    if ((headers as any).headers.Authorization) {
+      const companyId = getState().companyReducer.currentCompany._id;
+      response = await tigrowApi.put(
+        `company/${companyId}/certification?certificateId=${id}`,
+        certificate,
+        headers,
+      );
+      const companyName = getState().companyReducer.currentCompany.uniqueName;
+      dispatch(getCompanyDetails(companyName));
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      // console.log('error in adding certificate');
     }
     return;
   } catch (error) {

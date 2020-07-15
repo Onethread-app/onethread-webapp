@@ -6,12 +6,13 @@ import editIcon from '../../../resources/images/editIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
 import { Divider } from '@blueprintjs/core';
 import { ProductEdit } from './ProductEditor';
-import { CertificateEdit } from './CertificateEditor';
 import { OrganizationAdd } from './ParentOrganizationAddEditor';
 import { ICompany, IOrg } from 'stores/company/Reducer';
-import { getAllProduct } from 'stores/company/Actions';
 import { companyPermit } from 'stores/UtilsActions';
 import { OrganizationEditEditor } from './ParentOrganizationEditEditor';
+import { CertificateAdd } from './CertificateAddEditor';
+import { getAllProduct } from 'stores/company/Actions';
+import { CertificateEdit } from './CertificateEditEditor';
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
@@ -23,12 +24,20 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
   const [showCertificateDialog, setShowCertificateDialog] = useState(
     false,
   );
+  const [showCertificateEditDialog, setShowCertificateEditDialog] = useState(
+    false,
+  );
   const [
     showOrganizationDialog,
     setShowOrganizationDialog,
   ] = useState(false);
   const [showOrganizationEditDialog, setShowOrganizationEditDialog] = useState(false);
   const [org, setOrg] = useState({} as IOrg);
+  const [certificate, setCertificate] = useState({
+    _id:'',
+    name: '',
+    description: ''
+  });
 
   useEffect(() => {
     async function getAPI() {
@@ -106,7 +115,10 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
                     src={editIcon}
                     width="38"
                     className="br2 pointer"
-                    onClick={() => setShowCertificateDialog(true)}
+                    onClick={() => {
+                      setShowCertificateEditDialog(true);
+                      setCertificate({_id: certificate._id, name: certificate.name, description: certificate.description})
+                    }}
                   />
                 </div>
               </div>
@@ -180,8 +192,22 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           }
         >
           <div>
-            <CertificateEdit
+            <CertificateAdd
               setShowDialog={setShowCertificateDialog}
+            />
+          </div>
+        </RightSidebar>
+      )}
+      {showCertificateEditDialog && (
+        <RightSidebar
+          onClose={() =>
+            setShowCertificateEditDialog(!showCertificateEditDialog)
+          }
+        >
+          <div>
+            <CertificateEdit
+              setShowDialog={setShowCertificateEditDialog}
+              certificate={certificate}
             />
           </div>
         </RightSidebar>

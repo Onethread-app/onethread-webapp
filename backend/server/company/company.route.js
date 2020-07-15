@@ -71,14 +71,14 @@ router
     subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     companyCtrl.addCertifications,
+  )
+  .put(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    SchemaValidator(joiSchema.editCertification),
+    companyCtrl.editCertification
   );
-router.route('/:companyId/parentorg').put(
-  authorization,
-  subCtrl.subscriptionExpireCheck(),
-  companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-  // SchemaValidator(joiSchema.parentOrg),
-  companyCtrl.parentOrg,
-);
 
 // change name
 router
