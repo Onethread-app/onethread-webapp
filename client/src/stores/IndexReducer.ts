@@ -8,6 +8,24 @@ import { BoardIndexReducer } from './boardIndexReducer';
 import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 import { PusherReducer } from './pusher/Reducer';
+import { SubscriptionReducer } from './subscriptionBilling/Reducer';
+import { AssociateModel } from './associate/Reducer';
+import { videoConferencesReducers } from './videoConferences/Reducer';
+import toasterReducer from './toast/Reducer';
+export interface AppState {
+  layoutReducer: any;
+  roomReducer: any;
+  userReducer: any;
+  companyReducer: any;
+  boardIndexReducer: any;
+  associateReducer: AssociateModel;
+  projectReducer: any;
+  notificationReducer: any;
+  pusherReducer: any;
+  SubscriptionReducer: any;
+  videoConferencesReducers: any;
+  toasterReducer: any;
+}
 
 export const rootReducer = combineReducers({
   layoutReducer: LayoutReducer,
@@ -19,4 +37,7 @@ export const rootReducer = combineReducers({
   projectReducer: ProjectReducer,
   notificationReducer,
   pusherReducer: PusherReducer,
+  subscriptionReducer: SubscriptionReducer,
+  videoConferencesReducers: videoConferencesReducers,
+  toasterReducer: toasterReducer,
 });

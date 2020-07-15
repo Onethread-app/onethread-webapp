@@ -1,0 +1,45 @@
+
+html,
+body,
+#root,
+.full {
+  height: 100%;
+  min-height: 100%;
+  font-size: 14px;
+}
+
+img {
+  vertical-align: middle;
+  max-width: 100%;
+}
+
+.ag-header,
+.ag-footer {
+  /* flex-basis: 70px; */
+  width: 100%;
+  opacity: .8;
+  height: 70px;
+  color: #FFF;
+}
+
+.ag-main {
+  width: 100%;
+  height: calc(100% - 140px);
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ag-rounded {
+  border-radius: 19px!important;
+}
+
+.ag-href {
+  color: #FFF;
+  cursor: pointer;
+}
+
+.ag-href:hover {
+  color: #FFF;
+}

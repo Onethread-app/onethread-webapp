@@ -200,11 +200,11 @@ export const logoutAction = (routeHistory: History) => async (
       if (isEqual(response.status, 200)) {
         localStorage.removeItem('tigrow_acc_id');
         localStorage.removeItem('tigrow_real_id');
+        routeHistory.push('/signin');
         await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
         await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
         await dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
         await dispatch({ type: CLEAR_USER_REDUCER_STATE });
-        routeHistory.push('/signin');
       }
     } else {
       // tslint:disable-next-line: no-console
@@ -234,5 +234,53 @@ export const resendMailForSignup = async (email?: string) => {
     return errorMessgeHandler(response);
   } catch (error) {
     return errorMessgeHandler(error);
+  }
+};
+
+export const getVideoConferencesJoinee = () => async (
+  dispatch: any,
+) => {
+  let accessToken = localStorage.getItem('tigrow_acc_id');
+  let accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
+  const refreshToken = localStorage.getItem('tigrow_real_id');
+  const refreshTokenExpiredTime = parseJwt(refreshToken) * 1000;
+  // when refresh token is expired
+  if (refreshTokenExpiredTime < Date.now()) {
+    localStorage.removeItem('tigrow_acc_id');
+    localStorage.removeItem('tigrow_real_id');
+  } else if (accessTokenExpiredTime < Date.now()) {
+    // when access token is expired
+    await resfreshApiAction();
+  }
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      let response;
+
+      try {
+        response = await tigrowApi.get(
+          `video-conf/get-joinee`,
+          headers,
+        );
+      } catch (error) {
+        // tslint:disable-next-line: no-console
+        // console.log(error);
+      }
+      response = { ...response.data.user };
+      accessToken = localStorage.getItem('tigrow_acc_id');
+      accessTokenExpiredTime = parseJwt(accessToken) * 1000 - 1000;
+      const accessTokenRemainingTime =
+        accessTokenExpiredTime - Date.now();
+      setTimeout(resfreshApiAction, accessTokenRemainingTime);
+      dispatch({ type: FETCH_USER, payload: response });
+    } else {
+      dispatch({
+        type: USER_FETCH_ERROR,
+        payload: 'error in user fetching',
+      });
+    }
+  } catch (error) {
+    // tslint:disable-next-line: no-console
+    // console.log(error);
   }
 };

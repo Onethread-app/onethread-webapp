@@ -1,6 +1,6 @@
 {
   "name": "tigrow",
-  "version": "2.1.0",
+  "version": "2.4.2",
   "description": "A comunity for business people",
   "author": "Rubaiyat Farhan <tigrowtecheven@gmail.com>",
   "main": "index.js",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@bitbucket.org:BirUdaya/tigrowback.git"
+    "url": "https://github.com/TiGrow-Tech/TiGrowWebApp.git"
   },
   "keywords": [
     "server",
@@ -35,7 +35,7 @@
   "dependencies": {
     "@hapi/joi": "^15.1.1",
     "aws-sdk": "^2.538.0",
-    "axios": "^0.19.0",
+    "axios": "^0.19.2",
     "bcrypt": "^3.0.8",
     "bluebird": "^3.5.5",
     "body-parser": "^1.19.0",
@@ -70,8 +70,9 @@
     "ms": "^2.1.2",
     "multer": "^1.4.2",
     "nodemailer": "^6.3.0",
+    "nodemailer-express-handlebars": "^4.0.0",
     "nodemailer-smtp-transport": "^2.7.4",
-    "nodemon": "^1.19.1",
+    "nodemon": "^1.19.4",
     "passport": "^0.4.0",
     "passport-facebook": "^3.0.0",
     "passport-google-oauth": "^2.0.0",
@@ -79,6 +80,7 @@
     "passport-local": "^1.0.0",
     "passport-oauth": "^1.0.0",
     "pusher": "^3.0.1",
+    "qs": "^6.9.4",
     "rand-token": "^0.4.0",
     "react-router-dom": "^4.3.1",
     "redis": "^2.8.0",
@@ -88,6 +90,7 @@
     "set-immediate-shim": "^2.0.0",
     "shortid": "^2.2.15",
     "slug": "^2.1.1",
+    "stripe": "^8.64.0",
     "winston": "3.2.1"
   },
   "devDependencies": {

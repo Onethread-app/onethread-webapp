@@ -3,6 +3,7 @@ import { Dialog } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ImageEdit } from './ImageEditor';
 import DefaultUserImage from './../../../resources/images/profilePhoto.svg';
+import { companyPermit } from 'stores/UtilsActions';
 
 const CompanyProfilePictureComponent = (props: any) => {
   const [showDialogPicture, setShowDialogPicture] = useState(false);
@@ -18,7 +19,7 @@ const CompanyProfilePictureComponent = (props: any) => {
           src={
             props.company.logo ? props.company.logo : DefaultUserImage
           }
-          onClick={() => setShowDialogPicture(true)}
+          onClick={() => companyPermit(props.company.role) ? setShowDialogPicture(true) : undefined}
         />
         <h1 className="ma1 ws-break ttc f3-ns f4">
           {' '}

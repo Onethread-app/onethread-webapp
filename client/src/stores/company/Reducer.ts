@@ -37,8 +37,15 @@ import {
   ADD_PRODUCT,
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
+  EDIT_ORGANIZATION,
+  SET_INITIAL_CURRENT_COMPANY,
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
+
+export interface IOrg {
+  ind: number;
+  name: string;
+}
 
 // tslint:disable-next-line: interface-name
 export interface IDesignations {
@@ -83,6 +90,7 @@ export interface ICertificates {
 export interface ICompany {
   _id: string;
   name: string;
+  uniqueName: string;
   type: string;
   email: string;
   address: string;
@@ -105,10 +113,18 @@ export interface ICompany {
   totalAssociate: number;
 }
 
+export interface ICompanyResponse {
+  data : {
+    company : ICompany
+  },
+  status: number;
+}
+
 const InitialState = {
   currentCompany: {
     _id: '',
     name: '',
+    uniqueName: '',
     type: '',
     email: '',
     address: '',
@@ -289,7 +305,8 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          name: action.payload,
+          name: action.payload.name,
+          uniqueName: action.payload.uniqueName
         },
         changeCompanyNameLoading: false,
         error: '',
@@ -402,6 +419,14 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           ],
         },
       };
+    case EDIT_ORGANIZATION:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          parentcom: action.payload ,
+        },
+      };
     case GET_ALL_COMPANY_ANNOUNCEMENT:
       return {
         ...state,
@@ -462,6 +487,17 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           totalMember: action.payload,
         },
       };
+    case SET_INITIAL_CURRENT_COMPANY:
+        return {
+          ...state,
+          currentCompany: {
+            ...state.currentCompany,
+            _id: action.payload.company._id,
+            name: action.payload.company.name,
+            uniqueName: action.payload.company.uniqueName,
+            role: action.payload.role
+          },
+        };
     default:
       return state;
   }

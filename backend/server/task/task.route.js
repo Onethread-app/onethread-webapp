@@ -1,26 +1,38 @@
 const express = require('express');
-const passport = require('passport');
 const taskCtrl = require('./task.controller');
 const SchemaValidator = require('./../helpers/joiSchemaValidator');
 const joiSchema = require('./task.validation');
-
+const subCtrl = require('../subscription/subscription.controller');
+const projectCtrl = require('../project/project.controller');
 // const authorization = passport.authenticate('jwt', { session: false });
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
-const { permit } = require('./../helpers/permission');
+
 const router = express.Router();
+
+router.use('/', subCtrl.subscriptionExpireCheck());
 
 router
   .route('/')
   .get(
     authorization,
-    // permit('user', 'admin'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     taskCtrl.list,
   )
   .post(
     authorization,
-    // permit('user', 'admin'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     SchemaValidator(joiSchema.createTask),
     taskCtrl.create,
   );
@@ -29,40 +41,81 @@ router
   .route('/:taskId')
   .get(
     authorization,
-    // permit('user', 'admin'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     taskCtrl.get,
   )
   .put(
     authorization,
-    // permit('user', 'admin'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     SchemaValidator(joiSchema.updateTask),
     taskCtrl.update,
   );
 
 router
   .route('/member/:taskId')
-  .get(authorization, taskCtrl.getMembers)
+  .get(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    taskCtrl.getMembers,
+  )
   .post(
     authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     SchemaValidator(joiSchema.addMember),
     taskCtrl.addMember,
   )
   .delete(
     authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     SchemaValidator(joiSchema.deleteMember),
     taskCtrl.deleteMember,
   );
 
-router.route('/dragTask').post(
-  authorization,
-  // permit('user', 'admin'),
-  SchemaValidator(joiSchema.dragTask),
-  taskCtrl.dragTask,
-);
+router
+  .route('/dragTask')
+  .post(
+    authorization,
+    SchemaValidator(joiSchema.dragTask),
+    taskCtrl.dragTask,
+  );
 
 router
   .route('/:taskId/suggest-member')
-  .get(authorization, taskCtrl.suggestMember);
+  .get(
+    authorization,
+    // projectCtrl.authorizeProjectRole(
+    //   'all',
+    //   'admin',
+    //   'projectModerator',
+    //   'member',
+    // ),
+    taskCtrl.suggestMember,
+  );
 
 router.param('taskId', taskCtrl.load);
 

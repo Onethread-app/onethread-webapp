@@ -6,8 +6,7 @@ import {
   CURRENT_ROOM,
   NEW_MESSAGE,
   CLEAR_ROOMS_REDUCER_STATE,
-  CREATE_ROOM_FROM_SERVER,
-  CREATE_ROOM_ERROR,
+  CREATE_ROOM_FROM_SERVER_SUCCESS,
   GET_ROOM_ERROR,
   GET_ROOM_MEMBERS,
   GET_ROOM_MEMBERS_ERROR,
@@ -37,6 +36,7 @@ import {
   UPDATE_UNREAD_COUNT_ROOMS,
   CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
   INCREMENT_UNREAD_COUNT_FOR_SINGLE_ROOM,
+  room,
 } from './Types';
 
 export interface IRoom {
@@ -130,6 +130,9 @@ export interface IRoomReducer {
   pendingFiles: IRoomPendingFile[];
   companyRooms: ICompanyRoom[];
   roomError: string;
+  responseCode: number;
+  roomNotification: {};
+  totalUnread: number;
 }
 const InitialState: IRoomReducer = {
   activeRoom: {},
@@ -159,6 +162,9 @@ const InitialState: IRoomReducer = {
   companyRooms: [],
   loading: false,
   roomError: '',
+  responseCode: 0,
+  roomNotification: {},
+  totalUnread: 0,
 };
 
 export const sortRooms = (a: IRoom, b: IRoom) => {
@@ -428,9 +434,15 @@ export const RoomReducer = (state = InitialState, action: any) => {
         roomsUnreadCount: action.payload.roomsUnreadCount,
         loading: false,
       };
-    case CREATE_ROOM_FROM_SERVER:
+    case room.FETCH_ROOMS_SUCCESS:
       return {
         ...state,
+        roomNotification: action.payload,
+      };
+    case CREATE_ROOM_FROM_SERVER_SUCCESS:
+      return {
+        ...state,
+        responseCode: 0,
         rooms: [
           ...state.rooms,
           {
@@ -447,6 +459,18 @@ export const RoomReducer = (state = InitialState, action: any) => {
         ],
         roomError: '',
         loading: false,
+      };
+
+    case room.RESPONSE_STATUS_CODE:
+      return {
+        ...state,
+        responseCode: action.payload,
+      };
+
+    case room.CLEAR_STATUS_CODE:
+      return {
+        ...state,
+        responseCode: 0,
       };
 
     case TOGGLE_EMOJI_PICKER:
@@ -510,7 +534,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
     case GET_ROOM_SHARED_FILES_ERROR:
     case ADD_MEMBER_IN_ROOM_ERROR:
     case GET_ROOM_MEMBERS_ERROR:
-    case CREATE_ROOM_ERROR:
+    case room.CREATE_ROOM_ERROR:
     case GET_ROOM_ERROR:
       return {
         ...state,
@@ -531,6 +555,11 @@ export const RoomReducer = (state = InitialState, action: any) => {
       return {
         ...InitialState,
         companyRooms: state.companyRooms,
+      };
+    case room.COUNT_TOTAL_REED_COUNT:
+      return {
+        ...state,
+        totalUnread: action.payload,
       };
     default:
       return state;

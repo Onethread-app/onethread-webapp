@@ -41,6 +41,7 @@ import {
 } from 'react-device-detect';
 import { Navbar } from '@blueprintjs/core';
 import { NavbarIndividual } from './NavbarIndividual';
+import { companyPermit } from 'stores/UtilsActions';
 
 const load = async (
   reactRouterMatch: match,
@@ -200,7 +201,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       ) : (
         <>
           <CustomView condition={!isMobileOnly}>
-            {queries.view === 'default' ? (
+            {props.match.url !== `/${props.user.name}/home` ? (
               <div
                 id="main-layout"
                 className={`flex relative vh-100 ${
@@ -290,9 +291,22 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 </div>
               </div>
             ) : (
-              <div className="vh-100 bg-white">
-                <SecondaryLayout Component={props.Component} />
-              </div>
+              <div
+                  className="relative"
+                >
+                  <div className="flex flex-column h-100">
+                    <NavbarTop
+                      scrollTop={scrollTop}
+                      type={'home'}
+                    />
+                    <div
+                      ref={scrollRef}
+                      className="flex-grow-1 overflow-y-auto bg-white"
+                    >
+                      <SecondaryLayout Component={props.Component} />
+                    </div>
+                  </div>
+                </div>
             )}
           </CustomView>
           <MobileOnlyView>
@@ -435,7 +449,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               Associates
                             </small>
                           </NavLink>
-                          <NavLink
+                          {(companyPermit(props.company.role) && props.company.role !== 'employee') && (<NavLink
                             exact
                             activeStyle={{
                               background: '#3F61C5',
@@ -447,6 +461,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           >
                             <span className="">
                               <img
+                                alt="settings icon"
                                 src={settings}
                                 className="br3"
                                 style={{ width: '1.4rem' }}
@@ -455,7 +470,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                             <small style={{ color: 'inherit' }}>
                               Settings
                             </small>
-                          </NavLink>
+                          </NavLink>)}
                         </Navbar>
                       )
                     ) : (
@@ -484,47 +499,8 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 </div>
               </div>
             ) : (
-              <div
-                id="main-layout"
-                className={`flex relative h-100 vh-100 ${
-                  props.rightSidebarOpen && 'main-layout-overlay'
-                  }`}
-              >
-                <div
-                  className="relative br3 pv1"
-                  style={{
-                    transition: 'width 0.4s',
-                    width: props.rightSidebarOpen ? '0%' : '100%',
-                  }}
-                >
-                  <div className="flex flex-column h-100">
-                    <div
-                      ref={scrollRef}
-                      className="flex-grow-1 overflow-y-auto bg-white"
-                      style={{
-                        borderRadius: '0px 0px 0.5rem 0.5rem',
-                      }}
-                    >
-                      <SecondaryLayout Component={props.Component} />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="relative h-100 vh-100"
-                  style={{
-                    transition: 'width 0.4s',
-                    width: props.rightSidebarOpen ? '100%' : '0%',
-                    zIndex: 5,
-                  }}
-                >
-                  <div
-                    id="rightSidebar"
-                    className="h-100 c-tigrowWhite vh-100"
-                    style={{
-                      background: 'rgb(6, 5, 23)',
-                    }}
-                  ></div>
-                </div>
+              <div className="vh-100 bg-white">
+                <SecondaryLayout Component={props.Component} />
               </div>
             )}
           </MobileOnlyView>

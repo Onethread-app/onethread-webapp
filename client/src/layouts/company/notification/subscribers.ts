@@ -1,11 +1,13 @@
 import { NOTIFICATION } from './../../../stores/notifications/Types';
 import { store } from 'Store';
 import Pusher from 'pusher-js';
+import { INotification } from 'stores/notifications/Reducer';
+import { NOTIFICATION_KEY, NOTIFICATION_CLUSTER } from '../../../config';
 // import {setSocketId} from '../../../stores/notifications/Action'
 
-export const companySubscriber = (companyId: string) => {
-  const pusher = new Pusher('1743ba5fa64dd023e3dc', {
-    cluster: 'ap1',
+export const companySubscriber = async (companyId: string) => {
+  const pusher = new Pusher(NOTIFICATION_KEY!, {
+    cluster: NOTIFICATION_CLUSTER!,
     forceTLS: true,
   });
   pusher.connection.bind('connected', function () {
@@ -28,14 +30,16 @@ export const companySubscriber = (companyId: string) => {
     await store
       .getState()
       .notificationReducer.allNotifications.map(
-        (notification: any) => {
+        (notification: INotification) => {
           if (notification.read === false) {
             count = count + 1;
+            return count;
           }
+          return count;
         },
       );
     store.dispatch({
-      type: NOTIFICATION.SET_READ_COUNT,
+      type: NOTIFICATION.SET_SEEN_COUNT,
       payload: count,
     });
   });

@@ -6,7 +6,7 @@ import {
 } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
 import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
-import { IPendingProject, IProject } from './Reducer';
+import { IPendingProject } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
 
 export const getAllProjects = () => async (
@@ -39,32 +39,21 @@ export const getAllProjects = () => async (
   }
 };
 
-export const createProject = (payload: any, admin: any) => async (
+export const createProject = (payload: any) => async (
   dispatch: any,
   getState: any,
 ) => {
   try {
     const headers = tokenConfig();
-    const companyId = getState().companyReducer.currentCompany._id;
-    const userId = getState().userReducer.user._id;
 
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
-        type: payload.projectType,
-        account: userId,
-        concernedAdmin: {
-          memberId: admin.memberId,
-          accountId: admin._id,
-        },
-        companyId,
-        departments: payload.department,
-        associates: payload.associates,
-        color: payload.color,
+        companyId: payload.company,
       };
 
       const response = await tigrowApi.post(
-        `projects/${companyId}/create`,
+        `projects/${payload.company}/create-project`,
         reqBody,
         headers,
       );
@@ -82,6 +71,50 @@ export const createProject = (payload: any, admin: any) => async (
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
+      // return error.response;
+    }
+  }
+};
+
+export const createProjectInCompany = (payload: any) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    const companyId = getState().companyReducer.currentCompany._id;
+    if ((headers as any).headers.Authorization) {
+      const reqBody = {
+        name: payload.name,
+        type: payload.type,
+        concernedAdmin: {
+          memberId: payload.admin.memberId,
+          accountId: payload.admin._id
+        },
+        color: payload.color,
+        department: payload.department,
+        associates: payload.associates,
+        companyId: companyId,
+      };
+      const response = await tigrowApi.post(
+        `projects/${companyId}/create`,
+        reqBody,
+        headers,
+      );
+      await dispatch({
+        type: PROJECT.PROJECT_CREATE,
+        payload: response.data,
+      });
+      dispatch(getAllProjects());
+      return response.data;
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      // console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      // console.log(error.response);
       // return error.response;
     }
   }
@@ -203,6 +236,7 @@ export const getSingleProject = (pid: string) => async (
         type: PROJECT.PROJECT_SINGLE_VIEW,
         payload: response.data,
       });
+      // tslint:disable-next-line: no-unused-expression
       getState().projectReducer.projectDetails._id !== '' &&
         dispatch({
           type: PROJECT.PROJECT_FILE_OPEN,
@@ -354,26 +388,33 @@ export const getAllPendingProjects = () => async (
   }
 };
 
-export const acceptPendingProject = (project: IProject) => async (
-  dispatch: any,
-  getState: any,
-) => {
+export const acceptPendingProject = (
+  pending: IPendingProject,
+) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
-    if ((headers as any).headers.Authorization && project._id) {
+    if (
+      (headers as any).headers.Authorization &&
+      pending.project._id
+    ) {
       const companyID = getState().companyReducer.currentCompany._id;
       const pendingProjects = getState().projectReducer
         .pendingProjects;
+      const reqBody = {
+        size: pending.size,
+        associate: pending.associate,
+      };
       const response = await tigrowApi.put(
-        `projects/${companyID}/accept-request?pid=${project._id}`,
-        null,
+        `projects/${companyID}/accept-request?pid=${pending.project._id}`,
+        reqBody,
         headers,
       );
 
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
           (pending: IPendingProject) =>
-            isEqual(pending.project._id, project._id) === false,
+            isEqual(pending.project._id, pending.project._id) ===
+            false,
         );
         dispatch({
           type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT,
@@ -381,7 +422,7 @@ export const acceptPendingProject = (project: IProject) => async (
         });
         dispatch({
           type: PROJECT.PROJECT_ADD_PROJECT,
-          payload: project,
+          payload: pending.project,
         });
         Toaster.create().show({
           message: `Successfully accepted`,
@@ -469,6 +510,7 @@ export const updateProjectRole = (optionalRole: any) => async (
         reqBody,
         headers,
       );
+      dispatch(getRoleForProject(projectId));
       dispatch({
         type: PROJECT.PROJECT_UPDATE_ROLE,
       });
@@ -476,10 +518,10 @@ export const updateProjectRole = (optionalRole: any) => async (
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      // console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      // console.log(error.response);
       // return error.response;
     }
   }
@@ -531,10 +573,6 @@ export const getProjectTeams = () => async (
       await dispatch({
         type: PROJECT.PROJECT_GET_TEAMS,
         payload: response.data.memberList,
-      });
-      await dispatch({
-        type: PROJECT.PROJECT_GET_ASSOCIATES,
-        payload: response.data.associateList.associate,
       });
       return response.data;
     }
@@ -594,6 +632,39 @@ export const addProjectTeams = (
   }
 };
 
+export const getProjectAssociates = () => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const pid = getState().projectReducer.pid;
+      const companyId = getState().companyReducer.currentCompany._id;
+      headers['companyid'] = companyId;
+      const response = await tigrowApi.get(
+        `/teams/associate-list?pid=${pid}`,
+        headers,
+      );
+
+      await dispatch({
+        type: PROJECT.PROJECT_GET_ASSOCIATES,
+        payload: response.data.associateList[0].associate,
+      });
+      return response.data;
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      // return error.response;
+    }
+  }
+};
+
 export const addProjectAssociate = (
   data: {
     project: string;
@@ -615,6 +686,10 @@ export const addProjectAssociate = (
         },
         headers,
       );
+      console.log(response);
+      if (response.status === 200) {
+        dispatch(getProjectAssociates());
+      }
       // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
       return response;
     } else {
@@ -651,6 +726,7 @@ export const changeProjectMemberRole = (
       if (userId === accountId) {
         dispatch(getRoleForProject(projectId));
       }
+      dispatch(getSingleProject(projectId));
       dispatch({
         type: PROJECT.PROJECT_UPDATE_TEAM_ROLE,
         payload: { memberId, role: values.role },
@@ -658,16 +734,52 @@ export const changeProjectMemberRole = (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in changing team role');
+      // console.log('error in changing team role');
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      // console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      // console.log(error.response);
     }
     return error.response.status;
+  }
+};
+
+export const getProjectsIndividual = () => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    await dispatch({
+      type: PROJECT.PROJECT_LIST_CLEAR,
+    });
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const list = getState().userReducer.user.companies;
+      list.map((l) => {
+        tigrowApi
+          .get(`projects/project-list/${l._id}`, headers)
+          .then((res) => {
+            res.data.map((m) => {
+              dispatch({
+                type: PROJECT.PROJECT_LIST_INDIVIDUAL,
+                payload: m.project,
+              });
+            });
+          })
+          .catch((err) => []);
+      });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in project fetching');
+    }
+  } catch (error) {
+    dispatch({
+      type: PROJECT.PROJECT_ERROR,
+      payload: error.response,
+    });
   }
 };

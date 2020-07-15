@@ -41,7 +41,7 @@ const BoardCard = withRouter(
               );
               if (currentBoard._id) {
                 props.history.push(
-                  `/company/${props.company.name}/board/${currentBoard._id}`,
+                  `/company/${props.company.uniqueName}/board/${currentBoard._id}`,
                 );
               }
             }}
@@ -276,8 +276,11 @@ const TaskPageComponent = (
                     />
                   )}
                 </div>
-              ) : (
+              ) : ( props.role && 
+                (props.role === 'admin' || projectRules(props.optionalRole)[props.role].includes('createUpdateBoard')) ?
                 noBoardsFound
+                :
+                undefined
               )
             ) : (
               <Loading />
@@ -289,6 +292,7 @@ const TaskPageComponent = (
                   'createUpdateBoard',
                 )) ? (
                 <img
+                  alt="plus"
                   onClick={() =>
                     setShowTaskBoardDialog(!showTaskBoardDialog)
                   }

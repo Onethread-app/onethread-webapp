@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const slug = require('slug');
 const Account = require('./account.model');
 const { Member } = require('../company/member/member.model');
 const {
@@ -16,7 +15,6 @@ const {
 const {
   addTokenToBlackList,
   accountVerificationToken,
-  addUserDataIntoCache,
 } = require('../services/redis.services');
 const {
   sendJSONresponse,
@@ -29,6 +27,7 @@ const {
   memberIndex,
 } = require('../services/elastic.services');
 const chalk = require('chalk');
+const { createSlug } = require('../helpers/SlugCreator');
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -44,22 +43,8 @@ const register = async (req, res, next) => {
   })
     .exec()
     .then((result) => {
-      let firstName = slug(data.firstName, {
-        replacement: '-',
-        symbols: true,
-        remove: /[.]/g,
-        lower: false,
-        charmap: slug.charmap,
-        multicharmap: slug.multicharmap,
-      });
-      let lastName = slug(data.lastName, {
-        replacement: '-',
-        symbols: true,
-        remove: /[.]/g,
-        lower: false,
-        charmap: slug.charmap,
-        multicharmap: slug.multicharmap,
-      });
+      let firstName = createSlug(data.firstName);
+      let lastName = createSlug(data.lastName);
       let uniqueId = result + 1;
       name = firstName + '-' + lastName + '-' + uniqueId;
     });
@@ -211,59 +196,6 @@ const getAccount = async (req, res, next) => {
     logger.error(`${error}`);
     next(error);
   }
-  // client
-  //   .multi()
-  //   .hgetall(`userID:${req.user._id}`)
-  //   .execAsync()
-  //   .then(async result => {
-  //     let user = result[0];
-  //     let userInfo = {};
-  //     if (user === null) {
-  //       userInfo = await Account.findOne({
-  //         _id: req.user._id,
-  //       }).select('-password');
-  //     } else {
-  //       userInfo = user;
-  //       // userInfo.skillArea = JSON.parse(user.skillArea);
-  //       // userInfo.skillArea = [];
-  //       // userInfo = await Account.findOne({
-  //       //   _id: req.user._id,
-  //       // }).select('-password');
-  //       // // userInfo = await Account.findOne({
-  //       // //   _id: req.user._id,
-  //       // // }).select('-password');
-  //       // client
-  //       //   .multi()
-  //       //   .smembers(`skillArea:${req.user._id}`)
-  //       //   .execAsync()
-  //       //   .then(result => {
-  //       //     userInfo.skillArea = result[0];
-  //       //   });
-  //     }
-  //     console.log(userInfo);
-  //     return sendJSONresponse(res, 200, {
-  //       success: true,
-  //       user: userInfo,
-  //     });
-  //     // const user = result[0];
-  //     // let userInfo = {};
-  //     // client
-  //     //   .multi()
-  //     //   .smembers(`skillArea:${req.user._id}`)
-  //     //   .execAsync()
-  //     //   .then(result => {
-  //     //     userInfo = user;
-  //     //     userInfo.skillArea = result[0];
-  //     //     return sendJSONresponse(res, 200, {
-  //     //       success: true,
-  //     //       user: userInfo,
-  //     //     });
-  //     //   });
-  //   })
-  // .catch(err => {
-  //   console.log(err);
-  //   next(err);
-  // });
 };
 // client
 //   .multi()
@@ -740,6 +672,7 @@ const resendEmail = async (req, res, next) => {
       message: 'resend email successfully',
     });
   } catch (error) {
+    logger.error(`Account: ${error}`);
     next(error);
   }
 };
@@ -753,9 +686,7 @@ module.exports = {
   timeline,
   accountUpdate,
   tokenRefresh,
-  // tokenRevoke,
   sendEmailForForgetPassword,
-  // getAccessTokenForForgetPassword,
   resetPassword,
   changePassword,
   skillArea,

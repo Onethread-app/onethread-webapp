@@ -24,7 +24,10 @@ const ChangePasswordComponentView = (
     logoutAction: (history: History) => void;
   } & RouteComponentProps,
 ) => {
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordOld, setShowPasswordOld] = useState(false);
+  const [showPasswordNew, setShowPasswordNew] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
   const handleChangePassword = async (changePasswordInfo: {}) => {
@@ -110,17 +113,17 @@ const ChangePasswordComponentView = (
                 >
                   <InputGroupFieldWithError
                     id="oldPassword"
-                    type={`${showPassword ? 'text' : 'password'}`}
+                    type={`${showPasswordOld ? 'text' : 'password'}`}
                     value={input.value}
                     onChange={input.onChange}
                     placeHolder="Old Password"
                     leftIcon="lock"
                     rightElement={
                       <Icon
-                        icon={showPassword ? 'eye-open' : 'eye-off'}
+                        icon={showPasswordOld ? 'eye-open' : 'eye-off'}
                         color="#0fa3a3"
                         onClick={(e) =>
-                          setShowPassword(!showPassword)
+                          setShowPasswordOld(!showPasswordOld)
                         }
                         className="pt2 pr2 pointer"
                       />
@@ -159,17 +162,17 @@ const ChangePasswordComponentView = (
                 >
                   <InputGroupFieldWithError
                     id="newPassword"
-                    type={`${showPassword ? 'text' : 'password'}`}
+                    type={`${showPasswordNew ? 'text' : 'password'}`}
                     value={input.value}
                     onChange={input.onChange}
                     placeHolder="New Password"
                     leftIcon="lock"
                     rightElement={
                       <Icon
-                        icon={showPassword ? 'eye-open' : 'eye-off'}
+                        icon={showPasswordNew ? 'eye-open' : 'eye-off'}
                         color="#0fa3a3"
                         onClick={(e) =>
-                          setShowPassword(!showPassword)
+                          setShowPasswordNew(!showPasswordNew)
                         }
                         className="pt2 pr2 pointer"
                       />
@@ -205,17 +208,17 @@ const ChangePasswordComponentView = (
                 >
                   <InputGroupFieldWithError
                     id="confirmPassword"
-                    type={`${showPassword ? 'text' : 'password'}`}
+                    type={`${showPasswordConfirm ? 'text' : 'password'}`}
                     value={input.value}
                     onChange={input.onChange}
                     placeHolder="Confirm Password"
                     leftIcon="lock"
                     rightElement={
                       <Icon
-                        icon={showPassword ? 'eye-open' : 'eye-off'}
+                        icon={showPasswordConfirm ? 'eye-open' : 'eye-off'}
                         color="#0fa3a3"
                         onClick={(e) =>
-                          setShowPassword(!showPassword)
+                          setShowPasswordConfirm(!showPasswordConfirm)
                         }
                         className="pt2 pr2 pointer"
                       />

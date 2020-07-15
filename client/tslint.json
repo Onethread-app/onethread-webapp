@@ -28,6 +28,8 @@
     "no-any": false,
     "no-arg": true,
     "no-bitwise": true,
+    "no-shadowed-variable": false,
+    "array-type": false,
     "no-console": [
       true,
       "log",
@@ -90,6 +92,8 @@
       "check-separator",
       "check-type",
       "check-typecast"
-    ]
+    ],
+    "array-callback-return": 0,
+    "no-useless-escape": 0
   }
 }

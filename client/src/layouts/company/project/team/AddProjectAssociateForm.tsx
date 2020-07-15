@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import Select from 'react-select';
 import {
   SuggestField,
   ItemEntityProps,
@@ -9,7 +8,9 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { Button, Tag } from '@blueprintjs/core';
 import { addProjectAssociate } from 'stores/project/Actions';
 import { tigrowApi } from 'config';
-import { isEmpty, isEqual } from 'lodash';
+import { ICompany } from 'stores/company/Reducer';
+import { useLiveSearch } from 'components/useLiveSearch';
+import { isEqual } from 'lodash';
 
 interface ProjectAssociateProps {
   showDialog: boolean;
@@ -18,7 +19,7 @@ interface ProjectAssociateProps {
 
 interface ProjectAssociateInternalProps
   extends ProjectAssociateProps {
-  companyId: string;
+  company: ICompany;
   projectId: string;
   // tslint:disable-next-line: max-line-length
   addProjectAssociate: (
@@ -34,58 +35,89 @@ interface ProjectAssociateInternalProps
 const AddProjectAssociateFormComponent = (
   props: ProjectAssociateInternalProps,
 ) => {
-  const [suggestedAssociate, setSuggestedAssociate]: any = useState(
-    [],
-  );
+  const [associates, setAssociates] = useState([]);
   const [selectedAssociate, setSelectedAssociate] = useState(
     [] as ItemEntityProps[],
   );
+  const [searchAssociate, setSearchAssociate] = useState('');
 
-  const getSuggestionsForProjectAssociate = async () => {
-    try {
-      const headers = tokenConfig();
-      if ((headers as any).headers.Authorization) {
-        const response = await tigrowApi.get(
-          `/associate/${props.companyId}`,
-          headers,
-        );
-        const formatResponse = response.data.map((assoc: any) =>
-          isEqual(props.companyId, assoc.company._id) === true
-            ? {
-                ...assoc.associateCompany,
-                createdAt: assoc.createdAt,
-                size: 5,
-              }
-            : {
-                ...assoc.company,
-                createdAt: assoc.createdAt,
-                size: 5,
-              },
-        );
-        setSuggestedAssociate(formatResponse);
-      } else {
-        // tslint:disable-next-line: no-console
-        console.log('no headers');
+  const userRequestFactoryAssociate = async (userName: string) => {
+    const headers = tokenConfig();
+    const response = await tigrowApi.get(
+      `projects/associate-company-search/${
+      props.company._id
+      }?name=${searchAssociate}&companyName=${props.company.name}`,
+      headers,
+    );
+
+    // return response.data.data.map((e: any) => {
+    //   return {
+    //     _id: e._source.mongo_id,
+    //     name: e._source.associateCompanyName,
+    //     size: 5
+    //   };
+    // });
+    const asso = response.data.data.map((e: any) => 
+      isEqual(props.company._id, e._source.company_id ) === true ?
+      {
+        _id: e._source.mongo_id,
+        name: e._source.associateCompanyName,
+        size: 5
       }
-    } catch (error) {
-      if (isEqual(error.message, 'Network Error')) {
-        // tslint:disable-next-line: no-console
-        console.log('network error');
-      } else {
-        // tslint:disable-next-line: no-console
-        console.log(error.response);
+      :
+      {
+        _id: e._source.mongo_id,
+        name: e._source.companyName,
+        size: 5
       }
-    }
+    );
+    return asso;
   };
 
+  let resultAssociate: any = [];
+  resultAssociate = useLiveSearch(searchAssociate, userRequestFactoryAssociate, 0);
+  // const getSuggestionsForProjectAssociate = async () => {
+  //   try {
+  //     const headers = tokenConfig();
+  //     if ((headers as any).headers.Authorization) {
+  //       const response = await tigrowApi.get(
+  //         `/associate/${props.companyId}`,
+  //         headers,
+  //       );
+  //       const formatResponse = response.data.map((assoc: any) =>
+  //         isEqual(props.companyId, assoc.company._id) === true
+  //           ? {
+  //               ...assoc.associateCompany,
+  //               createdAt: assoc.createdAt,
+  //               size: 5,
+  //             }
+  //           : {
+  //               ...assoc.company,
+  //               createdAt: assoc.createdAt,
+  //               size: 5,
+  //             },
+  //       );
+  //       console.log(formatResponse);
+
+  //       setSuggestedAssociate(formatResponse);
+  //     } else {
+  //       // tslint:disable-next-line: no-console
+  //       console.log('no headers');
+  //     }
+  //   } catch (error) {
+  //     if (isEqual(error.message, 'Network Error')) {
+  //       // tslint:disable-next-line: no-console
+  //       console.log('network error');
+  //     } else {
+  //       // tslint:disable-next-line: no-console
+  //       console.log(error.response);
+  //     }
+  //   }
+  // };
+
   useEffect(() => {
-    if (
-      isEmpty(props.projectId) === false &&
-      isEmpty(props.companyId) === false
-    ) {
-      getSuggestionsForProjectAssociate();
-    }
-  }, []);
+    setAssociates(resultAssociate);
+  }, [resultAssociate]);
 
   const teamSizes = [
     { value: 5, label: '1-5' },
@@ -98,7 +130,10 @@ const AddProjectAssociateFormComponent = (
       <div className="w-100">
         <h1 className="f5 tigrow-darkBlue">Add Associates</h1>
         <SuggestField
-          items={suggestedAssociate}
+          onChange={(query: string) => {
+            setSearchAssociate(query);
+          }}
+          items={associates}
           selectedItems={selectedAssociate}
           setSelectedItems={setSelectedAssociate}
           multipleItemSelect={true}
@@ -134,7 +169,6 @@ const AddProjectAssociateFormComponent = (
                   onChange={(e: any) => {
                     let sa = [...selectedAssociate];
                     sa[index]['size'] = e.target.value;
-                    console.log(sa);
                     setSelectedAssociate(sa);
                   }}
                 >
@@ -172,15 +206,15 @@ const AddProjectAssociateFormComponent = (
           onClick={async () => {
             const data = {
               project: props.projectId,
-              company: props.companyId,
+              company: props.company._id,
               associates: selectedAssociate.map((m: any) => {
                 return {
                   _id: m._id,
                   size: m.size,
+                  name: m.name
                 };
               }),
             };
-
             const response: any = await props.addProjectAssociate(
               data,
               selectedAssociate,
@@ -200,7 +234,7 @@ const AddProjectAssociateFormComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    companyId: state.companyReducer.currentCompany._id,
+    company: state.companyReducer.currentCompany,
     projectId: state.projectReducer.pid,
     associates: state.associateReducer.associatesList,
   };

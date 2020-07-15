@@ -27,6 +27,7 @@ const create = async (req, res) => {
     }
 
     req.body.company = req.company._id;
+    req.body.account = req.user._id;
     const newDepartment = new Department(req.body);
     const department = await newDepartment.save();
 
@@ -42,33 +43,31 @@ const create = async (req, res) => {
     });
   } catch (err) {
     logger.error(` process:${process.pid} Bad request : ${err}`);
-    return sendErrorResponse(res, 400, '', {
+    return sendErrorResponse(res, 400, 'ValidationError', {
       message: 'Failed to create new department',
       fieldName: 'name',
     });
   }
 };
 
-const list = async (req, res) => {
+const list = async (req, res, next) => {
   try {
     const departments = await Department.find({
       company: req.company._id,
       removed: false,
     }).select('_id name');
 
-    if (departments) {
-      return sendJSONresponse(res, 200, {
-        departments,
+    if (!departments) {
+      return sendErrorResponse(res, 404, 'DepartmentFoundError', {
+        message: 'No departments found.',
       });
     }
-
-    return res.status(404).json({
-      message: 'No departments found.',
+    return sendJSONresponse(res, 200, {
+      departments,
     });
   } catch (error) {
-    return res.status(500).json({
-      error: error,
-    });
+    logger.error(`Departments: ${error}`);
+    next(error);
   }
 };
 

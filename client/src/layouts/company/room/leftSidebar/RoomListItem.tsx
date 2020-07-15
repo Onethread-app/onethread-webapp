@@ -9,25 +9,29 @@ import { Drawer } from '@blueprintjs/core';
 
 interface RoomListItemProps {
   room: IRoom;
-  lastChild: boolean;
+  lastChild?: boolean;
   active: boolean;
   iconBgColor: string;
+  currentCompany?: string;
 }
 
 export const RoomListItem = (props: RoomListItemProps) => {
   const [showDialog, setShowDialog] = useState(false);
+  const dispatch = useDispatch();
+  const location = useLocation();
+  const history = useHistory();
   const unreadCount = useSelector(
     (state: any) =>
-      state.roomReducer.roomsUnreadCount[props.room._id],
+      state.roomReducer.roomNotification.roomsUnreadCount &&
+      state.roomReducer.roomNotification.roomsUnreadCount[
+        props.room._id
+      ],
   );
+
   const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
     roomId: '',
   });
-
-  const dispatch = useDispatch();
-  const location = useLocation();
-  const history = useHistory();
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -41,7 +45,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
 
   return (
     <>
-      <li
+      <div
         id="roomListItem"
         className="pointer br1"
         style={{
@@ -54,11 +58,18 @@ export const RoomListItem = (props: RoomListItemProps) => {
             if (!props.active) {
               dispatch({ type: CHANGE_ROOM });
               // tslint:disable-next-line: max-line-length
-              history.push(
-                `${location.pathname}?roomId=${props.room._id}${
-                  queries.view ? '&view=' + queries.view : ''
-                }`,
-              );
+              props.currentCompany?
+                history.push(
+                  `/company/${props.currentCompany}/project/${props.room.project}/room?roomId=${props.room._id}${
+                    queries.view ? '&view=' + queries.view : ''
+                  }`,
+                )
+              : 
+                history.push(
+                  `${location.pathname}?roomId=${props.room._id}${
+                    queries.view ? '&view=' + queries.view : ''
+                  }`,
+                );
             }
             if (isMobileOnly) {
               setShowDialog(true);
@@ -105,7 +116,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
             ) : null}
           </div>
         </article>
-      </li>
+      </div>
       {showDialog && (
         <Drawer
           onClose={() => setShowDialog(!showDialog)}

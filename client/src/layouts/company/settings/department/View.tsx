@@ -29,12 +29,12 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
 
   return (
     <>
-      <div>
-        <div className="flex-ns justify-between">
+      <div className="pr6">
+        <div className="flex-ns justify-between pv3">
           <h1 className="f6 lh-copy">Departments</h1>
           <Button
             type="submit"
-            className="grow pointer addDepartment"
+            className="grow pointer addDepartment h2"
             style={{
               background: '#0fa3a3',
               outline: 'none',

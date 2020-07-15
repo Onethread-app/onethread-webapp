@@ -6,6 +6,11 @@ const departmentSchema = mongoose.Schema(
       maxlength: 32,
       require: true,
     },
+    account: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Account',
+      required: true,
+    },
     company: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',

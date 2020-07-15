@@ -43,6 +43,8 @@ import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import Button from '@material-ui/core/Button';
 import { store } from 'Store';
 import { saveContactForm } from '../../stores/landing/Actions';
+import { isEmail } from 'components/final-form/utils';
+import _ from 'lodash';
 
 // import contactImage from '../../resources/homepageImages/contact.png';
 
@@ -64,9 +66,10 @@ export const HomePage = () => {
   const [message, setMessage] = useState('');
   const [subject, setSubject] = useState('');
   const [error, setError] = useState('');
+
   const handleSubmit = () => {
-    // console.log(name, email, message);
-    if (name === '' || email === '' || message === '') {
+
+    if (_.isEmpty(name) || _.isEmpty(email) || _.isEmpty(message)) {
       setError('Please fill all the information');
     } else {
       const reqBody = {
@@ -75,8 +78,10 @@ export const HomePage = () => {
         subject,
         message,
       };
+      if (error === '') {
       store.dispatch(saveContactForm(reqBody));
       setIsOpen(false);
+      }
     }
   };
   function openModal() {
@@ -93,7 +98,7 @@ export const HomePage = () => {
         name,
         email,
         subject: 'N/A',
-        message: 'N/A',
+        message,
       };
       store.dispatch(saveContactForm(reqBody));
     }
@@ -509,7 +514,6 @@ export const HomePage = () => {
                     fullWidth={true}
                     id="standard-basic"
                     label="Name"
-                    variant="outlined"
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -519,10 +523,17 @@ export const HomePage = () => {
                 <div className="mb4">
                   <TextField
                     onChange={(e) => setEmail(e.target.value)}
+                    onBlur={() => {
+                      const res = isEmail(email);
+                      if ( typeof res !== 'undefined') {
+                        setError(res);
+                      } else {
+                        setError('');
+                      }
+                    }}
                     fullWidth={true}
-                    id="outlined-basic"
+                    id="standard-basic"
                     label="Your Email"
-                    variant="outlined"
                     InputLabelProps={{
                       shrink: true,
                     }}
@@ -533,9 +544,8 @@ export const HomePage = () => {
                   <TextField
                     onChange={(e) => setSubject(e.target.value)}
                     fullWidth={true}
-                    id="outlined-basic"
+                    id="standard-basic"
                     label="Subject"
-                    variant="outlined"
                     InputLabelProps={{
                       shrink: true,
                     }}

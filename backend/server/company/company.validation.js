@@ -13,7 +13,7 @@ const idSchema = {
 
 // company-id
 const companyId = Joi.object().keys({
-  companyId: idSchema.id.required(),
+  companyId: idSchema.id.required()
 });
 
 const cname = Joi.object().keys({
@@ -46,7 +46,16 @@ const schema = {
     .min(1)
     .max(5)
     .items(Joi.string().regex(/^[0-9a-fA-F]{24}$/)),
-  optionalRole: Joi.array().min(0).max(7).items(Joi.string()),
+  optionalRole: Joi.array().min(0).max(7)
+  .items(Joi.string().valid([
+    'editProfile',
+    'cRUDAnnouncement',
+    'archiveProject',
+    'addRemoveModerator',
+    'messageAssociate',
+    'addAcceptRejectAssociate',
+    'acceptRejectProjectFromAssociate',
+  ])),
   location: Joi.string(),
   websites: Joi.array()
     .max(3)

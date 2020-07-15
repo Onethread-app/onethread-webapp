@@ -40,6 +40,7 @@ import {
   GET_ALL_COMPANY_ANNOUNCEMENT,
   // ADD_ANNOUNCEMENT,
   GET_ALL_PRODUCT,
+  EDIT_ORGANIZATION,
   // ADD_ANNOUNCEMENT
 } from './Types';
 import {
@@ -106,7 +107,7 @@ export const createCompanyAction = (
       dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
       dispatch({ type: CREATE_COMPANY, payload: response.data });
       routeHistory.push(
-        `/company/${response.data.company.name}/dashboard`,
+        `/company/${response.data.company.uniqueName}/dashboard`,
       );
       return response.data;
     } else {
@@ -383,26 +384,25 @@ export const changeCompanyName = (companyName: string) => async (
         { name: companyName },
         headers,
       );
-      if (isEqual(response.status, 200)) {
-        dispatch({ type: CHANGE_COMPANY_NAME, payload: companyName });
-        return response.data;
-      }
+      dispatch({ type: CHANGE_COMPANY_NAME, payload: response.data.company });
+      return response;
     } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in changing Company Name');
+      //TODO create a logger for client end
+      return;
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('Network error');
+      //TODO create a logger for client end
+      return;
     } else if (error.response.status === 409) {
       dispatch({
         type: CHANGE_COMPANY_NAME_ERROR,
         payload: 'Name already exist',
       });
+      return;
     } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
+      //  TODO create a logger for client end
+      return;
     }
   }
 };
@@ -679,15 +679,47 @@ export const addOrganization = (organization: any) => async (
     const headers = tokenConfig();
     let response;
     if ((headers as any).headers.Authorization) {
-      const companyId = getState().companyReducer.currentCompany._id;
-      response = await tigrowApi.put(
-        `company/${companyId}/parentorg`,
-        organization,
-        headers,
-      );
       dispatch({
         type: ADD_ORGANIZATION,
         payload: organization.parentcom,
+      });
+      const companyId = getState().companyReducer.currentCompany._id;
+      const parentOrgArray = getState().companyReducer.currentCompany.parentcom;      
+      response = await tigrowApi.put(
+        `company/${companyId}/parentorg`,
+        {parentcom: parentOrgArray},
+        headers,
+      );
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      // console.log('error in adding organization');
+    }
+    return;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const editOrganization = (organization: any, ind: number) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    let response;
+    if ((headers as any).headers.Authorization) {
+      const companyId = getState().companyReducer.currentCompany._id;
+      const parentOrgArray = getState().companyReducer.currentCompany.parentcom;
+      parentOrgArray[ind]=organization.parentcom;
+      response = await tigrowApi.put(
+        `company/${companyId}/parentorg`,
+        {parentcom: parentOrgArray},
+        headers,
+      );
+      dispatch({
+        type: EDIT_ORGANIZATION,
+        payload: response.data.data.parentcom,
       });
       return response.status;
     } else {

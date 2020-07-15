@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import React from 'react';
 import ChatBot from 'react-simple-chatbot';
 import { ThemeProvider } from 'styled-components';
@@ -96,6 +98,7 @@ export default function CustomChatbot(props) {
       id: 'Done',
       message: ({ previousValue, steps }) => {
         setEmail(previousValue);
+        console.log(steps);
         return `Thanks ${steps.name.message}, Glad to know you !!`;
       },
       end: true,

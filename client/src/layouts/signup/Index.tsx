@@ -20,7 +20,7 @@ import { connect } from 'react-redux';
 import { userSignupAction, UserModel } from 'stores/auth/Actions';
 import { isEmpty } from 'lodash';
 
-import logo from './../../resources/images/TiGrowLogoFinal.png';
+import logo from './../../resources/images/logoFinal.svg';
 import nameTagIcon from './../../resources/images/nameTag.png';
 // import phoneIcon from './../../resources/images/phone.png';
 import emailIcon from './../../resources/images/email.png';
@@ -281,7 +281,7 @@ export const SignUpPageComponent = (
                                       boxShadow: 'none',
                                       fontSize: '18px',
                                     }}
-                                    placeHolder="Contact Number (optional)"
+                                    placeHolder="Contact Number"
                                     keypress={(e) => {
                                       if (
                                         e.which < 48 ||

@@ -7,13 +7,13 @@ import {
   acceptPendingProject,
   rejectPendingProject,
 } from 'stores/project/Actions';
-import { IPendingProject, IProject } from 'stores/project/Reducer';
+import { IPendingProject } from 'stores/project/Reducer';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 interface IProjectRequestComponent {
   PendingProjects: IPendingProject[];
   getAllPendingProjects: () => void;
-  acceptPendingProject: (project: IProject) => void;
+  acceptPendingProject: (project: IPendingProject) => void;
   rejectPendingProject: (projectId: string) => void;
   companyRole: string;
 }
@@ -21,6 +21,7 @@ interface IProjectRequestComponent {
 const ProjectRequestComponent = (
   props: IProjectRequestComponent & RouteComponentProps,
 ) => {
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     // get all pending projects
 
@@ -28,20 +29,21 @@ const ProjectRequestComponent = (
       getAllPendingProjects: () => void,
     ) {
       setLoading(true);
-      props.companyRole !== 'employee' &&
-        (await getAllPendingProjects());
+      if (props.companyRole !== 'employee') {
+        getAllPendingProjects();
+      }
       setLoading(false);
     }
     loadPendingProjects(props.getAllPendingProjects);
   }, []);
 
-  const [loading, setLoading] = useState(true);
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
 
   return (
     <div>
       {loading === false ? (
+        props.PendingProjects && props.PendingProjects.length > 0 ?
         props.PendingProjects.map((pending) => (
           <main className="">
             <article className="dt w-100 pv4 mt2">
@@ -96,7 +98,7 @@ const ProjectRequestComponent = (
                     onClick={async () => {
                       setAcceptLoading(true);
                       await props.acceptPendingProject(
-                        pending.project,
+                        pending
                       );
                       setAcceptLoading(false);
                     }}
@@ -109,9 +111,13 @@ const ProjectRequestComponent = (
             <Divider />
           </main>
         ))
+        :
+        (
+          <h1 className="f5 fw4">No pending Projects</h1>
+        )
       ) : (
-        <Loading />
-      )}
+          <Loading />
+        )}
     </div>
   );
 };

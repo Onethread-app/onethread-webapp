@@ -4,6 +4,18 @@ import { User } from 'stores/user/Reducer';
 import { IDesignations } from 'stores/company/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 
+export interface IMember {
+  concernedAdmin: {
+    firstName: string;
+    lastName: string;
+    name: string;
+    _id: string;
+  };
+  name: string;
+  optionalRole: [];
+  type: string;
+  _id: string;
+}
 export interface IProject {
   _id: string;
   name: string;
@@ -19,7 +31,9 @@ export interface IProject {
 export interface IPendingProject {
   _id: string;
   project: IProject;
+  size: string;
   company: ICompany;
+  associate: string;
 }
 
 export interface ProjectModel {
@@ -63,10 +77,12 @@ const initialState = {
     outline: '',
   },
   teams: [],
-  associates: [],
+  projectAssociates: [],
   pid: '',
   projectRole: {},
   projectFileOpen: false,
+  projectList: [],
+  error: ''
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -116,7 +132,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case PROJECT.PROJECT_GET_ASSOCIATES:
       return {
         ...state,
-        associates: action.payload,
+        projectAssociates: action.payload,
       };
     case PROJECT.PROJECT_GET_ROLES:
       return {
@@ -142,6 +158,21 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         projectFileOpen: action.payload,
       };
+      case PROJECT.PROJECT_LIST_INDIVIDUAL:
+        return {
+          ...state,
+          projectList: [...state.projectList, action.payload],
+        };
+      case PROJECT.PROJECT_LIST_CLEAR:
+        return {
+            ...state,
+            projectList: [],
+          };
+      case PROJECT.PROJECT_ERROR:
+        return {
+            ...state,
+            error: action.payload,
+          };
     default:
       return state;
   }

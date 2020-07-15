@@ -48,7 +48,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
   return (
     <div className="dt w-100 vh-100">
       <div className="v-mid dtc">
-        <div className="cf shadow-4 w-34 center br3 ph4">
+        <div className="cf shadow-4-ns w-34-ns center br3 ph4">
           <Form
             onSubmit={handleResetPassword}
             validate={(values: any) => {
@@ -241,7 +241,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                   </div>
 
                   <Button
-                    className=" b--none w-100 br3 fr grow h2 ph5 pointer pv2 white mb3"
+                    className=" b--none w-100 fr grow h2 ph5 pointer pv2 white mb3"
                     style={{
                       background: '#0fa3a3',
                       outline: 'none',

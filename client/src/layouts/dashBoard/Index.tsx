@@ -6,7 +6,7 @@ import addIcon from '../../resources/images/addIcon.png';
 import { AnnouncementEditor } from './announcementEditor';
 import { tigrowApi } from 'config';
 import { ICompany } from 'stores/company/Reducer';
-import { tokenConfig } from 'stores/UtilsActions';
+import { tokenConfig, companyPermit } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
 import { getCompanyAnnouncement } from 'stores/company/Actions';
 import { makeStyles } from '@material-ui/core/styles';
@@ -17,7 +17,9 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
+import { webPush } from '../../stores/notifications/Action';
 
+import firebase from '../../firebase';
 import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
@@ -44,6 +46,7 @@ interface DashBoardViewProps {
   user: User;
   company: ICompany;
   getCompanyAnnouncement: () => void;
+  webPush: (token) => void;
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
@@ -55,7 +58,17 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [dashboard, setDashboard] = useState(Object);
   const dispatch = useDispatch();
   const classes = useStyles();
+
+  const getTokenFromGCM = () => {
+    const messaging = firebase.messaging();
+    messaging
+      .requestPermission()
+      .then(() => messaging.getToken())
+      .then((token: string) => props.webPush(token))
+      .catch((err: string) => console.log(err));
+  };
   useEffect(() => {
+    getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();
       try {
@@ -89,11 +102,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           <div className="mh4-ns mh2 mt5 mt0-ns pb6 pb0-ns">
             <div className="flex-ns justify-between">
               <Card className="w-25-ns w-90 ma2">
-                <h1 className="f6 fw6">Total running project</h1>
+                <h1 className="f6 fw6">Total Running Project</h1>
                 <h1 className="mv0">{dashboard.totalProject}</h1>
               </Card>
               <Card className="w-25-ns w-90 ma2">
-                <h1 className="f6 fw6">Completed project</h1>
+                <h1 className="f6 fw6">Completed Project</h1>
                 <h1 className="mv0">0</h1>
               </Card>
               <Card className="w-25-ns w-90 ma2">
@@ -152,23 +165,25 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     </div>
                   ))
                 ) : (
-                  <small>No announcements.</small>
+                  <small>No Announcement.</small>
                 )}
               </div>
             </div>
           </div>
           <div>
-            <img
-              onClick={() =>
-                setShowAnnouncementDialog(!showAnnouncementDialog)
-              }
-              src={addIcon}
-              className={`fixed pointer addButton`}
-              style={{
-                boxShadow: '0px 6px 6px #00000029',
-                borderRadius: '50%',
-              }}
-            />
+            {companyPermit(props.company.role) && (
+              <img
+                onClick={() =>
+                  setShowAnnouncementDialog(!showAnnouncementDialog)
+                }
+                src={addIcon}
+                className={`fixed pointer addButton`}
+                style={{
+                  boxShadow: '0px 6px 6px #00000029',
+                  borderRadius: '50%',
+                }}
+              />
+            )}
           </div>
         </>
       ) : (
@@ -203,4 +218,5 @@ const mapStateToProps = (state: any) => {
 
 export const DashboardView = connect(mapStateToProps, {
   getCompanyAnnouncement,
+  webPush,
 })(DashboardViewComponent);

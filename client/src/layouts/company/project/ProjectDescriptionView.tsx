@@ -31,6 +31,7 @@ export const _ProjectDescriptionView = (
         {props.role === 'admin' ? (
           <div className="pr2" style={{ paddingTop: '10px' }}>
             <Icon
+
               className={
                 editDescriptionDialog
                   ? 'fr tigrow-lightBlue pointer'
@@ -79,9 +80,10 @@ export const _ProjectDescriptionView = (
 };
 
 const mapStateToProps = (state: any) => ({
-  role: state.projectReducer.projectRole.projects.role,
-  optionalRole:
-    state.projectReducer.projectRole.projects.project.optionalRole,
+  role: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
+   state.projectReducer.projectRole.projects.role,
+  optionalRole: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project && state.projectReducer.projectRole.projects.project.optionalRole,
 });
 
 export const ProjectDescriptionView = connect(

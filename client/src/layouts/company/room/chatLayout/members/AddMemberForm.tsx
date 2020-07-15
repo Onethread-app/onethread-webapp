@@ -3,17 +3,19 @@ import {
   SuggestField,
   ItemEntityProps,
 } from 'components/fields/SuggestField';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual, isEmpty } from 'lodash';
 import { Button, Tag } from '@blueprintjs/core';
 import { addRoomMembers } from 'stores/room/Actions';
 import { tigrowApi } from 'config';
 import { IRoomReducer } from 'stores/room/Reducer';
+import { room } from 'stores/room/Types';
 
 interface RoomMembersViewProps {
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
+  roomStatus: number;
 }
 
 interface RoomMembersViewInternalProps extends RoomMembersViewProps {
@@ -38,20 +40,19 @@ interface RoomMembersViewInternalProps extends RoomMembersViewProps {
 const AddMemberFormComponent = (
   props: RoomMembersViewInternalProps,
 ) => {
-  // const store = useStore();
   const [suggestedMembers, setSuggestedMembers]: any = useState([]);
   const [selectedRoomMember, setSelectedRoomMember] = useState(
     [] as ItemEntityProps[],
   );
   const [error, setError] = useState('');
-
+  const dispatch = useDispatch();
   const getSuggestionsForRoomMembers = async () => {
     try {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         // tslint:disable-next-line:max-line-length
         const response = await tigrowApi.get(
-          `/rooms/suggest-member?projectId=${props.projectId}&roomId=${props.currentRoom._id}`,
+          `/rooms/suggest-member?pid=${props.projectId}&roomId=${props.currentRoom._id}`,
           headers,
         );
         setSuggestedMembers(response.data.members);
@@ -70,14 +71,31 @@ const AddMemberFormComponent = (
     }
   };
 
+  const errorHandling: any = (status: number) => {
+    
+    setError('');
+    if (status === 201) {
+      props.setShowDialog(!props.showDialog);
+    } else if (status === 400) {
+      setError('Could not add more than 10 members at time');
+    } else if (status === 0) {
+      setError('');
+    } else {
+      setError('Network Error');
+    }
+    return;
+
+  };
+
   useEffect(() => {
     if (
       isEmpty(props.currentRoom._id) === false &&
       isEmpty(props.companyId) === false
     ) {
       getSuggestionsForRoomMembers();
+      errorHandling(props.roomStatus);
     }
-  }, []);
+  }, [props.roomStatus]);
 
   return (
     <div className="pa3">
@@ -131,7 +149,10 @@ const AddMemberFormComponent = (
             border: '1px solid #3b5998',
             color: '#3b5998',
           }}
-          onClick={(e: any) => props.setShowDialog(!props.showDialog)}
+          onClick={(e: any) => {
+            props.setShowDialog(!props.showDialog);
+            dispatch({ type: room.CLEAR_STATUS_CODE });
+          }}
         >
           Cancel
         </Button>
@@ -154,18 +175,17 @@ const AddMemberFormComponent = (
                 };
               }),
             };
-            const response: any = await props.addRoomMembers(
+            await props.addRoomMembers(
               data,
               selectedRoomMember,
             );
-
-            if (response.status === 201) {
-              props.setShowDialog(!props.showDialog);
-            } else if (response.status === 400) {
-              setError('Could not add more than 10 members at time');
-            } else {
-              setError('Network Error');
-            }
+            // if (props.roomStatus === 201) {
+            //   props.setShowDialog(!props.showDialog);
+            // } else if (props.roomStatus === 400) {
+            //   setError('Could not add more than 10 members at time');
+            // } else {
+            //   setError('Network Error');
+            // }
           }}
         >
           Add
@@ -180,6 +200,7 @@ const mapStateToProps = (state: any) => {
     currentRoom: state.roomReducer.currentRoom,
     companyId: state.companyReducer.currentCompany._id,
     projectId: state.projectReducer.projectDetails._id,
+    roomStatus: state.roomReducer.responseCode
   };
 };
 

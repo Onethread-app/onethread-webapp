@@ -1,13 +1,11 @@
-const httpStatus = require('http-status');
 const Task = require('./task.model');
 const BoardColumn = require('./../boardColumn/boardColumn.model');
 const ActivityCtrl = require('./../activity/activity.controller');
 const logger = require('../../config/winston');
-const { APIError, BadRequestError } = require('../helpers/APIError');
 const TaskAssign = require('./taskAssign.model');
 const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
-var _ = require('lodash');
+const _ = require('lodash');
 const { sendErrorResponse } = require('../helpers/jsonResponse');
 const {
   createCompanyRoleNotification,
@@ -21,10 +19,10 @@ const load = (req, res, next, id) => {
     .exec()
     .then((result) => {
       req.task = result;
-      return next();
+      next();
     })
-    .catch((err) => {
-      return sendErrorResponse(res, 404, 'Idisnotexits', {
+    .catch(() => {
+      return sendErrorResponse(res, 404, 'IdIsNotExits', {
         success: false,
         message: 'No valid entry found for provided Task ID',
       });
@@ -35,7 +33,6 @@ const create = async (req, res, next) => {
   try {
     const task = new Task({
       name: req.body.name,
-      // description: req.body.description,
       account: req.user._id,
       columnId: req.body.columnId,
       boardId: req.body.boardId,
@@ -50,13 +47,18 @@ const create = async (req, res, next) => {
       populate: {
         path: 'project',
         model: 'Project',
-        select: 'name company',
+        select: '_id name company',
       },
     });
 
     const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
     createCompanyRoleNotification(
-      { _id: column.boardId.project.company },
+      {
+        _id: column.boardId.project.company,
+        project: column.boardId.project._id,
+        board: column.boardId,
+        task: createdTask._id,
+      },
       {
         _id: req.user._id,
         name: req.user.name,
@@ -86,10 +88,6 @@ const create = async (req, res, next) => {
     res.status(201).send(responseData);
   } catch (error) {
     logger.error(`Task: ${error}`);
-    // const err = new BadRequestError(
-    //   'task data is invalid.',
-    //   httpStatus.BAD_REQUEST,
-    // );
     next(error);
   }
 };
@@ -304,7 +302,12 @@ const dragTask = async (req, res, next) => {
 
     const text = `${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
     createCompanyRoleNotification(
-      { _id: column.boardId.project.company },
+      {
+        _id: column.boardId.project.company,
+        project: column.boardId.project._id,
+        board: column.boardId,
+        task: task._id,
+      },
       {
         _id: req.user._id,
         name: req.user.name,

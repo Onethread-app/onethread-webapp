@@ -1,0 +1,52 @@
+.meeting.wrapper {
+  background: #3a3b3c;
+  height: 100%;
+  color: #fff;
+}
+
+video {
+  max-width: unset;
+}
+
+.meeting .ag-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ag-header-lead {
+  font-size: 24px;
+  line-height: 35px;
+}
+
+.meeting .ag-footer {
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+}
+
+.meeting .ag-footer :first-child {
+  margin-right: 80px;
+}
+
+.header-logo {
+  width: 60px;
+  height: 35px;
+  margin-right: 12px;
+}
+
+.ag-container {
+  height: calc(100vh - 70px);
+}
+
+.invitation-frame {
+  margin: 0 auto;
+  width: 300px;
+  padding: 100px 0;
+}
+
+.invite-btn {
+  height: 30px;
+  width: 300px;
+  font-size: 16px;
+}

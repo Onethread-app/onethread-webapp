@@ -1,14 +1,15 @@
 const Account = require('../account/account.model');
-const mongoose = require('mongoose');
 const { Associate } = require('../associate/associate.model');
 const { Company, Certificate } = require('./company.model');
 const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
-const { chatkit } = require('../services/pusher.services');
+const Plan = require('../plan/plan.model');
+const { createSlug } = require('../helpers/SlugCreator');
 
 const {
-  sendCompanyNotification,
-} = require('../services/notification.services');
+  Subscription,
+} = require('../subscription/subscription.model');
+
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
@@ -30,6 +31,7 @@ const { Project } = require('../project/project.model');
 const changeName = async (req, res, next) => {
   // Check for JSON
   if (!req.is('application/json')) {
+    // return sendErrorResponse()
     return res.send("Expects 'application/json'");
   }
 
@@ -58,7 +60,8 @@ const changeName = async (req, res, next) => {
     }
 
     req.company.name = req.body.name;
-    await req.company.save();
+    req.company.uniqueName = createSlug(req.body.name);
+    const company = await req.company.save();
 
     //notification
 
@@ -98,10 +101,22 @@ const changeName = async (req, res, next) => {
     // await notification.save();
     // await UserNotification.create(usersNotification);
 
-    return res.status(200).json({
+    return sendJSONresponse(res, 200, {
       message: `Company's name updated`,
+      company: {
+        _id: company._id,
+        name: company.name,
+        uniqueName: company.uniqueName,
+        type: company.type,
+        email: company.email,
+        address: company.address,
+        legalOwnerName: company.legalOwnerName,
+        legalOwnerMail: company.legalOwnerMail,
+        role: 'superAdmin',
+      },
     });
   } catch (error) {
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };
@@ -109,19 +124,25 @@ const changeName = async (req, res, next) => {
 // create a company profile
 const createCompany = async (req, res, next) => {
   try {
-    // check duplicate company name
-    const duplicate = await Company.findOne({
-      name: req.body.name,
-    });
-    if (duplicate) {
-      return res.status(409).json({
-        message: `Duplicate company name`,
-      });
-    }
-
     req.body.account = req.user._id;
+    req.body.uniqueName = createSlug(req.body.name);
     const newCompany = new Company(req.body);
 
+    const planId = await Plan.findOne({ name: 'trial' });
+    if (!planId) {
+      return sendErrorResponse(res, 404, 'PlanNotFoundError', {
+        message: 'Plan is not created',
+      });
+    }
+    await Subscription.create({
+      company: newCompany._id,
+      plan: planId._id,
+      expireAt: new Date().getTime() + 86400000 * planId.validity,
+      isActive: true,
+    });
+    logger.info(
+      `Subscription: Subscription create for company ${req.body.name}`,
+    );
     // create a default member
     const newMember = new Member({
       account: req.user._id,
@@ -164,11 +185,12 @@ const createCompany = async (req, res, next) => {
       ),
     );
 
-    return res.status(201).json({
+    return sendJSONresponse(res, 201, {
       message: 'New company created',
       company: {
         _id: company._id,
         name: company.name,
+        uniqueName: company.uniqueName,
         type: company.type,
         email: company.email,
         address: company.address,
@@ -178,8 +200,8 @@ const createCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
-    logger.error(`${error}`);
-    return next(error);
+    logger.error(`Company: ${error}`);
+    next(error);
   }
 };
 
@@ -190,7 +212,7 @@ const getCompanyIndividual = async (req, res, next) => {
     let options = [
       {
         path: 'company',
-        select: '_id name logo',
+        select: '_id name uniqueName logo',
       },
     ];
 
@@ -201,11 +223,11 @@ const getCompanyIndividual = async (req, res, next) => {
       .select('_id company role')
       .populate(options);
 
-    return res.status(200).json({
+    return sendJSONresponse(res, 200, {
       companies,
     });
   } catch (error) {
-    console.log(error);
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };
@@ -215,7 +237,7 @@ const getCompany = async (req, res, next) => {
   try {
     // company details
     let company = await Company.findOne({
-      name: req.params.cname,
+      uniqueName: req.params.cname,
     }).select(
       '-account -websites -members -rooms -products -departments -divisions -createdAt -updatedAt -__v',
     );
@@ -231,7 +253,8 @@ const getCompany = async (req, res, next) => {
     let memberCount = await Member.find({
       company: company._id,
     }).countDocuments();
-    return res.status(200).json({
+
+    return sendJSONresponse(res, 200, {
       company: {
         ...company._doc,
         role: member.role,
@@ -240,6 +263,7 @@ const getCompany = async (req, res, next) => {
       },
     });
   } catch (error) {
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };
@@ -409,35 +433,23 @@ const deleteCompany = async (req, res, next) => {
 
 const authorizeUser = (functionalRole, ...userRoles) => {
   return async function (req, res, next) {
-    // console.log(functionalRole)
-    // console.log(req)
-    // console.log(...userRoles)
     try {
-      // const company =  await Company.findOne({
-      //   _id: req.params.companyId,
-      // }).select('_id optionalRole').exec();
-
       const member = await Member.findOne({
         account: req.user._id,
-        company: req.params.companyId, //apatoto pore name or id hobe
+        company: req.headers.companyid || req.params.companyId, //apatoto pore name or id hobe
       }).exec();
-
-      // if (
-      //   !member ||
-      //   !userRoles.includes(member.role) ||
-      //   !company.optionalRole.includes(functionalRole)
-      // )
       if (
         !member ||
         (functionalRole === 'all' && !userRoles.includes(member.role))
       ) {
-        return res.status(403).json({
+        return sendErrorResponse(res, 403, 'PermissionError', {
           message: `Restricted`,
         });
       }
 
       next();
     } catch (error) {
+      logger.error(`Company: ${error}`);
       next(error);
     }
   };
@@ -495,22 +507,8 @@ const searchCompany = async (req, res, next) => {
         message: `query error`,
       });
     }
-
-    // await Company.find({
-    //   name: { $regex: new RegExp(name), $options: 'i' },
-    //   _id: { $nin: associateCompanyId },
-    // })
-    //   .select('name')
-    //   .skip(+skip)
-    //   .limit(+limit)
-    //   .then(data => {
-    //     return sendJSONresponse(res, 200, {
-    //       success: true,
-    //       message: `Search complete for ${name}`,
-    //       data,
-    //     });
-    //   });
   } catch (error) {
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };
@@ -539,20 +537,21 @@ const parentOrg = async (req, res, next) => {
         _id: req.params.companyId,
       },
       {
-        $push: { parentcom: parentCom },
+        $set: { parentcom: parentCom },
       },
       {
         new: true,
         safe: true,
         upsert: true,
       },
-    );
-    //  await Company.findOneAndUpdate({_id: req.params.companyId}, {$push:{parentcom: parentCom._id}},{safe: true, new: true, upsert: true})
+    ).select('parentcom');
     return sendJSONresponse(res, 200, {
       success: true,
       message: `parentOrg updated`,
+      data: user
     });
   } catch (error) {
+    logger.error(`Compnay: ${error}`)
     next(error);
   }
 };
@@ -660,6 +659,18 @@ const allNoticesForCompany = async (req, res, next) => {
   }
 };
 
+const adminSuperAdminFinder = async (req, res, next) => {
+  try {
+    const companyList = await Member.find({
+      account: req.user._id,
+      role: { $in: ['superAdmin', 'admin'] },
+    }).populate('company', '_id name');
+    return sendJSONresponse(res, 200, companyList);
+  } catch (error) {
+    logger.error(`Company: ${error}`);
+    next(error);
+  }
+};
 module.exports = {
   authorizeUser,
   createCompany,
@@ -677,4 +688,5 @@ module.exports = {
   dashBoard,
   noticePostByCompany,
   allNoticesForCompany,
+  adminSuperAdminFinder,
 };

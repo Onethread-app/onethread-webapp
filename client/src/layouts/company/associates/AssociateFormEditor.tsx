@@ -5,23 +5,25 @@ import {
 } from 'components/fields/SuggestField';
 import { connect } from 'react-redux';
 import { tokenConfig } from 'stores/UtilsActions';
-import { Button, Toaster } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { addAssociate } from 'stores/associate/Actions';
 import { server } from 'config';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEmpty, map } from 'lodash';
+import { ICompany } from 'stores/company/Reducer';
 
 interface AddAssociateEditorProps {
-  companyId: string;
+  company: ICompany;
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
+  sendingRequestSuccess: boolean;
 }
 
 interface AddAssociateEditorInternalProps
   extends AddAssociateEditorProps {
   addAssociate: (
     associateWith: ItemEntityProps,
-    companyId: string,
+    company: ICompany,
   ) => any;
 }
 
@@ -29,19 +31,15 @@ const AssociateFormEditorComponent = (
   props: AddAssociateEditorInternalProps,
 ) => {
   const [associates, setAssociates]: any = useState([]);
-
   const [selectedAssociate, setSelectedAssociate] = useState(
     {} as ItemEntityProps,
   );
-
   const [query, setQuery] = useState('');
-
-  const [error, setError] = useState('');
-
+  const [error] = useState('');
   const userRequestFactory = (value: string): Promise<any> => {
     const headers = tokenConfig();
     return fetch(
-      `${server}company/search?name=${value}&companyId=${props.companyId}`,
+      `${server}company/search?name=${value}&companyId=${props.company._id}`,
       headers,
     )
       .then((res) => res.json())
@@ -103,28 +101,27 @@ const AssociateFormEditorComponent = (
             if (isEmpty(selectedAssociate) === false) {
               const response = await props.addAssociate(
                 selectedAssociate,
-                props.companyId,
+                props.company,
               );
-              if (response.status !== 201) {
-                setError(response.data.error);
-              } else {
+              if (response === 201) {
                 props.setShowDialog(!props.showDialog);
-                Toaster.create().show({
-                  message: 'Request send successfully',
-                  timeout: 3000,
-                  intent: 'success',
-                });
               }
             }
           }}
         >
           Add
         </Button>
+        {props.sendingRequestSuccess &&
+          props.setShowDialog(!props.showDialog)}
       </div>
     </div>
   );
 };
 
-export const AssociateFormEditor = connect(null, { addAssociate })(
-  AssociateFormEditorComponent,
-);
+const mapStateToPropd = (state) => ({
+  sendingRequestSuccess: state.associateReducer.sendingRequestSuccess,
+});
+
+export const AssociateFormEditor = connect(mapStateToPropd, {
+  addAssociate,
+})(AssociateFormEditorComponent);

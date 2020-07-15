@@ -3,6 +3,7 @@ import { Suggest } from '@blueprintjs/select';
 import { MenuItem, Intent } from '@blueprintjs/core';
 import { includes, lowerCase, isEqual, findIndex } from 'lodash';
 import { useState } from 'react';
+import { capitalizeName } from 'stores/UtilsActions';
 export interface ItemEntityProps {
   _id?: string;
   email?: string;
@@ -21,6 +22,8 @@ interface SuggestFieldProps {
   isCreatableAPI?: (obj: { name: string }) => void;
   multipleItemSelect?: boolean;
   error?: string;
+  className?: string | '';
+
 }
 
 const SuggestInput = Suggest.ofType<ItemEntityProps>();
@@ -32,6 +35,7 @@ export const SuggestField = (props: SuggestFieldProps) => {
 
   return (
     <SuggestInput
+      className={props.className}
       initialContent={null}
       onQueryChange={props.onChange}
       items={props.items}
@@ -75,7 +79,7 @@ export const SuggestField = (props: SuggestFieldProps) => {
           text={
             item.email ? (
               <div className="flex justify-start items-center">
-                <h5 className="ma0 mr1">{item.email}</h5>
+                <h5 className="ma0 mr1">{capitalizeName(item.email)}</h5>
                 <small>({item.name})</small>
               </div>
             ) : (

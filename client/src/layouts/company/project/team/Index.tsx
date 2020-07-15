@@ -44,6 +44,7 @@ interface TeamMember {
     accountId: string,
   ) => void;
   project: any;
+  projectList: Array<{ _id: string; company: string }>;
 }
 
 const load = async (_getProjectTeams: () => void) => {
@@ -154,21 +155,28 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             >
               Add Team Members
             </Button>
-            <Button
-              className="grow fr h2 pointer white bp3-minimal mr2"
-              style={{
-                background: 'none',
-                border: '#0fa3a3',
-                borderWidth: 1,
-                borderStyle: 'solid',
-                color: '#0fa3a3',
-              }}
-              onClick={() =>
-                setShowAssociateDialog(!showAssociateDialog)
-              }
-            >
-              Add Associates
-            </Button>
+            {props.projectList &&
+              props.projectList.map((project) =>
+                props.project._id === project._id ? (
+                  project.company === props.company._id ? (
+                    <Button
+                      className="grow fr h2 pointer white bp3-minimal mr2"
+                      style={{
+                        background: 'none',
+                        border: '#0fa3a3',
+                        borderWidth: 1,
+                        borderStyle: 'solid',
+                        color: '#0fa3a3',
+                      }}
+                      onClick={() =>
+                        setShowAssociateDialog(!showAssociateDialog)
+                      }
+                    >
+                      Add Associates
+                    </Button>
+                  ) : undefined
+                ) : undefined,
+              )}
           </div>
         </div>
         {/* Admins list starts */}
@@ -469,13 +477,13 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     teams: state.projectReducer.teams,
-    associates: state.projectReducer.associates,
     projectRole:
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.role,
     companyRole: state.companyReducer.currentCompany.role,
     project: state.projectReducer.projectDetails,
     company: state.companyReducer.currentCompany,
+    projectList: state.projectReducer.allProjects,
   };
 };
 

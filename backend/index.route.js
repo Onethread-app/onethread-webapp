@@ -9,7 +9,6 @@ const saveRoutes = require('./server/save/save.route');
 const commentRoutes = require('./server/comment/comment.route');
 const reportRoutes = require('./server/report/report.route');
 const reviewRoutes = require('./server/review/review.route');
-const hashRoutes = require('./server/hashtag/hashtag.route');
 const roomRoutes = require('./server/room/room.route');
 const skillRoutes = require('./server/skillArea/skillArea.route');
 const fileRoutes = require('./server/file/file.route');
@@ -26,6 +25,10 @@ const associateRoutes = require('./server/associate/associate.route');
 const teamRoutes = require('./server/team-member/team.route');
 const channelRoutes = require('./server/channel/channel.route');
 const contactRoutes = require('./server/contact-us/contact.route');
+const planRoutes = require('./server/plan/plan.route');
+const subscriptionRoutes = require('./server/subscription/subscription.route');
+const paymentRoute = require('./server/payment/payment.route');
+const videoConferencesRoute = require('./server/videoConferences/videoConferences.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -38,7 +41,6 @@ router.use('/category', categoryRoutes);
 router.use('/comments', commentRoutes);
 router.use('/company', companyRoutes);
 router.use('/educations', educationRoutes);
-router.use('/hashtags', hashRoutes);
 router.use('/jobs', jobRoutes);
 router.use('/posts', postRoutes);
 router.use('/reacts', reactRoutes);
@@ -59,4 +61,8 @@ router.use('/notifications', notificationRoutes);
 router.use('/channel', channelRoutes);
 router.use('/teams', teamRoutes);
 router.use('/contact', contactRoutes);
+router.use('/plans', planRoutes);
+router.use('/payments', paymentRoute);
+router.use('/subscriptions', subscriptionRoutes);
+router.use('/video-conferences', videoConferencesRoute);
 module.exports = router;

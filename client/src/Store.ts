@@ -1,27 +1,33 @@
-import { createStore, applyMiddleware, compose } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension/logOnlyInProduction';
 import { rootReducer } from 'stores/IndexReducer';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import rootSaga from 'stores/indexSagas';
 
+import createSagaMiddleware from 'redux-saga';
 // const initialState = {} as any;
 
 const persistConfig = {
   key: 'projectType',
   storage,
-  whitelist: ['projectReducer'], // which reducer want to store
+  whitelist: ['projectReducer', 'subscriptionReducer'], // which reducer want to store
 };
 
-const pReducer = persistReducer(persistConfig, rootReducer);
-const middleware = [thunk];
+const sagaMiddleware = createSagaMiddleware();
 
-const composeEnhancers =
-  (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const pReducer = persistReducer(persistConfig, rootReducer);
+const middleware = [thunk, sagaMiddleware];
+
+// const composeEnhancers =
+//   (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const store = createStore(
   pReducer,
-  composeEnhancers(applyMiddleware(...middleware)),
+  composeWithDevTools(applyMiddleware(...middleware)),
 );
+sagaMiddleware.run(rootSaga);
 const persistor = persistStore(store);
 
 export { persistor, store };

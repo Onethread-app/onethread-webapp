@@ -6,23 +6,23 @@ import {
   ADD_ASSOCIATE,
   SELECT_ASSOCIATE,
   GET_ALL_PENDING_ASSOCIATE,
-  GET_PROJECT_ASSOCIATES,
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { Associate } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
+import { ICompany } from 'stores/company/Reducer';
 
 export const addAssociate = (
   associateWith: ItemEntityProps,
-  companyID: string,
+  company: ICompany,
 ) => async (dispatch: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.post(
-        `/associate/${companyID}`,
+        `/associate/${company._id}`,
         {
-          companyId: companyID,
+          company: company,
           associateCompany: {
             _id: associateWith.mongo_id,
             name: associateWith.name,
@@ -31,7 +31,7 @@ export const addAssociate = (
         headers,
       );
       // dispatch({ type: ADD_ASSOCIATE_IN_PENDING_LIST, payload: response.data });
-      return response;
+      return response.status;
     } else {
       // tslint:disable-next-line: no-console
       console.log('error in selection of company fetching');
@@ -77,36 +77,6 @@ export const getAllAssociates = () => async (
     } else {
       // tslint:disable-next-line: no-console
       console.log('error in selection of company fetching');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-      // return error.response;
-    }
-  }
-};
-
-export const getProjectAssociates = () => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const pid = getState().projectReducer.pid;
-      const response = await tigrowApi.get(
-        `/teams/member-list?pid=${pid}`,
-        headers,
-      );
-      await dispatch({
-        type: GET_PROJECT_ASSOCIATES,
-        payload: response.data.associateList.associate,
-      });
-      return response.data;
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {

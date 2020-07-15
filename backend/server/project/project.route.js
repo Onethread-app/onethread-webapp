@@ -8,10 +8,14 @@ const companyCtrl = require('../company/company.controller');
 const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
+const subCtrl = require('../subscription/subscription.controller');
+const { route } = require('../associate/associate.route');
+
 router
   .route('/change-title')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     schemaValidator(projectValidation.changeNameProject),
     projectCtrl.authorizeProjectRole(
       'all',
@@ -21,42 +25,71 @@ router
     projectCtrl.changeTitleProject,
   );
 // authentication
-router.route('/:companyId/create').post(
-  authorization,
-  companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
-  // schemaValidator(projectValidation.createNewProjectForCompany),
-  projectCtrl.createNewProjectForCompany,
-);
-
+router
+  .route('/:companyId/create')
+  .post(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.createNewProjectForCompany),
+    projectCtrl.createNewProjectForCompany,
+  );
+router
+  .route('/:companyId/create-project')
+  .post(
+    authorization,
+    schemaValidator(projectValidation.createProjectFromHome),
+    projectCtrl.createNewProjectFromHome,
+  );
 router
   .route('/:companyId/add-associates')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     projectCtrl.authorizeProjectRole('all', 'admin'),
     schemaValidator(projectValidation.addAssociate),
     projectCtrl.addAssociateInProject,
   );
-router.route('/:companyId/lists').get(
-  authorization,
-  companyCtrl.authorizeUser('all', 'admin', 'superAdmin', 'employee'),
-  // projectCtrl.authorizeProjectRole('all', 'admin'),
-  schemaValidator(projectValidation.showProjectList),
-  projectCtrl.showAllProjectsForCompany,
-);
+router
+  .route('/:companyId/lists')
+  .get(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    companyCtrl.authorizeUser(
+      'all',
+      'admin',
+      'superAdmin',
+      'employee',
+    ),
+    schemaValidator(projectValidation.showProjectList),
+    projectCtrl.showAllProjectsForCompany,
+  );
 
 router
   .route('/concern-admin-search/:companyId')
   .get(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     schemaValidator(projectValidation.searchConcernAdmin),
     projectCtrl.suggestConcernAdmin,
+  );
+
+router
+  .route('/associate-company-search/:companyId')
+  .get(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.searchAssociateCompany),
+    projectCtrl.suggestAssociateCompany,
   );
 router
   .route('/:companyId/archive-list')
   .get(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     schemaValidator(projectValidation.showProjectList),
     projectCtrl.archiveProjectList,
@@ -65,27 +98,34 @@ router
   .route('/:companyId/pending-requests')
   .get(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.pendingList),
     projectCtrl.projectPendingRequest,
   );
 router
   .route('/:companyId/accept-request')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.acceptProject),
     projectCtrl.acceptProjectRequest,
   );
 router
   .route('/:companyId/reject-request')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    schemaValidator(projectValidation.rejectProject),
     projectCtrl.rejectProjectRequest,
   );
 router
   .route('/')
   .get(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -98,6 +138,7 @@ router
   .route('/outline')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -111,6 +152,7 @@ router
   .route('/description')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -123,6 +165,7 @@ router
   .route('/show-files')
   .get(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -136,6 +179,7 @@ router
   .route('/archive')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -148,10 +192,23 @@ router
   .route('/:companyId/role')
   .put(
     authorization,
+    subCtrl.subscriptionExpireCheck(),
     companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
     projectCtrl.updateRole,
   );
 router
   .route('/individual/:account')
-  .get(authorization, projectCtrl.getProjectIndividual);
+  .get(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.getProjectIndividual,
+  );
+router
+  .route('/project-list/:memberId')
+  .get(authorization, projectCtrl.projectListForMember);
 module.exports = router;
