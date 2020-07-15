@@ -76,6 +76,50 @@ export const createProject = (payload: any) => async (
   }
 };
 
+export const createProjectInCompany = (payload: any) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    const companyId = getState().companyReducer.currentCompany._id;
+    if ((headers as any).headers.Authorization) {
+      const reqBody = {
+        name: payload.name,
+        type: payload.type,
+        concernedAdmin: {
+          memberId: payload.admin.memberId,
+          accountId: payload.admin._id
+        },
+        color: payload.color,
+        department: payload.department,
+        associates: payload.associates,
+        companyId: companyId,
+      };
+      const response = await tigrowApi.post(
+        `projects/${companyId}/create`,
+        reqBody,
+        headers,
+      );
+      await dispatch({
+        type: PROJECT.PROJECT_CREATE,
+        payload: response.data,
+      });
+      dispatch(getAllProjects());
+      return response.data;
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      // console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      // console.log(error.response);
+      // return error.response;
+    }
+  }
+};
+
 export const archiveProject = (pid: string) => async (
   dispatch: any,
   getState: any,

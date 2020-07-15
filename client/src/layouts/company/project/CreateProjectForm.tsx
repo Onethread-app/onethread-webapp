@@ -16,7 +16,7 @@ import { Condition } from 'components/final-form/Condition';
 import { SuggestFieldWithError } from 'components/fields/SuggestField';
 import { ICompany } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
-import { createProject } from '../../../stores/project/Actions';
+import { createProjectInCompany } from '../../../stores/project/Actions';
 import { getAllDepartments } from '../../../stores/company/Actions';
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
@@ -24,10 +24,15 @@ import { Associate } from 'stores/associate/Reducer';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
 
+interface IProject {
+  department: string;
+  projectType: string;
+}
+
 const FormComponent = (props: {
   setShowProjectDialog: (val: boolean) => void;
   departments: [];
-  createProject: any;
+  createProjectInCompany: (val:{}) => void;
   company: ICompany;
   associates: Associate[];
 }) => {
@@ -49,13 +54,12 @@ const FormComponent = (props: {
   );
   const [search, setSearch] = useState('');
 
-  const onSubmit = async (values: any) => {
-
+  const onSubmit = async (values: IProject) => {
     if (values.department ? values.department.length > 1 : undefined) {
       values.projectType = 'md';
     }
 
-    await props.createProject(values, selectedAdmins);
+    await props.createProjectInCompany(values);
     if (props.setShowProjectDialog) {
       props.setShowProjectDialog(false);
     }
@@ -249,7 +253,7 @@ const FormComponent = (props: {
                 </div>
                 <div className="flex flex-column">
                   <Field<string>
-                    name="projectType"
+                    name="type"
                     validate={required}
                     render={({ input, meta }) => (
                       <div
@@ -278,7 +282,7 @@ const FormComponent = (props: {
                 </div>
 
                 <Condition
-                  when="projectType"
+                  when="type"
                   validate={(value) => {
                     return ['sd'].includes(value);
                   }}
@@ -372,7 +376,7 @@ const FormComponent = (props: {
                 </Condition>
 
                 <Condition
-                  when="projectType"
+                  when="type"
                   validate={(value) => {
                     return ['associates'].includes(value);
                   }}
@@ -547,6 +551,6 @@ const mapStateToProps = (state: any) => {
 };
 
 export const FormProject = connect(mapStateToProps, {
-  createProject,
+  createProjectInCompany,
   getAllDepartments,
 })(FormComponent);

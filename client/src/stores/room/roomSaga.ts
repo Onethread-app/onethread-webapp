@@ -94,7 +94,7 @@ function* getRooms() {
     if ((headers as any).headers.Authorization) {
       yield put({ type: LOADING_ROOM });
       const response = yield tigrowApi.get(
-        `rooms/${company}/${project}`,
+        `rooms/${company}/${project}?pid=${project}`,
         headers,
       );
       yield put({ type: GET_ROOMS, payload: response.data });
