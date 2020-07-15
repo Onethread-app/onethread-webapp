@@ -57,7 +57,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
             id="roomName"
             value={searchKeyword}
             placeHolder="Search for Rooms"
-            className="pv1 ba b--light-silver br3"
+            className="pv1 ba b--light-silver br3 pl4"
             style={{
               paddingLeft: '36px',
               boxShadow: 'none',
