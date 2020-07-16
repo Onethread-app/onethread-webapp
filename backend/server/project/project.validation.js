@@ -16,7 +16,6 @@ const companyId = Joi.object().keys({
 
 const schema = {
   name: Joi.string().max(50),
-  type: Joi.string(),
   pid: idSchema.id,
   memberId: idSchema.id,
   description: Joi.string().max(2500).allow(''),
@@ -39,7 +38,6 @@ module.exports = {
   createNewProjectForCompany: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      type: schema.type.required(),
       concernedAdmin: Joi.object().keys({
         memberId: schema.memberId.required(),
         accountId: idSchema.id,

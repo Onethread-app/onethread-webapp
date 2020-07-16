@@ -86,10 +86,9 @@ export const createProjectInCompany = (payload: any) => async (
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
-        type: payload.type,
         concernedAdmin: {
           memberId: payload.admin.memberId,
-          accountId: payload.admin._id
+          accountId: payload.admin._id,
         },
         color: payload.color,
         department: payload.department,
