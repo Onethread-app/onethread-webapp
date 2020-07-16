@@ -1,893 +1,673 @@
 * {
-  box-sizing: border-box;
-  font-family: 'Open Sans', sans-serif;
-  scroll-behavior: smooth;
+	box-sizing: border-box;
+	font-family: 'Open Sans', sans-serif;
+	scroll-behavior: smooth;
 }
 body {
-  font-family: 'Open Sans', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 }
 .signinPageBackground {
-  background-image: url(./resources/images/Bg-png.png);
-  background-size: cover;
+	background-image: url(./resources/images/Bg-png.png);
+	background-size: cover;
 }
 .shadow-0 {
-  box-shadow: none !important;
+	box-shadow: none !important;
 }
 
 .bg-0 {
-  background-color: none;
+	background-color: none;
 }
 .c-tigrowWhite {
-  color: #ffffff;
+	color: #ffffff;
 }
 .c-tigrowViolet {
-  color: #4a5b9d;
+	color: #4a5b9d;
 }
 .b--tigrowGray {
-  color: #707070;
+	color: #707070;
 }
 .c-message-from {
-  color: rgb(74, 73, 73);
+	color: rgb(74, 73, 73);
 }
 .bg-tigrowLightBlue {
-  background-color: #0fa3a3;
+	background-color: #0fa3a3;
 }
 .bg-tigrow-darkBlue {
-  background-color: #3b5998;
+	background-color: #3b5998;
 }
 .bg-tigrowNewDarkBlue {
-  background-color: #3b5998;
+	background-color: #3b5998;
 }
 .bg-tigrowLightestBlue {
-  background-color: #6ed8d844;
+	background-color: #6ed8d844;
 }
 .bg-tigrowLightGray-1 {
-  background-color: #f5f6fa;
+	background-color: #f5f6fa;
 }
 .bg-tigrowDarkBlue {
-  background-color: #3b5998;
+	background-color: #3b5998;
 }
 .bg-tigrow {
-  background-color: #f5f6fa;
+	background-color: #f5f6fa;
 }
 
 .b--lightBlue {
-  border-color: #0fa3a3;
+	border-color: #0fa3a3;
 }
 .b--tigrow-darkBlue {
-  border-color: #3b5998;
+	border-color: #3b5998;
 }
 
 .b--tigrowLightGray-1 {
-  border-color: #d8d8d8;
+	border-color: #d8d8d8;
 }
 
 .tigrow-darkBlue {
-  color: #3b5998;
+	color: #3b5998;
 }
 
 .tigrow-lightBlue {
-  color: #0fa3a3;
+	color: #0fa3a3;
 }
 .tigrow-darkGray {
-  color: #555555;
+	color: #555555;
 }
 .tigrow-lightGray-1 {
-  color: #1b1b1b;
+	color: #1b1b1b;
 }
 
 .tigrow-lightGray-2 {
-  color: #484848;
+	color: #484848;
 }
 .tigrow-lightGray-3 {
-  color: #333334;
+	color: #333334;
 }
 .outline-0 {
-  outline: none;
+	outline: none;
 }
 a:hover {
-  text-decoration: none;
-  outline: none;
+	text-decoration: none;
+	outline: none;
 }
 
 .absolute--center {
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  transform: translate(-50%, -50%);
+	top: 50%;
+	left: 50%;
+	position: absolute;
+	transform: translate(-50%, -50%);
 }
 
 .max-h5 {
-  max-height: 16rem;
+	max-height: 16rem;
 }
 .w-2 {
-  width: 2%;
+	width: 2%;
 }
 .w-15 {
-  width: 15%;
+	width: 15%;
 }
 .w-85 {
-  width: 85%;
+	width: 85%;
 }
 .not-allowed {
-  cursor: not-allowed;
+	cursor: not-allowed;
 }
 
 .ws-break {
-  -webkit-word-break: break-word;
-  -moz-word-break: break-word;
-  -o-word-break: break-word;
-  -ms-word-break: break-word;
-  word-break: break-word;
+	-webkit-word-break: break-word;
+	-moz-word-break: break-word;
+	-o-word-break: break-word;
+	-ms-word-break: break-word;
+	word-break: break-word;
 }
 
 .break-word {
-  word-wrap: break-word;
-  word-break: break-word;
+	word-wrap: break-word;
+	word-break: break-word;
 }
 
 .lh-2 {
-  line-height: 2rem;
+	line-height: 2rem;
 }
 
 .t-100-a {
-  transition: all 1s;
-  -webkit-transition: all 1s;
+	transition: all 1s;
+	-webkit-transition: all 1s;
 }
 .t-50-a {
-  transition: all 0.5s;
-  -webkit-transition: all 0.5s;
+	transition: all 0.5s;
+	-webkit-transition: all 0.5s;
 }
 .t-25-a {
-  transition: all 0.25s;
-  -webkit-transition: all 0.25s;
+	transition: all 0.25s;
+	-webkit-transition: all 0.25s;
 }
 .left--12 {
-  left: -12px;
+	left: -12px;
 }
 .right--12 {
-  right: -12px;
+	right: -12px;
 }
 .w6 {
-  width: 6rem;
+	width: 6rem;
 }
 .w11 {
-  width: 11rem;
+	width: 11rem;
 }
 .min-vh-75 {
-  min-height: 75vh;
+	min-height: 75vh;
 }
 
 .pl6 {
-  padding-left: 6rem;
+	padding-left: 6rem;
 }
 .pl11 {
-  padding-left: 11rem;
+	padding-left: 11rem;
 }
 .w2tigrow {
-  width: 3rem;
+	width: 3rem;
 }
 
 /**  custom scrollbar **/
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
-  border-radius: 10px;
-  background-color: #0fa3a3;
+	width: 7px;
+	height: 7px;
+	border-radius: 10px;
+	background-color: #0fa3a3;
 }
 
 ::-webkit-scrollbar-track {
-  border-radius: 10px;
-  background: rgb(196, 240, 240);
-  border: 1px solid #ccc;
+	border-radius: 10px;
+	background: rgb(196, 240, 240);
+	border: 1px solid #ccc;
 }
 
 ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: rgb(13, 189, 189);
-  border: 1px solid #ccc;
+	border-radius: 10px;
+	background: rgb(13, 189, 189);
+	border: 1px solid #ccc;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0fa3a3;
+	background: #0fa3a3;
 }
 
 .ml5-tigrow {
-  margin-left: 5rem;
+	margin-left: 5rem;
 }
 
 @media only screen and (min-width: 30em) {
-  .w-15-ns {
-    width: 15%;
-  }
-  .w-23-ns {
-    width: 23%;
-  }
-  .w-85-ns {
-    width: 85%;
-  }
-  .not-allowed-ns {
-    cursor: not-allowed;
-  }
-  .w6-ns {
-    width: 6rem;
-  }
-  .min-vh-75-ns {
-    min-height: 75vh;
-  }
-  .w11-ns {
-    width: 11rem;
-  }
-  .pl6-ns {
-    padding-left: 6rem;
-  }
-  .pl11-ns {
-    padding-left: 11rem;
-  }
-  .w2tigrow-ns {
-    width: 3rem;
-  }
-  .ml5-tigrow-ns {
-    margin-left: 5rem;
-  }
+	.w-15-ns {
+			width: 15%;
+	}
+	.w-23-ns {
+			width: 23%;
+	}
+	.w-85-ns {
+			width: 85%;
+	}
+	.not-allowed-ns {
+			cursor: not-allowed;
+	}
+	.w6-ns {
+			width: 6rem;
+	}
+	.min-vh-75-ns {
+			min-height: 75vh;
+	}
+	.w11-ns {
+			width: 11rem;
+	}
+	.pl6-ns {
+			padding-left: 6rem;
+	}
+	.pl11-ns {
+			padding-left: 11rem;
+	}
+	.w2tigrow-ns {
+			width: 3rem;
+	}
+	.ml5-tigrow-ns {
+			margin-left: 5rem;
+	}
 }
 @media only screen and (min-width: 30em) and (max-width: 60em) {
-  .w-15-m {
-    width: 15%;
-  }
-  .w-23-m {
-    width: 23%;
-  }
-  .w-85-m {
-    width: 85%;
-  }
-  .not-allowed-m {
-    cursor: not-allowed;
-  }
-  .w6-m {
-    width: 6rem;
-  }
-  .w11-m {
-    width: 11rem;
-  }
-  .min-vh-75-m {
-    min-height: 75vh;
-  }
-  .pl6-m {
-    padding-left: 6rem;
-  }
-  .pl11-m {
-    padding-left: 11rem;
-  }
-  .w2tigrow-m {
-    width: 3rem;
-  }
-  .ml5-tigrow-m {
-    margin-left: 5rem;
-  }
+	.w-15-m {
+			width: 15%;
+	}
+	.w-23-m {
+			width: 23%;
+	}
+	.w-85-m {
+			width: 85%;
+	}
+	.not-allowed-m {
+			cursor: not-allowed;
+	}
+	.w6-m {
+			width: 6rem;
+	}
+	.w11-m {
+			width: 11rem;
+	}
+	.min-vh-75-m {
+			min-height: 75vh;
+	}
+	.pl6-m {
+			padding-left: 6rem;
+	}
+	.pl11-m {
+			padding-left: 11rem;
+	}
+	.w2tigrow-m {
+			width: 3rem;
+	}
+	.ml5-tigrow-m {
+			margin-left: 5rem;
+	}
 }
 @media only screen and (min-width: 60em) {
-  .w-15-l {
-    width: 15%;
-  }
-  .w-23-l {
-    width: 23%;
-  }
-  .w-85-l {
-    width: 85%;
-  }
-  .not-allowed-l {
-    cursor: not-allowed;
-  }
-  .min-vh-75-l {
-    min-height: 75vh;
-  }
-  .w6-l {
-    width: 6rem;
-  }
-  .w11-l {
-    width: 11rem;
-  }
-  .pl6-l {
-    padding-left: 6rem;
-  }
-  .pl11-l {
-    padding-left: 11rem;
-  }
-  .w2tigrow-l {
-    width: 3rem;
-  }
-  .ml5-tigrow-l {
-    margin-left: 5rem;
-  }
+	.w-15-l {
+			width: 15%;
+	}
+	.w-23-l {
+			width: 23%;
+	}
+	.w-85-l {
+			width: 85%;
+	}
+	.not-allowed-l {
+			cursor: not-allowed;
+	}
+	.min-vh-75-l {
+			min-height: 75vh;
+	}
+	.w6-l {
+			width: 6rem;
+	}
+	.w11-l {
+			width: 11rem;
+	}
+	.pl6-l {
+			padding-left: 6rem;
+	}
+	.pl11-l {
+			padding-left: 11rem;
+	}
+	.w2tigrow-l {
+			width: 3rem;
+	}
+	.ml5-tigrow-l {
+			margin-left: 5rem;
+	}
 }
 
 /*************************************/
 .vertical-timeline::before {
-  background: #0fa3a3 !important;
-  z-index: 1;
+	background: #0fa3a3 !important;
+	z-index: 1;
 }
 .vertical-timeline-element-date {
-  font-weight: bold !important;
+	font-weight: bold !important;
 }
 .vertical-timeline--two-columns .vertical-timeline-element-icon {
-  width: 20px !important;
-  height: 20px !important;
-  margin-left: -10px !important;
-  background-color: #0fa3a3 !important;
+	width: 20px !important;
+	height: 20px !important;
+	margin-left: -10px !important;
+	background-color: #0fa3a3 !important;
 }
 .vertical-timeline--two-columns
-  .vertical-timeline-element-content
-  .vertical-timeline-element-date {
-  top: 0px !important;
+	.vertical-timeline-element-content
+	.vertical-timeline-element-date {
+	top: 0px !important;
 }
 .vertical-timeline-element-content {
-  box-shadow: none !important;
-  border: 1px solid #ddd;
-  border-left: 3px solid #0fa3a3;
-  margin-top: 40px;
+	box-shadow: none !important;
+	border: 1px solid #ddd;
+	border-left: 3px solid #0fa3a3;
+	margin-top: 40px;
 }
 .vertical-timeline-element-content-arrow {
-  display: none;
+	display: none;
 }
 
 @media only screen and (max-width: 1169px) {
-  .vertical-timeline--two-columns .vertical-timeline-element-icon {
-    margin-left: 10px !important;
-  }
+	.vertical-timeline--two-columns .vertical-timeline-element-icon {
+			margin-left: 10px !important;
+	}
 }
 .vertical-timeline-element-content p {
-  font-size: 14px !important;
-  line-height: initial !important;
+	font-size: 14px !important;
+	line-height: initial !important;
 }
 
 .birthdatePicker .bp3-input-group .bp3-input {
-  box-shadow: none;
-  font-size: 18px;
-  padding-bottom: 10px;
+	box-shadow: none;
+	font-size: 18px;
+	padding-bottom: 10px;
 }
 .companyCover {
-  height: 340px;
-  background-position: center;
-  background-repeat: no-repeat;
-  object-fit: cover;
+	height: 340px;
+	background-position: center;
+	background-repeat: no-repeat;
+	object-fit: cover;
 }
 
 .companyProfilepicOuter {
-  width: 235px;
-  height: 235px;
+	width: 235px;
+	height: 235px;
 }
 .companyProfilepic {
-  width: 220px;
-  height: 220px;
+	width: 220px;
+	height: 220px;
 }
 .companyProfilepicOuterOuter {
-  margin-top: -120px;
-  margin-left: 50px;
+	margin-top: -120px;
+	margin-left: 50px;
 }
 .addButton {
-  bottom: 5rem;
-  right: 7rem;
-  width: 5rem;
+	bottom: 5rem;
+	right: 7rem;
+	width: 5rem;
 }
 .individualcover {
-  height: 340px;
+	height: 340px;
 }
 .changecompanybutton {
-  font-size: 16px;
+	font-size: 16px;
 }
 .addDepartment {
-  font-size: 15px;
-<<<<<<< HEAD
-<<<<<<< HEAD
+	font-size: 15px;
 }
 .changepass {
-  font-size: 16px;
-=======
->>>>>>> f991604b... add dept font size chnaged
+	font-size: 16px;
 }
 @media only screen and (max-width: 360px) {
-  .displayNone {
-    display: none;
-  }
-  .companyProfilepicOuterOuter {
-    margin-top: -72px;
-    margin-left: 30%;
-    width: 130px;
-    height: 130px;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 12px;
-  }
-  .changepass {
-    font-size: 12px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
+	.displayNone {
+			display: none;
+	}
+	.companyProfilepicOuterOuter {
+			margin-top: -72px;
+			margin-left: 30%;
+			width: 130px;
+			height: 130px;
+	}
+	.companyCoverButton {
+			margin-top: 10px;
+			margin-right: 10px;
+	}
+	.companyProfilepicOuter {
+			width: 130px;
+			height: 130px;
+	}
+	.companyProfilepic {
+			width: 120px;
+			height: 115px;
+	}
+	.companyCover {
+			height: 185px;
+			background-position: center;
+			background-repeat: no-repeat;
+			object-fit: cover;
+	}
+	.addButton {
+			bottom: 5rem;
+			right: 3rem;
+			width: 4rem;
+	}
+	.individualcover {
+			height: 185px;
+	}
+	.changecompanybutton {
+			font-size: 11px;
+	}
+	.addDepartment {
+			font-size: 12px;
+	}
+	.changepass {
+			font-size: 12px;
+	}
+	.addButton {
+			bottom: 5rem;
+			right: 3rem;
+			width: 4rem;
+	}
+	.individualcover {
+			height: 185px;
+	}
 }
 
 @media only screen and (min-width: 361px) and (max-width: 450px) {
-  .displayNone {
-    display: none;
-  }
-  .companyProfilepicOuterOuter {
-    margin-top: -72px;
-    margin-left: 32%;
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 14px;
-  }
-  .changepass {
-    font-size: 14px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
+	.displayNone {
+			display: none;
+	}
+	.companyProfilepicOuterOuter {
+			margin-top: -72px;
+			margin-left: 32%;
+			width: 130px;
+			height: 130px;
+	}
+	.companyProfilepicOuter {
+			width: 130px;
+			height: 130px;
+	}
+	.companyProfilepic {
+			width: 120px;
+			height: 115px;
+	}
+	.companyCover {
+			height: 185px;
+			background-position: center;
+			background-repeat: no-repeat;
+			object-fit: cover;
+	}
+	.companyCoverButton {
+			margin-top: 10px;
+			margin-right: 10px;
+	}
+	.addButton {
+			bottom: 5rem;
+			right: 3rem;
+			width: 4rem;
+	}
+	.individualcover {
+			height: 185px;
+	}
+	.changecompanybutton {
+			font-size: 11px;
+	}
+	.addDepartment {
+			font-size: 14px;
+	}
+	.changepass {
+			font-size: 14px;
+	}
+	.companyProfilepicOuter {
+			width: 130px;
+			height: 130px;
+	}
+	.companyProfilepic {
+			width: 120px;
+			height: 115px;
+	}
+	.companyCover {
+			height: 185px;
+			background-position: center;
+			background-repeat: no-repeat;
+			object-fit: cover;
+	}
+	.companyCoverButton {
+			margin-top: 10px;
+			margin-right: 10px;
+	}
+	.addButton {
+			bottom: 5rem;
+			right: 3rem;
+			width: 4rem;
+	}
+	.individualcover {
+			height: 185px;
+	}
 }
 
 .companyCoverButton{
-  margin-top: 265px;
-  margin-right: 45px;
+	margin-top: 265px;
+	margin-right: 45px;
 }
 
 .companyProfilepicOuter {
-  width: 235px;
-  height: 235px;
+	width: 235px;
+	height: 235px;
 }
 .companyProfilepic {
-  width: 220px;
-  height: 220px;
+	width: 220px;
+	height: 220px;
 }
 .companyProfilepicOuterOuter {
-  margin-top: -120px;
-  margin-left: 50px;
+	margin-top: -120px;
+	margin-left: 50px;
 }
 .addButton {
-  bottom: 5rem;
-  right: 7rem;
-  width: 5rem;
+	bottom: 5rem;
+	right: 7rem;
+	width: 5rem;
 }
 .individualcover {
-  height: 340px;
+	height: 340px;
 }
 .changecompanybutton {
-  font-size: 16px;
+	font-size: 16px;
 }
 .addDepartment {
-  font-size: 16px;
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
+	font-size: 16px;
 }
 .changepass {
-  font-size: 16px;
+	font-size: 16px;
 }
 @media only screen and (max-width: 360px) {
-  .displayNone {
-    display: none;
-  }
-  .companyProfilepicOuterOuter {
-    margin-top: -72px;
-    margin-left: 30%;
-    width: 130px;
-    height: 130px;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 12px;
-  }
-  .changepass {
-    font-size: 12px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
+	.displayNone {
+			display: none;
+	}
+	.companyProfilepicOuterOuter {
+			margin-top: -72px;
+			margin-left: 30%;
+			width: 130px;
+			height: 130px;
+	}
+	.companyCoverButton {
+			margin-top: 10px;
+			margin-right: 10px;
+	}
+	.companyProfilepicOuter {
+			width: 130px;
+			height: 130px;
+	}
+	.companyProfilepic {
+			width: 120px;
+			height: 115px;
+	}
+	.companyCover {
+			height: 185px;
+			background-position: center;
+			background-repeat: no-repeat;
+			object-fit: cover;
+	}
+	.addButton {
+			bottom: 5rem;
+			right: 3rem;
+			width: 4rem;
+	}
+	.individualcover {
+			height: 185px;
+	}
+	.changecompanybutton {
+			font-size: 11px;
+	}
+	.addDepartment {
+			font-size: 12px;
+	}
+	.changepass {
+			font-size: 12px;
+	}
+	.addButton {
+			bottom: 5rem;
+			right: 3rem;
+			width: 4rem;
+	}
+	.individualcover {
+			height: 185px;
+	}
 }
 
 @media only screen and (min-width: 361px) and (max-width: 450px) {
-  .displayNone {
-    display: none;
-  }
-  .companyProfilepicOuterOuter {
-    margin-top: -72px;
-    margin-left: 32%;
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 14px;
-  }
-  .changepass {
-    font-size: 14px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-}
-
-.companyCoverButton{
-  margin-top: 265px;
-  margin-right: 45px;
-}
-
-.companyProfilepicOuter {
-  width: 235px;
-  height: 235px;
-}
-.companyProfilepic {
-  width: 220px;
-  height: 220px;
-}
-.companyProfilepicOuterOuter {
-  margin-top: -120px;
-  margin-left: 50px;
-}
-.addButton {
-  bottom: 5rem;
-  right: 7rem;
-  width: 5rem;
-}
-.individualcover {
-  height: 340px;
-}
-.changecompanybutton {
-  font-size: 16px;
-}
-.addDepartment {
-  font-size: 16px;
-}
-.changepass {
-  font-size: 16px;
-}
-@media only screen and (max-width: 360px) {
-  .displayNone {
-    display: none;
-  }
-  .companyProfilepicOuterOuter {
-    margin-top: -72px;
-    margin-left: 30%;
-    width: 130px;
-    height: 130px;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 12px;
-  }
-  .changepass {
-    font-size: 12px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 12px;
-  }
-  .changepass {
-    font-size: 12px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-}
-
-@media only screen and (min-width: 361px) and (max-width: 450px) {
-  .displayNone {
-    display: none;
-  }
-  .companyProfilepicOuterOuter {
-    margin-top: -72px;
-    margin-left: 32%;
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 14px;
-  }
-  .changepass {
-    font-size: 14px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
-  .changecompanybutton {
-    font-size: 11px;
-  }
-  .addDepartment {
-    font-size: 14px;
-  }
-  .changepass {
-    font-size: 14px;
-  }
-  .companyProfilepicOuter {
-    width: 130px;
-    height: 130px;
-  }
-  .companyProfilepic {
-    width: 120px;
-    height: 115px;
-  }
-  .companyCover {
-    height: 185px;
-    background-position: center;
-    background-repeat: no-repeat;
-    object-fit: cover;
-  }
-  .companyCoverButton {
-    margin-top: 10px;
-    margin-right: 10px;
-  }
-  .addButton {
-    bottom: 5rem;
-    right: 3rem;
-    width: 4rem;
-  }
-  .individualcover {
-    height: 185px;
-  }
+	.displayNone {
+			display: none;
+	}
+	.companyProfilepicOuterOuter {
+			margin-top: -72px;
+			margin-left: 32%;
+			width: 130px;
+			height: 130px;
+	}
+	.companyProfilepicOuter {
+			width: 130px;
+			height: 130px;
+	}
+	.companyProfilepic {
+			width: 120px;
+			height: 115px;
+	}
+	.companyCover {
+			height: 185px;
+			background-position: center;
+			background-repeat: no-repeat;
+			object-fit: cover;
+	}
+	.companyCoverButton {
+			margin-top: 10px;
+			margin-right: 10px;
+	}
+	.addButton {
+			bottom: 5rem;
+			right: 3rem;
+			width: 4rem;
+	}
+	.individualcover {
+			height: 185px;
+	}
+	.changecompanybutton {
+			font-size: 11px;
+	}
+	.addDepartment {
+			font-size: 14px;
+	}
+	.changepass {
+			font-size: 14px;
+	}
+	.companyProfilepicOuter {
+			width: 130px;
+			height: 130px;
+	}
+	.companyProfilepic {
+			width: 120px;
+			height: 115px;
+	}
+	.companyCover {
+			height: 185px;
+			background-position: center;
+			background-repeat: no-repeat;
+			object-fit: cover;
+	}
+	.companyCoverButton {
+			margin-top: 10px;
+			margin-right: 10px;
+	}
+	.addButton {
+			bottom: 5rem;
+			right: 3rem;
+			width: 4rem;
+	}
+	.individualcover {
+			height: 185px;
+	}
 }

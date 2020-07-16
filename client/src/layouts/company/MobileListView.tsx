@@ -48,30 +48,10 @@ export const ListViewComponent = (
     <>
       <div>
         <div style={{ backgroundColor: '#3F61C5' }}>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d06346b0... code style issue fixed
-=======
->>>>>>> 4e99f05f... code style issue fixed
           <Icon
             icon="delete"
             iconSize={20}
             className="white ma3 fr"
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          <Icon icon="delete" iconSize={20} className="white ma3 fr"
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
->>>>>>> d06346b0... code style issue fixed
-=======
-          <Icon icon="delete" iconSize={20} className="white ma3 fr"
->>>>>>> 05623007... mobile responsive for project preface
-=======
->>>>>>> 4e99f05f... code style issue fixed
             onClick={() => props.setShowDialog(false)}
           />
           <Button
@@ -79,25 +59,7 @@ export const ListViewComponent = (
             onClick={() => {
               props.history.push(`/${props.user.name}`);
               props.setShowDialog(false);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             }}
-=======
-            }
-            }
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
-            }}
->>>>>>> d06346b0... code style issue fixed
-=======
-            }
-            }
->>>>>>> 05623007... mobile responsive for project preface
-=======
-            }}
->>>>>>> 4e99f05f... code style issue fixed
           >
             <div className="dtc w2">
               <img
@@ -109,44 +71,12 @@ export const ListViewComponent = (
                 className="db w2 h2 br-100 ba b--white-90 "
               />
             </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
             <div className="dtc v-mid pl3 pt2">
-=======
-            <div className="dtc v-mid pl3">
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
-            <div className="dtc v-mid pl3 pt2">
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-            <div className="dtc v-mid pl3">
->>>>>>> 05623007... mobile responsive for project preface
-=======
-            <div className="dtc v-mid pl3 pt2">
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
               <h1 className="f6 white ma0">
                 {`${props.user.firstName} ${props.user.lastName}`}
               </h1>
               <h1 className="f7 white ma0 fw4 mb4">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                 {props.user.position}
-=======
-                {props.user.position} 
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
-                {props.user.position}
->>>>>>> d06346b0... code style issue fixed
-=======
-                {props.user.position} 
->>>>>>> 05623007... mobile responsive for project preface
-=======
-                {props.user.position}
->>>>>>> 4e99f05f... code style issue fixed
               </h1>
             </div>
           </Button>
@@ -159,22 +89,12 @@ export const ListViewComponent = (
           to={`/${props.user.name}/settings`}
           onClick={() => props.setShowDialog(false)}
         >
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d06346b0... code style issue fixed
-=======
->>>>>>> 4e99f05f... code style issue fixed
           <Icon
             icon="cog"
             className="pr3"
             style={{ color: '#787e8d' }}
           />
           Profile Settings
-<<<<<<< HEAD
-<<<<<<< HEAD
         </NavLink>
         <NavLink
           exact
@@ -194,53 +114,6 @@ export const ListViewComponent = (
         <Button
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
           onClick={(e: any) => props.logoutAction(props.history)}
-=======
-          <Icon icon="cog" className="pr3" style={{ color: '#787e8d' }} />
-            Profile Settings
-        </NavLink>
-        <Button
-          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
-          onClick={(e: any) =>
-            props.logoutAction(props.history)
-          }
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
-        </NavLink>
-        <NavLink
-          exact
-          className="w-100 flex items-center nowrap ma2 hover-bg-black-10 pa2"
-          activeStyle={{ background: '#3F61C5', color: 'white' }}
-          style={{ color: 'black' }}
-          to={`/${props.user.name}/home`}
-          onClick={() => props.setShowDialog(false)}
-        >
-          <Icon
-            icon="home"
-            className="pr3"
-            style={{ color: '#787e8d' }}
-          />
-          Home
-        </NavLink>
-        <Button
-          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
-          onClick={(e: any) => props.logoutAction(props.history)}
->>>>>>> d06346b0... code style issue fixed
-=======
-          <Icon icon="cog" className="pr3" style={{ color: '#787e8d' }} />
-            Profile Settings
-        </NavLink>
-        <Button
-          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
-          onClick={(e: any) =>
-            props.logoutAction(props.history)
-          }
->>>>>>> 05623007... mobile responsive for project preface
-=======
-        </NavLink>
-        <Button
-          className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
-          onClick={(e: any) => props.logoutAction(props.history)}
->>>>>>> 4e99f05f... code style issue fixed
           icon="log-in"
           alignText="left"
         >
@@ -264,39 +137,7 @@ export const ListViewComponent = (
                       props.currentCompany === c.company._id
                         ? 'bg-black-10'
                         : ''
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     } mt1 pointer bp3-popover-dismiss`}
-=======
-                      } mt1 pointer bp3-popover-dismiss`}
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
-                    } mt1 pointer bp3-popover-dismiss`}
->>>>>>> d06346b0... code style issue fixed
-=======
-                      } mt1 pointer bp3-popover-dismiss`}
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-                    } mt1 pointer bp3-popover-dismiss`}
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-                      } mt1 pointer bp3-popover-dismiss`}
->>>>>>> 05623007... mobile responsive for project preface
-=======
-                    } mt1 pointer bp3-popover-dismiss`}
->>>>>>> 4e99f05f... code style issue fixed
-=======
-                      } mt1 pointer bp3-popover-dismiss`}
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
-                    } mt1 pointer bp3-popover-dismiss`}
->>>>>>> a26cd117... Release/v2.2.0 (#183)
                     onClick={async () => {
                       props.getNotifications(c.company._id);
                       const response = (await props.getCompanyDetails(
@@ -304,98 +145,23 @@ export const ListViewComponent = (
                         props.history,
                       )) as any;
                       if (response.status === 200) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-                        dispatch({
-                          type: CLEAR_PROJECT_REDUCER_STATE,
-                        });
-                        props.history.push(
-                          `/company/${
-<<<<<<< HEAD
-<<<<<<< HEAD
-                            (response as any).data.company.name
-<<<<<<< HEAD
-=======
-                        dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
-                        props.history.push(
-                          `/company/${
-                          (response as any).data.company.name
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
-                        dispatch({
-                          type: CLEAR_PROJECT_REDUCER_STATE,
-                        });
-                        props.history.push(
-                          `/company/${
-<<<<<<< HEAD
-                            (response as any).data.company.name
->>>>>>> d06346b0... code style issue fixed
-=======
-                          (response as any).data.company.name
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-                        dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
-                        props.history.push(
-                          `/company/${
-                          (response as any).data.company.name
->>>>>>> 05623007... mobile responsive for project preface
-=======
                         dispatch({
                           type: CLEAR_PROJECT_REDUCER_STATE,
                         });
                         props.history.push(
                           `/company/${
                             (response as any).data.company.name
->>>>>>> 4e99f05f... code style issue fixed
-=======
-                          (response as any).data.company.name
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
-                            (response as any).data.company.name
->>>>>>> a26cd117... Release/v2.2.0 (#183)
                           }/dashboard`,
                         );
                       }
                     }}
                   >
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                     <div className="flex justify-between">
                       <img
                         src={
                           c.company.logo
                             ? c.company.logo
                             : CompanyIcon
-=======
-                    <div className="flex justify-between">
-                      <img
-                        src={
-<<<<<<< HEAD
-                          c.company.logo ? c.company.logo : CompanyIcon
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-                          c.company.logo
-                            ? c.company.logo
-                            : CompanyIcon
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-                    <div className="flex justify-between">
-                      <img
-                        src={
-<<<<<<< HEAD
-                          c.company.logo ? c.company.logo : CompanyIcon
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
-                          c.company.logo
-                            ? c.company.logo
-                            : CompanyIcon
->>>>>>> a26cd117... Release/v2.2.0 (#183)
                         }
                         className="v-mid dib br-100 w-10"
                         alt="user"
@@ -411,36 +177,6 @@ export const ListViewComponent = (
                         </h1>
                         <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
                       </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 05623007... mobile responsive for project preface
-                    <img
-                      src={
-                        c.company.logo ? c.company.logo : CompanyIcon
-                      }
-                      className="v-mid dib br-100"
-                      alt="user"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        objectFit: 'cover',
-                      }}
-                    />
-                    <div className="dtc v-mid pl3">
-                      <h1 className="f7 f6-ns fw4 lh-title black mv0 ws-break">
-                        {c.company.name}{' '}
-                      </h1>
-                      <h2 className="f6 fw3 mt0 mb0 black-60 ws-break">{`Role: ${c.role}`}</h2>
-<<<<<<< HEAD
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
->>>>>>> 05623007... mobile responsive for project preface
-=======
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
                     </div>
                   </article>
                 ),
@@ -451,27 +187,12 @@ export const ListViewComponent = (
           onClick={() => {
             setShowButton(true);
             // props.setShowDialog(!props.showDialog);
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
           }}
-=======
-          }
-          }
->>>>>>> 05623007... mobile responsive for project preface
-=======
-          }}
->>>>>>> 4e99f05f... code style issue fixed
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
           Create Company
         </button>
       </div>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 4e99f05f... code style issue fixed
       {showButton && (
         <Dialog
           onClose={() => setShowButton(!showButton)}
@@ -484,55 +205,6 @@ export const ListViewComponent = (
           </div>
         </Dialog>
       )}
-<<<<<<< HEAD
-=======
-          }
-          }
-=======
-          }}
->>>>>>> d06346b0... code style issue fixed
-          className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
-        >
-          Create Company
-        </button>
-      </div>
-<<<<<<< HEAD
-=======
->>>>>>> 05623007... mobile responsive for project preface
-      {
-        showButton && (
-          <Dialog
-            onClose={() => setShowButton(!showButton)}
-            isOpen={showButton}
-            style={{ background: '#fff' }}
-            canOutsideClickClose={false}
-          >
-            <div>
-              <CompanySignupForm setShowDialog={props.setShowDialog} />
-            </div>
-          </Dialog>
-        )
-      }
-<<<<<<< HEAD
->>>>>>> b9e80fb9... mobile responsive for project preface
-=======
-      {showButton && (
-        <Dialog
-          onClose={() => setShowButton(!showButton)}
-          isOpen={showButton}
-          style={{ background: '#fff' }}
-          canOutsideClickClose={false}
-        >
-          <div>
-            <CompanySignupForm setShowDialog={props.setShowDialog} />
-          </div>
-        </Dialog>
-      )}
->>>>>>> d06346b0... code style issue fixed
-=======
->>>>>>> 05623007... mobile responsive for project preface
-=======
->>>>>>> 4e99f05f... code style issue fixed
     </>
   );
 };

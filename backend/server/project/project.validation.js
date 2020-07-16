@@ -38,7 +38,6 @@ module.exports = {
   createNewProjectForCompany: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      type: schema.type.required(),
       concernedAdmin: Joi.object().keys({
         memberId: schema.memberId.required(),
         accountId: idSchema.id,

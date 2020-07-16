@@ -12,8 +12,6 @@ const {
 
 const router = express.Router();
 
-router.use('/', subscriptionExpireCheck);
-
 router
   .route('/')
 

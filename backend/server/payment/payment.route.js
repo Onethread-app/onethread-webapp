@@ -17,16 +17,10 @@ router
     paymentCtrl.paymentIntent,
   );
 
-<<<<<<< HEAD
-  router
+router
   .route('/portwallet/initiate')
-  .post(
-    authorization,
-    paymentCtrl.initiateInvoice,
-  );
+  .post(authorization, paymentCtrl.initiateInvoice);
 
-=======
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
 router
   .route('/:companyId')
   .post(
@@ -40,7 +34,5 @@ router
     companyCtrl.authorizeUser('all', 'superAdmin'),
     paymentCtrl.list,
   );
-
-
 
 module.exports = router;

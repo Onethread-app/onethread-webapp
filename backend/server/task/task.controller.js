@@ -54,56 +54,11 @@ const create = async (req, res, next) => {
     const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
     createCompanyRoleNotification(
       {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d0b80317... ready for pre-release v2.3.1
         _id: column.boardId.project.company,
         project: column.boardId.project._id,
         board: column.boardId,
         task: createdTask._id,
       },
-<<<<<<< HEAD
-=======
-=======
->>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
-         _id: column.boardId.project.company ,
-         project: column.boardId.project._id,
-         board: column.boardId,
-         task: createdTask._id,
-
-        },
-<<<<<<< HEAD
->>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
-=======
->>>>>>> d0b80317... ready for pre-release v2.3.1
-=======
->>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
-=======
-        _id: column.boardId.project.company ,
-        project: column.boardId.project._id,
-        board: column.boardId,
-        task: createdTask._id,
-       },
->>>>>>> 6d92f22e... Dev (#202)
-=======
-        _id: column.boardId.project.company,
-        project: column.boardId.project._id,
-        board: column.boardId,
-        task: createdTask._id,
-      },
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
-        _id: column.boardId.project.company,
-        project: column.boardId.project._id,
-        board: column.boardId,
-        task: createdTask._id,
-      },
->>>>>>> c447d3e7... fix: account field add into the collection & refactor some response
       {
         _id: req.user._id,
         name: req.user.name,
@@ -348,54 +303,11 @@ const dragTask = async (req, res, next) => {
     const text = `${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
     createCompanyRoleNotification(
       {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         _id: column.boardId.project.company,
         project: column.boardId.project._id,
         board: column.boardId,
         task: task._id,
       },
-=======
-        _id: column.boardId.project.company ,
-        project: column.boardId.project._id,
-        board: column.boardId,
-        task: task._id,
-
-       },
->>>>>>> 7ef09ef2... Wip/multicompmany (#180) (#184)
-=======
-        _id: column.boardId.project.company,
-        project: column.boardId.project._id,
-        board: column.boardId,
-        task: task._id,
-<<<<<<< HEAD
-      },
->>>>>>> d0b80317... ready for pre-release v2.3.1
-=======
-
-       },
->>>>>>> 0db3de3c... Feat/notification (#198)
-=======
-        _id: column.boardId.project.company ,
-=======
-        _id: column.boardId.project.company,
->>>>>>> 6d92f22e... Dev (#202)
-        project: column.boardId.project._id,
-        board: column.boardId,
-        task: task._id,
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-       },
->>>>>>> fb2e0789... Wip/multicompmany (#180) (#184)
-=======
-      },
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
-      },
->>>>>>> c447d3e7... fix: account field add into the collection & refactor some response
       {
         _id: req.user._id,
         name: req.user.name,

@@ -65,29 +65,9 @@ const ProjectSettingsPageComponent = (props: any) => {
         </div>
       </MobileView>
       <div className="bg-white pa5-ns ph3 mb6">
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
         {isMobileOnly ? undefined : (
           <h3 className="f3 ma0">Project Settings</h3>
         )}
-=======
-        {isMobileOnly ? undefined : <h3 className="f3 ma0">Project Settings</h3>}
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
-        {isMobileOnly ? undefined : (
-          <h3 className="f3 ma0">Project Settings</h3>
-        )}
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-        {isMobileOnly ? undefined : <h3 className="f3 ma0">Project Settings</h3>}
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
-        {isMobileOnly ? undefined : (
-          <h3 className="f3 ma0">Project Settings</h3>
-        )}
->>>>>>> a26cd117... Release/v2.2.0 (#183)
         <h3 className="f5 mv4">Project Moderator</h3>
         <Tabs id="TabsExample" vertical={true}>
           <Tab

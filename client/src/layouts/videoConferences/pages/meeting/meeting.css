@@ -1,141 +1,52 @@
 .meeting.wrapper {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  background: #3a3b3c;
-=======
-  background: blueviolet;
->>>>>>> d6893708... implemented video conferences using agora (#228)
-=======
-  background: blueviolet;
->>>>>>> 1059a963... implemented video conferences using agora
-=======
-  background: #3a3b3c;
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
-  background: #3a3b3c;
->>>>>>> 6f3b6bfc... Dev (#257)
-  height: 100%;
-  color: #fff;
+	background: #3a3b3c;
+	height: 100%;
+	color: #fff;
 }
 
 video {
-  max-width: unset;
+	max-width: unset;
 }
 
 .meeting .ag-header {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  padding: 20px 30px;
->>>>>>> d6893708... implemented video conferences using agora (#228)
-=======
-  padding: 20px 30px;
->>>>>>> 1059a963... implemented video conferences using agora
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 6f3b6bfc... Dev (#257)
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
 }
 
 .ag-header-lead {
-  font-size: 24px;
-  line-height: 35px;
+	font-size: 24px;
+	line-height: 35px;
 }
 
 .meeting .ag-footer {
-  padding: 0 30px;
-  display: flex;
-  align-items: center;
+	padding: 0 30px;
+	display: flex;
+	align-items: center;
 }
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> 1059a963... implemented video conferences using agora
-.meeting .ag-main {
-  position: relative;
-  padding: 10px;
-}
-
-<<<<<<< HEAD
->>>>>>> d6893708... implemented video conferences using agora (#228)
-=======
->>>>>>> 1059a963... implemented video conferences using agora
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 6f3b6bfc... Dev (#257)
 .meeting .ag-footer :first-child {
-  margin-right: 80px;
+	margin-right: 80px;
 }
 
 .header-logo {
-  width: 60px;
-  height: 35px;
-  margin-right: 12px;
+	width: 60px;
+	height: 35px;
+	margin-right: 12px;
 }
 
 .ag-container {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 6f3b6bfc... Dev (#257)
-  height: calc(100vh - 70px);
+	height: calc(100vh - 70px);
 }
 
 .invitation-frame {
-<<<<<<< HEAD
-<<<<<<< HEAD
-  margin: 0 auto;
-  width: 300px;
-  padding: 100px 0;
+	margin: 0 auto;
+	width: 300px;
+	padding: 100px 0;
 }
 
 .invite-btn {
-  height: 30px;
-  width: 300px;
-  font-size: 16px;
-=======
-=======
->>>>>>> 1059a963... implemented video conferences using agora
-  width: 1050px;
-  height: 85vh;
-  margin: 0 auto;
-  background: orange;
-  padding: 10px;
-<<<<<<< HEAD
->>>>>>> d6893708... implemented video conferences using agora (#228)
-=======
->>>>>>> 1059a963... implemented video conferences using agora
-=======
-  margin: 0 auto;
-=======
-  margin: 0 auto;
->>>>>>> 6f3b6bfc... Dev (#257)
-  width: 300px;
-  padding: 100px 0;
-}
-
-.invite-btn {
-  height: 30px;
-  width: 300px;
-  font-size: 16px;
-<<<<<<< HEAD
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 6f3b6bfc... Dev (#257)
+	height: 30px;
+	width: 300px;
+	font-size: 16px;
 }

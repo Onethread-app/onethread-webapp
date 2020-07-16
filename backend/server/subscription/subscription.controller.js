@@ -1,11 +1,4 @@
-<<<<<<< HEAD
 const { Subscription } = require('./subscription.model');
-=======
-const {
-  Subscription,
-  SubscriptionHistory,
-} = require('./subscription.model');
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
 
 const Plan = require('../plan/plan.model');
 const logger = require('../../config/winston.js');
@@ -17,12 +10,8 @@ const {
 
 const createSubscriptionForCompany = async (req, res, next) => {
   try {
-<<<<<<< HEAD
     const companyId = req.headers.companyid;
     const { plan } = req.body;
-=======
-    const { companyId, plan } = req.body;
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
     const planValidation = await Plan.findById({ _id: plan }).select(
       'validity',
     );
@@ -35,14 +24,6 @@ const createSubscriptionForCompany = async (req, res, next) => {
     });
     await subscription.save();
     logger.info(`Subscription created for ${companyId}`);
-<<<<<<< HEAD
-=======
-    await SubscriptionHistory.create({
-      subscription: subscription._id,
-      plan: plan,
-    });
-    logger.info(`Subscription History created for ${companyId}`);
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
     return sendJSONresponse(res, 201, {
       message: `New Subscription created`,
       subscription: subscription._id,
@@ -115,17 +96,10 @@ const renewSubscription = async (req, res, next) => {
 const subscriptionExpireCheck = () => {
   return async (req, res, next) => {
     try {
-<<<<<<< HEAD
       const subscribe = await Subscription.find({
         company: req.headers.companyid,
         isActive: true,
       }).sort({ _id: -1 });
-=======
-      const subscribe = await Subscription.findOne({
-        company: req.params.companyId,
-        isActive: true,
-      });
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
       if (!subscribe) {
         return sendErrorResponse(res, 404, 'CompanyIdNotFoundError', {
           message: `companyId not found`,
@@ -133,13 +107,8 @@ const subscriptionExpireCheck = () => {
       }
       let today = new Date().getTime();
 
-<<<<<<< HEAD
       if (subscribe[0].expireAt > today) {
         req.subscribe = subscribe[0].expireAt;
-=======
-      if (subscribe.expireAt > today) {
-        req.subscribe = subscribe.expireAt;
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
         next();
       } else {
         return sendErrorResponse(

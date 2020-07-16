@@ -8,14 +8,7 @@ export interface IMember {
   concernedAdmin: {
     firstName: string;
     lastName: string;
-<<<<<<< HEAD
-<<<<<<< HEAD
     name: string;
-=======
->>>>>>> 64cb9964... Wip/home page skeleton (#235)
-=======
-    name: string;
->>>>>>> 945955c5... project list filter, mobile responsive done (#248)
     _id: string;
   };
   name: string;
@@ -38,25 +31,9 @@ export interface IProject {
 export interface IPendingProject {
   _id: string;
   project: IProject;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e5e8ab62... Feature/role access (#187)
-=======
->>>>>>> 380328e7... Feature/role access (#187)
   size: string;
   company: ICompany;
   associate: string;
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  company: ICompany;
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
 }
 
 export interface ProjectModel {
@@ -100,33 +77,12 @@ const initialState = {
     outline: '',
   },
   teams: [],
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   projectAssociates: [],
-=======
-  associates: [],
->>>>>>> c885f026... add associates in the project (#19)
-=======
-  projectAssociates: [],
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-  projectAssociates: [],
->>>>>>> 6d92f22e... Dev (#202)
   pid: '',
   projectRole: {},
   projectFileOpen: false,
-<<<<<<< HEAD
-<<<<<<< HEAD
   projectList: [],
   error: ''
-=======
-  projectList: []
->>>>>>> 64cb9964... Wip/home page skeleton (#235)
-=======
-  projectList: [],
-  error: ''
->>>>>>> 353e5819... console removed
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -173,37 +129,10 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         teams: action.payload,
       };
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     case PROJECT.PROJECT_GET_ASSOCIATES:
       return {
         ...state,
         projectAssociates: action.payload,
-=======
-      case PROJECT.PROJECT_GET_ASSOCIATES:
-=======
-    case PROJECT.PROJECT_GET_ASSOCIATES:
->>>>>>> d06346b0... code style issue fixed
-=======
-      case PROJECT.PROJECT_GET_ASSOCIATES:
->>>>>>> f4601c6e... add associates in the project (#19)
-=======
-    case PROJECT.PROJECT_GET_ASSOCIATES:
->>>>>>> 4e99f05f... code style issue fixed
-      return {
-        ...state,
-<<<<<<< HEAD
-<<<<<<< HEAD
-        associates: action.payload,
->>>>>>> c885f026... add associates in the project (#19)
-=======
-        projectAssociates: action.payload,
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-        projectAssociates: action.payload,
->>>>>>> 6d92f22e... Dev (#202)
       };
     case PROJECT.PROJECT_GET_ROLES:
       return {
@@ -239,20 +168,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
             ...state,
             projectList: [],
           };
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 353e5819... console removed
       case PROJECT.PROJECT_ERROR:
         return {
             ...state,
             error: action.payload,
           };
-<<<<<<< HEAD
-=======
->>>>>>> 64cb9964... Wip/home page skeleton (#235)
-=======
->>>>>>> 353e5819... console removed
     default:
       return state;
   }

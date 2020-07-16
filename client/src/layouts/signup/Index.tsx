@@ -167,176 +167,42 @@ export const SignUpPageComponent = (
                             )}
                           />
                         </div>
-
-                      {/* <div className={`flex justify-content`}>
-                        <div style={{ width: '90px' }}>
-                          <Field<string>
-                            name="birthDate"
-                            validate={required}
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                }`}
-                              >
-                                <ReactFlagsSelect
-                                  onSelect={onSelectFlag}
-                                  defaultCountry="BD"
-                                  showSelectedLabel={false}
-                                  selectedSize={20}
-                                  // optionsSize={14}
-                                />
-                              </div>
-                            )}
-                          />
-                        </div>
-
-                        <div style={{ width: '50px' }}>
-                          <Field<string>
-                            name="birthDate"
-                            validate={required}
-                            render={({ input, meta }) => (
-                              <div
-                                className={` ${
-                                  checkError(meta)
-                                    ? 'mb3-ns mb2'
-                                    : 'mb4-ns mb3'
-                                }`}
-                              >
-                                <div
-                                  className={`flex bw1 pb1 br0 bb ${
+                        <Field<string>
+                          name="lastName"
+                          validate={composeValidators(
+                            required,
+                            maxValue(32),
+                          )}
+                          render={({ input, meta }) => (
+                            <div className="ml3">
+                              <div>
+                                <InputGroupFieldWithError
+                                  id="lastName"
+                                  className={`bw1 pb2 br0 bb ${
                                     checkError(meta)
                                       ? 'b--red'
                                       : 'b--lightBlue'
                                   }`}
+                                  value={input.value}
                                   onChange={input.onChange}
-                                  value={countryCode}
-                                  readOnly={true}
                                   style={{
                                     boxShadow: 'none',
-                                    fontSize: '12px',
+                                    fontSize: '18px',
                                   }}
+                                  placeHolder="Last Name"
+                                  error={
+                                    checkError(meta) &&
+                                    (meta.error || meta.submitError)
+                                  }
                                 />
                               </div>
-                            )}
-                          />
-                        </div>
-
-                        <div>
-                          <div>
-                            <Field<string>
-                              name="countryCode"
-                              render={({ input, meta }) => (
-                                <div
-                                  className={` ${
-                                    checkError(meta) ? 'mb3-ns mb2' : 'mb4-ns mb3'
-                                    }`}
-                                >
-                                  <InputGroupFieldWithError
-                                    id="email"
-                                    className={`bw1 pb2 br0 bb ${
-                                      checkError(meta)
-                                        ? 'b--red'
-                                        : 'b--lightBlue'
-                                      }`}
-                                    value={input.value}
-                                    onChange={input.onChange}
-                                    leftIcon={
-                                      <span className="bp3-icon">
-                                        <img
-                                          src={emailIcon}
-                                          width="20px"
-                                          height="20px"
-                                          color="#0fa3a3"
-                                        />
-                                      </span>
-                                    }
-                                    rightElement={
-                                      <span
-                                        className="bp3-icon"
-                                        style={{
-                                          paddingTop: '10px',
-                                          paddingRight: '5px',
-                                        }}
-                                      >
-                                        <img
-                                          src={greyLockIcon}
-                                          width="15px"
-                                          height="15px"
-                                          color="#0fa3a3"
-                                        />
-                                      </span>
-                                    }
-                                    style={{
-                                      boxShadow: 'none',
-                                      fontSize: '18px',
-                                      paddingLeft: '40px',
-                                    }}
-                                    placeHolder="Contact Number"
-                                    keypress={(e) => {
-                                      if (
-                                        e.which < 48 ||
-                                        e.which > 57
-                                      ) {
-                                        e.preventDefault();
-                                      }
-                                    }}
-                                  />
-                                </div>
-                              )}
-                            />
-                          </div>
-
-                          <div className="ml3 ml1-m flex-auto">
-                            <div className="w-100">
-                              <Field<string>
-                                name="contactNo"
-                                validate={composeValidators(
-                                  required,
-                                  phoneNoValidation,
-                                )}
-                                render={({ input, meta }) => (
-                                  <div
-                                    className={` ${
-                                      checkError(meta) ? 'mb3-ns mb2' : 'mb4-ns mb3'
-                                      }`}
-                                  >
-                                    <InputGroupFieldWithError
-                                      id="contactNo"
-                                      className={`bw1 pb2 br0 bb ${
-                                        checkError(meta)
-                                          ? 'b--red'
-                                          : 'b--lightBlue'
-                                        }`}
-                                      value={input.value}
-                                      onChange={input.onChange}
-                                      style={{
-                                        boxShadow: 'none',
-                                        fontSize: '18px',
-                                      }}
-                                      placeHolder="Contact Number"
-                                      keypress={(e) => {
-                                        if (
-                                          e.which < 48 ||
-                                          e.which > 57
-                                        ) {
-                                          e.preventDefault();
-                                        }
-                                      }}
-                                      error={
-                                        checkError(meta) &&
-                                        (meta.error || meta.submitError)
-                                      }
-                                    />
-                                  </div>
-                                )}
-                              />
                             </div>
-                          </div>
-                        </div>
-                        <div>
+                          )}
+                        />
+                      </div>
+
+                      {/* <div className={`flex justify-content`}>
+                        <div style={{ width: '90px' }}>
                           <Field<string>
                             name="countryCode"
                             render={({ input, meta }) => (

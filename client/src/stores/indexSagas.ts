@@ -3,21 +3,8 @@ import getAllProject from './project/sagas/getProjectSaga';
 import associateSaga from './associate/associateSaga';
 import roomSaga from './room/roomSaga';
 import notificationSaga from './notifications/notificationSaga';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import subscriptionSaga from './subscriptionBilling/subscriptionSaga';
 import videoConferencesSaga from './videoConferences/saga';
-<<<<<<< HEAD
-=======
->>>>>>> 0db3de3c... Feat/notification (#198)
-=======
->>>>>>> 6d92f22e... Dev (#202)
-=======
-import subscriptionSaga from './subscriptionBilling/subscriptionSaga';
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
->>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 
 export default function* rootSaga() {
   yield all([
@@ -25,21 +12,7 @@ export default function* rootSaga() {
     associateSaga(),
     roomSaga(),
     notificationSaga(),
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     subscriptionSaga(),
     videoConferencesSaga(),
-=======
->>>>>>> 0db3de3c... Feat/notification (#198)
-=======
->>>>>>> 6d92f22e... Dev (#202)
-=======
-    subscriptionSaga(),
-<<<<<<< HEAD
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
-    videoConferencesSaga(),
->>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
   ]);
 }

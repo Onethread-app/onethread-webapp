@@ -1,14 +1,4 @@
 import React, { useState, useEffect } from 'react';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-// import Select from 'react-select';
->>>>>>> c885f026... add associates in the project (#19)
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
 import {
   SuggestField,
   ItemEntityProps,
@@ -18,25 +8,9 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { Button, Tag } from '@blueprintjs/core';
 import { addProjectAssociate } from 'stores/project/Actions';
 import { tigrowApi } from 'config';
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 import { ICompany } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEqual } from 'lodash';
-=======
-import { isEmpty, isEqual } from 'lodash';
->>>>>>> c885f026... add associates in the project (#19)
-=======
-import { ICompany } from 'stores/company/Reducer';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { isEqual } from 'lodash';
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-import { ICompany } from 'stores/company/Reducer';
-import { useLiveSearch } from 'components/useLiveSearch';
-import { isEqual } from 'lodash';
->>>>>>> 6d92f22e... Dev (#202)
 
 interface ProjectAssociateProps {
   showDialog: boolean;
@@ -45,42 +19,14 @@ interface ProjectAssociateProps {
 
 interface ProjectAssociateInternalProps
   extends ProjectAssociateProps {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   company: ICompany;
-=======
-  companyId: string;
->>>>>>> c885f026... add associates in the project (#19)
-=======
-  company: ICompany;
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-  company: ICompany;
->>>>>>> 6d92f22e... Dev (#202)
   projectId: string;
   // tslint:disable-next-line: max-line-length
   addProjectAssociate: (
     data: {
       project: string;
       company: string;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
       associates: Array<{ _id: string; size: number }>;
-=======
-      associates: Array<{ _id:string, size:number }>;
->>>>>>> c885f026... add associates in the project (#19)
-=======
-      associates: Array<{ _id: string; size: number }>;
->>>>>>> d06346b0... code style issue fixed
-=======
-      associates: Array<{ _id:string, size:number }>;
->>>>>>> f4601c6e... add associates in the project (#19)
-=======
-      associates: Array<{ _id: string; size: number }>;
->>>>>>> 4e99f05f... code style issue fixed
     },
     selectedAssociate: any,
   ) => void;
@@ -89,12 +35,6 @@ interface ProjectAssociateInternalProps
 const AddProjectAssociateFormComponent = (
   props: ProjectAssociateInternalProps,
 ) => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   const [associates, setAssociates] = useState([]);
   const [selectedAssociate, setSelectedAssociate] = useState(
     [] as ItemEntityProps[],
@@ -178,138 +118,6 @@ const AddProjectAssociateFormComponent = (
   useEffect(() => {
     setAssociates(resultAssociate);
   }, [resultAssociate]);
-=======
-  const [suggestedAssociate, setSuggestedAssociate]: any = useState([]);
-=======
-  const [suggestedAssociate, setSuggestedAssociate]: any = useState(
-    [],
-  );
->>>>>>> d06346b0... code style issue fixed
-=======
-  const [suggestedAssociate, setSuggestedAssociate]: any = useState([]);
->>>>>>> f4601c6e... add associates in the project (#19)
-=======
-  const [suggestedAssociate, setSuggestedAssociate]: any = useState(
-    [],
-  );
->>>>>>> 4e99f05f... code style issue fixed
-=======
-  const [associates, setAssociates] = useState([]);
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-  const [associates, setAssociates] = useState([]);
->>>>>>> 6d92f22e... Dev (#202)
-  const [selectedAssociate, setSelectedAssociate] = useState(
-    [] as ItemEntityProps[],
-  );
-  const [searchAssociate, setSearchAssociate] = useState('');
-<<<<<<< HEAD
-
-  const userRequestFactoryAssociate = async (userName: string) => {
-    const headers = tokenConfig();
-    const response = await tigrowApi.get(
-      `projects/associate-company-search/${
-      props.company._id
-      }?name=${searchAssociate}&companyName=${props.company.name}`,
-      headers,
-    );
-
-=======
-
-  const userRequestFactoryAssociate = async (userName: string) => {
-    const headers = tokenConfig();
-    const response = await tigrowApi.get(
-      `projects/associate-company-search/${
-      props.company._id
-      }?name=${searchAssociate}&companyName=${props.company.name}`,
-      headers,
-    );
-
->>>>>>> 6d92f22e... Dev (#202)
-    // return response.data.data.map((e: any) => {
-    //   return {
-    //     _id: e._source.mongo_id,
-    //     name: e._source.associateCompanyName,
-    //     size: 5
-    //   };
-    // });
-    const asso = response.data.data.map((e: any) => 
-      isEqual(props.company._id, e._source.company_id ) === true ?
-      {
-        _id: e._source.mongo_id,
-        name: e._source.associateCompanyName,
-        size: 5
-      }
-      :
-      {
-        _id: e._source.mongo_id,
-        name: e._source.companyName,
-        size: 5
-      }
-    );
-    return asso;
-  };
-
-  let resultAssociate: any = [];
-  resultAssociate = useLiveSearch(searchAssociate, userRequestFactoryAssociate, 0);
-  // const getSuggestionsForProjectAssociate = async () => {
-  //   try {
-  //     const headers = tokenConfig();
-  //     if ((headers as any).headers.Authorization) {
-  //       const response = await tigrowApi.get(
-  //         `/associate/${props.companyId}`,
-  //         headers,
-  //       );
-  //       const formatResponse = response.data.map((assoc: any) =>
-  //         isEqual(props.companyId, assoc.company._id) === true
-  //           ? {
-  //               ...assoc.associateCompany,
-  //               createdAt: assoc.createdAt,
-  //               size: 5,
-  //             }
-  //           : {
-  //               ...assoc.company,
-  //               createdAt: assoc.createdAt,
-  //               size: 5,
-  //             },
-  //       );
-  //       console.log(formatResponse);
-
-  //       setSuggestedAssociate(formatResponse);
-  //     } else {
-  //       // tslint:disable-next-line: no-console
-  //       console.log('no headers');
-  //     }
-  //   } catch (error) {
-  //     if (isEqual(error.message, 'Network Error')) {
-  //       // tslint:disable-next-line: no-console
-  //       console.log('network error');
-  //     } else {
-  //       // tslint:disable-next-line: no-console
-  //       console.log(error.response);
-  //     }
-  //   }
-  // };
-
-  useEffect(() => {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    if (
-      isEmpty(props.projectId) === false &&
-      isEmpty(props.companyId) === false
-    ) {
-      getSuggestionsForProjectAssociate();
-    }
-  }, []);
->>>>>>> c885f026... add associates in the project (#19)
-=======
-    setAssociates(resultAssociate);
-  }, [resultAssociate]);
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-    setAssociates(resultAssociate);
-  }, [resultAssociate]);
->>>>>>> 6d92f22e... Dev (#202)
 
   const teamSizes = [
     { value: 5, label: '1-5' },
@@ -322,26 +130,10 @@ const AddProjectAssociateFormComponent = (
       <div className="w-100">
         <h1 className="f5 tigrow-darkBlue">Add Associates</h1>
         <SuggestField
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
           onChange={(query: string) => {
             setSearchAssociate(query);
           }}
           items={associates}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-          items={suggestedAssociate}
->>>>>>> c885f026... add associates in the project (#19)
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
           selectedItems={selectedAssociate}
           setSelectedItems={setSelectedAssociate}
           multipleItemSelect={true}
@@ -363,14 +155,6 @@ const AddProjectAssociateFormComponent = (
             }}
             large={true}
           >
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> d06346b0... code style issue fixed
-=======
->>>>>>> 4e99f05f... code style issue fixed
             <span
               style={{
                 display: 'flex',
@@ -385,20 +169,6 @@ const AddProjectAssociateFormComponent = (
                   onChange={(e: any) => {
                     let sa = [...selectedAssociate];
                     sa[index]['size'] = e.target.value;
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                    console.log(sa);
->>>>>>> d06346b0... code style issue fixed
-=======
-                    console.log(sa);
->>>>>>> 4e99f05f... code style issue fixed
-=======
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
->>>>>>> 6d92f22e... Dev (#202)
                     setSelectedAssociate(sa);
                   }}
                 >
@@ -409,54 +179,9 @@ const AddProjectAssociateFormComponent = (
                       </option>
                     );
                   })}
-<<<<<<< HEAD
-<<<<<<< HEAD
                 </select>
               </span>
             </span>
-=======
-=======
->>>>>>> f4601c6e... add associates in the project (#19)
-            <span style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-              <span>
-                {item.name}
-              </span>
-              <span style={{padding: 3}}>
-                <select value={item['size']} onChange={(e:any) => {
-                  let sa = [...selectedAssociate];
-                  sa[index]['size'] = e.target.value;
-                  console.log(sa);
-                  setSelectedAssociate(sa);
-                }}>
-                  {
-                    teamSizes.map(t=>{
-                      return <option key={t.label+t.value} value={t.value}>{t.label}</option>
-                    })
-                  }
-<<<<<<< HEAD
-                </select>
-              </span>
-            </span>
-
-            
->>>>>>> c885f026... add associates in the project (#19)
-=======
-                </select>
-              </span>
-            </span>
->>>>>>> d06346b0... code style issue fixed
-=======
-                </select>
-              </span>
-            </span>
-
-            
->>>>>>> f4601c6e... add associates in the project (#19)
-=======
-                </select>
-              </span>
-            </span>
->>>>>>> 4e99f05f... code style issue fixed
           </Tag>
         ))}
       </div>
@@ -481,48 +206,15 @@ const AddProjectAssociateFormComponent = (
           onClick={async () => {
             const data = {
               project: props.projectId,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
               company: props.company._id,
-=======
-              company: props.companyId,
->>>>>>> c885f026... add associates in the project (#19)
-=======
-              company: props.company._id,
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-              company: props.company._id,
->>>>>>> 6d92f22e... Dev (#202)
               associates: selectedAssociate.map((m: any) => {
                 return {
                   _id: m._id,
                   size: m.size,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                   name: m.name
                 };
               }),
             };
-=======
-                };
-              }),
-            };
-
->>>>>>> c885f026... add associates in the project (#19)
-=======
-                  name: m.name
-                };
-              }),
-            };
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-                  name: m.name
-                };
-              }),
-            };
->>>>>>> 6d92f22e... Dev (#202)
             const response: any = await props.addProjectAssociate(
               data,
               selectedAssociate,
@@ -542,19 +234,7 @@ const AddProjectAssociateFormComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     company: state.companyReducer.currentCompany,
-=======
-    companyId: state.companyReducer.currentCompany._id,
->>>>>>> c885f026... add associates in the project (#19)
-=======
-    company: state.companyReducer.currentCompany,
->>>>>>> e8fd5de7... Wip/project type associates (#199) (#203)
-=======
-    company: state.companyReducer.currentCompany,
->>>>>>> 6d92f22e... Dev (#202)
     projectId: state.projectReducer.pid,
     associates: state.associateReducer.associatesList,
   };

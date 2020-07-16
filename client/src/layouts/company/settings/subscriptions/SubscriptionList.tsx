@@ -43,23 +43,6 @@ const _SubscriptionList = (props: ISubscriptionList) => {
   const [dense] = React.useState(true);
   const classes = useStyles();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-  // function generate(element) {
-  //   return [0, 1, 2].map((value) =>
-  //     React.cloneElement(element, {
-  //       key: value,
-  //     }),
-  //   );
-  // }
-
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 4754c34c... Bug fix paymment (#250)
   React.useEffect(() => {
     props.getSubscription();
   }, []);
@@ -105,17 +88,6 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                             </ListItem>
                             ,
                           </List>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                          {/* <label>Less than 20 user</label>
-                    <label>Up to 5 user free</label> */}
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 4754c34c... Bug fix paymment (#250)
                         </CardContent>
                       </Grid>
 
@@ -132,19 +104,7 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                                 props.changeComponentTo('checkOut');
                               }}
                             >
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
                               Pay Bill
-=======
-                              Switch Plan
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
-                              Pay Bill
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
-                              Pay Bill
->>>>>>> 4754c34c... Bug fix paymment (#250)
                             </Button>
                           </div>
                         </CardActions>
@@ -155,13 +115,6 @@ const _SubscriptionList = (props: ISubscriptionList) => {
               </Grid>
             );
           })}
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 4754c34c... Bug fix paymment (#250)
           <Grid container>
             <Grid item xs={4}>
               <Card style={{ marginBottom: '10px' }}>
@@ -175,14 +128,6 @@ const _SubscriptionList = (props: ISubscriptionList) => {
               </Card>
             </Grid>
           </Grid>
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 4754c34c... Bug fix paymment (#250)
         </div>
       )}
     </div>

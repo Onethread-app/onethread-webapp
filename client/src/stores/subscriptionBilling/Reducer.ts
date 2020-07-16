@@ -4,18 +4,7 @@ const initialState = {
   paymentHistory: [],
   subscriptions: [],
   currentSubscriptions: undefined,
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
   subscriptionId: '',
-=======
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
-  subscriptionId: '',
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
-  subscriptionId: '',
->>>>>>> 4754c34c... Bug fix paymment (#250)
 };
 export const SubscriptionReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -34,27 +23,12 @@ export const SubscriptionReducer = (state = initialState, action) => {
         ...state,
         currentSubscriptions: action.payload,
       };
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 4754c34c... Bug fix paymment (#250)
 
     case subscription.CREATE_SUBSCRIPTION_SUCESS:
       return {
         ...state,
         subscriptionId: action.payload,
       };
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
->>>>>>> 1d9824de... Bugfix/controller (#259)
-=======
->>>>>>> 4754c34c... Bug fix paymment (#250)
     default:
       return state;
   }

@@ -14,10 +14,6 @@ router
   .route('/')
   .post(
     authorization,
-<<<<<<< HEAD
-=======
-    subCtrl.subscriptionExpireCheck(),
->>>>>>> 3a98ae02... Wip/tig 229 (#232)
     companyCtrl.authorizeUser('superAdmin'),
     SchemaValidator(subSchema.createSubscription),
     subCtrl.createSubscriptionForCompany,

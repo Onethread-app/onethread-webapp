@@ -9,44 +9,6 @@ import { AssociateReducer } from './associate/Reducer';
 import { ProjectReducer } from './project/Reducer';
 import { PusherReducer } from './pusher/Reducer';
 import { SubscriptionReducer } from './subscriptionBilling/Reducer';
-<<<<<<< HEAD
-<<<<<<< HEAD
-import { AssociateModel } from './associate/Reducer';
-import { videoConferencesReducers } from './videoConferences/Reducer';
-import toasterReducer from './toast/Reducer';
-export interface AppState {
-  layoutReducer: any;
-  roomReducer: any;
-  userReducer: any;
-  companyReducer: any;
-  boardIndexReducer: any;
-  associateReducer: AssociateModel;
-  projectReducer: any;
-  notificationReducer: any;
-  pusherReducer: any;
-  SubscriptionReducer: any;
-  videoConferencesReducers: any;
-  toasterReducer: any;
-}
-
-import { AssociateModel } from './associate/Reducer';
-
-export interface AppState {
-  layoutReducer: any;
-  roomReducer: any;
-  userReducer: any;
-  companyReducer: any;
-  boardIndexReducer: any;
-  associateReducer: AssociateModel;
-  projectReducer: any;
-  notificationReducer: any;
-  pusherReducer: any;
-}
-=======
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-
-=======
->>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 import { AssociateModel } from './associate/Reducer';
 import { videoConferencesReducers } from './videoConferences/Reducer';
 import toasterReducer from './toast/Reducer';
@@ -76,14 +38,6 @@ export const rootReducer = combineReducers({
   notificationReducer,
   pusherReducer: PusherReducer,
   subscriptionReducer: SubscriptionReducer,
-<<<<<<< HEAD
-<<<<<<< HEAD
   videoConferencesReducers: videoConferencesReducers,
   toasterReducer: toasterReducer,
-=======
->>>>>>> cdf1363f... Feature/tig 224 (#231)
-=======
-  videoConferencesReducers: videoConferencesReducers,
-  toasterReducer: toasterReducer,
->>>>>>> 8c1bc264... Bugfix/refactor saga (#267)
 });

@@ -70,110 +70,6 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
           hasValidationErrors,
           ...rest
         }) => (
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-            <form onSubmit={handleSubmit}>
-              <div className="pv3 justify-content w-100">
-                <Field<string>
-                  name="name"
-                  validate={composeValidators(required, maxValue(60))}
-                  render={({ input, meta }) => (
-                    <div
-                      className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
-                    >
-                      <InputGroupFieldWithLabel
-                        id="name"
-                        value={input.value}
-                        onChange={input.onChange}
-                        style={{
-                          boxShadow: 'none',
-                          fontSize: '18px',
-                        }}
-                        error={
-                          checkError(meta) &&
-                          (meta.error || meta.submitError)
-                        }
-                        label="Column Name"
-                        autoFocus={true}
-                      />
-                    </div>
-                  )}
-                />
-                <div className="fr">
-                  <Button
-                    className="w4 grow h2 pointer mr3"
-                    style={{
-                      background: '#fff',
-                      outline: 'none',
-                      border: '1px solid #0fa3a3',
-                      color: '#0fa3a3',
-                    }}
-                    onClick={(e: any) => {
-                      if (props.setShowColumnFormDialog) {
-                        props.setShowColumnFormDialog(false);
-<<<<<<< HEAD
-                      }
-<<<<<<< HEAD
-                      label="Column Name"
-                      autoFocus={true}
-                    />
-                  </div>
-                )}
-              />
-              <div className="fr">
-                <Button
-                  className="w4 grow h2 pointer mr3"
-                  style={{
-                    background: '#fff',
-                    outline: 'none',
-                    border: '1px solid #0fa3a3',
-                    color: '#0fa3a3',
-                  }}
-                  onClick={(e: any) => {
-                    if (props.setShowColumnFormDialog) {
-                      props.setShowColumnFormDialog(false);
-                    }
-                  }}
-                >
-                  cancel
-                </Button>
-                <Button
-                  className="grow pointer white bp3-minimal w4 mt2"
-                  style={{
-                    background: '#0FA3A3',
-                    outline: 'none',
-                    color: 'white',
-                  }}
-                  loading={submitting}
-                  type="submit"
-                  disabled={submitting || pristine}
-                >
-                  {props.column ? 'Update' : 'Create'}
-                </Button>
-=======
-                    }}
-                  >
-                    cancel
-                  </Button>
-                  <Button
-                    className="grow pointer white bp3-minimal w4 mt2"
-                    style={{
-                      background: '#0FA3A3',
-                      outline: 'none',
-                      color: 'white',
-                    }}
-                    loading={submitting}
-                    type="submit"
-                    disabled={submitting || pristine}
-                  >
-                    {props.column ? 'Update' : 'Create'}
-                  </Button>
-                </div>
->>>>>>> a51ad486... Feature/mobile responsive (#148)
-=======
           <form onSubmit={handleSubmit}>
             <div className="pv3 justify-content w-100">
               <Field<string>
@@ -183,17 +79,6 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                   <div
                     className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
                   >
-=======
-          <form onSubmit={handleSubmit}>
-            <div className="pv3 justify-content w-100">
-              <Field<string>
-                name="name"
-                validate={composeValidators(required, maxValue(60))}
-                render={({ input, meta }) => (
-                  <div
-                    className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
-                  >
->>>>>>> a26cd117... Release/v2.2.0 (#183)
                     <InputGroupFieldWithLabel
                       id="name"
                       value={input.value}
@@ -242,31 +127,6 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                 >
                   {props.column ? 'Update' : 'Create'}
                 </Button>
-<<<<<<< HEAD
->>>>>>> 750029e8... Release/v2.2.0 (#183)
-=======
-                      }
-                    }}
-                  >
-                    cancel
-                  </Button>
-                  <Button
-                    className="grow pointer white bp3-minimal w4 mt2"
-                    style={{
-                      background: '#0FA3A3',
-                      outline: 'none',
-                      color: 'white',
-                    }}
-                    loading={submitting}
-                    type="submit"
-                    disabled={submitting || pristine}
-                  >
-                    {props.column ? 'Update' : 'Create'}
-                  </Button>
-                </div>
->>>>>>> 2650e2be... Feature/mobile responsive (#148)
-=======
->>>>>>> a26cd117... Release/v2.2.0 (#183)
               </div>
             </div>
           </form>
