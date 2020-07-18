@@ -29,6 +29,9 @@ export const ProjectPrefaceViewComponent = (
   props: ProjectPrefaceProps,
 ) => {
   const [showFileDialog, setShowFileDialog] = useState(false);
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
 
   return (
     <>
@@ -138,7 +141,9 @@ export const ProjectPrefaceViewComponent = (
               </Button>
             </div>
           ) : (
-            props.optionalRole && props.role && projectRules(props.optionalRole)[props.role].includes(
+            props.optionalRole &&
+            props.role &&
+            projectRules(props.optionalRole)[props.role].includes(
               'addFileProject',
             ) && (
               <div>
@@ -202,7 +207,9 @@ export const ProjectPrefaceViewComponent = (
                       {member.account.name}
                     </h1>
                     <h1 className="f7 fw4 black mv1">
-                      {member.role}
+                      {member.role === 'projectModerator'
+                        ? 'Project Moderator'
+                        : capitalizeFirstLetter(member.role)}
                     </h1>
                   </div>
                 </article>
@@ -229,10 +236,15 @@ const mapStateToProps = (state: any) => ({
   description: state.projectReducer.projectDetails.description,
   outline: state.projectReducer.projectDetails.outline,
   files: state.projectReducer.projectDetails.files,
-  role: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
-   state.projectReducer.projectRole.projects.role,
-  optionalRole: state.projectReducer.projectRole && state.projectReducer.projectRole.projects &&
-    state.projectReducer.projectRole.projects.project && state.projectReducer.projectRole.projects.project.optionalRole,
+  role:
+    state.projectReducer.projectRole &&
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.role,
+  optionalRole:
+    state.projectReducer.projectRole &&
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project &&
+    state.projectReducer.projectRole.projects.project.optionalRole,
   projectMembers: state.projectReducer.projectDetails.members,
   project: state.projectReducer.projectDetails,
   company: state.companyReducer.currentCompany,

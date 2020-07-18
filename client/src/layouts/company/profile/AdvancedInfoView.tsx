@@ -7,10 +7,11 @@ import { RightSidebar } from 'components/RightSidebar';
 import { Divider } from '@blueprintjs/core';
 import { ProductEdit } from './ProductEditor';
 import { CertificateEdit } from './CertificateEditor';
-import { OrganizationEdit } from './ParentOrganizationEditor';
-import { ICompany } from 'stores/company/Reducer';
+import { OrganizationAdd } from './ParentOrganizationAddEditor';
+import { ICompany, IOrg } from 'stores/company/Reducer';
 import { getAllProduct } from 'stores/company/Actions';
 import { companyPermit } from 'stores/UtilsActions';
+import { OrganizationEditEditor } from './ParentOrganizationEditEditor';
 
 interface AdvancedInfoInternalProps {
   company?: ICompany;
@@ -26,6 +27,8 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
     showOrganizationDialog,
     setShowOrganizationDialog,
   ] = useState(false);
+  const [showOrganizationEditDialog, setShowOrganizationEditDialog] = useState(false);
+  const [org, setOrg] = useState({} as IOrg);
 
   useEffect(() => {
     async function getAPI() {
@@ -133,10 +136,24 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
             {props.company &&
             props.company.parentcom &&
             props.company.parentcom.length > 0 ? (
-              props.company.parentcom.map((parentcom: any) => (
-                <h1 key={parentcom._id} className="f5 fw4">
+              props.company.parentcom.map((parentcom: any, index: any) => (
+                <div className="flex justify-between">
+                <h1 key={index} className="f5 fw4">
                   {parentcom}
                 </h1>
+                <div>
+                  <img
+                    src={editIcon}
+                    alt="edit"
+                    width="35"
+                    className="br2 pointer"
+                    onClick={() => {
+                      setShowOrganizationEditDialog(true);
+                      setOrg({ind: index, name: parentcom});
+                    }}
+                  />
+                </div>
+                </div>
               ))
             ) : (
               <p className="f5">No organizations</p>
@@ -176,8 +193,22 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           }
         >
           <div>
-            <OrganizationEdit
+            <OrganizationAdd
               setShowDialog={setShowOrganizationDialog}
+            />
+          </div>
+        </RightSidebar>
+      )}
+       {showOrganizationEditDialog && (
+        <RightSidebar
+          onClose={() =>
+            setShowOrganizationDialog(!showOrganizationDialog)
+          }
+        >
+          <div>
+            <OrganizationEditEditor
+              setShowDialog={setShowOrganizationEditDialog}
+              org={org}
             />
           </div>
         </RightSidebar>

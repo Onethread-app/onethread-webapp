@@ -10,18 +10,19 @@ import {
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { Associate } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
+import { ICompany } from 'stores/company/Reducer';
 
 export const addAssociate = (
   associateWith: ItemEntityProps,
-  companyID: string,
+  company: ICompany,
 ) => async (dispatch: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = await tigrowApi.post(
-        `/associate/${companyID}`,
+        `/associate/${company._id}`,
         {
-          companyId: companyID,
+          company: company,
           associateCompany: {
             _id: associateWith.mongo_id,
             name: associateWith.name,

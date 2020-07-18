@@ -176,7 +176,7 @@ export const AssociateListComponent = (
           onClose={() => setShowAssociateDialog(!showAssociateDialog)}
         >
           <AssociateFormEditor
-            companyId={props.company._id}
+            company={props.company}
             showDialog={showAssociateDialog}
             setShowDialog={() =>
               setShowAssociateDialog(!showAssociateDialog)
