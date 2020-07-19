@@ -88,22 +88,24 @@ const createNewProjectForCompany = async (req, res, next) => {
     }
 
     if (req.body.type === 'associates') {
-      let projectId = projectCreation(
-        req.body.name,
-        req.body.type,
-        concernedAdmin.accountId,
-        req.user._id,
-        req.body.departments,
-        associates,
-        req.body.color,
-        companyId,
-      );
+      const project = new Project({
+        name: req.body.name,
+        concernedAdmin: concernedAdmin.accountId,
+        account: req.user._id,
+        departments: req.body.departments,
+        color: req.body.color,
+        company: req.params.companyId,
+        description: '',
+        outline: '',
+      });
+      await project.save();
       let projectReq = [];
       // create an id of map array
       associates.map(async (data) => {
         let reqObject = {};
         reqObject.company = req.params.companyId;
         reqObject.associate = data._id;
+        reqObject.account = req.user._id;
         reqObject.isAccepted = false;
         reqObject.project = projectId;
         reqObject.size = data.size;
@@ -172,16 +174,17 @@ const createNewProjectForCompany = async (req, res, next) => {
         project,
       });
     } else {
-      let project = projectCreation(
-        req.body.name,
-        req.body.type,
-        concernedAdmin.accountId,
-        req.user._id,
-        req.body.departments,
-        associates,
-        req.body.color,
-        companyId,
-      );
+      const project = new Project({
+        name: req.body.name,
+        concernedAdmin: concernedAdmin.accountId,
+        account: req.user._id,
+        departments: req.body.departments,
+        color: req.body.color,
+        company: req.body.companyId,
+        description: '',
+        outline: '',
+      });
+
       const text = `${req.user.name} has created a project ${project.name} `;
       createCompanyRoleNotification(
         { _id: companyId },

@@ -7,6 +7,7 @@ import { IRoom, IRoomReducer } from 'stores/room/Reducer';
 interface IRoomListComponentProps {
   currentRoom?: IRoomReducer['currentRoom'];
   rooms?: IRoom[];
+  search: string;
 }
 
 export const RoomListComponent = (props: IRoomListComponentProps) => {
@@ -23,7 +24,23 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
     <>
       <main className="mw6" id="roomList">
         <ul className="list pa0 mh2-ns">
-          {props.rooms && props.rooms.length ? (
+          {props.rooms && props.rooms.length ? props.search ?
+            (
+              props.rooms.filter(item => !item.name.indexOf(props.search)).map(
+                (filteredRooms, i, arr: {}) => (
+                  <RoomListItem
+                    key={filteredRooms._id}
+                    room={filteredRooms}
+                    active={
+                      props.currentRoom !== undefined &&
+                      filteredRooms._id === props.currentRoom._id
+                    }
+                    iconBgColor={roomBgColor[i % roomBgColor.length]}
+                  />
+                ))
+            )
+          :
+          (
             props.rooms.map((room: IRoom, i: number, arr: any) => {
               return (
                 <RoomListItem

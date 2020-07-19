@@ -6,13 +6,15 @@ import { CreateForm } from './Form';
 import { clearRoomError } from 'stores/room/Actions';
 import { RightSidebar } from 'components/RightSidebar';
 import { InputGroupField } from 'components/fields/InputGroupField';
-
+import { projectRules } from './../../project/settings/projectrules';
 import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
 import { room } from 'stores/room/Types';
 
 interface RoomSideBarComponentProps {
+  projectRole?: string;
+  optionalRole?: string;
   companyRole?: string;
   isOpen?: boolean;
 }
@@ -35,27 +37,34 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       >
         <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
-            <span
-              className="bp3-icon grow pointer"
-              onClick={() => { 
-                setShowDialog(!showDialog);
-                dispatch({ type: room.CLEAR_STATUS_CODE });
-              }}
-            >
-              <img
-                src={createIcon}
-                width="30px"
-                height="30px"
-                color="#0FA3A3"
-              />
-            </span>
-        </div>
+          { props.projectRole && 
+            props.optionalRole && 
+            (projectRules(props.optionalRole)[props.projectRole] === true || 
+            projectRules(props.optionalRole)[props.projectRole].includes(
+            'createUpdateRoom',
+            )) &&
+          <span
+            className="bp3-icon grow pointer"
+            onClick={() => { 
+              setShowDialog(!showDialog);
+              dispatch({ type: room.CLEAR_STATUS_CODE });
+            }}
+          >
+            <img
+              src={createIcon}
+              width="30px"
+              height="30px"
+              color="#0FA3A3"
+            />
+          </span>
+          }
+      </div>
         <div className="flex items-center ph3-ns relative">
           <InputGroupField
-            id="companyName"
+            id="roomName"
             value={searchKeyword}
             placeHolder="Search for Rooms"
-            className="pv1 ba b--light-silver br3"
+            className="pv1 ba b--light-silver br3 pl4"
             style={{
               paddingLeft: '36px',
               boxShadow: 'none',
@@ -76,7 +85,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           />
         </div>
         <div className="flex-grow-1 overflow-y-auto">
-          {props.isOpen || isMobileOnly ? <RoomList /> : null}
+          {props.isOpen || isMobileOnly ? <RoomList search={searchKeyword}/> : null}
         </div>
       </div>
       {showDialog && (
@@ -94,7 +103,17 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    companyRole: state.companyReducer.currentCompany.role,
+    companyRole: 
+      state.companyReducer.currentCompany.role,
+    projectRole: 
+      state.projectReducer.projectRole && 
+      state.projectReducer.projectRole.projects && 
+      state.projectReducer.projectRole.projects.role,
+    optionalRole: 
+      state.projectReducer.projectRole &&
+      state.projectReducer.projectRole.projects &&
+      state.projectReducer.projectRole.projects.project &&
+      state.projectReducer.projectRole.projects.project.optionalRole,
   };
 };
 

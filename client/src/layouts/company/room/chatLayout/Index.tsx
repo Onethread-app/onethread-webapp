@@ -7,6 +7,7 @@ import { AddMemberForm } from './members/AddMemberForm';
 import { getRoomMembers, archiveRoom } from 'stores/room/Actions';
 import { isEmpty } from 'lodash';
 import { projectPermit } from 'stores/UtilsActions';
+import { projectRules } from './../../project/settings/projectrules';
 import { MembersList } from './members/MembersList';
 import { IRoomReducer } from 'stores/room/Reducer';
 import memberListIcon from './../../../../resources/images/member-list.svg';
@@ -22,6 +23,8 @@ interface ChatLayoutComponentProps {
   activeRoom: any;
   companyRole: string;
   users: IRoomReducer['users'];
+  projectRole?: string;
+  optionalRole?: string;
 }
 
 export const ChatLayoutComponent = (
@@ -101,7 +104,12 @@ export const ChatLayoutComponent = (
                           <h5 className="gray ma0 mb2 pointer bp3-popover-dismiss">
                             Mute Conversation
                           </h5>
-                          {projectPermit(props.companyRole) && (
+                          { projectPermit(props.companyRole) || props.projectRole && 
+                            props.optionalRole && 
+                            (projectRules(props.optionalRole)[props.projectRole] === true || 
+                            projectRules(props.optionalRole)[props.projectRole].includes(
+                            'archiveRoom',
+                            )) && (
                             <h5
                               className="red ma0 pointer bp3-popover-dismiss"
                               onClick={async () => {
@@ -132,7 +140,13 @@ export const ChatLayoutComponent = (
                   }
                 />
               </div>
-              {projectPermit(props.companyRole) &&
+              { projectPermit(props.companyRole) || 
+                props.projectRole && 
+                props.optionalRole && 
+                (projectRules(props.optionalRole)[props.projectRole] === true || 
+                projectRules(props.optionalRole)[props.projectRole].includes(
+                'addRemoveMemberRoom',
+                )) &&
               props.currentRoom.archive === false ? (
                 <div
                   className="pointer ml3-ns ml1"
@@ -261,6 +275,15 @@ const mapStateToProps = (state: any) => {
     activeRoom: state.roomReducer.activeRoom,
     users: state.roomReducer.users,
     companyRole: state.companyReducer.currentCompany.role,
+    projectRole: 
+      state.projectReducer.projectRole && 
+      state.projectReducer.projectRole.projects && 
+      state.projectReducer.projectRole.projects.role,
+    optionalRole: 
+      state.projectReducer.projectRole &&
+      state.projectReducer.projectRole.projects &&
+      state.projectReducer.projectRole.projects.project &&
+      state.projectReducer.projectRole.projects.project.optionalRole,
   };
 };
 

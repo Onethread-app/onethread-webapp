@@ -14,7 +14,7 @@ import { isEqual } from 'lodash';
 import { User } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
-import { SET_INITIAL_CURRENT_COMPANY } from 'stores/company/Types';
+// import { SET_INITIAL_CURRENT_COMPANY } from 'stores/company/Types';
 
 export const editUserInfoAction = (basicInfo: User) => async (
   dispatch: any,
@@ -153,17 +153,17 @@ export const getAllCompaniesByUserId = (userId: string) => async (
         type: USER_COMPANIES_UPDATE,
         payload: response.data,
       });
-      dispatch({
-        type: SET_INITIAL_CURRENT_COMPANY,
-        payload: response.data.companies[0]
-      });
+      // dispatch({
+      //   type: SET_INITIAL_CURRENT_COMPANY,
+      //   payload: response.data.companies[0]
+      // });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in get company list by user');
+      // console.log('error in get company list by user');
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    console.log(error.response);
+    // console.log(error.response);
   }
 };
 export const deleteSkillAction = (skill: string) => async (

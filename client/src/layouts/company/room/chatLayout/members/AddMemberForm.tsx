@@ -52,7 +52,7 @@ const AddMemberFormComponent = (
       if ((headers as any).headers.Authorization) {
         // tslint:disable-next-line:max-line-length
         const response = await tigrowApi.get(
-          `/rooms/suggest-member?projectId=${props.projectId}&roomId=${props.currentRoom._id}`,
+          `/rooms/suggest-member?pid=${props.projectId}&roomId=${props.currentRoom._id}`,
           headers,
         );
         setSuggestedMembers(response.data.members);

@@ -46,7 +46,7 @@ export const AssignedMembersEditorComponent = (
   const userRequestFactory = async (userName: string) => {
     const headers = tokenConfig();
     const response = await tigrowApi.get(
-      `tasks/${props.currentTask!._id}/suggest-member?projectId=${
+      `tasks/${props.currentTask!._id}/suggest-member?pid=${
         props.project!._id
       }`,
       headers,

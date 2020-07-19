@@ -40,6 +40,7 @@ import {
   GET_ALL_COMPANY_ANNOUNCEMENT,
   // ADD_ANNOUNCEMENT,
   GET_ALL_PRODUCT,
+  EDIT_ORGANIZATION,
   // ADD_ANNOUNCEMENT
 } from './Types';
 import {
@@ -678,15 +679,47 @@ export const addOrganization = (organization: any) => async (
     const headers = tokenConfig();
     let response;
     if ((headers as any).headers.Authorization) {
-      const companyId = getState().companyReducer.currentCompany._id;
-      response = await tigrowApi.put(
-        `company/${companyId}/parentorg`,
-        organization,
-        headers,
-      );
       dispatch({
         type: ADD_ORGANIZATION,
         payload: organization.parentcom,
+      });
+      const companyId = getState().companyReducer.currentCompany._id;
+      const parentOrgArray = getState().companyReducer.currentCompany.parentcom;      
+      response = await tigrowApi.put(
+        `company/${companyId}/parentorg`,
+        {parentcom: parentOrgArray},
+        headers,
+      );
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      // console.log('error in adding organization');
+    }
+    return;
+  } catch (error) {
+    return false;
+  }
+};
+
+export const editOrganization = (organization: any, ind: number) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    let response;
+    if ((headers as any).headers.Authorization) {
+      const companyId = getState().companyReducer.currentCompany._id;
+      const parentOrgArray = getState().companyReducer.currentCompany.parentcom;
+      parentOrgArray[ind]=organization.parentcom;
+      response = await tigrowApi.put(
+        `company/${companyId}/parentorg`,
+        {parentcom: parentOrgArray},
+        headers,
+      );
+      dispatch({
+        type: EDIT_ORGANIZATION,
+        payload: response.data.data.parentcom,
       });
       return response.status;
     } else {

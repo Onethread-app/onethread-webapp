@@ -200,11 +200,11 @@ export const logoutAction = (routeHistory: History) => async (
       if (isEqual(response.status, 200)) {
         localStorage.removeItem('tigrow_acc_id');
         localStorage.removeItem('tigrow_real_id');
+        routeHistory.push('/signin');
         await dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
         await dispatch({ type: CLEAR_ROOMS_REDUCER_STATE });
         await dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
         await dispatch({ type: CLEAR_USER_REDUCER_STATE });
-        routeHistory.push('/signin');
       }
     } else {
       // tslint:disable-next-line: no-console

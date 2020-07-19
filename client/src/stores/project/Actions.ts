@@ -76,6 +76,49 @@ export const createProject = (payload: any) => async (
   }
 };
 
+export const createProjectInCompany = (payload: any) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    const companyId = getState().companyReducer.currentCompany._id;
+    if ((headers as any).headers.Authorization) {
+      const reqBody = {
+        name: payload.name,
+        concernedAdmin: {
+          memberId: payload.admin.memberId,
+          accountId: payload.admin._id,
+        },
+        color: payload.color,
+        department: payload.department,
+        associates: payload.associates,
+        companyId: companyId,
+      };
+      const response = await tigrowApi.post(
+        `projects/${payload.company}/create-project`,
+        reqBody,
+        headers,
+      );
+      await dispatch({
+        type: PROJECT.PROJECT_CREATE,
+        payload: response.data,
+      });
+      dispatch(getAllProjects());
+      return response.data;
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      // tslint:disable-next-line: no-console
+      // console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      // console.log(error.response);
+      // return error.response;
+    }
+  }
+};
+
 export const archiveProject = (pid: string) => async (
   dispatch: any,
   getState: any,
@@ -466,6 +509,7 @@ export const updateProjectRole = (optionalRole: any) => async (
         reqBody,
         headers,
       );
+      dispatch(getRoleForProject(projectId));
       dispatch({
         type: PROJECT.PROJECT_UPDATE_ROLE,
       });
@@ -473,10 +517,10 @@ export const updateProjectRole = (optionalRole: any) => async (
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      // console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      // console.log(error.response);
       // return error.response;
     }
   }
@@ -604,7 +648,7 @@ export const getProjectAssociates = () => async (
 
       await dispatch({
         type: PROJECT.PROJECT_GET_ASSOCIATES,
-        payload: response.data.associateList[0].associate,
+        payload: response.data,
       });
       return response.data;
     }
@@ -681,6 +725,7 @@ export const changeProjectMemberRole = (
       if (userId === accountId) {
         dispatch(getRoleForProject(projectId));
       }
+      dispatch(getSingleProject(projectId));
       dispatch({
         type: PROJECT.PROJECT_UPDATE_TEAM_ROLE,
         payload: { memberId, role: values.role },
@@ -688,15 +733,15 @@ export const changeProjectMemberRole = (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in changing team role');
+      // console.log('error in changing team role');
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      // console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      // console.log(error.response);
     }
     return error.response.status;
   }

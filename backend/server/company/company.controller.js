@@ -537,20 +537,21 @@ const parentOrg = async (req, res, next) => {
         _id: req.params.companyId,
       },
       {
-        $push: { parentcom: parentCom },
+        $set: { parentcom: parentCom },
       },
       {
         new: true,
         safe: true,
         upsert: true,
       },
-    );
-    //  await Company.findOneAndUpdate({_id: req.params.companyId}, {$push:{parentcom: parentCom._id}},{safe: true, new: true, upsert: true})
+    ).select('parentcom');
     return sendJSONresponse(res, 200, {
       success: true,
       message: `parentOrg updated`,
+      data: user
     });
   } catch (error) {
+    logger.error(`Compnay: ${error}`)
     next(error);
   }
 };
