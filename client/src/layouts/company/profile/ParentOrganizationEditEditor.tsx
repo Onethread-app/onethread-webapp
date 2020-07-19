@@ -9,20 +9,27 @@ import {
   editOrganization,
   getCompanyDetails,
 } from 'stores/company/Actions';
-import { ICompany } from 'stores/company/Reducer';
+import { ICompany, IOrg } from 'stores/company/Reducer';
 
 interface IOrganizationEditProps {
   setShowDialog: (val: boolean) => void;
-  editOrganization: (parentcom: {}, organization: any) => any;
+  editOrganization: (
+    parentcom: {},
+    organization: number,
+  ) => Promise<number>;
   getCompanyDetails: (companyName: string) => void;
   company: ICompany;
-  org: any;
+  org: IOrg;
 }
 
-const OrganizationEditEditorComponent = (props: IOrganizationEditProps) => {
-
-  const onSubmit = async (values: {}) => {
-    const response = await props.editOrganization(values, props.org.ind);
+const OrganizationEditEditorComponent = (
+  props: IOrganizationEditProps,
+) => {
+  const onSubmit = async (values: any) => {
+    const response = await props.editOrganization(
+      values,
+      props.org.ind,
+    );
     if (response === 200) {
       props.setShowDialog(false);
     }

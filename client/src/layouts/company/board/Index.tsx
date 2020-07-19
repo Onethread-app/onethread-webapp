@@ -276,13 +276,13 @@ const TaskPageComponent = (
                     />
                   )}
                 </div>
-              ) : (
-                  props.role &&
-                    (props.role === 'admin' || projectRules(props.optionalRole)[props.role].includes('createUpdateBoard')) ?
-                    noBoardsFound
-                    :
-                    null
-              )
+              ) : props.role &&
+                (props.role === 'admin' ||
+                  projectRules(props.optionalRole)[
+                    props.role
+                  ].includes('createUpdateBoard')) ? (
+                noBoardsFound
+              ) : undefined
             ) : (
               <Loading />
             )}
@@ -293,6 +293,7 @@ const TaskPageComponent = (
                   'createUpdateBoard',
                 )) ? (
                 <img
+                  alt="plus"
                   onClick={() =>
                     setShowTaskBoardDialog(!showTaskBoardDialog)
                   }

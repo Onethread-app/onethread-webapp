@@ -42,6 +42,11 @@ import {
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
 
+export interface IOrg {
+  ind: number;
+  name: string;
+}
+
 // tslint:disable-next-line: interface-name
 export interface IDesignations {
   _id: string;

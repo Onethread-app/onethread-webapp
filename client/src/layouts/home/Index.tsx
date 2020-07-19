@@ -27,7 +27,6 @@ export const HomePageComponent = (
     setLoading(true);
     await props.getAllCompaniesByUserId(props.user._id);
     // await props.getProjectsIndividual();
-    
     setLoading(false);
   };
 

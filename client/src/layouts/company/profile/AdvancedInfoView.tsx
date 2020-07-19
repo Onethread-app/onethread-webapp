@@ -8,7 +8,7 @@ import { Divider } from '@blueprintjs/core';
 import { ProductEdit } from './ProductEditor';
 import { CertificateEdit } from './CertificateEditor';
 import { OrganizationAdd } from './ParentOrganizationAddEditor';
-import { ICompany } from 'stores/company/Reducer';
+import { ICompany, IOrg } from 'stores/company/Reducer';
 import { getAllProduct } from 'stores/company/Actions';
 import { companyPermit } from 'stores/UtilsActions';
 import { OrganizationEditEditor } from './ParentOrganizationEditEditor';
@@ -27,8 +27,11 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
     showOrganizationDialog,
     setShowOrganizationDialog,
   ] = useState(false);
-  const [showOrganizationEditDialog, setShowOrganizationEditDialog] = useState(false);
-  const [org, setOrg] = useState({ind: -1, name: ''});
+  const [
+    showOrganizationEditDialog,
+    setShowOrganizationEditDialog,
+  ] = useState(false);
+  const [org, setOrg] = useState({} as IOrg);
 
   useEffect(() => {
     async function getAPI() {
@@ -47,16 +50,14 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         <div>
           <div className="flex justify-between">
             <h1 className="f5">Products/Services</h1>
-            {
-              companyPermit(props.company!.role) && (
-                <img
-              src={addIcon}
-              width="38"
-              className="br2 pointer fr mv1"
-              onClick={() => setShowProductDialog(true)}
-            />
-              )
-            }  
+            {companyPermit(props.company!.role) && (
+              <img
+                src={addIcon}
+                width="38"
+                className="br2 pointer fr mv1"
+                onClick={() => setShowProductDialog(true)}
+              />
+            )}
           </div>
           <Divider />
           {props.company &&
@@ -74,18 +75,14 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         <div className="mt4">
           <div className="flex justify-between">
             <h1 className="f5">Certificates</h1>
-            {
-              companyPermit(props.company!.role) && (
-                <img
-              src={addIcon}
-              width="38"
-              className="br2 pointer fr mv1"
-              onClick={() => setShowCertificateDialog(true)}
-            />
-
-              )
-            }
-            
+            {companyPermit(props.company!.role) && (
+              <img
+                src={addIcon}
+                width="38"
+                className="br2 pointer fr mv1"
+                onClick={() => setShowCertificateDialog(true)}
+              />
+            )}
           </div>
           <Divider />
           {props.company &&
@@ -118,43 +115,41 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
         <div className="mt4">
           <div className="flex justify-between">
             <h1 className="f5">Member of Parent Organizations</h1>
-            {
-              companyPermit(props.company!.role) && (
-                <img
-              src={addIcon}
-              width="38"
-              className="br2 pointer fr mv1"
-              onClick={() => setShowOrganizationDialog(true)}
-            />
-
-              )
-            }
-            
+            {companyPermit(props.company!.role) && (
+              <img
+                src={addIcon}
+                width="38"
+                className="br2 pointer fr mv1"
+                onClick={() => setShowOrganizationDialog(true)}
+              />
+            )}
           </div>
           <Divider />
           <div className="outline-0">
             {props.company &&
             props.company.parentcom &&
             props.company.parentcom.length > 0 ? (
-              props.company.parentcom.map((parentcom: string, index: number) => (
-                <div key={index} className="flex justify-between">
-                <h1  className="f5 fw4">
-                  {parentcom}
-                </h1>
-                <div>
-                  <img
-                    src={editIcon}
-                    alt="edit"
-                    width="35"
-                    className="br2 pointer"
-                    onClick={() => {
-                      setShowOrganizationEditDialog(true);
-                      setOrg({ind: index, name: parentcom});
-                    }}
-                  />
-                </div>
-                </div>
-              ))
+              props.company.parentcom.map(
+                (parentcom: any, index: any) => (
+                  <div className="flex justify-between">
+                    <h1 key={index} className="f5 fw4">
+                      {parentcom}
+                    </h1>
+                    <div>
+                      <img
+                        src={editIcon}
+                        alt="edit"
+                        width="35"
+                        className="br2 pointer"
+                        onClick={() => {
+                          setShowOrganizationEditDialog(true);
+                          setOrg({ ind: index, name: parentcom });
+                        }}
+                      />
+                    </div>
+                  </div>
+                ),
+              )
             ) : (
               <p className="f5">No organizations</p>
             )}
@@ -199,7 +194,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
           </div>
         </RightSidebar>
       )}
-       {showOrganizationEditDialog && (
+      {showOrganizationEditDialog && (
         <RightSidebar
           onClose={() =>
             setShowOrganizationDialog(!showOrganizationDialog)

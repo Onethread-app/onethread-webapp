@@ -8,6 +8,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
 // import { Associate } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
+import { ICompany } from 'stores/company/Reducer';
 // import { type } from 'os';
 // import { ItemEntityProps } from 'components/fields/SuggestField';
 // import { Associate } from './Reducer';
@@ -22,7 +23,7 @@ interface IAddAssociateAction {
     mongo_id: String;
     name: String;
   };
-  companyID: String;
+  company: ICompany;
 }
 
 function* addAssociate(action: IAddAssociateAction) {
@@ -30,9 +31,9 @@ function* addAssociate(action: IAddAssociateAction) {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
-        `/associate/${action.companyID}`,
+        `/associate/${action.company._id}`,
         {
-          companyId: action.companyID,
+          company: action.company,
           associateCompany: {
             _id: action.associateWith.mongo_id,
             name: action.associateWith.name,
@@ -155,14 +156,14 @@ function* getAllPendingAssociates() {
   }
 }
 
-interface IAddAssociateAction {
-  type: String;
-  associateWith: {
-    mongo_id: String;
-    name: String;
-  };
-  companyID: String;
-}
+// interface IAddAssociateAction {
+//   type: String;
+//   associateWith: {
+//     mongo_id: String;
+//     name: String;
+//   };
+//   companyID: String;
+// }
 
 function* acceptPendingAssociate(action: {
   type: String;

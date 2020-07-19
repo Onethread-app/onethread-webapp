@@ -384,7 +384,10 @@ export const changeCompanyName = (companyName: string) => async (
         { name: companyName },
         headers,
       );
-      dispatch({ type: CHANGE_COMPANY_NAME, payload: response.data.company });
+      dispatch({
+        type: CHANGE_COMPANY_NAME,
+        payload: response.data.company,
+      });
       return response;
     } else {
       //TODO create a logger for client end
@@ -684,10 +687,11 @@ export const addOrganization = (organization: any) => async (
         payload: organization.parentcom,
       });
       const companyId = getState().companyReducer.currentCompany._id;
-      const parentOrgArray = getState().companyReducer.currentCompany.parentcom;      
+      const parentOrgArray = getState().companyReducer.currentCompany
+        .parentcom;
       response = await tigrowApi.put(
         `company/${companyId}/parentorg`,
-        {parentcom: parentOrgArray},
+        { parentcom: parentOrgArray },
         headers,
       );
       return response.status;
@@ -701,20 +705,21 @@ export const addOrganization = (organization: any) => async (
   }
 };
 
-export const editOrganization = (organization: any, ind: any) => async (
-  dispatch: any,
-  getState: any,
-) => {
+export const editOrganization = (
+  organization: any,
+  ind: number,
+) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     let response;
     if ((headers as any).headers.Authorization) {
       const companyId = getState().companyReducer.currentCompany._id;
-      const parentOrgArray = getState().companyReducer.currentCompany.parentcom;
-      parentOrgArray[ind]=organization.parentcom;
+      const parentOrgArray = getState().companyReducer.currentCompany
+        .parentcom;
+      parentOrgArray[ind] = organization.parentcom;
       response = await tigrowApi.put(
         `company/${companyId}/parentorg`,
-        {parentcom: parentOrgArray},
+        { parentcom: parentOrgArray },
         headers,
       );
       dispatch({

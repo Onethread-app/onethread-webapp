@@ -121,7 +121,7 @@ const NavbarTopComponent = (
   return (
     <>
       <div
-        className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between tigrow-navbar"
+        className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between"
         style={{
           height: '60px',
           borderColor: props.type === 'home' ? '#0F0C4E' : 'white',
@@ -157,11 +157,6 @@ const NavbarTopComponent = (
                   />
                 </NavLink>
               </div>
-              <NavLink exact to={`/${props.user.name}/home`}>
-                <div className="f4 fw6 white ttc ws-break mh4">
-                  {props.type === 'home' ? 'Home' : ''}
-                </div>
-              </NavLink>
             </div>
           )}
         </div>
@@ -217,7 +212,7 @@ const NavbarTopComponent = (
                 </div>
               }
               target={
-                <div className="mh4 pointer">
+                <div className="mr2 pointer">
                   <Badge
                     badgeContent={props.seen}
                     anchorOrigin={{
@@ -264,6 +259,7 @@ const NavbarTopComponent = (
                               props.currentRoom !== undefined &&
                               room._id === props.currentRoom._id
                             }
+                            currentCompany={props.companyName}
                             iconBgColor={
                               roomBgColor[i % roomBgColor.length]
                             }
@@ -277,7 +273,7 @@ const NavbarTopComponent = (
                 </div>
               }
               target={
-                <div className="mh4 pointer">
+                <div className="mr3 pointer">
                   <Badge
                     badgeContent={props.totalRoomUnread}
                     anchorOrigin={{
