@@ -3,6 +3,7 @@
 import React from 'react';
 import { merge } from 'lodash';
 import AgoraRTC from 'agora-rtc-sdk';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import './canvas.css';
@@ -114,7 +115,7 @@ class AgoraCanvas extends React.Component {
       }
       btnGroup.classList.add('active');
       global._toolbarToggle = setTimeout(function () {
-        btnGroup.classList.remove('active');
+        // btnGroup.classList.remove('active');
       }, 2000);
     });
   }
@@ -126,6 +127,12 @@ class AgoraCanvas extends React.Component {
     document.querySelector('.tigrow-navbar').style.display = 'none';
     document.querySelector('.tigrow-main-content').style.width =
       '100%';
+    document.querySelector(
+      '.wrapper.meeting',
+    ).parentElement.style.borderRadius = '0';
+    document.querySelector(
+      '.wrapper.meeting',
+    ).parentElement.style.flexGrow = 'unset';
   }
 
   // componentWillUnmount () {
@@ -384,7 +391,8 @@ class AgoraCanvas extends React.Component {
       this.setState({ readyState: false });
       this.client = null;
       this.localStream = null;
-      this.props.history.push('/video/conferences');
+      // this.props.history.push(`/${this.props.user.name}/home`);
+      window.location.href = `/${this.props.user.name}/home`;
     }
   };
 
@@ -521,4 +529,13 @@ class AgoraCanvas extends React.Component {
   }
 }
 
-export default withRouter(AgoraCanvas);
+const mapStateToProps = (state) => {
+  return {
+    user: state.userReducer.user,
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null,
+)(withRouter(AgoraCanvas));
