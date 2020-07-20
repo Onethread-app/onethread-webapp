@@ -6,8 +6,12 @@
 body {
   font-family: 'Open Sans', sans-serif;
 }
-.signinPageBackground {
-  background-image: url(./resources/images/Bg-png.png);
+.LandingFirstBackground {
+  background-image: url(./resources/LandingImages/HomeFirstBackground.svg);
+  background-size: cover;
+}
+.LandingSecondBackground {
+  background-image: url(./resources/LandingImages/HomeSecondBackground.svg);
   background-size: cover;
 }
 .shadow-0 {

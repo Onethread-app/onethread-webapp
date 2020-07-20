@@ -21,10 +21,10 @@ import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
 import { ResetPasswordPage } from 'layouts/resetPassword/Index';
 import { EmailVerificationPage } from 'layouts/emailVerification/Index';
 import { BoardDetailsView } from 'layouts/company/boardDetails/Index';
-import { LandingPage } from 'layouts/user/profile/Index';
+import { UserProfilePage } from 'layouts/user/profile/Index';
 import { ProfileSettingsPage } from 'layouts/user/settings/Index';
 import { FeedPage } from 'layouts/company/feed/Index';
-import { HomePage } from 'layouts/landing/Index';
+// import { HomePage } from 'layouts/landing/Index';
 import { TaskPage } from 'layouts/company/task';
 import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
 import { ProjectPage } from 'layouts/company/project/Index';
@@ -41,6 +41,7 @@ import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
 import { HomePageNew } from 'layouts/home/Index';
 import Success from './components/Success';
+import { LandingPage } from 'layouts/landingNew/Index';
 
 const PrivateRoute = (props: {
   component: any;
@@ -102,7 +103,7 @@ export const App = () => (
   <BrowserRouter>
     <Switch>
       {!isAuthenticate() && (
-        <Route exact path="/" component={HomePage} />
+        <Route exact path="/" component={LandingPage} />
       )}
       <Route
         exact
@@ -170,7 +171,7 @@ export const App = () => (
       <PrivateRoute
         path="/:username"
         exact={true}
-        component={LandingPage}
+        component={UserProfilePage}
       />
       <PrivateRoute
         path="/:username/settings"
