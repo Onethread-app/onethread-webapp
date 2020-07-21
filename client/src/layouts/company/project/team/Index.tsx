@@ -9,6 +9,7 @@ import {
   ButtonGroup,
   Alignment,
 } from '@blueprintjs/core';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { connect } from 'react-redux';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
@@ -29,6 +30,7 @@ import { Associate } from 'stores/associate/Reducer';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
+import InviteTeamMemberView from './InviteTeamMemberView';
 
 interface TeamMember {
   company: ICompany;
@@ -61,6 +63,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
     [],
   );
   const [teamList, setTeamList] = useState<IProjectTeam[]>([]);
+  const [showInviteTeam, setShowInviteTeam] = useState(false);
 
   useEffect(() => {
     load(props.getProjectTeams);
@@ -173,6 +176,38 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                       }
                     >
                       Add Associates
+                    </Button>
+                  ) : undefined
+                ) : undefined,
+              )}
+            {props.projectList &&
+              props.projectList.map((project) =>
+                props.project._id === project._id ? (
+                  project.company === props.company._id ? (
+                    <Button
+                      className="grow fr h2 pointer white bp3-minimal mr2"
+                      style={{
+                        background: 'none',
+                        border: '#0fa3a3',
+                        borderWidth: 1,
+                        borderStyle: 'solid',
+                        color: '#0fa3a3',
+                      }}
+                      onClick={() =>
+                        setShowInviteTeam(!showInviteTeam)
+                      }
+                    >
+                      <div className="flex">
+                        <MailOutlineIcon fontSize="small" />
+                        <div
+                          style={{
+                            marginLeft: '3px',
+                            fontSize: '15px',
+                          }}
+                        >
+                          Invite
+                        </div>
+                      </div>
                     </Button>
                   ) : undefined
                 ) : undefined,
@@ -466,6 +501,18 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             setShowDialog={(e) =>
               setShowAssociateDialog(!showAssociateDialog)
             }
+          />
+        </Dialog>
+      )}
+      {showInviteTeam && (
+        <Dialog
+          onClose={() => setShowInviteTeam(!showInviteTeam)}
+          isOpen={showInviteTeam}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+        >
+          <InviteTeamMemberView
+            setShowDialog={() => setShowInviteTeam(!showInviteTeam)}
           />
         </Dialog>
       )}
