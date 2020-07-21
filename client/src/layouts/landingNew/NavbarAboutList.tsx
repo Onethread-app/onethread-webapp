@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 import tigrowMini from './../../resources/LandingImages/TiGrow-mini-logo.svg';
+import { NavLink } from 'react-router-dom';
 
 interface NavbarAboutListProps {
   setShowAboutDrawer: (val: boolean) => void;
@@ -20,7 +21,9 @@ export const NavbarAboutList = (
           backgroundColor: '#F0FBFF'
         }}
       >
-        <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+        <NavLink to="/">
+          <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+        </NavLink>
         <Icon
           icon="cross"
           iconSize={35}
