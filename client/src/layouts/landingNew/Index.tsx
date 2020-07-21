@@ -20,223 +20,238 @@ import fb from './../../resources/LandingImages/fbIcon.png';
 import youtubeIcon from './../../resources/LandingImages/youtubeIcon.png';
 import linkedInIcon from './../../resources/LandingImages/linkedInIcon.png';
 import tigrowFooter from './../../resources/LandingImages/tigrowFooter.png';
+import { isMobileOnly } from 'react-device-detect';
+import { NavLink } from 'react-router-dom';
 
 export const LandingPage = () => {
   return (
-    <div>
+    <div className="w-100">
       <NavbarLanding />
       <div className="LandingFirstBackground vh-100 w-100">
-        <div className="w-40 ml5 pt4">
-          <h1 className="f3 fw5 blue" style={{ color: '#3F61C5' }}>Work From Home</h1>
-          <h1 className="f2" style={{ color: '#1D3557' }}>
+        <div className="w-40-ns w-90 ml5-ns ml3 pt4-ns pt2">
+          <h1 className="f3-ns f6 fw5 blue" style={{ color: '#3F61C5' }}>Work From Home</h1>
+          <h1 className="f2-ns f4" style={{ color: '#1D3557' }}>
             There is a better way to collaborate with your teammates.
           </h1>
-          <p className="f4 w-70" style={{ color: '#43466D' }}>An innovative project management tool that allows you to seamlessly manage your teams’ tasks,
+          <p className="f4-ns f7 w-70" style={{ color: '#43466D' }}>An innovative project management tool that allows you to seamlessly manage your teams’ tasks,
           communicate with team members in real-time, hold video conferences, and simplify collaboration
           with your vendors and partner organizations.
           </p>
-          <Button
-            className="f4 fw6 bp3-minimal pa3 br2 mv3"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            GET TIGROW FREE
+          <NavLink to="/signup">
+            <Button
+              className="f4-ns f7 fw6-ns bp3-minimal pa3 br2 mv3"
+              style={{ color: 'white', backgroundColor: '#4B6BC8' }}
+            >
+              GET TIGROW FREE
           </Button>
-          <p className="f5 w-40" style={{ color: '#707070' }}>Get started with FREE tools, and upgrade as you grow.</p>
+          </NavLink>
+          <p className="f5-ns f7 w-40" style={{ color: '#707070' }}>Get started with FREE tools, and upgrade as you grow.</p>
         </div>
       </div>
-      <div className="w-100 flex ph5 pt6" style={{ backgroundColor: '#F0FBFF' }}>
-        <div className="w-30">
-          <h1 className="f2" style={{ color: '#1D3557' }}>
+      <div className="w-100 flex-ns ph5-ns ph4 pt6-ns pt2" style={{ backgroundColor: '#F0FBFF' }}>
+        <div className="w-30-ns w-100">
+          <h1 className="f2-ns f4" style={{ color: '#1D3557' }}>
             Comprehensive collaboration tools, to run your entire organization at one place.
           </h1>
-          <p style={{ color: '#43466D' }} className="f4 mt4 lh-2">
+          <p style={{ color: '#43466D' }} className="f4-ns f7 mt4-ns mt2 lh-2-ns mb4">
             TiGrow offers a full stack of software for task management, real time communication and
             video conferencing with a project management tool at its core. They’re powerful alone —
             but even better when used together.
           </p>
         </div>
-        <div className="w-30 bg-white br2 pa4 shadow-4 ml5">
+        <div className="w-30-ns w-100 bg-white br2 pa4 shadow-4 ml5-ns">
           <article className="flex items-center">
             <img
-              style={{ width: '35px' }}
+              style={{ width: isMobileOnly? '25px' : '35px' }}
               src={task}
             />
             <div className="ml2">
-              <p className="f3 fw7" style={{ color: '#1D3557' }}>Project Management Tool</p>
+              <p className="f3-ns f5 fw7" style={{ color: '#1D3557' }}>Project Management Tool</p>
             </div>
           </article>
-          <p className="bb b--light-silver pb4 f5 fw5 mt3 lh-2" style={{ color: '#43466D' }}>
+          <p className="bb b--light-silver pb4 f5-ns f7 fw5 mt3 lh-2-ns" style={{ color: '#43466D' }}>
             Easily plan, collaborate,
             organize and deliver projects of all sizes,
             on time, using one project planning software
             with all the right tools put at one place.
           </p>
-          <h1 className='f5 fw7 mt4' style={{ color: '#1D3557' }}>POPULAR FEATURES</h1>
+          <h1 className='f5-ns f6 fw7 mt4' style={{ color: '#1D3557' }}>POPULAR FEATURES</h1>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>KANBAN BOARDS</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>KANBAN BOARDS</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>TASK, SUB-TASK</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>TASK, SUB-TASK</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>PROJECT MODERATORS</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>PROJECT MODERATORS</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>ANNOUNCEMENT</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>ANNOUNCEMENT</h1>
           </div>
-          <Button
-            className="f4 fw6 bp3-minimal pa3 br2 mv4 w-90 mh3"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            Get Started
+          <NavLink to="/signup">
+            <Button
+              className="f4-ns fw6 bp3-minimal pa3 br2 mv4-ns mv2 w-90 mh3"
+              style={{ color: 'white', backgroundColor: '#4B6BC8' }}
+            >
+              Get Started
           </Button>
+          </NavLink>
         </div>
-        <div className="w-30 bg-white br2 pa4 shadow-4 ml5">
+        <div className="w-30-ns w-100 bg-white br2 pa4 shadow-4 ml5-ns mt4 mt0-ns">
           <article className="flex items-center">
             <img
-              style={{ width: '35px' }}
+              style={{ width: isMobileOnly? '25px' : '35px' }}
               src={intClient}
             />
             <div className="ml2">
-              <p className="f3 fw7" style={{ color: '#1D3557' }}>Work From Home Solution</p>
+              <p className="f3-ns f5 fw7" style={{ color: '#1D3557' }}>Work From Home Solution</p>
             </div>
           </article>
-          <p className="bb b--light-silver pb4 f5 fw5 mt3 lh-2" style={{ color: '#43466D' }}>
+          <p className="bb b--light-silver pb4 f5-ns f7 fw5 mt3 lh-2-ns" style={{ color: '#43466D' }}>
             From assigning tasks & monitoring your team’s performance to collaborating
             with them in a shared browser and video conference, TiGrow is a complete
             remote working solution.
           </p>
-          <h1 className='f5 fw7 mt4' style={{ color: '#1D3557' }}>UPCOMING FEATURES</h1>
+          <h1 className='f5-ns f6 fw7 mt4' style={{ color: '#1D3557' }}>UPCOMING FEATURES</h1>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>SHARED BROWSER</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>SHARED BROWSER</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>GANTT CHART FOR KPI MONITORING</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>GANTT CHART FOR KPI MONITORING</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>CLOCK IN & OUT</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>CLOCK IN & OUT</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>TIME SHEET</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>TIME SHEET</h1>
           </div>
-          <Button
-            className="f4 fw6 bp3-minimal pa3 br2 mv4 w-90 mh3"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            Get Started
-          </Button>
+          <NavLink to="/signup">
+            <Button
+              className="f4-ns fw6 bp3-minimal pa3 br2 mv4-ns mv2 w-90 mh3"
+              style={{ color: 'white', backgroundColor: '#4B6BC8' }}
+            >
+              Get Started
+            </Button>
+          </NavLink>
         </div>
       </div>
-      <div className="w-100 flex ph5 pv5" style={{ backgroundColor: '#F0FBFF' }}>
-        <div className="w-30 bg-white br2 pa4 shadow-4">
+      <div className="w-100 flex-ns ph5-ns ph4 pv5" style={{ backgroundColor: '#F0FBFF' }}>
+        <div className="w-30-ns w-100 bg-white br2 pa4 shadow-4">
           <article className="flex items-center">
             <img
-              style={{ width: '35px' }}
+              style={{ width: isMobileOnly? '25px' : '35px' }}
               src={business}
             />
             <div className="ml2">
-              <p className="f3 fw7" style={{ color: '#1D3557' }}>Vendor Management Tool</p>
+              <p className="f3-ns f5 fw7" style={{ color: '#1D3557' }}>Vendor Management Tool</p>
             </div>
           </article>
-          <p className="bb b--light-silver pb4 f5 fw5 mt3 lh-2" style={{ color: '#43466D' }}>
+          <p className="bb b--light-silver pb4 f5 fw5-ns f7 mt3 lh-2-ns" style={{ color: '#43466D' }}>
             From Medium To Large Enterprise everyone has to manage multiple
             vendors for their activities, managing all those vendors wasn't
             this much easier before.
           </p>
-          <h1 className='f5 fw7 mt4' style={{ color: '#1D3557' }}>NEW FEATURE INTEGRATION</h1>
+          <h1 className='f5-ns f6 fw7 mt4' style={{ color: '#1D3557' }}>NEW FEATURE INTEGRATION</h1>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>QUOTATION REVEALING</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>QUOTATION REVEALING</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>DOCUMENTS APPROVAL</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>DOCUMENTS APPROVAL</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>SMART CONTRACT</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>SMART CONTRACT</h1>
           </div>
-          <Button
-            className="f4 fw6 bp3-minimal pa3 br2 mv4 w-90 mh3"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            Get Started
-          </Button>
+          <NavLink to="/signup">
+            <Button
+              className="f4-ns fw6 bp3-minimal pa3 br2 mv4-ns mv2 w-90 mh3"
+              style={{ color: 'white', backgroundColor: '#4B6BC8' }}
+            >
+              Get Started
+            </Button>
+          </NavLink>
         </div>
-        <div className="w-30 bg-white br2 pa4 shadow-4 ml5">
+        <div className="w-30-ns w-100 bg-white br2 pa4 shadow-4 ml5-ns mt4 mt0-ns">
           <article className="flex items-center">
             <img
+              style={{ width: isMobileOnly? '30px' : '35px' }}
               src={team}
             />
             <div className="ml2">
-              <p className="f3 fw7" style={{ color: '#1D3557' }}>Finding Team Mates</p>
+              <p className="f3-ns f5 fw7" style={{ color: '#1D3557' }}>Finding Team Mates</p>
             </div>
           </article>
-          <p className="bb b--light-silver pb4 f5 fw5 mt3 lh-2" style={{ color: '#43466D' }}>
+          <p className="bb b--light-silver pb4 f5-ns f7 fw5 mt3 lh-2-ns" style={{ color: '#43466D' }}>
             Find the perfect Team Mate for your Team Find
             & Hire Your Remote, Contractual, Full Time or
             Part Time Teammate For Any Type Of Projects.
           </p>
-          <h1 className='f5 fw7 mt4' style={{ color: '#1D3557' }}>NEW FEATURES</h1>
+          <h1 className='f5-ns f6 fw7 mt4' style={{ color: '#1D3557' }}>NEW FEATURES</h1>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>REQUEST FOR NEW TEAM MATE</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>REQUEST FOR NEW TEAM MATE</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>PROJECT BASED TIME SHEET FOR PAYMENT</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>PROJECT BASED TIME SHEET FOR PAYMENT</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>POST YOUR PORTFOLIO SERVICES/SKILLS AND GET HIRED BY COMPANIES</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>POST YOUR PORTFOLIO SERVICES/SKILLS AND GET HIRED BY COMPANIES</h1>
           </div>
-          <Button
-            className="f4 fw6 bp3-minimal pa3 br2 mv4 w-90 mh3"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            Get Started
-          </Button>
+          <NavLink to="/signup">
+            <Button
+              className="f4-ns fw6 bp3-minimal pa3 br2 mv4-ns mv2 w-90 mh3"
+              style={{ color: 'white', backgroundColor: '#4B6BC8' }}
+            >
+              Get Started
+            </Button>
+          </NavLink>
         </div>
-        <div className="w-30 bg-white br2 pa4 shadow-4 ml5">
+        <div className="w-30-ns w-100  bg-white br2 pa4 shadow-4 ml5-ns mt4 mt0-ns">
           <article className="flex items-center">
             <img
-              style={{ width: '35px' }}
+              style={{ width: isMobileOnly? '25px' :'35px' }}
               src={support}
             />
             <div className="ml2">
-              <p className="f3 fw7" style={{ color: '#1D3557' }}>Finding Partners</p>
+              <p className="f3-ns f5 fw7" style={{ color: '#1D3557' }}>Finding Partners</p>
             </div>
           </article>
-          <p className="bb b--light-silver pb4 f5 fw5 mt3 lh-2" style={{ color: '#43466D' }}>
+          <p className="bb b--light-silver pb4 f5-ns f7 fw5 mt3 lh-2-ns" style={{ color: '#43466D' }}>
             Search and Find Partner Companies from around the world and Invite them to collaborate with you in TiGrow.
           </p>
-          <h1 className='f5 fw7 mt4' style={{ color: '#1D3557' }}>NEW FEATURES</h1>
+          <h1 className='f5-ns f6 fw7 mt4' style={{ color: '#1D3557' }}>NEW FEATURES</h1>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>TECHNOLOGICAL VENDOR SECTION</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>TECHNOLOGICAL VENDOR SECTION</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>CHANNEL PARTNER SECTION</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>CHANNEL PARTNER SECTION</h1>
           </div>
           <div className="flex">
             <img src={tick} />
-            <h1 className='f5 fw7 ml2'>DIGITAL MARKETING SECTION</h1>
+            <h1 className='f5-ns f7 fw7 ml2'>DIGITAL MARKETING SECTION</h1>
           </div>
-          <Button
-            className="f4 fw6 bp3-minimal pa3 br2 mv4 w-90 mh3"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            Get Started
-          </Button>
+          <NavLink to="/signup">
+            <Button
+              className="f4-ns fw6 bp3-minimal pa3 br2 mv4-ns mv2 w-90 mh3"
+              style={{ color: 'white', backgroundColor: '#4B6BC8' }}
+            >
+              Get Started
+            </Button>
+          </NavLink>
         </div>
       </div>
       <div className="LandingSecondBackground w-100">
@@ -257,7 +272,7 @@ export const LandingPage = () => {
       </Button>
         </div>
       </div>
-      <div className="flex ph7-l items-center">
+      <div className="flex-ns ph7-l items-center">
         <div className="w-34">
           <h1 className="f1" style={{ color: '#0FB7A0' }}>6,370</h1>
           <h1 style={{ color: '#0FB7A0' }} className="f3 fw5">Users in over <span className="fw7">28</span> countries collaborating with Tigrow</h1>
@@ -277,7 +292,7 @@ export const LandingPage = () => {
           </div>
         </div>
       </div>
-      <div className="flex ph7 pv5">
+      <div className="flex ph7-ns pv5">
         <div className="w-50">
           <h1 className="f1" style={{ color: '#0FB7A0' }}>Start Growing With TiGrow Today</h1>
           <h1 className="f4 fw4 lh-2" style={{ color: '#0FB7A0' }}>With tools to Plan and collaborate while having a seamless user
@@ -285,12 +300,14 @@ export const LandingPage = () => {
           necessary with little to no learning curve, and a support
           team excited to help you, getting started with this
             comprehensive tool has become even easier.</h1>
-          <Button
-            className="f4 fw6 bp3-minimal pa4 br2 mv4 mh3"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            Get Tigrow Free
+          <NavLink to="/signup">
+            <Button
+              className="f4 fw6 bp3-minimal pa4 br2 mv4 mh3"
+              style={{ color: 'white', backgroundColor: '#4B6BC8' }}
+            >
+              Get Tigrow Free
           </Button>
+          </NavLink>
           <h1 className="f4 fw4 lh-2" style={{ color: '#707070' }}>Get started with FREE tools, and upgrade as you grow.</h1>
         </div>
         <div className="w-50 ml5">
