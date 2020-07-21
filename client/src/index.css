@@ -6,21 +6,6 @@
 body {
   font-family: 'Open Sans', sans-serif;
 }
-.LandingFirstBackground {
-  background-image: url(./resources/LandingImages/HomeFirstBackground.svg);
-  position: relative;
-	background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-}
-.LandingSecondBackground {
-  background-image: url(./resources/LandingImages/HomeSecondBackground.svg);
-  position: relative;
-	background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-
-}
 .shadow-0 {
   box-shadow: none !important;
 }
