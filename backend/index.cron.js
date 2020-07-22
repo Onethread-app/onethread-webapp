@@ -26,7 +26,7 @@ mongoose.set('useUnifiedTopology', true);
 mongoose.set('useCreateIndex', true);
 mongoose.connect(mongoUri, () => {});
 logger.info('MongoDB is connected');
-IndexElasticSearch();
+// IndexElasticSearch();
 console.log('I am starting.....');
 
 const options = {
@@ -49,23 +49,27 @@ const transporter = nodeMailer.createTransport({
 });
 transporter.use('compile', hbs(options));
 
-cron.schedule('* * * * *', async () => {
+cron.schedule('* 0 10 * *', async () => {
   let startDate = new Date().getTime();
-  let endDate = new Date().getTime() + 30;
+  let endDate = startDate + 669600000;
   console.log('process start');
+
   await Subscription.find({
-    expireAt: { $gte: startDate },
-    isActive: true,
+    expireAt: { $gte: startDate, $lt: endDate},
+    isActive: true
   })
     .populate('company', '_id')
     .exec()
     .then((result) => {
+      console.log(result);
       result.forEach(async (company) => {
         let emailId = await Member.findOne({
           company: company.company._id,
           role: 'superAdmin',
         }).populate('account', 'email');
         if (emailId.account.email) {
+
+          console.log(emailId.account.email);
           const mailOptions = {
             from: config.emailAddress, // sender address
             to: emailId.account.email, // list of receivers
@@ -73,6 +77,7 @@ cron.schedule('* * * * *', async () => {
             text: 'Renew Your subscription plan', // plain text body
             html: '<b>Renew your Subscription.</b>', // html body
           };
+          console.log(mailOptions)
           transporter.sendMail(mailOptions, function (error, info) {
             console.log(info.messageId);
             if (err) {
