@@ -1,4 +1,5 @@
 const { Member } = require('./member.model');
+const Account = require('../../account/account.model');
 const { Subscription } = require('../../subscription/subscription.model');
 const logger = require('../../../config/winston');
 const {
@@ -108,52 +109,10 @@ const addMember = async (req, res, next) => {
           removed: false,
         },
       );
+
+      createMembers(req, accounts);
       // add new members in company
-      members = await Member.create(newMembers);
-
-      const elasticSearchIndexedMembers = await Member.find({
-        account: { $in: accounts },
-        company: req.company._id,
-      }).populate({
-        path: 'account',
-        select: '_id name firstName lastName email',
-      });
-
-      // console.log(elasticSearchIndexedMembers);
-      // //notification need account info
-      // newMembersForNotification = await elasticSearchIndexedMembers.filter(newMember => {
-      //   return !prevMembers.some(prevMemberAccount => {
-      //     return (
-      //       prevMemberAccount.toString() ===
-      //       newMember.account._id.toString()
-      //     );
-      //   });
-      // });
-      // console.log(newMembersForNotification);
-
-      createMemberAddNotification(
-        req.company._id,
-        elasticSearchIndexedMembers,
-        {
-          _id: req.user._id,
-          name: req.user.name,
-          pusherSock: req.headers.clientid,
-        },
-      );
-
-      const memberStructure = (data) => {
-        return {
-          mongo_id: data._id,
-          account: data.account,
-          company: data.company,
-        };
-      };
-
-      await bulkInsert(
-        memberIndex,
-        elasticSearchIndexedMembers,
-        memberStructure,
-      );
+           
       logger.info(
         chalk.blueBright(
           `ElasticSearch successfully Elasticsearch documented with bulk on ${memberIndex}`,
@@ -166,18 +125,7 @@ const addMember = async (req, res, next) => {
       req.body.pendingTeamMembers.length <=
       planMemberAllow[0].plan.maxTier
     ) {
-      let pendingMembersInfo = req.body.pendingTeamMembers.map(
-        (m) => {
-          return { email: m, company: req.company._id };
-        },
-      );
-      pendingMembers = await PendingMember.create(pendingMembersInfo);
-
-      sendInviteColleague(
-        req.user.email,
-        req.company,
-        req.body.pendingTeamMembers,
-      );
+      createPendingMembers(req, req.body.pendingTeamMembers);
     }
     return sendJSONresponse(res, 201, {
       message: 'New member created and invitation send',
@@ -398,7 +346,193 @@ const searchMember = async (req, res, next) => {
   }
 };
 
+const bulkInsertMember = async (req, res, next) => {
+  if (!req.is('application/json')) {
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
+  }
+  try {
+    const planMemberAllow = await Subscription.find({
+      company: req.company._id,
+      isActive: true,
+    }).populate('plan', 'maxTier');
+
+    let memberCount = await Member.countDocuments({
+      company: req.company._id,
+      removed: false,
+    }).exec();
+
+    let emails = req.body;
+    
+    let tolatCount = emails.length + memberCount;
+
+    if (tolatCount > planMemberAllow[0].plan.maxTier) {
+      return sendJSONresponse(res, 400, {
+        message: `Plan maximum member limit ${planMemberAllow[0].plan.maxTier} exceeded.`,
+      });
+    }
+
+    const haveAccount = await Account.find({
+      email: emails,
+    })
+      .select('email')
+      .exec();
+
+    let haveAccountEmails = haveAccount.map((c) => {
+      return c.email;
+    });
+
+    //email need to send
+    let inviteEmailUsers = emails.filter(
+      (el) => !haveAccountEmails.includes(el),
+    );
+
+    const havePendingAccount = await PendingMember.find({
+      email: inviteEmailUsers,
+      company: req.company._id,
+    })
+      .select('email')
+      .exec();
+
+    let havePendingAccountEmails = havePendingAccount.map((c) => {
+      return c.email;
+    });
+
+    inviteEmailUsers = inviteEmailUsers.filter(
+      (el) => !havePendingAccountEmails.includes(el),
+    );
+
+    if (inviteEmailUsers.length > 0)
+      createPendingMembers(req, inviteEmailUsers);
+
+    let haveAccountIds = haveAccount.map((c) => {
+      return c._id.toString();
+    });
+
+    let prevMembers = await Member.find({
+      account: haveAccountIds,
+      company: req.company._id,
+      removed: true,
+    })
+      .select('account')
+      .exec();
+
+    prevMembers = prevMembers.map((member) => member.account);
+
+    await Member.updateMany(
+      {
+        account: prevMembers,
+        company: req.company._id,
+      },
+      {
+        removed: false,
+      },
+    );
+
+    const haveMember = await Member.find({
+      account: haveAccountIds,
+      company: req.company._id,
+      removed: false,
+    })
+      .select('account')
+      .exec();
+
+    let haveMemberAccounts = haveMember.map((c) => {
+      return c.account.toString();
+    });
+
+    //notify user
+
+    let notifiyUsersIds = haveAccountIds.filter(
+      (el) => !haveMemberAccounts.includes(el),
+    );
+
+    if (notifiyUsersIds.length > 0)
+      createMembers(req, notifiyUsersIds);
+
+    return sendJSONresponse(res, 200, {
+      inviteEmailUsers: inviteEmailUsers,
+      notifiyUsersIds: notifiyUsersIds,
+    });
+  } catch (error) {
+    
+    logger.error(`Member: ${error}`);
+    next(error);
+  }
+};
+
+const createMembers = async (req, notifiyUsersIds) => {
+  try {
+    let newMembers = notifiyUsersIds.map((c) => {
+      return {
+        account: c,
+        company: req.company._id,
+      };
+    });
+    await Member.create(newMembers);
+
+    const elasticSearchIndexedMembers = await Member.find({
+      account: notifiyUsersIds,
+      company: req.company._id,
+    }).populate({
+      path: 'account',
+      select: '_id name firstName lastName email',
+    });
+
+    createMemberAddNotification(
+      req.company._id,
+      elasticSearchIndexedMembers,
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
+    );
+
+    const memberStructure = (data) => {
+      return {
+        mongo_id: data._id,
+        account: data.account,
+        company: data.company,
+      };
+    };
+
+    await bulkInsert(
+      memberIndex,
+      elasticSearchIndexedMembers,
+      memberStructure,
+    );
+
+    //return members;
+  } catch (error) {
+    
+    logger.error(`Member: ${error}`);
+  }
+};
+
+const createPendingMembers = async (req, memberEmails) => {
+  try {
+    
+    let pendingMembersInfo = memberEmails.map((m) => {
+      return { email: m, company: req.company._id };
+    });
+    pendingMembers = await PendingMember.create(pendingMembersInfo);
+  
+    sendInviteColleague(
+      req.user.email,
+      req.company,
+      memberEmails,
+    );
+
+  } catch (error) {
+   
+    logger.error(`Member: ${error}`);
+  }
+};
+
 module.exports = {
+  bulkInsertMember,
   addMember,
   list,
   pendingList,
