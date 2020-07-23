@@ -208,7 +208,7 @@ const suggestMember = async (req, res, next) => {
       .populate('assignedPerson', '_id name')
       .exec();
     let projectMembers = await Team.find({
-      project: req.query.projectId,
+      project: req.query.pid,
     })
       .select('_id account')
       .populate('account', '_id name')
