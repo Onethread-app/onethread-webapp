@@ -5,6 +5,8 @@ const { Member } = require('../company/member/member.model');
 const {
   PendingMember,
 } = require('../company/member/pendingMember.model');
+const { pendingTeam } = require('../team-member/pendingteam.model');
+const { Team } = require('../team-member/team.model');
 const config = require('../../config/config');
 const logger = require('../../config/winston');
 const client = require('../../index.redis');
@@ -120,6 +122,18 @@ const register = async (req, res, next) => {
         );
       }
 
+      let pendingTeam = await pendingTeam
+        .find({
+          email: account.email,
+        })
+        .select('-__v -createdAt -updatedAt');
+
+      if (pendingTeam.length > 0) {
+        let pendingMemberToTeam = pendingTeam.map((m) => {
+          return { account: account._id, project: m.project };
+        });
+        await Team.create(pendingMemberToTeam);
+      }
       sendEmailForVerifyAccount(
         user.firstName,
         user.lastName,

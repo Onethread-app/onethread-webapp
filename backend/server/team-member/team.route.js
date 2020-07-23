@@ -35,6 +35,19 @@ router.route('/:companyId/add-team-member').post(
   subCtrl.subscriptionExpireCheck(),
   teamCtrl.addTeamMember,
 );
+router
+  .route('/invite-team')
+  .post(
+    authorization,
+    SchemaValidator(teamValidation.inviteTeam),
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
+    teamCtrl.bulkInsertTeam,
+  );
 // .get(authorization, teamCtrl.list);
 router
   .route('/member-list')

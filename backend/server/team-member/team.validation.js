@@ -17,6 +17,7 @@ const schema = {
   company: idSchema.id,
   department: idSchema.id,
   division: idSchema.id,
+  pid: idSchema.id,
   position: Joi.string(),
   role: Joi.string().valid([
     'superAdmin',
@@ -54,17 +55,30 @@ module.exports = {
     }),
     params: memberId,
   }),
-  // updateCompany: Joi.object().keys({
-  //   body: Joi.object().keys({
-  //     address: schema.address.required(),
-  //     email: schema.email,
-  //     legalOwnerName: schema.legalOwnerName,
-  //     legalOwnerMail: schema.legalOwnerMail,
-  //     about: schema.about,
-  //   }),
-  //   params: cname,
-  // }),
-  // deleteCompany: Joi.object().keys({
-  //   params: cname,
-  // }),
+  inviteTeam: Joi.object().keys({
+    headers: Joi.object().keys({
+      companyid: schema.company,
+    }),
+    query: Joi.object().keys({
+      pid: schema.pid,
+    }),
+    body: Joi.array()
+      .min(1)
+      .max(200)
+      .items(
+        Joi.string()
+          .regex(
+            /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+          )
+          .lowercase()
+          .min(3)
+          .max(62)
+          .required()
+          .error(() => {
+            return {
+              message: 'Invalid email format',
+            };
+          }),
+      ),
+  }),
 };

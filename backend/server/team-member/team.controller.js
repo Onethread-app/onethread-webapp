@@ -1,7 +1,15 @@
+const Account = require('../account/account.model');
 const { Team } = require('./team.model');
 const { Member } = require('../company/member/member.model');
+const {
+  PendingMember,
+} = require('../company/member/pendingMember.model');
 const { Project } = require('../project/project.model');
+const { PendingTeam } = require('./pendingteam.model');
 const { ProjectRequest } = require('../request/request.model');
+const {
+  Subscription,
+} = require('../subscription/subscription.model');
 const logger = require('../../config/winston');
 const {
   sendJSONresponse,
@@ -11,6 +19,9 @@ const {
 const {
   createTeamAddNotification,
 } = require('../notification/notification.controller');
+const {
+  sendInviteTeamMember,
+} = require('../services/email.services');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -303,6 +314,268 @@ const searchTeamMember = async (req, res, next) => {
   }
 };
 
+// TODO: Previous remove member check in colleague
+// TODO: Previous remove member check in team
+const bulkInsertTeam = async (req, res, next) => {
+  if (!req.is('application/json')) {
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
+  }
+  try {
+    const emails = req.body;
+    const companyId = req.headers.companyid;
+    const pid = req.query.pid;
+    const planMemberAllow = await Subscription.find({
+      company: companyId,
+      isActive: true,
+    })
+      .sort({ _id: -1 })
+      .populate('plan company', 'maxTier name');
+    let maxNumAllow = planMemberAllow[0].plan.maxTier;
+    let companyName = planMemberAllow[0].company.name;
+    if (emails.length >= maxNumAllow) {
+      return sendErrorResponse(res, 400, 'LimitExceedError', {
+        message: 'Limit is exceed',
+      });
+    }
+    // check project owner or not
+    const projectOwner = await Project.findOne({
+      _id: pid,
+    });
+
+    if (projectOwner.company.toString() === companyId) {
+      // if mail already exist in tigrow
+      const haveAccount = await Account.find({
+        email: emails,
+      })
+        .select('email')
+        .exec();
+      let haveAccountEmails = haveAccount.map((c) => {
+        return c.email;
+      });
+      if (haveAccount) {
+        // find the existing email account id
+        let haveAccountIds = haveAccount.map((c) => {
+          return c._id.toString();
+        });
+        // if account holder exist in company
+        let inColleague = await Member.find({
+          account: haveAccountIds,
+          company: req.headers.companyid,
+        }).select('member account');
+        if (inColleague) {
+          // check if this member add previously in the project
+          inColleague.forEach(async (data) => {
+            let prevMembers = await Team.findOne({
+              account: data.account,
+              project: pid,
+              removed: true,
+            }).select('account');
+            // if prevMem is empty
+            // then add member into team
+            if (prevMembers === undefined) {
+              let newMember = await Team.create({
+                account: data.account,
+                project: pid,
+                member: data._id,
+                role: 'member',
+              });
+              logger.info(
+                `Team: send notification to newly add team members`,
+              );
+              createTeamAddNotification(projectOwner, newMember, {
+                _id: req.user._id,
+                name: req.user.name,
+                pusherSock: req.headers.clientid,
+              });
+            } else {
+              await Team.updateOne(
+                { account: data.account, project: pid },
+                {
+                  removed: false,
+                },
+              );
+              logger.info(
+                `Team: previous member re-add into the team`,
+              );
+            }
+          });
+        }
+        let haveColleagueAccounts = inColleague.map((c) => {
+          return c.account.toString();
+        });
+        let inviteInColleague = haveAccountIds.filter(
+          (el) => !haveColleagueAccounts.includes(el),
+        );
+        // add each account into the colleague
+        inviteInColleague.forEach(async (data) => {
+          let memberId = await Member.create({
+            account: data,
+            company: companyId,
+            removed: false,
+            role: 'employee',
+          });
+          // add memberIn into the team
+          let teamId = await Team.create({
+            member: memberId._id,
+            account: data,
+            project: pid,
+            role: 'member',
+            removed: false,
+          });
+          logger.info(`${memberId._id} add into project ${pid}`);
+          createTeamAddNotification(projectOwner, teamId, {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          });
+        });
+      }
+      //email need to send
+      let inviteEmailUsers = emails.filter(
+        (el) => !haveAccountEmails.includes(el),
+      );
+      // create a pending member request
+      inviteEmailUsers.forEach(async (data) => {
+        let pendingMember = await PendingMember.create({
+          email: data,
+          company: companyId,
+          removed: false,
+        });
+        // create a pending Team request
+        let pendingTeam = await PendingTeam.create({
+          email: data,
+          project: pid,
+          removed: false,
+        });
+        sendInviteTeamMember(req.user._id, companyName, data);
+      });
+    } else {
+      const memberAllowNumber = await ProjectRequest.findOne({
+        project: req.query.pid,
+      }).select('size');
+      if (memberAllowNumber.size >= emails.length) {
+        return sendErrorResponse(res, 400, 'LimitExceedError', {
+          message: `You can not add more than ${memberAllowNumber.size}`,
+        });
+      }
+
+      const haveAccount = await Account.find({
+        email: emails,
+      })
+        .select('email')
+        .exec();
+      let haveAccountEmails = haveAccount.map((c) => {
+        return c.email;
+      });
+      if (haveAccount) {
+        // find the existing email account id
+        let haveAccountIds = haveAccount.map((c) => {
+          return c._id.toString();
+        });
+        // if account holder exist in company
+        let inColleague = await Member.find({
+          account: haveAccountIds,
+          company: req.headers.companyid,
+        }).select('member account');
+        if (inColleague) {
+          // check if this member add previously in the project
+          inColleague.forEach(async (data) => {
+            let prevMembers = await Team.findOne({
+              account: data.account,
+              project: pid,
+              removed: true,
+            }).select('account');
+            // if prevMem is empty
+            // then add member into team
+            if (prevMembers === undefined) {
+              let newMember = await Team.create({
+                account: data.account,
+                project: pid,
+                member: data._id,
+                role: 'member',
+              });
+              logger.info(
+                `Team: send notification to newly add team members`,
+              );
+              createTeamAddNotification(projectOwner, newMember, {
+                _id: req.user._id,
+                name: req.user.name,
+                pusherSock: req.headers.clientid,
+              });
+            } else {
+              await Team.updateOne(
+                { account: data.account, project: pid },
+                {
+                  removed: false,
+                },
+              );
+              logger.info(
+                `Team: previous member re-add into the team`,
+              );
+            }
+          });
+        }
+        let haveColleagueAccounts = inColleague.map((c) => {
+          return c.account.toString();
+        });
+        let inviteInColleague = haveAccountIds.filter(
+          (el) => !haveColleagueAccounts.includes(el),
+        );
+        // add each account into the colleague
+        inviteInColleague.forEach(async (data) => {
+          let memberId = await Member.create({
+            account: data,
+            company: companyId,
+            removed: false,
+            role: 'employee',
+          });
+          // add memberIn into the team
+          let teamId = await Team.create({
+            member: memberId._id,
+            account: data,
+            project: pid,
+            role: 'member',
+            removed: false,
+          });
+          logger.info(`${memberId._id} add into project ${pid}`);
+          createTeamAddNotification(projectOwner, teamId, {
+            _id: req.user._id,
+            name: req.user.name,
+            pusherSock: req.headers.clientid,
+          });
+        });
+      }
+      //email need to send
+      let inviteEmailUsers = emails.filter(
+        (el) => !haveAccountEmails.includes(el),
+      );
+      // create a pending member request
+      inviteEmailUsers.forEach(async (data) => {
+        let pendingMember = await PendingMember.create({
+          email: data,
+          company: companyId,
+          removed: false,
+        });
+        // create a pending Team request
+        let pendingTeam = await PendingTeam.create({
+          email: data,
+          project: pid,
+          removed: false,
+        });
+        sendInviteTeamMember(req.user._id, companyName, data);
+      });
+    }
+    return sendJSONresponse(res, 200, {
+      message: 'successfully add into the team',
+    });
+  } catch (error) {
+    logger.error(`Team: ${error}`);
+    next(error);
+  }
+};
+
 module.exports = {
   addTeamMember,
   list,
@@ -311,4 +584,5 @@ module.exports = {
   searchTeamMember,
   changeRole,
   associateListInProject,
+  bulkInsertTeam,
 };

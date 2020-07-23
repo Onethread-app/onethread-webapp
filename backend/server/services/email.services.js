@@ -20,7 +20,7 @@ let host = ``;
 if (config.env === 'production') {
   host = `https://www.tigrow.co`;
 } else if (config.env === 'test') {
-  host = `https://tigrow.herokuapp.com`;
+  host = `https://demo.tigrow.co`;
 } else if (config.env === 'test3') {
   host = `http://test3.tigrow.co.s3-website-ap-southeast-1.amazonaws.com`;
 } else if (config.env === 'test4') {
@@ -116,6 +116,31 @@ module.exports.sendInviteColleague = async (
   return transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
       return next(err);
+    }
+    logger.info(`send company invitation mail to users successfully`);
+    return info;
+  });
+};
+
+module.exports.sendInviteTeamMember = async (
+  userEmail,
+  company,
+  emailList,
+) => {
+  const link = `${host}/signup`;
+  const mailOptions = {
+    to: emailList,
+    subject: 'Invitation to join company',
+    html: `
+					<h1> Join ${company.name} on TiGrow, </h1>
+					<h2> ${userEmail} has invited you to join the company ${company.name}. join now to start collaborating!  <a href="${link}"> Link </a> </h2>
+	
+			`,
+  };
+
+  return transporter.sendMail(mailOptions, (err, info) => {
+    if (err) {
+      logger.error(`${error}`);
     }
     logger.info(`send company invitation mail to users successfully`);
     return info;
