@@ -31,6 +31,9 @@ import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
 import InviteTeamMemberView from './InviteTeamMemberView';
+import {
+  inviteColleagueInBulk,
+} from 'stores/project/Actions';
 
 interface TeamMember {
   company: ICompany;
@@ -47,6 +50,7 @@ interface TeamMember {
   ) => void;
   project: any;
   projectList: Array<{ _id: string; company: string }>;
+  inviteColleagueInBulk: (emails: any) => void;
 }
 
 const load = async (_getProjectTeams: () => void) => {
@@ -512,7 +516,9 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           canOutsideClickClose={false}
         >
           <InviteTeamMemberView
-            setShowDialog={() => setShowInviteTeam(!showInviteTeam)}
+          inviteColleagueInBulk={props.inviteColleagueInBulk}
+          currentCompany={props.company.name}
+          setShowDialog={() => setShowInviteTeam(!showInviteTeam)}
           />
         </Dialog>
       )}
@@ -537,4 +543,5 @@ const mapStateToProps = (state: any) => {
 export const ProjectTeamPage = connect(mapStateToProps, {
   getProjectTeams,
   changeProjectMemberRole,
+  inviteColleagueInBulk
 })(ProjectTeamPageComponent);

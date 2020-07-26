@@ -6,6 +6,8 @@ import { makeStyles } from '@material-ui/core/styles';
 // import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import CloseIcon from '@material-ui/icons/Close';
 import './InviteTeamMemberView.scss';
+import { CSVReader } from 'react-papaparse'
+import { ICompany } from 'stores/company/Reducer';
 
 const useStyles = makeStyles({
   button: {
@@ -15,13 +17,52 @@ const useStyles = makeStyles({
 
 interface IInviteTeamMemberView {
   setShowDialog: () => void;
+  inviteColleagueInBulk: (emails: any) => void;
+  currentCompany: ICompany['name']
 }
 
 export default function InviteTeamMemberView(
   props: IInviteTeamMemberView,
 ) {
   const [inputType, setInputType] = React.useState('single');
+  const [emails, setEmails] = React.useState([])
   const classes = useStyles();
+
+  const handleOnDrop = (data: any , file) => {
+    try {
+        console.log('---------------------------')
+        const parsedData = data.map(element => {
+          delete element.errors 
+          delete element.meta
+          return element.data[0]
+        })
+        console.log(parsedData.slice(0,parsedData.length -1 ))
+        setEmails(parsedData.slice(0,parsedData.length -1 ))
+        console.log('---------------------------')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleOnError = (err:any, file:any, inputElem:any, reason:any) => {
+    console.log(err)
+  }
+
+  const handleOnRemoveFile = (data:any) => {
+    console.log('---------------------------')
+    console.log(data)
+    console.log('---------------------------')
+  }
+
+  const invateColleague = async () => {
+    console.log(emails)
+    await props.inviteColleagueInBulk(emails)
+  }
+
+  const handleEmail = (event: any) => {
+    setEmails(event.target.value.split(','))
+  }
+
 
   return (
     <div>
@@ -58,7 +99,7 @@ export default function InviteTeamMemberView(
               color: '#5674CC',
             }}
           >
-            Demo Company
+            {props.currentCompany}
           </label>
           <label
             style={{
@@ -87,6 +128,7 @@ export default function InviteTeamMemberView(
                 placeholder="e.g. jon@gmail.com"
                 variant="outlined"
                 fullWidth={true}
+                onChange={handleEmail}
               />
               <div>
                 <div
@@ -116,6 +158,7 @@ export default function InviteTeamMemberView(
                 // style={{ width: '100%' }}
                 placeholder="e.g. jon@gmail.com, demo@outlook.com"
                 rows={4}
+                onChange={handleEmail}
               ></textarea>
               <div>
                 <div
@@ -157,6 +200,12 @@ export default function InviteTeamMemberView(
               marginTop: '50px',
             }}
           >
+             <CSVReader
+        onDrop={handleOnDrop}
+        onError={handleOnError}
+        addRemoveButton
+        onRemoveFile={handleOnRemoveFile}
+        >
             <div
               style={{
                 borderRadius: '8px',
@@ -180,8 +229,10 @@ export default function InviteTeamMemberView(
                 <input type="file" style={{ display: 'none' }} />
               </Button>
             </div>
+            </CSVReader>
           </div>
-          <Button variant="contained" color="primary">
+         
+          <Button variant="contained" color="primary" onClick={invateColleague}>
             Invite
           </Button>
         </div>

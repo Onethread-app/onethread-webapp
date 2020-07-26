@@ -782,3 +782,34 @@ export const getProjectsIndividual = () => async (
     });
   }
 };
+
+export const inviteColleagueInBulk = (emails: any) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      // const companyId = getState().companyReducer.currentCompany._id;
+      const pid = getState().projectReducer.pid;
+      const response = await tigrowApi.post(
+        `/teams/invite-team?pid=${pid}`,
+        emails,
+        headers
+      );
+      console.log(response)
+      // dispatch({ type: GET_ALL_PRODUCT, payload: response.data });
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log('error in getting bulk email');
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+    }
+  }
+};
+

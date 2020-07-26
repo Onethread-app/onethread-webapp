@@ -51,6 +51,7 @@
     "react-modal": "^3.11.2",
     "react-multi-carousel": "^2.5.4",
     "react-number-format": "^4.4.1",
+    "react-papaparse": "^3.4.0",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",
