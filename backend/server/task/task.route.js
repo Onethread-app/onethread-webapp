@@ -108,12 +108,12 @@ router
   .route('/:taskId/suggest-member')
   .get(
     authorization,
-    // projectCtrl.authorizeProjectRole(
-    //   'all',
-    //   'admin',
-    //   'projectModerator',
-    //   'member',
-    // ),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
     taskCtrl.suggestMember,
   );
 
