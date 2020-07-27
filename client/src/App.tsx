@@ -41,7 +41,7 @@ import Meeting from 'layouts/videoConferences/pages/meeting';
 import { HomePageNew } from 'layouts/home/Index';
 import Success from './components/Success';
 import { LandingPage } from 'layouts/landingNew/Index';
-import { PricingPage } from 'layouts/landingNew/PricingPage';
+import { VendorManagementPage } from 'layouts/landingNew/VendorManagementPage';
 
 const PrivateRoute = (props: {
   component: any;
@@ -169,9 +169,9 @@ export const App = () => (
       <Route path="/autologin" render={() => <AutoLoginPage />} />
       <Route
         exact
-        path="/pricing"
+        path="/vendor-management-tool"
         render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
+          isAuthenticate() ? <Redirect to="/" /> : <VendorManagementPage />
         }
       />
       <PrivateRoute exact path="/" component={Demo} />
