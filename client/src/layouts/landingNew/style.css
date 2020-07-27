@@ -1,0 +1,223 @@
+
+  @import url('https://fonts.maateen.me/bangla/font.css');
+
+  .LandingFirstBackground {
+    background-image: url(./../../resources/LandingImages/HomeFirstBackground.svg);
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+  }
+  .LandingSecondBackground {
+    background-image: url(./../../resources/LandingImages/HomeSecondBackground.svg);
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+  
+  }
+  .PricingFirstBackground {
+  background-image: url(./../../resources/LandingImages/pricingPageBackground.png);
+  position: relative;
+	background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+}
+.comprehensiveGrid{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: repeat(2,650px);
+  gap: 30px 55px;
+  background-color: #F0FBFF;
+}
+.basic{
+  border: 1px solid lightgray;
+}
+.basic:hover{
+  border-color: blue;
+}
+.enterprise{
+  border: 1px solid lightgray;
+}
+.enterprise:hover{
+  border-color: blue;
+}
+.pricing-btn{
+  background-color: white;
+  color: darkslategray;
+}
+.pricing-btn:hover{
+  background-color: #007CFF;
+  color: white;
+}
+.tigrowLogo{
+  width: 50px;
+}
+.requestDemoBtn{
+  margin-top: 50rem;
+  width: 20rem;
+}
+.marketLogo{
+  width: 115px;
+}
+.DYSINLogo{
+  width: 95px;
+}
+.plummyLogo{
+  width: 160px;
+}
+.knitLogo{
+  width: 280px;
+}
+@media only screen and (min-width: 540px) and (max-width: 768px) {
+  .tigrowLogo{
+    width: 25px;
+  }
+  .LandingSecondBackground {
+    background-image: url(./../../resources/LandingImages/homeSecondBackgroundTab.png);
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: initial;
+  }
+  .comprehensiveGrid{
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 20px;
+  }
+  .requestDemoBtn{
+    margin-top: 25rem;
+  }
+  .marketLogo{
+    width: 45px;
+  }
+  .DYSINLogo{
+    width: 35px;
+  }
+  .plummyLogo{
+    width: 90px;
+  }
+  .knitLogo{
+    width: 125px;
+  }
+}
+@media only screen and (min-width: 960px) and (max-width: 1135px) {
+  .navmain{
+    padding: 0 1rem;
+  }
+  .targetPadding{
+    padding: 0 .25rem;
+  }
+  .colorfulWidth{
+    width: 80%;
+  }
+  .paddingStart{
+    padding: 0 5rem;
+  }
+  .paddingFooter{
+    padding: 3rem;
+  }
+  .basicFont{
+    font-size: 2rem;
+  }
+  .comprehensiveGrid{
+    grid-template-columns: 1fr 1fr;
+    gap: 30px 55px;
+  }
+  .companiesFont{
+    font-size: 2.5rem;
+  }
+  .companiesWidth{
+    width: 40%;
+  }
+  .companiesPadding{
+    padding: 4rem;
+  }
+  .companiesInnerPadding{
+    padding-left: 1.5rem;
+  }
+  .marketLogo{
+    width: 65px;
+  }
+  .DYSINLogo{
+    width: 50px;
+  }
+  .plummyLogo{
+    width: 105px;
+  }
+  .knitLogo{
+    width: 125px;
+  }
+}
+@media only screen and (min-width: 1025px) and (max-width: 1200px) {
+  .companiesPadding{
+    padding: 4rem;
+  }
+  .marketLogo{
+    width: 65px;
+  }
+  .DYSINLogo{
+    width: 50px;
+  }
+  .plummyLogo{
+    width: 105px;
+  }
+  .knitLogo{
+    width: 125px;
+  }
+  .comprehensiveGrid{
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(2,775px);
+    gap: 30px 55px;
+  }
+}
+@media only screen and (min-width: 1201px) and (max-width: 1750px) {
+  .companiesPadding{
+    padding: 8rem;
+  }
+  .marketLogo{
+    width: 85px;
+  }
+  .DYSINLogo{
+    width: 65px;
+  }
+  .plummyLogo{
+    width: 150px;
+  }
+  .knitLogo{
+    width: 180px;
+  }
+  .comprehensiveGrid{
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: repeat(2,755px);
+    gap: 30px 55px;
+  }
+}
+@media only screen and (max-width: 414px) {
+  .LandingSecondBackground {
+    background-image: url(./../../resources/LandingImages/homeSecondBackgroundMob.png);
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  .comprehensiveGrid{
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(2, auto);
+    gap: 0px 0px;
+  }
+  .requestDemoBtn{
+    margin-top: 15rem;
+    width: auto;
+  }
+  .marketLogo{
+    width: 50px;
+  }
+  .DYSINLogo{
+    width: 35px;
+  }
+  .plummyLogo{
+    width: 90px;
+  }
+  .knitLogo{
+    width: 115px;
+  }
+}
