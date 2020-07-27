@@ -16,7 +16,7 @@ interface ContactUsFormInternalProps extends ContactUsFormProps {
 }
 
 export const ContactUsFormComponent = (
-  props: ContactUsFormInternalProps,
+  props: ContactUsFormInternalProps
 ) => {
 
   const onSubmit = async (values: any) => {
@@ -152,3 +152,4 @@ export const ContactUsForm = connect(
   mapStateToProps,
   { saveContactForm }
 )(ContactUsFormComponent);
+

@@ -1,6 +1,3 @@
-
-  @import url('https://fonts.maateen.me/bangla/font.css');
-
   .LandingFirstBackground {
     background-image: url(./../../resources/LandingImages/HomeFirstBackground.svg);
     position: relative;
@@ -17,12 +14,12 @@
   
   }
   .PricingFirstBackground {
-  background-image: url(./../../resources/LandingImages/pricingPageBackground.png);
-  position: relative;
-	background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center center;
-}
+    background-image: url(./../../resources/LandingImages/pricingPageBackground.png);
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center;
+  }
 .comprehensiveGrid{
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

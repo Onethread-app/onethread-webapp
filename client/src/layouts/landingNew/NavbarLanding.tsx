@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Button, Popover, Icon, Drawer } from '@blueprintjs/core';
+import { Button, Popover, Icon, Drawer, Position } from '@blueprintjs/core';
 import task from './../../resources/LandingImages/task-complete.svg';
 import client from './../../resources/LandingImages/international-client.svg';
 import business from './../../resources/LandingImages/business.svg';
@@ -28,6 +28,7 @@ export const NavbarLanding = () => {
               <img className="mr1 tigrowLogo"  src={tigrowMini} />
             </NavLink>
             <Popover
+              position={Position.BOTTOM}
               popoverClassName="pv4 ph3 bg-white"
               targetClassName="h-100"
               className=""
@@ -113,6 +114,7 @@ export const NavbarLanding = () => {
               </Button>
             </NavLink>
             <Popover
+              position={Position.BOTTOM}
               popoverClassName="pv4 ph3 bg-white"
               targetClassName="h-100"
               className=""
@@ -159,6 +161,7 @@ export const NavbarLanding = () => {
               }
             />
             <Popover
+              position={Position.BOTTOM}
               popoverClassName="pv4 ph3 bg-white"
               targetClassName="h-100"
               className=""
@@ -197,6 +200,7 @@ export const NavbarLanding = () => {
               </Button>
             </NavLink>
             <Popover
+              position={Position.BOTTOM}
               popoverClassName="pa4 bg-white"
               targetClassName="h-100"
               className=""
