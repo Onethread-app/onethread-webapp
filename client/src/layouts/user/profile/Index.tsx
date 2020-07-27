@@ -8,7 +8,7 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import { User } from 'stores/user/Reducer';
 import { CoverPhotoView } from './CoverPhotoView';
 
-export const LandingPage = (props: { user: User }) => {
+export const UserProfilePage = (props: { user: User }) => {
   React.useEffect(() => {}, []);
   return (
     <>
