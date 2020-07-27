@@ -9,9 +9,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 // import { makeStyles } from '@material-ui/core/styles';
 import { createSubscription } from '../../../../stores/subscriptionBilling/Actions';
 import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 import { connect } from 'react-redux';
 import {
   useStripe,
@@ -63,7 +61,7 @@ interface ICheckout {
 }
 
 function _Checkout(props: ICheckout) {
-  const [value, setValue] = React.useState('bangladesh');
+  const [value] = React.useState('bangladesh');
   const [success, setSuccess] = React.useState(false);
   const [formValues, setFormValues] = React.useState({
     name: '',
@@ -133,11 +131,11 @@ function _Checkout(props: ICheckout) {
       );
   };
 
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    setValue((event.target as HTMLInputElement).value);
-  };
+  // const handleChange = (
+  //   event: React.ChangeEvent<HTMLInputElement>,
+  // ) => {
+  //   setValue((event.target as HTMLInputElement).value);
+  // };
   return (
     <div>
       {props.currentComponent === 'checkOut' && (
@@ -185,7 +183,7 @@ function _Checkout(props: ICheckout) {
 
                   <Grid item>
                     <CardContent style={{ marginLeft: '15px' }}>
-                      <label>$0.00</label>
+                      <label>$7.00</label>
                     </CardContent>
                   </Grid>
                 </Grid>
@@ -200,7 +198,7 @@ function _Checkout(props: ICheckout) {
 
                   <Grid item>
                     <CardContent style={{ marginLeft: '15px' }}>
-                      <label>$0.99</label>
+                      <label>$7.99</label>
                     </CardContent>
                   </Grid>
                 </Grid>
@@ -228,24 +226,7 @@ function _Checkout(props: ICheckout) {
               </Card>
             </Grid>
           </Grid>
-          <h4>Payment Option</h4>
-          <RadioGroup
-            aria-label="payment"
-            name="gender1"
-            value={value}
-            onChange={handleChange}
-          >
-            <FormControlLabel
-              value="international"
-              control={<Radio />}
-              label="International"
-            />
-            <FormControlLabel
-              value="bangladesh"
-              control={<Radio />}
-              label="Bangladesh"
-            />
-          </RadioGroup>
+
           {value === 'international' && (
             <div style={{ marginTop: '10px' }}>
               <label className="b mt5">Card Details</label>
