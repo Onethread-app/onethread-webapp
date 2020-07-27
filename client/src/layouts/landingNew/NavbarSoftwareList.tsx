@@ -6,6 +6,7 @@ import business from './../../resources/LandingImages/business.svg';
 import support from './../../resources/LandingImages/support.svg';
 import team from './../../resources/LandingImages/team.svg';
 import tigrowMini from './../../resources/LandingImages/TiGrow-mini-logo.svg';
+import { NavLink } from 'react-router-dom';
 
 interface NavbarSoftwareListProps {
   setShowSoftwareDrawer: (val: boolean) => void;
@@ -58,19 +59,21 @@ export const NavbarSoftwareList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
-            <img
-              src={business}
-            />
-            <div className="ml2">
-              <div className="flex">
-                <p className="fw7 mv0 pv0">Vendor Management Tool</p>
-                <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+          <NavLink to="vendor-management-tool">
+            <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+              <img
+                src={business}
+              />
+              <div className="ml2">
+                <div className="flex">
+                  <p className="fw7 mv0 pv0">Vendor Management Tool</p>
+                  <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                </div>
+                <p className="f7 mv0 pv0">Managing all those vendors wasn't this much easier before!</p>
               </div>
-              <p className="f7 mv0 pv0">Managing all those vendors wasn't this much easier before!</p>
-            </div>
-            <Icon className="ml-auto" icon="chevron-right" />
-          </article>
+              <Icon className="ml-auto" icon="chevron-right" />
+            </article>
+          </NavLink>
           <article className="flex items-center ba b--light-gray pa3 pointer mv2">
             <img
               src={support}

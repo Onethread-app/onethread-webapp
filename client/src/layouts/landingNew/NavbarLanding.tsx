@@ -52,18 +52,20 @@ export const NavbarLanding = () => {
                       <p className="f7 mv0 pv0">An Effortless WFH Experience to manage your remote teams.</p>
                     </div>
                   </article>
-                  <article className="flex pt4 pointer">
-                    <img
-                      src={business}
-                    />
-                    <div className="ml2">
-                      <div className="flex">
-                        <p className="fw7 mv0 pv0">Vendor Management Tool</p>
-                        <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                  <NavLink to="vendor-management-tool">
+                    <article className="flex pt4 pointer">
+                      <img
+                        src={business}
+                      />
+                      <div className="ml2">
+                        <div className="flex">
+                          <p className="fw7 mv0 pv0">Vendor Management Tool</p>
+                          <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                        </div>
+                        <p className="f7 mv0 pv0">Managing all those vendors wasn't this much easier before!</p>
                       </div>
-                      <p className="f7 mv0 pv0">Managing all those vendors wasn't this much easier before!</p>
-                    </div>
-                  </article>
+                    </article>
+                  </NavLink>
                   <article className="flex pt4 pointer">
                     <img
                       src={support}
