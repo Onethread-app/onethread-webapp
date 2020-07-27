@@ -209,7 +209,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 }`}
               >
                 <div
-                  className={`relative`}
+                  className={`relative tigrow-left-sidebar`}
                   style={{
                     transition: 'width 0.4s',
                     width: leftOpen ? '15%' : '4%',
@@ -231,7 +231,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   </div>
                 </div>
                 <div
-                  className="relative br3 pv1"
+                  className="relative br3 pv1 tigrow-main-content"
                   style={{
                     transition: 'width 0.4s',
                     width: leftOpen
@@ -291,22 +291,17 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                 </div>
               </div>
             ) : (
-              <div
-                  className="relative"
-                >
-                  <div className="flex flex-column h-100">
-                    <NavbarTop
-                      scrollTop={scrollTop}
-                      type={'home'}
-                    />
-                    <div
-                      ref={scrollRef}
-                      className="flex-grow-1 overflow-y-auto bg-white"
-                    >
-                      <SecondaryLayout Component={props.Component} />
-                    </div>
+              <div className="relative">
+                <div className="flex flex-column h-100">
+                  <NavbarTop scrollTop={scrollTop} type={'home'} />
+                  <div
+                    ref={scrollRef}
+                    className="flex-grow-1 overflow-y-auto bg-white"
+                  >
+                    <SecondaryLayout Component={props.Component} />
                   </div>
                 </div>
+              </div>
             )}
           </CustomView>
           <MobileOnlyView>
@@ -449,28 +444,31 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               Associates
                             </small>
                           </NavLink>
-                          {(companyPermit(props.company.role) && props.company.role !== 'employee') && (<NavLink
-                            exact
-                            activeStyle={{
-                              background: '#3F61C5',
-                              color: 'white',
-                            }}
-                            style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/settings`}
-                            className="hover-bg-black-20 pa2 flex flex-column items-center"
-                          >
-                            <span className="">
-                              <img
-                                alt="settings icon"
-                                src={settings}
-                                className="br3"
-                                style={{ width: '1.4rem' }}
-                              />
-                            </span>
-                            <small style={{ color: 'inherit' }}>
-                              Settings
-                            </small>
-                          </NavLink>)}
+                          {companyPermit(props.company.role) &&
+                            props.company.role !== 'employee' && (
+                              <NavLink
+                                exact
+                                activeStyle={{
+                                  background: '#3F61C5',
+                                  color: 'white',
+                                }}
+                                style={{ color: '#3F61C5' }}
+                                to={`/company/${props.company.name}/settings`}
+                                className="hover-bg-black-20 pa2 flex flex-column items-center"
+                              >
+                                <span className="">
+                                  <img
+                                    alt="settings icon"
+                                    src={settings}
+                                    className="br3"
+                                    style={{ width: '1.4rem' }}
+                                  />
+                                </span>
+                                <small style={{ color: 'inherit' }}>
+                                  Settings
+                                </small>
+                              </NavLink>
+                            )}
                         </Navbar>
                       )
                     ) : (

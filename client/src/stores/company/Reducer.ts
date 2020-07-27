@@ -106,7 +106,7 @@ export interface ICompany {
   logo: string;
   coverImage: string;
   certificate: ICertificates[];
-  parentcom: Entity[];
+  parentcom: [];
   announce: [];
   products: Entity[];
   totalMember: number;

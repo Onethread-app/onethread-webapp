@@ -70,7 +70,7 @@ function* seenNotification() {
     if ((headers as any).headers.Authorization) {
       yield tigrowApi.get(`notifications/seen/${companyId}`, headers);
     }
-    // put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
+    put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console

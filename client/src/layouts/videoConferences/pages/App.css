@@ -1,4 +1,3 @@
-
 html,
 body,
 #root,
@@ -17,14 +16,14 @@ img {
 .ag-footer {
   /* flex-basis: 70px; */
   width: 100%;
-  opacity: .8;
+  opacity: 0.8;
   height: 70px;
-  color: #FFF;
+  color: #fff;
 }
 
 .ag-main {
   width: 100%;
-  height: calc(100% - 140px);
+
   display: flex;
   flex-flow: column;
   justify-content: center;
@@ -32,14 +31,14 @@ img {
 }
 
 .ag-rounded {
-  border-radius: 19px!important;
+  border-radius: 19px !important;
 }
 
 .ag-href {
-  color: #FFF;
+  color: #fff;
   cursor: pointer;
 }
 
 .ag-href:hover {
-  color: #FFF;
+  color: #fff;
 }
