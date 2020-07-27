@@ -48,9 +48,11 @@ export const NavbarListView = (
             <h1 className="fw6 f5 mr2">Software</h1>
             <Icon icon="caret-right" />
           </article>
-          <article className="flex bb b--light-silver items-center pv3 ph4">
-            <h1 className="fw6 f5 mr2">Pricing</h1>
-          </article>
+          <NavLink to="/pricing">
+            <article className="flex bb b--light-silver items-center pv3 ph4">
+              <h1 className="fw6 f5 mr2">Pricing</h1>
+            </article>
+          </NavLink>
           <article
             className="flex bb b--light-silver items-center pv3 ph4"
             onClick={() => {
@@ -98,7 +100,7 @@ export const NavbarListView = (
                 color: 'white',
                 backgroundColor: '#4B6BC8'
               }}
-            >GET TIGROW FREE
+            >GET TiGrow FREE
       </Button>
           </NavLink>
 
