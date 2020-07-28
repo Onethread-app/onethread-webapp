@@ -3,10 +3,13 @@ const router = express.Router();
 const {
   authorization,
 } = require('../../middlewares/authorizationMiddleware');
+const subCtrl = require('../../subscription/subscription.controller');
 const joiSchema = require('./member.validation');
 const memberCtrl = require('./member.controller');
 
 const SchemaValidator = require('../../helpers/joiSchemaValidator');
+
+router.use('/', subCtrl.subscriptionExpireCheck());
 
 router.route('/search').get(authorization, memberCtrl.searchMember);
 
@@ -19,6 +22,16 @@ router
     memberCtrl.addMember,
   )
   .get(authorization, memberCtrl.list);
+
+  router
+  .route('/bulk')
+  .post(
+    authorization,
+    // TODO: member validations
+     SchemaValidator(joiSchema.bulkMember),
+    memberCtrl.bulkInsertMember,
+  );
+  
 
 router.route('/pending').get(authorization, memberCtrl.pendingList);
 

@@ -102,7 +102,7 @@ module.exports.sendInviteColleague = async (
   emailList,
 ) => {
   const link = `${host}/signup`;
-
+ 
   const mailOptions = {
     to: emailList,
     subject: 'Invitation to join company',
