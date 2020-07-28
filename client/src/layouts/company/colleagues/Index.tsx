@@ -19,6 +19,7 @@ import {
   changeMemberRole,
   getCompanyPendingMembers,
   deleteCompanyMember,
+  inviteColleagueInBulk,
 } from 'stores/company/Actions';
 import {
   ICompanyMembers,
@@ -34,6 +35,9 @@ import { User } from 'stores/user/Reducer';
 import { IProjectTeam } from 'stores/project/Reducer';
 import { isMobileOnly } from 'react-device-detect';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { InviteColleagueView } from './InviteColleagueView';
+import { colleagueInviteSuccess } from '../../../stores/company/Actions';
+
 interface Colleagues {
   company: ICompany;
   user: User;
@@ -47,7 +51,9 @@ interface Colleagues {
     memberId: string,
   ) => void;
   deleteCompanyMember: (memberId: string) => void;
+  inviteColleagueInBulk: (emails: any) => void;
   companyLoading: boolean;
+  colleagueInviteSuccess: () => void;
 }
 
 const load = async (
@@ -100,6 +106,10 @@ const ColleaguesPageComponent = (props: Colleagues) => {
   const [showDialog, setShowDialog] = useState(false);
   const [showDialogAdd, setShowDialogAdd] = useState(false);
   const [showDialogEdit, setShowDialogEdit] = useState(false);
+  const [
+    showDialogForInviteColleague,
+    setshowDialogForInviteColleague,
+  ] = useState(false);
   const [editMember, setEditMember] = useState<
     ICompanyMembers | undefined
   >(undefined);
@@ -110,6 +120,10 @@ const ColleaguesPageComponent = (props: Colleagues) => {
   const [pendingList, setPendingList] = useState<
     ICompanyPendingMembers[][]
   >([]);
+
+  const setInviteDialogue = () => {
+    setshowDialogForInviteColleague(!showDialogForInviteColleague);
+  };
 
   useEffect(() => {
     load(props.getCompanyMembers, props.getCompanyPendingMembers);
@@ -154,19 +168,37 @@ const ColleaguesPageComponent = (props: Colleagues) => {
             <h1 className="tigrow-lightGray-1">Colleagues</h1>
           )}
           {companyPermit(props.company.role) ? (
-            <Button
-              className="grow fr h2 pointer white bp3-minimal "
-              style={{
-                background: '#0fa3a3',
-                outline: 'none',
-                color: 'white',
-              }}
-              onClick={() => setShowDialog(!showDialog)}
-            >
-              Add Colleagues
-            </Button>
+            <div>
+              <Button
+                className="grow fr h2 pointer white bp3-minimal "
+                style={{
+                  background: '#0fa3a3',
+                  outline: 'none',
+                  color: 'white',
+                }}
+                onClick={() => setShowDialog(!showDialog)}
+              >
+                Add Colleagues
+              </Button>
+              <Button
+                className="grow fr h2 pointer white bp3-minimal mr2"
+                style={{
+                  background: '#0fa3a3',
+                  outline: 'none',
+                  color: 'white',
+                }}
+                onClick={() =>
+                  setshowDialogForInviteColleague(
+                    !showDialogForInviteColleague,
+                  )
+                }
+              >
+                Invite Colleagues
+              </Button>
+            </div>
           ) : undefined}
         </div>
+
         {/* Admins list starts */}
         <h1 className="f4 mb0 tigrow-lightGray-1">Admins</h1>
         <HTMLTable className="w-100 mv3" striped={true}>
@@ -482,28 +514,30 @@ const ColleaguesPageComponent = (props: Colleagues) => {
           <>
             <h1 className="f4 tigrow-lightGray-1">Pending request</h1>
             <HTMLTable className="w-100 mv3" striped={true}>
-              <tbody>
-                {props.companyLoading ? (
-                  <Loading />
-                ) : pendingList.length ? (
-                  // tslint:disable-next-line: no-shadowed-variable
-                  pendingList.map((chunkMembers, i1) => (
-                    <tr className="hide-child" key={i1}>
-                      {chunkMembers.map((member) => (
+              {props.companyLoading ? (
+                <Loading />
+              ) : pendingList.length ? (
+                // tslint:disable-next-line: no-shadowed-variable
+                pendingList.map((chunkMembers, i1) => (
+                  <tbody>
+                    {chunkMembers.map((member) => (
+                      <tr className="hide-child" key={i1}>
                         <td>
                           <span className="mr2 f7 f6-ns">
                             {member.email}
                           </span>
                         </td>
-                      ))}
-                    </tr>
-                  ))
-                ) : (
+                      </tr>
+                    ))}
+                  </tbody>
+                ))
+              ) : (
+                <tbody>
                   <tr>
                     <td colSpan={3}>No pending request</td>
                   </tr>
-                )}
-              </tbody>
+                </tbody>
+              )}
             </HTMLTable>
           </>
         ) : undefined}
@@ -521,6 +555,26 @@ const ColleaguesPageComponent = (props: Colleagues) => {
           <AddColleaguesForm
             showDialog={showDialog}
             setShowDialog={(e) => setShowDialog(!showDialog)}
+          />
+        </Dialog>
+      )}
+      {showDialogForInviteColleague && (
+        <Dialog
+          onClose={() =>
+            setshowDialogForInviteColleague(
+              !showDialogForInviteColleague,
+            )
+          }
+          isOpen={showDialogForInviteColleague}
+          style={{ background: '#fff' }}
+          canOutsideClickClose={false}
+          className="ma2"
+        >
+          <InviteColleagueView
+            colleagueInviteSuccess={props.colleagueInviteSuccess}
+            inviteColleagueInBulk={props.inviteColleagueInBulk}
+            setshowDialogForInviteColleague={setInviteDialogue}
+            currentCompany={props.company.name}
           />
         </Dialog>
       )}
@@ -580,4 +634,6 @@ export const ColleaguesPage = connect(mapStateToProps, {
   changeMemberRole,
   getCompanyPendingMembers,
   deleteCompanyMember,
+  inviteColleagueInBulk,
+  colleagueInviteSuccess,
 })(ColleaguesPageComponent);

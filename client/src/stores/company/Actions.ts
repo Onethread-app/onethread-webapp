@@ -41,6 +41,8 @@ import {
   // ADD_ANNOUNCEMENT,
   GET_ALL_PRODUCT,
   EDIT_ORGANIZATION,
+  COLLEAGUE_INVITE_SUCCESS,
+  COLLEAGUE_WENT_WRONG,
   // ADD_ANNOUNCEMENT
 } from './Types';
 import {
@@ -384,7 +386,10 @@ export const changeCompanyName = (companyName: string) => async (
         { name: companyName },
         headers,
       );
-      dispatch({ type: CHANGE_COMPANY_NAME, payload: response.data.company });
+      dispatch({
+        type: CHANGE_COMPANY_NAME,
+        payload: response.data.company,
+      });
       return response;
     } else {
       //TODO create a logger for client end
@@ -684,10 +689,11 @@ export const addOrganization = (organization: any) => async (
         payload: organization.parentcom,
       });
       const companyId = getState().companyReducer.currentCompany._id;
-      const parentOrgArray = getState().companyReducer.currentCompany.parentcom;      
+      const parentOrgArray = getState().companyReducer.currentCompany
+        .parentcom;
       response = await tigrowApi.put(
         `company/${companyId}/parentorg`,
-        {parentcom: parentOrgArray},
+        { parentcom: parentOrgArray },
         headers,
       );
       return response.status;
@@ -701,20 +707,21 @@ export const addOrganization = (organization: any) => async (
   }
 };
 
-export const editOrganization = (organization: any, ind: number) => async (
-  dispatch: any,
-  getState: any,
-) => {
+export const editOrganization = (
+  organization: any,
+  ind: number,
+) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     let response;
     if ((headers as any).headers.Authorization) {
       const companyId = getState().companyReducer.currentCompany._id;
-      const parentOrgArray = getState().companyReducer.currentCompany.parentcom;
-      parentOrgArray[ind]=organization.parentcom;
+      const parentOrgArray = getState().companyReducer.currentCompany
+        .parentcom;
+      parentOrgArray[ind] = organization.parentcom;
       response = await tigrowApi.put(
         `company/${companyId}/parentorg`,
-        {parentcom: parentOrgArray},
+        { parentcom: parentOrgArray },
         headers,
       );
       dispatch({
@@ -813,3 +820,42 @@ export const getAllProduct = () => async (
     }
   }
 };
+
+export const inviteColleagueInBulk = (emails: any) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const companyId = getState().companyReducer.currentCompany._id;
+      const response = await tigrowApi.post(
+        `company/${companyId}/members/bulk`,
+        emails,
+        headers,
+      );
+      if (response.status === 200) {
+        dispatch({ type: COLLEAGUE_INVITE_SUCCESS });
+      }
+      if (response.status === 400) {
+        dispatch({
+          type: COLLEAGUE_WENT_WRONG,
+          payload: response,
+        });
+      }
+    } else {
+      //TODO: catch console in logger.
+    }
+  } catch (error) {
+    if (isEqual(error.message, 'Network Error')) {
+      //TODO: catch console in logger.
+    } else {
+      
+     //TODO: catch console in logger.
+    }
+  }
+};
+
+export const colleagueInviteSuccess = () => ({
+  type: COLLEAGUE_INVITE_SUCCESS,
+});
