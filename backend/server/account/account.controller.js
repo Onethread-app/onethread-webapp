@@ -663,7 +663,7 @@ const resendEmail = async (req, res, next) => {
         verifyToken,
       );
       accountVerificationToken(
-        verifyToken,
+       `verifyAccountToken:${verifyToken}`,
         user._id,
         verifyAccountTokenExpiration,
       );
