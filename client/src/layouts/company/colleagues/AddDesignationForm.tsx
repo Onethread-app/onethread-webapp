@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon, Button } from '@blueprintjs/core';
 import { Entity } from 'stores/UtilsActions';
 import { Form, Field } from 'react-final-form';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { IconNames } from '@blueprintjs/icons';
 import { Condition } from 'components/final-form/Condition';
 import { ICompanyMembers } from 'stores/company/Reducer';
@@ -128,7 +128,7 @@ export const AddDesignationForm = (
             </div>
             <Field<string>
               name="position"
-              validate={required}
+              validate={composeValidators(required, maxValue(50))}
               render={({ input, meta }) => (
                 <InputGroupFieldWithError
                   id={input.name}
