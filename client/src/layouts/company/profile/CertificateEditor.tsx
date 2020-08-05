@@ -63,6 +63,7 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
             />
             <Field<string>
               name="description"
+              validate={maxValue(500)}
               render={({ input, meta }) => (
                 <div
                   className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}
