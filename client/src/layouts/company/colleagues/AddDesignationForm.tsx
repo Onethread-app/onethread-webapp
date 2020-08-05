@@ -72,6 +72,7 @@ export const AddDesignationForm = (
                   render={({ input, meta }) => (
                     <DropdownFieldWithError
                       id={input.name}
+                      placeholder="Please select a division"
                       selectedValue={input.value}
                       options={
                         props.divisions && props.divisions.length > 0
@@ -106,7 +107,7 @@ export const AddDesignationForm = (
                       <DropdownFieldWithError
                         id={input.name}
                         selectedValue={input.value}
-                        placeholder="Select Department"
+                        placeholder="Please select a department"
                         options={
                           props.departments &&
                           props.departments.length > 0
