@@ -34,12 +34,12 @@ export const NavbarSoftwareList = (
           onClick={() => props.setShowSoftwareDrawer(false)}
         />
       </div>
-      <div className="pa4">
+      <div className="pa4 softwareList">
         <div className="tc">
           <p className="silver f5 fw4">Software</p>
         </div>
         <div>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <img
               src={task}
             />
@@ -49,7 +49,7 @@ export const NavbarSoftwareList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <img
               src={client}
             />
@@ -60,7 +60,7 @@ export const NavbarSoftwareList = (
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
           <NavLink to="vendor-management-tool">
-            <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+            <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
               <img
                 src={business}
               />
@@ -74,7 +74,7 @@ export const NavbarSoftwareList = (
               <Icon className="ml-auto" icon="chevron-right" />
             </article>
           </NavLink>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <img
               src={support}
             />
@@ -87,7 +87,7 @@ export const NavbarSoftwareList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <img
               src={team}
             />
@@ -100,7 +100,7 @@ export const NavbarSoftwareList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">App Marketplace</p>
