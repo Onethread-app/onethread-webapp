@@ -24,12 +24,12 @@ export const VendorManagementPage = () => {
       <div className="flex items-center ph5-l ph4-m ph3 mt6 mb4">
         <div className="w-50 pr5-l pr3-m">
           <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f6 ">Managing multiple vendors is now effortless</h1>
-          <h1 style={{ color: '#43466D' }} className="f3-l f5-m f7 fw4 lh-2">Receive Quotations From Your Vendors, Open Those Simultaneously,
+          <h1 style={{ color: '#43466D' }} className="f3-l f5-m f7 fw4 lh-2 vendorLineHeight">Receive Quotations From Your Vendors, Open Those Simultaneously,
           Even Create Smart Contracts With Them While Having TiGrow PMT With All Of Those.
           </h1>
           <Button
-            className="f4-l f5-m f7 fw6 bp3-minimal pa4-l pa3-m pa2 br3 mb5 outline-0 "
-            style={{ color: 'WHITE', border: 'solid 2px WHITE', backgroundColor: '#4B6BC8', width: '23rem' }}
+            className="f4-l f5-m f7 fw6 bp3-minimal pa4-l pa3-m pa2 br3 mb5 outline-0 vendorRqstBtn"
+            style={{ color: 'WHITE', border: 'solid 2px WHITE', backgroundColor: '#4B6BC8' }}
             onClick={() => {
               setShowForm3(true);
             }}
@@ -49,7 +49,7 @@ export const VendorManagementPage = () => {
           </h1>
         <Button
           className="f4-l f5-m f6 fw6 bp3-minimal pa4-l pa3-m pa2 br3 outline-0 mt2"
-          style={{ color: 'WHITE', border: 'solid 2px WHITE', backgroundColor: '#4B6BC8', width: '20rem' }}
+          style={{ color: 'WHITE', border: 'solid 2px WHITE', backgroundColor: '#4B6BC8', width: '19rem' }}
           onClick={() => {
             setShowForm3(true);
           }}
@@ -178,9 +178,9 @@ export const VendorManagementPage = () => {
         </div>
         <div className="flex flex-row items-center justify-center pv4 tc">
           <img src={marketLogo} className="marketLogo" />
-          <img className="ml4-ns ml2 plummyLogo" src={plummyLogo} />
-          <img className="ml4-ns ml2 plummyLogo" src={BKMEALogo} />
-          <img className="ml4-ns ml2 knitLogo" src={knitLogo} />
+          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={plummyLogo} />
+          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={BKMEALogo} />
+          <img className="ml4-ns ml2 vendorLogoSpacing knitLogo" src={knitLogo} />
         </div>
       </div>
       <LandingFooter />

@@ -66,6 +66,9 @@ width: 160px;
 .knitLogo{
 width: 280px;
 }
+.vendorRqstBtn{
+  width: 23rem;
+}
 @media only screen and (min-width: 540px) and (max-width: 768px) {
 .tigrowLogo{
   width: 25px;
@@ -230,6 +233,12 @@ width: 280px;
 .knitLogo{
   width: 115px;
 }
+.vendorRqstBtn{
+  width: 10rem;
+}
+.vendorLineHeight{
+  line-height: initial;
+}
 }
 @media only screen and (max-width: 360px) {
 .softwareList{
@@ -243,5 +252,14 @@ padding: .25rem;
 }
 .partnersList{
   padding: .5rem;
+}
+.vendorLogoSpacing{
+  margin-left: 0;
+}
+.vendorRqstBtn{
+  width: 9rem;
+}
+.vendorLineHeight{
+  line-height: initial;
 }
 }
