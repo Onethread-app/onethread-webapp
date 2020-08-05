@@ -28,12 +28,12 @@ export const NavbarResourcesList = (
           onClick={() => props.setShowResourcesDrawer(false)}
         />
       </div>
-      <div className="pa4">
+      <div className="pa4 resourceList">
         <div className="tc">
           <p className="silver f5 fw4">Resources</p>
         </div>
         <div>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 resourceList pointer mv2">
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Blog</p>
@@ -43,7 +43,7 @@ export const NavbarResourcesList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 resourceList pointer mv2">
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Ebooks, Guides & More</p>
@@ -53,7 +53,7 @@ export const NavbarResourcesList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 resourceList pointer mv2">
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Onboarding & Services</p>
@@ -63,7 +63,7 @@ export const NavbarResourcesList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 resourceList pointer mv2">
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Customer Support</p>

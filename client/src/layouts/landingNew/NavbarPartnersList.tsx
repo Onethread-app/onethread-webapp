@@ -28,12 +28,12 @@ export const NavbarPartnersList = (
           onClick={() => props.setShowPartnersDrawer(false)}
         />
       </div>
-      <div className="pa4">
+      <div className="pa4 partnersList">
         <div className="tc">
           <p className="silver f5 fw4">Partners</p>
         </div>
         <div>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 partnersList pointer mv2">
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Hire a Partner</p>
@@ -43,7 +43,7 @@ export const NavbarPartnersList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 pointer mv2">
+          <article className="flex items-center ba b--light-gray pa3 partnersList pointer mv2">
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Partner with Us</p>

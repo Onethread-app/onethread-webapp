@@ -28,22 +28,22 @@ export const NavbarAboutList = (
           onClick={() => props.setShowAboutDrawer(false)}
         />
       </div>
-      <div className="pa4">
+      <div className="pa4 aboutList">
         <div className="tc">
           <p className="silver f5 fw4">About</p>
         </div>
         <div>
-          <p className="b--light-silver ba bg-light-gray br3 f5 fw6 pa3 tc w-100">Company</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 w-100 f5">About Us</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 w-100 f5">Contact</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 w-100 f5">Management Team</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 w-100 f5">Investors and Advisers</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 w-100 f5">Careers</p>
+          <p className="b--light-silver ba bg-light-gray br3 f5 fw6 pa3 aboutList tc w-100">Company</p>
+          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">About Us</p>
+          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Contact</p>
+          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Management Team</p>
+          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Investors and Advisers</p>
+          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Careers</p>
         </div>
         <div>
-          <p className="b--light-silver ba bg-light-gray br3 f5 fw6 pa3 tc w-100">News</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 w-100 f5">Tigrow News</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 w-100 f5">Press Resources</p>
+          <p className="b--light-silver ba bg-light-gray br3 f5 fw6 pa3 aboutList tc w-100">News</p>
+          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Tigrow News</p>
+          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Press Resources</p>
         </div>
       </div>
     </div>

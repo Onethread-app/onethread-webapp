@@ -231,3 +231,17 @@ width: 280px;
   width: 115px;
 }
 }
+@media only screen and (max-width: 360px) {
+.softwareList{
+padding: .25rem;
+}  
+.aboutList{
+  padding: .5rem;
+  }  
+.resourceList{
+  padding: .5rem;
+}
+.partnersList{
+  padding: .5rem;
+}
+}
