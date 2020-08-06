@@ -52,7 +52,7 @@ const _CurrentSubscription = (
       {props.currentComonent === 'base' && (
         <div>
           <div className="pt1">
-            <h4>Current Subscriptin Plan</h4>
+            <h4>Current Subscription Plan</h4>
             <Grid container spacing={3}>
               <Grid item xs={7}>
                 <label className="pl1">
