@@ -94,6 +94,16 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     getAPI();
   }, [props.company._id]);
 
+  const desigmationMap = {
+      'director' : 'Director' ,
+      'cxo': 'CXO',
+      'seniorManager' : 'Senior Manager',
+      'middleManager' : 'Middle Manager',
+      'operationalEmployee': 'Operational Employee',
+  }
+
+  
+
   return (
     <>
       {loading === false ? (
@@ -140,8 +150,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                 announcement.memberId &&
                                 announcement.memberId.designations
                                   .length > 0
-                                  ? announcement.memberId
-                                      .designations[0].division
+                                  ? desigmationMap[announcement.memberId
+                                    .designations[0].division]
                                   : 'Admin'
                               }`}
                             </Typography>
