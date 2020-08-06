@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Icon, Dialog, Button } from '@blueprintjs/core';
-import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
 import { CompanySignupForm } from 'layouts/company/Form';
 import { isMobileOnly } from 'react-device-detect';
@@ -15,7 +14,6 @@ import company from './../../resources/images/noCompany.png';
 
 interface CompanyListProps {
   currentCompany: string;
-  getAllCompaniesByUserId: (userId: string) => void;
   getNotifications: () => void;
   getCompanyDetails: (companyId: string, history: History) => void;
   user: User;
@@ -150,7 +148,6 @@ const mapStateToProps = (state: any) => {
 export const CompanyList = connect(
   mapStateToProps,
   {
-    getAllCompaniesByUserId,
     getNotifications,
     getCompanyDetails
   }
