@@ -8,7 +8,7 @@ import Button from '@material-ui/core/Button';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 // import { makeStyles } from '@material-ui/core/styles';
 import { createSubscription } from '../../../../stores/subscriptionBilling/Actions';
-import TextField from '@material-ui/core/TextField';
+// import TextField from '@material-ui/core/TextField';
 
 import { connect } from 'react-redux';
 import {
@@ -157,7 +157,7 @@ function _Checkout(props: ICheckout) {
                   <Grid item>
                     <CardContent>
                       <p className="b">Package Name</p>
-                      <label>Small</label>
+                      <label>Workspaces</label>
                     </CardContent>
                   </Grid>
 
@@ -168,12 +168,12 @@ function _Checkout(props: ICheckout) {
                         marginLeft: '15px',
                       }}
                     >
-                      <label>$0.99</label>
+                      <label>$7.99</label>
                     </CardContent>
                   </Grid>
                 </Grid>
               </Card>
-              <Card style={{ marginTop: '1px' }}>
+              {/* <Card style={{ marginTop: '1px' }}>
                 <Grid justify="space-between" container>
                   <Grid item>
                     <CardContent>
@@ -187,7 +187,7 @@ function _Checkout(props: ICheckout) {
                     </CardContent>
                   </Grid>
                 </Grid>
-              </Card>
+              </Card> */}
               <Card style={{ marginTop: '1px' }}>
                 <Grid justify="space-between" container>
                   <Grid item>
@@ -203,7 +203,7 @@ function _Checkout(props: ICheckout) {
                   </Grid>
                 </Grid>
               </Card>
-              <Card style={{ marginTop: '10px' }}>
+              {/* <Card style={{ marginTop: '10px' }}>
                 <Grid justify="space-between" container>
                   <Grid item>
                     <CardContent style={{ marginTop: '12px' }}>
@@ -223,7 +223,7 @@ function _Checkout(props: ICheckout) {
                     </CardContent>
                   </Grid>
                 </Grid>
-              </Card>
+              </Card> */}
             </Grid>
           </Grid>
 
