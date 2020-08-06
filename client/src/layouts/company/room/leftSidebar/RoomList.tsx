@@ -26,7 +26,7 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
         <ul className="list pa0 mh2-ns">
           {props.rooms && props.rooms.length ? props.search ?
             (
-              props.rooms.filter(item => !item.name.indexOf(props.search)).map(
+              props.rooms.filter(item => !item.name.toLowerCase().indexOf(props.search.toLowerCase())).map(
                 (filteredRooms, i, arr: {}) => (
                   <RoomListItem
                     key={filteredRooms._id}
