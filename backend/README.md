@@ -26,6 +26,16 @@ For running the test case use `npm test`
 
 run `npm lint` to match with the coding style.
 
+For seed data:
+
+    To import plans seed data into developer's database run the command from root:
+
+    `cd ./seed`
+
+    `mongoimport --uri <connectionString> --collection plans --file plans.json`
+
+
+
 ## Authors
 
 - **Orvi** - _Initial work_

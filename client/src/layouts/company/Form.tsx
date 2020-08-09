@@ -37,10 +37,11 @@ const CompanySignupFormComponent = (
 
   const [errors, setErrors] = useState({
     name: '',
+    legalOwnerName:'',
     email: '',
     legalOwnerMail: '',
     address: '',
-    type: '',
+    type: ''
   });
 
   const [loading, setLoading] = useState(false);
@@ -87,7 +88,8 @@ const CompanySignupFormComponent = (
       isEmpty(errors.address) &&
       isEmpty(errors.type) &&
       isEmpty(errors.email) &&
-      isEmpty(errors.legalOwnerMail)
+      isEmpty(errors.legalOwnerMail) &&
+      isEmpty(errors.legalOwnerName)
     ) {
       return true;
     } else {
@@ -303,8 +305,33 @@ const CompanySignupFormComponent = (
             }}
             className={'br0 bb b--lightBlue'}
             leftIconColor="#0fa3a3"
+            validationOnBlur={() => {
+              if (values.legalOwnerName.length > 32) {
+                const legalOwnerNameError = {
+                  ...errors,
+                  legalOwnerName:
+                    'legal owner name must be less than 32 character.',
+                };
+                setErrors(legalOwnerNameError);
+              } else {
+                const legalOwnerNameError = { ...errors, legalOwnerName: '' };
+                setErrors(legalOwnerNameError);
+              }
+            }}
           />
         </div>
+        {errors.legalOwnerName ? (
+          <small style={{ color: 'red' }}>{errors.legalOwnerName}</small>
+        ) : (
+          ''
+        )}
+        {props.errorCompany ? (
+          <small style={{ color: 'red' }}>
+            {props.errorCompany.message}
+          </small>
+        ) : (
+          ''
+        )}
       </div>
 
       <div className={` ${errors.legalOwnerMail ? 'mb3' : 'mb4'}`}>

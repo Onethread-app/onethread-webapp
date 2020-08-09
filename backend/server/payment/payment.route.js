@@ -9,13 +9,13 @@ const {
 const router = express.Router();
 
 // For TigrowWebApp users
-router
-  .route('/stripe/intent')
-  .post(
-    authorization,
-    SchemaValidator(paymentSchema.intent),
-    paymentCtrl.paymentIntent,
-  );
+// router
+//   .route('/stripe/intent')
+//   .post(
+//     authorization,
+//     SchemaValidator(paymentSchema.intent),
+//     paymentCtrl.paymentIntent,
+//   );
 
   router
   .route('/portwallet/initiate')

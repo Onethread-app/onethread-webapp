@@ -2,7 +2,7 @@ import React from 'react';
 import { Icon, Button } from '@blueprintjs/core';
 import { Entity } from 'stores/UtilsActions';
 import { Form, Field } from 'react-final-form';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { IconNames } from '@blueprintjs/icons';
 import { Condition } from 'components/final-form/Condition';
 import { ICompanyMembers } from 'stores/company/Reducer';
@@ -72,6 +72,7 @@ export const AddDesignationForm = (
                   render={({ input, meta }) => (
                     <DropdownFieldWithError
                       id={input.name}
+                      placeholder="Please select a division"
                       selectedValue={input.value}
                       options={
                         props.divisions && props.divisions.length > 0
@@ -106,7 +107,7 @@ export const AddDesignationForm = (
                       <DropdownFieldWithError
                         id={input.name}
                         selectedValue={input.value}
-                        placeholder="Select Department"
+                        placeholder="Please select a department"
                         options={
                           props.departments &&
                           props.departments.length > 0
@@ -127,7 +128,7 @@ export const AddDesignationForm = (
             </div>
             <Field<string>
               name="position"
-              validate={required}
+              validate={composeValidators(required, maxValue(50))}
               render={({ input, meta }) => (
                 <InputGroupFieldWithError
                   id={input.name}

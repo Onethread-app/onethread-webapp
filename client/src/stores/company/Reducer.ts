@@ -39,6 +39,8 @@ import {
   ADD_TOTAL_MEMBER,
   EDIT_ORGANIZATION,
   SET_INITIAL_CURRENT_COMPANY,
+  COLLEAGUE_INVITE_SUCCESS,
+  COLLEAGUE_WENT_WRONG,
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
 
@@ -111,12 +113,14 @@ export interface ICompany {
   products: Entity[];
   totalMember: number;
   totalAssociate: number;
+  colleagueInviteSuccess: boolean;
+  colleagueError: string;
 }
 
 export interface ICompanyResponse {
-  data : {
-    company : ICompany
-  },
+  data: {
+    company: ICompany;
+  };
   status: number;
 }
 
@@ -156,6 +160,8 @@ const InitialState = {
   departmentNameLoading: false,
   designationLoading: false,
   error: '',
+  colleagueInviteSuccess: false,
+  colleagueError: '',
 };
 
 export const CompanyReducer = (state = InitialState, action: any) => {
@@ -306,7 +312,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         currentCompany: {
           ...state.currentCompany,
           name: action.payload.name,
-          uniqueName: action.payload.uniqueName
+          uniqueName: action.payload.uniqueName,
         },
         changeCompanyNameLoading: false,
         error: '',
@@ -424,7 +430,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         currentCompany: {
           ...state.currentCompany,
-          parentcom: action.payload ,
+          parentcom: action.payload,
         },
       };
     case GET_ALL_COMPANY_ANNOUNCEMENT:
@@ -488,16 +494,26 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
       };
     case SET_INITIAL_CURRENT_COMPANY:
-        return {
-          ...state,
-          currentCompany: {
-            ...state.currentCompany,
-            _id: action.payload.company._id,
-            name: action.payload.company.name,
-            uniqueName: action.payload.company.uniqueName,
-            role: action.payload.role
-          },
-        };
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          _id: action.payload.company._id,
+          name: action.payload.company.name,
+          uniqueName: action.payload.company.uniqueName,
+          role: action.payload.role,
+        },
+      };
+    case COLLEAGUE_INVITE_SUCCESS:
+      return {
+        ...state,
+        colleagueInviteSuccess: !state.colleagueInviteSuccess,
+      };
+    case COLLEAGUE_WENT_WRONG:
+      return {
+        ...state,
+        colleagueError: action.payload,
+      };
     default:
       return state;
   }
