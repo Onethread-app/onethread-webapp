@@ -1,7 +1,7 @@
 {
   "name": "tigrow_frontend",
   "version": "2.4.2",
-  "homepage": "https://tigrow.herokuapp.com",
+  "homepage": "https://demo.tigrow.co/",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.18.0",
@@ -51,6 +51,7 @@
     "react-modal": "^3.11.2",
     "react-multi-carousel": "^2.5.4",
     "react-number-format": "^4.4.1",
+    "react-papaparse": "^3.5.0",
     "react-redux": "^7.1.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1",

@@ -12,7 +12,7 @@ import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
 interface HomePageComponentProps {
   currentCompany: ICompany;
-  getAllCompaniesByUserId: (userId: string) => void;
+  getAllCompaniesByUserId: (userId: string, type: string) => void;
   getProjectsIndividual: () => void;
   user: User;
   project: IMember[];
@@ -25,7 +25,7 @@ export const HomePageComponent = (
 
   const load = async () => {
     setLoading(true);
-    await props.getAllCompaniesByUserId(props.user._id);
+    await props.getAllCompaniesByUserId(props.user._id, 'home');
     // await props.getProjectsIndividual();
     setLoading(false);
   };

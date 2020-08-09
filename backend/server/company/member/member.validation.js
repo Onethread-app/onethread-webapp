@@ -41,6 +41,24 @@ module.exports = {
       position: schema.position.required(),
     }),
   }),
+  bulkMember: Joi.object().keys({
+    body: Joi.array().min(1).max(200)
+      .items(Joi.string()
+      .regex(
+        /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+      )
+      .lowercase()
+      .min(3)
+      .max(62)
+      .required()
+      .error((error) => {
+        return {
+          message: 'Invalid email format',
+        };
+      })),
+    
+  }),
+
   getMember: Joi.object().keys({
     params: memberId,
   }),

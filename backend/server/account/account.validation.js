@@ -1,62 +1,56 @@
 // Reference: https://docs.google.com/document/d/1yGg5DUbqOrw1aCA5u1s2VCRL_dFu6LQOvbDLamgl9bM/edit#
 const Joi = require('@hapi/joi');
+
+const schema = {
+  firstName: Joi.string().trim().lowercase().min(2).max(32),
+  lastName: Joi.string().required().lowercase().min(2).max(32),
+  email: Joi.string()
+    .regex(
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+    )
+    .lowercase()
+    .min(3)
+    .max(62),
+  password: Joi.string()
+    .regex(
+      /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
+    )
+    .required(),
+  birthDate: Joi.date(),
+  contactNo: Joi.string(),
+  bloodGroup: Joi.string().valid([
+    'A+',
+    'A-',
+    'O+',
+    'O-',
+    'AB+',
+    'AB-',
+    'B+',
+    'B-',
+  ]),
+  location: Joi.string().allow('').max(120),
+  position: Joi.string().allow('').max(32),
+  about: Joi.string().max(2000).allow(''),
+  gender: Joi.string().valid(['male', 'female', 'others']),
+};
+
+({
+  'string.trim': 'firstName may not contain any space at the beginning or end',
+  'string.empty': 'firstName is required',
+  'string.max': 'firstName only allow 32 characters'
+})
 module.exports = {
   register: Joi.object().keys({
     body: Joi.object().keys({
-      firstName: Joi.string()
-        .lowercase()
-        .required()
-        .min(2)
-        .max(32)
-        .error((error) => {
-          return { success: false, message: `firstName Required` };
-        }),
-      lastName: Joi.string()
-        .required()
-        .lowercase()
-        .min(2)
-        .max(32)
-        .error((error) => {
-          return { success: false, message: `lastName Required` };
-        }),
-      email: Joi.string()
-        .regex(
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        )
-        .lowercase()
-        .min(3)
-        .max(62)
-        .required()
-        .error((error) => {
-          return {
-            success: false,
-            message: 'mail id is not valid format',
-          };
-        }),
-      password: Joi.string()
-        .regex(
-          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
-        )
-        .required()
-        .error((error) => {
-          return {
-            success: false,
-            message:
-              'Password should contain Uppercase, Lowercase, Special character, Number',
-          };
-        }),
+      firstName: schema.firstName.required(),
+      lastName: schema.lastName,
+      email: schema.email,
+      password: schema.password,
       confirmPassword: Joi.string()
         .valid(Joi.ref('password'))
         .required(),
-      birthDate: Joi.date()
-        .required()
-        .error((error) => {
-          return {
-            success: false,
-            message: 'BirthDate field required',
-          };
-        }),
-      contactNo: Joi.string(),
+      birthDate: schema.birthDate.required(),
+      // contactNo: schema.contactNo,
       // .regex(/^(\+?(880)[0-9]{10})$/)
       // // .required()
       // .error((error) => {
@@ -68,95 +62,32 @@ module.exports = {
   }),
   login: Joi.object().keys({
     body: Joi.object().keys({
-      email: Joi.string()
-        .regex(
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        )
-        .email()
-        .min(3)
-        .max(62)
-        .lowercase()
-        .required()
-        .error((error) => {
-          return {
-            success: false,
-            message: 'mail id is not valid format',
-          };
-        }),
-      password: Joi.string().required(),
+      email: schema.email.required(),
+      password: schema.password.required(),
     }),
   }),
   update: Joi.object().keys({
     body: Joi.object().keys({
-      contactNo: Joi.string().regex(/^(\+?(880)[0-9]{10})$/),
-      birthDate: Joi.date(),
-      bloodGroup: Joi.string(),
-      location: Joi.string().allow('').max(120),
-      position: Joi.string().allow('').max(32),
-      about: Joi.string().max(2000).allow(''),
-      gender: Joi.string().valid(['male', 'female', 'others']),
-      secondaryEmail: Joi.string()
-        .regex(
-          /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-        )
-        .email()
-        .min(3)
-        .max(62)
-        .lowercase()
-        .allow('')
-        .error((error) => {
-          return {
-            success: false,
-            message: 'mail id is not valid format',
-          };
-        }),
+      contactNo: schema.contactNo,
+      birthDate: schema.birthDate,
+      bloodGroup: schema.bloodGroup,
+      location: schema.location,
+      position: schema.position,
+      about: schema.about,
+      gender: schema.gender,
+      secondaryEmail: schema.email.allow(''),
     }),
   }),
   resetPassword: Joi.object().keys({
     body: Joi.object().keys({
-      password: Joi.string()
-        .regex(
-          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
-        )
-        .required()
-        .error((error) => {
-          return {
-            success: false,
-            message:
-              'Password should contain Uppercase, Lowercase, Special character, Number',
-          };
-        }),
+      password: schema.password,
       token: Joi.string(),
     }),
   }),
-  search: Joi.string().min(2),
-
   changePassword: Joi.object().keys({
     body: Joi.object().keys({
-      newPassword: Joi.string()
-        .regex(
-          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
-        )
-        .required()
-        .error((error) => {
-          return {
-            success: false,
-            message:
-              'Password should contain Uppercase, Lowercase, Special character, Number',
-          };
-        }),
-      oldPassword: Joi.string()
-        .regex(
-          /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
-        )
-        .required()
-        .error((error) => {
-          return {
-            success: false,
-            message:
-              'Password should contain Uppercase, Lowercase, Special character, Number',
-          };
-        }),
+      newPassword: schema.password,
+      oldPassword: schema.password,
     }),
   }),
 };

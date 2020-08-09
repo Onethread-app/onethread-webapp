@@ -4,7 +4,7 @@ import { ICompanyMembers } from 'stores/company/Reducer';
 import { Entity } from 'stores/UtilsActions';
 import { Form, Field } from 'react-final-form';
 import { IconNames } from '@blueprintjs/icons';
-import { required, checkError } from 'components/final-form/utils';
+import { required, checkError, composeValidators, maxValue } from 'components/final-form/utils';
 import { Condition } from 'components/final-form/Condition';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { DropdownFieldWithError } from 'components/fields/DropdownField';
@@ -153,7 +153,7 @@ export const EditDesignationForm = (
             </div>
             <Field<string>
               name="position"
-              validate={required}
+              validate={composeValidators(required, maxValue(50))}
               render={({ input, meta }) => (
                 <InputGroupFieldWithError
                   id={input.name}

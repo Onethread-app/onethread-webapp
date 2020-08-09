@@ -11,6 +11,7 @@ interface IOPtionalRole {
   optionalRole?: [];
 }
 interface IProjectRole {
+  role?: string;
   onSubmit: (values: IOPtionalRole) => Promise<void>;
   optionalRole?: [];
 }
@@ -252,7 +253,7 @@ const GeneralPageComponent = (props: IProjectRole) => {
                 </MuiAlert>
               </Snackbar>
             </div>
-            {disabled === false ? (
+            { props.role && props.role === 'admin' && disabled === false ? (
               <div>
                 <Button
                   className="w4 grow h2 pointer"

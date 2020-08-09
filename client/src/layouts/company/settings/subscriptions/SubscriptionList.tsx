@@ -119,7 +119,7 @@ const _SubscriptionList = (props: ISubscriptionList) => {
             <Grid item xs={4}>
               <Card style={{ marginBottom: '10px' }}>
                 <CardContent>
-                  <h3>ENTERPRICE</h3>
+                  <h3>ENTERPRISE</h3>
                 </CardContent>
                 <CardContent>
                   <h3>Sales</h3>

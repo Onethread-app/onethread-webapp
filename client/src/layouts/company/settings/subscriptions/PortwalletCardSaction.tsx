@@ -5,6 +5,9 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import NumberFormat from 'react-number-format';
+import Checkbox from '@material-ui/core/Checkbox';
+import Modal from 'react-modal';
+import { TermsAndCondition } from './TermsAndCondition';
 
 interface NumberFormatCustomProps {
   inputRef: (instance: NumberFormat | null) => void;
@@ -52,6 +55,17 @@ interface IPortwalletCardSaction {
   ) => void;
 }
 
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
 const ErrorLabel = () => {
   return (
     <div style={{ margin: '5px', color: 'red' }}>
@@ -74,6 +88,21 @@ export default function PortwalletCardSaction(
   });
   const [error, setError] = React.useState(false);
   const [emailValidation, setEmailValidation] = React.useState(false);
+  const [checked, setChecked] = React.useState(false);
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  function openModal() {
+    setIsOpen(true);
+  }
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  const handleTermsCheck = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    setChecked(event.target.checked);
+  };
   const handleChange = (e) => {
     const { id, value } = e.target;
     props.getPortWalletFormData(e);
@@ -110,7 +139,7 @@ export default function PortwalletCardSaction(
   }
 
   return (
-    <div style={{ marginTop: '10px' }}>
+    <div style={{ marginTop: '45px' }}>
       <label className="b mt5">Card Details</label>
       <div className="mt3">
         <Grid container>
@@ -213,8 +242,30 @@ export default function PortwalletCardSaction(
                     </div>
                   </div>
                 </form>
+                <div className="flex">
+                  <Checkbox
+                    size="small"
+                    checked={checked}
+                    onChange={handleTermsCheck}
+                    defaultChecked
+                    color="primary"
+                    inputProps={{
+                      'aria-label': 'secondary checkbox',
+                    }}
+                  />{' '}
+                  <div style={{ marginTop: '10px' }}>
+                    <span>I have read and approved Tigrow's</span>{' '}
+                    <span
+                      style={{ color: 'blue', cursor: 'pointer' }}
+                      onClick={() => openModal()}
+                    >
+                      general terms
+                    </span>
+                  </div>
+                </div>
                 <Button
                   style={{ marginTop: '15px' }}
+                  disabled={!checked}
                   fullWidth
                   onClick={(e) =>
                     checkAllInput() && props.handleSubmit(e)
@@ -228,6 +279,14 @@ export default function PortwalletCardSaction(
             </Card>
           </Grid>
         </Grid>
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <TermsAndCondition />
+        </Modal>
       </div>
     </div>
   );
