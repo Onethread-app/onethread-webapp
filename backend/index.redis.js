@@ -5,23 +5,24 @@ const config = require('./config/config');
 const logger = require('./config/winston');
 
 const client = redis.createClient({
-  retry_strategy: function (options) {
-    if (options.error && options.error.code === 'ECONNREFUSED') {
-      logger.error(`The server refused the connection`);
-      return new Error('The server refused the connection');
-    }
-    if (options.total_retry_time > 1000 * 60 * 60) {
-      logger.error('Retry time exhausted');
-      return new Error('Retry time exhausted');
-    }
-    if (options.attempt > 10) {
-      return undefined;
-    }
-    // reconnect after
-    return Math.min(options.attempt * 100, 3000);
-  },
+  // retry_strategy: function (options) {
+  //   if (options.error && options.error.code === 'ECONNREFUSED') {
+  //     logger.error(`The server refused the connection`);
+  //     return new Error('The server refused the connection');
+  //   }
+  //   if (options.total_retry_time > 1000 * 60 * 60) {
+  //     logger.error('Retry time exhausted');
+  //     return new Error('Retry time exhausted');
+  //   }
+  //   if (options.attempt > 10) {
+  //     return undefined;
+  //   }
+  //   // reconnect after
+  //   return Math.min(options.attempt * 100, 3000);
+  // },
   port: config.redis.port,
   host: config.redis.host,
+  detect_buffers: true
 });
 client.auth(config.redis.password, (err, response) => {
   if (err) {
@@ -35,8 +36,9 @@ client.on('connect', () => {
 client.on('error', (err) => {
   logger.error('REDIS ' + err.message);
 });
-client.on('end', function () {
+client.on('end',  () => {
   logger.info('REDIS disconnect');
+  client.quit();
 });
-// client.quit();
+// client.quit();                           
 module.exports = client;

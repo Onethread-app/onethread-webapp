@@ -3,11 +3,17 @@ const dbHandler = require('../db-handler');
 const app = require('../../index');
 const Account = require('../../server/account/account.model');
 const request = supertest(app);
-
+let server;
 /**
  * Connect to a new in-memory database before running any tests.
  */
-beforeAll(async () => await dbHandler.connect());
+beforeAll(async () => 
+await dbHandler.connect(),
+// server = app.listen(4000, () => {
+//     global.agent = request.agent(server);
+//     done();
+//   })
+);
 
 // beforeEach(() => {
 //   jest.setTimeout(100000);
@@ -21,8 +27,9 @@ beforeAll(async () => await dbHandler.connect());
  * Remove and close the db and server.
  */
 afterAll(async () => {
+    await new Promise(resolve => setTimeout(() => resolve(), 500));
   await dbHandler.closeDatabase();
-  // app.close(done);
+//   await new Promise(resolve => setTimeout(() => resolve(), 500));  
 });
 describe('Account Module', () => {
   let token, accessToken, refreshToken;

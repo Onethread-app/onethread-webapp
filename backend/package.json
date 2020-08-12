@@ -111,6 +111,7 @@
     "jest": "^26.2.2",
     "mocha": "^6.1.4",
     "nyc": "^15.0.0",
+    "redis-mock": "^0.50.0",
     "should": "^13.2.3",
     "supertest": "4.0.2",
     "supertest-as-promised": "4.0.2",
