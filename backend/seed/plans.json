@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5f0b08fa99229803329dc8b4"},"validity":30,"version":0,"isActive":true,"name":"trial","maxTier":100,"description":"for teams and individuals","pricing":0,"createdAt":{"$date":"2020-07-12T12:58:34.513Z"},"updatedAt":{"$date":"2020-07-12T12:58:34.513Z"},"__v":0}
+{"_id":{"$oid":"5f0b0954d52a9705494c9242"},"validity":30,"version":0,"isActive":true,"name":"Workspaces","maxTier":100,"description":"for teams and individuals","pricing":7.99,"createdAt":{"$date":"2020-07-12T13:00:04.413Z"},"updatedAt":{"$date":"2020-07-12T13:00:04.413Z"},"__v":0}

@@ -142,7 +142,7 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
           </CustomView>
           {searchProjects ?
             (
-                props.project.filter(item => !item.name.indexOf(searchProjects)).map(
+                props.project.filter((item) => !item.name.toLowerCase().indexOf(searchProjects.toLowerCase())).map(
                   filteredProjects => (
                     <Card
                       style={{ marginTop: '10px', padding: '10px' }}

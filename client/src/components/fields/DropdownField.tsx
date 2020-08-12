@@ -49,9 +49,17 @@ export const DropdownField = (props: DropdownFieldProps) => (
         outline: 'none',
       }}
     >
+
+    {
+      props.placeholder ? 
+      <option selected value="">
+       {props.placeholder}
+      </option> :
       <option selected value="">
         Please select a value
-      </option>
+     </option>
+    }
+      
       {props.options.map((opt) => (
         <option
           value={opt._id}
