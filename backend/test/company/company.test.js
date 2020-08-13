@@ -98,11 +98,6 @@ describe('Company Module', () => {
     companyId1 = response.body.company._id;
     done();
   });
-  it('should check companyId works', async (done) => {
-    const response = request.get(companyApi + `/${companyId1}`);
-    expect(response.status).toBeUndefined();
-    done();
-  });
   it('should not create a new company because of duplicate name', async (done) => {
     const response = await request
       .post(companyApi)

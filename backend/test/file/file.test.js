@@ -72,7 +72,6 @@ describe('File Module', () => {
       .post(fileApi + '/upload?imageType=profilePic')
       .set(`Authorization`, `Bearer ${accessToken}`)
       .attach('file', picture);
-    console.log(response)
     expect(response.status).toBe(200);
     done();
   });

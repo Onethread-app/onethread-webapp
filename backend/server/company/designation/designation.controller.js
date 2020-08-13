@@ -32,6 +32,8 @@ const create = async (req, res, next) => {
       designation,
     });
   } catch (err) {
+    console.log(err)
+    logger.error(`Designations: ${err}`)
     next(err);
   }
 };

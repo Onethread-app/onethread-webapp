@@ -22,8 +22,9 @@ const client = redis.createClient({
   // },
   port: config.redis.port,
   host: config.redis.host,
-  detect_buffers: true
+  // detect_buffers: true
 });
+
 client.auth(config.redis.password, (err, response) => {
   if (err) {
     logger.error(`${err}`);
@@ -34,11 +35,12 @@ client.on('connect', () => {
   logger.info('REDIS ready');
 });
 client.on('error', (err) => {
+  client.quit();
   logger.error('REDIS ' + err.message);
 });
 client.on('end',  () => {
   logger.info('REDIS disconnect');
-  client.quit();
+  
 });
 // client.quit();                           
 module.exports = client;
