@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './style.css';
+import './style.scss';
 import tick from './../../resources/LandingImages/tick.svg';
 import { Button, Dialog } from '@blueprintjs/core';
 import { NavLink } from 'react-router-dom';

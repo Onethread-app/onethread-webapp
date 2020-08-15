@@ -25,7 +25,7 @@ export const NavbarLanding = () => {
         >
           <div className="flex items-center">
             <NavLink to="/">
-              <img className="mr1 tigrowLogo"  src={tigrowMini} />
+              <img className="mr1 tigrowLogo" src={tigrowMini} />
             </NavLink>
             <Popover
               position={Position.BOTTOM}
@@ -210,7 +210,9 @@ export const NavbarLanding = () => {
                 <div style={{ width: '20rem' }} className="flex">
                   <div className="flex flex-column">
                     <h1 className="f6">Company</h1>
-                    <small className="pointer mv1">About Us</small>
+                    <NavLink to="about">
+                      <small className="pointer mv1">About Us</small>
+                    </NavLink>
                     <small className="pointer mv1">Contact Us</small>
                     <small className="pointer mv1">Management Team</small>
                     <small className="pointer mv1">Investors and Advisers</small>

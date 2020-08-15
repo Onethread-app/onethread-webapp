@@ -69,6 +69,17 @@ width: 280px;
 .vendorRqstBtn{
   width: 23rem;
 }
+.AboutFirstBackground {
+  background-image: url(./../../resources/LandingImages/aboutCover.png);
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 20rem;
+}
+.AboutFirstInner{
+  height: 32vh;
+}
 @media only screen and (min-width: 540px) and (max-width: 768px) {
 .tigrowLogo{
   width: 25px;
@@ -160,6 +171,17 @@ width: 280px;
 .vendorThirdPadding{
   padding-left: 4rem;
 }
+.AboutFirstBackground {
+  background-image: url(./../../resources/LandingImages/aboutCover1366.png);
+  background-size: contain;
+  height: 19rem;
+}
+.AboutFirstInner{
+  height: 30vh;
+}
+.AboutFirstInnerFont{
+  font-size: 2.25rem;
+}
 }
 @media only screen and (min-width: 1025px) and (max-width: 1200px) {
 .companiesPadding{
@@ -182,10 +204,24 @@ width: 280px;
   grid-template-rows: repeat(2,775px);
   gap: 30px 55px;
 }
+.AboutFirstBackground {
+  background-image: url(./../../resources/LandingImages/aboutCover1366.png);
+  background-size: contain;
+  height: 19rem;
+}
+.AboutFirstInner{
+  height: 30vh;
+}
+.AboutFirstInnerFont{
+  font-size: 2.25rem;
+}
 }
 @media only screen and (min-width: 1201px) and (max-width: 1750px) {
 .companiesPadding{
   padding: 8rem;
+}
+.companiesMaxWidth{
+  width: 75rem;
 }
 .marketLogo{
   width: 85px;
@@ -203,6 +239,17 @@ width: 280px;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: repeat(2,755px);
   gap: 30px 55px;
+}
+.AboutFirstBackground {
+  background-image: url(./../../resources/LandingImages/aboutCover1366.png);
+  background-size: contain;
+  height: 19rem;
+}
+.AboutFirstInner{
+  height: 30vh;
+}
+.AboutFirstInnerFont{
+  font-size: 2.25rem;
 }
 }
 @media only screen and (max-width: 414px) {
@@ -239,6 +286,14 @@ width: 280px;
 .vendorLineHeight{
   line-height: initial;
 }
+.AboutFirstBackground {
+  background-image: url(./../../resources/LandingImages/aboutCoverMob.png);
+  background-size: contain;
+  height: 19rem;
+}
+.AboutFirstInner{
+  height: 38vh;
+}
 }
 @media only screen and (max-width: 360px) {
 .softwareList{
@@ -261,5 +316,13 @@ padding: .25rem;
 }
 .vendorLineHeight{
   line-height: initial;
+}
+.AboutFirstBackground {
+  background-image: url(./../../resources/LandingImages/aboutCoverMob.png);
+  background-size: contain;
+  height: 19rem;
+}
+.AboutFirstInner{
+  height: 38vh;
 }
 }
