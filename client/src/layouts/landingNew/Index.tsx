@@ -18,7 +18,7 @@ import peakwardLogo from './../../resources/LandingImages/peakwardLogo.png';
 import smile from './../../resources/LandingImages/Smile.png';
 import { isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
-import './style.css';
+import './style.scss';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
 
@@ -119,19 +119,19 @@ export const LandingPage = () => {
             Remote Working Solution.
           </p>
           <h1 className='f5-l f6 fw7 mt4' style={{ color: '#1D3557' }}>UPCOMING FEATURES</h1>
-          <div className="flex">
+          <div className="flex items-baseline">
             <img src={tick} />
             <h1 className='f5-l f6-m f7 fw7 ml2'>SHARED BROWSER</h1>
           </div>
-          <div className="flex">
+          <div className="flex items-baseline">
             <img src={tick} />
             <h1 className='f5-l f6-m f7 fw7 ml2'>GANTT CHART FOR KPI MONITORING</h1>
           </div>
-          <div className="flex">
+          <div className="flex items-baseline">
             <img src={tick} />
             <h1 className='f5-l f6-m f7 fw7 ml2'>CLOCK IN & OUT</h1>
           </div>
-          <div className="flex">
+          <div className="flex items-baseline">
             <img src={tick} />
             <h1 className='f5-l f6-m f7 fw7 ml2'>TIME SHEET</h1>
           </div>
@@ -206,15 +206,15 @@ export const LandingPage = () => {
               Part Time Teammate For Any Type Of Projects.
           </p>
             <h1 className='f5-l f6 fw7 mt4' style={{ color: '#1D3557' }}>NEW FEATURES</h1>
-            <div className="flex">
+            <div className="flex items-baseline">
               <img src={tick} />
               <h1 className='f5-l f7 fw7 ml2'>REQUEST FOR NEW TEAM MATE</h1>
             </div>
-            <div className="flex">
+            <div className="flex items-baseline">
               <img src={tick} />
               <h1 className='f5-l f7 fw7 ml2'>PROJECT BASED TIME SHEET FOR PAYMENT</h1>
             </div>
-            <div className="flex">
+            <div className="flex items-baseline">
               <img src={tick} />
               <h1 className='f5-l f7 fw7 ml2'>POST YOUR PORTFOLIO SERVICES/SKILLS AND GET HIRED BY COMPANIES</h1>
             </div>
@@ -246,15 +246,15 @@ export const LandingPage = () => {
               Search And Find Partner Companies From Around The World And Invite Them To Collaborate With You In TiGrow.
           </p>
             <h1 className='f5-l f6 fw7 mt4' style={{ color: '#1D3557' }}>NEW FEATURES</h1>
-            <div className="flex">
+            <div className="flex items-baseline">
               <img src={tick} />
               <h1 className='f5-l f7 fw7 ml2'>TECHNOLOGICAL VENDOR SECTION</h1>
             </div>
-            <div className="flex">
+            <div className="flex items-baseline">
               <img src={tick} />
               <h1 className='f5-l f7 fw7 ml2'>CHANNEL PARTNER SECTION</h1>
             </div>
-            <div className="flex">
+            <div className="flex items-baseline">
               <img src={tick} />
               <h1 className='f5-l f7 fw7 ml2'>DIGITAL MARKETING SECTION</h1>
             </div>

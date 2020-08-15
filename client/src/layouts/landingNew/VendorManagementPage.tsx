@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavbarLanding } from './NavbarLanding';
-import './style.css';
+import './style.scss';
 import vendorFirst from './../../resources/LandingImages/vendorFirstBack.png';
 import vendorSecond from './../../resources/LandingImages/vendorSecondBack.png';
 import vendorThird from './../../resources/LandingImages/vendorThirdBack.png';
