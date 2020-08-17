@@ -5,6 +5,8 @@ const initialState = {
   subscriptions: [],
   currentSubscriptions: undefined,
   subscriptionId: '',
+  subscriptionExpired: false,
+  massageShown: false,
 };
 export const SubscriptionReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -28,6 +30,21 @@ export const SubscriptionReducer = (state = initialState, action) => {
       return {
         ...state,
         subscriptionId: action.payload,
+      };
+    case subscription.SUBSCRIPTION_EXPIRED:
+      return {
+        ...state,
+        subscriptionExpired: true,
+      };
+    case subscription.SUBSCRIPTION_NOT_EXPIRED:
+      return {
+        ...state,
+        subscriptionExpired: false,
+      };
+    case subscription.EXPIRED_MASSAGE_SHOWN:
+      return {
+        ...state,
+        massageShown: true,
       };
     default:
       return state;
