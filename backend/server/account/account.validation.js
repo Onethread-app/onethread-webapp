@@ -33,12 +33,6 @@ const schema = {
   about: Joi.string().max(2000).allow(''),
   gender: Joi.string().valid(['male', 'female', 'others']),
 };
-
-({
-  'string.trim': 'firstName may not contain any space at the beginning or end',
-  'string.empty': 'firstName is required',
-  'string.max': 'firstName only allow 32 characters'
-})
 module.exports = {
   register: Joi.object().keys({
     body: Joi.object().keys({

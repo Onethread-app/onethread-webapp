@@ -106,7 +106,11 @@ describe('Designation Module', ()=>{
           expect(memberId).toHaveProperty('_id');
           memberId = memberId._id;
           done();
+<<<<<<< HEAD
       })
+=======
+      });
+>>>>>>> 6626ce22b9deeb2a07417e701f78b92d27b1a155
       it('should create a designation for member', async( done)=>{
           let designationApi = `/api/v1/company/${companyId}/designations/${memberId}`;
           const response = await request.post(designationApi).set('Authorization', `Bearer ${accessToken}`).send({

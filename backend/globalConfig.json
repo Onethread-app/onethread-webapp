@@ -1,1 +1,5 @@
-{"mongoUri":"mongodb://127.0.0.1:36403/jest?","mongoDBName":"jest"}
+<<<<<<< HEAD
+{"mongoUri":"mongodb://127.0.0.1:36769/jest?","mongoDBName":"jest"}
+=======
+{"mongoUri":"mongodb://127.0.0.1:37687/jest?","mongoDBName":"jest"}
+>>>>>>> 19fa3d71... associate test done

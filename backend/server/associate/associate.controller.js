@@ -204,8 +204,8 @@ const list = async (req, res, next) => {
 
 const listPending = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
-
-  await Associate.find({
+try{
+  let result = await Associate.find({
     $or: [{ associateCompany: req.params.companyId }],
     isAccepted: false,
     removed: false,
@@ -218,12 +218,15 @@ const listPending = async (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then((result) => {
-      return sendJSONresponse(res, 200, result);
-    })
-    .catch((e) => {
-      next(e);
-    });
+    
+    return sendJSONresponse(res, 200, result);
+    
+    
+  } catch (error) {
+    logger.error(`Associate pending: ${error}`);
+    
+    next(error);
+  }
 };
 
 module.exports = {
