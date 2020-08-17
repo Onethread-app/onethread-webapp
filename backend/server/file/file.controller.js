@@ -107,11 +107,13 @@ const profilePicture = async (req, res, next) => {
           }
         })
         .catch((error) => {
-          logger.error(`${error}`);
+          console.log(error)
+          logger.error(`File: ${error}`);
           next(error);
         });
     })
     .catch((err) => {
+      logger.error(`File: ${err}`);
       next(err);
     });
 };
@@ -178,11 +180,12 @@ const companyLogo = async (req, res, next) => {
           }
         })
         .catch((error) => {
-          logger.error(`${error}`);
+          logger.error(`File: ${error}`);
           next(error);
         });
     })
     .catch((err) => {
+      logger.error(`File: ${err}`);
       next(err);
     });
 };

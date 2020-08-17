@@ -22,7 +22,7 @@ For development:
 
 ## Running the tests
 
-For running the test case use `npm test`
+For running the test case use `npm run test`
 
 ### And coding style tests
 

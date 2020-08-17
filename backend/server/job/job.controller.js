@@ -24,8 +24,8 @@ const createJobExperience = async (req, res, next) => {
       return sendJSONresponse(res, 201, { data });
     })
     .catch((err) => {
-      logger.error(`Error: ${err}`);
-      return next(err);
+      logger.error(`Job: ${err}`);
+      next(err);
     });
 };
 
@@ -58,20 +58,6 @@ const getAllJobExperience = async (req, res) => {
       return next(err);
     });
 };
-// const getAllJobExpereicne = async (req, res) => {
-//   const userid = req.user.id;
-//   Account.find({ _id: userid })
-//     .populate(
-//       'jobExperience, companyName positionName startYear endingYear currentlyWork',
-//     )
-//     .exec()
-//     .then(data => {
-//       return sendJSONresponse(res, 200, { data });
-//     })
-//     .catch(err => {
-//       return next(err);
-//     });
-// };
 module.exports = {
   createJobExperience,
   updateJobExperience,
