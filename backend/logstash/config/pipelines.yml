@@ -75,3 +75,11 @@
 #   Default is path.data/dead_letter_queue
 #
 #   path.dead_letter_queue:
+
+- pipeline.id: tigrow_logs
+ path.config: ""
+- pipeline.id: tigrow_error_logs
+ path.config: ""
+- pipeline.id: tigrow_info_logs
+ path.config: ""
+
