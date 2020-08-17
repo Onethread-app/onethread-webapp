@@ -6,12 +6,26 @@ import { AdvancedInfo } from './AdvancedInfoView';
 import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { ICompany } from 'stores/company/Reducer';
 
 interface ProfilePageProps {
   user: User;
+  company: ICompany;
+  subscriptiontExpired: boolean;
 }
 
 const CompanyProfilePageComponent = (props: ProfilePageProps) => {
+  React.useEffect(() => {
+    if (props.subscriptiontExpired) {
+      props.company.role === 'superAdmin'
+        ? window.location.replace(
+            `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+          )
+        : window.location.replace(
+            `${window.location.origin}/${props.user.name}/home`,
+          );
+    }
+  }, []);
   return (
     <>
       <NavbarCompany title="Company Profile" />
@@ -38,8 +52,14 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    user: state.userReducer.user
+    user: state.userReducer.user,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
+    company: state.companyReducer.currentCompany,
   };
 };
 
-export const CompanyProfilePage = connect(mapStateToProps, null)(CompanyProfilePageComponent);
+export const CompanyProfilePage = connect(
+  mapStateToProps,
+  null,
+)(CompanyProfilePageComponent);
