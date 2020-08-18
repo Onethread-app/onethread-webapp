@@ -125,6 +125,12 @@ const changeName = async (req, res, next) => {
 const createCompany = async (req, res, next) => {
   try {
     req.body.account = req.user._id;
+    const duplicate = await Company.findOne({
+      name: req.body.name,
+    });
+    if (duplicate) {
+      return sendErrorResponse(res, 409, 'DuplicateNameError', {message: 'Name already exist'});
+    }
     req.body.uniqueName = createSlug(req.body.name);
     const newCompany = new Company(req.body);
 

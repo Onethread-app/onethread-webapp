@@ -5,10 +5,6 @@ const idSchema = {
   id: Joi.string().regex(/^[a-fA-F0-9]{24}$/),
 };
 
-// project id
-const pid = Joi.object().keys({
-  pid: idSchema.id,
-});
 // company-name
 const companyId = Joi.object().keys({
   companyId: idSchema.id,
@@ -70,7 +66,7 @@ module.exports = {
     }),
   }),
   getProject: Joi.object().keys({
-    params: pid.required(),
+    params: schema.pid.required(),
   }),
   pendingList: Joi.object().keys({
     params: companyId.required(),
@@ -103,7 +99,9 @@ module.exports = {
     params: companyId.required(),
   }),
   archiveProject: Joi.object().keys({
-    params: pid.required(),
+    query: Joi.object().keys({
+      pid: schema.pid.required(),
+    })
   }),
   searchConcernAdmin: Joi.object().keys({
     params: companyId.required(),
