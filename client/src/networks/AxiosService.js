@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { tokenConfig } from 'stores/UtilsActions';
+// import { tokenConfig } from 'stores/UtilsActions';
 import { server } from 'config';
 // import config from '../config';
 
