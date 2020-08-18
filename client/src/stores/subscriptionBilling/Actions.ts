@@ -14,3 +14,14 @@ export const createSubscription = (subscriptionId) => ({
   type: subscription.CREATE_SUBSCRIPTION_SUCESS,
   payload: subscriptionId,
 });
+
+export const setSubscriptionExpire = () => ({
+  type: subscription.SUBSCRIPTION_EXPIRED,
+});
+export const setSubscriptionNotExpire = () => ({
+  type: subscription.SUBSCRIPTION_NOT_EXPIRED,
+});
+
+export const setExpireMassage = () => ({
+  type: subscription.EXPIRED_MASSAGE_SHOWN,
+});

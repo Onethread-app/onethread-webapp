@@ -5,12 +5,26 @@ import { PendingAssociateList } from './PendingAssociateList';
 import { connect } from 'react-redux';
 import { User } from 'stores/user/Reducer';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { ICompany } from 'stores/company/Reducer';
 
 interface AssociatesPageProps {
   user: User;
+  company: ICompany;
+  subscriptiontExpired: boolean;
 }
 
 const AssociatesPageComponent = (props: AssociatesPageProps) => {
+  React.useEffect(() => {
+    if (props.subscriptiontExpired) {
+      props.company.role === 'superAdmin'
+        ? window.location.replace(
+            `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+          )
+        : window.location.replace(
+            `${window.location.origin}/${props.user.name}/home`,
+          );
+    }
+  }, []);
   return (
     <>
       <NavbarCompany title="My Associates" />
@@ -37,6 +51,9 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
+    company: state.companyReducer.currentCompany,
   };
 };
 

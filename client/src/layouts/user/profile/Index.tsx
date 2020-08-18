@@ -7,9 +7,17 @@ import { BasicInfoDetailsView } from './BasicInfoDetailsView';
 import { Tabs, Tab } from '@blueprintjs/core';
 import { User } from 'stores/user/Reducer';
 import { CoverPhotoView } from './CoverPhotoView';
+import { connect } from 'react-redux';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
-export const UserProfilePage = (props: { user: User }) => {
-  React.useEffect(() => {}, []);
+interface UserProfilePageProps {
+  user: User;
+  subscriptiontExpired: boolean;
+}
+
+const _UserProfilePage = (
+  props: UserProfilePageProps & RouteComponentProps,
+) => {
   return (
     <>
       <div
@@ -52,3 +60,15 @@ export const UserProfilePage = (props: { user: User }) => {
     </>
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    user: state.userReducer.user,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
+  };
+};
+export const UserProfilePage = connect(
+  mapStateToProps,
+  {},
+)(withRouter(_UserProfilePage));

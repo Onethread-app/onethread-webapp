@@ -54,6 +54,7 @@ interface Colleagues {
   inviteColleagueInBulk: (emails: any) => void;
   companyLoading: boolean;
   colleagueInviteSuccess: () => void;
+  subscriptiontExpired: boolean;
 }
 
 const load = async (
@@ -127,6 +128,15 @@ const ColleaguesPageComponent = (props: Colleagues) => {
 
   useEffect(() => {
     load(props.getCompanyMembers, props.getCompanyPendingMembers);
+    if (props.subscriptiontExpired) {
+      props.company.role === 'superAdmin'
+        ? window.location.replace(
+            `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+          )
+        : window.location.replace(
+            `${window.location.origin}/${props.user.name}/home`,
+          );
+    }
   }, []);
 
   useEffect(() => {
@@ -623,6 +633,8 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     companyLoading: state.companyReducer.loading,
     user: state.userReducer.user,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
   };
 };
 
