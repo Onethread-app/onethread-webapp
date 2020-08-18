@@ -213,7 +213,9 @@ export const NavbarLanding = () => {
                     <NavLink to="about">
                       <small className="pointer mv1">About Us</small>
                     </NavLink>
-                    <small className="pointer mv1">Contact Us</small>
+                    <NavLink to="contact">
+                      <small className="pointer mv1">Contact Us</small>
+                    </NavLink>
                     <small className="pointer mv1">Management Team</small>
                     <small className="pointer mv1">Investors and Advisers</small>
                     <small className="pointer mv1">Careers</small>

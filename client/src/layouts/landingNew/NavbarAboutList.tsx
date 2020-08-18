@@ -38,7 +38,9 @@ export const NavbarAboutList = (
           <NavLink to="about">
             <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">About Us</p>
           </NavLink>
-          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Contact</p>
+          <NavLink to="contact">
+            <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Contact</p>
+          </NavLink>
           <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Management Team</p>
           <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Investors and Advisers</p>
           <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Careers</p>

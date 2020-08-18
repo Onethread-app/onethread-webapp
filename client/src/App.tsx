@@ -44,6 +44,7 @@ import { LandingPage } from 'layouts/landingNew/Index';
 import { VendorManagementPage } from 'layouts/landingNew/VendorManagementPage';
 import { PricingPage } from 'layouts/landingNew/PricingPage';
 import { AboutPage } from 'layouts/landingNew/AboutUs';
+import { ContactUsPage } from 'layouts/landingNew/ContactUsPage';
 
 const PrivateRoute = (props: {
   component: any;
@@ -188,6 +189,13 @@ export const App = () => (
         path="/about"
         render={() =>
           isAuthenticate() ? <Redirect to="/" /> : <AboutPage />
+        }
+      />
+      <Route
+        exact
+        path="/contact"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
         }
       />
       <PrivateRoute exact path="/" component={Demo} />

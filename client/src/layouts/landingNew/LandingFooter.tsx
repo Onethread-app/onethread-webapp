@@ -58,10 +58,16 @@ export const LandingFooter = (
           >
             Contact TiGrow Support
           </Button>
-          <div className="flex">
-            <img src={fb} />
-            <img className="mh4" src={youtubeIcon} />
-            <img src={linkedInIcon} />
+          <div className="flex items-center">
+            <a href="https://web.facebook.com/TiGrow2020/" rel="noopener noreferrer" >
+              <img src={fb} />
+            </a>
+            <a href="https://www.youtube.com/channel/UCJSox3eBrv-L5JP33Grp0NQ" rel="noopener noreferrer" >
+              <img className="mh4" src={youtubeIcon} />
+            </a>
+            <a href="https://www.linkedin.com/company/tigrowlimited" rel="noopener noreferrer" >
+              <img src={linkedInIcon} />
+            </a>
           </div>
           <div className="tc bb b--white mt5 flex justify-center">
             <p className="white fw6 f5">English</p>
@@ -176,10 +182,16 @@ export const LandingFooter = (
           >
             Contact Tigrow Support
           </Button>
-          <div className="flex tc justify-center">
-            <img className="w2" src={fb} />
-            <img className="mh4 w2" src={youtubeIcon} />
-            <img className="w2" src={linkedInIcon} />
+          <div className="flex items-center tc">
+            <a href="https://web.facebook.com/TiGrow2020/" rel="noopener noreferrer" >
+              <img src={fb} />
+            </a>
+            <a href="https://www.youtube.com/channel/UCJSox3eBrv-L5JP33Grp0NQ" rel="noopener noreferrer" >
+              <img className="mh4" src={youtubeIcon} />
+            </a>
+            <a href="https://www.linkedin.com/company/tigrowlimited" rel="noopener noreferrer" >
+              <img src={linkedInIcon} />
+            </a>
           </div>
           <div className="tc bb b--white mt3 flex justify-center">
             <p className="white fw6 f7">English</p>

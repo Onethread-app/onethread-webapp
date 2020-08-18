@@ -61,6 +61,7 @@
     "react-toastify": "^6.0.8",
     "react-transition-group": "^4.3.0",
     "react-vertical-timeline-component": "^2.5.0",
+    "react-google-map": "^3.1.1",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^6.0.0",
