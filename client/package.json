@@ -61,7 +61,6 @@
     "react-toastify": "^6.0.8",
     "react-transition-group": "^4.3.0",
     "react-vertical-timeline-component": "^2.5.0",
-    "react-google-map": "^3.1.1",
     "redux": "^4.0.4",
     "redux-devtools-extension": "^2.13.8",
     "redux-persist": "^6.0.0",
@@ -72,7 +71,8 @@
     "tslib": "^1.10.0",
     "typeface-josefin-sans": "^0.0.75",
     "typeface-open-sans": "^0.0.75",
-    "typescript": "3.6.2"
+    "typescript": "3.6.2",
+    "google-map-react": "2.0.8"
   },
   "scripts": {
     "start": "react-scripts start",
