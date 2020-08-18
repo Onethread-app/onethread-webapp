@@ -30,7 +30,9 @@ export const NavbarListView = (
             backgroundColor: '#F0FBFF'
           }}
         >
-          <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+          <NavLink to="/">
+            <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+          </NavLink>
           <Icon
             icon="cross"
             iconSize={35}

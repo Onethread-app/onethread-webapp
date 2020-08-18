@@ -11,7 +11,6 @@
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center center;
-
 }
 .PricingFirstBackground {
   background-image: url(./../../resources/LandingImages/pricingPageBackground.png);
@@ -23,7 +22,7 @@
 .comprehensiveGrid{
 display: grid;
 grid-template-columns: 1fr 1fr 1fr;
-grid-template-rows: repeat(2,650px);
+grid-template-rows: repeat(2,auto);
 gap: 30px 55px;
 background-color: #F0FBFF;
 }
@@ -102,6 +101,9 @@ width: 280px;
 .vendorThirdPadding{
   padding-left: 3rem;
 }
+.vendorRqstBtn{
+  width: 21rem;
+}
 }
 @media only screen and (min-width: 960px) and (max-width: 1135px) {
 .navmain{
@@ -179,13 +181,16 @@ width: 280px;
 }
 .comprehensiveGrid{
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: repeat(2,775px);
+  grid-template-rows: repeat(2,auto);
   gap: 30px 55px;
 }
 }
 @media only screen and (min-width: 1201px) and (max-width: 1750px) {
 .companiesPadding{
   padding: 8rem;
+}
+.companiesMaxWidth{
+  width: 75rem;
 }
 .marketLogo{
   width: 85px;
@@ -201,11 +206,18 @@ width: 280px;
 }
 .comprehensiveGrid{
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: repeat(2,755px);
+  grid-template-rows: repeat(2,auto);
   gap: 30px 55px;
 }
 }
 @media only screen and (max-width: 414px) {
+.LandingFirstBackground {
+  background-image: url(./../../resources/LandingImages/HomeFirstBackgroundMob.png);
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 38rem;
+}
 .LandingSecondBackground {
   background-image: url(./../../resources/LandingImages/homeSecondBackgroundMob.png);
   position: relative;
@@ -215,7 +227,7 @@ width: 280px;
 .comprehensiveGrid{
   grid-template-columns: 1fr;
   grid-template-rows: repeat(2, auto);
-  gap: 0px 0px;
+  gap: 0 0;
 }
 .requestDemoBtn{
   margin-top: 15rem;
@@ -241,12 +253,19 @@ width: 280px;
 }
 }
 @media only screen and (max-width: 360px) {
+.LandingFirstBackground {
+  background-image: url(./../../resources/LandingImages/HomeFirstBackgroundMob.png);
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: auto;
+  height: 33rem;
+}
 .softwareList{
-padding: .25rem;
+  padding: .25rem;
 }  
 .aboutList{
   padding: .5rem;
-  }  
+}  
 .resourceList{
   padding: .5rem;
 }
