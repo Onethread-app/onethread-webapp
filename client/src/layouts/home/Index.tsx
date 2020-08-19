@@ -10,18 +10,42 @@ import { ProjectList } from './ProjectList';
 import { VideoConference } from './VideoList';
 import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
+import SubscriptionExpiredText from 'layouts/company/settings/SubscriptionExpiredText';
+import Modal from 'react-modal';
+import { setExpireMassage } from 'stores/subscriptionBilling/Actions';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
+
 interface HomePageComponentProps {
   currentCompany: ICompany;
   getAllCompaniesByUserId: (userId: string, type: string) => void;
   getProjectsIndividual: () => void;
   user: User;
   project: IMember[];
+  subscriptiontExpired: boolean;
+  setExpireMassage: () => void;
+  massageShown: boolean;
 }
 
 export const HomePageComponent = (
   props: HomePageComponentProps & RouteComponentProps,
 ) => {
   const [loading, setLoading] = useState(false);
+
+  const [success, setSuccess] = React.useState(false);
+
+  function closeModal() {
+    setSuccess(false);
+  }
 
   const load = async () => {
     setLoading(true);
@@ -31,6 +55,7 @@ export const HomePageComponent = (
   };
 
   useEffect(() => {
+    setSuccess(props.subscriptiontExpired);
     load();
   }, []);
 
@@ -52,6 +77,23 @@ export const HomePageComponent = (
           </>
         )}
       </div>
+      {success &&
+        props.massageShown !== true &&
+        props.currentCompany.role !== 'superAdmin' && (
+          <Modal
+            isOpen={success}
+            // onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <SubscriptionExpiredText
+              setExpireMassage={props.setExpireMassage}
+              closeModal={closeModal}
+              text="Your Subscription has expired, contact with Super Admin"
+            />
+          </Modal>
+        )}
     </>
   );
 };
@@ -61,10 +103,14 @@ const mapStateToProps = (state: any) => {
     user: state.userReducer.user,
     project: state.projectReducer.projectList,
     currentCompany: state.companyReducer.currentCompany,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
+    massageShown: state.subscriptionReducer.massageShown,
   };
 };
 
 export const HomePageNew = connect(mapStateToProps, {
   getAllCompaniesByUserId,
   getProjectsIndividual,
+  setExpireMassage,
 })(withRouter(HomePageComponent));

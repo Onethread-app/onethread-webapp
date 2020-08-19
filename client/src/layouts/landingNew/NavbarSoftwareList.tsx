@@ -26,7 +26,9 @@ export const NavbarSoftwareList = (
           backgroundColor: '#F0FBFF'
         }}
       >
-        <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+        <NavLink to="/">
+          <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+        </NavLink>
         <Icon
           icon="cross"
           iconSize={35}
@@ -67,7 +69,7 @@ export const NavbarSoftwareList = (
               <div className="ml2">
                 <div className="flex">
                   <p className="fw7 mv0 pv0">Vendor Management Tool</p>
-                  <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                  <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
                 </div>
                 <p className="f7 mv0 pv0">Managing all those vendors wasn't this much easier before!</p>
               </div>
@@ -81,7 +83,7 @@ export const NavbarSoftwareList = (
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Finding Partners</p>
-                <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
               </div>
               <p className="f7 mv0 pv0">Search And Find Partner Companies From Around The World!</p>
             </div>
@@ -94,7 +96,7 @@ export const NavbarSoftwareList = (
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Finding Teammates</p>
-                <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
               </div>
               <p className="f7 mv0 pv0">Find The Perfect Team Mate For Your Team!</p>
             </div>
@@ -104,7 +106,7 @@ export const NavbarSoftwareList = (
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">App Marketplace</p>
-                <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
               </div>
               <p className="f7 mv0 pv0">Find TiGrow apps for the tools and software you use to run your business.</p>
             </div>

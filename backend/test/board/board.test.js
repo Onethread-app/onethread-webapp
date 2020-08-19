@@ -99,17 +99,4 @@ describe('Board Module', ()=>{
     companyId1 = response.body.company._id;
     done();
   });
-
- 
-
-//   it('should get the all notifications for company companyId', async (done) => {
-//     const response = await request
-//       .get(notificationApi + `/${companyId}`)
-//       .set({'Authorization':`Bearer ${accessToken}`, companyid: `${companyId}`});
-//     expect(response.status).toBe(200);
-//     done();
-//   });
-  
-  
-  
-});
+})

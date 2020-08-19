@@ -60,7 +60,7 @@ export const NavbarLanding = () => {
                       <div className="ml2">
                         <div className="flex">
                           <p className="fw7 mv0 pv0">Vendor Management Tool</p>
-                          <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                          <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
                         </div>
                         <p className="f7 mv0 pv0">Managing all those vendors wasn't this much easier before!</p>
                       </div>
@@ -73,7 +73,7 @@ export const NavbarLanding = () => {
                     <div className="ml2">
                       <div className="flex">
                         <p className="fw7 mv0 pv0">Finding Partners</p>
-                        <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                        <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
                       </div>
                       <p className="f7 mv0 pv0">Search And Find Partner Companies From Around The World!</p>
                     </div>
@@ -85,7 +85,7 @@ export const NavbarLanding = () => {
                     <div className="ml2">
                       <div className="flex">
                         <p className="fw7 mv0 pv0">Finding Teammates</p>
-                        <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                        <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
                       </div>
                       <p className="f7 mv0 pv0">Find The Perfect Team Mate For Your Team!</p>
                     </div>
@@ -93,15 +93,17 @@ export const NavbarLanding = () => {
                   <article className="pt3 pointer">
                     <div className="flex">
                       <p className="fw7 mv0 pv0">App Marketplace</p>
-                      <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                      <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
                     </div>
-                    <p className="f7 mv0 pv0">Find TiGrow apps for the tools and software you use to run your business.</p>
+                    <p className="f7 mv0 pv0">
+                      Find TiGrow apps for the tools and software you use to run your business.
+                    </p>
                   </article>
                 </>
               }
               target={
                 <Button
-                  style={{ color: "#707070" }}
+                  style={{ color: '#707070' }}
                   className="bp3-minimal outline-0 h-100 f5-l f7-m fw6 pa1-m targetPadding"
                   rightIcon="caret-down">
                   Software
@@ -110,7 +112,7 @@ export const NavbarLanding = () => {
             />
             <NavLink to="/pricing">
               <Button
-                style={{ color: "#707070" }}
+                style={{ color: '#707070' }}
                 className="bp3-minimal outline-0 h-100 f5-l f7-m fw6 pa1-m targetPadding">
                 Pricing
               </Button>
@@ -126,25 +128,31 @@ export const NavbarLanding = () => {
                     <article className="pointer">
                       <div className="flex">
                         <p className="fw7 mv0 pv0">Blog</p>
-                        <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
+                        <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
                       </div>
-                      <p className="f7 mv0 pv0">Read project management, freelancer success stories, b2B Partnership Strategy and many more</p>
+                      <p className="f7 mv0 pv0">
+                        Read project management, freelancer success stories, b2B Partnership Strategy and many more
+                      </p>
                     </article>
                     <article className="pointer pl3">
                       <div className="flex">
                         <p className="fw7 mv0 pv0">Ebooks, Guides & More</p>
-                        <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
+                        <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
                       </div>
-                      <p className="f7 mv0 pv0">Get access to TiGrow's resources about procurement, agile management and more.</p>
+                      <p className="f7 mv0 pv0">
+                        Get access to TiGrow's resources about procurement, agile management and more.
+                      </p>
                     </article>
                   </div>
                   <div className="flex pt3">
                     <article className="pointer">
                       <div className="flex">
                         <p className="fw7 mv0 pv0">Onboarding & Services</p>
-                        <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
+                        <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
                       </div>
-                      <p className="f7 mv0 pv0">Find training and consulting services to help you thrive with tiGrow.</p>
+                      <p className="f7 mv0 pv0">
+                        Find training and consulting services to help you thrive with tiGrow.
+                      </p>
                     </article>
                     <article className="pointer pl3">
                       <p className="fw7 pv0">Customer Support</p>
@@ -155,7 +163,7 @@ export const NavbarLanding = () => {
               }
               target={
                 <Button
-                  style={{ color: "#707070" }}
+                  style={{ color: '#707070' }}
                   className="bp3-minimal outline-0 h-100 f5-l f7-m fw6 pa1-m targetPadding"
                   rightIcon="caret-down">
                   Resources
@@ -172,14 +180,16 @@ export const NavbarLanding = () => {
                   <article className="pointer">
                     <div className="flex">
                       <p className="fw7 mv0 pv0">Hire a Partner</p>
-                      <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
+                      <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
                     </div>
-                    <p className="f7 mv0 pv0">Find a partner in our global community of service providers who can help you grow.</p>
+                    <p className="f7 mv0 pv0">
+                      Find a partner in our global community of service providers who can help you grow.
+                    </p>
                   </article>
                   <article className="pointer pl3">
                     <div className="flex">
                       <p className="fw7 mv0 pv0">Partner with Us</p>
-                      <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
+                      <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ">Upcoming</p>
                     </div>
                     <p className="f7 mv0 pv0">Find the right partner program to help your business to grow.</p>
                   </article>
@@ -187,7 +197,7 @@ export const NavbarLanding = () => {
               }
               target={
                 <Button
-                  style={{ color: "#707070" }}
+                  style={{ color: '#707070' }}
                   className="bp3-minimal outline-0 h-100 f5-l f7-m fw6 pa1-m targetPadding"
                   rightIcon="caret-down">
                   Partners
@@ -196,7 +206,7 @@ export const NavbarLanding = () => {
             />
             <NavLink to="#">
               <Button
-                style={{ color: "#707070" }}
+                style={{ color: '#707070' }}
                 className="bp3-minimal outline-0 h-100 f5-l f7-m fw6 pa1-m targetPadding">
                 Teammate
               </Button>
@@ -210,8 +220,12 @@ export const NavbarLanding = () => {
                 <div style={{ width: '20rem' }} className="flex">
                   <div className="flex flex-column">
                     <h1 className="f6">Company</h1>
-                    <small className="pointer mv1">About Us</small>
-                    <small className="pointer mv1">Contact Us</small>
+                    <NavLink to="about">
+                      <small className="pointer mv1">About Us</small>
+                    </NavLink>
+                    <NavLink to="contact">
+                      <small className="pointer mv1">Contact Us</small>
+                    </NavLink>
                     <small className="pointer mv1">Management Team</small>
                     <small className="pointer mv1">Investors and Advisers</small>
                     <small className="pointer mv1">Careers</small>
@@ -225,7 +239,7 @@ export const NavbarLanding = () => {
               }
               target={
                 <Button
-                  style={{ color: "#707070" }}
+                  style={{ color: '#707070' }}
                   className="bp3-minimal outline-0 h-100 f5-l f7-m fw6 pa1-m targetPadding"
                   rightIcon="caret-down">
                   About
