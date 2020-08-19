@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 
 import '../../assets/fonts/css/icons.css';
 import Validator from '../../utils/Validator';

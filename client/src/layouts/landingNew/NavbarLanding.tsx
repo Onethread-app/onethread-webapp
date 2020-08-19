@@ -220,8 +220,12 @@ export const NavbarLanding = () => {
                 <div style={{ width: '20rem' }} className="flex">
                   <div className="flex flex-column">
                     <h1 className="f6">Company</h1>
-                    <small className="pointer mv1">About Us</small>
-                    <small className="pointer mv1">Contact Us</small>
+                    <NavLink to="about">
+                      <small className="pointer mv1">About Us</small>
+                    </NavLink>
+                    <NavLink to="contact">
+                      <small className="pointer mv1">Contact Us</small>
+                    </NavLink>
                     <small className="pointer mv1">Management Team</small>
                     <small className="pointer mv1">Investors and Advisers</small>
                     <small className="pointer mv1">Careers</small>
