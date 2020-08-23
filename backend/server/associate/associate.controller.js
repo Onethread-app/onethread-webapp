@@ -48,6 +48,12 @@ const get = async (req, res, next) => {
 };
 
 const createPending = async (req, res, next) => {
+  if (!req.is('application/json')) {
+    logger.error("'Expects 'application/json'");
+    return sendErrorResponse(res, 406, 'ContentTypeError', {
+      message: "Expects 'application/json'",
+    });
+  }
   try {
     let associate = await Associate.findOne({
       company: req.body.company.id,
@@ -70,6 +76,7 @@ const createPending = async (req, res, next) => {
     
     await associate.save();
     const text = `${req.body.company.name} wants to add you as their associate`;
+    console.log(1,req.headers)
     createCompanyRoleNotification(
       req.body.associateCompany,
       {

@@ -28,7 +28,7 @@ afterAll(async () => {
 });
 
 describe('Associate Module', () => {
-  let accessToken, token, companyId, cname, companyAssociateId, cnameAssociate ;
+  let accessToken, token, companyId, cname, companyAssociateId, cnameAssociate, pusherSockId ;
   let accountApi = '/api/v1/accounts';
   let companyApi = `/api/v1/company`;
   let associateApi = `/api/v1/associate`;
@@ -87,6 +87,7 @@ describe('Associate Module', () => {
   });
 
   it('should create a new company to be associate', async (done) => {
+    
     const response = await request
       .post(companyApi)
       .set('Authorization', `Bearer ${accessToken}`)
@@ -105,10 +106,11 @@ describe('Associate Module', () => {
 
   it('should create a new associate', async (done) => {
       let associateapi = associateApi+'/'+companyId;
+      pusherSockId = '297706.29845612';
       
     const response = await request
       .post(associateapi)
-      .set({'Authorization':`Bearer ${accessToken}`, companyid: `${companyId}`})
+      .set({'Authorization':`Bearer ${accessToken}`, companyid: `${companyId}`,  clientid: `${pusherSockId}`})
       .send({
         company: {id: companyId, _id: companyId, name: cname },
         associateCompany: {id: companyAssociateId, _id: companyAssociateId, name: cnameAssociate },
