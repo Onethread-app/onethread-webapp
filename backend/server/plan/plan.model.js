@@ -4,6 +4,7 @@ const planSchema = mongoose.Schema(
   {
     name: {
       type: String,
+      unique: false,
       enum: ['trial', 'enterprice', 'workspaces'],
     },
     maxTier: {
@@ -23,6 +24,7 @@ const planSchema = mongoose.Schema(
     validity: {
       type: Number,
       required: true,
+      unique: false,
       default: 30,
     },
     version: {
@@ -33,6 +35,11 @@ const planSchema = mongoose.Schema(
   {
     timestamps: true,
   },
+);
+
+planSchema.index(
+  { name: 1, validity: 1 },
+  { unique: true },
 );
 
 module.exports = mongoose.model('Plan', planSchema);
