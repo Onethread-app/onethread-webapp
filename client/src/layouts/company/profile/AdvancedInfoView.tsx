@@ -141,18 +141,22 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
                 <h1 key={index} className="f5 fw4">
                   {parentcom}
                 </h1>
-                <div>
-                  <img
-                    src={editIcon}
-                    alt="edit"
-                    width="35"
-                    className="br2 pointer"
-                    onClick={() => {
-                      setShowOrganizationEditDialog(true);
-                      setOrg({ind: index, name: parentcom});
-                    }}
-                  />
-                </div>
+                  <div>
+                    {
+                      companyPermit(props.company!.role) && (
+                        <img
+                          src={editIcon}
+                          alt="edit"
+                          width="35"
+                          className="br2 pointer"
+                          onClick={() => {
+                            setShowOrganizationEditDialog(true);
+                            setOrg({ ind: index, name: parentcom });
+                          }}
+                        />
+                      )
+                    }
+                  </div>
                 </div>
               ))
             ) : (
