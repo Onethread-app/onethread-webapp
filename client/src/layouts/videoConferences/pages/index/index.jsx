@@ -190,7 +190,7 @@ class InputChannel extends React.Component {
     return (
       <div className="channel-wrapper control">
         <input
-          onInput={this.handleChange}
+          onChange={this.handleChange}
           id="channel"
           className={'ag-rounded input ' + this.state.state}
           type="text"
