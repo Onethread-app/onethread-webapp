@@ -1,0 +1,32 @@
+.quote {
+  &::before {
+    content: '"';
+    margin-left: -1.2rem;
+    font-size: 3rem;
+    font-family: Cambria;
+    font-weight: 900;
+    font-style: italic;
+    color: #0fb7a0;
+  }
+  &::after {
+    content: '"';
+    font-size: 3rem;
+    font-family: Cambria;
+    font-weight: 900;
+    font-style: italic;
+    color: #0fb7a0;
+  }
+}
+
+@media only screen and (max-width: 414px) {
+  .workHomeFirstBack {
+    margin-top: -3rem;
+  }
+  .quote {
+    &::before {
+      content: '"';
+      margin-left: -1rem;
+      
+    }
+  }
+}

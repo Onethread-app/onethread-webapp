@@ -51,16 +51,19 @@ export const NavbarSoftwareList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
-          <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
-            <img
-              src={client}
-            />
-            <div className="ml2">
-              <p className="fw7 mv0 pv0">Work From Home Solution</p>
-              <p className="f7 mv0 pv0">An Effortless WFH Experience to manage your remote teams.</p>
-            </div>
-            <Icon className="ml-auto" icon="chevron-right" />
-          </article>
+          <NavLink to="work-from-home-solution">
+            <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
+              <img src={client} />
+              <div className="ml2">
+                <p className="fw7 mv0 pv0">Work From Home Solution</p>
+                <p className="f7 mv0 pv0">
+                  An Effortless WFH Experience to manage your remote
+                  teams.
+                </p>
+              </div>
+              <Icon className="ml-auto" icon="chevron-right" />
+            </article>
+          </NavLink>
           <NavLink to="vendor-management-tool">
             <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
               <img

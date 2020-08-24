@@ -43,15 +43,17 @@ export const NavbarLanding = () => {
                       <p className="f7 mv0 pv0">A Robust Project management tool for all type of projects!</p>
                     </div>
                   </article>
-                  <article className="flex pt4 pointer">
-                    <img
-                      src={client}
-                    />
-                    <div className="ml2">
-                      <p className="fw7 mv0 pv0">Work From Home Solution</p>
-                      <p className="f7 mv0 pv0">An Effortless WFH Experience to manage your remote teams.</p>
-                    </div>
-                  </article>
+                  <NavLink to="work-from-home-solution">
+                    <article className="flex pt4 pointer">
+                      <img
+                        src={client}
+                      />
+                      <div className="ml2">
+                        <p className="fw7 mv0 pv0">Work From Home Solution</p>
+                        <p className="f7 mv0 pv0">An Effortless WFH Experience to manage your remote teams.</p>
+                      </div>
+                    </article>
+                  </NavLink>
                   <NavLink to="vendor-management-tool">
                     <article className="flex pt4 pointer">
                       <img

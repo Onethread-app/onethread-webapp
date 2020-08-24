@@ -42,6 +42,7 @@ import { HomePageNew } from 'layouts/home/Index';
 import Success from './components/Success';
 import { LandingPage } from 'layouts/landingNew/Index';
 import { VendorManagementPage } from 'layouts/landingNew/VendorManagementPage';
+import { WorkFromHomePage } from 'layouts/landingNew/WorkFromHomePage';
 import { PricingPage } from 'layouts/landingNew/PricingPage';
 import { AboutPage } from 'layouts/landingNew/AboutUs';
 import { ContactUsPage } from 'layouts/landingNew/ContactUsPage';
@@ -170,6 +171,17 @@ export const App = () => (
         }
       />
       <Route path="/autologin" render={() => <AutoLoginPage />} />
+      <Route
+        exact
+        path="/work-from-home-solution"
+        render={() =>
+          isAuthenticate() ? (
+            <Redirect to="/" />
+          ) : (
+            <WorkFromHomePage />
+          )
+        }
+      />
       <Route
         exact
         path="/vendor-management-tool"
