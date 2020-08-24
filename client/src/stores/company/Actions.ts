@@ -664,7 +664,7 @@ export const addCertificate = (certificate: any) => async (
         certificate,
         headers,
       );
-      dispatch({ type: ADD_CERTIFICATE, payload: certificate });
+      dispatch({ type: ADD_CERTIFICATE, payload: response.data.certificate });
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
@@ -859,3 +859,30 @@ export const inviteColleagueInBulk = (emails: any) => async (
 export const colleagueInviteSuccess = () => ({
   type: COLLEAGUE_INVITE_SUCCESS,
 });
+
+export const editCertificate = (certificate: any, id: string) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    let response;
+    if ((headers as any).headers.Authorization) {
+      const companyId = getState().companyReducer.currentCompany._id;
+      response = await tigrowApi.put(
+        `company/${companyId}/certification?certificateId=${id}`,
+        certificate,
+        headers,
+      );
+      const companyName = getState().companyReducer.currentCompany.uniqueName;
+      dispatch(getCompanyDetails(companyName));
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      // console.log('error in adding certificate');
+    }
+    return;
+  } catch (error) {
+    return false;
+  }
+};

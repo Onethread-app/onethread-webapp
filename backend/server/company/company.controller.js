@@ -529,11 +529,45 @@ const addCertifications = async (req, res, next) => {
     await certificate.save();
     return sendJSONresponse(res, 201, {
       message: 'Certification add',
+      certificate
     });
   } catch (error) {
+    logger.error(`Company: ${error}`);
     next(error);
   }
 };
+
+const editCertification = async (req,res,next) => {
+  try {
+
+    const certificate = await Certificate.findOne({ _id: req.query.certificateId});
+
+    if (!certificate) {
+      return sendErrorResponse(res, 404, 'CertificateIdNotFoundError', {
+        message: `certificateId not found`,
+      });
+    }else{
+
+      for (const key in req.body) {
+        if (req.body.hasOwnProperty(key)) {
+          certificate[key] = req.body[key];
+        }
+      }
+
+      const editedCertificate = await certificate.save()
+
+      return sendJSONresponse(res, 200, {
+        message: 'Certification edited',
+        data: editedCertificate
+      });
+
+    }
+
+  } catch (error) {
+    logger.error(`Company: ${error}`)
+    next(error);
+  }
+}
 
 const parentOrg = async (req, res, next) => {
   try {
@@ -695,4 +729,5 @@ module.exports = {
   noticePostByCompany,
   allNoticesForCompany,
   adminSuperAdminFinder,
+  editCertification
 };
