@@ -1,8 +1,10 @@
 # Use leightweight linux distrubution
 # Choose alpine because it's size only 5MB 
-FROM alpine:3.7
+FROM mhart/alpine-node:latest 
 
 ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION v10.22.0
+
 ENV NODE_ENV=local
 ENV PORT=4044
 ENV JWT_ACCESS_TOKEN=iamdeveloper
@@ -26,9 +28,9 @@ ENV AWS_SECRET_ACCESS_KEY=9/dV7koHr9/RVbdCwCIwf2/dP8MhcUt9x17LNy09
 ENV S3_REGION=ap-southeast-1
 ENV AWS_UPLOADED_FILE_URL_LINK=https://tigrow.s3-ap-southeast-1.amazonaws.com/
 
-# RUN apk add nodejs=12.14.0-r0
-RUN apk add --no-cache --virtual .gyp python make g++ 
-RUN apk add --update nodejs
+# RUN apk add nodejs=10.22-alpine3.11
+RUN apk --no-cache add --virtual builds-deps build-base python
+RUN npm rebuild bcrypt --build-from-source
 RUN npm cache verify
 
 
@@ -44,7 +46,8 @@ WORKDIR /app
 # taking advantages of docker layer cache system
 ADD package.json /app/package.json
 
-# install all desired packages 
+# install all desired packages
+RUN npm rebuild bcrypt --update-binary
 RUN npm install
 
 #for production

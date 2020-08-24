@@ -3,11 +3,17 @@ FROM node:13.12.0
 ENV PATH /app/node_modules/.bin:$PATH
 ENV BIND_HOST=0.0.0.0
 
-# Pusher Configuration
-ENV REACT_APP_PUSHER_CHANNEL_KEY=7e706af4c123d518ccb5
-ENV REACT_APP_PUSHER_CHANNEL_CLUSTER=ap1
-ENV NVM_DIR /usr/local/nvm
-
+# Dev Environment Configuration
+ENV REACT_APP_PUSHER_CHANNEL_KEY_DEV=2d2483157c37a8782f19
+ENV REACT_APP_PUSHER_CHANNEL_CLUSTER_DEV=ap2
+ENV REACT_APP_PUSHER_CHANNEL_KEY=2d2483157c37a8782f19
+ENV REACT_APP_PUSHER_CHANNEL_CLUSTER=ap2
+ENV PUBLIC_URL=https://stage.tigrow.co/
+ENV SKIP_PREFLIGHT_CHECK=true
+ENV NOTIFICATION_PUSHER_CHANNEL_CLUSTER=ap2
+ENV NOTIFICATION_PUSHER_CHANNEL_KEY=2d2483157c37a8782f19
+ENV REACT_APP_STRIPE_PUBLIC_KEY=pk_test_51GuveEJN3n5bhvDVvKqwqOQRlwgIDLAnXFA8Olt69qmWjMb54QgOqKueCta8G0WEyPcTEFOi8mjYdTztSTX42zOV00QuzTN6di
+ENV REACT_APP_API_URL=http://172.17.0.2:4044/api/v1/
 # Add Maintainer info
 LABEL maintainer="tigrowtecheven@gmail.com"
 
@@ -26,7 +32,7 @@ COPY . /app
 RUN yarn install
 
 # FROM nginx:1.16.0-alpine
-# COPY --from=client /app/build /usr/share/nginx/html
-EXPOSE 3000
+# COPY --from=client ./build /usr/share/nginx/html
+EXPOSE 4000
 
 CMD ["yarn", "start"]
