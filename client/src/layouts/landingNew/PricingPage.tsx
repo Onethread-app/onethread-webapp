@@ -54,9 +54,7 @@ const PricingPageComponent = (
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">Unlimited</span>
-               Kanban Boards
-            </h1>
+              <span className="fw7">Unlimited</span> Kanban Boards</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -65,23 +63,17 @@ const PricingPageComponent = (
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">100,000</span>
-               Message History
-            </h1>
+              <span className="fw7">100,000</span> Message History</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">1000 Minute</span>
-               Video Conferencing (Premium)
-            </h1>
+              <span className="fw7">1000 Minute</span> Video Conferencing (Premium)</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">Unlimited Minute</span>
-               Video Conferencing (Basic)
-            </h1>
+              <span className="fw7">Unlimited Minute</span> Video Conferencing (Basic)</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -90,37 +82,29 @@ const PricingPageComponent = (
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">Unlimited</span>
-               Admins And Project Moderators
-            </h1>
+              <span className="fw7">Unlimited</span> Admins And Project Moderators</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">Up To 100</span>
-               Project Team Mates
-            </h1>
+              <span className="fw7">Up To 100</span> Project Team Mates</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">Up To 100</span>
-               Colleagues
-            </h1>
+              <span className="fw7">Up To 100</span> Colleagues</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">Up To 50</span>
-               Associates
-            </h1>
+              <span className="fw7">Up To 50</span> Associates</h1>
           </div>
           <div className="flex mt2 items-start">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
-              <span className="fw7">Free Inclusion At The Time Of Release -</span>
-               Major Features Like Gantt Chart,
-            Clock In-Out, TIme Sheet and Shared Browser
+              <span className="fw7">Free Inclusion At The Time Of Release -</span> Major
+                Features Like Gantt Chart,
+                Clock In-Out, TIme Sheet and Shared Browser
             </h1>
           </div>
           <div className="tc">
