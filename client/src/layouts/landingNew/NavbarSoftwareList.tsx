@@ -79,19 +79,21 @@ export const NavbarSoftwareList = (
               <Icon className="ml-auto" icon="chevron-right" />
             </article>
           </NavLink>
-          <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
-            <img
-              src={support}
-            />
-            <div className="ml2">
-              <div className="flex">
-                <p className="fw7 mv0 pv0">Finding Partners</p>
-                <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+          <NavLink to="finding-partners-page">
+            <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
+              <img
+                src={support}
+              />
+              <div className="ml2">
+                <div className="flex">
+                  <p className="fw7 mv0 pv0">Finding Partners</p>
+                  <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                </div>
+                <p className="f7 mv0 pv0">Search And Find Partner Companies From Around The World!</p>
               </div>
-              <p className="f7 mv0 pv0">Search And Find Partner Companies From Around The World!</p>
-            </div>
-            <Icon className="ml-auto" icon="chevron-right" />
-          </article>
+              <Icon className="ml-auto" icon="chevron-right" />
+            </article>
+          </NavLink>
           <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <img
               src={team}
