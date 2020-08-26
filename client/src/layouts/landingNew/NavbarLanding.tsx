@@ -80,18 +80,20 @@ export const NavbarLanding = () => {
                       <p className="f7 mv0 pv0">Search And Find Partner Companies From Around The World!</p>
                     </div>
                   </article>
-                  <article className="flex pt4 bb b--light-silver pb3 pointer">
-                    <img
-                      src={team}
-                    />
-                    <div className="ml2">
-                      <div className="flex">
-                        <p className="fw7 mv0 pv0">Finding Teammates</p>
-                        <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                  <NavLink to="finding-teammates-page">
+                    <article className="flex pt4 bb b--light-silver pb3 pointer">
+                      <img
+                        src={team}
+                      />
+                      <div className="ml2">
+                        <div className="flex">
+                          <p className="fw7 mv0 pv0">Finding Teammates</p>
+                          <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                        </div>
+                        <p className="f7 mv0 pv0">Find The Perfect Team Mate For Your Team!</p>
                       </div>
-                      <p className="f7 mv0 pv0">Find The Perfect Team Mate For Your Team!</p>
-                    </div>
-                  </article>
+                    </article>
+                  </NavLink>
                   <article className="pt3 pointer">
                     <div className="flex">
                       <p className="fw7 mv0 pv0">App Marketplace</p>

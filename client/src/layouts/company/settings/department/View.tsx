@@ -29,9 +29,9 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
 
   return (
     <>
-      <div className="pr6">
+      <div className="pr6 code">
         <div className="flex-ns justify-between pv3">
-          <h1 className="f6 lh-copy">Departments</h1>
+          <h1 className="f4 fw7 lh-copy">Departments</h1>
           <Button
             type="submit"
             className="grow pointer addDepartment h2"
@@ -45,7 +45,10 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
             Add Department
           </Button>
         </div>
-        <div className="mt4">
+        <div 
+          className="mt3 f4 fw6"
+          style={{ fontSize: "1.13rem" }}
+        >
           {props.loading ? (
             <Loading />
           ) : props.company.departments &&
