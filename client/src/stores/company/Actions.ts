@@ -836,6 +836,8 @@ export const inviteColleagueInBulk = (emails: any) => async (
       );
       if (response.status === 200) {
         dispatch({ type: COLLEAGUE_INVITE_SUCCESS });
+        dispatch(getCompanyPendingMembers());
+        dispatch(getCompanyMembers());
       }
       if (response.status === 400) {
         dispatch({
@@ -850,8 +852,7 @@ export const inviteColleagueInBulk = (emails: any) => async (
     if (isEqual(error.message, 'Network Error')) {
       //TODO: catch console in logger.
     } else {
-      
-     //TODO: catch console in logger.
+      //TODO: catch console in logger.
     }
   }
 };
