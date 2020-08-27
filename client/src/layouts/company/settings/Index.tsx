@@ -12,6 +12,19 @@ import { getNotifications } from '../../../stores/notifications/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
 import Subscriptions from './subscriptions/Index';
+import Modal from 'react-modal';
+import SubscriptionExpiredText from './SubscriptionExpiredText';
+
+const customStyles = {
+  content: {
+    top: '50%',
+    left: '50%',
+    right: 'auto',
+    bottom: 'auto',
+    marginRight: '-50%',
+    transform: 'translate(-50%, -50%)',
+  },
+};
 
 interface SettingsPageProps {
   user: User;
@@ -21,11 +34,19 @@ interface SettingsPageProps {
   readNotification: any;
   getNotifications: any;
   companyRole: string;
+  subscriptiontExpired: boolean;
 }
 
 const SettingsPagComponent = (
   props: SettingsPageProps & RouteComponentProps,
 ) => {
+  const [success, setSuccess] = React.useState(false);
+  function closeModal() {
+    setSuccess(false);
+  }
+  React.useEffect(() => {
+    setSuccess(props.subscriptiontExpired);
+  }, []);
   return (
     <>
       <NavbarCompany title="My Settings" />
@@ -71,6 +92,20 @@ const SettingsPagComponent = (
             />
           )}
         </Tabs>
+        {success && (
+          <Modal
+            isOpen={success}
+            // onAfterOpen={afterOpenModal}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <SubscriptionExpiredText
+              closeModal={closeModal}
+              text="Your Subscription has expired"
+            />
+          </Modal>
+        )}
       </div>
     </>
   );
@@ -83,6 +118,8 @@ const mapStateToProps = (state: any) => {
     notifications: state.notificationReducer.allNotifications,
     read: state.notificationReducer.read,
     companyRole: state.companyReducer.currentCompany.role,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
   };
 };
 export const SettingsPage = connect(mapStateToProps, {

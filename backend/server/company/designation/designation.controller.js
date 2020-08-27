@@ -32,6 +32,7 @@ const create = async (req, res, next) => {
       designation,
     });
   } catch (err) {
+    logger.error(`Designations: ${err}`)
     next(err);
   }
 };
@@ -75,6 +76,7 @@ const edit = async (req, res, next) => {
       designation,
     });
   } catch (err) {
+    logger.error(`Designations: ${err}`)
     next(err);
   }
 };
@@ -97,6 +99,7 @@ const list = async (req, res, next) => {
       message: 'No designations found',
     });
   } catch (error) {
+    logger.error(`Designations: ${error}`)
     next(error);
   }
 };
@@ -116,6 +119,7 @@ const load = async (req, res, next) => {
       });
     }
   } catch (error) {
+    logger.error(`Designations: ${error}`)
     next(error);
   }
 };

@@ -17,6 +17,15 @@ const {
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
+
+const isPidExist = async(pid)=>{
+  let checkExist= await Project.findOne({
+    _id: pid,
+  },
+  { removed: false },);
+  return checkExist;
+}
+
 const teamCreate = async (account, member, project, role) => {
   let newTeam = new Team({
     account,
@@ -571,6 +580,10 @@ const showAllProjectsForCompany = async (req, res, next) => {
 };
 
 const updateProjectDescription = async (req, res, next) => {
+  let checkPid = isPidExist(req.query.pid);
+  if(!checkPid){
+    return sendErrorResponse(res, 404, 'IdNotExist', {message: 'pid is not exist'});
+  }
   await Project.findByIdAndUpdate(
     { _id: req.query.pid },
     {
@@ -582,7 +595,7 @@ const updateProjectDescription = async (req, res, next) => {
   )
     .exec()
     .then(() => {
-      logger.info(`Description addeed for ${req.params.pid}`);
+      logger.info(`Project: Description addeed for ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         success: true,
         message: 'Description updated',
@@ -680,12 +693,12 @@ const archiveProject = async (req, res) => {
         'project',
       );
 
-      logger.info(`Archive a project  ${req.query.pid}`);
+      logger.info(`Project: Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
         message: `Archive a project`,
       });
     } else {
-      logger.error(`Already Archived`);
+      logger.error(`Project: Already Archived`);
       return sendErrorResponse(res, 400, 'ProjectIdNotFoundError', {
         message: 'Already Archived',
       });

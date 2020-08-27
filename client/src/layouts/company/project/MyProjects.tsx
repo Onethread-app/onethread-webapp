@@ -81,56 +81,62 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   };
 
   const noProjectsFound = (
-    <div onClick={() => setShowProjectDialog(true)} className="tc pointer dim mb6">
-        <h1 style={{ color: '#34495E' }}>No Projects Found</h1>
-        <p 
-          className="f5-l f4-ns f6 tc" 
+    <div className="tc  mb6">
+      <h1 style={{ color: '#34495E' }}>No Projects Found</h1>
+      {props.companyRole !== 'employee' && (
+        <p
+          onClick={() => setShowProjectDialog(true)}
+          className="f5-l pointer dim f4-ns f6 tc"
           style={{ color: '#85929E', display: 'inline-block' }}
-      >
-          Click here to create a project or click on the <img 
-              src={addIcon} 
-              style={{ 
-                  display: 'inline-block',
-                  height: '20px', 
-              }} /> icon below
+        >
+          Click here to create a project or click on the{' '}
+          <img
+            src={addIcon}
+            style={{
+              display: 'inline-block',
+              height: '20px',
+            }}
+          />{' '}
+          icon below
         </p>
+      )}
     </div>
   );
 
   useEffect(() => {
-
     async function loadProjects() {
+      await props.getAllProjects();
+      setProjectsLoaded(true);
 
-        await props.getAllProjects();
-        setProjectsLoaded(true);
-
-        if (props.company.role !== 'employee') {
-          props.getAllDepartments();
-          props.getProjectArchive();
-          props.getAllAssociates();
-        }
+      if (props.company.role !== 'employee') {
+        props.getAllDepartments();
+        props.getProjectArchive();
+        props.getAllAssociates();
+      }
     }
 
     loadProjects();
-
   }, []);
   return (
     <>
       <div>
         <div className="overflow-auto">
           <div
-            style={(projectsLoaded && props.projects.length > 0) ? {
-              display: 'grid',
-              gridTemplateColumns:
-                'repeat(auto-fit, minmax(200px, 265px))',
-              gridTemplateRows: 'repeat(2, 135px)',
-              gridGap: '10px 10px',
-            } : {}}
+            style={
+              projectsLoaded && props.projects.length > 0
+                ? {
+                    display: 'grid',
+                    gridTemplateColumns:
+                      'repeat(auto-fit, minmax(200px, 265px))',
+                    gridTemplateRows: 'repeat(2, 135px)',
+                    gridGap: '10px 10px',
+                  }
+                : {}
+            }
           >
-            {
-              !projectsLoaded ?
-              <CircularProgress /> :
-              props.projects.length > 0 ?
+            {!projectsLoaded ? (
+              <CircularProgress />
+            ) : props.projects.length > 0 ? (
               props.projects.map((project: any) => (
                 <div>
                   <Card
@@ -259,8 +265,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                     </RightSidebar>
                   )}
                 </div>
-              )) : noProjectsFound
-            }
+              ))
+            ) : (
+              noProjectsFound
+            )}
           </div>
           {props.company.role !== 'employee' && (
             <div>
@@ -413,6 +421,7 @@ const mapStateToProps = (state: any) => ({
   currentProject:
     state.projectReducer.projectRole.projects &&
     state.projectReducer.projectRole.projects.project,
+  companyRole: state.companyReducer.currentCompany.role,
 });
 
 export const MyProject = connect(mapStateToProps, {

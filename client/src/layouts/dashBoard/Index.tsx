@@ -18,6 +18,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Paper from '@material-ui/core/Paper';
 import { webPush } from '../../stores/notifications/Action';
+import { setSubscriptionExpire } from '../../stores/subscriptionBilling/Actions';
+import { setSubscriptionNotExpire } from '../../stores/subscriptionBilling/Actions';
 
 import firebase from '../../firebase';
 import {
@@ -47,6 +49,9 @@ interface DashBoardViewProps {
   company: ICompany;
   getCompanyAnnouncement: () => void;
   webPush: (token) => void;
+  setSubscriptionExpire: () => void;
+  subscriptiontExpired: boolean;
+  setSubscriptionNotExpire: () => void;
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
@@ -71,38 +76,55 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();
-      try {
-        const response = await tigrowApi.get(
-          `company/${props.company!._id}/dashboard`,
-          headers,
-        );
-        dispatch({
-          type: ADD_TOTAL_ASSOCIATE,
-          payload: response.data.data.totalAssociates,
+      // try {
+      await tigrowApi
+        .get(`company/${props.company!._id}/dashboard`, headers)
+        .then((response) => {
+          dispatch({
+            type: ADD_TOTAL_ASSOCIATE,
+            payload: response.data.data.totalAssociates,
+          });
+          dispatch({
+            type: ADD_TOTAL_MEMBER,
+            payload: response.data.data.totalEmployee,
+          });
+          setDashboard(response.data.data);
+          props.setSubscriptionNotExpire();
+          props.getCompanyAnnouncement();
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+          if (err.response.data.status === 403) {
+            props.setSubscriptionExpire();
+            if (props.subscriptiontExpired) {
+              props.company.role === 'superAdmin'
+                ? window.location.replace(
+                    `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+                  )
+                : window.location.replace(
+                    `${window.location.origin}/${props.user.name}/home`,
+                  );
+            }
+          }
         });
-        dispatch({
-          type: ADD_TOTAL_MEMBER,
-          payload: response.data.data.totalEmployee,
-        });
-        await setDashboard(response.data.data);
-        await props.getCompanyAnnouncement();
-        await setLoading(false);
-      } catch (error) {
-        await setLoading(false);
-      }
+
+      // } catch (error) {
+      //
+
+      //   console.log(error);
+      // }
     }
     getAPI();
   }, [props.company._id]);
 
   const desigmationMap = {
-      'director' : 'Director' ,
-      'cxo': 'CXO',
-      'seniorManager' : 'Senior Manager',
-      'middleManager' : 'Middle Manager',
-      'operationalEmployee': 'Operational Employee',
-  }
-
-  
+    director: 'Director',
+    cxo: 'CXO',
+    seniorManager: 'Senior Manager',
+    middleManager: 'Middle Manager',
+    operationalEmployee: 'Operational Employee',
+  };
 
   return (
     <>
@@ -150,8 +172,10 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                 announcement.memberId &&
                                 announcement.memberId.designations
                                   .length > 0
-                                  ? desigmationMap[announcement.memberId
-                                    .designations[0].division]
+                                  ? desigmationMap[
+                                      announcement.memberId
+                                        .designations[0].division
+                                    ]
                                   : 'Admin'
                               }`}
                             </Typography>
@@ -223,10 +247,14 @@ const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
     company: state.companyReducer.currentCompany,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
   };
 };
 
 export const DashboardView = connect(mapStateToProps, {
   getCompanyAnnouncement,
   webPush,
+  setSubscriptionExpire,
+  setSubscriptionNotExpire,
 })(DashboardViewComponent);

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './style.css';
+import './style.scss';
 import tick from './../../resources/LandingImages/tick.svg';
 import { Button, Dialog } from '@blueprintjs/core';
 import { NavLink } from 'react-router-dom';
@@ -11,9 +11,15 @@ import {
 import { ContactSupportForm } from './ContactSupportForm';
 import { ContactUsForm } from './ContactUsForm';
 import { LandingFooter } from './LandingFooter';
+import { SuccessMessage } from 'components/success-message/SuccessMessage';
+import { connect } from 'react-redux';
 
+interface IPricingPageProps {
+  response: string;
+}
 
-export const PricingPage = (
+const PricingPageComponent = (
+  props: IPricingPageProps
 ) => {
 
   const [showForm1, setShowForm1] = useState(false);
@@ -47,7 +53,8 @@ export const PricingPage = (
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">Unlimited</span> Kanban Boards</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">Unlimited</span> Kanban Boards</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -55,15 +62,18 @@ export const PricingPage = (
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">100,000</span> Message History</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">100,000</span> Message History</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">1000 Minute</span> Video Conferencing (Premium)</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">1000 Minute</span> Video Conferencing (Premium)</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">Unlimited Minute</span> Video Conferencing (Basic)</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">Unlimited Minute</span> Video Conferencing (Basic)</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -71,24 +81,31 @@ export const PricingPage = (
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">Unlimited</span> Admins And Project Moderators</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">Unlimited</span> Admins And Project Moderators</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">Up To 100</span> Project Team Mates</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">Up To 100</span> Project Team Mates</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">Up To 100</span> Colleagues</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">Up To 100</span> Colleagues</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">Up To 50</span> Associates</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">Up To 50</span> Associates</h1>
           </div>
           <div className="flex mt2 items-start">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
-            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90"><span className="fw7">Free Inclusion At The Time Of Release -</span> Major Features Like Gantt Chart,
-            Clock In-Out, TIme Sheet and Shared Browser</h1>
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">Free Inclusion At The Time Of Release -</span> Major
+                Features Like Gantt Chart,
+                Clock In-Out, TIme Sheet and Shared Browser
+            </h1>
           </div>
           <div className="tc">
             <NavLink to="/signup">
@@ -107,12 +124,17 @@ export const PricingPage = (
             <h1 className="f2-l f3 fw7 ma0 basicFont">Enterprise</h1>
             <h1 className="f3-l f5 fw4 silver ma0">For teams with custom needs.</h1>
           </div>
-          <h1 className="f4-ns f6 fw5 dark-gray lh-2 w-90">We work closely with our enterprise customers to ensure TiGrow meets
-          their unique needs.
+          <h1 className="f4-ns f6 fw5 dark-gray lh-2 w-90">
+            We work closely with our enterprise customers to ensure TiGrow meets
+            their unique needs.
           </h1>
           <h1 className="f4-ns f6 fw5 dark-gray lh-2 w-90 mt4">
-            For more information about how we can make TiGrow work for your company, please contact us at &nbsp;
-            <span className="fw7 blue underline"><a href="mailto:sales@tigrow.co">sales@tigrow.co</a></span>
+            For more information about how we can make
+            TiGrow work for your company, please contact
+            us at &nbsp;
+            <span className="fw7 blue underline">
+              <a href="mailto:sales@tigrow.co">sales@tigrow.co</a>
+            </span>
           </h1>
           <div className="tc">
             <button
@@ -129,23 +151,30 @@ export const PricingPage = (
       <div className="tc flex flex-column justify-center" style={{ height: '450px', backgroundColor: '#0FB7A0' }}>
         <h1 className="white f2-ns f5">Why People Choose TiGrow</h1>
         <div className="flex flex-column items-center">
-          <h1 className="white f3-ns f6 fw4 w-40-l w-80 colorfulWidth tl lh-2"><span className="f1 fw8">"</span>I love how simple, yet very efficient TiGrow is.
+          <h1 className="white f3-ns f6 fw4 w-40-l w-80 colorfulWidth tl lh-2">
+            <span className="f1 fw9 i" style={{ fontFamily: 'cambria' }}>"</span>
+          I love how simple, yet very efficient TiGrow is.
           I've been using this software on a daily basis to
           communicate and collaborate with all my teammates.
-           Kudos to the product owners for their impeccable product.<span className="f1 fw8">"</span>
+           Kudos to the product owners for their impeccable product.
+           <span className="f1 fw9 i" style={{ fontFamily: 'cambria' }}>"</span>
           </h1>
           <h1 className="white f3-ns f6 fw4 w-40-l w-80 colorfulWidth tl">Fazlul Hoque</h1>
-          <h1 className="white f5-ns f7 fw4 w-40-l w-80 colorfulWidth tl ma0">Managing Director | Plummy Fashions Ltd.</h1>
+          <h1 className="white f5-ns f7 fw4 w-40-l w-80 colorfulWidth tl ma0">
+            Managing Director | Plummy Fashions Ltd.
+          </h1>
         </div>
       </div>
       <div className="flex flex-column-reverse flex-row-ns items-center ph7-l ph5-m pv5 paddingStart">
         <div className="w-50-l w-80">
           <h1 className="f2-l f4-m f5" style={{ color: '#0FB7A0' }}>Start Growing With TiGrow Today</h1>
-          <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#0FB7A0' }}>with tools to Plan and collaborate while having a seamless user
+          <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#0FB7A0' }}>
+          with tools to Plan and collaborate while having a seamless user
           experience that keeps everyone in the loop and focuses on the
           necessary with little to no learning curve, and a support
           team excited to help you, getting started with this
-            comprehensive tool has become even easier.</h1>
+          comprehensive tool has become even easier.
+          </h1>
           <NavLink to="/signup">
             <Button
               className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2"
@@ -154,7 +183,9 @@ export const PricingPage = (
               GET TiGrow FREE
           </Button>
           </NavLink>
-          <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#707070' }}>Get started with FREE tools, and upgrade as you grow.</h1>
+          <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#707070' }}>
+            Get started with FREE tools, and upgrade as you grow.
+          </h1>
         </div>
         <div className="w-50-l ml5-l">
           <img className="w-70-l" src={smile} />
@@ -181,6 +212,17 @@ export const PricingPage = (
           <ContactUsForm setShowDialog={setShowForm3} title="Contact Us" />
         </Dialog>
       )}
+      { props.response == '201' ?  <SuccessMessage /> : null }
     </>
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    response: state.landingReducer.contactForm.response
+  };
+};
+
+export const PricingPage = connect(
+  mapStateToProps
+)(PricingPageComponent);

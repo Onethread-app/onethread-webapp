@@ -42,7 +42,11 @@ import { HomePageNew } from 'layouts/home/Index';
 import Success from './components/Success';
 import { LandingPage } from 'layouts/landingNew/Index';
 import { VendorManagementPage } from 'layouts/landingNew/VendorManagementPage';
+import { WorkFromHomePage } from 'layouts/landingNew/WorkFromHomePage';
+import { ProjectManagementTool } from 'layouts/landingNew/ProjectManagementTool';
 import { PricingPage } from 'layouts/landingNew/PricingPage';
+import { AboutPage } from 'layouts/landingNew/AboutUs';
+import { ContactUsPage } from 'layouts/landingNew/ContactUsPage';
 
 const PrivateRoute = (props: {
   component: any;
@@ -170,6 +174,17 @@ export const App = () => (
       <Route path="/autologin" render={() => <AutoLoginPage />} />
       <Route
         exact
+        path="/work-from-home-solution"
+        render={() =>
+          isAuthenticate() ? (
+            <Redirect to="/" />
+          ) : (
+            <WorkFromHomePage />
+          )
+        }
+      />
+      <Route
+        exact
         path="/vendor-management-tool"
         render={() =>
           isAuthenticate() ? <Redirect to="/" /> : <VendorManagementPage />
@@ -177,9 +192,30 @@ export const App = () => (
       />
       <Route
         exact
+        path="/project-management-tool"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
+        }
+      />
+      <Route
+        exact
         path="/pricing"
         render={() =>
           isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
+        }
+      />
+      <Route
+        exact
+        path="/about"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <AboutPage />
+        }
+      />
+      <Route
+        exact
+        path="/contact"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
         }
       />
       <PrivateRoute exact path="/" component={Demo} />

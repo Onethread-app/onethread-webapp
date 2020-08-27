@@ -7,6 +7,17 @@ import { withRouter } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
 
 const _ProjectPage = (props: any) => {
+  React.useEffect(() => {
+    if (props.subscriptiontExpired) {
+      props.company.role === 'superAdmin'
+        ? window.location.replace(
+            `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+          )
+        : window.location.replace(
+            `${window.location.origin}/${props.user.name}/home`,
+          );
+    }
+  }, []);
   return (
     <>
       <NavbarCompany title="My Projects" />
@@ -36,6 +47,9 @@ const mapStateToProps = (state: any) => {
     companyRole: state.companyReducer.currentCompany.role,
     PendingProjects: state.projectReducer.pendingProjects,
     user: state.userReducer.user,
+    subscriptiontExpired:
+      state.subscriptionReducer.subscriptionExpired,
+    company: state.companyReducer.currentCompany,
   };
 };
 

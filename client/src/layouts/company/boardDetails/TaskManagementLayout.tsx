@@ -140,6 +140,7 @@ const TaskManagementLayoutComponent = (
                     )}
                     {provided.placeholder}
                     {props.role === 'admin' ||
+                    props.optionalRole && props.optionalRole &&
                     projectRules(props.optionalRole)[
                       props.role
                     ].includes('assignDeleteMemberBoard') ? (

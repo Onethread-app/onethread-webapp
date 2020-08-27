@@ -77,12 +77,12 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     await _getRooms();
   };
 
-  if(isEmpty(props.projectId)){
-    const { projectId } = (props.match.params as any);
-    props.getSingleProject(projectId);
-    props.setCurrentProjectId(projectId);
-    props.getRoleForProject(projectId);
-  }
+  // if(isEmpty(props.projectId)){
+  //   const { projectId } = (props.match.params as any);
+  //   props.getSingleProject(projectId);
+  //   props.setCurrentProjectId(projectId);
+  //   props.getRoleForProject(projectId);
+  // }
 
   const roomSwitch = async (roomId: string) => {
     const currentRoom = props.rooms.filter((room) =>

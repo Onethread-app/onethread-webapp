@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
-import Pusher from 'pusher-js';
+// import Pusher from 'pusher-js';
 
 import '../../assets/fonts/css/icons.css';
 import Validator from '../../utils/Validator';
@@ -190,7 +190,7 @@ class InputChannel extends React.Component {
     return (
       <div className="channel-wrapper control">
         <input
-          onInput={this.handleChange}
+          onChange={this.handleChange}
           id="channel"
           className={'ag-rounded input ' + this.state.state}
           type="text"

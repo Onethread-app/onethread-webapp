@@ -26,7 +26,9 @@ export const NavbarSoftwareList = (
           backgroundColor: '#F0FBFF'
         }}
       >
-        <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+        <NavLink to="/">
+          <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+        </NavLink>
         <Icon
           icon="cross"
           iconSize={35}
@@ -49,6 +51,31 @@ export const NavbarSoftwareList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
+          <NavLink to="work-from-home-solution">
+            <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
+              <img src={client} />
+              <div className="ml2">
+                <p className="fw7 mv0 pv0">Work From Home Solution</p>
+                <p className="f7 mv0 pv0">
+                  An Effortless WFH Experience to manage your remote
+                  teams.
+                </p>
+              </div>
+              <Icon className="ml-auto" icon="chevron-right" />
+            </article>
+          </NavLink>
+          <NavLink to="project-management-tool">
+            <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
+              <img
+                src={task}
+              />
+              <div className="ml2">
+                <p className="fw7 mv0 pv0">Project Management Tool</p>
+                <p className="f7 mv0 pv0">A Robust Project management tool for all type of projects!</p>
+              </div>
+              <Icon className="ml-auto" icon="chevron-right" />
+            </article>
+          </NavLink>
           <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <img
               src={client}
@@ -67,7 +94,7 @@ export const NavbarSoftwareList = (
               <div className="ml2">
                 <div className="flex">
                   <p className="fw7 mv0 pv0">Vendor Management Tool</p>
-                  <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                  <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
                 </div>
                 <p className="f7 mv0 pv0">Managing all those vendors wasn't this much easier before!</p>
               </div>
@@ -81,7 +108,7 @@ export const NavbarSoftwareList = (
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Finding Partners</p>
-                <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
               </div>
               <p className="f7 mv0 pv0">Search And Find Partner Companies From Around The World!</p>
             </div>
@@ -94,7 +121,7 @@ export const NavbarSoftwareList = (
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">Finding Teammates</p>
-                <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
               </div>
               <p className="f7 mv0 pv0">Find The Perfect Team Mate For Your Team!</p>
             </div>
@@ -104,7 +131,7 @@ export const NavbarSoftwareList = (
             <div className="ml2">
               <div className="flex">
                 <p className="fw7 mv0 pv0">App Marketplace</p>
-                <p style={{ backgroundColor: "#0FB7A0" }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
+                <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
               </div>
               <p className="f7 mv0 pv0">Find TiGrow apps for the tools and software you use to run your business.</p>
             </div>

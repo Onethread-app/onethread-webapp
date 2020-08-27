@@ -306,8 +306,12 @@ const ColumnComponent = (props: ColumnInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
-    projectRole: state.projectReducer.projectRole.projects.role,
-    optionalRole: state.projectReducer.projectRole.projects.project.optionalRole,
+    projectRole:
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.role,
+    optionalRole:
+    state.projectReducer.projectRole.projects &&
+    state.projectReducer.projectRole.projects.project.optionalRole,
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
   };
 };

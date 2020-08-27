@@ -1,7 +1,7 @@
 {
   "name": "tigrow_frontend",
-  "version": "2.4.2",
-  "homepage": "https://demo.tigrow.co/",
+  "version": "2.4.4",
+  "homepage": "https://stage.tigrow.co/",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.18.0",
@@ -71,7 +71,8 @@
     "tslib": "^1.10.0",
     "typeface-josefin-sans": "^0.0.75",
     "typeface-open-sans": "^0.0.75",
-    "typescript": "3.6.2"
+    "typescript": "3.6.2",
+    "google-map-react": "2.0.8"
   },
   "scripts": {
     "start": "react-scripts start",

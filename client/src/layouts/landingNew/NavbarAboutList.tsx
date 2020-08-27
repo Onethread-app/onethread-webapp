@@ -1,6 +1,7 @@
 import React from 'react';
 import { Icon } from '@blueprintjs/core';
 import tigrowMini from './../../resources/LandingImages/TiGrow-mini-logo.svg';
+import { NavLink } from 'react-router-dom';
 
 interface NavbarAboutListProps {
   setShowAboutDrawer: (val: boolean) => void;
@@ -20,7 +21,9 @@ export const NavbarAboutList = (
           backgroundColor: '#F0FBFF'
         }}
       >
+        <NavLink to="/">
         <img className="mr1" style={{ width: '50px' }} src={tigrowMini} />
+        </NavLink>
         <Icon
           icon="cross"
           iconSize={35}
@@ -34,8 +37,12 @@ export const NavbarAboutList = (
         </div>
         <div>
           <p className="b--light-silver ba bg-light-gray br3 f5 fw6 pa3 aboutList tc w-100">Company</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">About Us</p>
-          <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Contact</p>
+          <NavLink to="about">
+            <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">About Us</p>
+          </NavLink>
+          <NavLink to="contact">
+            <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Contact</p>
+          </NavLink>
           <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Management Team</p>
           <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Investors and Advisers</p>
           <p className="b--light-silver ba  br3 fw6 pa3 aboutList w-100 f5">Careers</p>

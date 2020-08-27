@@ -19,7 +19,7 @@ module.exports = {
           };
         }),
       subject: Joi.string().max(500).allow(''),
-      message: Joi.string().max(5000).allow(''),
+      message: Joi.string().max(5000),
     }),
   }),
 };

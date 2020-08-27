@@ -4,7 +4,7 @@ const planSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      enum: ['trial', 'small', 'medium', 'enterprise'],
+      enum: ['trial', 'enterprice', 'workspaces'],
     },
     maxTier: {
       type: Number,

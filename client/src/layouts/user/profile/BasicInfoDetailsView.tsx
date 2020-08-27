@@ -52,7 +52,7 @@ const BasicInfoDetailsViewComponent = (
             <h1 className="f6">Birthdate</h1>
             <p className="black-60 fw4">
               {props.user.birthDate
-                ? moment(props.user.birthDate).format('MM/DD/YYYY')
+                ? moment(props.user.birthDate).format('Do MMMM YYYY')
                 : ''}
             </p>
           </div>

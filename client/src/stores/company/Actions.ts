@@ -664,7 +664,7 @@ export const addCertificate = (certificate: any) => async (
         certificate,
         headers,
       );
-      dispatch({ type: ADD_CERTIFICATE, payload: certificate });
+      dispatch({ type: ADD_CERTIFICATE, payload: response.data.certificate });
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
@@ -836,6 +836,8 @@ export const inviteColleagueInBulk = (emails: any) => async (
       );
       if (response.status === 200) {
         dispatch({ type: COLLEAGUE_INVITE_SUCCESS });
+        dispatch(getCompanyPendingMembers());
+        dispatch(getCompanyMembers());
       }
       if (response.status === 400) {
         dispatch({
@@ -850,8 +852,7 @@ export const inviteColleagueInBulk = (emails: any) => async (
     if (isEqual(error.message, 'Network Error')) {
       //TODO: catch console in logger.
     } else {
-      
-     //TODO: catch console in logger.
+      //TODO: catch console in logger.
     }
   }
 };
@@ -859,3 +860,30 @@ export const inviteColleagueInBulk = (emails: any) => async (
 export const colleagueInviteSuccess = () => ({
   type: COLLEAGUE_INVITE_SUCCESS,
 });
+
+export const editCertificate = (certificate: any, id: string) => async (
+  dispatch: any,
+  getState: any,
+) => {
+  try {
+    const headers = tokenConfig();
+    let response;
+    if ((headers as any).headers.Authorization) {
+      const companyId = getState().companyReducer.currentCompany._id;
+      response = await tigrowApi.put(
+        `company/${companyId}/certification?certificateId=${id}`,
+        certificate,
+        headers,
+      );
+      const companyName = getState().companyReducer.currentCompany.uniqueName;
+      dispatch(getCompanyDetails(companyName));
+      return response.status;
+    } else {
+      // tslint:disable-next-line: no-console
+      // console.log('error in adding certificate');
+    }
+    return;
+  } catch (error) {
+    return false;
+  }
+};
