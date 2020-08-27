@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { getPaymentHistory } from '../../../../stores/subscriptionBilling/Actions';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 interface IHistory {
   _id: string;
@@ -55,26 +56,31 @@ const _PaymentHistory = (props: IPaymentHistory) => {
               <div className="b">Amount</div>
             </Grid>
           </Grid>
-          {props.paymentHistory.map((payment, i) => {
-            return (
-              <Card style={{ marginTop: '10px', padding: '10px' }}>
-                <Grid container spacing={3}>
-                  <Grid item xs={6} sm={3}>
-                    <div className="ml1">{payment._id}</div>
+          {props.paymentHistory &&
+            props.paymentHistory.map((payment, i) => {
+              return (
+                <Card style={{ marginTop: '10px', padding: '10px' }}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={6} sm={3}>
+                      <div className="ml1">{payment._id}</div>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                      <div className="ml1">
+                        {moment(payment.createdAt).format(
+                          'MMMM Do YYYY',
+                        )}
+                      </div>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                      <div className="ml1">{payment.status}</div>
+                    </Grid>
+                    <Grid item xs={6} sm={3}>
+                      <div className="ml1">{payment.amount}</div>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <div className="ml1">{payment.createdAt}</div>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <div className="ml1">{payment.status}</div>
-                  </Grid>
-                  <Grid item xs={6} sm={3}>
-                    <div className="ml1">{payment.amount}</div>
-                  </Grid>
-                </Grid>
-              </Card>
-            );
-          })}
+                </Card>
+              );
+            })}
         </div>
       )}
     </div>
