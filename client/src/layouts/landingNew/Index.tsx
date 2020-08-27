@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { NavbarLanding } from './NavbarLanding';
 import { Button, Dialog } from '@blueprintjs/core';
 import task from './../../resources/LandingImages/task-complete.svg';
@@ -21,8 +22,11 @@ import { NavLink } from 'react-router-dom';
 import './style.scss';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
-
-export const LandingPage = () => {
+import { SuccessMessage } from 'components/success-message/SuccessMessage';
+interface ILandingPageProps {
+  response: string;
+}
+const LandingPageComponent = (props: ILandingPageProps) => {
   const [showContactUs, setShowContactUs] = useState(false);
   return (
     <div className="w-100">
@@ -355,6 +359,17 @@ export const LandingPage = () => {
           <ContactUsForm setShowDialog={setShowContactUs} title="Contact Us" />
         </Dialog>
       )}
+      { props.response == '201' ?  <SuccessMessage /> : null }
     </div>
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    response: state.landingReducer.contactForm.response
+  };
+};
+
+export const LandingPage = connect(
+  mapStateToProps
+)(LandingPageComponent);

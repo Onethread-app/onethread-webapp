@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { NavbarLanding } from './NavbarLanding';
 import './style.scss';
 import vendorFirst from './../../resources/LandingImages/vendorFirstBack.png';
@@ -13,8 +14,12 @@ import knitLogo from './../../resources/LandingImages/knitwearLogo.png';
 import { Button, Dialog } from '@blueprintjs/core';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
+import { SuccessMessage } from 'components/success-message/SuccessMessage';
 
-export const VendorManagementPage = () => {
+interface IVendorManagementProps {
+  response: string;
+}
+const VendorManagementPageComponent = (props: IVendorManagementProps) => {
 
   const [showForm3, setShowForm3] = useState(false);
 
@@ -208,6 +213,19 @@ export const VendorManagementPage = () => {
           <ContactUsForm setShowDialog={setShowForm3} title="Contact Us" />
         </Dialog>
       )}
+      { props.response == '201' ?  <SuccessMessage /> : null }
     </div>
   );
 };
+
+
+const mapStateToProps = (state: any) => {
+  return {
+    response: state.landingReducer.contactForm.response
+  };
+};
+
+
+export const VendorManagementPage = connect(
+  mapStateToProps
+)(VendorManagementPageComponent);

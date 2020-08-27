@@ -11,8 +11,15 @@ import {
 import { ContactSupportForm } from './ContactSupportForm';
 import { ContactUsForm } from './ContactUsForm';
 import { LandingFooter } from './LandingFooter';
+import { SuccessMessage } from 'components/success-message/SuccessMessage';
+import { connect } from 'react-redux';
 
-export const PricingPage = (
+interface IPricingPageProps {
+  response: string;
+}
+
+const PricingPageComponent = (
+  props: IPricingPageProps
 ) => {
 
   const [showForm1, setShowForm1] = useState(false);
@@ -221,6 +228,17 @@ export const PricingPage = (
           <ContactUsForm setShowDialog={setShowForm3} title="Contact Us" />
         </Dialog>
       )}
+      { props.response == '201' ?  <SuccessMessage /> : null }
     </>
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    response: state.landingReducer.contactForm.response
+  };
+};
+
+export const PricingPage = connect(
+  mapStateToProps
+)(PricingPageComponent);

@@ -5,6 +5,7 @@ import roomSaga from './room/roomSaga';
 import notificationSaga from './notifications/notificationSaga';
 import subscriptionSaga from './subscriptionBilling/subscriptionSaga';
 import videoConferencesSaga from './videoConferences/saga';
+import landingSaga from './landing/landingSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -14,5 +15,6 @@ export default function* rootSaga() {
     notificationSaga(),
     subscriptionSaga(),
     videoConferencesSaga(),
+    landingSaga()
   ]);
 }
