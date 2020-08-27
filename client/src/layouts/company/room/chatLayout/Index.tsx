@@ -173,7 +173,7 @@ export const ChatLayoutComponent = (
                         <div
                           className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
                           onClick={() => {
-                            window.open('https://8x8.vc', '_blank');
+                            window.open('https://meet.jit.si', '_blank');
                           }}
                         >
                           <h4 className="mv0">Basic</h4>
