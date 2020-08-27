@@ -34,6 +34,7 @@ export const NavbarLanding = () => {
               className=""
               content={
                 <>
+                <NavLink to="project-management-tool">
                   <article className="flex bb b--light-silver pb3 pointer">
                     <img
                       src={task}
@@ -54,6 +55,7 @@ export const NavbarLanding = () => {
                       </div>
                     </article>
                   </NavLink>
+                </NavLink>
                   <NavLink to="vendor-management-tool">
                     <article className="flex pt4 pointer">
                       <img
