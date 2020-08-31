@@ -4,7 +4,6 @@ import {
   tokenConfig,
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
-import { isEqual } from 'lodash';
 import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
 import { IPendingProject } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
@@ -28,7 +27,7 @@ export const getAllProjects = () => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -65,7 +64,7 @@ export const createProject = (payload: any) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -108,7 +107,7 @@ export const createProjectInCompany = (payload: any) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       // console.log('network error');
     } else {
@@ -140,7 +139,7 @@ export const archiveProject = (pid: string) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -170,7 +169,7 @@ export const getProjectArchive = () => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -206,7 +205,7 @@ export const updateProjectName = (
     }
     return response.status;
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -244,7 +243,7 @@ export const getSingleProject = (pid: string) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -274,7 +273,7 @@ export const projectPrefaceDescriptionUpdate = (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -304,7 +303,7 @@ export const projectPrefaceOutlineUpdate = (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -342,7 +341,7 @@ export const projectFileUpload: any = (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -376,7 +375,7 @@ export const getAllPendingProjects = () => async (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -412,8 +411,7 @@ export const acceptPendingProject = (
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
           (pending: IPendingProject) =>
-            isEqual(pending.project._id, pending.project._id) ===
-            false,
+            (pending.project._id !== pending.project._id),
         );
         dispatch({
           type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT,
@@ -434,7 +432,7 @@ export const acceptPendingProject = (
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -464,7 +462,7 @@ export const rejectPendingProject = (projectId: string) => async (
       if (response.status === 200) {
         const currentPendingProjects = pendingProjects.filter(
           (pending: IPendingProject) =>
-            isEqual(pending.project._id, projectId) === false,
+            (pending.project._id !== projectId),
         );
         dispatch({
           type: PROJECT.PROJECT_GET_ALL_PENDING_PROJECT,
@@ -481,7 +479,7 @@ export const rejectPendingProject = (projectId: string) => async (
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -515,7 +513,7 @@ export const updateProjectRole = (optionalRole: any) => async (
       });
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       // console.log('network error');
     } else {
@@ -546,7 +544,7 @@ export const getRoleForProject = (projectId: string) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -576,7 +574,7 @@ export const getProjectTeams = () => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -620,7 +618,7 @@ export const addProjectTeams = (
       console.log('error in adding members in a room');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log(error.message);
     } else {
@@ -653,7 +651,7 @@ export const getProjectAssociates = () => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -696,7 +694,7 @@ export const addProjectAssociate = (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -736,7 +734,7 @@ export const changeProjectMemberRole = (
       // console.log('error in changing team role');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       // console.log('network error');
     } else {

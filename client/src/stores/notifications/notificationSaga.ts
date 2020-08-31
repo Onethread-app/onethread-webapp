@@ -4,7 +4,6 @@ import * as Eff from 'redux-saga/effects';
 import { NOTIFICATION } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
-import { isEqual } from 'lodash';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
@@ -50,7 +49,7 @@ function* readNotification(action) {
       yield tigrowApi.get(`reed/${action.notificationId}`, headers);
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -72,7 +71,7 @@ function* seenNotification() {
     }
     // put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -105,7 +104,7 @@ function* webPushNotification(action) {
     }
     put({ type: NOTIFICATION.GET_NOTIFICATIONS_LOADING });
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {

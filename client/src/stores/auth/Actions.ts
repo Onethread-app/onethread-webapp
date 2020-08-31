@@ -1,6 +1,5 @@
 import { AxiosRequestConfig } from 'axios';
 import { History } from 'history';
-import { isEqual } from 'lodash';
 import { tokenConfig, parseJwt } from '../UtilsActions';
 import {
   FETCH_USER,
@@ -197,7 +196,7 @@ export const logoutAction = (routeHistory: History) => async (
         },
         headers,
       );
-      if (isEqual(response.status, 200)) {
+      if (response.status === 200) {
         localStorage.removeItem('tigrow_acc_id');
         localStorage.removeItem('tigrow_real_id');
         routeHistory.push('/signin');

@@ -1,4 +1,3 @@
-import { isEqual } from 'lodash';
 import { History } from 'history';
 import { tokenConfig } from '../UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
@@ -78,7 +77,7 @@ export const getCompanyDetails = (name: string) => async (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CREATE_COMPANY_ERROR,
         payload: 'Network error',
@@ -117,7 +116,7 @@ export const createCompanyAction = (
       console.log('error in creation of company');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CREATE_COMPANY_ERROR,
         payload: {
@@ -162,7 +161,7 @@ export const getCompanyMembers = () => async (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: ADD_TEAM_MEMBERS_ERROR,
         payload: 'Network error',
@@ -201,7 +200,7 @@ export const addTeamMembers = (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: ADD_TEAM_MEMBERS_ERROR,
         payload: 'Network error',
@@ -231,7 +230,7 @@ export const deleteCompanyMember = (memberId: string) => async (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: DELETE_TEAM_MEMBER_ERROR,
         payload: 'Network error',
@@ -294,7 +293,7 @@ export const getAllDepartments = () => async (
       console.log('error in adding department');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: ADD_DEPARTMENT_ERROR,
         payload: 'Network error',
@@ -331,7 +330,7 @@ export const editCompanyInfoAction = (
   } catch (error) {
     // tslint:disable-next-line: no-console
     console.log(error);
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('Network error');
     } else {
@@ -362,7 +361,7 @@ export const editCompanyAboutAction = (
       console.log('error in user fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('Network error');
     } else {
@@ -396,7 +395,7 @@ export const changeCompanyName = (companyName: string) => async (
       return;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       //TODO create a logger for client end
       return;
     } else if (error.response.status === 409) {
@@ -448,7 +447,7 @@ export const companyLogoUploadAction = (
       console.log('no headers');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -479,7 +478,7 @@ export const addDesignation = (
       console.log('error in adding designation');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: ADD_DESIGNATION_ERROR,
         payload: 'Network error',
@@ -518,7 +517,7 @@ export const editDesignation = (
       console.log('error in adding designation');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: EDIT_DESIGNATION_ERROR,
         payload: 'Network error',
@@ -559,7 +558,7 @@ export const changeMemberRole = (
       console.log('error in changing member role');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CHANGE_MEMBER_ROLE_ERROR,
         payload: 'Network error',
@@ -602,7 +601,7 @@ export const companyOptionalRole = (values: {
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       Toaster.create().show({
         message: 'Network is disconnected.',
         action: {
@@ -812,7 +811,7 @@ export const getAllProduct = () => async (
       console.log('error in getting product');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       console.log('network error');
     } else {
       // tslint:disable-next-line: no-console
@@ -849,7 +848,7 @@ export const inviteColleagueInBulk = (emails: any) => async (
       //TODO: catch console in logger.
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       //TODO: catch console in logger.
     } else {
       //TODO: catch console in logger.

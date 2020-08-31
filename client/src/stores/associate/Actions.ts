@@ -1,6 +1,5 @@
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
-import { isEqual } from 'lodash';
 import {
   GET_ALL_ASSOCIATE,
   ADD_ASSOCIATE,
@@ -37,7 +36,7 @@ export const addAssociate = (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -61,7 +60,7 @@ export const getAllAssociates = () => async (
         headers,
       );
       const associates = response.data.map((associate: any) =>
-        isEqual(companyId, associate.company._id) === true
+        (companyId === associate.company._id)
           ? {
               _id: associate._id,
               associateCompany: associate.associateCompany,
@@ -79,7 +78,7 @@ export const getAllAssociates = () => async (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -105,7 +104,7 @@ export const getAllPendingAssociates = () => async (
       );
 
       const associates = response.data.map((associate: any) =>
-        isEqual(companyId, associate.company._id) === true
+        (companyId === associate.company._id)
           ? {
               _id: associate._id,
               associateCompany: associate.associateCompany,
@@ -126,7 +125,7 @@ export const getAllPendingAssociates = () => async (
       console.log('error in selection of company fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -155,7 +154,7 @@ export const getSelectedAssociate = (associateId: string) => async (
       return 500;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -186,7 +185,7 @@ export const acceptPendingAssociate = (associateID: string) => async (
       if (response.status === 200) {
         const currentPendingAssociates = pendingAssociates.filter(
           (associate: Associate) =>
-            isEqual(associate._id, associateID) === false,
+            (associate._id !== associateID),
         );
         dispatch({
           type: GET_ALL_PENDING_ASSOCIATE,
@@ -215,7 +214,7 @@ export const acceptPendingAssociate = (associateID: string) => async (
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -246,7 +245,7 @@ export const rejectPendingAssociate = (associateID: string) => async (
       if (response.status === 200) {
         const currentPendingAssociates = pendingAssociates.filter(
           (associate: Associate) =>
-            isEqual(associate._id, associateID) === false,
+            (associate._id !== associateID),
         );
         dispatch({
           type: GET_ALL_PENDING_ASSOCIATE,
@@ -263,7 +262,7 @@ export const rejectPendingAssociate = (associateID: string) => async (
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {

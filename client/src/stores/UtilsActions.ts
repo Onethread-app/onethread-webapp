@@ -1,4 +1,3 @@
-import { isEqual } from 'lodash';
 import { createBrowserHistory } from 'history';
 import { Toaster } from '@blueprintjs/core';
 import { store } from 'Store';
@@ -86,8 +85,8 @@ export const isAuthenticate = () => {
 
 export const projectPermit = (companyRole: string): boolean => {
   if (
-    isEqual(companyRole, 'superAdmin') ||
-    isEqual(companyRole, 'admin')
+    (companyRole === 'superAdmin') ||
+    (companyRole === 'admin')
   ) {
     return true;
   } else {

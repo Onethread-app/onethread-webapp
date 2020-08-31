@@ -1,4 +1,3 @@
-import { isEqual } from 'lodash';
 import { tokenConfig } from '../UtilsActions';
 import {
   GET_ROOM_ERROR,
@@ -41,7 +40,7 @@ export const getRoom = (roomId: string) => async (
       console.log('error in room fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({ type: GET_ROOM_ERROR, payload: 'Network error' });
     } else if (error.response.status === 401) {
       dispatch({

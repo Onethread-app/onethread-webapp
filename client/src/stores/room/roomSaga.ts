@@ -31,7 +31,6 @@ import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 import { roomSubscribe } from 'layouts/company/room/channelSubscribe';
 import { IRoom } from './Reducer';
-import { isEqual } from 'lodash';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
@@ -105,7 +104,7 @@ function* getRooms() {
       console.log('error in rooms fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       yield put({ type: GET_ROOM_ERROR, payload: 'Network error' });
     } else if (error.response.status === 401) {
       yield put({
@@ -136,7 +135,7 @@ function* getRoomMembers(action) {
       console.log('error in rooms members fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       yield put({
         type: GET_ROOM_MEMBERS_ERROR,
         payload: 'Network error',
@@ -182,7 +181,7 @@ function* addRoomMembers(action) {
       console.log('error in adding members in a room');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       yield put({
         type: ADD_MEMBER_IN_ROOM_ERROR,
         payload: 'Network error',
@@ -220,7 +219,7 @@ function* sendRoomMessage(action) {
         type: SEND_MESSAGE_ERROR,
         payload: 'Unauthorized user',
       });
-    } else if (isEqual(error.message, 'Network Error')) {
+    } else if (error.message === 'Network Error') {
       yield put({
         type: SEND_MESSAGE_ERROR,
         payload: 'Network error',
@@ -253,7 +252,7 @@ function* getRoomMessages(action) {
       console.log('error in rooms message fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       yield put({
         type: GET_ROOM_MESSAGES_ERROR,
         payload: 'Network error',
@@ -284,7 +283,7 @@ function* fileUploadAction(action) {
       console.log('no headers');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -325,7 +324,7 @@ function* archiveRoom(action) {
         type: ARCHIVE_ROOM_ERROR,
         payload: 'Unauthorized user',
       });
-    } else if (isEqual(error.message, 'Network Error')) {
+    } else if (error.message === 'Network Error') {
       yield put({
         type: ARCHIVE_ROOM_ERROR,
         payload: 'Network error',
@@ -355,7 +354,7 @@ function* getRoomSharedFiles(action) {
       console.log('error in rooms file fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       yield put({
         type: GET_ROOM_SHARED_FILES_ERROR,
         payload: 'Network error',
@@ -384,7 +383,7 @@ function* getRoomDiscussions(action) {
       console.log('error in rooms discussion fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       yield put({
         type: GET_ROOM_DISCUSSIONS_ERROR,
         payload: 'Network error',
@@ -431,7 +430,7 @@ function* toggleDiscussionRoom(action) {
         type: TOGGLE_ROOM_DISCUSSIONS_ERROR,
         payload: 'Unauthorized user',
       });
-    } else if (isEqual(error.message, 'Network Error')) {
+    } else if (error.message === 'Network Error') {
       yield put({
         type: TOGGLE_ROOM_DISCUSSIONS_ERROR,
         payload: 'Network error',

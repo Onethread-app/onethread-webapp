@@ -2,10 +2,8 @@ import { all, put, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import { associate } from './Types';
 import { tigrowApi } from 'config';
-// import { isEqual } from 'lodash';
 import { tokenConfig } from 'stores/UtilsActions';
 // import { combineReducers } from 'redux';
-import { isEqual } from 'lodash';
 // import { Associate } from './Reducer';
 import { Toaster } from '@blueprintjs/core';
 import { ICompany } from 'stores/company/Reducer';
@@ -65,7 +63,7 @@ function* getAllAssociates() {
         headers,
       );
       const associates = yield response.data.map((associate: any) =>
-        isEqual(companyId, associate.company._id) === true
+        (companyId === associate.company._id)
           ? {
               _id: associate._id,
               associateCompany: associate.associateCompany,
@@ -103,7 +101,7 @@ function* getProjectAssociates() {
       });
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
@@ -127,7 +125,7 @@ function* getAllPendingAssociates() {
       );
 
       const associates = response.data.map((associate: any) =>
-        isEqual(companyId, associate.company._id) === true
+        (companyId === associate.company._id)
           ? {
               _id: associate._id,
               associateCompany: associate.associateCompany,
@@ -145,7 +143,7 @@ function* getAllPendingAssociates() {
       });
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {

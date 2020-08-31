@@ -14,7 +14,6 @@ import {
   SELECT_TASK,
   UPDATE_TASK,
 } from './Types';
-import { isEqual } from 'lodash';
 import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
@@ -42,7 +41,7 @@ export const createBoard = (board: TaskBoard) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CREATE_BOARD_ERROR,
         payload: 'Network error',
@@ -76,7 +75,7 @@ export const getAllBoards = () => async (
       // return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CREATE_BOARD_ERROR,
         payload: 'Network error',
@@ -111,7 +110,7 @@ export const getSelectedBoard = (
       return 500;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CREATE_BOARD_ERROR,
         payload: 'Network error',
@@ -150,7 +149,7 @@ export const createColumn = (columnName: any) => async (
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CREATE_COLUMN_ERROR,
         payload: 'Network error',
@@ -188,7 +187,7 @@ export const updateColumn = (columnInfo: any) => async (
       }
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CREATE_COLUMN_ERROR,
         payload: 'Network error',
@@ -223,7 +222,7 @@ export const createTask = (task: any) => async (
       return response.data;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({ type: CREATE_TASK_ERROR, payload: 'Network error' });
     } else if (error.response.status === 401) {
       dispatch({
@@ -261,14 +260,14 @@ export const dragAndDropTask = (
 
       // find the dragged task, removed from source and save destination column index
       allColumns.forEach((column, i) => {
-        if (isEqual(sourceColumnId, column._id)) {
+        if (sourceColumnId === column._id) {
           const index = column.tasks!.findIndex(
             (task) => task._id === taskId,
           );
           addedTask = column.tasks!.slice(index, index + 1)[0];
           column.tasks!.splice(index, 1);
         }
-        if (isEqual(destinationColumnId, column._id)) {
+        if (destinationColumnId === column._id) {
           destCol = i;
         }
       });
@@ -318,7 +317,7 @@ export const addTeamMembersIntoBoard = (
       console.log('error on member add in board');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // dispatch({ type: ADD_TEAM_MEMBERS_ERROR, payload: "Network error" });
       // tslint:disable-next-line: no-console
       console.log('Network error');
@@ -358,7 +357,7 @@ export const getSelectedTaskDetails = (
       return 500;
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       dispatch({
         type: CREATE_BOARD_ERROR,
         payload: 'Network error',

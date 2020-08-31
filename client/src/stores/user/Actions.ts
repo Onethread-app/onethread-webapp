@@ -10,7 +10,6 @@ import {
   VIDEO_CONFERENCE,
 } from './Types';
 import { tokenConfig } from 'stores/UtilsActions';
-import { isEqual } from 'lodash';
 import { User } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
@@ -70,7 +69,7 @@ export const addSkillAction = (skillSet: string[]) => async (
       console.log('error in user fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('Network error');
     } else {
@@ -154,7 +153,7 @@ export const getAllCompaniesByUserId = (userId: string, type?: string) => async 
         payload: response.data,
       });
       console.log(response.data);
-      if (isEqual(type, 'home')) {
+      if (type === 'home') {
         dispatch({
           type: SET_INITIAL_CURRENT_COMPANY,
           payload: response.data.companies.length > 0 ? response.data.companies[0] : null
@@ -189,7 +188,7 @@ export const deleteSkillAction = (skill: string) => async (
       console.log('error in user fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('Network error');
     } else {
@@ -294,7 +293,7 @@ export const imageUploadAction = (
       console.log('no headers');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
+    if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
       console.log('network error');
     } else {
