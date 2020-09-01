@@ -1,7 +1,7 @@
 {
   "name": "tigrow_frontend",
   "version": "2.4.4",
-  "homepage": "https://stage.tigrow.co/",
+  "homepage": "https://www.tigrow.co/",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.18.0",
