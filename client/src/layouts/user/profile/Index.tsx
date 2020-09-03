@@ -6,7 +6,7 @@ import { AboutView } from './AboutView';
 import { BasicInfoDetailsView } from './BasicInfoDetailsView';
 import { Tabs, Tab } from '@blueprintjs/core';
 import { User } from 'stores/user/Reducer';
-import { CoverPhotoView } from './CoverPhotoView';
+import { CoverPhoto } from 'components/cover-photo/CoverPhoto';
 import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
@@ -24,7 +24,7 @@ const _UserProfilePage = (
         className="w-100 bg-white ph4-ns ph2"
         style={{ marginTop: '3.2rem' }}
       >
-        <CoverPhotoView />
+        <CoverPhoto type="user" />
         <div className="w-100 relative">
           <div className="flex-l w-100 mt5-ns mt4 ph4-ns ph3">
             <div
