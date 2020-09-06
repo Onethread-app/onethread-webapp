@@ -59,6 +59,7 @@ const BoardDetailsViewComponent = (
         <h3 className="w-100 ma0 f3">{props.currentBoard!.name}</h3>
         <div className="flex mh3-ns">
           {props.role === 'admin' ||
+          props.optionalRole && props.role &&
           projectRules(props.optionalRole)[props.role].includes(
             'assignDeleteMemberBoard',
           ) ? (

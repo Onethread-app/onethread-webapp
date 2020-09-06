@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { NavbarLanding } from './NavbarLanding';
 import { Button, Dialog } from '@blueprintjs/core';
 import task from './../../resources/LandingImages/task-complete.svg';
@@ -21,15 +22,18 @@ import { NavLink } from 'react-router-dom';
 import './style.scss';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
-
-export const LandingPage = () => {
+import { SuccessMessage } from 'components/success-message/SuccessMessage';
+interface ILandingPageProps {
+  response: string;
+}
+const LandingPageComponent = (props: ILandingPageProps) => {
   const [showContactUs, setShowContactUs] = useState(false);
   return (
     <div className="w-100">
       <NavbarLanding />
       <div className="LandingFirstBackground vh-100 w-100 mt5">
         <div className="w-50-l w-60-m w-90 ml5-l ml4-m ml3 pt4-l pt2">
-          <h1 className="f3-l f4-m f6 fw5 blue ma0" style={{ color: '#3F61C5' }}>WORK FROM HOME</h1>
+          <h1 className="f3-l f4-m f6 fw5 blue mt2" style={{ color: '#3F61C5' }}>WORK FROM HOME</h1>
           <h1 className="f2-l f3-m f4 mt3" style={{ color: '#1D3557' }}>
             There is a better way to collaborate with your teammates.
           </h1>
@@ -181,7 +185,7 @@ export const LandingPage = () => {
             </div>
             <NavLink to="/signup">
               <Button
-                className="f4-ns fw6 bp3-minimal pa3 br2 mv4-ns mv2 w-90 mh3"
+                className="f4-ns fw6 bp3-minimal pa3 br2 mv4 w-90 mh3"
                 style={{ color: 'white', backgroundColor: '#4B6BC8' }}
               >
                 Get Started
@@ -355,6 +359,17 @@ export const LandingPage = () => {
           <ContactUsForm setShowDialog={setShowContactUs} title="Contact Us" />
         </Dialog>
       )}
+      { props.response == '201' ?  <SuccessMessage /> : null }
     </div>
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    response: state.landingReducer.contactForm.response
+  };
+};
+
+export const LandingPage = connect(
+  mapStateToProps
+)(LandingPageComponent);

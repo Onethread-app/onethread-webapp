@@ -43,6 +43,7 @@ import Success from './components/Success';
 import { LandingPage } from 'layouts/landingNew/Index';
 import { VendorManagementPage } from 'layouts/landingNew/VendorManagementPage';
 import { WorkFromHomePage } from 'layouts/landingNew/WorkFromHomePage';
+import { ProjectManagementTool } from 'layouts/landingNew/ProjectManagementTool';
 import { PricingPage } from 'layouts/landingNew/PricingPage';
 import { AboutPage } from 'layouts/landingNew/AboutUs';
 import { ContactUsPage } from 'layouts/landingNew/ContactUsPage';
@@ -187,6 +188,13 @@ export const App = () => (
         path="/vendor-management-tool"
         render={() =>
           isAuthenticate() ? <Redirect to="/" /> : <VendorManagementPage />
+        }
+      />
+      <Route
+        exact
+        path="/project-management-tool"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
         }
       />
       <Route

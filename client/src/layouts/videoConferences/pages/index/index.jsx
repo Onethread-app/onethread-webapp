@@ -49,7 +49,7 @@ class Index extends React.Component {
     const host =
       process.env.PUBLIC_URL || `${document.location.host}/`;
     const link =
-      host + 'vc/join/?conf=' + window.btoa(this.state.channel);
+      host + '/vc/join/?conf=' + window.btoa(this.state.channel);
 
     const headers = tokenConfig();
 
@@ -190,7 +190,7 @@ class InputChannel extends React.Component {
     return (
       <div className="channel-wrapper control">
         <input
-          onInput={this.handleChange}
+          onChange={this.handleChange}
           id="channel"
           className={'ag-rounded input ' + this.state.state}
           type="text"

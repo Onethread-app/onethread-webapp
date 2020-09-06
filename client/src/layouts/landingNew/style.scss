@@ -265,6 +265,13 @@ width: 280px;
 }
 }
 @media only screen and (max-width: 414px) {
+  .LandingFirstBackground {
+    background-image: url(./../../resources/LandingImages/HomeFirstBackgroundMob.png);
+    position: relative;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 38rem;
+  }
 .LandingSecondBackground {
   background-image: url(./../../resources/LandingImages/homeSecondBackgroundMob.png);
   position: relative;
@@ -324,6 +331,9 @@ width: 280px;
 }
 }
 @media only screen and (max-width: 360px) {
+  .LandingFirstBackground {
+    height: 33rem;
+  }
   .ContactFirstBackground {
     background-image: url(./../../resources/LandingImages/contactFirstBackgroundMob.png);
     position: relative;
@@ -370,3 +380,4 @@ padding: .25rem;
   height: 40vh;
 }
 }
+

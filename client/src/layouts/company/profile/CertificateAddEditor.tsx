@@ -7,12 +7,12 @@ import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { addCertificate } from 'stores/company/Actions';
 
-interface ICertificateEditProps {
+interface ICertificateAddProps {
   setShowDialog: (val: boolean) => void;
   addCertificate: (certificate: {}) => any;
 }
 
-const CertificateEditComponent = (props: ICertificateEditProps) => {
+const CertificateAddComponent = (props: ICertificateAddProps) => {
   const onSubmit = async (values: any) => {
     const res = await props.addCertificate(values);
     if (res === 201) {
@@ -127,6 +127,6 @@ const CertificateEditComponent = (props: ICertificateEditProps) => {
   );
 };
 
-export const CertificateEdit = connect(null, { addCertificate })(
-  CertificateEditComponent,
+export const CertificateAdd = connect(null, { addCertificate })(
+  CertificateAddComponent,
 );
