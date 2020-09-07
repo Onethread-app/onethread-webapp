@@ -1,67 +1,48 @@
-import { isEqual } from 'lodash';
-import { tokenConfig } from '../UtilsActions';
-import {
-  GET_ROOM_ERROR,
-  LOADING_ROOM,
-  CLEAR_ROOMS_ERROR,
-  CURRENT_ROOM,
-  room,
-} from './Types';
-import { tigrowApi } from 'config';
+import { CLEAR_ROOMS_ERROR, RoomActionTypes } from './Types';
 
-export const createRoomAction = (roomData: any) => {
-  return {
-    type: room.CREATE_ROOM_LOAD,
-    roomData,
-  };
-};
+export const createRoom = (roomData: any) => ({
+  type: RoomActionTypes.CREATE_ROOM_START,
+  payload: roomData,
+});
 
-export const getRooms = () => {
-  return {
-    type: room.GET_ROOMS_LOAD,
-  };
-};
+export const createRoomSuccess = (response: any) => ({
+  type: RoomActionTypes.CREATE_ROOM_SUCCESS,
+  payload: response,
+});
 
-export const getRoom = (roomId: string) => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      dispatch({ type: LOADING_ROOM });
-      const response = await tigrowApi.get(
-        `rooms/${roomId}`,
-        headers,
-      );
-      dispatch({ type: CURRENT_ROOM, payload: response.data.room });
-      return response.status;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in room fetching');
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      dispatch({ type: GET_ROOM_ERROR, payload: 'Network error' });
-    } else if (error.response.status === 401) {
-      dispatch({
-        type: GET_ROOM_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response.status;
-  }
-};
+export const createRoomFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.CREATE_ROOM_FAILURE,
+  payload: errorMessage,
+});
 
-export const getRoomMembers = (roomId: string) => {
-  return {
-    type: room.GET_ROOM_MEMBERS_LOAD,
-    roomId,
-  };
-};
+export const getRooms = () => ({
+  type: RoomActionTypes.GET_ROOMS_START,
+});
+
+export const getRoomsSuccess = (response: any) => ({
+  type: RoomActionTypes.GET_ROOMS_SUCCESS,
+  payload: response,
+});
+
+export const getRoomsFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.GET_ROOMS_FAILURE,
+  payload: errorMessage,
+});
+
+export const getRoomMembers = (roomId: string) => ({
+  type: RoomActionTypes.GET_ROOM_MEMBERS_START,
+  payload: roomId,
+});
+
+export const getRoomMembersSuccess = (response: any) => ({
+  type: RoomActionTypes.GET_ROOM_MEMBERS_SUCCESS,
+  payload: response,
+});
+
+export const getRoomMembersFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.GET_ROOM_MEMBERS_FAILURE,
+  payload: errorMessage,
+});
 
 export const addRoomMembers = (
   data: {
@@ -74,13 +55,21 @@ export const addRoomMembers = (
     }>;
   },
   selectedRoomMember: any,
-) => {
-  return {
-    type: room.ADD_MEMBER_IN_ROOM_LOAD,
-    data,
-    selectedRoomMember,
-  };
-};
+) => ({
+  type: RoomActionTypes.ADD_ROOM_MEMBERS_START,
+  data,
+  selectedRoomMember,
+});
+
+export const addRoomMembersSuccess = (response: any) => ({
+  type: RoomActionTypes.ADD_ROOM_MEMBERS_SUCCESS,
+  payload: response,
+});
+
+export const addRoomMembersFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.ADD_ROOM_MEMBERS_FAILURE,
+  payload: errorMessage,
+});
 
 export const clearRoomError = () => ({
   type: CLEAR_ROOMS_ERROR,
@@ -91,129 +80,170 @@ export const sendRoomMessage = (data: {
   room: string;
   files: any[];
   type?: string;
-}) => {
-  return {
-    type: room.SEND_MESSAGE_LOAD,
-    data,
-  };
-};
+}) => ({
+  type: RoomActionTypes.SEND_MESSAGE_START,
+  payload: data,
+});
+
+export const sendRoomMessageSuccess = () => ({
+  type: RoomActionTypes.SEND_MESSAGE_SUCCESS,
+});
+
+export const sendRoomMessageFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.SEND_MESSAGE_FAILURE,
+  payload: errorMessage,
+});
 
 export const getRoomMessages = (
   roomId: string,
   limit: number = 15,
   skip: number = 0,
-) => {
-  return {
-    type: room.GET_ROOM_MESSAGES_LOAD,
-    roomId,
-    limit,
-    skip,
-  };
-};
+) => ({
+  type: RoomActionTypes.GET_ROOM_MESSAGES_START,
+  roomId,
+  limit,
+  skip,
+});
+
+export const getRoomMessagesSuccess = (response: any) => ({
+  type: RoomActionTypes.GET_ROOM_MESSAGES_SUCCESS,
+  payload: response,
+});
+
+export const getRoomMessagesFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.GET_ROOM_MESSAGES_FAILURE,
+  payload: errorMessage,
+});
 
 export const fileUploadAction = (
   imageSelected: any,
   roomID: string,
-) => {
-  return {
-    type: room.FILE_UPLOAD_LOAD,
-    imageSelected,
-    roomID,
-  };
-};
+) => ({
+  type: RoomActionTypes.FILE_UPLOAD_START,
+  imageSelected,
+  roomID,
+});
+
+export const fileUploadActionSuccess = (response: any) => ({
+  type: RoomActionTypes.FILE_UPLOAD_SUCCESS,
+  payload: response,
+});
+
+export const fileUploadActionFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.FILE_UPLOAD_FAILURE,
+  payload: errorMessage,
+});
 
 export const archiveRoom = (
   data: { archive: boolean },
   roomId: string,
-) => {
-  return {
-    type: room.ARCHIVE_ROOM_LOAD,
-    data,
-    roomId,
-  };
-};
+) => ({
+  type: RoomActionTypes.ARCHIVE_ROOM_START,
+  data,
+  roomId,
+});
+
+export const archiveRoomSuccess = (response: any) => ({
+  type: RoomActionTypes.ARCHIVE_ROOM_SUCCESS,
+  payload: response,
+});
+
+export const archiveRoomFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.ARCHIVE_ROOM_FAILURE,
+  payload: errorMessage,
+});
 
 export const getRoomSharedFiles = (
   roomId: string,
   limit: number = 1000,
   skip: number = 0,
-) => {
-  return {
-    type: room.GET_ROOM_SHARED_FILES_LOAD,
-    roomId,
-    limit,
-    skip,
-  };
-};
+) => ({
+  type: RoomActionTypes.GET_ROOM_SHARED_FILES_START,
+  roomId,
+  limit,
+  skip,
+});
 
-// export const getRoomDiscussions = (
-//   roomId: string,
-//   limit: number = 1000,
-//   skip: number = 0,
-// ) => async (dispatch: any) => {
-//   try {
-//     const headers = tokenConfig();
-//     if ((headers as any).headers.Authorization) {
-//       const response = await tigrowApi.get(
-//         `messages/room/${roomId}/discussion?limit=${limit}&skip=${skip}`,
-//         headers,
-//       );
-//       // if (response.data.count < limit) {
-//       // 	dispatch({ type: ALL_MESSAGE_RECEIVED, payload: true });
-//       // }
-//       dispatch({
-//         type: GET_ROOM_DISCUSSIONS,
-//         payload: response.data.discussion,
-//       });
-//     } else {
-//       // tslint:disable-next-line: no-console
-//       console.log('error in rooms discussion fetching');
-//     }
-//   } catch (error) {
-//     if (isEqual(error.message, 'Network Error')) {
-//       dispatch({
-//         type: GET_ROOM_DISCUSSIONS_ERROR,
-//         payload: 'Network error',
-//       });
-//     } else {
-//       // tslint:disable-next-line: no-console
-//       console.log(error.response);
-//     }
-//   }
-// };
+export const getRoomSharedFilesSuccess = (response: any) => ({
+  type: RoomActionTypes.GET_ROOM_SHARED_FILES_SUCCESS,
+  payload: response,
+});
+
+export const getRoomSharedFilesFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.GET_ROOM_SHARED_FILES_FAILURE,
+  payload: errorMessage,
+});
+
 export const getRoomDiscussions = (
   roomId: string,
   limit: number = 1000,
   skip: number = 0,
-) => {
-  return {
-    type: room.GET_ROOM_DISCUSSIONS_LOAD,
-    roomId,
-    limit,
-    skip,
-  };
-};
+) => ({
+  type: RoomActionTypes.GET_ROOM_DISCUSSIONS_START,
+  roomId,
+  limit,
+  skip,
+});
+
+export const getRoomDiscussionsSuccess = (response: any) => ({
+  type: RoomActionTypes.GET_ROOM_DISCUSSIONS_SUCCESS,
+  payload: response,
+});
+
+export const getRoomDiscussionsFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.GET_ROOM_DISCUSSIONS_FAILURE,
+  payload: errorMessage,
+});
 
 export const toggleDiscussionRoom = (
   data: { discussion: boolean },
   messageId: string,
-) => {
-  return {
-    type: room.TOGGLE_ROOM_DISCUSSIONS_LOAD,
-    data,
-    messageId,
-  };
-};
+) => ({
+  type: RoomActionTypes.TOGGLE_ROOM_DISCUSSION_START,
+  data,
+  messageId,
+});
 
-export const updateLastSeen = (roomId: string) => {
-  return {
-    type: room.CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM_LOAD,
-    roomId,
-  };
-};
+export const toggleDiscussionRoomSuccess = (response: any) => ({
+  type: RoomActionTypes.TOGGLE_ROOM_DISCUSSION_SUCCESS,
+  payload: response,
+});
 
-export const fethcRooms = () => {
-  return {
-    type: room.FETCH_ROOMS_LOAD,
-  };
-};
+export const toggleDiscussionRoomFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.TOGGLE_ROOM_DISCUSSION_FAILURE,
+  payload: errorMessage,
+});
+
+export const removeRoomDiscussion = (response: any) => ({
+  type: RoomActionTypes.REMOVE_ROOM_DISCUSSION,
+  payload: response,
+});
+
+export const updateLastSeen = (roomId: string) => ({
+  type: RoomActionTypes.UPDATE_LAST_SEEN_START,
+  roomId,
+});
+
+export const updateLastSeenSuccess = (response: any) => ({
+  type: RoomActionTypes.UPDATE_LAST_SEEN_SUCCESS,
+  payload: response,
+});
+
+export const updateLastSeenFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.UPDATE_LAST_SEEN_FAILURE,
+  payload: errorMessage,
+});
+
+export const fetchRooms = () => ({
+  type: RoomActionTypes.FETCH_ROOMS_START,
+});
+
+export const fetchRoomsSuccess = (response: any) => ({
+  type: RoomActionTypes.FETCH_ROOMS_SUCCESS,
+  payload: response,
+});
+
+export const fetchRoomsFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.FETCH_ROOMS_FAILURE,
+  payload: errorMessage,
+});

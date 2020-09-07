@@ -123,12 +123,28 @@ const TaskPageComponent = (
     ]).then(() => setLoading(false));
   }, [props.project._id]);
 
+  useEffect(() => {
+    const forwardToGeneral = async () => {
+      await props.getSelectedBoard(props.boardList[0]._id);
+      props.history.push(
+        `/company/${props.company.uniqueName}/board/${props.boardList[0]._id}`,
+      );
+    };
+    if (
+      props.boardList &&
+      props.boardList.length === 1 &&
+      props.boardList[0].name.toLowerCase() === 'general'
+    ) {
+      forwardToGeneral();
+    }
+  }, [props.boardList]);
+
   const [department, setDepartment] = useState('');
   const boards = props.boardList.filter(
     (board) => board.department === department,
   );
-  
-  const permissions = projectRules(props.role , props.optionalRole);
+
+  const permissions = projectRules(props.role, props.optionalRole);
 
   const noBoardsFound = (
     <div
@@ -275,18 +291,20 @@ const TaskPageComponent = (
                     />
                   )}
                 </div>
-              ) : ( props.role && 
-                (permissions.grantAll || permissions.projectModerator.includes('createUpdateBoard')) ?
+              ) : props.role &&
+                (permissions.grantAll ||
+                  permissions.projectModerator.includes(
+                    'createUpdateBoard',
+                  )) ? (
                 noBoardsFound
-                :
-                undefined
-              )
+              ) : undefined
             ) : (
               <Loading />
             )}
             <div>
               {props.role &&
-              (permissions.grantAll || permissions.projectModerator.includes(
+              (permissions.grantAll ||
+                permissions.projectModerator.includes(
                   'createUpdateBoard',
                 )) ? (
                 <img

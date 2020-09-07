@@ -23,25 +23,28 @@ interface ISubTaskViewInternalProps {
   createSubTask: (subTask: ISubTask) => void;
   updateSubTask: (subTask: ISubTask) => void;
   deleteSubTask: (subTask: ISubTask) => void;
+  loading: boolean;
+  fetchingTask: boolean;
 }
 
 export const SubTaskViewPageComponent = (
   props: ISubTaskViewInternalProps & RouteComponentProps,
 ) => {
   const [showSubtaskForm, setShowSubTaskForm] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [subtask, setsubtask] = useState(Object);
 
   useEffect(() => {
     async function getAPI() {
-      await props.getAllSubTask();
-      await setLoading(false);
+      if (props.fetchingTask === false) {
+        await props.getAllSubTask();
+      }
     }
     getAPI();
-  }, []);
+  }, [props.fetchingTask]);
+
   return (
     <>
-      {loading === false ? (
+      {props.loading === false ? (
         <div className="fl w-100">
           <div className="mt3">
             <div className="flex">
@@ -77,16 +80,16 @@ export const SubTaskViewPageComponent = (
                     overflowY: 'auto',
                   }}
                 >
-                  {props.subTaskList.map((list) => (
+                  {props.subTaskList.map((subTask) => (
                     <div className="flex justify-between">
                       <Checkbox
                         className="ws-break"
-                        value={list._id}
-                        checked={list.done}
-                        label={list.name}
+                        value={subTask._id}
+                        checked={subTask.done}
+                        label={subTask.name}
                         large={true}
                         style={{
-                          textDecoration: list.done
+                          textDecoration: subTask.done
                             ? 'line-through'
                             : 'none',
                         }}
@@ -108,14 +111,14 @@ export const SubTaskViewPageComponent = (
                             }}
                             icon="edit"
                             onClick={async () => {
-                              await setsubtask(list);
+                              await setsubtask(subTask);
                               setShowSubTaskForm(true);
                             }}
                           />
                         </div>
 
                         <SubTaskDelete
-                          subTask={list}
+                          subTask={subTask}
                           deleteSubTask={props.deleteSubTask}
                         />
                       </div>
@@ -156,7 +159,7 @@ export const SubTaskViewPageComponent = (
         </div>
       ) : (
         <div
-          style={{ bottom: 0, position: 'absolute', left: '150px' }}
+          style={{ bottom: 10, position: 'absolute', margin: '0 auto', width: '50%' }}
         >
           <Loading />
         </div>
@@ -168,6 +171,8 @@ export const SubTaskViewPageComponent = (
 const mapStateToProps = (state: any) => {
   return {
     subTaskList: state.boardIndexReducer.subTaskReducer.subTaskList,
+    loading: state.boardIndexReducer.subTaskReducer.fetchingSubTask,
+    fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
   };
 };
 

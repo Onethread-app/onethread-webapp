@@ -9,6 +9,8 @@ import { BreadCrumbs } from 'components/fields/Breadcrumbs';
 import addMemberIcon from 'resources/images/addMemberIcon.png';
 import { IProject } from 'stores/project/Reducer';
 import { projectRules } from '../project/settings/projectrules';
+import { RightSidebar } from 'components/RightSidebar';
+import { FormBoard } from '../board/Form';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
@@ -26,6 +28,9 @@ const BoardDetailsViewComponent = (
     setShowAddMemberFormDialog,
   ] = useState(false);
   const [showMemberListDialog, setShowMemberListDialog] = useState(
+    false,
+  );
+  const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(
     false,
   );
   const permissions = projectRules(props.role, props.optionalRole);
@@ -58,10 +63,33 @@ const BoardDetailsViewComponent = (
         style={{ justifyContent: 'space-between' }}
       >
         <h3 className="w-100 ma0 f3">{props.currentBoard!.name}</h3>
-        <div className="flex mh3-ns">
-          {permissions.grantAll || permissions.projectModerator.includes(
-            'assignDeleteMemberBoard',
+        <div className="flex mh3-ns w-100 w-auto-ns">
+          {permissions.grantAll ||
+          permissions.projectModerator.includes(
+            'createUpdateBoard',
           ) ? (
+            <>
+              <button
+                className="mb0 mr2 pointer f5 f6-ns bn white br2 pa1"
+                style={{ minWidth: '130px', background: '#3F61C5' }}
+                onClick={() => setShowTaskBoardDialog(true)}
+              >
+                Create New Board
+              </button>
+              <img
+                className="br2 pointer"
+                style={{ height: '1.8rem', width: '1.8rem' }}
+                src={addMemberIcon}
+                alt="Add Member Icon"
+                onClick={() =>
+                  setShowAddMemberFormDialog(!showAddMemberFormDialog)
+                }
+              />
+            </>
+          ) : permissions.grantAll ||
+            permissions.projectModerator.includes(
+              'assignDeleteMemberBoard',
+            ) ? (
             <>
               <img
                 className="br2 pointer"
@@ -133,6 +161,15 @@ const BoardDetailsViewComponent = (
             </div>
           </div>
         </Dialog>
+      )}
+      {showTaskBoardDialog && (
+        <RightSidebar
+          onClose={() => setShowTaskBoardDialog(!showTaskBoardDialog)}
+        >
+          <FormBoard
+            setShowTaskBoardDialog={setShowTaskBoardDialog}
+          />
+        </RightSidebar>
       )}
     </div>
   );

@@ -1,42 +1,43 @@
 import {
   LOADING_ROOM,
-  GET_ROOM_MESSAGES,
-  GET_ROOMS,
+  // GET_ROOM_MESSAGES,
+  // GET_ROOMS,
   CHANGE_ROOM,
   CURRENT_ROOM,
   NEW_MESSAGE,
   CLEAR_ROOMS_REDUCER_STATE,
-  CREATE_ROOM_FROM_SERVER_SUCCESS,
-  GET_ROOM_ERROR,
-  GET_ROOM_MEMBERS,
-  GET_ROOM_MEMBERS_ERROR,
-  ADD_MEMBER_IN_ROOM_ERROR,
-  ADD_MEMBER_IN_ROOM,
-  ACTIVE_ROOM,
+  // CREATE_ROOM_FROM_SERVER_SUCCESS,
+  // GET_ROOM_ERROR,
+  // GET_ROOM_MEMBERS,
+  // GET_ROOM_MEMBERS_ERROR,
+  // ADD_MEMBER_IN_ROOM_ERROR,
+  // ADD_MEMBER_IN_ROOM,
+  // ACTIVE_ROOM,
   UPDATE_ROOM,
   ON_USER_STARTED_TYPING,
   ON_USER_STOPPED_TYPING,
   CLEAR_ROOMS_ERROR,
   TOGGLE_EMOJI_PICKER,
-  FILE_UPLOAD,
+  // FILE_UPLOAD,
   CLEAR_FILE_UPLOAD,
   DELETE_ONE_PENDING_FILE,
   ALL_MESSAGE_RECEIVED,
-  ARCHIVE_ROOM,
-  GET_ROOM_SHARED_FILES_ERROR,
-  GET_ROOM_SHARED_FILES,
-  GET_ROOM_DISCUSSIONS,
-  GET_ROOM_DISCUSSIONS_ERROR,
-  SET_ROOM_DISCUSSIONS,
-  TOGGLE_ROOM_DISCUSSIONS_ERROR,
-  REMOVE_ROOM_DISCUSSIONS,
+  // ARCHIVE_ROOM,
+  // GET_ROOM_SHARED_FILES_ERROR,
+  // GET_ROOM_SHARED_FILES,
+  // GET_ROOM_DISCUSSIONS,
+  // GET_ROOM_DISCUSSIONS_ERROR,
+  // SET_ROOM_DISCUSSIONS,
+  // TOGGLE_ROOM_DISCUSSIONS_ERROR,
+  // REMOVE_ROOM_DISCUSSIONS,
   GET_COMPANY_ROOMS,
   CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
   CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY,
-  UPDATE_UNREAD_COUNT_ROOMS,
-  CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
+  // UPDATE_UNREAD_COUNT_ROOMS,
+  // CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
   INCREMENT_UNREAD_COUNT_FOR_SINGLE_ROOM,
   room,
+  RoomActionTypes,
 } from './Types';
 
 export interface IRoom {
@@ -133,6 +134,32 @@ export interface IRoomReducer {
   responseCode: number;
   roomNotification: {};
   totalUnread: number;
+  creatingRoom: boolean;
+  gettingRoom: boolean;
+  gettingRoomMembers: boolean;
+  addingRoomMembers: boolean;
+  sendingMessage: boolean;
+  loadingMessages: boolean;
+  uploadingFile: boolean;
+  archivingRoom: boolean;
+  gettingFiles: boolean;
+  gettingDiscussions: boolean;
+  togglingDiscussion: boolean;
+  updatingLastSeen: boolean;
+  fetchingRooms: boolean;
+  errorOnRoomCreate: string;
+  errorOnGettingRoom: string;
+  errorOnGettingRoomMembers: string;
+  errorOnAddingMembers: string;
+  errorOnSendingMessage: string;
+  errorOnLoadingMessages: string;
+  errorOnFileUpload: string;
+  errorOnArchive: string;
+  errorOnGettingFiles: string;
+  errorOnGettingDiscussions: string;
+  errorOnToggleDiscussion: string;
+  errorOnUpdatingLastSeen: string;
+  errorOnFetchingRoom: string;
 }
 const InitialState: IRoomReducer = {
   activeRoom: {},
@@ -165,20 +192,37 @@ const InitialState: IRoomReducer = {
   responseCode: 0,
   roomNotification: {},
   totalUnread: 0,
+  creatingRoom: false,
+  gettingRoom: false,
+  gettingRoomMembers: false,
+  addingRoomMembers: false,
+  sendingMessage: false,
+  loadingMessages: false,
+  uploadingFile: false,
+  archivingRoom: false,
+  gettingFiles: false,
+  gettingDiscussions: false,
+  togglingDiscussion: false,
+  updatingLastSeen: false,
+  fetchingRooms: false,
+  errorOnRoomCreate: '',
+  errorOnGettingRoom: '',
+  errorOnGettingRoomMembers: '',
+  errorOnAddingMembers: '',
+  errorOnSendingMessage: '',
+  errorOnLoadingMessages: '',
+  errorOnFileUpload: '',
+  errorOnArchive: '',
+  errorOnGettingFiles: '',
+  errorOnGettingDiscussions: '',
+  errorOnToggleDiscussion: '',
+  errorOnUpdatingLastSeen: '',
+  errorOnFetchingRoom: '',
 };
 
 export const sortRooms = (a: IRoom, b: IRoom) => {
-  // tslint:disable-next-line: one-variable-per-declaration
-  // const unreadCountA = a.unreadCount;
-  // const unreadCountB = b.unreadCount;
   const createdAtA = Date.parse(a.createdAt);
   const createdAtB = Date.parse(b.createdAt);
-
-  // return unreadCountA > unreadCountB ?
-  // 	-1 : unreadCountA < unreadCountB ?
-  // 		1 : createdAtA > createdAtB ?
-  // 			1 : createdAtA < createdAtB ?
-  // 				-1 : 0;
   return createdAtA > createdAtB
     ? 1
     : createdAtA < createdAtB
@@ -239,40 +283,315 @@ const onUserStartedTyping = (state: IRoomReducer, action: any) => {
 
 export const RoomReducer = (state = InitialState, action: any) => {
   switch (action.type) {
-    case LOADING_ROOM:
+    case RoomActionTypes.FILE_UPLOAD_START:
       return {
         ...state,
-        loading: true,
-        roomError: '',
+        uploadingFile: true,
       };
-    case FILE_UPLOAD: {
+    case RoomActionTypes.FILE_UPLOAD_SUCCESS:
       return {
         ...state,
         pendingFiles: [...state.pendingFiles, action.payload],
+        uploadingFile: false,
       };
-    }
-    case GET_COMPANY_ROOMS: {
+    case RoomActionTypes.FILE_UPLOAD_FAILURE:
       return {
         ...state,
-        companyRooms: action.payload,
+        errorOnFileUpload: action.payload,
+        uploadingFiles: false,
       };
-    }
-    case UPDATE_UNREAD_COUNT_ROOMS: {
+    case RoomActionTypes.UPDATE_LAST_SEEN_START:
       return {
         ...state,
-        roomsUnreadCount: updateUnreadCount(
-          state.roomsUnreadCount,
-          action.payload,
-        ),
+        updatingLastSeen: true,
       };
-    }
-    case CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM: {
+    case RoomActionTypes.UPDATE_LAST_SEEN_SUCCESS: {
       return {
         ...state,
         roomsUnreadCount: clearUnreadCountForSingleRoom(
           state.roomsUnreadCount,
           action.payload,
         ),
+        updatingLastSeen: false,
+      };
+    }
+    case RoomActionTypes.UPDATE_LAST_SEEN_FAILURE:
+      return {
+        ...state,
+        errorOnUpdatingLastSeen: action.payload,
+        updatingLastSeen: false,
+      };
+    case RoomActionTypes.SEND_MESSAGE_START:
+      return {
+        ...state,
+        sendingMessage: true,
+      };
+    case RoomActionTypes.SEND_MESSAGE_SUCCESS:
+      return {
+        ...state,
+        sendingMessage: false,
+      };
+    case RoomActionTypes.SEND_MESSAGE_FAILURE:
+      return {
+        ...state,
+        errorOnSendingMessage: action.payload,
+        sendingMessage: false,
+      };
+    case RoomActionTypes.GET_ROOM_MEMBERS_START:
+      return {
+        ...state,
+        gettingRoomMembers: true,
+      };
+    case RoomActionTypes.GET_ROOM_MEMBERS_SUCCESS:
+      return {
+        ...state,
+        users: action.payload,
+        gettingRoomMembers: false,
+      };
+    case RoomActionTypes.GET_ROOM_MEMBERS_FAILURE:
+      return {
+        ...state,
+        errorOnGettingRoomMembers: action.payload,
+      };
+    case RoomActionTypes.ADD_ROOM_MEMBERS_START:
+      return {
+        ...state,
+        addingRoomMembers: true,
+      };
+    case RoomActionTypes.ADD_ROOM_MEMBERS_SUCCESS:
+      return {
+        ...state,
+        users: [...state.users, ...action.payload],
+        addingRoomMembers: false,
+      };
+    case RoomActionTypes.ADD_ROOM_MEMBERS_FAILURE:
+      return {
+        ...state,
+        errorOnAddingMembers: action.payload,
+        addingRoomMembers: false,
+      };
+    case RoomActionTypes.GET_ROOM_MESSAGES_START:
+      return {
+        ...state,
+        loadingMessages: true,
+      };
+    case RoomActionTypes.GET_ROOM_MESSAGES_SUCCESS:
+      return {
+        ...state,
+        messages: [...action.payload, ...state.messages],
+        loadingMessages: false,
+      };
+    case RoomActionTypes.GET_ROOM_MESSAGES_FAILURE:
+      return {
+        ...state,
+        errorOnLoadingMessages: action.payload,
+        loadingMessages: false,
+      };
+    case RoomActionTypes.ARCHIVE_ROOM_START:
+      return {
+        ...state,
+        archivingRoom: true,
+      };
+    case RoomActionTypes.ARCHIVE_ROOM_SUCCESS:
+      return {
+        ...state,
+        currentRoom: {
+          ...state.currentRoom,
+          archive: action.payload.archive,
+        },
+        rooms: state.rooms.map((room: IRoom) => {
+          if (room._id === action.payload.roomId) {
+            return {
+              ...room,
+              archive: action.payload.archive,
+            };
+          } else {
+            return room;
+          }
+        }),
+        archivingRoom: false,
+      };
+    case RoomActionTypes.ARCHIVE_ROOM_FAILURE:
+      return {
+        ...state,
+        errorOnArchive: action.payload,
+        archivingRoom: false,
+      };
+    case RoomActionTypes.GET_ROOMS_START:
+      return {
+        ...state,
+        gettingRoom: true,
+      };
+    case RoomActionTypes.GET_ROOMS_SUCCESS:
+      return {
+        ...state,
+        rooms: action.payload.rooms.sort(sortRooms),
+        roomsUnreadCount: action.payload.roomsUnreadCount,
+        gettingRoom: false,
+      };
+    case RoomActionTypes.GET_ROOMS_FAILURE:
+      return {
+        ...state,
+        gettingRoom: false,
+        errorOnGettingRoom: action.payload,
+      };
+    case RoomActionTypes.FETCH_ROOMS_START:
+      return {
+        ...state,
+        fetchingRooms: true,
+      };
+    case RoomActionTypes.FETCH_ROOMS_SUCCESS:
+      return {
+        ...state,
+        roomNotification: action.payload,
+        fetchingRooms: false,
+      };
+    case RoomActionTypes.FETCH_ROOMS_FAILURE:
+      return {
+        ...state,
+        errorOnFetchingRoom: action.payload,
+        fetchingRooms: false,
+      };
+    case RoomActionTypes.CREATE_ROOM_START:
+      return {
+        ...state,
+        creatingRoom: true,
+      };
+    case RoomActionTypes.CREATE_ROOM_SUCCESS:
+      return {
+        ...state,
+        responseCode: 0,
+        rooms: [
+          ...state.rooms,
+          {
+            _id: action.payload._id,
+            name: action.payload.name,
+            company: action.payload.company,
+            project: action.payload.project,
+            account: action.payload.account,
+            createdAt: action.payload.createdAt,
+            updatedAt: action.payload.updatedAt,
+            archive: action.payload.archive,
+            removed: action.payload.removed,
+          },
+        ],
+        errorOnRoomCreate: '',
+        creatingRoom: false,
+      };
+    case RoomActionTypes.GET_ROOM_SHARED_FILES_START:
+      return {
+        ...state,
+        gettingFiles: true,
+      };
+    case RoomActionTypes.GET_ROOM_SHARED_FILES_SUCCESS:
+      return {
+        ...state,
+        sharedFileMessages: [
+          ...state.sharedFileMessages,
+          ...action.payload,
+        ],
+        gettingFiles: false,
+      };
+    case RoomActionTypes.GET_ROOM_SHARED_FILES_FAILURE:
+      return {
+        ...state,
+        errorOnGettingFiles: action.payload,
+        gettingFiles: false,
+      };
+    case RoomActionTypes.GET_ROOM_DISCUSSIONS_START:
+      return {
+        ...state,
+        gettingDiscussions: true,
+      };
+    case RoomActionTypes.GET_ROOM_DISCUSSIONS_SUCCESS:
+      return {
+        ...state,
+        discussions: [...state.discussions, ...action.payload],
+        gettingDiscussions: false,
+      };
+    case RoomActionTypes.GET_ROOM_DISCUSSIONS_FAILURE:
+      return {
+        ...state,
+        errorOnGettingDiscussions: action.payload,
+        gettingDiscussions: false,
+      };
+    case RoomActionTypes.TOGGLE_ROOM_DISCUSSION_START:
+      return {
+        ...state,
+        togglingDiscussion: true,
+      };
+    case RoomActionTypes.TOGGLE_ROOM_DISCUSSION_SUCCESS:
+      return {
+        ...state,
+        messages: state.messages.map((message: IRoomMessage) => {
+          if (message._id === action.payload.data._id) {
+            return {
+              ...message,
+              discussion: action.payload.discussion,
+            };
+          } else {
+            return message;
+          }
+        }),
+        discussions: [...state.discussions, action.payload.data],
+        togglingDiscussion: false,
+      };
+    case RoomActionTypes.TOGGLE_ROOM_DISCUSSION_FAILURE:
+      return {
+        ...state,
+        errorOnToggleDiscussion: action.payload,
+        togglingDiscussion: false,
+      };
+    case RoomActionTypes.REMOVE_ROOM_DISCUSSION:
+      return {
+        ...state,
+        messages: state.messages.map((message: IRoomMessage) => {
+          if (message._id === action.payload.data._id) {
+            return {
+              ...message,
+              discussion: action.payload.discussion,
+            };
+          } else {
+            return message;
+          }
+        }),
+        discussions: state.discussions.filter(
+          (discussion: IRoomDiscussion) => {
+            return discussion._id !== action.payload.data._id;
+          },
+        ),
+        loading: false,
+      };
+    case CLEAR_ROOMS_ERROR:
+      return {
+        ...state,
+        roomError: '',
+      };
+    case CLEAR_ROOMS_REDUCER_STATE:
+      return {
+        ...InitialState,
+      };
+    case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY:
+    case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT:
+      return {
+        ...InitialState,
+        companyRooms: state.companyRooms,
+      };
+    case room.COUNT_TOTAL_REED_COUNT:
+      return {
+        ...state,
+        totalUnread: action.payload,
+      };
+    case LOADING_ROOM:
+      return {
+        ...state,
+        loading: true,
+        roomError: '',
+      };
+    case GET_COMPANY_ROOMS: {
+      return {
+        ...state,
+        companyRooms: action.payload,
       };
     }
     case INCREMENT_UNREAD_COUNT_FOR_SINGLE_ROOM: {
@@ -313,24 +632,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
         },
         loading: false,
       };
-    case GET_ROOM_MEMBERS:
-      return {
-        ...state,
-        users: action.payload,
-        loading: false,
-      };
-    case ADD_MEMBER_IN_ROOM:
-      return {
-        ...state,
-        users: [...state.users, ...action.payload],
-        loading: false,
-      };
-    case ACTIVE_ROOM:
-      return {
-        ...state,
-        activeRoom: action.payload,
-        loading: false,
-      };
     case CURRENT_ROOM:
       return {
         ...state,
@@ -360,12 +661,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
             : [...state.sharedFileMessages],
         loading: false,
       };
-    case GET_ROOM_MESSAGES:
-      return {
-        ...state,
-        messages: [...action.payload, ...state.messages],
-        loading: false,
-      };
     case ALL_MESSAGE_RECEIVED:
       return {
         ...state,
@@ -382,22 +677,6 @@ export const RoomReducer = (state = InitialState, action: any) => {
     case UPDATE_ROOM:
       return {
         ...state,
-        // rooms: state.rooms
-        // 	.map((room: IRoom) => {
-        // 		if (room.id === action.payload.id) {
-        // 			return {
-        // 				id: action.payload.id,
-        // 				name: action.payload.name,
-        // 				unreadCount: action.payload.unreadCount,
-        // 				company: action.payload.customData.company,
-        // 				account: action.payload.createdByUserId,
-        // 				createdAt: action.payload.createdAt,
-        // 				updatedAt: action.payload.updatedAt,
-        // 			};
-        // 		} else {
-        // 			return room;
-        // 		}
-        // 	}).sort(sortRooms),
         roomsUnreadCount: updateUnreadCount(
           state.roomsUnreadCount,
           action.payload,
@@ -408,159 +687,47 @@ export const RoomReducer = (state = InitialState, action: any) => {
         ),
         loading: false,
       };
-    case ARCHIVE_ROOM:
-      return {
-        ...state,
-        currentRoom: {
-          ...state.currentRoom,
-          archive: action.payload.archive,
-        },
-        rooms: state.rooms.map((room: IRoom) => {
-          if (room._id === action.payload.roomId) {
-            return {
-              ...room,
-              archive: action.payload.archive,
-            };
-          } else {
-            return room;
-          }
-        }),
-        loading: false,
-      };
-    case GET_ROOMS:
-      return {
-        ...state,
-        rooms: action.payload.rooms.sort(sortRooms),
-        roomsUnreadCount: action.payload.roomsUnreadCount,
-        loading: false,
-      };
-    case room.FETCH_ROOMS_SUCCESS:
-      return {
-        ...state,
-        roomNotification: action.payload,
-      };
-    case CREATE_ROOM_FROM_SERVER_SUCCESS:
-      return {
-        ...state,
-        responseCode: 0,
-        rooms: [
-          ...state.rooms,
-          {
-            _id: action.payload._id,
-            name: action.payload.name,
-            company: action.payload.company,
-            project: action.payload.project,
-            account: action.payload.account,
-            createdAt: action.payload.createdAt,
-            updatedAt: action.payload.updatedAt,
-            archive: action.payload.archive,
-            removed: action.payload.removed,
-          },
-        ],
-        roomError: '',
-        loading: false,
-      };
-
     case room.RESPONSE_STATUS_CODE:
       return {
         ...state,
         responseCode: action.payload,
       };
-
     case room.CLEAR_STATUS_CODE:
       return {
         ...state,
         responseCode: 0,
       };
-
     case TOGGLE_EMOJI_PICKER:
       return {
         ...state,
         emojiPicker: action.payload,
       };
-    case GET_ROOM_SHARED_FILES:
-      return {
-        ...state,
-        sharedFileMessages: [
-          ...state.sharedFileMessages,
-          ...action.payload,
-        ],
-        loading: false,
-      };
-    case GET_ROOM_DISCUSSIONS:
-      return {
-        ...state,
-        discussions: [...state.discussions, ...action.payload],
-        loading: false,
-      };
-    case SET_ROOM_DISCUSSIONS:
-      return {
-        ...state,
-        messages: state.messages.map((message: IRoomMessage) => {
-          if (message._id === action.payload.data._id) {
-            return {
-              ...message,
-              discussion: action.payload.discussion,
-            };
-          } else {
-            return message;
-          }
-        }),
-        discussions: [...state.discussions, action.payload.data],
-        loading: false,
-      };
-    case REMOVE_ROOM_DISCUSSIONS:
-      return {
-        ...state,
-        messages: state.messages.map((message: IRoomMessage) => {
-          if (message._id === action.payload.data._id) {
-            return {
-              ...message,
-              discussion: action.payload.discussion,
-            };
-          } else {
-            return message;
-          }
-        }),
-        discussions: state.discussions.filter(
-          (discussion: IRoomDiscussion) => {
-            return discussion._id !== action.payload.data._id;
-          },
-        ),
-        loading: false,
-      };
-    case TOGGLE_ROOM_DISCUSSIONS_ERROR:
-    case GET_ROOM_DISCUSSIONS_ERROR:
-    case GET_ROOM_SHARED_FILES_ERROR:
-    case ADD_MEMBER_IN_ROOM_ERROR:
-    case GET_ROOM_MEMBERS_ERROR:
-    case room.CREATE_ROOM_ERROR:
-    case GET_ROOM_ERROR:
-      return {
-        ...state,
-        roomError: action.payload,
-        loading: false,
-      };
-    case CLEAR_ROOMS_ERROR:
-      return {
-        ...state,
-        roomError: '',
-      };
-    case CLEAR_ROOMS_REDUCER_STATE:
-      return {
-        ...InitialState,
-      };
-    case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY:
-    case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT:
-      return {
-        ...InitialState,
-        companyRooms: state.companyRooms,
-      };
-    case room.COUNT_TOTAL_REED_COUNT:
-      return {
-        ...state,
-        totalUnread: action.payload,
-      };
+    // case UPDATE_UNREAD_COUNT_ROOMS: {
+    //   return {
+    //     ...state,
+    //     roomsUnreadCount: updateUnreadCount(
+    //       state.roomsUnreadCount,
+    //       action.payload,
+    //     ),
+    //   };
+    // }
+    // case ACTIVE_ROOM:
+    //   return {
+    //     ...state,
+    //     activeRoom: action.payload,
+    //     loading: false,
+    //   };
+    // case TOGGLE_ROOM_DISCUSSIONS_ERROR:
+    // case GET_ROOM_DISCUSSIONS_ERROR:
+    // case GET_ROOM_SHARED_FILES_ERROR:
+    // case ADD_MEMBER_IN_ROOM_ERROR:
+    // case GET_ROOM_MEMBERS_ERROR:
+    // case room.CREATE_ROOM_ERROR:
+    //   return {
+    //     ...state,
+    //     roomError: action.payload,
+    //     loading: false,
+    //   };
     default:
       return state;
   }
