@@ -7,14 +7,13 @@ import vendorSecond from './../../resources/LandingImages/vendorSecondBack.png';
 import vendorThird from './../../resources/LandingImages/vendorThirdBack.png';
 import tick from './../../resources/LandingImages/tick.svg';
 import growth from './../../resources/LandingImages/growth.svg';
-import marketLogo from './../../resources/LandingImages/marketLogo.png';
-import BKMEALogo from './../../resources/LandingImages/BKMEA-Logo.png';
-import plummyLogo from './../../resources/LandingImages/plummy.png';
-import knitLogo from './../../resources/LandingImages/knitwearLogo.png';
 import { Button, Dialog } from '@blueprintjs/core';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
-import { SuccessMessage } from 'components/success-message/SuccessMessage';
+import { SuccessMessage } from '../../components/success-message/SuccessMessage';
+import { TiButton } from '../../components/button/Button';
+import { MostUsedCL } from '../../components/company-logos/CompanyLogos';
+import { ReviewSection } from 'components/review-section/ReviewSection';
 
 interface IVendorManagementProps {
   response: string;
@@ -22,6 +21,12 @@ interface IVendorManagementProps {
 const VendorManagementPageComponent = (props: IVendorManagementProps) => {
 
   const [showForm3, setShowForm3] = useState(false);
+  const customerReview = {
+    customer: "Syed Naimul Abedin",
+    position: "CEO",
+    company: "Peakward Enterprise",
+    review: "It's like a life saver for the executives of my company who are currently dealing with 368 vendors simultaneously, and TiGrow is improving day by day, hearing our pain point and adding new features accordingly - I'm loving their solutions."
+  };
 
   return (
     <div className="w-100">
@@ -30,18 +35,12 @@ const VendorManagementPageComponent = (props: IVendorManagementProps) => {
         <div className="w-50-ns w-100 pr5-l pr3-m">
           <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f6 ">Managing multiple vendors is now effortless</h1>
           <h1 style={{ color: '#43466D' }} className="f3-l f5-m f7 fw4 lh-2 vendorLineHeight">
-          Receive Quotations From Your Vendors, Open Those Simultaneously,
-          Even Create Smart Contracts With Them While Having TiGrow PMT With All Of Those.
+            Receive Quotations From Your Vendors, Open Those Simultaneously,
+            Even Create Smart Contracts With Them While Having TiGrow PMT With All Of Those.
           </h1>
-          <Button
-            className="f4-l f5-m f7 fw6 bp3-minimal pa4-l pa3-m pa2 br3 mb4 outline-0 vendorRqstBtn"
-            style={{ color: 'WHITE', border: 'solid 2px WHITE', backgroundColor: '#4B6BC8' }}
-            onClick={() => {
-              setShowForm3(true);
-            }}
-          >
+          <TiButton extraClasses='mb4 outline-0 vendorRqstBtn' onClick={() => { setShowForm3(true); }}>
             Request A Demo
-          </Button>
+          </TiButton>
         </div>
         <div className="w-50-ns w-100">
           <img className="w-85-l w-100" src={vendorFirst} />
@@ -164,21 +163,7 @@ const VendorManagementPageComponent = (props: IVendorManagementProps) => {
           </h1>
         </div>
       </div>
-      <div className="tc flex flex-column justify-center mt5">
-        <div className="flex flex-column items-center">
-          <h1 className="f3-ns f6 fw4 w-60-l w-80 colorfulWidth tl lh-2" style={{ color: '#43466D' }}>
-            <span style={{ color: '#0FB7A0', fontFamily: 'cambria' }} className="fw9 i f1">"</span>
-          It's like a life saver for the executives of my company who are currently dealing with 368 vendors
-           simultaneously, and TiGrow is improving day by day, hearing our pain point and adding new features
-            accordingly - I'm loving their solutions.
-            <span style={{ color: '#0FB7A0', fontFamily: 'cambria' }} className="fw9 i f1">"</span>
-          </h1>
-          <h1 style={{ color: '#707070' }} className="f3-ns f6 fw4 w-60-l w-80 colorfulWidth tl">Syed Naimul Abedin</h1>
-          <h1 style={{ color: '#707070' }} className="f5-ns f7 fw4 w-60-l w-80 colorfulWidth tl ma0">
-            CEO | Peakward Enterprise
-          </h1>
-        </div>
-      </div>
+      <ReviewSection customerReview={customerReview} />
       <div className="mt4" style={{ backgroundColor: '#F8F8F9' }}>
         <div className="pv4 ph6-l ph4 tc vendorSecondPadding">
           <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f4 ">Built for managing any number of vendors.</h1>
@@ -195,12 +180,7 @@ const VendorManagementPageComponent = (props: IVendorManagementProps) => {
             Book A Call
           </Button>
         </div>
-        <div className="flex flex-row items-center justify-center pv4 tc">
-          <img src={marketLogo} className="marketLogo" />
-          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={plummyLogo} />
-          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={BKMEALogo} />
-          <img className="ml4-ns ml2 vendorLogoSpacing knitLogo" src={knitLogo} />
-        </div>
+        <MostUsedCL />
       </div>
       <LandingFooter />
       {showForm3 && (

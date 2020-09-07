@@ -2,18 +2,22 @@ import React, { useState } from 'react';
 import { NavbarLanding } from './NavbarLanding';
 import './style.scss';
 import './WorkFromHomePage.scss';
-import { Button, Dialog } from '@blueprintjs/core';
-import { NavLink } from 'react-router-dom';
+import { Dialog } from '@blueprintjs/core';
 import tick from './../../resources/LandingImages/tick.svg';
-import marketLogo from './../../resources/LandingImages/marketLogo.png';
-import BKMEALogo from './../../resources/LandingImages/BKMEA-Logo.png';
-import plummyLogo from './../../resources/LandingImages/plummy.png';
-import knitLogo from './../../resources/LandingImages/knitwearLogo.png';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
+import { TiButton } from 'components/button/Button';
+import { MostUsedCL } from 'components/company-logos/CompanyLogos';
+import { ReviewSection } from 'components/review-section/ReviewSection';
 
 export const WorkFromHomePage = () => {
   const [showForm3, setShowForm3] = useState(false);
+  const customerReview = {
+    customer: 'Syed Naimul Abedin',
+    position: 'CEO',
+    company: 'Peakward Enterprise',
+    review: 'TiGrow WFH Tool is simple and easy to use, I\'ve been using this software almost on a daily basis to communicate with team members throughout this pandemic and their service is impeccable.'
+  };
   return (
     <div className="w-100">
       <NavbarLanding />
@@ -67,14 +71,7 @@ export const WorkFromHomePage = () => {
           advanced features like shared browsers and modified gantt
           chart, All included in the TiGrow WFH Tool.
         </p>
-        <NavLink to="/signup">
-          <Button
-            className="f4-ns fw6 bp3-minimal pa4-l pa3 ph5 br2 mv4-ns mv2"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            GET TiGrow FREE
-          </Button>
-        </NavLink>
+        <TiButton to="/signup">GET TiGrow FREE</TiButton>
       </section>
       {/* Monitoring Teammates */}
       <section className="flex flex-row-ns flex-column-reverse ph5-l ph4 mv2">
@@ -214,32 +211,8 @@ export const WorkFromHomePage = () => {
           </div>
         </div>
       </section>
-      {/* Comments */}
-      <section className="tc flex flex-column justify-center ph5-l ph4 mv5-l mv4">
-        <div className="flex flex-column items-center">
-          <h1
-            className="f3-ns f6 fw4 w-60-l w-80 colorfulWidth quote tl lh-2"
-            style={{ color: '#43466D' }}
-          >
-            TiGrow WFH Tool is simple and easy to use, I've been using
-            this software almost on a daily basis to communicate with
-            team members throughout this pandemic and their service is
-            impeccable.
-          </h1>
-          <h1
-            style={{ color: '#707070' }}
-            className="f3-ns f6 fw4 w-60-l w-80 colorfulWidth tl"
-          >
-            Syed Naimul Abedin
-          </h1>
-          <h1
-            style={{ color: '#707070' }}
-            className="f5-ns f7 fw4 w-60-l w-80 colorfulWidth tl ma0"
-          >
-            CEO | Peakward Enterprise
-          </h1>
-        </div>
-      </section>
+      {/* Review */}
+      <ReviewSection customerReview={customerReview} />
       {/* Vendors */}
       <section
         className="tc pv4 ph5-l ph4"
@@ -255,30 +228,8 @@ export const WorkFromHomePage = () => {
             everyone.
           </h1>
         </div>
-        <NavLink to="/signup">
-          <Button
-            className="f4-ns fw6 bp3-minimal pa4-l pa3 ph5 br2 mv4-ns mv2"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-          >
-            GET TiGrow FREE
-          </Button>
-        </NavLink>
-
-        <div className="flex flex-row items-center justify-center ph5-l ph4 pv3 tc">
-          <img src={marketLogo} className="marketLogo" />
-          <img
-            className="ml4-ns ml2 vendorLogoSpacing plummyLogo"
-            src={plummyLogo}
-          />
-          <img
-            className="ml4-ns ml2 vendorLogoSpacing plummyLogo"
-            src={BKMEALogo}
-          />
-          <img
-            className="ml4-ns ml2 vendorLogoSpacing knitLogo"
-            src={knitLogo}
-          />
-        </div>
+        <TiButton to="/signup">GET TiGrow FREE</TiButton>
+        <MostUsedCL />
       </section>
       <LandingFooter />
       {showForm3 && (
