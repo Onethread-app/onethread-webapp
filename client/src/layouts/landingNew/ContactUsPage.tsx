@@ -4,11 +4,12 @@ import { LandingFooter } from './LandingFooter';
 import customerCare from './../../resources/LandingImages/customer.svg';
 import callCenter from './../../resources/LandingImages/call-center.svg';
 import strategy from './../../resources/LandingImages/strategy.svg';
-import { Button, Dialog } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core';
 import { ContactSupportForm } from './ContactSupportForm';
 import { ContactUsForm } from './ContactUsForm';
 import GoogleMapReact from 'google-map-react';
 import { MarkerComponent } from './Marker';
+import { TiButton } from 'components/button/Button';
 
 export const ContactUsPage = (
 ) => {
@@ -42,15 +43,9 @@ export const ContactUsPage = (
           <h1 className="f4-ns f6 fw5" style={{ color: '#43466D' }}>
             Or, We can contact you at your suitable time
           </h1>
-          <Button
-            className="f4-l f5-m f7 fw6-ns bp3-minimal pv3 ph5 ph4-ns br2 mv3 w-90 w-auto-ns"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-            onClick={() => {
-              setShowForm3(true);
-            }}
-          >
+          <TiButton extraClasses="w-90 w-auto-ns" mid onClick={() => { setShowForm3(true); }}>
             Book A Call
-          </Button>
+          </TiButton>
         </div>
         <div className="shadow-4 pa4 ma1 tc w-50-l mb4 mh3">
           <img src={customerCare} />
@@ -61,15 +56,9 @@ export const ContactUsPage = (
             Sometimes you need a little help from your friends.
             Or a TiGrow support rep. Don’t worry… we’re here for you.
           </h1>
-          <Button
-            className="f4-l f5-m f7 fw6-ns bp3-minimal pa3 br2 mt5-ns w-90 w-auto-ns"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-            onClick={() => {
-              setShowForm1(true);
-            }}
-          >
+          <TiButton extraClasses="w-90 w-auto-ns mt5-ns" mid onClick={() => { setShowForm1(true); }}>
             Contact Support
-          </Button>
+          </TiButton>
         </div>
       </div>
       <section className="mw7-ns center ph5-ns ph2 ml3-m ml1">
@@ -81,15 +70,9 @@ export const ContactUsPage = (
           <h1 className="f4-ns f6 fw5" style={{ color: '#43466D' }}>
             Want to have a guided tour of TiGrow's software? Our sales team are here for you!
           </h1>
-          <Button
-            className="f4-l f5-m f7 fw6-ns bp3-minimal pa3 br2 mv4 w-90 w-auto-ns"
-            style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-            onClick={() => {
-              setShowForm3(true);
-            }}
-          >
+          <TiButton extraClasses="w-90 w-auto-ns mt5-ns" mid onClick={() => { setShowForm3(true); }}>
             Request A Demo
-          </Button>
+          </TiButton>
         </div>
       </section>
 
