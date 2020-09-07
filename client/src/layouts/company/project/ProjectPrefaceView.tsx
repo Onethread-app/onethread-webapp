@@ -105,7 +105,7 @@ export const ProjectPrefaceViewComponent = (
               <h1 className="f6">Shared Files</h1>
               {props.files.map((file: any) => (
                 <div className="flex items-center justify-between">
-                  <h1 className="f6 fw6 blue">
+                  <h1 className="f6 fw6 blue w-80" style={{wordBreak: 'break-word', wordWrap: 'break-word'}}>
                     {file.s3Key.split('/')[1]}
                   </h1>
                   <a
@@ -150,7 +150,7 @@ export const ProjectPrefaceViewComponent = (
                 <h1 className="f6">Shared Files</h1>
                 {props.files.map((file: any) => (
                   <div className="flex items-center justify-between">
-                    <h1 className="f6 fw6 blue">
+                    <h1 className="f6 fw6 blue w-80" style={{wordBreak: 'break-word', wordWrap: 'break-word'}} >
                       {file.s3Key.split('/')[1]}
                     </h1>
                     <a
