@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Button, Spinner } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
+import { companyLogoUploadAction } from 'stores/company/Actions';
 import { imageUploadAction } from 'stores/user/Actions';
 
 interface IImageEditProps {
   setShowDialog: (val: boolean) => void;
+  companyLogoUploadAction: (imageSelected: any, type: string) => any;
   imageUploadAction: (val: any, type: string) => any;
   type: string;
 }
@@ -52,7 +54,6 @@ const ImageEditComponent = (props: IImageEditProps) => {
     }
     return false;
   };
-
   return (
     <div className="pa3 cf">
       <h1 className="f5 tigrow-lightBlue">Upload Photo</h1>
@@ -111,10 +112,25 @@ const ImageEditComponent = (props: IImageEditProps) => {
           onClick={async (e: any) => {
             e.preventDefault();
             setImageLoading(true);
-            const response = await props.imageUploadAction(
-              imageSelected,
-              props.type,
-            );
+            let response;
+            if (
+              props.type === 'company-logo' ||
+              props.type === 'company-cover-photo'
+            ) {
+              response = await props.companyLogoUploadAction(
+                imageSelected,
+                props.type,
+              );
+            }
+            if (
+              props.type === 'coverPhoto' ||
+              props.type === 'profilePic'
+            ) {
+              response = await props.imageUploadAction(
+                imageSelected,
+                props.type,
+              );
+            }
             if (response) {
               props.setShowDialog(false);
               setImageName({});
@@ -134,6 +150,7 @@ const ImageEditComponent = (props: IImageEditProps) => {
   );
 };
 
-export const ImageEdit = connect(null, { imageUploadAction })(
-  ImageEditComponent,
-);
+export const ImageEdit = connect(null, {
+  companyLogoUploadAction,
+  imageUploadAction,
+})(ImageEditComponent);
