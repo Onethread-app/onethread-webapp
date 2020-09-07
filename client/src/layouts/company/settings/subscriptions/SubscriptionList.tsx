@@ -94,7 +94,14 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                       <Grid item xs={6}>
                         <CardActions>
                           <div className="mt5 center">
-                            <h3>${subscription.pricing}</h3>
+                            <h3 style={{ marginBottom: '0' }}>${subscription.pricing}</h3>
+                            {
+                              subscription.pricing !== 0 && 
+                              <>
+                                <span>Or</span>
+                                <h3 style={{ marginTop: '0' }}>BDT {subscription.pricing * 85}</h3>
+                              </>
+                            }
                             <Button
                               className={classes.button}
                               variant="contained"
