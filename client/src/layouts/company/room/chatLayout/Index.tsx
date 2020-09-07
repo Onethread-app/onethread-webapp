@@ -40,6 +40,8 @@ export const ChatLayoutComponent = (
     false,
   );
 
+  const permissions = projectRules(props.projectRole, props.optionalRole);
+
   return (
     <>
       {isEmpty(props.currentRoom.name) === false &&
@@ -106,8 +108,7 @@ export const ChatLayoutComponent = (
                           </h5>
                           { projectPermit(props.companyRole) || props.projectRole && 
                             props.optionalRole && 
-                            (projectRules(props.optionalRole)[props.projectRole] === true || 
-                            projectRules(props.optionalRole)[props.projectRole].includes(
+                            (permissions.grantAll || permissions.projectModerator.includes(
                             'archiveRoom',
                             )) && (
                             <h5
@@ -143,8 +144,7 @@ export const ChatLayoutComponent = (
               { projectPermit(props.companyRole) || 
                 props.projectRole && 
                 props.optionalRole && 
-                (projectRules(props.optionalRole)[props.projectRole] === true || 
-                projectRules(props.optionalRole)[props.projectRole].includes(
+                (permissions.grantAll || permissions.projectModerator.includes(
                 'addRemoveMemberRoom',
                 )) &&
               props.currentRoom.archive === false ? (

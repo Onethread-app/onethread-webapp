@@ -32,6 +32,7 @@ export const ProjectPrefaceViewComponent = (
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
+  const permissions = projectRules(props.role, props.optionalRole);
 
   return (
     <>
@@ -143,7 +144,7 @@ export const ProjectPrefaceViewComponent = (
           ) : (
             props.optionalRole &&
             props.role &&
-            projectRules(props.optionalRole)[props.role].includes(
+            permissions.projectModerator.includes(
               'addFileProject',
             ) && (
               <div>

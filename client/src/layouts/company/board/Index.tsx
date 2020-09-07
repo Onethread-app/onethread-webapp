@@ -130,6 +130,8 @@ const TaskPageComponent = (
   const boards = props.boardList.filter(
     (board) => board.department === department,
   );
+  
+  const permissions = projectRules(props.role , props.optionalRole);
 
   const noBoardsFound = (
     <div
@@ -277,7 +279,7 @@ const TaskPageComponent = (
                   )}
                 </div>
               ) : ( props.role && 
-                (props.role === 'admin' || projectRules(props.optionalRole)[props.role].includes('createUpdateBoard')) ?
+                (permissions.grantAll || permissions.projectModerator.includes('createUpdateBoard')) ?
                 noBoardsFound
                 :
                 undefined
@@ -287,8 +289,7 @@ const TaskPageComponent = (
             )}
             <div>
               {props.role &&
-              (props.role === 'admin' ||
-                projectRules(props.optionalRole)[props.role].includes(
+              (permissions.grantAll || permissions.projectModerator.includes(
                   'createUpdateBoard',
                 )) ? (
                 <img
