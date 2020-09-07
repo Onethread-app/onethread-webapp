@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import './style.scss';
 import tick from './../../resources/LandingImages/tick.svg';
-import { Button, Dialog } from '@blueprintjs/core';
-import { NavLink } from 'react-router-dom';
-import smile from './../../resources/LandingImages/Smile.png';
+import { Dialog } from '@blueprintjs/core';
 import { NavbarLanding } from './NavbarLanding';
 import {
   isMobileOnly
@@ -13,6 +11,9 @@ import { ContactUsForm } from './ContactUsForm';
 import { LandingFooter } from './LandingFooter';
 import { SuccessMessage } from 'components/success-message/SuccessMessage';
 import { connect } from 'react-redux';
+import { TiButton } from 'components/button/Button';
+import { GWTSection } from 'components/gwt-section/GWTSection';
+import { ReviewSection } from 'components/review-section/ReviewSection';
 
 interface IPricingPageProps {
   response: string;
@@ -24,6 +25,13 @@ const PricingPageComponent = (
 
   const [showForm1, setShowForm1] = useState(false);
   const [showForm3, setShowForm3] = useState(false);
+
+  const customerReview = {
+    customer: "Fazlul Hoque",
+    position: "Managing Director",
+    company: "Plummy Fashions Ltd.",
+    review: "I love how simple, yet very efficient TiGrow is. I've been using this software on a daily basis to communicate and collaborate with all my teammates. Kudos to the product owners for their impeccable product."
+  };
 
   return (
     <>
@@ -108,15 +116,10 @@ const PricingPageComponent = (
             </h1>
           </div>
           <div className="tc">
-            <NavLink to="/signup">
-              <button
-                className="b--silver ba br3 f4-ns f5 fw6 outline-0 pa3-ns pa2 w5-ns mt4 tc pricing-btn pointer"
-              >
-                Try for free
+            <TiButton to='/signup' mid extraClasses="outline-0 w5-ns mt4 tc">
+              Try for free
               <br /><span className="f6 fw4">No credit card required</span>
-              </button>
-            </NavLink>
-
+            </TiButton>
           </div>
         </article>
         <article className="br3 w-50-l w-100 pa4 mh4-l mh3-m enterprise mt4 mt0-l">
@@ -137,60 +140,14 @@ const PricingPageComponent = (
             </span>
           </h1>
           <div className="tc">
-            <button
-              className="b--silver ba br3 f4-ns f5 fw6 outline-0 pa3 w5-ns mt4 tc pricing-btn pointer"
-              onClick={() => {
-                setShowForm3(true);
-              }}
-            >
+            <TiButton extraClasses="outline-0 w5-ns mt4 tc pointer" mid onClick={() => { setShowForm3(true); }}>
               Contact Us
-          </button>
+            </TiButton>
           </div>
         </article>
       </div>
-      <div className="tc flex flex-column justify-center" style={{ height: '450px', backgroundColor: '#0FB7A0' }}>
-        <h1 className="white f2-ns f5">Why People Choose TiGrow</h1>
-        <div className="flex flex-column items-center">
-          <h1 className="white f3-ns f6 fw4 w-40-l w-80 colorfulWidth tl lh-2">
-            <span className="f1 fw9 i" style={{ fontFamily: 'cambria' }}>"</span>
-          I love how simple, yet very efficient TiGrow is.
-          I've been using this software on a daily basis to
-          communicate and collaborate with all my teammates.
-           Kudos to the product owners for their impeccable product.
-           <span className="f1 fw9 i" style={{ fontFamily: 'cambria' }}>"</span>
-          </h1>
-          <h1 className="white f3-ns f6 fw4 w-40-l w-80 colorfulWidth tl">Fazlul Hoque</h1>
-          <h1 className="white f5-ns f7 fw4 w-40-l w-80 colorfulWidth tl ma0">
-            Managing Director | Plummy Fashions Ltd.
-          </h1>
-        </div>
-      </div>
-      <div className="flex flex-column-reverse flex-row-ns items-center ph7-l ph5-m pv5 paddingStart">
-        <div className="w-50-l w-80">
-          <h1 className="f2-l f4-m f5" style={{ color: '#0FB7A0' }}>Start Growing With TiGrow Today</h1>
-          <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#0FB7A0' }}>
-          with tools to Plan and collaborate while having a seamless user
-          experience that keeps everyone in the loop and focuses on the
-          necessary with little to no learning curve, and a support
-          team excited to help you, getting started with this
-          comprehensive tool has become even easier.
-          </h1>
-          <NavLink to="/signup">
-            <Button
-              className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2"
-              style={{ color: 'white', backgroundColor: '#4B6BC8' }}
-            >
-              GET TiGrow FREE
-          </Button>
-          </NavLink>
-          <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#707070' }}>
-            Get started with FREE tools, and upgrade as you grow.
-          </h1>
-        </div>
-        <div className="w-50-l ml5-l">
-          <img className="w-70-l" src={smile} />
-        </div>
-      </div>
+      <ReviewSection bgBlue customerReview={customerReview}/>
+      <GWTSection />
       <LandingFooter />
       {showForm1 && (
         <Dialog
