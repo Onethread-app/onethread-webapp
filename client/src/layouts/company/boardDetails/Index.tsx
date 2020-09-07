@@ -28,6 +28,7 @@ const BoardDetailsViewComponent = (
   const [showMemberListDialog, setShowMemberListDialog] = useState(
     false,
   );
+  const permissions = projectRules(props.role, props.optionalRole);
 
   return (
     <div
@@ -58,9 +59,7 @@ const BoardDetailsViewComponent = (
       >
         <h3 className="w-100 ma0 f3">{props.currentBoard!.name}</h3>
         <div className="flex mh3-ns">
-          {props.role === 'admin' ||
-          props.optionalRole && props.role &&
-          projectRules(props.optionalRole)[props.role].includes(
+          {permissions.grantAll || permissions.projectModerator.includes(
             'assignDeleteMemberBoard',
           ) ? (
             <>
