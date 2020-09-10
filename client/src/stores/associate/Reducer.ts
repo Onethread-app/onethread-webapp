@@ -2,7 +2,8 @@ import {
 	GET_ALL_ASSOCIATE,
 	SELECT_ASSOCIATE,
 	ADD_ASSOCIATE,
-	GET_ALL_PENDING_ASSOCIATE
+	GET_ALL_PENDING_ASSOCIATE,
+	associate
 } from './Types';
 import { ICompany } from 'stores/company/Reducer';
 import { User } from 'stores/user/Reducer';
@@ -42,6 +43,8 @@ const InitialState = {
 			},
 			createdAt: '',
 	},
+	associateFetching: false,
+	associateFetchingError: undefined,
 };
 
 export const AssociateReducer = (
@@ -77,6 +80,23 @@ export const AssociateReducer = (
 							...state,
 							currentAssociate: action.payload,
 					};
+			case associate.SELECT_ASSOCIATE_START:
+				return {
+					...state,
+					associateFetching: true,
+				};
+			case associate.SELECT_ASSOCIATE_SUCCESS:
+				return {
+					...state,
+					associateFetching: false,
+					currentAssociate: action.payload,
+				};
+			case associate.SELECT_ASSOCIATE_FAILURE:
+				return {
+					...state,
+					associateFetching: false,
+					associateFetchingError: action.payload
+				};
 			default:
 					return state;
 	}

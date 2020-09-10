@@ -13,6 +13,7 @@ interface DepartmentEditorProps {
 interface DepartmentEditorInternalProps
   extends DepartmentEditorProps {
   addDepartment: (val: string) => any;
+  isCompanyLoading: boolean;
 }
 
 const DepartmentEditorComponent = (
@@ -20,11 +21,9 @@ const DepartmentEditorComponent = (
 ) => {
   const onSubmit = async (values: any) => {
     const response = await props.addDepartment(values.name);
-    if (response.message === 200) {
+    if (response && props.isCompanyLoading === false) {
       props.setShowDialog(false);
-      return true;
     }
-    return { [response.fieldName]: response.message };
   };
 
   return (
@@ -107,7 +106,11 @@ const DepartmentEditorComponent = (
     />
   );
 };
-
-export const DepartmentEditor = connect(null, { addDepartment })(
+const mapStateToProps = (state: any) => {
+  return {
+    isCompanyLoading: state.companyReducer.loading,
+  };
+};
+export const DepartmentEditor = connect(mapStateToProps, { addDepartment })(
   DepartmentEditorComponent,
 );

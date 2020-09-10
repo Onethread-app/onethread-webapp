@@ -8,6 +8,7 @@ import { required, checkError, composeValidators, maxValue } from 'components/fi
 import { Condition } from 'components/final-form/Condition';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { DropdownFieldWithError } from 'components/fields/DropdownField';
+import { connect } from 'react-redux';
 interface EditDesignationFormProps {
   setShowDialogEdit: (val: boolean) => void;
 }
@@ -20,8 +21,9 @@ interface EditDesignationFormInternalProps
   getCompanyMembers: () => void;
   divisions: Entity[];
   departments: Entity[];
+  isLoading: boolean;
 }
-export const EditDesignationForm = (
+export const EditDesignationFormComponent = (
   props: EditDesignationFormInternalProps,
 ) => {
   const [initial, setInitial] = useState({});
@@ -33,7 +35,7 @@ export const EditDesignationForm = (
         values,
         props.member._id,
       );
-      if (status === 200) {
+      if ( status && props.isLoading === false ) {
         await props.getCompanyMembers();
         props.setShowDialogEdit(false);
       }
@@ -196,3 +198,11 @@ export const EditDesignationForm = (
     />
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    isLoading: state.companyReducer.designationLoading,
+  };
+};
+
+export const EditDesignationForm = connect(mapStateToProps)(EditDesignationFormComponent);

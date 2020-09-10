@@ -7,10 +7,10 @@ import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { User, ICompanyByUser } from 'stores/user/Reducer';
 import { Loading } from 'components/Loading';
 import { getNotifications } from '../../stores/notifications/Action';
+// import { isCompanyLoading } from 'stores/company/Selector';
 
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
-import { ICompanyResponse } from 'stores/company/Reducer';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -23,6 +23,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   getCompanyDetails: (companyId: string, history: History) => void;
   getAllCompaniesByUserId: (userId: string) => void;
   getNotifications: () => void;
+  isCompanyLoading: boolean;
 }
 
 export const ListViewComponent = (
@@ -64,11 +65,11 @@ export const ListViewComponent = (
                       c.company.uniqueName,
                       props.history,
                     )) as any;
-                    if (response.status === 200) {
+                    if (response && props.isCompanyLoading === false) {
                       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                       props.history.push(
                         `/company/${
-                          (response as ICompanyResponse).data.company.uniqueName
+                          c.company.uniqueName
                         }/dashboard`,
                       );
                     }
@@ -117,6 +118,7 @@ const mapStateToProps = (state: any) => {
     companies: state.userReducer.user.companies,
     user: state.userReducer.user,
     currentCompany: state.companyReducer.currentCompany._id,
+    isCompanyLoading: state.companyReducer.loading,
   };
 };
 

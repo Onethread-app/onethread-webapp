@@ -16,17 +16,16 @@ interface ITaskTitleFormProps {
   setNameEdit: (val: boolean) => void;
   nameEdit: boolean;
   currentTask?: ITask;
-  updateTask: (task: ITask) => Promise<any>;
+  updateTask: (task: ITask) => any;
+  updatingTask: boolean;
 }
 
 const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
-    if (response.message === 200) {
+    if ( response && !props.updatingTask ) {
       props.setNameEdit(false);
-      return true;
     }
-    return { [response.fieldName]: response.message };
   };
 
   return (
@@ -104,6 +103,7 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
 const mapStateToProps = (state: any) => {
   return {
     currentTask: state.boardIndexReducer.boardReducer.currentTask,
+    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
   };
 };
 

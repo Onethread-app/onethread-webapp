@@ -21,7 +21,7 @@ interface ColumnFormProps {
 interface ColumnFormInternalProps extends ColumnFormProps {
   currentBoard: TaskBoard;
   createColumn: (columnInfo: any) => void;
-  updateColumn: (columnIndo: any) => Promise<any>;
+  updateColumn: (columnIndo: any) => void;
 }
 
 const ColumnFormComponent = (props: ColumnFormInternalProps) => {
