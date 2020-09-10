@@ -6,7 +6,7 @@ import {
   changeCompanyName,
   clearChangeCompanyNameError,
 } from '../../../../stores/company/Actions';
-import { ICompany, ICompanyResponse } from 'stores/company/Reducer';
+import { ICompany } from 'stores/company/Reducer';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { isEqual, isEmpty } from 'lodash';
 import { History } from 'history';
@@ -17,6 +17,7 @@ interface DetailsViewProps {
   changeCompanyName: (name: string) => void;
   clearChangeCompanyNameError: () => void;
   errorCompanyName: string;
+  changeCompanyNameLoading: boolean;
   history: History;
 }
 
@@ -151,9 +152,9 @@ const GeneralViewComponent = (
                     const response = (await props.changeCompanyName(
                       companyName
                     )) as any;
-                    if (response) {
+                    if (response && props.changeCompanyNameLoading === false) {
                       props.history.push(
-                        `/company/${(response as  ICompanyResponse).data.company.uniqueName}/settings`,
+                        `/company/${companyName}/settings`,
                       );
                       setShowDialog(false);
                     }
@@ -173,6 +174,7 @@ const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
     errorCompanyName: state.companyReducer.error,
+    changeCompanyNameLoading: state.companyReducer.changeCompanyNameLoading,
   };
 };
 

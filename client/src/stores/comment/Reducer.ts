@@ -1,4 +1,4 @@
-import { GET_ALL_COMMENT, CREATE_COMMENT } from './Types';
+import { CommentActionTypes } from './Types';
 // import { isEqual } from 'lodash';
 export interface Icomment {
   _id?: string;
@@ -15,16 +15,36 @@ export interface Icomment {
 
 const InitialState = {
   commentList: [] as any,
+  fetchingComment: false,
+  isCreating: false,
+  errorMessage: '',
 };
 
 export const CommentReducer = (state = InitialState, action: any) => {
   switch (action.type) {
-    case GET_ALL_COMMENT:
+    case CommentActionTypes.GET_ALL_COMMENTS_START:
+      return {
+        ...state,
+        fetchingComment: true,
+      };
+    case CommentActionTypes.GET_ALL_COMMENTS_SUCCESS:
       return {
         ...state,
         commentList: action.payload,
+        fetchingComment: false,
       };
-    case CREATE_COMMENT:
+    case CommentActionTypes.GET_ALL_COMMENTS_FAILURE:
+      return {
+        ...state,
+        errorMessage: action.payload,
+        fetchingComment: false,
+      };
+    case CommentActionTypes.CREATE_COMMENT_START:
+      return {
+        ...state,
+        isCreating: true,
+      };
+    case CommentActionTypes.CREATE_COMMENT_SUCCESS:
       return {
         ...state,
         commentList: [
@@ -38,6 +58,13 @@ export const CommentReducer = (state = InitialState, action: any) => {
           },
           ...state.commentList,
         ],
+        isCreating: false,
+      };
+    case CommentActionTypes.CREATE_COMMENT_FAILURE:
+      return {
+        ...state,
+        errorMessage: action.payload,
+        isCreating: false,
       };
     // case COMPLETE_SUBTASK:
     //   return {

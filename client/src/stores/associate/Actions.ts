@@ -4,8 +4,8 @@ import { isEqual } from 'lodash';
 import {
   GET_ALL_ASSOCIATE,
   ADD_ASSOCIATE,
-  SELECT_ASSOCIATE,
   GET_ALL_PENDING_ASSOCIATE,
+  associate
 } from './Types';
 import { ItemEntityProps } from 'components/fields/SuggestField';
 import { Associate } from './Reducer';
@@ -60,17 +60,17 @@ export const getAllAssociates = () => async (
         `associate/${companyId}`,
         headers,
       );
-      const associates = response.data.map((associate: any) =>
-        isEqual(companyId, associate.company._id) === true
+      const associates = response.data.map((assoc: any) =>
+        isEqual(companyId, assoc.company._id) === true
           ? {
-              _id: associate._id,
-              associateCompany: associate.associateCompany,
-              createdAt: associate.createdAt,
+              _id: assoc._id,
+              associateCompany: assoc.associateCompany,
+              createdAt: assoc.createdAt,
             }
           : {
-              _id: associate._id,
-              associateCompany: associate.company,
-              createdAt: associate.createdAt,
+              _id: assoc._id,
+              associateCompany: assoc.company,
+              createdAt: assoc.createdAt,
             },
       );
       dispatch({ type: GET_ALL_ASSOCIATE, payload: associates });
@@ -104,17 +104,17 @@ export const getAllPendingAssociates = () => async (
         headers,
       );
 
-      const associates = response.data.map((associate: any) =>
-        isEqual(companyId, associate.company._id) === true
+      const associates = response.data.map((assoc: any) =>
+        isEqual(companyId, assoc.company._id) === true
           ? {
-              _id: associate._id,
-              associateCompany: associate.associateCompany,
-              createdAt: associate.createdAt,
+              _id: assoc._id,
+              associateCompany: assoc.associateCompany,
+              createdAt: assoc.createdAt,
             }
           : {
-              _id: associate._id,
-              associateCompany: associate.company,
-              createdAt: associate.createdAt,
+              _id: assoc._id,
+              associateCompany: assoc.company,
+              createdAt: assoc.createdAt,
             },
       );
       dispatch({
@@ -137,34 +137,34 @@ export const getAllPendingAssociates = () => async (
   }
 };
 
-export const getSelectedAssociate = (associateId: string) => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization && associateId) {
-      const companyId = getState().companyReducer.currentCompany._id;
-      const response = await tigrowApi.get(
-        `associate/${associateId}/${companyId}`,
-        headers,
-      );
-      dispatch({ type: SELECT_ASSOCIATE, payload: response.data });
-      return response.data;
-    } else {
-      return 500;
-    }
-  } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-      // return error.response;
-    }
-  }
-};
+// export const getSelectedAssociate = (associateId: string) => async (
+//   dispatch: any,
+//   getState: any,
+// ) => {
+//   try {
+//     const headers = tokenConfig();
+//     if ((headers as any).headers.Authorization && associateId) {
+//       const companyId = getState().companyReducer.currentCompany._id;
+//       const response = await tigrowApi.get(
+//         `associate/${associateId}/${companyId}`,
+//         headers,
+//       );
+//       dispatch({ type: SELECT_ASSOCIATE, payload: response.data });
+//       return response.data;
+//     } else {
+//       return 500;
+//     }
+//   } catch (error) {
+//     if (isEqual(error.message, 'Network Error')) {
+//       // tslint:disable-next-line: no-console
+//       console.log('network error');
+//     } else {
+//       // tslint:disable-next-line: no-console
+//       console.log(error.response);
+//       // return error.response;
+//     }
+//   }
+// };
 
 export const acceptPendingAssociate = (associateID: string) => async (
   dispatch: any,
@@ -185,8 +185,8 @@ export const acceptPendingAssociate = (associateID: string) => async (
       );
       if (response.status === 200) {
         const currentPendingAssociates = pendingAssociates.filter(
-          (associate: Associate) =>
-            isEqual(associate._id, associateID) === false,
+          (assoc: Associate) =>
+            isEqual(assoc._id, associateID) === false,
         );
         dispatch({
           type: GET_ALL_PENDING_ASSOCIATE,
@@ -245,8 +245,8 @@ export const rejectPendingAssociate = (associateID: string) => async (
       );
       if (response.status === 200) {
         const currentPendingAssociates = pendingAssociates.filter(
-          (associate: Associate) =>
-            isEqual(associate._id, associateID) === false,
+          (assoc: Associate) =>
+            isEqual(assoc._id, associateID) === false,
         );
         dispatch({
           type: GET_ALL_PENDING_ASSOCIATE,
@@ -273,3 +273,18 @@ export const rejectPendingAssociate = (associateID: string) => async (
     }
   }
 };
+
+export const getSelectedAssociate = (associateID: string) => ({
+  type: associate.SELECT_ASSOCIATE_START,
+  payload: associateID
+});
+
+export const selectAssociateSuccess = (response: any) => ({
+  type: associate.SELECT_ASSOCIATE_SUCCESS,
+  payload: response
+});
+
+export const selectAssociateFailure = (errorMessage: any) => ({
+  type: associate.SELECT_ASSOCIATE_FAILURE,
+  payload: errorMessage
+});

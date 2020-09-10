@@ -14,6 +14,8 @@ import { ICompany } from 'stores/company/Reducer';
 // import { Associate } from './Reducer';
 // import { Toaster } from '@blueprintjs/core';
 
+import { selectAssociateSuccess, selectAssociateFailure } from './Actions';
+
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
 
@@ -246,6 +248,32 @@ function* rejectPendingAssociate(action: {
   }
 }
 
+function* getSelectedAssociate( associateId: string ) {
+  try {
+    const headers = tokenConfig();
+    const selectCompanyId = (state) =>
+      state.companyReducer.currentCompany._id;
+    if ((headers as any).headers.Authorization &&
+      associateId) {
+      const companyId = yield select(selectCompanyId);
+      const response = yield tigrowApi.get(
+        `associate/${associateId}/${companyId}`,
+        headers,
+      );
+      yield put(selectAssociateSuccess(response.data));
+    }
+  } catch (error) { 
+    if (error.message === 'Network Error') {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      yield put(selectAssociateFailure(error.message));
+    }
+  }
+}
+
 export default function* associateSaga() {
   yield all([
     takeEvery(associate.SEND_REQUEST_LOAD, addAssociate),
@@ -266,6 +294,7 @@ export default function* associateSaga() {
       associate.REJECT_ASSOCIATE_REQUEST_LOADING,
       rejectPendingAssociate,
     ),
+    takeLatest(associate.SELECT_ASSOCIATE_START, getSelectedAssociate)
   ]);
 }
 

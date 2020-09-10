@@ -12,18 +12,17 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Icomment } from 'stores/comment/Reducer';
 
 interface ICommentReplyInternalProps {
-  createComment: (text: Icomment['text']) => Promise<any>;
+  createComment: (text: Icomment['text']) => any;
+  isCreating: boolean;
 }
 export const ActivityEditorPageComponent = (
   props: ICommentReplyInternalProps & RouteComponentProps,
 ) => {
   const onSubmit = async (values: any) => {
     const response = await props.createComment(values.text);
-    if (response.message === 200) {
+    if ( response && !props.isCreating ) {
       values.text = '';
-      return true;
     }
-    return { [response.fieldName]: response.message };
   };
   return (
     <div className="w-100">
@@ -94,7 +93,13 @@ export const ActivityEditorPageComponent = (
   );
 };
 
-export const ActivityEditor = connect(null, { createComment })(
+const mapStateToProps = (state: any) => {
+  return {
+    isCreating: state.commentReducer.isCreating,
+  };
+};
+
+export const ActivityEditor = connect(mapStateToProps, { createComment })(
   withRouter(ActivityEditorPageComponent),
 );
 
