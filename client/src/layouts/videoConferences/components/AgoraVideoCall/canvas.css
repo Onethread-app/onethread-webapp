@@ -30,10 +30,12 @@
 
 .ag-btn-group {
   height: 50px;
-  width: 100%;
+  width: 40%;
   position: absolute;
-  bottom: 0;
-  background: #3a3a3a;
+  left: 30%;
+  right: 30%;
+  bottom: 8px;
+
   z-index: 11;
   display: flex;
   justify-content: space-around;

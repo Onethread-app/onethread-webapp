@@ -1,7 +1,8 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
-// import Pusher from 'pusher-js';
+import Pusher from 'pusher-js';
+import { Button } from '@blueprintjs/core';
 
 import '../../assets/fonts/css/icons.css';
 import Validator from '../../utils/Validator';
@@ -46,10 +47,14 @@ class Index extends React.Component {
     Cookies.set('transcode', this.state.transcode);
     Cookies.set('attendeeMode', this.state.attendeeMode);
     Cookies.set('videoProfile', this.state.videoProfile);
-    const host =
-      process.env.PUBLIC_URL || `${document.location.host}/`;
+    let host =
+      process.env.REACT_APP_PUBLIC_URL || `${document.location.host}`;
+    if (host[host.length - 1] !== '/') {
+      host = host + '/';
+    }
+
     const link =
-      host + '/vc/join/?conf=' + window.btoa(this.state.channel);
+      host + 'vc/join/?conf=' + window.btoa(this.state.channel);
 
     const headers = tokenConfig();
 
@@ -70,16 +75,11 @@ class Index extends React.Component {
 
   render() {
     return (
-      <div className="video-conferences">
+      <div className="wrapper meeting">
         <div className="vc-main">
           <section className="vc-login-wrapper">
-            <div className="vc-login-header">
-              {/* <p className="vc-login-title">
-                <b>Video Conferences</b>
-              </p> */}
-              <p className="vc-login-subtitle">
-                <b>Empowering remote teams</b>
-              </p>
+            <div className="header">
+              <h2>Empowering remote teams</h2>
             </div>
             <div className="vc-login-body">
               <div className="vc-team-input">
@@ -103,15 +103,19 @@ class Index extends React.Component {
               )}
             </div>
             <div className="vc-login-footer">
-              <div
+              <Button
                 id="joinBtn"
                 onClick={this.handleJoin}
                 disabled={!this.state.joinBtn}
-                className="vc-join-btn"
-                href="button"
+                className="pa3-ns pa2 ml2"
+                style={{
+                  background: '#0F0C4E',
+                  color: 'white',
+                  width: '285px',
+                }}
               >
-                Create link
-              </div>
+                Create Link
+              </Button>
             </div>
           </section>
         </div>
@@ -190,7 +194,7 @@ class InputChannel extends React.Component {
     return (
       <div className="channel-wrapper control">
         <input
-          onChange={this.handleChange}
+          onInput={this.handleChange}
           id="channel"
           className={'ag-rounded input ' + this.state.state}
           type="text"

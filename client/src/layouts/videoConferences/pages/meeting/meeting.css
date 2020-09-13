@@ -41,8 +41,13 @@ video {
 
 .invitation-frame {
   margin: 0 auto;
-  width: 300px;
+  width: 400px;
   padding: 100px 0;
+  text-align: center;
+}
+
+.invitation-frame .header h2 {
+  font-style: italic;
 }
 
 .invite-btn {

@@ -1,12 +1,11 @@
 import React from 'react';
 import * as Cookies from 'js-cookie';
 import { withRouter } from 'react-router';
-// import { connect } from 'react-redux';
+import { Button } from '@blueprintjs/core';
 
 import './meeting.css';
 import AgoraVideoCall from '../../components/AgoraVideoCall';
 import { AGORA_APP_ID } from '../../agora.config';
-// import { getVideoConferencesJoinee } from 'stores/auth/Actions';
 
 class Meeting extends React.Component {
   constructor(props) {
@@ -33,9 +32,7 @@ class Meeting extends React.Component {
     };
   }
 
-  componentDidMount() {
-    // this.props.getVideoConferencesJoinee();
-  }
+  componentDidMount() {}
 
   joinMeeting = () => {
     this.setState({ showInvitaion: false });
@@ -60,9 +57,20 @@ class Meeting extends React.Component {
 
     const inviatationFrame = (
       <div className="invitation-frame">
-        <button className="invite-btn" onClick={this.joinMeeting}>
+        <div className="header">
+          <h2>You are invited to join room - {this.channel}</h2>
+        </div>
+        <Button
+          onClick={this.joinMeeting}
+          className="pa3-ns pa2 ml2"
+          style={{
+            background: '#0F0C4E',
+            color: 'white',
+            width: '285px',
+          }}
+        >
           Please Click to Join
-        </button>
+        </Button>
       </div>
     );
 
@@ -77,13 +85,3 @@ class Meeting extends React.Component {
 }
 
 export default withRouter(Meeting);
-
-// const mapStateToProps = (state) => {
-//   return {
-//     user: state.userReducer.user,
-//   };
-// };
-
-// export default connect(mapStateToProps, {
-//   getVideoConferencesJoinee,
-// })(withRouter(Meeting));
