@@ -40,6 +40,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
+  const permissions = projectRules(props.role, props.optionalRole);
 
   const projectArchive = async (pid: string) => {
     await props.archiveProject(pid);
@@ -61,9 +62,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     setModalOpen(true);
   };
   const checkRoleForChangeName = () => {
-    props.role === 'admin'
+    permissions.grantAll
       ? setShowUpdateNameDialog(true)
-      : projectRules(props.optionalRole)[props.role].includes(
+      : permissions.projectModerator.includes(
           'updateProjectPreface',
         )
       ? setShowUpdateNameDialog(true)
@@ -71,9 +72,9 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   };
 
   const checkRoleForArchiveProject = (projectId: string) => {
-    props.role === 'admin'
+    permissions.grantAll
       ? projectArchive(projectId)
-      : projectRules(props.optionalRole)[props.role].includes(
+      : permissions.projectModerator.includes(
           'updateProjectPreface',
         )
       ? projectArchive(projectId)

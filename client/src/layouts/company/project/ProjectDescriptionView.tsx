@@ -18,6 +18,7 @@ export const _ProjectDescriptionView = (
   const [editDescriptionDialog, setEditDescriptionDialog] = useState(
     false,
   );
+  const permissions = projectRules(props.role, props.optionalRole);
   return (
     <>
       <div
@@ -28,37 +29,22 @@ export const _ProjectDescriptionView = (
           <h1 className="f6">{props.headline}</h1>
         </div>
 
-        {props.role === 'admin' ? (
+        {
+          (permissions.grantAll || permissions.projectModerator.includes('updateProjectPreface')) &&
           <div className="pr2" style={{ paddingTop: '10px' }}>
-            <Icon
-
-              className={
-                editDescriptionDialog
-                  ? 'fr tigrow-lightBlue pointer'
-                  : 'fr silver pointer'
-              }
-              icon="edit"
-              onClick={() => {
-                setEditDescriptionDialog(!editDescriptionDialog);
-              }}
-            />
-          </div>
-        ) : (
-          props.optionalRole &&
-          projectRules(props.optionalRole)[props.role!].includes(
-            'updateProjectPreface',
-          ) && (
-            <div className="pr2" style={{ paddingTop: '10px' }}>
               <Icon
-                className="fr silver pointer"
+              className={permissions.grantAll ?
+                    (editDescriptionDialog
+                    ? 'fr tigrow-lightBlue pointer'
+                    : 'fr silver pointer')
+                  : 'fr silver pointer'}
                 icon="edit"
                 onClick={() => {
-                  setEditDescriptionDialog(true);
+                  setEditDescriptionDialog(!editDescriptionDialog);
                 }}
               />
             </div>
-          )
-        )}
+        }
       </div>
       {editDescriptionDialog ? (
         <ProjectDescriptionEditor
