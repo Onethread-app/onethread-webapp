@@ -15,7 +15,7 @@ import Subscriptions from './subscriptions/Index';
 import Modal from 'react-modal';
 import SubscriptionExpiredText from './SubscriptionExpiredText';
 import './styles.scss';
-import './settings.styles.scss';
+import './settings.scss';
 
 const customStyles = {
   content: {
