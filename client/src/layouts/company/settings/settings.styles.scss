@@ -1,0 +1,28 @@
+@media only screen and (max-width: 414px) {
+  .bp3-horizontal {
+    flex-direction: column;
+  }
+  /* .bp3-tab-indicator-wrapper {
+    // width: inherit !important;
+  } */
+  .bp3-tabs.bp3-vertical > .bp3-tab-panel {
+    padding-left: 0;
+  }
+  .bp3-tab-list {
+    flex-direction: row !important;
+  }
+  .bp3-tabs.bp3-vertical > .bp3-tab-list .bp3-tab {
+    width: auto;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .bp3-horizontal {
+    flex-direction: column;
+  }
+  /* .bp3-tab-indicator-wrapper {
+    // width: inherit !important;
+  } */
+  .bp3-tabs.bp3-vertical > .bp3-tab-panel {
+    padding-left: 0;
+  }
+}

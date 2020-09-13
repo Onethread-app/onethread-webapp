@@ -6,6 +6,7 @@ import { updateProjectRole } from '../../../../stores/project/Actions';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
+import './settings.scss';
 
 const ProjectSettingsPageComponent = (props: any) => {
   const onSubmit = async (values: any) => {
@@ -69,12 +70,12 @@ const ProjectSettingsPageComponent = (props: any) => {
           <h3 className="f3 ma0">Project Settings</h3>
         )}
         <h3 className="f5 mv4">Project Moderator</h3>
-        <Tabs id="TabsExample" vertical={true}>
+        <Tabs id="TabsExample" vertical={true} className="bp3-horizontal">
           <Tab
             id="general"
             title="Permission"
             panel={<GeneralPage onSubmit={onSubmit} />}
-            className="outline-0 w-100"
+            className="outline-0"
           />
         </Tabs>
       </div>

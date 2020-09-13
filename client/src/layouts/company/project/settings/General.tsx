@@ -21,7 +21,7 @@ const GeneralPageComponent = (props: IProjectRole) => {
   const [open, setOpen] = React.useState(false);
 
   return (
-    <div className="bl b--black-05 bw1 pl5-ns pl2 ml5-ns h-100">
+    <div className="bl b--black-05 bw1 pl5-ns pl2-ns ml5-ns h-100">
       <Form
         onSubmit={props.onSubmit}
         initialValues={{ optionalRole: props.optionalRole }}

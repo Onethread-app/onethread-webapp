@@ -1,0 +1,16 @@
+@media only screen and (max-width: 414px) {
+  .bp3-horizontal {
+    flex-direction: column;
+  }
+  .bp3-tabs.bp3-vertical > .bp3-tab-panel {
+    padding-left: 0;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .bp3-horizontal {
+    flex-direction: column;
+  }
+  .bp3-tabs.bp3-vertical > .bp3-tab-panel {
+    padding-left: 0;
+  }
+}

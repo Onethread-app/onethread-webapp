@@ -15,6 +15,7 @@ import Subscriptions from './subscriptions/Index';
 import Modal from 'react-modal';
 import SubscriptionExpiredText from './SubscriptionExpiredText';
 import './styles.scss';
+import './settings.styles.scss';
 
 const customStyles = {
   content: {
@@ -46,7 +47,7 @@ const ViewContent = ({ selectedTab }) => {
           1: <GeneralView />,
           2: <AdminRoleView />,
           3: <DepartmentView />,
-          4: <Subscriptions />
+          4: <Subscriptions />,
         }[selectedTab]
       }
     </div>
@@ -60,22 +61,38 @@ const MobileView = () => {
     <MobileOnlyView>
       <div className="mobile-nav w-100 tc">
         <ul className="flex flex-column list pl0">
-          <li className={liClasses + (selectedTab === 1 ? ' activeNav' : '')}
-            onClick={() => setSelectedTab(1)}>
+          <li
+            className={
+              liClasses + (selectedTab === 1 ? ' activeNav' : '')
+            }
+            onClick={() => setSelectedTab(1)}
+          >
             General
-        </li>
-          <li className={liClasses + (selectedTab === 2 ? ' activeNav' : '')}
-            onClick={() => setSelectedTab(2)}>
+          </li>
+          <li
+            className={
+              liClasses + (selectedTab === 2 ? ' activeNav' : '')
+            }
+            onClick={() => setSelectedTab(2)}
+          >
             Role Permission
-        </li>
-          <li className={liClasses + (selectedTab === 3 ? ' activeNav' : '')}
-            onClick={() => setSelectedTab(3)}>
+          </li>
+          <li
+            className={
+              liClasses + (selectedTab === 3 ? ' activeNav' : '')
+            }
+            onClick={() => setSelectedTab(3)}
+          >
             Departments
-        </li>
-          <li className={liClasses + (selectedTab === 4 ? ' activeNav' : '')}
-            onClick={() => setSelectedTab(4)}>
+          </li>
+          <li
+            className={
+              liClasses + (selectedTab === 4 ? ' activeNav' : '')
+            }
+            onClick={() => setSelectedTab(4)}
+          >
             Subscription And Billing
-        </li>
+          </li>
         </ul>
       </div>
       <ViewContent selectedTab={selectedTab} />
@@ -102,45 +119,49 @@ const SettingsPagComponent = (
             <h3 className="f3 b">Settings</h3>
           )}
         </div>
-        {isMobileOnly ? <MobileView /> : (
+        {isMobileOnly ? (
+          <MobileView />
+        ) : (
           <Tabs
-          id="TabsExample"
-          className="fl w-100 min-vh-75"
-          vertical={ isMobileOnly ? false : true}
-        >
-          <Tab
-            id="General"
-            panelClassName={`b--black-05 ${ isMobileOnly ? '' : 'bl'} bw1 ml3-ns ml1 w-100`}
-            title="General"
-            panel={<GeneralView />}
-            className="outline-0 f6-ns f7"
-          />
-          <Tab
-            id="admin_role_permissions"
-            panelClassName={`b--black-05 ${ isMobileOnly ? '' : 'bl'} bw1 ml3-ns ml1 w-100`}
-            title="Role Permissions"
-            panel={<AdminRoleView />}
-            className="outline-0 f6-ns f7"
-          />
-          <Tab
-            id="department"
-            panelClassName={`b--black-05 ${ isMobileOnly ? '' : 'bl'} bw1 ml3-ns ml1 w-100`}
-            title="Department"
-            panel={<DepartmentView />}
-            className="outline-0 f6-ns f7"
-          />
-          {props.companyRole === 'superAdmin' && (
+            id="TabsExample"
+            className="fl w-100 min-vh-75 bp3-horizontal"
+            vertical={true}
+          >
             <Tab
-              id="subscription"
-              panelClassName={`b--black-05 ${ isMobileOnly ? '' : 'bl'} bw1 ml3-ns ml1 w-100`}
-              title="Subscriptions and Billing"
-              panel={<Subscriptions />}
-              className="outline-0 f6-ns f7"
+              id="General"
+              panelClassName="b--black-05 bl-ns bw1 ml3-ns ml1 w-100"
+              title="General"
+              panel={<GeneralView />}
+              className="outline-0 f6-ns f7 bp3-horizontal"
             />
-          )}
-        </Tabs>
+            <Tab
+              id="admin_role_permissions"
+              panelClassName="b--black-05 bl-ns bw1 ml3-ns ml1 w-100"
+              title="Role Permissions"
+              panel={<AdminRoleView />}
+              className="outline-0 w-100 f6-ns f7 bp3-horizontal"
+            />
+            <Tab
+              id="department"
+              panelClassName="b--black-05 bl-ns bw1 ml3-ns ml1 w-100"
+              title="Department"
+              panel={<DepartmentView />}
+              className="outline-0 f6-ns f7 bp3-horizontal"
+            />
+            {props.companyRole === 'superAdmin' && (
+              <Tab
+                id="subscription"
+                panelClassName={`b--black-05 ${
+                  isMobileOnly ? '' : 'bl'
+                } bw1 ml3-ns ml1 w-100`}
+                title="Subscriptions and Billing"
+                panel={<Subscriptions />}
+                className="outline-0 f6-ns f7"
+              />
+            )}
+          </Tabs>
         )}
-        
+
         {success && (
           <Modal
             isOpen={success}

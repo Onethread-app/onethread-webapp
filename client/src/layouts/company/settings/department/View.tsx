@@ -6,6 +6,8 @@ import {
   getAllDepartments,
   clearAddDepartmentError,
 } from '../../../../stores/company/Actions';
+import moment from 'moment';
+import 'moment/locale/en-gb';
 import { ICompany } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
 import { DepartmentEditor } from './Editor';
@@ -31,7 +33,7 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
     <>
       <div className="pr6">
         <div className="flex-ns justify-between pv3">
-          <h1 className="f6 lh-copy">Departments</h1>
+          <h1 className="f3 lh-copy mid-gray b">Departments</h1>
           <Button
             type="submit"
             className="grow pointer addDepartment h2"
@@ -51,7 +53,22 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
           ) : props.company.departments &&
             props.company.departments.length > 0 ? (
             props.company.departments.map((d: any) => (
-              <p key={d._id}>{d.name}</p>
+              <div className="fl w-third-l w-100 ml0-l ml5 pa2">
+                <div>
+                  <p key={d._id} className="br2 shadow-3 h5-l h4 flex justify-center items-center mid-gray b">
+                    <p className="tc" style={{overflow: 'hidden'}}>
+                      <p className="f2-l f4-m f5 pb5-l mt5-l pb4 mt4 w5-l">{d.name}</p>
+                      <p className="f4-l f5-m f6" style={{ color: '#0FA3A3'}}> 
+                        Added on {moment(d.createdAt).format('ll')}
+                      </p>
+                    </p>
+                  </p>
+                  </div>
+                </div>
+
+             /*  <p key={d._id}>
+                {d.name}
+              </p> */
             ))
           ) : (
             <p>No departments</p>
