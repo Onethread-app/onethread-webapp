@@ -43,7 +43,7 @@ const PricingPageComponent = (
               <h1 className="f3-ns f6 fw4 silver ma0">For teams and individuals.</h1>
             </div>
             <div>
-              <h1 className="f1-ns f3 fw7 ma0  basicFont"><span className="fw4">$</span>7.99</h1>
+              <h1 className="f1-ns f3 fw7 ma0  basicFont"><span className="fw4">$</span>2.99</h1>
               <h1 className="f4-ns f6 fw4 silver ma0">/user per month</h1>
             </div>
           </div>
@@ -84,11 +84,11 @@ const PricingPageComponent = (
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
               <span className="fw7">Unlimited</span> Admins And Project Moderators</h1>
           </div>
-          <div className="flex mt2">
+          {/* <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
               <span className="fw7">Up To 100</span> Project Team Mates</h1>
-          </div>
+          </div> */}
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
@@ -110,10 +110,11 @@ const PricingPageComponent = (
           <div className="tc">
             <NavLink to="/signup">
               <button
-                className="b--silver ba br3 f4-ns f5 fw6 outline-0 pa3-ns pa2 w5-ns mt4 tc pricing-btn pointer"
+                className="b--silver ba br3 f4-ns f5 fw6 outline-0 pa3-ns pa2 w5-ns mt4 tc pricing-btn  pointer"
               >
                 Try for free
-              <br /><span className="f6 fw4">No credit card required</span>
+              <br /><span className="f6 fw4">*No credit card required</span>
+              <br /><span className="f6 fw4">*Upto 5 colleagues</span>
               </button>
             </NavLink>
 
