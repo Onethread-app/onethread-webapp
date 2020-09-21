@@ -5,6 +5,8 @@ const { Announcement } = require('./announcement.model');
 const { Member } = require('./member/member.model');
 const Plan = require('../plan/plan.model');
 const { createSlug } = require('../helpers/SlugCreator');
+const Task = require('../task/task.model');
+const Boardcolumn = require('../boardColumn/boardColumn.model');
 
 const {
   Subscription,
@@ -129,7 +131,9 @@ const createCompany = async (req, res, next) => {
       name: req.body.name,
     });
     if (duplicate) {
-      return sendErrorResponse(res, 409, 'DuplicateNameError', {message: 'Name already exist'});
+      return sendErrorResponse(res, 409, 'DuplicateNameError', {
+        message: 'Name already exist',
+      });
     }
     req.body.uniqueName = createSlug(req.body.name);
     const newCompany = new Company(req.body);
@@ -529,7 +533,7 @@ const addCertifications = async (req, res, next) => {
     await certificate.save();
     return sendJSONresponse(res, 201, {
       message: 'Certification add',
-      certificate
+      certificate,
     });
   } catch (error) {
     logger.error(`Company: ${error}`);
@@ -537,37 +541,40 @@ const addCertifications = async (req, res, next) => {
   }
 };
 
-const editCertification = async (req,res,next) => {
+const editCertification = async (req, res, next) => {
   try {
-
-    const certificate = await Certificate.findOne({ _id: req.query.certificateId});
+    const certificate = await Certificate.findOne({
+      _id: req.query.certificateId,
+    });
 
     if (!certificate) {
-      return sendErrorResponse(res, 404, 'CertificateIdNotFoundError', {
-        message: `certificateId not found`,
-      });
-    }else{
-
+      return sendErrorResponse(
+        res,
+        404,
+        'CertificateIdNotFoundError',
+        {
+          message: `certificateId not found`,
+        },
+      );
+    } else {
       for (const key in req.body) {
         if (req.body.hasOwnProperty(key)) {
           certificate[key] = req.body[key];
         }
       }
 
-      const editedCertificate = await certificate.save()
+      const editedCertificate = await certificate.save();
 
       return sendJSONresponse(res, 200, {
         message: 'Certification edited',
-        data: editedCertificate
+        data: editedCertificate,
       });
-
     }
-
   } catch (error) {
-    logger.error(`Company: ${error}`)
+    logger.error(`Company: ${error}`);
     next(error);
   }
-}
+};
 
 const parentOrg = async (req, res, next) => {
   try {
@@ -588,10 +595,10 @@ const parentOrg = async (req, res, next) => {
     return sendJSONresponse(res, 200, {
       success: true,
       message: `parentOrg updated`,
-      data: user
+      data: user,
     });
   } catch (error) {
-    logger.error(`Compnay: ${error}`)
+    logger.error(`Compnay: ${error}`);
     next(error);
   }
 };
@@ -612,13 +619,34 @@ const dashBoard = async (req, res, next) => {
       removed: false,
       isRejected: false,
     }).countDocuments();
-
+    let projectCompilation = [];
+    let projectList = await Project.find({
+      $or: [{ company: companyId }, { associate: companyId }],
+      removed: false,
+    }).select('_id name');
+    let i;
+    for (i = 0; i < projectList.length; i++) {
+      let projectName = projectList[i].name;
+      const taskNumbers = await Task.find({
+        project:{ $in: projectList[i]._id},
+      }).countDocuments();
+      const doneTask = await Task.find({
+        $and:[{project: {$in: projectList[i]._id},
+        status: 'done',}]
+      }).countDocuments();
+      let projectObj= {};
+      projectObj.name = projectName;
+      projectObj.taskNumbers = taskNumbers;
+      projectObj.doneTask = doneTask;
+      projectCompilation.push(projectObj);
+    }
     return sendJSONresponse(res, 200, {
       success: true,
       data: {
         totalProject,
         totalEmployee,
         totalAssociates,
+        projectCompilation,
       },
     });
   } catch (error) {
@@ -729,5 +757,5 @@ module.exports = {
   noticePostByCompany,
   allNoticesForCompany,
   adminSuperAdminFinder,
-  editCertification
+  editCertification,
 };

@@ -43,7 +43,7 @@ export const _ProjectOutlineView = (
             />
           </div>
         ) : (
-          permissions.grantAll || permissions.projectModerator.includes(
+          permissions.grantAll || permissions.projectModerator && permissions.projectModerator.includes(
             'updateProjectPreface',
           ) && (
             <div className="pr2" style={{ paddingTop: '10px' }}>

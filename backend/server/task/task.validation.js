@@ -18,8 +18,10 @@ const taskId = Joi.object().keys({
 const taskSchema = {
   name: Joi.string(),
   description: Joi.string(),
+  status: Joi.string(),
   priority: Joi.number(),
   account: idSchema.id,
+  project: idSchema.id,
   dueDate: Joi.date(),
   comments: Joi.array().items(idSchema.id),
   columnId: idSchema.id,
@@ -31,13 +33,19 @@ module.exports = {
     body: Joi.object().keys({
       name: taskSchema.name.required(),
       // description: taskSchema.description.allow(''),
+      status: taskSchema.status,
       columnId: taskSchema.columnId.required(),
       boardId: taskSchema.boardId.required(),
+    }),
+
+    query: Joi.object().keys({
+      pid: taskSchema.project.required(),
     }),
   }),
   dragTask: Joi.object().keys({
     body: Joi.object().keys({
       taskId: Joi.string().required(),
+      status: taskSchema.status.required(),
       sourceColumnId: Joi.string().required(),
       destinationColumnId: Joi.string().required(),
       taskIndexOfDestinationColumn: Joi.number().required(),

@@ -12,12 +12,10 @@ const load = async (req, res, next, id) => {
       if (result) {
         req.boardColumn = result;
         next();
-      }else{
-
+      } else {
         return sendErrorResponse(res, 400, 'IdIsNotExits', {
           message: 'No valid entry found for provided Board ID',
         });
-
       }
     })
     .catch((err) => {
@@ -28,8 +26,18 @@ const load = async (req, res, next, id) => {
 
 const create = async (req, res, next) => {
   try {
+    const uniqueName = await BoardColumn.findOne({
+      name: req.body.name,
+      boardId: req.body.boardId,
+    });
+    if (uniqueName) {
+      return sendErrorResponse(res, 409, 'DuplicateColumnError', {
+        message: 'Duplicate column name',
+      });
+    }
     const boardColumn = new BoardColumn({
       name: req.body.name,
+      type: req.body.type,
       positionInBoard: req.body.positionInBoard,
       boardId: req.body.boardId,
       account: req.user._id,
@@ -46,7 +54,7 @@ const create = async (req, res, next) => {
         return sendJSONresponse(res, 201, resposneObj);
       })
       .catch((e) => {
-        logger.error(`Board column: ${err}`);
+        logger.error(`Board column: ${e}`);
         next(e);
       });
   } catch (error) {

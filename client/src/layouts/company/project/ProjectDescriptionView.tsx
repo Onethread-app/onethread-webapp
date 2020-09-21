@@ -30,7 +30,7 @@ export const _ProjectDescriptionView = (
         </div>
 
         {
-          (permissions.grantAll || permissions.projectModerator.includes('updateProjectPreface')) &&
+          (permissions.grantAll || ( permissions.projectModerator && permissions.projectModerator.includes('updateProjectPreface'))) &&
           <div className="pr2" style={{ paddingTop: '10px' }}>
               <Icon
               className={permissions.grantAll ?

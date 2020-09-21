@@ -34,8 +34,10 @@ const create = async (req, res, next) => {
     const task = new Task({
       name: req.body.name,
       account: req.user._id,
+      status: req.body.status,
       columnId: req.body.columnId,
       boardId: req.body.boardId,
+      project: req.query.pid,
     });
     const createdTask = await task.save();
 
@@ -261,7 +263,7 @@ const list = (req, res, next) => {};
 const dragTask = async (req, res, next) => {
   try {
     const task = await Task.findByIdAndUpdate(req.body.taskId, {
-      $set: { columnId: req.body.destinationColumnId },
+      $set: { columnId: req.body.destinationColumnId, status: req.body.status },
     }).exec();
 
     // TODO: avoid task population

@@ -13,6 +13,7 @@ const idSchema = {
 
 const boardColumnSchema = {
   name: Joi.string(),
+  type: Joi.string().lowercase(),
   taskIds: Joi.array().items(idSchema.id),
   boardId: idSchema.id,
   positionInBoard: Joi.number(),
@@ -25,6 +26,7 @@ module.exports = {
       name: boardColumnSchema.name.required(),
       positionInBoard: boardColumnSchema.positionInBoard.required(),
       boardId: boardColumnSchema.boardId.required(),
+      type: boardColumnSchema.type.required(),
     }),
   }),
   updateBoardColumn: Joi.object().keys({
