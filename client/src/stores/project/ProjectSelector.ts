@@ -1,1 +1,0 @@
-export const getProjectId = state => state.projectReducer.projectDetails._id;

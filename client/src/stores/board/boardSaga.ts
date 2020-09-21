@@ -27,7 +27,7 @@ import {
   updateTaskFailure,
   updateTaskSuccess,
 } from './Actions';
-import { getProjectId } from 'stores/project/ProjectSelector';
+import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
 import { getCurrentBoard, getCurrentTask } from './Selector';
 

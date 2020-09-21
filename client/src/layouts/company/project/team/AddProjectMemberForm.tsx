@@ -28,6 +28,7 @@ interface ProjectTeamMembersInternalProps
     },
     selectedTeamMember: any,
   ) => void;
+  isLoading: boolean,
 }
 
 const AddProjectMemberFormComponent = (
@@ -143,7 +144,7 @@ const AddProjectMemberFormComponent = (
               selectedTeamMember,
             );
 
-            if (response.status === 201) {
+            if (response && props.isLoading === false) {
               props.setShowDialog(!props.showDialog);
             }
           }}
@@ -159,6 +160,7 @@ const mapStateToProps = (state: any) => {
   return {
     companyId: state.companyReducer.currentCompany._id,
     projectId: state.projectReducer.pid,
+    isLoading: state.projectReducer.projectLoading,
   };
 };
 

@@ -1,5 +1,5 @@
 import { all } from 'redux-saga/effects';
-import getAllProject from './project/sagas/getProjectSaga';
+import projectSaga from './project/projectSaga';
 import associateSaga from './associate/associateSaga';
 import roomSaga from './room/roomSaga';
 import notificationSaga from './notifications/notificationSaga';
@@ -12,7 +12,7 @@ import companySaga from './company/companySaga';
 
 export default function* rootSaga() {
   yield all([
-    getAllProject(),
+    projectSaga(),
     associateSaga(),
     roomSaga(),
     notificationSaga(),

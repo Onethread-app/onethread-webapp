@@ -22,7 +22,8 @@ interface ChangeNameInternalProps extends ChangeNameProps {
   updateProjectName: (
     name: string,
     projectId: string,
-  ) => Promise<number>;
+  ) => any;
+  isLoading: boolean;
 }
 
 const ChangeNameComponent = (props: ChangeNameInternalProps) => {
@@ -31,7 +32,7 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
       values.name,
       props.projectId,
     );
-    if (responseStatus === 200) {
+    if (responseStatus && props.isLoading === false ) {
       props.setShowDialog(false);
       return true;
     }
@@ -115,6 +116,12 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
   );
 };
 
-export const ChangeName = connect(null, { updateProjectName })(
+const mapStateToProps = (state: any) => {
+  return {
+    isLoading: state.projectReducer.projectLoading,
+  }
+}
+
+export const ChangeName = connect(mapStateToProps, { updateProjectName })(
   ChangeNameComponent,
 );
