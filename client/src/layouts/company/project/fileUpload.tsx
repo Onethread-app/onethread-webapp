@@ -9,7 +9,10 @@ interface IFileUploadProps {
   projectFileUpload: (imageSelected: any, projectID: string) => any;
   projectID: string;
 }
-const FileUploadComponent = (props: IFileUploadProps) => {
+interface IFileUploadInternalProps extends IFileUploadProps {
+  isLoading: boolean;
+}
+const FileUploadComponent = (props: IFileUploadInternalProps) => {
   const [imageSelected, setImageSelected] = useState({}) as any;
   const [imageName, setImageName] = useState({}) as any;
   const [imageLoading, setImageLoading] = useState(false);
@@ -129,7 +132,7 @@ const FileUploadComponent = (props: IFileUploadProps) => {
               imageSelected,
               props.projectID,
             );
-            if (response) {
+            if (response && props.isLoading === false) {
               props.setShowDialog(false);
               setImageName({});
             }
@@ -149,6 +152,7 @@ const FileUploadComponent = (props: IFileUploadProps) => {
 };
 const mapStateToProps = (state: any) => ({
   projectID: state.projectReducer.pid,
+  isLoading: state.projectReducer.projectLoading,
 });
 export const FileUpload = connect(mapStateToProps, {
   projectFileUpload,
