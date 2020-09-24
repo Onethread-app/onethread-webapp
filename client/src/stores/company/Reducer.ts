@@ -1,46 +1,18 @@
 import {
-  GET_COMPANY_DETAILS,
-  CREATE_COMPANY,
   ADD_DEPARTMENT,
   ADD_DEPARTMENT_LOADING,
   COMPANY_DEPARTMENT_LOADING,
   ADD_DEPARTMENT_ERROR,
-  GET_ALL_COMPANY_MEMBERS,
   COMPANY_REDUCER_LOADING,
   COMPANY_REDUCER_LOADING_FALSE,
-  GET_ALL_DEPARTMENT,
   CLEAR_COMPANY_REDUCER_STATE,
-  EDIT_COMPANY_INFO,
-  CHANGE_COMPANY_NAME,
-  CHANGE_COMPANY_NAME_ERROR,
   CLEAR_CHANGE_COMPANY_NAME_ERROR,
-  CHANGE_COMPANY_NAME_LOADING,
   CLEAR_ADD_DEPARTMENT_ERROR,
-  CREATE_COMPANY_ERROR,
-  COMPANY_DESIGNATION_LOADING,
-  ADD_DESIGNATION,
-  ADD_DESIGNATION_ERROR,
-  EDIT_DESIGNATION,
-  EDIT_DESIGNATION_ERROR,
-  LOGO_UPLOAD,
-  COVER_IMAGE_UPLOAD_COMPANY,
-  CHANGE_MEMBER_ROLE,
-  COMPANY_ROLE,
-  UPDATE_ALL_COMPANY_PENDING_MEMBERS,
-  DELETE_TEAM_MEMBER,
-  GET_ALL_COMPANY_PENDING_MEMBERS,
-  ADD_CERTIFICATE,
-  ADD_ORGANIZATION,
-  GET_ALL_COMPANY_ANNOUNCEMENT,
-  ADD_ANNOUNCEMENT,
-  GET_ALL_PRODUCT,
   ADD_PRODUCT,
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
-  EDIT_ORGANIZATION,
   SET_INITIAL_CURRENT_COMPANY,
-  COLLEAGUE_INVITE_SUCCESS,
-  COLLEAGUE_WENT_WRONG,
+  CompanyActionTypes,
 } from './Types';
 import { Entity } from 'stores/UtilsActions';
 
@@ -167,38 +139,63 @@ const InitialState = {
 export const CompanyReducer = (state = InitialState, action: any) => {
   switch (action.type) {
     case COMPANY_REDUCER_LOADING:
+    case COMPANY_REDUCER_LOADING_FALSE:
+    case CompanyActionTypes.COLLEAGUE_INVITE_START:
+    case CompanyActionTypes.GET_ALL_PRODUCT_START:
+    case CompanyActionTypes.ADD_COMPANY_ANNOUNCEMENT_START:
+    case CompanyActionTypes.GET_ALL_COMPANY_ANNOUNCEMENT_START:
+    case CompanyActionTypes.EDIT_ORGANIZATION_START:
+    case CompanyActionTypes.ADD_ORGANIZATION_START:
+    case CompanyActionTypes.ADD_COMPANY_CERTIFICATE_START:
+    case CompanyActionTypes.CHANGE_COMPANY_OPTIONAL_ROLE_START:
+    case CompanyActionTypes.CHANGE_MEMBER_ROLE_START:
+    case CompanyActionTypes.CHANGE_COMPANY_LOGO_START:
+    case CompanyActionTypes.EDIT_COMPANY_INFO_START:
+    case CompanyActionTypes.GET_ALL_COMPANY_PENDING_MEMBERS_START:
+    case CompanyActionTypes.DELETE_TEAM_MEMBER_START:
+    case CompanyActionTypes.ADD_TEAM_MEMBER_START:
+    case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_START:
+    case CompanyActionTypes.GET_COMPANY_DETAILS_START:
+    case CompanyActionTypes.CREATE_COMPANY_START:
       return {
         ...state,
         loading: true,
       };
-    case COMPANY_REDUCER_LOADING_FALSE:
-      return {
-        ...state,
-        loading: false,
-      };
-    case GET_COMPANY_DETAILS:
-      return {
-        ...state,
-        currentCompany: action.payload,
-      };
-    case CREATE_COMPANY:
+    case CompanyActionTypes.CREATE_COMPANY_SUCCESS:
       return {
         ...state,
         currentCompany: action.payload.company,
+        loading: false,
       };
-    // case ADD_TEAM_MEMBERS:
-    //   return {
-    //     ...state,
-    //     currentCompany: {
-    //       ...state.currentCompany,
-    //       members: [
-    //         ...state.currentCompany.members,
-    //         action.payload.member
-    //       ]
-    //     }
-    //   }
-
-    case GET_ALL_COMPANY_MEMBERS:
+    case CompanyActionTypes.COLLEAGUE_INVITE_FAILURE:
+    case CompanyActionTypes.GET_ALL_PRODUCT_FAILURE:
+    case CompanyActionTypes.ADD_COMPANY_ANNOUNCEMENT_FAILURE:
+    case CompanyActionTypes.GET_ALL_COMPANY_ANNOUNCEMENT_FAILURE:
+    case CompanyActionTypes.EDIT_ORGANIZATION_FAILURE:
+    case CompanyActionTypes.ADD_ORGANIZATION_FAILURE:
+    case CompanyActionTypes.ADD_COMPANY_CERTIFICATE_FAILURE:
+    case CompanyActionTypes.CHANGE_COMPANY_OPTIONAL_ROLE_FAILURE:
+    case CompanyActionTypes.CHANGE_MEMBER_ROLE_FAILURE:
+    case CompanyActionTypes.CHANGE_COMPANY_LOGO_FAILURE:
+    case CompanyActionTypes.EDIT_DESIGNATION_FAILURE:
+    case CompanyActionTypes.GET_ALL_COMPANY_PENDING_MEMBERS_FAILURE:
+    case CompanyActionTypes.DELETE_TEAM_MEMBER_FAILURE:
+    case CompanyActionTypes.ADD_TEAM_MEMBER_FAILURE:
+    case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_FAILURE:
+    case CompanyActionTypes.GET_COMPANY_DETAILS_FAILURE:
+    case CompanyActionTypes.CREATE_COMPANY_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
+      };
+    case CompanyActionTypes.GET_COMPANY_DETAILS_SUCCESS:
+      return {
+        ...state,
+        currentCompany: action.payload,
+        loading: false,
+      };
+    case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -207,7 +204,18 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
         loading: false,
       };
-    case DELETE_TEAM_MEMBER:
+    case CompanyActionTypes.ADD_TEAM_MEMBER_SUCCESS:
+      return {
+        ...state,
+        currentCompany: {
+          ...state.currentCompany,
+          pendingMembers: state.currentCompany.pendingMembers.concat(
+            action.payload.pendingMembers,
+          ),
+        },
+        loading: false,
+      };
+    case CompanyActionTypes.DELETE_TEAM_MEMBER_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -219,23 +227,12 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
         loading: false,
       };
-    case GET_ALL_COMPANY_PENDING_MEMBERS:
+    case CompanyActionTypes.GET_ALL_COMPANY_PENDING_MEMBERS_SUCCESS:
       return {
         ...state,
         currentCompany: {
           ...state.currentCompany,
           pendingMembers: action.payload,
-        },
-        loading: false,
-      };
-    case UPDATE_ALL_COMPANY_PENDING_MEMBERS:
-      return {
-        ...state,
-        currentCompany: {
-          ...state.currentCompany,
-          pendingMembers: state.currentCompany.pendingMembers.concat(
-            action.payload,
-          ),
         },
         loading: false,
       };
@@ -274,7 +271,12 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         error: '',
         departmentNameLoading: false,
       };
-    case GET_ALL_DEPARTMENT:
+    case CompanyActionTypes.GET_ALL_DEPARTMENT_START:
+      return {
+        ...state,
+        departmentNameLoading: true,
+      };
+    case CompanyActionTypes.GET_ALL_DEPARTMENT_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -283,30 +285,28 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
         departmentNameLoading: false,
       };
-    case CLEAR_COMPANY_REDUCER_STATE:
+    case CompanyActionTypes.GET_ALL_DEPARTMENT_FAILURE:
       return {
-        ...InitialState,
+        ...state,
+        error: action.payload,
+        departmentNameLoading: false,
       };
-
-    case EDIT_COMPANY_INFO:
+    case CompanyActionTypes.EDIT_COMPANY_INFO_SUCCESS:
       return {
         ...state,
         currentCompany: {
           ...state.currentCompany,
           ...action.payload,
         },
+        loading: false,
       };
-    case CREATE_COMPANY_ERROR:
-      return {
-        ...state,
-        createCompanyError: action.payload,
-      };
-    case CHANGE_COMPANY_NAME_LOADING:
+
+    case CompanyActionTypes.CHANGE_COMPANY_NAME_START:
       return {
         ...state,
         changeCompanyNameLoading: true,
       };
-    case CHANGE_COMPANY_NAME:
+    case CompanyActionTypes.CHANGE_COMPANY_NAME_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -315,68 +315,66 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           uniqueName: action.payload.uniqueName,
         },
         changeCompanyNameLoading: false,
-        error: '',
       };
-    case CHANGE_COMPANY_NAME_ERROR:
+    case CompanyActionTypes.CHANGE_COMPANY_NAME_FAILURE:
       return {
         ...state,
         error: action.payload,
         changeCompanyNameLoading: false,
       };
-    case CLEAR_CHANGE_COMPANY_NAME_ERROR:
-      return {
-        ...state,
-        error: '',
-        changeCompanyNameLoading: false,
-      };
-    case COMPANY_DESIGNATION_LOADING:
+    case CompanyActionTypes.ADD_DESIGNATION_START:
       return {
         ...state,
         designationLoading: true,
       };
-    case ADD_DESIGNATION:
+    case CompanyActionTypes.ADD_DESIGNATION_SUCCESS:
       return {
         ...state,
         error: '',
         designationLoading: false,
       };
-    case ADD_DESIGNATION_ERROR:
+    case CompanyActionTypes.ADD_DESIGNATION_FAILURE:
       return {
         ...state,
         error: action.payload,
         designationLoading: false,
       };
-    case EDIT_DESIGNATION:
+    case CompanyActionTypes.EDIT_DESIGNATION_START:
+      return {
+        ...state,
+        designationLoading: true,
+      };
+    case CompanyActionTypes.EDIT_DESIGNATION_SUCCESS:
       return {
         ...state,
         error: '',
         designationLoading: false,
       };
-    case EDIT_DESIGNATION_ERROR:
+    case CompanyActionTypes.EDIT_DESIGNATION_FAILURE:
       return {
         ...state,
         error: action.payload,
         designationLoading: false,
       };
-    case LOGO_UPLOAD:
+    case CompanyActionTypes.CHANGE_COMPANY_LOGO_SUCCESS:
       return {
         ...state,
         currentCompany: {
           ...state.currentCompany,
           logo: action.payload.link,
         },
+        loading: false,
       };
-    case COVER_IMAGE_UPLOAD_COMPANY: {
+    case CompanyActionTypes.CHANGE_COMPANY_COVER_SUCCESS:
       return {
         ...state,
         currentCompany: {
           ...state.currentCompany,
           coverImage: action.payload.link,
         },
+        loading: false,
       };
-    }
-
-    case CHANGE_MEMBER_ROLE:
+    case CompanyActionTypes.CHANGE_MEMBER_ROLE_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -394,16 +392,18 @@ export const CompanyReducer = (state = InitialState, action: any) => {
             },
           ),
         },
+        loading: false,
       };
-    case COMPANY_ROLE:
+    case CompanyActionTypes.CHANGE_COMPANY_OPTIONAL_ROLE_SUCCESS:
       return {
         ...state,
         currentCompany: {
           ...state.currentCompany,
           optionalRole: action.payload,
         },
+        loading: false,
       };
-    case ADD_CERTIFICATE:
+    case CompanyActionTypes.ADD_COMPANY_CERTIFICATE_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -414,7 +414,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           ],
         },
       };
-    case ADD_ORGANIZATION:
+    case CompanyActionTypes.ADD_ORGANIZATION_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -424,16 +424,18 @@ export const CompanyReducer = (state = InitialState, action: any) => {
             action.payload,
           ],
         },
+        loading: false,
       };
-    case EDIT_ORGANIZATION:
+    case CompanyActionTypes.EDIT_ORGANIZATION_SUCCESS:
       return {
         ...state,
         currentCompany: {
           ...state.currentCompany,
           parentcom: action.payload,
         },
+        loading: false,
       };
-    case GET_ALL_COMPANY_ANNOUNCEMENT:
+    case CompanyActionTypes.GET_ALL_COMPANY_ANNOUNCEMENT_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -442,24 +444,27 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         },
         loading: false,
       };
-    case ADD_ANNOUNCEMENT:
+    case CompanyActionTypes.ADD_COMPANY_ANNOUNCEMENT_SUCCESS:
       return {
         ...state,
-        currentCompany: {
-          ...state.currentCompany,
-          announce: [
-            ...state.currentCompany.announce,
-            action.payload,
-          ],
-        },
+        loading: false,
       };
-    case GET_ALL_PRODUCT:
+
+    case CompanyActionTypes.GET_ALL_PRODUCT_SUCCESS:
       return {
         ...state,
         currentCompany: {
           ...state.currentCompany,
           products: action.payload,
         },
+        loading: false,
+      };
+
+    case CompanyActionTypes.COLLEAGUE_INVITE_SUCCESS:
+      return {
+        ...state,
+        colleagueInviteSuccess: true,
+        loading: false,
       };
     case ADD_PRODUCT:
       return {
@@ -493,6 +498,16 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           totalMember: action.payload,
         },
       };
+    case CLEAR_CHANGE_COMPANY_NAME_ERROR:
+      return {
+        ...state,
+        error: '',
+        changeCompanyNameLoading: false,
+      };
+    case CLEAR_COMPANY_REDUCER_STATE:
+      return {
+        ...InitialState,
+      };
     case SET_INITIAL_CURRENT_COMPANY:
       return {
         ...state,
@@ -504,17 +519,30 @@ export const CompanyReducer = (state = InitialState, action: any) => {
           role: action.payload.role,
         },
       };
-    case COLLEAGUE_INVITE_SUCCESS:
-      return {
-        ...state,
-        colleagueInviteSuccess: !state.colleagueInviteSuccess,
-      };
-    case COLLEAGUE_WENT_WRONG:
-      return {
-        ...state,
-        colleagueError: action.payload,
-      };
     default:
       return state;
   }
 };
+
+// case ADD_TEAM_MEMBERS:
+//   return {
+//     ...state,
+//     currentCompany: {
+//       ...state.currentCompany,
+//       members: [
+//         ...state.currentCompany.members,
+//         action.payload.member
+//       ]
+//     }
+//   }
+// case ADD_ANNOUNCEMENT:
+//   return {
+//     ...state,
+//     currentCompany: {
+//       ...state.currentCompany,
+//       announce: [
+//         ...state.currentCompany.announce,
+//         action.payload,
+//       ],
+//     },
+//   };

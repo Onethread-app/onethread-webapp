@@ -11,8 +11,9 @@ import { ITask } from 'stores/board/Reducer';
 
 interface IPriorityEditorProps {
   setPriorityPopover: (val: boolean) => void;
-  updateTask: (task: ITask) => Promise<any>;
+  updateTask: (task: ITask) => any;
   colorCode: Number;
+  updatingTask: boolean;
 }
 
 export const PriorityEditorComponent = (
@@ -20,11 +21,9 @@ export const PriorityEditorComponent = (
 ) => {
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
-    if (response.message === 200) {
+    if ( response && !props.updatingTask ) {
       props.setPriorityPopover(false);
-      return true;
     }
-    return { [response.fieldName]: response.message };
   };
 
   const [labelColor, setLabelColor] = useState(props.colorCode);
@@ -143,6 +142,7 @@ const mapStateToProps = (state: any) => {
   return {
     colorCode:
       state.boardIndexReducer.boardReducer.currentTask.priority,
+    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
   };
 };
 

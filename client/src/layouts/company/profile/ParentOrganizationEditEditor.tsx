@@ -13,17 +13,18 @@ import { ICompany, IOrg } from 'stores/company/Reducer';
 
 interface IOrganizationEditProps {
   setShowDialog: (val: boolean) => void;
-  editOrganization: (parentcom: {}, organization: number) => Promise<number>;
+  editOrganization: (parentcom: {}, organization: number) => any;
   getCompanyDetails: (companyName: string) => void;
   company: ICompany;
   org: IOrg;
+  isLoading: boolean;
 }
 
 const OrganizationEditEditorComponent = (props: IOrganizationEditProps) => {
 
   const onSubmit = async (values: any) => {
     const response = await props.editOrganization(values, props.org.ind);
-    if (response === 200) {
+    if (response && props.isLoading === false) {
       props.setShowDialog(false);
     }
   };
@@ -113,6 +114,7 @@ const OrganizationEditEditorComponent = (props: IOrganizationEditProps) => {
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
+    isLoading: state.companyReducer.loading,
   };
 };
 

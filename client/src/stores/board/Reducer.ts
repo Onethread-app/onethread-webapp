@@ -1,19 +1,4 @@
-import {
-  CREATE_BOARD,
-  CREATE_BOARD_ERROR,
-  GET_ALL_BOARDS,
-  SELECT_BOARD,
-  CREATE_COLUMN_ERROR,
-  CREATE_COLUMN,
-  CREATE_TASK,
-  CREATE_TASK_ERROR,
-  DRAG_AND_DROP_TASK,
-  UPDATE_COLUMN,
-  ADD_TEAM_MEMBER_IN_BOARD,
-  SELECT_TASK,
-  UPDATE_TASK,
-} from './Types';
-import { isEqual } from 'lodash';
+import { BoardActionTypes } from './Types';
 
 export interface IColumn {
   _id?: string;
@@ -65,16 +50,31 @@ const InitialState = {
     members: [],
   },
   currentTask: {},
+  creatingBoard: false,
+  fetchingBoards: false,
+  fetchingColumn: false,
+  fetchingTask: false,
+  updatingColumn: false,
+  updatingBoard: false,
+  updatingTask: false,
+  dragAndDrop: false,
   boardError: '',
   boardColumnError: '',
   boardTaskError: '',
+  taskError: '',
 };
 
 export const BoardReducer = (state = InitialState, action: any) => {
   switch (action.type) {
-    case CREATE_BOARD:
+    case BoardActionTypes.CREATE_BOARD_START:
       return {
         ...state,
+        creatingBoard: true,
+      };
+    case BoardActionTypes.CREATE_BOARD_SUCCESS:
+      return {
+        ...state,
+        creatingBoard: true,
         boardList: [
           {
             _id: action.payload._id,
@@ -86,50 +86,99 @@ export const BoardReducer = (state = InitialState, action: any) => {
           ...state.boardList,
         ],
       };
-    case CREATE_BOARD_ERROR:
+    case BoardActionTypes.CREATE_BOARD_FAILURE:
       return {
         ...state,
+        creatingBoard: false,
         boardError: action.payload,
       };
-    case GET_ALL_BOARDS:
+    case BoardActionTypes.GET_ALL_BOARDS_START:
+      return {
+        ...state,
+        fetchingBoards: true,
+      };
+    case BoardActionTypes.GET_ALL_BOARDS_SUCCESS:
       return {
         ...state,
         boardList: action.payload,
+        fetchingBoards: false,
       };
-    case SELECT_BOARD:
+    case BoardActionTypes.GET_ALL_BOARDS_FAILURE:
+      return {
+        ...state,
+        boardError: action.payload,
+        fetchingBoards: false,
+      };
+    case BoardActionTypes.SELECT_BOARD_START:
+      return {
+        ...state,
+        fetchingBoards: true,
+      };
+    case BoardActionTypes.SELECT_BOARD_SUCCESS:
       return {
         ...state,
         currentBoard: action.payload,
+        fetchingBoards: false,
       };
-    case ADD_TEAM_MEMBER_IN_BOARD:
+    case BoardActionTypes.SELECT_BOARD_FAILURE:
+      return {
+        ...state,
+        currentBoard: action.payload,
+        fetchingBoards: false,
+      };
+    case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_START:
+      return {
+        ...state,
+        updatingBoard: true,
+      };
+    case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_SUCCESS:
       return {
         ...state,
         currentBoard: {
           ...state.currentBoard,
           members: action.payload,
         },
+        updatingBoard: false,
       };
-    case CREATE_COLUMN:
+    case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_FAILURE:
+      return {
+        ...state,
+        updatingBoard: false,
+        boardError: action.payload,
+      };
+    case BoardActionTypes.CREATE_COLUMN_START:
+      return {
+        ...state,
+        fetchingColumn: true,
+      };
+    case BoardActionTypes.CREATE_COLUMN_SUCCESS:
       return {
         ...state,
         currentBoard: {
           ...state.currentBoard,
           columns: [...state.currentBoard.columns, action.payload],
         },
+        fetchingColumn: false,
       };
-    case CREATE_COLUMN_ERROR:
+    case BoardActionTypes.CREATE_COLUMN_FAILURE:
       return {
         ...state,
         boardColumnError: action.payload,
+        fetchingColumn: false,
       };
-    case UPDATE_COLUMN:
+    case BoardActionTypes.UPDATE_COLUMN_START:
+      return {
+        ...state,
+        updatingColumn: true,
+      };
+    case BoardActionTypes.UPDATE_COLUMN_SUCCESS:
       return {
         ...state,
         currentBoard: {
           ...state.currentBoard,
           columns: state.currentBoard.columns.map(
             (column: IColumn, i) =>
-              isEqual(column._id, action.payload._id)
+              column._id === action.payload._id
                 ? {
                     ...column,
                     name: action.payload.name,
@@ -137,15 +186,27 @@ export const BoardReducer = (state = InitialState, action: any) => {
                 : column,
           ),
         },
+        updatingColumn: false,
       };
-    case CREATE_TASK:
+    case BoardActionTypes.CREATE_COLUMN_FAILURE:
+      return {
+        ...state,
+        boardColumnError: action.payload,
+        updatingColumn: false,
+      };
+    case BoardActionTypes.CREATE_TASK_START:
+      return {
+        ...state,
+        fetchingTask: true,
+      };
+    case BoardActionTypes.CREATE_TASK_SUCCESS:
       return {
         ...state,
         currentBoard: {
           ...state.currentBoard,
           columns: state.currentBoard.columns.map(
             (column: IColumn, i) =>
-              isEqual(column._id, action.payload.columnId)
+              column._id === action.payload.columnId
                 ? {
                     ...column,
                     tasks: [...column.tasks!, action.payload],
@@ -153,39 +214,69 @@ export const BoardReducer = (state = InitialState, action: any) => {
                 : column,
           ),
         },
+        fetchingTask: false,
       };
-    case CREATE_TASK_ERROR:
+    case BoardActionTypes.CREATE_TASK_FAILURE:
       return {
         ...state,
         boardTaskError: action.payload,
+        fetchingTask: false,
       };
-    case DRAG_AND_DROP_TASK:
+    case BoardActionTypes.DRAG_AND_DROP_TASK_START:
+      return {
+        ...state,
+        dragAndDrop: true,
+      };
+    case BoardActionTypes.DRAG_AND_DROP_TASK_SUCCESS:
       return {
         ...state,
         currentBoard: {
           ...state.currentBoard,
           columns: action.payload,
         },
+        dragAndDrop: false,
       };
-    case SELECT_TASK:
+    case BoardActionTypes.DRAG_AND_DROP_TASK_FAILURE:
+      return {
+        ...state,
+        dragAndDrop: false,
+      };
+    case BoardActionTypes.SELECT_TASK_START:
+      return {
+        ...state,
+        fetchingTask: true,
+      };
+    case BoardActionTypes.SELECT_TASK_SUCCESS:
       return {
         ...state,
         currentTask: action.payload,
+        fetchingTask: false,
       };
-    case UPDATE_TASK:
+    case BoardActionTypes.SELECT_TASK_FAILURE:
+      return {
+        ...state,
+        taskError: action.payload,
+        fetchingTask: false,
+      };
+    case BoardActionTypes.UPDATE_TASK_START:
+      return {
+        ...state,
+        updatingTask: true,
+      };
+    case BoardActionTypes.UPDATE_TASK_SUCCESS:
       return {
         ...state,
         currentBoard: {
           ...state.currentBoard,
           columns: (state.currentBoard.columns as any).map(
             (column: IColumn) =>
-              isEqual(column._id, action.payload.columnId._id)
+              column._id === action.payload.columnId._id
                 ? {
                     ...column,
                     tasks:
                       column.tasks && column.tasks.length > 0
                         ? column.tasks!.map((task: ITask) =>
-                            isEqual(task._id, action.payload._id)
+                            task._id === action.payload._id
                               ? {
                                   ...task,
                                   name: action.payload.name,
@@ -199,6 +290,13 @@ export const BoardReducer = (state = InitialState, action: any) => {
           ),
         },
         currentTask: action.payload,
+        updatingTask: false,
+      };
+    case BoardActionTypes.UPDATE_TASK_FAILURE:
+      return {
+        ...state,
+        taskError: action.payload,
+        updatingTask: false,
       };
     default:
       return state;

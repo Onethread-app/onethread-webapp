@@ -16,7 +16,7 @@ interface TaskItemProps {
 interface TaskItemInternalProps extends TaskItemProps {
   currentBoard?: TaskBoard;
   company?: ICompany;
-  getSelectedTaskDetails: (task: string | undefined) => Promise<any>;
+  getSelectedTaskDetails: (task: string | undefined) => void;
 }
 
 const TaskItemComponent = (
@@ -35,10 +35,10 @@ const TaskItemComponent = (
               {...provided.dragHandleProps}
               {...allowedProps}
               onClick={async () => {
-                const responseTask = await props.getSelectedTaskDetails(
+                const responseTask: any = await props.getSelectedTaskDetails(
                   props.task._id,
                 );
-                if (responseTask._id) {
+                if (responseTask.payload) {
                   props.history.push(
                     `/company/${props.company!.uniqueName}/board/${
                       props.currentBoard!._id

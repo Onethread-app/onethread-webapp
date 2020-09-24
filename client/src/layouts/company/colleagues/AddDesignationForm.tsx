@@ -8,6 +8,7 @@ import { Condition } from 'components/final-form/Condition';
 import { ICompanyMembers } from 'stores/company/Reducer';
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { DropdownFieldWithError } from 'components/fields/DropdownField';
+import { connect } from 'react-redux';
 
 interface AddDesignationFormProps {
   member: ICompanyMembers | undefined;
@@ -17,9 +18,12 @@ interface AddDesignationFormProps {
   divisions: Entity[];
   departments: Entity[];
 }
+interface AddDesignationFormInternalProps extends AddDesignationFormProps {
+  isLoading: boolean;
+}
 
-export const AddDesignationForm = (
-  props: AddDesignationFormProps,
+const AddDesignationFormComponent = (
+  props: AddDesignationFormInternalProps,
 ) => {
   const onSubmit: any = async (values: any) => {
     if (props.member) {
@@ -27,7 +31,7 @@ export const AddDesignationForm = (
         values,
         props.member._id,
       );
-      if (status === 201) {
+      if (status && props.isLoading === false) {
         await props.getCompanyMembers();
         props.setShowDialogAdd(false);
       }
@@ -171,3 +175,11 @@ export const AddDesignationForm = (
     />
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    isLoading: state.companyReducer.designationLoading,
+  };
+};
+
+export const AddDesignationForm = connect(mapStateToProps)(AddDesignationFormComponent);

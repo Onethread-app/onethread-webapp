@@ -29,6 +29,7 @@ interface ProjectAssociateInternalProps
     },
     selectedAssociate: any,
   ) => void;
+  isLoading: boolean,
 }
 
 const AddProjectAssociateFormComponent = (
@@ -222,7 +223,7 @@ const AddProjectAssociateFormComponent = (
               selectedAssociate,
             );
 
-            if (response.status === 200) {
+            if (response && props.isLoading === false) {
               props.setShowDialog(!props.showDialog);
             }
           }}
@@ -239,6 +240,7 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     projectId: state.projectReducer.pid,
     associates: state.associateReducer.associatesList,
+    isLoading: state.projectReducer.projectLoading,
   };
 };
 

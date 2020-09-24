@@ -22,7 +22,16 @@ import { NavbarCompany } from 'components/NavbarCompany';
 interface IBoardCardComponent {
   boardList: TaskBoard[];
   company: ICompany;
-  getSelectedBoard: (boardId: string | undefined) => Promise<number>;
+  getSelectedBoard: (boardId: any) => void;
+}
+
+interface IBoardListViewInternalProps extends IBoardCardComponent {
+  getAllBoards: () => void;
+  getAllDepartments: () => void;
+  role: string;
+  optionalRole: any;
+  user: User;
+  project: any;
 }
 
 const BoardCard = withRouter(
@@ -39,9 +48,9 @@ const BoardCard = withRouter(
               const currentBoard: any = await props.getSelectedBoard(
                 board._id,
               );
-              if (currentBoard._id) {
+              if (currentBoard.payload) {
                 props.history.push(
-                  `/company/${props.company.uniqueName}/board/${currentBoard._id}`,
+                  `/company/${props.company.uniqueName}/board/${currentBoard.payload}`,
                 );
               }
             }}
@@ -98,18 +107,6 @@ const BoardCard = withRouter(
     </>
   ),
 );
-
-interface IBoardListViewInternalProps {
-  boardList: TaskBoard[];
-  company: ICompany;
-  getAllBoards: () => void;
-  getAllDepartments: () => void;
-  getSelectedBoard: (boardId: string | undefined) => Promise<number>;
-  role: string;
-  optionalRole: any;
-  user: User;
-  project: any;
-}
 
 const TaskPageComponent = (
   props: IBoardListViewInternalProps & RouteComponentProps,
