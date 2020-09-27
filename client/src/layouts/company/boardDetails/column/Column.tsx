@@ -25,6 +25,7 @@ import {
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { createTask } from 'stores/board/Actions';
 import { RightSidebar } from 'components/RightSidebar';
+import { projectRules } from 'layouts/company/project/settings/projectrules';
 
 interface ColumnProps {
   key: string;
@@ -61,6 +62,8 @@ const ColumnComponent = (props: ColumnInternalProps) => {
     return;
   };
 
+  const permissions = projectRules(props.projectRole, props.optionalRole);
+  
   return (
     <>
       <div
@@ -91,12 +94,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 }
               />
               {props.company &&
-              (projectPermit(props.company.role) ||
-                (
-                    props.projectRole === "projectModerator" && 
-                    props.optionalRole!.includes("createUpdateBoard")
-                )
-              ) && (
+              (permissions.grantAll ||( permissions.projectModerator && permissions.projectModerator.includes('createUpdateColumn'))) && (
                 <Popover
                   className="w-10"
                   content={
