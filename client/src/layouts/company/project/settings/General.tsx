@@ -6,6 +6,7 @@ import { SubmitError } from 'components/final-form/SubmitError';
 import { Button } from '@blueprintjs/core';
 import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import { projectRules } from './projectrules';
 
 interface IOPtionalRole {
   optionalRole?: [];
@@ -20,6 +21,7 @@ const GeneralPageComponent = (props: IProjectRole) => {
   const [disabled] = React.useState(false);
   const [open, setOpen] = React.useState(false);
 
+  const permissions = projectRules(props.role, props.optionalRole);
   return (
     <div className="bl b--black-05 bw1 pl5-ns pl2 ml5-ns h-100">
       <Form
@@ -39,30 +41,34 @@ const GeneralPageComponent = (props: IProjectRole) => {
             <div className="mb3">
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className="b f5 mb3">General</p>
-            <div className="mb3 ml2">
-              <Field<string>
-                name="optionalRole"
-                type="checkbox"
-                render={({ input, meta }) => (
-                  <label
-                    className={`flex items-center mb2 ${
-                      disabled ? 'not-allowed' : 'pointer'
-                    }`}
-                  >
-                    <Field
+              <p className="b f5 mb3">General</p>
+              {
+                permissions.grantAll ?
+                  <div className="mb3 ml2">
+                    <Field<string>
                       name="optionalRole"
-                      className="mr2"
-                      component="input"
                       type="checkbox"
-                      value="updateArchiveProject"
-                      disabled={disabled}
+                      render={({ input, meta }) => (
+                        <label
+                          className={`flex items-center mb2 ${
+                            disabled ? 'not-allowed' : 'pointer'
+                          }`}
+                        >
+                          <Field
+                            name="optionalRole"
+                            className="mr2"
+                            component="input"
+                            type="checkbox"
+                            value="updateArchiveProject"
+                            disabled={disabled}
+                          />
+                          Update Archive Project
+                        </label>
+                      )}
                     />
-                    Update Archive Project
-                  </label>
-                )}
-              />
-            </div>
+                  </div>
+                  : null
+              }
             <p className="b f5 mb3">Project Preface</p>
             <div className="mb3 ml2">
               <Field<string>
