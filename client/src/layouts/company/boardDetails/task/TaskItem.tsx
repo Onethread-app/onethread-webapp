@@ -17,6 +17,7 @@ interface TaskItemInternalProps extends TaskItemProps {
   currentBoard?: TaskBoard;
   company?: ICompany;
   getSelectedTaskDetails: (task: string | undefined) => void;
+  isFetching: boolean;
 }
 
 const TaskItemComponent = (
@@ -35,10 +36,10 @@ const TaskItemComponent = (
               {...provided.dragHandleProps}
               {...allowedProps}
               onClick={async () => {
-                const responseTask: any = await props.getSelectedTaskDetails(
+                await props.getSelectedTaskDetails(
                   props.task._id,
                 );
-                if (responseTask.payload) {
+                if (props.isFetching === false) {
                   props.history.push(
                     `/company/${props.company!.uniqueName}/board/${
                       props.currentBoard!._id
@@ -189,6 +190,7 @@ const mapStateToProps = (state: any) => {
   return {
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
     company: state.companyReducer.currentCompany,
+    isFetching: state.boardIndexReducer.boardReducer.fetchingTask,
   };
 };
 

@@ -6,6 +6,7 @@ import { ITaskMember } from 'stores/taskMembers/Reducer';
 
 interface IAssignedMemberListViewComponentInternalProps {
   taskMemberList: ITaskMember[];
+  role: string;
 }
 
 export const AssignedMemberListViewComponent = (
@@ -21,7 +22,7 @@ export const AssignedMemberListViewComponent = (
         overflowY: 'auto',
       }}
     >
-      {props.taskMemberList.map((list) => (
+      {props.taskMemberList && props.taskMemberList.map((list) => (
         <div className="flex mb1">
           <img
             className="h3 w3"
@@ -42,9 +43,13 @@ export const AssignedMemberListViewComponent = (
               <p className="b ma0">{list.name}</p>
               <p className="ma0">added by {list.account}</p>
             </div>
-            <div>
-              <AssignedMemeberListEditor assignMemberId={list._id} />
-            </div>
+            {
+              props.role !== 'member' 
+                && 
+              <div>
+                <AssignedMemeberListEditor assignMemberId={list._id} />
+              </div>
+            }
           </div>
         </div>
       ))}
@@ -56,6 +61,9 @@ const mapStateToProps = (state: any) => {
   return {
     taskMemberList:
       state.boardIndexReducer.taskMembersReducer.taskMemberList,
+    role:
+      state.projectReducer.projectRole.projects &&
+      state.projectReducer.projectRole.projects.role,
   };
 };
 

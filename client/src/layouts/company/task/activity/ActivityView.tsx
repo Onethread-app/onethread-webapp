@@ -33,7 +33,7 @@ export const ActivityViewPageComponent = (
       </div>
 
       <div className="flex flex-column flex-grow-1 overflow-y-auto pt2 bl b--tigrowLightGray-1 pl3">
-        {loading === false ? (
+        {(loading === false && props.commentList) ? (
           props.commentList.map((comment) => (
             <div className="flex justify-between">
               <article className="dt pb2 mt2 w-100">
