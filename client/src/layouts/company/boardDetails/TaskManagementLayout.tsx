@@ -140,7 +140,7 @@ const TaskManagementLayoutComponent = (
                       <h5 className="tc fw5 f3">No Columns</h5>
                     )}
                     {provided.placeholder}
-                    {permissions.grantAll || permissions.projectModerator.includes('assignDeleteMemberBoard') ? (
+                    {permissions.grantAll || permissions.projectModerator.includes('createUpdateColumn') ? (
                       <div
                         className={`${
                           props.columns && props.columns.length > 0
