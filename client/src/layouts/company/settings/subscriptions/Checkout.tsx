@@ -168,7 +168,7 @@ function _Checkout(props: ICheckout) {
                         marginLeft: '15px',
                       }}
                     >
-                      <label>$7.99</label>
+                      <label>{`$${props.plan.pricing}`}</label>
                     </CardContent>
                   </Grid>
                 </Grid>
@@ -198,7 +198,7 @@ function _Checkout(props: ICheckout) {
 
                   <Grid item>
                     <CardContent style={{ marginLeft: '15px' }}>
-                      <label>$7.99</label>
+                      <label>{`$${props.plan.pricing}`}</label>
                     </CardContent>
                   </Grid>
                 </Grid>
