@@ -35,6 +35,7 @@ const TaskManagementLayoutComponent = (
   const [showColumnFormDialog, setShowColumnFormDialog] = useState(
     false,
   );
+  const permissions = projectRules(props.role, props.optionalRole);
 
   const dragEnd = async (result: DropResult) => {
     if (!result.destination) {
@@ -139,10 +140,7 @@ const TaskManagementLayoutComponent = (
                       <h5 className="tc fw5 f3">No Columns</h5>
                     )}
                     {provided.placeholder}
-                    {props.role === 'admin' ||
-                    projectRules(props.optionalRole)[
-                      props.role
-                    ].includes('assignDeleteMemberBoard') ? (
+                    {permissions.grantAll || permissions.projectModerator.includes('assignDeleteMemberBoard') ? (
                       <div
                         className={`${
                           props.columns && props.columns.length > 0

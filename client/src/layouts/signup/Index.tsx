@@ -341,7 +341,7 @@ export const SignUpPageComponent = (
                                   popoverProps={{
                                     targetClassName: 'w-100',
                                   }}
-                                  minDate={new Date('1800-01-01')}
+                                  minDate={new Date('1934-01-01')}
                                   placeholder="Birth Date"
                                   maxDate={moment(new Date())
                                     .subtract(13, 'years')

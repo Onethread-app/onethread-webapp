@@ -34,6 +34,7 @@ export const NavbarLanding = () => {
               className=""
               content={
                 <>
+                <NavLink to="project-management-tool">
                   <article className="flex bb b--light-silver pb3 pointer">
                     <img
                       src={task}
@@ -54,6 +55,7 @@ export const NavbarLanding = () => {
                       </div>
                     </article>
                   </NavLink>
+                </NavLink>
                   <NavLink to="vendor-management-tool">
                     <article className="flex pt4 pointer">
                       <img
@@ -79,6 +81,14 @@ export const NavbarLanding = () => {
                           <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
                         </div>
                         <p className="f7 mv0 pv0">Search And Find Partner Companies From Around The World!</p>
+                  <article className="flex pt4 pointer">
+                    <img
+                      src={support}
+                    />
+                    <div className="ml2">
+                      <div className="flex">
+                        <p className="fw7 mv0 pv0">Finding Partners</p>
+                        <p style={{ backgroundColor: '#0FB7A0' }} className="br2 f7 pa1 white ml2 ma0">Upcoming</p>
                       </div>
                     </article>
                   </NavLink>

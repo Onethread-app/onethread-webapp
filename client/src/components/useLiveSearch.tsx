@@ -17,7 +17,7 @@ function useDebounce(value: string, delay: number) {
 export function useLiveSearch(
   query: string,
   requestFactory: any,
-  delay: number = 250,
+  delay: number = 180,
   neglectValue: string = '',
 ) {
   const [response, setResponse] = useState([]);

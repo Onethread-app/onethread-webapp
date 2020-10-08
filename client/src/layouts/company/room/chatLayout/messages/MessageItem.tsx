@@ -9,6 +9,7 @@ import DownloadIcon from './../../../../../resources/images/Download.svg';
 import starIcon from './../../../../../resources/images/colorful-star.svg';
 import muteStarIcon from './../../../../../resources/images/mute-star.svg';
 
+import { handleDownload } from 'helpers/FileDownload';
 interface MessageItemProps {
   message: IRoomMessage;
   group: {
@@ -159,13 +160,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 >
                   {file.s3Key.split('/')[1]}
                 </h4>
-                <a
-                  href={file.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  download
-                >
-                  <span className="flex pl3">
+                  <span className="flex pl3 pointer" onClick = {() => handleDownload(file)}>
                     <img
                       src={DownloadIcon}
                       alt="Download icon"
@@ -175,7 +170,6 @@ const MessageItemComponent = (props: MessageItemProps) => {
                       }}
                     />
                   </span>
-                </a>
               </div>
             </article>
           ))

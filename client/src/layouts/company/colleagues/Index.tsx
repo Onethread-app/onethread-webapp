@@ -36,7 +36,7 @@ import { IProjectTeam } from 'stores/project/Reducer';
 import { isMobileOnly } from 'react-device-detect';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { InviteColleagueView } from './InviteColleagueView';
-import { colleagueInviteSuccess } from '../../../stores/company/Actions';
+import { inviteColleagueInBulkSuccess } from '../../../stores/company/Actions';
 
 interface Colleagues {
   company: ICompany;
@@ -54,6 +54,7 @@ interface Colleagues {
   inviteColleagueInBulk: (emails: any) => void;
   companyLoading: boolean;
   colleagueInviteSuccess: () => void;
+  inviteColleagueInBulkSuccess: () => void;
   subscriptiontExpired: boolean;
 }
 
@@ -305,36 +306,39 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                             )}
                             {companyPermit(props.company.role) &&
                             isEqual(member.role, 'superAdmin') ===
-                              false ? (
-                              isEqual(member.role, 'admin') ===
-                              true ? (
-                                <Button
-                                  className="outline-0 bp3-large bp3-popover-dismiss"
-                                  onClick={async () => {
-                                    await props.changeMemberRole(
-                                      { role: 'employee' },
-                                      member._id,
-                                    );
-                                  }}
-                                >
-                                  <span className="red">
-                                    Remove from Admin
-                                  </span>
-                                </Button>
-                              ) : (
-                                <Button
-                                  className="outline-0 bp3-large bp3-popover-dismiss"
-                                  onClick={async () => {
-                                    await props.changeMemberRole(
-                                      { role: 'admin' },
-                                      member._id,
-                                    );
-                                  }}
-                                >
-                                  <span>Make Admin</span>
-                                </Button>
-                              )
-                            ) : null}
+                              false
+                              ? isEqual(member.role, 'admin') === true
+                                ? props.company.role ===
+                                    'superAdmin' && (
+                                    <Button
+                                      className="outline-0 bp3-large bp3-popover-dismiss"
+                                      onClick={async () => {
+                                        await props.changeMemberRole(
+                                          { role: 'employee' },
+                                          member._id,
+                                        );
+                                      }}
+                                    >
+                                      <span className="red">
+                                        Remove from Admin
+                                      </span>
+                                    </Button>
+                                  )
+                                : props.company.role ===
+                                    'superAdmin' && (
+                                    <Button
+                                      className="outline-0 bp3-large bp3-popover-dismiss"
+                                      onClick={async () => {
+                                        await props.changeMemberRole(
+                                          { role: 'admin' },
+                                          member._id,
+                                        );
+                                      }}
+                                    >
+                                      <span>Make Admin</span>
+                                    </Button>
+                                  )
+                              : null}
                           </ButtonGroup>
                         }
                         target={
@@ -454,36 +458,39 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                             )}
                             {companyPermit(props.company.role) &&
                             isEqual(member.role, 'superAdmin') ===
-                              false ? (
-                              isEqual(member.role, 'admin') ===
-                              true ? (
-                                <Button
-                                  className="outline-0 bp3-large bp3-popover-dismiss"
-                                  onClick={async () => {
-                                    await props.changeMemberRole(
-                                      { role: 'employee' },
-                                      member._id,
-                                    );
-                                  }}
-                                >
-                                  <span className="red">
-                                    Remove from Admin
-                                  </span>
-                                </Button>
-                              ) : (
-                                <Button
-                                  className="outline-0 bp3-large bp3-popover-dismiss"
-                                  onClick={async () => {
-                                    await props.changeMemberRole(
-                                      { role: 'admin' },
-                                      member._id,
-                                    );
-                                  }}
-                                >
-                                  <span>Make Admin</span>
-                                </Button>
-                              )
-                            ) : null}
+                              false
+                              ? isEqual(member.role, 'admin') === true
+                                ? props.company.role ===
+                                    'superAdmin' && (
+                                    <Button
+                                      className="outline-0 bp3-large bp3-popover-dismiss"
+                                      onClick={async () => {
+                                        await props.changeMemberRole(
+                                          { role: 'employee' },
+                                          member._id,
+                                        );
+                                      }}
+                                    >
+                                      <span className="red">
+                                        Remove from Admin
+                                      </span>
+                                    </Button>
+                                  )
+                                : props.company.role ===
+                                    'superAdmin' && (
+                                    <Button
+                                      className="outline-0 bp3-large bp3-popover-dismiss"
+                                      onClick={async () => {
+                                        await props.changeMemberRole(
+                                          { role: 'admin' },
+                                          member._id,
+                                        );
+                                      }}
+                                    >
+                                      <span>Make Admin</span>
+                                    </Button>
+                                  )
+                              : null}
                             {/* {companyPermit(props.company.role) ? (
                                 <Button
                                   className='outline-0 bp3-large bp3-popover-dismiss'
@@ -581,7 +588,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
           className="ma2"
         >
           <InviteColleagueView
-            colleagueInviteSuccess={props.colleagueInviteSuccess}
+            colleagueInviteSuccess={props.inviteColleagueInBulkSuccess}
             inviteColleagueInBulk={props.inviteColleagueInBulk}
             setshowDialogForInviteColleague={setInviteDialogue}
             currentCompany={props.company.name}
@@ -647,5 +654,5 @@ export const ColleaguesPage = connect(mapStateToProps, {
   getCompanyPendingMembers,
   deleteCompanyMember,
   inviteColleagueInBulk,
-  colleagueInviteSuccess,
+  inviteColleagueInBulkSuccess,
 })(ColleaguesPageComponent);

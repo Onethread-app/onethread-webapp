@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { NavbarLanding } from './NavbarLanding';
 import './style.scss';
 import vendorFirst from './../../resources/LandingImages/vendorFirstBack.png';
@@ -6,17 +7,26 @@ import vendorSecond from './../../resources/LandingImages/vendorSecondBack.png';
 import vendorThird from './../../resources/LandingImages/vendorThirdBack.png';
 import tick from './../../resources/LandingImages/tick.svg';
 import growth from './../../resources/LandingImages/growth.svg';
-import marketLogo from './../../resources/LandingImages/marketLogo.png';
-import BKMEALogo from './../../resources/LandingImages/BKMEA-Logo.png';
-import plummyLogo from './../../resources/LandingImages/plummy.png';
-import knitLogo from './../../resources/LandingImages/knitwearLogo.png';
 import { Button, Dialog } from '@blueprintjs/core';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
+import { SuccessMessage } from '../../components/success-message/SuccessMessage';
+import { TiButton } from '../../components/button/Button';
+import { MostUsedCL } from '../../components/company-logos/CompanyLogos';
+import { ReviewSection } from 'components/review-section/ReviewSection';
 
-export const VendorManagementPage = () => {
+interface IVendorManagementProps {
+  response: string;
+}
+const VendorManagementPageComponent = (props: IVendorManagementProps) => {
 
   const [showForm3, setShowForm3] = useState(false);
+  const customerReview = {
+    customer: "Syed Naimul Abedin",
+    position: "CEO",
+    company: "Peakward Enterprise",
+    review: "It's like a life saver for the executives of my company who are currently dealing with 368 vendors simultaneously, and TiGrow is improving day by day, hearing our pain point and adding new features accordingly - I'm loving their solutions."
+  };
 
   return (
     <div className="w-100">
@@ -35,8 +45,12 @@ export const VendorManagementPage = () => {
               setShowForm3(true);
             }}
           >
+            Receive Quotations From Your Vendors, Open Those Simultaneously,
+            Even Create Smart Contracts With Them While Having TiGrow PMT With All Of Those.
+          </h1>
+          <TiButton extraClasses='mb4 outline-0 vendorRqstBtn' onClick={() => { setShowForm3(true); }}>
             Request A Demo
-          </Button>
+          </TiButton>
         </div>
         <div className="w-50-ns w-100">
           <img className="w-85-l w-100" src={vendorFirst} />
@@ -172,8 +186,16 @@ export const VendorManagementPage = () => {
           <h1 style={{ color: '#707070' }} className="f5-ns f7 fw4 w-60-l w-80 colorfulWidth tl ma0">
             CEO | Peakward Enterprise
           </h1>
+          <h1 style={{ color: '#43466D' }} className="f4-ns f6 fw4 lh-2">
+            There isn't any single solution to this vendor management
+            problem of an enterprise, why rely on solutions like WhatsApp
+            and Viber to manage your vendors, or even spending loads
+            on ERP solutions when you can have a much more lighter,
+            robust, efficient and economically feasible solution for your company.
+          </h1>
         </div>
       </div>
+      <ReviewSection customerReview={customerReview} />
       <div className="mt4" style={{ backgroundColor: '#F8F8F9' }}>
         <div className="pv4 ph6-l ph4 tc vendorSecondPadding">
           <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f4 ">Built for managing any number of vendors.</h1>
@@ -190,12 +212,7 @@ export const VendorManagementPage = () => {
             Book A Call
           </Button>
         </div>
-        <div className="flex flex-row items-center justify-center pv4 tc">
-          <img src={marketLogo} className="marketLogo" />
-          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={plummyLogo} />
-          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={BKMEALogo} />
-          <img className="ml4-ns ml2 vendorLogoSpacing knitLogo" src={knitLogo} />
-        </div>
+        <MostUsedCL />
       </div>
       <LandingFooter />
       {showForm3 && (
@@ -208,6 +225,19 @@ export const VendorManagementPage = () => {
           <ContactUsForm setShowDialog={setShowForm3} title="Contact Us" />
         </Dialog>
       )}
+      { props.response == '201' ?  <SuccessMessage /> : null }
     </div>
   );
 };
+
+
+const mapStateToProps = (state: any) => {
+  return {
+    response: state.landingReducer.contactForm.response
+  };
+};
+
+
+export const VendorManagementPage = connect(
+  mapStateToProps
+)(VendorManagementPageComponent);

@@ -11,18 +11,17 @@ import { ITask } from 'stores/board/Reducer';
 
 interface IDueDateFormProps {
   setDatePopover: (val: boolean) => void;
-  updateTask: (task: ITask) => Promise<any>;
+  updateTask: (task: ITask) => any;
   dueDate: Date;
+  updatingTask: boolean;
 }
 
 export const DueDateEditorComponent = (props: IDueDateFormProps) => {
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
-    if (response.message === 200) {
+    if ( response && !props.updatingTask ) {
       await props.setDatePopover(false);
-      return true;
     }
-    return { [response.fieldName]: response.message };
   };
 
   return (
@@ -115,6 +114,7 @@ export const DueDateEditorComponent = (props: IDueDateFormProps) => {
 const mapStateToProps = (state: any) => {
   return {
     dueDate: state.boardIndexReducer.boardReducer.currentTask.dueDate,
+    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
   };
 };
 

@@ -1,4 +1,8 @@
-import { PROJECT, CLEAR_PROJECT_REDUCER_STATE } from './Types';
+import {
+  PROJECT,
+  CLEAR_PROJECT_REDUCER_STATE,
+  ProjectActionTypes,
+} from './Types';
 import { Entity } from 'stores/UtilsActions';
 import { User } from 'stores/user/Reducer';
 import { IDesignations } from 'stores/company/Reducer';
@@ -82,64 +86,127 @@ const initialState = {
   projectRole: {},
   projectFileOpen: false,
   projectList: [],
-  error: ''
+  projectLoading: false,
+  error: '',
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
   switch (action.type) {
-    case PROJECT.PROJECT_GET_ALL_PROJECTS:
+    case ProjectActionTypes.GET_INDIVIDUAL_PROJECT_LIST_START:
+    case ProjectActionTypes.UPDATE_PROJECT_MEMBER_ROLE_START:
+    case ProjectActionTypes.ADD_PROJECT_ASSOCIATES_START:
+    case ProjectActionTypes.GET_PROJECT_ASSOCIATES_START:
+    case ProjectActionTypes.ADD_PROJECT_TEAMS_START:
+    case ProjectActionTypes.GET_PROJECT_TEAMS_START:
+    case ProjectActionTypes.GET_PROJECT_ROLE_START:
+    case ProjectActionTypes.UPDATE_PROJECT_ROLE_START:
+    case ProjectActionTypes.REJECT_PENDING_PROJECT_START:
+    case ProjectActionTypes.ACCEPT_PENDING_PROJECT_START:
+    case ProjectActionTypes.GET_ARCHIVED_PROJECTS_START:
+    case ProjectActionTypes.GET_SINGLE_PROJECT_START:
+    case ProjectActionTypes.GET_ALL_PENDING_PROJECT_START:
+    case ProjectActionTypes.PROJECT_FILE_UP_START:
+    case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_START:
+    case ProjectActionTypes.PROJECT_PREFACE_DES_UP_START:
+    case ProjectActionTypes.UPDATE_PROJECT_NAME_START:
+    case ProjectActionTypes.ARCHIVE_PROJECT_START:
+    case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_START:
+    case ProjectActionTypes.GET_ALL_PROJECTS_START:
+    case ProjectActionTypes.CREATE_PROJECT_START:
+      return {
+        ...state,
+        projectLoading: true,
+      };
+    case ProjectActionTypes.ADD_PROJECT_ASSOCIATES_SUCCESS:
+    case ProjectActionTypes.ADD_PROJECT_TEAMS_SUCCESS:
+    case ProjectActionTypes.UPDATE_PROJECT_ROLE_SUCCESS:
+    case ProjectActionTypes.REJECT_PENDING_PROJECT_SUCCESS:
+    case ProjectActionTypes.ACCEPT_PENDING_PROJECT_SUCCESS:
+    case ProjectActionTypes.PROJECT_FILE_UP_SUCCESS:
+    case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_SUCCESS:
+    case ProjectActionTypes.PROJECT_PREFACE_DES_UP_SUCCESS:
+    case ProjectActionTypes.UPDATE_PROJECT_NAME_SUCCESS:
+    case ProjectActionTypes.ARCHIVE_PROJECT_SUCCESS:
+    case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_SUCCESS:
+    case ProjectActionTypes.CREATE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        projectLoading: false,
+      };
+    case ProjectActionTypes.GET_INDIVIDUAL_PROJECT_LIST_FAILURE:
+    case ProjectActionTypes.UPDATE_PROJECT_MEMBER_ROLE_FAILURE:
+    case ProjectActionTypes.ADD_PROJECT_ASSOCIATES_FAILURE:
+    case ProjectActionTypes.GET_PROJECT_ASSOCIATES_FAILURE:
+    case ProjectActionTypes.ADD_PROJECT_TEAMS_FAILURE:
+    case ProjectActionTypes.GET_PROJECT_TEAMS_FAILURE:
+    case ProjectActionTypes.GET_PROJECT_ROLE_FAILURE:
+    case ProjectActionTypes.UPDATE_PROJECT_ROLE_FAILURE:
+    case ProjectActionTypes.REJECT_PENDING_PROJECT_FAILURE:
+    case ProjectActionTypes.ACCEPT_PENDING_PROJECT_FAILURE:
+    case ProjectActionTypes.GET_ARCHIVED_PROJECTS_FAILURE:
+    case ProjectActionTypes.GET_SINGLE_PROJECT_FAILURE:
+    case ProjectActionTypes.GET_ALL_PENDING_PROJECT_FAILURE:
+    case ProjectActionTypes.PROJECT_FILE_UP_FAILURE:
+    case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_FAILURE:
+    case ProjectActionTypes.PROJECT_PREFACE_DES_UP_FAILURE:
+    case ProjectActionTypes.UPDATE_PROJECT_NAME_FAILURE:
+    case ProjectActionTypes.ARCHIVE_PROJECT_FAILURE:
+    case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_FAILURE:
+    case ProjectActionTypes.GET_ALL_PROJECTS_FAILURE:
+    case ProjectActionTypes.CREATE_PROJECT_FAILURE:
+      return {
+        ...state,
+        error: action.payload,
+        projectLoading: false,
+      };
+    case ProjectActionTypes.GET_ALL_PROJECTS_SUCCESS:
       return {
         ...state,
         allProjects: action.payload,
+        projectLoading: false,
       };
-    case PROJECT.PROJECT_GET_ALL_PENDING_PROJECT:
-      return {
-        ...state,
-        pendingProjects: action.payload,
-      };
-    case PROJECT.PROJECT_GET_ALL_ARCHIVE:
+    case ProjectActionTypes.GET_ARCHIVED_PROJECTS_SUCCESS:
       return {
         ...state,
         allArchive: action.payload,
+        projectLoading: false,
       };
-    case PROJECT.PROJECT_SINGLE_VIEW:
+    case ProjectActionTypes.GET_ALL_PENDING_PROJECT_SUCCESS:
+      return {
+        ...state,
+        pendingProjects: action.payload,
+        projectLoading: false,
+      };
+    case ProjectActionTypes.GET_SINGLE_PROJECT_SUCCESS:
       return {
         ...state,
         projectDetails: {
           ...state.projectDetails,
           ...action.payload,
         },
+        projectLoading: false,
       };
-    case PROJECT.PROJECT_PROJECT_ID:
-      return {
-        ...state,
-        pid: action.payload,
-      };
-    case CLEAR_PROJECT_REDUCER_STATE:
-      return {
-        ...initialState,
-      };
-    case PROJECT.PROJECT_ADD_PROJECT:
+    case ProjectActionTypes.ADD_PROJECT:
       return {
         ...state,
         allProjects: [...state.allProjects, action.payload],
       };
-    case PROJECT.PROJECT_GET_TEAMS:
+    case ProjectActionTypes.GET_PROJECT_TEAMS_SUCCESS:
       return {
         ...state,
         teams: action.payload,
       };
-    case PROJECT.PROJECT_GET_ASSOCIATES:
+    case ProjectActionTypes.GET_PROJECT_ASSOCIATES_SUCCESS:
       return {
         ...state,
         projectAssociates: action.payload,
       };
-    case PROJECT.PROJECT_GET_ROLES:
+    case ProjectActionTypes.GET_PROJECT_ROLE_SUCCESS:
       return {
         ...state,
         projectRole: action.payload,
       };
-    case PROJECT.PROJECT_UPDATE_TEAM_ROLE:
+    case ProjectActionTypes.UPDATE_PROJECT_MEMBER_ROLE_SUCCESS:
       return {
         ...state,
         teams: state.teams.map((team: IProjectTeam) => {
@@ -153,26 +220,40 @@ export const ProjectReducer = (state = initialState, action: any) => {
           }
         }),
       };
+    case ProjectActionTypes.OPEN_PROJECT_FILE:
+      return {
+        ...state,
+        projectFileOpen: action.payload,
+      };
+    case ProjectActionTypes.SET_CURRENT_PROJECT_ID:
+      return {
+        ...state,
+        pid: action.payload,
+      };
     case PROJECT.PROJECT_FILE_OPEN:
       return {
         ...state,
         projectFileOpen: action.payload,
       };
-      case PROJECT.PROJECT_LIST_INDIVIDUAL:
-        return {
-          ...state,
-          projectList: [...state.projectList, action.payload],
-        };
-      case PROJECT.PROJECT_LIST_CLEAR:
-        return {
-            ...state,
-            projectList: [],
-          };
-      case PROJECT.PROJECT_ERROR:
-        return {
-            ...state,
-            error: action.payload,
-          };
+    case ProjectActionTypes.GET_INDIVIDUAL_PROJECT_LIST_SUCCESS:
+      return {
+        ...state,
+        projectList: [...state.projectList, action.payload],
+      };
+    case PROJECT.PROJECT_LIST_CLEAR:
+      return {
+        ...state,
+        projectList: [],
+      };
+    case PROJECT.PROJECT_ERROR:
+      return {
+        ...state,
+        error: action.payload,
+      };
+    case CLEAR_PROJECT_REDUCER_STATE:
+      return {
+        ...initialState,
+      };
     default:
       return state;
   }

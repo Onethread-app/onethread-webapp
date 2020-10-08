@@ -40,6 +40,8 @@ export const ChatLayoutComponent = (
     false,
   );
 
+  const permissions = projectRules(props.projectRole, props.optionalRole);
+
   return (
     <>
       {isEmpty(props.currentRoom.name) === false &&
@@ -106,8 +108,7 @@ export const ChatLayoutComponent = (
                           </h5>
                           { projectPermit(props.companyRole) || props.projectRole && 
                             props.optionalRole && 
-                            (projectRules(props.optionalRole)[props.projectRole] === true || 
-                            projectRules(props.optionalRole)[props.projectRole].includes(
+                            (permissions.grantAll || permissions.projectModerator.includes(
                             'archiveRoom',
                             )) && (
                             <h5
@@ -143,8 +144,7 @@ export const ChatLayoutComponent = (
               { projectPermit(props.companyRole) || 
                 props.projectRole && 
                 props.optionalRole && 
-                (projectRules(props.optionalRole)[props.projectRole] === true || 
-                projectRules(props.optionalRole)[props.projectRole].includes(
+                (permissions.grantAll || permissions.projectModerator.includes(
                 'addRemoveMemberRoom',
                 )) &&
               props.currentRoom.archive === false ? (
@@ -173,7 +173,7 @@ export const ChatLayoutComponent = (
                         <div
                           className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
                           onClick={() => {
-                            window.open('https://8x8.vc', '_blank');
+                            window.open('https://meet.jit.si', '_blank');
                           }}
                         >
                           <h4 className="mv0">Basic</h4>

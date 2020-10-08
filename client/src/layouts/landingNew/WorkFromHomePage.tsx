@@ -14,6 +14,22 @@ import { ContactUsForm } from './ContactUsForm';
 
 export const WorkFromHomePage = () => {
   const [showForm3, setShowForm3] = useState(false);
+import { Dialog } from '@blueprintjs/core';
+import tick from './../../resources/LandingImages/tick.svg';
+import { LandingFooter } from './LandingFooter';
+import { ContactUsForm } from './ContactUsForm';
+import { TiButton } from 'components/button/Button';
+import { MostUsedCL } from 'components/company-logos/CompanyLogos';
+import { ReviewSection } from 'components/review-section/ReviewSection';
+
+export const WorkFromHomePage = () => {
+  const [showForm3, setShowForm3] = useState(false);
+  const customerReview = {
+    customer: 'Syed Naimul Abedin',
+    position: 'CEO',
+    company: 'Peakward Enterprise',
+    review: 'TiGrow WFH Tool is simple and easy to use, I\'ve been using this software almost on a daily basis to communicate with team members throughout this pandemic and their service is impeccable.'
+  };
   return (
     <div className="w-100">
       <NavbarLanding />
@@ -75,6 +91,7 @@ export const WorkFromHomePage = () => {
             GET TiGrow FREE
           </Button>
         </NavLink>
+        <TiButton to="/signup">GET TiGrow FREE</TiButton>
       </section>
       {/* Monitoring Teammates */}
       <section className="flex flex-row-ns flex-column-reverse ph5-l ph4 mv2">
@@ -240,6 +257,8 @@ export const WorkFromHomePage = () => {
           </h1>
         </div>
       </section>
+      {/* Review */}
+      <ReviewSection customerReview={customerReview} />
       {/* Vendors */}
       <section
         className="tc pv4 ph5-l ph4"
@@ -279,6 +298,8 @@ export const WorkFromHomePage = () => {
             src={knitLogo}
           />
         </div>
+        <TiButton to="/signup">GET TiGrow FREE</TiButton>
+        <MostUsedCL />
       </section>
       <LandingFooter />
       {showForm3 && (

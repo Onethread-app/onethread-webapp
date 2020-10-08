@@ -5,10 +5,12 @@ import customerCare from './../../resources/LandingImages/customer.svg';
 import callCenter from './../../resources/LandingImages/call-center.svg';
 import strategy from './../../resources/LandingImages/strategy.svg';
 import { Button, Dialog } from '@blueprintjs/core';
+import { Dialog } from '@blueprintjs/core';
 import { ContactSupportForm } from './ContactSupportForm';
 import { ContactUsForm } from './ContactUsForm';
 import GoogleMapReact from 'google-map-react';
 import { MarkerComponent } from './Marker';
+import { TiButton } from 'components/button/Button';
 
 export const ContactUsPage = (
 ) => {
@@ -51,6 +53,9 @@ export const ContactUsPage = (
           >
             Book A Call
           </Button>
+          <TiButton extraClasses="w-90 w-auto-ns" mid onClick={() => { setShowForm3(true); }}>
+            Book A Call
+          </TiButton>
         </div>
         <div className="shadow-4 pa4 ma1 tc w-50-l mb4 mh3">
           <img src={customerCare} />
@@ -70,6 +75,9 @@ export const ContactUsPage = (
           >
             Contact Support
           </Button>
+          <TiButton extraClasses="w-90 w-auto-ns mt5-ns" mid onClick={() => { setShowForm1(true); }}>
+            Contact Support
+          </TiButton>
         </div>
       </div>
       <section className="mw7-ns center ph5-ns ph2 ml3-m ml1">
@@ -90,6 +98,9 @@ export const ContactUsPage = (
           >
             Request A Demo
           </Button>
+          <TiButton extraClasses="w-90 w-auto-ns mt5-ns" mid onClick={() => { setShowForm3(true); }}>
+            Request A Demo
+          </TiButton>
         </div>
       </section>
 

@@ -26,6 +26,7 @@ const sname = Joi.object().keys({
 // joi schema
 const schema = {
   name: Joi.string().max(32),
+  description: Joi.string().max(1000),
   type: Joi.string().valid([
     'Manufacturer',
     'Trading Company',
@@ -157,4 +158,14 @@ module.exports = {
   allNoticesForCompany: Joi.object().keys({
     params: companyId,
   }),
+  editCertification: Joi.object().keys({
+    params: companyId,
+    query: Joi.object().keys({
+      certificateId: idSchema.id.required(),
+    }),
+    body: Joi.object().keys({
+      name:schema.name,
+      description: schema.description
+    })
+  })
 };

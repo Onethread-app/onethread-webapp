@@ -68,6 +68,23 @@ export const LandingFooter = (
               <img className="mh4" src={youtubeIcon} />
             </a>
             <a href="https://www.linkedin.com/company/tigrowlimited" rel="noopener noreferrer" >
+            <a href="https://web.facebook.com/TiGrow2020/" 
+            rel="noopener noreferrer" 
+            target="_blank"
+            >
+              <img src={fb} />
+            </a>
+            <a 
+            href="https://www.youtube.com/channel/UCJSox3eBrv-L5JP33Grp0NQ" 
+            rel="noopener noreferrer" 
+            target="_blank"
+            >
+              <img className="mh4" src={youtubeIcon} />
+            </a>
+            <a href="https://www.linkedin.com/company/tigrowlimited" 
+            rel="noopener noreferrer" 
+            target="_blank"
+            >
               <img src={linkedInIcon} />
             </a>
           </div>
@@ -204,6 +221,24 @@ export const LandingFooter = (
               <img className="mh4" src={youtubeIcon} />
             </a>
             <a href="https://www.linkedin.com/company/tigrowlimited" rel="noopener noreferrer" >
+          <div className="flex items-center justify-center tc">
+            <a href="https://web.facebook.com/TiGrow2020/" 
+            rel="noopener noreferrer"
+            target="_blank"
+            >
+              <img src={fb} />
+            </a>
+            <a 
+            href="https://www.youtube.com/channel/UCJSox3eBrv-L5JP33Grp0NQ" 
+            rel="noopener noreferrer" 
+            target="_blank"
+            >
+              <img className="mh4" src={youtubeIcon} />
+            </a>
+            <a href="https://www.linkedin.com/company/tigrowlimited" 
+            rel="noopener noreferrer" 
+            target="_blank"
+            >
               <img src={linkedInIcon} />
             </a>
           </div>

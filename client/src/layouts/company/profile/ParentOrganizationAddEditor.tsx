@@ -16,6 +16,7 @@ interface IOrganizationEditProps {
   addOrganization: (parentcom: {}) => any;
   getCompanyDetails: (companyName: string) => void;
   company: ICompany;
+  isLoading: boolean;
 }
 
 const OrganizationAddComponent = (props: IOrganizationEditProps) => {
@@ -28,7 +29,7 @@ const OrganizationAddComponent = (props: IOrganizationEditProps) => {
 
   const onSubmit = async (values: any) => {
     const response = await props.addOrganization(values);
-    if (response === 200) {
+    if (response && props.isLoading === false) {
       props.setShowDialog(false);
     }
   };
@@ -115,6 +116,7 @@ const OrganizationAddComponent = (props: IOrganizationEditProps) => {
 const mapStateToProps = (state: any) => {
   return {
     company: state.companyReducer.currentCompany,
+    isLoading: state.companyReducer.loading,
   };
 };
 

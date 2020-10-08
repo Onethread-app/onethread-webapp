@@ -12,6 +12,7 @@ import { NavLink } from 'react-router-dom';
 import { MobileView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { handleDownload } from 'helpers/FileDownload';
 
 interface ProjectPrefaceProps {
   description: string;
@@ -32,6 +33,7 @@ export const ProjectPrefaceViewComponent = (
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
+  const permissions = projectRules(props.role, props.optionalRole);
 
   return (
     <>
@@ -104,27 +106,20 @@ export const ProjectPrefaceViewComponent = (
             <div>
               <h1 className="f6">Shared Files</h1>
               {props.files.map((file: any) => (
-                <div className="flex items-center justify-between">
-                  <h1 className="f6 fw6 blue">
+                <div className="flex items-center justify-between" key={file._id}>
+                  <h1 className="f6 fw6 blue w-80" style={{wordBreak: 'break-word', wordWrap: 'break-word'}}>
                     {file.s3Key.split('/')[1]}
                   </h1>
-                  <a
-                    href={file.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download
-                  >
-                    <span className="flex pl3">
-                      <img
-                        src={DownloadIcon}
-                        alt="Download icon"
-                        style={{
-                          width: '23px',
-                          height: '23px',
-                        }}
-                      />
-                    </span>
-                  </a>
+                  <span className="flex pl3 pointer" onClick = {() => handleDownload(file)}>
+                    <img
+                      src={DownloadIcon}
+                      alt="Download icon"
+                      style={{
+                        width: '23px',
+                        height: '23px',
+                      }}
+                    />
+                  </span>
                 </div>
               ))}
               <Button
@@ -143,23 +138,17 @@ export const ProjectPrefaceViewComponent = (
           ) : (
             props.optionalRole &&
             props.role &&
-            projectRules(props.optionalRole)[props.role].includes(
+            permissions.projectModerator.includes(
               'addFileProject',
             ) && (
               <div>
                 <h1 className="f6">Shared Files</h1>
                 {props.files.map((file: any) => (
-                  <div className="flex items-center justify-between">
-                    <h1 className="f6 fw6 blue">
+                  <div className="flex items-center justify-between" key={file._id}>
+                    <h1 className="f6 fw6 blue w-80" style={{wordBreak: 'break-word', wordWrap: 'break-word'}} >
                       {file.s3Key.split('/')[1]}
                     </h1>
-                    <a
-                      href={file.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      download
-                    >
-                      <span className="flex pl3">
+                      <span className="flex pl3 pointer" onClick = {() => handleDownload(file)}>
                         <img
                           src={DownloadIcon}
                           alt="Download icon"
@@ -169,7 +158,6 @@ export const ProjectPrefaceViewComponent = (
                           }}
                         />
                       </span>
-                    </a>
                   </div>
                 ))}
                 <Button

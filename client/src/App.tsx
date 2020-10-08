@@ -47,6 +47,10 @@ import { PricingPage } from 'layouts/landingNew/PricingPage';
 import { AboutPage } from 'layouts/landingNew/AboutUs';
 import { ContactUsPage } from 'layouts/landingNew/ContactUsPage';
 import { FindingPartnersPage } from 'layouts/landingNew/FindingPartnersPage';
+import { ProjectManagementTool } from 'layouts/landingNew/ProjectManagementTool';
+import { PricingPage } from 'layouts/landingNew/PricingPage';
+import { AboutPage } from 'layouts/landingNew/AboutUs';
+import { ContactUsPage } from 'layouts/landingNew/ContactUsPage';
 
 const PrivateRoute = (props: {
   component: any;
@@ -195,6 +199,9 @@ export const App = () => (
         path="/finding-partners-page"
         render={() =>
           isAuthenticate() ? <Redirect to="/" /> : <FindingPartnersPage />
+        path="/project-management-tool"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
         }
       />
       <Route

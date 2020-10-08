@@ -14,6 +14,11 @@ import { ICompany } from 'stores/company/Reducer';
 // import { Associate } from './Reducer';
 // import { Toaster } from '@blueprintjs/core';
 
+import {
+  selectAssociateSuccess,
+  selectAssociateFailure,
+} from './Actions';
+
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
 
@@ -246,6 +251,31 @@ function* rejectPendingAssociate(action: {
   }
 }
 
+function* getSelectedAssociate(associateId: string) {
+  try {
+    const headers = tokenConfig();
+    const selectCompanyId = (state) =>
+      state.companyReducer.currentCompany._id;
+    if ((headers as any).headers.Authorization && associateId) {
+      const companyId = yield select(selectCompanyId);
+      const response = yield tigrowApi.get(
+        `associate/${associateId}/${companyId}`,
+        headers,
+      );
+      yield put(selectAssociateSuccess(response.data));
+    }
+  } catch (error) {
+    if (error.message === 'Network Error') {
+      // tslint:disable-next-line: no-console
+      console.log('network error');
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      yield put(selectAssociateFailure(error.message));
+    }
+  }
+}
+
 export default function* associateSaga() {
   yield all([
     takeEvery(associate.SEND_REQUEST_LOAD, addAssociate),
@@ -266,32 +296,9 @@ export default function* associateSaga() {
       associate.REJECT_ASSOCIATE_REQUEST_LOADING,
       rejectPendingAssociate,
     ),
+    takeLatest(
+      associate.SELECT_ASSOCIATE_START,
+      getSelectedAssociate,
+    ),
   ]);
-}
-
-// const fetchProjects = (url: any, headers: any, companyId: any) => {
-//   fetch(`${url}/${companyId}`, headers);
-// };
-// const setProjects = (projects: any) => {
-//   console.log(projects);
-// };
-// const setProjectError = () => {};
-
-export function* handleProjecLoad() {
-  console.log('from saga');
-  // try {
-  //   const state = select();
-  //   const headers = tokenConfig();
-  //   const companyId = yield (state as any).companyReducer
-  //     .currentCompany._id;
-  //   const projects = yield call(
-  //     fetchProjects,
-  //     'http://tigrow.co',
-  //     headers,
-  //     companyId,
-  //   );
-  //   yield put(setProjects(projects) as any);
-  // } catch (e) {
-  //   yield put(setProjectError() as any);
-  // }
 }

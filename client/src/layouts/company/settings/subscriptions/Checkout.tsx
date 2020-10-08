@@ -125,7 +125,7 @@ function _Checkout(props: ICheckout) {
     value === 'bangladesh' &&
       portWalletCheckout(
         formValues,
-        props.plan.pricing,
+        props.plan.pricing * 85,
         props.plan._id,
         props.companyName,
       );

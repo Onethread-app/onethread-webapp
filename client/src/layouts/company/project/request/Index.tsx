@@ -95,7 +95,8 @@ const ProjectRequestComponent = (
                     }}
                     type="submit"
                     loading={acceptLoading}
-                    onClick={async () => {
+                    onClick={async (e: any) => {
+                      e.preventDefault();
                       setAcceptLoading(true);
                       await props.acceptPendingProject(
                         pending

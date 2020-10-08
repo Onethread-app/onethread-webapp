@@ -23,6 +23,17 @@ import { NavLink } from 'react-router-dom';
 import './style.scss';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
+import { Dialog } from '@blueprintjs/core';
+import firstBack from './../../resources/LandingImages/aboutFirstBack.svg';
+import secondBack from './../../resources/LandingImages/aboutUsSecondBack.png';
+import './style.scss';
+import { LandingFooter } from './LandingFooter';
+import { ContactUsForm } from './ContactUsForm';
+import { ProductCard } from '../../components/productCard/ProductCard';
+import { CGCSection } from '../../components/cgc-section/CGCSection';
+import CardData from '../../resources/CardData';
+import { CLWithNumbers } from '../../components/company-logos/CompanyLogos';
+import { GWTSection } from 'components/gwt-section/GWTSection';
 
 export const AboutPage = () => {
   const [showContactUs, setShowContactUs] = useState(false);
@@ -379,6 +390,15 @@ export const AboutPage = () => {
           <img className="w-80-l w-100-m w-60" src={smile} />
         </div>
       </section>
+        {
+          CardData.map((data) => (
+            <ProductCard key={data.id} data={data} />
+          ))
+        }
+      </div>
+      <CGCSection setShowContactUs={setShowContactUs} />
+      <CLWithNumbers />
+      <GWTSection />
       <LandingFooter />
       {showContactUs && (
         <Dialog

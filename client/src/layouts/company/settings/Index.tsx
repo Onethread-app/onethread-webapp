@@ -3,7 +3,7 @@ import { Tabs, Tab } from '@blueprintjs/core';
 import { GeneralView } from './companyName/General';
 import { DepartmentView } from './department/View';
 import { AdminRoleView } from './adminRole/View';
-import { isMobileOnly } from 'react-device-detect';
+import { isMobileOnly, MobileOnlyView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
 import { companySubscriber } from 'layouts/company/notification/subscribers';
@@ -14,6 +14,7 @@ import { NavbarCompany } from 'components/NavbarCompany';
 import Subscriptions from './subscriptions/Index';
 import Modal from 'react-modal';
 import SubscriptionExpiredText from './SubscriptionExpiredText';
+import './styles.scss';
 
 const customStyles = {
   content: {
@@ -37,6 +38,51 @@ interface SettingsPageProps {
   subscriptiontExpired: boolean;
 }
 
+const ViewContent = ({ selectedTab }) => {
+  return (
+    <div>
+      {
+        {
+          1: <GeneralView />,
+          2: <AdminRoleView />,
+          3: <DepartmentView />,
+          4: <Subscriptions />
+        }[selectedTab]
+      }
+    </div>
+  );
+};
+
+const MobileView = () => {
+  const [selectedTab, setSelectedTab] = React.useState(1);
+  const liClasses = 'pv2';
+  return (
+    <MobileOnlyView>
+      <div className="mobile-nav w-100 tc">
+        <ul className="flex flex-column list pl0">
+          <li className={liClasses + (selectedTab === 1 ? ' activeNav' : '')}
+            onClick={() => setSelectedTab(1)}>
+            General
+        </li>
+          <li className={liClasses + (selectedTab === 2 ? ' activeNav' : '')}
+            onClick={() => setSelectedTab(2)}>
+            Role Permission
+        </li>
+          <li className={liClasses + (selectedTab === 3 ? ' activeNav' : '')}
+            onClick={() => setSelectedTab(3)}>
+            Departments
+        </li>
+          <li className={liClasses + (selectedTab === 4 ? ' activeNav' : '')}
+            onClick={() => setSelectedTab(4)}>
+            Subscription And Billing
+        </li>
+        </ul>
+      </div>
+      <ViewContent selectedTab={selectedTab} />
+    </MobileOnlyView>
+  );
+};
+
 const SettingsPagComponent = (
   props: SettingsPageProps & RouteComponentProps,
 ) => {
@@ -56,28 +102,29 @@ const SettingsPagComponent = (
             <h3 className="f3 b">Settings</h3>
           )}
         </div>
-        <Tabs
+        {isMobileOnly ? <MobileView /> : (
+          <Tabs
           id="TabsExample"
           className="fl w-100 min-vh-75"
-          vertical={true}
+          vertical={ isMobileOnly ? false : true}
         >
           <Tab
             id="General"
-            panelClassName="b--black-05 bl bw1 ml3-ns ml1 w-100"
+            panelClassName={`b--black-05 ${ isMobileOnly ? '' : 'bl'} bw1 ml3-ns ml1 w-100`}
             title="General"
             panel={<GeneralView />}
             className="outline-0 f6-ns f7"
           />
           <Tab
             id="admin_role_permissions"
-            panelClassName="b--black-05 bl bw1 ml3-ns ml1 w-100"
+            panelClassName={`b--black-05 ${ isMobileOnly ? '' : 'bl'} bw1 ml3-ns ml1 w-100`}
             title="Role Permissions"
             panel={<AdminRoleView />}
-            className="outline-0 w-100 f6-ns f7"
+            className="outline-0 f6-ns f7"
           />
           <Tab
             id="department"
-            panelClassName="b--black-05 bl bw1 ml3-ns ml1 w-100"
+            panelClassName={`b--black-05 ${ isMobileOnly ? '' : 'bl'} bw1 ml3-ns ml1 w-100`}
             title="Department"
             panel={<DepartmentView />}
             className="outline-0 f6-ns f7"
@@ -85,13 +132,14 @@ const SettingsPagComponent = (
           {props.companyRole === 'superAdmin' && (
             <Tab
               id="subscription"
-              panelClassName="b--black-05 bl bw1 ml3-ns ml1 w-100"
+              panelClassName={`b--black-05 ${ isMobileOnly ? '' : 'bl'} bw1 ml3-ns ml1 w-100`}
               title="Subscriptions and Billing"
               panel={<Subscriptions />}
               className="outline-0 f6-ns f7"
             />
           )}
         </Tabs>
+        )}
         {success && (
           <Modal
             isOpen={success}

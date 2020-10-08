@@ -11,7 +11,6 @@ import { tigrowApi } from 'config';
 import { ICompany } from 'stores/company/Reducer';
 import { useLiveSearch } from 'components/useLiveSearch';
 import { isEqual } from 'lodash';
-
 interface ProjectAssociateProps {
   showDialog: boolean;
   setShowDialog: (val: boolean) => void;
@@ -30,6 +29,7 @@ interface ProjectAssociateInternalProps
     },
     selectedAssociate: any,
   ) => void;
+  isLoading: boolean,
 }
 
 const AddProjectAssociateFormComponent = (
@@ -57,19 +57,19 @@ const AddProjectAssociateFormComponent = (
     //     size: 5
     //   };
     // });
-    const asso = response.data.data.map((e: any) => 
-      isEqual(props.company._id, e._source.company_id ) === true ?
-      {
-        _id: e._source.mongo_id,
-        name: e._source.associateCompanyName,
-        size: 5
-      }
-      :
-      {
-        _id: e._source.mongo_id,
-        name: e._source.companyName,
-        size: 5
-      }
+    const asso = response.data.data.map((e: any) =>
+      isEqual(props.company._id, e._source.company_id) === true ?
+        {
+          _id: e._source.mongo_id,
+          name: e._source.associateCompanyName,
+          size: 5
+        }
+        :
+        {
+          _id: e._source.mongo_id,
+          name: e._source.companyName,
+          size: 5
+        }
     );
     return asso;
   };
@@ -142,47 +142,50 @@ const AddProjectAssociateFormComponent = (
 
       <div className="w-100 mb2">
         {selectedAssociate.map((item, index) => (
-          <Tag
-            key={item._id}
-            className="ma1 pa2"
-            style={{ backgroundColor: '#3b5998', color: 'white' }}
-            interactive={true}
-            onRemove={(e) => {
-              const filteredItems = selectedAssociate.filter(
-                (selectedItem) => item.name !== selectedItem.name,
-              );
-              setSelectedAssociate([...filteredItems]);
-            }}
-            large={true}
-          >
-            <span
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
+          <>
+            <Tag
+              key={item._id}
+              className="ma1 pa2"
+              style={{ backgroundColor: '#3b5998', color: 'white' }}
+              interactive={true}
+              onRemove={(e) => {
+                const filteredItems = selectedAssociate.filter(
+                  (selectedItem) => item.name !== selectedItem.name,
+                );
+                setSelectedAssociate([...filteredItems]);
               }}
+              large={true}
             >
-              <span>{item.name}</span>
-              <span style={{ padding: 3 }}>
-                <select
-                  value={item['size']}
-                  onChange={(e: any) => {
-                    let sa = [...selectedAssociate];
-                    sa[index]['size'] = e.target.value;
-                    setSelectedAssociate(sa);
-                  }}
-                >
-                  {teamSizes.map((t) => {
-                    return (
-                      <option key={t.label + t.value} value={t.value}>
-                        {t.label}
-                      </option>
-                    );
-                  })}
-                </select>
+              <span
+                style={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}
+              >
+                <span>{item.name}</span>
               </span>
+            </Tag>
+            <span style={{ padding: 3 }}>
+              <select
+                onChange={(e: any) => {
+                  let sa = [...selectedAssociate];
+                  sa[index]['size'] = e.target.value;
+                  setSelectedAssociate(sa);
+                }}
+                className="pa1" 
+              >
+                <option selected value="">No. of employee</option>
+                {teamSizes.map((t) => {
+                  return (
+                    <option key={t.label + t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  );
+                })}
+              </select>
             </span>
-          </Tag>
+          </>
         ))}
       </div>
 
@@ -220,7 +223,7 @@ const AddProjectAssociateFormComponent = (
               selectedAssociate,
             );
 
-            if (response.status === 200) {
+            if (response && props.isLoading === false) {
               props.setShowDialog(!props.showDialog);
             }
           }}
@@ -237,6 +240,7 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     projectId: state.projectReducer.pid,
     associates: state.associateReducer.associatesList,
+    isLoading: state.projectReducer.projectLoading,
   };
 };
 

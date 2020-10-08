@@ -11,8 +11,16 @@ import {
 import { ContactSupportForm } from './ContactSupportForm';
 import { ContactUsForm } from './ContactUsForm';
 import { LandingFooter } from './LandingFooter';
+import { SuccessMessage } from 'components/success-message/SuccessMessage';
+import { connect } from 'react-redux';
 
 export const PricingPage = (
+interface IPricingPageProps {
+  response: string;
+}
+
+const PricingPageComponent = (
+  props: IPricingPageProps
 ) => {
 
   const [showForm1, setShowForm1] = useState(false);
@@ -36,7 +44,7 @@ export const PricingPage = (
               <h1 className="f3-ns f6 fw4 silver ma0">For teams and individuals.</h1>
             </div>
             <div>
-              <h1 className="f1-ns f3 fw7 ma0  basicFont"><span className="fw4">$</span>7.99</h1>
+              <h1 className="f1-ns f3 fw7 ma0  basicFont"><span className="fw4">$</span>2.99</h1>
               <h1 className="f4-ns f6 fw4 silver ma0">/user per month</h1>
             </div>
           </div>
@@ -50,6 +58,7 @@ export const PricingPage = (
               <span className="fw7">Unlimited</span>
                Kanban Boards
             </h1>
+              <span className="fw7">Unlimited</span> Kanban Boards</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -61,6 +70,7 @@ export const PricingPage = (
               <span className="fw7">100,000</span>
                Message History
             </h1>
+              <span className="fw7">100,000</span> Message History</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -68,6 +78,7 @@ export const PricingPage = (
               <span className="fw7">1000 Minute</span>
                Video Conferencing (Premium)
             </h1>
+              <span className="fw7">1000 Minute</span> Video Conferencing (Premium)</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -75,6 +86,7 @@ export const PricingPage = (
               <span className="fw7">Unlimited Minute</span>
                Video Conferencing (Basic)
             </h1>
+              <span className="fw7">Unlimited Minute</span> Video Conferencing (Basic)</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -86,8 +98,9 @@ export const PricingPage = (
               <span className="fw7">Unlimited</span>
                Admins And Project Moderators
             </h1>
+              <span className="fw7">Unlimited</span> Admins And Project Moderators</h1>
           </div>
-          <div className="flex mt2">
+          {/* <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
             <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
               <span className="fw7">Up To 100</span>
@@ -100,6 +113,12 @@ export const PricingPage = (
               <span className="fw7">Up To 100</span>
                Colleagues
             </h1>
+              <span className="fw7">Up To 100</span> Project Team Mates</h1>
+          </div> */}
+          <div className="flex mt2">
+            <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
+            <h1 className="f4-ns f6 fw4 dark-gray ml2 mv0 w-90">
+              <span className="fw7">Up To 100</span> Colleagues</h1>
           </div>
           <div className="flex mt2">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -107,6 +126,7 @@ export const PricingPage = (
               <span className="fw7">Up To 50</span>
                Associates
             </h1>
+              <span className="fw7">Up To 50</span> Associates</h1>
           </div>
           <div className="flex mt2 items-start">
             <img className="w-10" style={{ width: isMobileOnly ? '15px' : '23px' }} src={tick} />
@@ -114,15 +134,19 @@ export const PricingPage = (
               <span className="fw7">Free Inclusion At The Time Of Release -</span>
                Major Features Like Gantt Chart,
             Clock In-Out, TIme Sheet and Shared Browser
+              <span className="fw7">Free Inclusion At The Time Of Release -</span> Major
+                Features Like Gantt Chart,
+                Clock In-Out, TIme Sheet and Shared Browser
             </h1>
           </div>
           <div className="tc">
             <NavLink to="/signup">
               <button
-                className="b--silver ba br3 f4-ns f5 fw6 outline-0 pa3-ns pa2 w5-ns mt4 tc pricing-btn pointer"
+                className="b--silver ba br3 f4-ns f5 fw6 outline-0 pa3-ns pa2 w5-ns mt4 tc pricing-btn  pointer"
               >
                 Try for free
-              <br /><span className="f6 fw4">No credit card required</span>
+              <br /><span className="f6 fw4">*No credit card required</span>
+              <br /><span className="f6 fw4">*Upto 5 colleagues</span>
               </button>
             </NavLink>
 
@@ -221,6 +245,18 @@ export const PricingPage = (
           <ContactUsForm setShowDialog={setShowForm3} title="Contact Us" />
         </Dialog>
       )}
+      { props.response == '201' ?  <SuccessMessage /> : null }
     </>
   );
 };
+};
+
+const mapStateToProps = (state: any) => {
+  return {
+    response: state.landingReducer.contactForm.response
+  };
+};
+
+export const PricingPage = connect(
+  mapStateToProps
+)(PricingPageComponent);

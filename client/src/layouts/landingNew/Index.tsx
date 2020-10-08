@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { connect } from 'react-redux';
 import { NavbarLanding } from './NavbarLanding';
 import { Button, Dialog } from '@blueprintjs/core';
 import task from './../../resources/LandingImages/task-complete.svg';
@@ -18,18 +19,31 @@ import peakwardLogo from './../../resources/LandingImages/peakwardLogo.png';
 import smile from './../../resources/LandingImages/Smile.png';
 import { isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
+import { TiButton } from 'components/button/Button';
+import { Dialog } from '@blueprintjs/core';
 import './style.scss';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
+import { SuccessMessage } from 'components/success-message/SuccessMessage';
+import { ProductCard } from '../../components/productCard/ProductCard';
+import { CGCSection } from '..../../components/cgc-section/CGCSection';
+import CardData from '../../resources/CardData';
+import { CLWithNumbers } from 'components/company-logos/CompanyLogos';
+import { GWTSection } from 'components/gwt-section/GWTSection';
 
-export const LandingPage = () => {
+interface ILandingPageProps {
+  response: string;
+}
+const LandingPageComponent = (props: ILandingPageProps) => {
   const [showContactUs, setShowContactUs] = useState(false);
   return (
     <div className="w-100">
       <NavbarLanding />
       <div className="LandingFirstBackground vh-100 w-100 mt5">
         <div className="w-50-l w-60-m w-90 ml5-l ml4-m ml3 pt4-l pt2">
+
           <h1 className="f3-l f4-m f6 fw5 blue ma0" style={{ color: '#3F61C5' }}>WORK FROM HOME</h1>
+          <h1 className="f3-l f4-m f6 fw5 blue mt2" style={{ color: '#3F61C5' }}>WORK FROM HOME</h1>
           <h1 className="f2-l f3-m f4 mt3" style={{ color: '#1D3557' }}>
             There is a better way to collaborate with your teammates.
           </h1>
@@ -46,6 +60,11 @@ export const LandingPage = () => {
               GET TiGrow FREE
           </Button>
           </NavLink>
+          tool that allows you to seamlessly manage your teams’ tasks,
+          communicate with team members in real-time, hold video conferences, and simplify collaboration
+          with your vendors and partner organizations.
+          </p>
+          <TiButton to='/signup' mid>GET TiGrow FREE</TiButton>
           <p className="f5-ns f7 w-40" style={{ color: '#707070' }}>
             Get started with FREE tools, and upgrade as you grow.</p>
         </div>
@@ -343,7 +362,15 @@ export const LandingPage = () => {
         <div className="w-50-l ml6-l">
           <img className="w-80-l w-100-m w-60" src={smile} />
         </div>
+        {
+          CardData.map((data) => (
+            <ProductCard key={data.id} data={data} />
+          ))
+        }
       </div>
+      <CGCSection setShowContactUs={setShowContactUs}/>
+      <CLWithNumbers />
+      <GWTSection />
       <LandingFooter />
       {showContactUs && (
         <Dialog
@@ -355,6 +382,17 @@ export const LandingPage = () => {
           <ContactUsForm setShowDialog={setShowContactUs} title="Contact Us" />
         </Dialog>
       )}
+      { props.response == '201' ?  <SuccessMessage /> : null }
     </div>
   );
 };
+
+const mapStateToProps = (state: any) => {
+  return {
+    response: state.landingReducer.contactForm.response
+  };
+};
+
+export const LandingPage = connect(
+  mapStateToProps
+)(LandingPageComponent);

@@ -16,7 +16,8 @@ interface ITaskDescriptionFormProps {
   description: ITask['description'];
   setEditDescriptionDialog: (val: boolean) => void;
   editDescriptionDialog: boolean;
-  updateTask: (task: ITask) => Promise<any>;
+  updateTask: (task: ITask) => any;
+  updatingTask: boolean;
 }
 
 export const TaskDescriptionEditorComponent = (
@@ -24,7 +25,7 @@ export const TaskDescriptionEditorComponent = (
 ) => {
   const onSubmit = async (values: any) => {
     const response = await props.updateTask(values);
-    if (response.message === 200) {
+    if ( response && !props.updatingTask ) {
       props.setEditDescriptionDialog(false);
       return true;
     }
@@ -109,6 +110,7 @@ const mapStateToProps = (state: any) => {
   return {
     description:
       state.boardIndexReducer.boardReducer.currentTask.description,
+    updatingTask: state.boardIndexReducer.boardReducer.updatingTask,
   };
 };
 
