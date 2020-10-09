@@ -154,23 +154,23 @@ export const FindingPartnersPage = () => {
             Enroll as Partner Today and Start Growing with TiGrow
           </h1> 
           <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#0FB7A0' }}>
-            Ready to accelerate growth for your business and your clients? 
+            Ready to accelerate growth for your business and your clients ? 
              So are we. We can’t wait to launch and share this partner tool with you.  
           </h1> 
             <Button
-              className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2"
-              style={{ color: 'white', backgroundColor: '#4B6BC8', textTransform:'uppercase' }} 
-              onClick={() => {
+              className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2" 
+              style={{ color: 'white', backgroundColor: '#4B6BC8', textTransform:'uppercase' }}  
+              onClick={() => { 
                     setShowForm3(true);
-                }}
-            >
+                }} 
+            >  
               Contact us to enroll as a partner
           </Button> 
-        </div>
-        <div className="w-50-l ml6-l">
-          <img className="w-70-l w-100-m w-60" src={smile} />
-        </div>
-      </div>
+        </div> 
+        <div className="w-50-l ml6-l"> 
+          <img className="w-70-l w-100-m w-60" src={smile} /> 
+        </div> 
+      </div> 
 
       <div className="mt4" style={{ backgroundColor: '#F8F8F9' }}>
         <div className="pv4 ph6-l ph4 tc vendorSecondPadding">
