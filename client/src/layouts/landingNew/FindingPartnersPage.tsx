@@ -152,7 +152,7 @@ export const FindingPartnersPage = () => {
         <div className="w-50-l w-80 pl6-l">
           <h1 className="f2-l f3-m f5" style={{ color: '#0FB7A0' }}>
             Enroll as Partner Today and Start Growing with TiGrow
-          </h1>
+          </h1> 
           <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#0FB7A0' }}>
             Ready to accelerate growth for your business and your clients? 
             So are we. We can’t wait to launch and share this partner tool with you.
