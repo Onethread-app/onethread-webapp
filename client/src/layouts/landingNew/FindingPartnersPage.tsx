@@ -155,7 +155,7 @@ export const FindingPartnersPage = () => {
           </h1> 
           <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#0FB7A0' }}>
             Ready to accelerate growth for your business and your clients? 
-            So are we. We can’t wait to launch and share this partner tool with you. 
+             So are we. We can’t wait to launch and share this partner tool with you.  
           </h1> 
             <Button
               className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2"
