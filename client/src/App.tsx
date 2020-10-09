@@ -155,7 +155,7 @@ export const App = () => (
             <EmailVerificationPage />
           )
         }
-      />
+      /> 
       <Route
         path="/signup-confirmation"
         render={() =>

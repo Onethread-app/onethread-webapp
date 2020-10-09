@@ -21,7 +21,9 @@ export const FindingPartnersPage = () => {
       <NavbarLanding />
       <div className="flex flex-column-reverse flex-row-ns items-center ph5-l ph4-m ph3 mt5 pt3 mb4-ns tc tl-ns">
         <div className="w-50-ns w-100 pr5-l pr3-m">
-          <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f6 ">What can an agency or service provider do for you ?</h1>
+          <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f6 ">
+            What can an agency or service provider do for you ?
+          </h1>
           <h1 style={{ color: '#43466D' }} className="f3-l f5-m f7 fw4 lh-2 vendorLineHeight">
           Generate more leads, increase revenue, and delight your customers with one
            of our vetted and proven agencies or service providers. Get help with marketing,
@@ -148,14 +150,16 @@ export const FindingPartnersPage = () => {
       ph5-ns flex flex-column-reverse flex-row-ns items-center tc tl-ns mb4"
       >
         <div className="w-50-l w-80 pl6-l">
-          <h1 className="f2-l f3-m f5" style={{ color: '#0FB7A0' }}>Enroll as Partner Today and Start Growing with TiGrow</h1>
+          <h1 className="f2-l f3-m f5" style={{ color: '#0FB7A0' }}>
+            Enroll as Partner Today and Start Growing with TiGrow
+          </h1>
           <h1 className="f4-ns f6 fw4 lh-2-ns" style={{ color: '#0FB7A0' }}>
             Ready to accelerate growth for your business and your clients? 
             So are we. We can’t wait to launch and share this partner tool with you.
           </h1>
             <Button
               className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2"
-              style={{ color: 'white', backgroundColor: '#4B6BC8', textTransform:'uppercase' }}
+              style={{ color: 'white', backgroundColor: '#4B6BC8', textTransform:'uppercase' }} 
               onClick={() => {
                     setShowForm3(true);
                 }}
