@@ -160,7 +160,7 @@ export const FindingPartnersPage = () => {
           </h1>
             <Button
               className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2"
-              style={{ color: 'white', backgroundColor: '#4B6BC8', textTransform:'uppercase' }} 
+              style={{ color: 'white', backgroundColor: '#4B6BC8', textTransform: 'uppercase' }} 
               onClick={() => {
                     setShowForm3(true);
                 }}
