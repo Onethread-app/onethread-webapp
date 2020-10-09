@@ -154,58 +154,58 @@ export const FindingPartnersPage = () => {
             Enroll as Partner Today and Start Growing with TiGrow 
           </h1>  
           <h1 
-          className="f4-ns f6 fw4 lh-2-ns"
-          style={{ color: '#0FB7A0' }}
-          >
+          className="f4-ns f6 fw4 lh-2-ns" 
+          style={{ color: '#0FB7A0' }} 
+          > 
             Ready to accelerate growth for your business and your clients ? 
-            So are we. We can’t wait to launch and share this partner tool with you. 
-          </h1> 
+            So are we. We can’t wait to launch and share this partner tool with you.  
+          </h1>  
             <Button
-              className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2" 
-              style={{ color: 'white', backgroundColor: '#4B6BC8', textTransform:'uppercase' }}  
+              className="f4-ns fw6 bp3-minimal pa4-l pa2 br2 mv4-ns mv2"  
+              style={{ color: 'white', backgroundColor: '#4B6BC8', textTransform:'uppercase' }}   
               onClick={() => { 
                     setShowForm3(true);
-                }} 
-            >  
-              Contact us to enroll as a partner 
-          </Button> 
-        </div> 
-        <div className="w-50-l ml6-l"> 
-          <img className="w-70-l w-100-m w-60" src={smile} /> 
-        </div> 
-      </div> 
+                }}  
+            >   
+              Contact us to enroll as a partner  
+          </Button>  
+        </div>  
+        <div className="w-50-l ml6-l">  
+          <img className="w-70-l w-100-m w-60" src={smile} />  
+        </div>  
+      </div>  
 
-      <div className="mt4" style={{ backgroundColor: '#F8F8F9' }}>
-        <div className="pv4 ph6-l ph4 tc vendorSecondPadding">
-          <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f4 ">Built for managing any number of vendors.</h1>
-          <h1 style={{ color: '#43466D' }} className="f3-l f4-m f5 fw4">
-            Book A Call Today - For A Demo And Get Started With TiGrow Vendor Management tool
-          </h1>
+      <div className="mt4" style={{ backgroundColor: '#F8F8F9' }}> 
+        <div className="pv4 ph6-l ph4 tc vendorSecondPadding"> 
+          <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f4 ">Built for managing any number of vendors.</h1> 
+          <h1 style={{ color: '#43466D' }} className="f3-l f4-m f5 fw4"> 
+            Book A Call Today - For A Demo And Get Started With TiGrow Vendor Management tool 
+          </h1> 
           <Button
-            className="f4-ns fw6 bp3-minimal pa4-l pa3-m pa2 w5 br3 outline-0 mt2"
-            style={{ color: 'WHITE', border: 'solid 2px WHITE', backgroundColor: '#4B6BC8' }}
+            className="f4-ns fw6 bp3-minimal pa4-l pa3-m pa2 w5 br3 outline-0 mt2" 
+            style={{ color: 'WHITE', border: 'solid 2px WHITE', backgroundColor: '#4B6BC8' }} 
             onClick={() => {
               setShowForm3(true);
-            }}
-          >
+            }} 
+          > 
             Book A Call
-          </Button>
-        </div>
-        <div className="flex flex-row items-center justify-center pv4 tc">
-          <img src={marketLogo} className="marketLogo" />
-          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={plummyLogo} />
-          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={BKMEALogo} />
-          <img className="ml4-ns ml2 vendorLogoSpacing knitLogo" src={knitLogo} />
-        </div>
-      </div>
-      <LandingFooter />
+          </Button> 
+        </div> 
+        <div className="flex flex-row items-center justify-center pv4 tc"> 
+          <img src={marketLogo} className="marketLogo" /> 
+          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={plummyLogo} /> 
+          <img className="ml4-ns ml2 vendorLogoSpacing plummyLogo" src={BKMEALogo} /> 
+          <img className="ml4-ns ml2 vendorLogoSpacing knitLogo" src={knitLogo} /> 
+        </div> 
+      </div> 
+      <LandingFooter /> 
       {showForm3 && (
         <Dialog
           icon="briefcase"
           onClose={() => setShowForm3(!showForm3)}
           isOpen
           style={{ background: '#fff' }}
-        >
+        > 
           <ContactUsForm setShowDialog={setShowForm3} title="Contact Us" />
         </Dialog>
       )}
