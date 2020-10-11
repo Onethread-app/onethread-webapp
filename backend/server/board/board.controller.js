@@ -65,13 +65,38 @@ const create = async (req, res, next) => {
       department: req.body.department,
       color: req.body.color,
       account: req.user._id,
-      project: req.body.projectId,
+      project: req.query.pid,
       members: [req.user._id],
+    });
+    // await board.save();
+    await BoardColumn.create({
+      name: 'To do',
+      type: 'to-do',
+      project: req.query.pid,
+      account: req.user._id,
+      positionInBoard: 1,
+      boardId: board._id,
+    });
+    await BoardColumn.create({
+      name: 'In progress',
+      type: 'in-progress',
+      project: req.query.pid,
+      account: req.user._id,
+      positionInBoard: 2,
+      boardId: board._id,
+    });
+    await BoardColumn.create({
+      name: 'Done',
+      type: 'done',
+      project: req.query.pid,
+      account: req.user._id,
+      positionInBoard: 3,
+      boardId: board._id,
     });
 
     const project = await Project.findOne({
-      _id: req.body.projectId,
-    }).select('_id name company');  //company name in header can remove that
+      _id: req.query.pid,
+    }).select('_id name company'); //company name in header can remove that
 
     //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
 
@@ -80,7 +105,7 @@ const create = async (req, res, next) => {
       {
         project: project._id,
         company: project.company,
-        _id : board._id,
+        _id: board._id,
       },
       {
         _id: req.user._id,
@@ -94,7 +119,6 @@ const create = async (req, res, next) => {
     return res.status(201).json(createdBoard);
   } catch (error) {
     logger.error(`Board create: ${error}`);
-
     next(error);
   }
 };
@@ -115,19 +139,22 @@ const addBoardMembers = async (req, res, next) => {
     })
       .populate('project', '_id name company')
       .populate('members', 'name');
-    
 
-    const newBoardMember = board.members.filter((value)=> value._id.toString() === memberID[memberID.indexOf(value._id.toString())] ).map((m)=>m.name)
+    const newBoardMember = board.members
+      .filter(
+        (value) =>
+          value._id.toString() ===
+          memberID[memberID.indexOf(value._id.toString())],
+      )
+      .map((m) => m.name);
 
     const text = `${req.user.name} has added  ${newBoardMember} in ${board.name} from ${board.project.name}`;
-
-    
 
     createBoardNotification(
       {
         project: board.project._id,
         company: board.project.company,
-        _id : board._id,
+        _id: board._id,
       },
       {
         _id: req.user._id,
@@ -181,7 +208,7 @@ const suggestMember = async (req, res, next) => {
       .exec();
     //now it will check form project team by projectId
     let projectMembers = await Team.find({
-      project: req.query.pid
+      project: req.query.pid,
     })
       .select('-_id account')
       .populate('account', '_id name')
@@ -193,10 +220,10 @@ const suggestMember = async (req, res, next) => {
         );
       });
     });
-    
+
     members = members.map((m) => m.account);
 
-    return sendJSONresponse(res,200,members);
+    return sendJSONresponse(res, 200, members);
   } catch (error) {
     logger.error(`Board Details: ${error}`);
     next(error);

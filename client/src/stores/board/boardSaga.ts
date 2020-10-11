@@ -29,7 +29,7 @@ import {
 } from './Actions';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
-import { getCurrentBoard, getCurrentTask } from './Selector';
+import { getCurrentBoard, getCurrentTask, selectColumnName } from './Selector';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -125,11 +125,16 @@ export function* getSelectedBoard({ payload }: any) {
 
 export function* createColumn({ payload }: any) {
   try {
+    const { name, } = payload;
+    const newPayload = {
+      type: name.toLowerCase(),
+      ...payload
+    };
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
     const response = yield tigrowApi.post(
       `boardColumns?pid=${projectId}`,
-      payload,
+      newPayload,
       headers,
     );
     yield put(createColumnSuccess(response.data));
@@ -186,10 +191,16 @@ export function* createTask({ payload }: any) {
   try {
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
+    const { columnId } = payload;
+    const col = yield select(selectColumnName(columnId));
+    const newPayload = {
+      status: col[0].name.toLowerCase().split(' ').join('-'),
+      ...payload,
+    };
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.post(
         `tasks?pid=${projectId}`,
-        payload,
+        newPayload,
         headers,
       );
       const responseValue = {
@@ -224,9 +235,12 @@ export function* dragAndDrop({
   try {
     const headers = tokenConfig();
     const currentBoard: TaskBoard = yield select(getCurrentBoard);
+    const destColumn = yield select(selectColumnName(destinationColumnId));
+    const status = destColumn[0].name.toLowerCase().split(' ').join('-');
     if ((headers as any).headers.Authorization) {
       const requestData = {
         taskId,
+        status,
         sourceColumnId,
         destinationColumnId,
         taskIndexOfDestinationColumn,
