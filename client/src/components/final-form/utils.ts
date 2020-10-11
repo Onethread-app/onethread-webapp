@@ -30,6 +30,22 @@ export const checkError = (meta: any) => {
   return false;
 };
 
+export const checkTaskName = (value: any) => {
+  if (!value) {
+    return 'Column Name is required';
+  }
+  if (value.toLowerCase() === 'to do') {
+    return 'Column Name Cannot Be To Do';
+  }
+  if (value.toLowerCase() === 'in progress') {
+    return 'Column Name Cannot Be In Progress';
+  }
+  if (value.toLowerCase() === 'done') {
+    return 'Column Name Cannot Be Done';
+  }
+  return null;
+};
+
 export const isEmail = (email: string) => {
   // eslint-disable-next-line no-useless-escape
   const regexForEmailValidation = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

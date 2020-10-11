@@ -9,6 +9,15 @@ const BoardColumnSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    type: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    project: {
+      type: String,
+      required: true,
+    },
     account: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Account',

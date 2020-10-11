@@ -18,6 +18,7 @@ export const _ProjectOutlineView = (
   const [editDescriptionDialog, setEditDescriptionDialog] = useState(
     false,
   );
+  const permissions = projectRules(props.role, props.optionalRole);
   return (
     <>
       <div
@@ -42,8 +43,7 @@ export const _ProjectOutlineView = (
             />
           </div>
         ) : (
-          props.optionalRole &&
-          projectRules(props.optionalRole)[props.role!].includes(
+          permissions.grantAll || permissions.projectModerator && permissions.projectModerator.includes(
             'updateProjectPreface',
           ) && (
             <div className="pr2" style={{ paddingTop: '10px' }}>

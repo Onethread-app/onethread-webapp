@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import { NavbarLanding } from './NavbarLanding';
 import './ProjectManagementTool.scss';
 import tick from './../../resources/LandingImages/tick.svg';
-import marketLogo from './../../resources/LandingImages/marketLogo.png';
-import BKMEALogo from './../../resources/LandingImages/BKMEA-Logo.png';
-import plummyLogo from './../../resources/LandingImages/plummy.png';
-import knitLogo from './../../resources/LandingImages/knitwearLogo.png';
 import { Button, Dialog } from '@blueprintjs/core';
 import { LandingFooter } from './LandingFooter';
 import { ContactUsForm } from './ContactUsForm';
 import { ProjectManagementTool } from './ProjectManagementTool';
 import { ProjectManagementToolForBusiness } from './ProjectManagementToolForBusiness';
+import { TiButton } from 'components/button/Button';
+import { MostUsedCL } from '../../components/company-logos/CompanyLogos';
+import { ReviewSection } from 'components/review-section/ReviewSection';
 
 export const ProjectManagementToolForPM = () => {
   const [showForm3, setShowForm3] = useState(false);
@@ -20,6 +19,13 @@ export const ProjectManagementToolForPM = () => {
     'Project Managers',
     'Business Owners',
   ];
+
+  const customerReview = {
+    customer: 'Fazlul Hoque',
+    position: 'Managing Director',
+    company: 'Plummy Fashions Ltd.',
+    review: 'I love how simple, yet very efficient TiGrow is. I\'ve been using this software on a daily basis to communicate and collaborate with all my teammates. Kudos to the product owners for their impeccable product.'
+  };
 
   const [selectedTab, setSelectedTab] = useState(tabItems[1]);
   // const selectedTabs = tabItems[selectedTab];
@@ -148,20 +154,9 @@ export const ProjectManagementToolForPM = () => {
           performance evaluations and easy-to-use communications you
           need.
         </h1>
-        <Button
-          className="f4-l f5-m f6 fw6 bp3-minimal pa4-l pa3-m pa2 br3 outline-0 mt2"
-          style={{
-            color: 'WHITE',
-            border: 'solid 2px WHITE',
-            backgroundColor: '#4B6BC8',
-            width: '19rem',
-          }}
-          onClick={() => {
-            setShowForm3(true);
-          }}
-        >
+        <TiButton to="/signup">
           GET TiGrow FREE
-        </Button>
+        </TiButton>
       </div>
 
       <div className="flex flex-row-ns flex-column-reverse items-center ph6-l ph4 mv5-l mv4 vendorSecondPadding">
@@ -371,51 +366,7 @@ export const ProjectManagementToolForPM = () => {
       </div>
       {/* <div className="tc flex flex-column justify-center"> */}
 
-      <div className="tc flex flex-column justify-center mt5">
-        <div className="flex flex-column items-center">
-          <h1
-            className=" f3-ns f6 fw4 w-60-l w-80 colorfulWidth tl lh-2"
-            style={{ color: '#43466D' }}
-          >
-            <span
-              style={{
-                color: '#0FB7A0',
-                fontFamily: 'Cambria',
-                fontStyle: 'italic',
-              }}
-              className="f1 fw8"
-            >
-              "
-            </span>
-            I love how simple, yet very efficient TiGrow is. I've been
-            using this software on a daily basis to communicate and
-            collaborate with all my teammates. Kudos to the product
-            owners for their impeccable product.
-            <span
-              style={{
-                color: '#0FB7A0',
-                fontFamily: 'Cambria',
-                fontStyle: 'italic',
-              }}
-              className="f1 fw8"
-            >
-              "
-            </span>
-          </h1>
-          <h1
-            style={{ color: '#707070' }}
-            className=" f3-ns f6 fw4 w-60-l w-80 colorfulWidth tl"
-          >
-            FAZLUL HOQUE
-          </h1>
-          <h1
-            style={{ color: '#707070' }}
-            className=" f5-ns f7 fw4 w-60-l w-80 colorfulWidth tl ma0"
-          >
-            Managing Director | Plummy Fashions Ltd.
-          </h1>
-        </div>
-      </div>
+      <ReviewSection customerReview={customerReview}/>
       <div className="mt4" style={{ backgroundColor: '#F8F8F9' }}>
         <div className="pv4 ph6-l ph4 tc vendorSecondPadding">
           <h1 style={{ color: '#1D3557' }} className="f2-l f3-m f4 ">
@@ -429,35 +380,11 @@ export const ProjectManagementToolForPM = () => {
             Start using TiGrow PMT for free - with something for
             everyone.
           </h1>
-          <Button
-            className="f4-ns fw6 bp3-minimal pa4-l pa3-m pa2 w5 br3 outline-0 mt2"
-            style={{
-              color: 'WHITE',
-              border: 'solid 2px WHITE',
-              backgroundColor: '#4B6BC8',
-            }}
-            onClick={() => {
-              setShowForm3(true);
-            }}
-          >
+          <TiButton to="/signup">
             GET TiGrow FREE
-          </Button>
+          </TiButton>
         </div>
-        <div className="flex flex-row items-center justify-center pv4 tc">
-          <img src={marketLogo} className="marketLogo" />
-          <img
-            className="ml4-ns ml2 vendorLogoSpacing plummyLogo"
-            src={plummyLogo}
-          />
-          <img
-            className="ml4-ns ml2 vendorLogoSpacing plummyLogo"
-            src={BKMEALogo}
-          />
-          <img
-            className="ml4-ns ml2 vendorLogoSpacing knitLogo"
-            src={knitLogo}
-          />
-        </div>
+        <MostUsedCL />
       </div>
       <LandingFooter />
       {showForm3 && (

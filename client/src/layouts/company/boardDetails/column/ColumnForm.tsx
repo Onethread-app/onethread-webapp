@@ -11,6 +11,7 @@ import {
   checkError,
   composeValidators,
   maxValue,
+  checkTaskName
 } from 'components/final-form/utils';
 
 interface ColumnFormProps {
@@ -21,7 +22,7 @@ interface ColumnFormProps {
 interface ColumnFormInternalProps extends ColumnFormProps {
   currentBoard: TaskBoard;
   createColumn: (columnInfo: any) => void;
-  updateColumn: (columnIndo: any) => Promise<any>;
+  updateColumn: (columnIndo: any) => void;
 }
 
 const ColumnFormComponent = (props: ColumnFormInternalProps) => {
@@ -74,7 +75,7 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
             <div className="pv3 justify-content w-100">
               <Field<string>
                 name="name"
-                validate={composeValidators(required, maxValue(60))}
+                validate={composeValidators(required, maxValue(60), checkTaskName)}
                 render={({ input, meta }) => (
                   <div
                     className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}

@@ -13,6 +13,11 @@ const TaskSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    status: {
+      type: String,
+      trim: true,
+      required: true
+    },
     priority: {
       type: Number,
       enum: [0, 1, 2, 3, 4],
@@ -21,6 +26,11 @@ const TaskSchema = new mongoose.Schema(
     account: {
       type: Schema.Types.ObjectId,
       ref: 'Account',
+      required: true,
+    },
+    project: {
+      type: Schema.Types.ObjectId,
+      ref: 'Project',
       required: true,
     },
     dueDate: {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { BasicInfoDetailsView } from 'layouts/company/profile/BasicInformationView';
-import { CoverPhotoView } from './CompanyCoverPhoto';
+import { CoverPhoto } from 'components/cover-photo/CoverPhoto';
 import { Tabs, Tab } from '@blueprintjs/core';
 import { AdvancedInfo } from './AdvancedInfoView';
 import { User } from 'stores/user/Reducer';
@@ -30,7 +30,7 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
     <>
       <NavbarCompany title="Company Profile" />
       <div className="w-100 pa4-ns pa2 mt5 mt0-ns">
-        <CoverPhotoView />
+        <CoverPhoto type="company"/>
         <Tabs id="TabsExample" className="mt6-ns mt5 ph5-ns ph3">
           <Tab
             id="basic_info"

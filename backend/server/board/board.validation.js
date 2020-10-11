@@ -27,8 +27,10 @@ module.exports = {
     body: Joi.object().keys({
       name: schema.name.required(),
       department: schema.department,
-      projectId: schema.project,
       color: schema.color,
+    }),
+    query: Joi.object().keys({
+      pid: schema.project,
     }),
   }),
   getAllBoards: Joi.object().keys({

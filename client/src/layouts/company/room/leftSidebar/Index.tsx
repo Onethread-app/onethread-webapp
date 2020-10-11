@@ -27,6 +27,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const dispatch = useDispatch();
+  const permissions = projectRules(props.projectRole, props.optionalRole);
 
   return (
     <>
@@ -37,10 +38,12 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       >
         <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
-          { props.projectRole && 
+          {
+          
+            props.projectRole && 
             props.optionalRole && 
-            (projectRules(props.optionalRole)[props.projectRole] === true || 
-            projectRules(props.optionalRole)[props.projectRole].includes(
+            (permissions.grantAll || 
+            permissions.projectModerator.includes(
             'createUpdateRoom',
             )) &&
           <span

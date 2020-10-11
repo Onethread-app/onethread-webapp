@@ -13,6 +13,7 @@ import { AssociateModel } from './associate/Reducer';
 import { videoConferencesReducers } from './videoConferences/Reducer';
 import toasterReducer from './toast/Reducer';
 import { LandingReducer } from './landing/Reducer';
+import { CommentReducer } from './comment/Reducer';
 export interface AppState {
   layoutReducer: any;
   roomReducer: any;
@@ -27,6 +28,7 @@ export interface AppState {
   videoConferencesReducers: any;
   toasterReducer: any;
   landingReducer: any;
+  commentReducer: any;
 }
 
 export const rootReducer = combineReducers({
@@ -43,4 +45,5 @@ export const rootReducer = combineReducers({
   videoConferencesReducers: videoConferencesReducers,
   toasterReducer: toasterReducer,
   landingReducer: LandingReducer,
+  commentReducer: CommentReducer,
 });
