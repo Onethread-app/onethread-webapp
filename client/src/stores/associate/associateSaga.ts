@@ -251,15 +251,15 @@ function* rejectPendingAssociate(action: {
   }
 }
 
-function* getSelectedAssociate(associateId: string) {
+function* getSelectedAssociate({payload}: any) {
   try {
     const headers = tokenConfig();
     const selectCompanyId = (state) =>
       state.companyReducer.currentCompany._id;
-    if ((headers as any).headers.Authorization && associateId) {
+    if ((headers as any).headers.Authorization && payload) {
       const companyId = yield select(selectCompanyId);
       const response = yield tigrowApi.get(
-        `associate/${associateId}/${companyId}`,
+        `associate/${payload}/${companyId}`,
         headers,
       );
       yield put(selectAssociateSuccess(response.data));
