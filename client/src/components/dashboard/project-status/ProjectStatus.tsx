@@ -5,9 +5,6 @@ const fontColor = {
   color: '#656565',
 };
 
-const secondaryFontColor = {
-  color: '#B4B4B4',
-};
 const ProjectStatus = (props) => {
   return (
     <div className="project-status-content mb2">
@@ -15,7 +12,7 @@ const ProjectStatus = (props) => {
         <div style={fontColor} className="f5 f6 fw6">
           {props.content}
         </div>
-        <div style={secondaryFontColor} className="f5 f7">
+        <div style={fontColor} className="f5 f7">
           Task Remaining
           <span className="ml4">
             {props.remaining}/{props.total}
