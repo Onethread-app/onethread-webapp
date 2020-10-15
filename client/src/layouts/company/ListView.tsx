@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { getCompanyDetails } from 'stores/company/Actions';
@@ -29,15 +29,23 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
 export const ListViewComponent = (
   props: CompanyListViewInternalProps & RouteComponentProps,
 ) => {
-  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
 
+  // useEffect(() => {
+  //   if (loading === true) {
+  //     props.getAllCompaniesByUserId(props.user._id);
+  //   }
+  //   setLoading(false);
+  // }, []);
+
   useEffect(() => {
-    if (loading === true) {
-      props.getAllCompaniesByUserId(props.user._id);
-    }
-    setLoading(false);
-  }, [loading]);
+    const load = async () => {
+      if (props.user._id) {
+        await props.getAllCompaniesByUserId(props.user._id);
+      }
+    };
+    load();
+  }, [props.user._id]);
 
   return (
     <>
@@ -45,10 +53,9 @@ export const ListViewComponent = (
         className="mw6 center overflow-y-auto"
         style={{ maxHeight: '16rem' }}
       >
-        {loading ? (
+        {props.isCompanyLoading ? (
           <Loading />
         ) : props.companies && props.companies.length > 0 ? (
-          props.companies &&
           props.companies.map(
             (c) =>
               c.company && (
@@ -65,12 +72,13 @@ export const ListViewComponent = (
                       c.company.uniqueName,
                       props.history,
                     )) as any;
-                    if (response && props.isCompanyLoading === false) {
+                    if (
+                      response &&
+                      props.isCompanyLoading === false
+                    ) {
                       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                       props.history.push(
-                        `/company/${
-                          c.company.uniqueName
-                        }/dashboard`,
+                        `/company/${c.company.uniqueName}/dashboard`,
                       );
                     }
                     // else{
@@ -114,11 +122,12 @@ export const ListViewComponent = (
 };
 
 const mapStateToProps = (state: any) => {
+  // console.log(state.userReducer.user.companies);
   return {
     companies: state.userReducer.user.companies,
     user: state.userReducer.user,
     currentCompany: state.companyReducer.currentCompany._id,
-    isCompanyLoading: state.companyReducer.loading,
+    isCompanyLoading: state.userReducer.isCompanyLoading,
   };
 };
 

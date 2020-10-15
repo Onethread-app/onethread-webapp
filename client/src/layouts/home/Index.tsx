@@ -50,7 +50,6 @@ export const HomePageComponent = (
   const load = async () => {
     setLoading(true);
     await props.getAllCompaniesByUserId(props.user._id, 'home');
-    // await props.getProjectsIndividual();
     setLoading(false);
   };
 

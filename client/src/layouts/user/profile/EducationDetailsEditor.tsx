@@ -26,6 +26,7 @@ interface IEduFormProps {
 interface IEduFormInternalProps extends IEduFormProps {
   addEducationExperienceAction: (val: {}) => any;
   editEducationExperienceAction: (jobInfo: {}, id: string) => any;
+  isEditingUser: boolean;
 }
 
 const EducationFormComponent = (props: IEduFormInternalProps) => {
@@ -49,7 +50,7 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
         values._id,
       );
     }
-    if (response.message === 200) {
+    if (response && props.isEditingUser === false) {
       props.setShowDialog(false);
       return true;
     }
@@ -325,7 +326,14 @@ const EducationFormComponent = (props: IEduFormInternalProps) => {
   );
 };
 
-export const EducationForm = connect(null, {
+const mapStateToProps = (state: any) => {
+  return {
+    userInfo: state.userReducer.user,
+    isEditingUser: state.userReducer.isEditingUser,
+  };
+};
+
+export const EducationForm = connect(mapStateToProps, {
   addEducationExperienceAction,
   editEducationExperienceAction,
 })(EducationFormComponent);

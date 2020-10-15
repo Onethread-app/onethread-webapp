@@ -13,6 +13,7 @@ interface AboutEditComponentProps {
 interface AboutEditInternalProps extends AboutEditComponentProps {
   editInfoAction: (val: User) => any;
   user: User;
+  isEditingUser: boolean;
 }
 
 const AboutEditComponent = (props: AboutEditInternalProps) => {
@@ -21,7 +22,7 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
       values.about = '';
     }
     const response = await props.editInfoAction(values);
-    if (response.message === 200) {
+    if (response && props.isEditingUser === false) {
       props.setShowDialog(false);
       return true;
     }
@@ -112,6 +113,7 @@ const AboutEditComponent = (props: AboutEditInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
+    isEditingUser: state.userReducer.isEditingUser,
   };
 };
 
