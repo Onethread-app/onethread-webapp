@@ -106,11 +106,7 @@ export const ProjectPrefaceViewComponent = (
             <div>
               <h1 className="f6">Shared Files</h1>
               {props.files.map((file: any) => (
-<<<<<<< HEAD
                 <div className="flex items-center justify-between" key={file._id}>
-=======
-                <div className="flex items-center justify-between">
->>>>>>> 973414ba... large file names fit within view (#397)
                   <h1 className="f6 fw6 blue w-80" style={{wordBreak: 'break-word', wordWrap: 'break-word'}}>
                     {file.s3Key.split('/')[1]}
                   </h1>
@@ -148,11 +144,7 @@ export const ProjectPrefaceViewComponent = (
               <div>
                 <h1 className="f6">Shared Files</h1>
                 {props.files.map((file: any) => (
-<<<<<<< HEAD
                   <div className="flex items-center justify-between" key={file._id}>
-=======
-                  <div className="flex items-center justify-between">
->>>>>>> 973414ba... large file names fit within view (#397)
                     <h1 className="f6 fw6 blue w-80" style={{wordBreak: 'break-word', wordWrap: 'break-word'}} >
                       {file.s3Key.split('/')[1]}
                     </h1>
