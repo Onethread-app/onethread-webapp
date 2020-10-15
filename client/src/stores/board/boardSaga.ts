@@ -26,6 +26,7 @@ import {
   getSelectedTaskDetailsSuccess,
   updateTaskFailure,
   updateTaskSuccess,
+  getAllBoards,
 } from './Actions';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
@@ -48,7 +49,10 @@ export function* createBoard({ payload }: any) {
         requestBody,
         headers,
       );
-      yield put(createBoardSuccess(response.data));
+      yield all([
+        put(createBoardSuccess(response.data)),
+        put(getAllBoards())
+      ]);
     }
   } catch (error) {
     if (error.message === 'Network Error') {
@@ -67,7 +71,7 @@ export function* createBoard({ payload }: any) {
   }
 }
 
-export function* getAllBoards() {
+export function* getAllBoardsAsync() {
   try {
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
@@ -397,7 +401,7 @@ export function* onCreateBoard() {
 export function* onGetAllBoards() {
   yield takeEvery(
     BoardActionTypes.GET_ALL_BOARDS_START,
-    getAllBoards,
+    getAllBoardsAsync,
   );
 }
 

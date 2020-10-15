@@ -21,10 +21,11 @@ const FormComponent = (props: {
   createBoard: (board: TaskBoard) => void;
   departments: [];
   company: ICompany;
+  isCreating: boolean;
 }) => {
   const onSubmit = async (values: any) => {
     await props.createBoard(values);
-    if (props.setShowTaskBoardDialog) {
+    if (props.setShowTaskBoardDialog && props.isCreating === false) {
       props.setShowTaskBoardDialog(false);
     }
     return {};
@@ -186,6 +187,7 @@ const mapStateToProps = (state: any) => {
   return {
     departments: state.companyReducer.currentCompany.departments,
     company: state.companyReducer.currentCompany,
+    isCreating: state.boardIndexReducer.boardReducer.creatingBoard,
   };
 };
 
