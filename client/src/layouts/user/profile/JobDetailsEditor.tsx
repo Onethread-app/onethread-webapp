@@ -26,6 +26,7 @@ interface IJobFormProps {
 interface IJobFormInternalProps extends IJobFormProps {
   addJobExperienceAction: (val: {}) => any;
   editJobExperienceAction: (jobInfo: {}, id: string) => any;
+  isEditingUser: boolean;
 }
 
 const JobFormComponent = (props: IJobFormInternalProps) => {
@@ -49,7 +50,7 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
         values._id,
       );
     }
-    if (response.message === 200) {
+    if (response && props.isEditingUser === false) {
       props.setShowDialog(false);
       return true;
     }
@@ -341,7 +342,13 @@ const JobFormComponent = (props: IJobFormInternalProps) => {
   );
 };
 
-export const JobForm = connect(null, {
+const mapStateToProps = (state: any) => {
+  return {
+    isEditingUser: state.userReducer.isEditingUser,
+  };
+};
+
+export const JobForm = connect(mapStateToProps, {
   addJobExperienceAction,
   editJobExperienceAction,
 })(JobFormComponent);

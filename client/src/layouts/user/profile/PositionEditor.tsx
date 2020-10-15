@@ -14,6 +14,7 @@ interface IPositionEditProps {
 interface IPositionEditInternalProps extends IPositionEditProps {
   editInfoAction: (val: User) => any;
   user: User;
+  isEditingUser: boolean;
 }
 
 const PositionEditComponent = (props: IPositionEditInternalProps) => {
@@ -22,7 +23,7 @@ const PositionEditComponent = (props: IPositionEditInternalProps) => {
       values.position = '';
     }
     const response = await props.editInfoAction(values);
-    if (response.message === 200) {
+    if (response && props.isEditingUser === false) {
       props.setShowDialog(false);
       return true;
     }
@@ -107,6 +108,7 @@ const PositionEditComponent = (props: IPositionEditInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
+    isEditingUser: state.userReducer.isEditingUser,
   };
 };
 

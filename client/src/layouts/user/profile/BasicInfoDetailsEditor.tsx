@@ -24,6 +24,7 @@ interface IBasicInfoProps {
 interface IBasicInfoInternalProps extends IBasicInfoProps {
   userInfo: User;
   editInfoAction: (val: User) => any;
+  isEditingUser: boolean;
 }
 
 const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
@@ -39,7 +40,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
       values.location = '';
     }
     const response = await props.editInfoAction(values);
-    if (response.message === 200) {
+    if (response && props.isEditingUser === false) {
       props.setShowDialog(false);
       return true;
     }
@@ -292,6 +293,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     userInfo: state.userReducer.user,
+    isEditingUser: state.userReducer.isEditingUser,
   };
 };
 

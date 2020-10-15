@@ -10,6 +10,7 @@ interface IImageEditProps {
   companyLogoUploadAction: (imageSelected: any, type: string) => any;
   imageUploadAction: (val: any, type: string) => any;
   type: string;
+  isEditingUser: boolean;
 }
 const ImageEditComponent = (props: IImageEditProps) => {
   const [imageSelected, setImageSelected] = useState({}) as any;
@@ -54,6 +55,7 @@ const ImageEditComponent = (props: IImageEditProps) => {
     }
     return false;
   };
+
   return (
     <div className="pa3 cf">
       <h1 className="f5 tigrow-lightBlue">Upload Photo</h1>
@@ -112,12 +114,11 @@ const ImageEditComponent = (props: IImageEditProps) => {
           onClick={async (e: any) => {
             e.preventDefault();
             setImageLoading(true);
-            let response;
             if (
               props.type === 'company-logo' ||
               props.type === 'company-cover-photo'
             ) {
-              response = await props.companyLogoUploadAction(
+              await props.companyLogoUploadAction(
                 imageSelected,
                 props.type,
               );
@@ -126,12 +127,12 @@ const ImageEditComponent = (props: IImageEditProps) => {
               props.type === 'coverPhoto' ||
               props.type === 'profilePic'
             ) {
-              response = await props.imageUploadAction(
+              await props.imageUploadAction(
                 imageSelected,
                 props.type,
               );
             }
-            if (response) {
+            if (props.isEditingUser === false) {
               props.setShowDialog(false);
               setImageName({});
             }
@@ -143,14 +144,24 @@ const ImageEditComponent = (props: IImageEditProps) => {
               : false
           }
         >
-          {imageLoading ? <Spinner size={15} /> : 'Save'}
+          {imageLoading && props.isEditingUser === false ? (
+            <Spinner size={15} />
+          ) : (
+            'Save'
+          )}
         </Button>
       </div>
     </div>
   );
 };
 
-export const ImageEdit = connect(null, {
+const mapStateToProps = (state: any) => {
+  return {
+    isEditingUser: state.userReducer.isEditingUser,
+  };
+};
+
+export const ImageEdit = connect(mapStateToProps, {
   companyLogoUploadAction,
   imageUploadAction,
 })(ImageEditComponent);
