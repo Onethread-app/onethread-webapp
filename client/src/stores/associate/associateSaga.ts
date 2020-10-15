@@ -251,15 +251,26 @@ function* rejectPendingAssociate(action: {
   }
 }
 
+<<<<<<< HEAD
 function* getSelectedAssociate({payload}: any) {
+=======
+function* getSelectedAssociate(associateId: string) {
+>>>>>>> 0865aa45... associate, board, comment, company and project actions converted to saga (#408)
   try {
     const headers = tokenConfig();
     const selectCompanyId = (state) =>
       state.companyReducer.currentCompany._id;
+<<<<<<< HEAD
     if ((headers as any).headers.Authorization && payload) {
       const companyId = yield select(selectCompanyId);
       const response = yield tigrowApi.get(
         `associate/${payload}/${companyId}`,
+=======
+    if ((headers as any).headers.Authorization && associateId) {
+      const companyId = yield select(selectCompanyId);
+      const response = yield tigrowApi.get(
+        `associate/${associateId}/${companyId}`,
+>>>>>>> 0865aa45... associate, board, comment, company and project actions converted to saga (#408)
         headers,
       );
       yield put(selectAssociateSuccess(response.data));
