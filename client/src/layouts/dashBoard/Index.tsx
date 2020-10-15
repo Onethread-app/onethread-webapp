@@ -7,7 +7,10 @@ import { tigrowApi } from 'config';
 import { ICompany } from 'stores/company/Reducer';
 import { tokenConfig, companyPermit } from 'stores/UtilsActions';
 import { Loading } from 'components/Loading';
-import { getCompanyAnnouncement } from 'stores/company/Actions';
+import {
+  getCompanyAnnouncement,
+  getLatestCompletedTasks,
+} from 'stores/company/Actions';
 import Typography from '@material-ui/core/Typography';
 import { webPush } from '../../stores/notifications/Action';
 import { setSubscriptionExpire } from '../../stores/subscriptionBilling/Actions';
@@ -24,6 +27,9 @@ import {
 } from 'stores/company/Types';
 import moment from 'moment';
 import { NavbarCompany } from 'components/NavbarCompany';
+import tick from '../../resources/images/tick.svg';
+import { isMobileOnly } from 'react-device-detect';
+import { orderBy } from 'lodash';
 
 interface DashBoardViewProps {
   user: User;
@@ -33,6 +39,22 @@ interface DashBoardViewProps {
   setSubscriptionExpire: () => void;
   subscriptiontExpired: boolean;
   setSubscriptionNotExpire: () => void;
+  getLatestCompletedTasks: () => void;
+  completedTasks: [];
+}
+
+interface latestTask {
+  _id: string;
+  name: string;
+  updatedAt: string;
+  boardId: {
+    name: string;
+    _id: string;
+  };
+  project: {
+    name: string;
+    _id: string;
+  };
 }
 
 const DashboardViewComponent = (props: DashBoardViewProps) => {
@@ -42,6 +64,12 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   ] = useState(false);
   const [loading, setLoading] = useState(true);
   const [dashboard, setDashboard] = useState(Object);
+  const [currentTaskPage, setCurrentTaskPage] = useState(1);
+  const [
+    currentAnnouncementPage,
+    setCurrentAnnouncementPage,
+  ] = useState(1);
+  const [itemsPerPage] = useState(5);
   const dispatch = useDispatch();
 
   const getTokenFromGCM = () => {
@@ -55,6 +83,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   useEffect(() => {
     getTokenFromGCM();
     async function getAPI() {
+      await props.getLatestCompletedTasks();
       const headers = tokenConfig();
       // try {
       await tigrowApi
@@ -92,6 +121,57 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     }
     getAPI();
   }, [props.company._id]);
+
+  const indexOfLastTask = currentTaskPage * itemsPerPage;
+  const indexOfFirstTask = indexOfLastTask - itemsPerPage;
+
+  const allTasks = orderBy(
+    props.completedTasks,
+    ['updatedAt'],
+    ['desc'],
+  );
+
+  const currentTasks = allTasks.slice(
+    indexOfFirstTask,
+    indexOfLastTask,
+  );
+
+  const indexOfLastAnnouncement =
+    currentAnnouncementPage * itemsPerPage;
+  const indexOfFirstAnnouncement =
+    indexOfLastAnnouncement - itemsPerPage;
+  let currentAnnouncements: any;
+  if (props.company.announce) {
+    const allAnnouncements = orderBy(
+      props.company.announce,
+      ['createdAt'],
+      ['desc'],
+    );
+    currentAnnouncements = allAnnouncements.slice(
+      indexOfFirstAnnouncement,
+      indexOfLastAnnouncement,
+    );
+  }
+
+  const nextTaskPage = (e) => {
+    e.preventDefault();
+    setCurrentTaskPage(currentTaskPage + 1);
+  };
+
+  const prevTaskPage = (e) => {
+    e.preventDefault();
+    setCurrentTaskPage(currentTaskPage - 1);
+  };
+
+  const nextAnnouncementPage = (e) => {
+    e.preventDefault();
+    setCurrentAnnouncementPage(currentAnnouncementPage + 1);
+  };
+
+  const prevAnnouncementPage = (e) => {
+    e.preventDefault();
+    setCurrentAnnouncementPage(currentAnnouncementPage - 1);
+  };
 
   const designationMap = {
     director: 'Director',
@@ -140,12 +220,114 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             <div>
               <div className="mt5 pb0-ns">
                 <h3 className="f3-ns f5" style={{ color: '#3F61C5' }}>
+                  Latest Completed Tasks
+                </h3>
+                <div className="flex-ns justify-between">
+                  <Card className="w-100-l w-100 pa3-ns pa2 shadow-1 br2">
+                    {props.completedTasks.length > 0 ? (
+                      currentTasks.map((task: latestTask) => (
+                        <div
+                          className="flex flex-row-ns flex-column mb2"
+                          key={task._id}
+                        >
+                          <div className="flex flex-row mb1">
+                            <img
+                              src={tick}
+                              alt="tick"
+                              className="mr2"
+                              style={{
+                                height: '18px',
+                                width: '18px',
+                              }}
+                            />
+                            <div className="w-100 flex flex-row justify-between">
+                              <span
+                                className="fw6 mr2 ba b-light-gray br2 ph2"
+                                style={{ color: '#BBBBBB' }}
+                              >
+                                {task.project.name}
+                              </span>
+                              {isMobileOnly ? (
+                                <span style={{ color: '#B4B4B4' }}>
+                                  {moment(task.updatedAt).fromNow()}
+                                </span>
+                              ) : null}
+                            </div>
+                          </div>
+                          <div>
+                            <span
+                              className="fw6 mr3"
+                              style={{ color: '#656565' }}
+                            >
+                              <span
+                                className="ttc"
+                                style={{ color: '#3F61C5' }}
+                              >
+                                {task.name}
+                              </span>{' '}
+                              from {task.boardId.name} has been marked
+                              as complete.
+                            </span>
+                            {isMobileOnly ? null : (
+                              <span style={{ color: '#B4B4B4' }}>
+                                {moment(task.updatedAt).fromNow()}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <Typography>
+                        None of the tasks have been marked as done.
+                      </Typography>
+                    )}
+                    {props.completedTasks.length > 5 && (
+                      <div className="flex flex-row items-end w-100 justify-end">
+                        <div
+                          className="f7"
+                          style={{ color: '#BBBBBB' }}
+                        >
+                          {currentTaskPage > 1 && (
+                            <span
+                              className="mr1 pointer"
+                              style={{ color: '#656565' }}
+                              onClick={prevTaskPage}
+                            >
+                              &lt;
+                            </span>
+                          )}
+                          {currentTaskPage} of{' '}
+                          {Math.ceil(
+                            props.completedTasks.length /
+                              itemsPerPage,
+                          )}
+                          {currentTaskPage <
+                            Math.ceil(
+                              props.completedTasks.length /
+                                itemsPerPage,
+                            ) && (
+                            <span
+                              className="ml1 pointer"
+                              style={{ color: '#656565' }}
+                              onClick={nextTaskPage}
+                            >
+                              &#707;
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </Card>
+                </div>
+              </div>
+              <div className="mt5 pb0-ns">
+                <h3 className="f3-ns f5" style={{ color: '#3F61C5' }}>
                   Project Status
                 </h3>
                 <div className="flex-ns justify-between">
                   {dashboard && (
-                    <Card className="w-100-l w-100 pa4-ns pa3 shadow-2 br3">
-                      {dashboard.projectCompilation ?
+                    <Card className="w-100-l w-100 pa4-ns pa3 shadow-1 br2">
+                      {dashboard.projectCompilation ? (
                         dashboard.projectCompilation.map(
                           (project) => (
                             <div className="mb4">
@@ -166,7 +348,12 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                               />
                             </div>
                           ),
-                        ): <Typography>You do not have any project at this moment.</Typography>}
+                        )
+                      ) : (
+                        <Typography>
+                          You do not have any project at this moment.
+                        </Typography>
+                      )}
                     </Card>
                   )}
                 </div>
@@ -208,11 +395,11 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 </div>
                 {props.company.announce && (
                   <Card
-                    className="w-100-l w-100 pa4 shadow-2 br3"
+                    className="w-100-l w-100 pa4 shadow-1 br2"
                     style={{ borderLeft: '10px solid #3F61C5' }}
                   >
                     {props.company.announce.length > 0 ? (
-                      props.company.announce.map(
+                      currentAnnouncements.map(
                         (announcement: any) => (
                           <CompanyAnnouncements
                             name={
@@ -229,18 +416,54 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                               announcement.createdAt,
                             ).calendar()}
                             content={announcement.text}
+                            key={announcement._id}
                           />
                         ),
                       )
                     ) : (
                       <Typography>No Announcement</Typography>
                     )}
+                    {props.company.announce.length > 5 && (
+                      <div className="flex flex-row items-end w-100 justify-end">
+                        <div
+                          className="f7"
+                          style={{ color: '#BBBBBB' }}
+                        >
+                          {currentAnnouncementPage > 1 && (
+                            <span
+                              className="mr1 pointer"
+                              style={{ color: '#656565' }}
+                              onClick={prevAnnouncementPage}
+                            >
+                              &lt;
+                            </span>
+                          )}
+                          {currentAnnouncementPage} of{' '}
+                          {Math.ceil(
+                            props.company.announce.length /
+                              itemsPerPage,
+                          )}
+                          {currentAnnouncementPage <
+                            Math.ceil(
+                              props.company.announce.length /
+                                itemsPerPage,
+                            ) && (
+                            <span
+                              className="ml1 pointer"
+                              style={{ color: '#656565' }}
+                              onClick={nextAnnouncementPage}
+                            >
+                              &#707;
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </Card>
                 )}
               </div>
             </div>
           </div>
-          <div></div>
         </>
       ) : (
         <Loading />
@@ -271,6 +494,7 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
+    completedTasks: state.companyReducer.completedTasks,
   };
 };
 
@@ -279,4 +503,5 @@ export const DashboardView = connect(mapStateToProps, {
   webPush,
   setSubscriptionExpire,
   setSubscriptionNotExpire,
+  getLatestCompletedTasks,
 })(DashboardViewComponent);
