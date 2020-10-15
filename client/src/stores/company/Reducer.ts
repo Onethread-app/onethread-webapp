@@ -126,6 +126,9 @@ const InitialState = {
     message: '',
     network: false,
   },
+  completedTasks: [],
+  loadingCompletedTasks: false,
+  completedTaskserror: '',
   loading: false,
   logoLoading: false,
   changeCompanyNameLoading: false,
@@ -466,6 +469,23 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         colleagueInviteSuccess: true,
         loading: false,
       };
+    case CompanyActionTypes.GET_LATEST_COMPLETED_TASK_START:
+      return {
+        ...state,
+        loadingCompletedTasks: true,
+      };
+    case CompanyActionTypes.GET_LATEST_COMPLETED_TASK_SUCCESS:
+      return {
+        ...state,
+        completedTasks: action.payload,
+        loadingCompletedTasks: false,
+      };
+    case CompanyActionTypes.GET_LATEST_COMPLETED_TASK_FAILURE:
+      return {
+        ...state,
+        completedTaskserror: action.payload,
+        loadingCompletedTasks: false,
+      }
     case ADD_PRODUCT:
       return {
         ...state,

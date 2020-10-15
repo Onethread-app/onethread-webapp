@@ -87,6 +87,7 @@ const initialState = {
   projectFileOpen: false,
   projectList: [],
   projectLoading: false,
+  addTeamMemberLoading: false,
   error: '',
 };
 
@@ -96,7 +97,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.UPDATE_PROJECT_MEMBER_ROLE_START:
     case ProjectActionTypes.ADD_PROJECT_ASSOCIATES_START:
     case ProjectActionTypes.GET_PROJECT_ASSOCIATES_START:
-    case ProjectActionTypes.ADD_PROJECT_TEAMS_START:
     case ProjectActionTypes.GET_PROJECT_TEAMS_START:
     case ProjectActionTypes.GET_PROJECT_ROLE_START:
     case ProjectActionTypes.UPDATE_PROJECT_ROLE_START:
@@ -118,7 +118,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
         projectLoading: true,
       };
     case ProjectActionTypes.ADD_PROJECT_ASSOCIATES_SUCCESS:
-    case ProjectActionTypes.ADD_PROJECT_TEAMS_SUCCESS:
     case ProjectActionTypes.UPDATE_PROJECT_ROLE_SUCCESS:
     case ProjectActionTypes.REJECT_PENDING_PROJECT_SUCCESS:
     case ProjectActionTypes.ACCEPT_PENDING_PROJECT_SUCCESS:
@@ -137,7 +136,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.UPDATE_PROJECT_MEMBER_ROLE_FAILURE:
     case ProjectActionTypes.ADD_PROJECT_ASSOCIATES_FAILURE:
     case ProjectActionTypes.GET_PROJECT_ASSOCIATES_FAILURE:
-    case ProjectActionTypes.ADD_PROJECT_TEAMS_FAILURE:
     case ProjectActionTypes.GET_PROJECT_TEAMS_FAILURE:
     case ProjectActionTypes.GET_PROJECT_ROLE_FAILURE:
     case ProjectActionTypes.UPDATE_PROJECT_ROLE_FAILURE:
@@ -159,6 +157,17 @@ export const ProjectReducer = (state = initialState, action: any) => {
         error: action.payload,
         projectLoading: false,
       };
+    case ProjectActionTypes.ADD_PROJECT_TEAMS_START:
+      return {
+        ...state,
+        addTeamMemberLoading: true,
+      }
+    case ProjectActionTypes.ADD_PROJECT_TEAMS_SUCCESS:
+    case ProjectActionTypes.ADD_PROJECT_TEAMS_FAILURE:
+      return {
+        ...state,
+        addTeamMemberLoading: false,
+      }
     case ProjectActionTypes.GET_ALL_PROJECTS_SUCCESS:
       return {
         ...state,

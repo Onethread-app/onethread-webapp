@@ -68,7 +68,7 @@ const create = async (req, res, next) => {
       project: req.query.pid,
       members: [req.user._id],
     });
-    // await board.save();
+    const createdBoard = await board.save();
     await BoardColumn.create({
       name: 'To do',
       type: 'to-do',
@@ -114,7 +114,7 @@ const create = async (req, res, next) => {
       },
       text,
     );
-    const createdBoard = await board.save();
+    // const createdBoard = await board.save();
 
     return res.status(201).json(createdBoard);
   } catch (error) {

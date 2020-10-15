@@ -74,7 +74,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
     case BoardActionTypes.CREATE_BOARD_SUCCESS:
       return {
         ...state,
-        creatingBoard: true,
+        creatingBoard: false,
         boardList: [
           {
             _id: action.payload._id,

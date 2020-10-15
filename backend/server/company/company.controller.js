@@ -655,6 +655,42 @@ const dashBoard = async (req, res, next) => {
   }
 };
 
+const latestCompletedTasks = async(req, res, next) => {
+  try {
+    const companyId = req.headers.companyid;
+    let projectList = await Project.find({
+      $or: [{ company: companyId }, { associate: companyId }],
+      removed: false,
+    }).select('name');
+    let completedTaskCompilation = [];
+    for (let i = 0; i < projectList.length; i++) {
+      const doneTask = await Task.find({
+        $and: [{
+          project: { $in: projectList[i]._id },
+          status: 'done',
+        }]
+      })
+        .select('name updatedAt')
+        .populate('boardId project', 'name name')
+        .exec();
+      completedTaskCompilation.push(doneTask);
+    }
+    let organizedTask = [];
+    completedTaskCompilation.map((cTask) => {
+      cTask.map((task) => {
+        organizedTask.push(task);
+      })
+    })
+    return sendJSONresponse(res, 200, {
+      success: true,
+      data: organizedTask,
+    });
+  } catch (error) {
+    logger.error(error);
+    next(error);
+  }
+}
+
 const noticePostByCompany = async (req, res, next) => {
   try {
     const NewNotice = req.body.text;
@@ -754,6 +790,7 @@ module.exports = {
   parentOrg,
   addCertifications,
   dashBoard,
+  latestCompletedTasks,
   noticePostByCompany,
   allNoticesForCompany,
   adminSuperAdminFinder,

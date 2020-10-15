@@ -121,7 +121,7 @@ const TaskPageComponent = (
       props.getAllBoards(),
       props.getAllDepartments(),
     ]).then(() => setLoading(false));
-  }, []);
+  }, [props.project._id]);
 
   const [department, setDepartment] = useState('');
   const boards = props.boardList.filter(

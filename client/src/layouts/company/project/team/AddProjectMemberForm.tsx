@@ -139,12 +139,12 @@ const AddProjectMemberFormComponent = (
               }),
             };
 
-            const response: any = await props.addProjectTeams(
+            await props.addProjectTeams(
               data,
               selectedTeamMember,
             );
 
-            if (response && props.isLoading === false) {
+            if (props.setShowDialog && props.isLoading === false) {
               props.setShowDialog(!props.showDialog);
             }
           }}
@@ -160,7 +160,7 @@ const mapStateToProps = (state: any) => {
   return {
     companyId: state.companyReducer.currentCompany._id,
     projectId: state.projectReducer.pid,
-    isLoading: state.projectReducer.projectLoading,
+    isLoading: state.projectReducer.addTeamMemberLoading,
   };
 };
 

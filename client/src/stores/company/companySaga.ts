@@ -54,6 +54,8 @@ import {
   getCompanyDetails,
   editCertificateSuccess,
   editCertificateFailure,
+  getLatestCompletedTasksSuccess,
+  getLatestCompletedTasksFailure,
 } from './Actions';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import {
@@ -812,6 +814,34 @@ export function* editCertificateAsync({ certificate, id }: any) {
   }
 }
 
+export function* getLatestCompletedTasksAsync() {
+  try {
+    const headers = tokenConfig();
+    const companyId = yield select(getCompanyId);
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(
+        `company/${companyId}/latest-completed-tasks`,
+        headers,
+      );
+      yield put(getLatestCompletedTasksSuccess(response.data.data));
+    }
+  } catch (error) {
+    if (error.message === 'Network Error') {
+      yield put(getLatestCompletedTasksFailure('Network Error'));
+    } else if (error.response.status === 401) {
+      yield put(
+        getLatestCompletedTasksFailure(
+          'Unauthorized user. Please enter valid email and password.',
+        ),
+      );
+    } else {
+      // tslint:disable-next-line: no-console
+      console.log(error.response);
+      yield put(getLatestCompletedTasksFailure(error.message));
+    }
+  }
+}
+
 export function* onCreateCompany() {
   yield takeEvery(
     CompanyActionTypes.CREATE_COMPANY_START,
@@ -973,6 +1003,13 @@ export function* onEditCompanyCertificate() {
   );
 }
 
+export function* onGetLatestCompletedTasks() {
+  yield takeLatest(
+    CompanyActionTypes.GET_LATEST_COMPLETED_TASK_START,
+    getLatestCompletedTasksAsync
+  );
+}
+
 export default function* companySaga() {
   yield all([
     call(onCreateCompany),
@@ -997,5 +1034,6 @@ export default function* companySaga() {
     call(onGetAllProduct),
     call(onInviteColleagueInBulk),
     call(onEditCompanyCertificate),
+    call(onGetLatestCompletedTasks),
   ]);
 }

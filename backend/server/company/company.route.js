@@ -136,6 +136,14 @@ router
     companyCtrl.dashBoard,
   );
 
+router
+  .route('/:companyId/latest-completed-tasks')
+  .get(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    companyCtrl.latestCompletedTasks,
+  )
+
 // companies list for individual user
 router
   .route('/individual/:account')

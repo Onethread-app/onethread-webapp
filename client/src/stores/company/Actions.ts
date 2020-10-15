@@ -384,6 +384,20 @@ export const editCertificateFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
+export const getLatestCompletedTasks = () => ({
+  type: CompanyActionTypes.GET_LATEST_COMPLETED_TASK_START,
+});
+
+export const getLatestCompletedTasksSuccess = (response: any) => ({
+  type: CompanyActionTypes.GET_LATEST_COMPLETED_TASK_SUCCESS,
+  payload: response,
+});
+
+export const getLatestCompletedTasksFailure = (errorMessage: any) => ({
+  type: CompanyActionTypes.GET_LATEST_COMPLETED_TASK_FAILURE,
+  payload: errorMessage,
+});
+
 export const clearAddDepartmentError = () => async (
   dispatch: any,
 ) => {
