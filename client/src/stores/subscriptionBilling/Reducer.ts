@@ -7,6 +7,10 @@ const initialState = {
   subscriptionId: '',
   subscriptionExpired: false,
   massageShown: false,
+  checkingValidity: false,
+  couponValid: null,
+  couponError: '',
+  coupon: [],
 };
 export const SubscriptionReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -45,6 +49,24 @@ export const SubscriptionReducer = (state = initialState, action) => {
       return {
         ...state,
         massageShown: true,
+      };
+    case subscription.CHECK_COUPON_VALIDITY_START:
+      return {
+        ...state,
+        checkingValidity: true,
+      };
+    case subscription.CHECK_COUPON_VALIDITY_SUCCESS:
+      return {
+        ...state,
+        couponValid: action.payload.validity,
+        coupon: action.payload.data,
+        checkingValidity: false,
+      };
+    case subscription.CHECK_COUPON_VALIDITY_FAILURE:
+      return {
+        ...state,
+        couponError: action.payload,
+        checkingValidity: false,
       };
     default:
       return state;

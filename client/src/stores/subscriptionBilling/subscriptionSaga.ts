@@ -1,8 +1,12 @@
-import { all, put, select } from 'redux-saga/effects';
+import { all, put, select, takeLatest } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
-import { tokenConfig } from 'stores/UtilsActions';
-import { tigrowApi } from 'config';
+import { tokenConfig, adminTokenConfig } from 'stores/UtilsActions';
+import { tigrowAdminApi, tigrowApi } from 'config';
 import { subscription } from './Type';
+import {
+  checkCouponValidityFailure,
+  checkCouponValiditySuccess,
+} from './Actions';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 // const takeLatest: any = Eff.takeLatest;
@@ -71,6 +75,21 @@ function* getCurrentSubscription() {
   }
 }
 
+function* checkCouponValidityAsync({ payload }: any) {
+  try {
+    const adminHeaders = adminTokenConfig();
+    const response = yield tigrowAdminApi.get(
+      `coupon/checkvalidity?name=${payload}`,
+      adminHeaders,
+    );
+    response.data.data
+      ? yield put(checkCouponValiditySuccess({validity: true, data: response.data.data}))
+      : yield put(checkCouponValiditySuccess({validity: false, data: response.data.data}));
+  } catch (error) {
+    yield put(checkCouponValidityFailure(error.message));
+  }
+}
+
 export default function* subscriptionSaga() {
   yield all([
     takeEvery(subscription.GET_PAYMENT_HISTORY, getPaymentIntent),
@@ -78,6 +97,10 @@ export default function* subscriptionSaga() {
     takeEvery(
       subscription.GET_CURRENT_SUBSCRIPTION,
       getCurrentSubscription,
+    ),
+    takeLatest(
+      subscription.CHECK_COUPON_VALIDITY_START,
+      checkCouponValidityAsync,
     ),
   ]);
 }

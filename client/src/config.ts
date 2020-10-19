@@ -6,6 +6,7 @@ export const dev = 'http://localhost:4044/api/v1/';
 
 // export const server = process.env.NODE_ENV === 'production' ? prod : dev;
 export const server = process.env.REACT_APP_API_URL;
+export const adminServer = process.env.REACT_APP_ADMIN_API_URL;
 
 export const PUSHER_CHANNEL_AUTH_END_POINT = `${server}channel/authenticate`;
 
@@ -21,4 +22,8 @@ export const NOTIFICATION_CLUSTER =
 
 export const tigrowApi = axios.create({
   baseURL: server,
+});
+
+export const tigrowAdminApi = axios.create({
+  baseURL: adminServer,
 });

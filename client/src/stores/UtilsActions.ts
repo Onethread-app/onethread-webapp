@@ -42,6 +42,15 @@ export const tokenConfig = () => {
   };
 };
 
+export const adminTokenConfig = () => {
+  return {
+    headers: {
+      'Content-type': 'application/json',
+      companyid: store.getState().companyReducer.currentCompany._id,
+    },
+  };
+};
+
 export const tokenConfigFIleUpload = () => {
   const token =
     typeof window !== undefined &&
