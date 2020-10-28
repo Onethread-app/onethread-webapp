@@ -114,6 +114,7 @@ export const NavbarSoftwareList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
+          <NavLink to="finding-teammates-page">
           <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <img
               src={team}
@@ -127,6 +128,7 @@ export const NavbarSoftwareList = (
             </div>
             <Icon className="ml-auto" icon="chevron-right" />
           </article>
+          </NavLink>
           <article className="flex items-center ba b--light-gray pa3 softwareList pointer mv2">
             <div className="ml2">
               <div className="flex">
