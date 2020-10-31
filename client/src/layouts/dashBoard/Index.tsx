@@ -284,12 +284,12 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     {props.completedTasks.length > 5 && (
                       <div className="flex flex-row items-end w-100 justify-end">
                         <div
-                          className="f7"
+                          className="f6 fw5 flex flex-row items-center"
                           style={{ color: '#BBBBBB' }}
                         >
                           {currentTaskPage > 1 && (
                             <span
-                              className="mr1 pointer"
+                              className="mr2 pointer f4"
                               style={{ color: '#656565' }}
                               onClick={prevTaskPage}
                             >
@@ -307,7 +307,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                 itemsPerPage,
                             ) && (
                             <span
-                              className="ml1 pointer"
+                              className="ml2 pointer f4"
                               style={{ color: '#656565' }}
                               onClick={nextTaskPage}
                             >
@@ -426,12 +426,12 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     {props.company.announce.length > 5 && (
                       <div className="flex flex-row items-end w-100 justify-end">
                         <div
-                          className="f7"
+                          className="f6 fw5 flex flex-row items-center"
                           style={{ color: '#BBBBBB' }}
                         >
                           {currentAnnouncementPage > 1 && (
                             <span
-                              className="mr1 pointer"
+                              className="mr2 pointer f4"
                               style={{ color: '#656565' }}
                               onClick={prevAnnouncementPage}
                             >
@@ -449,7 +449,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                 itemsPerPage,
                             ) && (
                             <span
-                              className="ml1 pointer"
+                              className="ml2 pointer f4"
                               style={{ color: '#656565' }}
                               onClick={nextAnnouncementPage}
                             >
