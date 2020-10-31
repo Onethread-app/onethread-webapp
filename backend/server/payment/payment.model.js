@@ -22,9 +22,9 @@ const paymentSchema = mongoose.Schema(
       required: true,
       enum: ['bdt', 'usd', 'rs'],
     },
-    discount: {
-      type: Number,
-      min : [0, 'The value of path `{PATH}` ({VALUE}) is beneath the limit ({MIN}).'],
+    coupon: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Coupon',
     },
     subscription: {
       type: mongoose.Schema.ObjectId,

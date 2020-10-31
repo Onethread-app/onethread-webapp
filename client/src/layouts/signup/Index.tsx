@@ -35,7 +35,16 @@ import moment from 'moment';
 // import ReactFlagsSelect from 'react-flags-select';
 import 'react-flags-select/css/react-flags-select.css';
 // import { allCountryList } from './countryCode';
-
+import InputTooltip from 'components/input-tooltip/InputTooltip';
+import './Signup.scss';
+const validation = {
+  rules: [
+    'At least 1 capital letter',
+    'At least 1 small letter',
+    'At least 1 special character',
+    'At least 1 numeric value',
+  ],
+};
 interface SignUpPageInternalProps {
   userSignupAction: (user: UserModel) => any;
 }
@@ -458,7 +467,7 @@ export const SignUpPageComponent = (
                                     <span
                                       className="bp3-icon"
                                       style={{
-                                        paddingTop: '5px',
+                                        paddingTop: '10px',
                                         paddingRight: '5px',
                                         cursor: 'pointer',
                                       }}
@@ -483,6 +492,7 @@ export const SignUpPageComponent = (
                                           width: '15px',
                                           height: '15px',
                                           color: '#0fa3a3',
+                                          right: '10px',
                                         }}
                                       />
                                       {/* <Tooltip content={
@@ -498,6 +508,31 @@ export const SignUpPageComponent = (
                                             color="#0fa3a3"
                                           />
                                         </Tooltip> */}
+                                      <span
+                                        style={{
+                                          position: 'absolute',
+                                          left: '40px',
+                                        }}
+                                      >
+                                        <InputTooltip
+                                          content="Choose a password at least 8 characters long"
+                                          direction="right"
+                                          validations={validation}
+                                        >
+                                          <span
+                                            role="img"
+                                            aria-label="question mark"
+                                          >
+                                            <img
+                                              src="https://svgshare.com/i/Q3c.svg"
+                                              alt="question mark logo"
+                                              style={{
+                                                width: '15px',
+                                              }}
+                                            />
+                                          </span>
+                                        </InputTooltip>
+                                      </span>
                                     </span>
                                   }
                                   style={{
@@ -527,7 +562,7 @@ export const SignUpPageComponent = (
                                   checkError(meta)
                                     ? 'mb3-ns mb2'
                                     : 'mb4-ns mb3'
-                                }`}
+                                } fieldWidth`}
                               >
                                 <InputGroupFieldWithError
                                   id="confirmPassword"
@@ -605,7 +640,7 @@ export const SignUpPageComponent = (
                         </div>
                       </div>
                       <Button
-                        className="grow h2 pointer white bp3-minimal w4"
+                        className="grow h2 pointer white bp3-minimal w4 btnWidth"
                         style={{
                           background: '#0FA3A3',
                           outline: 'none',

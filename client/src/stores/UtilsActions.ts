@@ -42,6 +42,15 @@ export const tokenConfig = () => {
   };
 };
 
+export const adminTokenConfig = () => {
+  return {
+    headers: {
+      'Content-type': 'application/json',
+      companyid: store.getState().companyReducer.currentCompany._id,
+    },
+  };
+};
+
 export const tokenConfigFIleUpload = () => {
   const token =
     typeof window !== undefined &&
@@ -285,30 +294,55 @@ export const portWalletCheckout = async (
   amount,
   productId,
   companyName,
+  couponId?,
 ) => {
   // const getway =
   //     value === 'international' ? 'stripe' : 'portwallet';
   const headers = tokenConfig();
-  const response = await tigrowApi.post(
-    'payments/portwallet/initiate',
-    {
-      amount: amount,
-      redirect_url: `${window.location.origin}/company/${companyName}/settings/payment/success`,
-      name: formData.name,
-      phone: formData.phone,
-      email: formData.email,
-      city: formData.city,
-      state: formData.state,
-      country: 'BD',
-      zipcode: formData.zipCode,
-      adress: formData.house,
-      call: '',
-      currency: 'BDT',
-      product_name: productId,
-      product_description: 'Dummy',
-    },
-    headers,
-  );
+  let response;
+  couponId
+    ? (response = await tigrowApi.post(
+        'payments/portwallet/initiate',
+        {
+          amount,
+          redirect_url: `${window.location.origin}/company/${companyName}/settings/payment/success`,
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          city: formData.city,
+          state: formData.state,
+          country: 'BD',
+          zipcode: formData.zipCode,
+          adress: formData.house,
+          call: '',
+          currency: 'BDT',
+          product_name: productId,
+          product_description: 'Dummy',
+          coupon: couponId,
+        },
+        headers,
+      ))
+    : (response = await tigrowApi.post(
+        'payments/portwallet/initiate',
+        {
+          amount,
+          redirect_url: `${window.location.origin}/company/${companyName}/settings/payment/success`,
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          city: formData.city,
+          state: formData.state,
+          country: 'BD',
+          zipcode: formData.zipCode,
+          adress: formData.house,
+          call: '',
+          currency: 'BDT',
+          product_name: productId,
+          product_description: 'Dummy',
+        },
+        headers,
+      ));
+
   const paymentUrl = response.data.paymentUrl;
   window.location.replace(`${paymentUrl}`);
   // @ts-ignore: Unreachable code error
@@ -325,9 +359,3 @@ export const addSpace = (name: string) => {
   name = name.replace(/([A-Z])/g, ' $1').trim();
   return capitalizeName(name);
 };
-
-
-
-
-
-
