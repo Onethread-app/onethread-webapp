@@ -19,6 +19,7 @@ const schema = {
   statusPg: Joi.string(),
   currency: Joi.string(),
   amount: Joi.number(),
+  coupon: idSchema.id,
 };
 
 module.exports = {
@@ -31,6 +32,7 @@ module.exports = {
       statusPg: schema.statusPg,
       currency: schema.currency.required(),
       amount: schema.amount.required(),
+      coupon: schema.coupon,
     }),
     params: companyId,
   }),

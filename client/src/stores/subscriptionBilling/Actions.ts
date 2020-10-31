@@ -25,3 +25,32 @@ export const setSubscriptionNotExpire = () => ({
 export const setExpireMassage = () => ({
   type: subscription.EXPIRED_MASSAGE_SHOWN,
 });
+
+export const checkCouponValidity = (coupon: any) => ({
+  type: subscription.CHECK_COUPON_VALIDITY_START,
+  payload: coupon
+});
+
+export const checkCouponValiditySuccess = (response: any) => ({
+  type: subscription.CHECK_COUPON_VALIDITY_SUCCESS,
+  payload: response,
+});
+
+export const checkCouponValidityFailure = (errorMessage: any) => ({
+  type: subscription.CHECK_COUPON_VALIDITY_FAILURE,
+  payload: errorMessage,
+});
+
+export const getTotalMembers = () => ({
+  type: subscription.GET_TOTAL_MEMBER_START,
+});
+
+export const getTotalMembersSuccess = (response: any) => ({
+  type: subscription.GET_TOTAL_MEMBER_SUCCESS,
+  payload: response,
+});
+
+export const getTotalMembersFailure = (errorMessage: any) => ({
+  type: subscription.GET_TOTAL_MEMBER_FAILURE,
+  payload: errorMessage,
+});

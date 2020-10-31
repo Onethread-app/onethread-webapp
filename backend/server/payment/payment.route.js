@@ -25,6 +25,14 @@ const router = express.Router();
   );
 
 router
+  .route('/total-subscriber')
+  .get(
+    authorization,
+    companyCtrl.authorizeUser('all', 'superAdmin'),
+    paymentCtrl.subscriber,
+  );
+
+router
   .route('/:companyId')
   .post(
     authorization,

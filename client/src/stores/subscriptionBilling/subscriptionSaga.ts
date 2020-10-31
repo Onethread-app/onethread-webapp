@@ -1,8 +1,14 @@
-import { all, put, select } from 'redux-saga/effects';
+import { all, put, select, takeLatest } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
-import { tokenConfig } from 'stores/UtilsActions';
-import { tigrowApi } from 'config';
+import { tokenConfig, adminTokenConfig } from 'stores/UtilsActions';
+import { tigrowAdminApi, tigrowApi } from 'config';
 import { subscription } from './Type';
+import {
+  checkCouponValidityFailure,
+  checkCouponValiditySuccess,
+  getTotalMembersFailure,
+  getTotalMembersSuccess,
+} from './Actions';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 // const takeLatest: any = Eff.takeLatest;
@@ -71,6 +77,43 @@ function* getCurrentSubscription() {
   }
 }
 
+function* checkCouponValidityAsync({ payload }: any) {
+  try {
+    const adminHeaders = adminTokenConfig();
+    const response = yield tigrowAdminApi.get(
+      `coupon/checkvalidity?name=${payload}`,
+      adminHeaders,
+    );
+    response.data.data
+      ? response.data.data.isUsed
+        ? yield put(checkCouponValidityFailure('Coupon has already been used'))
+        : yield put(
+            checkCouponValiditySuccess({
+              validity: true,
+              data: response.data.data,
+            }),
+          )
+      : yield put(checkCouponValidityFailure('No Data Found'));
+  } catch (error) {
+    yield put(checkCouponValidityFailure(error.message));
+  }
+}
+
+export function* getTotalMembersAsync() {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(
+        `payments/total-subscriber`,
+        headers,
+      );
+      yield put(getTotalMembersSuccess(response.data));
+    }
+  } catch (error) {
+    yield put(getTotalMembersFailure(error.message));
+  }
+}
+
 export default function* subscriptionSaga() {
   yield all([
     takeEvery(subscription.GET_PAYMENT_HISTORY, getPaymentIntent),
@@ -78,6 +121,14 @@ export default function* subscriptionSaga() {
     takeEvery(
       subscription.GET_CURRENT_SUBSCRIPTION,
       getCurrentSubscription,
+    ),
+    takeLatest(
+      subscription.CHECK_COUPON_VALIDITY_START,
+      checkCouponValidityAsync,
+    ),
+    takeLatest(
+      subscription.GET_TOTAL_MEMBER_START,
+      getTotalMembersAsync,
     ),
   ]);
 }

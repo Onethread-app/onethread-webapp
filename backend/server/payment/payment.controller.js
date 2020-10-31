@@ -10,6 +10,9 @@ const {
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
 
+const { Member } = require('../company/member/member.model');
+const { CompanyCouponModel } = require('../coupon/companyCouponModel');
+
 const create = async (req, res, next) => {
 
   try{
@@ -79,6 +82,13 @@ const initiateInvoice = async (req, res, next) => {
   const response = await axios(url, {method: 'POST', data: qs.stringify(post_body)});  //qs.stringify(post_body)
   const urlInvoice = 'https://payment-sandbox.portwallet.com/payment/?invoice='+response.data.data.invoice_id;
 
+  if (req.body.coupon) {
+    await CompanyCouponModel.findOneAndUpdate(
+      { _id: req.body.coupon },
+      { isUsed: true },
+      { safe: true, upsert: true, new: true },
+    ).exec();
+  };
     return sendJSONresponse(res, 200, {paymentUrl: urlInvoice});
 
   } catch (e) {
@@ -92,7 +102,6 @@ const initiateInvoice = async (req, res, next) => {
 const paymentIntent = async (req, res, next) => {
 
   try{
-    
     const intent = await stripe.paymentIntents.create({
       amount: req.body.amount*100, //because cents to dollar
       currency: 'usd',
@@ -126,9 +135,22 @@ const list = async (req, res, next) => {
   }
 };
 
+const subscriber = async (req, res, next) => {
+  try {
+    const memberList = await Member.find({
+      company: req.headers.companyid,
+    });
+    return sendJSONresponse(res, 200, memberList.length);
+  } catch(error) {
+    logger.error(`Payment: ${error}`);
+    next(error);
+  }
+}
+
   module.exports = {
     initiateInvoice,
     paymentIntent,
     list,
     create,
+    subscriber,
   };
