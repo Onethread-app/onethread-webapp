@@ -1,0 +1,41 @@
+/* .fieldWidth {
+  width: 82%;
+}
+.accountLink {
+  width: 45%;
+}
+@media only screen and (max-width: 414px) {
+  .fieldWidth {
+    width: 100%;
+  }
+  .btnWidth {
+    width: 100% !important;
+  }
+  .accountLink {
+    width: 100%;
+    text-align: center;
+  }
+  .hidden-small {
+    display: none;
+  }
+}
+@media only screen and (max-width: 360px) {
+  .fieldWidth {
+    width: 100%;
+  }
+  .btnWidth {
+    width: 100% !important;
+  }
+  .accountLink {
+    width: 100%;
+    text-align: center;
+  }
+  .hidden-small {
+    display: none;
+  }
+}
+ */
+
+.bp3-input-action {
+  right: 15px !important;
+}

@@ -17,6 +17,15 @@ import {
   errorMessgeHandler,
 } from 'components/final-form/utils';
 import { tigrowApi } from 'config';
+import InputTooltip from 'components/input-tooltip/InputTooltip';
+const validation = {
+  rules: [
+    'At least 1 capital letter',
+    'At least 1 small letter',
+    'At least 1 special character',
+    'At least 1 numeric value',
+  ],
+};
 
 const ChangePasswordComponentView = (
   props: {
@@ -26,7 +35,9 @@ const ChangePasswordComponentView = (
 ) => {
   const [showPasswordOld, setShowPasswordOld] = useState(false);
   const [showPasswordNew, setShowPasswordNew] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(
+    false,
+  );
 
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
@@ -120,7 +131,9 @@ const ChangePasswordComponentView = (
                     leftIcon="lock"
                     rightElement={
                       <Icon
-                        icon={showPasswordOld ? 'eye-open' : 'eye-off'}
+                        icon={
+                          showPasswordOld ? 'eye-open' : 'eye-off'
+                        }
                         color="#0fa3a3"
                         onClick={(e) =>
                           setShowPasswordOld(!showPasswordOld)
@@ -168,14 +181,45 @@ const ChangePasswordComponentView = (
                     placeHolder="New Password"
                     leftIcon="lock"
                     rightElement={
-                      <Icon
-                        icon={showPasswordNew ? 'eye-open' : 'eye-off'}
-                        color="#0fa3a3"
-                        onClick={(e) =>
-                          setShowPasswordNew(!showPasswordNew)
-                        }
-                        className="pt2 pr2 pointer"
-                      />
+                      <span>
+                        <Icon
+                          icon={
+                            showPasswordNew ? 'eye-open' : 'eye-off'
+                          }
+                          color="#0fa3a3"
+                          onClick={(e) =>
+                            setShowPasswordNew(!showPasswordNew)
+                          }
+                          className="pt2 pr2 pointer"
+                        />
+                        <span
+                          style={{
+                            position: 'absolute',
+                            left: '40px',
+                          }}
+                          className="hidden-small"
+                        >
+                          <InputTooltip
+                            content="Choose a password at least 8 characters long"
+                            direction="right"
+                            validations={validation}
+                          >
+                            <span
+                              role="img"
+                              aria-label="question mark"
+                              style={{
+                                position: 'absolute',
+                                top: '7px',
+                              }}
+                            >
+                              <img
+                                src="https://svgshare.com/i/Q3c.svg"
+                                alt="question mark logo"
+                              />
+                            </span>
+                          </InputTooltip>
+                        </span>
+                      </span>
                     }
                     className={`br0 mt1 ${
                       checkError(meta)
@@ -208,14 +252,18 @@ const ChangePasswordComponentView = (
                 >
                   <InputGroupFieldWithError
                     id="confirmPassword"
-                    type={`${showPasswordConfirm ? 'text' : 'password'}`}
+                    type={`${
+                      showPasswordConfirm ? 'text' : 'password'
+                    }`}
                     value={input.value}
                     onChange={input.onChange}
                     placeHolder="Confirm Password"
                     leftIcon="lock"
                     rightElement={
                       <Icon
-                        icon={showPasswordConfirm ? 'eye-open' : 'eye-off'}
+                        icon={
+                          showPasswordConfirm ? 'eye-open' : 'eye-off'
+                        }
                         color="#0fa3a3"
                         onClick={(e) =>
                           setShowPasswordConfirm(!showPasswordConfirm)

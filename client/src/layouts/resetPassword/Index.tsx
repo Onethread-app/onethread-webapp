@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { InputGroupFieldWithError } from '../../components/fields/InputGroupField';
-import { Button, Tooltip, Position } from '@blueprintjs/core';
+import { Button } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { Form, Field } from 'react-final-form';
 import { SubmitError } from 'components/final-form/SubmitError';
@@ -14,10 +14,18 @@ import {
 
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
-import questionIcon from './../../resources/images/question.png';
+// import questionIcon from './../../resources/images/question.png';
 import { Link } from 'react-router-dom';
 import { tigrowApi } from 'config';
-
+import InputTooltip from 'components/input-tooltip/InputTooltip';
+const validation = {
+  rules: [
+    'At least 1 capital letter',
+    'At least 1 small letter',
+    'At least 1 special character',
+    'At least 1 numeric value',
+  ],
+};
 const ResetPasswordComponent = (props: RouteComponentProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(
@@ -110,7 +118,6 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                 className="bp3-icon"
                                 style={{
                                   paddingTop: '5px',
-                                  paddingRight: '5px',
                                 }}
                               >
                                 <span
@@ -132,24 +139,29 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                     color="#0fa3a3"
                                   />
                                 </span>
-                                <Tooltip
-                                  content={
-                                    <p style={{ width: '400px' }}>
-                                      Password should contain at least
-                                      1 capital letter, 1 small
-                                      letter, 1 special character and
-                                      1 numeric value
-                                    </p>
-                                  }
-                                  position={Position.TOP_RIGHT}
+                                <span
+                                  style={{
+                                    position: 'absolute',
+                                    left: '40px',
+                                  }}
+                                  className="hidden-small"
                                 >
-                                  <img
-                                    src={questionIcon}
-                                    width="20px"
-                                    height="20px"
-                                    color="#0fa3a3"
-                                  />
-                                </Tooltip>
+                                  <InputTooltip
+                                    content="Choose a password at least 8 characters long"
+                                    direction="right"
+                                    validations={validation}
+                                  >
+                                    <span
+                                      role="img"
+                                      aria-label="question mark"
+                                    >
+                                      <img
+                                        src="https://svgshare.com/i/Q3c.svg"
+                                        alt="question mark logo"
+                                      />
+                                    </span>
+                                  </InputTooltip>
+                                </span>
                               </span>
                             }
                             style={{

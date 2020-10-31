@@ -1,0 +1,103 @@
+:root {
+  --tooltip-text-color: white;
+  --tooltip-background-color: #3f61c5;
+  --tooltip-margin: 30px;
+  --tooltip-arrow-size: 6px;
+}
+
+.Tooltip-Wrapper {
+  display: inline;
+  position: relative;
+}
+
+.Tooltip-Tip {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 25px;
+  color: var(--tooltip-text-color);
+  background: var(--tooltip-background-color);
+  font-size: 14px;
+  font-family: sans-serif;
+  line-height: 1.8;
+  z-index: 99999;
+  width: 270px;
+}
+
+.Tooltip-Tip.right {
+  left: calc(50% + var(--tooltip-margin));
+  top: 122px;
+  transform: translateX(0) translateY(-50%);
+  pointer-events: none;
+
+  &::before {
+    content: url('https://tigrowresources.s3-ap-southeast-1.amazonaws.com/icon-bulb.svg');
+    position: absolute;
+    top: 20px !important;
+    left: 250px !important;
+    left: calc(var(--tooltip-arrow-size) * -1);
+    // top: 50%;
+    transform: translateX(0) translateY(-50%);
+    border-right-color: var(--tooltip-background-color);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    margin-top: -6px;
+    margin-left: -5px;
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-bottom: 25px solid #3f61c5;
+    transform: rotate(50deg);
+    left: -17px;
+    top: 2px;
+  }
+}
+
+@media only screen and (max-width: 414px) {
+  .Tooltip-Tip {
+    padding: 15px;
+    font-size: 13px;
+    line-height: 1.6;
+    width: 211px;
+  }
+
+  .Tooltip-Tip.right {
+    top: 120px;
+    left: -210px;
+    &::after {
+      transform: rotate(150deg);
+      left: 182px;
+      top: 0;
+    }
+    &::before {
+      top: 25px !important;
+      left: 190px !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 360px) {
+  .Tooltip-Tip {
+    padding: 15px;
+    font-size: 13px;
+    line-height: 1.6;
+    width: 211px;
+  }
+
+  .Tooltip-Tip.right {
+    top: 120px;
+    left: -210px;
+
+    &::after {
+      transform: rotate(150deg);
+      left: 182px;
+      top: 0;
+    }
+    &::before {
+      top: 25px !important;
+      left: 190px !important;
+    }
+  }
+}
