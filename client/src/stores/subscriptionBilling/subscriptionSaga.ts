@@ -8,6 +8,7 @@ import {
   checkCouponValiditySuccess,
   getTotalMembersFailure,
   getTotalMembersSuccess,
+  setSubscriptionExpire,
 } from './Actions';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
@@ -71,6 +72,10 @@ function* getCurrentSubscription() {
         type: subscription.GET_CURRENT_SUBSCRIPTION_SUCCESS,
         payload: response.data,
       });
+      const today = new Date().toISOString();
+      if (response.data.expireAt < today) {
+        yield put(setSubscriptionExpire());
+      }
     }
   } catch (error) {
     // console.log(error);

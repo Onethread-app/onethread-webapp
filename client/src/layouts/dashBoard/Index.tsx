@@ -13,8 +13,11 @@ import {
 } from 'stores/company/Actions';
 import Typography from '@material-ui/core/Typography';
 import { webPush } from '../../stores/notifications/Action';
-import { setSubscriptionExpire } from '../../stores/subscriptionBilling/Actions';
-import { setSubscriptionNotExpire } from '../../stores/subscriptionBilling/Actions';
+import {
+  setSubscriptionExpire,
+  setSubscriptionNotExpire,
+  getCurrentSubscription
+} from '../../stores/subscriptionBilling/Actions';
 import DashboardSummery from 'components/dashboard/dashboard-summary/DashboardSummary';
 import TotalInfo from 'components/dashboard/total-info/TotalInfo';
 import ProjectStatus from 'components/dashboard/project-status/ProjectStatus';
@@ -40,6 +43,7 @@ interface DashBoardViewProps {
   subscriptiontExpired: boolean;
   setSubscriptionNotExpire: () => void;
   getLatestCompletedTasks: () => void;
+  getCurrentSubscription: () => void;
   completedTasks: [];
 }
 
@@ -83,7 +87,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   useEffect(() => {
     getTokenFromGCM();
     async function getAPI() {
-      await props.getLatestCompletedTasks();
       const headers = tokenConfig();
       // try {
       await tigrowApi
@@ -99,23 +102,22 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           });
           setDashboard(response.data.data);
           props.setSubscriptionNotExpire();
+          props.getLatestCompletedTasks();
           props.getCompanyAnnouncement();
           setLoading(false);
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(async (err) => {
           setLoading(false);
           if (err.response.data.status === 403) {
-            props.setSubscriptionExpire();
-            if (props.subscriptiontExpired) {
-              props.company.role === 'superAdmin'
-                ? window.location.replace(
-                    `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
-                  )
-                : window.location.replace(
-                    `${window.location.origin}/${props.user.name}/home`,
-                  );
-            }
+            await props.setSubscriptionExpire();
+            await props.getCurrentSubscription();
+            props.company.role === 'superAdmin'
+              ? window.location.replace(
+                  `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+                )
+              : window.location.replace(
+                  `${window.location.origin}/${props.user.name}/home`,
+                );
           }
         });
     }
@@ -504,4 +506,5 @@ export const DashboardView = connect(mapStateToProps, {
   setSubscriptionExpire,
   setSubscriptionNotExpire,
   getLatestCompletedTasks,
+  getCurrentSubscription,
 })(DashboardViewComponent);

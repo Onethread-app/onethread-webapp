@@ -11,6 +11,7 @@ import { getNotifications } from '../../stores/notifications/Action';
 
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
+import { CLEAR_COMPANY_REDUCER_STATE } from 'stores/company/Types';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -61,11 +62,12 @@ export const ListViewComponent = (
                   } mt2 pointer bp3-popover-dismiss`}
                   onClick={async () => {
                     props.getNotifications();
-                    const response = (await props.getCompanyDetails(
+                    dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
+                    await props.getCompanyDetails(
                       c.company.uniqueName,
                       props.history,
-                    )) as any;
-                    if (response && props.isCompanyLoading === false) {
+                    );
+                    if (props.isCompanyLoading === false) {
                       dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                       props.history.push(
                         `/company/${

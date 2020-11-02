@@ -23,7 +23,7 @@ router
   .route('/:companyId')
   .get(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
+    // subCtrl.subscriptionExpireCheck(),
     SchemaValidator(subSchema.currentSubscriptionPlan),
     subCtrl.currentSubscriptionPlan,
   )
