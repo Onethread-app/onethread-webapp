@@ -43,7 +43,7 @@ const PricingPageComponent = (
               <h1 className="f3-ns f6 fw4 silver ma0">For teams and individuals.</h1>
             </div>
             <div>
-              <h1 className="f1-ns f3 fw7 ma0  basicFont"><span className="fw4">$</span>2.99</h1>
+              <h1 className="f1-ns f3 fw7 ma0  basicFont"><span className="fw4">$</span>0.99</h1>
               <h1 className="f4-ns f6 fw4 silver ma0">/user per month</h1>
             </div>
           </div>
