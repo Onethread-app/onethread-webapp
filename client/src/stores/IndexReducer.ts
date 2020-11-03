@@ -14,6 +14,8 @@ import { videoConferencesReducers } from './videoConferences/Reducer';
 import toasterReducer from './toast/Reducer';
 import { LandingReducer } from './landing/Reducer';
 import { CommentReducer } from './comment/Reducer';
+import { TaskMembersReducer } from './taskMembers/Reducer';
+
 export interface AppState {
   layoutReducer: any;
   roomReducer: any;
@@ -29,6 +31,7 @@ export interface AppState {
   toasterReducer: any;
   landingReducer: any;
   commentReducer: any;
+  taskMembersReducer: any;
 }
 
 export const rootReducer = combineReducers({
@@ -46,4 +49,5 @@ export const rootReducer = combineReducers({
   toasterReducer: toasterReducer,
   landingReducer: LandingReducer,
   commentReducer: CommentReducer,
+  taskMembersReducer: TaskMembersReducer,
 });

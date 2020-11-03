@@ -1,156 +1,61 @@
-import { tokenConfig } from 'stores/UtilsActions';
 import {
-  GET_ALL_MEMBER,
-  DELETE_MEMBER,
-  ASSIGN_MEMBER,
+  ASSIGN_MEMBER_START,
+  ASSIGN_MEMBER_SUCCESS,
+  ASSIGN_MEMBER_FAILURE,
+  DELETE_MEMBER_START,
+  DELETE_MEMBER_SUCCESS,
+  DELETE_MEMBER_FAILURE,
 } from './Types';
+
+import {
+  GET_ALL_MEMBER_START,
+  GET_ALL_MEMBER_SUCCESS,
+  GET_ALL_MEMBER_FAILURE,
+} from './Types';
+
 import { ITaskMember } from './Reducer';
-import { isEmpty } from 'lodash';
-import { errorMessgeHandler } from 'components/final-form/utils';
-import { tigrowApi } from 'config';
 
-export const addTaskMember = (members: string[]) => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    let response;
-    const taskId = getState().boardIndexReducer.boardReducer
-      .currentTask._id;
-      const projectId = getState().projectReducer.projectDetails._id;
-    if ((headers as any).headers.Authorization) {
-      const reqBody = { assignmembers: members };
-      response = await tigrowApi.post(
-        `tasks/member/${taskId}?pid=${projectId}`,
-        reqBody,
-        headers,
-      );
-      const responseData = response.data.map((assigned: any) => {
-        if (isEmpty(assigned.assignedPerson.profileImage)) {
-          return {
-            _id: assigned._id,
-            name:
-              assigned.assignedPerson.firstName +
-              ' ' +
-              assigned.assignedPerson.lastName,
-            account:
-              assigned.account.firstName +
-              ' ' +
-              assigned.account.lastName,
-            profileImage: '',
-          };
-        } else {
-          return {
-            _id: assigned._id,
-            name:
-              assigned.assignedPerson.firstName +
-              ' ' +
-              assigned.assignedPerson.lastName,
-            account:
-              assigned.account.firstName +
-              ' ' +
-              assigned.account.lastName,
-            profileImage: assigned.assignedPerson.profileImage,
-          };
-        }
-      });
-      dispatch({ type: ASSIGN_MEMBER, payload: responseData });
-    }
-    return errorMessgeHandler(response);
-  } catch (error) {
-    return errorMessgeHandler(error);
-  }
-};
+export const addTaskMember = (members: string[]) => ({
+  type: ASSIGN_MEMBER_START,
+  payload: members,
+});
 
-export const getAllMembers = () => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    const taskId = getState().boardIndexReducer.boardReducer
-      .currentTask._id;
-      const projectId = getState().projectReducer.projectDetails._id;
-    if ((headers as any).headers.Authorization) {
-      const response = await tigrowApi.get(
-        `tasks/member/${taskId}?pid=${projectId}`,
-        headers,
-      );
+export const addTaskMemberSuccess = (response: any) => ({
+  type: ASSIGN_MEMBER_SUCCESS,
+  payload: response,
+});
 
-      const responseData = response.data.map((assigned: any) => {
-        if (isEmpty(assigned.assignedPerson.profileImage)) {
-          return {
-            _id: assigned._id,
-            name:
-              assigned.assignedPerson.firstName +
-              ' ' +
-              assigned.assignedPerson.lastName,
-            account:
-              assigned.account.firstName +
-              ' ' +
-              assigned.account.lastName,
-            profileImage: '',
-          };
-        } else {
-          return {
-            _id: assigned._id,
-            name:
-              assigned.assignedPerson.firstName +
-              ' ' +
-              assigned.assignedPerson.lastName,
-            account:
-              assigned.account.firstName +
-              ' ' +
-              assigned.account.lastName,
-            profileImage: assigned.assignedPerson.profileImage,
-          };
-        }
-      });
-      dispatch({ type: GET_ALL_MEMBER, payload: responseData });
-    }
-  } catch (error) {
-    // tslint:disable-next-line: no-console
-    console.log(error);
-    // if (isEqual(error.message, 'Network Error')) {
-    //   // dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
-    // } else if (error.response.status === 401) {
-    //   dispatch({ type: CREATE_BOARD_ERROR,
-    //      payload: 'Unauthorized user. Please enter valid email and password.' });
-    // } else {
-    //   // tslint:disable-next-line: no-console
-    //   console.log(error.response);
-    // }
-  }
-};
+export const addTaskMemberFailure = (errorMessage: any) => ({
+  type: ASSIGN_MEMBER_FAILURE,
+  payload: errorMessage,
+});
 
-export const deleteMember = (memberId: ITaskMember['_id']) => async (
-  dispatch: any,
-  getState: any,
-) => {
-  try {
-    const headers = tokenConfig();
-    const projectId = getState().projectReducer.projectDetails._id;
-    if ((headers as any).headers.Authorization) {
-      const taskId = getState().boardIndexReducer.boardReducer
-        .currentTask._id;
-      await tigrowApi.delete(
-        `tasks/member/${taskId}?assignedMemberid=${memberId}&pid=${projectId}`,
-        headers,
-      );
-      dispatch({ type: DELETE_MEMBER, payload: memberId });
-    }
-  } catch (error) {
-    // tslint:disable-next-line: no-console
-    console.log(error);
-    // if (isEqual(error.message, 'Network Error')) {
-    //   dispatch({ type: CREATE_BOARD_ERROR, payload: 'Network error' });
-    // } else if (error.response.status === 401) {
-    //   dispatch({ type: CREATE_BOARD_ERROR,
-    //      payload: 'Unauthorized user. Please enter valid email and password.' });
-    // } else {
-    //   // tslint:disable-next-line: no-console
-    //   console.log(error.response);
-    // }
-  }
-};
+export const getAllMembers = () => ({
+  type: GET_ALL_MEMBER_START,
+});
+
+export const getAllMembersSuccess = (response: any) => ({
+  type: GET_ALL_MEMBER_SUCCESS,
+  payload: response,
+});
+
+export const getAllMembersFailure = (errorMessage: any) => ({
+  type: GET_ALL_MEMBER_FAILURE,
+  payload: errorMessage,
+});
+
+export const deleteMember = (memberId: ITaskMember['_id']) => ({
+  type: DELETE_MEMBER_START,
+  memberId,
+});
+
+export const deleteMemberSuccess = (response: any) => ({
+  type: DELETE_MEMBER_SUCCESS,
+  payload: response,
+});
+
+export const deleteMemberFailure = (errorMessage: any) => ({
+  type: DELETE_MEMBER_FAILURE,
+  payload: errorMessage,
+});
+
