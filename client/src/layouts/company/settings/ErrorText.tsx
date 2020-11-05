@@ -2,13 +2,14 @@ import React from 'react';
 import expiredIcon from '../../../resources/images/expiredIcon.png';
 import CloseIcon from '@material-ui/icons/Close';
 
-interface ISubscriptionExpiredText {
+interface IErrorText {
   text: string;
+  subtext: string;
   closeModal: () => void;
   setExpireMassage?: () => void;
 }
-export default function SubscriptionExpiredText(
-  props: ISubscriptionExpiredText,
+export default function ErrorText(
+  props: IErrorText,
 ) {
   return (
     <div>
@@ -39,8 +40,7 @@ export default function SubscriptionExpiredText(
           textAlign: 'center',
         }}
       >
-        To keep using Tigrow without interruption you need to pay your
-        dues.
+        {props.subtext}
       </p>
     </div>
   );

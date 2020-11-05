@@ -80,6 +80,7 @@ const initialState = {
     description: '',
     outline: '',
   },
+  hasAccess: true,
   teams: [],
   projectAssociates: [],
   pid: '',
@@ -263,6 +264,11 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...initialState,
       };
+    case ProjectActionTypes.SET_USER_ACCESS:
+      return {
+        ...state,
+        hasAccess: action.payload,
+      }
     default:
       return state;
   }

@@ -364,3 +364,8 @@ export const getProjectsIndividualFailure = (errorMessage: any) => ({
   type: ProjectActionTypes.GET_INDIVIDUAL_PROJECT_LIST_FAILURE,
   payload: errorMessage,
 });
+
+export const setProjectAccessForUser = (response: boolean) => ({
+  type: ProjectActionTypes.SET_USER_ACCESS,
+  payload: response,
+})

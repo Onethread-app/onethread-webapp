@@ -13,6 +13,10 @@ import { MobileView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { handleDownload } from 'helpers/FileDownload';
+import ErrorText from '../settings/ErrorText';
+import { customStyles } from '../settings/Index';
+import Modal from 'react-modal';
+import { useHistory } from 'react-router-dom';
 
 interface ProjectPrefaceProps {
   description: string;
@@ -24,16 +28,28 @@ interface ProjectPrefaceProps {
   project: any;
   company: any;
   user: User;
+  hasAccess: boolean;
 }
 
 export const ProjectPrefaceViewComponent = (
   props: ProjectPrefaceProps,
 ) => {
   const [showFileDialog, setShowFileDialog] = useState(false);
+  const [success, setSuccess] = React.useState(false);
+  const history = useHistory();
+
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
   const permissions = projectRules(props.role, props.optionalRole);
+
+  function closeModal() {
+    setSuccess(false);
+    history.goBack();
+  }
+  React.useEffect(() => {
+    setSuccess(!props.hasAccess);
+  }, [props.hasAccess]);
 
   return (
     <>
@@ -106,11 +122,23 @@ export const ProjectPrefaceViewComponent = (
             <div>
               <h1 className="f6">Shared Files</h1>
               {props.files.map((file: any) => (
-                <div className="flex items-center justify-between" key={file._id}>
-                  <h1 className="f6 fw6 blue w-80" style={{wordBreak: 'break-word', wordWrap: 'break-word'}}>
+                <div
+                  className="flex items-center justify-between"
+                  key={file._id}
+                >
+                  <h1
+                    className="f6 fw6 blue w-80"
+                    style={{
+                      wordBreak: 'break-word',
+                      wordWrap: 'break-word',
+                    }}
+                  >
                     {file.s3Key.split('/')[1]}
                   </h1>
-                  <span className="flex pl3 pointer" onClick = {() => handleDownload(file)}>
+                  <span
+                    className="flex pl3 pointer"
+                    onClick={() => handleDownload(file)}
+                  >
                     <img
                       src={DownloadIcon}
                       alt="Download icon"
@@ -144,20 +172,32 @@ export const ProjectPrefaceViewComponent = (
               <div>
                 <h1 className="f6">Shared Files</h1>
                 {props.files.map((file: any) => (
-                  <div className="flex items-center justify-between" key={file._id}>
-                    <h1 className="f6 fw6 blue w-80" style={{wordBreak: 'break-word', wordWrap: 'break-word'}} >
+                  <div
+                    className="flex items-center justify-between"
+                    key={file._id}
+                  >
+                    <h1
+                      className="f6 fw6 blue w-80"
+                      style={{
+                        wordBreak: 'break-word',
+                        wordWrap: 'break-word',
+                      }}
+                    >
                       {file.s3Key.split('/')[1]}
                     </h1>
-                      <span className="flex pl3 pointer" onClick = {() => handleDownload(file)}>
-                        <img
-                          src={DownloadIcon}
-                          alt="Download icon"
-                          style={{
-                            width: '23px',
-                            height: '23px',
-                          }}
-                        />
-                      </span>
+                    <span
+                      className="flex pl3 pointer"
+                      onClick={() => handleDownload(file)}
+                    >
+                      <img
+                        src={DownloadIcon}
+                        alt="Download icon"
+                        style={{
+                          width: '23px',
+                          height: '23px',
+                        }}
+                      />
+                    </span>
                   </div>
                 ))}
                 <Button
@@ -216,6 +256,21 @@ export const ProjectPrefaceViewComponent = (
           <FileUpload setShowDialog={setShowFileDialog} />
         </Dialog>
       )}
+      {success && (
+        <Modal
+          isOpen={success}
+          // onAfterOpen={afterOpenModal}
+          onRequestClose={closeModal}
+          style={customStyles}
+          contentLabel="Example Modal"
+        >
+          <ErrorText
+            closeModal={closeModal}
+            text="You do not have permission"
+            subtext="Contact your admin for permissions"
+          />
+        </Modal>
+      )}
     </>
   );
 };
@@ -234,6 +289,7 @@ const mapStateToProps = (state: any) => ({
     state.projectReducer.projectRole.projects.project &&
     state.projectReducer.projectRole.projects.project.optionalRole,
   projectMembers: state.projectReducer.projectDetails.members,
+  hasAccess: state.projectReducer.hasAccess,
   project: state.projectReducer.projectDetails,
   company: state.companyReducer.currentCompany,
   user: state.userReducer.user,
