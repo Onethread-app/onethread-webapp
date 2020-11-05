@@ -36,15 +36,15 @@ const createSubscriptionForCompany = async (req, res, next) => {
 
 const currentSubscriptionPlan = async (req, res, next) => {
   try {
-    await Subscription.findOne({
+    await Subscription.find({
       company: req.params.companyId,
       isActive: true,
     })
-
+      .sort({ _id: -1 })
       .populate('plan', 'name maxTier pricing')
       .exec()
       .then((result) => {
-        return sendJSONresponse(res, 200, result);
+        return sendJSONresponse(res, 200, result[0]);
       });
   } catch (error) {
     logger.error(`Subscription: ${error}`);
@@ -106,7 +106,6 @@ const subscriptionExpireCheck = () => {
         });
       }
       let today = new Date().getTime();
-
       if (subscribe[0].expireAt > today) {
         req.subscribe = subscribe[0].expireAt;
         next();
