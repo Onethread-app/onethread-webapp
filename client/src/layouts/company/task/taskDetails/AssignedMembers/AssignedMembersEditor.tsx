@@ -10,7 +10,11 @@ import { isEmpty } from 'lodash';
 import { connect } from 'react-redux';
 import { IconNames } from '@blueprintjs/icons';
 import { ITask } from 'stores/board/Reducer';
-import { addTaskMember } from 'stores/taskMembers/Action';
+import {
+  addTaskMember,
+  addTaskMemberSuccess,
+  addTaskMemberFailure,
+} from 'stores/taskMembers/Action';
 import { tigrowApi } from 'config';
 import { IProject } from 'stores/project/Reducer';
 
@@ -18,7 +22,8 @@ interface IMembersFormProps {
   setMembersPopover: (val: boolean) => void;
   project?: IProject;
   currentTask?: ITask;
-  addTaskMember: (members: string[]) => Promise<any>;
+  addTaskMember: (members: string[]) => any;
+  isEditingTask: boolean;
 }
 
 interface ICompanyTeamMembers {
@@ -30,7 +35,7 @@ export const AssignedMembersEditorComponent = (
 ) => {
   const onSubmit = async (values: any) => {
     const response = await props.addTaskMember(values.member);
-    if (response.message === 200) {
+    if (props.isEditingTask === false) {
       props.setMembersPopover(false);
       return true;
     }
@@ -185,9 +190,12 @@ const mapStateToProps = (state: any) => {
   return {
     project: state.projectReducer.projectDetails,
     currentTask: state.boardIndexReducer.boardReducer.currentTask,
+    isEditingTask: state.taskMembersReducer.isEditingTask,
   };
 };
 
 export const AssignedMembersEditor = connect(mapStateToProps, {
   addTaskMember,
+  addTaskMemberSuccess,
+  addTaskMemberFailure,
 })(AssignedMembersEditorComponent);

@@ -56,6 +56,7 @@ import {
   changeProjectMemberRoleFailure,
   getProjectsIndividualSuccess,
   getProjectsIndividualFailure,
+  setProjectAccessForUser,
 } from './Actions';
 import { getCompanyId } from 'stores/company/Selector';
 import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
@@ -300,6 +301,11 @@ export function* getSingleProjectAsync({ payload }: any) {
           'Unauthorized user. Please enter valid email and password.',
         ),
       );
+    } else if (error.response.status === 403) {
+      yield all([
+        put(setProjectAccessForUser(false)),
+        put(getSingleProjectFailure(error.message)),
+      ]);
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);

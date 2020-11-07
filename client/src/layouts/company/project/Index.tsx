@@ -5,6 +5,7 @@ import { PendingProjectRequest } from './request/Index';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { setProjectAccessForUser } from 'stores/project/Actions';
 
 const _ProjectPage = (props: any) => {
   React.useEffect(() => {
@@ -18,6 +19,11 @@ const _ProjectPage = (props: any) => {
           );
     }
   }, []);
+
+  React.useEffect(() => {
+    props.setProjectAccessForUser(true);
+  }, []);
+
   return (
     <>
       <NavbarCompany title="My Projects" />
@@ -50,10 +56,11 @@ const mapStateToProps = (state: any) => {
     subscriptiontExpired:
       state.subscriptionReducer.subscriptionExpired,
     company: state.companyReducer.currentCompany,
+    hasAccess: state.projectReducer.hasAccess,
   };
 };
 
 export const ProjectPage = connect(
   mapStateToProps,
-  {},
+  {setProjectAccessForUser},
 )(withRouter(_ProjectPage));

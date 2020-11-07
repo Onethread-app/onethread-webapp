@@ -10,7 +10,7 @@ import { ProjectList } from './ProjectList';
 import { VideoConference } from './VideoList';
 import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
-import SubscriptionExpiredText from 'layouts/company/settings/SubscriptionExpiredText';
+import ErrorText from 'layouts/company/settings/ErrorText';
 import Modal from 'react-modal';
 import { setExpireMassage } from 'stores/subscriptionBilling/Actions';
 
@@ -87,10 +87,12 @@ export const HomePageComponent = (
             style={customStyles}
             contentLabel="Example Modal"
           >
-            <SubscriptionExpiredText
+            <ErrorText
               setExpireMassage={props.setExpireMassage}
               closeModal={closeModal}
               text="Your Subscription has expired, contact with Super Admin"
+              subtext="To keep using Tigrow without interruption you need to pay your
+              dues."
             />
           </Modal>
         )}

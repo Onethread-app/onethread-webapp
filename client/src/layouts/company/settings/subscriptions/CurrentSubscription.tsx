@@ -58,7 +58,7 @@ const _CurrentSubscription = (
                 <label className="pl1">
                   {props.currentSubscriptions
                     ? props.currentSubscriptions
-                    : 'Trail'}
+                    : 'Trial'}
                 </label>
               </Grid>
               <Grid item xs={5}>

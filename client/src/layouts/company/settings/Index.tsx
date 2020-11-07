@@ -13,10 +13,10 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
 import Subscriptions from './subscriptions/Index';
 import Modal from 'react-modal';
-import SubscriptionExpiredText from './SubscriptionExpiredText';
+import ErrorText from './ErrorText';
 import './styles.scss';
 
-const customStyles = {
+export const customStyles = {
   content: {
     top: '50%',
     left: '50%',
@@ -149,9 +149,11 @@ const SettingsPagComponent = (
             style={customStyles}
             contentLabel="Example Modal"
           >
-            <SubscriptionExpiredText
+            <ErrorText
               closeModal={closeModal}
               text="Your Subscription has expired"
+              subtext="To keep using Tigrow without interruption you need to pay your
+              dues."
             />
           </Modal>
         )}
