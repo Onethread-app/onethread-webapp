@@ -8,10 +8,13 @@ import youtubeIcon from './../../resources/LandingImages/youtubeIcon.png';
 import linkedInIcon from './../../resources/LandingImages/linkedInIcon.png';
 import tigrowFooter from './../../resources/LandingImages/tigrowFooter.png';
 import { ContactSupportForm } from './ContactSupportForm';
+import LanguageSelector from 'components/LanguageSelector';
+import { useTranslation } from 'react-i18next';
 
 export const LandingFooter = (
 ) => {
   const [showForm1, setShowForm1] = useState(false);
+  const { t } = useTranslation();
   return (
     <div>
       <CustomView condition={!isMobileOnly}>
@@ -79,10 +82,8 @@ export const LandingFooter = (
               <img src={linkedInIcon} />
             </a>
           </div>
-          <div className="tc bb b--white mt5 flex justify-center">
-            <p className="white fw6 f5">English</p>
-            <p className="white f5 ml4">বাংলা</p>
-          </div>
+          <div className='tc white'>{t('title')}</div>
+          <LanguageSelector />
           <div className="flex justify-between mv4">
             <div>
               <img src={tigrowFooter} />

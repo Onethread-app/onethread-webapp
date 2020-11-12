@@ -17,6 +17,8 @@ import { App } from './App';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
 import { store, persistor } from 'Store';
+import './i18n';
+import { Loading } from 'components/Loading';
 
 const PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY as string;
 const stripePromise = loadStripe(PUBLIC_KEY);
@@ -25,7 +27,9 @@ ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
       <Elements stripe={stripePromise}>
-        <App />
+        <React.Suspense fallback={<Loading />}>
+          <App />
+        </React.Suspense>
       </Elements>
     </PersistGate>
   </Provider>,
