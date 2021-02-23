@@ -56,6 +56,7 @@ import {
   editCertificateFailure,
   getLatestCompletedTasksSuccess,
   getLatestCompletedTasksFailure,
+  getAllDepartments,
 } from './Actions';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import {
@@ -247,6 +248,7 @@ export function* addDepartmentAsync({ name }: any) {
         headers,
       );
       yield put(addDepartmentSuccess(response.data));
+      yield put(getAllDepartments());
     }
   } catch (error) {
     if (error.message === 'Network Error') {
@@ -1006,7 +1008,7 @@ export function* onEditCompanyCertificate() {
 export function* onGetLatestCompletedTasks() {
   yield takeLatest(
     CompanyActionTypes.GET_LATEST_COMPLETED_TASK_START,
-    getLatestCompletedTasksAsync
+    getLatestCompletedTasksAsync,
   );
 }
 
