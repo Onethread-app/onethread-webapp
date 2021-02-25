@@ -14,6 +14,7 @@ import addIcon from '../../../resources/images/addIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormProject } from './CreateProjectForm';
 import { ChangeName } from './ChangeProjectName';
+import { ChangeType } from './ChangeProjectType';
 import { find } from 'lodash';
 import {
   Color,
@@ -37,6 +38,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(
     false,
   );
+  const [
+    showUpdateProjectDialog,
+    setShowUpdateProjectDialog,
+  ] = useState(false);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
@@ -64,19 +69,23 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const checkRoleForChangeName = () => {
     permissions.grantAll
       ? setShowUpdateNameDialog(true)
-      : permissions.projectModerator.includes(
-          'updateProjectPreface',
-        )
+      : permissions.projectModerator.includes('updateProjectPreface')
       ? setShowUpdateNameDialog(true)
+      : setOpen(true);
+  };
+
+  const checkRoleForUpdatingProject = () => {
+    permissions.grantAll
+      ? setShowUpdateProjectDialog(true)
+      : permissions.projectModerator.includes('updateProjectPreface')
+      ? setShowUpdateProjectDialog(true)
       : setOpen(true);
   };
 
   const checkRoleForArchiveProject = (projectId: string) => {
     permissions.grantAll
       ? projectArchive(projectId)
-      : permissions.projectModerator.includes(
-          'updateProjectPreface',
-        )
+      : permissions.projectModerator.includes('updateProjectPreface')
       ? projectArchive(projectId)
       : setOpen(true);
   };
@@ -193,6 +202,13 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                                   }
                                 />
                                 <MenuItem
+                                  className="pa1"
+                                  text="Change Project Type"
+                                  onClick={(e: any) =>
+                                    checkRoleForUpdatingProject()
+                                  }
+                                />
+                                <MenuItem
                                   className="pa1 red"
                                   text="Archive Project"
                                   onClick={(e: any) =>
@@ -262,6 +278,21 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                         projectName={props.currentProject.name}
                         projectId={props.currentProject._id}
                         setShowDialog={setShowUpdateNameDialog}
+                      />
+                    </RightSidebar>
+                  )}
+                  {showUpdateProjectDialog && (
+                    <RightSidebar
+                      onClose={() =>
+                        setShowUpdateProjectDialog(
+                          !showUpdateProjectDialog,
+                        )
+                      }
+                    >
+                      <ChangeType
+                        departments={props.currentProject.departments}
+                        projectId={props.currentProject._id}
+                        setShowDialog={setShowUpdateProjectDialog}
                       />
                     </RightSidebar>
                   )}
