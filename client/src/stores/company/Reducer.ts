@@ -1,8 +1,5 @@
 import {
-  ADD_DEPARTMENT,
-  ADD_DEPARTMENT_LOADING,
   COMPANY_DEPARTMENT_LOADING,
-  ADD_DEPARTMENT_ERROR,
   COMPANY_REDUCER_LOADING,
   COMPANY_REDUCER_LOADING_FALSE,
   CLEAR_COMPANY_REDUCER_STATE,
@@ -244,18 +241,18 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         departmentNameLoading: true,
       };
-    case ADD_DEPARTMENT_LOADING:
+    case CompanyActionTypes.ADD_DEPARTMENT_START:
       return {
         ...state,
         departmentNameLoading: true,
       };
-    case ADD_DEPARTMENT_ERROR:
+    case CompanyActionTypes.ADD_DEPARTMENT_FAILURE:
       return {
         ...state,
         error: action.payload,
         departmentNameLoading: false,
       };
-    case ADD_DEPARTMENT:
+    case CompanyActionTypes.ADD_DEPARTMENT_SUCCESS:
       return {
         ...state,
         currentCompany: {
@@ -485,7 +482,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         completedTaskserror: action.payload,
         loadingCompletedTasks: false,
-      }
+      };
     case ADD_PRODUCT:
       return {
         ...state,
