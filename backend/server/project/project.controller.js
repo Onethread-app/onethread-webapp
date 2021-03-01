@@ -17,14 +17,17 @@ const {
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
+const { createBoard } = require('../board/board.controller');
 
-const isPidExist = async(pid)=>{
-  let checkExist= await Project.findOne({
-    _id: pid,
-  },
-  { removed: false },);
+const isPidExist = async (pid) => {
+  let checkExist = await Project.findOne(
+    {
+      _id: pid,
+    },
+    { removed: false },
+  );
   return checkExist;
-}
+};
 
 const teamCreate = async (account, member, project, role) => {
   let newTeam = new Team({
@@ -77,6 +80,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         outline: '',
       });
       await project.save();
+      await createBoard(req, '', project._id);
       let projectReq = [];
       // create an id of map array
       associates.map(async (data) => {
@@ -177,8 +181,9 @@ const createNewProjectForCompany = async (req, res, next) => {
 
       await project
         .save()
-        .then((project) => {
+        .then(async (project) => {
           logger.info(`new project created`);
+          await createBoard(req, '', project._id);
           if (req.user._id === concernedAdmin.accountId) {
             teamCreate(
               concernedAdmin.accountId,
@@ -581,8 +586,10 @@ const showAllProjectsForCompany = async (req, res, next) => {
 
 const updateProjectDescription = async (req, res, next) => {
   let checkPid = isPidExist(req.query.pid);
-  if(!checkPid){
-    return sendErrorResponse(res, 404, 'IdNotExist', {message: 'pid is not exist'});
+  if (!checkPid) {
+    return sendErrorResponse(res, 404, 'IdNotExist', {
+      message: 'pid is not exist',
+    });
   }
   await Project.findByIdAndUpdate(
     { _id: req.query.pid },

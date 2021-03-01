@@ -64,7 +64,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
   return (
     <>
       <Draggable
-        draggableId={props.column._id ? props.column._id.toString() : '0'}
+        draggableId={
+          props.column._id ? props.column._id.toString() : '0'
+        }
         index={props.index}
       >
         {(provided) => (
@@ -103,9 +105,12 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   {props.company &&
                     (projectPermit(props.company.role) ||
                       (props.projectRole === 'projectModerator' &&
-                        props.optionalRole!.includes(
+                        (props.optionalRole!.includes(
                           'createUpdateBoard',
-                        ))) && (
+                        ) ||
+                          props.optionalRole!.includes(
+                            'createUpdateColumn',
+                          )))) && (
                       <Popover
                         className="w-10"
                         content={
@@ -136,9 +141,12 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 {props.company &&
                   (projectPermit(props.company.role) ||
                     (props.projectRole === 'projectModerator' &&
-                      props.optionalRole!.includes(
+                      (props.optionalRole!.includes(
                         'createUpdateBoard',
-                      ))) && (
+                      ) ||
+                        props.optionalRole!.includes(
+                          'createUpdateColumn',
+                        )))) && (
                     <div
                       className="overflow-hidden ph2 pt2"
                       style={{

@@ -1,6 +1,7 @@
 const { Team } = require('./team.model');
 const { Member } = require('../company/member/member.model');
 const { Project } = require('../project/project.model');
+const Board = require('../board/board.model');
 const { ProjectRequest } = require('../request/request.model');
 const logger = require('../../config/winston');
 const {
@@ -11,6 +12,8 @@ const {
 const {
   createTeamAddNotification,
 } = require('../notification/notification.controller');
+
+const { addToBoard } = require('../board/board.controller');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -28,6 +31,7 @@ const changeRole = async (req, res, next) => {
 
 // add team member
 const addTeamMember = async (req, res, next) => {
+  console.log(req.body);
   // Check for JSON
   if (!req.is('application/json')) {
     return sendErrorResponse(res, 406, 'ContentTypeError', {
@@ -81,6 +85,14 @@ const addTeamMember = async (req, res, next) => {
           };
         });
         await Team.create(members);
+        // add to general board
+        const board = await Board.findOne({
+          name: 'General',
+          project: req.query.pid,
+        });
+        members.map(async (e) => {
+          await addToBoard(board._id, e.account);
+        });
       }
 
       const allTeamMembers = await Team.find({
