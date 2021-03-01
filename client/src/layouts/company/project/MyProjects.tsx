@@ -290,7 +290,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       }
                     >
                       <ChangeType
-                        departments={props.currentProject.departments}
                         projectId={props.currentProject._id}
                         setShowDialog={setShowUpdateProjectDialog}
                       />

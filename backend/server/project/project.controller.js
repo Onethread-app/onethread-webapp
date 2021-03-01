@@ -579,10 +579,66 @@ const showAllProjectsForCompany = async (req, res, next) => {
   }
 };
 
+const updateProjectType = async (req, res, next) => {
+  const { pid } = req.query;
+  const { list, type } = req.body;
+  console.log(pid, list, type);
+
+  if (type === 'department') {
+    await Project.findByIdAndUpdate(
+      { _id: pid },
+      {
+        $set: {
+          associate: [],
+          departments: list,
+        },
+      },
+      { safe: true, upsert: true, new: true },
+    )
+      .exec()
+      .then(() => {
+        logger.info(`Project Type Updated for ${pid}`);
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: 'Type Updated',
+        });
+      })
+      .catch((err) => {
+        logger.error(`Project: ${err}`);
+        next(err);
+      });
+  } else {
+    await Project.findByIdAndUpdate(
+      { _id: pid },
+      {
+        $set: {
+          associate: list,
+          departments: [],
+        },
+      },
+      { safe: true, upsert: true, new: true },
+    )
+      .exec()
+      .then(() => {
+        logger.info(`Project Type Updated for ${pid}`);
+        return sendJSONresponse(res, 200, {
+          success: true,
+          message: 'Type Updated',
+        });
+      })
+      .catch((err) => {
+        logger.error(`Project: ${err}`);
+        next(err);
+      });
+  }
+};
+
 const updateProjectDescription = async (req, res, next) => {
   let checkPid = isPidExist(req.query.pid);
-  if(!checkPid){
-    return sendErrorResponse(res, 404, 'IdNotExist', {message: 'pid is not exist'});
+  if (!checkPid) {
+    return sendErrorResponse(res, 404, 'IdNotExist', {
+      message: 'pid is not exist',
+    });
   }
   await Project.findByIdAndUpdate(
     { _id: req.query.pid },
@@ -957,6 +1013,7 @@ module.exports = {
   createNewProjectFromHome,
   addAssociateInProject,
   showAllProjectsForCompany,
+  updateProjectType,
   updateProjectDescription,
   updateProjectOutline,
   // getProjectLoad,

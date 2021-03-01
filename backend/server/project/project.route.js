@@ -148,6 +148,18 @@ router
     projectCtrl.updateProjectOutline,
   );
 
+router.route('/change-type').put(
+  authorization,
+  // subCtrl.subscriptionExpireCheck(),
+  projectCtrl.authorizeProjectRole(
+    'all',
+    'admin',
+    'projectModerator',
+  ),
+  schemaValidator(projectValidation.updateProjectType),
+  projectCtrl.updateProjectType,
+);
+
 router
   .route('/description')
   .put(

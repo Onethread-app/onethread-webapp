@@ -15,6 +15,11 @@ const schema = {
   pid: idSchema.id,
   memberId: idSchema.id,
   description: Joi.string().max(2500).allow(''),
+  list: Joi.array().items(
+    Joi.object().keys({
+      _id: idSchema.id.required(),
+    }),
+  ),
   outline: Joi.string().max(5000).allow(''),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
@@ -53,6 +58,12 @@ module.exports = {
   addAssociate: Joi.object().keys({
     body: Joi.object().keys({
       associates: schema.associates,
+    }),
+  }),
+  updateProjectType: Joi.object().keys({
+    body: Joi.object().keys({
+      list: schema.list,
+      type: Joi.string().required(),
     }),
   }),
   updateProjectOutline: Joi.object().keys({
@@ -101,7 +112,7 @@ module.exports = {
   archiveProject: Joi.object().keys({
     query: Joi.object().keys({
       pid: schema.pid.required(),
-    })
+    }),
   }),
   searchConcernAdmin: Joi.object().keys({
     params: companyId.required(),
