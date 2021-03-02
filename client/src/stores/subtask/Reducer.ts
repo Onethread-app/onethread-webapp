@@ -1,32 +1,31 @@
-import {
-  GET_ALL_SUBTASK,
-  CREATE_SUBTASK,
-  COMPLETE_SUBTASK,
-  DELETE_SUBTASK,
-  UPDATE_SUBTASK_TITLE,
-} from './Types';
+import { SubtaskActionTypes } from './Types';
 import { isEqual } from 'lodash';
 export interface ISubTask {
   _id?: string;
   name?: string;
   done?: boolean;
 }
-// export interface ISubTaskList {
-//   subTaskList: ISubTask[];
-// }
 
 const InitialState = {
   subTaskList: [] as any,
+  creatingSubTask: false,
+  fetchingSubTask: false,
+  updatingSubTask: false,
+  deletingSubTask: false,
+  errorOnCreate: '',
+  errorOnFetch: '',
+  errorOnUpdate: '',
+  errorOnDelete: '',
 };
 
 export const SubTaskReducer = (state = InitialState, action: any) => {
   switch (action.type) {
-    case GET_ALL_SUBTASK:
+    case SubtaskActionTypes.CREATE_SUBTASK_START:
       return {
         ...state,
-        subTaskList: action.payload,
+        creatingSubTask: true,
       };
-    case CREATE_SUBTASK:
+    case SubtaskActionTypes.CREATE_SUBTASK_SUCCESS:
       return {
         ...state,
         subTaskList: [
@@ -37,27 +36,37 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
           },
           ...state.subTaskList,
         ],
+        creatingSubTask: false,
       };
-    case COMPLETE_SUBTASK:
+    case SubtaskActionTypes.CREATE_SUBTASK_FAILURE:
       return {
         ...state,
-        subTaskList: state.subTaskList.map((subTask: ISubTask) =>
-          isEqual(subTask._id, action.payload._id)
-            ? {
-                ...subTask,
-                done: action.payload.done,
-              }
-            : subTask,
-        ),
+        errorOnCreate: action.payload,
+        creatingSubTask: false,
       };
-    case DELETE_SUBTASK:
+    case SubtaskActionTypes.GET_ALL_SUBTASK_START:
       return {
         ...state,
-        subTaskList: state.subTaskList.filter(
-          (subTask: ISubTask) => subTask._id !== action.payload,
-        ),
+        fetchingSubTask: true,
       };
-    case UPDATE_SUBTASK_TITLE:
+    case SubtaskActionTypes.GET_ALL_SUBTASK_SUCCESS:
+      return {
+        ...state,
+        subTaskList: action.payload,
+        fetchingSubTask: false,
+      };
+    case SubtaskActionTypes.GET_ALL_SUBTASK_FAILURE:
+      return {
+        ...state,
+        errorOnFetch: action.payload,
+        fetchingSubTask: false,
+      };
+    case SubtaskActionTypes.UPDATE_SUBTASK_START:
+      return {
+        ...state,
+        updatingSubTask: true,
+      };
+    case SubtaskActionTypes.UPDATE_SUBTASK_SUCCESS:
       return {
         ...state,
         subTaskList: state.subTaskList.map((subTask: ISubTask) =>
@@ -65,9 +74,36 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
             ? {
                 ...subTask,
                 name: action.payload.name,
+                done: action.payload.done,
               }
             : subTask,
         ),
+        updatingSubTask: false,
+      };
+    case SubtaskActionTypes.UPDATE_SUBTASK_FAILURE:
+      return {
+        ...state,
+        errorOnUpdate: action.payload,
+        updatingSubTask: false,
+      };
+    case SubtaskActionTypes.DELETE_SUBTASK_START:
+      return {
+        ...state,
+        deletingSubTask: true,
+      };
+    case SubtaskActionTypes.DELETE_SUBTASK_SUCCESS:
+      return {
+        ...state,
+        subTaskList: state.subTaskList.filter(
+          (subTask: ISubTask) => subTask._id !== action.payload,
+        ),
+        deletingSubTask: false,
+      };
+    case SubtaskActionTypes.DELETE_SUBTASK_FAILURE:
+      return {
+        ...state,
+        errorOnDelete: action.payload,
+        deletingSubTask: false,
       };
     default:
       return state;

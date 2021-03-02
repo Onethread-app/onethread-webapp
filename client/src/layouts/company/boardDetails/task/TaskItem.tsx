@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { TaskBoard, ITask } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { getSelectedTaskDetails } from 'stores/board/Actions';
+import { getAllSubTask } from 'stores/subtask/Actions';
 import moment from 'moment';
 
 interface TaskItemProps {
@@ -16,12 +17,25 @@ interface TaskItemProps {
 interface TaskItemInternalProps extends TaskItemProps {
   currentBoard?: TaskBoard;
   company?: ICompany;
-  getSelectedTaskDetails: (task: string | undefined) => void;
+  getSelectedTaskDetails: (task: string) => void;
+  getAllSubTask: () => void;
 }
 
 const TaskItemComponent = (
   props: TaskItemInternalProps & RouteComponentProps,
 ) => {
+  const handleClick = async () => {
+    if (props.task._id) {
+      await props.getSelectedTaskDetails(props.task._id);
+
+      props.history.push(
+        `/company/${props.company!.uniqueName}/board/${
+          props.currentBoard!._id
+        }/task/${props.task._id}`,
+      );
+    }
+  };
+
   return (
     <>
       <Draggable draggableId={props.task._id!} index={props.index}>
@@ -34,18 +48,7 @@ const TaskItemComponent = (
               {...provided.draggableProps}
               {...provided.dragHandleProps}
               {...allowedProps}
-              onClick={async () => {
-                const responseTask: any = await props.getSelectedTaskDetails(
-                  props.task._id,
-                );
-                if (responseTask.payload) {
-                  props.history.push(
-                    `/company/${props.company!.uniqueName}/board/${
-                      props.currentBoard!._id
-                    }/task/${props.task._id}`,
-                  );
-                }
-              }}
+              onClick={handleClick}
             >
               <div
                 className="br3"
@@ -194,4 +197,5 @@ const mapStateToProps = (state: any) => {
 
 export const TaskItem = connect(mapStateToProps, {
   getSelectedTaskDetails,
+  getAllSubTask,
 })(withRouter(TaskItemComponent));
