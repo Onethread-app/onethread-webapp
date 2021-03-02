@@ -58,14 +58,14 @@ export const DashboardSummary = (props) => {
             />
           </div>
           <h3
-            className="w-50-ns w-100 f5-ns f7 fw7 relative midWidth"
+            className="w-50-ns w-100 f5-ns f7 fw7 midWidth flex items-center"
             style={fontColor}
           >
-            Running <br /> Project
-            <span
-              className="fr f2-ns f3 countPoisition"
-              style={primaryColor}
-            >
+            <div className="flex flex-column">
+              <span>Running</span>
+              <span>Projects</span>
+            </div>
+            <span className="fr f2-ns f3 pl3" style={primaryColor}>
               {runningProjects}
             </span>
           </h3>
@@ -78,21 +78,24 @@ export const DashboardSummary = (props) => {
             />
           </div>
           <h3
-            className="w-50-ns w-100 f5-ns f7 fw7 relative midWidth"
+            className="w-50-ns w-100 f5-ns f7 fw7 midWidth flex items-center"
             style={fontColor}
           >
-            Completed <br /> Projects
-            <span
-              className="fr f2-ns f3 countPoisition"
-              style={primaryColor}
-            >
+            <div className="flex flex-column">
+              <span>Completed</span>
+              <span>Projects</span>
+            </div>
+            <span className="fr f2-ns f3 pl3" style={primaryColor}>
               {completedProjects}
             </span>
           </h3>
         </div>
       </div>
       <div className="w-70-l w-100 chart-height-mobile">
-        <DashboardChart runningProjects={runningProjects} completedProjects={completedProjects}/>
+        <DashboardChart
+          runningProjects={runningProjects}
+          completedProjects={completedProjects}
+        />
       </div>
     </div>
   );
