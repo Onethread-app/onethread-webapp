@@ -2,6 +2,7 @@ const { Team } = require('./team.model');
 const { Member } = require('../company/member/member.model');
 const { Project } = require('../project/project.model');
 const Board = require('../board/board.model');
+const { Room } = require('../room/room.model');
 const { ProjectRequest } = require('../request/request.model');
 const logger = require('../../config/winston');
 const {
@@ -14,6 +15,7 @@ const {
 } = require('../notification/notification.controller');
 
 const { addToBoard } = require('../board/board.controller');
+const { createRoomMember } = require('../room/room.controller');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -31,7 +33,6 @@ const changeRole = async (req, res, next) => {
 
 // add team member
 const addTeamMember = async (req, res, next) => {
-  console.log(req.body);
   // Check for JSON
   if (!req.is('application/json')) {
     return sendErrorResponse(res, 406, 'ContentTypeError', {
@@ -84,14 +85,27 @@ const addTeamMember = async (req, res, next) => {
             role: 'member',
           };
         });
-        await Team.create(members);
-        // add to general board
+        const team = await Team.create(members);
+        // creating general board
         const board = await Board.findOne({
           name: 'General',
           project: req.query.pid,
         });
+        // creating general room
+        const room = await Room.findOne({
+          name: 'General',
+          project: req.query.pid,
+        });
         members.map(async (e) => {
+          // adding to board & creating room member
           await addToBoard(board._id, e.account);
+          await createRoomMember(
+            req.params.companyId,
+            req.query.pid,
+            e.account,
+            room._id,
+            team[0]._id,
+          );
         });
       }
 

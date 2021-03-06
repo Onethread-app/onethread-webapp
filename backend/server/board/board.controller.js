@@ -12,37 +12,43 @@ const {
 } = require('../notification/notification.controller');
 const { Team } = require('../team-member/team.model');
 
-const createBoard = async (req, name, pid) => {
+const createBoard = async (
+  name,
+  project,
+  department,
+  color,
+  account,
+) => {
   const board = new Board({
-    name: name ? name : 'General',
-    department: req.body.department && req.body.department,
-    color: req.body.color,
-    account: req.user._id,
-    project: pid,
-    members: [req.user._id],
+    name,
+    department: department && department,
+    color: color ? color : 0,
+    account,
+    project,
+    members: [account],
   });
   const createdBoard = await board.save();
   await BoardColumn.create({
     name: 'To do',
     type: 'to-do',
-    project: pid,
-    account: req.user._id,
+    project,
+    account,
     positionInBoard: 1,
     boardId: board._id,
   });
   await BoardColumn.create({
     name: 'In progress',
     type: 'in-progress',
-    project: pid,
-    account: req.user._id,
+    project,
+    account,
     positionInBoard: 2,
     boardId: board._id,
   });
   await BoardColumn.create({
     name: 'Done',
     type: 'done',
-    project: pid,
-    account: req.user._id,
+    project,
+    account,
     positionInBoard: 3,
     boardId: board._id,
   });
@@ -110,9 +116,11 @@ const get = async (req, res, next) => {
 const create = async (req, res, next) => {
   try {
     const createdBoard = await createBoard(
-      req,
       req.body.name,
       req.query.pid,
+      req.body.department,
+      req.body.color,
+      req.user._id,
     );
     const project = await Project.findOne({
       _id: req.query.pid,

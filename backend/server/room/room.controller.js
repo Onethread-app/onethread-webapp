@@ -9,6 +9,36 @@ const {
 } = require('../helpers/jsonResponse');
 const logger = require('../../config/winston');
 
+const createRoom = async (company, project, account, name) => {
+  const room = await new Room({
+    name /* roomName */,
+    company /* companyId */,
+    project /* projectId */,
+    account /* userId */,
+  }).save();
+  logger.info(`Room Created Successfully.`);
+  return room;
+};
+
+const createRoomMember = async (
+  company,
+  project,
+  account,
+  room,
+  team,
+) => {
+  console.log('here', team);
+  const roomMember = await new RoomMember({
+    account,
+    team,
+    company,
+    project,
+    room,
+  }).save();
+  logger.info(`Room Member Added Successfully.`);
+  return roomMember;
+};
+
 const create = async (req, res, next) => {
   try {
     // check room already exists with same company
@@ -22,25 +52,21 @@ const create = async (req, res, next) => {
         message: `Room already exists`,
       });
     }
-    const newRoom = new Room({
-      name: req.body.name,
-      company: req.headers.companyid,
-      project: req.query.pid,
-      // members: [req.user._id],
-      account: req.user._id,
-    });
 
-    const room = await newRoom.save();
+    const room = await createRoom(
+      req.body.name,
+      req.headers.companyid,
+      req.query.pid,
+      req.user._id,
+    );
 
-    const newRoomMember = new RoomMember({
-      account: req.user._id,
-      team: req.team._id,
-      company: req.headers.companyid,
-      project: req.query.pid,
-      room: room._id,
-    });
-
-    const roomMember = await newRoomMember.save();
+    const roomMember = new createRoomMember(
+      req.headers.companyid,
+      req.query.pid,
+      req.user._id,
+      room._id,
+      req.team._id,
+    );
 
     return sendJSONresponse(res, 201, { room, roomMember });
   } catch (e) {
@@ -251,7 +277,7 @@ const list = async (req, res, next) => {
             'archive removed _id name company project account createdAt updatedAt',
         },
       ]);
-
+    console.log('rooms: ', rooms);
     // unread count
     const roomsUnreadCount = {};
     for (const e of rooms) {
@@ -290,6 +316,7 @@ const list = async (req, res, next) => {
         ...room._doc,
       };
     });
+    console.log(filterRooms);
     return sendJSONresponse(res, 200, {
       rooms: filterRooms,
       roomsUnreadCount,
@@ -361,4 +388,6 @@ module.exports = {
   memberList,
   archiveRoom,
   updateLastSeen,
+  createRoom,
+  createRoomMember,
 };
