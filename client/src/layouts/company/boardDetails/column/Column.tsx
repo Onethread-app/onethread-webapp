@@ -105,12 +105,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                   {props.company &&
                     (projectPermit(props.company.role) ||
                       (props.projectRole === 'projectModerator' &&
-                        (props.optionalRole!.includes(
+                        props.optionalRole!.includes(
                           'createUpdateBoard',
-                        ) ||
-                          props.optionalRole!.includes(
-                            'createUpdateColumn',
-                          )))) && (
+                        ))) && (
                       <Popover
                         className="w-10"
                         content={
@@ -141,12 +138,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                 {props.company &&
                   (projectPermit(props.company.role) ||
                     (props.projectRole === 'projectModerator' &&
-                      (props.optionalRole!.includes(
+                      props.optionalRole!.includes(
                         'createUpdateBoard',
-                      ) ||
-                        props.optionalRole!.includes(
-                          'createUpdateColumn',
-                        )))) && (
+                      ))) && (
                     <div
                       className="overflow-hidden ph2 pt2"
                       style={{

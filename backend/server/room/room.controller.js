@@ -27,7 +27,6 @@ const createRoomMember = async (
   room,
   team,
 ) => {
-  console.log('here', team);
   const roomMember = await new RoomMember({
     account,
     team,
@@ -277,7 +276,6 @@ const list = async (req, res, next) => {
             'archive removed _id name company project account createdAt updatedAt',
         },
       ]);
-    console.log('rooms: ', rooms);
     // unread count
     const roomsUnreadCount = {};
     for (const e of rooms) {
@@ -316,7 +314,6 @@ const list = async (req, res, next) => {
         ...room._doc,
       };
     });
-    console.log(filterRooms);
     return sendJSONresponse(res, 200, {
       rooms: filterRooms,
       roomsUnreadCount,

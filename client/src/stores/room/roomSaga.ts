@@ -1,267 +1,185 @@
-import { all, put, select } from 'redux-saga/effects';
+import { all, call, put, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 import {
   room,
   LOADING_ROOM,
-  CREATE_ROOM_FROM_SERVER_SUCCESS,
-  GET_ROOMS,
-  GET_ROOM_ERROR,
-  GET_ROOM_MEMBERS,
-  GET_ROOM_MEMBERS_ERROR,
-  SEND_MESSAGE,
-  SEND_MESSAGE_ERROR,
   ALL_MESSAGE_RECEIVED,
-  GET_ROOM_MESSAGES,
-  GET_ROOM_MESSAGES_ERROR,
-  FILE_UPLOAD,
-  ARCHIVE_ROOM,
-  ARCHIVE_ROOM_ERROR,
-  GET_ROOM_SHARED_FILES,
-  GET_ROOM_SHARED_FILES_ERROR,
-  GET_ROOM_DISCUSSIONS,
-  GET_ROOM_DISCUSSIONS_ERROR,
-  SET_ROOM_DISCUSSIONS,
-  REMOVE_ROOM_DISCUSSIONS,
-  TOGGLE_ROOM_DISCUSSIONS_ERROR,
-  CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
-  ADD_MEMBER_IN_ROOM,
-  ADD_MEMBER_IN_ROOM_ERROR,
+  RoomActionTypes,
 } from './Types';
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
 import { roomSubscribe } from 'layouts/company/room/channelSubscribe';
 import { IRoom } from './Reducer';
-import { isEqual } from 'lodash';
+import {
+  addRoomMembersFailure,
+  addRoomMembersSuccess,
+  archiveRoomFailure,
+  archiveRoomSuccess,
+  createRoomFailure,
+  createRoomSuccess,
+  fetchRoomsFailure,
+  fetchRoomsSuccess,
+  fileUploadActionFailure,
+  fileUploadActionSuccess,
+  getRoomDiscussionsFailure,
+  getRoomDiscussionsSuccess,
+  getRoomMembersFailure,
+  getRoomMessagesFailure,
+  getRoomMessagesSuccess,
+  getRoomsFailure,
+  getRoomSharedFilesFailure,
+  getRoomSharedFilesSuccess,
+  getRoomsSuccess,
+  removeRoomDiscussion,
+  sendRoomMessageFailure,
+  sendRoomMessageSuccess,
+  toggleDiscussionRoomFailure,
+  toggleDiscussionRoomSuccess,
+  updateLastSeenFailure,
+  updateLastSeenSuccess,
+} from './Actions';
+import handleError from 'helpers/HandleSagaErrors';
+import { getProjectId } from 'stores/project/Selector';
+import { getCompanyId } from 'stores/company/Selector';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
 
-function* createRoomAction(action) {
+function* createRoom({ payload }) {
   try {
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
-    const selectProjectId = (state) =>
-      state.projectReducer.projectDetails._id;
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      const company = yield select(selectCompanyId);
-      const project = yield select(selectProjectId);
+      const companyId = yield select(getCompanyId);
+      const projectId = yield select(getProjectId);
       yield put({ type: LOADING_ROOM });
       const response = yield tigrowApi.post(
-        `rooms?pid=${project}`,
+        `rooms?pid=${projectId}`,
         {
-          ...action.roomData,
-          company,
-          project,
+          ...payload,
+          companyId,
+          projectId,
         },
         headers,
       );
-      yield put({
-        type: CREATE_ROOM_FROM_SERVER_SUCCESS,
-        payload: response.data.room,
-      });
+      yield put(createRoomSuccess(response.data.room));
       yield put({
         type: room.RESPONSE_STATUS_CODE,
         payload: response.status,
       });
       yield roomSubscribe(response.data.room._id);
-
-      // return response.status;
     }
   } catch (error) {
-    console.log(error.response);
     yield put({
       type: room.RESPONSE_STATUS_CODE,
       payload: error.response.status,
     });
-    yield put({
-      type: room.CREATE_ROOM_ERROR,
-      payload: error.response.data.errors[0].message,
+    handleError(error, async (errorMessage: any) => {
+      await createRoomFailure(errorMessage);
     });
-    // return error.response.status;
   }
 }
 
 function* getRooms() {
   try {
-
-    const selectProjectId = (state) =>
-      state.projectReducer.projectDetails._id;
-    const project = yield select(selectProjectId);
+    const projectId = yield select(getProjectId);
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      yield put({ type: LOADING_ROOM });
       const response = yield tigrowApi.get(
-        `rooms/list?pid=${project}`,
+        `rooms/list?pid=${projectId}`,
         headers,
       );
-      yield put({ type: GET_ROOMS, payload: response.data });
+      yield put(getRoomsSuccess(response.data));
       const rooms = response.data.rooms as IRoom[];
       rooms.forEach(async (room) => {
         await roomSubscribe(room._id);
       });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in rooms fetching');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      yield put({ type: GET_ROOM_ERROR, payload: 'Network error' });
-    } else if (error.response.status === 401) {
-      yield put({
-        type: GET_ROOM_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
+    handleError(error, async (errorMessage: any) => {
+      await getRoomsFailure(errorMessage);
+    });
   }
 }
 
-function* getRoomMembers(action) {
+function* getRoomMembers({ payload }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
-        `rooms/members/${action.roomId}`,
+        `rooms/members/${payload}`,
         headers,
       );
-      yield put({
-        type: GET_ROOM_MEMBERS,
-        payload: response.data.members,
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in rooms members fetching');
+      yield put(getRoomsSuccess(response.data.members));
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      yield put({
-        type: GET_ROOM_MEMBERS_ERROR,
-        payload: 'Network error',
-      });
-    } else if (error.response.status === 401) {
-      yield put({
-        type: GET_ROOM_MEMBERS_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
+    handleError(error, async (errorMessage: any) => {
+      await getRoomMembersFailure(errorMessage);
+    });
   }
 }
 
-function* addRoomMembers(action) {
+function* addRoomMembers({ data, selectedRoomMember }) {
   try {
-    const selectProjectId = (state) =>
-      state.projectReducer.projectDetails._id;
-    const project = yield select(selectProjectId);
+    const projectId = yield select(getProjectId);
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      yield put({ type: LOADING_ROOM });
       const response = yield tigrowApi.post(
-        `rooms/addUser?pid=${project}`,
-        action.data,
+        `rooms/addUser?pid=${projectId}`,
+        data,
         headers,
       );
       if (response.status === 201) {
-        yield put({
-          type: ADD_MEMBER_IN_ROOM,
-          payload: action.selectedRoomMember,
-        });
+        yield put(addRoomMembersSuccess(selectedRoomMember));
       }
       yield put({
         type: room.RESPONSE_STATUS_CODE,
         payload: response.status,
       });
-      return response;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in adding members in a room');
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      yield put({
-        type: ADD_MEMBER_IN_ROOM_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
+    handleError(error, async (errorMessage: any) => {
+      await addRoomMembersFailure(errorMessage);
+    });
     yield put({
       type: room.RESPONSE_STATUS_CODE,
       payload: error.response.status,
     });
-    return error.response;
   }
 }
 
-function* sendRoomMessage(action) {
+function* sendRoomMessage({ payload }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.post(
-        `messages`,
-        action.data,
-        headers,
-      );
-      yield put({ type: SEND_MESSAGE });
-      return response.status;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in sending a room message');
+      yield tigrowApi.post(`messages`, payload.data, headers);
+      yield put(sendRoomMessageSuccess());
     }
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put({
-        type: SEND_MESSAGE_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else if (isEqual(error.message, 'Network Error')) {
-      yield put({
-        type: SEND_MESSAGE_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response.status;
+    handleError(error, async (errorMessage: any) => {
+      await sendRoomMessageFailure(errorMessage);
+    });
   }
 }
 
-function* getRoomMessages(action) {
+function* getRoomMessages({ roomId, limit, skip }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
-        `messages/room/${action.roomId}?limit=${action.limit}&skip=${action.skip}`,
+        `messages/room/${roomId}?limit=${limit}&skip=${skip}`,
         headers,
       );
-      if (response.data.count < action.limit) {
+      if (response.data.count < limit) {
         yield put({ type: ALL_MESSAGE_RECEIVED, payload: true });
       }
-      yield put({
-        type: GET_ROOM_MESSAGES,
-        payload: response.data.messages.reverse(),
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in rooms message fetching');
+      yield put(
+        getRoomMessagesSuccess(response.data.messages.reverse()),
+      );
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      yield put({
-        type: GET_ROOM_MESSAGES_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
+    handleError(error, async (errorMessage: any) => {
+      await getRoomMessagesFailure(errorMessage);
+    });
   }
 }
 
@@ -274,24 +192,12 @@ function* fileUploadAction(action) {
         action.imageSelected,
         headers,
       );
-      yield put({
-        type: FILE_UPLOAD,
-        payload: response.data.newFile,
-      });
-      return response;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('no headers');
+      yield put(fileUploadActionSuccess(response.data.newFile));
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      // tslint:disable-next-line: no-console
-      console.log('network error');
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response;
+    handleError(error, async (errorMessage: any) => {
+      await fileUploadActionFailure(errorMessage);
+    });
   }
 }
 
@@ -307,186 +213,117 @@ function* archiveRoom(action) {
         action.data,
         headers,
       );
-      yield put({
-        type: ARCHIVE_ROOM,
-        payload: {
-          roomId: action.roomId,
-          archive: action.data.archive,
-        },
-      });
-      return response.status;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in creation of company');
+      if (response.status === 200 || 201) {
+        yield put(
+          archiveRoomSuccess({
+            roomId: action.roomId,
+            archive: action.data.archive,
+          }),
+        );
+      }
     }
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put({
-        type: ARCHIVE_ROOM_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else if (isEqual(error.message, 'Network Error')) {
-      yield put({
-        type: ARCHIVE_ROOM_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response.status;
+    handleError(error, async (errorMessage: any) => {
+      await archiveRoomFailure(errorMessage);
+    });
   }
 }
 
-function* getRoomSharedFiles(action) {
+function* getRoomSharedFiles({ roomId, limit, skip }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
-        `messages/room/${action.roomId}/files?limit=${action.limit}&skip=${action.skip}`,
+        `messages/room/${roomId}/files?limit=${limit}&skip=${skip}`,
         headers,
       );
-      yield put({
-        type: GET_ROOM_SHARED_FILES,
-        payload: response.data.files,
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in rooms file fetching');
+      yield put(getRoomSharedFilesSuccess(response.data.files));
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      yield put({
-        type: GET_ROOM_SHARED_FILES_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
+    handleError(error, async (errorMessage: any) => {
+      await getRoomSharedFilesFailure(errorMessage);
+    });
   }
 }
 
-function* getRoomDiscussions(action) {
+function* getRoomDiscussions({ roomId, limit, skip }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
-        `messages/room/${action.roomId}/discussion?limit=${action.limit}&skip=${action.skip}`,
+        `messages/room/${roomId}/discussion?limit=${limit}&skip=${skip}`,
         headers,
       );
-      yield put({
-        type: GET_ROOM_DISCUSSIONS,
-        payload: response.data.discussion,
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in rooms discussion fetching');
+      yield put(getRoomDiscussionsSuccess(response.data.discussion));
     }
   } catch (error) {
-    if (isEqual(error.message, 'Network Error')) {
-      yield put({
-        type: GET_ROOM_DISCUSSIONS_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
+    handleError(error, async (errorMessage: any) => {
+      await getRoomDiscussionsFailure(errorMessage);
+    });
   }
 }
 
-function* toggleDiscussionRoom(action) {
+function* toggleDiscussions({ messageId, data }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.put(
-        `messages/${action.messageId}/discussion`,
-        action.data,
+        `messages/${messageId}/discussion`,
+        data,
         headers,
       );
-      yield put({
-        type: response.data.discussion.discussion
-          ? SET_ROOM_DISCUSSIONS
-          : REMOVE_ROOM_DISCUSSIONS,
-        payload: {
-          data: {
-            _id: response.data.discussion._id,
-            text: response.data.discussion.text,
-            room: response.data.discussion.room,
-            createdAt: response.data.discussion.createdAt,
-            updatedAt: response.data.discussion.updatedAt,
-          },
-          discussion: response.data.discussion.discussion,
+      const responseData = {
+        data: {
+          _id: response.data.discussion._id,
+          text: response.data.discussion.text,
+          room: response.data.discussion.room,
+          createdAt: response.data.discussion.createdAt,
+          updatedAt: response.data.discussion.updatedAt,
         },
-      });
-      return response.status;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in creation of company');
+        discussion: response.data.discussion.discussion,
+      };
+      response.data.discussion.discussion
+        ? yield put(toggleDiscussionRoomSuccess(responseData))
+        : yield put(removeRoomDiscussion(responseData));
     }
   } catch (error) {
-    if (error.response.status === 401) {
-      yield put({
-        type: TOGGLE_ROOM_DISCUSSIONS_ERROR,
-        payload: 'Unauthorized user',
-      });
-    } else if (isEqual(error.message, 'Network Error')) {
-      yield put({
-        type: TOGGLE_ROOM_DISCUSSIONS_ERROR,
-        payload: 'Network error',
-      });
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
-    }
-    return error.response.status;
+    handleError(error, async (errorMessage: any) => {
+      await toggleDiscussionRoomFailure(errorMessage);
+    });
   }
 }
 
-function* updateLastSeen(action) {
+function* updateLastSeen({ roomId }) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.put(
-        `rooms/last-seen/${action.roomId}`,
+        `rooms/last-seen/${roomId}`,
         null,
         headers,
       );
       if (response.status === 200) {
-        yield put({
-          type: CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM,
-          payload: action.roomId,
-        });
+        yield put(updateLastSeenSuccess(roomId));
       }
-      return response;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in creation of company');
     }
   } catch (error) {
-    // tslint:disable-next-line: no-console
-    console.log(error.response);
-    return error.response;
+    handleError(error, async (errorMessage: any) => {
+      await updateLastSeenFailure(errorMessage);
+    });
   }
 }
 
-function* fethRooms() {
+function* fetchRooms() {
   try {
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
+    const companyId = yield select(getCompanyId);
     const headers = tokenConfig();
-    const companyId = yield select(selectCompanyId);
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
         `rooms/list/${companyId}`,
         headers,
       );
       if (response.status === 200) {
-        yield put({
-          type: room.FETCH_ROOMS_SUCCESS,
-          payload: response.data,
-        });
+        yield put(fetchRoomsSuccess(response.data));
       }
       const unreadCount = yield response.data.rooms.map(
         (room: any) => response.data.roomsUnreadCount[room._id],
@@ -499,38 +336,106 @@ function* fethRooms() {
         type: room.COUNT_TOTAL_REED_COUNT,
         payload: totalUnread,
       });
-      return response;
-    } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in creation of company');
     }
   } catch (error) {
-    // tslint:disable-next-line: no-console
-    console.log(error.response);
-    return error.response;
+    handleError(error, async (errorMessage: any) => {
+      await fetchRoomsFailure(errorMessage);
+    });
   }
+}
+
+export function* onRoomCreate() {
+  yield takeEvery(RoomActionTypes.CREATE_ROOM_START, createRoom);
+}
+
+export function* onGetRooms() {
+  yield takeLatest(RoomActionTypes.GET_ROOMS_START, getRooms);
+}
+
+export function* onGetRoomMembers() {
+  yield takeLatest(
+    RoomActionTypes.GET_ROOM_MEMBERS_START,
+    getRoomMembers,
+  );
+}
+
+export function* onAddRoomMembers() {
+  yield takeEvery(
+    RoomActionTypes.ADD_ROOM_MEMBERS_START,
+    addRoomMembers,
+  );
+}
+
+export function* onSendRoomMessage() {
+  yield takeEvery(
+    RoomActionTypes.SEND_MESSAGE_START,
+    sendRoomMessage,
+  );
+}
+
+export function* onGetRoomMessages() {
+  yield takeLatest(
+    RoomActionTypes.GET_ROOM_MESSAGES_START,
+    getRoomMessages,
+  );
+}
+
+export function* onFileUpload() {
+  yield takeEvery(
+    RoomActionTypes.FILE_UPLOAD_START,
+    fileUploadAction,
+  );
+}
+
+export function* onArchiveRoom() {
+  yield takeEvery(RoomActionTypes.ARCHIVE_ROOM_START, archiveRoom);
+}
+
+export function* onGetRoomSharedFiles() {
+  yield takeLatest(
+    RoomActionTypes.GET_ROOM_SHARED_FILES_START,
+    getRoomSharedFiles,
+  );
+}
+
+export function* onGetRoomDiscussions() {
+  yield takeLatest(
+    RoomActionTypes.GET_ROOM_DISCUSSIONS_START,
+    getRoomDiscussions,
+  );
+}
+
+export function* onToggleDiscussions() {
+  yield takeLatest(
+    RoomActionTypes.TOGGLE_ROOM_DISCUSSION_START,
+    toggleDiscussions,
+  );
+}
+
+export function* onUpdateLastSeen() {
+  yield takeLatest(
+    RoomActionTypes.UPDATE_LAST_SEEN_START,
+    updateLastSeen,
+  );
+}
+
+export function* onFetchRooms() {
+  yield takeLatest(RoomActionTypes.FETCH_ROOMS_START, fetchRooms);
 }
 
 export default function* roomSaga() {
   yield all([
-    takeEvery(room.CREATE_ROOM_LOAD, createRoomAction),
-    takeLatest(room.GET_ROOMS_LOAD, getRooms),
-    takeLatest(room.GET_ROOM_MEMBERS_LOAD, getRoomMembers),
-    takeLatest(room.SEND_MESSAGE_LOAD, sendRoomMessage),
-    takeLatest(room.GET_ROOM_MESSAGES_LOAD, getRoomMessages),
-    takeLatest(room.FILE_UPLOAD_LOAD, fileUploadAction),
-    takeLatest(room.ARCHIVE_ROOM_LOAD, archiveRoom),
-    takeLatest(room.GET_ROOM_SHARED_FILES_LOAD, getRoomSharedFiles),
-    takeLatest(room.GET_ROOM_DISCUSSIONS_LOAD, getRoomDiscussions),
-    takeLatest(
-      room.TOGGLE_ROOM_DISCUSSIONS_LOAD,
-      toggleDiscussionRoom,
-    ),
-    takeLatest(
-      room.CLEAR_UNREAD_COUNT_FOR_SINGLE_ROOM_LOAD,
-      updateLastSeen,
-    ),
-    takeLatest(room.ADD_MEMBER_IN_ROOM_LOAD, addRoomMembers),
-    takeLatest(room.FETCH_ROOMS_LOAD, fethRooms),
+    call(onRoomCreate),
+    call(onGetRooms),
+    call(onGetRoomMembers),
+    call(onAddRoomMembers),
+    call(onSendRoomMessage),
+    call(onGetRoomMessages),
+    call(onFileUpload),
+    call(onArchiveRoom),
+    call(onGetRoomSharedFiles),
+    call(onGetRoomDiscussions),
+    call(onUpdateLastSeen),
+    call(onFetchRooms),
   ]);
 }
