@@ -14,7 +14,7 @@ import {
   getRoomDiscussions,
   updateLastSeen,
 } from 'stores/room/Actions';
-import { 
+import {
   getSingleProject,
   setCurrentProjectId,
   getRoleForProject,
@@ -97,6 +97,10 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
     }
   };
 
+  useEffect(() => {
+    console.log(props.currentRoom);
+  }, [props.currentRoom]);
+
   // get all rooms
   useEffect(() => {
     if (!isMobileOnly && props.companyId && props.projectId) {
@@ -176,7 +180,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
           <MobileView>
             <Icon
               className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite left-0 pointer"
-              icon='arrow-left'
+              icon="arrow-left"
               iconSize={17}
               onClick={() => {
                 // tslint:disable-next-line: no-unused-expression
@@ -191,7 +195,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             isEmpty(props.currentRoom._id) === false && (
               <Icon
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
-                icon='arrow-right'
+                icon="arrow-right"
                 iconSize={17}
                 onClick={() => {
                   setIsOpenRightSidebar(!isOpenRightSidebar);
@@ -207,13 +211,13 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               className="overflow-hidden t-25-a bg-white b--tigrowLightGray-1 bl"
               style={{
                 borderBottomRightRadius: '0.5rem',
-                width: isOpenRightSidebar 
-                  ? isMobileOnly 
-                    ? '0px' 
-                    : '400px' 
-                  : isMobileOnly 
-                    ? '0px' 
-                    : '16px',
+                width: isOpenRightSidebar
+                  ? isMobileOnly
+                    ? '0px'
+                    : '400px'
+                  : isMobileOnly
+                  ? '0px'
+                  : '16px',
               }}
             >
               {isMobileOnly ? (
