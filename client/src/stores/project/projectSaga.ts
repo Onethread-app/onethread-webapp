@@ -71,6 +71,7 @@ import {
   getCurrentUserId,
   getUserCompanyList,
 } from 'stores/user/Selector';
+import { getAllBoards } from 'stores/board/Actions';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -650,6 +651,7 @@ export function* addProjectTeamsAsync({ data }: any) {
         yield all([
           put(addProjectTeamsSuccess()),
           put(getProjectTeams()),
+          put(getAllBoards()),
         ]);
       }
     }

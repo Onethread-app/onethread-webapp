@@ -1,13 +1,20 @@
 const handleError = async (error, errorHandler) => {
-  if (error.message === 'Network Error') {
-    await errorHandler('Network Error');
-  } else if (error.response.status === 401) {
-    await errorHandler(
-      'Unauthorized user. Please enter valid email and password.',
+  if (error.response) {
+    const { data, config } = error.response;
+    console.log(
+      `${data.type} on method ${config.method} at ${config.baseURL}${config.url}`,
     );
-  } else {
-    console.log(error.response);
-    await errorHandler(error.message);
+    if (data.type === 'Network Error') {
+      await errorHandler('Network Error');
+    } else if (data.status === 401) {
+      await errorHandler(
+        'Unauthorized user. Please enter valid email and password.',
+      );
+    } else if (data.status === 403) {
+      await errorHandler('Access Error');
+    } else {
+      await errorHandler(data.type);
+    }
   }
 };
 

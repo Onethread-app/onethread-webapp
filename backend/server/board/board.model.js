@@ -8,6 +8,7 @@ const BoardSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
+      unique: false,
     },
     department: {
       type: Schema.Types.ObjectId,
@@ -51,5 +52,7 @@ const BoardSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
+
+BoardSchema.index({ name: 1, project: 1 }, { unique: true });
 
 module.exports = mongoose.model('Board', BoardSchema);

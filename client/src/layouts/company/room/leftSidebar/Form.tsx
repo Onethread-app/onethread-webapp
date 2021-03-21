@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '@blueprintjs/core';
 import { connect, useDispatch } from 'react-redux';
-import { createRoomAction } from 'stores/room/Actions';
+import { createRoom } from 'stores/room/Actions';
 import { Form, Field } from 'react-final-form';
 import {
   required,
@@ -17,22 +17,20 @@ interface ICreateFormProps {
 }
 
 interface ICreateFormInternalProps extends ICreateFormProps {
-  createRoomAction: (val: any) => void;
+  createRoom: (val: any) => void;
   roomStatus: number;
 }
 
 const CreateFormComponent: React.FC<any> = (
   props: ICreateFormInternalProps,
 ) => {
-
   const [showDialog, setShowDialog] = useState('');
   const dispatch = useDispatch();
   const onSubmit: any = async (values: any) => {
-    await props.createRoomAction(values);
+    await props.createRoom(values);
   };
 
   const errorHandling: any = (status: number) => {
-
     setShowDialog('');
     if (status === 409) {
       setShowDialog('Duplicate name');
@@ -41,7 +39,6 @@ const CreateFormComponent: React.FC<any> = (
       props.setShowDialog(false);
     }
     return;
-
   };
 
   return (
@@ -64,14 +61,14 @@ const CreateFormComponent: React.FC<any> = (
                   autoFocus={true}
                   className={`br0 ${
                     checkError(meta) ? 'bb b--red' : 'bb b--lightBlue'
-                    }`}
+                  }`}
                   placeHolder="Room name"
                   value={input.value}
                   onChange={input.onChange}
                   leftIcon="layout-balloon"
                   leftIconColor={`${
                     checkError(meta) ? 'red' : '#0fa3a3'
-                    }`}
+                  }`}
                   style={{ boxShadow: 'none' }}
                   error={
                     checkError(meta) &&
@@ -121,10 +118,10 @@ const CreateFormComponent: React.FC<any> = (
 
 const mapStateToProps = (state: any) => {
   return {
-    roomStatus: state.roomReducer.responseCode
+    roomStatus: state.roomReducer.responseCode,
   };
 };
 
 export const CreateForm = connect(mapStateToProps, {
-  createRoomAction,
+  createRoom,
 })(CreateFormComponent);

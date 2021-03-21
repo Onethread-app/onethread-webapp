@@ -1,6 +1,8 @@
 const { Team } = require('./team.model');
 const { Member } = require('../company/member/member.model');
 const { Project } = require('../project/project.model');
+const Board = require('../board/board.model');
+const { Room } = require('../room/room.model');
 const { ProjectRequest } = require('../request/request.model');
 const logger = require('../../config/winston');
 const {
@@ -11,6 +13,9 @@ const {
 const {
   createTeamAddNotification,
 } = require('../notification/notification.controller');
+
+const { addToBoard } = require('../board/board.controller');
+const { createRoomMember } = require('../room/room.controller');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -80,7 +85,28 @@ const addTeamMember = async (req, res, next) => {
             role: 'member',
           };
         });
-        await Team.create(members);
+        const team = await Team.create(members);
+        // creating general board
+        const board = await Board.findOne({
+          name: 'General',
+          project: req.query.pid,
+        });
+        // creating general room
+        const room = await Room.findOne({
+          name: 'General',
+          project: req.query.pid,
+        });
+        members.map(async (e) => {
+          // adding to board & creating room member
+          await addToBoard(board._id, e.account);
+          await createRoomMember(
+            req.params.companyId,
+            req.query.pid,
+            e.account,
+            room._id,
+            team[0]._id,
+          );
+        });
       }
 
       const allTeamMembers = await Team.find({

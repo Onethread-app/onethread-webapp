@@ -72,7 +72,7 @@
     "reselect": "^4.0.0",
     "styled-components": "^5.1.0",
     "tachyons": "4.10.0",
-    "tslib": "^1.10.0",
+    "tslib": "^2.1.0",
     "typeface-josefin-sans": "^0.0.75",
     "typeface-open-sans": "^0.0.75",
     "typescript": "3.6.2"

@@ -40,7 +40,10 @@ export const ChatLayoutComponent = (
     false,
   );
 
-  const permissions = projectRules(props.projectRole, props.optionalRole);
+  const permissions = projectRules(
+    props.projectRole,
+    props.optionalRole,
+  );
 
   return (
     <>
@@ -106,25 +109,27 @@ export const ChatLayoutComponent = (
                           <h5 className="gray ma0 mb2 pointer bp3-popover-dismiss">
                             Mute Conversation
                           </h5>
-                          { projectPermit(props.companyRole) || props.projectRole && 
-                            props.optionalRole && 
-                            (permissions.grantAll || permissions.projectModerator.includes(
-                            'archiveRoom',
-                            )) && (
-                            <h5
-                              className="red ma0 pointer bp3-popover-dismiss"
-                              onClick={async () => {
-                                await props.archiveRoom(
-                                  {
-                                    archive: true,
-                                  },
-                                  props.currentRoom._id,
-                                );
-                              }}
-                            >
-                              Archive Room
-                            </h5>
-                          )}
+                          {projectPermit(props.companyRole) ||
+                            (props.projectRole &&
+                              props.optionalRole &&
+                              (permissions.grantAll ||
+                                permissions.projectModerator.includes(
+                                  'archiveRoom',
+                                )) && (
+                                <h5
+                                  className="red ma0 pointer bp3-popover-dismiss"
+                                  onClick={async () => {
+                                    await props.archiveRoom(
+                                      {
+                                        archive: true,
+                                      },
+                                      props.currentRoom._id,
+                                    );
+                                  }}
+                                >
+                                  Archive Room
+                                </h5>
+                              ))}
                         </>
                       )}
                     </div>
@@ -141,13 +146,14 @@ export const ChatLayoutComponent = (
                   }
                 />
               </div>
-              { projectPermit(props.companyRole) || 
-                props.projectRole && 
-                props.optionalRole && 
-                (permissions.grantAll || permissions.projectModerator.includes(
-                'addRemoveMemberRoom',
-                )) &&
-              props.currentRoom.archive === false ? (
+              {projectPermit(props.companyRole) ||
+              (props.projectRole &&
+                props.optionalRole &&
+                (permissions.grantAll ||
+                  permissions.projectModerator.includes(
+                    'addRemoveMemberRoom',
+                  )) &&
+                props.currentRoom.archive === false) ? (
                 <div
                   className="pointer ml3-ns ml1"
                   onClick={() =>
@@ -173,7 +179,10 @@ export const ChatLayoutComponent = (
                         <div
                           className="br3 ba b--gray gray pointer bp3-popover-dismiss pa2 tc"
                           onClick={() => {
-                            window.open('https://meet.jit.si', '_blank');
+                            window.open(
+                              'https://meet.jit.si',
+                              '_blank',
+                            );
                           }}
                         >
                           <h4 className="mv0">Basic</h4>
@@ -275,11 +284,11 @@ const mapStateToProps = (state: any) => {
     activeRoom: state.roomReducer.activeRoom,
     users: state.roomReducer.users,
     companyRole: state.companyReducer.currentCompany.role,
-    projectRole: 
-      state.projectReducer.projectRole && 
-      state.projectReducer.projectRole.projects && 
+    projectRole:
+      state.projectReducer.projectRole &&
+      state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.role,
-    optionalRole: 
+    optionalRole:
       state.projectReducer.projectRole &&
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.project &&

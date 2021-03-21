@@ -17,14 +17,21 @@ const {
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
+const { createBoard } = require('../board/board.controller');
+const {
+  createRoom,
+  createRoomMember,
+} = require('../room/room.controller');
 
-const isPidExist = async(pid)=>{
-  let checkExist= await Project.findOne({
-    _id: pid,
-  },
-  { removed: false },);
+const isPidExist = async (pid) => {
+  let checkExist = await Project.findOne(
+    {
+      _id: pid,
+    },
+    { removed: false },
+  );
   return checkExist;
-}
+};
 
 const teamCreate = async (account, member, project, role) => {
   let newTeam = new Team({
@@ -34,6 +41,7 @@ const teamCreate = async (account, member, project, role) => {
     role,
   });
   await newTeam.save();
+  return newTeam;
 };
 
 const projectRequestUpdate = async (pid, size) => {
@@ -77,6 +85,19 @@ const createNewProjectForCompany = async (req, res, next) => {
         outline: '',
       });
       await project.save();
+      await createBoard(
+        'General',
+        project._id,
+        undefined,
+        undefined,
+        req.user._id,
+      );
+      const room = await createRoom(
+        req.body.companyId,
+        project._id,
+        req.user._id,
+        'General',
+      );
       let projectReq = [];
       // create an id of map array
       associates.map(async (data) => {
@@ -128,21 +149,47 @@ const createNewProjectForCompany = async (req, res, next) => {
 
       // build a team for this project
       if (req.user._id === concernedAdmin.accountId) {
-        teamCreate(
+        const team = await teamCreate(
           concernedAdmin.accountId,
           concernedAdmin.memberId,
           project._id,
           'admin',
         );
+        await createRoomMember(
+          req.body.companyId,
+          project._id,
+          req.user._id,
+          room._id,
+          team._id,
+        );
         logger.info(`project creator is the admin`);
       } else {
-        teamCreate(member.account, member._id, project._id, 'admin');
+        const team1 = await teamCreate(
+          member.account,
+          member._id,
+          project._id,
+          'admin',
+        );
+        await createRoomMember(
+          req.body.companyId,
+          project._id,
+          req.user._id,
+          room._id,
+          team1._id,
+        );
         logger.info(`project creator add as a member here`);
-        teamCreate(
+        const team2 = await teamCreate(
           concernedAdmin.accountId,
           concernedAdmin.memberId,
           project._id,
           'admin',
+        );
+        await createRoomMember(
+          req.body.companyId,
+          project._id,
+          req.user._id,
+          room._id,
+          team2._id,
         );
         logger.info(`concern admin add as an admin here`);
       }
@@ -177,29 +224,67 @@ const createNewProjectForCompany = async (req, res, next) => {
 
       await project
         .save()
-        .then((project) => {
+        .then(async (project) => {
           logger.info(`new project created`);
+          await createBoard(
+            'General',
+            project._id,
+            undefined,
+            undefined,
+            req.user._id,
+          );
+          logger.info(`General Board Created`);
+          const room = await createRoom(
+            req.body.companyId,
+            project._id,
+            req.user._id,
+            'General',
+          );
+          logger.info(`General Room Created`);
           if (req.user._id === concernedAdmin.accountId) {
-            teamCreate(
+            const team = await teamCreate(
               concernedAdmin.accountId,
               concernedAdmin.memberId,
               project._id,
               'admin',
             );
+            await createRoomMember(
+              req.body.companyId,
+              project._id,
+              req.user._id,
+              room._id,
+              team._id,
+            );
+            logger.info(`Added to General Room`);
             logger.info(`project creator add as a admin here`);
           } else {
-            teamCreate(
+            const team1 = await teamCreate(
               member.account,
               member._id,
               project._id,
               'admin',
             );
-            teamCreate(
+            await createRoomMember(
+              req.body.companyId,
+              project._id,
+              member._id,
+              room._id,
+              team1._id,
+            );
+            const team2 = await teamCreate(
               concernedAdmin.accountId,
               concernedAdmin.memberId,
               project._id,
               'admin',
             );
+            await createRoomMember(
+              req.body.companyId,
+              project._id,
+              concernedAdmin.accountId,
+              room._id,
+              team2._id,
+            );
+            logger.info(`Added to General Room`);
             logger.info(
               `${concernedAdmin.accountId} & ${member.account} admin here`,
             );
@@ -238,14 +323,42 @@ const createNewProjectFromHome = async (req, res, next) => {
       });
       await project.save();
       logger.info(`project create for ${req.params.companyId}`);
+      const board = await createBoard(
+        'General',
+        project._id,
+        undefined,
+        undefined,
+        req.user._id,
+      );
+      logger.info(`General board created for ${project._id}`);
 
-      teamCreate(
+      const room = await createRoom(
+        req.params.companyId,
+        project._id,
+        req.user._id,
+        'General',
+      );
+      logger.info(`General room created for ${project._id}`);
+
+      const team = await teamCreate(
         memberId.account,
         memberId._id,
         project._id,
         'admin',
       );
+      logger.info(`Team created for ${project._id}`);
       logger.info(`${memberId.account} admin here`);
+
+      await createRoomMember(
+        req.params.companyId,
+        project._id,
+        memberId.account,
+        room._id,
+        team._id,
+      );
+      logger.info(
+        `${memberId.account} has been added to general room.`,
+      );
       return sendJSONresponse(res, 201, project);
     } else {
       return sendErrorResponse(res, 403, 'PermissionError', {
@@ -581,8 +694,10 @@ const showAllProjectsForCompany = async (req, res, next) => {
 
 const updateProjectDescription = async (req, res, next) => {
   let checkPid = isPidExist(req.query.pid);
-  if(!checkPid){
-    return sendErrorResponse(res, 404, 'IdNotExist', {message: 'pid is not exist'});
+  if (!checkPid) {
+    return sendErrorResponse(res, 404, 'IdNotExist', {
+      message: 'pid is not exist',
+    });
   }
   await Project.findByIdAndUpdate(
     { _id: req.query.pid },
