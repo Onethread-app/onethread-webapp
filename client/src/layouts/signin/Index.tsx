@@ -23,7 +23,7 @@ import {
 import { isEmpty, isEqual } from 'lodash';
 import { SubmitError } from 'components/final-form/SubmitError';
 
-import logo from './../../resources/images/logoFinal.svg';
+import logo from 'resources/images/onethread-text.png';
 import emailIcon from './../../resources/images/email.png';
 import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
@@ -103,12 +103,12 @@ export const SignInPageComponent = (
         <div className="v-mid dtc">
           <div className="w-50 center">
             <Link to="/">
-              <img width="200px" src={logo} />
+              <img src={logo} alt="onethread" />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
-              TiGrow is designed keeping in mind that Ease of
+              Onethread is designed keeping in mind that Ease of
               Communication is the key to success for any enterprise.
-              TiGrow’s architecture has the key unique element of
+              Onethread’s architecture has the key unique element of
               containerization with its feature called Project which
               ensures privacy within it, and fluidity to collaborate
               with external and internal stakeholders.

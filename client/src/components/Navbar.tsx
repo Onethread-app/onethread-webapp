@@ -32,7 +32,7 @@ import { getNotifications } from '../stores/notifications/Action';
 import { fetchRooms } from '../stores/room/Actions';
 import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
 import { IRoom } from '../stores/room/Reducer';
-import logo from '../resources/images/TiGrowLogoFinal.png';
+import logo from 'resources/images/onethread-text.png';
 
 interface NavbarTopInternalProps {
   user: User;
