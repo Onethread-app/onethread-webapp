@@ -24,14 +24,6 @@ module.exports = {
     }),
     body: Joi.object().keys({
       name: Joi.string().max(32).required(),
-      company: Joi.string()
-        .regex(/^[0-9a-fA-F]{24}$/)
-        .required()
-        .error(() => {
-          return {
-            message: 'Invalid Company ID',
-          };
-        }),
     }),
   }),
   addMembers: Joi.object().keys({

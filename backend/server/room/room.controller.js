@@ -9,6 +9,37 @@ const {
 } = require('../helpers/jsonResponse');
 const logger = require('../../config/winston');
 
+const createRoom = async (company, project, account, name) => {
+  const room = new Room({
+    name /* roomName */,
+    company /* companyId */,
+    project /* projectId */,
+    account /* userId */,
+  });
+  await room.save();
+  logger.info(`Room Created Successfully.`);
+  return room;
+};
+
+const createRoomMember = async (
+  company,
+  project,
+  account,
+  room,
+  team,
+) => {
+  const roomMember = new RoomMember({
+    account,
+    team,
+    company,
+    project,
+    room,
+  });
+  await roomMember.save();
+  logger.info(`Room Member Added Successfully.`);
+  return roomMember;
+};
+
 const create = async (req, res, next) => {
   try {
     // check room already exists with same company
@@ -22,25 +53,21 @@ const create = async (req, res, next) => {
         message: `Room already exists`,
       });
     }
-    const newRoom = new Room({
-      name: req.body.name,
-      company: req.headers.companyid,
-      project: req.query.pid,
-      // members: [req.user._id],
-      account: req.user._id,
-    });
 
-    const room = await newRoom.save();
+    const room = await createRoom(
+      req.headers.companyid,
+      req.query.pid,
+      req.user._id,
+      req.body.name,
+    );
 
-    const newRoomMember = new RoomMember({
-      account: req.user._id,
-      team: req.team._id,
-      company: req.headers.companyid,
-      project: req.query.pid,
-      room: room._id,
-    });
-
-    const roomMember = await newRoomMember.save();
+    const roomMember = await createRoomMember(
+      req.headers.companyid,
+      req.query.pid,
+      req.user._id,
+      room._id,
+      req.team._id,
+    );
 
     return sendJSONresponse(res, 201, { room, roomMember });
   } catch (e) {
@@ -251,7 +278,6 @@ const list = async (req, res, next) => {
             'archive removed _id name company project account createdAt updatedAt',
         },
       ]);
-
     // unread count
     const roomsUnreadCount = {};
     for (const e of rooms) {
@@ -361,4 +387,6 @@ module.exports = {
   memberList,
   archiveRoom,
   updateLastSeen,
+  createRoom,
+  createRoomMember,
 };

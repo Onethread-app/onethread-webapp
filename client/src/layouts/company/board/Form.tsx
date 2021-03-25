@@ -162,7 +162,7 @@ const FormComponent = (props: {
                   cancel
                 </Button>
                 <Button
-                  className="grow pointer white bp3-minimal w4 mt2"
+                  className="grow pointer white bp3-minimal w4"
                   style={{
                     background: '#0FA3A3',
                     outline: 'none',

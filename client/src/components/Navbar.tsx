@@ -29,10 +29,10 @@ import {
 import { Badge } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import { getNotifications } from '../stores/notifications/Action';
-import { fethcRooms } from '../stores/room/Actions';
+import { fetchRooms } from '../stores/room/Actions';
 import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
 import { IRoom } from '../stores/room/Reducer';
-import logo from '../resources/images/TiGrowLogoFinal.png';
+import logo from 'resources/images/onethread-text.png';
 
 interface NavbarTopInternalProps {
   user: User;
@@ -45,7 +45,7 @@ interface NavbarTopInternalProps {
   seenNotification: () => void;
   incrementPageNumber: () => void;
   clearSeen: () => void;
-  fethcRooms: () => void;
+  fetchRooms: () => void;
   notifications: any;
   readNotification: any;
   read: number;
@@ -101,7 +101,7 @@ const NavbarTopComponent = (
   useEffect(() => {
     props.match.path !== '/:username' && props.getNotifications();
     companySubscriber(props.companyId);
-    props.fethcRooms();
+    props.fetchRooms();
   }, []);
 
   const onCLickNotification = async (sNotification: any) => {
@@ -124,10 +124,11 @@ const NavbarTopComponent = (
         className="top-0 z-2 pr5 pv3 bg-white bb flex justify-between"
         style={{
           height: '60px',
-          borderColor:  props.type === 'home' ? '#0F0C4E' : 'white' ,
+          borderColor: props.type === 'home' ? '#0F0C4E' : 'white',
           position: 'sticky',
           borderRadius: '0.5rem 0.5rem 0px 0px',
-          backgroundColor: props.type === 'home' ? '#0F0C4E' : 'white'
+          backgroundColor:
+            props.type === 'home' ? '#0F0C4E' : 'white',
         }}
       >
         <div>
@@ -144,18 +145,20 @@ const NavbarTopComponent = (
               >
                 {props.type === 'company' ? props.companyName : ''}
               </div>
-            </NavLink>)
-            :
+            </NavLink>
+          ) : (
             <div className="flex items-center ml4">
-              <div
-                style={{ width: '6rem' }}
-              >
+              <div style={{ width: '6rem' }}>
                 <NavLink to={`/${props.user.name}/home`}>
-                  <img src={logo} className="br2" style={{ background: '#0F0C4E' }} />
+                  <img
+                    src={logo}
+                    className="br2"
+                    style={{ background: '#0F0C4E' }}
+                  />
                 </NavLink>
               </div>
             </div>
-          }
+          )}
         </div>
         <div className="flex items-center">
           {props.match.path !== '/:username' && (
@@ -219,7 +222,12 @@ const NavbarTopComponent = (
                     color="secondary"
                   >
                     <NotificationsIcon
-                      style={{color: props.type === 'home' ? 'white' : 'dark-gray'}}
+                      style={{
+                        color:
+                          props.type === 'home'
+                            ? 'white'
+                            : 'dark-gray',
+                      }}
                       onClick={handleSeenNotifications}
                     />
                   </Badge>
@@ -275,8 +283,14 @@ const NavbarTopComponent = (
                     color="secondary"
                   >
                     <ChatIcon
-                    style={{color: props.type === 'home' ? 'white' : 'dark-gray'}}
-                     onClick={handleSeenNotifications} />
+                      style={{
+                        color:
+                          props.type === 'home'
+                            ? 'white'
+                            : 'dark-gray',
+                      }}
+                      onClick={handleSeenNotifications}
+                    />
                   </Badge>
                 </div>
               }
@@ -298,7 +312,8 @@ const NavbarTopComponent = (
                   fontSize: '0.8rem',
                   fontWeight: 600,
                   border: '1px solid',
-                  color: props.type === 'home' ? 'white': 'dark-gray'
+                  color:
+                    props.type === 'home' ? 'white' : 'dark-gray',
                 }}
                 text="My Companies"
               />
@@ -415,5 +430,5 @@ export const NavbarTop = connect(mapStateToProps, {
   seenNotification,
   clearSeen,
   incrementPageNumber,
-  fethcRooms,
+  fetchRooms,
 })(withRouter(NavbarTopComponent));

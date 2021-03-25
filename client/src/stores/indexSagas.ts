@@ -10,6 +10,7 @@ import boardSaga from './board/boardSaga';
 import commentSaga from './comment/commentSaga';
 import companySaga from './company/companySaga';
 import taskMembersSaga from './taskMembers/taskMembersSaga';
+import subtaskSaga from './subtask/subtaskSaga';
 
 export default function* rootSaga() {
   yield all([
@@ -24,5 +25,6 @@ export default function* rootSaga() {
     commentSaga(),
     companySaga(),
     taskMembersSaga(),
+    subtaskSaga(),
   ]);
 }
