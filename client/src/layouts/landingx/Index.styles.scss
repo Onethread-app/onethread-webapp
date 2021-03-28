@@ -132,19 +132,33 @@
       color: #000000;
 
       h1 {
-        font-size: 48px;
-        line-height: 58px;
+        font-size: 58px;
+        line-height: 62px;
         font-weight: 700;
       }
 
       p {
-        font-size: 24px;
-        line-height: 29px;
+        font-size: 28px;
+        line-height: 36px;
+      }
+
+      @media screen and (max-width: 1366px) {
+        max-width: 887px;
+
+        h1 {
+          font-size: 54px;
+        }
+
+        p {
+          font-size: 28px;
+          line-height: 32px;
+        }
       }
     }
   }
   .third-section {
-    background: #303052;
+    background: #fff;
+    color: #000;
     padding: 100px 0;
 
     h3 {
@@ -165,7 +179,7 @@
     }
 
     .upper {
-      color: #fff;
+      color: inherit;
       margin-bottom: 88px;
 
       &-content {
@@ -182,7 +196,7 @@
     }
 
     .lower {
-      color: #fff;
+      color: inherit;
 
       &-content {
         max-width: 345px;
@@ -237,8 +251,7 @@
 
         &:before {
           content: '';
-          position: absolute;
-          left: 366px;
+          margin-right: 112px;
           width: 19px;
           height: 56px;
           background: #3484f0;
@@ -249,7 +262,7 @@
           &:after {
             content: '';
             position: absolute;
-            left: 375px;
+            margin-right: 924px;
             background: #c6c6c6;
             height: 384px;
             width: 1px;

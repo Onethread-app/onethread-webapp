@@ -20,11 +20,28 @@ import MCCI from 'resources/images/companies/mcci.png';
 import Peakward from 'resources/images/companies/peakward.png';
 
 const NewLanding = () => {
+  const [changeNow, setChangeNow] = React.useState(false);
+  const thirdRef = React.useRef(null);
+
+  React.useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const handleScroll = () => {
+    if (window.scrollY >= 1475) {
+      setChangeNow(true);
+    } else {
+      setChangeNow(false);
+    }
+  };
+
   const changeBgSpring = useSpring({
-    delay: 2000,
-    background: '#303052',
-    from: { background: '#fff' },
+    delay: 250,
+    background: changeNow ? '#303052' : '#fff',
+    color: changeNow ? '#fff' : '#000',
   });
+
   return (
     <div className="landing w-100">
       <Navbar />
@@ -61,19 +78,20 @@ const NewLanding = () => {
           <h1>
             Collaborate with people{' '}
             <span style={{ color: '#3484F0' }}>
-              outside your <br /> organization
+              outside your organization
             </span>
           </h1>
           <p>
             A project management tool built from the ground up for
-            multi-team <br /> collaboration among startups, agencies
-            and NGOs.
+            multi-team collaboration among <br />
+            startups, agencies and NGOs.
           </p>
         </div>
       </section>
       <animated.section
         className="third-section flex flex-column w-100"
         style={changeBgSpring}
+        ref={thirdRef}
       >
         <div className="upper flex flex-row-reverse items-center justify-center">
           <div className="upper-content">
