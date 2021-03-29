@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
 
 let host = ``;
 if (config.env === 'production') {
-  host = `https://www.tigrow.co`;
+  host = `https://www.onethread.app`;
 } else if (config.env === 'test') {
   host = `https://stage.tigrow.co`;
 } else if (config.env === 'test3') {
