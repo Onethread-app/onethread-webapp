@@ -8,10 +8,7 @@ import {
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import {
-  createSubTask,
-  updateSubTaskTitile,
-} from 'stores/subtask/Actions';
+import { createSubTask, updateSubTask } from 'stores/subtask/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { ISubTask } from 'stores/subtask/Reducer';
@@ -21,10 +18,12 @@ import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 interface ITaskDescriptionCreateFormProps {
   setShowSubTaskForm: (val: boolean) => void;
   showSubtaskForm: boolean;
-  createSubTask: (subTask: ISubTask) => Promise<any>;
+  createSubTask: (subTask: ISubTask) => void;
   subtask?: ISubTask;
   setsubtask: (subTask: ISubTask) => void;
-  updateSubTaskTitile: (subTask: ISubTask) => Promise<any>;
+  updateSubTask: (subTask: ISubTask) => void;
+  creatingSubTask: boolean;
+  updatingSubTask: boolean;
 }
 interface ISubTaskDescriptionDeleteFormProps {
   subTask: ISubTask;
@@ -39,25 +38,19 @@ export const SubTaskCreatorComponent = (
       const subTaskData = {
         name: values.subtaskTitle,
       };
-      const response = await props.createSubTask(subTaskData);
-      if (response.message === 200) {
-        values.subtaskTitle = '';
-        return true;
+      await props.createSubTask(subTaskData);
+      if (props.creatingSubTask === false) {
+        props.setShowSubTaskForm(!props.showSubtaskForm);
       }
-      return { [response.fieldName]: response.message };
     } else {
       const updateSubTaskData = {
         _id: props.subtask!._id,
         name: values.subtaskTitle,
       };
-      const response = await props.updateSubTaskTitile(
-        updateSubTaskData,
-      );
-      if (response.message === 200) {
-        values.subtaskTitle = '';
-        return true;
+      await props.updateSubTask(updateSubTaskData);
+      if (props.updatingSubTask === false) {
+        props.setShowSubTaskForm(!props.showSubtaskForm);
       }
-      return { [response.fieldName]: response.message };
     }
   };
 
@@ -134,9 +127,18 @@ export const SubTaskCreatorComponent = (
   );
 };
 
-export const SubTaskCreator = connect(null, {
+const mapStateToProps = (state: any) => {
+  return {
+    creatingSubTask:
+      state.boardIndexReducer.subTaskReducer.creatingSubTask,
+    updatingSubTask:
+      state.boardIndexReducer.subTaskReducer.updatingSubTask,
+  };
+};
+
+export const SubTaskCreator = connect(mapStateToProps, {
   createSubTask,
-  updateSubTaskTitile,
+  updateSubTask,
 })(withRouter(SubTaskCreatorComponent));
 
 export const SubTaskDelete = (

@@ -1,0 +1,63 @@
+import React from 'react';
+
+import PcIcon from 'resources/images/icons/pc.png';
+import AndroidIcon from 'resources/images/icons/android.png';
+import MacIcon from 'resources/images/icons/mac.png';
+import FBIcon from 'resources/images/icons/fb.png';
+import LinkedInIcon from 'resources/images/icons/linkedin.png';
+import YTIcon from 'resources/images/icons/youtube.png';
+
+const MainFooter = () => {
+  return (
+    <div className="main-footer w-100 flex flex-column">
+      <div className="main-footer-links flex items-center justify-between flex-nowrap">
+        <div>
+          <ul>
+            <li>Features</li>
+            <li>Integration</li>
+            <li>Pricing</li>
+            <li>Blog</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>For Startups</li>
+            <li>For Agencies</li>
+            <li>For NGOs</li>
+            <li>See More Uses Cases</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>OneThread vs WhatsApp</li>
+            <li>OneThread vs Email</li>
+            <li>OneThread vs Teams</li>
+            <li>See More Comparisons</li>
+          </ul>
+        </div>
+        <div>
+          <ul>
+            <li>About Us</li>
+            <li>Privacy Policy</li>
+            <li>Data Security</li>
+          </ul>
+        </div>
+      </div>
+      <div className="main-footer-border"></div>
+      <div className="main-footer-icons flex justify-between items-center">
+        <div className="group-1">
+          <img src={PcIcon} alt="windows" />
+          <img src={AndroidIcon} alt="android" />
+          <img src={MacIcon} alt="mac" />
+        </div>
+        <div className="group-2">
+          <img src={FBIcon} alt="facebook" />
+          <img src={LinkedInIcon} alt="linkedin" />
+          <img src={YTIcon} alt="youtube" />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default MainFooter;

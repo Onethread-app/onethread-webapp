@@ -60,6 +60,7 @@
     "react-scripts": "3.4.1",
     "react-select": "^4.1.0",
     "react-simple-chatbot": "^0.6.1",
+    "react-spring": "^9.0.0",
     "react-textarea-autosize": "^7.1.2",
     "react-toastify": "^6.0.8",
     "react-transition-group": "^4.3.0",
@@ -72,7 +73,7 @@
     "reselect": "^4.0.0",
     "styled-components": "^5.1.0",
     "tachyons": "4.10.0",
-    "tslib": "^1.10.0",
+    "tslib": "^2.1.0",
     "typeface-josefin-sans": "^0.0.75",
     "typeface-open-sans": "^0.0.75",
     "typescript": "3.6.2"

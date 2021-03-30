@@ -247,8 +247,10 @@ export function* addDepartmentAsync({ name }: any) {
         { name },
         headers,
       );
-      yield put(addDepartmentSuccess(response.data));
-      yield put(getAllDepartments());
+      yield all([
+        put(addDepartmentSuccess(response.data)),
+        put(getAllDepartments()),
+      ]);
     }
   } catch (error) {
     if (error.message === 'Network Error') {

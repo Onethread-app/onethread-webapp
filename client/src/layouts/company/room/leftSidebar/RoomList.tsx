@@ -24,10 +24,16 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
     <>
       <main className="mw6" id="roomList">
         <ul className="list pa0 mh2-ns">
-          {props.rooms && props.rooms.length ? props.search ?
-            (
-              props.rooms.filter(item => !item.name.toLowerCase().indexOf(props.search.toLowerCase())).map(
-                (filteredRooms, i, arr: {}) => (
+          {props.rooms && props.rooms.length ? (
+            props.search ? (
+              props.rooms
+                .filter(
+                  (item) =>
+                    !item.name
+                      .toLowerCase()
+                      .indexOf(props.search.toLowerCase()),
+                )
+                .map((filteredRooms, i, arr: {}) => (
                   <RoomListItem
                     key={filteredRooms._id}
                     room={filteredRooms}
@@ -38,26 +44,25 @@ export const RoomListComponent = (props: IRoomListComponentProps) => {
                     iconBgColor={roomBgColor[i % roomBgColor.length]}
                   />
                 ))
+            ) : (
+              props.rooms.map((room: IRoom, i: number, arr: any) => {
+                return (
+                  <RoomListItem
+                    key={room._id}
+                    room={room}
+                    lastChild={isEqual(
+                      room._id,
+                      arr[props.rooms!.length - 1].id,
+                    )}
+                    active={
+                      props.currentRoom !== undefined &&
+                      room._id === props.currentRoom._id
+                    }
+                    iconBgColor={roomBgColor[i % roomBgColor.length]}
+                  />
+                );
+              })
             )
-          :
-          (
-            props.rooms.map((room: IRoom, i: number, arr: any) => {
-              return (
-                <RoomListItem
-                  key={room._id}
-                  room={room}
-                  lastChild={isEqual(
-                    room._id,
-                    arr[props.rooms!.length - 1].id,
-                  )}
-                  active={
-                    props.currentRoom !== undefined &&
-                    room._id === props.currentRoom._id
-                  }
-                  iconBgColor={roomBgColor[i % roomBgColor.length]}
-                />
-              );
-            })
           ) : (
             <p className="ph2">No rooms</p>
           )}

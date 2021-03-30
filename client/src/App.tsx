@@ -40,13 +40,7 @@ import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
 import { HomePageNew } from 'layouts/home/Index';
 import Success from './components/Success';
-import { LandingPage } from 'layouts/landingNew/Index';
-import { VendorManagementPage } from 'layouts/landingNew/VendorManagementPage';
-import { WorkFromHomePage } from 'layouts/landingNew/WorkFromHomePage';
-import { ProjectManagementTool } from 'layouts/landingNew/ProjectManagementTool';
-import { PricingPage } from 'layouts/landingNew/PricingPage';
-import { AboutPage } from 'layouts/landingNew/AboutUs';
-import { ContactUsPage } from 'layouts/landingNew/ContactUsPage';
+import NewLanding  from 'layouts/landingx/Index';
 
 const PrivateRoute = (props: {
   component: any;
@@ -108,7 +102,7 @@ export const App = () => (
   <BrowserRouter>
     <Switch>
       {!isAuthenticate() && (
-        <Route exact path="/" component={LandingPage} />
+        <Route exact path="/" component={NewLanding} />
       )}
       <Route
         exact
@@ -172,7 +166,7 @@ export const App = () => (
         }
       />
       <Route path="/autologin" render={() => <AutoLoginPage />} />
-      <Route
+      {/* <Route
         exact
         path="/work-from-home-solution"
         render={() =>
@@ -217,7 +211,7 @@ export const App = () => (
         render={() =>
           isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
         }
-      />
+      /> */}
       <PrivateRoute exact path="/" component={Demo} />
       <PrivateRoute
         path="/:username"

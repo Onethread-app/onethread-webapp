@@ -8,7 +8,7 @@ import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { useDispatch, connect } from 'react-redux';
 
-import logo from '../resources/images/TiGrowLogoFinal.png';
+import logo from 'resources/images/onethread-text.png';
 import tigrowLogo from '../resources/images/TiGrowLogoFinal.png';
 import individualProfile from '../resources/images/sidebarIndividualProfile.svg';
 import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
@@ -100,7 +100,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
           </NavLink>
         ) : (
           <>
-            {(companyPermit(props.company.role) || props.company.role === 'employee') && (
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
               <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"
@@ -132,7 +133,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
-            {(companyPermit(props.company.role) || props.company.role === 'employee') && (
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
               <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"
@@ -164,7 +166,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
-            {(companyPermit(props.company.role) || props.company.role === 'employee') && (
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
               <NavLink
                 exact
                 className="flex items-center nowrap ma1 hover-bg-white-20"

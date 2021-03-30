@@ -135,7 +135,7 @@ export const addTeamMembersIntoBoardFailure = (
 });
 
 export const getSelectedTaskDetails = (
-  taskId: string | undefined,
+  taskId: string
 ) => ({
   type: BoardActionTypes.SELECT_TASK_START,
   payload: taskId,

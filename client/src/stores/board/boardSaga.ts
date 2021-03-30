@@ -417,7 +417,7 @@ export function* onCreateColumn() {
 }
 
 export function* onUpdateColumn() {
-  yield takeLatest(
+  yield takeEvery(
     BoardActionTypes.UPDATE_COLUMN_START,
     updateColumn,
   );

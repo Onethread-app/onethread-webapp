@@ -5,13 +5,14 @@ import {
   DropResult,
 } from 'react-beautiful-dnd';
 import { Column } from './column/Column';
-import { IColumn } from 'stores/board/Reducer';
+import { IColumn, TaskBoard } from 'stores/board/Reducer';
 import { connect } from 'react-redux';
-import { dragAndDropTask } from 'stores/board/Actions';
+import { dragAndDropTask, updateColumn } from 'stores/board/Actions';
 import { Button } from '@blueprintjs/core';
 import { RightSidebar } from 'components/RightSidebar';
 import { ColumnForm } from './column/ColumnForm';
 import { projectRules } from '../project/settings/projectrules';
+import { orderBy, isEqual } from 'lodash';
 
 interface TaskManagementLayoutProps {
   columns: IColumn[];
@@ -27,6 +28,8 @@ interface TaskManagementLayoutInternalProps
   ) => void;
   role: string;
   optionalRole: any;
+  currentBoard?: TaskBoard;
+  updateColumn: (columnInfo: any) => void;
 }
 
 const TaskManagementLayoutComponent = (
@@ -35,7 +38,13 @@ const TaskManagementLayoutComponent = (
   const [showColumnFormDialog, setShowColumnFormDialog] = useState(
     false,
   );
+  const [columns, setColumns] = useState<IColumn[]>([]);
   const permissions = projectRules(props.role, props.optionalRole);
+
+  React.useEffect(() => {
+    const cols = orderBy(props.columns, ['positionInBoard']);
+    setColumns(cols);
+  }, [props.columns]);
 
   const dragEnd = async (result: DropResult) => {
     if (!result.destination) {
@@ -47,12 +56,34 @@ const TaskManagementLayoutComponent = (
     ) {
       return;
     }
-    await props.dragAndDropTask(
-      result.draggableId,
-      result.source.droppableId,
-      result.destination.droppableId,
-      result.destination.index,
-    );
+    if (result.type === 'task') {
+      await props.dragAndDropTask(
+        result.draggableId,
+        result.source.droppableId,
+        result.destination.droppableId,
+        result.destination.index,
+      );
+    }
+
+    if (result.type === 'column') {
+      const newCols = Array.from(columns);
+      const val = columns[result.source.index];
+      newCols.splice(result.source.index, 1);
+      newCols.splice(result.destination.index, 0, val);
+      newCols.map(async (col, index) => {
+        col.positionInBoard = index + 1;
+        if (isEqual(columns[index], col) === false) {
+          const columnInfo = {
+            _id: col._id,
+            name: col.name,
+            positionInBoard: col.positionInBoard,
+            boardId: props.currentBoard!._id,
+          };
+          await props.updateColumn(columnInfo);
+        }
+      });
+      setColumns(newCols);
+    }
 
     // if (result.type === "column") {
     //   const newColumnOrder = Array.from(state.columnOrder);
@@ -125,14 +156,14 @@ const TaskManagementLayoutComponent = (
                   {...provided.droppableProps}
                   {...allowedProps}
                 >
-                  <div className="fl nowrap w-100 overflow-y-hidden">
-                    {props.columns && props.columns.length > 0 ? (
-                      props.columns.map((colmun, index) => (
+                  <div className="flex nowrap w-100 overflow-y-hidden">
+                    {columns && columns.length > 0 ? (
+                      columns.map((column, index) => (
                         <Column
                           key={
-                            colmun._id ? colmun._id : `col${index}`
+                            column._id ? column._id : `col${index}`
                           }
-                          column={colmun}
+                          column={column}
                           index={index}
                         />
                       ))
@@ -140,7 +171,10 @@ const TaskManagementLayoutComponent = (
                       <h5 className="tc fw5 f3">No Columns</h5>
                     )}
                     {provided.placeholder}
-                    {permissions.grantAll || permissions.projectModerator.includes('assignDeleteMemberBoard') ? (
+                    {permissions.grantAll ||
+                    permissions.projectModerator.includes(
+                      'assignDeleteMemberBoard',
+                    ) ? (
                       <div
                         className={`${
                           props.columns && props.columns.length > 0
@@ -197,8 +231,10 @@ const mapStateToProps = (state: any) => ({
   optionalRole:
     state.projectReducer.projectRole.projects &&
     state.projectReducer.projectRole.projects.project.optionalRole,
+  currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
 });
 
 export const TaskManagementLayout = connect(mapStateToProps, {
   dragAndDropTask,
+  updateColumn,
 })(TaskManagementLayoutComponent);

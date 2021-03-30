@@ -12,6 +12,61 @@ const {
 } = require('../notification/notification.controller');
 const { Team } = require('../team-member/team.model');
 
+const createBoard = async (
+  name,
+  project,
+  department,
+  color,
+  account,
+) => {
+  const board = new Board({
+    name,
+    department: department && department,
+    color: color ? color : 0,
+    account,
+    project,
+    members: [account],
+  });
+  const createdBoard = await board.save();
+  await BoardColumn.create({
+    name: 'To do',
+    type: 'to-do',
+    project,
+    account,
+    positionInBoard: 1,
+    boardId: board._id,
+  });
+  await BoardColumn.create({
+    name: 'In progress',
+    type: 'in-progress',
+    project,
+    account,
+    positionInBoard: 2,
+    boardId: board._id,
+  });
+  await BoardColumn.create({
+    name: 'Done',
+    type: 'done',
+    project,
+    account,
+    positionInBoard: 3,
+    boardId: board._id,
+  });
+
+  logger.info(`Board Created Successfully.`);
+
+  return createdBoard;
+};
+
+const addToBoard = async (boardID, memberID) => {
+  // update board
+  await Board.updateOne(
+    { _id: boardID },
+    { $addToSet: { members: memberID } },
+    { safe: true, upsert: true, new: true },
+  ).populate('members', '_id name');
+};
+
 const load = (req, res, next, id) => {
   Board.findById(id)
     .exec()
@@ -60,40 +115,13 @@ const get = async (req, res, next) => {
 
 const create = async (req, res, next) => {
   try {
-    const board = new Board({
-      name: req.body.name,
-      department: req.body.department,
-      color: req.body.color,
-      account: req.user._id,
-      project: req.query.pid,
-      members: [req.user._id],
-    });
-    const createdBoard = await board.save();
-    await BoardColumn.create({
-      name: 'To do',
-      type: 'to-do',
-      project: req.query.pid,
-      account: req.user._id,
-      positionInBoard: 1,
-      boardId: board._id,
-    });
-    await BoardColumn.create({
-      name: 'In progress',
-      type: 'in-progress',
-      project: req.query.pid,
-      account: req.user._id,
-      positionInBoard: 2,
-      boardId: board._id,
-    });
-    await BoardColumn.create({
-      name: 'Done',
-      type: 'done',
-      project: req.query.pid,
-      account: req.user._id,
-      positionInBoard: 3,
-      boardId: board._id,
-    });
-
+    const createdBoard = await createBoard(
+      req.body.name,
+      req.query.pid,
+      req.body.department,
+      req.body.color,
+      req.user._id,
+    );
     const project = await Project.findOne({
       _id: req.query.pid,
     }).select('_id name company'); //company name in header can remove that
@@ -105,7 +133,7 @@ const create = async (req, res, next) => {
       {
         project: project._id,
         company: project.company,
-        _id: board._id,
+        _id: createdBoard._id,
       },
       {
         _id: req.user._id,
@@ -129,11 +157,9 @@ const addBoardMembers = async (req, res, next) => {
   try {
     const boardID = req.params.boardId;
     const memberID = req.body.memberId;
-    await Board.updateOne(
-      { _id: boardID },
-      { $addToSet: { members: memberID } },
-      { safe: true, upsert: true, new: true },
-    ).populate('members', '_id name');
+    // updating Board
+    await addToBoard(boardID, memberID);
+
     const board = await Board.findOne({
       _id: boardID,
     })
@@ -240,4 +266,6 @@ module.exports = {
   addBoardMembers,
   addBoardColumn,
   suggestMember,
+  createBoard,
+  addToBoard,
 };
