@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { connect, useDispatch } from 'react-redux';
+import { connect } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { getCompanyDetails } from 'stores/company/Actions';
 import { History } from 'history';
@@ -9,7 +9,6 @@ import { Loading } from 'components/Loading';
 import { getNotifications } from '../../stores/notifications/Action';
 
 import CompanyIcon from './../../resources/images/CompanyIcon.svg';
-import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import { Dialog, Button, Icon } from '@blueprintjs/core';
 import { CompanySignupForm } from './Form';
 import user from './../../resources/images/profilePhoto.svg';
@@ -35,7 +34,6 @@ export const ListViewComponent = (
 ) => {
   const [loading, setLoading] = useState(true);
   const [showButton, setShowButton] = useState(false);
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (loading === true) {
@@ -140,20 +138,15 @@ export const ListViewComponent = (
                     } mt1 pointer bp3-popover-dismiss`}
                     onClick={async () => {
                       props.getNotifications(c.company._id);
-                      const response = (await props.getCompanyDetails(
+
+                      await props.getCompanyDetails(
                         c.company.name,
                         props.history,
-                      )) as any;
-                      if (response.status === 200) {
-                        dispatch({
-                          type: CLEAR_PROJECT_REDUCER_STATE,
-                        });
-                        props.history.push(
-                          `/company/${
-                            (response as any).data.company.name
-                          }/dashboard`,
-                        );
-                      }
+                      );
+
+                      props.history.push(
+                        `/company/${c.company.name}/dashboard`,
+                      );
                     }}
                   >
                     <div className="flex justify-between">
