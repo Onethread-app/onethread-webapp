@@ -147,6 +147,8 @@ export const ListViewComponent = (
                       props.history.push(
                         `/company/${c.company.name}/dashboard`,
                       );
+
+                      props.setShowDialog(false);
                     }}
                   >
                     <div className="flex justify-between">
