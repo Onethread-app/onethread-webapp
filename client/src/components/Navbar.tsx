@@ -199,7 +199,7 @@ const NavbarTopComponent = (
                       ),
                     )
                   ) : (
-                    <h2
+                    <h3
                       style={{
                         maxHeight: '300px',
                         textAlign: 'center',
@@ -207,7 +207,7 @@ const NavbarTopComponent = (
                       className="pa3 overflow-y-auto moon-gray"
                     >
                       No Notification To Show
-                    </h2>
+                    </h3>
                   )}
                 </div>
               }

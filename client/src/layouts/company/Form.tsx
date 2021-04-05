@@ -24,6 +24,8 @@ const CompanySignupFormComponent = (
     setShowDialog: (val: boolean) => void;
     createCompanyAction: (val: any, history: History) => void;
     errorCompany: { message: string; network: boolean };
+    companyName: string;
+    isCompanyLoading: boolean;
   } & RouteComponentProps,
 ) => {
   const [values, setValues] = useState({
@@ -37,11 +39,11 @@ const CompanySignupFormComponent = (
 
   const [errors, setErrors] = useState({
     name: '',
-    legalOwnerName:'',
+    legalOwnerName: '',
     email: '',
     legalOwnerMail: '',
     address: '',
-    type: ''
+    type: '',
   });
 
   const [loading, setLoading] = useState(false);
@@ -314,14 +316,19 @@ const CompanySignupFormComponent = (
                 };
                 setErrors(legalOwnerNameError);
               } else {
-                const legalOwnerNameError = { ...errors, legalOwnerName: '' };
+                const legalOwnerNameError = {
+                  ...errors,
+                  legalOwnerName: '',
+                };
                 setErrors(legalOwnerNameError);
               }
             }}
           />
         </div>
         {errors.legalOwnerName ? (
-          <small style={{ color: 'red' }}>{errors.legalOwnerName}</small>
+          <small style={{ color: 'red' }}>
+            {errors.legalOwnerName}
+          </small>
         ) : (
           ''
         )}
@@ -416,13 +423,16 @@ const CompanySignupFormComponent = (
             e.preventDefault();
             if (!emptyValueCheck() && emptyErrorCheck()) {
               setLoading(true);
-              const response = (await props.createCompanyAction(
+              await props.createCompanyAction(
                 pickBy(values, (v) => v !== ''),
                 props.history,
-              )) as any;
-              setLoading(false);
-              if (response) {
+              );
+              if (props.isCompanyLoading === false) {
+                setLoading(false);
                 props.setShowDialog(false);
+                props.history.push(
+                  `/company/${props.companyName}/dashboard`,
+                );
               }
             }
           }}
@@ -438,6 +448,8 @@ const CompanySignupFormComponent = (
 const mapStateToProps = (state: any) => {
   return {
     errorCompany: state.companyReducer.createCompanyError,
+    companyName: state.companyReducer.currentCompany.name,
+    isCompanyLoading: state.companyReducer.loading,
   };
 };
 
