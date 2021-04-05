@@ -27,6 +27,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   getAllCompaniesByUserId: (userId: string) => void;
   getNotifications: (companyId: string) => void;
   logoutAction: (history: History) => void;
+  isCompanyLoading: boolean;
 }
 
 export const ListViewComponent = (
@@ -144,11 +145,13 @@ export const ListViewComponent = (
                         props.history,
                       );
 
-                      props.history.push(
-                        `/company/${c.company.name}/dashboard`,
-                      );
+                      if (props.isCompanyLoading === false) {
+                        props.history.push(
+                          `/company/${c.company.name}/dashboard`,
+                        );
 
-                      props.setShowDialog(false);
+                        props.setShowDialog(false);
+                      }
                     }}
                   >
                     <div className="flex justify-between">
@@ -209,6 +212,7 @@ const mapStateToProps = (state: any) => {
     companies: state.userReducer.user.companies,
     user: state.userReducer.user,
     currentCompany: state.companyReducer.currentCompany._id,
+    isCompanyLoading: state.companyReducer.loading,
   };
 };
 
