@@ -57,6 +57,7 @@ import {
   getLatestCompletedTasksSuccess,
   getLatestCompletedTasksFailure,
   getAllDepartments,
+  clearCompanyError,
 } from './Actions';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import {
@@ -69,6 +70,7 @@ import {
   getParentCompany,
 } from './Selector';
 import { Toaster } from '@blueprintjs/core';
+import { getAllProjects } from 'stores/project/Actions';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -89,6 +91,7 @@ export function* createCompanyAsync({
         put({ type: CLEAR_PROJECT_REDUCER_STATE }),
         put({ type: CLEAR_ROOMS_REDUCER_STATE }),
         put(createCompanyActionSuccess(response.data)),
+        put(getAllProjects()),
       ]);
       routeHistory.push(
         `/company/${response.data.company.uniqueName}/dashboard`,
@@ -119,6 +122,8 @@ export function* createCompanyAsync({
 export function* getCompanyDetailsAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
+    yield put(clearCompanyError());
+
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
         `company/${payload}`,
@@ -127,6 +132,7 @@ export function* getCompanyDetailsAsync({ payload }: any) {
       yield all([
         put({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY }),
         put(getCompanyDetailsSuccess(response.data.company)),
+        put(getAllProjects()),
       ]);
     } else {
       // tslint:disable-next-line: no-console

@@ -393,9 +393,15 @@ export const getLatestCompletedTasksSuccess = (response: any) => ({
   payload: response,
 });
 
-export const getLatestCompletedTasksFailure = (errorMessage: any) => ({
+export const getLatestCompletedTasksFailure = (
+  errorMessage: any,
+) => ({
   type: CompanyActionTypes.GET_LATEST_COMPLETED_TASK_FAILURE,
   payload: errorMessage,
+});
+
+export const clearCompanyError = () => ({
+  type: CompanyActionTypes.CLEAR_COMPANY_ERROR,
 });
 
 export const clearAddDepartmentError = () => async (
