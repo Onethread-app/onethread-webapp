@@ -1,6 +1,43 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-const UserInput = ({ color }) => {
+import { Position, Toaster, Intent } from '@blueprintjs/core';
+
+import { inviteUserToSignUp } from 'stores/auth/Actions';
+import { isValidEmail } from 'helpers/utils';
+interface IUserInput {
+  color: string;
+}
+
+interface IUserInputInternalProps extends IUserInput {
+  inviteUserToSignUp: (email: string) => any;
+}
+
+export const AppToaster = Toaster.create({
+  className: 'app-toaster',
+  position: Position.TOP,
+});
+
+const UserInput = (props: IUserInputInternalProps) => {
+  const [email, setEmail] = React.useState('');
+  const handleChange = (e: any) => {
+    setEmail(e.target.value);
+  };
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    if (isValidEmail(email)) {
+      const response = await props.inviteUserToSignUp(email);
+      if (response.status === 200) {
+        AppToaster.show({
+          message: response.data.message,
+          intent: Intent.SUCCESS,
+        });
+      }
+    } else {
+      alert('Email is not valid');
+    }
+  };
+
   return (
     <div className="start-today-input-group flex items-center justify-center w-100">
       <input
@@ -9,12 +46,17 @@ const UserInput = ({ color }) => {
         id="useremail"
         placeholder="Your email address"
         className="h-100 tc"
+        onChange={handleChange}
       />
-      <button className="h-100" style={{ color }}>
+      <button
+        className="h-100"
+        style={{ color: props.color }}
+        onClick={handleSubmit}
+      >
         Get an Invite!
       </button>
     </div>
   );
 };
 
-export default UserInput;
+export default connect(null, { inviteUserToSignUp })(UserInput);

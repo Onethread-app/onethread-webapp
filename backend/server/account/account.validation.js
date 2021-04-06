@@ -16,6 +16,7 @@ const schema = {
       /^(?=.*?[A-Z])(?=(.*[a-z]){1,})(?=(.*[\d]){1,})(?=(.*[\W]){1,})(?!.*\s).{8,}$/,
     )
     .required(),
+  isAccountVerified: Joi.boolean(),
   birthDate: Joi.date(),
   contactNo: Joi.string(),
   bloodGroup: Joi.string().valid([
@@ -44,6 +45,7 @@ module.exports = {
         .valid(Joi.ref('password'))
         .required(),
       birthDate: schema.birthDate.required(),
+      isAccountVerified: schema.isAccountVerified.required(),
       // contactNo: schema.contactNo,
       // .regex(/^(\+?(880)[0-9]{10})$/)
       // // .required()
@@ -82,6 +84,11 @@ module.exports = {
     body: Joi.object().keys({
       newPassword: schema.password,
       oldPassword: schema.password,
+    }),
+  }),
+  inviteSignup: Joi.object().keys({
+    body: Joi.object().keys({
+      email: schema.email.required(),
     }),
   }),
 };
