@@ -96,13 +96,33 @@ module.exports.sendEmailForVerifyAccount = async (
   });
 };
 
+module.exports.inviteSignupEmail = async (email) => {
+  const link = `${host}/signup?email=${email}`;
+  const mailOptions = {
+    to: email,
+    subject: 'Invitation To Join Onethread',
+    template: 'invitation-signup',
+    context: {
+      link: link,
+    },
+  };
+
+  return transporter.sendMail(mailOptions, function (err, res) {
+    if (err) {
+      logger.error(' Message send to failed ' + err);
+    } else {
+      logger.info(`send confirmation mail to user successfully`);
+    }
+  });
+};
+
 module.exports.sendInviteColleague = async (
   userEmail,
   company,
   emailList,
 ) => {
   const link = `${host}/signup`;
- 
+
   const mailOptions = {
     to: emailList,
     subject: 'Invitation to join company',

@@ -22,6 +22,7 @@ export interface UserModel {
   email: string;
   password: string;
   confirmPassword: string;
+  isAccountVerified: boolean;
 }
 
 export interface LoginModel {
@@ -99,6 +100,19 @@ export const userSignupAction = (newUser: UserModel) => async (
       localStorage.setItem('email', JSON.stringify(newUser.email));
     }
     return errorMessgeHandler(response);
+  } catch (error) {
+    return errorMessgeHandler(error);
+  }
+};
+
+export const inviteUserToSignUp = (email: string) => async (
+  dispatch: any,
+) => {
+  try {
+    const response = await tigrowApi.post('accounts/invite-signup', {
+      email,
+    });
+    return response;
   } catch (error) {
     return errorMessgeHandler(error);
   }
