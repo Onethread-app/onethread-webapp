@@ -20,6 +20,8 @@ import { connect } from 'react-redux';
 import { userSignupAction, UserModel } from 'stores/auth/Actions';
 import { isEmpty } from 'lodash';
 
+import { isValidEmail } from 'helpers/utils';
+
 import logo from 'resources/images/onethread-text.png';
 import nameTagIcon from './../../resources/images/nameTag.png';
 // import phoneIcon from './../../resources/images/phone.png';
@@ -56,6 +58,8 @@ export const SignUpPageComponent = (
   const [showConfirmPassword, setShowConfirmPassword] = useState(
     false,
   );
+  const [email, setEmail] = useState('');
+  const [invited, setInvited] = useState(false);
   // const [countryCode] = useState('+880');
 
   // const onSelectFlag = (countryCodeA: any) => {
@@ -77,20 +81,29 @@ export const SignUpPageComponent = (
     const response = await props.userSignupAction({
       ...values,
       email: values.email.trim(),
+      isAccountVerified: invited ? true : false,
     });
-    if (response.message === 200) {
+
+    if (response.message === 200 && response.payload.data.token) {
       props.history.push(`/signup-confirmation`);
+      return true;
+    } else if (response.message === 200) {
+      props.history.push('/signin');
       return true;
     }
     return { [response.fieldName]: response.message };
   };
 
-  const [email, setEmail] = useState('');
-
   useEffect(() => {
     const search = props.location.search;
     const params = new URLSearchParams(search);
-    setEmail(params.get('email') ? params.get('email')! : '');
+    const emailFromURL = params.get('email');
+    if (emailFromURL) {
+      if (isValidEmail(emailFromURL)) {
+        setEmail(emailFromURL ? emailFromURL : '');
+        setInvited(true);
+      }
+    }
   }, [props.location.search]);
 
   return (

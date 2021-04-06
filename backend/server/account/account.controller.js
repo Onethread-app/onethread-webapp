@@ -11,6 +11,7 @@ const client = require('../../index.redis');
 const {
   sendEmailForVerifyAccount,
   sendEmailForResetPassword,
+  inviteSignupEmail,
 } = require('../services/email.services');
 const {
   addTokenToBlackList,
@@ -56,10 +57,15 @@ const register = async (req, res, next) => {
     contactNo: Date.now(),
     password: data.password,
     birthDate: data.birthDate,
+    isAccountVerified: data.isAccountVerified,
   });
   await account
     .save()
     .then(async (user) => {
+      if (user.isAccountVerified)
+        return sendJSONresponse(res, 201, {
+          message: 'User created',
+        });
       let token = crypto.randomBytes(20).toString('hex');
       let verifyToken = crypto
         .createHash('sha256')
@@ -665,13 +671,27 @@ const resendEmail = async (req, res, next) => {
         verifyToken,
       );
       accountVerificationToken(
-       `verifyAccountToken:${verifyToken}`,
+        `verifyAccountToken:${verifyToken}`,
         user._id,
         verifyAccountTokenExpiration,
       );
     }
     return sendJSONresponse(res, 200, {
       message: 'resend email successfully',
+    });
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
+  }
+};
+
+const inviteSignup = async (req, res, next) => {
+  try {
+    const email = req.body.email;
+    inviteSignupEmail(email);
+    return sendJSONresponse(res, 200, {
+      message:
+        'Invitaion sent successfully. Please check your email.',
     });
   } catch (error) {
     logger.error(`Account: ${error}`);
@@ -692,4 +712,5 @@ module.exports = {
   resetPassword,
   changePassword,
   skillArea,
+  inviteSignup,
 };

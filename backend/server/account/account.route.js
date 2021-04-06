@@ -11,6 +11,12 @@ const {
 const {
   authentication,
 } = require('../middlewares/authenticationMiddleware');
+router
+  .route('/invite-signup')
+  .post(
+    schemaValidator(paramValidation.inviteSignup),
+    accountCtrl.inviteSignup,
+  );
 // authentication
 router
   .route('/signup')
