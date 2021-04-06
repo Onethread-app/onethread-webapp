@@ -27,6 +27,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   getAllCompaniesByUserId: (userId: string) => void;
   getNotifications: (companyId: string) => void;
   logoutAction: (history: History) => void;
+  companyError: string;
   isCompanyLoading: boolean;
 }
 
@@ -141,13 +142,16 @@ export const ListViewComponent = (
                       props.getNotifications(c.company._id);
 
                       await props.getCompanyDetails(
-                        c.company.name,
+                        c.company.uniqueName,
                         props.history,
                       );
 
-                      if (props.isCompanyLoading === false) {
+                      if (
+                        props.isCompanyLoading === false &&
+                        props.companyError === ''
+                      ) {
                         props.history.push(
-                          `/company/${c.company.name}/dashboard`,
+                          `/company/${c.company.uniqueName}/dashboard`,
                         );
 
                         props.setShowDialog(false);
@@ -212,6 +216,7 @@ const mapStateToProps = (state: any) => {
     companies: state.userReducer.user.companies,
     user: state.userReducer.user,
     currentCompany: state.companyReducer.currentCompany._id,
+    companyError: state.companyReducer.error,
     isCompanyLoading: state.companyReducer.loading,
   };
 };

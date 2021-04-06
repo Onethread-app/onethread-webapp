@@ -138,10 +138,10 @@ export const addEducationExperienceAction = (
   }
 };
 
-export const getAllCompaniesByUserId = (userId: string, type?: string) => async (
-  dispatch: any,
-  getState: any,
-) => {
+export const getAllCompaniesByUserId = (
+  userId: string,
+  type?: string,
+) => async (dispatch: any, getState: any) => {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
@@ -153,11 +153,13 @@ export const getAllCompaniesByUserId = (userId: string, type?: string) => async 
         type: USER_COMPANIES_UPDATE,
         payload: response.data,
       });
-      console.log(response.data);
       if (isEqual(type, 'home')) {
         dispatch({
           type: SET_INITIAL_CURRENT_COMPANY,
-          payload: response.data.companies.length > 0 ? response.data.companies[0] : null
+          payload:
+            response.data.companies.length > 0
+              ? response.data.companies[0]
+              : null,
         });
       }
     } else {

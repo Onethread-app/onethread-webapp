@@ -483,6 +483,11 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         completedTaskserror: action.payload,
         loadingCompletedTasks: false,
       };
+    case CompanyActionTypes.CLEAR_COMPANY_ERROR:
+      return {
+        ...state,
+        error: '',
+      };
     case ADD_PRODUCT:
       return {
         ...state,
