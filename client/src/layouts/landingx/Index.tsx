@@ -13,11 +13,11 @@ import TextLogo from 'resources/images/onethread-text.png';
 import SecondaryLogo from 'resources/images/secondary-logo.png';
 import CombinedLogo from 'resources/images/combined-logo.png';
 import MarketExpress from 'resources/images/companies/market-express.png';
-import Dysin from 'resources/images/companies/dysin.png';
+// import Dysin from 'resources/images/companies/dysin.png';
 import Plummy from 'resources/images/companies/plummy-fashions.png';
 import BatteryLow from 'resources/images/companies/battery-low.png';
 import MCCI from 'resources/images/companies/mcci.png';
-import Peakward from 'resources/images/companies/peakward.png';
+// import Peakward from 'resources/images/companies/peakward.png';
 
 const NewLanding = () => {
   const [changeNow, setChangeNow] = React.useState(false);
@@ -129,11 +129,11 @@ const NewLanding = () => {
         </h1>
         <div className="companies w-100 flex justify-around items-center">
           <img src={MarketExpress} alt="market express" />
-          <img src={Dysin} alt="dysin" />
+          {/* <img src={Dysin} alt="dysin" /> */}
           <img src={Plummy} alt="plummy fashions" />
           <img src={BatteryLow} alt="battery low" />
           <img src={MCCI} alt="mcci" />
-          <img src={Peakward} alt="peakward" />
+          {/* <img src={Peakward} alt="peakward" /> */}
         </div>
       </section>
       <section className="product-details flex flex-column items-center justify-center w-100">
