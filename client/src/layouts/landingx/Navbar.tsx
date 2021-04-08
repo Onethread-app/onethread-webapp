@@ -5,7 +5,9 @@ const Navbar = () => {
   return (
     <div className="navbar flex justify-end items-center">
       <ul className="flex">
-        <li>Pricing</li>
+        <li>
+          <NavLink to="/pricing">Pricing</NavLink>
+        </li>
         <li>
           <NavLink to="/signin">Login</NavLink>
         </li>
