@@ -1,23 +1,22 @@
 import React from 'react';
 import { useSpring, animated } from 'react-spring';
+import { isMobileOnly } from 'react-device-detect';
+
 import './Index.styles.scss';
 
+import MobileIndex from './mobile/Index';
 import Navbar from './Navbar';
 import MainFooter from './MainFooter';
 import UserInput from './UserInput';
-// import { OTButton } from 'components/button/Button';
 
-// import BgMain from 'resources/images/bg-main.png';
 import Logo from 'resources/images/onethread-logo-main.png';
 import TextLogo from 'resources/images/onethread-text.png';
 import SecondaryLogo from 'resources/images/secondary-logo.png';
 import CombinedLogo from 'resources/images/combined-logo.png';
 import MarketExpress from 'resources/images/companies/market-express.png';
-// import Dysin from 'resources/images/companies/dysin.png';
 import Plummy from 'resources/images/companies/plummy-fashions.png';
 import BatteryLow from 'resources/images/companies/battery-low.png';
 import MCCI from 'resources/images/companies/mcci.png';
-// import Peakward from 'resources/images/companies/peakward.png';
 
 const NewLanding = () => {
   const [changeNow, setChangeNow] = React.useState(false);
@@ -42,7 +41,9 @@ const NewLanding = () => {
     color: changeNow ? '#fff' : '#000',
   });
 
-  return (
+  return isMobileOnly ? (
+    <MobileIndex />
+  ) : (
     <div className="landing w-100">
       <Navbar />
       <section className="main-header w-100 relative">

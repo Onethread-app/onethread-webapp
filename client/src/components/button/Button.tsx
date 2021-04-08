@@ -55,3 +55,50 @@ export const TiButton = ({
     );
   }
 };
+
+interface IOTButton {
+  to?: string;
+  style?: any;
+  classes?: any;
+  children?: any;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+}
+
+export const OTButton = (props: IOTButton) => {
+  let styles = {
+    width: '266.55px',
+    background: '#3484f0',
+    borderRadius: '10px',
+    padding: '1.15rem 8px',
+    border: 'none',
+    color: '#fff',
+    textAlign: 'center' as 'center',
+    fontWeight: 500,
+    fontSize: '20px',
+    lineHeight: '24px',
+
+    '&:hover': {
+      cursor: 'pointer',
+    },
+  };
+
+  React.useEffect(() => {
+    if (props.style) {
+      styles = { ...styles, ...props.style };
+    }
+  }, [props.style]);
+
+  if (props.to) {
+    return (
+      <Link to={props.to}>
+        <Button style={styles}>{props.children}</Button>
+      </Link>
+    );
+  } else {
+    return (
+      <Button onClick={props.onClick} style={styles}>
+        {props.children}
+      </Button>
+    );
+  }
+};
