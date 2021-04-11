@@ -40,7 +40,7 @@ import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
 import { HomePageNew } from 'layouts/home/Index';
 import Success from './components/Success';
-import NewLanding  from 'layouts/landingx/Index';
+import NewLanding from 'layouts/landingx/Index';
 
 const PrivateRoute = (props: {
   component: any;
@@ -219,8 +219,13 @@ export const App = () => (
         component={UserProfilePage}
       />
       <PrivateRoute
+        path="/:username/home"
+        exact={false}
+        component={HomePageNew}
+      />
+      <PrivateRoute
         path="/:username/settings"
-        exact={true}
+        exact={false}
         component={ProfileSettingsPage}
       />
       <PrivateRoute
@@ -313,11 +318,6 @@ export const App = () => (
         path="/vc/join"
         exact={true}
         component={Meeting}
-      />
-      <PrivateRoute
-        path="/:username/home"
-        exact={true}
-        component={HomePageNew}
       />
       <Route component={NoMatch} />
     </Switch>
