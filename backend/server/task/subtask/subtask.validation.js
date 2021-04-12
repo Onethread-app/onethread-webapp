@@ -38,4 +38,16 @@ module.exports = {
   deleteSubtask: Joi.object().keys({
     params: subTaskId,
   }),
+  addMember: Joi.object().keys({
+    body: Joi.object().keys({
+      assignmember: idSchema.id.required(),
+    }),
+    params: subTaskId,
+  }),
+  searchMember: Joi.object().keys({
+    params: subTaskId,
+  }),
+  deleteMember: Joi.object().keys({
+    params: subTaskId,
+  }),
 };

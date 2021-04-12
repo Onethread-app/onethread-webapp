@@ -17,9 +17,13 @@ import { SubtaskActionTypes } from './Types';
 import { getCurrentTaskId } from 'stores/taskMembers/Selector';
 import { getProjectId } from 'stores/project/Selector';
 import {
+  addSubTaskMemberFailure,
+  addSubTaskMemberSuccess,
   createSubTaskFailure,
   createSubTaskSuccess,
   deleteSubTaskFailure,
+  deleteSubTaskMemberFailure,
+  deleteSubTaskMemberSuccess,
   deleteSubTaskSuccess,
   getAllSubTask,
   getAllSubTaskFailure,
@@ -103,6 +107,48 @@ function* updateSubTaskAsync({ payload }: any) {
   }
 }
 
+function* addSubTaskMemberAsync({ payload }: any) {
+  try {
+    const headers = tokenConfig();
+    const projectId = yield select(getProjectId);
+    const reqBody = {
+      assignmember: payload.memberId,
+    };
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.post(
+        `subtasks/${payload._id}/member?pid=${projectId}`,
+        reqBody,
+        headers,
+      );
+      yield put(addSubTaskMemberSuccess(response.data));
+    }
+  } catch (error) {
+    handleError(error, async (errorMessage: any) => {
+      await addSubTaskMemberFailure(errorMessage);
+    });
+  }
+}
+
+function* deleteSubTaskMemberAsync({ payload }: any) {
+  try {
+    const headers = tokenConfig();
+    const projectId = yield select(getProjectId);
+
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.delete(
+        `subtasks/${payload._id}/member?pid=${projectId}&memberId=${payload.memberId}`,
+
+        headers,
+      );
+      yield put(deleteSubTaskMemberSuccess(response.data));
+    }
+  } catch (error) {
+    handleError(error, async (errorMessage: any) => {
+      await deleteSubTaskMemberFailure(errorMessage);
+    });
+  }
+}
+
 function* deleteSubTaskAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
@@ -143,6 +189,20 @@ function* onUpdateSubTask() {
   );
 }
 
+function* onAddSubTaskMember() {
+  yield takeEvery(
+    SubtaskActionTypes.ADD_SUBTASK_MEMBER_START,
+    addSubTaskMemberAsync,
+  );
+}
+
+function* onDeleteSubTaskMember() {
+  yield takeEvery(
+    SubtaskActionTypes.DELETE_SUBTASK_MEMBER_START,
+    deleteSubTaskMemberAsync,
+  );
+}
+
 function* onDeleteSubTask() {
   yield takeEvery(
     SubtaskActionTypes.DELETE_SUBTASK_START,
@@ -155,6 +215,8 @@ export default function* subtaskSaga() {
     call(onCreateSubTask),
     call(onGetAllSubTask),
     call(onUpdateSubTask),
+    call(onAddSubTaskMember),
+    call(onDeleteSubTaskMember),
     call(onDeleteSubTask),
   ]);
 }
