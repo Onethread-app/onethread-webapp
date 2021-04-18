@@ -22,6 +22,12 @@ const SubTaskSchema = new mongoose.Schema(
       ref: 'Task',
       required: true,
     },
+    assignedMembers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Account',
+      },
+    ],
     version: {
       type: Number,
       default: 0,

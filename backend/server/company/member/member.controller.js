@@ -1,6 +1,8 @@
 const { Member } = require('./member.model');
 const Account = require('../../account/account.model');
-const { Subscription } = require('../../subscription/subscription.model');
+const {
+  Subscription,
+} = require('../../subscription/subscription.model');
 const logger = require('../../../config/winston');
 const {
   sendJSONresponse,
@@ -112,7 +114,7 @@ const addMember = async (req, res, next) => {
 
       createMembers(req, accounts);
       // add new members in company
-           
+
       logger.info(
         chalk.blueBright(
           `ElasticSearch successfully Elasticsearch documented with bulk on ${memberIndex}`,
@@ -301,7 +303,6 @@ const searchMember = async (req, res, next) => {
     const existingMembersAccounts = existingMembers.map(
       (member) => member.account,
     );
-
     if (name) {
       let body = {
         size: 200,
@@ -364,7 +365,7 @@ const bulkInsertMember = async (req, res, next) => {
     }).exec();
 
     let emails = req.body;
-    
+
     let tolatCount = emails.length + memberCount;
 
     if (tolatCount > planMemberAllow[0].plan.maxTier) {
@@ -456,7 +457,6 @@ const bulkInsertMember = async (req, res, next) => {
       notifiyUsersIds: notifiyUsersIds,
     });
   } catch (error) {
-    
     logger.error(`Member: ${error}`);
     next(error);
   }
@@ -506,27 +506,19 @@ const createMembers = async (req, notifiyUsersIds) => {
 
     //return members;
   } catch (error) {
-    
     logger.error(`Member: ${error}`);
   }
 };
 
 const createPendingMembers = async (req, memberEmails) => {
   try {
-    
     let pendingMembersInfo = memberEmails.map((m) => {
       return { email: m, company: req.company._id };
     });
     pendingMembers = await PendingMember.create(pendingMembersInfo);
-  
-    sendInviteColleague(
-      req.user.email,
-      req.company,
-      memberEmails,
-    );
 
+    sendInviteColleague(req.user.email, req.company, memberEmails);
   } catch (error) {
-   
     logger.error(`Member: ${error}`);
   }
 };

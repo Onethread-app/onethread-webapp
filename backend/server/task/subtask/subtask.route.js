@@ -72,6 +72,54 @@ router
     subTaskCtrl.deleteSubtask,
   );
 
+router
+  .route('/:subTaskId/member')
+  .post(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    SchemaValidator(joiSchema.addMember),
+    subTaskCtrl.addMember,
+  )
+  .get(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    subTaskCtrl.getMembers,
+  )
+  .delete(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    SchemaValidator(joiSchema.deleteMember),
+    subTaskCtrl.deleteMember,
+  );
+
+router
+  .route('/:subTaskId/search')
+  .get(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
+    SchemaValidator(joiSchema.searchMember),
+    subTaskCtrl.searchMember,
+  );
+
 router.param('subTaskId', subTaskCtrl.load);
 
 module.exports = router;

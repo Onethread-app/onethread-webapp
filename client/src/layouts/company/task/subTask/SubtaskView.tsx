@@ -4,9 +4,15 @@ import {
   Button,
   Icon,
   Checkbox,
+  Popover,
 } from '@blueprintjs/core';
 import { SubTaskCreator, SubTaskDelete } from './SubTaskEditor';
+import AddSubtaskMember from './AddMember';
 import { ISubTask } from 'stores/subtask/Reducer';
+import {
+  deleteSubTaskMember,
+  IPayloadForDeletingMember,
+} from 'stores/subtask/Actions';
 import { connect } from 'react-redux';
 import {
   getAllSubTask,
@@ -16,13 +22,20 @@ import {
 } from 'stores/subtask/Actions';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Loading } from 'components/Loading';
+import { ICompany } from 'stores/company/Reducer';
+import { projectPermit } from 'stores/UtilsActions';
+import SubTaskMemberIcon from './SubTaskMemberIcon';
 
 interface ISubTaskViewInternalProps {
   subTaskList: ISubTask[];
+  company?: ICompany;
   getAllSubTask: () => void;
   createSubTask: (subTask: ISubTask) => void;
   updateSubTask: (subTask: ISubTask) => void;
   deleteSubTask: (subTask: ISubTask) => void;
+  deleteSubTaskMember: (payload: IPayloadForDeletingMember) => void;
+  deletingMember: boolean;
+  errorOnDeletingMember: string;
   loading: boolean;
   fetchingTask: boolean;
 }
@@ -32,6 +45,10 @@ export const SubTaskViewPageComponent = (
 ) => {
   const [showSubtaskForm, setShowSubTaskForm] = useState(false);
   const [subtask, setsubtask] = useState(Object);
+  const [membersPopover, setMembersPopover] = useState({
+    _id: '',
+    open: false,
+  });
 
   useEffect(() => {
     async function getAPI() {
@@ -41,6 +58,10 @@ export const SubTaskViewPageComponent = (
     }
     getAPI();
   }, [props.fetchingTask]);
+
+  const toggleMembersPopover = (id: string) => {
+    setMembersPopover({ _id: id, open: !membersPopover.open });
+  };
 
   return (
     <>
@@ -81,7 +102,10 @@ export const SubTaskViewPageComponent = (
                   }}
                 >
                   {props.subTaskList.map((subTask) => (
-                    <div className="flex justify-between">
+                    <div
+                      className="flex justify-between"
+                      key={subTask._id}
+                    >
                       <Checkbox
                         className="ws-break"
                         value={subTask._id}
@@ -102,6 +126,68 @@ export const SubTaskViewPageComponent = (
                         }}
                       />
                       <div className="flex">
+                        <div className="mr3">
+                          {subTask.assignedMembers &&
+                            subTask.assignedMembers.map(
+                              (subMember) => (
+                                <SubTaskMemberIcon
+                                  deleteSubTaskMember={
+                                    props.deleteSubTaskMember
+                                  }
+                                  member={subMember}
+                                  subTaskId={subTask._id}
+                                  deletingMember={
+                                    props.deletingMember
+                                  }
+                                  errorOnDeletingMember={
+                                    props.errorOnDeletingMember
+                                  }
+                                  company={props.company}
+                                />
+                              ),
+                            )}
+                        </div>
+                        <div>
+                          {props.company &&
+                          projectPermit(props.company.role) ? (
+                            <Popover
+                              isOpen={
+                                membersPopover._id === subTask._id &&
+                                membersPopover.open
+                              }
+                              position="right"
+                              content={
+                                <div className="pa3 cf bg-white">
+                                  <div>
+                                    <AddSubtaskMember
+                                      setMembersPopover={
+                                        setMembersPopover
+                                      }
+                                      id={
+                                        subTask._id ? subTask._id : ''
+                                      }
+                                    />
+                                  </div>
+                                </div>
+                              }
+                              target={
+                                <Icon
+                                  className="fr mv3 pointer mr4 mv0"
+                                  style={{
+                                    marginTop: 0,
+                                    color: 'lightsteelblue',
+                                  }}
+                                  icon="people"
+                                  onClick={() => {
+                                    toggleMembersPopover(
+                                      subTask._id ? subTask._id : '',
+                                    );
+                                  }}
+                                />
+                              }
+                            />
+                          ) : undefined}
+                        </div>
                         <div>
                           <Icon
                             className="fr mv3 pointer mr4 mv0"
@@ -159,7 +245,12 @@ export const SubTaskViewPageComponent = (
         </div>
       ) : (
         <div
-          style={{ bottom: 10, position: 'absolute', margin: '0 auto', width: '50%' }}
+          style={{
+            bottom: 10,
+            position: 'absolute',
+            margin: '0 auto',
+            width: '50%',
+          }}
         >
           <Loading />
         </div>
@@ -171,8 +262,13 @@ export const SubTaskViewPageComponent = (
 const mapStateToProps = (state: any) => {
   return {
     subTaskList: state.boardIndexReducer.subTaskReducer.subTaskList,
+    deletingMember:
+      state.boardIndexReducer.subTaskReducer.deletingMember,
+    errorOnDeletingMember:
+      state.boardIndexReducer.subTaskReducer.errorOnDeletingMember,
     loading: state.boardIndexReducer.subTaskReducer.fetchingSubTask,
     fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
+    company: state.companyReducer.currentCompany,
   };
 };
 
@@ -181,4 +277,5 @@ export const SubTaskView = connect(mapStateToProps, {
   createSubTask,
   updateSubTask,
   deleteSubTask,
+  deleteSubTaskMember,
 })(withRouter(SubTaskViewPageComponent));
