@@ -101,7 +101,12 @@ module.exports = {
   archiveProject: Joi.object().keys({
     query: Joi.object().keys({
       pid: schema.pid.required(),
-    })
+    }),
+  }),
+  unarchiveProject: Joi.object().keys({
+    query: Joi.object().keys({
+      pid: schema.pid.required(),
+    }),
   }),
   searchConcernAdmin: Joi.object().keys({
     params: companyId.required(),

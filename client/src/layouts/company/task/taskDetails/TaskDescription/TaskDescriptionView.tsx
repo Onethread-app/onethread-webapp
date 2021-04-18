@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
+import Linkify from 'react-linkify';
+import { componentDecorator } from 'helpers/LinkifyHelper';
 
 interface TaskDescriptionViewInternalProps {
   description?: ITask['description'];
@@ -50,12 +52,14 @@ export const TaskDescriptionViewComponent = (
           }
         />
       ) : props.description ? (
-        <p
-          className="pr2 ws-break"
-          style={{ whiteSpace: 'pre-line' }}
-        >
-          {props.description}
-        </p>
+        <Linkify componentDecorator={componentDecorator}>
+          <p
+            className="pr2 ws-break"
+            style={{ whiteSpace: 'pre-line' }}
+          >
+            {props.description}
+          </p>
+        </Linkify>
       ) : (
         <p className="pr2">Description has not been given yet</p>
       )}

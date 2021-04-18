@@ -58,18 +58,19 @@ export const RoomListItem = (props: RoomListItemProps) => {
             if (!props.active) {
               dispatch({ type: CHANGE_ROOM });
               // tslint:disable-next-line: max-line-length
-              props.currentCompany?
-                history.push(
-                  `/company/${props.currentCompany}/project/${props.room.project}/room?roomId=${props.room._id}${
-                    queries.view ? '&view=' + queries.view : ''
-                  }`,
-                )
-              : 
-                history.push(
-                  `${location.pathname}?roomId=${props.room._id}${
-                    queries.view ? '&view=' + queries.view : ''
-                  }`,
-                );
+              props.currentCompany
+                ? history.push(
+                    `/company/${props.currentCompany}/project/${
+                      props.room.project
+                    }/room?roomId=${props.room._id}${
+                      queries.view ? '&view=' + queries.view : ''
+                    }`,
+                  )
+                : history.push(
+                    `${location.pathname}?roomId=${props.room._id}${
+                      queries.view ? '&view=' + queries.view : ''
+                    }`,
+                  );
             }
             if (isMobileOnly) {
               setShowDialog(true);

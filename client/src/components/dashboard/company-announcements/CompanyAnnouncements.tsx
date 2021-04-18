@@ -1,5 +1,7 @@
 import React from 'react';
 import './CompanyAnnouncements.scss';
+import Linkify from 'react-linkify';
+import { componentDecorator } from 'helpers/LinkifyHelper';
 
 const CompanyAnnouncements = (props) => {
   return (
@@ -11,7 +13,9 @@ const CompanyAnnouncements = (props) => {
         <div className="date secondary-font-color">{props.date}</div>
       </div>
       <div className="content-wrapper content-color ml3 pb4 bb bw1 b--black-05 tj">
-        {props.content}
+        <Linkify componentDecorator={componentDecorator}>
+          {props.content}
+        </Linkify>
       </div>
     </div>
   );

@@ -36,7 +36,7 @@ export interface RoomQueries {
 interface RoomPageComponentProps extends RouteComponentProps {
   currentRoom: IRoomReducer['currentRoom'];
   companyId: string;
-  companyName: string;
+  uniqueCompanyName: string;
   projectId: string;
   rooms: IRoom[];
   getRooms: () => void;
@@ -181,7 +181,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                 // tslint:disable-next-line: no-unused-expression
                 props.setShowDialog && props.setShowDialog(false);
                 props.history.push(
-                  `/company/${props.companyName}/project/${props.projectId}/room?view=${queries.view}`,
+                  `/company/${props.uniqueCompanyName}/project/${props.projectId}/room?view=${queries.view}`,
                 );
               }}
             />
@@ -244,7 +244,7 @@ const mapStateToProps = (state: any) => {
     projectId: state.projectReducer.projectDetails._id,
     rooms: state.roomReducer.rooms,
     pusherInstance: state.pusherReducer.pusherInstance,
-    companyName: state.companyReducer.currentCompany.name,
+    uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
   };
 };
 

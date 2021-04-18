@@ -50,65 +50,65 @@ const RoomPageMobileComponent = (props: RoomPageComponentProps) => {
     }
   }, [props.companyId, props.projectId]);
 
-
-  if(props.projectId===''){
-    const { projectId } = (props.match.params as any);
-      props.getSingleProject(projectId);
-      props.setCurrentProjectId(projectId);
-      props.getRoleForProject(projectId);
+  if (props.projectId === '') {
+    const { projectId } = props.match.params as any;
+    props.getSingleProject(projectId);
+    props.setCurrentProjectId(projectId);
+    props.getRoleForProject(projectId);
   }
 
   return (
     <>
       <NavbarCompany title="Rooms" />
-      { !(view && view === 'mobile') && 
-      <div className="flex justify-between mt5">
-        <NavLink
-          exact
-          className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-          to={`/company/${props.company.name}/project/${props.project._id}`}
-          activeStyle={{ background: '#3F61C5', color: 'white' }}
-          style={{ color: 'darkGray' }}
-        >
-          <small style={{ color: 'inherit' }}>Preface</small>
-        </NavLink>
-        <NavLink
-          exact
-          className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-          to={`/company/${props.company.name}/project/${props.project._id}/room`}
-          activeStyle={{ background: '#3F61C5', color: 'white' }}
-          style={{ color: 'darkGray' }}
-        >
-          <small style={{ color: 'inherit' }}>Room</small>
-        </NavLink>
-        <NavLink
-          exact
-          className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-          to={`/company/${props.company.name}/project/${props.project._id}/board`}
-          activeStyle={{ background: '#3F61C5', color: 'white' }}
-          style={{ color: 'darkGray' }}
-        >
-          <small style={{ color: 'inherit' }}>Board</small>
-        </NavLink>
-        <NavLink
-          exact
-          className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-          to={`/company/${props.company.name}/project/${props.project._id}/team`}
-          activeStyle={{ background: '#3F61C5', color: 'white' }}
-          style={{ color: 'darkGray' }}
-        >
-          <small style={{ color: 'inherit' }}>Team</small>
-        </NavLink>
-        <NavLink
-          exact
-          className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-          to={`/company/${props.company.name}/project/${props.project._id}/settings`}
-          activeStyle={{ background: '#3F61C5', color: 'white' }}
-          style={{ color: 'darkGray' }}
-        >
-          <small style={{ color: 'inherit' }}>Settings</small>
-        </NavLink>
-      </div>}
+      {!(view && view === 'mobile') && (
+        <div className="flex justify-between mt5">
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Preface</small>
+          </NavLink>
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Room</small>
+          </NavLink>
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Board</small>
+          </NavLink>
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Team</small>
+          </NavLink>
+          <NavLink
+            exact
+            className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
+            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            style={{ color: 'darkGray' }}
+          >
+            <small style={{ color: 'inherit' }}>Settings</small>
+          </NavLink>
+        </div>
+      )}
       <div className="flex h-100 w-100">
         <div className="w-100">
           <RoomSideBar />

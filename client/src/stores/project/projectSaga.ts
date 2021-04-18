@@ -57,6 +57,9 @@ import {
   getProjectsIndividualSuccess,
   getProjectsIndividualFailure,
   setProjectAccessForUser,
+  unarchiveProjectFailure,
+  unarchiveProjectSuccess,
+  getProjectArchive,
 } from './Actions';
 import { getCompanyId } from 'stores/company/Selector';
 import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
@@ -72,6 +75,7 @@ import {
   getUserCompanyList,
 } from 'stores/user/Selector';
 import { getAllBoards } from 'stores/board/Actions';
+import handleError from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -192,6 +196,7 @@ export function* archiveProjectAsync({ payload }: any) {
       yield all([
         put(archiveProjectSuccess()),
         put(getAllProjects()),
+        put(getProjectArchive()),
       ]);
     }
   } catch (error) {
@@ -208,6 +213,29 @@ export function* archiveProjectAsync({ payload }: any) {
       console.log(error.response);
       yield put(archiveProjectFailure(error.message));
     }
+  }
+}
+
+export function* unarchiveProjectAsync({ payload }: any) {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.put(
+        `projects/unarchive?pid=${payload}`,
+        null,
+        headers,
+      );
+      console.log(response);
+      yield all([
+        put(unarchiveProjectSuccess(response.data.project)),
+        put(getAllProjects()),
+        put(getProjectArchive()),
+      ]);
+    }
+  } catch (error) {
+    handleError(error, async (errorMessage: any) => {
+      await unarchiveProjectFailure(errorMessage);
+    });
   }
 }
 
@@ -846,6 +874,13 @@ export function* onArchiveProject() {
   );
 }
 
+export function* onUnarchiveProject() {
+  yield takeEvery(
+    ProjectActionTypes.UNARCHIVE_PROJECT_START,
+    unarchiveProjectAsync,
+  );
+}
+
 export function* onGetProjectArchive() {
   yield takeLatest(
     ProjectActionTypes.GET_ARCHIVED_PROJECTS_START,
@@ -971,6 +1006,7 @@ export default function* projectSaga() {
     call(onGetAllProject),
     call(onCreateProjectInCompany),
     call(onArchiveProject),
+    call(onUnarchiveProject),
     call(onGetProjectArchive),
     call(onUpdateProjectName),
     call(onGetSingleProject),

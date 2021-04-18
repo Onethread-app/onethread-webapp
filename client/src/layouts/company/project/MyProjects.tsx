@@ -24,6 +24,7 @@ import { getAllDepartments } from '../../../stores/company/Actions';
 import {
   getAllProjects,
   archiveProject,
+  unarchiveProject,
   getProjectArchive,
   getSingleProject,
   setCurrentProjectId,
@@ -64,9 +65,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const checkRoleForChangeName = () => {
     permissions.grantAll
       ? setShowUpdateNameDialog(true)
-      : permissions.projectModerator.includes(
-          'updateProjectPreface',
-        )
+      : permissions.projectModerator.includes('updateProjectPreface')
       ? setShowUpdateNameDialog(true)
       : setOpen(true);
   };
@@ -74,11 +73,16 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const checkRoleForArchiveProject = (projectId: string) => {
     permissions.grantAll
       ? projectArchive(projectId)
-      : permissions.projectModerator.includes(
-          'updateProjectPreface',
-        )
+      : permissions.projectModerator.includes('updateProjectPreface')
       ? projectArchive(projectId)
       : setOpen(true);
+  };
+  const checkRoleForUnarchiveProject = (projectId: string) => {
+    permissions.grantAll
+      ? props.unarchiveProject(projectId)
+      : permissions.projectModerator.includes(
+          'updateProjectPreface',
+        ) && props.unarchiveProject(projectId);
   };
 
   const noProjectsFound = (
@@ -320,34 +324,37 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                         >
                           {archProject.name}
                         </h3>
-                        {/* <Popover
-                        className="w-10"
-                        content={
-                          <Menu className="pa2">
-                            <MenuItem
-                              className="pa1"
-                              text="Update Project Name"
-                            />
-                            <MenuItem
-                              className="pa1 red"
-                              text="Archive Project"
-                            />
-                          </Menu>
-                        }
-                        target={
-                          <Button
-                            style={{
-                              transform: 'rotate(90deg)',
-                              OTransform: 'rotate(90deg)',
-                              msTransform: 'rotate(90deg)',
-                              WebkitTransform: 'rotate(90deg)'
-                            }}
-                            icon="more"
-                            minimal={true}
-                            className="outline-0"
+                        {permissions.grantAll && (
+                          <Popover
+                            className="w-10"
+                            content={
+                              <Menu className="pa2">
+                                <MenuItem
+                                  className="pa1 red"
+                                  text="Unarchive Project"
+                                  onClick={() =>
+                                    checkRoleForUnarchiveProject(
+                                      archProject._id,
+                                    )
+                                  }
+                                />
+                              </Menu>
+                            }
+                            target={
+                              <Button
+                                style={{
+                                  transform: 'rotate(90deg)',
+                                  OTransform: 'rotate(90deg)',
+                                  msTransform: 'rotate(90deg)',
+                                  WebkitTransform: 'rotate(90deg)',
+                                }}
+                                icon="more"
+                                minimal={true}
+                                className="outline-0"
+                              />
+                            }
                           />
-                        }
-                      /> */}
+                        )}
                       </div>
                       <h3
                         className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
@@ -429,6 +436,7 @@ export const MyProject = connect(mapStateToProps, {
   getAllProjects,
   getAllDepartments,
   archiveProject,
+  unarchiveProject,
   getProjectArchive,
   getSingleProject,
   setCurrentProjectId,

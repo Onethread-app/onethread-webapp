@@ -16,7 +16,7 @@ import { webPush } from '../../stores/notifications/Action';
 import {
   setSubscriptionExpire,
   setSubscriptionNotExpire,
-  getCurrentSubscription
+  getCurrentSubscription,
 } from '../../stores/subscriptionBilling/Actions';
 import DashboardSummery from 'components/dashboard/dashboard-summary/DashboardSummary';
 import TotalInfo from 'components/dashboard/total-info/TotalInfo';
@@ -329,7 +329,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 <div className="flex-ns justify-between">
                   {dashboard && (
                     <Card className="w-100-l w-100 pa4-ns pa3 shadow-1 br2">
-                      {dashboard.projectCompilation ? (
+                      {dashboard.projectCompilation &&
+                      dashboard.projectCompilation.length > 0 ? (
                         dashboard.projectCompilation.map(
                           (project) => (
                             <div className="mb4">
