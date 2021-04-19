@@ -38,7 +38,7 @@ interface NavbarTopInternalProps {
   user: User;
   logoutAction: (history: History) => void;
   scrollTop: number;
-  companyName: string;
+  uniqueCompanyName: string;
   type: string;
   companyId: string;
   getNotifications: () => void;
@@ -135,7 +135,7 @@ const NavbarTopComponent = (
           {props.type !== 'home' ? (
             <NavLink
               exact
-              to={`/company/${props.companyName}/dashboard`}
+              to={`/company/${props.uniqueCompanyName}/dashboard`}
             >
               <div
                 className="f4 fw6 tigrow-lightBlue ttc ws-break overflow-hidden nowrap mh4"
@@ -143,7 +143,9 @@ const NavbarTopComponent = (
                   textOverflow: 'ellipsis',
                 }}
               >
-                {props.type === 'company' ? props.companyName : ''}
+                {props.type === 'company'
+                  ? props.uniqueCompanyName
+                  : ''}
               </div>
             </NavLink>
           ) : (
@@ -259,7 +261,7 @@ const NavbarTopComponent = (
                               props.currentRoom !== undefined &&
                               room._id === props.currentRoom._id
                             }
-                            currentCompany={props.companyName}
+                            currentCompany={props.uniqueCompanyName}
                             iconBgColor={
                               roomBgColor[i % roomBgColor.length]
                             }
@@ -411,7 +413,7 @@ const NavbarTopComponent = (
 const mapStateToProps = (state: any) => {
   return {
     user: state.userReducer.user,
-    companyName: state.companyReducer.currentCompany.name,
+    uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
     companyId: state.companyReducer.currentCompany._id,
     notifications: state.notificationReducer.allNotifications,
     seen: state.notificationReducer.seen,

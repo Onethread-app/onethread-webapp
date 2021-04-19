@@ -57,6 +57,21 @@ export const archiveProjectFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
+export const unarchiveProject = (pid: string) => ({
+  type: ProjectActionTypes.UNARCHIVE_PROJECT_START,
+  payload: pid,
+});
+
+export const unarchiveProjectSuccess = (response: any) => ({
+  type: ProjectActionTypes.UNARCHIVE_PROJECT_SUCCESS,
+  payload: response,
+});
+
+export const unarchiveProjectFailure = (errorMessage: any) => ({
+  type: ProjectActionTypes.UNARCHIVE_PROJECT_FAILURE,
+  payload: errorMessage,
+});
+
 export const getProjectArchive = () => ({
   type: ProjectActionTypes.GET_ARCHIVED_PROJECTS_START,
 });
@@ -368,4 +383,4 @@ export const getProjectsIndividualFailure = (errorMessage: any) => ({
 export const setProjectAccessForUser = (response: boolean) => ({
   type: ProjectActionTypes.SET_USER_ACCESS,
   payload: response,
-})
+});

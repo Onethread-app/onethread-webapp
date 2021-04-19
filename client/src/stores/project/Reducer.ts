@@ -89,7 +89,9 @@ const initialState = {
   projectList: [],
   projectLoading: false,
   addTeamMemberLoading: false,
+  unarchivingProject: false,
   error: '',
+  errorOnUnarchive: '',
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -158,17 +160,34 @@ export const ProjectReducer = (state = initialState, action: any) => {
         error: action.payload,
         projectLoading: false,
       };
+    case ProjectActionTypes.UNARCHIVE_PROJECT_START:
+      return {
+        ...state,
+        unarchivingProject: true,
+        errorOnUnarchive: '',
+      };
+    case ProjectActionTypes.UNARCHIVE_PROJECT_SUCCESS:
+      return {
+        ...state,
+        unarchivingProject: false,
+      };
+    case ProjectActionTypes.UNARCHIVE_PROJECT_FAILURE:
+      return {
+        ...state,
+        unarchivingProject: false,
+        errorOnUnarchive: action.payload,
+      };
     case ProjectActionTypes.ADD_PROJECT_TEAMS_START:
       return {
         ...state,
         addTeamMemberLoading: true,
-      }
+      };
     case ProjectActionTypes.ADD_PROJECT_TEAMS_SUCCESS:
     case ProjectActionTypes.ADD_PROJECT_TEAMS_FAILURE:
       return {
         ...state,
         addTeamMemberLoading: false,
-      }
+      };
     case ProjectActionTypes.GET_ALL_PROJECTS_SUCCESS:
       return {
         ...state,
@@ -268,7 +287,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         hasAccess: action.payload,
-      }
+      };
     default:
       return state;
   }

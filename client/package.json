@@ -51,6 +51,7 @@
     "react-final-form-arrays": "^3.1.1",
     "react-flags-select": "^1.1.12",
     "react-ga": "^2.7.0",
+    "react-linkify": "^1.0.0-alpha",
     "react-modal": "^3.11.2",
     "react-multi-carousel": "^2.5.4",
     "react-number-format": "^4.4.1",

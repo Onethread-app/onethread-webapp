@@ -189,6 +189,19 @@ router
     projectCtrl.archiveProject,
   );
 router
+  .route('/unarchive')
+  .put(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
+    schemaValidator(projectValidation.unarchiveProject),
+    projectCtrl.unarchiveProject,
+  );
+router
   .route('/:companyId/role')
   .put(
     authorization,

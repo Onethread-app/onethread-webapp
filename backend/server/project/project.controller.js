@@ -826,6 +826,52 @@ const archiveProject = async (req, res) => {
   }
 };
 
+const unarchiveProject = async (req, res) => {
+  try {
+    const projectExist = await Project.findOne(
+      {
+        _id: req.query.pid,
+      },
+      { removed: true },
+    );
+    if (projectExist) {
+      const project = await Project.findOneAndUpdate(
+        { _id: req.query.pid },
+        { $set: { removed: false } },
+        { safe: true, upsert: true, new: true },
+      );
+      const text = `${req.user.name} has unarchived project ${project.name}`;
+
+      createCompanyRoleNotification(
+        { _id: project.company },
+        {
+          _id: req.user._id,
+          name: req.user.name,
+          pusherSock: req.headers.clientid,
+        },
+        text,
+        'project',
+      );
+
+      logger.info(`Project: Archive a project  ${req.query.pid}`);
+      return sendJSONresponse(res, 200, {
+        message: `Unarchived project`,
+        project,
+      });
+    } else {
+      logger.error(`Project: Not Archived`);
+      return sendErrorResponse(res, 400, 'ProjectIdNotFoundError', {
+        message: 'Project has not been archived yet',
+      });
+    }
+  } catch (error) {
+    logger.error(`Project: ${error}`);
+    return sendErrorResponse(res, 404, 'ProjectIdNotFoundError', {
+      message: 'Project id is not found',
+    });
+  }
+};
+
 const showAllFilesForProject = async (req, res, next) => {
   const { limit = 10, skip = 0 } = req.query;
   await File.find({ project: req.query.pid })
@@ -1078,6 +1124,7 @@ module.exports = {
   getProjectDetails,
   changeTitleProject,
   archiveProject,
+  unarchiveProject,
   showAllFilesForProject,
   suggestConcernAdmin,
   suggestAssociateCompany,
