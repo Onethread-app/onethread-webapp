@@ -109,7 +109,7 @@ export const CompanyListComponent = (props: CompanyListProps & RouteComponentPro
               <article className="w-60-ns w-100 pa3 pa0-ns">
                 <h1 className="white f2-ns f3 fw6">Add a company to get started with all of your projects</h1>
                 <h3 className="white fw3 f4-ns f5">
-                  Or, want to join an existing company? Ask your peer to add you at his/her company at TiGrow
+                  Or, want to join an existing company? Ask your peer to add you at his/her company at Onethread
                   </h3>
                 <Button
                   onClick={() => setShowDialog(!showDialog)}
