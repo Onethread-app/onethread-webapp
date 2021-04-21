@@ -61,21 +61,23 @@ interface IOTButton {
   style?: any;
   classes?: any;
   children?: any;
+  white?: boolean;
+  bold?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 export const OTButton = (props: IOTButton) => {
   let styles = {
-    width: '266.55px',
-    background: '#3484f0',
+    minWidth: '266.55px',
+    background: props.white ? '#fff' : '#3484f0',
     borderRadius: '10px',
-    padding: '1.15rem 8px',
+    padding: '1.15rem 2.4rem',
     border: 'none',
-    color: '#fff',
+    color: props.white ? '#3484f0' : '#fff',
     textAlign: 'center' as 'center',
-    fontWeight: 500,
-    fontSize: '20px',
-    lineHeight: '24px',
+    fontWeight: props.bold ? 700 : 500,
+    fontSize: props.white ? '24px' : '20px',
+    lineHeight: props.white ? '29px' : '24px',
 
     '&:hover': {
       cursor: 'pointer',

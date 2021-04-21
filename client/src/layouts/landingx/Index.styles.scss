@@ -4,10 +4,12 @@
   background: #fff;
 
   .navbar {
-    background: #000;
+    background: #f8f8f8;
     position: sticky;
     top: 0;
-    color: #fff;
+    color: #303052;
+    padding: 0 101px 0 207px;
+    z-index: 2;
 
     ul {
       list-style-type: none;
@@ -18,10 +20,6 @@
         padding: 10px;
         line-height: 22px;
         text-align: center;
-
-        &:last-child {
-          margin-right: 100px;
-        }
 
         &:hover {
           cursor: pointer;
@@ -80,84 +78,80 @@
   }
 
   .main-header {
-    height: 896px;
-    background: #000;
-    color: #fff;
+    background: #f8f8f8;
+    padding: 130px 0 467px;
+    color: #000;
     overflow: hidden;
+    z-index: 3;
 
-    > img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-      position: absolute;
+    .heading {
+      font-size: 48px;
+      line-height: 57px;
+      font-weight: 700;
     }
 
-    .contents {
-      .logo {
-        padding-top: 98px;
+    .sub-heading {
+      font-size: 18px;
+      line-height: 22px;
+      font-weight: normal;
+      margin-bottom: 28px;
+    }
+  }
 
-        img {
-          &:first-child {
-            margin-bottom: 11px;
+  .second-section {
+    .unified-tool {
+      margin: -367px 65px 0;
+      padding: 65px 145px;
+      gap: 35px;
+      background: #ffffff;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+      z-index: 3;
+
+      &-text {
+        font-size: 36px;
+        line-height: 43px;
+        color: #252546;
+        min-width: 358px;
+        flex: 0 1 28%;
+      }
+
+      &-content {
+        flex: 0 1 56%;
+
+        &-header {
+          font-size: 18px;
+          line-height: 22px;
+          color: #434343;
+          font-weight: 400;
+          margin-bottom: 24px;
+          flex: 0 1 60%;
+        }
+
+        &-body {
+          > div {
+            img {
+              margin-right: 24px;
+            }
+
+            &:not(:last-child) {
+              margin-bottom: 24px;
+            }
           }
         }
-      }
 
-      .heading {
-        font-weight: 900;
-        font-size: 64px;
-        line-height: 77px;
-      }
-
-      .sub-heading {
-        font-size: 24px;
-        line-height: 29px;
-        margin-bottom: 30px;
-      }
-
-      .tertiary-heading {
-        font-size: 18px;
-        line-height: 22px;
-        margin-top: 0.75rem;
-      }
-    }
-  }
-
-  .collaborate {
-    padding: 123px 0 158px 0;
-
-    .secondary-logo {
-      margin-right: 45px;
-    }
-
-    .contents {
-      color: #000000;
-
-      h1 {
-        font-size: 58px;
-        line-height: 62px;
-        font-weight: 700;
-      }
-
-      p {
-        font-size: 28px;
-        line-height: 36px;
-      }
-
-      @media screen and (max-width: 1366px) {
-        max-width: 887px;
-
-        h1 {
-          font-size: 54px;
-        }
-
-        p {
-          font-size: 28px;
-          line-height: 32px;
+        &-footer {
+          margin-top: 36px;
+          font-weight: bold;
+          font-size: 24px;
+          line-height: 29px;
+          text-decoration-line: underline;
+          text-underline-position: under;
+          color: #3484f0;
         }
       }
     }
   }
+
   .third-section {
     background: #fff;
     color: #000;
@@ -182,40 +176,29 @@
 
     .upper {
       color: inherit;
-      margin-bottom: 88px;
+      margin: 0 250px 88px;
 
       &-content {
         max-width: 345px;
         margin-left: 33px;
       }
-
-      &-gif {
-        width: 566px;
-        height: 377px;
-
-        @extend .gif;
-      }
     }
 
     .lower {
       color: inherit;
+      margin: 0 250px;
 
       &-content {
         max-width: 345px;
         margin-right: 33px;
-      }
-
-      &-gif {
-        width: 580px;
-        height: 377px;
-
-        @extend .gif;
       }
     }
   }
 
   .teams {
     padding: 116px 0 80px;
+    color: #fff;
+    background: #303052;
 
     h1 {
       font-weight: 700;
@@ -242,10 +225,19 @@
     }
 
     .options {
-      margin-bottom: 150px;
+      margin: 0 230px 150px;
+
+      @media screen and (max-width: 1366px) {
+        margin: 0 50px 150px;
+      }
 
       .option {
         margin: 3rem 0;
+        padding: 0 78px;
+
+        @media screen and (max-width: 1366px) {
+          padding: 0 50px;
+        }
 
         &:first-child {
           margin-top: 2.5rem;
@@ -253,7 +245,6 @@
 
         &:before {
           content: '';
-          margin-right: 112px;
           width: 19px;
           height: 56px;
           background: #3484f0;
@@ -264,7 +255,7 @@
           &:after {
             content: '';
             position: absolute;
-            margin-right: 924px;
+            margin-left: 9px;
             background: #c6c6c6;
             height: 384px;
             width: 1px;
@@ -272,9 +263,34 @@
           }
         }
 
+        &:nth-child(1) {
+          &::after {
+            height: 394px;
+          }
+        }
+
+        &:nth-child(2) {
+          &::after {
+            height: 500px;
+          }
+        }
+
+        &:nth-child(3) {
+          &::after {
+            height: 500px;
+          }
+        }
+
         .contents {
           font-weight: 500;
           max-width: 345px;
+          margin-left: 170px;
+          margin-right: 130px;
+
+          @media screen and (max-width: 1366px) {
+            margin-left: 120px;
+            margin-right: 100px;
+          }
 
           h3 {
             font-size: 36px;
@@ -289,13 +305,6 @@
             line-height: 28px;
             width: 95%;
           }
-        }
-
-        &-gif {
-          width: 468px;
-          height: 275px;
-          background: #ffffff;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
       }
     }

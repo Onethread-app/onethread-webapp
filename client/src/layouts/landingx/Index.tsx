@@ -1,5 +1,4 @@
 import React from 'react';
-import { useSpring, animated } from 'react-spring';
 import { isMobileOnly } from 'react-device-detect';
 
 import './Index.styles.scss';
@@ -7,94 +6,99 @@ import './Index.styles.scss';
 import MobileIndex from './mobile/Index';
 import Navbar from './Navbar';
 import MainFooter from './MainFooter';
-import UserInput from './UserInput';
+
+import { OTButton } from 'components/button/Button';
 
 import Logo from 'resources/images/onethread-logo-main.png';
-import TextLogo from 'resources/images/onethread-text.png';
-import SecondaryLogo from 'resources/images/secondary-logo.png';
+import MainLanding from 'resources/images/main-landing.png';
 import CombinedLogo from 'resources/images/combined-logo.png';
 import MarketExpress from 'resources/images/companies/market-express.png';
 import Plummy from 'resources/images/companies/plummy-fashions.png';
 import BatteryLow from 'resources/images/companies/battery-low.png';
 import MCCI from 'resources/images/companies/mcci.png';
+import Dysin from 'resources/images/companies/dysin.png';
+import Peakward from 'resources/images/companies/peakward.png';
+
+import DashboardIcon from 'resources/images/dashboard-icon.png';
+import MessagesIcon from 'resources/images/messages-icon.png';
+import ReportIcon from 'resources/images/report-icon.png';
+
+import MailGif from 'resources/images/mail.gif';
+import ReportGif from 'resources/images/report.gif';
+
+import ProjectPng from 'resources/images/project.png';
+import MeetingPng from 'resources/images/meeting.png';
+import TasksPng from 'resources/images/tasks.png';
+import IntegrationsPng from 'resources/images/integrations.png';
 
 const NewLanding = () => {
-  const [changeNow, setChangeNow] = React.useState(false);
-  const thirdRef = React.useRef(null);
-
-  React.useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const handleScroll = () => {
-    if (window.scrollY >= 1475) {
-      setChangeNow(true);
-    } else {
-      setChangeNow(false);
-    }
-  };
-
-  const changeBgSpring = useSpring({
-    delay: 250,
-    background: changeNow ? '#303052' : '#fff',
-    color: changeNow ? '#fff' : '#000',
-  });
-
   return isMobileOnly ? (
     <MobileIndex />
   ) : (
     <div className="landing w-100">
       <Navbar />
-      <section className="main-header w-100 relative">
-        <img
-          src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/videoplayback(2).gif"
-          alt="background"
-        />
-        <div className="contents flex flex-column items-center justify-center w-100 tc absolute">
-          <div className="logo flex flex-column items-center justify-center">
-            <img src={Logo} alt="Onethread" />
-            <img src={TextLogo} alt="" />
+      <section className="main-header w-100 relative flex flex-column items-center">
+        <h2 className="heading tc">
+          Collaborate on projects with people <br />
+          <span style={{ color: '#3484F0' }}>
+            outside your organization
+          </span>
+        </h2>
+        <img src={MainLanding} alt="" />
+        <h3 className="sub-heading tc">
+          <span className="b">Onethread</span> is project management
+          tool built from the ground up for multi-team collaboration
+          among startups, agencies and NGOs.
+        </h3>
+        <OTButton to="/signin">Create Your First Project</OTButton>
+      </section>
+      <section className="second-section w-100 flex relative">
+        <div className="unified-tool flex items-center justify-around w-100">
+          <div className="unified-tool-text">
+            We spend 23% more time in external projects for{' '}
+            <span className="b">lack of a unified tool</span>
           </div>
-          <h2 className="heading">
-            Get rid of infinite email <br /> chains & WhatsApp threads
-          </h2>
-          <p className="sub-heading">
-            Onethread lets you efficiently organize all your projects
-            and <br /> communicate with everyone involved in a single
-            platform
-          </p>
-          <UserInput color={'#000'} />
-          <p className="tertiary-heading">
-            Onethread is in private beta. Sign up with your email to
-            use Onethread for free.
-          </p>
+          <div className="unified-tool-content flex flex-column justify-start">
+            <h3 className="unified-tool-content-header">
+              <span className="b">Onethread</span> lets you
+              efficiently organize all your projects and communicate
+              with everyone involved in a single platform
+            </h3>
+            <div className="unified-tool-content-body">
+              <div className="flex items-center">
+                <img src={DashboardIcon} alt="" />
+                <p>
+                  <span className="b">Messages:</span>
+                  Keep your work and personal inboxes separate
+                </p>
+              </div>
+              <div className="flex items-center">
+                <img src={MessagesIcon} alt="" />
+                <p>
+                  <span className="b">Project dashboard: </span> Task
+                  assignment, one-click approvals and project folders
+                </p>
+              </div>
+              <div className="flex items-center">
+                <img src={ReportIcon} alt="" />
+                <p>
+                  <span className="b">Reports: </span> No more asking
+                  “what’s done”. You already know it!
+                </p>
+              </div>
+            </div>
+            <h3 className="unified-tool-content-footer">
+              Read: Get rid of infinite email chains and WhatsApp
+              threads
+            </h3>
+          </div>
         </div>
       </section>
-      <section className="collaborate flex items-center justify-center">
-        <div className="secondary-logo">
-          <img src={SecondaryLogo} alt="onethread logo" />
-        </div>
-        <div className="contents flex flex-column">
-          <h1>
-            Collaborate with people{' '}
-            <span style={{ color: '#3484F0' }}>
-              outside your organization
-            </span>
-          </h1>
-          <p>
-            A project management tool built from the ground up for
-            multi-team collaboration among <br />
-            startups, agencies and NGOs.
-          </p>
-        </div>
-      </section>
-      <animated.section
-        className="third-section flex flex-column w-100"
-        style={changeBgSpring}
-        ref={thirdRef}
-      >
-        <div className="upper flex flex-row-reverse items-center justify-center">
+      <section className="third-section flex flex-column w-100">
+        <div className="upper flex items-center justify-around">
+          <div className="upper-gif flex items-center tc">
+            <img src={MailGif} alt="" />
+          </div>
           <div className="upper-content">
             <h3>No more deadly email loops.</h3>
             <p>
@@ -102,13 +106,8 @@ const NewLanding = () => {
               private email address. We got the rest covered.
             </p>
           </div>
-          <div className="upper-gif flex items-center tc">
-            <p className="w-100">
-              GIF showing steps to forward email to onethread project
-            </p>
-          </div>
         </div>
-        <div className="lower flex items-center justify-center">
+        <div className="lower flex items-center justify-around">
           <div className="lower-content">
             <h3>Real-time task overview</h3>
             <p>
@@ -117,27 +116,25 @@ const NewLanding = () => {
             </p>
           </div>
           <div className="lower-gif flex items-center tc">
-            <p className="w-100">GIF showing project dashboard</p>
+            <img src={ReportGif} alt="" />
           </div>
         </div>
-      </animated.section>
+      </section>
       <section className="teams flex flex-column items-center w-100">
         <h1 className="tc w-100">
           Teams large & small are using Onethread to <br />
-          <span style={{ color: '#3484F0' }}>
-            3x their output in half the time
-          </span>
+          3x their output in half the time
         </h1>
         <div className="companies w-100 flex justify-around items-center">
           <img src={MarketExpress} alt="market express" />
-          {/* <img src={Dysin} alt="dysin" /> */}
+          <img src={Dysin} alt="dysin" />
           <img src={Plummy} alt="plummy fashions" />
           <img src={BatteryLow} alt="battery low" />
           <img src={MCCI} alt="mcci" />
-          {/* <img src={Peakward} alt="peakward" /> */}
+          <img src={Peakward} alt="peakward" />
         </div>
       </section>
-      <section className="product-details flex flex-column items-center justify-center w-100">
+      <section className="product-details flex flex-column  w-100">
         <div className="header flex flex-column items-center justify-center">
           <img src={CombinedLogo} alt="combination" />
           <h2>
@@ -146,8 +143,8 @@ const NewLanding = () => {
             in one single package
           </h2>
         </div>
-        <div className="options flex flex-column items-center justify-center">
-          <div className="option flex justify-center items-center">
+        <div className="options flex flex-column ">
+          <div className="option flex items-center ">
             <div className="contents">
               <h3>Never lose track of a project again</h3>
               <p>
@@ -156,9 +153,15 @@ const NewLanding = () => {
                 engine
               </p>
             </div>
-            <div className="option-gif"></div>
+            <div className="option-gif">
+              <img
+                src={ProjectPng}
+                alt=""
+                style={{ maxWidth: '405px' }}
+              />
+            </div>
           </div>
-          <div className="option flex justify-center items-center">
+          <div className="option flex items-center ">
             <div className="contents">
               <h3>Communicate with anyone in your project</h3>
               <p>
@@ -167,9 +170,15 @@ const NewLanding = () => {
                 integrations too!
               </p>
             </div>
-            <div className="option-gif"></div>
+            <div className="option-gif">
+              <img
+                src={MeetingPng}
+                alt=""
+                style={{ maxWidth: '508px' }}
+              />
+            </div>
           </div>
-          <div className="option flex justify-center items-center">
+          <div className="option flex items-center ">
             <div className="contents">
               <h3>Manage all tasks from a single dashboard</h3>
               <p>
@@ -177,9 +186,15 @@ const NewLanding = () => {
                 members, and view them however you like
               </p>
             </div>
-            <div className="option-gif"></div>
+            <div className="option-gif">
+              <img
+                src={TasksPng}
+                alt=""
+                style={{ maxWidth: '558px' }}
+              />
+            </div>
           </div>
-          <div className="option flex justify-center items-center">
+          <div className="option flex items-center ">
             <div className="contents">
               <h3>Work with your favorite tools</h3>
               <p>
@@ -187,7 +202,13 @@ const NewLanding = () => {
                 all the tools that we love and use
               </p>
             </div>
-            <div className="option-gif"></div>
+            <div className="option-gif">
+              <img
+                src={IntegrationsPng}
+                alt=""
+                style={{ maxWidth: '413px' }}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -203,7 +224,9 @@ const NewLanding = () => {
             while in beta. The private beta is just the beginning, but
             we want you to be a part of it!
           </p>
-          <UserInput color={'#3484f0'} />
+          <OTButton to="/signin" white bold>
+            Create Your First Project
+          </OTButton>
         </div>
         <MainFooter />
         <div className="footer-copyright flex items-center w-100">
