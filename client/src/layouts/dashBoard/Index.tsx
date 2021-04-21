@@ -89,37 +89,39 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     async function getAPI() {
       const headers = tokenConfig();
       // try {
-      await tigrowApi
-        .get(`company/${props.company!._id}/dashboard`, headers)
-        .then((response) => {
-          dispatch({
-            type: ADD_TOTAL_ASSOCIATE,
-            payload: response.data.data.totalAssociates,
+      if (props.company._id) {
+        await tigrowApi
+          .get(`company/${props.company._id}/dashboard`, headers)
+          .then((response) => {
+            dispatch({
+              type: ADD_TOTAL_ASSOCIATE,
+              payload: response.data.data.totalAssociates,
+            });
+            dispatch({
+              type: ADD_TOTAL_MEMBER,
+              payload: response.data.data.totalEmployee,
+            });
+            setDashboard(response.data.data);
+            props.setSubscriptionNotExpire();
+            props.getLatestCompletedTasks();
+            props.getCompanyAnnouncement();
+            setLoading(false);
+          })
+          .catch(async (err) => {
+            setLoading(false);
+            if (err.response.data.status === 403) {
+              await props.setSubscriptionExpire();
+              await props.getCurrentSubscription();
+              props.company.role === 'superAdmin'
+                ? window.location.replace(
+                    `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
+                  )
+                : window.location.replace(
+                    `${window.location.origin}/${props.user.name}/home`,
+                  );
+            }
           });
-          dispatch({
-            type: ADD_TOTAL_MEMBER,
-            payload: response.data.data.totalEmployee,
-          });
-          setDashboard(response.data.data);
-          props.setSubscriptionNotExpire();
-          props.getLatestCompletedTasks();
-          props.getCompanyAnnouncement();
-          setLoading(false);
-        })
-        .catch(async (err) => {
-          setLoading(false);
-          if (err.response.data.status === 403) {
-            await props.setSubscriptionExpire();
-            await props.getCurrentSubscription();
-            props.company.role === 'superAdmin'
-              ? window.location.replace(
-                  `${window.location.origin}/company/${props.company.uniqueName}/settings/`,
-                )
-              : window.location.replace(
-                  `${window.location.origin}/${props.user.name}/home`,
-                );
-          }
-        });
+      }
     }
     getAPI();
   }, [props.company._id]);
