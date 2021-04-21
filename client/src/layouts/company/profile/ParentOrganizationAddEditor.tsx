@@ -78,25 +78,10 @@ const OrganizationAddComponent = (props: IOrganizationEditProps) => {
               )}
             />
             <div className="flex justify-end">
-              <Button
+            <Button
                 className="w4 grow h2 pointer mr3"
                 style={{
-                  background: '#fff',
-                  outline: 'none',
-                  border: '1px solid #0fa3a3',
-                  color: '#0fa3a3',
-                }}
-                onClick={(e: any) => {
-                  e.preventDefault();
-                  props.setShowDialog(false);
-                }}
-              >
-                cancel
-              </Button>
-              <Button
-                className="w4 grow h2 pointer"
-                style={{
-                  background: '#0fa3a3',
+                  background: '#3F61C5',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -106,6 +91,22 @@ const OrganizationAddComponent = (props: IOrganizationEditProps) => {
               >
                 Save
               </Button>
+              <Button
+                className="w4 grow h2 pointer"
+                style={{
+                  background: '#fff',
+                  outline: 'none',
+                  border: '1px solid #3F61C5',
+                  color: '#3F61C5',
+                }}
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  props.setShowDialog(false);
+                }}
+              >
+                cancel
+              </Button>
+            
             </div>
           </form>
         )}

@@ -169,7 +169,7 @@ export const AssignedMembersEditorComponent = (
             <Button
               className="grow pointer white bp3-minimal w4 mt2"
               style={{
-                background: '#0FA3A3',
+                background: '#3F61C5',
                 outline: 'none',
                 color: 'white',
               }}

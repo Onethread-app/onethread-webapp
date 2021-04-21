@@ -99,26 +99,10 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                 )}
               />
               <div className="fr">
-                <Button
-                  className="w4 grow h2 pointer mr3"
+              <Button
+                  className="grow pointer white bp3-minimal w4 mt2 mr3"
                   style={{
-                    background: '#fff',
-                    outline: 'none',
-                    border: '1px solid #0fa3a3',
-                    color: '#0fa3a3',
-                  }}
-                  onClick={(e: any) => {
-                    if (props.setShowColumnFormDialog) {
-                      props.setShowColumnFormDialog(false);
-                    }
-                  }}
-                >
-                  cancel
-                </Button>
-                <Button
-                  className="grow pointer white bp3-minimal w4 mt2"
-                  style={{
-                    background: '#0FA3A3',
+                    background: '#3F61C5',
                     outline: 'none',
                     color: 'white',
                   }}
@@ -128,6 +112,23 @@ const ColumnFormComponent = (props: ColumnFormInternalProps) => {
                 >
                   {props.column ? 'Update' : 'Create'}
                 </Button>
+                <Button
+                  className="w4 grow h2 pointer"
+                  style={{
+                    background: '#fff',
+                    outline: 'none',
+                    border: '1px solid #3F61C5',
+                    color: '#3F61C5',
+                  }}
+                  onClick={(e: any) => {
+                    if (props.setShowColumnFormDialog) {
+                      props.setShowColumnFormDialog(false);
+                    }
+                  }}
+                >
+                  cancel
+                </Button>
+             
               </div>
             </div>
           </form>

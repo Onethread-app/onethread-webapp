@@ -74,19 +74,10 @@ export const TaskDescriptionEditorComponent = (
                 )}
               />
               <div className="flex justify-end mt2">
-                <Button
+              <Button
                   className="mr2"
-                  style={{ background: 'transparent' }}
-                  icon="cross"
-                  onClick={() =>
-                    props.setEditDescriptionDialog(
-                      !props.editDescriptionDialog,
-                    )
-                  }
-                />
-                <Button
                   type="submit"
-                  style={{ background: '#0FA3A3' }}
+                  style={{ background: '#3F61C5' }}
                   loading={submitting}
                   icon={
                     <Icon
@@ -97,6 +88,17 @@ export const TaskDescriptionEditorComponent = (
                   }
                   disabled={submitting || pristine}
                 />
+                <Button
+                 
+                  style={{ background: 'transparent' }}
+                  icon="cross"
+                  onClick={() =>
+                    props.setEditDescriptionDialog(
+                      !props.editDescriptionDialog,
+                    )
+                  }
+                />
+               
               </div>
             </div>
           </form>

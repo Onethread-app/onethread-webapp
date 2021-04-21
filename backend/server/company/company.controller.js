@@ -640,6 +640,7 @@ const dashBoard = async (req, res, next) => {
       projectObj.doneTask = doneTask;
       projectCompilation.push(projectObj);
     }
+    console.log(projectCompilation);
     return sendJSONresponse(res, 200, {
       success: true,
       data: {

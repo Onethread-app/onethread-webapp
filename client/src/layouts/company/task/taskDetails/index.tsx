@@ -197,7 +197,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         type="submit"
                         text="Attach"
                         className="grow h2 pointer w-40 fr mt2"
-                        style={{ background: '#0fa3a3', outline: 'none', color: 'white', boxShadow: 'none' }}
+                        style={{ background: '#3F61C5', outline: 'none', color: 'white', boxShadow: 'none' }}
                       />
                     </div>
                   </div>

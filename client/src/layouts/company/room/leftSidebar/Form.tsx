@@ -67,7 +67,7 @@ const CreateFormComponent: React.FC<any> = (
                   onChange={input.onChange}
                   leftIcon="layout-balloon"
                   leftIconColor={`${
-                    checkError(meta) ? 'red' : '#0fa3a3'
+                    checkError(meta) ? 'red' : '#3F61C5'
                   }`}
                   style={{ boxShadow: 'none' }}
                   error={
@@ -80,25 +80,10 @@ const CreateFormComponent: React.FC<any> = (
             {errorHandling(props.roomStatus)}
             <small className="red">{showDialog}</small>
             <div className="flex justify-end mt4">
-              <Button
+            <Button
                 className="grow h2 pointer white bp3-minimal w4 mr3"
                 style={{
-                  background: '#fff',
-                  outline: 'none',
-                  border: '1px solid #0fa3a3',
-                  color: '#0fa3a3',
-                }}
-                onClick={() => {
-                  props.setShowDialog(false);
-                  dispatch({ type: room.CLEAR_STATUS_CODE });
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                className="grow h2 pointer white bp3-minimal w4"
-                style={{
-                  background: '#0fa3a3',
+                  background: '#3F61C5',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -108,6 +93,22 @@ const CreateFormComponent: React.FC<any> = (
               >
                 Create
               </Button>
+              <Button
+                className="grow h2 pointer white bp3-minimal w4"
+                style={{
+                  background: '#fff',
+                  outline: 'none',
+                  border: '1px solid #3F61C5',
+                  color: '#3F61C5',
+                }}
+                onClick={() => {
+                  props.setShowDialog(false);
+                  dispatch({ type: room.CLEAR_STATUS_CODE });
+                }}
+              >
+                Cancel
+              </Button>
+            
             </div>
           </form>
         </>

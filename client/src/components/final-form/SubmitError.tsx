@@ -17,7 +17,7 @@ export const SubmitError = (props: { errorMessage: string }) => (
             src={warningIcon}
             width="20px"
             height="20px"
-            color="#0fa3a3"
+            color="#3F61C5"
           />
         </span>
         <p style={{ color: '#962414', paddingLeft: '10px' }}>

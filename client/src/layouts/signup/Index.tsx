@@ -23,10 +23,6 @@ import { isEmpty } from 'lodash';
 import { isValidEmail } from 'helpers/utils';
 
 import logo from 'resources/images/onethread-text.png';
-import nameTagIcon from './../../resources/images/nameTag.png';
-// import phoneIcon from './../../resources/images/phone.png';
-import emailIcon from './../../resources/images/email.png';
-import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
 import eyeClose from './../../resources/images/eyeClose.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
@@ -166,11 +162,9 @@ export const SignUpPageComponent = (
                                   onChange={input.onChange}
                                   leftIcon={
                                     <span className="bp3-icon">
-                                      <img
-                                        src={nameTagIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
+                                      <Icon
+                                        icon="mugshot"                 
+                                        style={{ color: '#3F61C5' }}
                                       />
                                     </span>
                                   }
@@ -342,7 +336,7 @@ export const SignUpPageComponent = (
                                   <Icon
                                     icon="calendar"
                                     className="pl2"
-                                    style={{ color: '#0fa3a3' }}
+                                    style={{ color: '#3F61C5' }}
                                   />
                                 </div>
                                 <DateInput
@@ -410,11 +404,9 @@ export const SignUpPageComponent = (
                                   onChange={input.onChange}
                                   leftIcon={
                                     <span className="bp3-icon">
-                                      <img
-                                        src={emailIcon}
-                                        width="20px"
-                                        height="20px"
-                                        color="#0fa3a3"
+                                      <Icon
+                                        icon="envelope"                 
+                                        style={{ color: '#3F61C5' }}
                                       />
                                     </span>
                                   }
@@ -423,7 +415,7 @@ export const SignUpPageComponent = (
                                     fontSize: '18px',
                                     paddingLeft: '40px',
                                   }}
-                                  placeHolder="Email Address"
+                                  placeHolder="contact@onethread.app"
                                   error={
                                     checkError(meta) &&
                                     (meta.error || meta.submitError)
@@ -466,13 +458,9 @@ export const SignUpPageComponent = (
                                   }`}
                                   leftIcon={
                                     <span className="bp3-icon">
-                                      <img
-                                        src={lockIcon}
-                                        style={{
-                                          width: '20px',
-                                          height: '20px',
-                                          color: '#0fa3a3',
-                                        }}
+                                      <Icon
+                                        icon="lock"                 
+                                        style={{ color: '#3F61C5' }}
                                       />
                                     </span>
                                   }
@@ -504,7 +492,7 @@ export const SignUpPageComponent = (
                                         style={{
                                           width: '15px',
                                           height: '15px',
-                                          color: '#0fa3a3',
+                                          color: '#3F61C5',
                                           right: '10px',
                                         }}
                                       />
@@ -518,7 +506,7 @@ export const SignUpPageComponent = (
                                             src={questionIcon}
                                             width="20px"
                                             height="20px"
-                                            color="#0fa3a3"
+                                            color="#3F61C5"
                                           />
                                         </Tooltip> */}
                                       <span
@@ -593,13 +581,9 @@ export const SignUpPageComponent = (
                                   }`}
                                   leftIcon={
                                     <span className="bp3-icon">
-                                      <img
-                                        src={lockIcon}
-                                        style={{
-                                          width: '20px',
-                                          height: '20px',
-                                          color: '#0fa3a3',
-                                        }}
+                                    <Icon
+                                        icon="lock"                 
+                                        style={{ color: '#3F61C5' }}
                                       />
                                     </span>
                                   }
@@ -631,7 +615,7 @@ export const SignUpPageComponent = (
                                         style={{
                                           width: '15px',
                                           height: '15px',
-                                          color: '#0fa3a3',
+                                          color: '#3F61C5',
                                         }}
                                       />
                                     </span>
@@ -655,7 +639,7 @@ export const SignUpPageComponent = (
                       <Button
                         className="grow h2 pointer white bp3-minimal w4 btnWidth"
                         style={{
-                          background: '#0FA3A3',
+                          background: '#3F61C5',
                           outline: 'none',
                           color: 'white',
                           width: '100%',

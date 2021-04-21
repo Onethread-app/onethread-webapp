@@ -23,22 +23,10 @@ export const AssignedMemeberListEditorComponent = (
           <h1 className="f5">Delete</h1>
           <p>Are you sure want to permanently remove </p>
           <div className="flex justify-end mt4">
-            <Button
+          <Button
               className="grow h2 pointer white bp3-minimal w4 mr3"
               style={{
-                background: '#fff',
-                outline: 'none',
-                border: '1px solid #0fa3a3',
-                color: '#0fa3a3',
-              }}
-              onClick={() => setDeletePopover(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              className="grow h2 pointer white bp3-minimal w4"
-              style={{
-                background: '#0fa3a3',
+                background: '#3F61C5',
                 outline: 'none',
                 color: 'white',
               }}
@@ -50,6 +38,19 @@ export const AssignedMemeberListEditorComponent = (
             >
               Remove
             </Button>
+            <Button
+              className="grow h2 pointer white bp3-minimal w4"
+              style={{
+                background: '#fff',
+                outline: 'none',
+                border: '1px solid #3F61C5',
+                color: '#3F61C5',
+              }}
+              onClick={() => setDeletePopover(false)}
+            >
+              Cancel
+            </Button>
+        
           </div>
         </div>
       }

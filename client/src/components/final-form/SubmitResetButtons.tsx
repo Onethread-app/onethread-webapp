@@ -19,8 +19,8 @@ export const SubmitAndResetButtons = (
       style={{
         background: '#fff',
         outline: 'none',
-        border: '1px solid #0fa3a3',
-        color: '#0fa3a3',
+        border: '1px solid #3F61C5',
+        color: '#3F61C5',
       }}
       onClick={props.reset}
       disabled={props.submitting || props.pristine}
@@ -30,7 +30,7 @@ export const SubmitAndResetButtons = (
     <Button
       className="grow h2 pointer white bp3-minimal w4"
       style={{
-        background: '#0fa3a3',
+        background: '#3F61C5',
         outline: 'none',
         color: 'white',
       }}

@@ -766,9 +766,10 @@ const getProjectDetails = async (req, res, next) => {
 
 const changeTitleProject = async (req, res, next) => {
   try {
+    console.log(req.body);
     await Project.findByIdAndUpdate(
       { _id: req.query.pid },
-      { $set: { name: req.body.name } },
+      { $set: { name: req.body.name, color:req.body.color } },
       { safe: true, upsert: true, new: true },
     );
     logger.info(`project name change successfully`);

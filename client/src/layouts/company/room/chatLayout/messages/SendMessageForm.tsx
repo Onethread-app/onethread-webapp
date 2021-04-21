@@ -208,9 +208,9 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
           set="twitter"
           onSelect={addEmoji}
           emoji="sunglasses"
-          title="TiGrow Ltd"
+          title="Onethread app"
           autoFocus={true}
-          color="#0fa3a3"
+          color="#3F61C5"
           ref={emojiRef}
         />
       ) : null}
@@ -227,7 +227,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                     className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
                     style={{
                       backgroundColor: 'white',
-                      color: '#0fa3a3',
+                      color: '#3F61C5',
                       borderRadius: '30px',
                       paddingTop: '1px',
                     }}
@@ -294,24 +294,11 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                   src={SmileIcon}
                   width="30px"
                   height="30px"
-                  color="#0FA3A3"
+                  color="#3F61C5"
                 />
               </span>
             </Button>
           </div>
-          <Button
-            className="bp3-minimal outline-0"
-            onClick={handleMessageSend}
-          >
-            <span className="bp3-icon">
-              <img
-                src={SendIcon}
-                width="30px"
-                height="30px"
-                color="#0FA3A3"
-              />
-            </span>
-          </Button>
           <Button
             className="bp3-minimal outline-0"
             onClick={() => setShowFileDialog(true)}
@@ -321,10 +308,24 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                 src={AttachmentIcon}
                 width="30px"
                 height="30px"
-                color="#0FA3A3"
+                color="#3F61C5"
               />
             </span>
           </Button>
+          <Button
+            className="bp3-minimal outline-0"
+            onClick={handleMessageSend}
+          >
+            <span className="bp3-icon">
+              <img
+                src={SendIcon}
+                width="30px"
+                height="30px"
+                color="#3F61C5"
+              />
+            </span>
+          </Button>
+          
         </div>
       </div>
       {showFileDialog && (

@@ -109,7 +109,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                   src={lockIcon}
                                   width="20px"
                                   height="20px"
-                                  color="#0fa3a3"
+                                  color="#3F61C5"
                                 />
                               </span>
                             }
@@ -136,7 +136,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                     src={eyeIcon}
                                     width="15px"
                                     height="15px"
-                                    color="#0fa3a3"
+                                    color="#3F61C5"
                                   />
                                 </span>
                                 <span
@@ -210,7 +210,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                   src={lockIcon}
                                   width="20px"
                                   height="20px"
-                                  color="#0fa3a3"
+                                  color="#3F61C5"
                                 />
                               </span>
                             }
@@ -232,7 +232,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                                   src={eyeIcon}
                                   width="15px"
                                   height="15px"
-                                  color="#0fa3a3"
+                                  color="#3F61C5"
                                 />
                               </span>
                             }
@@ -255,7 +255,7 @@ const ResetPasswordComponent = (props: RouteComponentProps) => {
                   <Button
                     className=" b--none w-100 fr grow h2 ph5 pointer pv2 white mb3"
                     style={{
-                      background: '#0fa3a3',
+                      background: '#3F61C5',
                       outline: 'none',
                       color: 'white',
                     }}

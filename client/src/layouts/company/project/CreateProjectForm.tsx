@@ -228,7 +228,7 @@ const FormComponent = (props: {
                                   key={item._id}
                                   className="pa1 ma1"
                                   interactive={true}
-                                  style={{ background: '#0fa3a3' }}
+                                  style={{ background: '#3F61C5' }}
                                   onRemove={(e) => {
                                     const filteredItems = selectedAdmins.filter(
                                       (selectedItem) =>
@@ -455,8 +455,21 @@ const FormComponent = (props: {
                 )}
               />
               <div className="flex justify-end mt4">
-                <Button
+              <Button
                   className="w4 grow h2 pointer mr3"
+                  style={{
+                    background: '#3F61C5',
+                    outline: 'none',
+                    color: 'white',
+                  }}
+                  loading={submitting}
+                  type="submit"
+                  disabled={submitting || pristine}
+                  text="Create"
+                />
+
+                <Button
+                  className="w4 grow h2 pointer br0"
                   style={{
                     background: 'white',
                     outline: 'none',
@@ -467,18 +480,6 @@ const FormComponent = (props: {
                     props.setShowProjectDialog(false);
                   }}
                   text="Cancel"
-                />
-                <Button
-                  className="w4 grow h2 pointer br0"
-                  style={{
-                    background: '#0fa3a3',
-                    outline: 'none',
-                    color: 'white',
-                  }}
-                  loading={submitting}
-                  type="submit"
-                  disabled={submitting || pristine}
-                  text="Create"
                 />
               </div>
             </div>

@@ -89,10 +89,12 @@ export const getProjectArchiveFailure = (errorMessage: any) => ({
 export const updateProjectName = (
   projectName: string,
   projectId: string,
+  color: string,
 ) => ({
   type: ProjectActionTypes.UPDATE_PROJECT_NAME_START,
   projectName,
   projectId,
+  color,
 });
 
 export const updateProjectNameSuccess = (response: any) => ({

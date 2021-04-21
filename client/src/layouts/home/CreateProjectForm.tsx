@@ -208,7 +208,7 @@ export const ProjectAddComponent = (
                                   key={item._id}
                                   className="pa1 ma1"
                                   interactive={true}
-                                  style={{ background: '#0fa3a3' }}
+                                  style={{ background: '#3F61C5' }}
                                   onRemove={(e) => {
                                     const filteredItems = selectedAdmins.filter(
                                       (selectedItem) =>
@@ -243,25 +243,10 @@ export const ProjectAddComponent = (
               </div>
           </div>
           <div className="flex justify-end">
-            <Button
+          <Button
               className="w4 grow h2 pointer mr3"
               style={{
-                background: '#fff',
-                outline: 'none',
-                border: '1px solid #0fa3a3',
-                color: '#0fa3a3',
-              }}
-              onClick={(e: any) => {
-                e.preventDefault();
-                props.setShowDialog(false);
-              }}
-            >
-              cancel
-            </Button>
-            <Button
-              className="w4 grow h2 pointer"
-              style={{
-                background: '#0fa3a3',
+                background: '#3F61C5',
                 outline: 'none',
                 color: 'white',
               }}
@@ -271,6 +256,22 @@ export const ProjectAddComponent = (
             >
               Save
             </Button>
+            <Button
+              className="w4 grow h2 pointer"
+              style={{
+                background: '#fff',
+                outline: 'none',
+                border: '1px solid #3F61C5',
+                color: '#3F61C5',
+              }}
+              onClick={(e: any) => {
+                e.preventDefault();
+                props.setShowDialog(false);
+              }}
+            >
+              cancel
+            </Button>
+            
           </div>
         </form>
       )}

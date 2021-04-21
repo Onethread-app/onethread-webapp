@@ -52,13 +52,9 @@ const AddTeamMemberFormComponent = (
           setTeamMembers(response.data);
         }
       } else {
-        // tslint:disable-next-line: no-console
-        console.log('no headers');
       }
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
-        // tslint:disable-next-line: no-console
-        console.log('network error');
       } else {
         // tslint:disable-next-line: no-console
         console.log(error.response);
@@ -101,24 +97,7 @@ const AddTeamMemberFormComponent = (
       </div>
       <div className="fl w-100">
         <div className="flex justify-end">
-          <Button
-            className="w4 grow h2 pointer mr3"
-            onClick={(e: any) => {
-              e.preventDefault();
-              if (props.setShowAddMemberFormDialog) {
-                props.setShowAddMemberFormDialog(false);
-              }
-            }}
-            style={{
-              background: '#fff',
-              outline: 'none',
-              border: '2px solid #0fa3a3',
-              color: '#0fa3a3',
-            }}
-          >
-            cancel
-          </Button>
-          <Button
+        <Button
             type="submit"
             onClick={async (e: any) => {
               e.preventDefault();
@@ -137,12 +116,12 @@ const AddTeamMemberFormComponent = (
                 props.setShowAddMemberFormDialog(false);
               }
             }}
-            className="w4 grow h2 pointer"
+            className="w4 grow h2 pointer mr3"
             loading={loading}
             style={
               selectedItems.length < 1 === false
                 ? {
-                    background: '#0fa3a3',
+                    background: '#3F61C5',
                     outline: 'none',
                     color: 'white',
                   }
@@ -156,6 +135,24 @@ const AddTeamMemberFormComponent = (
           >
             Add
           </Button>
+          <Button
+            className="w4 grow h2 pointer"
+            onClick={(e: any) => {
+              e.preventDefault();
+              if (props.setShowAddMemberFormDialog) {
+                props.setShowAddMemberFormDialog(false);
+              }
+            }}
+            style={{
+              background: '#fff',
+              outline: 'none',
+              border: '2px solid #3F61C5',
+              color: '#3F61C5',
+            }}
+          >
+            cancel
+          </Button>
+       
         </div>
       </div>
     </div>

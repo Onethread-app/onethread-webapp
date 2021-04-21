@@ -190,8 +190,8 @@ const AddColleaguesFormComponent = (
           style={{
             background: '#fff',
             outline: 'none',
-            border: '1px solid #0fa3a3',
-            color: '#0fa3a3',
+            border: '1px solid #3F61C5',
+            color: '#3F61C5',
           }}
           onClick={(e: any) => props.setShowDialog(!props.showDialog)}
         >
@@ -205,7 +205,7 @@ const AddColleaguesFormComponent = (
             selectedTeamMember.length + pendingTeamMembers.length <=
               20
               ? {
-                  background: '#0fa3a3',
+                  background: '#3F61C5',
                   outline: 'none',
                   color: 'white',
                 }

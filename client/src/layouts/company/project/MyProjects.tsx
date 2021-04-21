@@ -265,6 +265,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       <ChangeName
                         projectName={props.currentProject.name}
                         projectId={props.currentProject._id}
+                        color={props.currentProject.color}
                         setShowDialog={setShowUpdateNameDialog}
                       />
                     </RightSidebar>
@@ -331,7 +332,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                               <Menu className="pa2">
                                 <MenuItem
                                   className="pa1 red"
-                                  text="Unarchive Project"
+                                  text="Restore Project"
                                   onClick={() =>
                                     checkRoleForUnarchiveProject(
                                       archProject._id,

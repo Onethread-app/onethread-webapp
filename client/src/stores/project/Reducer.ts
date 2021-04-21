@@ -90,8 +90,10 @@ const initialState = {
   projectLoading: false,
   addTeamMemberLoading: false,
   unarchivingProject: false,
+  updatingProjectName: false,
   error: '',
   errorOnUnarchive: '',
+  errorOnUpdatingProjectName: '',
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -111,7 +113,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.PROJECT_FILE_UP_START:
     case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_START:
     case ProjectActionTypes.PROJECT_PREFACE_DES_UP_START:
-    case ProjectActionTypes.UPDATE_PROJECT_NAME_START:
+
     case ProjectActionTypes.ARCHIVE_PROJECT_START:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_START:
     case ProjectActionTypes.GET_ALL_PROJECTS_START:
@@ -127,7 +129,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.PROJECT_FILE_UP_SUCCESS:
     case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_SUCCESS:
     case ProjectActionTypes.PROJECT_PREFACE_DES_UP_SUCCESS:
-    case ProjectActionTypes.UPDATE_PROJECT_NAME_SUCCESS:
     case ProjectActionTypes.ARCHIVE_PROJECT_SUCCESS:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_SUCCESS:
     case ProjectActionTypes.CREATE_PROJECT_SUCCESS:
@@ -150,7 +151,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.PROJECT_FILE_UP_FAILURE:
     case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_FAILURE:
     case ProjectActionTypes.PROJECT_PREFACE_DES_UP_FAILURE:
-    case ProjectActionTypes.UPDATE_PROJECT_NAME_FAILURE:
     case ProjectActionTypes.ARCHIVE_PROJECT_FAILURE:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_FAILURE:
     case ProjectActionTypes.GET_ALL_PROJECTS_FAILURE:
@@ -159,6 +159,22 @@ export const ProjectReducer = (state = initialState, action: any) => {
         ...state,
         error: action.payload,
         projectLoading: false,
+      };
+    case ProjectActionTypes.UPDATE_PROJECT_NAME_START:
+      return {
+        ...state,
+        updatingProjectName: true,
+      };
+    case ProjectActionTypes.UPDATE_PROJECT_NAME_SUCCESS:
+      return {
+        ...state,
+        updatingProjectName: false,
+      };
+    case ProjectActionTypes.UPDATE_PROJECT_NAME_FAILURE:
+      return {
+        ...state,
+        updatingProjectName: false,
+        errorOnUpdatingProjectName: action.payload,
       };
     case ProjectActionTypes.UNARCHIVE_PROJECT_START:
       return {

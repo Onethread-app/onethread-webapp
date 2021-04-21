@@ -113,22 +113,7 @@ export const SkillEdit = (props: SkillEditProps) => {
         </div>
         <div className="fl w-100 mt4">
           <div className="flex justify-end">
-            <Button
-              className="w4 grow h2 pointer mr3"
-              onClick={(e: any) => {
-                e.preventDefault();
-                props.setShowDialog(false);
-              }}
-              style={{
-                background: '#fff',
-                outline: 'none',
-                border: '1px solid #0fa3a3',
-                color: '#0fa3a3',
-              }}
-            >
-              cancel
-            </Button>
-            <Button
+          <Button
               type="submit"
               onClick={async (e: any) => {
                 e.preventDefault();
@@ -141,15 +126,31 @@ export const SkillEdit = (props: SkillEditProps) => {
                   props.setShowDialog(!props.showDialog);
                 }
               }}
-              className="w4 grow h2 pointer"
+              className="w4 grow h2 pointer mr3"
               style={{
-                background: '#0fa3a3',
+                background: '#3F61C5',
                 outline: 'none',
                 color: 'white',
               }}
             >
               Save
             </Button>
+            <Button
+              className="w4 grow h2 pointer"
+              onClick={(e: any) => {
+                e.preventDefault();
+                props.setShowDialog(false);
+              }}
+              style={{
+                background: '#fff',
+                outline: 'none',
+                border: '1px solid #3F61C5',
+                color: '#3F61C5',
+              }}
+            >
+              cancel
+            </Button>
+           
           </div>
         </div>
       </div>

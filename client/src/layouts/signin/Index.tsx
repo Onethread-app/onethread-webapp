@@ -13,7 +13,7 @@ import {
   withRouter,
   RouteComponentProps,
 } from 'react-router-dom';
-import { Button, Toaster } from '@blueprintjs/core';
+import { Button, Toaster, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import {
   loginAction,
@@ -24,8 +24,6 @@ import { isEmpty, isEqual } from 'lodash';
 import { SubmitError } from 'components/final-form/SubmitError';
 
 import logo from 'resources/images/onethread-text.png';
-import emailIcon from './../../resources/images/email.png';
-import lockIcon from './../../resources/images/lock.png';
 import eyeIcon from './../../resources/images/eye.png';
 import eyeClose from './../../resources/images/eyeClose.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
@@ -177,12 +175,10 @@ export const SignInPageComponent = (
                                 onChange={input.onChange}
                                 leftIcon={
                                   <span className="bp3-icon">
-                                    <img
-                                      src={emailIcon}
-                                      width="20px"
-                                      height="20px"
-                                      color="#0fa3a3"
-                                    />
+                                   <Icon
+                                        icon="envelope"                 
+                                        style={{ color: '#3F61C5' }}
+                                      />
                                   </span>
                                 }
                                 style={{
@@ -227,12 +223,10 @@ export const SignInPageComponent = (
                                 }`}
                                 leftIcon={
                                   <span className="bp3-icon">
-                                    <img
-                                      src={lockIcon}
-                                      width="20px"
-                                      height="20px"
-                                      color="#0fa3a3"
-                                    />
+                                    <Icon
+                                        icon="lock"                 
+                                        style={{ color: '#3F61C5' }}
+                                      />
                                   </span>
                                 }
                                 rightElement={
@@ -261,7 +255,7 @@ export const SignInPageComponent = (
                                       style={{
                                         width: '15px',
                                         height: '15px',
-                                        color: '#0fa3a3',
+                                        color: '#3F61C5',
                                       }}
                                     />
                                   </span>
@@ -286,7 +280,7 @@ export const SignInPageComponent = (
                     <Button
                       className="grow h2 pointer white bp3-minimal w4"
                       style={{
-                        background: '#0FA3A3',
+                        background: '#3F61C5',
                         outline: 'none',
                         color: 'white',
                         width: '100%',
@@ -322,8 +316,8 @@ export const SignInPageComponent = (
                         style={{
                           background: '#fff',
                           outline: 'none',
-                          border: '2px solid #0fa3a3',
-                          color: '#0fa3a3',
+                          border: '2px solid #3F61C5',
+                          color: '#3F61C5',
                           fontSize: '18px',
                           padding: '10px 0px',
                         }}

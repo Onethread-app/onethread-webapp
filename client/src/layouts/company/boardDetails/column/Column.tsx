@@ -207,19 +207,10 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                 )}
                               />
                               <div className="flex justify-end">
-                                <Button
+                              <Button
                                   className="mr2"
-                                  style={{
-                                    background: 'transparent',
-                                  }}
-                                  icon="cross"
-                                  onClick={() =>
-                                    setShowTaskInput(!showTaskInput)
-                                  }
-                                />
-                                <Button
                                   type="submit"
-                                  style={{ background: '#0FA3A3' }}
+                                  style={{ background: '#3F61C5' }}
                                   loading={submitting}
                                   icon={
                                     <Icon
@@ -229,6 +220,16 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                     />
                                   }
                                 />
+                                <Button
+                                  style={{
+                                    background: 'transparent',
+                                  }}
+                                  icon="cross"
+                                  onClick={() =>
+                                    setShowTaskInput(!showTaskInput)
+                                  }
+                                />
+                                
                               </div>
                             </div>
                           </form>

@@ -81,7 +81,7 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
                 />
                 <Button
                   type="submit"
-                  style={{ background: '#0FA3A3' }}
+                  style={{ background: '#3F61C5' }}
                   loading={submitting}
                   icon={
                     <Icon

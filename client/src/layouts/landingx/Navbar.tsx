@@ -8,7 +8,7 @@ const Navbar = () => {
       <img src={DarkLogo} alt="Onethread" />
       <ul className="flex">
         <li>
-          <NavLink to="/pricing">Pricing</NavLink>
+          <NavLink to="/">Pricing</NavLink>
         </li>
         <li>
           <NavLink to="/signin">Login</NavLink>

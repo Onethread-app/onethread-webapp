@@ -90,6 +90,7 @@ module.exports = {
   changeNameProject: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
+      color: schema.color,
     }),
     query: Joi.object().keys({
       pid: schema.pid.required(),

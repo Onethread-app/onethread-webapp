@@ -55,13 +55,28 @@ const AnnouncementEditorComponent = (
         />
         {error ? <h5 className="red">{massage}</h5> : ''}
         <div className="flex justify-end mv2">
-          <Button
+        <Button
+            type="submit"
+            onClick={(e: any) => {
+              e.preventDefault();
+              validateInput();
+            }}
             className="w4 grow h2 pointer mr3"
+            style={{
+              background: '#3F61C5',
+              outline: 'none',
+              color: 'white',
+            }}
+          >
+            Submit
+          </Button>
+          <Button
+            className="w4 grow h2 pointer"
             style={{
               background: '#fff',
               outline: 'none',
-              border: '1px solid #0fa3a3',
-              color: '#0fa3a3',
+              border: '1px solid #3F61C5',
+              color: '#3F61C5',
             }}
             onClick={(e: any) => {
               e.preventDefault();
@@ -70,21 +85,7 @@ const AnnouncementEditorComponent = (
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            onClick={(e: any) => {
-              e.preventDefault();
-              validateInput();
-            }}
-            className="w4 grow h2 pointer fr"
-            style={{
-              background: '#3F61C5',
-              outline: 'none',
-              color: 'white',
-            }}
-          >
-            Post
-          </Button>
+          
         </div>
       </div>
     </>

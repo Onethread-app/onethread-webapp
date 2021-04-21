@@ -97,8 +97,8 @@ const FileUploadComponent = (props: IFileUploadProps) => {
           style={{
             background: '#fff',
             outline: 'none',
-            border: '1px solid #0fa3a3',
-            color: '#0fa3a3',
+            border: '1px solid #3F61C5',
+            color: '#3F61C5',
           }}
           onClick={(e: any) => {
             e.preventDefault();
@@ -116,7 +116,7 @@ const FileUploadComponent = (props: IFileUploadProps) => {
           style={
             imageName && isEmpty(imageName.name) === false
               ? {
-                  background: '#0fa3a3',
+                  background: '#3F61C5',
                   outline: 'none',
                   color: 'white',
                 }

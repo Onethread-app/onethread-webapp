@@ -134,7 +134,7 @@ const ChangePasswordComponentView = (
                         icon={
                           showPasswordOld ? 'eye-open' : 'eye-off'
                         }
-                        color="#0fa3a3"
+                        color="#3F61C5"
                         onClick={(e) =>
                           setShowPasswordOld(!showPasswordOld)
                         }
@@ -147,7 +147,7 @@ const ChangePasswordComponentView = (
                         : 'bb b--lightBlue'
                     }`}
                     leftIconColor={`${
-                      checkError(meta) ? 'red' : '#0fa3a3'
+                      checkError(meta) ? 'red' : '#3F61C5'
                     }`}
                     style={{
                       boxShadow: 'none',
@@ -186,7 +186,7 @@ const ChangePasswordComponentView = (
                           icon={
                             showPasswordNew ? 'eye-open' : 'eye-off'
                           }
-                          color="#0fa3a3"
+                          color="#3F61C5"
                           onClick={(e) =>
                             setShowPasswordNew(!showPasswordNew)
                           }
@@ -227,7 +227,7 @@ const ChangePasswordComponentView = (
                         : 'bb b--lightBlue'
                     }`}
                     leftIconColor={`${
-                      checkError(meta) ? 'red' : '#0fa3a3'
+                      checkError(meta) ? 'red' : '#3F61C5'
                     }`}
                     style={{
                       boxShadow: 'none',
@@ -264,7 +264,7 @@ const ChangePasswordComponentView = (
                         icon={
                           showPasswordConfirm ? 'eye-open' : 'eye-off'
                         }
-                        color="#0fa3a3"
+                        color="#3F61C5"
                         onClick={(e) =>
                           setShowPasswordConfirm(!showPasswordConfirm)
                         }
@@ -277,7 +277,7 @@ const ChangePasswordComponentView = (
                         : 'bb b--lightBlue'
                     }`}
                     leftIconColor={`${
-                      checkError(meta) ? 'red' : '#0fa3a3'
+                      checkError(meta) ? 'red' : '#3F61C5'
                     }`}
                     style={{
                       boxShadow: 'none',
@@ -297,8 +297,8 @@ const ChangePasswordComponentView = (
               style={{
                 background: '#fff',
                 outline: 'none',
-                border: '1px solid #0fa3a3',
-                color: '#0fa3a3',
+                border: '1px solid #3F61C5',
+                color: '#3F61C5',
               }}
               onClick={(e: any) => {
                 e.preventDefault();
@@ -310,7 +310,7 @@ const ChangePasswordComponentView = (
             <Button
               className="w4 grow h2 pointer"
               style={{
-                background: '#0fa3a3',
+                background: '#3F61C5',
                 outline: 'none',
                 color: 'white',
               }}

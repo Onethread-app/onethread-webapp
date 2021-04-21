@@ -43,7 +43,7 @@ const GeneralViewComponent = (
                 className="grow pointer outline-0 shadow-0 h2 changecompanybutton"
                 text="Change Company Name"
                 style={{
-                  background: '#0fa3a3',
+                  background: '#3F61C5',
                   color: 'white',
                 }}
                 onClick={() => setShowDialog(true)}
@@ -86,7 +86,7 @@ const GeneralViewComponent = (
                     leftIconColor={`${
                       errors || props.errorCompanyName
                         ? 'red'
-                        : '#0fa3a3'
+                        : '#3F61C5'
                     }`}
                     style={{
                       boxShadow: 'none',
@@ -115,29 +115,11 @@ const GeneralViewComponent = (
               </div>
             </div>
             <div className="flex justify-end">
-              <Button
+            <Button
+                type="submit"
                 className="w4 grow h2 pointer mr3"
                 style={{
-                  background: '#fff',
-                  outline: 'none',
-                  border: '1px solid #0fa3a3',
-                  color: '#0fa3a3',
-                }}
-                onClick={(e: any) => {
-                  e.preventDefault();
-                  setShowDialog(false);
-                  setErrors('');
-                  setCompanyName(props.company.name);
-                  props.clearChangeCompanyNameError();
-                }}
-              >
-                cancel
-              </Button>
-              <Button
-                type="submit"
-                className="w4 grow h2 pointer"
-                style={{
-                  background: '#0fa3a3',
+                  background: '#3F61C5',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -163,6 +145,25 @@ const GeneralViewComponent = (
               >
                 Change
               </Button>
+              <Button
+                className="w4 grow h2 pointer"
+                style={{
+                  background: '#fff',
+                  outline: 'none',
+                  border: '1px solid #3F61C5',
+                  color: '#3F61C5',
+                }}
+                onClick={(e: any) => {
+                  e.preventDefault();
+                  setShowDialog(false);
+                  setErrors('');
+                  setCompanyName(props.company.name);
+                  props.clearChangeCompanyNameError();
+                }}
+              >
+                cancel
+              </Button>
+
             </div>
           </form>
         </Dialog>

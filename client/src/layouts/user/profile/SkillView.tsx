@@ -31,7 +31,7 @@ export const SkillViewComponent = (
                 <span
                   className="bp3-tag ma1 pv2 ph3 ws-break"
                   style={{
-                    backgroundColor: '#0fa3a3',
+                    backgroundColor: '#3F61C5',
                     color: 'white',
                     fontSize: '15px',
                   }}
@@ -41,7 +41,7 @@ export const SkillViewComponent = (
                     className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
                     style={{
                       backgroundColor: 'white',
-                      color: '#0fa3a3',
+                      color: '#3F61C5',
                       borderRadius: '30px',
                       paddingTop: '1px',
                     }}

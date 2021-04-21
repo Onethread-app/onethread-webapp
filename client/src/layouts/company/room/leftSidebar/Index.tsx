@@ -57,7 +57,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
               src={createIcon}
               width="30px"
               height="30px"
-              color="#0FA3A3"
+              color="#3F61C5"
             />
           </span>
           }
@@ -84,7 +84,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
             style={{
               marginLeft: '10px',
             }}
-            color="#0FA3A3"
+            color="#3F61C5"
           />
         </div>
         <div className="flex-grow-1 overflow-y-auto">

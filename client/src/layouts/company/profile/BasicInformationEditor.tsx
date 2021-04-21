@@ -122,7 +122,7 @@ const CompanyInfoFormComponent = (
           className={`br0 ${
             errors.name ? 'bb b--red' : 'bb b--lightBlue'
           }`}
-          leftIconColor={`${errors.name ? 'red' : '#0fa3a3'}`}
+          leftIconColor={`${errors.name ? 'red' : '#3F61C5'}`}
           validationOnBlur={() => {
             if (isEmpty(values.name)) {
               const nameError = { ...errors, name: 'Required' };
@@ -190,7 +190,7 @@ const CompanyInfoFormComponent = (
           className={`br0 ${
             errors.address ? 'bb b--red' : 'bb b--lightBlue'
           }`}
-          leftIconColor={`${errors.address ? 'red' : '#0fa3a3'}`}
+          leftIconColor={`${errors.address ? 'red' : '#3F61C5'}`}
           validationOnBlur={() => {
             if (isEmpty(values.address)) {
               const addressError = { ...errors, address: 'Required' };
@@ -230,7 +230,7 @@ const CompanyInfoFormComponent = (
           className={`br0 ${
             errors.email ? 'bb b--red' : 'bb b--lightBlue'
           }`}
-          leftIconColor={`${errors.email ? 'red' : '#0fa3a3'}`}
+          leftIconColor={`${errors.email ? 'red' : '#3F61C5'}`}
           validationOnBlur={() => {
             if (checkLegalOwnerMail() && !isEmpty(values.email)) {
               const companyEmailError = {
@@ -274,7 +274,7 @@ const CompanyInfoFormComponent = (
             errors.legalOwnerName ? 'bb b--red' : 'bb b--lightBlue'
           }`}
           leftIconColor={`${
-            errors.legalOwnerName ? 'red' : '#0fa3a3'
+            errors.legalOwnerName ? 'red' : '#3F61C5'
           }`}
           validationOnBlur={() => {
             if (
@@ -309,7 +309,7 @@ const CompanyInfoFormComponent = (
           id="legalOwnerMail"
           value={values.legalOwnerMail}
           onChange={handleChange('legalOwnerMail')}
-          placeHolder="Leagl Owner email address"
+          placeHolder="Legal Owner email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none',
@@ -318,7 +318,7 @@ const CompanyInfoFormComponent = (
             errors.legalOwnerMail ? 'bb b--red' : 'bb b--lightBlue'
           }`}
           leftIconColor={`${
-            errors.legalOwnerMail ? 'red' : '#0fa3a3'
+            errors.legalOwnerMail ? 'red' : '#3F61C5'
           }`}
           validationOnBlur={() => {
             if (
@@ -358,26 +358,11 @@ const CompanyInfoFormComponent = (
         )}
       </div>
       <div className="flex justify-end">
-        <Button
+      <Button
+          type="submit"
           className="w4 grow h2 pointer mr3"
           style={{
-            background: '#fff',
-            outline: 'none',
-            border: '1px solid #0fa3a3',
-            color: '#0fa3a3',
-          }}
-          onClick={(e: any) => {
-            e.preventDefault();
-            props.setShowDialog(false);
-          }}
-        >
-          cancel
-        </Button>
-        <Button
-          type="submit"
-          className="w4 grow h2 pointer"
-          style={{
-            background: '#0fa3a3',
+            background: '#3F61C5',
             outline: 'none',
             color: 'white',
           }}
@@ -391,6 +376,22 @@ const CompanyInfoFormComponent = (
         >
           Save
         </Button>
+        <Button
+          className="w4 grow h2 pointer"
+          style={{
+            background: '#fff',
+            outline: 'none',
+            border: '1px solid #3F61C5',
+            color: '#3F61C5',
+          }}
+          onClick={(e: any) => {
+            e.preventDefault();
+            props.setShowDialog(false);
+          }}
+        >
+          cancel
+        </Button>
+       
       </div>
     </form>
   );

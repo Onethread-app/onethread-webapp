@@ -69,7 +69,7 @@ const EmailVerificationFormComponent = (
           <Button
             className="grow h2 pointer white bp3-minimal w5-ns w-100"
             style={{
-              background: '#0fa3a3',
+              background: '#3F61C5',
               outline: 'none',
               color: 'white',
               borderRadius: '25px',

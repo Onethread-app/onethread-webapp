@@ -16,8 +16,6 @@ import MarketExpress from 'resources/images/companies/market-express.png';
 import Plummy from 'resources/images/companies/plummy-fashions.png';
 import BatteryLow from 'resources/images/companies/battery-low.png';
 import MCCI from 'resources/images/companies/mcci.png';
-import Dysin from 'resources/images/companies/dysin.png';
-import Peakward from 'resources/images/companies/peakward.png';
 
 import DashboardIcon from 'resources/images/dashboard-icon.png';
 import MessagesIcon from 'resources/images/messages-icon.png';
@@ -39,9 +37,9 @@ const NewLanding = () => {
       <Navbar />
       <section className="main-header w-100 relative flex flex-column items-center">
         <h2 className="heading tc">
-          Collaborate on projects with people <br />
+        Collaborate with people on projects  <br />
           <span style={{ color: '#3484F0' }}>
-            outside your organization
+          with the click of a button
           </span>
         </h2>
         <img src={MainLanding} alt="" />
@@ -50,7 +48,7 @@ const NewLanding = () => {
           tool built from the ground up for multi-team collaboration
           among startups, agencies and NGOs.
         </h3>
-        <OTButton to="/signin">Create Your First Project</OTButton>
+        <OTButton to="/signup">Create Your First Project</OTButton>
       </section>
       <section className="second-section w-100 flex relative">
         <div className="unified-tool flex items-center justify-around w-100">
@@ -97,7 +95,7 @@ const NewLanding = () => {
       <section className="third-section flex flex-column w-100">
         <div className="upper flex items-center justify-around">
           <div className="upper-gif flex items-center tc">
-            <img src={MailGif} alt="" />
+            <img src={MailGif} alt="MailGif" />
           </div>
           <div className="upper-content">
             <h3>No more deadly email loops.</h3>
@@ -116,7 +114,7 @@ const NewLanding = () => {
             </p>
           </div>
           <div className="lower-gif flex items-center tc">
-            <img src={ReportGif} alt="" />
+            <img src={ReportGif} alt="reportgif" />
           </div>
         </div>
       </section>
@@ -127,11 +125,9 @@ const NewLanding = () => {
         </h1>
         <div className="companies w-100 flex justify-around items-center">
           <img src={MarketExpress} alt="market express" />
-          <img src={Dysin} alt="dysin" />
           <img src={Plummy} alt="plummy fashions" />
           <img src={BatteryLow} alt="battery low" />
           <img src={MCCI} alt="mcci" />
-          <img src={Peakward} alt="peakward" />
         </div>
       </section>
       <section className="product-details flex flex-column  w-100">
@@ -224,7 +220,7 @@ const NewLanding = () => {
             while in beta. The private beta is just the beginning, but
             we want you to be a part of it!
           </p>
-          <OTButton to="/signin" white bold>
+          <OTButton to="/signup" white bold>
             Create Your First Project
           </OTButton>
         </div>

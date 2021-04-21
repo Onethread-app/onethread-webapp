@@ -51,8 +51,8 @@ const MainFooter = () => {
           <img src={MacIcon} alt="mac" />
         </div>
         <div className="group-2">
-          <img src={FBIcon} alt="facebook" />
-          <img src={LinkedInIcon} alt="linkedin" />
+          <a href="https://www.facebook.com/onethread.app.2021" target="_blank"> <img src={FBIcon} alt="facebook" /></a> 
+           <a href="https://www.linkedin.com/company/72622667 " target="_blank"> <img src={LinkedInIcon} alt="linkedin"/></a>          
           <img src={YTIcon} alt="youtube" />
         </div>
       </div>

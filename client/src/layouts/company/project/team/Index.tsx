@@ -24,7 +24,7 @@ import {
   getDivisionName,
   showDepartment,
 } from 'layouts/company/colleagues/Index';
-import { isEmpty, isEqual } from 'lodash';
+import { isEmpty, upperFirst, isEqual } from 'lodash';
 import { Associate } from 'stores/associate/Reducer';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
@@ -147,7 +147,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             <Button
               className="grow fr h2 pointer white bp3-minimal"
               style={{
-                background: '#0fa3a3',
+                background: '#3F61C5',
                 outline: 'none',
                 color: 'white',
               }}
@@ -163,10 +163,10 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                       className="grow fr h2 pointer white bp3-minimal mr2"
                       style={{
                         background: 'none',
-                        border: '#0fa3a3',
+                        border: '#3F61C5',
                         borderWidth: 1,
                         borderStyle: 'solid',
-                        color: '#0fa3a3',
+                        color: '#3F61C5',
                       }}
                       onClick={() =>
                         setShowAssociateDialog(!showAssociateDialog)
@@ -185,30 +185,36 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Email</th>
               <th>Division</th>
               <th>Department</th>
               <th>Position</th>
-              <th></th>
             </tr>
           </thead>
           <tbody>
             {adminList.length ? (
               adminList.map(({ _id, member }) => (
                 <tr key={_id}>
-                  <td style={{ width: '24%' }}>
-                    {member.account.name}
+                  <td style={{ width: '20%' }}>
+                  {member.account &&
+                        `${upperFirst(
+                          member.account.firstName,
+                        )} ${upperFirst(member.account.lastName)}`}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
+                    {member.account.email}
+                  </td>
+                  <td style={{ width: '20%' }}>
                     {member.designations.length
                       ? getDivisionName[
                           member.designations[0].division
                         ]
                       : null}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
                     {showDepartment(member)}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
                     {member.designations.length
                       ? member.designations[0].position
                       : null}
@@ -267,6 +273,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Email</th>
               <th>Division</th>
               <th>Department</th>
               <th>Position</th>
@@ -277,20 +284,26 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             {moderatorList.length ? (
               moderatorList.map(({ _id, member }) => (
                 <tr key={_id}>
-                  <td style={{ width: '24%' }}>
-                    {member.account.name}
+                  <td style={{ width: '20%' }}>
+                  {member.account &&
+                        `${upperFirst(
+                          member.account.firstName,
+                        )} ${upperFirst(member.account.lastName)}`}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
+                  {member.account? member.account.email : null}
+                  </td>
+                  <td style={{ width: '20%' }}>
                     {member.designations.length
                       ? getDivisionName[
                           member.designations[0].division
                         ]
                       : null}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
                     {showDepartment(member)}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
                     {member.designations.length
                       ? member.designations[0].position
                       : null}
@@ -363,6 +376,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Email</th>
               <th>Division</th>
               <th>Department</th>
               <th>Position</th>
@@ -373,20 +387,26 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             {teamList.length ? (
               teamList.map(({ _id, member }) => (
                 <tr key={_id}>
-                  <td style={{ width: '24%' }}>
-                    {member.account.name}
+                  <td style={{ width: '20%' }}>
+                  {member.account &&
+                        `${upperFirst(
+                          member.account.firstName,
+                        )} ${upperFirst(member.account.lastName)}`}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
+                  {member.account? member.account.email : null}
+                  </td>
+                  <td style={{ width: '20%' }}>
                     {member.designations.length
                       ? getDivisionName[
                           member.designations[0].division
                         ]
                       : null}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
                     {showDepartment(member)}
                   </td>
-                  <td style={{ width: '24%' }}>
+                  <td style={{ width: '20%' }}>
                     {member.designations.length
                       ? member.designations[0].position
                       : null}

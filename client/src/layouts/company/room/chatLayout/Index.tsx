@@ -66,7 +66,7 @@ export const ChatLayoutComponent = (
                   width="20px"
                   height="20px"
                   style={{}}
-                  color="#0FA3A3"
+                  color="#3F61C5"
                 />
                 <span className="f5 ml2 fw7">
                   {props.users.length}

@@ -270,12 +270,14 @@ export function* getArchivedProjectsAsync() {
 export function* updateProjectNameAsync({
   projectName,
   projectId,
+  color
 }: any) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: projectName,
+        color: color
       };
       const response = yield tigrowApi.put(
         `projects/change-title?pid=${projectId}`,

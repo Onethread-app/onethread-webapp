@@ -30,13 +30,13 @@ body {
   color: rgb(74, 73, 73);
 }
 .bg-tigrowLightBlue {
-  background-color: #0fa3a3;
+  background-color: #3F61C5;
 }
 .bg-tigrow-darkBlue {
-  background-color: #3b5998;
+  background-color: #3F61C5;
 }
 .bg-tigrowNewDarkBlue {
-  background-color: #3b5998;
+  background-color: #3F61C5;
 }
 .bg-tigrowLightestBlue {
   background-color: #6ed8d844;
@@ -45,14 +45,14 @@ body {
   background-color: #f5f6fa;
 }
 .bg-tigrowDarkBlue {
-  background-color: #3b5998;
+  background-color: #3F61C5;
 }
 .bg-tigrow {
   background-color: #f5f6fa;
 }
 
 .b--lightBlue {
-  border-color: #0fa3a3;
+  border-color: #3F61C5;
 }
 .b--tigrow-darkBlue {
   border-color: #3b5998;
@@ -67,7 +67,7 @@ body {
 }
 
 .tigrow-lightBlue {
-  color: #0fa3a3;
+  color: #3F61C5;
 }
 .tigrow-darkGray {
   color: #555555;
@@ -173,7 +173,7 @@ a:hover {
   width: 7px;
   height: 7px;
   border-radius: 10px;
-  background-color: #0fa3a3;
+  background-color: #3F61C5;
 }
 
 ::-webkit-scrollbar-track {
@@ -189,7 +189,7 @@ a:hover {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0fa3a3;
+  background: #3F61C5;
 }
 
 .ml5-tigrow {
@@ -304,7 +304,7 @@ a:hover {
 
 /*************************************/
 .vertical-timeline::before {
-  background: #0fa3a3 !important;
+  background: #3F61C5 !important;
   z-index: 1;
 }
 .vertical-timeline-element-date {
@@ -314,7 +314,7 @@ a:hover {
   width: 20px !important;
   height: 20px !important;
   margin-left: -10px !important;
-  background-color: #0fa3a3 !important;
+  background-color: #3F61C5 !important;
 }
 .vertical-timeline--two-columns
   .vertical-timeline-element-content
@@ -324,7 +324,7 @@ a:hover {
 .vertical-timeline-element-content {
   box-shadow: none !important;
   border: 1px solid #ddd;
-  border-left: 3px solid #0fa3a3;
+  border-left: 3px solid #3F61C5;
   margin-top: 40px;
 }
 .vertical-timeline-element-content-arrow {

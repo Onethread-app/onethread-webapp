@@ -182,7 +182,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
               <Button
                 className="grow fr h2 pointer white bp3-minimal "
                 style={{
-                  background: '#0fa3a3',
+                  background: '#3F61C5',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -193,7 +193,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
               <Button
                 className="grow fr h2 pointer white bp3-minimal mr2"
                 style={{
-                  background: '#0fa3a3',
+                  background: '#3F61C5',
                   outline: 'none',
                   color: 'white',
                 }}
@@ -214,10 +214,11 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
-              <th style={{ width: '24%' }}>Name</th>
-              <th style={{ width: '24%' }}>Division</th>
-              <th style={{ width: '24%' }}>Department</th>
-              <th style={{ width: '24%' }}>Position</th>
+              <th style={{ width: '20%' }}>Name</th>
+              <th style={{ width: '20%' }}>Email</th>
+              <th style={{ width: '20%' }}>Division</th>
+              <th style={{ width: '20%' }}>Department</th>
+              <th style={{ width: '20%' }}>Position</th>
               <th></th>
             </tr>
           </thead>
@@ -230,10 +231,12 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                 <tr className="hide-child" key={member._id}>
                   <td>
                     <span className="mr2-ns mr1 f7 f6-ns">
-                      {member.account &&
+                    <td style={{ width: '24%' }}>
+                  {member.account &&
                         `${upperFirst(
                           member.account.firstName,
                         )} ${upperFirst(member.account.lastName)}`}
+                  </td>
                     </span>
                     {companyPermit(member.role) ? (
                       member.role === 'superAdmin' ? (
@@ -246,6 +249,12 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                         <Icon icon="star" iconSize={15} />
                       )
                     ) : null}
+                  </td>
+                  <td>
+                    <span className="mr2-ns mr1 f7 f6-ns">
+                      {member.account? member.account.email: null
+                         }
+                    </span>
                   </td>
                   <td className="f7 f6-ns">
                     {member.designations.length
@@ -365,10 +374,11 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
-              <th style={{ width: '24%' }}>Name</th>
-              <th style={{ width: '24%' }}>Division</th>
-              <th style={{ width: '24%' }}>Department</th>
-              <th style={{ width: '24%' }}>Position</th>
+              <th style={{ width: '20%' }}>Name</th>
+              <th style={{ width: '20%' }}>Email</th>
+              <th style={{ width: '20%' }}>Division</th>
+              <th style={{ width: '20%' }}>Department</th>
+              <th style={{ width: '20%' }}>Position</th>
               <th></th>
             </tr>
           </thead>
@@ -398,6 +408,12 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                         <Icon iconSize={15} icon="star" />
                       )
                     ) : null}
+                  </td>
+                  <td>
+                    <span className="mr2-ns mr1 f7 f6-ns">
+                      {member.account? member.account.email: null
+                         }
+                    </span>
                   </td>
                   <td className="f7 f6-ns">
                     {member.designations.length
@@ -528,7 +544,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         {/* pending list starts */}
         {companyPermit(props.company.role) ? (
           <>
-            <h1 className="f4 tigrow-lightGray-1">Pending request</h1>
+            <h1 className="f4 tigrow-lightGray-1">Invited Colleagues</h1>
             <HTMLTable className="w-100 mv3" striped={true}>
               {props.companyLoading ? (
                 <Loading />

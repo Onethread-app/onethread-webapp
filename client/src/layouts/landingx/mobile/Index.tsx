@@ -31,7 +31,7 @@ const MobileIndex = () => {
             and communicate with everyone involved in one single
             platform
           </p>
-          <OTButton to="/signin">Create Your First Project</OTButton>
+          <OTButton to="/signup">Create Your First Project</OTButton>
         </div>
       </section>
       <section className="management flex items-center justify-center">
@@ -82,7 +82,7 @@ const MobileIndex = () => {
             <img src={MCCI} alt="mcci" />
           </div>
         </div>
-        <OTButton to="/signin">Create Your First Project</OTButton>
+        <OTButton to="/signup">Create Your First Project</OTButton>
       </section>
       <section className="product-details flex flex-column items-center justify-center w-100">
         <div className="header flex flex-column items-center justify-center">
