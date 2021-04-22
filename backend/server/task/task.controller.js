@@ -5,6 +5,7 @@ const logger = require('../../config/winston');
 const TaskAssign = require('./taskAssign.model');
 const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
+const File = require('../file/file.model');
 const _ = require('lodash');
 const { sendErrorResponse } = require('../helpers/jsonResponse');
 const {
@@ -16,6 +17,7 @@ const load = (req, res, next, id) => {
   Task.findById(id)
     .populate('account', '_id firstName lastName')
     .populate('columnId', '_id name')
+    .populate('file', '_id link')
     .exec()
     .then((result) => {
       req.task = result;

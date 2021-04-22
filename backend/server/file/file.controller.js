@@ -9,6 +9,7 @@ const File = require('./file.model');
 const Account = require('../account/account.model');
 const { Company } = require('../company/company.model');
 const { Project } = require('../project/project.model');
+const Task = require('../task/task.model');
 let s3bucket = new AWS.S3({
   accessKeyId: config.awsAccessKey,
   secretAccessKey: config.awsSecretAccessKey,
@@ -242,12 +243,6 @@ const fileInProject = async (req, res, next) => {
     });
   }
   const userID = req.user._id;
-  if (!checkMimetype.includes(file.mimetype)) {
-    return sendErrorResponse(res, 400, '', {
-      message: 'This file format is not supported',
-      fieldName: 'file',
-    });
-  }
   const pid = req.query.pid;
   const pidExist = await Project.findOne({ _id: pid });
   if (pidExist) {
@@ -293,9 +288,87 @@ const fileInProject = async (req, res, next) => {
     });
   }
 };
+
+const fileInTask = async(req, res, next)=>{
+  try {
+    const file = req.file;
+    if (!checkMimetype.includes(file.mimetype)) {
+      return sendErrorResponse(res, 400, '', {
+        message: 'This file format is not supported',
+        fieldName: 'file',
+      });
+    }
+    const userID = req.user._id;
+    const tid = req.body.taskId;
+    console.log(tid)
+    const tidExist = await Task.findById({ _id: tid });
+    if (tidExist) {
+      const params = {
+        Bucket: config.bucketName,
+        Key: `${tid}/${file.originalname}`,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+        ACL: 'public-read',
+      };
+      await s3bucket
+        .upload(params)
+        .promise()
+        .then(async (data) => {
+          logger.info(data);
+          try {
+            logger.info(`File in project Successfully upload to S3`);
+            const newFile = new File({
+              link: data.Location,
+              s3Key: params.Key,
+              type: params.ContentType,
+              account: userID,
+              task: tid,
+            });
+            await newFile.save();
+            logger.info(
+              'File Link successfully save to file collection',
+            );
+            tidExist.file.push(newFile._id);
+            await tidExist.save();
+            return sendJSONresponse(res, 200, newFile );
+          } catch (error) {
+            logger.error(`File: ${error}`);
+            next(error);
+          }
+        })
+        .catch((err) => {
+          logger.error(`File: ${error}`);
+          next(err);
+        });
+    } else {
+      return sendErrorResponse(res, 404, 'TaskIdNotFoundError', {
+        message: 'Task id is not exist',
+      });
+    }
+    
+  } catch (error) {
+    logger.error(`File: ${error}`);
+    next(error);
+  }
+
+}
+
+const removeFileInTask = async (req,res, next)=>{
+  try {
+    const {taskId,fileId} = req.body;
+    await Task.findByIdAndUpdate({_id: taskId},{$pull:{file:{_id: fileId}}}, {safe:true, new:true, upsert: true})
+    await File.findOneAndDelete({_id: fileId});
+    return sendJSONresponse(res, 200, {message: `file delete successfully`})
+  } catch (error) {
+    logger.error(`File: ${error}`);
+    next(error);
+  }
+}
 module.exports = {
   profilePicture,
   companyLogo,
   fileInRooms,
   fileInProject,
+  fileInTask,
+  removeFileInTask,
 };

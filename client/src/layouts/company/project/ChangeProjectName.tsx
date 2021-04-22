@@ -13,7 +13,7 @@ import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 import { updateProjectName } from '../../../stores/project/Actions';
 
 import { Color } from 'stores/UtilsActions';
-import { isEqual } from 'lodash';
+import { isEqual} from 'lodash';
 interface ChangeNameProps {
   setShowDialog: (val: boolean) => void;
   projectId: string;
@@ -55,7 +55,9 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
         name: props.projectName,
         color: props.color,
       }}
-      render={({
+      render={
+        
+        ({
         handleSubmit,
         form,
         submitting,
@@ -86,53 +88,58 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
                   }
                   label="Project Name*"
                 />
+
               </div>
             )}
           />
-          <Field<string>
-            name="color"
-            render={({ input, meta }) => (
-              <div className="mb3 mt3">
-                <p className="fw5 mb3" style={{ fontSize: '.8rem' }}>
-                  Label
-                </p>
-                <div className="flex">
-                  {Color.map((color) => (
-                    <div className="pr2" key={color.code}>
-                      <Icon
-                        className="br2"
-                        icon={
-                          isEqual(color.code, labelColor) === true
-                            ? 'tick'
-                            : 'blank'
-                        }
-                        onClick={(e) => {
-                          e.preventDefault();
-                          input.onChange(color.code);
-                          setLabelColor(color.code);
-                        }}
-                        style={{
-                          backgroundColor: color.value,
-                          border:
-                            isEqual(color.code, labelColor) === true
-                              ? '3px solid #ffffff'
-                              : 'none',
-                          height: '3rem',
-                          padding: '0.8rem',
-                        }}
-                      />
+                           <Field<string>
+                name="color"
+                render={({ input, meta }) => (
+                  <div className="mb3 mt3">
+                    <p
+                      className="fw5 mb3"
+                      style={{ fontSize: '.8rem' }}
+                    >
+                      Label
+                    </p>
+                    <div className="flex">
+                      {Color.map((color) => (
+                        <div className="pr2" key={color.code}>
+                          <Icon
+                            className="br2"
+                            icon={
+                              isEqual(color.code, labelColor) === true
+                                ? 'tick'
+                                : 'blank'
+                            }
+                            onClick={(e) => {
+                              e.preventDefault();
+                              input.onChange(color.code);
+                              setLabelColor(color.code);
+                            }}
+                            style={{
+                              backgroundColor: color.value,
+                              border:
+                                isEqual(color.code, labelColor) ===
+                                true
+                                  ? '3px solid #ffffff'
+                                  : 'none',
+                              height: '3rem',
+                              padding: '0.8rem',
+                            }}
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          />
+                  </div>
+                )}
+              />
           <Divider />
           <div className="flex justify-end">
-            <Button
+               <Button
               className="w4 grow h2 pointer mr3"
               style={{
-                background: '#3F61C5',
+                background: '#0fa3a3',
                 outline: 'none',
                 color: 'white',
               }}
@@ -156,6 +163,7 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
             >
               cancel
             </Button>
+                     
           </div>
         </form>
       )}

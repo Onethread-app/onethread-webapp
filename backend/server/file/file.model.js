@@ -68,6 +68,10 @@ const fileSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Project',
     },
+    task: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task',
+    }
   },
   { timestamps: true },
 );

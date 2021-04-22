@@ -458,7 +458,7 @@ const FormComponent = (props: {
               <Button
                   className="w4 grow h2 pointer mr3"
                   style={{
-                    background: '#3F61C5',
+                    background: '#0fa3a3',
                     outline: 'none',
                     color: 'white',
                   }}

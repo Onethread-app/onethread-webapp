@@ -36,6 +36,10 @@ const TaskSchema = new mongoose.Schema(
     dueDate: {
       type: Date,
     },
+    file: [{
+      type: [Schema.Types.ObjectId],
+      ref: 'File',
+    }],
     columnId: {
       type: Schema.Types.ObjectId,
       ref: 'BoardColumn',

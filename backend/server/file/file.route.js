@@ -41,4 +41,20 @@ router.post(
   schemaValidator(fileValidation.fileInProject),
   fileCtrl.fileInProject,
 );
+router
+.put(
+  '/file-upload-task',
+upload.single('file'),
+authorization,
+schemaValidator(fileValidation.fileInTask),
+fileCtrl.fileInTask,
+);
+
+router
+.put(
+  '/file-delete-task',
+authorization,
+schemaValidator(fileValidation.fileDeleteInTask),
+fileCtrl.removeFileInTask,
+);
 module.exports = router;

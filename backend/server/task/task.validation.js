@@ -10,11 +10,6 @@ const idSchema = {
       };
     }),
 };
-
-const taskId = Joi.object().keys({
-  taskId: idSchema.id.required(),
-});
-
 const taskSchema = {
   name: Joi.string(),
   description: Joi.string(),
@@ -26,6 +21,7 @@ const taskSchema = {
   comments: Joi.array().items(idSchema.id),
   columnId: idSchema.id,
   boardId: idSchema.id,
+  taskId: idSchema.id,
 };
 
 module.exports = {
@@ -63,9 +59,9 @@ module.exports = {
     body: Joi.object().keys({
       assignmembers: Joi.array().items(idSchema.id).required(),
     }),
-    params: taskId,
+    params: taskSchema.taskId,
   }),
   deleteMember: Joi.object().keys({
-    params: taskId,
-  }),
+    params: taskSchema.taskId.required(),
+  })
 };

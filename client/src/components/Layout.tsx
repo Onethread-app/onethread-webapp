@@ -250,7 +250,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     <img
                       src={leftOpen ? arrowLeft : arrowRight}
                       className="br2 w2"
-                      color="#0FA3A3"
+                      color="#3F61C5"
                     />
                   </span>
                   <div className="flex flex-column h-100">

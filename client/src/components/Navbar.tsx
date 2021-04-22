@@ -57,7 +57,7 @@ interface NavbarTopInternalProps {
 const roomBgColor = [
   '#D8315B',
   '#9F7DE8',
-  '#0FA3A3',
+  '#3F61C5',
   '#456990',
   '#CDA2AB',
   '#FE5E41',

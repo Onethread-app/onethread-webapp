@@ -1,3 +1,4 @@
+const { isSchema } = require('@hapi/joi');
 const Joi = require('@hapi/joi');
 
 // id
@@ -17,6 +18,8 @@ const pid = Joi.object().keys({
 });
 const schema = {
   pid: idSchema.id,
+  taskId: idSchema.id,
+  fileId: idSchema.id,
 };
 
 module.exports = {
@@ -24,5 +27,16 @@ module.exports = {
     query: Joi.object().keys({
       pid: schema.pid.required(),
     }),
+  }),
+  fileInTask: Joi.object().keys({
+    body: Joi.object().keys({
+      taskId: schema.taskId.required(),
+    })
+  }),
+  fileDeleteInTask: Joi.object().keys({
+    body: Joi.object().keys({
+      taskId: schema.taskId.required(),
+      fileId: schema.fileId.required(),
+    })
   }),
 };

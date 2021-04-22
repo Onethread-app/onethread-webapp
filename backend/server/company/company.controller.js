@@ -31,9 +31,7 @@ const logger = require('../../config/winston');
 const { Project } = require('../project/project.model');
 // create a company profile
 const changeName = async (req, res, next) => {
-  // Check for JSON
   if (!req.is('application/json')) {
-    // return sendErrorResponse()
     return res.send("Expects 'application/json'");
   }
 
@@ -43,14 +41,6 @@ const changeName = async (req, res, next) => {
       $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: req.company._id,
     });
-
-    //middleware added
-    // if (!member || !['superAdmin', 'admin'].includes(member.role)) {
-    //   return res.status(403).json({
-    //     message: `Restricted`,
-    //   });
-    // }
-
     // check duplicate company name
     const duplicate = await Company.findOne({
       name: req.body.name,
