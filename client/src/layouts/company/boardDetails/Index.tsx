@@ -11,6 +11,7 @@ import { IProject } from 'stores/project/Reducer';
 import { projectRules } from '../project/settings/projectrules';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormBoard } from '../board/Form';
+import { ColumnForm } from './column/ColumnForm';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
@@ -31,6 +32,9 @@ const BoardDetailsViewComponent = (
     false,
   );
   const [showTaskBoardDialog, setShowTaskBoardDialog] = useState(
+    false,
+  );
+  const [showColumnFormDialog, setShowColumnFormDialog] = useState(
     false,
   );
   const permissions = projectRules(props.role, props.optionalRole);
@@ -69,6 +73,13 @@ const BoardDetailsViewComponent = (
             'createUpdateBoard',
           ) ? (
             <>
+              <button
+                className="mb0 mr2 pointer f5 f6-ns br2 ba b--black pa1"
+                style={{ minWidth: '130px', background: 'inherit' }}
+                onClick={() => setShowColumnFormDialog(true)}
+              >
+                Add New Column
+              </button>
               <button
                 className="mb0 mr2 pointer f5 f6-ns bn white br2 pa1"
                 style={{ minWidth: '130px', background: '#3F61C5' }}
@@ -168,6 +179,17 @@ const BoardDetailsViewComponent = (
         >
           <FormBoard
             setShowTaskBoardDialog={setShowTaskBoardDialog}
+          />
+        </RightSidebar>
+      )}
+      {showColumnFormDialog && (
+        <RightSidebar
+          onClose={() =>
+            setShowColumnFormDialog(!showColumnFormDialog)
+          }
+        >
+          <ColumnForm
+            setShowColumnFormDialog={setShowColumnFormDialog}
           />
         </RightSidebar>
       )}

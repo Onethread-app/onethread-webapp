@@ -55,7 +55,11 @@ export const TaskDescriptionViewComponent = (
         <Linkify componentDecorator={componentDecorator}>
           <p
             className="pr2 ws-break"
-            style={{ whiteSpace: 'pre-line' }}
+            style={{
+              whiteSpace: 'pre-line',
+              maxHeight: '160px',
+              overflowY: 'auto',
+            }}
           >
             {props.description}
           </p>

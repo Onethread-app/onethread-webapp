@@ -64,7 +64,9 @@ const ColumnComponent = (props: ColumnInternalProps) => {
   return (
     <>
       <Draggable
-        draggableId={props.column._id ? props.column._id.toString() : '0'}
+        draggableId={
+          props.column._id ? props.column._id.toString() : '0'
+        }
         index={props.index}
       >
         {(provided) => (
@@ -88,7 +90,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     }
                     target={
                       <h3
-                        className="pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break pv1"
+                        className="pl1 overflow-hidden ma0 fw6 flex-grow-1 ws-normal ws-break pv1 ttc"
                         style={{
                           whiteSpace: 'nowrap',
                           textOverflow: 'ellipsis',
@@ -207,7 +209,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                 )}
                               />
                               <div className="flex justify-end">
-                              <Button
+                                <Button
                                   className="mr2"
                                   type="submit"
                                   style={{ background: '#3F61C5' }}
@@ -229,7 +231,6 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                     setShowTaskInput(!showTaskInput)
                                   }
                                 />
-                                
                               </div>
                             </div>
                           </form>
@@ -278,6 +279,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                   key={task._id!}
                                   task={task}
                                   index={index}
+                                  columnId={props.column._id}
                                 />
                               ),
                             )}

@@ -1,14 +1,14 @@
 import { BoardActionTypes } from './Types';
 
 export interface IColumn {
-  _id?: string;
+  _id: string;
   name: string;
   positionInBoard: number;
   tasks?: ITask[];
 }
 
 export interface TaskBoard {
-  _id?: string;
+  _id: string;
   name: string;
   department: string;
   color: string;
@@ -17,7 +17,7 @@ export interface TaskBoard {
 }
 
 export interface ITask {
-  _id?: string;
+  _id: string;
   name: string;
   description?: string;
   currentColumnName: string;
@@ -57,11 +57,13 @@ const InitialState = {
   updatingColumn: false,
   updatingBoard: false,
   updatingTask: false,
+  deletingTask: false,
   dragAndDrop: false,
   boardError: '',
   boardColumnError: '',
   boardTaskError: '',
   taskError: '',
+  errorOnTaskDelete: '',
 };
 
 export const BoardReducer = (state = InitialState, action: any) => {
@@ -298,6 +300,39 @@ export const BoardReducer = (state = InitialState, action: any) => {
         taskError: action.payload,
         updatingTask: false,
       };
+    case BoardActionTypes.DELETE_TASK_START:
+      return {
+        ...state,
+        deletingTask: true,
+        errorOnTaskDelete: '',
+      };
+    case BoardActionTypes.DELETE_TASK_SUCCESS:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          columns: state.currentBoard.columns.map((column: IColumn) =>
+            column._id === action.payload.columnId
+              ? {
+                  ...column,
+                  tasks: column.tasks
+                    ? column.tasks.filter(
+                        (task) => task._id !== action.payload.taskId,
+                      )
+                    : column.tasks,
+                }
+              : column,
+          ),
+        },
+        deletingTask: false,
+      };
+    case BoardActionTypes.DELETE_TASK_FAILURE: {
+      return {
+        ...state,
+        deletingTask: false,
+        errorOnTaskDelete: action.payload,
+      };
+    }
     default:
       return state;
   }

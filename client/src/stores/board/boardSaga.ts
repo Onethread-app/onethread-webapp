@@ -27,10 +27,17 @@ import {
   updateTaskFailure,
   updateTaskSuccess,
   getAllBoards,
+  deleteTaskFailure,
+  deleteTaskSuccess,
 } from './Actions';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
-import { getCurrentBoard, getCurrentTask, selectColumnName } from './Selector';
+import {
+  getCurrentBoard,
+  getCurrentTask,
+  selectColumnName,
+} from './Selector';
+import handleError from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
@@ -51,7 +58,7 @@ export function* createBoard({ payload }: any) {
       );
       yield all([
         put(createBoardSuccess(response.data)),
-        put(getAllBoards())
+        put(getAllBoards()),
       ]);
     }
   } catch (error) {
@@ -129,10 +136,10 @@ export function* getSelectedBoard({ payload }: any) {
 
 export function* createColumn({ payload }: any) {
   try {
-    const { name, } = payload;
+    const { name } = payload;
     const newPayload = {
       type: name.toLowerCase(),
-      ...payload
+      ...payload,
     };
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
@@ -239,8 +246,13 @@ export function* dragAndDrop({
   try {
     const headers = tokenConfig();
     const currentBoard: TaskBoard = yield select(getCurrentBoard);
-    const destColumn = yield select(selectColumnName(destinationColumnId));
-    const status = destColumn[0].name.toLowerCase().split(' ').join('-');
+    const destColumn = yield select(
+      selectColumnName(destinationColumnId),
+    );
+    const status = destColumn[0].name
+      .toLowerCase()
+      .split(' ')
+      .join('-');
     if ((headers as any).headers.Authorization) {
       const requestData = {
         taskId,
@@ -394,6 +406,26 @@ export function* updateTask({ payload }: any) {
   }
 }
 
+export function* deleteTaskAsync({ payload }: any) {
+  try {
+    const headers = tokenConfig();
+    const projectId = yield select(getProjectId);
+    if ((headers as any).headers.Authorization && payload) {
+      const response = yield tigrowApi.delete(
+        `tasks/${payload.taskId}?pid=${projectId}`,
+        headers,
+      );
+      if (response.status === 200) {
+        yield put(deleteTaskSuccess(payload));
+      }
+    }
+  } catch (error) {
+    handleError(error, async (errorMessage) => {
+      deleteTaskFailure(errorMessage);
+    });
+  }
+}
+
 export function* onCreateBoard() {
   yield takeEvery(BoardActionTypes.CREATE_BOARD_START, createBoard);
 }
@@ -417,10 +449,7 @@ export function* onCreateColumn() {
 }
 
 export function* onUpdateColumn() {
-  yield takeEvery(
-    BoardActionTypes.UPDATE_COLUMN_START,
-    updateColumn,
-  );
+  yield takeEvery(BoardActionTypes.UPDATE_COLUMN_START, updateColumn);
 }
 
 export function* onAddTeamMembersIntoBoard() {
@@ -452,6 +481,13 @@ export function* onUpdateTask() {
   yield takeLatest(BoardActionTypes.UPDATE_TASK_START, updateTask);
 }
 
+export function* onDeleteTask() {
+  yield takeEvery(
+    BoardActionTypes.DELETE_TASK_START,
+    deleteTaskAsync,
+  );
+}
+
 export default function* boardSaga() {
   yield all([
     call(onCreateBoard),
@@ -464,5 +500,6 @@ export default function* boardSaga() {
     call(onAddTeamMembersIntoBoard),
     call(onSelectTask),
     call(onUpdateTask),
+    call(onDeleteTask),
   ]);
 }

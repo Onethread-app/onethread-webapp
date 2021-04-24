@@ -8,10 +8,6 @@ import { Column } from './column/Column';
 import { IColumn, TaskBoard } from 'stores/board/Reducer';
 import { connect } from 'react-redux';
 import { dragAndDropTask, updateColumn } from 'stores/board/Actions';
-import { Button } from '@blueprintjs/core';
-import { RightSidebar } from 'components/RightSidebar';
-import { ColumnForm } from './column/ColumnForm';
-import { projectRules } from '../project/settings/projectrules';
 import { orderBy, isEqual } from 'lodash';
 
 interface TaskManagementLayoutProps {
@@ -35,11 +31,7 @@ interface TaskManagementLayoutInternalProps
 const TaskManagementLayoutComponent = (
   props: TaskManagementLayoutInternalProps,
 ) => {
-  const [showColumnFormDialog, setShowColumnFormDialog] = useState(
-    false,
-  );
   const [columns, setColumns] = useState<IColumn[]>([]);
-  const permissions = projectRules(props.role, props.optionalRole);
 
   React.useEffect(() => {
     const cols = orderBy(props.columns, ['positionInBoard']);
@@ -171,38 +163,6 @@ const TaskManagementLayoutComponent = (
                       <h5 className="tc fw5 f3">No Columns</h5>
                     )}
                     {provided.placeholder}
-                    {permissions.grantAll ||
-                    permissions.projectModerator.includes(
-                      'assignDeleteMemberBoard',
-                    ) ? (
-                      <div
-                        className={`${
-                          props.columns && props.columns.length > 0
-                            ? 'dib'
-                            : 'tc'
-                        } pr2  w-23-l w-50-m w-50 br3`}
-                        style={{ margin: '0 auto' }}
-                      >
-                        <Button
-                          className="pointer bp3-minimal w-100 ba b--dashed"
-                          style={{
-                            outline: 'none',
-                            color: 'black',
-                            height: '80px',
-                            fontWeight: 'bold',
-                          }}
-                          type="submit"
-                          onClick={() =>
-                            setShowColumnFormDialog(
-                              !showColumnFormDialog,
-                            )
-                          }
-                          icon="add"
-                        >
-                          Add Column
-                        </Button>
-                      </div>
-                    ) : null}
                   </div>
                 </div>
               );
@@ -210,17 +170,6 @@ const TaskManagementLayoutComponent = (
           </Droppable>
         </DragDropContext>
       </div>
-      {showColumnFormDialog && (
-        <RightSidebar
-          onClose={() =>
-            setShowColumnFormDialog(!showColumnFormDialog)
-          }
-        >
-          <ColumnForm
-            setShowColumnFormDialog={setShowColumnFormDialog}
-          />
-        </RightSidebar>
-      )}
     </>
   );
 };

@@ -1,6 +1,11 @@
 import { BoardActionTypes } from './Types';
 import { TaskBoard, ITask } from './Reducer';
 
+export interface ITaskDelete {
+  taskId: string;
+  columnId: string;
+}
+
 export const createBoard = (board: TaskBoard) => ({
   type: BoardActionTypes.CREATE_BOARD_START,
   payload: board,
@@ -134,9 +139,7 @@ export const addTeamMembersIntoBoardFailure = (
   payload: errorMessage,
 });
 
-export const getSelectedTaskDetails = (
-  taskId: string
-) => ({
+export const getSelectedTaskDetails = (taskId: string) => ({
   type: BoardActionTypes.SELECT_TASK_START,
   payload: taskId,
 });
@@ -163,5 +166,20 @@ export const updateTaskSuccess = (response: any) => ({
 
 export const updateTaskFailure = (errorMessage: any) => ({
   type: BoardActionTypes.UPDATE_TASK_FAILURE,
+  payload: errorMessage,
+});
+
+export const deleteTask = (payload: ITaskDelete) => ({
+  type: BoardActionTypes.DELETE_TASK_START,
+  payload,
+});
+
+export const deleteTaskSuccess = (payload: ITaskDelete) => ({
+  type: BoardActionTypes.DELETE_TASK_SUCCESS,
+  payload,
+});
+
+export const deleteTaskFailure = (errorMessage: any) => ({
+  type: BoardActionTypes.DELETE_TASK_FAILURE,
   payload: errorMessage,
 });

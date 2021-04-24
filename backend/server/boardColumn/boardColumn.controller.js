@@ -38,10 +38,12 @@ const create = async (req, res, next) => {
     const boardColumn = new BoardColumn({
       name: req.body.name,
       type: req.body.type,
+      project: req.query.pid,
       positionInBoard: req.body.positionInBoard,
       boardId: req.body.boardId,
       account: req.user._id,
     });
+
     await boardColumn
       .save()
       .then((createdColumn) => {

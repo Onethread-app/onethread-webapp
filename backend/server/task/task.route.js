@@ -61,6 +61,17 @@ router
     ),
     SchemaValidator(joiSchema.updateTask),
     taskCtrl.update,
+  )
+  .delete(
+    authorization,
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+      'member',
+    ),
+    SchemaValidator(joiSchema.deleteTask),
+    taskCtrl.deleteTask,
   );
 
 router

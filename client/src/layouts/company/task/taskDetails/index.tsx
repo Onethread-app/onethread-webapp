@@ -4,19 +4,21 @@ import { ITask } from 'stores/board/Reducer';
 import { connect } from 'react-redux';
 import { TaskTitleView } from './TaskTitle/TaskTitleView';
 import { TaskDescriptionView } from './TaskDescription/TaskDescriptionView';
-import { Popover } from '@blueprintjs/core';
+import { Button, FileInput, Popover } from '@blueprintjs/core';
 import { DueDateEditor } from './DueDate/DueDateEditor';
 import { DueDateView } from './DueDate/DueDateView';
 import { AssignedMembersView } from './AssignedMembers/AssignedMembersView';
 import { AssignedMembersEditor } from './AssignedMembers/AssignedMembersEditor';
 import dueDate from 'resources/images/dueDate.png';
 import addMembers from 'resources/images/addMembers.png';
+import attachFiles from 'resources/images/attachFiles.png';
 import priority from 'resources/images/priority.png';
 import { PriorityView } from './Priority/PriorityView';
 import { PriorityEditor } from './Priority/PriorityEditor';
 import moment from 'moment';
 import { ICompany } from 'stores/company/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
+import TaskFiles from './Files/TaskFiles';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
@@ -132,8 +134,11 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
           <div className="mt2">
             <AssignedMembersView />
           </div>
-          <div>
+          <div className="mt2">
             <TaskDescriptionView />
+          </div>
+          <div className="mt3">
+            <TaskFiles />
           </div>
           <div className="mt3">
             <div className="fl w-100 w-50-ns">
@@ -186,7 +191,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                 />
               ) : null}
             </div>
-            {/* <div>
+            <div>
               <Popover
                 content={
                   <div className="pa3 cf bg-white">
@@ -197,19 +202,30 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         type="submit"
                         text="Attach"
                         className="grow h2 pointer w-40 fr mt2"
-                        style={{ background: '#3F61C5', outline: 'none', color: 'white', boxShadow: 'none' }}
+                        style={{
+                          background: '#0fa3a3',
+                          outline: 'none',
+                          color: 'white',
+                          boxShadow: 'none',
+                        }}
                       />
                     </div>
                   </div>
                 }
                 target={
-                  <div className="flex br2 mb2 pt2 ph3" style={{ background: '#C1DEDE', width: '140px' }}>
-                    <img style={{ height: '15px' }} src={attachFiles} />
+                  <div
+                    className="flex br2 mb2 pt2 ph3 pointer"
+                    style={{ background: '#C1DEDE', width: '130px' }}
+                  >
+                    <img
+                      style={{ height: '15px' }}
+                      src={attachFiles}
+                    />
                     <p className="pl3 f7">Attach Files</p>
                   </div>
                 }
               />
-            </div> */}
+            </div>
             <div>
               {props.company && projectPermit(props.company.role) ? (
                 <Popover

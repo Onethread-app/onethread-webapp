@@ -55,6 +55,9 @@ module.exports = {
       priority: taskSchema.priority,
     }),
   }),
+  deleteTask: Joi.object().keys({
+    params: taskId,
+  }),
   addMember: Joi.object().keys({
     body: Joi.object().keys({
       assignmembers: Joi.array().items(idSchema.id).required(),

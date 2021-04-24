@@ -164,6 +164,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         updatingProjectName: true,
+        errorOnUpdatingProjectName: '',
       };
     case ProjectActionTypes.UPDATE_PROJECT_NAME_SUCCESS:
       return {

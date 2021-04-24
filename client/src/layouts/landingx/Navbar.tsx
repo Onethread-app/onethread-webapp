@@ -5,7 +5,9 @@ import DarkLogo from 'resources/images/onethread-logo-dark.png';
 const Navbar = () => {
   return (
     <div className="navbar flex justify-between items-center">
-      <img src={DarkLogo} alt="Onethread" />
+      <NavLink to="/">
+        <img src={DarkLogo} alt="Onethread" />
+      </NavLink>
       <ul className="flex">
         <li>
           <NavLink to="/">Pricing</NavLink>

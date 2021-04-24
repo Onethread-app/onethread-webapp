@@ -229,14 +229,21 @@ const ColleaguesPageComponent = (props: Colleagues) => {
               // tslint:disable-next-line: no-shadowed-variable
               adminsList.map((member) => (
                 <tr className="hide-child" key={member._id}>
-                  <td>
+                  <td className="flex items-center">
                     <span className="mr2-ns mr1 f7 f6-ns">
-                    <td style={{ width: '24%' }}>
-                  {member.account &&
-                        `${upperFirst(
-                          member.account.firstName,
-                        )} ${upperFirst(member.account.lastName)}`}
-                  </td>
+                      <td
+                        style={{
+                          width: '24%',
+                          boxShadow: 'none',
+                          background: 'inherit',
+                          padding: '0',
+                        }}
+                      >
+                        {member.account &&
+                          `${upperFirst(
+                            member.account.firstName,
+                          )} ${upperFirst(member.account.lastName)}`}
+                      </td>
                     </span>
                     {companyPermit(member.role) ? (
                       member.role === 'superAdmin' ? (
@@ -252,8 +259,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                   </td>
                   <td>
                     <span className="mr2-ns mr1 f7 f6-ns">
-                      {member.account? member.account.email: null
-                         }
+                      {member.account ? member.account.email : null}
                     </span>
                   </td>
                   <td className="f7 f6-ns">
@@ -411,8 +417,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                   </td>
                   <td>
                     <span className="mr2-ns mr1 f7 f6-ns">
-                      {member.account? member.account.email: null
-                         }
+                      {member.account ? member.account.email : null}
                     </span>
                   </td>
                   <td className="f7 f6-ns">
@@ -544,7 +549,9 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         {/* pending list starts */}
         {companyPermit(props.company.role) ? (
           <>
-            <h1 className="f4 tigrow-lightGray-1">Invited Colleagues</h1>
+            <h1 className="f4 tigrow-lightGray-1">
+              Invited Colleagues
+            </h1>
             <HTMLTable className="w-100 mv3" striped={true}>
               {props.companyLoading ? (
                 <Loading />
@@ -603,7 +610,9 @@ const ColleaguesPageComponent = (props: Colleagues) => {
           className="ma2"
         >
           <InviteColleagueView
-            colleagueInviteSuccess={props.inviteColleagueInBulkSuccess}
+            colleagueInviteSuccess={
+              props.inviteColleagueInBulkSuccess
+            }
             inviteColleagueInBulk={props.inviteColleagueInBulk}
             setshowDialogForInviteColleague={setInviteDialogue}
             currentCompany={props.company.name}

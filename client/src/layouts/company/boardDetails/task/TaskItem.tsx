@@ -4,14 +4,29 @@ import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { TaskBoard, ITask } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { getSelectedTaskDetails } from 'stores/board/Actions';
+import {
+  getSelectedTaskDetails,
+  ITaskDelete,
+} from 'stores/board/Actions';
 import { getAllSubTask } from 'stores/subtask/Actions';
+import { deleteTask } from 'stores/board/Actions';
 import moment from 'moment';
+import { projectPermit } from 'stores/UtilsActions';
+import {
+  Button,
+  ButtonGroup,
+  Dialog,
+  Icon,
+  Menu,
+  MenuItem,
+  Popover,
+} from '@blueprintjs/core';
 
 interface TaskItemProps {
   key: string;
   task: ITask;
   index: number;
+  columnId: string;
 }
 
 interface TaskItemInternalProps extends TaskItemProps {
@@ -19,11 +34,20 @@ interface TaskItemInternalProps extends TaskItemProps {
   company?: ICompany;
   getSelectedTaskDetails: (task: string) => void;
   getAllSubTask: () => void;
+  projectRole: string;
+  optionalRole?: Array<string>;
+  deleteTask: ({ taskId, columnId }: ITaskDelete) => void;
+  deletingTask: boolean;
+  errorOnTaskDelete: string;
 }
 
 const TaskItemComponent = (
   props: TaskItemInternalProps & RouteComponentProps,
 ) => {
+  const [showTaskEditDialog, setShowTaskEditDialog] = React.useState(
+    false,
+  );
+
   const handleClick = async () => {
     if (props.task._id) {
       await props.getSelectedTaskDetails(props.task._id);
@@ -33,6 +57,22 @@ const TaskItemComponent = (
           props.currentBoard!._id
         }/task/${props.task._id}`,
       );
+    }
+  };
+
+  const handleDelete = async () => {
+    const payload = {
+      taskId: props.task._id,
+      columnId: props.columnId,
+    };
+
+    await props.deleteTask(payload);
+
+    if (
+      props.deletingTask === false &&
+      props.errorOnTaskDelete === ''
+    ) {
+      setShowTaskEditDialog(false);
     }
   };
 
@@ -48,10 +88,9 @@ const TaskItemComponent = (
               {...provided.draggableProps}
               {...provided.dragHandleProps}
               {...allowedProps}
-              onClick={handleClick}
             >
               <div
-                className="br3"
+                className="br3 flex justify-between items-center mt2"
                 style={{
                   borderLeft: '4px solid rgb(97, 163, 250)',
                   borderRadius: '3px',
@@ -60,15 +99,48 @@ const TaskItemComponent = (
                 }}
               >
                 <h1
-                  className="f6 ws-break pt2 ph2 overflow-hidden "
+                  className="f6 ws-break ph2 overflow-hidden pointer"
                   style={{
                     whiteSpace: 'nowrap',
                     textOverflow: 'ellipsis',
                     width: '220px',
                   }}
+                  onClick={handleClick}
                 >
                   {props.task.name}
                 </h1>
+                {props.company &&
+                  (projectPermit(props.company.role) ||
+                    (props.projectRole === 'projectModerator' &&
+                      props.optionalRole!.includes(
+                        'createUpdateBoard',
+                      ))) && (
+                    <Popover
+                      className="w-10"
+                      content={
+                        <Menu>
+                          <MenuItem
+                            text="Delete"
+                            onClick={(e: any) =>
+                              setShowTaskEditDialog(true)
+                            }
+                          />
+                        </Menu>
+                      }
+                      target={
+                        <Button
+                          style={{
+                            transform: 'rotate(90deg)',
+                            OTransform: 'rotate(90deg)',
+                            msTransform: 'rotate(90deg)',
+                            WebkitTransform: 'rotate(90deg)',
+                          }}
+                          icon="more"
+                          minimal={true}
+                        />
+                      }
+                    />
+                  )}
               </div>
               {/* {isEmpty(props.task.description) === false ?
                 <div>
@@ -80,8 +152,8 @@ const TaskItemComponent = (
                 </div>
                 : undefined} */}
               <div className="flex-ns justify-between pa2">
-                <div className="flex pt1">
-                  {/* <div className="cf flex" style={{ height: '30px', width: '50px' }}>
+                {/* <div className="flex pt1">
+                  <div className="cf flex" style={{ height: '30px', width: '50px' }}>
                     <img
                       style={{ height: '25px', width: '25px' }}
                       src={attach}
@@ -89,8 +161,8 @@ const TaskItemComponent = (
                     <div className="pt1">
                       <p className="f7 dib">3</p>
                     </div>
-                  </div> */}
-                  {/* <div className="cf flex" style={{ height: '30px', width: '50px' }}>
+                  </div>
+                  <div className="cf flex" style={{ height: '30px', width: '50px' }}>
                     <img
                       style={{ height: '25px', width: '25px' }}
                       src={complete}
@@ -98,8 +170,8 @@ const TaskItemComponent = (
                     <div className="pt1">
                       <p className="f7 dib">3</p>
                     </div>
-                  </div> */}
-                </div>
+                  </div>
+                </div> */}
                 {props.task.dueDate && (
                   <div className="mr0 pt1">
                     {Math.ceil(
@@ -184,6 +256,44 @@ const TaskItemComponent = (
           );
         }}
       </Draggable>
+
+      <Dialog
+        isOpen={showTaskEditDialog}
+        style={{ paddingBottom: '0' }}
+        canOutsideClickClose={true}
+      >
+        <div
+          className="flex justify-around items-center w-100 ba bw1 br2"
+          style={{ borderColor: '#F55B7F' }}
+        >
+          <h4 className="fw5 f5 flex items-center">
+            <Icon
+              icon="info-sign"
+              intent="primary"
+              style={{ marginRight: '.5rem' }}
+            />{' '}
+            Are you sure?
+          </h4>
+          <ButtonGroup minimal={true}>
+            <Button
+              icon="undo"
+              onClick={() => {
+                setShowTaskEditDialog(false);
+              }}
+              intent="primary"
+            >
+              Cancel
+            </Button>
+            <Button
+              icon="trash"
+              intent="danger"
+              onClick={handleDelete}
+            >
+              Yes
+            </Button>
+          </ButtonGroup>
+        </div>
+      </Dialog>
     </>
   );
 };
@@ -191,11 +301,18 @@ const TaskItemComponent = (
 const mapStateToProps = (state: any) => {
   return {
     currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+    deletingTask: state.boardIndexReducer.boardReducer.deletingTask,
+    errorOnTaskDelete:
+      state.boardIndexReducer.boardReducer.errorOnTaskDelete,
     company: state.companyReducer.currentCompany,
+    projectRole: state.projectReducer.projectRole.projects.role,
+    optionalRole:
+      state.projectReducer.projectRole.projects.project.optionalRole,
   };
 };
 
 export const TaskItem = connect(mapStateToProps, {
   getSelectedTaskDetails,
   getAllSubTask,
+  deleteTask,
 })(withRouter(TaskItemComponent));

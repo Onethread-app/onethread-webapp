@@ -7,7 +7,10 @@ const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
 const File = require('../file/file.model');
 const _ = require('lodash');
-const { sendErrorResponse } = require('../helpers/jsonResponse');
+const {
+  sendErrorResponse,
+  sendJSONresponse,
+} = require('../helpers/jsonResponse');
 const {
   createCompanyRoleNotification,
 } = require('../notification/notification.controller');
@@ -260,12 +263,30 @@ const update = async (req, res, next) => {
     });
 };
 
+const deleteTask = async (req, res, next) => {
+  try {
+    Task.findByIdAndDelete(req.params.taskId)
+      .exec()
+      .then(() => {
+        return sendJSONresponse(res, 200, {
+          message: 'Task Deleted.',
+        });
+      });
+  } catch (error) {
+    logger.error(`Task: ${error}`);
+    next(error);
+  }
+};
+
 const list = (req, res, next) => {};
 
 const dragTask = async (req, res, next) => {
   try {
     const task = await Task.findByIdAndUpdate(req.body.taskId, {
-      $set: { columnId: req.body.destinationColumnId, status: req.body.status },
+      $set: {
+        columnId: req.body.destinationColumnId,
+        status: req.body.status,
+      },
     }).exec();
 
     // TODO: avoid task population
@@ -351,6 +372,7 @@ module.exports = {
   create,
   get,
   update,
+  deleteTask,
   list,
   load,
   dragTask,
