@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { getCompanyDetails } from 'stores/company/Actions';
-import { History } from 'history';
+// import { History } from 'history';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { User, ICompanyByUser } from 'stores/user/Reducer';
 import { Loading } from 'components/Loading';
@@ -21,7 +21,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   currentCompany: string;
   companies: ICompanyByUser[];
   user: User;
-  getCompanyDetails: (companyId: string, history: History) => void;
+  getCompanyDetails: (companyId: string) => void;
   getAllCompaniesByUserId: (userId: string) => void;
   getNotifications: () => void;
   isCompanyLoading: boolean;
@@ -34,11 +34,12 @@ export const ListViewComponent = (
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (loading === true) {
-      props.getAllCompaniesByUserId(props.user._id);
+    props.getAllCompaniesByUserId(props.user._id);
+
+    if (props.isCompanyLoading === false) {
+      setLoading(false);
     }
-    setLoading(false);
-  }, [loading]);
+  }, []);
 
   return (
     <>
@@ -65,15 +66,12 @@ export const ListViewComponent = (
                     dispatch({ type: CLEAR_COMPANY_REDUCER_STATE });
                     await props.getCompanyDetails(
                       c.company.uniqueName,
-                      props.history,
                     );
                     if (props.isCompanyLoading === false) {
-                      dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                       props.history.push(
-                        `/company/${
-                          c.company.uniqueName
-                        }/dashboard`,
+                        `/company/${c.company.uniqueName}/dashboard`,
                       );
+                      dispatch({ type: CLEAR_PROJECT_REDUCER_STATE });
                     }
                     // else{
                     //   props.history.push(`/notFound`);
