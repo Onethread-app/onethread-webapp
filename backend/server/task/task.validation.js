@@ -56,7 +56,8 @@ module.exports = {
     }),
   }),
   deleteTask: Joi.object().keys({
-    params: taskId,
+    params: Joi.object().keys({
+      taskId:taskSchema.taskId}),
   }),
   addMember: Joi.object().keys({
     body: Joi.object().keys({
