@@ -33,6 +33,8 @@ export const ProjectPrefaceViewComponent = (
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
 
+  const permissions = projectRules(props.role, props.optionalRole);
+
   return (
     <>
       <MobileView>
@@ -100,39 +102,43 @@ export const ProjectPrefaceViewComponent = (
           </div>
         </div>
         <div className="w-30-ns pa4 pb5">
-          {props.role === 'admin' ? (
-            <div>
-              <h1 className="f6">Shared Files</h1>
-              {props.files.map((file: any) => (
-                <div className="flex items-center justify-between">
-                  <h1
-                    className="f6 fw6 blue w-80"
-                    style={{
-                      wordBreak: 'break-word',
-                      wordWrap: 'break-word',
-                    }}
-                  >
-                    {file.s3Key.split('/')[1]}
-                  </h1>
-                  <a
-                    href={file.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    download
-                  >
-                    <span className="flex pl3">
-                      <img
-                        src={DownloadIcon}
-                        alt="Download icon"
-                        style={{
-                          width: '23px',
-                          height: '23px',
-                        }}
-                      />
-                    </span>
-                  </a>
-                </div>
-              ))}
+          <div>
+            <h1 className="f6">Shared Files</h1>
+            {props.files.map((file: any) => (
+              <div className="flex items-center justify-between">
+                <h1
+                  className="f6 fw6 blue w-80"
+                  style={{
+                    wordBreak: 'break-word',
+                    wordWrap: 'break-word',
+                  }}
+                >
+                  {file.s3Key.split('/')[1]}
+                </h1>
+                <a
+                  href={file.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                >
+                  <span className="flex pl3">
+                    <img
+                      src={DownloadIcon}
+                      alt="Download icon"
+                      style={{
+                        width: '23px',
+                        height: '23px',
+                      }}
+                    />
+                  </span>
+                </a>
+              </div>
+            ))}
+            {(permissions.grantAll ||
+              (permissions.projectModerator &&
+                permissions.projectModerator.includes(
+                  'addFileProject',
+                ))) && (
               <Button
                 className="pointer w4 pa2 flex flex-column center mb5 mt4"
                 style={{
@@ -145,60 +151,9 @@ export const ProjectPrefaceViewComponent = (
               >
                 Upload Files
               </Button>
-            </div>
-          ) : (
-            props.optionalRole &&
-            props.role &&
-            projectRules(props.optionalRole)[props.role].includes(
-              'addFileProject',
-            ) && (
-              <div>
-                <h1 className="f6">Shared Files</h1>
-                {props.files.map((file: any) => (
-                  <div className="flex items-center justify-between">
-                    <h1
-                      className="f6 fw6 blue w-80"
-                      style={{
-                        wordBreak: 'break-word',
-                        wordWrap: 'break-word',
-                      }}
-                    >
-                      {file.s3Key.split('/')[1]}
-                    </h1>
-                    <a
-                      href={file.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      download
-                    >
-                      <span className="flex pl3">
-                        <img
-                          src={DownloadIcon}
-                          alt="Download icon"
-                          style={{
-                            width: '23px',
-                            height: '23px',
-                          }}
-                        />
-                      </span>
-                    </a>
-                  </div>
-                ))}
-                <Button
-                  className="pointer w4 pa2 flex flex-column center mb5 mt4"
-                  style={{
-                    background: '#fff',
-                    outline: 'none',
-                    border: '2px solid blue',
-                    color: 'blue',
-                  }}
-                  onClick={() => setShowFileDialog(true)}
-                >
-                  Upload Files
-                </Button>
-              </div>
-            )
-          )}
+            )}
+          </div>
+
           <h1 className="f6 pb2">
             Project Members (
             {props.projectMembers && props.projectMembers.length})

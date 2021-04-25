@@ -57,8 +57,10 @@ module.exports = {
   }),
   deleteTask: Joi.object().keys({
     params: Joi.object().keys({
-      taskId:taskSchema.taskId}),
+      taskId: taskSchema.taskId,
+    }),
   }),
+
   addMember: Joi.object().keys({
     body: Joi.object().keys({
       assignmembers: Joi.array().items(idSchema.id).required(),
@@ -67,5 +69,5 @@ module.exports = {
   }),
   deleteMember: Joi.object().keys({
     params: taskSchema.taskId.required(),
-  })
+  }),
 };

@@ -35,7 +35,6 @@ export const ListViewComponent = (
 
   useEffect(() => {
     props.getAllCompaniesByUserId(props.user._id);
-
     if (props.isCompanyLoading === false) {
       setLoading(false);
     }

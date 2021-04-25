@@ -5,6 +5,7 @@ const logger = require('../../config/winston');
 const TaskAssign = require('./taskAssign.model');
 const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
+const SubTask = require('./subtask/subtask.model');
 const File = require('../file/file.model');
 const _ = require('lodash');
 const {
@@ -265,6 +266,23 @@ const update = async (req, res, next) => {
 
 const deleteTask = async (req, res, next) => {
   try {
+    const subTasks = await SubTask.find({
+      taskId: req.params.taskId,
+    })
+      .select('_id')
+      .exec();
+
+    const subTaskIds = subTasks.map((sub) => {
+      return sub._id;
+    });
+
+    if (subTaskIds.length > 0) {
+      SubTask.deleteMany({
+        _id: {
+          $in: subTaskIds,
+        },
+      }).exec();
+    }
     Task.findByIdAndDelete(req.params.taskId)
       .exec()
       .then(() => {

@@ -172,8 +172,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                       <div className="flex">
                         <h3
                           onClick={(e) => {
-                            singleProjectOnClick(project._id);
                             e.preventDefault();
+                            singleProjectOnClick(project._id);
                           }}
                           className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
                           style={{
