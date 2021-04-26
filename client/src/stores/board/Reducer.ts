@@ -7,6 +7,11 @@ export interface IColumn {
   tasks?: ITask[];
 }
 
+export interface IFile {
+  _id: string;
+  link: string;
+}
+
 export interface TaskBoard {
   _id: string;
   name: string;
@@ -20,6 +25,7 @@ export interface ITask {
   _id: string;
   name: string;
   description?: string;
+  columnId: string;
   currentColumnName: string;
   createdAt: Date;
   createdBy: string;
@@ -27,6 +33,7 @@ export interface ITask {
   assignedMembers?: Object[];
   dueDate?: Date;
   priority?: number;
+  file?: IFile[];
   comments?: Object[];
   column?: IColumn;
 }
@@ -60,12 +67,14 @@ const InitialState = {
   updatingTask: false,
   deletingTask: false,
   dragAndDrop: false,
+  uploadingTaskFile: false,
   boardError: '',
   boardColumnError: '',
   boardTaskError: '',
   taskError: '',
   errorOnFetchingBoard: '',
   errorOnTaskDelete: '',
+  errorOnUploadingTaskFile: '',
 };
 
 export const BoardReducer = (state = InitialState, action: any) => {
@@ -280,7 +289,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
                     ...column,
                     tasks:
                       column.tasks && column.tasks.length > 0
-                        ? column.tasks!.map((task: ITask) =>
+                        ? column.tasks.map((task: ITask) =>
                             task._id === action.payload._id
                               ? {
                                   ...task,
@@ -302,6 +311,51 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ...state,
         taskError: action.payload,
         updatingTask: false,
+      };
+    case BoardActionTypes.TASK_FILE_UP_START:
+      return {
+        ...state,
+        uploadingTaskFile: true,
+        errorOnUploadingTaskFile: '',
+      };
+    case BoardActionTypes.TASK_FILE_UP_SUCCESS:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          columns: (state.currentBoard.columns as any).map(
+            (column: IColumn) =>
+              column._id === action.payload.columnId
+                ? {
+                    ...column,
+                    tasks:
+                      column.tasks && column.tasks.length > 0
+                        ? column.tasks!.map((task: ITask) =>
+                            task._id === action.payload._id
+                              ? {
+                                  ...task,
+                                  file: [
+                                    ...task.file!,
+                                    {
+                                      _id: action.payload._id,
+                                      link: action.payload.link,
+                                    },
+                                  ],
+                                }
+                              : task,
+                          )
+                        : [],
+                  }
+                : column,
+          ),
+        },
+        uploadingTaskFile: false,
+      };
+    case BoardActionTypes.TASK_FILE_UP_FAILURE:
+      return {
+        ...state,
+        uploadingTaskFile: false,
+        errorOnUploadingTaskFile: action.payload,
       };
     case BoardActionTypes.DELETE_TASK_START:
       return {

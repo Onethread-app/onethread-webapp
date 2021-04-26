@@ -6,6 +6,12 @@ export interface ITaskDelete {
   columnId: string;
 }
 
+export interface ITaskFileUpload {
+  file: any;
+  columnId: string;
+  taskId: string;
+}
+
 export const createBoard = (board: TaskBoard) => ({
   type: BoardActionTypes.CREATE_BOARD_START,
   payload: board,
@@ -166,6 +172,21 @@ export const updateTaskSuccess = (response: any) => ({
 
 export const updateTaskFailure = (errorMessage: any) => ({
   type: BoardActionTypes.UPDATE_TASK_FAILURE,
+  payload: errorMessage,
+});
+
+export const taskFileUpload = (payload: ITaskFileUpload) => ({
+  type: BoardActionTypes.TASK_FILE_UP_START,
+  payload,
+});
+
+export const taskFileUploadSuccess = (response: any) => ({
+  type: BoardActionTypes.TASK_FILE_UP_SUCCESS,
+  payload: response,
+});
+
+export const taskFileUploadFailure = (errorMessage: any) => ({
+  type: BoardActionTypes.TASK_FILE_UP_FAILURE,
   payload: errorMessage,
 });
 

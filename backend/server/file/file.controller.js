@@ -289,9 +289,10 @@ const fileInProject = async (req, res, next) => {
   }
 };
 
-const fileInTask = async(req, res, next)=>{
+const fileInTask = async (req, res, next) => {
   try {
     const file = req.file;
+    console.log(req.file);
     if (!checkMimetype.includes(file.mimetype)) {
       return sendErrorResponse(res, 400, '', {
         message: 'This file format is not supported',
@@ -300,7 +301,7 @@ const fileInTask = async(req, res, next)=>{
     }
     const userID = req.user._id;
     const tid = req.body.taskId;
-    console.log(tid)
+    console.log(tid);
     const tidExist = await Task.findById({ _id: tid });
     if (tidExist) {
       const params = {
@@ -330,7 +331,7 @@ const fileInTask = async(req, res, next)=>{
             );
             tidExist.file.push(newFile._id);
             await tidExist.save();
-            return sendJSONresponse(res, 200, newFile );
+            return sendJSONresponse(res, 200, newFile);
           } catch (error) {
             logger.error(`File: ${error}`);
             next(error);
@@ -345,25 +346,29 @@ const fileInTask = async(req, res, next)=>{
         message: 'Task id is not exist',
       });
     }
-    
   } catch (error) {
     logger.error(`File: ${error}`);
     next(error);
   }
+};
 
-}
-
-const removeFileInTask = async (req,res, next)=>{
+const removeFileInTask = async (req, res, next) => {
   try {
-    const {taskId,fileId} = req.body;
-    await Task.findByIdAndUpdate({_id: taskId},{$pull:{file:{_id: fileId}}}, {safe:true, new:true, upsert: true})
-    await File.findOneAndDelete({_id: fileId});
-    return sendJSONresponse(res, 200, {message: `file delete successfully`})
+    const { taskId, fileId } = req.body;
+    await Task.findByIdAndUpdate(
+      { _id: taskId },
+      { $pull: { file: { _id: fileId } } },
+      { safe: true, new: true, upsert: true },
+    );
+    await File.findOneAndDelete({ _id: fileId });
+    return sendJSONresponse(res, 200, {
+      message: `file delete successfully`,
+    });
   } catch (error) {
     logger.error(`File: ${error}`);
     next(error);
   }
-}
+};
 module.exports = {
   profilePicture,
   companyLogo,
