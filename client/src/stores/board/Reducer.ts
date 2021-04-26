@@ -10,6 +10,7 @@ export interface IColumn {
 export interface IFile {
   _id: string;
   link: string;
+  s3Key: string;
 }
 
 export interface TaskBoard {
@@ -68,6 +69,7 @@ const InitialState = {
   deletingTask: false,
   dragAndDrop: false,
   uploadingTaskFile: false,
+  deletingTaskFile: false,
   boardError: '',
   boardColumnError: '',
   boardTaskError: '',
@@ -75,6 +77,7 @@ const InitialState = {
   errorOnFetchingBoard: '',
   errorOnTaskDelete: '',
   errorOnUploadingTaskFile: '',
+  errorOnTaskFileDelete: '',
 };
 
 export const BoardReducer = (state = InitialState, action: any) => {
@@ -321,34 +324,35 @@ export const BoardReducer = (state = InitialState, action: any) => {
     case BoardActionTypes.TASK_FILE_UP_SUCCESS:
       return {
         ...state,
-        currentBoard: {
-          ...state.currentBoard,
-          columns: (state.currentBoard.columns as any).map(
-            (column: IColumn) =>
-              column._id === action.payload.columnId
-                ? {
-                    ...column,
-                    tasks:
-                      column.tasks && column.tasks.length > 0
-                        ? column.tasks!.map((task: ITask) =>
-                            task._id === action.payload._id
-                              ? {
-                                  ...task,
-                                  file: [
-                                    ...task.file!,
-                                    {
-                                      _id: action.payload._id,
-                                      link: action.payload.link,
-                                    },
-                                  ],
-                                }
-                              : task,
-                          )
-                        : [],
-                  }
-                : column,
-          ),
-        },
+        // currentBoard: {
+        //   ...state.currentBoard,
+        //   columns: (state.currentBoard.columns as any).map(
+        //     (column: IColumn) =>
+        //       column._id === action.payload.columnId
+        //         ? {
+        //             ...column,
+        //             tasks:
+        //               column.tasks && column.tasks.length > 0
+        //                 ? column.tasks.map((task: ITask) =>
+        //                     task._id === action.payload.taskId
+        //                       ? {
+        //                           ...task,
+        //                           file: [
+        //                             ...task.file!,
+        //                             {
+        //                               _id: action.payload._id,
+        //                               link: action.payload.link,
+        //                               s3Key: action.payload.s3Key,
+        //                             },
+        //                           ],
+        //                         }
+        //                       : task,
+        //                   )
+        //                 : [],
+        //           }
+        //         : column,
+        //   ),
+        // },
         uploadingTaskFile: false,
       };
     case BoardActionTypes.TASK_FILE_UP_FAILURE:
@@ -356,6 +360,51 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ...state,
         uploadingTaskFile: false,
         errorOnUploadingTaskFile: action.payload,
+      };
+    case BoardActionTypes.TASK_FILE_DELETE_START:
+      return {
+        ...state,
+        deletingTaskFile: true,
+        errorOnTaskFileDelete: '',
+      };
+    case BoardActionTypes.TASK_FILE_DELETE_SUCCESS:
+      return {
+        ...state,
+        // currentBoard: {
+        //   ...state.currentBoard,
+        //   columns: (state.currentBoard.columns as any).map(
+        //     (column: IColumn) =>
+        //       column._id === action.payload.columnId
+        //         ? {
+        //             ...column,
+        //             tasks:
+        //               column.tasks && column.tasks.length > 0
+        //                 ? column.tasks.map((task: ITask) =>
+        //                     task._id === action.payload.taskId
+        //                       ? {
+        //                           ...task,
+        //                           file: task.file
+        //                             ? task.file.filter(
+        //                                 (f) =>
+        //                                   f._id !==
+        //                                   action.payload.fileId,
+        //                               )
+        //                             : task.file,
+        //                         }
+        //                       : task,
+        //                   )
+        //                 : [],
+        //           }
+        //         : column,
+        //   ),
+        // },
+        deletingTaskFile: false,
+      };
+    case BoardActionTypes.TASK_FILE_DELETE_FAILURE:
+      return {
+        ...state,
+        errorOnTaskFileDelete: action.payload,
+        deletingTaskFile: false,
       };
     case BoardActionTypes.DELETE_TASK_START:
       return {

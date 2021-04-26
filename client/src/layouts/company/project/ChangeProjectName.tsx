@@ -15,6 +15,7 @@ import { updateProject } from '../../../stores/project/Actions';
 import { Color } from 'stores/UtilsActions';
 import { isEqual } from 'lodash';
 import { DateInput } from '@blueprintjs/datetime';
+import moment from 'moment';
 interface UpdateProjectProps {
   setShowDialog: (val: boolean) => void;
   projectId: string;
@@ -121,6 +122,7 @@ const UpdateProjectComponent = (
                     popoverProps={{
                       targetClassName: 'w-100',
                     }}
+                    maxDate={moment().add(10, 'y').toDate()}
                     minDate={new Date()}
                     placeholder="Deadline"
                     className="flex-auto"

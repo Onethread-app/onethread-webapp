@@ -31,6 +31,7 @@ import { Associate } from 'stores/associate/Reducer';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
 import { DateInput } from '@blueprintjs/datetime';
+import moment from 'moment';
 
 interface IProject {
   department: string;
@@ -453,6 +454,7 @@ const FormComponent = (props: {
                             popoverProps={{
                               targetClassName: 'w-100',
                             }}
+                            maxDate={moment().add(10, 'y').toDate()}
                             minDate={new Date()}
                             placeholder="Deadline"
                             className="flex-auto"

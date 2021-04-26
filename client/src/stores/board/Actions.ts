@@ -12,6 +12,12 @@ export interface ITaskFileUpload {
   taskId: string;
 }
 
+export interface ITaskFileDelete {
+  fileId: string;
+  columnId: string;
+  taskId: string;
+}
+
 export const createBoard = (board: TaskBoard) => ({
   type: BoardActionTypes.CREATE_BOARD_START,
   payload: board,
@@ -187,6 +193,21 @@ export const taskFileUploadSuccess = (response: any) => ({
 
 export const taskFileUploadFailure = (errorMessage: any) => ({
   type: BoardActionTypes.TASK_FILE_UP_FAILURE,
+  payload: errorMessage,
+});
+
+export const taskFileDelete = (payload: ITaskFileDelete) => ({
+  type: BoardActionTypes.TASK_FILE_DELETE_START,
+  payload,
+});
+
+export const taskFileDeleteSuccess = (response: any) => ({
+  type: BoardActionTypes.TASK_FILE_DELETE_SUCCESS,
+  payload: response,
+});
+
+export const taskFileDeleteFailure = (errorMessage: any) => ({
+  type: BoardActionTypes.TASK_FILE_DELETE_FAILURE,
   payload: errorMessage,
 });
 

@@ -71,7 +71,7 @@ const fileSchema = new mongoose.Schema(
     task: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Task',
-    }
+    },
   },
   { timestamps: true },
 );

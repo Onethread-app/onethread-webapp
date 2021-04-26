@@ -166,7 +166,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   return (
     <div
       className="cf vh-100"
-      style={{ background: isMobileOnly ? 'white' : '#060517' }}
+      style={{ background: isMobileOnly ? 'white' : '#303053' }}
       onScroll={() =>
         scrollRef &&
         scrollRef.current &&

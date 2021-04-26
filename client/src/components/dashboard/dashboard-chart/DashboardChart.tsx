@@ -12,8 +12,8 @@ const DashboardChart = (props: IDashboardChartProps) => {
     datasets: [
       {
         data: [props.completedProjects, props.runningProjects],
-        backgroundColor: ['#3F61C5', '#52EC90'],
-        hoverBackgroundColor: ['#3F61C5', '#52EC90'],
+        backgroundColor: ['#3484F0', '#52EC90'],
+        hoverBackgroundColor: ['#3484F0', '#52EC90'],
       },
     ],
     text: '25%',

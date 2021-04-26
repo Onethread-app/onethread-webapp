@@ -195,7 +195,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
         <>
           <NavbarCompany title="My Dashboard" />
           <div className="w-90 center mh2 mt4-l mt5 pb5 pb0-l">
-            <h3 className="f3-ns f5" style={{ color: '#3F61C5' }}>
+            <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
               Dashboard
             </h3>
             <div className="flex flex-row-ns flex-column">
@@ -207,14 +207,14 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               <div className="w-20-l w-100 items-start-ns">
                 <Card className="w-100 pa2 mb3-ns mb3 shadow-2 br3 totalInfoCard h4-ns">
                   <TotalInfo
-                    icon="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/users-icon.svg"
+                    type="employee"
                     content="Total Employees"
                     count={dashboard.totalEmployee}
                   />
                 </Card>
                 <Card className="w-100 pa2 mb3-ns mb3 shadow-2 br3 totalInfoCard h4-ns">
                   <TotalInfo
-                    icon="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/user-card.svg"
+                    type="associates"
                     content="Total Associates"
                     count={dashboard.totalAssociates}
                   />
@@ -223,7 +223,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             </div>
             <div>
               <div className="mt5 pb0-ns">
-                <h3 className="f3-ns f5" style={{ color: '#3F61C5' }}>
+                <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
                   Latest Completed Tasks
                 </h3>
                 <div className="flex-ns justify-between">
@@ -265,7 +265,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                             >
                               <span
                                 className="ttc"
-                                style={{ color: '#3F61C5' }}
+                                style={{ color: '#3484F0' }}
                               >
                                 {task.name}
                               </span>{' '}
@@ -325,7 +325,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 </div>
               </div>
               <div className="mt5 pb0-ns">
-                <h3 className="f3-ns f5" style={{ color: '#3F61C5' }}>
+                <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
                   Project Status
                 </h3>
                 <div className="flex-ns justify-between">
@@ -366,7 +366,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               <div className="mt4 mb4 pb0-ns">
                 <div className="flex justify-between items-center">
                   <h3
-                    style={{ color: '#3F61C5' }}
+                    style={{ color: '#3484F0' }}
                     className="justify-center f3-ns f5"
                   >
                     Company Announcements
@@ -381,7 +381,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                       }
                       className="bp3-button w5 h2 pointer fr"
                       style={{
-                        background: '#3F61C5',
+                        background: '#3484F0',
                         outline: 'none',
                         color: '#fff',
                       }}
@@ -401,7 +401,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 {props.company.announce && (
                   <Card
                     className="w-100-l w-100 pa4 shadow-1 br2"
-                    style={{ borderLeft: '10px solid #3F61C5' }}
+                    style={{ borderLeft: '10px solid #3484F0' }}
                   >
                     {props.company.announce.length > 0 ? (
                       currentAnnouncements.map(

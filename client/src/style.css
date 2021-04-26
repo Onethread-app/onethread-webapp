@@ -103,6 +103,10 @@ textarea.message-input {
   z-index: 4;
 }
 
+/* .main-sidebar {
+
+} */
+
 /* highlighted discussion */
 .message-text:hover .highlighted-icon {
   display: flex;

@@ -10,15 +10,21 @@ import { useDispatch, connect } from 'react-redux';
 
 import logo from 'resources/images/onethread-text.png';
 import tigrowLogo from '../resources/images/TiGrowLogoFinal.png';
-import individualProfile from '../resources/images/sidebarIndividualProfile.svg';
-import companyProfile from '../resources/images/sidebarCompanyProfile.svg';
+// import individualProfile from '../resources/images/sidebarIndividualProfile.svg';
+import sidebarProfile from '../resources/images/sidebarProfile.svg';
+import sidebarProfileLight from '../resources/images/sidebarProfile-light.svg';
 import room from '../resources/images/sidebarRoom.svg';
 import board from '../resources/images/sideBarBoard.svg';
 import team from '../resources/images/sidebarTeam.svg';
+import teamLight from '../resources/images/sidebarTeam-light.svg';
 import settings from '../resources/images/sidebarSettings.svg';
+import settingsLight from '../resources/images/sidebarSettings-light.svg';
 import projects from '../resources/images/ProjectsIcon.svg';
+import projectsLight from '../resources/images/ProjectsIcon-light.svg';
 import associates from '../resources/images/sideBarAssociates.svg';
+import associatesLight from '../resources/images/sideBarAssociates-light.svg';
 import dashboard from '../resources/images/sideBarDashboard.svg';
+import dashboardLight from '../resources/images/sideBarDashboard-light.svg';
 
 import preface from '../resources/images/sideBarPreface.svg';
 import settingsProject from '../resources/images/sidebarProjectSettings.svg';
@@ -45,12 +51,20 @@ interface ISideBarProps {
 }
 
 const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
+  const [activeTab, setActiveTab] = React.useState('');
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    props.type === 'default'
+      ? setActiveTab('user-profile')
+      : setActiveTab('company-dashboard');
+  }, [props.type]);
   return (
     <div
       style={{
-        background: '#060517',
+        background: '#303053',
       }}
+      className="main-sidebar"
     >
       <div
         className={`${props.leftOpen ? 'db ml4 mv3' : 'dn'} `}
@@ -64,26 +78,45 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
           )}
         </NavLink>
       </div>
-      <div className={`${props.leftOpen ? 'pt4' : 'pt5'}`}>
+      <div
+        className={`${
+          props.leftOpen ? 'pt4' : 'pt5'
+        } pt4 flex flex-column justify-center items-center`}
+      >
         {props.type === 'default' ? (
           <NavLink
             exact
-            className="ma1 hover-bg-white-20 flex items-center nowrap"
+            className="ma1 hover-bg-white-20 pa1 flex items-center nowrap w-100"
             style={{ color: 'white' }}
-            activeStyle={{ background: '#3F61C5' }}
+            activeStyle={{ background: ' #3484F0' }}
+            onClick={() => setActiveTab('user-profile')}
             to={`/${props.user.name}`}
           >
             {props.leftOpen ? (
-              <span className="pl4">
-                <img src={individualProfile} className="w2 pt1" />
+              <span className="ml4 pa1 bg-white">
+                <img
+                  src={
+                    activeTab === 'user-profile'
+                      ? sidebarProfileLight
+                      : sidebarProfile
+                  }
+                  className="w1 pt1"
+                />
               </span>
             ) : (
               <Tooltip
                 content={<p className="mb0">Individual Profile</p>}
                 position="right"
               >
-                <span className="pl3">
-                  <img src={individualProfile} className="w2 pt1" />
+                <span className="ml3 pa1 bg-white">
+                  <img
+                    src={
+                      activeTab === 'user-profile'
+                        ? sidebarProfileLight
+                        : sidebarProfile
+                    }
+                    className="w1 pt1"
+                  />
                 </span>
               </Tooltip>
             )}
@@ -104,22 +137,37 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
               props.company.role === 'employee') && (
               <NavLink
                 exact
-                className="flex items-center nowrap ma1 hover-bg-white-20"
+                className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                 style={{ color: 'white' }}
-                activeStyle={{ background: '#3F61C5' }}
+                activeStyle={{ background: ' #3484F0' }}
                 to={`/company/${props.company.uniqueName}/dashboard`}
+                onClick={() => setActiveTab('company-dashboard')}
               >
                 {props.leftOpen ? (
-                  <span className="pl4">
-                    <img src={dashboard} className="w2 pt1" />
+                  <span className="ml4 pa1 bg-white">
+                    <img
+                      src={
+                        activeTab === 'company-dashboard'
+                          ? dashboardLight
+                          : dashboard
+                      }
+                      className="w1 pt1"
+                    />
                   </span>
                 ) : (
                   <Tooltip
                     content={<p className="mb0">Dashboard</p>}
                     position="right"
                   >
-                    <span className="pl3">
-                      <img src={dashboard} className="w2 pt1" />
+                    <span className="ml3 pa1 bg-white">
+                      <img
+                        src={
+                          activeTab === 'company-dashboard'
+                            ? dashboardLight
+                            : dashboard
+                        }
+                        className="w1 pt1"
+                      />
                     </span>
                   </Tooltip>
                 )}
@@ -133,24 +181,39 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
-                        <NavLink
+            <NavLink
               exact
-              className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+              className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
               style={{ color: 'white' }}
-              activeStyle={{ background: '#3F61C5' }}
+              activeStyle={{ background: ' #3484F0' }}
               to={`/company/${props.company.uniqueName}/project`}
+              onClick={() => setActiveTab('company-project')}
             >
               {props.leftOpen ? (
-                <span className="pl4">
-                  <img src={projects} className="w2 pt1" />
+                <span className="ml4 pa1 bg-white">
+                  <img
+                    src={
+                      activeTab === 'company-project'
+                        ? projectsLight
+                        : projects
+                    }
+                    className="w1 pt1"
+                  />
                 </span>
               ) : (
                 <Tooltip
                   content={<p className="mb0">Projects</p>}
                   position="right"
                 >
-                  <span className="pl3">
-                    <img src={projects} className="w2 pt1" />
+                  <span className="ml3 pa1 bg-white">
+                    <img
+                      src={
+                        activeTab === 'company-project'
+                          ? projectsLight
+                          : projects
+                      }
+                      className="w1 pt1"
+                    />
                   </span>
                 </Tooltip>
               )}
@@ -178,7 +241,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
             </NavLink>
             {/*  */}
             {props.projectFileOpen && (
-              <div className="bg-white-10">
+              <div className="w-100 bg-white-10">
                 {props.leftOpen ? (
                   <h1
                     className="f7 fw4 white pl4 pv2 pointer overflow-hidden"
@@ -208,9 +271,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 />
                 <NavLink
                   exact
-                  className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+                  className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                   style={{ color: 'white' }}
-                  activeStyle={{ background: '#3F61C5' }}
+                  activeStyle={{ background: ' #3484F0' }}
                   to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
                 >
                   {props.leftOpen ? (
@@ -246,9 +309,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 </NavLink>
                 <NavLink
                   exact
-                  className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+                  className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                   style={{ color: 'white' }}
-                  activeStyle={{ background: '#3F61C5' }}
+                  activeStyle={{ background: ' #3484F0' }}
                   to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
                 >
                   {props.leftOpen ? (
@@ -298,9 +361,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
 
                 <NavLink
                   exact
-                  className="flex items-center nowrap ma1 hover-bg-white-20"
+                  className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                   style={{ color: 'white' }}
-                  activeStyle={{ background: '#3F61C5' }}
+                  activeStyle={{ background: ' #3484F0' }}
                   to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
                 >
                   {props.leftOpen ? (
@@ -336,9 +399,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 </NavLink>
                 <NavLink
                   exact
-                  className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+                  className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                   style={{ color: 'white' }}
-                  activeStyle={{ background: '#3F61C5' }}
+                  activeStyle={{ background: ' #3484F0' }}
                   to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
                 >
                   {props.leftOpen ? (
@@ -374,9 +437,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 </NavLink>
                 <NavLink
                   exact
-                  className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+                  className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                   style={{ color: 'white' }}
-                  activeStyle={{ background: '#3F61C5' }}
+                  activeStyle={{ background: ' #3484F0' }}
                   to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
                 >
                   {props.leftOpen ? (
@@ -416,22 +479,37 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
               props.company.role === 'employee') && (
               <NavLink
                 exact
-                className="flex items-center nowrap ma1 hover-bg-white-20"
+                className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                 style={{ color: 'white' }}
-                activeStyle={{ background: '#3F61C5' }}
+                activeStyle={{ background: ' #3484F0' }}
                 to={`/company/${props.company.uniqueName}`}
+                onClick={() => setActiveTab('company-profile')}
               >
                 {props.leftOpen ? (
-                  <span className="pl4">
-                    <img src={companyProfile} className="w2 pt1" />
+                  <span className="ml4 pa1 bg-white">
+                    <img
+                      src={
+                        activeTab === 'company-profile'
+                          ? sidebarProfileLight
+                          : sidebarProfile
+                      }
+                      className="w1 pt1"
+                    />
                   </span>
                 ) : (
                   <Tooltip
                     content={<p className="mb0">Company Profile</p>}
                     position="right"
                   >
-                    <span className="pl3">
-                      <img src={companyProfile} className="w2 pt1" />
+                    <span className="ml3 pa1 bg-white">
+                      <img
+                        src={
+                          activeTab === 'company-profile'
+                            ? sidebarProfileLight
+                            : sidebarProfile
+                        }
+                        className="w1 pt1"
+                      />
                     </span>
                   </Tooltip>
                 )}
@@ -449,22 +527,37 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
               props.company.role === 'employee') && (
               <NavLink
                 exact
-                className="flex items-center nowrap ma1 hover-bg-white-20"
+                className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                 style={{ color: 'white' }}
-                activeStyle={{ background: '#3F61C5' }}
+                activeStyle={{ background: ' #3484F0' }}
                 to={`/company/${props.company.uniqueName}/colleague`}
+                onClick={() => setActiveTab('company-colleague')}
               >
                 {props.leftOpen ? (
-                  <span className="pl4">
-                    <img src={team} className="w2 pt1" />
+                  <span className="ml4 pa1 bg-white">
+                    <img
+                      src={
+                        activeTab === 'company-colleague'
+                          ? teamLight
+                          : team
+                      }
+                      className="w1 pt1"
+                    />
                   </span>
                 ) : (
                   <Tooltip
                     content={<p className="mb0">Colleagues</p>}
                     position="right"
                   >
-                    <span className="pl3">
-                      <img src={team} className="w2 pt1" />
+                    <span className="ml3 pa1 bg-white">
+                      <img
+                        src={
+                          activeTab === 'company-colleague'
+                            ? teamLight
+                            : team
+                        }
+                        className="w1 pt1"
+                      />
                     </span>
                   </Tooltip>
                 )}
@@ -481,22 +574,37 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
             {companyPermit(props.company.role) && (
               <NavLink
                 exact
-                className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+                className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                 style={{ color: 'white' }}
-                activeStyle={{ background: '#3F61C5' }}
+                activeStyle={{ background: ' #3484F0' }}
                 to={`/company/${props.company.uniqueName}/settings`}
+                onClick={() => setActiveTab('company-settings')}
               >
                 {props.leftOpen ? (
-                  <span className="pl4">
-                    <img src={settings} className="w2 pt1" />
+                  <span className="ml4 pa1 bg-white">
+                    <img
+                      src={
+                        activeTab === 'company-settings'
+                          ? settingsLight
+                          : settings
+                      }
+                      className="w1 pt1"
+                    />
                   </span>
                 ) : (
                   <Tooltip
                     content={<p className="mb0">Settings</p>}
                     position="right"
                   >
-                    <span className="pl3">
-                      <img src={settings} className="w2 pt1" />
+                    <span className="ml3 pa1 bg-white">
+                      <img
+                        src={
+                          activeTab === 'company-settings'
+                            ? settingsLight
+                            : settings
+                        }
+                        className="w1 pt1"
+                      />
                     </span>
                   </Tooltip>
                 )}
@@ -515,22 +623,37 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
             {companyPermit(props.company.role) && (
               <NavLink
                 exact
-                className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+                className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                 style={{ color: 'white' }}
-                activeStyle={{ background: '#3F61C5' }}
+                activeStyle={{ background: ' #3484F0' }}
                 to={`/company/${props.company.uniqueName}/associates`}
+                onClick={() => setActiveTab('company-associates')}
               >
                 {props.leftOpen ? (
-                  <span className="pl4">
-                    <img src={associates} className="w2 pt1" />
+                  <span className="ml4 pa1 bg-white">
+                    <img
+                      src={
+                        activeTab === 'company-associates'
+                          ? associatesLight
+                          : associates
+                      }
+                      className="w1 pt1"
+                    />
                   </span>
                 ) : (
                   <Tooltip
                     content={<p className="mb0">Associates</p>}
                     position="right"
                   >
-                    <span className="pl3">
-                      <img src={associates} className="w2 pt1" />
+                    <span className="ml3 pa1 bg-white">
+                      <img
+                        src={
+                          activeTab === 'company-associates'
+                            ? associatesLight
+                            : associates
+                        }
+                        className="w1 pt1"
+                      />
                     </span>
                   </Tooltip>
                 )}

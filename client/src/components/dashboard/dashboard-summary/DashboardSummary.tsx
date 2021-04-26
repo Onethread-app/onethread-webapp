@@ -2,7 +2,7 @@ import React from 'react';
 import './DashboardSummary.scss';
 import DashboardChart from '../dashboard-chart/DashboardChart';
 const primaryColor = {
-  color: '#3F61C5',
+  color: '#3484F0',
 };
 
 const fontColor = {

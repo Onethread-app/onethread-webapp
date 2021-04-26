@@ -1,5 +1,9 @@
 .my-projects {
   .projects-filter {
+    @media screen and (max-width: 1230px) {
+      flex-direction: column;
+    }
+
     .filter {
       gap: 0.5rem;
 

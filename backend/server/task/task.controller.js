@@ -25,10 +25,11 @@ const load = (req, res, next, id) => {
   Task.findById(id)
     .populate('account', '_id firstName lastName')
     .populate('columnId', '_id name')
-    .populate('file', '_id link')
+    .populate('file', '_id link s3Key')
     .exec()
     .then((result) => {
       req.task = result;
+      console.log(result);
       next();
     })
     .catch(() => {
