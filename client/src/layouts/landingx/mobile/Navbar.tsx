@@ -4,11 +4,10 @@ import { NavLink } from 'react-router-dom';
 import CloseIcon from '@material-ui/icons/Close';
 import { useSpring, animated } from 'react-spring';
 
-import Logo from 'resources/images/onethread-logo-main.png';
-import TextLogo from 'resources/images/onethread-text.png';
+import DarkLogo from 'resources/images/onethread-logo-dark.png';
 import { ReactComponent as Hamburger } from 'resources/navigation-menu.svg';
 
-const Menu = ({ open, setOpen }) => {
+const Menu = ({ setOpen }) => {
   const handleClose = () => {
     setOpen(false);
   };
@@ -35,7 +34,9 @@ const Menu = ({ open, setOpen }) => {
             <NavLink to="/signin">Login</NavLink>
           </li>
           <li>
-            <NavLink to="/signup">SignUp</NavLink>
+            <NavLink to="/signup" className="b">
+              SignUp
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -50,15 +51,14 @@ const MobileNavbar = () => {
   };
   return (
     <div className="navbar flex items-center justify-between w-100">
-      <div className="logos flex items-center">
-        <img src={Logo} alt="Onethread" className="main-logo mr1" />
-        <img src={TextLogo} alt="Onethread" className="text-logo" />
-      </div>
+      <NavLink to="/">
+        <img src={DarkLogo} alt="Onethread" />
+      </NavLink>
       <Hamburger
         className="hamburger-menu content-end"
         onClick={handleClick}
       />
-      {open && <Menu open={open} setOpen={setOpen} />}
+      {open && <Menu setOpen={setOpen} />}
     </div>
   );
 };

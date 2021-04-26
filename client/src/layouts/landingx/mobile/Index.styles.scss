@@ -1,15 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 .landing-m {
-  background: #000;
   font-family: 'Lato', sans-serif;
   position: relative;
+  background: #fff;
 
   .navbar {
     position: sticky;
     top: 0;
-    padding: 8px 18px;
-    background: rgba(0, 0, 0, 0.9);
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.9);
     z-index: 1;
 
     .logos {
@@ -29,8 +29,8 @@
     position: absolute;
     top: 0;
     left: 0;
-    background: rgba(0, 0, 0, 0.9);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.9);
+    color: #303052;
     z-index: 5;
 
     > div {
@@ -76,87 +76,122 @@
   }
 
   .main-header {
-    height: 746px;
-    color: #fff;
-    z-index: 2;
-
-    > img {
-      object-fit: cover;
-      width: 100%;
-      height: 100%;
-      position: absolute;
-    }
-
-    .contents {
-      .heading {
-        font-weight: 900;
-        font-size: 48px;
-        line-height: 58px;
-        margin-bottom: 50px;
-        padding: 0 0.75rem;
-      }
-
-      .sub-heading {
-        font-size: 24px;
-        line-height: 29px;
-        padding: 0 0.75rem;
-        margin-bottom: 50px;
-      }
-    }
-  }
-
-  .management {
-    height: 330px;
-    background: #fff;
+    height: 92vh;
     color: #000;
+    padding: 0 1.5rem;
 
-    h3 {
-      font-weight: normal;
-      font-size: 22px;
-      line-height: 26px;
-      padding: 0 22px;
+    img {
+      margin: 1rem 0;
     }
 
-    p {
-      font-weight: 500;
+    .heading {
+      font-size: 44px;
+      line-height: 56px;
+      font-weight: 700;
+    }
+
+    .sub-heading {
+      font-size: 18px;
+      line-height: 22px;
+      font-weight: normal;
+      margin-bottom: 28px;
+    }
+
+    @media screen and (max-height: 640px) {
+      height: 100vh;
+    }
+
+    @media screen and (max-height: 570px) {
+      height: 125vh;
     }
   }
 
+  .second-section {
+    padding: 0 1.5rem;
+    background: #303052;
+    color: #fff;
+
+    .unified-tool {
+      gap: 28px;
+      margin-top: 1.5rem;
+
+      &-text {
+        font-size: 33px;
+        line-height: 41px;
+        flex: 0 1 28%;
+      }
+
+      &-content {
+        flex: 0 1 56%;
+        box-shadow: rgba(255, 255, 255, 0.28) 0px 1px 4px;
+        padding: 1rem;
+
+        &-header {
+          font-size: 20px;
+          line-height: 22px;
+          font-weight: 400;
+          margin-bottom: 24px;
+          flex: 0 1 60%;
+        }
+
+        &-body {
+          > div {
+            img {
+              margin-right: 24px;
+            }
+
+            &:not(:last-child) {
+              margin-bottom: 24px;
+            }
+          }
+        }
+
+        &-footer {
+          margin: 24px 0 0;
+          font-weight: bold;
+          font-size: 19px;
+          line-height: 28px;
+          text-decoration-line: underline;
+          text-underline-position: under;
+          color: #3484f0;
+        }
+      }
+    }
+  }
   .third-section {
     background: #fff;
     color: #000;
+    padding: 0 1.5rem;
 
     .gif {
-      height: 340px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background: #ffffff;
     }
 
     .contents {
-      height: 410px;
-      background: #303052;
-      color: #fff;
+      color: inherit;
       padding: 0 0.5rem;
 
       h3 {
-        font-size: 28px;
+        font-size: 25px;
         line-height: 34px;
         font-weight: 700;
       }
 
       p {
-        font-size: 24px;
-        line-height: 28px;
+        font-size: 18px;
+        line-height: 26px;
+        text-align: justify;
       }
     }
   }
 
   .teams {
-    background: #fff;
-    color: #000;
-    padding: 2.5rem 0.5rem;
+    background: #303052;
+    color: #fff;
+    padding: 2.5rem 1.5rem;
 
     h2 {
-      font-size: 28px;
+      font-size: 26px;
       line-height: 34px;
       font-weight: 600;
       text-align: center;
@@ -170,7 +205,7 @@
         margin-bottom: 1.5rem;
 
         img {
-          filter: grayscale(100%);
+          // filter: grayscale(100%);
           height: max-content;
         }
       }
@@ -180,17 +215,15 @@
   .product-details {
     background: #fff;
     color: #000;
-    padding: 2.5rem 0;
+    padding: 0 1.5rem;
 
     .header {
-      padding: 0 2.5rem 1rem;
-
       img {
-        padding: 0 0.5rem;
+        padding: 0 3rem;
       }
 
       h2 {
-        font-size: 28px;
+        font-size: 26px;
         line-height: 34px;
         text-align: center;
         font-weight: 700;
@@ -203,27 +236,104 @@
           margin-bottom: 1.5rem;
         }
 
-        &-gif {
-          height: 221px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
-
         &-content {
-          padding: 0 0.5rem;
           text-align: center;
 
           h3 {
-            font-size: 28px;
+            font-size: 25px;
             line-height: 34px;
             font-weight: 600;
           }
 
           p {
-            font-size: 22px;
-            line-height: 28px;
-            font-weight: 500;
+            font-size: 18px;
+            line-height: 26px;
+            text-align: justify;
           }
         }
+      }
+    }
+  }
+  .footer {
+    background: #303052;
+    position: relative;
+
+    .main-footer {
+      margin-top: 1.5rem;
+      padding: 0 1.5rem;
+
+      &-links {
+        div {
+          width: 80%;
+          padding: 1rem;
+
+          &:not(:last-child) {
+            border-bottom: 1px solid #fff;
+          }
+          ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+
+            li {
+              font-size: 18px;
+              line-height: 22px;
+              color: #fff;
+
+              &:hover {
+                cursor: pointer;
+              }
+
+              &:not(:last-child) {
+                padding-bottom: 0.75rem;
+              }
+            }
+          }
+        }
+      }
+
+      &-border {
+        border: 1px solid #5c5c5c;
+        margin: 1.5rem 0;
+      }
+
+      &-icons {
+        margin-bottom: 1.5rem;
+
+        img {
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        .group-1 {
+          img {
+            &:not(:last-child) {
+              margin-right: 20px;
+            }
+          }
+        }
+
+        .group-2 {
+          img {
+            &:not(:last-child) {
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+    }
+
+    &-copyright {
+      height: 88px;
+      background: #252546;
+      padding: 0 1.5rem;
+
+      h1 {
+        font-size: 15px;
+        line-height: 22px;
+        color: #fff;
+        font-weight: normal;
       }
     }
   }
