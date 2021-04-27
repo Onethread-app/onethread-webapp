@@ -5,7 +5,6 @@ import { HTMLSelect, Icon, Button, Spinner } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import { createCompanyAction } from 'stores/company/Actions';
-import { History } from 'history';
 
 const Type = [
   'Manufacturer',
@@ -22,12 +21,14 @@ const Type = [
 const CompanySignupFormComponent = (
   props: {
     setShowDialog: (val: boolean) => void;
-    createCompanyAction: (val: any, history: History) => void;
-    errorCompany: { message: string; network: boolean };
+    createCompanyAction: (val: any) => void;
     companyName: string;
-    isCompanyLoading: boolean;
+    creatingCompany: boolean;
+    errorOnCreatingCompany: string;
   } & RouteComponentProps,
 ) => {
+  const [currentCompanyName, setCurrentCompanyName] = useState('');
+  const [loading, setLoading] = useState(false);
   const [values, setValues] = useState({
     name: '',
     email: '',
@@ -46,7 +47,22 @@ const CompanySignupFormComponent = (
     type: '',
   });
 
-  const [loading, setLoading] = useState(false);
+  React.useEffect(() => {
+    setCurrentCompanyName(props.companyName);
+  }, []);
+
+  React.useEffect(() => {
+    if (
+      loading &&
+      props.creatingCompany === false &&
+      props.errorOnCreatingCompany === '' &&
+      props.companyName !== currentCompanyName
+    ) {
+      setLoading(false);
+      props.setShowDialog(false);
+      props.history.push(`/company/${props.companyName}/dashboard`);
+    }
+  }, [props.creatingCompany]);
 
   const emailValidation = (email: string) => {
     if (email !== '') {
@@ -118,6 +134,16 @@ const CompanySignupFormComponent = (
     }
   };
 
+  const handleCreateCompany = async (e: any) => {
+    e.preventDefault();
+    if (!emptyValueCheck() && emptyErrorCheck()) {
+      setLoading(true);
+      await props.createCompanyAction(
+        pickBy(values, (v) => v !== ''),
+      );
+    }
+  };
+
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
@@ -164,9 +190,9 @@ const CompanySignupFormComponent = (
         ) : (
           ''
         )}
-        {props.errorCompany ? (
+        {props.errorOnCreatingCompany ? (
           <small style={{ color: 'red' }}>
-            {props.errorCompany.message}
+            {props.errorOnCreatingCompany}
           </small>
         ) : (
           ''
@@ -332,9 +358,9 @@ const CompanySignupFormComponent = (
         ) : (
           ''
         )}
-        {props.errorCompany ? (
+        {props.errorOnCreatingCompany ? (
           <small style={{ color: 'red' }}>
-            {props.errorCompany.message}
+            {props.errorOnCreatingCompany}
           </small>
         ) : (
           ''
@@ -405,7 +431,6 @@ const CompanySignupFormComponent = (
           onClick={(e: any) => {
             e.preventDefault();
             props.setShowDialog(false);
-            props.errorCompany.message = '';
             setLoading(false);
           }}
         >
@@ -420,21 +445,7 @@ const CompanySignupFormComponent = (
             color: 'white',
           }}
           onClick={async (e: any) => {
-            e.preventDefault();
-            if (!emptyValueCheck() && emptyErrorCheck()) {
-              setLoading(true);
-              await props.createCompanyAction(
-                pickBy(values, (v) => v !== ''),
-                props.history,
-              );
-              if (props.isCompanyLoading === false) {
-                setLoading(false);
-                props.setShowDialog(false);
-                props.history.push(
-                  `/company/${props.companyName}/dashboard`,
-                );
-              }
-            }
+            await handleCreateCompany(e);
           }}
           disabled={loading}
         >
@@ -447,9 +458,10 @@ const CompanySignupFormComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
-    errorCompany: state.companyReducer.createCompanyError,
-    companyName: state.companyReducer.currentCompany.name,
-    isCompanyLoading: state.companyReducer.loading,
+    companyName: state.companyReducer.currentCompany.uniqueName,
+    creatingCompany: state.companyReducer.creatingCompany,
+    errorOnCreatingCompany:
+      state.companyReducer.errorOnCreatingCompany,
   };
 };
 

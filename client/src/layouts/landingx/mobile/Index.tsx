@@ -18,11 +18,9 @@ import MailGif from 'resources/images/mail.gif';
 import ReportGif from 'resources/images/report.gif';
 
 import MarketExpress from 'resources/images/companies/market-express.png';
-import Dysin from 'resources/images/companies/dysin.png';
 import Plummy from 'resources/images/companies/plummy-fashions.png';
 import BatteryLow from 'resources/images/companies/battery-low.png';
 import MCCI from 'resources/images/companies/mcci.png';
-import Peakward from 'resources/images/companies/peakward.png';
 
 import ProjectPng from 'resources/images/project.png';
 import MeetingPng from 'resources/images/meeting.png';
@@ -124,19 +122,11 @@ const MobileIndex = () => {
         <div className="companies flex flex-column items-center justify-center">
           <div className="flex items-center justify-around w-100">
             <img src={MarketExpress} alt="market express" />
-            <img src={Dysin} alt="dysin" />
-          </div>
-          <div className="flex items-center justify-around w-100">
             <img src={Plummy} alt="plummy fashions" />
-            <img src={BatteryLow} alt="battery low" />
           </div>
           <div className="flex items-center justify-around w-100">
+            <img src={BatteryLow} alt="battery low" />
             <img src={MCCI} alt="mcci" />
-            <img
-              src={Peakward}
-              style={{ maxWidth: '50%' }}
-              alt="peakward enterprise"
-            />
           </div>
         </div>
         <OTButton to="/signup">Create Your First Project</OTButton>

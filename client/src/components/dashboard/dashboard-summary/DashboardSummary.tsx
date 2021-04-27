@@ -22,7 +22,10 @@ export const DashboardSummary = (props) => {
   React.useEffect(() => {
     if (projectCompilation) {
       const projectStats = projectCompilation.map((project) => {
-        return project.taskNumbers === project.doneTask;
+        return (
+          project.taskNumbers > 0 &&
+          project.taskNumbers === project.doneTask
+        );
       });
 
       const totalCompletedProjects = projectStats.reduce(

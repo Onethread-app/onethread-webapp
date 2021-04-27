@@ -88,7 +88,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();
-      // try {
+
       if (props.company._id) {
         await tigrowApi
           .get(`company/${props.company._id}/dashboard`, headers)

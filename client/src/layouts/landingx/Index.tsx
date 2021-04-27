@@ -13,11 +13,9 @@ import Logo from 'resources/images/onethread-logo-main.png';
 import MainLanding from 'resources/images/main-landing.png';
 import CombinedLogo from 'resources/images/combined-logo.png';
 import MarketExpress from 'resources/images/companies/market-express.png';
-import Dysin from 'resources/images/companies/dysin.png';
 import Plummy from 'resources/images/companies/plummy-fashions.png';
 import BatteryLow from 'resources/images/companies/battery-low.png';
 import MCCI from 'resources/images/companies/mcci.png';
-import Peakward from 'resources/images/companies/peakward.png';
 
 import DashboardIcon from 'resources/images/dashboard-icon.png';
 import MessagesIcon from 'resources/images/messages-icon.png';
@@ -127,11 +125,9 @@ const NewLanding = () => {
         </h1>
         <div className="companies w-100 flex justify-around items-center">
           <img src={MarketExpress} alt="market express" />
-          <img src={Dysin} alt="dysin" />
           <img src={Plummy} alt="plummy fashions" />
           <img src={BatteryLow} alt="battery low" />
           <img src={MCCI} alt="mcci" />
-          <img src={Peakward} alt="peakward enterprise" />
         </div>
       </section>
       <section className="product-details flex flex-column  w-100">
