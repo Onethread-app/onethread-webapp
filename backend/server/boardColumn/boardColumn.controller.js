@@ -9,12 +9,12 @@ const load = async (req, res, next, id) => {
   await BoardColumn.findById(id)
     .exec()
     .then((result) => {
-      if (result) {
+      if (result.project === req.query.pid) {
         req.boardColumn = result;
         next();
       } else {
-        return sendErrorResponse(res, 400, 'IdIsNotExits', {
-          message: 'No valid entry found for provided Board ID',
+        return sendErrorResponse(res, 400, 'ValidationError', {
+          message: 'Project ID mismatch',
         });
       }
     })
@@ -66,14 +66,20 @@ const create = async (req, res, next) => {
 };
 
 const list = async (req, res, next) => {
-  const { boardId } = req.query;
+  const { boardId, pid } = req.query;
   await BoardColumn.find({
     boardId: boardId,
     removed: false,
   })
     .exec()
     .then((result) => {
-      return sendJSONresponse(res, 200, result);
+      if (result.project === pid) {
+        return sendJSONresponse(res, 200, result);
+      } else {
+        return sendErrorResponse(res, 400, 'ValidationError', {
+          message: 'Project ID mismatch',
+        });
+      }
     })
     .catch((e) => {
       logger.error(`Board column: ${err}`);
