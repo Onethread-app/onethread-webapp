@@ -71,8 +71,15 @@ const load = (req, res, next, id) => {
   Board.findById(id)
     .exec()
     .then((result) => {
-      req.board = result;
-      return next();
+      if (result.project.toString() === req.query.pid) {
+        req.board = result;
+        return next();
+      } else {
+        return sendErrorResponse(res, 400, 'ValidationError', {
+          success: false,
+          message: 'Project ID mismatch',
+        });
+      }
     })
     .catch((err) => {
       return sendErrorResponse(res, 404, 'Idisnotexits', {
