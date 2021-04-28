@@ -29,12 +29,6 @@ const BoardSchema = new mongoose.Schema(
       ref: 'Project',
       required: true,
     },
-    columns: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'BoardColumn',
-      },
-    ],
     members: [
       {
         type: Schema.Types.ObjectId,

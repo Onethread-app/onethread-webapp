@@ -56,6 +56,9 @@ module.exports = {
     }),
   }),
   deleteTask: Joi.object().keys({
+    body: Joi.object().keys({
+      columnId: taskSchema.columnId.required(),
+    }),
     params: Joi.object().keys({
       taskId: taskSchema.taskId,
     }),

@@ -413,7 +413,12 @@ export function* deleteTaskAsync({ payload }: any) {
     if ((headers as any).headers.Authorization && payload) {
       const response = yield tigrowApi.delete(
         `tasks/${payload.taskId}?pid=${projectId}`,
-        headers,
+        {
+          data: {
+            columnId: payload.columnId,
+          },
+          headers: headers.headers,
+        },
       );
       if (response.status === 200) {
         yield put(deleteTaskSuccess(payload));

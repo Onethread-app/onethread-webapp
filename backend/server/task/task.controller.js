@@ -37,63 +37,76 @@ const load = (req, res, next, id) => {
 
 const create = async (req, res, next) => {
   try {
-    const task = new Task({
-      name: req.body.name,
-      account: req.user._id,
-      status: req.body.status,
-      columnId: req.body.columnId,
+    const columnProject = await BoardColumn.findOne({
       boardId: req.body.boardId,
-      project: req.query.pid,
-    });
-    const createdTask = await task.save();
-
-    // TODO: should use update function
-    const column = await BoardColumn.findOne({
       _id: req.body.columnId,
-    }).populate({
-      path: 'boardId',
-      populate: {
-        path: 'project',
-        model: 'Project',
-        select: '_id name company',
-      },
-    });
+    })
+      .select('project')
+      .exec();
 
-    const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
-    createCompanyRoleNotification(
-      {
-        _id: column.boardId.project.company,
-        project: column.boardId.project._id,
-        board: column.boardId,
-        task: createdTask._id,
-      },
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'task',
-    );
+    if (columnProject.project === req.query.pid) {
+      const task = new Task({
+        name: req.body.name,
+        account: req.user._id,
+        status: req.body.status,
+        columnId: req.body.columnId,
+        boardId: req.body.boardId,
+        project: req.query.pid,
+      });
+      const createdTask = await task.save();
 
-    column.tasks.push(createdTask._id);
-    await column.save();
+      // TODO: should use update function
+      const column = await BoardColumn.findOne({
+        _id: req.body.columnId,
+      }).populate({
+        path: 'boardId',
+        populate: {
+          path: 'project',
+          model: 'Project',
+          select: '_id name company',
+        },
+      });
 
-    await ActivityCtrl.create(
-      `added this card to ${column.name}`,
-      'create',
-      createdTask._id,
-      req.user,
-    );
+      const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
+      createCompanyRoleNotification(
+        {
+          _id: column.boardId.project.company,
+          project: column.boardId.project._id,
+          board: column.boardId,
+          task: createdTask._id,
+        },
+        {
+          _id: req.user._id,
+          name: req.user.name,
+          pusherSock: req.headers.clientid,
+        },
+        text,
+        'task',
+      );
 
-    const responseData = {
-      _id: createdTask._id,
-      name: createdTask.name,
-      description: createdTask.description,
-      dueDate: createdTask.dueDate,
-    };
-    logger.info(`Task column create`);
-    res.status(201).send(responseData);
+      column.tasks.push(createdTask._id);
+      await column.save();
+
+      await ActivityCtrl.create(
+        `added this card to ${column.name}`,
+        'create',
+        createdTask._id,
+        req.user,
+      );
+
+      const responseData = {
+        _id: createdTask._id,
+        name: createdTask.name,
+        description: createdTask.description,
+        dueDate: createdTask.dueDate,
+      };
+      logger.info(`Task column create`);
+      res.status(201).send(responseData);
+    } else {
+      sendErrorResponse(res, 400, 'ValidationError', {
+        message: 'Project ID mismatch',
+      });
+    }
   } catch (error) {
     logger.error(`Task: ${error}`);
     next(error);
@@ -283,13 +296,18 @@ const deleteTask = async (req, res, next) => {
         },
       }).exec();
     }
-    Task.findByIdAndDelete(req.params.taskId)
-      .exec()
-      .then(() => {
-        return sendJSONresponse(res, 200, {
-          message: 'Task Deleted.',
-        });
-      });
+
+    await Task.findByIdAndDelete(req.params.taskId).exec();
+
+    await BoardColumn.findByIdAndUpdate(
+      req.body.columnId,
+      { $pull: { tasks: { _id: { $in: req.params.taskId } } } },
+      { new: true },
+    ).exec();
+
+    return sendJSONresponse(res, 200, {
+      message: 'Task Deleted.',
+    });
   } catch (error) {
     logger.error(`Task: ${error}`);
     next(error);
