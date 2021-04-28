@@ -37,9 +37,9 @@ const NewLanding = () => {
       <Navbar />
       <section className="main-header w-100 relative flex flex-column items-center">
         <h2 className="heading tc">
-        Collaborate with people on projects  <br />
+          Collaborate with people on projects <br />
           <span style={{ color: '#3484F0' }}>
-          with the click of a button
+            with the click of a button
           </span>
         </h2>
         <img src={MainLanding} alt="" />

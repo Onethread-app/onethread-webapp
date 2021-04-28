@@ -1,4 +1,3 @@
-import { History } from 'history';
 import { ICompany } from 'stores/company/Reducer';
 import {
   CLEAR_CHANGE_COMPANY_NAME_ERROR,
@@ -21,13 +20,9 @@ export const getCompanyDetailsFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
-export const createCompanyAction = (
-  companyData: ICompany,
-  routeHistory: History,
-) => ({
+export const createCompanyAction = (companyData: ICompany) => ({
   type: CompanyActionTypes.CREATE_COMPANY_START,
   companyData,
-  routeHistory,
 });
 
 export const createCompanyActionSuccess = (response: any) => ({

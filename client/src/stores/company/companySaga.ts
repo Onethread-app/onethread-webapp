@@ -75,10 +75,7 @@ import { getAllProjects } from 'stores/project/Actions';
 const takeEvery: any = Eff.takeEvery;
 const takeLatest: any = Eff.takeLatest;
 
-export function* createCompanyAsync({
-  companyData,
-  routeHistory,
-}: any) {
+export function* createCompanyAsync({ companyData }: any) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
@@ -91,11 +88,7 @@ export function* createCompanyAsync({
         put({ type: CLEAR_PROJECT_REDUCER_STATE }),
         put({ type: CLEAR_ROOMS_REDUCER_STATE }),
         put(createCompanyActionSuccess(response.data)),
-        put(getAllProjects()),
       ]);
-      routeHistory.push(
-        `/company/${response.data.company.uniqueName}/dashboard`,
-      );
     }
   } catch (error) {
     if (error.message === 'Network Error') {

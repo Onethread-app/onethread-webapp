@@ -124,6 +124,7 @@ const InitialState = {
     network: false,
   },
   completedTasks: [],
+  creatingCompany: false,
   loadingCompletedTasks: false,
   completedTaskserror: '',
   loading: false,
@@ -132,6 +133,7 @@ const InitialState = {
   departmentNameLoading: false,
   designationLoading: false,
   error: '',
+  errorOnCreatingCompany: '',
   colleagueInviteSuccess: false,
   colleagueError: '',
 };
@@ -156,16 +158,9 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CompanyActionTypes.ADD_TEAM_MEMBER_START:
     case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_START:
     case CompanyActionTypes.GET_COMPANY_DETAILS_START:
-    case CompanyActionTypes.CREATE_COMPANY_START:
       return {
         ...state,
         loading: true,
-      };
-    case CompanyActionTypes.CREATE_COMPANY_SUCCESS:
-      return {
-        ...state,
-        currentCompany: action.payload.company,
-        loading: false,
       };
     case CompanyActionTypes.COLLEAGUE_INVITE_FAILURE:
     case CompanyActionTypes.GET_ALL_PRODUCT_FAILURE:
@@ -183,11 +178,28 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CompanyActionTypes.ADD_TEAM_MEMBER_FAILURE:
     case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_FAILURE:
     case CompanyActionTypes.GET_COMPANY_DETAILS_FAILURE:
-    case CompanyActionTypes.CREATE_COMPANY_FAILURE:
       return {
         ...state,
         error: action.payload,
         loading: false,
+      };
+    case CompanyActionTypes.CREATE_COMPANY_START:
+      return {
+        ...state,
+        creatingCompany: true,
+        errorOnCreatingCompany: '',
+      };
+    case CompanyActionTypes.CREATE_COMPANY_SUCCESS:
+      return {
+        ...state,
+        currentCompany: action.payload.company,
+        creatingCompany: false,
+      };
+    case CompanyActionTypes.CREATE_COMPANY_FAILURE:
+      return {
+        ...state,
+        errorOnCreatingCompany: action.payload,
+        creatingCompany: false,
       };
     case CompanyActionTypes.GET_COMPANY_DETAILS_SUCCESS:
       return {
