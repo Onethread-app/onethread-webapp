@@ -52,6 +52,7 @@ const InitialState = {
   currentTask: {},
   creatingBoard: false,
   fetchingBoards: false,
+  fetchingBoard: false,
   fetchingColumn: false,
   fetchingTask: false,
   updatingColumn: false,
@@ -63,6 +64,7 @@ const InitialState = {
   boardColumnError: '',
   boardTaskError: '',
   taskError: '',
+  errorOnFetchingBoard: '',
   errorOnTaskDelete: '',
 };
 
@@ -114,19 +116,20 @@ export const BoardReducer = (state = InitialState, action: any) => {
     case BoardActionTypes.SELECT_BOARD_START:
       return {
         ...state,
-        fetchingBoards: true,
+        errorOnFetchingBoard: '',
+        fetchingBoard: true,
       };
     case BoardActionTypes.SELECT_BOARD_SUCCESS:
       return {
         ...state,
         currentBoard: action.payload,
-        fetchingBoards: false,
+        fetchingBoard: false,
       };
     case BoardActionTypes.SELECT_BOARD_FAILURE:
       return {
         ...state,
-        currentBoard: action.payload,
-        fetchingBoards: false,
+        errorOnFetchingBoard: action.payload,
+        fetchingBoard: false,
       };
     case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_START:
       return {
@@ -331,6 +334,18 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ...state,
         deletingTask: false,
         errorOnTaskDelete: action.payload,
+      };
+    }
+    case BoardActionTypes.CLEAR_CURRENT_BOARD: {
+      return {
+        ...state,
+        currentBoard: {
+          _id: '',
+          name: '',
+          description: '',
+          columns: [],
+          members: [],
+        },
       };
     }
     default:

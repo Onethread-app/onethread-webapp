@@ -12,12 +12,13 @@ const {
 
 const router = express.Router();
 
+router.use('/', subCtrl.subscriptionExpireCheck());
+
 router
   .route('/')
 
   .post(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -32,7 +33,6 @@ router
   .route('/boardProject')
   .get(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -48,7 +48,6 @@ router
   .route('/:boardId')
   .get(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -60,7 +59,6 @@ router
   )
   .put(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -74,7 +72,6 @@ router
   .route('/:boardId/members')
   .put(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -88,7 +85,6 @@ router
   .route('/:boardId/columns')
   .put(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
@@ -102,7 +98,6 @@ router
   .route('/:boardId/suggest-member')
   .get(
     authorization,
-    subCtrl.subscriptionExpireCheck(),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',

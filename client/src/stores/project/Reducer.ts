@@ -88,12 +88,14 @@ const initialState = {
   projectFileOpen: false,
   projectList: [],
   projectLoading: false,
+  singleProjectLoading: false,
   addTeamMemberLoading: false,
   unarchivingProject: false,
   updatingProjectName: false,
   error: '',
   errorOnUnarchive: '',
   errorOnUpdatingProjectName: '',
+  errorOnSingleProjectLoading: '',
 };
 
 export const ProjectReducer = (state = initialState, action: any) => {
@@ -108,7 +110,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.REJECT_PENDING_PROJECT_START:
     case ProjectActionTypes.ACCEPT_PENDING_PROJECT_START:
     case ProjectActionTypes.GET_ARCHIVED_PROJECTS_START:
-    case ProjectActionTypes.GET_SINGLE_PROJECT_START:
     case ProjectActionTypes.GET_ALL_PENDING_PROJECT_START:
     case ProjectActionTypes.PROJECT_FILE_UP_START:
     case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_START:
@@ -146,7 +147,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.REJECT_PENDING_PROJECT_FAILURE:
     case ProjectActionTypes.ACCEPT_PENDING_PROJECT_FAILURE:
     case ProjectActionTypes.GET_ARCHIVED_PROJECTS_FAILURE:
-    case ProjectActionTypes.GET_SINGLE_PROJECT_FAILURE:
     case ProjectActionTypes.GET_ALL_PENDING_PROJECT_FAILURE:
     case ProjectActionTypes.PROJECT_FILE_UP_FAILURE:
     case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_FAILURE:
@@ -223,14 +223,24 @@ export const ProjectReducer = (state = initialState, action: any) => {
         pendingProjects: action.payload,
         projectLoading: false,
       };
+    case ProjectActionTypes.GET_SINGLE_PROJECT_START:
+      return {
+        ...state,
+        singleProjectLoading: true,
+      };
     case ProjectActionTypes.GET_SINGLE_PROJECT_SUCCESS:
       return {
         ...state,
         projectDetails: {
-          ...state.projectDetails,
           ...action.payload,
         },
-        projectLoading: false,
+        singleProjectLoading: false,
+      };
+    case ProjectActionTypes.GET_SINGLE_PROJECT_FAILURE:
+      return {
+        ...state,
+        errorOnSingleProjectLoading: action.payload,
+        singleProjectLoading: false,
       };
     case ProjectActionTypes.ADD_PROJECT:
       return {

@@ -159,8 +159,8 @@ function _InviteColleagueView(
                 fontSize: '10px',
               }}
             >
-              Invite your Co-workers who are not using Tigrow to the
-              workspace
+              Invite your Co-workers who are not using Onethread to
+              the workspace
             </label>
           </div>
           <div
@@ -344,6 +344,7 @@ function _InviteColleagueView(
               onClick={() => {
                 props.setshowDialogForInviteColleague();
                 props.colleagueInviteSuccess();
+                setSuccess(false);
               }}
             >
               Done

@@ -74,7 +74,10 @@ import {
   getCurrentUserId,
   getUserCompanyList,
 } from 'stores/user/Selector';
-import { getAllBoards } from 'stores/board/Actions';
+import {
+  clearCurrentBoard,
+  getAllBoards,
+} from 'stores/board/Actions';
 import handleError from 'helpers/HandleSagaErrors';
 
 const takeEvery: any = Eff.takeEvery;
@@ -270,14 +273,14 @@ export function* getArchivedProjectsAsync() {
 export function* updateProjectNameAsync({
   projectName,
   projectId,
-  color
+  color,
 }: any) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: projectName,
-        color: color
+        color: color,
       };
       const response = yield tigrowApi.put(
         `projects/change-title?pid=${projectId}`,
@@ -318,6 +321,7 @@ export function* getSingleProjectAsync({ payload }: any) {
         put({
           type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
         }),
+        put(clearCurrentBoard()),
         put(getSingleProjectSuccess(response.data)),
       ]);
       const projectId = yield select(getProjectId);
