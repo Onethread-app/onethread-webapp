@@ -6,7 +6,11 @@ import { Color } from 'stores/UtilsActions';
 import { Card, Elevation, HTMLSelect } from '@blueprintjs/core';
 import { Loading } from 'components/Loading';
 import { connect } from 'react-redux';
-import { getAllBoards, getSelectedBoard } from 'stores/board/Actions';
+import {
+  getAllBoards,
+  getSelectedBoard,
+  clearCurrentBoard,
+} from 'stores/board/Actions';
 import { getAllDepartments } from 'stores/company/Actions';
 import { FormBoard } from './Form';
 import { RightSidebar } from 'components/RightSidebar';
@@ -23,15 +27,22 @@ interface IBoardCardComponent {
   boardList: TaskBoard[];
   company: ICompany;
   getSelectedBoard: (boardId: any) => void;
+  currentBoard: TaskBoard;
+  errorOnFetchingBoard: string;
+  fetchingBoard: boolean;
+  singleProjectLoading: boolean;
 }
 
 interface IBoardListViewInternalProps extends IBoardCardComponent {
   getAllBoards: () => void;
   getAllDepartments: () => void;
+  clearCurrentBoard: () => void;
   role: string;
   optionalRole: any;
   user: User;
   project: any;
+  fetchingBoards: boolean;
+  departmentNameLoading: boolean;
 }
 
 const BoardCard = withRouter(
@@ -45,14 +56,7 @@ const BoardCard = withRouter(
             elevation={Elevation.TWO}
             onClick={async (e) => {
               e.preventDefault();
-              const currentBoard: any = await props.getSelectedBoard(
-                board._id,
-              );
-              if (currentBoard.payload) {
-                props.history.push(
-                  `/company/${props.company.uniqueName}/board/${currentBoard.payload}`,
-                );
-              }
+              await props.getSelectedBoard(board._id);
             }}
             style={{ paddingLeft: '0px', paddingBottom: '0px' }}
           >
@@ -120,17 +124,22 @@ const TaskPageComponent = (
     Promise.all([
       props.getAllBoards(),
       props.getAllDepartments(),
-    ]).then(() => setLoading(false));
+    ]).then(() => {
+      if (
+        props.fetchingBoards === false &&
+        props.departmentNameLoading === false
+      ) {
+        setLoading(false);
+      }
+    });
   }, [props.project._id]);
 
   useEffect(() => {
     const forwardToGeneral = async () => {
       await props.getSelectedBoard(props.boardList[0]._id);
-      props.history.push(
-        `/company/${props.company.uniqueName}/board/${props.boardList[0]._id}`,
-      );
     };
     if (
+      loading === false &&
       props.boardList &&
       props.boardList.length === 1 &&
       props.boardList[0].name.toLowerCase() === 'general'
@@ -138,6 +147,18 @@ const TaskPageComponent = (
       forwardToGeneral();
     }
   }, [props.boardList]);
+
+  useEffect(() => {
+    if (
+      props.fetchingBoard === false &&
+      props.errorOnFetchingBoard === '' &&
+      props.currentBoard._id
+    ) {
+      props.history.push(
+        `/company/${props.company.uniqueName}/board/${props.boardList[0]._id}`,
+      );
+    }
+  }, [props.currentBoard]);
 
   const [department, setDepartment] = useState('');
   const boards = props.boardList.filter(
@@ -282,12 +303,28 @@ const TaskPageComponent = (
                       boardList={boards}
                       company={props.company}
                       getSelectedBoard={props.getSelectedBoard}
+                      currentBoard={props.currentBoard}
+                      errorOnFetchingBoard={
+                        props.errorOnFetchingBoard
+                      }
+                      fetchingBoard={props.fetchingBoard}
+                      singleProjectLoading={
+                        props.singleProjectLoading
+                      }
                     />
                   ) : (
                     <BoardCard
                       boardList={props.boardList}
                       company={props.company}
                       getSelectedBoard={props.getSelectedBoard}
+                      currentBoard={props.currentBoard}
+                      errorOnFetchingBoard={
+                        props.errorOnFetchingBoard
+                      }
+                      fetchingBoard={props.fetchingBoard}
+                      singleProjectLoading={
+                        props.singleProjectLoading
+                      }
                     />
                   )}
                 </div>
@@ -348,6 +385,7 @@ const mapStateToProps = (state: any) => {
   return {
     boardList: state.boardIndexReducer.boardReducer.boardList,
     company: state.companyReducer.currentCompany,
+    departmentNameLoading: state.companyReducer.departmentNameLoading,
     role:
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.role,
@@ -356,6 +394,13 @@ const mapStateToProps = (state: any) => {
       state.projectReducer.projectRole.projects.project.optionalRole,
     user: state.userReducer.user,
     project: state.projectReducer.projectDetails,
+    singleProjectLoading: state.projectReducer.singleProjectLoading,
+    currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+    fetchingBoards:
+      state.boardIndexReducer.boardReducer.fetchingBoards,
+    fetchingBoard: state.boardIndexReducer.boardReducer.fetchingBoard,
+    errorOnFetchingBoard:
+      state.boardIndexReducer.boardReducer.errorOnFetchingBoard,
   };
 };
 
@@ -363,4 +408,5 @@ export const BoardPage = connect(mapStateToProps, {
   getAllBoards,
   getSelectedBoard,
   getAllDepartments,
+  clearCurrentBoard,
 })(withRouter(TaskPageComponent));

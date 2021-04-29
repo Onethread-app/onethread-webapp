@@ -60,7 +60,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const ProjectPage = connect(
-  mapStateToProps,
-  {setProjectAccessForUser},
-)(withRouter(_ProjectPage));
+export const ProjectPage = connect(mapStateToProps, {
+  setProjectAccessForUser,
+})(withRouter(_ProjectPage));

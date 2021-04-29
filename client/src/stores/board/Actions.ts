@@ -183,3 +183,7 @@ export const deleteTaskFailure = (errorMessage: any) => ({
   type: BoardActionTypes.DELETE_TASK_FAILURE,
   payload: errorMessage,
 });
+
+export const clearCurrentBoard = () => ({
+  type: BoardActionTypes.CLEAR_CURRENT_BOARD,
+});
