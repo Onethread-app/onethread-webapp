@@ -22,6 +22,9 @@ const projectSchema = new Schema(
       type: String,
       maxlength: 5000,
     },
+    deadline: {
+      type: Date,
+    },
     color: {
       type: Number,
       enum: [0, 1, 2, 3, 4, 5, 6],

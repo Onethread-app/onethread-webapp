@@ -158,6 +158,7 @@ export function* createProjectInCompanyAsync({ payload }: any) {
         color: payload.color,
         department: payload.department,
         associates: payload.associates,
+        deadline: payload.deadline ? payload.deadline : undefined,
         companyId,
       };
       yield tigrowApi.post(

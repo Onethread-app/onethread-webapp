@@ -79,6 +79,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         concernedAdmin: concernedAdmin.accountId,
         account: req.user._id,
         departments: req.body.departments,
+        deadline: req.body.deadline,
         color: req.body.color,
         company: req.params.companyId,
         description: '',
@@ -204,6 +205,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         concernedAdmin: concernedAdmin.accountId,
         account: req.user._id,
         departments: req.body.departments,
+        deadline: req.body.deadline,
         color: req.body.color,
         company: req.body.companyId,
         description: '',
@@ -769,7 +771,7 @@ const changeTitleProject = async (req, res, next) => {
     console.log(req.body);
     await Project.findByIdAndUpdate(
       { _id: req.query.pid },
-      { $set: { name: req.body.name, color:req.body.color } },
+      { $set: { name: req.body.name, color: req.body.color } },
       { safe: true, upsert: true, new: true },
     );
     logger.info(`project name change successfully`);

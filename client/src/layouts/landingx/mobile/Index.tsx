@@ -29,11 +29,6 @@ import MeetingPng from 'resources/images/meeting.png';
 import TasksPng from 'resources/images/tasks.png';
 import IntegrationsPng from 'resources/images/integrations.png';
 
-import ProjectPng from 'resources/images/project.png';
-import MeetingPng from 'resources/images/meeting.png';
-import TasksPng from 'resources/images/tasks.png';
-import IntegrationsPng from 'resources/images/integrations.png';
-
 const MobileIndex = () => {
   return (
     <div className="landing-m w-100">
