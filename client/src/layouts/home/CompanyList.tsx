@@ -115,7 +115,7 @@ export const CompanyListComponent = (props: CompanyListProps & RouteComponentPro
                   onClick={() => setShowDialog(!showDialog)}
                   className="pa3-ns pa2 f5-ns fw6 br2"
                   style={{ color: '#0F0C4E' }}>
-                  Create A Company
+                  Create Company
                   </Button>
               </article>
             </div>
