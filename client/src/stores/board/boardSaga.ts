@@ -1,7 +1,7 @@
 import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
-import { tokenConfig } from 'stores/UtilsActions';
+import { tokenConfig, tokenConfigFIleUpload  } from 'stores/UtilsActions';
 import { BoardActionTypes } from './Types';
 import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -412,16 +412,12 @@ export function* updateTask({ payload }: any) {
 
 export function* taskFileUploadAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    const reqBody = {
-      file: payload.file,
-      taskId: payload.taskId,
-    };
-    console.log(payload.file);
+    const headers = tokenConfigFIleUpload();
+    console.log('rwqbody', payload);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
-        `files/file-upload-task`,
-        reqBody,
+        `files/file-upload-task?taskId=${payload.taskId}`,
+        payload.file,
         headers,
       );
       console.log(res);

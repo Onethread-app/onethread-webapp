@@ -279,6 +279,7 @@ export const imageUploadAction = (
         imageSelected,
         headers,
       );
+
       if (response.data.imageType === 'profilePic') {
         dispatch({
           type: PROFILE_IMAGE_UPLOAD,

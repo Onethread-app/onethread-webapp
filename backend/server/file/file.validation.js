@@ -29,7 +29,7 @@ module.exports = {
     }),
   }),
   fileInTask: Joi.object().keys({
-    body: Joi.object().keys({
+    query: Joi.object().keys({
       taskId: schema.taskId.required(),
     })
   }),

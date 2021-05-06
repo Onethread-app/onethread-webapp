@@ -292,7 +292,6 @@ const fileInProject = async (req, res, next) => {
 const fileInTask = async (req, res, next) => {
   try {
     const file = req.file;
-    console.log(req.file);
     if (!checkMimetype.includes(file.mimetype)) {
       return sendErrorResponse(res, 400, '', {
         message: 'This file format is not supported',
@@ -300,8 +299,7 @@ const fileInTask = async (req, res, next) => {
       });
     }
     const userID = req.user._id;
-    const tid = req.body.taskId;
-    console.log(tid);
+    const tid = req.query.taskId;
     const tidExist = await Task.findById({ _id: tid });
     if (tidExist) {
       const params = {

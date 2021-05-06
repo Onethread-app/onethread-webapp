@@ -25,6 +25,8 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
   const [imageName, setImageName] = React.useState({}) as any;
   const [imageSelected, setImageSelected] = React.useState({}) as any;
   const [imageError, setImageError] = React.useState('');
+  // const [imageLoading, setImageLoading] = useState(false);
+  // const [imageError, setImageError] = useState('');
 
   const sizeLimit = 25;
 
@@ -57,7 +59,7 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
   ];
 
   const imageChangeHandler = (event: any) => {
-    if (event.target.files) {
+    if (event.target.files[0]) {
       const file = event.target.files[0];
       if (file) {
         if (!checkMimetype.includes(file.type)) {
@@ -73,6 +75,7 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
         } else {
           const data = new FormData();
           data.append('file', file, file.name);
+          data.append('taskId', props.currentTask._id);
           setImageName(file);
           setImageSelected(data);
           setImageError('');
@@ -89,16 +92,14 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
       columnId: props.currentTask.columnId,
       taskId: props.currentTask._id,
     };
-    console.log(payload);
-
     await props.taskFileUpload(payload);
 
-    // if (
-    //   props.uploadingTaskFile === false &&
-    //   props.errorOnUploadingTaskFile === ''
-    // ) {
-    //   props.setFilePopover(false);
-    // }
+    if (
+      props.uploadingTaskFile === false &&
+      props.errorOnUploadingTaskFile === ''
+    ) {
+      props.setFilePopover(false);
+    }
   };
 
   return (
