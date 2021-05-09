@@ -413,14 +413,12 @@ export function* updateTask({ payload }: any) {
 export function* taskFileUploadAsync({ payload }: any) {
   try {
     const headers = tokenConfigFIleUpload();
-    console.log('rwqbody', payload);
     if ((headers as any).headers.Authorization) {
       const res = yield tigrowApi.put(
         `files/file-upload-task?taskId=${payload.taskId}`,
         payload.file,
         headers,
       );
-      console.log(res);
       const response = {
         _id: res.data._id,
         link: res.data.link,

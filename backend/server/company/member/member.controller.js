@@ -482,6 +482,7 @@ const createMembers = async (req, notifiyUsersIds) => {
 
     createMemberAddNotification(
       req.company._id,
+      req.user._id,
       elasticSearchIndexedMembers,
       {
         _id: req.user._id,

@@ -1,6 +1,7 @@
 const { Company } = require('../company/company.model');
 const { Member } = require('../company/member/member.model');
 const { Team } = require('../team-member/team.model');
+const Account = require('../account/account.model');
 const Notification = require('./notification.model');
 const ObjectId = require('mongoose').Types.ObjectId;
 const UserNotification = require('./userNotification.model');
@@ -33,7 +34,7 @@ module.exports.userTokenFCM = async (req, res, next) => {
     })
     .catch(function (error) {
       logger.error(`${error}`);
-      //next(error);
+      next(error);
     });
 };
 
@@ -68,29 +69,31 @@ module.exports.userTokenFCM = async (req, res, next) => {
 
 module.exports.createMemberAddNotification = async (
   company, //fromHeader
+  senderName,
   newMembers,
   adminUser,
 ) => {
   try {
-    let membersToSendNotification = await Member.find({
-      $or: [{ role: 'superAdmin' }, { role: 'admin' }],
-      company: company,
-    });
-    membersToSendNotification = membersToSendNotification.filter(
-      (m) => m.account.toString() !== adminUser._id.toString(),
-    );
-
+    // let membersToSendNotification = await Member.find({
+    //   $or: [{ role: 'superAdmin' }, { role: 'admin' }],
+    //   company: company,
+    // });
+    // membersToSendNotification = membersToSendNotification.filter(
+    //   (m) => m.account.toString() !== adminUser._id.toString(),
+    // );
+      // console.log(membersToSendNotification);
     // let notification = new Notification({
     //   type: 'companyProfile',
     //   text: `company profile has been updated by ${adminUser.name}`,
     //   account: adminUser._id,
     //   company: company,
     // });
-
+    let senderFullName = await Account.findById({_id:senderName}).select('firstName lastName');
+    let companyName =await Company.findById({_id: company}).select('name');
     let notifications = newMembers.map((m) => {
       return {
         type: 'colleague',
-        text: `GA has added ${m.account.name}`,
+        text: `${senderFullName.firstName} ${senderFullName.lastName} added you in company ${companyName.name} `,
         account: adminUser._id,
         company: company,
       };
@@ -110,25 +113,21 @@ module.exports.createMemberAddNotification = async (
       adminUser,
       notifications,
     );
-
     notifications = await Notification.create(notifications);
+    newMembers = newMembers.map((m)=>{
+      return {account: m.account._id}})
+   newMembers.forEach(async member=>{
+    notifications = notifications.map(async (m)=>{
+      let userNoti = await UserNotification.create({
+        notification: m._id,
+        account: member.account
+      });
+    })
 
-    const promises = [];
-
-    for (let i = 0; i < notifications.length; i += 1) {
-      let usersNotifications = await membersToSendNotification.map(
-        (m) => {
-          return {
-            notification: notifications[i]._id,
-            account: m.account,
-          };
-        },
-      );
-
-      UserNotification.create(usersNotifications);
+   })
     }
-  } catch (error) {
-    logger.error(`${error}`);
+   catch (error) {
+    logger.error(`Notifications: ${error}`);
     //next(error);
   }
 };
