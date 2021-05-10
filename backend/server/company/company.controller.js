@@ -618,19 +618,19 @@ const dashBoard = async (req, res, next) => {
     for (i = 0; i < projectList.length; i++) {
       let projectName = projectList[i].name;
       const taskNumbers = await Task.find({
-        project:{ $in: projectList[i]._id},
+        project: { $in: projectList[i]._id },
       }).countDocuments();
       const doneTask = await Task.find({
-        $and:[{project: {$in: projectList[i]._id},
-        status: 'done',}]
+        $and: [
+          { project: { $in: projectList[i]._id }, status: 'done' },
+        ],
       }).countDocuments();
-      let projectObj= {};
+      let projectObj = {};
       projectObj.name = projectName;
       projectObj.taskNumbers = taskNumbers;
       projectObj.doneTask = doneTask;
       projectCompilation.push(projectObj);
     }
-    console.log(projectCompilation);
     return sendJSONresponse(res, 200, {
       success: true,
       data: {
@@ -646,7 +646,7 @@ const dashBoard = async (req, res, next) => {
   }
 };
 
-const latestCompletedTasks = async(req, res, next) => {
+const latestCompletedTasks = async (req, res, next) => {
   try {
     const companyId = req.headers.companyid;
     let projectList = await Project.find({
@@ -656,10 +656,12 @@ const latestCompletedTasks = async(req, res, next) => {
     let completedTaskCompilation = [];
     for (let i = 0; i < projectList.length; i++) {
       const doneTask = await Task.find({
-        $and: [{
-          project: { $in: projectList[i]._id },
-          status: 'done',
-        }]
+        $and: [
+          {
+            project: { $in: projectList[i]._id },
+            status: 'done',
+          },
+        ],
       })
         .select('name updatedAt')
         .populate('boardId project', 'name name')
@@ -670,8 +672,8 @@ const latestCompletedTasks = async(req, res, next) => {
     completedTaskCompilation.map((cTask) => {
       cTask.map((task) => {
         organizedTask.push(task);
-      })
-    })
+      });
+    });
     return sendJSONresponse(res, 200, {
       success: true,
       data: organizedTask,
@@ -680,7 +682,7 @@ const latestCompletedTasks = async(req, res, next) => {
     logger.error(error);
     next(error);
   }
-}
+};
 
 const noticePostByCompany = async (req, res, next) => {
   try {

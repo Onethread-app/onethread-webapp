@@ -22,7 +22,6 @@ import Plummy from 'resources/images/companies/plummy-fashions.png';
 import BatteryLow from 'resources/images/companies/battery-low.png';
 import MCCI from 'resources/images/companies/mcci.png';
 
-
 import ProjectPng from 'resources/images/project.png';
 import MeetingPng from 'resources/images/meeting.png';
 import TasksPng from 'resources/images/tasks.png';
@@ -128,7 +127,6 @@ const MobileIndex = () => {
         <div className="companies flex flex-column items-center justify-center">
           <div className="flex items-center justify-around w-100">
             <img src={MarketExpress} alt="market express" />
-            
           </div>
           <div className="flex items-center justify-around w-100">
             <img src={Plummy} alt="plummy fashions" />

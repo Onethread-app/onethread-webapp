@@ -18,8 +18,8 @@ import {
   archiveProjectFailure,
   getProjectArchiveSuccess,
   getProjectArchiveFailure,
-  updateProjectNameSuccess,
-  updateProjectNameFailure,
+  updateProjectSuccess,
+  updateProjectFailure,
   getSingleProjectSuccess,
   getSingleProjectFailure,
   openProjectFIle,
@@ -158,6 +158,7 @@ export function* createProjectInCompanyAsync({ payload }: any) {
         color: payload.color,
         department: payload.department,
         associates: payload.associates,
+        deadline: payload.deadline ? payload.deadline : undefined,
         companyId,
       };
       yield tigrowApi.post(
@@ -270,10 +271,11 @@ export function* getArchivedProjectsAsync() {
   }
 }
 
-export function* updateProjectNameAsync({
+export function* updateProjectAsync({
   projectName,
   projectId,
   color,
+  deadline,
 }: any) {
   try {
     const headers = tokenConfig();
@@ -281,6 +283,7 @@ export function* updateProjectNameAsync({
       const reqBody = {
         name: projectName,
         color: color,
+        deadline: deadline,
       };
       const response = yield tigrowApi.put(
         `projects/change-title?pid=${projectId}`,
@@ -288,23 +291,23 @@ export function* updateProjectNameAsync({
         headers,
       );
       yield all([
-        put(updateProjectNameSuccess(response.data)),
+        put(updateProjectSuccess(response.data)),
         put(getAllProjects()),
       ]);
     }
   } catch (error) {
     if (error.message === 'Network Error') {
-      yield put(updateProjectNameFailure('Network Error'));
+      yield put(updateProjectFailure('Network Error'));
     } else if (error.response.status === 401) {
       yield put(
-        updateProjectNameFailure(
+        updateProjectFailure(
           'Unauthorized user. Please enter valid email and password.',
         ),
       );
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
-      yield put(updateProjectNameFailure(error.message));
+      yield put(updateProjectFailure(error.message));
     }
   }
 }
@@ -896,8 +899,8 @@ export function* onGetProjectArchive() {
 
 export function* onUpdateProjectName() {
   yield takeLatest(
-    ProjectActionTypes.UPDATE_PROJECT_NAME_START,
-    updateProjectNameAsync,
+    ProjectActionTypes.UPDATE_PROJECT_START,
+    updateProjectAsync,
   );
 }
 

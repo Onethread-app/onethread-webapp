@@ -5,6 +5,7 @@ import { Form, Field } from 'react-final-form';
 
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 import CreatableSingle from 'components/creatable-select/CreatableSelect';
+import { Switch } from '@blueprintjs/core';
 
 import {
   checkError,
@@ -29,6 +30,7 @@ import { tokenConfig } from 'stores/UtilsActions';
 import { Associate } from 'stores/associate/Reducer';
 import arrayMutators from 'final-form-arrays';
 import { FieldArray } from 'react-final-form-arrays';
+import { DateInput } from '@blueprintjs/datetime';
 
 interface IProject {
   department: string;
@@ -60,6 +62,7 @@ const FormComponent = (props: {
     [] as Entity[],
   );
   const [search, setSearch] = useState('');
+  const [hasDeadline, setHasDeadline] = useState(false);
 
   const onSubmit = async (values: IProject) => {
     if (
@@ -67,7 +70,6 @@ const FormComponent = (props: {
     ) {
       values.projectType = 'md';
     }
-
     await props.createProjectInCompany(values);
     if (props.setShowProjectDialog) {
       props.setShowProjectDialog(false);
@@ -412,6 +414,63 @@ const FormComponent = (props: {
                   </FieldArray>
                 </div>
               </Condition>
+              <Switch
+                checked={hasDeadline}
+                label="Add Deadline"
+                onChange={() => setHasDeadline(!hasDeadline)}
+                className="dib"
+              />
+              {hasDeadline && (
+                <div>
+                  <Field<string>
+                    name="deadline"
+                    validate={required}
+                    render={({ input, meta }) => (
+                      <div>
+                        <div
+                          className={`flex bw1 pb1 br0 flex items-center `}
+                        >
+                          <div>
+                            <Icon
+                              icon="calendar"
+                              className="mr2"
+                              style={{ color: '#3F61C5' }}
+                              iconSize={30}
+                            />
+                          </div>
+                          <DateInput
+                            formatDate={(date: Date) =>
+                              date.toLocaleDateString()
+                            }
+                            parseDate={(str: string) => new Date(str)}
+                            onChange={input.onChange}
+                            canClearSelection={false}
+                            value={
+                              input.value
+                                ? new Date(input.value)
+                                : null
+                            }
+                            popoverProps={{
+                              targetClassName: 'w-100',
+                            }}
+                            minDate={new Date()}
+                            placeholder="Deadline"
+                            className="flex-auto"
+                          />
+                        </div>
+                        {checkError(meta) && (
+                          <small
+                            className="mv3-ns mv2"
+                            style={{ color: 'red' }}
+                          >
+                            {meta.error || meta.submitError}
+                          </small>
+                        )}
+                      </div>
+                    )}
+                  />
+                </div>
+              )}
               <Field<string>
                 name="color"
                 render={({ input, meta }) => (
@@ -455,7 +514,7 @@ const FormComponent = (props: {
                 )}
               />
               <div className="flex justify-end mt4">
-              <Button
+                <Button
                   className="w4 grow h2 pointer mr3"
                   style={{
                     background: '#0fa3a3',

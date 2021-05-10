@@ -18,6 +18,7 @@ const schema = {
   outline: Joi.string().max(5000).allow(''),
   departments: Joi.array().items(idSchema.id),
   concernedAdmin: idSchema.id,
+  deadline: Joi.date(),
   color: Joi.number(),
   company: idSchema.id,
   size: Joi.number().required(),
@@ -40,6 +41,7 @@ module.exports = {
       }),
       companyId: schema.company.required(),
       departments: schema.departments,
+      deadline: schema.deadline,
       color: schema.color,
       associates: schema.associates,
     }),
@@ -87,10 +89,11 @@ module.exports = {
       pid: schema.pid.required(),
     }),
   }),
-  changeNameProject: Joi.object().keys({
+  updateProject: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
       color: schema.color,
+      deadline: schema.deadline,
     }),
     query: Joi.object().keys({
       pid: schema.pid.required(),
