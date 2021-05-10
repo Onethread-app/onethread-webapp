@@ -4,7 +4,7 @@ import { ITask } from 'stores/board/Reducer';
 import { connect } from 'react-redux';
 import { TaskTitleView } from './TaskTitle/TaskTitleView';
 import { TaskDescriptionView } from './TaskDescription/TaskDescriptionView';
-import { Button, FileInput, Popover } from '@blueprintjs/core';
+import { Popover } from '@blueprintjs/core';
 import { DueDateEditor } from './DueDate/DueDateEditor';
 import { DueDateView } from './DueDate/DueDateView';
 import { AssignedMembersView } from './AssignedMembers/AssignedMembersView';
@@ -19,6 +19,7 @@ import moment from 'moment';
 import { ICompany } from 'stores/company/Reducer';
 import { projectPermit } from 'stores/UtilsActions';
 import TaskFiles from './Files/TaskFiles';
+import TaskFilesAttach from './Files/TaskFilesAttach';
 
 interface TaskDetailsInternalProps {
   currentTask?: ITask;
@@ -29,6 +30,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   const [datePopover, setDatePopover] = useState(false);
   const [membersPopover, setMembersPopover] = useState(false);
   const [priorityPopover, setPriorityPopover] = useState(false);
+  const [filePopover, setFilePopover] = useState(false);
 
   const openDatePopOver = () => {
     setDatePopover(true);
@@ -193,27 +195,13 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
             </div>
             <div>
               <Popover
+                isOpen={filePopover}
                 content={
-                  <div className="pa3 cf bg-white">
-                    <h1 className="f5">Attach Files</h1>
-                    <FileInput text="Choose file..." />
-                    <div>
-                      <Button
-                        type="submit"
-                        text="Attach"
-                        className="grow h2 pointer w-40 fr mt2"
-                        style={{
-                          background: '#0fa3a3',
-                          outline: 'none',
-                          color: 'white',
-                          boxShadow: 'none',
-                        }}
-                      />
-                    </div>
-                  </div>
+                  <TaskFilesAttach setFilePopover={setFilePopover} />
                 }
                 target={
                   <div
+                    onClick={() => setFilePopover(!filePopover)}
                     className="flex br2 mb2 pt2 ph3 pointer"
                     style={{ background: '#C1DEDE', width: '130px' }}
                   >

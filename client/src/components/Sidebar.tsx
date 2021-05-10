@@ -133,105 +133,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
-            {(companyPermit(props.company.role) ||
-              props.company.role === 'employee') && (
-              <NavLink
-                exact
-                className="flex items-center nowrap ma1 hover-bg-white-20"
-                style={{ color: 'white' }}
-                activeStyle={{ background: '#3F61C5' }}
-                to={`/company/${props.company.uniqueName}`}
-              >
-                {props.leftOpen ? (
-                  <span className="pl4">
-                    <img src={companyProfile} className="w2 pt1" />
-                  </span>
-                ) : (
-                  <Tooltip
-                    content={<p className="mb0">Company Profile</p>}
-                    position="right"
-                  >
-                    <span className="pl3">
-                      <img src={companyProfile} className="w2 pt1" />
-                    </span>
-                  </Tooltip>
-                )}
-                {props.leftOpen && (
-                  <span
-                    className="outline-0 bp3-large pl4"
-                    style={{ color: 'inherit' }}
-                  >
-                    Profile
-                  </span>
-                )}
-              </NavLink>
-            )}
-            {(companyPermit(props.company.role) ||
-              props.company.role === 'employee') && (
-              <NavLink
-                exact
-                className="flex items-center nowrap ma1 hover-bg-white-20"
-                style={{ color: 'white' }}
-                activeStyle={{ background: '#3F61C5' }}
-                to={`/company/${props.company.uniqueName}/colleague`}
-              >
-                {props.leftOpen ? (
-                  <span className="pl4">
-                    <img src={team} className="w2 pt1" />
-                  </span>
-                ) : (
-                  <Tooltip
-                    content={<p className="mb0">Colleagues</p>}
-                    position="right"
-                  >
-                    <span className="pl3">
-                      <img src={team} className="w2 pt1" />
-                    </span>
-                  </Tooltip>
-                )}
-                {props.leftOpen && (
-                  <span
-                    className="outline-0 bp3-large pl4"
-                    style={{ color: 'inherit' }}
-                  >
-                    Colleagues
-                  </span>
-                )}
-              </NavLink>
-            )}
-            {companyPermit(props.company.role) && (
-              <NavLink
-                exact
-                className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
-                style={{ color: 'white' }}
-                activeStyle={{ background: '#3F61C5' }}
-                to={`/company/${props.company.uniqueName}/settings`}
-              >
-                {props.leftOpen ? (
-                  <span className="pl4">
-                    <img src={settings} className="w2 pt1" />
-                  </span>
-                ) : (
-                  <Tooltip
-                    content={<p className="mb0">Settings</p>}
-                    position="right"
-                  >
-                    <span className="pl3">
-                      <img src={settings} className="w2 pt1" />
-                    </span>
-                  </Tooltip>
-                )}
-                {props.leftOpen && (
-                  <span
-                    className="outline-0 bp3-large pl4"
-                    style={{ color: 'inherit' }}
-                  >
-                    Settings
-                  </span>
-                )}
-              </NavLink>
-            )}
-            <NavLink
+                        <NavLink
               exact
               className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
               style={{ color: 'white' }}
@@ -510,6 +412,105 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 </NavLink>
               </div>
             )}
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
+              <NavLink
+                exact
+                className="flex items-center nowrap ma1 hover-bg-white-20"
+                style={{ color: 'white' }}
+                activeStyle={{ background: '#3F61C5' }}
+                to={`/company/${props.company.uniqueName}`}
+              >
+                {props.leftOpen ? (
+                  <span className="pl4">
+                    <img src={companyProfile} className="w2 pt1" />
+                  </span>
+                ) : (
+                  <Tooltip
+                    content={<p className="mb0">Company Profile</p>}
+                    position="right"
+                  >
+                    <span className="pl3">
+                      <img src={companyProfile} className="w2 pt1" />
+                    </span>
+                  </Tooltip>
+                )}
+                {props.leftOpen && (
+                  <span
+                    className="outline-0 bp3-large pl4"
+                    style={{ color: 'inherit' }}
+                  >
+                    Profile
+                  </span>
+                )}
+              </NavLink>
+            )}
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
+              <NavLink
+                exact
+                className="flex items-center nowrap ma1 hover-bg-white-20"
+                style={{ color: 'white' }}
+                activeStyle={{ background: '#3F61C5' }}
+                to={`/company/${props.company.uniqueName}/colleague`}
+              >
+                {props.leftOpen ? (
+                  <span className="pl4">
+                    <img src={team} className="w2 pt1" />
+                  </span>
+                ) : (
+                  <Tooltip
+                    content={<p className="mb0">Colleagues</p>}
+                    position="right"
+                  >
+                    <span className="pl3">
+                      <img src={team} className="w2 pt1" />
+                    </span>
+                  </Tooltip>
+                )}
+                {props.leftOpen && (
+                  <span
+                    className="outline-0 bp3-large pl4"
+                    style={{ color: 'inherit' }}
+                  >
+                    Colleagues
+                  </span>
+                )}
+              </NavLink>
+            )}
+            {companyPermit(props.company.role) && (
+              <NavLink
+                exact
+                className="w-100 flex items-center nowrap ma1 hover-bg-white-20"
+                style={{ color: 'white' }}
+                activeStyle={{ background: '#3F61C5' }}
+                to={`/company/${props.company.uniqueName}/settings`}
+              >
+                {props.leftOpen ? (
+                  <span className="pl4">
+                    <img src={settings} className="w2 pt1" />
+                  </span>
+                ) : (
+                  <Tooltip
+                    content={<p className="mb0">Settings</p>}
+                    position="right"
+                  >
+                    <span className="pl3">
+                      <img src={settings} className="w2 pt1" />
+                    </span>
+                  </Tooltip>
+                )}
+                {props.leftOpen && (
+                  <span
+                    className="outline-0 bp3-large pl4"
+                    style={{ color: 'inherit' }}
+                  >
+                    Settings
+                  </span>
+                )}
+              </NavLink>
+            )}
+
             {/*  */}
             {companyPermit(props.company.role) && (
               <NavLink

@@ -1,7 +1,7 @@
 import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
-import { tokenConfig } from 'stores/UtilsActions';
+import { tokenConfig, tokenConfigFIleUpload  } from 'stores/UtilsActions';
 import { BoardActionTypes } from './Types';
 import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -29,6 +29,8 @@ import {
   getAllBoards,
   deleteTaskFailure,
   deleteTaskSuccess,
+  taskFileUploadFailure,
+  taskFileUploadSuccess,
 } from './Actions';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
@@ -353,6 +355,8 @@ export function* getSelectedTaskDetails({ payload }: any) {
         description: res.data.description,
         priority: res.data.priority,
         currentColumnName: res.data.columnId.name,
+        columnId: res.data.columnId._id,
+        file: res.data.file,
       };
       yield put(getSelectedTaskDetailsSuccess(response));
     }
@@ -406,6 +410,29 @@ export function* updateTask({ payload }: any) {
   }
 }
 
+export function* taskFileUploadAsync({ payload }: any) {
+  try {
+    const headers = tokenConfigFIleUpload();
+    if ((headers as any).headers.Authorization) {
+      const res = yield tigrowApi.put(
+        `files/file-upload-task?taskId=${payload.taskId}`,
+        payload.file,
+        headers,
+      );
+      const response = {
+        _id: res.data._id,
+        link: res.data.link,
+        columnId: payload.columnId,
+      };
+      yield put(taskFileUploadSuccess(response));
+    }
+  } catch (error) {
+    handleError(error, async (errorMessage: any) => {
+      await taskFileUploadFailure(errorMessage);
+    });
+  }
+}
+
 export function* deleteTaskAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
@@ -425,8 +452,8 @@ export function* deleteTaskAsync({ payload }: any) {
       }
     }
   } catch (error) {
-    handleError(error, async (errorMessage) => {
-      deleteTaskFailure(errorMessage);
+    handleError(error, async (errorMessage: any) => {
+      await deleteTaskFailure(errorMessage);
     });
   }
 }
@@ -486,6 +513,13 @@ export function* onUpdateTask() {
   yield takeLatest(BoardActionTypes.UPDATE_TASK_START, updateTask);
 }
 
+export function* onTaskFileUpload() {
+  yield takeEvery(
+    BoardActionTypes.TASK_FILE_UP_START,
+    taskFileUploadAsync,
+  );
+}
+
 export function* onDeleteTask() {
   yield takeEvery(
     BoardActionTypes.DELETE_TASK_START,
@@ -505,6 +539,7 @@ export default function* boardSaga() {
     call(onAddTeamMembersIntoBoard),
     call(onSelectTask),
     call(onUpdateTask),
+    call(onTaskFileUpload),
     call(onDeleteTask),
   ]);
 }

@@ -41,20 +41,18 @@ router.post(
   schemaValidator(fileValidation.fileInProject),
   fileCtrl.fileInProject,
 );
-router
-.put(
+router.put(
   '/file-upload-task',
-upload.single('file'),
-authorization,
-schemaValidator(fileValidation.fileInTask),
-fileCtrl.fileInTask,
+  upload.single('file'),
+  authorization,
+  // schemaValidator(fileValidation.fileInTask),
+  fileCtrl.fileInTask,
 );
 
-router
-.put(
+router.put(
   '/file-delete-task',
-authorization,
-schemaValidator(fileValidation.fileDeleteInTask),
-fileCtrl.removeFileInTask,
+  authorization,
+  schemaValidator(fileValidation.fileDeleteInTask),
+  fileCtrl.removeFileInTask,
 );
 module.exports = router;
