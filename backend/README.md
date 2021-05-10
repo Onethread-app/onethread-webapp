@@ -1,6 +1,7 @@
-# Tigrow
+[![CodeFactor](https://www.codefactor.io/repository/github/onethread-app/onethread-webapp/badge?s=781502fd83262535851b87115dc3c3b65027e6ab)](https://www.codefactor.io/repository/github/onethread-app/onethread-webapp)
+# Onethread
 
-TiGrow is a cloud software suite for businesses. It includes an enterprise connectivity and team collaboration tool, a lead generation & sourcing tool and an AI for Digital Marketing & Market Research.
+Onethread is a cloud software suite for businesses. It includes an enterprise connectivity and team collaboration tool, a lead generation & sourcing tool and an AI for Digital Marketing & Market Research.
 
 ### Prerequisites
 
@@ -34,11 +35,3 @@ For seed data:
 
     `mongoimport --uri <connectionString> --collection plans --file plans.json`
 
-
-
-## Authors
-
-- **Orvi** - _Initial work_
-- **Nizam** - Senior Backend Engineer
-- **Arif** - Full Stack Engineer
-- **Omer** - Full Stack Engineer
