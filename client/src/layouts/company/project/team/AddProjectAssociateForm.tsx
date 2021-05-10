@@ -170,7 +170,7 @@ const AddProjectAssociateFormComponent = (
               <select
                 onChange={(e: any) => {
                   const sa = [...selectedAssociate];
-                  sa[index].size = e.target.value;
+                  sa[index]['size'] = e.target.value;
                   setSelectedAssociate(sa);
                 }}
                 className="pa1" 

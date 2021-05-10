@@ -656,23 +656,22 @@ const showAllProjectsForCompany = async (req, res, next) => {
       isAccepted: true,
       associate: associateId,
     }).populate('project', '_id');
-    // let memberExistInProject = await Team.find({
-    //   $and: [{ account: req.user._id }, { removed: false }],
-    // }).populate('project', '_id');
+    let memberExistInProject = await Team.find({
+      $and: [{ account: req.user._id }, { removed: false }],
+    }).populate('project', '_id');
 
     acceptedProject = acceptedProject.map((data) => {
       return data.project._id;
     });
-    // memberExistInProject = memberExistInProject.map((data) => {
-    //   return data.project._id;
-    // });
+    memberExistInProject = memberExistInProject.map((data) => {
+      return data.project._id;
+    });
     await Project.find({
-      $or: [
-        { _id: { $in: acceptedProject } },
-        // { _id: { $in: memberExistInProject } },
+      $and: [
         {
-          company: companyId,
+          _id: { $in: memberExistInProject }
         },
+        { $or:[{_id: { $in: acceptedProject }},{company: companyId}]},      
       ],
     })
       .where('removed')
