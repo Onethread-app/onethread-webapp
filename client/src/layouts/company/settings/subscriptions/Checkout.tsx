@@ -209,7 +209,7 @@ function _Checkout(props: ICheckout) {
     }
   }, [total, discountPrice]);
 
-  //to-do add type
+  // to-do add type
   const getPortWalletFormData = (e: any) => {
     const { id, value } = e.target;
     setFormValues((prevState: any) => ({

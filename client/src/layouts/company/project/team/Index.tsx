@@ -291,7 +291,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                         )} ${upperFirst(member.account.lastName)}`}
                   </td>
                   <td style={{ width: '20%' }}>
-                  {member.account? member.account.email : null}
+                  {member.account ? member.account.email : null}
                   </td>
                   <td style={{ width: '20%' }}>
                     {member.designations.length
@@ -394,7 +394,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                         )} ${upperFirst(member.account.lastName)}`}
                   </td>
                   <td style={{ width: '20%' }}>
-                  {member.account? member.account.email : null}
+                  {member.account ? member.account.email : null}
                   </td>
                   <td style={{ width: '20%' }}>
                     {member.designations.length

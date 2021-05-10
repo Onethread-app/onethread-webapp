@@ -476,7 +476,7 @@ export const SignUpPageComponent = (
                                       <img
                                         title={
                                           showPassword
-                                            ? "Don't show password"
+                                            ? 'Don\'t show password'
                                             : 'Show password'
                                         }
                                         onClick={() =>
@@ -599,7 +599,7 @@ export const SignUpPageComponent = (
                                       <img
                                         title={
                                           showConfirmPassword
-                                            ? "Don't show password"
+                                            ? 'Don\'t show password'
                                             : 'Show password'
                                         }
                                         onClick={() =>

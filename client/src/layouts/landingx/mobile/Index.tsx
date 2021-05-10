@@ -22,7 +22,6 @@ import Plummy from 'resources/images/companies/plummy-fashions.png';
 import BatteryLow from 'resources/images/companies/battery-low.png';
 import MCCI from 'resources/images/companies/mcci.png';
 
-
 import ProjectPng from 'resources/images/project.png';
 import MeetingPng from 'resources/images/meeting.png';
 import TasksPng from 'resources/images/tasks.png';

@@ -70,7 +70,7 @@ function _InviteColleagueView(
       });
       setEmailCsv(parsedData.slice(0, parsedData.length - 1));
     } catch (error) {
-      //TODO: catch console in logger.
+      // TODO: catch console in logger.
     }
   };
 
@@ -80,11 +80,11 @@ function _InviteColleagueView(
     inputElem: any,
     reason: any,
   ) => {
-    //TODO: catch console in logger.
+    // TODO: catch console in logger.
   };
 
   const handleOnRemoveFile = (data: any) => {
-    //TODO: catch console in logger.
+    // TODO: catch console in logger.
   };
 
   const invateColleague = async () => {

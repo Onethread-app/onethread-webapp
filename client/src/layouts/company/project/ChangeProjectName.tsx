@@ -13,7 +13,7 @@ import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 import { updateProjectName } from '../../../stores/project/Actions';
 
 import { Color } from 'stores/UtilsActions';
-import { isEqual} from 'lodash';
+import { isEqual } from 'lodash';
 interface ChangeNameProps {
   setShowDialog: (val: boolean) => void;
   projectId: string;

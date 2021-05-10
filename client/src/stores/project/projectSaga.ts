@@ -280,7 +280,7 @@ export function* updateProjectNameAsync({
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: projectName,
-        color: color,
+        color,
       };
       const response = yield tigrowApi.put(
         `projects/change-title?pid=${projectId}`,

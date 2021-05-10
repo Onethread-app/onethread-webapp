@@ -29,7 +29,7 @@ interface ProjectAssociateInternalProps
     },
     selectedAssociate: any,
   ) => void;
-  isLoading: boolean,
+  isLoading: boolean;
 }
 
 const AddProjectAssociateFormComponent = (
@@ -169,8 +169,8 @@ const AddProjectAssociateFormComponent = (
             <span style={{ padding: 3 }}>
               <select
                 onChange={(e: any) => {
-                  let sa = [...selectedAssociate];
-                  sa[index]['size'] = e.target.value;
+                  const sa = [...selectedAssociate];
+                  sa[index].size = e.target.value;
                   setSelectedAssociate(sa);
                 }}
                 className="pa1" 

@@ -44,7 +44,7 @@ export const EditDesignationFormComponent = (
   };
 
   const initialValues: any = () => {
-    let divisions = ['director', 'cxo'];
+    const divisions = ['director', 'cxo'];
     if (props.member && props.member.designations.length) {
       if (divisions.includes(props.member.designations[0].division)) {
         return {
