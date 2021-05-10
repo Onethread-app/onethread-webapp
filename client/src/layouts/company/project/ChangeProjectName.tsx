@@ -10,39 +10,44 @@ import {
 } from 'components/final-form/utils';
 import { SubmitError } from 'components/final-form/SubmitError';
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import { updateProjectName } from '../../../stores/project/Actions';
+import { updateProject } from '../../../stores/project/Actions';
 
 import { Color } from 'stores/UtilsActions';
-import { isEqual} from 'lodash';
-interface ChangeNameProps {
+import { isEqual } from 'lodash';
+import { DateInput } from '@blueprintjs/datetime';
+interface UpdateProjectProps {
   setShowDialog: (val: boolean) => void;
   projectId: string;
   projectName: string;
   color: string;
 }
 
-interface ChangeNameInternalProps extends ChangeNameProps {
-  updateProjectName: (
+interface UpdateProjectInternalProps extends UpdateProjectProps {
+  updateProject: (
     name: string,
     projectId: string,
     color: string,
+    deadline: Date,
   ) => any;
   isLoading: boolean;
-  updatingProjectName: boolean;
-  errorOnUpdatingProjectName: string;
+  updatingProject: boolean;
+  errorOnUpdatingProject: string;
 }
 
-const ChangeNameComponent = (props: ChangeNameInternalProps) => {
+const UpdateProjectComponent = (
+  props: UpdateProjectInternalProps,
+) => {
   const [labelColor, setLabelColor] = useState(null as any);
   const onSubmit = async (values: any) => {
-    await props.updateProjectName(
+    await props.updateProject(
       values.name,
       props.projectId,
       values.color,
+      values.deadline,
     );
     if (
-      props.updatingProjectName === false &&
-      props.errorOnUpdatingProjectName === ''
+      props.updatingProject === false &&
+      props.errorOnUpdatingProject === ''
     ) {
       props.setShowDialog(false);
     }
@@ -55,9 +60,7 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
         name: props.projectName,
         color: props.color,
       }}
-      render={
-        
-        ({
+      render={({
         handleSubmit,
         form,
         submitting,
@@ -88,55 +91,93 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
                   }
                   label="Project Name*"
                 />
-
               </div>
             )}
           />
-                           <Field<string>
-                name="color"
-                render={({ input, meta }) => (
-                  <div className="mb3 mt3">
-                    <p
-                      className="fw5 mb3"
-                      style={{ fontSize: '.8rem' }}
-                    >
-                      Label
-                    </p>
-                    <div className="flex">
-                      {Color.map((color) => (
-                        <div className="pr2" key={color.code}>
-                          <Icon
-                            className="br2"
-                            icon={
-                              isEqual(color.code, labelColor) === true
-                                ? 'tick'
-                                : 'blank'
-                            }
-                            onClick={(e) => {
-                              e.preventDefault();
-                              input.onChange(color.code);
-                              setLabelColor(color.code);
-                            }}
-                            style={{
-                              backgroundColor: color.value,
-                              border:
-                                isEqual(color.code, labelColor) ===
-                                true
-                                  ? '3px solid #ffffff'
-                                  : 'none',
-                              height: '3rem',
-                              padding: '0.8rem',
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
+          <Field<string>
+            name="deadline"
+            render={({ input, meta }) => (
+              <div>
+                <p className="fw5 mb3" style={{ fontSize: '.8rem' }}>
+                  Deadline
+                </p>
+                <div className={`flex bw1 pb1 br0 items-center `}>
+                  <div>
+                    <Icon
+                      icon="calendar"
+                      className="mr2"
+                      style={{ color: '#3F61C5' }}
+                      iconSize={30}
+                    />
                   </div>
+                  <DateInput
+                    formatDate={(date: Date) =>
+                      date.toLocaleDateString()
+                    }
+                    parseDate={(str: string) => new Date(str)}
+                    onChange={input.onChange}
+                    canClearSelection={false}
+                    value={input.value ? new Date(input.value) : null}
+                    popoverProps={{
+                      targetClassName: 'w-100',
+                    }}
+                    minDate={new Date()}
+                    placeholder="Deadline"
+                    className="flex-auto"
+                  />
+                </div>
+                {checkError(meta) && (
+                  <small
+                    className="mv3-ns mv2"
+                    style={{ color: 'red' }}
+                  >
+                    {meta.error || meta.submitError}
+                  </small>
                 )}
-              />
+              </div>
+            )}
+          />
+          <Field<string>
+            name="color"
+            render={({ input, meta }) => (
+              <div className="mb3 mt3">
+                <p className="fw5 mb3" style={{ fontSize: '.8rem' }}>
+                  Label
+                </p>
+                <div className="flex">
+                  {Color.map((color) => (
+                    <div className="pr2" key={color.code}>
+                      <Icon
+                        className="br2"
+                        icon={
+                          isEqual(color.code, labelColor) === true
+                            ? 'tick'
+                            : 'blank'
+                        }
+                        onClick={(e) => {
+                          e.preventDefault();
+                          input.onChange(color.code);
+                          setLabelColor(color.code);
+                        }}
+                        style={{
+                          backgroundColor: color.value,
+                          border:
+                            isEqual(color.code, labelColor) === true
+                              ? '3px solid #ffffff'
+                              : 'none',
+                          height: '3rem',
+                          padding: '0.8rem',
+                        }}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          />
           <Divider />
           <div className="flex justify-end">
-               <Button
+            <Button
               className="w4 grow h2 pointer mr3"
               style={{
                 background: '#0fa3a3',
@@ -163,7 +204,6 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
             >
               cancel
             </Button>
-                     
           </div>
         </form>
       )}
@@ -174,12 +214,12 @@ const ChangeNameComponent = (props: ChangeNameInternalProps) => {
 const mapStateToProps = (state: any) => {
   return {
     isLoading: state.projectReducer.projectLoading,
-    updatingProjectName: state.projectReducer.updatingProjectName,
-    errorOnUpdatingProjectName:
-      state.projectReducer.errorOnUpdatingProjectName,
+    updatingProject: state.projectReducer.updatingProject,
+    errorOnUpdatingProject:
+      state.projectReducer.errorOnUpdatingProject,
   };
 };
 
-export const ChangeName = connect(mapStateToProps, {
-  updateProjectName,
-})(ChangeNameComponent);
+export const UpdateProject = connect(mapStateToProps, {
+  updateProject,
+})(UpdateProjectComponent);
