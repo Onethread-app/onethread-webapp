@@ -260,7 +260,7 @@ export const allCountryList = [
     code: 'CR',
   },
   {
-    name: "Cote d'Ivoire",
+    name: 'Cote d\'Ivoire',
     dial_code: '+225',
     code: 'CI',
   },
@@ -560,7 +560,7 @@ export const allCountryList = [
     code: 'KI',
   },
   {
-    name: "Korea, Democratic People's Republic of Korea",
+    name: 'Korea, Democratic People\'s Republic of Korea',
     dial_code: '+850',
     code: 'KP',
   },

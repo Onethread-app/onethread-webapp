@@ -22,7 +22,7 @@ export const addAssociate = (
       const response = await tigrowApi.post(
         `/associate/${company._id}`,
         {
-          company: company,
+          company,
           associateCompany: {
             _id: associateWith.mongo_id,
             name: associateWith.name,

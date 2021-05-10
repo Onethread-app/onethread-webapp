@@ -58,4 +58,3 @@ export const deleteMemberFailure = (errorMessage: any) => ({
   type: DELETE_MEMBER_FAILURE,
   payload: errorMessage,
 });
-

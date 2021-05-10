@@ -34,7 +34,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
   const [showOrganizationEditDialog, setShowOrganizationEditDialog] = useState(false);
   const [org, setOrg] = useState({} as IOrg);
   const [certificate, setCertificate] = useState({
-    _id:'',
+    _id: '',
     name: '',
     description: ''
   });
@@ -124,7 +124,7 @@ const AdvancedInfoComponent = (props: AdvancedInfoInternalProps) => {
                               name: certificate.name,
                               description: certificate.description
                             }
-                          )
+                          );
                         }}
                       />
                     )

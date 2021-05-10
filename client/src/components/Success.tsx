@@ -20,8 +20,8 @@ function _Success(props: ISuccess) {
 
   React.useEffect(() => {
     async function successCall() {
-      let search = window.location.search;
-      let params = new URLSearchParams(search);
+      const search = window.location.search;
+      const params = new URLSearchParams(search);
       // const currency = params.get('currency');
       const amount = params.get('amount');
       const status = params.get('status');
@@ -34,13 +34,13 @@ function _Success(props: ISuccess) {
       await tigrowApi.post(
         `payments/${props.companyId}`,
         {
-          amount: amount,
+          amount,
           currency: 'bdt',
           reference: transaction_id,
           company: props.companyId,
           gateway: 'portWallet',
           subscription: props.subscriptionId,
-          status: status,
+          status,
         },
         headers,
       );

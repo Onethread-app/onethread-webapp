@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, HTMLSelect , Icon} from '@blueprintjs/core';
+import { Button, HTMLSelect , Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Field, Form } from 'react-final-form';
 import { InputGroupField } from 'components/fields/InputGroupField';
@@ -61,12 +61,12 @@ export const ProjectAddComponent = (
     return {};
   };
 
-  const [roleCompany,setRoleCompany] = useState([]);
+  const [roleCompany, setRoleCompany] = useState([]);
   const [, setCompany] = useState('');
 
   useEffect(() => {
 
-    let getCompanies = async()=>{
+    const getCompanies = async() => {
       const headers = tokenConfig();
       const response = await tigrowApi.get(
         `company/user-role-company`,
@@ -75,10 +75,9 @@ export const ProjectAddComponent = (
 
       setRoleCompany(response.data);
       return response.data ;
-    }
+    };
 
     getCompanies();
-
 
   }, []);
 
@@ -289,4 +288,3 @@ export const ProjectAdd = connect(
   mapStateToProps,
   {createProject}
 )(ProjectAddComponent);
-

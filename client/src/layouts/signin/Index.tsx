@@ -241,7 +241,7 @@ export const SignInPageComponent = (
                                     <img
                                       title={
                                         showPassword
-                                          ? "Don't show password"
+                                          ? 'Don\'t show password'
                                           : 'Show password'
                                       }
                                       onClick={() =>

@@ -230,7 +230,7 @@ export const stripeCheckout = async (
   const response = await tigrowApi.post(
     'payments/stripe/intent',
     {
-      amount: amount,
+      amount,
     },
     headers,
   );
