@@ -3,6 +3,10 @@ const BoardColumn = require('./../boardColumn/boardColumn.model');
 const ActivityCtrl = require('./../activity/activity.controller');
 const logger = require('../../config/winston');
 const TaskAssign = require('./taskAssign.model');
+const { Project } = require('../project/project.model');
+const {
+  calculateProjectStatus,
+} = require('../project/project.controller');
 const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
 const SubTask = require('./subtask/subtask.model');
@@ -86,6 +90,14 @@ const create = async (req, res, next) => {
 
       column.tasks.push(createdTask._id);
       await column.save();
+
+      await Project.findByIdAndUpdate(
+        { _id: req.query.pid },
+        {
+          $set: { status: 'ongoing' },
+        },
+        { safe: true, upsert: true, new: true },
+      );
 
       await ActivityCtrl.create(
         `added this card to ${column.name}`,
@@ -305,6 +317,16 @@ const deleteTask = async (req, res, next) => {
       { new: true },
     ).exec();
 
+    const status = await calculateProjectStatus(req.query.pid);
+
+    await Project.findByIdAndUpdate(
+      { _id: req.query.pid },
+      {
+        $set: { status },
+      },
+      { safe: true, upsert: true, new: true },
+    ).exec();
+
     return sendJSONresponse(res, 200, {
       message: 'Task Deleted.',
     });
@@ -360,6 +382,17 @@ const dragTask = async (req, res, next) => {
         select: 'name company',
       },
     });
+
+    const status = await calculateProjectStatus(
+      column.boardId.project._id,
+    );
+    await Project.findByIdAndUpdate(
+      { _id: column.boardId.project._id },
+      {
+        $set: { status },
+      },
+      { safe: true, upsert: true, new: true },
+    ).exec();
 
     const text = `${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
     createCompanyRoleNotification(

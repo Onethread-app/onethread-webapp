@@ -16,13 +16,13 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    schemaValidator(projectValidation.changeNameProject),
+    schemaValidator(projectValidation.updateProject),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',
       'projectModerator',
     ),
-    projectCtrl.changeTitleProject,
+    projectCtrl.updateProject,
   );
 // authentication
 router

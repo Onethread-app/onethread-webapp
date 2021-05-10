@@ -3,6 +3,7 @@ const { Project } = require('./project.model');
 const { ProjectRequest } = require('../request/request.model');
 const { Associate } = require('../associate/associate.model');
 const { Team } = require('../team-member/team.model');
+const Task = require('../task/task.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
 const {
@@ -58,6 +59,23 @@ const projectRequestUpdate = async (pid, size) => {
   );
 };
 
+const calculateProjectStatus = async (pid) => {
+  let status = 'not-started';
+  const taskNumbers = await Task.find({
+    project: { $in: pid },
+  }).countDocuments();
+  const doneTasks = await Task.find({
+    $and: [{ project: { $in: pid }, status: 'done' }],
+  }).countDocuments();
+  if (taskNumbers > 0 && taskNumbers === doneTasks) {
+    status = 'completed';
+  }
+  if (taskNumbers > 0 && taskNumbers > doneTasks) {
+    status = 'ongoing';
+  }
+  return status;
+};
+
 const createNewProjectForCompany = async (req, res, next) => {
   try {
     let associates = req.body.associates;
@@ -79,6 +97,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         concernedAdmin: concernedAdmin.accountId,
         account: req.user._id,
         departments: req.body.departments,
+        deadline: req.body.deadline,
         color: req.body.color,
         company: req.params.companyId,
         description: '',
@@ -204,6 +223,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         concernedAdmin: concernedAdmin.accountId,
         account: req.user._id,
         departments: req.body.departments,
+        deadline: req.body.deadline,
         color: req.body.color,
         company: req.body.companyId,
         description: '',
@@ -752,7 +772,7 @@ const getProjectDetails = async (req, res, next) => {
       _id: req.query.pid,
     })
       .populate('files', 'link s3Key')
-      .select('outline description color name');
+      .select('outline description color name status');
     const memberList = await Team.find({
       $and: [{ project: req.query.pid }, { removed: false }],
     }).populate('account', 'name profileImage');
@@ -764,21 +784,28 @@ const getProjectDetails = async (req, res, next) => {
   }
 };
 
-const changeTitleProject = async (req, res, next) => {
+const updateProject = async (req, res, next) => {
   try {
-    console.log(req.body);
+    const status = await calculateProjectStatus(req.query.pid);
     await Project.findByIdAndUpdate(
       { _id: req.query.pid },
-      { $set: { name: req.body.name, color:req.body.color } },
+      {
+        $set: {
+          name: req.body.name,
+          color: req.body.color,
+          deadline: req.body.deadline,
+          status,
+        },
+      },
       { safe: true, upsert: true, new: true },
-    );
+    ).exec();
     logger.info(`project name change successfully`);
     return sendJSONresponse(res, 200, {
       message: 'Project Name changed',
     });
   } catch (error) {
-    logger.error(`${err}`);
-    next(err);
+    logger.error(`${error}`);
+    next(error);
   }
 };
 
@@ -1115,6 +1142,7 @@ const projectListForMember = async (req, res, next) => {
   }
 };
 module.exports = {
+  calculateProjectStatus,
   createNewProjectForCompany,
   createNewProjectFromHome,
   addAssociateInProject,
@@ -1123,7 +1151,7 @@ module.exports = {
   updateProjectOutline,
   // getProjectLoad,
   getProjectDetails,
-  changeTitleProject,
+  updateProject,
   archiveProject,
   unarchiveProject,
   showAllFilesForProject,

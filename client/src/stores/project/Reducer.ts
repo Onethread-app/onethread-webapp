@@ -30,6 +30,8 @@ export interface IProject {
   departments: Entity[];
   totalMember: number;
   concernAdmin: User;
+  createdAt: Date;
+  status: String;
 }
 
 export interface IPendingProject {
@@ -79,6 +81,7 @@ const initialState = {
     name: '',
     description: '',
     outline: '',
+    status: '',
   },
   hasAccess: true,
   teams: [],
@@ -91,10 +94,10 @@ const initialState = {
   singleProjectLoading: false,
   addTeamMemberLoading: false,
   unarchivingProject: false,
-  updatingProjectName: false,
+  updatingProject: false,
   error: '',
   errorOnUnarchive: '',
-  errorOnUpdatingProjectName: '',
+  errorOnUpdatingProject: '',
   errorOnSingleProjectLoading: '',
 };
 
@@ -160,22 +163,22 @@ export const ProjectReducer = (state = initialState, action: any) => {
         error: action.payload,
         projectLoading: false,
       };
-    case ProjectActionTypes.UPDATE_PROJECT_NAME_START:
+    case ProjectActionTypes.UPDATE_PROJECT_START:
       return {
         ...state,
-        updatingProjectName: true,
-        errorOnUpdatingProjectName: '',
+        updatingProject: true,
+        errorOnUpdatingProject: '',
       };
-    case ProjectActionTypes.UPDATE_PROJECT_NAME_SUCCESS:
+    case ProjectActionTypes.UPDATE_PROJECT_SUCCESS:
       return {
         ...state,
-        updatingProjectName: false,
+        updatingProject: false,
       };
-    case ProjectActionTypes.UPDATE_PROJECT_NAME_FAILURE:
+    case ProjectActionTypes.UPDATE_PROJECT_FAILURE:
       return {
         ...state,
-        updatingProjectName: false,
-        errorOnUpdatingProjectName: action.payload,
+        updatingProject: false,
+        errorOnUpdatingProject: action.payload,
       };
     case ProjectActionTypes.UNARCHIVE_PROJECT_START:
       return {

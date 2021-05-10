@@ -127,7 +127,6 @@ const MobileIndex = () => {
         <div className="companies flex flex-column items-center justify-center">
           <div className="flex items-center justify-around w-100">
             <img src={MarketExpress} alt="market express" />
-            
           </div>
           <div className="flex items-center justify-around w-100">
             <img src={Plummy} alt="plummy fashions" />

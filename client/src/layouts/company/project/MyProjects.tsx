@@ -6,15 +6,25 @@ import {
   Button,
   Menu,
   MenuItem,
+  Icon,
+  Elevation,
 } from '@blueprintjs/core';
+
+import {
+  DateRangeInput,
+  DateRange,
+  TimePrecision,
+} from '@blueprintjs/datetime';
 
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import Select from 'react-select';
+import moment from 'moment';
 import addIcon from '../../../resources/images/addIcon.png';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormProject } from './CreateProjectForm';
-import { ChangeName } from './ChangeProjectName';
-import { find } from 'lodash';
+import { UpdateProject } from './ChangeProjectName';
+import { find, orderBy } from 'lodash';
 import {
   Color,
   unreadMessageNotification,
@@ -33,6 +43,8 @@ import {
 import { getAllAssociates } from 'stores/associate/Actions';
 import { projectRules } from './settings/projectrules';
 
+import './MyProjects.scss';
+
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [showProjectDialog, setShowProjectDialog] = useState(false);
   const [showUpdateNameDialog, setShowUpdateNameDialog] = useState(
@@ -40,8 +52,134 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   );
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [showClearFilter, setShowClearFilter] = useState(false);
   const [projectsLoaded, setProjectsLoaded] = useState(false);
+  const [currentProjectPage, setCurrentProjectPage] = useState(1);
+  const [allProjects, setAllProjects] = useState<any>([]); // projects after first render or after applying filters
+  const [filteredProjects, setFilteredProjects] = useState<any>([]); // projects after applying search
+  const [currentProjects, setCurrentProjects] = useState<any>([]); // projects in current page
+  const [selectedOption, setSelectedOption] = useState({
+    label: 'All',
+    value: 'all',
+  });
+
+  const [range, setRange] = useState<DateRange>([
+    undefined,
+    undefined,
+  ]);
+  const [searchValue, setSearchValue] = useState('');
+  const [itemsPerPage] = useState(15);
+
   const permissions = projectRules(props.role, props.optionalRole);
+
+  const statusOptions = [
+    { value: 'all', label: 'All' },
+    { value: 'ongoing', label: 'Ongoing' },
+    { value: 'completed', label: 'Completed' },
+    { value: 'not-started', label: 'Not Started' },
+    // { value: 'extended', label: 'Extended' },
+  ];
+
+  const indexOfLastProject = currentProjectPage * itemsPerPage;
+  const indexOfFirstProject = indexOfLastProject - itemsPerPage;
+
+  useEffect(() => {
+    async function loadProjects() {
+      await props.getAllProjects();
+      setProjectsLoaded(true);
+
+      if (props.company.role !== 'employee') {
+        props.getAllDepartments();
+        props.getProjectArchive();
+        props.getAllAssociates();
+      }
+    }
+
+    loadProjects();
+  }, []);
+
+  useEffect(() => {
+    setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
+  }, [props.projects]);
+
+  useEffect(() => {
+    if (searchValue) {
+      setCurrentProjectPage(1);
+      const filteredProjects = allProjects.filter((project: any) =>
+        project.name
+          .toLowerCase()
+          .includes(searchValue.toLowerCase()),
+      );
+      setFilteredProjects(filteredProjects);
+    } else setFilteredProjects(allProjects);
+  }, [allProjects, searchValue]);
+
+  useEffect(() => {
+    setCurrentProjects(
+      filteredProjects.slice(indexOfFirstProject, indexOfLastProject),
+    );
+  }, [filteredProjects, indexOfLastProject, indexOfFirstProject]);
+
+  useEffect(() => {
+    setCurrentProjectPage(1);
+    if (
+      range[0] === undefined &&
+      range[1] === undefined &&
+      selectedOption.value === 'all'
+    ) {
+      setAllProjects(
+        orderBy(props.projects, ['createdAt'], ['desc']),
+      );
+      setShowClearFilter(false);
+    } else if (
+      range[0] === undefined &&
+      range[1] === undefined &&
+      selectedOption.value !== 'all'
+    ) {
+      const filteredProjects = props.projects.filter(
+        (project: any) => {
+          return project.status === selectedOption.value;
+        },
+      );
+      setAllProjects(filteredProjects);
+      setShowClearFilter(true);
+    } else if (
+      range[0] !== undefined &&
+      range[1] !== undefined &&
+      selectedOption.value === 'all'
+    ) {
+      let filteredProjects: any;
+      if (range[0] && range[1]) {
+        filteredProjects = props.projects.filter((project: any) => {
+          if (range[0] && range[1]) {
+            return (
+              project.createdAt > range[0].toISOString() &&
+              project.createdAt < range[1].toISOString()
+            );
+          }
+          return;
+        });
+        setAllProjects(filteredProjects);
+        setShowClearFilter(true);
+      }
+    } else {
+      let filteredProjects: any;
+      if (range[0] && range[1]) {
+        filteredProjects = props.projects.filter((project: any) => {
+          if (range[0] && range[1]) {
+            return (
+              project.createdAt > range[0].toISOString() &&
+              project.createdAt < range[1].toISOString() &&
+              project.status === selectedOption.value
+            );
+          }
+          return;
+        });
+        setAllProjects(filteredProjects);
+        setShowClearFilter(true);
+      }
+    }
+  }, [range, selectedOption]);
 
   const projectArchive = async (pid: string) => {
     await props.archiveProject(pid);
@@ -85,10 +223,46 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
         ) && props.unarchiveProject(projectId);
   };
 
+  const nextProjectsPage = (e: any) => {
+    e.preventDefault();
+    if (
+      currentProjectPage <
+      Math.ceil(props.projects.length / itemsPerPage)
+    ) {
+      setCurrentProjectPage(currentProjectPage + 1);
+    }
+  };
+
+  const prevProjectsPage = (e: any) => {
+    e.preventDefault();
+    if (currentProjectPage > 1) {
+      setCurrentProjectPage(currentProjectPage - 1);
+    }
+  };
+
+  const handleRangeChange = (range: DateRange) => {
+    setRange(range);
+  };
+
+  const handleSearch = (e: any) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleSelect = (selected: any) => {
+    setSelectedOption(selected);
+  };
+
+  const handleClear = () => {
+    setRange([undefined, undefined]);
+    setSelectedOption({ value: 'all', label: 'All' });
+    setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
+    setShowClearFilter(false);
+  };
+
   const noProjectsFound = (
-    <div className="tc  mb6">
+    <div className={`tc  ${searchValue ? '' : 'mt4 mb5'} `}>
       <h1 style={{ color: '#34495E' }}>No Projects Found</h1>
-      {props.companyRole !== 'employee' && (
+      {!searchValue && props.companyRole !== 'employee' && (
         <p
           onClick={() => setShowProjectDialog(true)}
           className="f5-l pointer dim f4-ns f6 tc"
@@ -108,177 +282,293 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     </div>
   );
 
-  useEffect(() => {
-    async function loadProjects() {
-      await props.getAllProjects();
-      setProjectsLoaded(true);
-
-      if (props.company.role !== 'employee') {
-        props.getAllDepartments();
-        props.getProjectArchive();
-        props.getAllAssociates();
-      }
-    }
-
-    loadProjects();
-  }, []);
   return (
     <>
       <div>
-        <div className="overflow-auto">
-          <div
-            style={
-              projectsLoaded && props.projects.length > 0
-                ? {
-                    display: 'grid',
-                    gridTemplateColumns:
-                      'repeat(auto-fit, minmax(200px, 265px))',
-                    gridTemplateRows: 'repeat(2, 135px)',
-                    gridGap: '10px 10px',
-                  }
-                : {}
-            }
-          >
-            {!projectsLoaded ? (
-              <CircularProgress />
-            ) : props.projects.length > 0 ? (
-              props.projects.map((project: any) => (
-                <div>
-                  <Card
-                    key={project._id}
-                    className="h-100 ma1"
-                    interactive={false}
+        <div className="overflow-auto my-projects">
+          <div className="flex flex-column relative">
+            <div className="projects-filter mh1 mt1 mb3 self-start flex flex-row-l flex-column items-center justify-between w-90">
+              <div className="flex flex-row-l flex-column items-center filter mb0-ns mb2">
+                <Select
+                  options={statusOptions}
+                  value={selectedOption}
+                  onChange={handleSelect}
+                />
+                <DateRangeInput
+                  maxDate={new Date()}
+                  formatDate={(date) => date.toLocaleString()}
+                  onChange={handleRangeChange}
+                  parseDate={(str) => new Date(str)}
+                  timePickerProps={{
+                    precision: TimePrecision.MINUTE,
+                    showArrowButtons: true,
+                  }}
+                  value={range}
+                />
+                {showClearFilter && (
+                  <Button
+                    icon={
+                      <Icon
+                        icon="refresh"
+                        style={{
+                          color: '#fff',
+                          background: '#3F61C5',
+                        }}
+                      />
+                    }
+                    onClick={handleClear}
                     style={{
-                      paddingLeft: '0px',
-                      paddingBottom: '0px',
+                      height: '38px',
+                      background: '#3F61C5',
                     }}
-                  >
-                    <div
-                      className=""
+                  />
+                )}
+              </div>
+              <div className="bp3-input-group .modifier">
+                <span className="bp3-icon bp3-icon-search"></span>
+                <input
+                  type="text"
+                  className="bp3-input"
+                  placeholder="Search"
+                  onChange={(e) => handleSearch(e)}
+                />
+              </div>
+            </div>
+            <div
+              style={
+                projectsLoaded && filteredProjects.length > 0
+                  ? {
+                      display: 'grid',
+                      gridTemplateColumns:
+                        'repeat(auto-fit, minmax(200px, 265px))',
+                      gridAutoRows: '135px',
+                      gridGap: '10px 10px',
+                    }
+                  : {}
+              }
+            >
+              {!projectsLoaded ? (
+                <CircularProgress />
+              ) : filteredProjects.length > 0 ? (
+                currentProjects.map((project: any) => (
+                  <div className="pa1">
+                    <Card
+                      key={project._id}
+                      className="h-100"
+                      interactive={true}
+                      elevation={Elevation.TWO}
                       style={{
-                        borderLeft: `5px solid 
-                    ${
-                      find(Color, ['code', project.color])
-                        ? find(Color, ['code', project.color])!.value
-                        : 'white'
-                    }`,
-                        // TODO use dictionary
-                        // borderLeft: '5px solid',
-                        paddingLeft: '20px',
-                        marginLeft: '-2px',
-                        borderRadius: '3px',
+                        paddingLeft: '0px',
+                        paddingBottom: '0px',
+                        cursor: 'default',
                       }}
                     >
-                      <div className="flex">
-                        <h3
-                          onClick={(e) => {
-                            e.preventDefault();
-                            singleProjectOnClick(project._id);
-                          }}
-                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
+                      <div className="flex flex-column">
+                        <div className="flex items-start">
+                          <h3
+                            style={{
+                              borderLeft: `5px solid 
+                              ${
+                                find(Color, ['code', project.color])
+                                  ? find(Color, [
+                                      'code',
+                                      project.color,
+                                    ])!.value
+                                  : 'white'
+                              }`,
+                              paddingLeft: '20px',
+                              marginLeft: '-2px',
+                              borderRadius: '3px',
+                              whiteSpace: 'nowrap',
+                              textOverflow: 'ellipsis',
+                              width: '220px',
+                              height: '2rem',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                            }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              singleProjectOnClick(project._id);
+                            }}
+                            className="mt0 mb2 flex-grow-1 fw6 overflow-hidden f4 hover-dark-blue pointer"
+                          >
+                            {project.name}
+                          </h3>
+                          <Popover
+                            className="w-10"
+                            content={
+                              modalOpen ? (
+                                <Menu className="pa2">
+                                  <MenuItem
+                                    className="pa1"
+                                    text="Update Project"
+                                    onClick={(e: any) =>
+                                      checkRoleForChangeName()
+                                    }
+                                  />
+                                  <MenuItem
+                                    className="pa1 red"
+                                    text="Archive Project"
+                                    onClick={(e: any) =>
+                                      checkRoleForArchiveProject(
+                                        project._id,
+                                      )
+                                    }
+                                  />
+                                </Menu>
+                              ) : (
+                                'Loading..'
+                              )
+                            }
+                            target={
+                              <Button
+                                style={{
+                                  transform: 'rotate(90deg)',
+                                  OTransform: 'rotate(90deg)',
+                                  msTransform: 'rotate(90deg)',
+                                  WebkitTransform: 'rotate(90deg)',
+                                }}
+                                icon="more"
+                                minimal={true}
+                                className="outline-0"
+                                onClick={(e: any) =>
+                                  getProjectRole(project._id)
+                                }
+                              />
+                            }
+                          />
+                          {props.companyRooms &&
+                          unreadMessageNotification(
+                            props.companyRooms,
+                            'project',
+                            project._id,
+                          ) ? (
+                            <span
+                              className="ml1 br-100 bg-red"
+                              style={{ width: '7px', height: '7px' }}
+                            ></span>
+                          ) : null}
+                        </div>
+                        <div
+                          className="flex flex-column items-start mt2"
+                          style={{ paddingLeft: '25px' }}
+                        >
+                          <span
+                            className={`bp3-tag .modifier ${
+                              project.status === 'not-started'
+                                ? 'bg-blue'
+                                : project.status === 'ongoing'
+                                ? 'bg-orange'
+                                : 'bg-green'
+                            }`}
+                          >
+                            {project.status.replace(/-|\s/g, ' ')}
+                          </span>
+
+                          <p
+                            className="f7 fw5"
+                            style={{ marginTop: '10px' }}
+                          >
+                            Deadline:{' '}
+                            {project.deadline
+                              ? moment(project.deadline).format(
+                                  'DD/MM/YYYY',
+                                )
+                              : 'Not Set'}
+                          </p>
+                        </div>
+                        {/* <h3
+                          className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
                           style={{
                             whiteSpace: 'nowrap',
                             textOverflow: 'ellipsis',
                             width: '220px',
                           }}
                         >
-                          {project.name}
-                        </h3>
-                        <Popover
-                          className="w-10"
-                          content={
-                            modalOpen ? (
-                              <Menu className="pa2">
-                                <MenuItem
-                                  className="pa1"
-                                  text="Update Project Name"
-                                  onClick={(e: any) =>
-                                    checkRoleForChangeName()
-                                  }
-                                />
-                                <MenuItem
-                                  className="pa1 red"
-                                  text="Archive Project"
-                                  onClick={(e: any) =>
-                                    checkRoleForArchiveProject(
-                                      project._id,
-                                    )
-                                  }
-                                />
-                              </Menu>
-                            ) : (
-                              'Loading..'
-                            )
-                          }
-                          target={
-                            <Button
-                              style={{
-                                transform: 'rotate(90deg)',
-                                OTransform: 'rotate(90deg)',
-                                msTransform: 'rotate(90deg)',
-                                WebkitTransform: 'rotate(90deg)',
-                              }}
-                              icon="more"
-                              minimal={true}
-                              className="outline-0"
-                              onClick={(e: any) =>
-                                getProjectRole(project._id)
-                              }
-                            />
-                          }
-                        />
-                        {props.companyRooms &&
-                        unreadMessageNotification(
-                          props.companyRooms,
-                          'project',
-                          project._id,
-                        ) ? (
-                          <span
-                            className="ml1 br-100 bg-red"
-                            style={{ width: '7px', height: '7px' }}
-                          ></span>
-                        ) : null}
+                          {project.departments &&
+                            project.departments.map((dep: any) => (
+                              <label style={{ paddingLeft: '2px' }}>
+                                {dep.name}
+                              </label>
+                            ))}
+                        </h3> */}
                       </div>
-                      <h3
-                        className="mt0 mb2 flex-grow-1 fw6 overflow-hidden silver"
-                        style={{
-                          whiteSpace: 'nowrap',
-                          textOverflow: 'ellipsis',
-                          width: '220px',
-                        }}
+                    </Card>
+                    {showUpdateNameDialog && (
+                      <RightSidebar
+                        onClose={() =>
+                          setShowUpdateNameDialog(
+                            !showUpdateNameDialog,
+                          )
+                        }
                       >
-                        {project.departments &&
-                          project.departments.map((dep: any) => (
-                            <label style={{ paddingLeft: '2px' }}>
-                              {dep.name}
-                            </label>
-                          ))}
-                      </h3>
-                    </div>
-                  </Card>
-                  {showUpdateNameDialog && (
-                    <RightSidebar
-                      onClose={() =>
-                        setShowUpdateNameDialog(!showUpdateNameDialog)
-                      }
-                    >
-                      <ChangeName
-                        projectName={props.currentProject.name}
-                        projectId={props.currentProject._id}
-                        color={props.currentProject.color}
-                        setShowDialog={setShowUpdateNameDialog}
-                      />
-                    </RightSidebar>
-                  )}
+                        <UpdateProject
+                          projectName={props.currentProject.name}
+                          projectId={props.currentProject._id}
+                          color={props.currentProject.color}
+                          setShowDialog={setShowUpdateNameDialog}
+                        />
+                      </RightSidebar>
+                    )}
+                  </div>
+                ))
+              ) : (
+                noProjectsFound
+              )}
+            </div>
+            {projectsLoaded === true &&
+              filteredProjects.length > itemsPerPage && (
+                <div className="flex flex-row items-center w-100 justify-center mt3">
+                  <div
+                    className="f6 fw5 flex flex-row items-center"
+                    style={{ color: '#BBBBBB' }}
+                  >
+                    <Icon
+                      icon="circle-arrow-left"
+                      iconSize={25}
+                      onClick={prevProjectsPage}
+                      className={`mr2 ${
+                        currentProjectPage > 1 && 'pointer'
+                      }`}
+                      style={{
+                        color:
+                          currentProjectPage > 1
+                            ? '#3F61C5'
+                            : '#656565',
+                      }}
+                    />
+                    {currentProjectPage} of{' '}
+                    {Math.ceil(
+                      filteredProjects.length / itemsPerPage,
+                    )}
+                    <Icon
+                      icon="circle-arrow-right"
+                      iconSize={25}
+                      onClick={nextProjectsPage}
+                      className={`ml2 ${
+                        currentProjectPage <
+                          Math.ceil(
+                            filteredProjects.length / itemsPerPage,
+                          ) && 'pointer'
+                      }`}
+                      style={{
+                        color:
+                          currentProjectPage <
+                          Math.ceil(
+                            filteredProjects.length / itemsPerPage,
+                          )
+                            ? '#3F61C5'
+                            : '#656565',
+                      }}
+                    />
+                  </div>
                 </div>
-              ))
-            ) : (
-              noProjectsFound
-            )}
+              )}
           </div>
           {props.company.role !== 'employee' && (
             <div>
-              <h3 className="f3-ns f4">Archieved Projects</h3>
+              <h3 className="f3-ns f4">Archived Projects</h3>
               <div
                 style={{
                   display: 'grid',

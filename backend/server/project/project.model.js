@@ -22,10 +22,18 @@ const projectSchema = new Schema(
       type: String,
       maxlength: 5000,
     },
+    deadline: {
+      type: Date,
+    },
     color: {
       type: Number,
       enum: [0, 1, 2, 3, 4, 5, 6],
       default: 0,
+    },
+    status: {
+      type: String,
+      enum: ['not-started', 'ongoing', 'completed'],
+      default: 'not-started',
     },
     concernedAdmin: {
       type: mongoose.Schema.Types.ObjectId,
