@@ -155,7 +155,7 @@ const TaskPageComponent = (
       props.currentBoard._id
     ) {
       props.history.push(
-        `/company/${props.company.uniqueName}/board/${props.boardList[0]._id}`,
+        `/company/${props.company.uniqueName}/board/${props.currentBoard._id}`,
       );
     }
   }, [props.currentBoard]);

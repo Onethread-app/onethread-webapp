@@ -287,7 +287,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
       <div>
         <div className="overflow-auto my-projects">
           <div className="flex flex-column relative">
-            <div className="projects-filter mh1 mt1 mb3 self-start flex flex-row-l flex-column items-center justify-between w-90">
+            <div
+              className="projects-filter mh1 mt1 mb3 self-start flex flex-row-l flex-column items-center justify-between w-90"
+              style={{ gap: '.5rem' }}
+            >
               <div className="flex flex-row-l flex-column items-center filter mb0-ns mb2">
                 <Select
                   options={statusOptions}

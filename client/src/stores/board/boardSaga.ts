@@ -1,7 +1,10 @@
 import { all, put, call, select } from 'redux-saga/effects';
 import * as Eff from 'redux-saga/effects';
 
-import { tokenConfig, tokenConfigFIleUpload  } from 'stores/UtilsActions';
+import {
+  tokenConfig,
+  tokenConfigFIleUpload,
+} from 'stores/UtilsActions';
 import { BoardActionTypes } from './Types';
 import { TaskBoard, ITask } from './Reducer';
 import { errorMessgeHandler } from 'components/final-form/utils';
@@ -31,6 +34,9 @@ import {
   deleteTaskSuccess,
   taskFileUploadFailure,
   taskFileUploadSuccess,
+  taskFileDeleteFailure,
+  taskFileDeleteSuccess,
+  getSelectedTaskDetails,
 } from './Actions';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
@@ -333,7 +339,7 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
   }
 }
 
-export function* getSelectedTaskDetails({ payload }: any) {
+export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
@@ -421,14 +427,40 @@ export function* taskFileUploadAsync({ payload }: any) {
       );
       const response = {
         _id: res.data._id,
+        taskId: res.data.task,
         link: res.data.link,
+        s3Key: res.data.s3key,
         columnId: payload.columnId,
       };
-      yield put(taskFileUploadSuccess(response));
+      yield all([
+        put(taskFileUploadSuccess(response)),
+        put(getSelectedTaskDetails(payload.taskId)),
+      ]);
     }
   } catch (error) {
     handleError(error, async (errorMessage: any) => {
       await taskFileUploadFailure(errorMessage);
+    });
+  }
+}
+
+export function* taskFileDeleteAsync({ payload }: any) {
+  try {
+    const reqBody = {
+      fileId: payload.fileId,
+      taskId: payload.taskId,
+    };
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      yield tigrowApi.put(`files/file-delete-task`, reqBody, headers);
+      yield all([
+        put(taskFileDeleteSuccess(payload)),
+        put(getSelectedTaskDetails(payload.taskId)),
+      ]);
+    }
+  } catch (error) {
+    handleError(error, async (errorMessage: any) => {
+      await taskFileDeleteFailure(errorMessage);
     });
   }
 }
@@ -505,7 +537,7 @@ export function* onDragAndDrop() {
 export function* onSelectTask() {
   yield takeLatest(
     BoardActionTypes.SELECT_TASK_START,
-    getSelectedTaskDetails,
+    getSelectedTaskDetailsAsync,
   );
 }
 
@@ -517,6 +549,13 @@ export function* onTaskFileUpload() {
   yield takeEvery(
     BoardActionTypes.TASK_FILE_UP_START,
     taskFileUploadAsync,
+  );
+}
+
+export function* onTaskFileDelete() {
+  yield takeEvery(
+    BoardActionTypes.TASK_FILE_DELETE_START,
+    taskFileDeleteAsync,
   );
 }
 
@@ -540,6 +579,7 @@ export default function* boardSaga() {
     call(onSelectTask),
     call(onUpdateTask),
     call(onTaskFileUpload),
+    call(onTaskFileDelete),
     call(onDeleteTask),
   ]);
 }
