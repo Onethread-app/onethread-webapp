@@ -216,6 +216,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
             <tr>
               <th style={{ width: '20%' }}>Name</th>
               <th style={{ width: '20%' }}>Email</th>
+              {/* <th style={{ width: '20%' }}>Contact No</th> */}
               <th style={{ width: '20%' }}>Division</th>
               <th style={{ width: '20%' }}>Department</th>
               <th style={{ width: '20%' }}>Position</th>
@@ -261,6 +262,11 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                     <span className="mr2-ns mr1 f7 f6-ns">
                       {member.account ? member.account.email : null}
                     </span>
+                  </td>
+                  <td>
+                    {/* <span className="mr2-ns mr1 f7 f6-ns">
+                      {member.account ? member.account.contactNo : null}
+                    </span> */}
                   </td>
                   <td className="f7 f6-ns">
                     {member.designations.length
@@ -382,6 +388,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
             <tr>
               <th style={{ width: '20%' }}>Name</th>
               <th style={{ width: '20%' }}>Email</th>
+              {/* <th style={{ width: '20%' }}>Contact No</th> */}
               <th style={{ width: '20%' }}>Division</th>
               <th style={{ width: '20%' }}>Department</th>
               <th style={{ width: '20%' }}>Position</th>

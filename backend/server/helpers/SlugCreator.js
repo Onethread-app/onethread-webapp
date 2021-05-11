@@ -6,7 +6,7 @@ const createSlug = (name) => {
         replacement: '-',
         symbols: true,
         remove: /[.]/g,
-        lower: false,
+        lower: true,
         charmap: slug.charmap,
         multicharmap: slug.multicharmap,
       }

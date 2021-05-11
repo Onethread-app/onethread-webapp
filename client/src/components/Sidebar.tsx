@@ -300,7 +300,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   )}
                   {props.leftOpen && (
                     <span
-                      className="outline-0 bp3-large pl4"
+                      className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
                       Preface
@@ -339,7 +339,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   {props.leftOpen && (
                     <>
                       <span
-                        className="outline-0 bp3-large pl4"
+                        className="outline-0 bp3-large pl3"
                         style={{ color: 'inherit' }}
                       >
                         Rooms
@@ -390,7 +390,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   )}
                   {props.leftOpen && (
                     <span
-                      className="outline-0 bp3-large pl4"
+                      className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
                       Boards
@@ -414,7 +414,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Team</p>}
+                      content={<p className="mb0">Teammates</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -428,10 +428,10 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   )}
                   {props.leftOpen && (
                     <span
-                      className="outline-0 bp3-large pl4"
+                      className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
-                      Team
+                      Teammates
                     </span>
                   )}
                 </NavLink>
@@ -452,7 +452,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Settings</p>}
+                      content={<p className="mb0">Project Settings</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -466,10 +466,10 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   )}
                   {props.leftOpen && (
                     <span
-                      className="outline-0 bp3-large pl4"
+                      className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
-                      Settings
+                      Project Settings
                     </span>
                   )}
                 </NavLink>
@@ -571,6 +571,53 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
+                        {companyPermit(props.company.role) && (
+              <NavLink
+                exact
+                className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
+                style={{ color: 'white' }}
+                activeStyle={{ background: ' #3484F0' }}
+                to={`/company/${props.company.uniqueName}/associates`}
+                onClick={() => setActiveTab('company-associates')}
+              >
+                {props.leftOpen ? (
+                  <span className="ml4 pa1 bg-white">
+                    <img
+                      src={
+                        activeTab === 'company-associates'
+                          ? associatesLight
+                          : associates
+                      }
+                      className="w1 pt1"
+                    />
+                  </span>
+                ) : (
+                  <Tooltip
+                    content={<p className="mb0">Partners</p>}
+                    position="right"
+                  >
+                    <span className="ml3 pa1 bg-white">
+                      <img
+                        src={
+                          activeTab === 'company-associates'
+                            ? associatesLight
+                            : associates
+                        }
+                        className="w1 pt1"
+                      />
+                    </span>
+                  </Tooltip>
+                )}
+                {props.leftOpen && (
+                  <span
+                    className="outline-0 bp3-large pl4"
+                    style={{ color: 'inherit' }}
+                  >
+                    Partners
+                  </span>
+                )}
+              </NavLink>
+            )}
             {companyPermit(props.company.role) && (
               <NavLink
                 exact
@@ -620,53 +667,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
             )}
 
             {/*  */}
-            {companyPermit(props.company.role) && (
-              <NavLink
-                exact
-                className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
-                style={{ color: 'white' }}
-                activeStyle={{ background: ' #3484F0' }}
-                to={`/company/${props.company.uniqueName}/associates`}
-                onClick={() => setActiveTab('company-associates')}
-              >
-                {props.leftOpen ? (
-                  <span className="ml4 pa1 bg-white">
-                    <img
-                      src={
-                        activeTab === 'company-associates'
-                          ? associatesLight
-                          : associates
-                      }
-                      className="w1 pt1"
-                    />
-                  </span>
-                ) : (
-                  <Tooltip
-                    content={<p className="mb0">Associates</p>}
-                    position="right"
-                  >
-                    <span className="ml3 pa1 bg-white">
-                      <img
-                        src={
-                          activeTab === 'company-associates'
-                            ? associatesLight
-                            : associates
-                        }
-                        className="w1 pt1"
-                      />
-                    </span>
-                  </Tooltip>
-                )}
-                {props.leftOpen && (
-                  <span
-                    className="outline-0 bp3-large pl4"
-                    style={{ color: 'inherit' }}
-                  >
-                    Associates
-                  </span>
-                )}
-              </NavLink>
-            )}
+
           </>
         )}
       </div>

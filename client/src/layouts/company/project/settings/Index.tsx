@@ -33,7 +33,7 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Room</small>
+            <small style={{ color: 'inherit' }}>Rooms</small>
           </NavLink>
           <NavLink
             exact
@@ -42,7 +42,7 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Board</small>
+            <small style={{ color: 'inherit' }}>Boards</small>
           </NavLink>
           <NavLink
             exact
@@ -51,7 +51,7 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Team</small>
+            <small style={{ color: 'inherit' }}>Teammates</small>
           </NavLink>
           <NavLink
             exact
@@ -60,7 +60,7 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Settings</small>
+            <small style={{ color: 'inherit' }}>Project Settings</small>
           </NavLink>
         </div>
       </MobileView>
