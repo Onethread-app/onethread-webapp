@@ -441,7 +441,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
-                              Associates
+                              Partners
                             </small>
                           </NavLink>
                           {companyPermit(props.company.role) &&
