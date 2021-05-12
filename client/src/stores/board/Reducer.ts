@@ -86,11 +86,11 @@ export const BoardReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         creatingBoard: true,
+        boardError: '',
       };
     case BoardActionTypes.CREATE_BOARD_SUCCESS:
       return {
         ...state,
-        creatingBoard: false,
         boardList: [
           {
             _id: action.payload._id,
@@ -101,6 +101,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
           },
           ...state.boardList,
         ],
+        creatingBoard: false,
       };
     case BoardActionTypes.CREATE_BOARD_FAILURE:
       return {
@@ -147,6 +148,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         updatingBoard: true,
+        boardError: '',
       };
     case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_SUCCESS:
       return {

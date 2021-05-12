@@ -9,6 +9,7 @@ import {
 interface BreadCrumbsItemProps {
   text: string;
   href: string;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 interface BreadCrumbsProps {
@@ -37,6 +38,7 @@ export const BreadCrumbs = withRouter(
           breadcrumbRenderer={(e) => (
             <Link to={e.href!}>
               <Breadcrumb
+                onClick={e.onClick}
                 text={e.text}
                 className="pointer f7 black fw6"
               />
