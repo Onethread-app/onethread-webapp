@@ -40,7 +40,7 @@ export const BreadCrumbs = withRouter(
               <Breadcrumb
                 onClick={e.onClick}
                 text={e.text}
-                className="pointer f7 black fw6"
+                className="pointer f7 black fw6 hover-black"
               />
             </Link>
           )}

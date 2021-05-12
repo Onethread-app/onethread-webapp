@@ -1,32 +1,42 @@
 import React, { useState } from 'react';
-import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import { Button, Icon } from '@blueprintjs/core';
-import { createBoard } from 'stores/board/Actions';
-import { TaskBoard } from 'stores/board/Reducer';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Form, Field } from 'react-final-form';
+import { isEqual } from 'lodash';
+import { Button, Icon } from '@blueprintjs/core';
 import {
   checkError,
   required,
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
+import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
 import { DropdownFieldErrorWithLabel } from 'components/fields/DropdownField';
 import { Color } from 'stores/UtilsActions';
+import { createBoard, clearCurrentBoard } from 'stores/board/Actions';
+import { TaskBoard } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { isEqual } from 'lodash';
+import { IProject } from 'stores/project/Reducer';
 
 const FormComponent = (props: {
   setShowTaskBoardDialog?: (val: boolean) => void;
   createBoard: (board: TaskBoard) => void;
+  clearCurrentBoard: () => void;
   departments: [];
   company: ICompany;
+  currentProject: IProject;
   isCreating: boolean;
 }) => {
+  const history = useHistory();
+
   const onSubmit = async (values: any) => {
     await props.createBoard(values);
     if (props.setShowTaskBoardDialog && props.isCreating === false) {
       props.setShowTaskBoardDialog(false);
+      props.clearCurrentBoard();
+      history.push(
+        `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board`,
+      );
     }
     return {};
   };
@@ -145,7 +155,7 @@ const FormComponent = (props: {
                 )}
               />
               <div className="fr">
-              <Button
+                <Button
                   className="grow pointer white bp3-minimal w4 mr3"
                   style={{
                     background: '#3F61C5',
@@ -174,7 +184,6 @@ const FormComponent = (props: {
                 >
                   cancel
                 </Button>
-               
               </div>
             </div>
           </form>
@@ -188,10 +197,12 @@ const mapStateToProps = (state: any) => {
   return {
     departments: state.companyReducer.currentCompany.departments,
     company: state.companyReducer.currentCompany,
+    currentProject: state.projectReducer.projectDetails,
     isCreating: state.boardIndexReducer.boardReducer.creatingBoard,
   };
 };
 
-export const FormBoard = connect(mapStateToProps, { createBoard })(
-  FormComponent,
-);
+export const FormBoard = connect(mapStateToProps, {
+  createBoard,
+  clearCurrentBoard,
+})(FormComponent);

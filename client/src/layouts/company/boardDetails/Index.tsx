@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
-import { Dialog } from '@blueprintjs/core';
-import { TaskManagementLayout } from './TaskManagementLayout';
 import { connect } from 'react-redux';
-import { TaskBoard } from 'stores/board/Reducer';
+import { Dialog } from '@blueprintjs/core';
+
+import { TaskManagementLayout } from './TaskManagementLayout';
 import { AddTeamMemberForm } from './members/AddTeamMemberForm';
-import { ICompany } from 'stores/company/Reducer';
 import { BreadCrumbs } from 'components/fields/Breadcrumbs';
-import addMemberIcon from 'resources/images/addMemberIcon.png';
-import { IProject } from 'stores/project/Reducer';
 import { projectRules } from '../project/settings/projectrules';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormBoard } from '../board/Form';
 import { ColumnForm } from './column/ColumnForm';
+
 import { clearCurrentBoard } from 'stores/board/Actions';
+import { TaskBoard } from 'stores/board/Reducer';
+import { ICompany } from 'stores/company/Reducer';
+import { IProject } from 'stores/project/Reducer';
+
+import addMemberIcon from 'resources/images/addMemberIcon.png';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
