@@ -12,6 +12,7 @@ import { projectRules } from '../project/settings/projectrules';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormBoard } from '../board/Form';
 import { ColumnForm } from './column/ColumnForm';
+import { clearCurrentBoard } from 'stores/board/Actions';
 
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
@@ -19,6 +20,7 @@ interface BoardDetailsViewInternalProps {
   currentProject?: IProject;
   role: string;
   optionalRole: any;
+  clearCurrentBoard: () => void;
 }
 
 const BoardDetailsViewComponent = (
@@ -52,6 +54,9 @@ const BoardDetailsViewComponent = (
               href: `/company/${props.company.uniqueName}/project/${
                 props.currentProject!._id
               }/board`,
+              onClick: () => {
+                props.clearCurrentBoard();
+              },
             },
             {
               text: `${props.currentBoard!.name}`,
@@ -211,7 +216,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const BoardDetailsView = connect(
-  mapStateToProps,
-  null,
-)(BoardDetailsViewComponent);
+export const BoardDetailsView = connect(mapStateToProps, {
+  clearCurrentBoard,
+})(BoardDetailsViewComponent);
