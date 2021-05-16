@@ -212,7 +212,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   className={`relative`}
                   style={{
                     transition: 'width 0.4s',
-                    width: leftOpen ? '15%' : '4%',
+                    width: !leftOpen ? '15%' : '4%',
                   }}
                 >
                   <div>
@@ -224,7 +224,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                           ? 'company'
                           : 'default'
                       }
-                      leftOpen={leftOpen}
+                      leftOpen={!leftOpen}
                       project={props.project}
                       companyRooms={props.companyRooms}
                     />
@@ -234,7 +234,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                   className="relative br3 pv1"
                   style={{
                     transition: 'width 0.4s',
-                    width: leftOpen
+                    width: !leftOpen
                       ? props.rightSidebarOpen
                         ? '55%'
                         : '85%'
@@ -248,7 +248,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     onClick={() => setLeftOpen(!leftOpen)}
                   >
                     <img
-                      src={leftOpen ? arrowLeft : arrowRight}
+                      src={!leftOpen ? arrowLeft : arrowRight}
                       className="br2 w2"
                       color="#3F61C5"
                     />
