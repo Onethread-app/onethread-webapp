@@ -407,7 +407,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                       currentAnnouncements.map(
                         (announcement: any) => (
                           <CompanyAnnouncements
-                            name={
+                            divison={
                               announcement.memberId &&
                               announcement.memberId.designations
                                 .length > 0
@@ -415,13 +415,33 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                     announcement.memberId
                                       .designations[0].division
                                   ]
-                                : 'Admin'
+                                :  announcement.memberId.role
                             }
                             date={moment(
                               announcement.createdAt,
                             ).calendar()}
                             content={announcement.text}
                             key={announcement._id}
+                            firstName={
+                              announcement.memberId.account?
+                                 announcement.memberId.account.firstName
+                                : null
+                            }
+                            lastName={
+                              announcement.memberId.account?
+                                 announcement.memberId.account.lastName
+                                : null
+                            }
+                            position={
+                              announcement.memberId &&
+                              announcement.memberId.designations
+                              .length > 0
+                                ? 
+                                    announcement.memberId.designations[0].position
+                                  
+                                :  announcement.memberId.role
+
+                            }
                           />
                         ),
                       )
