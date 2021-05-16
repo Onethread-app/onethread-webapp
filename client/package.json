@@ -1,7 +1,7 @@
 {
   "name": "tigrow_frontend",
   "version": "2.4.4",
-  "homepage": "https://www.onethread.app/",
+  "homepage": "https://onethread.app/",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.18.0",

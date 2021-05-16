@@ -30,12 +30,12 @@ const SignupConfirmationPageComponent = () => {
             <img src={successfulEmailImage} />
           </p>
           <p className="tc">
-            We have send you a mail to verify your account.
-          </p>
-          <p className="tc">
-            Please check your mail to get the verification link.
-          </p>
-          <p className="mt4">Haven't got any mail?</p>
+          We have sent an email with a confirmation link to your email address. <br/>
+          Please allow 5-10 minutes for this message to arrive.
+          <h4>Haven't got any mail?</h4>
+          <br/>Please, check your spam folder.
+          <h4>Still, Didn't get any mail?</h4>
+          Submit your issue at contact@onethread.app</p>
           <Button
             className="br3 f5 f4-m f3-l fw6 mt3 ph4 pv3"
             text="Resend mail"
