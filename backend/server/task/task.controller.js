@@ -29,7 +29,6 @@ const load = (req, res, next, id) => {
     .exec()
     .then((result) => {
       req.task = result;
-      console.log(result);
       next();
     })
     .catch(() => {
@@ -151,6 +150,7 @@ const getMembers = async (req, res, next) => {
 };
 
 const addMember = async (req, res, next) => {
+ try {
   const requestedMembers = req.body.assignmembers;
   const boardID = req.task.boardId;
 
@@ -231,6 +231,10 @@ const addMember = async (req, res, next) => {
         });
     });
   }
+ } catch (error) {
+  logger.error(`Task: ${error}`);
+  next(error);
+ }
 };
 
 const suggestMember = async (req, res, next) => {
