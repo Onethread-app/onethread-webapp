@@ -1,4 +1,5 @@
 import React from 'react';
+import { upperFirst } from 'lodash';
 import './CompanyAnnouncements.scss';
 import Linkify from 'react-linkify';
 import { componentDecorator } from 'helpers/LinkifyHelper';
@@ -8,7 +9,12 @@ const CompanyAnnouncements = (props) => {
     <div className="company-announcements-status mb2">
       <div className="info-wrapper flex justify-between items-center">
         <div className="heading primary-font-color">
-          <h3>From {props.name.toUpperCase()}</h3>
+          {
+            props.divison === props.position?
+            <h3>From {upperFirst(props.firstName)} {upperFirst(props.lastName)} - {props.divison}</h3>:
+            <h3>From {upperFirst(props.firstName)} {upperFirst(props.lastName)} - {props.divison} - {props.position}</h3>
+          }
+          
         </div>
         <div className="date secondary-font-color">{props.date}</div>
       </div>

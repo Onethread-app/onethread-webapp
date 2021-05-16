@@ -214,12 +214,12 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
-              <th style={{ width: '20%' }}>Name</th>
-              <th style={{ width: '20%' }}>Email</th>
+              <th style={{ width: '25%' }}>Name</th>
+              <th style={{ width: '25%' }}>Email</th>
               {/* <th style={{ width: '20%' }}>Contact No</th> */}
-              <th style={{ width: '20%' }}>Division</th>
-              <th style={{ width: '20%' }}>Department</th>
-              <th style={{ width: '20%' }}>Position</th>
+              <th style={{ width: '25%' }}>Division</th>
+              {/* <th style={{ width: '20%' }}>Department</th> */}
+              <th style={{ width: '25%' }}>Position</th>
               <th></th>
             </tr>
           </thead>
@@ -263,11 +263,11 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                       {member.account ? member.account.email : null}
                     </span>
                   </td>
-                  <td>
+                  {/* <td> */}
                     {/* <span className="mr2-ns mr1 f7 f6-ns">
                       {member.account ? member.account.contactNo : null}
                     </span> */}
-                  </td>
+                  {/* </td> */}
                   <td className="f7 f6-ns">
                     {member.designations.length
                       ? getDivisionName[
@@ -275,11 +275,11 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                         ]
                       : null}
                   </td>
-                  <td>
+                  {/* <td>
                     <small className="f7 f6-ns">
                       {showDepartment(member)}
                     </small>
-                  </td>
+                  </td> */}
                   <td>
                     {member.designations.length ? (
                       <small className="f7 f6-ns">
@@ -386,12 +386,12 @@ const ColleaguesPageComponent = (props: Colleagues) => {
         <HTMLTable className="w-100 mv3" striped={true}>
           <thead>
             <tr>
-              <th style={{ width: '20%' }}>Name</th>
-              <th style={{ width: '20%' }}>Email</th>
+              <th style={{ width: '25%' }}>Name</th>
+              <th style={{ width: '25%' }}>Email</th>
               {/* <th style={{ width: '20%' }}>Contact No</th> */}
-              <th style={{ width: '20%' }}>Division</th>
-              <th style={{ width: '20%' }}>Department</th>
-              <th style={{ width: '20%' }}>Position</th>
+              <th style={{ width: '25%' }}>Division</th>
+              {/* <th style={{ width: '20%' }}>Department</th> */}
+              <th style={{ width: '25%' }}>Position</th>
               <th></th>
             </tr>
           </thead>
@@ -434,11 +434,11 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                         ]
                       : null}
                   </td>
-                  <td>
+                  {/* <td>
                     <small className="f7 f6-ns">
                       {showDepartment(member)}
                     </small>
-                  </td>
+                  </td> */}
                   <td>
                     {member.designations.length ? (
                       <small className="f6-ns f7">
