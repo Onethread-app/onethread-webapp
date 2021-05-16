@@ -734,9 +734,18 @@ const allNoticesForCompany = async (req, res, next) => {
     const options = [
       {
         path: 'memberId',
-        select: 'designations',
-        populate: 'designations',
+        select: 'designations account role',
+        populate: [{
+          path: 'account',
+          select: '_id firstName lastName'
+        },
+        {
+          path: 'designations',
+          select: 'division department position'
+        }
+      ]
       },
+     
     ];
 
     const announce = await Announcement.find({
