@@ -224,4 +224,7 @@ router
 router
   .route('/project-list/:memberId')
   .get(authorization, projectCtrl.projectListForMember);
+
+router.route('/:projectId/tasks').get(projectCtrl.TasksOfProject);
+
 module.exports = router;
