@@ -196,7 +196,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 }
 
 const PriorityButton = ({ value }) => {
-  let priorObject: any = priorityColor.find((p) => p.code === value);
+  const priorObject: any = priorityColor.find(
+    (p) => p.code === value,
+  );
   return (
     <span
       className="ph2 pv1"

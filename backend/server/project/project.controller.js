@@ -557,7 +557,6 @@ const acceptProjectRequest = async (req, res, next) => {
       text,
       'project',
     );
-    // console.log(asso);
     await Project.updateOne(
       { _id: pid },
       {
@@ -1163,7 +1162,6 @@ const TasksOfProject = async (req, res, next) => {
       },
     ])
     .select('name status deadline concernedAdmin createdAt');
-  console.log(project);
   let response = {
     project: {
       name: nameWordCapitalize(project.name),

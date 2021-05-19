@@ -34,10 +34,10 @@ const ProjectInfo = ({
 };
 
 const getDate = (time) => {
-  let today = new Date(time);
-  let dd = String(today.getDate()).padStart(2, '0');
-  let mm = String(today.getMonth() + 1).padStart(2, '0');
-  let yyyy = today.getFullYear();
+  const today = new Date(time);
+  const dd = String(today.getDate()).padStart(2, '0');
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const yyyy = today.getFullYear();
 
   return dd + '/' + mm + '/' + yyyy;
 };
@@ -68,7 +68,7 @@ const Index = (props: any) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  let { projectId } = useParams<{ projectId: string }>();
+  const { projectId } = useParams<{ projectId: string }>();
 
   useEffect(() => {
     setIsLoading(true);
@@ -76,7 +76,7 @@ const Index = (props: any) => {
     const headers = tokenConfig();
     Axios.get(`${server}projects/${projectId}/tasks`, headers)
       .then((res) => {
-        const { tasks, project } = res.data.response;
+        const { project } = res.data.response;
 
         setName(project.name);
         setDueDate(project.dueDate);
@@ -84,7 +84,7 @@ const Index = (props: any) => {
         setLead(project.lead);
         setStartingDate(getDate(project.startingDate));
 
-        setTasks(tasks);
+        setTasks(res.data.response.tasks);
 
         setIsLoading(false);
       })
