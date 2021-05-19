@@ -192,7 +192,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
     await props.getRoleForProject(pid);
     await props.setCurrentProjectId(pid);
     props.history.push(
-      `/company/${props.company.uniqueName}/project/${pid}`,
+      `/company/${props.company.uniqueName}/project/${pid}/overview`,
     );
   };
 

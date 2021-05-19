@@ -1147,6 +1147,12 @@ const projectListForMember = async (req, res, next) => {
   }
 };
 
+const nameWordCapitalize = (name) =>
+  name
+    .split(' ')
+    .map((t) => t[0].toUpperCase() + t.slice(1))
+    .join(' ');
+
 const TasksOfProject = async (req, res, next) => {
   const projectId = req.params.projectId;
   const project = await Project.findById(projectId)
@@ -1156,12 +1162,26 @@ const TasksOfProject = async (req, res, next) => {
         select: '_id firstName lastName profileImage',
       },
     ])
-    .select('name status deadline concernedAdmin');
-
-  let response = { project };
+    .select('name status deadline concernedAdmin createdAt');
+  console.log(project);
+  let response = {
+    project: {
+      name: nameWordCapitalize(project.name),
+      status: nameWordCapitalize(project.status),
+      dueDate: project.dueDate,
+      lead: project.concernedAdmin
+        ? nameWordCapitalize(
+            project.concernedAdmin.firstName +
+              ' ' +
+              project.concernedAdmin.lastName,
+          )
+        : null,
+      startingDate: project.createdAt,
+    },
+  };
   response.tasks = [];
   let tasks = await Task.find({ project: projectId })
-    .select('name status dueDate')
+    .select('name status dueDate priority')
     .populate([
       {
         path: 'assignedPerson',
@@ -1173,10 +1193,11 @@ const TasksOfProject = async (req, res, next) => {
     const taskInf = {
       taskId: task._id,
       name: task.name,
-      status: task.status,
+      status: nameWordCapitalize(task.status),
       dueDate: task.dueDate ?? null,
+      priority: task.priority,
     };
-    taskInf.assignedTo = await TaskAssign.findOne({
+    let assignedTo = await TaskAssign.findOne({
       taskId: task._id,
     })
       .populate([
@@ -1186,6 +1207,14 @@ const TasksOfProject = async (req, res, next) => {
         },
       ])
       .select('assignedPerson');
+    taskInf.assign =
+      assignedTo && assignedTo.assignedPerson
+        ? nameWordCapitalize(
+            assignedTo.assignedPerson.firstName +
+              ' ' +
+              assignedTo.assignedPerson.lastName,
+          )
+        : null;
     response.tasks.push(taskInf);
   }
   return res.json({ success: true, response });
