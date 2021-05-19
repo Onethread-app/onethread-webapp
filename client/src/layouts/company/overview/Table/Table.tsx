@@ -70,6 +70,7 @@ interface Data {
   dueDate: string;
   assign: string;
   priority: string;
+  boardName: string;
 }
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
@@ -120,6 +121,10 @@ const headCells: HeadCell[] = [
   {
     id: 'assign',
     label: 'Resource Assign',
+  },
+  {
+    id: 'boardName',
+    label: 'Board',
   },
   {
     id: 'priority',
@@ -302,21 +307,14 @@ const AppTable = ({
                         {row.assign ? row.assign : '-'}
                       </StyledTableCell>
                       <StyledTableCell align="left">
+                        {row.boardName}
+                      </StyledTableCell>
+
+                      <StyledTableCell align="left">
                         <PriorityButton value={row.priority} />
                       </StyledTableCell>
                       <StyledTableCell align="left">
-                        <span
-                          className="ph2 pv1"
-                          style={{
-                            fontWeight: 'normal',
-                            backgroundColor: '#fca11c',
-                            marginLeft: 5,
-                            color: 'white',
-                            borderRadius: 2,
-                          }}
-                        >
-                          {row.status}
-                        </span>
+                        <span>{row.status}</span>
                       </StyledTableCell>
                       <StyledTableCell align="left">
                         {row.dueDate ? row.dueDate : '-'}

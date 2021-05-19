@@ -1187,6 +1187,10 @@ const TasksOfProject = async (req, res, next) => {
         path: 'assignedPerson',
         select: '_id firstName lastName profileImage',
       },
+      {
+        path: 'boardId',
+        select: 'name',
+      },
     ]);
   for (let i = 0; i < tasks.length; i++) {
     const task = tasks[i];
@@ -1215,6 +1219,8 @@ const TasksOfProject = async (req, res, next) => {
               assignedTo.assignedPerson.lastName,
           )
         : null;
+
+    taskInf.boardName = task.boardId.name;
     response.tasks.push(taskInf);
   }
   return res.json({ success: true, response });
