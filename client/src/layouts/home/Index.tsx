@@ -91,7 +91,7 @@ export const HomePageComponent = (
               setExpireMassage={props.setExpireMassage}
               closeModal={closeModal}
               text="Your Subscription has expired, contact with Super Admin"
-              subtext="To keep using Tigrow without interruption you need to pay your
+              subtext="To keep using Onethread without interruption you need to pay your
               dues."
             />
           </Modal>
