@@ -1153,6 +1153,8 @@ const nameWordCapitalize = (name) =>
     .join(' ');
 
 const TasksOfProject = async (req, res, next) => {
+ //TODOS: it will come from project query
+  try {
   const projectId = req.params.projectId;
   const project = await Project.findById(projectId)
     .populate([
@@ -1196,7 +1198,7 @@ const TasksOfProject = async (req, res, next) => {
       taskId: task._id,
       name: task.name,
       status: nameWordCapitalize(task.status),
-      dueDate: task.dueDate ?? null,
+      dueDate: task.dueDate,
       priority: task.priority,
     };
     let assignedTo = await TaskAssign.findOne({
@@ -1222,6 +1224,10 @@ const TasksOfProject = async (req, res, next) => {
     response.tasks.push(taskInf);
   }
   return res.json({ success: true, response });
+ } catch (error) {
+  logger.error(`Project: ${error}`);
+  next(error);
+ }
 };
 
 module.exports = {

@@ -155,7 +155,7 @@ const CompanySignupFormComponent = (
             id="companyName"
             value={values.name}
             onChange={handleChange('name')}
-            placeHolder="Company Name"
+            placeHolder="Company Name (Required)"
             leftIcon="briefcase"
             style={{
               boxShadow: 'none',
@@ -204,7 +204,7 @@ const CompanySignupFormComponent = (
             id="companyAddress"
             value={values.address}
             onChange={handleChange('address')}
-            placeHolder="Company Address"
+            placeHolder="Company Address (Required)"
             leftIcon="map-marker"
             style={{
               boxShadow: 'none',
@@ -263,7 +263,7 @@ const CompanySignupFormComponent = (
             }}
           >
             <option selected value="">
-              Please select a company type
+              Select a company type (Required)
             </option>
             {Type.map((t) => (
               <option value={t}>{t}</option>

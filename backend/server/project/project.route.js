@@ -225,6 +225,7 @@ router
   .route('/project-list/:memberId')
   .get(authorization, projectCtrl.projectListForMember);
 
+//TODOS: need to add permission, subscriptioncheck, validation  
 router
   .route('/:projectId/tasks')
   .get(authorization, projectCtrl.TasksOfProject);
