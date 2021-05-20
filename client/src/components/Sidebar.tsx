@@ -269,6 +269,45 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     borderBottom: '1px groove darkgray',
                   }}
                 />
+
+                <NavLink
+                  exact
+                  className="flex items-center nowrap ma1 hover-bg-white-20"
+                  style={{ color: 'white' }}
+                  activeStyle={{ background: '#3F61C5' }}
+                  to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
+                >
+                  {props.leftOpen ? (
+                    <span className="pl4">
+                      <img
+                        src={board}
+                        className="pt1"
+                        style={{ width: '25px' }}
+                      />
+                    </span>
+                  ) : (
+                    <Tooltip
+                      content={<p className="mb0">Overview</p>}
+                      position="right"
+                    >
+                      <span className="pl3">
+                        <img
+                          src={board}
+                          className="pt1"
+                          style={{ width: '25px' }}
+                        />
+                      </span>
+                    </Tooltip>
+                  )}
+                  {props.leftOpen && (
+                    <span
+                      className="outline-0 bp3-large pl4"
+                      style={{ color: 'inherit' }}
+                    >
+                      Overview
+                    </span>
+                  )}
+                </NavLink>
                 <NavLink
                   exact
                   className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"

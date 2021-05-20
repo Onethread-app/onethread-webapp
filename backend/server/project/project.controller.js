@@ -4,6 +4,7 @@ const { ProjectRequest } = require('../request/request.model');
 const { Associate } = require('../associate/associate.model');
 const { Team } = require('../team-member/team.model');
 const Task = require('../task/task.model');
+const TaskAssign = require('../task/taskAssign.model');
 const File = require('../file/file.model');
 const logger = require('../../config/winston');
 const {
@@ -556,7 +557,6 @@ const acceptProjectRequest = async (req, res, next) => {
       text,
       'project',
     );
-    // console.log(asso);
     await Project.updateOne(
       { _id: pid },
       {
@@ -669,9 +669,14 @@ const showAllProjectsForCompany = async (req, res, next) => {
     await Project.find({
       $and: [
         {
-          _id: { $in: memberExistInProject }
+          _id: { $in: memberExistInProject },
         },
-        { $or:[{_id: { $in: acceptedProject }},{company: companyId}]},      
+        {
+          $or: [
+            { _id: { $in: acceptedProject } },
+            { company: companyId },
+          ],
+        },
       ],
     })
       .where('removed')
@@ -1140,6 +1145,85 @@ const projectListForMember = async (req, res, next) => {
     next(error);
   }
 };
+
+const nameWordCapitalize = (name) =>
+  name
+    .split(' ')
+    .map((t) => t[0].toUpperCase() + t.slice(1))
+    .join(' ');
+
+const TasksOfProject = async (req, res, next) => {
+  const projectId = req.params.projectId;
+  const project = await Project.findById(projectId)
+    .populate([
+      {
+        path: 'concernedAdmin',
+        select: '_id firstName lastName profileImage',
+      },
+    ])
+    .select('name status deadline concernedAdmin createdAt');
+  let response = {
+    project: {
+      name: nameWordCapitalize(project.name),
+      status: nameWordCapitalize(project.status),
+      dueDate: project.dueDate,
+      lead: project.concernedAdmin
+        ? nameWordCapitalize(
+            project.concernedAdmin.firstName +
+              ' ' +
+              project.concernedAdmin.lastName,
+          )
+        : null,
+      startingDate: project.createdAt,
+    },
+  };
+  response.tasks = [];
+  let tasks = await Task.find({ project: projectId })
+    .select('name status dueDate priority')
+    .populate([
+      {
+        path: 'assignedPerson',
+        select: '_id firstName lastName profileImage',
+      },
+      {
+        path: 'boardId',
+        select: 'name',
+      },
+    ]);
+  for (let i = 0; i < tasks.length; i++) {
+    const task = tasks[i];
+    const taskInf = {
+      taskId: task._id,
+      name: task.name,
+      status: nameWordCapitalize(task.status),
+      dueDate: task.dueDate ?? null,
+      priority: task.priority,
+    };
+    let assignedTo = await TaskAssign.findOne({
+      taskId: task._id,
+    })
+      .populate([
+        {
+          path: 'assignedPerson',
+          select: '_id firstName lastName profileImage',
+        },
+      ])
+      .select('assignedPerson');
+    taskInf.assign =
+      assignedTo && assignedTo.assignedPerson
+        ? nameWordCapitalize(
+            assignedTo.assignedPerson.firstName +
+              ' ' +
+              assignedTo.assignedPerson.lastName,
+          )
+        : null;
+
+    taskInf.boardName = task.boardId.name;
+    response.tasks.push(taskInf);
+  }
+  return res.json({ success: true, response });
+};
+
 module.exports = {
   calculateProjectStatus,
   createNewProjectForCompany,
@@ -1164,4 +1248,5 @@ module.exports = {
   updateRole,
   getProjectIndividual,
   projectListForMember,
+  TasksOfProject,
 };

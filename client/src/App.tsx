@@ -15,6 +15,7 @@ import { RoomPage } from 'layouts/company/room/Index';
 import { CompanyProfilePage } from 'layouts/company/profile/Index';
 import { Layout } from 'components/Layout';
 import { BoardPage } from 'layouts/company/board/Index';
+import { OverviewPage } from 'layouts/company/overview/Index';
 import { ColleaguesPage } from 'layouts/company/colleagues/Index';
 import { SettingsPage } from 'layouts/company/settings/Index';
 import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
@@ -247,6 +248,11 @@ export const App = () => (
         path="/company/:cname/project/:projectId/board"
         exact={true}
         component={BoardPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId/overview"
+        exact={true}
+        component={OverviewPage}
       />
       <PrivateRoute
         path="/company/:cname/board/:boardId"
