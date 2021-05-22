@@ -78,43 +78,48 @@ export function* getAllMembersAsync() {
   try {
     const headers = tokenConfig();
     const taskId = yield select(getCurrentTaskId);
-
     const projectId = yield select(getProjectDetailsId);
-    if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `tasks/member/${taskId}?pid=${projectId}`,
-        headers,
+    if (taskId && projectId) {
+      if ((headers as any).headers.Authorization) {
+        const response = yield tigrowApi.get(
+          `tasks/member/${taskId}?pid=${projectId}`,
+          headers,
+        );
+        const responseData = response.data.map((assigned: any) => {
+          if (isEmpty(assigned.assignedPerson.profileImage)) {
+            return {
+              _id: assigned._id,
+              name:
+                assigned.assignedPerson.firstName +
+                ' ' +
+                assigned.assignedPerson.lastName,
+              account:
+                assigned.account.firstName +
+                ' ' +
+                assigned.account.lastName,
+              profileImage: '',
+            };
+          } else {
+            return {
+              _id: assigned._id,
+              name:
+                assigned.assignedPerson.firstName +
+                ' ' +
+                assigned.assignedPerson.lastName,
+              account:
+                assigned.account.firstName +
+                ' ' +
+                assigned.account.lastName,
+              profileImage: assigned.assignedPerson.profileImage,
+            };
+          }
+        });
+        yield put(getAllMembersSuccess(responseData));
+      }
+    } else {
+      yield put(
+        getAllMembersFailure('Task ID or Project ID not found'),
       );
-      const responseData = response.data.map((assigned: any) => {
-        if (isEmpty(assigned.assignedPerson.profileImage)) {
-          return {
-            _id: assigned._id,
-            name:
-              assigned.assignedPerson.firstName +
-              ' ' +
-              assigned.assignedPerson.lastName,
-            account:
-              assigned.account.firstName +
-              ' ' +
-              assigned.account.lastName,
-            profileImage: '',
-          };
-        } else {
-          return {
-            _id: assigned._id,
-            name:
-              assigned.assignedPerson.firstName +
-              ' ' +
-              assigned.assignedPerson.lastName,
-            account:
-              assigned.account.firstName +
-              ' ' +
-              assigned.account.lastName,
-            profileImage: assigned.assignedPerson.profileImage,
-          };
-        }
-      });
-      yield put(getAllMembersSuccess(responseData));
     }
   } catch (error) {
     yield put(getAllMembersFailure(error));

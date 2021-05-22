@@ -5,7 +5,11 @@ import {
   tokenConfigFIleUpload,
 } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
-import { PROJECT, ProjectActionTypes } from './Types';
+import {
+  PROJECT,
+  ProjectActionTypes,
+  CLEAR_PROJECT_REDUCER_STATE,
+} from './Types';
 import {
   createProjectSuccess,
   createProjectFailure,
@@ -60,6 +64,7 @@ import {
   unarchiveProjectFailure,
   unarchiveProjectSuccess,
   getProjectArchive,
+  updateProjectLoading,
 } from './Actions';
 import { getCompanyId } from 'stores/company/Selector';
 import { CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT } from 'stores/room/Types';
@@ -314,21 +319,27 @@ export function* updateProjectAsync({
 
 export function* getSingleProjectAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `projects?pid=${payload}`,
-        headers,
-      );
-      yield all([
-        put({
-          type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
-        }),
-        put(clearCurrentBoard()),
-        put(getSingleProjectSuccess(response.data)),
-      ]);
-      const projectId = yield select(getProjectId);
-      yield projectId !== '' && put(openProjectFIle(true));
+    const currentProjectId = yield select(getProjectId);
+    if (payload && payload !== currentProjectId) {
+      const headers = tokenConfig();
+      if ((headers as any).headers.Authorization) {
+        const response = yield tigrowApi.get(
+          `projects?pid=${payload}`,
+          headers,
+        );
+        yield all([
+          put({
+            type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT,
+          }),
+          put(clearCurrentBoard()),
+          put(getRoleForProject(response.data._id)),
+          put(getSingleProjectSuccess(response.data)),
+        ]);
+        const projectId = yield select(getProjectId);
+        yield projectId !== '' && put(openProjectFIle(true));
+      }
+    } else {
+      yield put(updateProjectLoading(false));
     }
   } catch (error) {
     if (error.message === 'Network Error') {
@@ -856,6 +867,11 @@ export function* getProjectsIndividualAsync() {
   }
 }
 
+export function* clearProjectReducerAsync() {
+  yield put(clearCurrentBoard());
+  yield put({ type: CLEAR_PROJECT_REDUCER_STATE });
+}
+
 export function* onCreateProject() {
   yield takeEvery(
     ProjectActionTypes.CREATE_PROJECT_START,
@@ -1010,6 +1026,13 @@ export function* onGetIndividualProjectList() {
   );
 }
 
+export function* onClearProjectReducer() {
+  yield takeEvery(
+    ProjectActionTypes.CLEAR_PROJECT_REDUCER,
+    clearProjectReducerAsync,
+  );
+}
+
 export default function* projectSaga() {
   yield all([
     call(onCreateProject),
@@ -1034,5 +1057,6 @@ export default function* projectSaga() {
     call(onAddProjectAssociate),
     call(onChangeProjectMemberRole),
     call(onGetIndividualProjectList),
+    call(onClearProjectReducer),
   ]);
 }

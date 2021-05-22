@@ -1,16 +1,11 @@
-const httpStatus = require('http-status');
 const SubTask = require('./subtask.model');
 const logger = require('../../../config/winston');
-const {
-  APIError,
-  BadRequestError,
-} = require('../../helpers/APIError');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
-
 const {
   search,
   accountIndex,
 } = require('../../services/elastic.services');
+const { subTaskAssignNotificationToUsers} = require('../../notification/notification.controller');
 
 const load = (req, res, next, id) => {
   SubTask.findById(id)
@@ -116,6 +111,14 @@ const addMember = async (req, res, next) => {
         },
       ])
       .exec();
+    console.log(requestedMembers);
+    if(req.user._id !== requestedMembers){
+      await subTaskAssignNotificationToUsers(req.user._id,req.headers.companyid, subTaskId, requestedMembers, {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,            
+    })
+    }
 
     return sendJSONresponse(res, 201, subTask);
   } catch (error) {

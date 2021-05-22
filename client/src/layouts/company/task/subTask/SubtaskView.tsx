@@ -29,6 +29,7 @@ import SubTaskMemberIcon from './SubTaskMemberIcon';
 interface ISubTaskViewInternalProps {
   subTaskList: ISubTask[];
   company?: ICompany;
+  currentTaskId: string;
   getAllSubTask: () => void;
   createSubTask: (subTask: ISubTask) => void;
   updateSubTask: (subTask: ISubTask) => void;
@@ -57,7 +58,7 @@ export const SubTaskViewPageComponent = (
       }
     }
     getAPI();
-  }, [props.fetchingTask]);
+  }, [props.fetchingTask, props.currentTaskId]);
 
   const toggleMembersPopover = (id: string) => {
     setMembersPopover({ _id: id, open: !membersPopover.open });
@@ -267,6 +268,8 @@ const mapStateToProps = (state: any) => {
     errorOnDeletingMember:
       state.boardIndexReducer.subTaskReducer.errorOnDeletingMember,
     loading: state.boardIndexReducer.subTaskReducer.fetchingSubTask,
+    currentTaskId:
+      state.boardIndexReducer.boardReducer.currentTask._id,
     fetchingTask: state.boardIndexReducer.boardReducer.fetchingTask,
     company: state.companyReducer.currentCompany,
   };

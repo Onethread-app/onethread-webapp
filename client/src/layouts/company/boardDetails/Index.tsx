@@ -20,7 +20,7 @@ import addMemberIcon from 'resources/images/addMemberIcon.png';
 interface BoardDetailsViewInternalProps {
   currentBoard?: TaskBoard;
   company: ICompany;
-  currentProject?: IProject;
+  currentProject: IProject;
   role: string;
   optionalRole: any;
   clearCurrentBoard: () => void;
@@ -63,9 +63,9 @@ const BoardDetailsViewComponent = (
             },
             {
               text: `${props.currentBoard!.name}`,
-              href: `/company/${props.company.uniqueName}/board/${
-                props.currentBoard!._id
-              }`,
+              href: `/company/${props.company.uniqueName}/project/${
+                props.currentProject._id
+              }/board/${props.currentBoard!._id}`,
             },
           ]}
         />
@@ -76,50 +76,56 @@ const BoardDetailsViewComponent = (
       >
         <h3 className="w-100 ma0 f3">{props.currentBoard!.name}</h3>
         <div className="flex mh3-ns w-100 w-auto-ns">
-          {permissions.grantAll ||
-          permissions.projectModerator.includes(
-            'createUpdateBoard',
-          ) ? (
-            <>
-              <button
-                className="mb0 mr2 pointer f5 f6-ns br2 ba b--black pa1"
-                style={{ minWidth: '130px', background: 'inherit' }}
-                onClick={() => setShowColumnFormDialog(true)}
-              >
-                Add New Column
-              </button>
-              <button
-                className="mb0 mr2 pointer f5 f6-ns bn white br2 pa1"
-                style={{ minWidth: '130px', background: '#3F61C5' }}
-                onClick={() => setShowTaskBoardDialog(true)}
-              >
-                Create New Board
-              </button>
-              <img
-                className="br2 pointer"
-                style={{ height: '1.8rem', width: '1.8rem' }}
-                src={addMemberIcon}
-                alt="Add Member Icon"
-                onClick={() =>
-                  setShowAddMemberFormDialog(!showAddMemberFormDialog)
-                }
-              />
-            </>
-          ) : permissions.grantAll ||
+          {props.currentProject!._id ? (
+            permissions.grantAll ||
             permissions.projectModerator.includes(
-              'assignDeleteMemberBoard',
+              'createUpdateBoard',
             ) ? (
-            <>
-              <img
-                className="br2 pointer"
-                style={{ height: '1.8rem', width: '1.8rem' }}
-                src={addMemberIcon}
-                alt="Add Member Icon"
-                onClick={() =>
-                  setShowAddMemberFormDialog(!showAddMemberFormDialog)
-                }
-              />
-            </>
+              <>
+                <button
+                  className="mb0 mr2 pointer f5 f6-ns br2 ba b--black pa1"
+                  style={{ minWidth: '130px', background: 'inherit' }}
+                  onClick={() => setShowColumnFormDialog(true)}
+                >
+                  Add New Column
+                </button>
+                <button
+                  className="mb0 mr2 pointer f5 f6-ns bn white br2 pa1"
+                  style={{ minWidth: '130px', background: '#3F61C5' }}
+                  onClick={() => setShowTaskBoardDialog(true)}
+                >
+                  Create New Board
+                </button>
+                <img
+                  className="br2 pointer"
+                  style={{ height: '1.8rem', width: '1.8rem' }}
+                  src={addMemberIcon}
+                  alt="Add Member Icon"
+                  onClick={() =>
+                    setShowAddMemberFormDialog(
+                      !showAddMemberFormDialog,
+                    )
+                  }
+                />
+              </>
+            ) : permissions.grantAll ||
+              permissions.projectModerator.includes(
+                'assignDeleteMemberBoard',
+              ) ? (
+              <>
+                <img
+                  className="br2 pointer"
+                  style={{ height: '1.8rem', width: '1.8rem' }}
+                  src={addMemberIcon}
+                  alt="Add Member Icon"
+                  onClick={() =>
+                    setShowAddMemberFormDialog(
+                      !showAddMemberFormDialog,
+                    )
+                  }
+                />
+              </>
+            ) : undefined
           ) : undefined}
         </div>
       </div>

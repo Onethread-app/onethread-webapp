@@ -7,7 +7,6 @@ const subCtrl = require('../../subscription/subscription.controller');
 const {
   authorization,
 } = require('../../middlewares/authorizationMiddleware');
-const { permit } = require('./../../helpers/permission');
 const projectCtrl = require('../../project/project.controller');
 const router = express.Router();
 

@@ -53,6 +53,7 @@ export const TaskMembersReducer = (
       return {
         ...state,
         isEditingTask: true,
+        error: '',
       };
 
     case GET_ALL_MEMBER_SUCCESS:
@@ -60,6 +61,7 @@ export const TaskMembersReducer = (
         ...state,
         taskMemberList: action.payload,
         isEditingTask: false,
+        error: '',
       };
 
     case GET_ALL_MEMBER_FAILURE:

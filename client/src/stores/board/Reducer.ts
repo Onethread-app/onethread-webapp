@@ -113,11 +113,13 @@ export const BoardReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         fetchingBoards: true,
+        boardError: '',
       };
     case BoardActionTypes.GET_ALL_BOARDS_SUCCESS:
       return {
         ...state,
         boardList: action.payload,
+        boardError: '',
         fetchingBoards: false,
       };
     case BoardActionTypes.GET_ALL_BOARDS_FAILURE:
@@ -451,8 +453,19 @@ export const BoardReducer = (state = InitialState, action: any) => {
           columns: [],
           members: [],
         },
+        currentTask: {},
       };
     }
+    case BoardActionTypes.UPDATE_BOARD_LOADING:
+      return {
+        ...state,
+        fetchingBoard: action.payload,
+      };
+    case BoardActionTypes.UPDATE_TASK_LOADING:
+      return {
+        ...state,
+        fetchingTask: action.payload,
+      };
     default:
       return state;
   }

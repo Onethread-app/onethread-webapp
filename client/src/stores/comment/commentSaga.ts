@@ -24,39 +24,43 @@ export function* getAllComments() {
     const headers = tokenConfig();
     const taskId = yield select(getCurrentTask);
 
-    if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `comments?taskId=${taskId}`,
-        headers,
-      );
-      const responseData = response.data.map((comment: any) => {
-        if (isEmpty(comment.account.profileImage)) {
-          return {
-            _id: comment._id,
-            name:
-              comment.account.firstName +
-              ' ' +
-              comment.account.lastName,
-            profileImage: '',
-            position: comment.account.position,
-            text: comment.text,
-            createdAt: comment.createdAt,
-          };
-        } else {
-          return {
-            _id: comment._id,
-            name:
-              comment.account.firstName +
-              ' ' +
-              comment.account.lastName,
-            profileImage: comment.account.profileImage,
-            position: comment.account.position,
-            text: comment.text,
-            createdAt: comment.createdAt,
-          };
-        }
-      });
-      yield put(getAllCommentsSuccess(responseData));
+    if (taskId) {
+      if ((headers as any).headers.Authorization) {
+        const response = yield tigrowApi.get(
+          `comments?taskId=${taskId}`,
+          headers,
+        );
+        const responseData = response.data.map((comment: any) => {
+          if (isEmpty(comment.account.profileImage)) {
+            return {
+              _id: comment._id,
+              name:
+                comment.account.firstName +
+                ' ' +
+                comment.account.lastName,
+              profileImage: '',
+              position: comment.account.position,
+              text: comment.text,
+              createdAt: comment.createdAt,
+            };
+          } else {
+            return {
+              _id: comment._id,
+              name:
+                comment.account.firstName +
+                ' ' +
+                comment.account.lastName,
+              profileImage: comment.account.profileImage,
+              position: comment.account.position,
+              text: comment.text,
+              createdAt: comment.createdAt,
+            };
+          }
+        });
+        yield put(getAllCommentsSuccess(responseData));
+      }
+    } else {
+      yield put(getAllCommentsFailure('No Task ID'));
     }
   } catch (error) {
     if (error.message === 'Network Error') {

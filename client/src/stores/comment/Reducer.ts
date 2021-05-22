@@ -26,11 +26,13 @@ export const CommentReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         fetchingComment: true,
+        errorMessage: '',
       };
     case CommentActionTypes.GET_ALL_COMMENTS_SUCCESS:
       return {
         ...state,
         commentList: action.payload,
+        errorMessage: '',
         fetchingComment: false,
       };
     case CommentActionTypes.GET_ALL_COMMENTS_FAILURE:

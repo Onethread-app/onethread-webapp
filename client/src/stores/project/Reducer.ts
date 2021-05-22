@@ -230,6 +230,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
       return {
         ...state,
         singleProjectLoading: true,
+        errorOnSingleProjectLoading: '',
       };
     case ProjectActionTypes.GET_SINGLE_PROJECT_SUCCESS:
       return {
@@ -238,6 +239,7 @@ export const ProjectReducer = (state = initialState, action: any) => {
           ...action.payload,
         },
         singleProjectLoading: false,
+        errorOnSingleProjectLoading: '',
       };
     case ProjectActionTypes.GET_SINGLE_PROJECT_FAILURE:
       return {

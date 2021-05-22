@@ -11,9 +11,9 @@ import { IProject } from 'stores/project/Reducer';
 
 interface TaskInternalProps {
   currentTask: ITask;
-  currentBoard?: TaskBoard;
+  currentBoard: TaskBoard;
   company: ICompany;
-  currentProject?: IProject;
+  currentProject: IProject;
 }
 
 const TaskPageComponent = (props: TaskInternalProps) => {
@@ -23,21 +23,15 @@ const TaskPageComponent = (props: TaskInternalProps) => {
         items={[
           {
             text: `Board`,
-            href: `/company/${props.company.uniqueName}/project/${
-              props.currentProject!._id
-            }/board`,
+            href: `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board`,
           },
           {
             text: `${props.currentBoard!.name}`,
-            href: `/company/${props.company.uniqueName}/board/${
-              props.currentBoard!._id
-            }`,
+            href: `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board/${props.currentBoard._id}`,
           },
           {
-            text: `${props.currentTask!.name}`,
-            href: `/company/${props.company.uniqueName}/board/${
-              props.currentBoard!._id
-            }/task/${props.currentTask._id}`,
+            text: `${props.currentTask.name}`,
+            href: `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board/${props.currentBoard._id}/task/${props.currentTask._id}`,
           },
         ]}
       />

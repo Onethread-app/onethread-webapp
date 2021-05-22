@@ -37,6 +37,8 @@ import {
   taskFileDeleteFailure,
   taskFileDeleteSuccess,
   getSelectedTaskDetails,
+  updateBoardLoading,
+  updateTaskLoading,
 } from './Actions';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
@@ -90,12 +92,16 @@ export function* getAllBoardsAsync() {
   try {
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
-    if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `boards/boardProject?pid=${projectId}`,
-        headers,
-      );
-      yield put(getAllBoardsSuccess(response.data));
+    if (projectId) {
+      if ((headers as any).headers.Authorization) {
+        const response = yield tigrowApi.get(
+          `boards/boardProject?pid=${projectId}`,
+          headers,
+        );
+        yield put(getAllBoardsSuccess(response.data));
+      }
+    } else {
+      yield put(getAllBoardsFailure('Project ID not found'));
     }
   } catch (error) {
     if (error.message === 'Network Error') {
@@ -116,14 +122,19 @@ export function* getAllBoardsAsync() {
 
 export function* getSelectedBoard({ payload }: any) {
   try {
+    const currentBoardId = yield select(getCurrentBoard);
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
-    if ((headers as any).headers.Authorization && payload) {
-      const response = yield tigrowApi.get(
-        `boards/${payload}?pid=${projectId}`,
-        headers,
-      );
-      yield put(getSelectedBoardSuccess(response.data));
+    if (payload !== currentBoardId && projectId) {
+      if ((headers as any).headers.Authorization && payload) {
+        const response = yield tigrowApi.get(
+          `boards/${payload}?pid=${projectId}`,
+          headers,
+        );
+        yield put(getSelectedBoardSuccess(response.data));
+      }
+    } else {
+      yield put(updateBoardLoading(false));
     }
   } catch (error) {
     if (error.message === 'Network Error') {
@@ -341,30 +352,34 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
 
 export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
+    const currentTaskId = yield select(getCurrentTask);
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
-
-    if ((headers as any).headers.Authorization && payload) {
-      const res = yield tigrowApi.get(
-        `tasks/${payload}?pid=${projectId}`,
-        headers,
-      );
-      const response = {
-        _id: res.data._id,
-        name: res.data.name,
-        createdAt: res.data.createdAt,
-        dueDate: res.data.dueDate,
-        createdBy:
-          res.data.account.firstName +
-          ' ' +
-          res.data.account.lastName,
-        description: res.data.description,
-        priority: res.data.priority,
-        currentColumnName: res.data.columnId.name,
-        columnId: res.data.columnId._id,
-        file: res.data.file,
-      };
-      yield put(getSelectedTaskDetailsSuccess(response));
+    if (payload !== currentTaskId && projectId) {
+      if ((headers as any).headers.Authorization && payload) {
+        const res = yield tigrowApi.get(
+          `tasks/${payload}?pid=${projectId}`,
+          headers,
+        );
+        const response = {
+          _id: res.data._id,
+          name: res.data.name,
+          createdAt: res.data.createdAt,
+          dueDate: res.data.dueDate,
+          createdBy:
+            res.data.account.firstName +
+            ' ' +
+            res.data.account.lastName,
+          description: res.data.description,
+          priority: res.data.priority,
+          currentColumnName: res.data.columnId.name,
+          columnId: res.data.columnId._id,
+          file: res.data.file,
+        };
+        yield put(getSelectedTaskDetailsSuccess(response));
+      }
+    } else {
+      yield put(updateTaskLoading(false));
     }
   } catch (error) {
     if (error.message === 'Network Error') {

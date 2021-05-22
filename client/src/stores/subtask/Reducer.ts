@@ -60,11 +60,13 @@ export const SubTaskReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         fetchingSubTask: true,
+        errorOnFetch: '',
       };
     case SubtaskActionTypes.GET_ALL_SUBTASK_SUCCESS:
       return {
         ...state,
         subTaskList: action.payload,
+        errorOnFetch: '',
         fetchingSubTask: false,
       };
     case SubtaskActionTypes.GET_ALL_SUBTASK_FAILURE:

@@ -58,6 +58,7 @@ import {
   getLatestCompletedTasksFailure,
   getAllDepartments,
   clearCompanyError,
+  updateCompanyLoading,
 } from './Actions';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 import {
@@ -114,22 +115,27 @@ export function* createCompanyAsync({ companyData }: any) {
 
 export function* getCompanyDetailsAsync({ payload }: any) {
   try {
-    const headers = tokenConfig();
-    yield put(clearCompanyError());
+    const currentCompanyName = yield select(getCompanyName);
+    if (payload !== currentCompanyName) {
+      const headers = tokenConfig();
+      yield put(clearCompanyError());
 
-    if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `company/${payload}`,
-        headers,
-      );
-      yield all([
-        put({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY }),
-        put(getCompanyDetailsSuccess(response.data.company)),
-        put(getAllProjects()),
-      ]);
+      if ((headers as any).headers.Authorization) {
+        const response = yield tigrowApi.get(
+          `company/${payload}`,
+          headers,
+        );
+        yield all([
+          put({ type: CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY }),
+          put(getCompanyDetailsSuccess(response.data.company)),
+          put(getAllProjects()),
+        ]);
+      } else {
+        // tslint:disable-next-line: no-console
+        console.log('error in selection of company fetching');
+      }
     } else {
-      // tslint:disable-next-line: no-console
-      console.log('error in selection of company fetching');
+      yield put(updateCompanyLoading(false));
     }
   } catch (error) {
     if (error.message === 'Network Error') {

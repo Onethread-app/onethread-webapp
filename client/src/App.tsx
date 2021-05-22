@@ -8,7 +8,6 @@ import {
   Link,
 } from 'react-router-dom';
 import ReactGA from 'react-ga';
-import { getToken, onMessageListener } from './firebase';
 import { SignUpPage } from './layouts/signup/Index';
 import { SignInPage } from 'layouts/signin/Index';
 import { isAuthenticate } from 'stores/UtilsActions';
@@ -100,245 +99,233 @@ const NotFound = () => (
   </article>
 );
 
-export const App = () => {
+export const App = () => (
+  <BrowserRouter>
+    <Switch>
+      {!isAuthenticate() && (
+        <Route exact path="/" component={NewLanding} />
+      )}
+      <Route
+        exact
+        path="/signin"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <SignInPage />
+        }
+      />
+      <Route
+        exact
+        path="/signup"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
+        }
+      />
+      <Route
+        exact
+        path="/forgot-password"
+        render={() =>
+          isAuthenticate() ? (
+            <Redirect to="/" />
+          ) : (
+            <ForgotPasswordPage />
+          )
+        }
+      />
+      <Route
+        path="/reset-password/:token"
+        render={() =>
+          isAuthenticate() ? (
+            <Redirect to="/" />
+          ) : (
+            <ResetPasswordPage />
+          )
+        }
+      />
+      <Route
+        path="/verify-account/:token"
+        render={() =>
+          isAuthenticate() ? (
+            <Redirect to="/" />
+          ) : (
+            <EmailVerificationPage />
+          )
+        }
+      />
+      <Route
+        path="/signup-confirmation"
+        render={() =>
+          localStorage.getItem('email') ? (
+            <SignupConfirmationPage />
+          ) : (
+            <Redirect to="/signin" />
+          )
+        }
+      />
+      <Route
+        path="/notFound"
+        render={() =>
+          isAuthenticate() ? <NotFound /> : <Redirect to="/" />
+        }
+      />
+      <Route path="/autologin" render={() => <AutoLoginPage />} />
+      {/* <Route
+        exact
+        path="/work-from-home-solution"
+        render={() =>
+          isAuthenticate() ? (
+            <Redirect to="/" />
+          ) : (
+            <WorkFromHomePage />
+          )
+        }
+      />
+      <Route
+        exact
+        path="/vendor-management-tool"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <VendorManagementPage />
+        }
+      />
+      <Route
+        exact
+        path="/project-management-tool"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
+        }
+      />
+      <Route
+        exact
+        path="/pricing"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
+        }
+      />
+      <Route
+        exact
+        path="/about"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <AboutPage />
+        }
+      />
+      <Route
+        exact
+        path="/contact"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
+        }
+      /> */}
+      <PrivateRoute exact path="/" component={Demo} />
+      <PrivateRoute
+        path="/:username"
+        exact={true}
+        component={UserProfilePage}
+      />
+      <PrivateRoute
+        path="/:username/home"
+        exact={false}
+        component={HomePageNew}
+      />
+      <PrivateRoute
+        path="/:username/settings"
+        exact={false}
+        component={ProfileSettingsPage}
+      />
+      <PrivateRoute
+        exact={true}
+        path="/company/:cname"
+        component={CompanyProfilePage}
+      />
+      <PrivateRoute
+        path="/company/:cname/feed"
+        exact={true}
+        component={FeedPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId/room"
+        exact={true}
+        component={isMobileOnly ? RoomPageMobile : RoomPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId/board"
+        exact={true}
+        component={BoardPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId/overview"
+        exact={true}
+        component={OverviewPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId/board/:boardId"
+        exact={true}
+        component={BoardDetailsView}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId/board/:boardId/task/:taskId"
+        exact={true}
+        component={TaskPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/colleague"
+        exact={true}
+        component={ColleaguesPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/settings"
+        exact={true}
+        component={SettingsPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/settings/payment/success"
+        exact={true}
+        component={Success}
+      />
+      <PrivateRoute
+        path="/company/:cname/dashboard"
+        exact={true}
+        component={DashboardView}
+      />
+      <PrivateRoute
+        path="/company/:cname/project"
+        exact={true}
+        component={ProjectPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId"
+        exact={true}
+        component={ProjectPrefaceView}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId/team"
+        exact={true}
+        component={ProjectTeamPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/project/:projectId/settings"
+        exact={true}
+        component={ProjectSettingsPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/associates"
+        exact={true}
+        component={AssociatesPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/associate/:associateId"
+        exact={true}
+        component={AssociatesDetailsView}
+      />
+      <PrivateRoute
+        path="/video/conferences"
+        exact={true}
+        component={VideoConferences}
+      />
 
-  const [tokenFound, setTokenFound] = React.useState(false);
-  getToken(setTokenFound);
-  onMessageListener();
-  useEffect(() => {
-    console.log(tokenFound);
-  }, [tokenFound]);
-
-  return  (
-    <BrowserRouter>
-      <Switch>
-        {!isAuthenticate() && (
-          <Route exact path="/" component={NewLanding} />
-        )}
-        <Route
-          exact
-          path="/signin"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <SignInPage />
-          }
-        />
-        <Route
-          exact
-          path="/signup"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <SignUpPage />
-          }
-        />
-        <Route
-          exact
-          path="/forgot-password"
-          render={() =>
-            isAuthenticate() ? (
-              <Redirect to="/" />
-            ) : (
-              <ForgotPasswordPage />
-            )
-          }
-        />
-        <Route
-          path="/reset-password/:token"
-          render={() =>
-            isAuthenticate() ? (
-              <Redirect to="/" />
-            ) : (
-              <ResetPasswordPage />
-            )
-          }
-        />
-        <Route
-          path="/verify-account/:token"
-          render={() =>
-            isAuthenticate() ? (
-              <Redirect to="/" />
-            ) : (
-              <EmailVerificationPage />
-            )
-          }
-        />
-        <Route
-          path="/signup-confirmation"
-          render={() =>
-            localStorage.getItem('email') ? (
-              <SignupConfirmationPage />
-            ) : (
-              <Redirect to="/signin" />
-            )
-          }
-        />
-        <Route
-          path="/notFound"
-          render={() =>
-            isAuthenticate() ? <NotFound /> : <Redirect to="/" />
-          }
-        />
-        <Route path="/autologin" render={() => <AutoLoginPage />} />
-        {/* <Route
-          exact
-          path="/work-from-home-solution"
-          render={() =>
-            isAuthenticate() ? (
-              <Redirect to="/" />
-            ) : (
-              <WorkFromHomePage />
-            )
-          }
-        />
-        <Route
-          exact
-          path="/vendor-management-tool"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <VendorManagementPage />
-          }
-        />
-        <Route
-          exact
-          path="/project-management-tool"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
-          }
-        />
-        <Route
-          exact
-          path="/pricing"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
-          }
-        />
-        <Route
-          exact
-          path="/about"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <AboutPage />
-          }
-        />
-        <Route
-          exact
-          path="/contact"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
-          }
-        /> */}
-        <PrivateRoute exact path="/" component={Demo} />
-        <PrivateRoute
-          path="/:username"
-          exact={true}
-          component={UserProfilePage}
-        />
-        <PrivateRoute
-          path="/:username/home"
-          exact={false}
-          component={HomePageNew}
-        />
-        <PrivateRoute
-          path="/:username/settings"
-          exact={false}
-          component={ProfileSettingsPage}
-        />
-        <PrivateRoute
-          exact={true}
-          path="/company/:cname"
-          component={CompanyProfilePage}
-        />
-        <PrivateRoute
-          path="/company/:cname/feed"
-          exact={true}
-          component={FeedPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/project/:projectId/room"
-          exact={true}
-          component={isMobileOnly ? RoomPageMobile : RoomPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/project/:projectId/board"
-          exact={true}
-          component={BoardPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/project/:projectId/overview"
-          exact={true}
-          component={OverviewPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/board/:boardId"
-          exact={true}
-          component={BoardDetailsView}
-        />
-        <PrivateRoute
-          path="/company/:cname/board/:boardId/task/:taskId"
-          exact={true}
-          component={TaskPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/colleague"
-          exact={true}
-          component={ColleaguesPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/settings"
-          exact={true}
-          component={SettingsPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/settings/payment/success"
-          exact={true}
-          component={Success}
-        />
-        <PrivateRoute
-          path="/company/:cname/dashboard"
-          exact={true}
-          component={DashboardView}
-        />
-        <PrivateRoute
-          path="/company/:cname/project"
-          exact={true}
-          component={ProjectPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/project/:projectId"
-          exact={true}
-          component={ProjectPrefaceView}
-        />
-        <PrivateRoute
-          path="/company/:cname/project/:projectId/team"
-          exact={true}
-          component={ProjectTeamPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/project/:projectId/settings"
-          exact={true}
-          component={ProjectSettingsPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/associates"
-          exact={true}
-          component={AssociatesPage}
-        />
-        <PrivateRoute
-          path="/company/:cname/associate/:associateId"
-          exact={true}
-          component={AssociatesDetailsView}
-        />
-        <PrivateRoute
-          path="/video/conferences"
-          exact={true}
-          component={VideoConferences}
-        />
-  
-        <PrivateRoute
-          path="/vc/join"
-          exact={true}
-          component={Meeting}
-        />
-        <Route component={NoMatch} />
-      </Switch>
-    </BrowserRouter>
-  );
-}
-
-
+      <PrivateRoute
+        path="/vc/join"
+        exact={true}
+        component={Meeting}
+      />
+      <Route component={NoMatch} />
+    </Switch>
+  </BrowserRouter>
+);

@@ -162,6 +162,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         loading: true,
+        error: '',
       };
     case CompanyActionTypes.COLLEAGUE_INVITE_FAILURE:
     case CompanyActionTypes.GET_ALL_PRODUCT_FAILURE:
@@ -206,6 +207,7 @@ export const CompanyReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         currentCompany: action.payload,
+        error: '',
         loading: false,
       };
     case CompanyActionTypes.GET_ALL_COMPANY_MEMBERS_SUCCESS:
@@ -500,6 +502,11 @@ export const CompanyReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         error: '',
+      };
+    case CompanyActionTypes.UPDATE_COMPANY_LOADING:
+      return {
+        ...state,
+        loading: action.payload,
       };
     case ADD_PRODUCT:
       return {

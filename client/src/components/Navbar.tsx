@@ -170,7 +170,7 @@ const NavbarTopComponent = (
               content={
                 <div
                   style={{ maxHeight: '300px', width: '500px' }}
-                  className="pa3 overflow-y-auto"
+                  className="pv2 br4 overflow-y-auto"
                 >
                   {props.notifications &&
                   props.notifications.length > 0 ? (

@@ -11,6 +11,10 @@ const { Member } = require('../company/member/member.model');
 const Board = require('../board/board.model');
 const SubTask = require('./subtask/subtask.model');
 const File = require('../file/file.model');
+const {
+  taskAssignNotificationToUsers,
+} = require('../notification/notification.controller');
+
 const _ = require('lodash');
 const {
   sendErrorResponse,
@@ -48,16 +52,7 @@ const create = async (req, res, next) => {
       .select('project')
       .exec();
 
-    const boardProject = await Board.findOne({
-      _id: req.body.boardId,
-    })
-      .select('project')
-      .exec();
-
-    if (
-      columnProject.project.toString() === req.query.pid.toString() &&
-      req.query.pid.toString() === boardProject.project.toString()
-    ) {
+    if (columnProject.project === req.query.pid) {
       const task = new Task({
         name: req.body.name,
         account: req.user._id,
@@ -80,25 +75,25 @@ const create = async (req, res, next) => {
         },
       });
 
-      const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
-      createCompanyRoleNotification(
-        {
-          _id: column.boardId.project.company,
-          project: column.boardId.project._id,
-          board: column.boardId,
-          task: createdTask._id,
-        },
-        {
-          _id: req.user._id,
-          name: req.user.name,
-          pusherSock: req.headers.clientid,
-        },
-        text,
-        'task',
-      );
+      // const text = `${req.user.name} has created a task ${task.name} from ${column.boardId.project.name}`;
+      // createCompanyRoleNotification(
+      //   {
+      //     _id: column.boardId.project.company,
+      //     project: column.boardId.project._id,
+      //     board: column.boardId,
+      //     task: createdTask._id,
+      //   },
+      //   {
+      //     _id: req.user._id,
+      //     name: req.user.name,
+      //     pusherSock: req.headers.clientid,
+      //   },
+      //   text,
+      //   'task',
+      // );
 
-      // column.tasks.push(createdTask._id);
-      // await column.save();
+      column.tasks.push(createdTask._id);
+      await column.save();
 
       await Project.findByIdAndUpdate(
         { _id: req.query.pid },
@@ -108,12 +103,12 @@ const create = async (req, res, next) => {
         { safe: true, upsert: true, new: true },
       );
 
-      await ActivityCtrl.create(
-        `added this card to ${column.name}`,
-        'create',
-        createdTask._id,
-        req.user,
-      );
+      // await ActivityCtrl.create(
+      //   `added this card to ${column.name}`,
+      //   'create',
+      //   createdTask._id,
+      //   req.user,
+      // );
 
       const responseData = {
         _id: createdTask._id,
@@ -169,7 +164,7 @@ const addMember = async (req, res, next) => {
       _id: boardID,
     });
 
-    //convert current taskbaord members to check the difference between them
+    //convert current taskboard members to check the difference between them
 
     const Members = currentTaskBoard.members.map((member) =>
       member.toString(),
@@ -191,7 +186,7 @@ const addMember = async (req, res, next) => {
 
     //check the difference's
     //if new member who is already in board , just add in task
-    //others add them in baord first
+    //others add them in board first
 
     if (_.isEmpty(newBoardmember)) {
       TaskAssign.insertMany(newMembers).then((taskMember) => {
@@ -210,6 +205,21 @@ const addMember = async (req, res, next) => {
           ])
           .exec()
           .then((result) => {
+            result.map(async (e) => {
+              if (req.user._id !== e.assignedPerson._id) {
+                await taskAssignNotificationToUsers(
+                  req.user._id,
+                  req.headers.companyid,
+                  e._id,
+                  e.assignedPerson._id,
+                  {
+                    _id: req.user._id,
+                    name: req.user.name,
+                    pusherSock: req.headers.clientid,
+                  },
+                );
+              }
+            });
             res.status(201).send(result);
           });
       });
@@ -236,6 +246,22 @@ const addMember = async (req, res, next) => {
           ])
           .exec()
           .then((result) => {
+            //TODO: need to combine both function
+            result.map(async (e) => {
+              if (req.user._id !== e.assignedPerson._id) {
+                await taskAssignNotificationToUsers(
+                  req.user._id,
+                  req.headers.companyid,
+                  e._id,
+                  e.assignedPerson._id,
+                  {
+                    _id: req.user._id,
+                    name: req.user.name,
+                    pusherSock: req.headers.clientid,
+                  },
+                );
+              }
+            });
             res.status(201).send(result);
           });
       });
@@ -408,29 +434,29 @@ const dragTask = async (req, res, next) => {
       { safe: true, upsert: true, new: true },
     ).exec();
 
-    const text = `${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
-    createCompanyRoleNotification(
-      {
-        _id: column.boardId.project.company,
-        project: column.boardId.project._id,
-        board: column.boardId,
-        task: task._id,
-      },
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'task',
-    );
+    // const text = `${req.user.name} has moved task ${task.name} from ${sourceColumn.name} to ${destinationColumn.name}`;
+    // createCompanyRoleNotification(
+    //   {
+    //     _id: column.boardId.project.company,
+    //     project: column.boardId.project._id,
+    //     board: column.boardId,
+    //     task: task._id,
+    //   },
+    //   {
+    //     _id: req.user._id,
+    //     name: req.user.name,
+    //     pusherSock: req.headers.clientid,
+    //   },
+    //   text,
+    //   'task',
+    // );
 
-    await ActivityCtrl.create(
-      `moved this card from ${sourceColumn.name} to ${destinationColumn.name}`,
-      'move',
-      req.body.taskId,
-      req.user,
-    );
+    // await ActivityCtrl.create(
+    //   `moved this card from ${sourceColumn.name} to ${destinationColumn.name}`,
+    //   'move',
+    //   req.body.taskId,
+    //   req.user,
+    // );
 
     const responseData = {
       sourceColumn: {

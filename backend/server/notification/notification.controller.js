@@ -1,6 +1,9 @@
 const { Company } = require('../company/company.model');
 const { Member } = require('../company/member/member.model');
 const { Team } = require('../team-member/team.model');
+const { Project } = require('../project/project.model');
+const TaskAssign = require('../task/taskAssign.model');
+const Subtask = require('../task/subtask/subtask.model');
 const Account = require('../account/account.model');
 const Notification = require('./notification.model');
 const ObjectId = require('mongoose').Types.ObjectId;
@@ -8,7 +11,6 @@ const UserNotification = require('./userNotification.model');
 const _ = require('lodash');
 const {
   sendMultipleNotification,
-
   sendCompanyRoleNotification,
   sendCompanyAndProjectNotification,
   sendCompanyNotification,
@@ -38,35 +40,6 @@ module.exports.userTokenFCM = async (req, res, next) => {
     });
 };
 
-// module.exports.createCompanyNotification = async (
-//   company, //fromHeader
-//   adminUser,
-// ) => {
-//   const members = await Member.find({
-//     $or: [{ role: 'superAdmin' }, { role: 'admin' }],
-//     company: company,
-//   });
-
-//   let notification = new Notification({
-//     type: 'companyProfile',
-//     text: `company profile has been updated by ${adminUser.name}`,
-//     account: adminUser._id,
-//     company: company,
-//   });
-
-//   let usersNotifications = members.map(m => {
-//     return {
-//       notification: notification._id,
-//       account: m.account,
-//     };
-//   });
-
-//   sendCompanyNotification(company, adminUser, notification);
-
-//   await notification.save();
-//   await UserNotification.create(usersNotifications);
-// };
-
 module.exports.createMemberAddNotification = async (
   company, //fromHeader
   senderName,
@@ -74,162 +47,201 @@ module.exports.createMemberAddNotification = async (
   adminUser,
 ) => {
   try {
-    // let membersToSendNotification = await Member.find({
-    //   $or: [{ role: 'superAdmin' }, { role: 'admin' }],
-    //   company: company,
-    // });
-    // membersToSendNotification = membersToSendNotification.filter(
-    //   (m) => m.account.toString() !== adminUser._id.toString(),
-    // );
-      // console.log(membersToSendNotification);
-    // let notification = new Notification({
-    //   type: 'companyProfile',
-    //   text: `company profile has been updated by ${adminUser.name}`,
-    //   account: adminUser._id,
-    //   company: company,
-    // });
-    let senderFullName = await Account.findById({_id:senderName}).select('firstName lastName');
-    let companyName =await Company.findById({_id: company}).select('name');
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    let companyName = await Company.findById({ _id: company }).select(
+      'name',
+    );
     let notifications = newMembers.map((m) => {
       return {
         type: 'colleague',
-        text: `${senderFullName.firstName} ${senderFullName.lastName} added you in company ${companyName.name} `,
+        text: `${_.upperFirst(
+          senderFullName.firstName,
+        )} ${_.upperFirst(
+          senderFullName.lastName,
+        )} added you in company ${companyName.name} `,
         account: adminUser._id,
         company: company,
       };
     });
-
-    // let usersNotifications = membersToSendNotification.map(m => {
-    //   return {
-    //     notification: notification._id,
-    //     account: m.account,
-    //   };
-    // });
-
-    const companyRoleReciver = ['superAdmin', 'admin'];
-    sendMultipleNotification(
-      company,
-      companyRoleReciver,
-      adminUser,
-      notifications,
-    );
     notifications = await Notification.create(notifications);
-    newMembers = newMembers.map((m)=>{
-      return {account: m.account._id}})
-   newMembers.forEach(async member=>{
-    notifications = notifications.map(async (m)=>{
-      let userNoti = await UserNotification.create({
-        notification: m._id,
-        account: member.account
+    newMembers = newMembers.map((m) => {
+      return { account: m.account._id };
+    });
+    newMembers.forEach(async (member) => {
+      notifications = notifications.map(async (m) => {
+        let userNoti = await UserNotification.create({
+          notification: m._id,
+          account: member.account,
+        });
       });
-    })
-
-   })
-    }
-   catch (error) {
+    });
+  } catch (error) {
     logger.error(`Notifications: ${error}`);
     //next(error);
   }
 };
 
 module.exports.createTeamAddNotification = async (
-  project, //fromHeader
+  senderName,
+  companyId,
+  projectName,
   newMembers,
   adminUser,
 ) => {
   try {
-    const members = await Member.find({
-      $or: [{ role: 'superAdmin' }, { role: 'admin' }],
-      company: project.company,
-    });
-
-    const teamMembers = await Team.find({
-      $or: [{ role: 'projectModerator' }, { role: 'admin' }],
-      company: project._id,
-    });
-
-    // let notification = new Notification({
-    //   type: 'companyProfile',
-    //   text: `company profile has been updated by ${adminUser.name}`,
-    //   account: adminUser._id,
-    //   company: company,
-    // });
-
-    let notifications = newMembers.map((m) => {
-      return {
-        type: 'team',
-        text: `PA has added ${m.account.name}`,
-        account: adminUser._id,
-        project: project._id,
-        company: project.company,
-      };
-    });
-
-    // let usersNotifications = membersToSendNotification.map(m => {
-    //   return {
-    //     notification: notification._id,
-    //     account: m.account,
-    //   };
-    // });
-
-    const companyRoleReciver = ['superAdmin', 'admin'];
-    let projectRoleReciver = ['modarator'];
-    sendCompanyAndProjectNotification(
-      project,
-      companyRoleReciver,
-      projectRoleReciver,
-      adminUser,
-      notifications,
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    let project = await Project.findById({ _id: projectName }).select(
+      'name',
     );
-
+    let notifications = {
+      type: 'team',
+      text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
+        senderFullName.lastName,
+      )} added you in project ${project.name} `,
+      account: adminUser._id,
+      project: project._id,
+      company: companyId,
+    };
     notifications = await Notification.create(notifications);
-
-    let usersAccountNotificationCollegue = members.map((m) => {
-      return m.account.toString();
+    await UserNotification.create({
+      notification: notifications._id,
+      account: newMembers,
     });
-
-    let usersAccountNotificationTeam = teamMembers.map((m) => {
-      return m.account.toString();
-    });
-
-    let allNotificationReciver = _.union(
-      usersAccountNotificationCollegue,
-      usersAccountNotificationTeam,
-    );
-    allNotificationReciver = allNotificationReciver.filter(
-      (m) => m !== adminUser._id.toString(),
-    );
-
-    for (let i = 0; i < notifications.length; i += 1) {
-      let usersNotificationAll = allNotificationReciver.map((m) => {
-        return {
-          notification: notifications[i]._id,
-          account: m,
-        };
-      });
-
-      // let usersNotificationCollegue = await members.map(m => {
-      //   return {
-      //     notification: notification._id,
-      //     account: m.account,
-      //   };
-      // });
-
-      // let usersNotificationTeam = await teamMembers.map(m => {
-      //   return {
-      //     notification: notification._id,
-      //     account: m.account,
-      //   };
-      // });
-
-      UserNotification.create(usersNotificationAll);
-    }
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Notification: ${error}`);
     //next(error);
   }
 };
 
+module.exports.taskAssignNotificationToUsers = async (
+  senderName,
+  companyId,
+  taskId,
+  reciever,
+  adminUser,
+) => {
+  try {
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    // let project = await Project.findById({_id: projectName}).select('name');
+    const options = [
+      {
+        path: 'taskId',
+        select: '_id name boardId columnId project',
+        populate: [
+          {
+            path: 'project',
+            select: '_id',
+          },
+          {
+            path: 'boardId',
+            select: '_id',
+          },
+          {
+            path: 'columnId',
+            select: '_id',
+          },
+        ],
+      },
+      {
+        path: 'account',
+        select: '_id firstName lastName',
+      },
+    ];
+
+    let taskAssign = await TaskAssign.findById({
+      _id: taskId,
+    }).populate(options);
+    let notifications = {
+      type: 'task',
+      text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
+        senderFullName.lastName,
+      )} added you in task ${taskAssign.taskId.name} `,
+      account: adminUser._id,
+      project: taskAssign.taskId.project._id,
+      company: companyId,
+      task: taskAssign.taskId._id,
+      fromColumn: taskAssign.taskId.columnId._id,
+      board: taskAssign.taskId.boardId._id,
+    };
+    notifications = await Notification.create(notifications);
+    await UserNotification.create({
+      notification: notifications._id,
+      account: reciever,
+    });
+  } catch (error) {
+    logger.error(`Notification: ${error}`);
+  }
+};
+
+module.exports.subTaskAssignNotificationToUsers = async (
+  senderName,
+  companyId,
+  subTaskId,
+  reciever,
+  adminUser,
+) => {
+  try {
+    const options = [
+      {
+        path: 'taskId',
+        select: '_id name boardId columnId project',
+        populate: [
+          {
+            path: 'project',
+            select: '_id company',
+          },
+          {
+            path: 'boardId',
+            select: '_id',
+          },
+          {
+            path: 'columnId',
+            select: '_id',
+          },
+        ],
+      },
+      {
+        path: 'account',
+        select: '_id firstName lastName',
+      },
+    ];
+    //TODOS: don't need account find query in future
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    let subTaskAssign = await Subtask.findById({
+      _id: subTaskId,
+    }).populate(options);
+    // console.log('sub', subTaskAssign);
+    let notifications = {
+      type: 'subtask',
+      text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
+        senderFullName.lastName,
+      )} added you in subtask ${subTaskAssign.taskId.name} `,
+      account: adminUser._id,
+      project: subTaskAssign.taskId.project,
+      company: companyId,
+      task: subTaskAssign.taskId._id,
+      subtask: subTaskAssign._id,
+      fromColumn: subTaskAssign.taskId.columnId,
+      board: subTaskAssign.taskId.boardId,
+    };
+    // console.log(notifications);
+    notifications = await Notification.create(notifications);
+    await UserNotification.create({
+      notification: notifications._id,
+      account: reciever,
+    });
+  } catch (error) {
+    logger.error(`Notification: ${error}`);
+  }
+};
 // module.exports.createAssociateNotification = async (
 //   company,
 //   adminUser,
@@ -427,49 +439,74 @@ module.exports.list = async (req, res, next) => {
           path: '$notification',
         },
       },
-      {
-        $match: {
-          'notification.company': new ObjectId(req.params.companyId),
-        },
-      },
+      // {
+      //   $match: {
+      //     'notification.company': new ObjectId(req.params.companyId),
+      //   },
+      // },
       { $group: { _id: '$seen', count: { $sum: 1 } } },
     ]);
 
-    let resultCompany = await UserNotification.aggregate([
-      { $match: { account: new ObjectId(req.user._id) } },
+    const options = [
+      {
+        path: 'notification',
+        select:
+          '_id type text account company project board room task subTask fromColum toColum registerUser associate createdAt',
+        populate: [
+          {
+            path: 'company',
+            select: 'uniqueName',
+          },
+        ],
+      },
+    ];
 
-      {
-        $lookup: {
-          from: 'notifications',
-          localField: 'notification',
-          foreignField: '_id',
-          as: 'notification',
-        },
-      },
-      {
-        $unwind: {
-          path: '$notification',
-        },
-      },
-      {
-        $match: {
-          'notification.company': new ObjectId(req.params.companyId),
-        },
-      },
-      // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
-      //{ "$unwind": "$docs" },
+    let notificationFound = await UserNotification.find({
+      account: req.user._id,
+    })
+      .populate(options)
+      .sort({ createdAt: -1 })
+      .skip(+skip)
+      .limit(+limit)
+      .exec();
 
-      { $limit: +limit },
-      { $skip: +skip },
-    ]);
+    // let notificationResult = await UserNotification.aggregate([
+    //   { $match: { account: new ObjectId(req.user._id) } },
+
+    //   {
+    //     $lookup: {
+    //       from: 'notifications',
+    //       localField: 'notification',
+    //       foreignField: '_id',
+    //       as: 'notification',
+    //     },
+    //   },
+    //   {
+    //     $unwind: {
+    //       path: '$notification',
+    //     },
+    //   },
+    //   // {
+    //   //   $match: {
+    //   //     'notification.company': new ObjectId(req.params.companyId),
+    //   //   },
+    //   // },
+    //   // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
+    //   //{ "$unwind": "$docs" },
+
+    //   { $limit: +limit },
+    //   { $skip: +skip },
+    // ]).sort({ createdAt: -1 });
+
     let unseenCount =
       count.length < 2
         ? 0
         : count[0]._id
         ? count[1].count
         : count[0].count;
+    // console.log(notificationResult);
     return sendJSONresponse(res, 200, {
-      result: resultCompany,
+      result: notificationFound,
       unseenCount: unseenCount,
     });
 

@@ -6,105 +6,86 @@ import project from '../../../resources/images/ProjectsIcon.svg';
 import preface from '../../../resources/images/sideBarPreface.svg';
 import room from '../../../resources/images/sidebarRoom.svg';
 import team from '../../../resources/images/sidebarProjectTeam.svg';
-import { store } from 'Store';
 
 // const state = store.getState();
 
 export const notificationType = {
   associate: {
     img: associates,
-    path: async () => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/associates`;
+    path: async (notification: any) => {
+      return `/company/${notification.company.uniqueName}/associates`;
     },
   },
   companyProfile: {
     img: companyProfile,
-    path: async () => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}`;
+    path: async (notification: any) => {
+      return `/company/${notification.company.uniqueName}`;
     },
   },
   colleague: {
     img: colleague,
-    path: async () => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/colleague`;
+    path: async (notification: any) => {
+      return `/company/${notification.company.uniqueName}/dashboard`;
     },
   },
   announcement: {
     img: companyProfile,
-    path: async () => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/dashboard`;
+    path: async (notification: any) => {
+      return `/company/${notification.company.uniqueName}/dashboard`;
     },
   },
   profile: {
     img: companyProfile,
-    path: async () => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}`;
+    path: async (notification: any) => {
+      return `/company/${notification.company.uniqueName}`;
     },
   },
   project: {
     img: project,
-    path: async () => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/project`;
+    path: async (notification: any) => {
+      return `/company/${notification.company.uniqueName}/project`;
     },
   },
   preface: {
     img: preface,
     path: async (notification: any) => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/project/${notification.project._id}`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}`;
     },
   },
   board: {
     img: board,
     path: async (notification: any) => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/project/${notification.project._id}/board`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/board`;
     },
   },
   room: {
     img: room,
     path: async (notification: any) => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/project/${notification.project._id}/room`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/room`;
     },
   },
   team: {
     img: team,
     path: async (notification: any) => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/project/${notification.project._id}/team`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/overview`;
     },
   },
   task: {
     img: board,
     path: async (notification: any) => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}/project`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}/task/${notification.task}`;
+    },
+  },
+  subtask: {
+    img: board,
+    path: async (notification: any) => {
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}/task/${notification.task}`;
     },
   },
   others: {
     img: companyProfile,
-    path: async () => {
-      const companyName = await store.getState().companyReducer
-        .currentCompany.name;
-      return `/company/${companyName}`;
+    path: async (notification: any) => {
+      return `/company/${notification.company.uniqueName}`;
     },
   },
 };
