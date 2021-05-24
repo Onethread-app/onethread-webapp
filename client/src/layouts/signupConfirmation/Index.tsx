@@ -7,6 +7,12 @@ import { resendMailForSignup } from 'stores/auth/Actions';
 
 const SignupConfirmationPageComponent = () => {
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+
+  React.useEffect(() => {
+    const em = localStorage.getItem('email');
+    if (em) setEmail(em.replace(/['"]+/g, ''));
+  }, []);
 
   const onSubmit = async () => {
     setLoading(true);
@@ -30,12 +36,17 @@ const SignupConfirmationPageComponent = () => {
             <img src={successfulEmailImage} />
           </p>
           <p className="tc">
-          We have sent an email with a confirmation link to your email address. <br/>
-          Please allow 5-10 minutes for this message to arrive.
-          <h4>Haven't got any mail?</h4>
-          <br/>Please, check your spam folder.
-          <h4>Still, Didn't get any mail?</h4>
-          Submit your issue at contact@onethread.app</p>
+            We have sent an email with a confirmation link to {email}
+            <br />
+            Please allow 5-10 minutes for this message to arrive.
+            <br />
+            The link will be valid for next 45 minutes.
+            <h4>Haven't got any mail?</h4>
+            <br />
+            Please, check your spam folder.
+            <h4>Still, Didn't get any mail?</h4>
+            Submit your issue at contact@onethread.app
+          </p>
           <Button
             className="br3 f5 f4-m f3-l fw6 mt3 ph4 pv3"
             text="Resend mail"

@@ -88,8 +88,8 @@ const create = async (req, res, next) => {
         'task',
       );
 
-      column.tasks.push(createdTask._id);
-      await column.save();
+      // column.tasks.push(createdTask._id);
+      // await column.save();
 
       await Project.findByIdAndUpdate(
         { _id: req.query.pid },
@@ -150,91 +150,91 @@ const getMembers = async (req, res, next) => {
 };
 
 const addMember = async (req, res, next) => {
- try {
-  const requestedMembers = req.body.assignmembers;
-  const boardID = req.task.boardId;
+  try {
+    const requestedMembers = req.body.assignmembers;
+    const boardID = req.task.boardId;
 
-  //get current task board to check members in board
+    //get current task board to check members in board
 
-  const currentTaskBoard = await Board.findOne({
-    _id: boardID,
-  });
-
-  //convert current taskbaord members to check the difference between them
-
-  const Members = currentTaskBoard.members.map((member) =>
-    member.toString(),
-  );
-
-  //new members who are  not in baord
-
-  const newBoardmember = _.difference(requestedMembers, Members);
-
-  //new members to add in task
-
-  const newMembers = requestedMembers.map((memberId) => {
-    return {
-      taskId: req.task._id,
-      account: req.user._id,
-      assignedPerson: memberId,
-    };
-  });
-
-  //check the difference's
-  //if new member who is already in board , just add in task
-  //others add them in baord first
-
-  if (_.isEmpty(newBoardmember)) {
-    TaskAssign.insertMany(newMembers).then((taskMember) => {
-      TaskAssign.find({
-        taskId: req.task._id,
-        assignedPerson: {
-          $in: requestedMembers,
-        },
-      })
-        .select('_id assignedPerson account')
-        .populate([
-          {
-            path: 'assignedPerson account',
-            select: '_id firstName lastName profileImage',
-          },
-        ])
-        .exec()
-        .then((result) => {
-          res.status(201).send(result);
-        });
+    const currentTaskBoard = await Board.findOne({
+      _id: boardID,
     });
-  } else {
-    await Board.updateOne(
-      { _id: boardID },
-      { $addToSet: { members: newBoardmember } },
-      { safe: true, upsert: true, new: true },
+
+    //convert current taskbaord members to check the difference between them
+
+    const Members = currentTaskBoard.members.map((member) =>
+      member.toString(),
     );
 
-    TaskAssign.insertMany(newMembers).then((taskMember) => {
-      TaskAssign.find({
+    //new members who are  not in baord
+
+    const newBoardmember = _.difference(requestedMembers, Members);
+
+    //new members to add in task
+
+    const newMembers = requestedMembers.map((memberId) => {
+      return {
         taskId: req.task._id,
-        assignedPerson: {
-          $in: requestedMembers,
-        },
-      })
-        .select('_id assignedPerson account')
-        .populate([
-          {
-            path: 'assignedPerson account',
-            select: '_id firstName lastName profileImage',
-          },
-        ])
-        .exec()
-        .then((result) => {
-          res.status(201).send(result);
-        });
+        account: req.user._id,
+        assignedPerson: memberId,
+      };
     });
+
+    //check the difference's
+    //if new member who is already in board , just add in task
+    //others add them in baord first
+
+    if (_.isEmpty(newBoardmember)) {
+      TaskAssign.insertMany(newMembers).then((taskMember) => {
+        TaskAssign.find({
+          taskId: req.task._id,
+          assignedPerson: {
+            $in: requestedMembers,
+          },
+        })
+          .select('_id assignedPerson account')
+          .populate([
+            {
+              path: 'assignedPerson account',
+              select: '_id firstName lastName profileImage',
+            },
+          ])
+          .exec()
+          .then((result) => {
+            res.status(201).send(result);
+          });
+      });
+    } else {
+      await Board.updateOne(
+        { _id: boardID },
+        { $addToSet: { members: newBoardmember } },
+        { safe: true, upsert: true, new: true },
+      );
+
+      TaskAssign.insertMany(newMembers).then((taskMember) => {
+        TaskAssign.find({
+          taskId: req.task._id,
+          assignedPerson: {
+            $in: requestedMembers,
+          },
+        })
+          .select('_id assignedPerson account')
+          .populate([
+            {
+              path: 'assignedPerson account',
+              select: '_id firstName lastName profileImage',
+            },
+          ])
+          .exec()
+          .then((result) => {
+            res.status(201).send(result);
+          });
+      });
+    }
+  } catch (error) {
+    logger.error(`Task: ${error}`);
+    next(error);
   }
- } catch (error) {
-  logger.error(`Task: ${error}`);
-  next(error);
- }
 };
 
 const suggestMember = async (req, res, next) => {
