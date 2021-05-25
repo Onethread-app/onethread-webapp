@@ -74,6 +74,8 @@ export const SignUpPageComponent = (
     //   }`,
     // };
 
+    localStorage.setItem('email', values.email.trim());
+
     const response = await props.userSignupAction({
       ...values,
       email: values.email.trim(),
@@ -163,7 +165,7 @@ export const SignUpPageComponent = (
                                   leftIcon={
                                     <span className="bp3-icon">
                                       <Icon
-                                        icon="mugshot"                 
+                                        icon="mugshot"
                                         style={{ color: '#3F61C5' }}
                                       />
                                     </span>
@@ -405,7 +407,7 @@ export const SignUpPageComponent = (
                                   leftIcon={
                                     <span className="bp3-icon">
                                       <Icon
-                                        icon="envelope"                 
+                                        icon="envelope"
                                         style={{ color: '#3F61C5' }}
                                       />
                                     </span>
@@ -459,7 +461,7 @@ export const SignUpPageComponent = (
                                   leftIcon={
                                     <span className="bp3-icon">
                                       <Icon
-                                        icon="lock"                 
+                                        icon="lock"
                                         style={{ color: '#3F61C5' }}
                                       />
                                     </span>
@@ -476,7 +478,7 @@ export const SignUpPageComponent = (
                                       <img
                                         title={
                                           showPassword
-                                            ? 'Don\'t show password'
+                                            ? `Don't show password`
                                             : 'Show password'
                                         }
                                         onClick={() =>
@@ -581,8 +583,8 @@ export const SignUpPageComponent = (
                                   }`}
                                   leftIcon={
                                     <span className="bp3-icon">
-                                    <Icon
-                                        icon="lock"                 
+                                      <Icon
+                                        icon="lock"
                                         style={{ color: '#3F61C5' }}
                                       />
                                     </span>
@@ -599,7 +601,7 @@ export const SignUpPageComponent = (
                                       <img
                                         title={
                                           showConfirmPassword
-                                            ? 'Don\'t show password'
+                                            ? `Don't show password`
                                             : 'Show password'
                                         }
                                         onClick={() =>

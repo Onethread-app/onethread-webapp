@@ -1,5 +1,6 @@
 const Board = require('./board.model');
 const BoardColumn = require('./../boardColumn/boardColumn.model');
+const Task = require('../task/task.model');
 const { Member } = require('../company/member/member.model');
 const logger = require('../../config/winston');
 const {
@@ -69,10 +70,31 @@ const addToBoard = async (boardID, memberID) => {
 
 const load = (req, res, next, id) => {
   Board.findById(id)
+    .populate('members', '_id name')
     .exec()
-    .then((result) => {
+    .then(async (result) => {
       if (result.project.toString() === req.query.pid) {
-        req.board = result;
+        let board;
+        await BoardColumn.find({
+          boardId: result._id,
+          removed: false,
+        })
+          .select('_id name positionInBoard')
+          .exec()
+          .then((cols) => {
+            if (cols) {
+              const columns = cols.map((col) => {
+                return {
+                  ...col._doc,
+                  tasks: [],
+                };
+              });
+
+              board = { ...result._doc, columns };
+            } else board = result;
+            req.board = board;
+          });
+
         return next();
       } else {
         return sendErrorResponse(res, 400, 'ValidationError', {
@@ -90,29 +112,24 @@ const load = (req, res, next, id) => {
 };
 
 const get = async (req, res, next) => {
-  const boardObj = await Board.findById(req.board._id)
-    .populate('members', '_id name color')
-    .exec()
-    .then((result) => result)
-    .catch((err) => {
-      next(err);
-    });
-  await BoardColumn.find({
+  let newBoardObj = req.board;
+  Task.find({
     boardId: req.board._id,
-    removed: false,
   })
-    .select('_id name tasks positionInBoard')
-    .populate('tasks', '_id name color description dueDate')
+    .select('_id name color description dueDate columnId')
     .exec()
-    .then((colResult) => {
-      const responseResult = {
-        _id: boardObj._id,
-        name: boardObj.name,
-        description: boardObj.description,
-        members: boardObj.members,
-        columns: colResult,
-      };
-      return sendJSONresponse(res, 200, responseResult);
+    .then((tasks) => {
+      const { columns } = newBoardObj;
+
+      columns.forEach((col) => {
+        for (let i = 0; i < tasks.length; i++) {
+          col._id.toString() === tasks[i].columnId.toString() &&
+            col.tasks.push(tasks[i]);
+        }
+      });
+
+      console.log(newBoardObj);
+      return sendJSONresponse(res, 200, newBoardObj);
     })
     .catch((e) => {
       logger.error(`${e}`);

@@ -86,12 +86,12 @@ const addTeamMember = async (req, res, next) => {
           };
         });
         const team = await Team.create(members);
-        // creating general board
+        // finding general board
         const board = await Board.findOne({
           name: 'General',
           project: req.query.pid,
         });
-        // creating general room
+        // finding general room
         const room = await Room.findOne({
           name: 'General',
           project: req.query.pid,
