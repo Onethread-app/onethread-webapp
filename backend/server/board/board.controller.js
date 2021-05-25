@@ -112,29 +112,30 @@ const load = (req, res, next, id) => {
 };
 
 const get = async (req, res, next) => {
-  let newBoardObj = req.board;
-  Task.find({
-    boardId: req.board._id,
-  })
-    .select('_id name color description dueDate columnId')
-    .exec()
-    .then((tasks) => {
-      const { columns } = newBoardObj;
-
-      columns.forEach((col) => {
-        for (let i = 0; i < tasks.length; i++) {
-          col._id.toString() === tasks[i].columnId.toString() &&
-            col.tasks.push(tasks[i]);
-        }
-      });
-
-      console.log(newBoardObj);
-      return sendJSONresponse(res, 200, newBoardObj);
+  try {
+    let newBoardObj = req.board;
+    const { columns } = newBoardObj;
+    const tasks = await Task.find({
+      boardId: req.board._id,
+      project: req.query.pid,
     })
-    .catch((e) => {
-      logger.error(`${e}`);
-      next(e);
+      .select(
+        '_id name color description dueDate columnId boardId project',
+      )
+      .exec();
+
+    columns.forEach((col) => {
+      for (let i = 0; i < tasks.length; i++) {
+        col._id.toString() === tasks[i].columnId.toString() &&
+          col.tasks.push(tasks[i]);
+      }
     });
+
+    return sendJSONresponse(res, 200, newBoardObj);
+  } catch (error) {
+    logger.error(`Board get: ${error}`);
+    next(eroor);
+  }
 };
 
 const create = async (req, res, next) => {

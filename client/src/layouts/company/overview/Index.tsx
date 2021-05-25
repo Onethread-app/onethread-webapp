@@ -80,7 +80,7 @@ const Index = (props: any) => {
 
         setName(project.name);
         setDueDate(project.dueDate);
-        setStatus(project.status);
+        setStatus(project.status.toLowerCase());
         setLead(project.lead);
         setStartingDate(getDate(project.startingDate));
 
@@ -117,14 +117,21 @@ const Index = (props: any) => {
             <ProjectInfo context="Lead: " data={lead} />
             <ProjectInfo
               context="Status: "
-              data={status}
+              data={status.replace(/-|\s/g, ' ')}
               dataStyle={{
                 fontWeight: 'normal',
-                backgroundColor: '#fca11c',
+                backgroundColor: `${
+                  status === 'not-started'
+                    ? '#357EDD'
+                    : status === 'ongoing'
+                    ? '#FF6300'
+                    : '#19A974'
+                }`,
                 marginLeft: 5,
                 color: 'white',
-                borderRadius: 2,
+                borderRadius: 5,
                 fontSize: 16.5,
+                textTransform: 'capitalize',
               }}
               dataClassName="ph2 pv1"
             />

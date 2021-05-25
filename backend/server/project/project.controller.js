@@ -1153,81 +1153,81 @@ const nameWordCapitalize = (name) =>
     .join(' ');
 
 const TasksOfProject = async (req, res, next) => {
- //TODOS: it will come from project query
+  //TODOS: it will come from project query
   try {
-  const projectId = req.params.projectId;
-  const project = await Project.findById(projectId)
-    .populate([
-      {
-        path: 'concernedAdmin',
-        select: '_id firstName lastName profileImage',
+    const projectId = req.params.projectId;
+    const project = await Project.findById(projectId)
+      .populate([
+        {
+          path: 'concernedAdmin',
+          select: '_id firstName lastName profileImage',
+        },
+      ])
+      .select('name status deadline concernedAdmin createdAt');
+    let response = {
+      project: {
+        name: nameWordCapitalize(project.name),
+        status: nameWordCapitalize(project.status),
+        dueDate: project.dueDate,
+        lead: project.concernedAdmin
+          ? nameWordCapitalize(
+              project.concernedAdmin.firstName +
+                ' ' +
+                project.concernedAdmin.lastName,
+            )
+          : null,
+        startingDate: project.createdAt,
       },
-    ])
-    .select('name status deadline concernedAdmin createdAt');
-  let response = {
-    project: {
-      name: nameWordCapitalize(project.name),
-      status: nameWordCapitalize(project.status),
-      dueDate: project.dueDate,
-      lead: project.concernedAdmin
-        ? nameWordCapitalize(
-            project.concernedAdmin.firstName +
-              ' ' +
-              project.concernedAdmin.lastName,
-          )
-        : null,
-      startingDate: project.createdAt,
-    },
-  };
-  response.tasks = [];
-  let tasks = await Task.find({ project: projectId })
-    .select('name status dueDate priority')
-    .populate([
-      {
-        path: 'assignedPerson',
-        select: '_id firstName lastName profileImage',
-      },
-      {
-        path: 'boardId',
-        select: 'name',
-      },
-    ]);
-  for (let i = 0; i < tasks.length; i++) {
-    const task = tasks[i];
-    const taskInf = {
-      taskId: task._id,
-      name: task.name,
-      status: nameWordCapitalize(task.status),
-      dueDate: task.dueDate,
-      priority: task.priority,
     };
-    let assignedTo = await TaskAssign.findOne({
-      taskId: task._id,
-    })
+    response.tasks = [];
+    let tasks = await Task.find({ project: projectId })
+      .select('name status dueDate priority')
       .populate([
         {
           path: 'assignedPerson',
           select: '_id firstName lastName profileImage',
         },
-      ])
-      .select('assignedPerson');
-    taskInf.assign =
-      assignedTo && assignedTo.assignedPerson
-        ? nameWordCapitalize(
-            assignedTo.assignedPerson.firstName +
-              ' ' +
-              assignedTo.assignedPerson.lastName,
-          )
-        : null;
+        {
+          path: 'boardId',
+          select: 'name',
+        },
+      ]);
+    for (let i = 0; i < tasks.length; i++) {
+      const task = tasks[i];
+      const taskInf = {
+        taskId: task._id,
+        name: task.name,
+        status: nameWordCapitalize(task.status),
+        dueDate: task.dueDate,
+        priority: task.priority,
+      };
+      let assignedTo = await TaskAssign.findOne({
+        taskId: task._id,
+      })
+        .populate([
+          {
+            path: 'assignedPerson',
+            select: '_id firstName lastName profileImage',
+          },
+        ])
+        .select('assignedPerson');
+      taskInf.assign =
+        assignedTo && assignedTo.assignedPerson
+          ? nameWordCapitalize(
+              assignedTo.assignedPerson.firstName +
+                ' ' +
+                assignedTo.assignedPerson.lastName,
+            )
+          : null;
 
-    taskInf.boardName = task.boardId.name;
-    response.tasks.push(taskInf);
+      taskInf.boardName = task.boardId.name;
+      response.tasks.push(taskInf);
+    }
+    return res.json({ success: true, response });
+  } catch (error) {
+    logger.error(`Project: ${error}`);
+    next(error);
   }
-  return res.json({ success: true, response });
- } catch (error) {
-  logger.error(`Project: ${error}`);
-  next(error);
- }
 };
 
 module.exports = {

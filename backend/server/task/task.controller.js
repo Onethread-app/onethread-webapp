@@ -48,7 +48,16 @@ const create = async (req, res, next) => {
       .select('project')
       .exec();
 
-    if (columnProject.project === req.query.pid) {
+    const boardProject = await Board.findOne({
+      _id: req.body.boardId,
+    })
+      .select('project')
+      .exec();
+
+    if (
+      columnProject.project.toString() === req.query.pid.toString() &&
+      req.query.pid.toString() === boardProject.project.toString()
+    ) {
       const task = new Task({
         name: req.body.name,
         account: req.user._id,
