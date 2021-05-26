@@ -269,18 +269,17 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     borderBottom: '1px groove darkgray',
                   }}
                 />
-
-                <NavLink
+                 <NavLink
                   exact
-                  className="flex items-center nowrap ma1 hover-bg-white-20"
+                  className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                   style={{ color: 'white' }}
-                  activeStyle={{ background: '#3F61C5' }}
+                  activeStyle={{ background: ' #3484F0' }}
                   to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
                 >
                   {props.leftOpen ? (
                     <span className="pl4">
                       <img
-                        src={board}
+                        src={preface}
                         className="pt1"
                         style={{ width: '25px' }}
                       />
@@ -301,13 +300,14 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   )}
                   {props.leftOpen && (
                     <span
-                      className="outline-0 bp3-large pl4"
+                      className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
                       Overview
                     </span>
                   )}
                 </NavLink>
+              
                 <NavLink
                   exact
                   className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"

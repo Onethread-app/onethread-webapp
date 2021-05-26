@@ -139,7 +139,7 @@ const Index = (props: any) => {
           <>
             {!tasks.length ? (
               <div className="tc pt3">
-                <h2>No tasks available</h2>
+                <h2>No task available. Please, create some tasks in board.</h2>
               </div>
             ) : (
               <>
