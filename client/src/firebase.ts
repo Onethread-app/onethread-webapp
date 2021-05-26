@@ -1,15 +1,55 @@
-import firebase from 'firebase';
+import firebase from 'firebase/app';
+import 'firebase/messaging';
 
 const config = {
-  apiKey: 'AIzaSyBCTcnRzUjTUslkcRMvVGUNEeJjlLWU1SE',
-  authDomain: 'newone-96b5e.firebaseapp.com',
-  databaseURL: 'https://newone-96b5e.firebaseio.com',
-  projectId: 'newone-96b5e',
-  storageBucket: 'newone-96b5e.appspot.com',
-  messagingSenderId: '823132541283',
-  appId: '1:823132541283:web:24f5a5d8fe003038',
+  apiKey: "AIzaSyAT-A7TOxre30PJWMUYcSrSF9uqOEwymh0",
+  authDomain: "onethread-d2992.firebaseapp.com",
+  projectId: "onethread-d2992",
+  storageBucket: "onethread-d2992.appspot.com",
+  messagingSenderId: "399728662753",
+  appId: "1:399728662753:web:59417673b698f315787fa0"
 };
 
-const firebaseConfig = firebase.initializeApp(config);
+// const firebaseConfig =
+firebase.initializeApp(config);
+const messaging = firebase.messaging();
 
-export default firebaseConfig;
+export const getToken = async (setTokenFound) => {
+  return messaging
+    .getToken({
+      vapidKey:
+        'BFlYQph_gwTpJ-rYlS-CmGVeamgP9akluznKypTkRk1IQHm3KMJVeX_17ZPPdWOXHtgQTMi-2yc9ac9LxswMmQI',
+    })
+    .then((currentToken) => {
+      if (currentToken) {
+        console.log('current token for client: ', currentToken);
+        setTokenFound(true);
+        // Track the token -> client mapping, by sending to backend server
+        // show on the UI that permission is secured
+      } else {
+        console.log(
+          'No registration token available. Request permission to generate one.',
+        );
+        setTokenFound(false);
+        // shows on the UI that permission is required
+      }
+    })
+    .catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+      // catch error while creating client token
+    });
+};
+
+export const onMessageListener = () =>
+messaging.onMessage(p=>{
+console.log(p);
+});
+//  new Promise((resolve) => {
+//    console.log(messaging);
+// messaging.onMessage((payload) => {
+//   console.log('paisi', payload);
+//     resolve(payload);
+// });
+// });
+
+// export default firebaseConfig;

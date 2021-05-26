@@ -32,13 +32,13 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
         <Tabs id="associatesTab" className="mt5 mt0-ns">
           <Tab
             id="associates"
-            title="Associates"
+            title="Partners"
             panel={<AssociateList />}
             className="outline-0"
           />
           <Tab
             id="pending_associates"
-            title="Pending Associates"
+            title="Pending Partners"
             panel={<PendingAssociateList />}
             className="outline-0"
           />

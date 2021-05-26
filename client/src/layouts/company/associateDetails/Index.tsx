@@ -42,7 +42,7 @@ const AssociatesDetailsViewComponent = (
             <BreadCrumbs
               items={[
                 {
-                  text: `My Associates`,
+                  text: `My Partners`,
                   href: `/company/${props.company.name}/associates`,
                 },
                 {

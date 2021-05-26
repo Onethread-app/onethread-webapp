@@ -93,7 +93,7 @@ export const AssociateListComponent = (
                   </Card>
                 ))
               ) : (
-                <p>No associates available</p>
+                <p> You are not partnering with anyone yet.</p>
               )}
             </div>
           </CustomView>

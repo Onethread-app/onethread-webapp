@@ -57,7 +57,7 @@ const AssociateFormEditorComponent = (
   return (
     <div className="pa3 mt5 mt0-ns">
       <div className=" w-100">
-        <h1 className="f5 tigrow-lightBlue">Add Associate</h1>
+        <h1 className="f5 tigrow-lightBlue">Add Partners</h1>
         <SuggestField
           onChange={(value: string) => {
             setQuery(value);

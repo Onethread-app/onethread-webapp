@@ -23,7 +23,7 @@ import TotalInfo from 'components/dashboard/total-info/TotalInfo';
 import ProjectStatus from 'components/dashboard/project-status/ProjectStatus';
 import Progressbar from 'components/dashboard/progressbar/Progressbar';
 import CompanyAnnouncements from 'components/dashboard/company-announcements/CompanyAnnouncements';
-import firebase from '../../firebase';
+// import firebase from '../../firebase';
 import {
   ADD_TOTAL_ASSOCIATE,
   ADD_TOTAL_MEMBER,
@@ -76,16 +76,16 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [itemsPerPage] = useState(5);
   const dispatch = useDispatch();
 
-  const getTokenFromGCM = () => {
-    const messaging = firebase.messaging();
-    messaging
-      .requestPermission()
-      .then(() => messaging.getToken())
-      .then((token: string) => props.webPush(token))
-      .catch((err: string) => console.log(err));
-  };
+  // const getTokenFromGCM = () => {
+  //   const messaging = firebase.messaging();
+  //   messaging
+  //     .requestPermission()
+  //     .then(() => messaging.getToken())
+  //     .then((token: string) => props.webPush(token))
+  //     .catch((err: string) => console.log(err));
+  // };
   useEffect(() => {
-    getTokenFromGCM();
+    // getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();
 
