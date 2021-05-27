@@ -410,3 +410,8 @@ export const clearChangeCompanyNameError = () => async (
 ) => {
   dispatch({ type: CLEAR_CHANGE_COMPANY_NAME_ERROR });
 };
+
+export const updateCompanyLoading = (loading: boolean) => ({
+  type: CompanyActionTypes.UPDATE_COMPANY_LOADING,
+  payload: loading,
+});

@@ -21,6 +21,7 @@ import {
   getSelectedBoard,
   getSelectedTaskDetails,
 } from 'stores/board/Actions';
+import { getSingleProject } from 'stores/project/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -93,10 +94,15 @@ interface LayoutInternalProps
   getCompanyDetails: (companyName: string) => any;
   getSelectedBoard: (boardId: string) => any;
   getSelectedTaskDetails: (taskId: string) => any;
+  getSingleProject: (pid: string) => void;
   company: ICompany;
   companyRooms: ICompanyRoom[];
   rightSidebarOpen: boolean;
   project: any;
+  boardId: string;
+  companyLoading: boolean;
+  projectLoading: boolean;
+  boardLoading: boolean;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -108,6 +114,49 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   const [showMenu, setShowMenu] = useState(false);
 
   const location = useLocation();
+
+  const updateCompanyReducer = async () => {
+    await props.getCompanyDetails((props.match.params as any).cname);
+  };
+  const updateProjectReducer = async () => {
+    await props.getSingleProject(
+      (props.match.params as any).projectId,
+    );
+  };
+
+  const updateBoardReducer = async () => {
+    await props.getSelectedBoard((props.match.params as any).boardId);
+  };
+
+  const updateTaskReducer = async () => {
+    await props.getSelectedTaskDetails(
+      (props.match.params as any).taskId,
+    );
+  };
+
+  useEffect(() => {
+    if ((props.match.params as any).cname) {
+      updateCompanyReducer();
+    }
+  }, [props.match]);
+
+  useEffect(() => {
+    if ((props.match.params as any).projectId) {
+      updateProjectReducer();
+    }
+  }, [props.match, props.company._id]);
+
+  useEffect(() => {
+    if ((props.match.params as any).boardId) {
+      updateBoardReducer();
+    }
+  }, [props.match, props.project._id]);
+
+  useEffect(() => {
+    if ((props.match.params as any).taskId) {
+      updateTaskReducer();
+    }
+  }, [props.match, props.project._id, props.boardId]);
 
   useEffect(() => {
     if (
@@ -514,7 +563,11 @@ const mapStateToProps = (state: any) => {
     company: state.companyReducer.currentCompany,
     rightSidebarOpen: state.layoutReducer.rightSidebar.open,
     project: state.projectReducer.projectDetails,
+    boardId: state.boardIndexReducer.boardReducer.currentBoard._id,
     companyRooms: state.roomReducer.companyRooms,
+    companyLoading: state.companyReducer.loading,
+    projectLoading: state.projectReducer.singleProjectLoading,
+    boardLoading: state.boardIndexReducer.boardReducer.fetchingBoard,
   };
 };
 
@@ -523,4 +576,5 @@ export const Layout = connect(mapStateToProps, {
   getCompanyDetails,
   getSelectedBoard,
   getSelectedTaskDetails,
+  getSingleProject,
 })(withRouter(LayoutComponent));

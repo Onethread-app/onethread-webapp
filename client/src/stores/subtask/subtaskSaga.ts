@@ -67,13 +67,19 @@ function* getAllSubTaskAsync() {
     const taskId = yield select(getCurrentTaskId);
     const projectId = yield select(getProjectId);
 
-    if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `subTasks?taskId=${taskId}&pid=${projectId}`,
-        headers,
-      );
+    if (projectId && taskId) {
+      if ((headers as any).headers.Authorization) {
+        const response = yield tigrowApi.get(
+          `subTasks?taskId=${taskId}&pid=${projectId}`,
+          headers,
+        );
 
-      yield put(getAllSubTaskSuccess(response.data));
+        yield put(getAllSubTaskSuccess(response.data));
+      }
+    } else {
+      yield put(
+        getAllSubTaskFailure('Task ID or Project ID not found'),
+      );
     }
   } catch (error) {
     handleError(error, async (errorMessage: any) => {

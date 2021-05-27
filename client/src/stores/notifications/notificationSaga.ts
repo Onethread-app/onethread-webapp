@@ -11,8 +11,8 @@ const takeLatest: any = Eff.takeLatest;
 
 function* getNotifications() {
   try {
-    const selectCompanyId = (state) =>
-      state.companyReducer.currentCompany._id;
+    // const selectCompanyId = (state) =>
+    //   state.companyReducer.currentCompany._id;
     // const selectPageNumber = (state) =>
     //   state.notificationReducer.pageNumber;
     // const selectAllNotificatons = (state) =>
@@ -20,12 +20,13 @@ function* getNotifications() {
 
     const headers = tokenConfig();
     // const pageNumber = yield select(selectPageNumber);
-    const companyId = yield select(selectCompanyId);
+    // const companyId = yield select(selectCompanyId);
     // const stateNotifications = yield select(selectAllNotificatons);
     // const skip = pageNumber * 0;
     if ((headers as any).headers.Authorization) {
       const response = yield tigrowApi.get(
-        `notifications/${companyId}`,
+        // `notifications/${companyId}`,
+        `notifications/get`,
         headers,
       );
       yield put({
@@ -47,7 +48,10 @@ function* readNotification(action) {
   try {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
-      yield tigrowApi.get(`reed/${action.notificationId}`, headers);
+      yield tigrowApi.get(
+        `notifications/read/${action.notificationId}`,
+        headers,
+      );
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {

@@ -21,7 +21,7 @@ interface CompanyListViewInternalProps extends CompanyListViewProps {
   currentCompany: string;
   companies: ICompanyByUser[];
   user: User;
-  getCompanyDetails: (companyId: string) => void;
+  getCompanyDetails: (companyName: string) => void;
   getAllCompaniesByUserId: (userId: string) => void;
   getNotifications: () => void;
   isCompanyLoading: boolean;
@@ -35,10 +35,13 @@ export const ListViewComponent = (
 
   useEffect(() => {
     props.getAllCompaniesByUserId(props.user._id);
+  }, []);
+
+  useEffect(() => {
     if (props.isCompanyLoading === false) {
       setLoading(false);
     }
-  }, []);
+  }, [props.isCompanyLoading]);
 
   return (
     <>

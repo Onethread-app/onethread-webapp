@@ -6,11 +6,12 @@ const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
 
+// router.route('/:companyId').get(authorization, notificationCtrl.list);
+router.route('/get').get(authorization, notificationCtrl.list);
 
-
-router.route('/:companyId').get(authorization, notificationCtrl.list);
-
-router.route('/webpush').post(authorization, notificationCtrl.userTokenFCM);
+router
+  .route('/webpush')
+  .post(authorization, notificationCtrl.userTokenFCM);
 
 // router
 // .route('/test/:companyId')
@@ -23,6 +24,8 @@ router
   .route('/read/:userNotificationId')
   .get(authorization, notificationCtrl.read);
 
-router.route('/seen/:companyId').get(authorization, notificationCtrl.seen);
+router
+  .route('/seen/:companyId')
+  .get(authorization, notificationCtrl.seen);
 
 module.exports = router;

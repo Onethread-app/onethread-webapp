@@ -8,7 +8,6 @@ import {
   getSelectedTaskDetails,
   ITaskDelete,
 } from 'stores/board/Actions';
-import { getAllSubTask } from 'stores/subtask/Actions';
 import { deleteTask } from 'stores/board/Actions';
 import moment from 'moment';
 import { projectPermit } from 'stores/UtilsActions';
@@ -33,12 +32,12 @@ interface TaskItemInternalProps extends TaskItemProps {
   currentBoard?: TaskBoard;
   company?: ICompany;
   getSelectedTaskDetails: (task: string) => void;
-  getAllSubTask: () => void;
   projectRole: string;
   optionalRole?: Array<string>;
   deleteTask: ({ taskId, columnId }: ITaskDelete) => void;
   deletingTask: boolean;
   errorOnTaskDelete: string;
+  projectId: string;
 }
 
 const TaskItemComponent = (
@@ -53,9 +52,9 @@ const TaskItemComponent = (
       await props.getSelectedTaskDetails(props.task._id);
 
       props.history.push(
-        `/company/${props.company!.uniqueName}/board/${
-          props.currentBoard!._id
-        }/task/${props.task._id}`,
+        `/company/${props.company!.uniqueName}/project/${
+          props.projectId
+        }/board/${props.currentBoard!._id}/task/${props.task._id}`,
       );
     }
   };
@@ -306,6 +305,7 @@ const mapStateToProps = (state: any) => {
       state.boardIndexReducer.boardReducer.errorOnTaskDelete,
     company: state.companyReducer.currentCompany,
     projectRole: state.projectReducer.projectRole.projects.role,
+    projectId: state.projectReducer.projectDetails._id,
     optionalRole:
       state.projectReducer.projectRole.projects.project.optionalRole,
   };
@@ -313,6 +313,5 @@ const mapStateToProps = (state: any) => {
 
 export const TaskItem = connect(mapStateToProps, {
   getSelectedTaskDetails,
-  getAllSubTask,
   deleteTask,
 })(withRouter(TaskItemComponent));

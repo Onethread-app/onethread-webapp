@@ -11,6 +11,7 @@ import moment from 'moment';
 interface IActivityViewInternalProps {
   commentList: Icomment[];
   getAllComments: () => void;
+  currentTaskId: string;
 }
 
 export const ActivityViewPageComponent = (
@@ -24,7 +25,7 @@ export const ActivityViewPageComponent = (
       setLoading(false);
     }
     getCommentsApi();
-  }, []);
+  }, [props.currentTaskId]);
 
   return (
     <div className="flex flex-column h-100 pl2 mb5 mb0-ns">
@@ -91,6 +92,8 @@ export const ActivityViewPageComponent = (
 
 const mapStateToProps = (state: any) => {
   return {
+    currentTaskId:
+      state.boardIndexReducer.boardReducer.currentTask._id,
     commentList: state.boardIndexReducer.commentReducer.commentList,
   };
 };

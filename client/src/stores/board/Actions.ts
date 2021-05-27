@@ -229,3 +229,13 @@ export const deleteTaskFailure = (errorMessage: any) => ({
 export const clearCurrentBoard = () => ({
   type: BoardActionTypes.CLEAR_CURRENT_BOARD,
 });
+
+export const updateBoardLoading = (loading: boolean) => ({
+  type: BoardActionTypes.UPDATE_BOARD_LOADING,
+  payload: loading,
+});
+
+export const updateTaskLoading = (loading: boolean) => ({
+  type: BoardActionTypes.UPDATE_TASK_LOADING,
+  payload: loading,
+});

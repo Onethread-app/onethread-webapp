@@ -388,3 +388,12 @@ export const setProjectAccessForUser = (response: boolean) => ({
   type: ProjectActionTypes.SET_USER_ACCESS,
   payload: response,
 });
+
+export const clearProjectReducer = () => ({
+  type: ProjectActionTypes.CLEAR_PROJECT_REDUCER,
+});
+
+export const updateProjectLoading = (loading: boolean) => ({
+  type: ProjectActionTypes.UPDATE_PROJECT_LOADING,
+  payload: loading,
+});

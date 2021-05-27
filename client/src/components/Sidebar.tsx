@@ -38,6 +38,7 @@ import {
 // import { isEmpty } from 'lodash';
 import { ICompanyRoom } from 'stores/room/Reducer';
 import { PROJECT } from '../stores/project/Types';
+import { clearProjectReducer } from 'stores/project/Actions';
 // import { withRouter } from 'react-router';
 
 interface ISideBarProps {
@@ -48,6 +49,7 @@ interface ISideBarProps {
   project: any;
   companyRooms: ICompanyRoom[];
   projectFileOpen: boolean;
+  clearProjectReducer: () => void;
 }
 
 const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
@@ -251,6 +253,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       width: '230px',
                     }}
                     onClick={async () => {
+                      if (props.project._id) {
+                        await props.clearProjectReducer();
+                      }
                       await dispatch({
                         type: PROJECT.PROJECT_FILE_OPEN,
                         payload: false,
@@ -491,7 +496,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Project Settings</p>}
+                      content={
+                        <p className="mb0">Project Settings</p>
+                      }
                       position="right"
                     >
                       <span className="pl3">
@@ -610,7 +617,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
-                        {companyPermit(props.company.role) && (
+            {companyPermit(props.company.role) && (
               <NavLink
                 exact
                 className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
@@ -706,7 +713,6 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
             )}
 
             {/*  */}
-
           </>
         )}
       </div>
@@ -720,7 +726,6 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export const Sidebar = connect(
-  mapStateToProps,
-  {},
-)(withRouter(_Sidebar));
+export const Sidebar = connect(mapStateToProps, {
+  clearProjectReducer,
+})(withRouter(_Sidebar));

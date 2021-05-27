@@ -10,6 +10,7 @@ import { ITaskMember } from 'stores/taskMembers/Reducer';
 interface IAssignedMembersViewComponentInternalProps {
   getAllMembers: () => void;
   taskMemberList: ITaskMember[];
+  currentTaskId: string;
 }
 
 export const AssignedMembersViewComponent = (
@@ -25,7 +26,7 @@ export const AssignedMembersViewComponent = (
       setLoading(false);
     }
     getAllTaskMembers();
-  }, []);
+  }, [props.currentTaskId]);
 
   return (
     <>
@@ -80,6 +81,8 @@ const mapStateToProps = (state: any) => {
   return {
     taskMemberList:
       state.boardIndexReducer.taskMembersReducer.taskMemberList,
+    currentTaskId:
+      state.boardIndexReducer.boardReducer.currentTask._id,
   };
 };
 

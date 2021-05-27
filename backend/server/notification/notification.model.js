@@ -20,6 +20,7 @@ const notificationSchema = new Schema(
         'team',
         'colleague',
         'task',
+        'subtask',
         'others',
       ],
       default: 'others',
@@ -44,6 +45,10 @@ const notificationSchema = new Schema(
     task: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Task',
+    },
+    subtask: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'SubTask',
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
