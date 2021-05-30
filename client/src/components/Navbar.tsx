@@ -1,38 +1,39 @@
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Button,
-  ButtonGroup,
-  Dialog,
   Popover,
   Position,
+  ButtonGroup,
+  Dialog,
 } from '@blueprintjs/core';
-import { Badge } from '@material-ui/core';
-import ChatIcon from '@material-ui/icons/Chat';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { History } from 'history';
-import { isEqual, upperFirst } from 'lodash';
-import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { upperFirst } from 'lodash';
 import { NavLink } from 'react-router-dom';
-import logo from 'resources/images/onethread-text.png';
 import { logoutAction } from 'stores/auth/Actions';
-import { User } from 'stores/user/Reducer';
-import { CompanySignupForm } from '../layouts/company/Form';
-import { CompanyListView } from '../layouts/company/ListView';
-import Notification from '../layouts/company/notification/index';
-import { notificationType } from '../layouts/company/notification/rule';
-import { companySubscriber } from '../layouts/company/notification/subscribers';
-import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
+import { withRouter, RouteComponentProps } from 'react-router';
+import { History } from 'history';
+import ChatIcon from '@material-ui/icons/Chat';
 import user from '../resources/images/profilePhoto.svg';
+import { User } from 'stores/user/Reducer';
+import { CompanyListView } from '../layouts/company/ListView';
+import { CompanySignupForm } from '../layouts/company/Form';
+import Notification from '../layouts/company/notification/index';
+import { companySubscriber } from '../layouts/company/notification/subscribers';
+import { notificationType } from '../layouts/company/notification/rule';
 import {
-  clearSeen,
-  getNotifications,
-  incrementPageNumber,
   readNotification,
   seenNotification,
+  clearSeen,
+  incrementPageNumber,
 } from '../stores/notifications/Action';
-import { fetchRooms } from '../stores/room/Actions';
-import { IRoom } from '../stores/room/Reducer';
+import { Badge } from '@material-ui/core';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { getNotifications } from '../stores/notifications/Action';
+import { fetchRooms, fetchChats } from '../stores/room/Actions';
+// import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
+import { IRoom, IChat } from '../stores/room/Reducer';
+import logo from 'resources/images/onethread-text.png';
+import ChatListItem from 'components/chat/ChatListItem';
 
 interface NavbarTopInternalProps {
   user: User;
@@ -46,22 +47,23 @@ interface NavbarTopInternalProps {
   incrementPageNumber: () => void;
   clearSeen: () => void;
   fetchRooms: () => void;
+  fetchChats: () => void;
   notifications: any;
   readNotification: any;
   read: number;
   seen: number;
-  rooms: [IRoom];
+  chats: [IChat];
   totalRoomUnread: number;
   currentRoom: IRoom;
 }
-const roomBgColor = [
-  '#D8315B',
-  '#9F7DE8',
-  '#3F61C5',
-  '#456990',
-  '#CDA2AB',
-  '#FE5E41',
-];
+// const roomBgColor = [
+//   '#D8315B',
+//   '#9F7DE8',
+//   '#3F61C5',
+//   '#456990',
+//   '#CDA2AB',
+//   '#FE5E41',
+// ];
 const NavbarTopComponent = (
   props: NavbarTopInternalProps & RouteComponentProps,
 ) => {
@@ -102,6 +104,7 @@ const NavbarTopComponent = (
     props.match.path !== '/:username' && props.getNotifications();
     companySubscriber(props.companyId);
     props.fetchRooms();
+    props.fetchChats();
   }, []);
 
   const onCLickNotification = async (sNotification: any) => {
@@ -244,31 +247,12 @@ const NavbarTopComponent = (
               content={
                 <div
                   style={{ maxHeight: '300px', width: '500px' }}
-                  className="pa3 overflow-y-auto"
+                  className="pt2 pb1 overflow-y-auto"
                 >
-                  {props.rooms && props.rooms.length ? (
-                    props.rooms.map(
-                      (room: IRoom, i: number, arr: any) => {
-                        return (
-                          <RoomListItem
-                            key={room._id}
-                            room={room}
-                            lastChild={isEqual(
-                              room._id,
-                              arr[props.rooms!.length - 1].id,
-                            )}
-                            active={
-                              props.currentRoom !== undefined &&
-                              room._id === props.currentRoom._id
-                            }
-                            currentCompany={props.uniqueCompanyName}
-                            iconBgColor={
-                              roomBgColor[i % roomBgColor.length]
-                            }
-                          />
-                        );
-                      },
-                    )
+                  {props.chats && props.chats.length ? (
+                    props.chats.map((chat: IChat) => (
+                      <ChatListItem chat={chat} />
+                    ))
                   ) : (
                     <p className="ph2">No room To Show</p>
                   )}
@@ -418,7 +402,7 @@ const mapStateToProps = (state: any) => {
     notifications: state.notificationReducer.allNotifications,
     seen: state.notificationReducer.seen,
     read: state.notificationReducer.read,
-    rooms: state.roomReducer.roomNotification.rooms,
+    chats: state.roomReducer.chats,
     currentRoom: state.roomReducer.currentRoom,
     totalRoomUnread: state.roomReducer.totalUnread,
   };
@@ -433,4 +417,5 @@ export const NavbarTop = connect(mapStateToProps, {
   clearSeen,
   incrementPageNumber,
   fetchRooms,
+  fetchChats,
 })(withRouter(NavbarTopComponent));

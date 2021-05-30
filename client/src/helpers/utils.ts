@@ -4,3 +4,7 @@ export const isValidEmail = (email: string) => {
     return true;
   } else return false;
 };
+
+export const capitalizeFirstLetter = (str: string) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};

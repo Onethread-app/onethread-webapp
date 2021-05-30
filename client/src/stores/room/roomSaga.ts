@@ -17,6 +17,8 @@ import {
   archiveRoomSuccess,
   createRoomFailure,
   createRoomSuccess,
+  fetchChatsFailure,
+  fetchChatsSuccess,
   fetchRoomsFailure,
   fetchRoomsSuccess,
   fileUploadActionFailure,
@@ -41,7 +43,6 @@ import {
 } from './Actions';
 import handleError from 'helpers/HandleSagaErrors';
 import { getProjectId } from 'stores/project/Selector';
-import { getCompanyId } from 'stores/company/Selector';
 
 const takeEvery: any = Eff.takeEvery; // <-- new
 const takeLatest: any = Eff.takeLatest;
@@ -314,31 +315,45 @@ function* updateLastSeen({ roomId }) {
 
 function* fetchRooms() {
   try {
-    const companyId = yield select(getCompanyId);
     const headers = tokenConfig();
-    if ((headers as any).headers.Authorization) {
-      const response = yield tigrowApi.get(
-        `rooms/list/${companyId}`,
-        headers,
-      );
-      if (response.status === 200) {
+    const projectId = yield select(getProjectId);
+    if (projectId) {
+      if ((headers as any).headers.Authorization) {
+        const response = yield tigrowApi.get(
+          `rooms/list?pid=${projectId}`,
+          headers,
+        );
         yield put(fetchRoomsSuccess(response.data));
-      }
-      const unreadCount = yield response.data.rooms.map(
-        (room: any) => response.data.roomsUnreadCount[room._id],
-      );
+        const unreadCount = yield response.data.rooms.map(
+          (room: any) => response.data.roomsUnreadCount[room._id],
+        );
 
-      const totalUnread = yield unreadCount.reduce(
-        (accumulator, current) => accumulator + current,
-      );
-      yield put({
-        type: room.COUNT_TOTAL_REED_COUNT,
-        payload: totalUnread,
-      });
-    }
+        const totalUnread = yield unreadCount.reduce(
+          (accumulator, current) => accumulator + current,
+        );
+        yield put({
+          type: room.COUNT_TOTAL_REED_COUNT,
+          payload: totalUnread,
+        });
+      }
+    } else yield put(fetchRoomsFailure('No Project Id'));
   } catch (error) {
     handleError(error, async (errorMessage: any) => {
       await fetchRoomsFailure(errorMessage);
+    });
+  }
+}
+
+function* fetchChatsAsync() {
+  try {
+    const headers = tokenConfig();
+    if ((headers as any).headers.Authorization) {
+      const response = yield tigrowApi.get(`rooms/chats`, headers);
+      yield put(fetchChatsSuccess(response.data.rooms));
+    }
+  } catch (error) {
+    handleError(error, async (errorMessage: any) => {
+      await fetchChatsFailure(errorMessage);
     });
   }
 }
@@ -422,6 +437,13 @@ export function* onFetchRooms() {
   yield takeLatest(RoomActionTypes.FETCH_ROOMS_START, fetchRooms);
 }
 
+export function* onFetchChats() {
+  yield takeLatest(
+    RoomActionTypes.FETCH_CHATS_START,
+    fetchChatsAsync,
+  );
+}
+
 export default function* roomSaga() {
   yield all([
     call(onRoomCreate),
@@ -430,11 +452,13 @@ export default function* roomSaga() {
     call(onAddRoomMembers),
     call(onSendRoomMessage),
     call(onGetRoomMessages),
+    call(onToggleDiscussions),
     call(onFileUpload),
     call(onArchiveRoom),
     call(onGetRoomSharedFiles),
     call(onGetRoomDiscussions),
     call(onUpdateLastSeen),
     call(onFetchRooms),
+    call(onFetchChats),
   ]);
 }

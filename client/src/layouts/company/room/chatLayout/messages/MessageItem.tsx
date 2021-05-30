@@ -1,15 +1,18 @@
 import * as React from 'react';
 import { useSelector, connect } from 'react-redux';
 import moment from 'moment';
+import Linkify from 'react-linkify';
+
 import { IRoomMessage } from 'stores/room/Reducer';
 import { toggleDiscussionRoom } from 'stores/room/Actions';
+import { componentDecorator } from 'helpers/LinkifyHelper';
 
 import UserIcon from './../../../../../resources/images/profilePhoto.svg';
 import DownloadIcon from './../../../../../resources/images/Download.svg';
 import starIcon from './../../../../../resources/images/colorful-star.svg';
 import muteStarIcon from './../../../../../resources/images/mute-star.svg';
 
-import { handleDownload } from 'helpers/FileDownload';
+// import { handleDownload } from 'helpers/FileDownload';
 interface MessageItemProps {
   message: IRoomMessage;
   group: {
@@ -94,15 +97,17 @@ const MessageItemComponent = (props: MessageItemProps) => {
               backgroundColor: currentUser ? '#3b5998' : '#d4d4d47a',
             }}
           >
-            <p
-              className={`mv0 tj break-word`}
-              style={{
-                color: currentUser ? 'white' : 'rgb(74, 73, 73)',
-                whiteSpace: 'pre-wrap',
-              }}
-            >
-              {props.message.text}
-            </p>
+            <Linkify componentDecorator={componentDecorator}>
+              <p
+                className={`mv0 tj break-word`}
+                style={{
+                  color: currentUser ? 'white' : 'rgb(74, 73, 73)',
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                {props.message.text}
+              </p>
+            </Linkify>
           </div>
           <span
             className={`highlighted-icon ph3 ${
@@ -160,7 +165,16 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 >
                   {file.s3Key.split('/')[1]}
                 </h4>
-                  <span className="flex pl3 pointer" onClick = {() => handleDownload(file)}>
+                <a
+                  href={file.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  download
+                >
+                  <span
+                    className="flex pl3 pointer"
+                    // onClick={() => handleDownload(file)}
+                  >
                     <img
                       src={DownloadIcon}
                       alt="Download icon"
@@ -170,6 +184,7 @@ const MessageItemComponent = (props: MessageItemProps) => {
                       }}
                     />
                   </span>
+                </a>
               </div>
             </article>
           ))

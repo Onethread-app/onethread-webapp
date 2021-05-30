@@ -458,7 +458,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           style={{ paddingLeft: '25px' }}
                         >
                           <span
-                            className={`bp3-tag .modifier ${
+                            className={`bp3-tag modifier ${
                               project.status === 'not-started'
                                 ? 'bg-blue'
                                 : project.status === 'ongoing'

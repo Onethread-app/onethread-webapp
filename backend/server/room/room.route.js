@@ -79,22 +79,14 @@ router
   );
 
 router
-  .route('/list/:company')
-  .get(authorization, roomCtrl.listCompany);
-
-// get rooms for a company
-router
-  .route('/list')
+  .route('/list') // for project
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
+    SchemaValidator(joiSchema.getProjectRooms),
     roomCtrl.list,
   );
+
+router.route('/chats').get(authorization, roomCtrl.chats); // for chat
 
 // get single room
 router

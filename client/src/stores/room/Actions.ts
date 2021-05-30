@@ -247,3 +247,17 @@ export const fetchRoomsFailure = (errorMessage: any) => ({
   type: RoomActionTypes.FETCH_ROOMS_FAILURE,
   payload: errorMessage,
 });
+
+export const fetchChats = () => ({
+  type: RoomActionTypes.FETCH_CHATS_START,
+});
+
+export const fetchChatsSuccess = (response: any) => ({
+  type: RoomActionTypes.FETCH_CHATS_SUCCESS,
+  payload: response,
+});
+
+export const fetchChatsFailure = (errorMessage: any) => ({
+  type: RoomActionTypes.FETCH_ROOMS_FAILURE,
+  payload: errorMessage,
+});
