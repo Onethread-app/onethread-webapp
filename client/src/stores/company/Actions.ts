@@ -415,3 +415,7 @@ export const updateCompanyLoading = (loading: boolean) => ({
   type: CompanyActionTypes.UPDATE_COMPANY_LOADING,
   payload: loading,
 });
+
+export const clearErrorOnCompanyCreate = () => ({
+  type: CompanyActionTypes.CLEAR_ERROR_ON_COMPANY_CREATE,
+});

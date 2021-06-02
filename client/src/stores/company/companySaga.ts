@@ -93,19 +93,9 @@ export function* createCompanyAsync({ companyData }: any) {
     }
   } catch (error) {
     if (error.message === 'Network Error') {
-      yield put(
-        createCompanyActionFailure({
-          message: 'Network error',
-          network: true,
-        }),
-      );
+      yield put(createCompanyActionFailure('Network error'));
     } else if (error.response.status === 409) {
-      yield put(
-        createCompanyActionFailure({
-          message: 'Duplicate Company Name',
-          network: false,
-        }),
-      );
+      yield put(createCompanyActionFailure('Duplicate Company Name'));
     } else {
       // tslint:disable-next-line: no-console
       console.log(error.response);
