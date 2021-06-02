@@ -4,7 +4,10 @@ import { isEmpty, isEqual, pickBy } from 'lodash';
 import { HTMLSelect, Icon, Button, Spinner } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
-import { createCompanyAction } from 'stores/company/Actions';
+import {
+  createCompanyAction,
+  clearErrorOnCompanyCreate,
+} from 'stores/company/Actions';
 
 const Type = [
   'Manufacturer',
@@ -22,6 +25,7 @@ const CompanySignupFormComponent = (
   props: {
     setShowDialog: (val: boolean) => void;
     createCompanyAction: (val: any) => void;
+    clearErrorOnCompanyCreate: () => void;
     companyName: string;
     creatingCompany: boolean;
     errorOnCreatingCompany: string;
@@ -49,6 +53,9 @@ const CompanySignupFormComponent = (
 
   React.useEffect(() => {
     setCurrentCompanyName(props.companyName);
+    return () => {
+      props.clearErrorOnCompanyCreate();
+    };
   }, []);
 
   React.useEffect(() => {
@@ -63,6 +70,12 @@ const CompanySignupFormComponent = (
       props.history.push(`/company/${props.companyName}/dashboard`);
     }
   }, [props.creatingCompany]);
+
+  React.useEffect(() => {
+    if (props.errorOnCreatingCompany) {
+      setLoading(false);
+    }
+  }, [props.errorOnCreatingCompany]);
 
   const emailValidation = (email: string) => {
     if (email !== '') {
@@ -190,12 +203,10 @@ const CompanySignupFormComponent = (
         ) : (
           ''
         )}
-        {props.errorOnCreatingCompany ? (
+        {props.errorOnCreatingCompany && (
           <small style={{ color: 'red' }}>
             {props.errorOnCreatingCompany}
           </small>
-        ) : (
-          ''
         )}
       </div>
       <div className={` ${errors.address ? 'mb3' : 'mb4'}`}>
@@ -351,19 +362,10 @@ const CompanySignupFormComponent = (
             }}
           />
         </div>
-        {errors.legalOwnerName ? (
+        {errors.legalOwnerName && (
           <small style={{ color: 'red' }}>
             {errors.legalOwnerName}
           </small>
-        ) : (
-          ''
-        )}
-        {props.errorOnCreatingCompany ? (
-          <small style={{ color: 'red' }}>
-            {props.errorOnCreatingCompany}
-          </small>
-        ) : (
-          ''
         )}
       </div>
 
@@ -467,4 +469,5 @@ const mapStateToProps = (state: any) => {
 
 export const CompanySignupForm = connect(mapStateToProps, {
   createCompanyAction,
+  clearErrorOnCompanyCreate,
 })(withRouter(CompanySignupFormComponent));

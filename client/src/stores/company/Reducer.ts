@@ -508,6 +508,11 @@ export const CompanyReducer = (state = InitialState, action: any) => {
         ...state,
         loading: action.payload,
       };
+    case CompanyActionTypes.CLEAR_ERROR_ON_COMPANY_CREATE:
+      return {
+        ...state,
+        errorOnCreatingCompany: '',
+      };
     case ADD_PRODUCT:
       return {
         ...state,
