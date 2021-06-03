@@ -47,7 +47,13 @@ router
     schemaValidator(paramValidation.update),
     accountCtrl.accountUpdate,
   );
-router.route('/logout').post(authorization, accountCtrl.logout);
+router
+  .route('/logout')
+  .post(
+    authorization,
+    schemaValidator(paramValidation.logout),
+    accountCtrl.logout,
+  );
 router
   .route('/forget-password')
   .post(accountCtrl.sendEmailForForgetPassword);

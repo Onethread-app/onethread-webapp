@@ -95,6 +95,12 @@ const envVarsSchema = Joi.object({
     .required()
     .description('APM_TOKEN required'),
   APM_URL: Joi.string().required().description('APM_URL required'),
+  VAPID_PUBLIC_KEY: Joi.string()
+    .required()
+    .description('VAPID_PUBLIC_KEY required'),
+  VAPID_PRIVATE_KEY: Joi.string()
+    .required()
+    .description('VAPID_PRIVATE_KEY required'),
 })
   .unknown()
   .required();
@@ -135,6 +141,8 @@ const config = {
   APM_SERVICE_NAME: envVars.APM_SERVICE_NAME,
   APM_TOKEN: envVars.APM_TOKEN,
   APM_URL: envVars.APM_URL,
+  vapidPublicKey: envVars.VAPID_PUBLIC_KEY,
+  vapidPrivateKey: envVars.VAPID_PRIVATE_KEY,
 };
 
 module.exports = config;

@@ -57,6 +57,7 @@ export const ListViewComponent = (
             (c) =>
               c.company && (
                 <article
+                  key={c.company._id}
                   // tslint:disable-next-line: max-line-length
                   className={`dt w-100 hover-bg-black-10 pa2 ${
                     props.currentCompany === c.company._id

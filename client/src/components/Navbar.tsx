@@ -1,38 +1,38 @@
-import React, { useState, useRef, useEffect } from 'react';
 import {
   Button,
-  Popover,
-  Position,
   ButtonGroup,
   Dialog,
+  Popover,
+  Position,
 } from '@blueprintjs/core';
-import { connect } from 'react-redux';
-import { upperFirst, isEqual } from 'lodash';
-import { NavLink } from 'react-router-dom';
-import { logoutAction } from 'stores/auth/Actions';
-import { withRouter, RouteComponentProps } from 'react-router';
-import { History } from 'history';
+import { Badge } from '@material-ui/core';
 import ChatIcon from '@material-ui/icons/Chat';
-import user from '../resources/images/profilePhoto.svg';
+import NotificationsIcon from '@material-ui/icons/Notifications';
+import { History } from 'history';
+import { isEqual, upperFirst } from 'lodash';
+import React, { useEffect, useRef, useState } from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { NavLink } from 'react-router-dom';
+import logo from 'resources/images/onethread-text.png';
+import { logoutAction } from 'stores/auth/Actions';
 import { User } from 'stores/user/Reducer';
-import { CompanyListView } from '../layouts/company/ListView';
 import { CompanySignupForm } from '../layouts/company/Form';
+import { CompanyListView } from '../layouts/company/ListView';
 import Notification from '../layouts/company/notification/index';
-import { companySubscriber } from '../layouts/company/notification/subscribers';
 import { notificationType } from '../layouts/company/notification/rule';
+import { companySubscriber } from '../layouts/company/notification/subscribers';
+import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
+import user from '../resources/images/profilePhoto.svg';
 import {
+  clearSeen,
+  getNotifications,
+  incrementPageNumber,
   readNotification,
   seenNotification,
-  clearSeen,
-  incrementPageNumber,
 } from '../stores/notifications/Action';
-import { Badge } from '@material-ui/core';
-import NotificationsIcon from '@material-ui/icons/Notifications';
-import { getNotifications } from '../stores/notifications/Action';
 import { fetchRooms } from '../stores/room/Actions';
-import { RoomListItem } from '../layouts/company/room/leftSidebar/RoomListItem';
 import { IRoom } from '../stores/room/Reducer';
-import logo from 'resources/images/onethread-text.png';
 
 interface NavbarTopInternalProps {
   user: User;

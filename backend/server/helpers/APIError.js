@@ -66,9 +66,16 @@ class SearchNotMatchError extends ExtendableError {
   }
 }
 
+class ServiceError extends ExtendableError {
+  constructor(name, message, status, isPublic = true) {
+    super(name, message, status, isPublic);
+  }
+}
+
 module.exports = {
   APIError,
   EmailIdExistError,
   BadRequestError,
   SearchNotMatchError,
+  ServiceError,
 };

@@ -15,6 +15,8 @@ import { tigrowApi } from 'config';
 import { Toaster } from '@blueprintjs/core';
 import { CLEAR_PROJECT_REDUCER_STATE } from 'stores/project/Types';
 
+// import { removePushSubscriptionFromServer } from '../../usePushNotifications';
+
 export interface UserModel {
   firstName: string;
   lastName: string;
@@ -28,6 +30,7 @@ export interface UserModel {
 export interface LoginModel {
   email: string;
   password: string;
+  pushSubscription: string | null;
 }
 
 const RouteHistory = createBrowserHistory();
@@ -138,6 +141,12 @@ export const loginAction = (loginUser: LoginModel) => async (
         'tigrow_real_id',
         JSON.stringify(response.data.refreshToken),
       );
+      if (response.data.pushSubscription) {
+        localStorage.setItem(
+          'pushSubscription',
+          JSON.stringify(response.data.pushSubscription),
+        );
+      }
       if (localStorage.getItem('email')) {
         localStorage.removeItem('email');
       }
@@ -172,7 +181,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
         timeline = timeline.data.user.timeline;
       } catch (error) {
         // tslint:disable-next-line: no-console
-        
+        console.log(error);
       }
       response = { ...response.data.user, timeline };
       accessToken = localStorage.getItem('tigrow_acc_id');
@@ -189,7 +198,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    
+    console.log(error);
   }
 };
 
@@ -204,14 +213,22 @@ export const logoutAction = (routeHistory: History) => async (
         localStorage.getItem('tigrow_real_id')
           ? JSON.parse(localStorage.getItem('tigrow_real_id')!)
           : null;
+
+      let subscriptionId;
+      let pushSubscription: any = localStorage.getItem(
+        'pushSubscription',
+      );
+      if (pushSubscription) {
+        pushSubscription = JSON.parse(pushSubscription);
+        subscriptionId = pushSubscription._id;
+      }
       const response = await tigrowApi.post(
         `accounts/logout`,
-        {
-          refreshToken,
-        },
+        { refreshToken, subscriptionId },
         headers,
       );
       if (isEqual(response.status, 200)) {
+        localStorage.removeItem('pushSubscription');
         localStorage.removeItem('tigrow_acc_id');
         localStorage.removeItem('tigrow_real_id');
         routeHistory.push('/signin');
@@ -222,11 +239,11 @@ export const logoutAction = (routeHistory: History) => async (
       }
     } else {
       // tslint:disable-next-line: no-console
-      
+      console.log('No token found in logout action');
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    
+    console.log('error in logout', error);
   }
 };
 
@@ -278,7 +295,7 @@ export const getVideoConferencesJoinee = () => async (
         );
       } catch (error) {
         // tslint:disable-next-line: no-console
-        // 
+        // console.log(error);
       }
       response = { ...response.data.user };
       accessToken = localStorage.getItem('tigrow_acc_id');
@@ -295,6 +312,6 @@ export const getVideoConferencesJoinee = () => async (
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    // 
+    // console.log(error);
   }
 };

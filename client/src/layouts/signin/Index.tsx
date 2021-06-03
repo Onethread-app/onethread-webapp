@@ -27,6 +27,7 @@ import logo from 'resources/images/onethread-text.png';
 import eyeIcon from './../../resources/images/eye.png';
 import eyeClose from './../../resources/images/eyeClose.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
+import { usePushNotifications } from '../../usePushNotifications';
 
 interface SignInPageInternalProps {
   loginAction: (login: LoginModel) => any;
@@ -35,10 +36,29 @@ interface SignInPageInternalProps {
 export const SignInPageComponent = (
   props: SignInPageInternalProps & RouteComponentProps,
 ) => {
+  const {
+    pushNotificationSupported,
+    AskUserPermission,
+    subscribeToPushNotification,
+  } = usePushNotifications();
+
+  useEffect(() => {
+    (async () => {
+      if (!localStorage.getItem('pushSubscription')) {
+        if (!pushNotificationSupported) return;
+        const consent = await AskUserPermission();
+        if (consent === 'granted') {
+          await subscribeToPushNotification();
+        }
+      }
+    })();
+  }, []);
+
   const onSubmit = async (values: LoginModel) => {
     const response = await props.loginAction({
       email: values.email.trim(),
       password: values.password,
+      pushSubscription: localStorage.getItem('pushSubscription'),
     });
     if (response.message === 200) {
       props.history.push(`/${response.payload.data.user.name}/home`);
@@ -126,6 +146,7 @@ export const SignInPageComponent = (
               initialValues={{
                 email: email ? email : '',
                 password: '',
+                pushSubscription: '',
               }}
               validate={(values) => {
                 const errors = {} as any;
@@ -175,10 +196,10 @@ export const SignInPageComponent = (
                                 onChange={input.onChange}
                                 leftIcon={
                                   <span className="bp3-icon">
-                                   <Icon
-                                        icon="envelope"                 
-                                        style={{ color: '#3F61C5' }}
-                                      />
+                                    <Icon
+                                      icon="envelope"
+                                      style={{ color: '#3F61C5' }}
+                                    />
                                   </span>
                                 }
                                 style={{
@@ -224,9 +245,9 @@ export const SignInPageComponent = (
                                 leftIcon={
                                   <span className="bp3-icon">
                                     <Icon
-                                        icon="lock"                 
-                                        style={{ color: '#3F61C5' }}
-                                      />
+                                      icon="lock"
+                                      style={{ color: '#3F61C5' }}
+                                    />
                                   </span>
                                 }
                                 rightElement={
@@ -241,7 +262,7 @@ export const SignInPageComponent = (
                                     <img
                                       title={
                                         showPassword
-                                          ? 'Don\'t show password'
+                                          ? "Don't show password"
                                           : 'Show password'
                                       }
                                       onClick={() =>

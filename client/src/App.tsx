@@ -1,47 +1,43 @@
-import * as React from 'react';
-import { useEffect } from 'react';
-import {
-  BrowserRouter,
-  Route,
-  Switch,
-  Redirect,
-  Link,
-} from 'react-router-dom';
-import ReactGA from 'react-ga';
-import { SignUpPage } from './layouts/signup/Index';
-import { SignInPage } from 'layouts/signin/Index';
-import { isAuthenticate } from 'stores/UtilsActions';
-import { RoomPage } from 'layouts/company/room/Index';
-import { CompanyProfilePage } from 'layouts/company/profile/Index';
+import { AutoLoginPage } from 'components/AutoLogin';
 import { Layout } from 'components/Layout';
-import { BoardPage } from 'layouts/company/board/Index';
-import { OverviewPage } from 'layouts/company/overview/Index';
-import { ColleaguesPage } from 'layouts/company/colleagues/Index';
-import { SettingsPage } from 'layouts/company/settings/Index';
-import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
-import { ResetPasswordPage } from 'layouts/resetPassword/Index';
-import { EmailVerificationPage } from 'layouts/emailVerification/Index';
-import { BoardDetailsView } from 'layouts/company/boardDetails/Index';
-import { UserProfilePage } from 'layouts/user/profile/Index';
-import { ProfileSettingsPage } from 'layouts/user/settings/Index';
-import { FeedPage } from 'layouts/company/feed/Index';
-import { TaskPage } from 'layouts/company/task';
-import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
-import { ProjectPage } from 'layouts/company/project/Index';
-import { AssociatesPage } from 'layouts/company/associates/Index';
 import { AssociatesDetailsView } from 'layouts/company/associateDetails/Index';
+import { AssociatesPage } from 'layouts/company/associates/Index';
+import { BoardPage } from 'layouts/company/board/Index';
+import { BoardDetailsView } from 'layouts/company/boardDetails/Index';
+import { ColleaguesPage } from 'layouts/company/colleagues/Index';
+import { FeedPage } from 'layouts/company/feed/Index';
+import { OverviewPage } from 'layouts/company/overview/Index';
+import { CompanyProfilePage } from 'layouts/company/profile/Index';
+import { ProjectPage } from 'layouts/company/project/Index';
 import { ProjectPrefaceView } from 'layouts/company/project/ProjectPrefaceView';
-import { DashboardView } from 'layouts/dashBoard/Index';
 import { ProjectSettingsPage } from 'layouts/company/project/settings/Index';
 import { ProjectTeamPage } from 'layouts/company/project/team/Index';
-import { isMobileOnly } from 'react-device-detect';
+import { RoomPage } from 'layouts/company/room/Index';
 import { RoomPageMobile } from 'layouts/company/room/IndexMobile';
-import { AutoLoginPage } from 'components/AutoLogin';
+import { SettingsPage } from 'layouts/company/settings/Index';
+import { TaskPage } from 'layouts/company/task';
+import { DashboardView } from 'layouts/dashBoard/Index';
+import { EmailVerificationPage } from 'layouts/emailVerification/Index';
+import { ForgotPasswordPage } from 'layouts/forgotPassword/Index';
+import { HomePageNew } from 'layouts/home/Index';
+import NewLanding from 'layouts/landingx/Index';
+import { ResetPasswordPage } from 'layouts/resetPassword/Index';
+import { SignInPage } from 'layouts/signin/Index';
+import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
+import { UserProfilePage } from 'layouts/user/profile/Index';
+import { ProfileSettingsPage } from 'layouts/user/settings/Index';
 import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
-import { HomePageNew } from 'layouts/home/Index';
+import * as React from 'react';
+import { useEffect } from 'react';
+import { isMobileOnly } from 'react-device-detect';
+import ReactGA from 'react-ga';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import { Link, Redirect, Route, Switch } from 'react-router-dom';
+import { isAuthenticate } from 'stores/UtilsActions';
 import Success from './components/Success';
-import NewLanding from 'layouts/landingx/Index';
+import { SignUpPage } from './layouts/signup/Index';
 
 const PrivateRoute = (props: {
   component: any;
@@ -49,7 +45,7 @@ const PrivateRoute = (props: {
   exact: boolean;
 }) => {
   useEffect(() => {
-    ReactGA.initialize('UA-164767364-1', {
+    ReactGA.initialize('G-BQE8N1ZYYC', {
       debug: true,
       gaOptions: {
         cookieDomain: 'none',
@@ -99,8 +95,8 @@ const NotFound = () => (
   </article>
 );
 
-export const App = () => (
-  <BrowserRouter>
+const App = () => {
+  return (
     <Switch>
       {!isAuthenticate() && (
         <Route exact path="/" component={NewLanding} />
@@ -168,51 +164,51 @@ export const App = () => (
       />
       <Route path="/autologin" render={() => <AutoLoginPage />} />
       {/* <Route
-        exact
-        path="/work-from-home-solution"
-        render={() =>
-          isAuthenticate() ? (
-            <Redirect to="/" />
-          ) : (
-            <WorkFromHomePage />
-          )
-        }
-      />
-      <Route
-        exact
-        path="/vendor-management-tool"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <VendorManagementPage />
-        }
-      />
-      <Route
-        exact
-        path="/project-management-tool"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
-        }
-      />
-      <Route
-        exact
-        path="/pricing"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
-        }
-      />
-      <Route
-        exact
-        path="/about"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <AboutPage />
-        }
-      />
-      <Route
-        exact
-        path="/contact"
-        render={() =>
-          isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
-        }
-      /> */}
+          exact
+          path="/work-from-home-solution"
+          render={() =>
+            isAuthenticate() ? (
+              <Redirect to="/" />
+            ) : (
+              <WorkFromHomePage />
+            )
+          }
+        />
+        <Route
+          exact
+          path="/vendor-management-tool"
+          render={() =>
+            isAuthenticate() ? <Redirect to="/" /> : <VendorManagementPage />
+          }
+        />
+        <Route
+          exact
+          path="/project-management-tool"
+          render={() =>
+            isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
+          }
+        />
+        <Route
+          exact
+          path="/pricing"
+          render={() =>
+            isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
+          }
+        />
+        <Route
+          exact
+          path="/about"
+          render={() =>
+            isAuthenticate() ? <Redirect to="/" /> : <AboutPage />
+          }
+        />
+        <Route
+          exact
+          path="/contact"
+          render={() =>
+            isAuthenticate() ? <Redirect to="/" /> : <ContactUsPage />
+          }
+        /> */}
       <PrivateRoute exact path="/" component={Demo} />
       <PrivateRoute
         path="/:username"
@@ -327,5 +323,13 @@ export const App = () => (
       />
       <Route component={NoMatch} />
     </Switch>
-  </BrowserRouter>
-);
+  );
+};
+const mapStateToProps = (state: any) => {
+  return {
+    user: state.userReducer.user,
+    currentCompany: state.companyReducer.currentCompany,
+  };
+};
+
+export default connect(mapStateToProps, {})(withRouter(App));

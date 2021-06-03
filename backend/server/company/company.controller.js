@@ -7,6 +7,9 @@ const Plan = require('../plan/plan.model');
 const { createSlug } = require('../helpers/SlugCreator');
 const Task = require('../task/task.model');
 const Boardcolumn = require('../boardColumn/boardColumn.model');
+const {
+  triggerNotification,
+} = require('../services/webpush.services');
 
 const {
   Subscription,
@@ -661,15 +664,19 @@ const latestCompletedTasks = async (req, res, next) => {
 
 const noticePostByCompany = async (req, res, next) => {
   try {
-    const NewNotice = req.body.text;
+    const noticeText = req.body.text;
+    const companyId = req.params.companyId;
+    const currentUserId = req.user._id;
+
     const memberId = await Member.findOne({
-      account: req.user._id,
-      company: req.params.companyId,
+      account: currentUserId,
+      company: companyId,
     });
+
     const announcement = new Announcement({
       memberId,
-      text: NewNotice,
-      company: req.params.companyId,
+      text: noticeText,
+      company: companyId,
     });
 
     const options = [
@@ -710,17 +717,17 @@ const allNoticesForCompany = async (req, res, next) => {
       {
         path: 'memberId',
         select: 'designations account role',
-        populate: [{
-          path: 'account',
-          select: '_id firstName lastName'
-        },
-        {
-          path: 'designations',
-          select: 'division department position'
-        }
-      ]
+        populate: [
+          {
+            path: 'account',
+            select: '_id firstName lastName',
+          },
+          {
+            path: 'designations',
+            select: 'division department position',
+          },
+        ],
       },
-     
     ];
 
     const announce = await Announcement.find({

@@ -93,6 +93,7 @@
     "shortid": "^2.2.15",
     "slug": "^2.1.1",
     "stripe": "^8.64.0",
+    "web-push": "^3.4.4",
     "winston": "3.2.1"
   },
   "devDependencies": {

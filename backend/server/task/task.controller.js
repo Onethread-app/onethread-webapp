@@ -15,6 +15,10 @@ const {
   taskAssignNotificationToUsers,
 } = require('../notification/notification.controller');
 
+const {
+  triggerUnreadNotifications,
+} = require('../services/webpush.services');
+
 const _ = require('lodash');
 const {
   sendErrorResponse,
@@ -217,6 +221,9 @@ const addMember = async (req, res, next) => {
                     name: req.user.name,
                     pusherSock: req.headers.clientid,
                   },
+                );
+                await triggerUnreadNotifications(
+                  e.assignedPerson._id,
                 );
               }
             });

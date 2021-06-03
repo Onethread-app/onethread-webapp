@@ -28,7 +28,7 @@ const Menu = ({ setOpen }) => {
         </span>
         <ul className="flex flex-column items-center justify-center w-100 h-100">
         <li>
-          <a href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA" target="_blank">How to use</a>
+          <a href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA" target="_blank">How It Works</a>
         </li>
           <li>
             <NavLink to="/signin">Login</NavLink>

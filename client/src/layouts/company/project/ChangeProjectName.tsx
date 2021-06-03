@@ -21,6 +21,7 @@ interface UpdateProjectProps {
   projectId: string;
   projectName: string;
   color: string;
+  deadline: Date | undefined;
 }
 
 interface UpdateProjectInternalProps extends UpdateProjectProps {
@@ -38,14 +39,23 @@ interface UpdateProjectInternalProps extends UpdateProjectProps {
 const UpdateProjectComponent = (
   props: UpdateProjectInternalProps,
 ) => {
-  const [labelColor, setLabelColor] = useState(null as any);
+  const [labelColor, setLabelColor] = useState(props.color as any);
   const onSubmit = async (values: any) => {
-    await props.updateProject(
-      values.name,
-      props.projectId,
-      values.color,
-      values.deadline,
-    );
+    if (props.deadline) {
+      await props.updateProject(
+        values.name,
+        props.projectId,
+        values.color,
+        values.deadline ? values.deadline : new Date(props.deadline),
+      );
+    } else {
+      await props.updateProject(
+        values.name,
+        props.projectId,
+        values.color,
+        values.deadline,
+      );
+    }
     if (
       props.updatingProject === false &&
       props.errorOnUpdatingProject === ''
@@ -118,7 +128,13 @@ const UpdateProjectComponent = (
                     parseDate={(str: string) => new Date(str)}
                     onChange={input.onChange}
                     canClearSelection={false}
-                    value={input.value ? new Date(input.value) : null}
+                    value={
+                      input.value
+                        ? new Date(input.value)
+                        : props.deadline
+                        ? new Date(props.deadline)
+                        : undefined
+                    }
                     popoverProps={{
                       targetClassName: 'w-100',
                     }}
