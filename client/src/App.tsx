@@ -45,7 +45,7 @@ const PrivateRoute = (props: {
   exact: boolean;
 }) => {
   useEffect(() => {
-    ReactGA.initialize('UA-164767364-1', {
+    ReactGA.initialize('G-BQE8N1ZYYC', {
       debug: true,
       gaOptions: {
         cookieDomain: 'none',

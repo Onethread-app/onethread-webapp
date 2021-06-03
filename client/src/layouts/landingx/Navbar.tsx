@@ -14,7 +14,7 @@ const Navbar = () => {
             href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
             target="_blank"
           >
-            How to use
+            How It Works
           </a>
         </li>
         <li>
