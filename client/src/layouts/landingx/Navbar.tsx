@@ -10,7 +10,12 @@ const Navbar = () => {
       </NavLink>
       <ul className="flex">
         <li>
-          <a href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA" target="_blank">How to use</a>
+          <a
+            href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
+            target="_blank"
+          >
+            How to use
+          </a>
         </li>
         <li>
           <NavLink to="/signin">Login</NavLink>

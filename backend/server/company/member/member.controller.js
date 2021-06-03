@@ -24,6 +24,9 @@ const { PendingMember } = require('./pendingMember.model');
 const {
   sendInviteColleague,
 } = require('../../services/email.services');
+const {
+  triggerUnreadNotifications,
+} = require('../../services/webpush.services');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -505,6 +508,10 @@ const createMembers = async (req, notifiyUsersIds) => {
       memberStructure,
     );
 
+    for (let i = 0; i < elasticSearchIndexedMembers.length; i++) {
+      const memberId = elasticSearchIndexedMembers[i].account._id;
+      await triggerUnreadNotifications(memberId);
+    }
     //return members;
   } catch (error) {
     logger.error(`Member: ${error}`);

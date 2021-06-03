@@ -16,6 +16,9 @@ const {
 
 const { addToBoard } = require('../board/board.controller');
 const { createRoomMember } = require('../room/room.controller');
+const {
+  triggerUnreadNotifications,
+} = require('../services/webpush.services');
 
 const changeRole = async (req, res, next) => {
   try {
@@ -112,12 +115,12 @@ const addTeamMember = async (req, res, next) => {
             req.query.pid,
             e.account,
             {
-                 _id: req.user._id,
-                 name: req.user.name,
-                 pusherSock: req.headers.clientid,
-               }
-
-            )  
+              _id: req.user._id,
+              name: req.user.name,
+              pusherSock: req.headers.clientid,
+            },
+          );
+          await triggerUnreadNotifications(e.account);
         });
       }
 

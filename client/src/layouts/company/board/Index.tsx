@@ -121,6 +121,10 @@ const TaskPageComponent = (
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    props.clearCurrentBoard();
+  }, []);
+
+  useEffect(() => {
     Promise.all([
       props.getAllBoards(),
       props.getAllDepartments(),

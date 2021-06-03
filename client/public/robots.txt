@@ -1,4 +1,6 @@
 # https://www.robotstxt.org/robotstxt.html
-User-agent: *
 Disallow:
+Allow: /
+Host: https://www.onethread.app
+
 Sitemap: https://www.onethread.app/sitemap.xml

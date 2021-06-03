@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+// import firebaseConfig from '../../firebase';
+import 'firebase/messaging';
+import { webPush } from '../../stores/notifications/Action';
 import { getAllCompaniesByUserId } from 'stores/user/Actions';
 import { getProjectsIndividual } from 'stores/project/Actions';
 import { User } from 'stores/user/Reducer';
@@ -13,6 +16,7 @@ import { ICompany } from 'stores/company/Reducer';
 import ErrorText from 'layouts/company/settings/ErrorText';
 import Modal from 'react-modal';
 import { setExpireMassage } from 'stores/subscriptionBilling/Actions';
+// import { subscribeUserToPush } from 'serviceWorker';
 
 const customStyles = {
   content: {
@@ -30,6 +34,7 @@ interface HomePageComponentProps {
   getAllCompaniesByUserId: (userId: string, type: string) => void;
   getProjectsIndividual: () => void;
   user: User;
+  webPush: (token) => void;
   project: IMember[];
   subscriptiontExpired: boolean;
   setExpireMassage: () => void;
@@ -54,7 +59,22 @@ export const HomePageComponent = (
     setLoading(false);
   };
 
+  // const getTokenFromGCM = () => {
+  //   const messaging = firebaseConfig.messaging();
+
+  //   Notification.requestPermission()
+  //     .then(() => messaging.getToken())
+  //     .then(async (token: string) => {
+  //       const data = await subscribeUserToPush(messaging['vapidKey']);
+  //       console.log(JSON.stringify(data));
+  //       console.log(token);
+  //       props.webPush(token);
+  //     })
+  //     .catch((err: string) => console.log(err));
+  // };
+
   useEffect(() => {
+    // getTokenFromGCM();
     setSuccess(props.subscriptiontExpired);
     load();
   }, []);
@@ -114,5 +134,6 @@ const mapStateToProps = (state: any) => {
 export const HomePageNew = connect(mapStateToProps, {
   getAllCompaniesByUserId,
   getProjectsIndividual,
+  webPush,
   setExpireMassage,
 })(withRouter(HomePageComponent));

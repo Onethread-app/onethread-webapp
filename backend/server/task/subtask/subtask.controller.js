@@ -5,7 +5,12 @@ const {
   search,
   accountIndex,
 } = require('../../services/elastic.services');
-const { subTaskAssignNotificationToUsers} = require('../../notification/notification.controller');
+const {
+  subTaskAssignNotificationToUsers,
+} = require('../../notification/notification.controller');
+const {
+  triggerUnreadNotifications,
+} = require('../../services/webpush.services');
 
 const load = (req, res, next, id) => {
   SubTask.findById(id)
@@ -95,12 +100,12 @@ const list = async (req, res, next) => {
 
 const addMember = async (req, res, next) => {
   try {
-    const requestedMembers = req.body.assignmember;
+    const requestedMember = req.body.assignmember;
     const subTaskId = req.params.subTaskId;
-    //TODOs: need to check if user already added in thsi subtask
+    //TODOs: need to check if user already added in this subtask
     const subTask = await SubTask.findByIdAndUpdate(
       { _id: subTaskId },
-      { $push: { assignedMembers: requestedMembers } },
+      { $push: { assignedMembers: requestedMember } },
       { safe: true, upsert: true, new: true },
     )
       .select('_id assignedMembers')
@@ -111,13 +116,19 @@ const addMember = async (req, res, next) => {
         },
       ])
       .exec();
-    console.log(requestedMembers);
-    if(req.user._id !== requestedMembers){
-      await subTaskAssignNotificationToUsers(req.user._id,req.headers.companyid, subTaskId, requestedMembers, {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,            
-    })
+    if (req.user._id !== requestedMember) {
+      await subTaskAssignNotificationToUsers(
+        req.user._id,
+        req.headers.companyid,
+        subTaskId,
+        requestedMember,
+        {
+          _id: req.user._id,
+          name: req.user.name,
+          pusherSock: req.headers.clientid,
+        },
+      );
+      await triggerUnreadNotifications(requestedMember);
     }
 
     return sendJSONresponse(res, 201, subTask);

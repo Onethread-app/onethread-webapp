@@ -46,7 +46,7 @@ const MobileIndex = () => {
         </h2>
         <img src={MainLanding} alt="" />
         <h3 className="sub-heading tc mt3">
-          <span className="b">Onethread</span> is project management
+          <span className="b">Onethread</span> is a project management
           tool built from the ground up for multi-team collaboration
           among startups, agencies and NGOs.
         </h3>

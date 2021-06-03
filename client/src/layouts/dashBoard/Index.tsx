@@ -12,7 +12,6 @@ import {
   getLatestCompletedTasks,
 } from 'stores/company/Actions';
 import Typography from '@material-ui/core/Typography';
-import { webPush } from '../../stores/notifications/Action';
 import {
   setSubscriptionExpire,
   setSubscriptionNotExpire,
@@ -38,7 +37,6 @@ interface DashBoardViewProps {
   user: User;
   company: ICompany;
   getCompanyAnnouncement: () => void;
-  webPush: (token) => void;
   setSubscriptionExpire: () => void;
   subscriptiontExpired: boolean;
   setSubscriptionNotExpire: () => void;
@@ -76,16 +74,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   const [itemsPerPage] = useState(5);
   const dispatch = useDispatch();
 
-  // const getTokenFromGCM = () => {
-  //   const messaging = firebase.messaging();
-  //   messaging
-  //     .requestPermission()
-  //     .then(() => messaging.getToken())
-  //     .then((token: string) => props.webPush(token))
-  //     .catch((err: string) => console.log(err));
-  // };
   useEffect(() => {
-    // getTokenFromGCM();
     async function getAPI() {
       const headers = tokenConfig();
 
@@ -335,7 +324,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                       dashboard.projectCompilation.length > 0 ? (
                         dashboard.projectCompilation.map(
                           (project) => (
-                            <div className="mb4">
+                            <div className="mb4" key={project.name}>
                               <ProjectStatus
                                 content={project.name}
                                 remaining={
@@ -415,7 +404,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                     announcement.memberId
                                       .designations[0].division
                                   ]
-                                :  announcement.memberId.role
+                                : announcement.memberId.role
                             }
                             date={moment(
                               announcement.createdAt,
@@ -423,24 +412,24 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                             content={announcement.text}
                             key={announcement._id}
                             firstName={
-                              announcement.memberId.account?
-                                 announcement.memberId.account.firstName
+                              announcement.memberId.account
+                                ? announcement.memberId.account
+                                    .firstName
                                 : null
                             }
                             lastName={
-                              announcement.memberId.account?
-                                 announcement.memberId.account.lastName
+                              announcement.memberId.account
+                                ? announcement.memberId.account
+                                    .lastName
                                 : null
                             }
                             position={
                               announcement.memberId &&
                               announcement.memberId.designations
-                              .length > 0
-                                ? 
-                                    announcement.memberId.designations[0].position
-                                  
-                                :  announcement.memberId.role
-
+                                .length > 0
+                                ? announcement.memberId
+                                    .designations[0].position
+                                : announcement.memberId.role
                             }
                           />
                         ),
@@ -505,6 +494,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           <div>
             <AnnouncementEditor
               setShowDialog={setShowAnnouncementDialog}
+              companyId={props.company._id}
             />
           </div>
         </Dialog>
@@ -525,7 +515,6 @@ const mapStateToProps = (state: any) => {
 
 export const DashboardView = connect(mapStateToProps, {
   getCompanyAnnouncement,
-  webPush,
   setSubscriptionExpire,
   setSubscriptionNotExpire,
   getLatestCompletedTasks,

@@ -19,7 +19,8 @@ export const NOTIFICATION_KEY =
   process.env.REACT_APP_PUSHER_CHANNEL_KEY;
 export const NOTIFICATION_CLUSTER =
   process.env.REACT_APP_PUSHER_CHANNEL_CLUSTER;
-
+export const VAPID_PUBLIC_KEY = 
+ process.env.REACT_APP_VAPID_PUBLIC_KEY;
 export const tigrowApi = axios.create({
   baseURL: server,
 });

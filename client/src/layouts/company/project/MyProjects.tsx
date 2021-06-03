@@ -510,6 +510,11 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           projectName={props.currentProject.name}
                           projectId={props.currentProject._id}
                           color={props.currentProject.color}
+                          deadline={
+                            props.currentProject.deadline
+                              ? props.currentProject.deadline
+                              : undefined
+                          }
                           setShowDialog={setShowUpdateNameDialog}
                         />
                       </RightSidebar>

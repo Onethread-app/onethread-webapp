@@ -33,6 +33,9 @@ const schema = {
   position: Joi.string().allow('').max(32),
   about: Joi.string().max(2000).allow(''),
   gender: Joi.string().valid(['male', 'female', 'others']),
+  refreshToken: Joi.string(),
+  pushSubscription: Joi.string(),
+  subscriptionId: Joi.string(),
 };
 module.exports = {
   register: Joi.object().keys({
@@ -60,6 +63,7 @@ module.exports = {
     body: Joi.object().keys({
       email: schema.email.required(),
       password: schema.password.required(),
+      pushSubscription: schema.pushSubscription.required(),
     }),
   }),
   update: Joi.object().keys({
@@ -89,6 +93,12 @@ module.exports = {
   inviteSignup: Joi.object().keys({
     body: Joi.object().keys({
       email: schema.email.required(),
+    }),
+  }),
+  logout: Joi.object().keys({
+    body: Joi.object().keys({
+      refreshToken: schema.refreshToken,
+      subscriptionId: schema.subscriptionId,
     }),
   }),
 };
