@@ -58,15 +58,15 @@ const AddMemberFormComponent = (
         setSuggestedMembers(response.data.members);
       } else {
         // tslint:disable-next-line: no-console
-        console.log('no headers');
+        
       }
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
-        console.log('network error');
+        
       } else {
         // tslint:disable-next-line: no-console
-        console.log(error.response);
+        
       }
     }
   };

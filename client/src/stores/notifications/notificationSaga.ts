@@ -56,10 +56,10 @@ function* readNotification(action) {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       put({ type: NOTIFICATION.READ_NOTIFICATION_FAIL });
       // return error.response;
     }
@@ -78,10 +78,10 @@ function* seenNotification() {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       put({ type: NOTIFICATION.SEEN_NOTIFICATION_FAIL });
       // return error.response;
     }
@@ -111,10 +111,10 @@ function* webPushNotification(action) {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       put({ type: NOTIFICATION.SEEN_NOTIFICATION_FAIL });
       // return error.response;
     }

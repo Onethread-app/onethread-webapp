@@ -115,7 +115,7 @@ export function* createProjectAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(createProjectFailure(error.message));
     }
   }
@@ -143,7 +143,7 @@ export function* getAllProjectsAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getAllProjectsFailure(error.message));
     }
   }
@@ -187,7 +187,7 @@ export function* createProjectInCompanyAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(createProjectInCompanyFailure(error.message));
     }
   }
@@ -219,7 +219,7 @@ export function* archiveProjectAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(archiveProjectFailure(error.message));
     }
   }
@@ -234,7 +234,7 @@ export function* unarchiveProjectAsync({ payload }: any) {
         null,
         headers,
       );
-      console.log(response);
+      
       yield all([
         put(unarchiveProjectSuccess(response.data.project)),
         put(getAllProjects()),
@@ -270,7 +270,7 @@ export function* getArchivedProjectsAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getProjectArchiveFailure(error.message));
     }
   }
@@ -311,7 +311,7 @@ export function* updateProjectAsync({
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(updateProjectFailure(error.message));
     }
   }
@@ -357,7 +357,7 @@ export function* getSingleProjectAsync({ payload }: any) {
       ]);
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getSingleProjectFailure(error.message));
     }
   }
@@ -393,7 +393,7 @@ export function* projectPrefaceDescriptionUpdateAsync({
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(
         projectPrefaceDescriptionUpdateFailure(error.message),
       );
@@ -429,7 +429,7 @@ export function* projectPrefaceOutlineUpdateAsync({
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(projectPrefaceOutlineUpdateFailure(error.message));
     }
   }
@@ -439,7 +439,7 @@ export function* projectFileUploadAsync({ file, pid }: any) {
   try {
     const headers = tokenConfigFIleUpload();
     const projectId = yield select(getProjectId);
-    console.log(file);
+    
     if ((headers as any).headers.Authorization) {
       yield tigrowApi.post(
         `files/file-upload-project?pid=${pid}`,
@@ -462,7 +462,7 @@ export function* projectFileUploadAsync({ file, pid }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(projectFileUploadFailure(error.message));
     }
   }
@@ -491,7 +491,7 @@ export function* getAllPendingProjectsAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getAllPendingProjectsFailure(error.message));
     }
   }
@@ -544,7 +544,7 @@ export function* acceptPendingProjectAsync({ pending }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(acceptPendingProjectFailure(error.message));
     }
   }
@@ -589,7 +589,7 @@ export function* rejectPendingProjectAsync({ projectId }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(rejectPendingProjectFailure(error.message));
     }
   }
@@ -625,7 +625,7 @@ export function* updateProjectRoleAsync({ optionalRole }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(updateProjectRoleFailure(error.message));
     }
   }
@@ -653,7 +653,7 @@ export function* getRoleForProjectAsync({ projectId }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getRoleForProjectFailure(error.message));
     }
   }
@@ -681,7 +681,7 @@ export function* getProjectTeamsAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getProjectTeamsFailure(error.message));
     }
   }
@@ -714,8 +714,7 @@ export function* addProjectTeamsAsync({ data }: any) {
         ),
       );
     } else {
-      // tslint:disable-next-line: no-console
-      console.log(error.response);
+      // tslint:disable-next-line: no-console      
       yield put(addProjectTeamsFailure(error.message));
     }
   }
@@ -746,7 +745,7 @@ export function* getProjectAssociatesAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getProjectAssociatesFailure(error.message));
     }
   }
@@ -781,7 +780,7 @@ export function* addProjectAssociateAsync({ data }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(addProjectAssociateFailure(error.message));
     }
   }
@@ -826,7 +825,7 @@ export function* changeProjectMemberRoleAsync({
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(changeProjectMemberRoleFailure(error.message));
     }
   }
@@ -861,7 +860,7 @@ export function* getProjectsIndividualAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getProjectsIndividualFailure(error.message));
     }
   }

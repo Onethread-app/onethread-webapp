@@ -82,7 +82,7 @@ export function* createBoard({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(createBoardFailure(error.message));
     }
   }
@@ -114,7 +114,7 @@ export function* getAllBoardsAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getAllBoardsFailure(error.message));
     }
   }
@@ -147,7 +147,7 @@ export function* getSelectedBoard({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getSelectedBoardFailure(error.message));
     }
   }
@@ -179,7 +179,7 @@ export function* createColumn({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(createBoardFailure(error.message));
     }
   }
@@ -211,7 +211,7 @@ export function* updateColumn({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(updateColumnFailure(error.message));
     }
   }
@@ -250,7 +250,7 @@ export function* createTask({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(createTaskFailure(error.message));
     }
   }
@@ -344,7 +344,7 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(addTeamMembersIntoBoardFailure(error.message));
     }
   }
@@ -392,7 +392,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getSelectedTaskDetailsFailure(error.message));
     }
   }

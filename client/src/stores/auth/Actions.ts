@@ -172,7 +172,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
         timeline = timeline.data.user.timeline;
       } catch (error) {
         // tslint:disable-next-line: no-console
-        console.log(error);
+        
       }
       response = { ...response.data.user, timeline };
       accessToken = localStorage.getItem('tigrow_acc_id');
@@ -189,7 +189,7 @@ export const fetchUserAction = () => async (dispatch: any) => {
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    console.log(error);
+    
   }
 };
 
@@ -222,11 +222,11 @@ export const logoutAction = (routeHistory: History) => async (
       }
     } else {
       // tslint:disable-next-line: no-console
-      console.log('No token found in logout action');
+      
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    console.log('error in logout', error);
+    
   }
 };
 
@@ -278,7 +278,7 @@ export const getVideoConferencesJoinee = () => async (
         );
       } catch (error) {
         // tslint:disable-next-line: no-console
-        // console.log(error);
+        // 
       }
       response = { ...response.data.user };
       accessToken = localStorage.getItem('tigrow_acc_id');
@@ -295,6 +295,6 @@ export const getVideoConferencesJoinee = () => async (
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    // console.log(error);
+    // 
   }
 };

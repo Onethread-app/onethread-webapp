@@ -22,7 +22,7 @@ export const getToken = async (setTokenFound) => {
     })
     .then((currentToken) => {
       if (currentToken) {
-        console.log('current token for client: ', currentToken);
+        
         setTokenFound(true);
         // Track the token -> client mapping, by sending to backend server
         // show on the UI that permission is secured
@@ -35,19 +35,19 @@ export const getToken = async (setTokenFound) => {
       }
     })
     .catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
+      
       // catch error while creating client token
     });
 };
 
 export const onMessageListener = () =>
 messaging.onMessage(p=>{
-console.log(p);
+
 });
 //  new Promise((resolve) => {
-//    console.log(messaging);
+//    
 // messaging.onMessage((payload) => {
-//   console.log('paisi', payload);
+//   
 //     resolve(payload);
 // });
 // });

@@ -57,7 +57,7 @@ const AddTeamMemberFormComponent = (
       if (isEqual(error.message, 'Network Error')) {
       } else {
         // tslint:disable-next-line: no-console
-        console.log(error.response);
+        
       }
     }
   };

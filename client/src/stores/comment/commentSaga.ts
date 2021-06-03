@@ -73,7 +73,7 @@ export function* getAllComments() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(getAllCommentsFailure(error.message));
     }
   }
@@ -119,7 +119,7 @@ export function* createComment({ text }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(createCommentFailure(error.message));
     }
   }

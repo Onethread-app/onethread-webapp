@@ -81,7 +81,7 @@ export const userSubscriber = async () => {
   pusher.connection.bind('error', (err: any) => {
     if (err.error.data.code === 4004) {
       // tslint:disable-next-line: no-console
-      console.log('>>> detected limit error', err);
+      
     }
   });
 
@@ -128,14 +128,14 @@ export const roomSubscribe = async (roomId: string) => {
 
   // presenceChannel.bind('pusher:subscription_succeeded', async (data: any) => {
   //   // tslint:disable-next-line: no-console
-  //   console.log('data', data);
+  //   
   //   presenceChannel.bind('pusher:member_added', (member: any) => {
   //     // tslint:disable-next-line: no-console
-  //     console.log('join', member);
+  //     
   //   });
   //   presenceChannel.bind('pusher:member_removed', (member: any) => {
   //     // tslint:disable-next-line: no-console
-  //     console.log('leave', member);
+  //     
   //   });
   // });
   channel.bind('pusher:subscription_succeeded', async () => {

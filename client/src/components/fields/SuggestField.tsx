@@ -143,14 +143,14 @@ export const SuggestField = (props: SuggestFieldProps) => {
             intent={Intent.WARNING}
             onClick={async (e: any) => {
               // tslint:disable-next-line: no-console
-              console.log(`No item found clicked`);
+              
             }}
           />
         ) : undefined;
       }}
       onItemSelect={(selectedSkill) => {
         // tslint:disable-next-line: no-console
-        console.log(selectedSkill);
+        
       }}
       closeOnSelect={false}
       resetOnClose={true}

@@ -53,7 +53,7 @@ const ChangePasswordComponentView = (
         );
       } else {
         // tslint:disable-next-line: no-console
-        console.log('error in user fetching');
+        
       }
       return errorMessgeHandler(response);
     } catch (error) {

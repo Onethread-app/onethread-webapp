@@ -76,12 +76,12 @@ const AddColleaguesFormComponent = (
         return response.data;
       } else {
         // tslint:disable-next-line: no-console
-        console.log('error in checking of pending member status');
+        
         return { status: false, message: 'Authorization Error' };
       }
     } catch (error) {
       // tslint:disable-next-line: no-console
-      console.log(error);
+      
       return {
         status: false,
         message: isEqual(error.message, 'Network Error')

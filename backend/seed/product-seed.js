@@ -126,7 +126,7 @@ function insert(levelOne, levelTwo) {
       .post(url, postData)
 
       .then((res) => {
-        console.log('Level-one : ', res.data.newCategory._id);
+        
 
         // insert level two
 
@@ -148,13 +148,13 @@ function insert(levelOne, levelTwo) {
             })
 
             .catch((err) => {
-              console.log('Level-two ERROR: ', err.message);
+              
             });
         });
       })
 
       .catch((err) => {
-        console.log('Level-one ERROR: ', err);
+        
       });
   });
 }

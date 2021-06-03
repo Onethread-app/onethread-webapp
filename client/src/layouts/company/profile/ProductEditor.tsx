@@ -46,7 +46,7 @@ export const ProductEditComponent = (
         props.setShowDialog(false);
       }
     } catch (error) {
-      console.log(error);
+      
     }
   };
 
@@ -60,7 +60,7 @@ export const ProductEditComponent = (
         );
         await setCategory(response.data.categories);
       } catch (error) {
-        console.log(error);
+        
       }
     }
     getAPI();
@@ -76,7 +76,7 @@ export const ProductEditComponent = (
         );
         await setSubCategory(response.data.subcategories);
       } catch (error) {
-        console.log(error);
+        
       }
     }
     if (selectcategory !== '') {
