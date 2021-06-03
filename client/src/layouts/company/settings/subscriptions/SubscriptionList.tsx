@@ -133,7 +133,7 @@ const _SubscriptionList = (props: ISubscriptionList) => {
                 </CardContent>
                 <CardContent>
                   <h3>Sales</h3>
-                  <label>Contact us at sales@tigrow.info</label>
+                  <label>Contact us at contact@onethread.app</label>
                 </CardContent>
               </Card>
             </Grid>
