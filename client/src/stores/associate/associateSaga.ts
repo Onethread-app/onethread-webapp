@@ -50,7 +50,7 @@ function* addAssociate(action: IAddAssociateAction) {
       return response;
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in selection of company fetching');
+      
     }
   } catch (error) {
     yield put({ type: associate.SEND_REQUEST_ERROR, error });
@@ -64,7 +64,7 @@ function* getAllAssociates() {
     const headers = tokenConfig();
     if ((headers as any).headers.Authorization) {
       const companyId = yield select(selectCompanyId);
-      console.log(companyId);
+      
       const response = yield tigrowApi.get(
         `associate/${companyId}`,
         headers,
@@ -110,10 +110,10 @@ function* getProjectAssociates() {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       // return error.response;
     }
   }
@@ -152,10 +152,10 @@ function* getAllPendingAssociates() {
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       // return error.response;
     }
   }
@@ -267,10 +267,10 @@ function* getSelectedAssociate({payload}: any) {
   } catch (error) {
     if (error.message === 'Network Error') {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       yield put(selectAssociateFailure(error.message));
     }
   }

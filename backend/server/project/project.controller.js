@@ -872,18 +872,18 @@ const unarchiveProject = async (req, res) => {
         { $set: { removed: false } },
         { safe: true, upsert: true, new: true },
       );
-      const text = `${req.user.name} has unarchived project ${project.name}`;
+      // const text = `${req.user.name} has unarchived project ${project.name}`;
 
-      createCompanyRoleNotification(
-        { _id: project.company },
-        {
-          _id: req.user._id,
-          name: req.user.name,
-          pusherSock: req.headers.clientid,
-        },
-        text,
-        'project',
-      );
+      // createCompanyRoleNotification(
+      //   { _id: project.company },
+      //   {
+      //     _id: req.user._id,
+      //     name: req.user.name,
+      //     pusherSock: req.headers.clientid,
+      //   },
+      //   text,
+      //   'project',
+      // );
 
       logger.info(`Project: Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {

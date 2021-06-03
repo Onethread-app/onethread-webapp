@@ -67,15 +67,15 @@ export const addSkillAction = (skillSet: string[]) => async (
       dispatch({ type: ADD_SKILL, payload: response.data.skillList });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in user fetching');
+      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('Network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
     }
   }
 };
@@ -101,7 +101,7 @@ export const addJobExperienceAction = (
       dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('token error');
+      
     }
     return errorMessgeHandler(response);
   } catch (error) {
@@ -130,7 +130,7 @@ export const addEducationExperienceAction = (
       dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('token error');
+      
     }
     return errorMessgeHandler(response);
   } catch (error) {
@@ -164,11 +164,11 @@ export const getAllCompaniesByUserId = (
       }
     } else {
       // tslint:disable-next-line: no-console
-      // console.log('error in get company list by user');
+      // 
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    // console.log(error.response);
+    // 
   }
 };
 export const deleteSkillAction = (skill: string) => async (
@@ -188,15 +188,15 @@ export const deleteSkillAction = (skill: string) => async (
       });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in user fetching');
+      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('Network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
     }
   }
 };
@@ -226,7 +226,7 @@ export const editJobExperienceAction = (
       dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('token error');
+      
     }
     return errorMessgeHandler(response);
   } catch (error) {
@@ -259,7 +259,7 @@ export const editEducationExperienceAction = (
       dispatch({ type: ADD_EXPERIENCE, payload: timelineSort });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('token error');
+      
     }
     return errorMessgeHandler(response);
   } catch (error) {
@@ -294,15 +294,15 @@ export const imageUploadAction = (
       return response.data;
     } else {
       // tslint:disable-next-line: no-console
-      console.log('no headers');
+      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
     }
   }
 };
@@ -323,10 +323,10 @@ export const getAllVideoHistory = () => async (
       });
     } else {
       // tslint:disable-next-line: no-console
-      // console.log('error in get company list by user');
+      // 
     }
   } catch (error) {
     // tslint:disable-next-line: no-console
-    // console.log(error.response);
+    // 
   }
 };

@@ -57,42 +57,17 @@ const changeName = async (req, res, next) => {
 
     //notification
 
-    const text = `company name has been updated by ${req.user.name}`;
-    createCompanyRoleNotification(
-      req.company,
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'companyProfile',
-    );
-    // sendCompanyNotification(req.company._id, {
-    //   _id: req.user._id,
-    //   name: req.user.name,
-    // });
-
-    // const notification = new Notification({
-    //   type: 'companyProfile',
-    //   account: req.user._id,
-    //   company: req.company._id,
-    // });
-
-    // // const userNotification = new UserNotification({
-    // //   notification: notification._id,
-    // //   company: req.company._id,
-    // // });
-    // let usersNotification = members.map(m => {
-    //   return {
-    //     notification: notification._id,
-    //     account: m.account,
-    //   };
-    // });
-
-    // await notification.save();
-    // await UserNotification.create(usersNotification);
-
+    // const text = `company name has been updated by ${req.user.name}`;
+    // createCompanyRoleNotification(
+    //   req.company,
+    //   {
+    //     _id: req.user._id,
+    //     name: req.user.name,
+    //     pusherSock: req.headers.clientid,
+    //   },
+    //   text,
+    //   'companyProfile',
+    // );
     return sendJSONresponse(res, 200, {
       message: `Company's name updated`,
       company: {
@@ -285,17 +260,17 @@ const updateBasicInfo = async (req, res, next) => {
 
     await req.company.save();
 
-    const text = `company profile has been updated by ${req.user.name}`;
-    createCompanyRoleNotification(
-      req.company,
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'companyProfile',
-    );
+    // const text = `company profile has been updated by ${req.user.name}`;
+    // createCompanyRoleNotification(
+    //   req.company,
+    //   {
+    //     _id: req.user._id,
+    //     name: req.user.name,
+    //     pusherSock: req.headers.clientid,
+    //   },
+    //   text,
+    //   'companyProfile',
+    // );
     //createCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name} );
     return res.status(200).json({
       message: `Company's basic information updated`,
@@ -322,17 +297,17 @@ const updateAbout = async (req, res, next) => {
       { safe: true, upsert: true, new: true },
     ).exec();
 
-    const text = `company profile has been updated by ${req.user.name}`;
-    createCompanyRoleNotification(
-      req.company,
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'companyProfile',
-    );
+    // const text = `company profile has been updated by ${req.user.name}`;
+    // createCompanyRoleNotification(
+    //   req.company,
+    //   {
+    //     _id: req.user._id,
+    //     name: req.user.name,
+    //     pusherSock: req.headers.clientid,
+    //   },
+    //   text,
+    //   'companyProfile',
+    // );
     //sendCompanyNotification(req.company._id, {_id:req.user._id, name: req.user.name});
     //createCompanyNotification(req.company._id , {_id:req.user._id, name: req.user.name} );
 
@@ -708,17 +683,17 @@ const noticePostByCompany = async (req, res, next) => {
     logger.info(`new notice created`);
     const newAnnouncement = await announcement.save();
     await Announcement.populate(newAnnouncement, options);
-    const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
-    createCompanyRoleNotification(
-      { _id: req.params.companyId },
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'announcement',
-    );
+    // const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
+    // createCompanyRoleNotification(
+    //   { _id: req.params.companyId },
+    //   {
+    //     _id: req.user._id,
+    //     name: req.user.name,
+    //     pusherSock: req.headers.clientid,
+    //   },
+    //   text,
+    //   'announcement',
+    // );
     return sendJSONresponse(res, 201, {
       message: 'New notice added',
       newAnnouncement,

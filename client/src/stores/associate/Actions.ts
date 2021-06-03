@@ -34,15 +34,15 @@ export const addAssociate = (
       return response.status;
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in selection of company fetching');
+      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       return error.response;
     }
   }
@@ -76,15 +76,15 @@ export const getAllAssociates = () => async (
       dispatch({ type: GET_ALL_ASSOCIATE, payload: associates });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in selection of company fetching');
+      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       // return error.response;
     }
   }
@@ -123,15 +123,15 @@ export const getAllPendingAssociates = () => async (
       });
     } else {
       // tslint:disable-next-line: no-console
-      console.log('error in selection of company fetching');
+      
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       // return error.response;
     }
   }
@@ -182,16 +182,16 @@ export const acceptPendingAssociate = (associateID: string) => async (
         });
       } else {
         // tslint:disable-next-line: no-console
-        console.log(`Error in accept pending associate`);
+        
       }
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       // return error.response;
     }
   }
@@ -230,16 +230,16 @@ export const rejectPendingAssociate = (associateID: string) => async (
         });
       } else {
         // tslint:disable-next-line: no-console
-        console.log(`Error in accept pending associate`);
+        
       }
     }
   } catch (error) {
     if (isEqual(error.message, 'Network Error')) {
       // tslint:disable-next-line: no-console
-      console.log('network error');
+      
     } else {
       // tslint:disable-next-line: no-console
-      console.log(error.response);
+      
       // return error.response;
     }
   }

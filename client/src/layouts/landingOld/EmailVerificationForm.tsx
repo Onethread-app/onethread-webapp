@@ -27,12 +27,12 @@ const EmailVerificationFormComponent = (
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
-        console.log('Network error');
+        
       } else if (error.response.status === 409) {
         props.history.push('/signin?email=' + values.email);
       } else {
         // tslint:disable-next-line: no-console
-        console.log(error.response);
+        
       }
     }
   };
