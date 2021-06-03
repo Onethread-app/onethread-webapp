@@ -29,6 +29,12 @@ const {
 } = require('../services/elastic.services');
 const chalk = require('chalk');
 const { createSlug } = require('../helpers/SlugCreator');
+
+const {
+  savePushSubscription,
+  removePushSubscription,
+} = require('../services/webpush.services');
+
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -82,12 +88,10 @@ const register = async (req, res, next) => {
           return { account: account._id, company: m.company };
         });
 
-        const pendingMemberToMemberAccounts = pendingMemberToMember.map(
-          (member) => member.account,
-        );
-        const pendingMemberToMemberCompany = pendingMemberToMember.map(
-          (member) => member.company,
-        );
+        const pendingMemberToMemberAccounts =
+          pendingMemberToMember.map((member) => member.account);
+        const pendingMemberToMemberCompany =
+          pendingMemberToMember.map((member) => member.company);
 
         await Member.create(pendingMemberToMember);
 
@@ -176,11 +180,16 @@ const login = async (req, res, next) => {
     let userObj = {};
     userObj.name = req.user.name;
     // addUserDataIntoCache(req.user._id, req.user);
+    const pushSubscription = await savePushSubscription(
+      req.user._id,
+      req.body.pushSubscription,
+    );
     return sendJSONresponse(res, 200, {
       success: true,
-      accessToken: accessToken,
-      refreshToken: refreshToken,
+      accessToken,
+      refreshToken,
       user: userObj,
+      pushSubscription,
     });
   } catch (error) {
     logger.error(`${error}`);
@@ -380,7 +389,7 @@ const logout = async (req, res, next) => {
       await jwt.verify(
         refreshToken,
         config.refreshTokenSecret,
-        (err, user) => {
+        async (err, user) => {
           if (err) {
             return sendErrorResponse(res, 401, 'AuthError', {
               message: err.message,
@@ -396,6 +405,9 @@ const logout = async (req, res, next) => {
               new Date(Date.now()).getTimezoneOffset() * 60 * 1000);
           addTokenToBlackList(accessToken, accessTokenExpire);
           addTokenToBlackList(refreshToken, refreshTokenExpire);
+
+          await removePushSubscription(req.body.subscriptionId);
+
           logger.info('Account successfully Logout');
           return sendJSONresponse(res, 200, {
             success: true,

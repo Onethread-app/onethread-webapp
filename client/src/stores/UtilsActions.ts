@@ -82,7 +82,6 @@ export const isAuthenticate = () => {
   if (typeof window === undefined) {
     return false;
   }
-
   if (
     localStorage.getItem('tigrow_acc_id') &&
     localStorage.getItem('tigrow_real_id')

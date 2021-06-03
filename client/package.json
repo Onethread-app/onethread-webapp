@@ -1,7 +1,7 @@
 {
   "name": "tigrow_frontend",
   "version": "2.4.4",
-  "homepage": "https://onethread.app/",
+  "homepage": "https://www.onethread.app/",
   "private": true,
   "dependencies": {
     "@blueprintjs/core": "^3.18.0",
@@ -33,9 +33,7 @@
     "emoji-mart": "^2.11.1",
     "env-cmd": "^10.1.0",
     "final-form": "^4.18.6",
-    "final-form-arrays": "^3.0.2",
-    "firebase": "^8.6.2",
-    "google-map-react": "2.0.8",
+    "final-form-arrays": "^3.0.2",    "google-map-react": "2.0.8",
     "js-cookie": "^2.2.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.15",

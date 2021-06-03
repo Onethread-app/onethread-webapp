@@ -153,11 +153,11 @@ module.exports.contactSaleMail = async (email, subject, message) => {
     Destination: {
       /* required */
       CcAddresses: [
-        'sales@tigrow.co',
+        'contact@onethread.app',
         /* more items */
       ],
       ToAddresses: [
-        'sales@tigrow.co',
+        'contact@onethread.app',
         /* more items */
       ],
     },

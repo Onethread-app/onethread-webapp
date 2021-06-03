@@ -5,7 +5,12 @@ import { getProjectsIndividual } from 'stores/project/Actions';
 import { isMobileOnly, CustomView } from 'react-device-detect';
 import { IMember } from 'stores/project/Reducer';
 import { withRouter, RouteComponentProps } from 'react-router';
-import { Grid, makeStyles, ExpansionPanel, ExpansionPanelSummary } from '@material-ui/core';
+import {
+  Grid,
+  makeStyles,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+} from '@material-ui/core';
 import Card from '@material-ui/core/Card';
 import project from './../../resources/images/noProject.png';
 import { ProjectAdd } from './CreateProjectForm';
@@ -46,7 +51,9 @@ interface ProjectListProps {
   company: ICompany;
 }
 
-export const ProjectListComponent = (props: ProjectListProps & RouteComponentProps) => {
+export const ProjectListComponent = (
+  props: ProjectListProps & RouteComponentProps,
+) => {
   const classes = useStyles();
 
   const [searchProjects, setSearchProjects] = useState('');
@@ -98,37 +105,42 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
             className="bg-white dn-ns db"
             content={
               <div className="bp3-input-group .modifier">
-              <span className="bp3-icon bp3-icon-search"></span>
-              <input
-                className="bp3-input"
-                type="search"
-                placeholder="Search input"
-                dir="auto"
-                onChange={(e) => {
-                  setSearchProjects(e.target.value);
-                }}
-              />
-            </div>
+                <span className="bp3-icon bp3-icon-search"></span>
+                <input
+                  className="bp3-input"
+                  type="search"
+                  placeholder="Search input"
+                  dir="auto"
+                  onChange={(e) => {
+                    setSearchProjects(e.target.value);
+                  }}
+                />
+              </div>
             }
             target={
               <span className="bp3-icon bp3-icon-search mh2"></span>
             }
           />
           <Button
-            onClick={() => (setShowProjectDialog(true))}
+            onClick={() => setShowProjectDialog(true)}
             icon="plus"
             className="pa3-ns pa2 ml2"
-            style={{ background: '#0F0C4E', color: 'white', width: isMobileOnly ? '180px' : '285px' }}>
+            style={{
+              background: '#0F0C4E',
+              color: 'white',
+              width: isMobileOnly ? '180px' : '285px',
+            }}
+          >
             Start A New Project
-              </Button>
+          </Button>
         </div>
       </div>
-      { loading ? <Loading/>
-      :
-      props.project && props.project.length > 0 ?
+      {loading ? (
+        <Loading />
+      ) : props.project && props.project.length > 0 ? (
         <div className="overflow-y-auto h5">
           <CustomView condition={!isMobileOnly}>
-            <Grid container >
+            <Grid container>
               <Grid item xs>
                 <div className="b">Name</div>
               </Grid>
@@ -140,35 +152,43 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
               </Grid>
             </Grid>
           </CustomView>
-          {searchProjects ?
-            (
-                props.project.filter((item) => !item.name.toLowerCase().indexOf(searchProjects.toLowerCase())).map(
-                  filteredProjects => (
-                    <Card
-                      style={{ marginTop: '10px', padding: '10px' }}
-                      onClick={(e) => {
-                        singleProjectOnClick(filteredProjects._id);
-                        e.preventDefault();
-                      }}>
-                      <Grid container style={{ cursor: 'pointer'}}>
-                        <Grid item xs>
-                          <div className="ml1">{filteredProjects.name}</div>
-                        </Grid>
-                        <Grid item xs>
-                          <div className="ml1">{filteredProjects.type}</div>
-                        </Grid>
-                        <Grid item xs>
-                          <div className="ml1">
-                            {filteredProjects.concernedAdmin.name}
-                          </div>
-                        </Grid>
+          {searchProjects
+            ? props.project
+                .filter(
+                  (item) =>
+                    !item.name
+                      .toLowerCase()
+                      .indexOf(searchProjects.toLowerCase()),
+                )
+                .map((filteredProjects) => (
+                  <Card
+                    style={{ marginTop: '10px', padding: '10px' }}
+                    onClick={(e) => {
+                      singleProjectOnClick(filteredProjects._id);
+                      e.preventDefault();
+                    }}
+                  >
+                    <Grid container style={{ cursor: 'pointer' }}>
+                      <Grid item xs>
+                        <div className="ml1">
+                          {filteredProjects.name}
+                        </div>
                       </Grid>
-                    </Card>
-                  ))
-            )
-            : (props.project.map((p) => {
-              return (
-                isMobileOnly ?
+                      <Grid item xs>
+                        <div className="ml1">
+                          {filteredProjects.type}
+                        </div>
+                      </Grid>
+                      <Grid item xs>
+                        <div className="ml1">
+                          {filteredProjects.concernedAdmin.name}
+                        </div>
+                      </Grid>
+                    </Grid>
+                  </Card>
+                ))
+            : props.project.map((p) => {
+                return isMobileOnly ? (
                   <div className="mt2 pointer">
                     <ExpansionPanel>
                       <ExpansionPanelSummary
@@ -185,11 +205,12 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
                           </Typography>
                         </Paper>
                       </ExpansionPanelSummary>
-                      <ExpansionPanelDetails 
-                      onClick={(e) => {
-                        singleProjectOnClick(p._id);
-                        e.preventDefault();
-                      }}>
+                      <ExpansionPanelDetails
+                        onClick={(e) => {
+                          singleProjectOnClick(p._id);
+                          e.preventDefault();
+                        }}
+                      >
                         <Paper
                           className={classes.heading}
                           elevation={0}
@@ -200,20 +221,23 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
                           className={classes.heading}
                           elevation={0}
                         >
-                          <Typography>Lead: {p.concernedAdmin.name}</Typography>
+                          <Typography>
+                            Lead: {p.concernedAdmin.name}
+                          </Typography>
                         </Paper>
                       </ExpansionPanelDetails>
                     </ExpansionPanel>
                   </div>
-                  :
-                  <Card 
-                  style={{ marginTop: '10px', padding: '10px'}}
-                  onClick={(e) => {
-                    singleProjectOnClick(p._id);
-                    e.preventDefault();
-                  }}
+                ) : (
+                  <Card
+                    style={{ marginTop: '10px', padding: '10px' }}
+                    key={p._id}
+                    onClick={(e) => {
+                      singleProjectOnClick(p._id);
+                      e.preventDefault();
+                    }}
                   >
-                    <Grid container style={{ cursor: 'pointer'}}>
+                    <Grid container style={{ cursor: 'pointer' }}>
                       <Grid item xs>
                         <div className="ml1">{p.name}</div>
                       </Grid>
@@ -221,24 +245,31 @@ export const ProjectListComponent = (props: ProjectListProps & RouteComponentPro
                         <div className="ml1">{p.type}</div>
                       </Grid>
                       <Grid item xs>
-                        <div className="ml1">{p.concernedAdmin.name}</div>
+                        <div className="ml1">
+                          {p.concernedAdmin.name}
+                        </div>
                       </Grid>
                     </Grid>
                   </Card>
-              );
-            }))}
+                );
+              })}
         </div>
-        :
-        (
-          <div className="white pv4 tc bg-white">
-            <img className={`${isMobileOnly && 'w4'}`} src={project} alt="project" />
-            <h1 className="light-silver fw4 f5 f3-ns">There's no existing project to show</h1>
-            <h2 className="light-silver fw4 f7 f4">
-              Simply click on 'Start a New Project' button to create a new one
-                </h2>
-          </div>
-        )
-      }
+      ) : (
+        <div className="white pv4 tc bg-white">
+          <img
+            className={`${isMobileOnly && 'w4'}`}
+            src={project}
+            alt="project"
+          />
+          <h1 className="light-silver fw4 f5 f3-ns">
+            There's no existing project to show
+          </h1>
+          <h2 className="light-silver fw4 f7 f4">
+            Simply click on 'Start a New Project' button to create a
+            new one
+          </h2>
+        </div>
+      )}
       {showProjectDialog && (
         <Dialog
           onClose={() => setShowProjectDialog(!showProjectDialog)}
@@ -257,17 +288,13 @@ const mapStateToProps = (state: any) => {
   return {
     project: state.projectReducer.allProjects,
     company: state.companyReducer.currentCompany,
-
   };
 };
 
-export const ProjectList = connect(
-  mapStateToProps,
-  {
-    getProjectsIndividual,
-    getSingleProject,
-    setCurrentProjectId,
-    getRoleForProject,
-    getAllProjects
-  },
-)(withRouter(ProjectListComponent));
+export const ProjectList = connect(mapStateToProps, {
+  getProjectsIndividual,
+  getSingleProject,
+  setCurrentProjectId,
+  getRoleForProject,
+  getAllProjects,
+})(withRouter(ProjectListComponent));

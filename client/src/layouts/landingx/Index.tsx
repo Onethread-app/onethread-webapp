@@ -18,7 +18,6 @@ import BatteryLow from 'resources/images/companies/battery-low.png';
 import Checkmate from 'resources/images/companies/checkmate.png';
 import Goodybro from 'resources/images/companies/goodybro.png';
 
-
 import DashboardIcon from 'resources/images/dashboard-icon.png';
 import MessagesIcon from 'resources/images/messages-icon.png';
 import ReportIcon from 'resources/images/report-icon.png';
@@ -46,7 +45,7 @@ const NewLanding = () => {
         </h2>
         <img src={MainLanding} alt="" />
         <h3 className="sub-heading tc">
-          <span className="b">Onethread</span> is project management
+          <span className="b">Onethread</span> is a project management
           tool built from the ground up for multi-team collaboration
           among startups, agencies and NGOs.
         </h3>
@@ -130,7 +129,7 @@ const NewLanding = () => {
           <img src={Plummy} alt="plummy fashions" />
           <img src={BatteryLow} alt="battery low" />
           <img src={Checkmate} alt="checkmate" />
-          <img src={MarketExpress} alt="market express" />        
+          <img src={MarketExpress} alt="market express" />
         </div>
       </section>
       <section className="product-details flex flex-column  w-100">
