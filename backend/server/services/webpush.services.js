@@ -12,7 +12,7 @@ const publicVapidKey = config.vapidPublicKey;
 const privateVapidKey = config.vapidPrivateKey;
 
 webpush.setVapidDetails(
-  'http://localhost:3000/',
+  'https://www.onethread.app',
   publicVapidKey,
   privateVapidKey,
 );
