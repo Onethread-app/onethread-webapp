@@ -21,7 +21,7 @@ import { IRoom } from 'stores/room/Reducer';
 import { isEqual } from 'lodash';
 import { RoomListItem } from 'layouts/company/room/leftSidebar/RoomListItem';
 import ChatIcon from '@material-ui/icons/Chat';
-import { fetchRooms } from '../stores/room/Actions';
+import { fetchRooms, fetchChats } from '../stores/room/Actions';
 
 interface NavbarProps {
   title: string;
@@ -33,6 +33,7 @@ interface NavbarProps {
   getNotifications: any;
   seenNotification: () => void;
   fetchRooms: () => void;
+  fetchChats: () => void;
   incrementPageNumber: () => void;
   rooms: [IRoom];
   seen: number;
@@ -93,6 +94,7 @@ const NavbarCompanyComponent = (
     }
     companySubscriber(props.companyId);
     props.fetchRooms();
+    props.fetchChats();
   }, []);
 
   const onCLickNotification = async (sNotification: any) => {
@@ -313,4 +315,5 @@ export const NavbarCompany = connect(mapStateToProps, {
   seenNotification,
   incrementPageNumber,
   fetchRooms,
+  fetchChats,
 })(withRouter(NavbarCompanyComponent));

@@ -22,6 +22,7 @@ import {
   getSelectedTaskDetails,
 } from 'stores/board/Actions';
 import { getSingleProject } from 'stores/project/Actions';
+import { fetchRooms } from 'stores/room/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -95,6 +96,7 @@ interface LayoutInternalProps
   getSelectedBoard: (boardId: string) => any;
   getSelectedTaskDetails: (taskId: string) => any;
   getSingleProject: (pid: string) => void;
+  fetchRooms: () => void;
   company: ICompany;
   companyRooms: ICompanyRoom[];
   rightSidebarOpen: boolean;
@@ -150,6 +152,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     if ((props.match.params as any).boardId) {
       updateBoardReducer();
     }
+    props.fetchRooms();
   }, [props.match, props.project._id]);
 
   useEffect(() => {
@@ -577,4 +580,5 @@ export const Layout = connect(mapStateToProps, {
   getSelectedBoard,
   getSelectedTaskDetails,
   getSingleProject,
+  fetchRooms,
 })(withRouter(LayoutComponent));

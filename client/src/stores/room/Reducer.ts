@@ -43,13 +43,48 @@ import {
 export interface IRoom {
   _id: string;
   name: string;
-  company: string;
+  company: {
+    _id: string;
+    uniqueName: string;
+  };
   project: string;
   account: string;
   createdAt: string;
   updatedAt: string;
   archive: boolean;
   removed: boolean;
+}
+
+export interface IChat {
+  _id: string;
+  read: boolean;
+  seen: boolean;
+  receiver: string;
+  message: {
+    _id: string;
+    type: string;
+    text: string;
+    createdAt: string;
+    account: {
+      _id: string;
+      firstName: string;
+      lastName: string;
+      profileImage: string;
+    };
+  };
+  room: {
+    _id: string;
+    name: string;
+    company: {
+      _id: string;
+      uniqueName: string;
+    };
+    project: {
+      _id: string;
+      name: string;
+      color: number;
+    };
+  };
 }
 
 export interface IRoomMember {
@@ -125,6 +160,7 @@ export interface IRoomReducer {
   discussions: IRoomDiscussion[];
   sharedFileMessages: IRoomMessage[];
   rooms: IRoom[];
+  chats: IChat[];
   roomsUnreadCount: any;
   loading: boolean;
   emojiPicker: boolean;
@@ -147,6 +183,7 @@ export interface IRoomReducer {
   togglingDiscussion: boolean;
   updatingLastSeen: boolean;
   fetchingRooms: boolean;
+  fetchingChats: boolean;
   errorOnRoomCreate: string;
   errorOnGettingRoom: string;
   errorOnGettingRoomMembers: string;
@@ -160,6 +197,7 @@ export interface IRoomReducer {
   errorOnToggleDiscussion: string;
   errorOnUpdatingLastSeen: string;
   errorOnFetchingRoom: string;
+  errorOnFetchingChats: string;
 }
 const InitialState: IRoomReducer = {
   activeRoom: {},
@@ -167,7 +205,10 @@ const InitialState: IRoomReducer = {
     _id: '',
     name: '',
     account: '',
-    company: '',
+    company: {
+      _id: '',
+      uniqueName: '',
+    },
     project: '',
     archive: false,
     removed: false,
@@ -183,6 +224,7 @@ const InitialState: IRoomReducer = {
   discussions: [],
   sharedFileMessages: [],
   rooms: [],
+  chats: [],
   roomsUnreadCount: {},
   emojiPicker: false,
   pendingFiles: [],
@@ -205,6 +247,7 @@ const InitialState: IRoomReducer = {
   togglingDiscussion: false,
   updatingLastSeen: false,
   fetchingRooms: false,
+  fetchingChats: false,
   errorOnRoomCreate: '',
   errorOnGettingRoom: '',
   errorOnGettingRoomMembers: '',
@@ -218,6 +261,7 @@ const InitialState: IRoomReducer = {
   errorOnToggleDiscussion: '',
   errorOnUpdatingLastSeen: '',
   errorOnFetchingRoom: '',
+  errorOnFetchingChats: '',
 };
 
 export const sortRooms = (a: IRoom, b: IRoom) => {
@@ -452,6 +496,23 @@ export const RoomReducer = (state = InitialState, action: any) => {
         errorOnFetchingRoom: action.payload,
         fetchingRooms: false,
       };
+    case RoomActionTypes.FETCH_CHATS_START:
+      return {
+        ...state,
+        fetchingChats: true,
+        errorOnFetchingChats: '',
+      };
+    case RoomActionTypes.FETCH_CHATS_SUCCESS:
+      return {
+        ...state,
+        chats: action.payload,
+        fetchingChats: false,
+      };
+    case RoomActionTypes.FETCH_CHATS_FAILURE:
+      return {
+        ...state,
+        errorOnFetchingChats: action.payload,
+      };
     case RoomActionTypes.CREATE_ROOM_START:
       return {
         ...state,
@@ -574,8 +635,68 @@ export const RoomReducer = (state = InitialState, action: any) => {
     case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_COMPANY:
     case CLEAR_ROOMS_REDUCER_STATE_FOR_CHANGE_PROJECT:
       return {
-        ...InitialState,
+        activeRoom: {},
+        currentRoom: {
+          _id: '',
+          name: '',
+          account: '',
+          company: {
+            _id: '',
+            uniqueName: '',
+          },
+          project: '',
+          archive: false,
+          removed: false,
+          createdAt: '',
+          updatedAt: '',
+        },
+        allMessages: false,
+        messages: [],
+        typing: {
+          users: [],
+        },
+        users: [],
+        discussions: [],
+        sharedFileMessages: [],
+        rooms: [],
+        chats: state.chats,
+        roomsUnreadCount: {},
+        emojiPicker: false,
+        pendingFiles: [],
         companyRooms: state.companyRooms,
+        loading: false,
+        roomError: '',
+        responseCode: 0,
+        roomNotification: {},
+        totalUnread: 0,
+        creatingRoom: false,
+        gettingRoom: false,
+        gettingRoomMembers: false,
+        addingRoomMembers: false,
+        sendingMessage: false,
+        loadingMessages: false,
+        uploadingFile: false,
+        archivingRoom: false,
+        gettingFiles: false,
+        gettingDiscussions: false,
+        togglingDiscussion: false,
+        updatingLastSeen: false,
+        fetchingRooms: false,
+        fetchingChats: false,
+        errorOnRoomCreate: '',
+        errorOnGettingRoom: '',
+        errorOnGettingRoomMembers: '',
+        errorOnAddingMembers: '',
+        errorOnSendingMessage: '',
+        errorOnLoadingMessages: '',
+        errorOnFileUpload: '',
+        errorOnArchive: '',
+        errorOnGettingFiles: '',
+        errorOnGettingDiscussions: '',
+        errorOnToggleDiscussion: '',
+        errorOnUpdatingLastSeen: '',
+        errorOnFetchingRoom: '',
+        errorOnFetchingChats: '',
       };
     case room.COUNT_TOTAL_REED_COUNT:
       return {

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Message } = require('./message.model');
+const { UserMessage } = require('./userMessage.model');
 const { Room } = require('./../room/room.model');
 const { RoomMember } = require('../room/roomMember.model');
 const Account = require('./../account/account.model');
@@ -93,6 +94,31 @@ const create = async (req, res, next) => {
     );
 
     const message = await newMessage.save();
+
+    const roomMembers = await RoomMember.find({
+      room,
+    })
+      .select('account')
+      .exec();
+
+    roomMembers.map(async (member) => {
+      const memberMessage = new UserMessage({
+        message: message._id,
+        receiver: member.account,
+        read:
+          member.account.toString() === req.user._id.toString()
+            ? true
+            : false,
+        seen:
+          member.account.toString() === req.user._id.toString()
+            ? true
+            : false,
+        room,
+      });
+      console.log(memberMessage);
+      await memberMessage.save();
+      logger.info(`userMessage saved for user ${member.account}`);
+    });
 
     pusherChannel.trigger(`private-${req.body.room}`, 'new_message', {
       message,

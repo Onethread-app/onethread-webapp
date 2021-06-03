@@ -1,5 +1,15 @@
 const Joi = require('@hapi/joi');
 
+const idSchema = {
+  id: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .error((errors) => {
+      return {
+        message: 'Invalid ID',
+      };
+    }),
+};
+
 module.exports = {
   createRoom: Joi.object().keys({
     headers: Joi.object().keys({
@@ -105,6 +115,11 @@ module.exports = {
             message: 'Invalid Room ID',
           };
         }),
+    }),
+  }),
+  getProjectRooms: Joi.object().keys({
+    query: Joi.object().keys({
+      pid: idSchema.id.required(),
     }),
   }),
 };

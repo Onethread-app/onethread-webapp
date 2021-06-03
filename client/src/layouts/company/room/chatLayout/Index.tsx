@@ -13,7 +13,7 @@ import { IRoomReducer } from 'stores/room/Reducer';
 import memberListIcon from './../../../../resources/images/member-list.svg';
 import addMemberIcon from './../../../../resources/images/addMemberIcon.png';
 import settingsIcon from './../../../../resources/images/settings.svg';
-import videoCallIcon from './../../../../resources/images/video-call.png';
+// import videoCallIcon from './../../../../resources/images/video-call.png';
 import { VideoCallRequest } from './VideoCallRequest';
 
 interface ChatLayoutComponentProps {
@@ -168,7 +168,7 @@ export const ChatLayoutComponent = (
                   />
                 </div>
               ) : null}
-              {props.currentRoom.archive === false && (
+              {/* {props.currentRoom.archive === false && (
                 <div className="pointer ml3-ns ml1">
                   <Popover
                     minimal={true}
@@ -216,7 +216,7 @@ export const ChatLayoutComponent = (
                     }
                   />
                 </div>
-              )}
+              )} */}
             </div>
           </div>
           {/* chat heading ends */}

@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const { Room } = require('./room.model');
 const { Team } = require('../team-member/team.model');
 const { Message } = require('../message/message.model');
+const { UserMessage } = require('../message/userMessage.model');
 const { RoomMember } = require('./roomMember.model');
 const {
   sendJSONresponse,
@@ -192,12 +193,14 @@ const getRoom = async (req, res, next) => {
   }
 };
 
-const listCompany = async (req, res, next) => {
+const list = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   try {
+    const project = req.query.pid;
+
     const rooms = await RoomMember.find({
       account: req.user._id,
-      company: req.params.company,
+      project,
       removed: false,
     })
       .skip(+skip)
@@ -208,6 +211,7 @@ const listCompany = async (req, res, next) => {
           path: 'room',
           select:
             'archive removed _id name company project account createdAt updatedAt',
+          populate: [{ path: 'company', select: '_id uniqueName' }],
         },
       ]);
 
@@ -259,13 +263,11 @@ const listCompany = async (req, res, next) => {
   }
 };
 
-const list = async (req, res, next) => {
+const chats = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   try {
     const rooms = await RoomMember.find({
       account: req.user._id,
-      company: req.headers.companyid,
-      project: req.query.pid,
       removed: false,
     })
       .skip(+skip)
@@ -276,49 +278,67 @@ const list = async (req, res, next) => {
           path: 'room',
           select:
             'archive removed _id name company project account createdAt updatedAt',
-        },
-      ]);
-    // unread count
-    const roomsUnreadCount = {};
-    for (const e of rooms) {
-      const results = await Message.aggregate([
-        {
-          $match: {
-            removed: false,
-            room: mongoose.Types.ObjectId(e.room._id),
-            // room: {
-            //   $in: roomObjectIDs,
-            // },
-            createdAt: {
-              $gt: new Date(e.lastSeen),
+          populate: [
+            {
+              path: 'project',
+              select: '_id name',
             },
-          },
-        },
-        {
-          $group: {
-            _id: '$room',
-            count: {
-              $sum: 1,
-            },
-          },
+            { path: 'company', select: '_id uniqueName' },
+          ],
         },
       ]);
 
-      if (results.length > 0) {
-        roomsUnreadCount[results[0]._id] = results[0].count;
-      } else {
-        roomsUnreadCount[e.room._id] = 0;
-      }
-    }
-
-    const filterRooms = rooms.map(({ room }) => {
-      return {
-        ...room._doc,
-      };
+    const roomIds = rooms.map((room) => {
+      return room.room._id;
     });
+
+    const options = [
+      {
+        path: 'room',
+        select: '_id name company project',
+        populate: [
+          {
+            path: 'project',
+            select: '_id name color',
+          },
+          {
+            path: 'company',
+            select: '_id uniqueName',
+          },
+        ],
+      },
+      {
+        path: 'message',
+        select: 'account text type createdAt',
+        populate: [
+          {
+            path: 'account',
+            select: '_id firstName lastName profileImage',
+          },
+        ],
+      },
+    ];
+
+    let uMessage = await Promise.all(
+      roomIds.map(async (roomId) => {
+        let uMsg = await UserMessage.find({
+          room: roomId,
+          receiver: req.user._id,
+        })
+          .sort({ createdAt: -1 })
+          .select('read seen message receiver room')
+          .populate(options)
+          .exec();
+        return uMsg[0];
+      }),
+    );
+
+    const filteredMessages = uMessage.filter(
+      (msg) => msg !== undefined,
+    );
+
     return sendJSONresponse(res, 200, {
-      rooms: filterRooms,
-      roomsUnreadCount,
+      rooms: filteredMessages,
     });
   } catch (error) {
     logger.error(`Room: ${error}`);
@@ -379,8 +399,8 @@ const updateLastSeen = async (req, res, next) => {
 
 module.exports = {
   create,
+  chats,
   list,
-  listCompany,
   getRoom,
   addMembers,
   suggestMember,
