@@ -180,10 +180,13 @@ const login = async (req, res, next) => {
     let userObj = {};
     userObj.name = req.user.name;
     // addUserDataIntoCache(req.user._id, req.user);
-    const pushSubscription = await savePushSubscription(
-      req.user._id,
-      req.body.pushSubscription,
-    );
+    let pushSubscription;
+    if (req.body.pushSubscription) {
+      pushSubscription = await savePushSubscription(
+        req.user._id,
+        req.body.pushSubscription,
+      );
+    }
     return sendJSONresponse(res, 200, {
       success: true,
       accessToken,

@@ -101,6 +101,9 @@ const envVarsSchema = Joi.object({
   VAPID_PRIVATE_KEY: Joi.string()
     .required()
     .description('VAPID_PRIVATE_KEY required'),
+  CLIENT_URL: Joi.string()
+    .required()
+    .description('CLIENT_URL required'),
 })
   .unknown()
   .required();
@@ -143,6 +146,7 @@ const config = {
   APM_URL: envVars.APM_URL,
   vapidPublicKey: envVars.VAPID_PUBLIC_KEY,
   vapidPrivateKey: envVars.VAPID_PRIVATE_KEY,
+  clientUrl: envVars.CLIENT_URL,
 };
 
 module.exports = config;

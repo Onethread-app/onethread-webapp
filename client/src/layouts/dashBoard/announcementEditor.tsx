@@ -4,9 +4,6 @@ import { TextArea, Button } from '@blueprintjs/core';
 import { ICompany } from 'stores/company/Reducer';
 import { addAnnouncement } from 'stores/company/Actions';
 import { isEmpty } from 'lodash';
-import Axios from 'axios';
-import { tokenConfig } from 'stores/UtilsActions';
-import { server } from 'config';
 
 interface AnnouncementEditorProps {
   setShowDialog: (val: boolean) => void;
@@ -28,12 +25,6 @@ const AnnouncementEditorComponent = (
     if (!isEmpty(inputValues) && inputValues.length <= 500) {
       await props.addAnnouncement(inputValues);
       props.setShowDialog(false);
-      const headers = tokenConfig();
-      await Axios.post(
-        `${server}notifications/webpush/subscription/${props.companyId}`,
-        { announcementText: inputValues },
-        headers,
-      );
     } else {
       setError(true);
 

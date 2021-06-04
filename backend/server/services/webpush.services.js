@@ -1,7 +1,4 @@
 const WebPushModel = require('../notification/webpush/webpush.model');
-const { Company } = require('../company/company.model');
-const { Member } = require('../company/member/member.model');
-
 const { ServiceError } = require('../helpers/APIError');
 
 const webpush = require('web-push');
@@ -11,8 +8,10 @@ const Account = require('../account/account.model');
 const publicVapidKey = config.vapidPublicKey;
 const privateVapidKey = config.vapidPrivateKey;
 
+const logger = require('../../config/winston');
+
 webpush.setVapidDetails(
-  'https://www.onethread.app',
+  config.clientUrl,
   publicVapidKey,
   privateVapidKey,
 );
@@ -52,10 +51,16 @@ const triggerNotification = async (memberId, dataToSend) => {
       } catch (err) {
         if (err.statusCode === 404 || err.statusCode === 410) {
           await removePushSubscription(subscriptions[i]._id);
+        } else {
+          logger.error(`${err}`);
         }
       }
     }
   } catch (err) {
+    logger.error(
+      `We were unable to send messages to all subscriptions: '${err.message}'`,
+    );
+
     throw new ServiceError(
       'WebPushError',
       `We were unable to send messages to all subscriptions :  '${err.message}'`,
