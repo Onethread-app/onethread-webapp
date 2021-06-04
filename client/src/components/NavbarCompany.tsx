@@ -135,6 +135,7 @@ const NavbarCompanyComponent = (
                         props.notifications.map(
                           (sNotification: any, index) => (
                             <div
+                              key={index}
                               onClick={() => {
                                 onCLickNotification(sNotification);
                               }}

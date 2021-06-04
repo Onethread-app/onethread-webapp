@@ -44,12 +44,13 @@ export const SignInPageComponent = (
 
   useEffect(() => {
     (async () => {
-      if (!localStorage.getItem('pushSubscription')) {
-        if (!pushNotificationSupported) return;
-        const consent = await AskUserPermission();
-        if (consent === 'granted') {
-          await subscribeToPushNotification();
-        }
+      if (!navigator.serviceWorker) return;
+      if (!pushNotificationSupported) return;
+      const consent = await AskUserPermission();
+      if (consent === 'granted') {
+        await subscribeToPushNotification();
+      } else {
+        localStorage.removeItem('pushSubscription');
       }
     })();
   }, []);

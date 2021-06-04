@@ -180,6 +180,7 @@ const NavbarTopComponent = (
                     props.notifications.map(
                       (sNotification: any, index) => (
                         <div
+                          key={index}
                           onClick={() => {
                             onCLickNotification(sNotification);
                           }}
@@ -250,8 +251,8 @@ const NavbarTopComponent = (
                   className="pt2 pb1 overflow-y-auto"
                 >
                   {props.chats && props.chats.length ? (
-                    props.chats.map((chat: IChat) => (
-                      <ChatListItem chat={chat} />
+                    props.chats.map((chat: IChat, index) => (
+                      <ChatListItem chat={chat} key={index} />
                     ))
                   ) : (
                     <p className="ph2">No room To Show</p>

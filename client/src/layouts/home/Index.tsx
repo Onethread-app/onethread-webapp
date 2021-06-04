@@ -1,22 +1,19 @@
+import { Loading } from 'components/Loading';
+import ErrorText from 'layouts/company/settings/ErrorText';
 import React, { useEffect, useState } from 'react';
+import Modal from 'react-modal';
 import { connect } from 'react-redux';
-// import firebaseConfig from '../../firebase';
-import 'firebase/messaging';
-import { webPush } from '../../stores/notifications/Action';
-import { getAllCompaniesByUserId } from 'stores/user/Actions';
+import { RouteComponentProps, withRouter } from 'react-router';
+import { ICompany } from 'stores/company/Reducer';
 import { getProjectsIndividual } from 'stores/project/Actions';
-import { User } from 'stores/user/Reducer';
 import { IMember } from 'stores/project/Reducer';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { setExpireMassage } from 'stores/subscriptionBilling/Actions';
+import { getAllCompaniesByUserId } from 'stores/user/Actions';
+import { User } from 'stores/user/Reducer';
+import { webPush } from '../../stores/notifications/Action';
 import { CompanyList } from './CompanyList';
 import { ProjectList } from './ProjectList';
 import { VideoConference } from './VideoList';
-import { Loading } from 'components/Loading';
-import { ICompany } from 'stores/company/Reducer';
-import ErrorText from 'layouts/company/settings/ErrorText';
-import Modal from 'react-modal';
-import { setExpireMassage } from 'stores/subscriptionBilling/Actions';
-// import { subscribeUserToPush } from 'serviceWorker';
 
 const customStyles = {
   content: {
@@ -45,7 +42,6 @@ export const HomePageComponent = (
   props: HomePageComponentProps & RouteComponentProps,
 ) => {
   const [loading, setLoading] = useState(false);
-
   const [success, setSuccess] = React.useState(false);
 
   function closeModal() {
@@ -59,22 +55,7 @@ export const HomePageComponent = (
     setLoading(false);
   };
 
-  // const getTokenFromGCM = () => {
-  //   const messaging = firebaseConfig.messaging();
-
-  //   Notification.requestPermission()
-  //     .then(() => messaging.getToken())
-  //     .then(async (token: string) => {
-  //       const data = await subscribeUserToPush(messaging['vapidKey']);
-  //       console.log(JSON.stringify(data));
-  //       console.log(token);
-  //       props.webPush(token);
-  //     })
-  //     .catch((err: string) => console.log(err));
-  // };
-
   useEffect(() => {
-    // getTokenFromGCM();
     setSuccess(props.subscriptiontExpired);
     load();
   }, []);

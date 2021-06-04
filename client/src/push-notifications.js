@@ -1,6 +1,7 @@
-import {VAPID_PUBLIC_KEY } from './config';
-const pushServerPublicKey =
-  VAPID_PUBLIC_KEY;
+// web-push generate-vapid-keys
+
+import { VAPID_PUBLIC_KEY } from './config';
+const pushServerPublicKey = VAPID_PUBLIC_KEY;
 
 function isPushNotificationSupported() {
   return 'serviceWorker' in navigator && 'PushManager' in window;
@@ -11,7 +12,9 @@ async function askUserPermission() {
 }
 
 function registerServiceWorker() {
-  return navigator.serviceWorker.register('/sw.js');
+  return navigator.serviceWorker.register(
+    `${process.env.PUBLIC_URL}/service-worker.js`,
+  );
 }
 
 async function createNotificationSubscription() {
