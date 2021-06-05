@@ -223,7 +223,7 @@ const NewLanding = () => {
             we want you to be a part of it!
           </p>
           <OTButton to="/signup" white bold>
-            Create Your First Project
+            Create Your First Project For Free
           </OTButton>
         </div>
         <MainFooter />
