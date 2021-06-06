@@ -324,6 +324,7 @@ const chats = async (req, res, next) => {
         let uMsg = await UserMessage.find({
           room: roomId,
           receiver: req.user._id,
+          read: false,
         })
           .sort({ createdAt: -1 })
           .select('read seen message receiver room')
