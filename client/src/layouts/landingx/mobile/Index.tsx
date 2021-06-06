@@ -50,7 +50,7 @@ const MobileIndex = () => {
           tool built from the ground up for multi-team collaboration
           among startups, agencies and NGOs.
         </h3>
-        <OTButton to="/signup">Create Your First Project</OTButton>
+        <OTButton to="/signup">Create Your First Project For Free</OTButton>
       </section>
       <section className="second-section w-100 flex relative mb5">
         <div className="unified-tool flex flex-column items-center justify-around w-100 pb3">
@@ -141,7 +141,7 @@ const MobileIndex = () => {
           </div>
           
         </div>
-        <OTButton to="/signup">Create Your First Project</OTButton>
+        <OTButton to="/signup">Create Your First Project For Free</OTButton>
       </section>
       <section className="product-details flex flex-column items-center justify-center mb5 w-100">
         <div className="header flex flex-column items-center justify-center mb5">

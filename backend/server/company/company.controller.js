@@ -690,17 +690,17 @@ const noticePostByCompany = async (req, res, next) => {
     logger.info(`new notice created`);
     const newAnnouncement = await announcement.save();
     await Announcement.populate(newAnnouncement, options);
-    const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
-    createCompanyRoleNotification(
-      { _id: req.params.companyId },
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'announcement',
-    );
+    // const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
+    // createCompanyRoleNotification(
+    //   { _id: req.params.companyId },
+    //   {
+    //     _id: req.user._id,
+    //     name: req.user.name,
+    //     pusherSock: req.headers.clientid,
+    //   },
+    //   text,
+    //   'announcement',
+    // );
     const company = await Company.findById(req.params.companyId);
     const dataToSend = {
       notification: {
