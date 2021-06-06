@@ -89,7 +89,7 @@ const MobileIndex = () => {
               </div>
             </div>
             <h3 className="unified-tool-content-footer tc">
-              Read: Get rid of infinite email chains and WhatsApp
+              rid of infinite email chains and WhatsApp
               threads
             </h3>
           </div>

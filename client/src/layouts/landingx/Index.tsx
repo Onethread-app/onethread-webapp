@@ -87,8 +87,9 @@ const NewLanding = () => {
               </div>
             </div>
             <h3 className="unified-tool-content-footer">
-              Read: Get rid of infinite email chains and WhatsApp
-              threads
+              < a href="https://www.linkedin.com/pulse/onethread-here-declutter-your-workspace-onethreadapp/" target="_blank">Read: Get rid of infinite email chains and WhatsApp
+              threads</a>
+            
             </h3>
           </div>
         </div>
