@@ -225,9 +225,17 @@ router
   .route('/project-list/:memberId')
   .get(authorization, projectCtrl.projectListForMember);
 
-//TODOS: need to add permission, subscriptioncheck, validation  
-router
-  .route('/:projectId/tasks')
-  .get(authorization, projectCtrl.TasksOfProject);
+//TODOS: need to add permission, subscriptioncheck, validation
+router.route('/overview').get(
+  authorization,
+  // subCtrl.subscriptionExpireCheck(),
+  // projectCtrl.authorizeProjectRole(
+  //   'all',
+  //   'admin',
+  //   'projectModerator',
+  //   'member',
+  // ),
+  projectCtrl.projectOverview,
+);
 
 module.exports = router;

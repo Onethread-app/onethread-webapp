@@ -62,7 +62,7 @@ export const AssociateListComponent = (
                     onClick={async (e) => {
                       e.preventDefault();
                       props.history.push(
-                        `/company/${props.company.name}/associate/${associate._id}`,
+                        `/company/${props.company.uniqueName}/associate/${associate._id}`,
                       );
                     }}
                   >
@@ -116,7 +116,7 @@ export const AssociateListComponent = (
                     onClick={async (e) => {
                       e.preventDefault();
                       props.history.push(
-                        `/company/${props.company.name}/associate/${associate._id}`,
+                        `/company/${props.company.uniqueName}/associate/${associate._id}`,
                       );
                     }}
                   >

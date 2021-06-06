@@ -2,10 +2,15 @@ import Axios from 'axios';
 import { Loading } from 'components/Loading';
 import { server } from 'config';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, NavLink } from 'react-router-dom';
 import { tokenConfig } from 'stores/UtilsActions';
 import './index.scss';
 import Table from './Table/Table';
+import { MobileView, isMobileOnly } from 'react-device-detect';
+import { withRouter } from 'react-router';
+
+import { connect } from 'react-redux';
+import { NavbarCompany } from 'components/NavbarCompany';
 
 const ProjectInfo = ({
   context,
@@ -31,15 +36,6 @@ const ProjectInfo = ({
       </span>
     </p>
   );
-};
-
-const getDate = (time) => {
-  const today = new Date(time);
-  const dd = String(today.getDate()).padStart(2, '0');
-  const mm = String(today.getMonth() + 1).padStart(2, '0');
-  const yyyy = today.getFullYear();
-
-  return dd + '/' + mm + '/' + yyyy;
 };
 
 type Order = 'asc' | 'desc';
@@ -74,7 +70,7 @@ const Index = (props: any) => {
     setIsLoading(true);
 
     const headers = tokenConfig();
-    Axios.get(`${server}projects/${projectId}/tasks`, headers)
+    Axios.get(`${server}projects/overview?pid=${projectId}`, headers)
       .then((res) => {
         const { project } = res.data.response;
 
@@ -82,7 +78,7 @@ const Index = (props: any) => {
         setDueDate(project.dueDate);
         setStatus(project.status.toLowerCase());
         setLead(project.lead);
-        setStartingDate(getDate(project.startingDate));
+        setStartingDate(project.startingDate);
 
         setTasks(res.data.response.tasks);
 
@@ -94,75 +90,185 @@ const Index = (props: any) => {
   }, []);
 
   return (
-    <div className="ph5">
+    <div className={isMobileOnly ? 'ph2' : 'ph5'}>
       {isLoading ? (
         <Loading />
       ) : (
-        <div>
+        <>
+          <MobileView>
+            <NavbarCompany title="Overview" />
+            <div className="flex justify-between mt5">
+              <NavLink
+                exact
+                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
+                activeStyle={{
+                  background: '#3F61C5',
+                  color: 'white',
+                }}
+                style={{ color: 'darkGray' }}
+              >
+                <small style={{ color: 'inherit' }}>Overview</small>
+              </NavLink>
+              <NavLink
+                exact
+                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
+                activeStyle={{
+                  background: '#3F61C5',
+                  color: 'white',
+                }}
+                style={{ color: 'darkGray' }}
+              >
+                <small style={{ color: 'inherit' }}>Preface</small>
+              </NavLink>
+              <NavLink
+                exact
+                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
+                activeStyle={{
+                  background: '#3F61C5',
+                  color: 'white',
+                }}
+                style={{ color: 'darkGray' }}
+              >
+                <small style={{ color: 'inherit' }}>Room</small>
+              </NavLink>
+              <NavLink
+                exact
+                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
+                activeStyle={{
+                  background: '#3F61C5',
+                  color: 'white',
+                }}
+                style={{ color: 'darkGray' }}
+              >
+                <small style={{ color: 'inherit' }}>Boards</small>
+              </NavLink>
+              <NavLink
+                exact
+                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
+                activeStyle={{
+                  background: '#3F61C5',
+                  color: 'white',
+                }}
+                style={{ color: 'darkGray' }}
+              >
+                <small style={{ color: 'inherit' }}>Teammates</small>
+              </NavLink>
+              <NavLink
+                exact
+                className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
+                to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
+                activeStyle={{
+                  background: '#3F61C5',
+                  color: 'white',
+                }}
+                style={{ color: 'darkGray' }}
+              >
+                <small style={{ color: 'inherit' }}>
+                  Project Settings
+                </small>
+              </NavLink>
+            </div>
+          </MobileView>
+
           <div>
-            <h1>
-              Project name:{' '}
-              <span style={{ fontWeight: 'normal' }}>{name}</span>
-            </h1>
+            <div>
+              <h1>
+                Project name:{' '}
+                <span style={{ fontWeight: 'normal' }}>{name}</span>
+              </h1>
+            </div>
+            <div>
+              <ProjectInfo
+                context="Starting date: "
+                data={startingDate}
+              />
+              <ProjectInfo
+                context="End date: "
+                data={dueDate ? dueDate : 'N/A'}
+              />
+              <ProjectInfo context="Lead: " data={lead} />
+              <ProjectInfo
+                context="Status: "
+                data={status.replace(/-|\s/g, ' ')}
+                dataStyle={{
+                  fontWeight: 'normal',
+                  backgroundColor: `${
+                    status === 'not-started'
+                      ? '#357EDD'
+                      : status === 'ongoing'
+                      ? '#FF6300'
+                      : '#19A974'
+                  }`,
+                  marginLeft: 5,
+                  color: 'white',
+                  borderRadius: 5,
+                  fontSize: 16.5,
+                  textTransform: 'capitalize',
+                }}
+                dataClassName="ph2 pv1"
+              />
+            </div>
+            <>
+              {!tasks.length ? (
+                <div className="tc pt3">
+                  <h2>
+                    No task available. Please, create some tasks in
+                    board.
+                  </h2>
+                </div>
+              ) : (
+                <>
+                  <Table
+                    order={order}
+                    setOrder={setOrder}
+                    orderBy={orderBy}
+                    setOrderBy={setOrderBy}
+                    selected={selected}
+                    setSelected={setSelected}
+                    page={page}
+                    setPage={setPage}
+                    rowsPerPage={rowsPerPage}
+                    setRowsPerPage={setRowsPerPage}
+                    tasks={tasks}
+                  />
+                </>
+              )}
+            </>
           </div>
-          <div>
-            <ProjectInfo
-              context="Starting date: "
-              data={startingDate}
-            />
-            <ProjectInfo
-              context="End date: "
-              data={dueDate ? dueDate : 'N/A'}
-            />
-            <ProjectInfo context="Lead: " data={lead} />
-            <ProjectInfo
-              context="Status: "
-              data={status.replace(/-|\s/g, ' ')}
-              dataStyle={{
-                fontWeight: 'normal',
-                backgroundColor: `${
-                  status === 'not-started'
-                    ? '#357EDD'
-                    : status === 'ongoing'
-                    ? '#FF6300'
-                    : '#19A974'
-                }`,
-                marginLeft: 5,
-                color: 'white',
-                borderRadius: 5,
-                fontSize: 16.5,
-                textTransform: 'capitalize',
-              }}
-              dataClassName="ph2 pv1"
-            />
-          </div>
-          <>
-            {!tasks.length ? (
-              <div className="tc pt3">
-                <h2>No task available. Please, create some tasks in board.</h2>
-              </div>
-            ) : (
-              <>
-                <Table
-                  order={order}
-                  setOrder={setOrder}
-                  orderBy={orderBy}
-                  setOrderBy={setOrderBy}
-                  selected={selected}
-                  setSelected={setSelected}
-                  page={page}
-                  setPage={setPage}
-                  rowsPerPage={rowsPerPage}
-                  setRowsPerPage={setRowsPerPage}
-                  tasks={tasks}
-                />
-              </>
-            )}
-          </>
-        </div>
+        </>
       )}
     </div>
   );
 };
+const mapStateToProps = (state: any) => {
+  return {
+    boardList: state.boardIndexReducer.boardReducer.boardList,
+    company: state.companyReducer.currentCompany,
+    departmentNameLoading: state.companyReducer.departmentNameLoading,
+    role:
+      state.projectReducer.projectRole.projects &&
+      state.projectReducer.projectRole.projects.role,
+    optionalRole:
+      state.projectReducer.projectRole.projects &&
+      state.projectReducer.projectRole.projects.project.optionalRole,
+    user: state.userReducer.user,
+    project: state.projectReducer.projectDetails,
+    singleProjectLoading: state.projectReducer.singleProjectLoading,
+    currentBoard: state.boardIndexReducer.boardReducer.currentBoard,
+    fetchingBoards:
+      state.boardIndexReducer.boardReducer.fetchingBoards,
+    fetchingBoard: state.boardIndexReducer.boardReducer.fetchingBoard,
+    errorOnFetchingBoard:
+      state.boardIndexReducer.boardReducer.errorOnFetchingBoard,
+  };
+};
 
-export const OverviewPage = Index;
+export const OverviewPage = connect(
+  mapStateToProps,
+  {},
+)(withRouter(Index));

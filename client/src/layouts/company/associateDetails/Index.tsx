@@ -43,11 +43,11 @@ const AssociatesDetailsViewComponent = (
               items={[
                 {
                   text: `My Partners`,
-                  href: `/company/${props.company.name}/associates`,
+                  href: `/company/${props.company.uniqueName}/associates`,
                 },
                 {
                   text: `${props.associate.associateCompany.name}`,
-                  href: `/company/${props.company.name}/associate/${props.associate._id}`,
+                  href: `/company/${props.company.uniqueName}/associate/${props.associate._id}`,
                 },
               ]}
             />
