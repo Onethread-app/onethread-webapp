@@ -40,11 +40,14 @@ export const ProjectPrefaceViewComponent = (
       <MobileView>
         <NavbarCompany title="Project" />
         <div className="flex justify-between mt5">
-        <NavLink
+          <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/overview`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/overview`}
+            activeStyle={{
+              background: '#3F61C5',
+              color: 'white',
+            }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Overview</small>
@@ -52,8 +55,11 @@ export const ProjectPrefaceViewComponent = (
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}`}
+            activeStyle={{
+              background: '#3F61C5',
+              color: 'white',
+            }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Preface</small>
@@ -61,8 +67,11 @@ export const ProjectPrefaceViewComponent = (
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/room`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/room`}
+            activeStyle={{
+              background: '#3F61C5',
+              color: 'white',
+            }}
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Room</small>
@@ -70,29 +79,40 @@ export const ProjectPrefaceViewComponent = (
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/board`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/board`}
+            activeStyle={{
+              background: '#3F61C5',
+              color: 'white',
+            }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Board</small>
+            <small style={{ color: 'inherit' }}>Boards</small>
           </NavLink>
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/team`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/team`}
+            activeStyle={{
+              background: '#3F61C5',
+              color: 'white',
+            }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Team</small>
+            <small style={{ color: 'inherit' }}>Teammates</small>
           </NavLink>
           <NavLink
             exact
             className="bg-black-10 pa2 ma1 br4 tc dark-gray fw6 w-25"
-            to={`/company/${props.company.name}/project/${props.project._id}/settings`}
-            activeStyle={{ background: '#3F61C5', color: 'white' }}
+            to={`/company/${props.company.uniqueName}/project/${props.project._id}/settings`}
+            activeStyle={{
+              background: '#3F61C5',
+              color: 'white',
+            }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Settings</small>
+            <small style={{ color: 'inherit' }}>
+              Project Settings
+            </small>
           </NavLink>
         </div>
       </MobileView>

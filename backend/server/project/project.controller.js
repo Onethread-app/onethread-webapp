@@ -1152,10 +1152,34 @@ const nameWordCapitalize = (name) =>
     .map((t) => t[0].toUpperCase() + t.slice(1))
     .join(' ');
 
-const TasksOfProject = async (req, res, next) => {
-  //TODOS: it will come from project query
+const ISOformat = (time) => {
+  if (!time) return null;
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const [day, month, year] = new Date(time)
+    .toISOString()
+    .split('T')[0]
+    .split('-')
+    .reverse()
+    .map((d) => parseInt(d));
+  return `${monthNames[month - 1]} ${day}, ${year}`;
+};
+
+const projectOverview = async (req, res, next) => {
   try {
-    const projectId = req.params.projectId;
+    const projectId = req.query.pid;
     const project = await Project.findById(projectId)
       .populate([
         {
@@ -1168,7 +1192,7 @@ const TasksOfProject = async (req, res, next) => {
       project: {
         name: nameWordCapitalize(project.name),
         status: nameWordCapitalize(project.status),
-        dueDate: project.dueDate,
+        dueDate: ISOformat(project.dueDate),
         lead: project.concernedAdmin
           ? nameWordCapitalize(
               project.concernedAdmin.firstName +
@@ -1176,7 +1200,7 @@ const TasksOfProject = async (req, res, next) => {
                 project.concernedAdmin.lastName,
             )
           : null,
-        startingDate: project.createdAt,
+        startingDate: ISOformat(project.createdAt),
       },
     };
     response.tasks = [];
@@ -1198,7 +1222,7 @@ const TasksOfProject = async (req, res, next) => {
         taskId: task._id,
         name: task.name,
         status: nameWordCapitalize(task.status),
-        dueDate: task.dueDate,
+        dueDate: ISOformat(task.dueDate),
         priority: task.priority,
       };
       let assignedTo = await TaskAssign.findOne({
@@ -1254,5 +1278,5 @@ module.exports = {
   updateRole,
   getProjectIndividual,
   projectListForMember,
-  TasksOfProject,
+  projectOverview,
 };
