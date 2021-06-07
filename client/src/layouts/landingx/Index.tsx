@@ -49,7 +49,7 @@ const NewLanding = () => {
           tool built from the ground up for multi-team collaboration
           among startups, agencies and NGOs.
         </h3>
-        <OTButton to="/signup">Create Your First Project</OTButton>
+        <OTButton to="/signup">Create Your First Project For Free</OTButton>
       </section>
       <section className="second-section w-100 flex relative">
         <div className="unified-tool flex items-center justify-around w-100">
