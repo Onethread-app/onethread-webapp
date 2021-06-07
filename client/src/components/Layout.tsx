@@ -398,7 +398,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               color: 'white',
                             }}
                             style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}`}
+                            to={`/company/${props.company.uniqueName}`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
                             <span className="">
@@ -419,7 +419,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               color: 'white',
                             }}
                             style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/dashboard`}
+                            to={`/company/${props.company.uniqueName}/dashboard`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
                             <span className="">
@@ -440,7 +440,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               color: 'white',
                             }}
                             style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/project`}
+                            to={`/company/${props.company.uniqueName}/project`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
                             <span className="">
@@ -461,7 +461,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               color: 'white',
                             }}
                             style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/colleague`}
+                            to={`/company/${props.company.uniqueName}/colleague`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
                             <span className="">
@@ -482,7 +482,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                               color: 'white',
                             }}
                             style={{ color: '#3F61C5' }}
-                            to={`/company/${props.company.name}/associates`}
+                            to={`/company/${props.company.uniqueName}/associates`}
                             className="hover-bg-black-20 pa2 flex flex-column items-center"
                           >
                             <span className="">
@@ -505,7 +505,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                   color: 'white',
                                 }}
                                 style={{ color: '#3F61C5' }}
-                                to={`/company/${props.company.name}/settings`}
+                                to={`/company/${props.company.uniqueName}/settings`}
                                 className="hover-bg-black-20 pa2 flex flex-column items-center"
                               >
                                 <span className="">

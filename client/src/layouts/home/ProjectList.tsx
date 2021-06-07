@@ -77,7 +77,7 @@ export const ProjectListComponent = (
     await props.getRoleForProject(pid);
     await props.setCurrentProjectId(pid);
     props.history.push(
-      `/company/${props.company.name}/project/${pid}`,
+      `/company/${props.company.uniqueName}/project/${pid}`,
     );
   };
 
