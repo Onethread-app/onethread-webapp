@@ -49,7 +49,7 @@ const NewLanding = () => {
           tool built from the ground up for multi-team collaboration
           among startups, agencies and NGOs.
         </h3>
-        <OTButton to="/signup">Create Your First Project</OTButton>
+        <OTButton to="/signup">Create Your First Project For Free</OTButton>
       </section>
       <section className="second-section w-100 flex relative">
         <div className="unified-tool flex items-center justify-around w-100">
@@ -87,8 +87,9 @@ const NewLanding = () => {
               </div>
             </div>
             <h3 className="unified-tool-content-footer">
-              Read: Get rid of infinite email chains and WhatsApp
-              threads
+              < a href="https://www.linkedin.com/pulse/onethread-here-declutter-your-workspace-onethreadapp/" target="_blank">Read: Get rid of infinite email chains and WhatsApp
+              threads</a>
+            
             </h3>
           </div>
         </div>

@@ -134,7 +134,7 @@ const CompanyCustomView = (props: ICompanyProps) => {
                 style={{ marginTop: '10rem' }}
               >
                 <h1 className="f6 ma0 ws-break ttc">
-                  Total Associates
+                  Total Partners
                 </h1>
                 <h1 className="f3-l f4 fw4 ma0 ws-break tc ">
                   {props.company.totalAssociate
@@ -160,7 +160,7 @@ const CompanyCustomView = (props: ICompanyProps) => {
             </h1>
           </div>
           <div className="">
-            <h1 className="f7 ma0 ws-break ttc">Associates</h1>
+            <h1 className="f7 ma0 ws-break ttc">Partners</h1>
             <h1 className="fw4 ma0 ws-break tc ">
               {props.company.totalAssociate
                 ? props.company.totalAssociate

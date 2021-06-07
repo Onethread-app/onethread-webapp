@@ -204,7 +204,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 <Card className="w-100 pa2 mb3-ns mb3 shadow-2 br3 totalInfoCard h4-ns">
                   <TotalInfo
                     type="associates"
-                    content="Total Associates"
+                    content="Total Partners"
                     count={dashboard.totalAssociates}
                   />
                 </Card>
