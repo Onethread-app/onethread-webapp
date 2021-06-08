@@ -41,6 +41,7 @@ const TaskFiles = (props: ITaskFiles) => {
         {props.taskFiles ? (
           props.taskFiles.map((file) => (
             <div
+              key={file._id}
               className="flex items-center justify-between pr2"
               onMouseEnter={() =>
                 setShowDelete({ value: true, _id: file._id })

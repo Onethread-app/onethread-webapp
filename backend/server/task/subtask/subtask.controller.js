@@ -1,4 +1,5 @@
 const SubTask = require('./subtask.model');
+const { Team } = require('../../team-member/team.model');
 const logger = require('../../../config/winston');
 const { sendJSONresponse } = require('../../helpers/jsonResponse');
 const {
@@ -215,71 +216,95 @@ const deleteMember = async (req, res, next) => {
 
 const searchMember = async (req, res, next) => {
   try {
-    const name = req.query.name;
     const subTaskId = req.params.subTaskId;
 
-    const subTask = await SubTask.findById(subTaskId).exec();
+    let subTaskMembers = await SubTask.findById(subTaskId)
+      .select('_id assignedMembers')
+      .exec();
 
-    if (name) {
-      let body = {
-        size: 200,
-        from: 0,
-        query: {
-          bool:
-            subTask.assignedMembers.length > 0
-              ? {
-                  must: [
-                    {
-                      multi_match: {
-                        query: req.query.name,
-                        type: 'phrase_prefix',
-                        fields: [
-                          'email',
-                          'firstName',
-                          'lastName',
-                          'name',
-                        ],
-                      },
-                    },
-                  ],
-                  must_not: [
-                    {
-                      terms: {
-                        mongo_id: subTask.assignedMembers,
-                      },
-                    },
-                  ],
-                }
-              : {
-                  must: [
-                    {
-                      multi_match: {
-                        query: req.query.name,
-                        type: 'phrase_prefix',
-                        fields: [
-                          'email',
-                          'firstName',
-                          'lastName',
-                          'name',
-                        ],
-                      },
-                    },
-                  ],
-                },
-        },
-      };
+    let projectMembers = await Team.find({
+      project: req.query.pid,
+    })
+      .select('_id account')
+      .populate('account', '_id name')
+      .exec();
 
-      const response = await search(accountIndex, '_doc', body);
-      return sendJSONresponse(res, 200, {
-        success: true,
-        message: `Search complete for ${name}`,
-        data: response.hits.hits,
-      });
-    } else {
-      return sendErrorResponse(res, 400, 'EmptySearchError', {
-        message: `query error`,
-      });
-    }
+    let members = projectMembers.filter(({ account }) => {
+      return !subTaskMembers.assignedMembers.includes(account._id);
+    });
+
+    members = members.map((m) => m.account);
+
+    return sendJSONresponse(res, 200, {
+      success: true,
+      message: `Suggested members for ${subTaskId}`,
+      data: members,
+    });
+
+    // const subTask = await SubTask.findById(subTaskId).exec();
+
+    // if (name) {
+    //   let body = {
+    //     size: 200,
+    //     from: 0,
+    //     query: {
+    //       bool:
+    //         subTask.assignedMembers.length > 0
+    //           ? {
+    //               must: [
+    //                 {
+    //                   multi_match: {
+    //                     query: req.query.name,
+    //                     type: 'phrase_prefix',
+    //                     fields: [
+    //                       'email',
+    //                       'firstName',
+    //                       'lastName',
+    //                       'name',
+    //                     ],
+    //                   },
+    //                 },
+    //               ],
+    //               must_not: [
+    //                 {
+    //                   terms: {
+    //                     mongo_id: subTask.assignedMembers,
+    //                   },
+    //                 },
+    //               ],
+    //             }
+    //           : {
+    //               must: [
+    //                 {
+    //                   multi_match: {
+    //                     query: req.query.name,
+    //                     type: 'phrase_prefix',
+    //                     fields: [
+    //                       'email',
+    //                       'firstName',
+    //                       'lastName',
+    //                       'name',
+    //                     ],
+    //                   },
+    //                 },
+    //               ],
+    //             },
+    //     },
+    //   };
+
+    //   const response = await search(accountIndex, '_doc', body);
+
+    //   console.log(response.hits.hits);
+    //   return sendJSONresponse(res, 200, {
+    //     success: true,
+    //     message: `Search complete for ${name}`,
+    //     data: response.hits.hits,
+    //   });
+    // } else {
+    //   return sendErrorResponse(res, 400, 'EmptySearchError', {
+    //     message: `query error`,
+    //   });
+    // }
   } catch (error) {
     logger.error(`Subtask: ${error}`);
     next(error);

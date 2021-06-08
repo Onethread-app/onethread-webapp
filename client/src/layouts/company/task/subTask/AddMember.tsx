@@ -59,13 +59,10 @@ const AddSubtaskMember = (props: IAddSubtaskMemberInternalProps) => {
   const userRequestFactory = async () => {
     const headers = tokenConfig();
     const response = await tigrowApi.get(
-      `subtasks/${props.id}/search?pid=${props.projectId}&name=${username}`,
+      `subtasks/${props.id}/search?pid=${props.projectId}`,
       headers,
     );
-    const members = response.data.data.map((member: any) => {
-      return member._source;
-    });
-    return members;
+    return response.data.data;
   };
 
   let result: any = [];
@@ -123,7 +120,7 @@ const AddSubtaskMember = (props: IAddSubtaskMemberInternalProps) => {
                     selectedItems={selectedUser}
                     setSelectedItems={(item) => {
                       setSelectedUser(item);
-                      input.onChange(item.mongo_id);
+                      input.onChange(item._id);
                     }}
                     multipleItemSelect={false}
                   />

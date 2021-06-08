@@ -30,6 +30,7 @@ export const AssignedMemberListViewComponent = (
                 ? list.profileImage
                 : 'https://tigrowresources.s3-ap-southeast-1.amazonaws.com/profilePhoto.svg'
             }
+            alt=""
           />
           <div
             className="flex w-100 justify-between bb pr3 ml3"

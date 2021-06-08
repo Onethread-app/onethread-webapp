@@ -33,7 +33,7 @@ export const AssignedMembersViewComponent = (
       {loading === false ? (
         <div className="flex">
           {props.taskMemberList.slice(0, 3).map((list) => (
-            <div className="pa1 dib">
+            <div className="pa1 dib" key={list._id}>
               <img
                 src={
                   list.profileImage
