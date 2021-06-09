@@ -1,7 +1,8 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { connect } from 'react-redux';
-import { Button, FileInput } from '@blueprintjs/core';
 import { isEmpty } from 'lodash';
+import { Button, FileInput, Icon } from '@blueprintjs/core';
+import { IconNames } from '@blueprintjs/icons';
 
 import {
   ITaskFileUpload,
@@ -25,7 +26,7 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
   const [imageName, setImageName] = React.useState({}) as any;
   const [imageSelected, setImageSelected] = React.useState({}) as any;
   const [imageError, setImageError] = React.useState('');
-  // const [imageLoading, setImageLoading] = useState(false);
+  const [fileLoading, setFileLoading] = React.useState(false);
   // const [imageError, setImageError] = useState('');
 
   const sizeLimit = 25;
@@ -93,17 +94,30 @@ const TaskFilesAttach = (props: ITaskFilesAttachInternalProps) => {
       taskId: props.currentTask._id,
     };
     await props.taskFileUpload(payload);
+    setFileLoading(true);
+  };
 
+  React.useEffect(() => {
     if (
+      fileLoading &&
       props.uploadingTaskFile === false &&
       props.errorOnUploadingTaskFile === ''
     ) {
+      setFileLoading(false);
       props.setFilePopover(false);
     }
-  };
+  }, [props.uploadingTaskFile, props.errorOnUploadingTaskFile]);
 
   return (
-    <div className="pa3 cf bg-white">
+    <div className="pa3 cf bg-white flex flex-column">
+      <div className="flex justify-end">
+        <Icon
+          icon={IconNames.CROSS}
+          iconSize={20}
+          className="grow pointer"
+          onClick={(e: any) => props.setFilePopover(false)}
+        />
+      </div>
       <h1 className="f5">Attach Files</h1>
       <FileInput
         text={imageName.name ? imageName.name : 'Choose file...'}

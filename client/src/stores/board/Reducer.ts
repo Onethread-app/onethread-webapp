@@ -209,7 +209,7 @@ export const BoardReducer = (state = InitialState, action: any) => {
         },
         updatingColumn: false,
       };
-    case BoardActionTypes.CREATE_COLUMN_FAILURE:
+    case BoardActionTypes.UPDATE_COLUMN_FAILURE:
       return {
         ...state,
         boardColumnError: action.payload,

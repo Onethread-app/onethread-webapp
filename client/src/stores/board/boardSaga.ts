@@ -82,7 +82,7 @@ export function* createBoard({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(createBoardFailure(error.message));
     }
   }
@@ -114,7 +114,7 @@ export function* getAllBoardsAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getAllBoardsFailure(error.message));
     }
   }
@@ -122,10 +122,9 @@ export function* getAllBoardsAsync() {
 
 export function* getSelectedBoard({ payload }: any) {
   try {
-    const currentBoardId = yield select(getCurrentBoard);
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
-    if (payload !== currentBoardId && projectId) {
+    if (projectId) {
       if ((headers as any).headers.Authorization && payload) {
         const response = yield tigrowApi.get(
           `boards/${payload}?pid=${projectId}`,
@@ -147,7 +146,7 @@ export function* getSelectedBoard({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getSelectedBoardFailure(error.message));
     }
   }
@@ -179,7 +178,7 @@ export function* createColumn({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(createBoardFailure(error.message));
     }
   }
@@ -211,7 +210,7 @@ export function* updateColumn({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(updateColumnFailure(error.message));
     }
   }
@@ -250,7 +249,7 @@ export function* createTask({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(createTaskFailure(error.message));
     }
   }
@@ -344,7 +343,7 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(addTeamMembersIntoBoardFailure(error.message));
     }
   }
@@ -352,10 +351,9 @@ export function* addTeamMembersIntoBoard({ members, boardId }: any) {
 
 export function* getSelectedTaskDetailsAsync({ payload }: any) {
   try {
-    const currentTaskId = yield select(getCurrentTask);
     const headers = tokenConfig();
     const projectId = yield select(getProjectId);
-    if (payload !== currentTaskId && projectId) {
+    if (projectId) {
       if ((headers as any).headers.Authorization && payload) {
         const res = yield tigrowApi.get(
           `tasks/${payload}?pid=${projectId}`,
@@ -392,7 +390,7 @@ export function* getSelectedTaskDetailsAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getSelectedTaskDetailsFailure(error.message));
     }
   }

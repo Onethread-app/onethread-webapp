@@ -132,6 +132,7 @@ export const SubTaskViewPageComponent = (
                             subTask.assignedMembers.map(
                               (subMember) => (
                                 <SubTaskMemberIcon
+                                  key={subMember._id}
                                   deleteSubTaskMember={
                                     props.deleteSubTaskMember
                                   }

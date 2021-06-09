@@ -186,7 +186,11 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                       }}
                       onClick={openDatePopOver}
                     >
-                      <img style={{ height: '15px' }} src={dueDate} />
+                      <img
+                        style={{ height: '15px' }}
+                        src={dueDate}
+                        alt=""
+                      />
                       <p className="pl3 f7">Due Date</p>
                     </div>
                   }
@@ -208,6 +212,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                     <img
                       style={{ height: '15px' }}
                       src={attachFiles}
+                      alt=""
                     />
                     <p className="pl3 f7">Attach Files</p>
                   </div>
@@ -240,6 +245,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                       <img
                         style={{ height: '15px' }}
                         src={addMembers}
+                        alt=""
                       />
                       <p className="pl3 f7">Members</p>
                     </div>
@@ -273,6 +279,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                       <img
                         style={{ height: '15px' }}
                         src={priority}
+                        alt=""
                       />
                       <p className="pl3 f7">Priority</p>
                     </div>

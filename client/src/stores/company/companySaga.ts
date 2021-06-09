@@ -98,15 +98,13 @@ export function* createCompanyAsync({ companyData }: any) {
       yield put(createCompanyActionFailure('Duplicate Company Name'));
     } else {
       // tslint:disable-next-line: no-console
-      
     }
   }
 }
 
 export function* getCompanyDetailsAsync({ payload }: any) {
   try {
-    const currentCompanyName = yield select(getCompanyName);
-    if (payload !== currentCompanyName) {
+    if (payload) {
       const headers = tokenConfig();
       yield put(clearCompanyError());
 
@@ -122,7 +120,6 @@ export function* getCompanyDetailsAsync({ payload }: any) {
         ]);
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     } else {
       yield put(updateCompanyLoading(false));
@@ -138,7 +135,7 @@ export function* getCompanyDetailsAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getCompanyDetailsFailure(error.message));
     }
   }
@@ -166,7 +163,7 @@ export function* getCompanyMembersAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getCompanyMembersFailure(error.message));
     }
   }
@@ -198,7 +195,7 @@ export function* addTeamMembersAsync({
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(addTeamMembersFailure(error.message));
     }
   }
@@ -226,7 +223,7 @@ export function* deleteCompanyMemberAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(deleteCompanyMemberFailure(error.message));
     }
   }
@@ -258,7 +255,7 @@ export function* addDepartmentAsync({ name }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(addDepartmentFailure(error.message));
     }
   }
@@ -286,7 +283,7 @@ export function* getAllDepartmentsAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getAllDepartmentsFailure(error.message));
     }
   }
@@ -313,7 +310,7 @@ export function* editCompanyInfoAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(editCompanyInfoActionFailure(error.message));
     }
   }
@@ -342,7 +339,7 @@ export function* changeCompanyNameAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(changeCompanyNameFailure(error.message));
     }
   }
@@ -388,7 +385,7 @@ export function* uploadCompanyLogoAsync({
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(companyLogoUploadActionFailure(error.message));
     }
   }
@@ -417,7 +414,7 @@ export function* addDesignationAsync({ values, memberId }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(addDesignationFailure(error.message));
     }
   }
@@ -446,7 +443,7 @@ export function* editDesignationAsync({ values, memberId }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(editDesignationFailure(error.message));
     }
   }
@@ -477,7 +474,7 @@ export function* changeMemberRoleAsync({ values, memberId }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(changeMemberRoleFailure(error.message));
     }
   }
@@ -524,7 +521,7 @@ export function* changeCompanyOptionalRoleAsync({ payload }: any) {
         timeout: 300000,
       });
       // tslint:disable-next-line: no-console
-      
+
       yield put(changeMemberRoleFailure(error.message));
     }
   }
@@ -554,7 +551,7 @@ export function* getCompanyPendingMembersAsync({ limit, skip }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getCompanyPendingMembersFailure(error.message));
     }
   }
@@ -583,7 +580,7 @@ export function* addCertificateAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(addCertificateFailure(error.message));
     }
   }
@@ -613,7 +610,7 @@ export function* addOrganizationAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(addOrganizationFailure(error.message));
     }
   }
@@ -646,7 +643,7 @@ export function* editOrganizationAsync({ organization, ind }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(editOrganizationFailure(error.message));
     }
   }
@@ -676,7 +673,7 @@ export function* getAllCompanyAnnouncementAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getCompanyAnnouncementFailure(error.message));
     }
   }
@@ -711,7 +708,7 @@ export function* addAnnouncementAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(addAnnouncementFailure(error.message));
     }
   }
@@ -739,7 +736,7 @@ export function* getAllProductAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getAllProductFailure(error.message));
     }
   }
@@ -774,7 +771,7 @@ export function* inviteColleagueInBulkAsync({ payload }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(inviteColleagueInBulkFailure(error.message));
     }
   }
@@ -807,7 +804,7 @@ export function* editCertificateAsync({ certificate, id }: any) {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(editCertificateFailure(error.message));
     }
   }
@@ -835,7 +832,7 @@ export function* getLatestCompletedTasksAsync() {
       );
     } else {
       // tslint:disable-next-line: no-console
-      
+
       yield put(getLatestCompletedTasksFailure(error.message));
     }
   }

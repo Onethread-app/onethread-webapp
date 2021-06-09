@@ -102,6 +102,7 @@ interface LayoutInternalProps
   rightSidebarOpen: boolean;
   project: any;
   boardId: string;
+  taskId: string;
   companyLoading: boolean;
   projectLoading: boolean;
   boardLoading: boolean;
@@ -137,29 +138,41 @@ const LayoutComponent = (props: LayoutInternalProps) => {
   };
 
   useEffect(() => {
-    if ((props.match.params as any).cname) {
+    if (
+      (props.match.params as any).cname &&
+      (props.match.params as any).cname !== props.company.uniqueName
+    ) {
       updateCompanyReducer();
     }
-  }, [props.match]);
+  }, [props.match, props.company.uniqueName]);
 
   useEffect(() => {
-    if ((props.match.params as any).projectId) {
+    if (
+      (props.match.params as any).projectId &&
+      (props.match.params as any).projectId !== props.project._id
+    ) {
       updateProjectReducer();
     }
-  }, [props.match, props.company._id]);
+  }, [props.match, props.company._id, props.project._id]);
 
   useEffect(() => {
-    if ((props.match.params as any).boardId) {
+    if (
+      (props.match.params as any).boardId &&
+      (props.match.params as any).boardId !== props.boardId
+    ) {
       updateBoardReducer();
     }
     props.fetchRooms();
-  }, [props.match, props.project._id]);
+  }, [props.match, props.project._id, props.boardId]);
 
   useEffect(() => {
-    if ((props.match.params as any).taskId) {
+    if (
+      (props.match.params as any).taskId &&
+      (props.match.params as any).taskId !== props.taskId
+    ) {
       updateTaskReducer();
     }
-  }, [props.match, props.project._id, props.boardId]);
+  }, [props.match, props.project._id, props.boardId, props.taskId]);
 
   useEffect(() => {
     if (
@@ -303,6 +316,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                       src={!leftOpen ? arrowLeft : arrowRight}
                       className="br2 w2"
                       color="#3F61C5"
+                      alt=""
                     />
                   </span>
                   <div className="flex flex-column h-100">
@@ -406,6 +420,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                 src={companyProfile}
                                 className="br3"
                                 style={{ width: '1.4rem' }}
+                                alt=""
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
@@ -427,6 +442,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                 src={dashboard}
                                 className="br3"
                                 style={{ width: '1.4rem' }}
+                                alt=""
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
@@ -448,6 +464,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                 src={project}
                                 className="br3"
                                 style={{ width: '1.4rem' }}
+                                alt=""
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
@@ -469,6 +486,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                 src={team}
                                 className="br3"
                                 style={{ width: '1.4rem' }}
+                                alt=""
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
@@ -490,6 +508,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                 src={associate}
                                 className="br3"
                                 style={{ width: '1.4rem' }}
+                                alt=""
                               />
                             </span>
                             <small style={{ color: 'inherit' }}>
@@ -567,6 +586,7 @@ const mapStateToProps = (state: any) => {
     rightSidebarOpen: state.layoutReducer.rightSidebar.open,
     project: state.projectReducer.projectDetails,
     boardId: state.boardIndexReducer.boardReducer.currentBoard._id,
+    taskId: state.boardIndexReducer.boardReducer.currentTask._id,
     companyRooms: state.roomReducer.companyRooms,
     companyLoading: state.companyReducer.loading,
     projectLoading: state.projectReducer.singleProjectLoading,

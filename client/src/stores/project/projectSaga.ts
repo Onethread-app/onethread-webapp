@@ -319,8 +319,7 @@ export function* updateProjectAsync({
 
 export function* getSingleProjectAsync({ payload }: any) {
   try {
-    const currentProjectId = yield select(getProjectId);
-    if (payload && payload !== currentProjectId) {
+    if (payload) {
       const headers = tokenConfig();
       if ((headers as any).headers.Authorization) {
         const response = yield tigrowApi.get(
