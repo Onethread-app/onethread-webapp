@@ -314,7 +314,10 @@ const suggestMember = async (req, res, next) => {
 
 const deleteMember = async (req, res, next) => {
   try {
-    await TaskAssign.findByIdAndDelete(req.query.assignedMemberid);
+    await TaskAssign.findOneAndDelete({
+      assignedPerson: req.query.assignedMemberid,
+      taskId: req.params.taskId,
+    });
     res.status(200).json({ message: 'MEMBER DELETED' });
   } catch (error) {
     next(error);
