@@ -1,0 +1,49 @@
+[
+  {
+    "name": "Startup Package",
+    "type": "startup",
+    "options": [
+      "1-month Free Trial",
+      "6-50 users",
+      "Multiple Organizations",
+      "Unlimited Projects",
+      "Unlimited Kanban Boards",
+      "Unlimited Chat Rooms",
+      "Access Level Control",
+      "Notice Board for Company Announcements",
+      "Dashboard for both organization & project",
+      "Early Access to New Features"
+    ]
+  },
+  {
+    "name": "Free Tier",
+    "type": "free",
+    "options": [
+      "Up to 5 users",
+      "Multiple Organizations",
+      "Multiple Projects",
+      "Multiple Kanban Boards",
+      "Multiple Chat Rooms",
+      "Notice Board for Company Announcements",
+      "Dashboard for both organization & project",
+      "Access Level Control"
+    ]
+  },
+  {
+    "name": "Enterprise Package",
+    "type": "enterprise",
+    "options": [
+      "1-month Free Trial",
+      "In-House Training for Employees",
+      "Dedicated Customer Manager",
+      "Multiple Organizations",
+      "Unlimited Projects",
+      "Unlimited Kanban Boards",
+      "Unlimited Chat Rooms",
+      "Access Level Control",
+      "Notice Board for Company Announcements",
+      "Dashboard for both organization & project",
+      "Early Access to New Features"
+    ]
+  }
+]

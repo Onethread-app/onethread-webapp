@@ -10,6 +10,9 @@ const Navbar = () => {
       </NavLink>
       <ul className="flex">
         <li>
+          <NavLink to="/pricing">Pricing</NavLink>
+        </li>
+        <li>
           <a
             href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
             target="_blank"

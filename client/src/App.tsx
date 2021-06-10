@@ -38,6 +38,7 @@ import { Link, Redirect, Route, Switch } from 'react-router-dom';
 import { isAuthenticate } from 'stores/UtilsActions';
 import Success from './components/Success';
 import { SignUpPage } from './layouts/signup/Index';
+import PricingPage from 'layouts/landingx/Pricing';
 
 const PrivateRoute = (props: {
   component: any;
@@ -163,6 +164,13 @@ const App = () => {
         }
       />
       <Route path="/autologin" render={() => <AutoLoginPage />} />
+      <Route
+        exact
+        path="/pricing"
+        render={() =>
+          isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
+        }
+      />
       {/* <Route
           exact
           path="/work-from-home-solution"
@@ -186,13 +194,6 @@ const App = () => {
           path="/project-management-tool"
           render={() =>
             isAuthenticate() ? <Redirect to="/" /> : <ProjectManagementTool />
-          }
-        />
-        <Route
-          exact
-          path="/pricing"
-          render={() =>
-            isAuthenticate() ? <Redirect to="/" /> : <PricingPage />
           }
         />
         <Route
