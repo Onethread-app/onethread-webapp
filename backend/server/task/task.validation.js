@@ -72,6 +72,12 @@ module.exports = {
     }),
   }),
   deleteMember: Joi.object().keys({
-    params: taskSchema.taskId.required(),
+    params: Joi.object().keys({
+      taskId: taskSchema.taskId,
+    }),
+    query: Joi.object().keys({
+      pid: taskSchema.project.required(),
+      assignedMemberid: idSchema.id.required(),
+    }),
   }),
 };

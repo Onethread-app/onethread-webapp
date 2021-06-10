@@ -129,7 +129,7 @@ export const AssignedMembersEditorComponent = (
                       }}
                     >
                       {selectedTeamMember.map((item) => (
-                        <div>
+                        <div key={item._id}>
                           <Tag
                             key={item._id}
                             className="pa1"
