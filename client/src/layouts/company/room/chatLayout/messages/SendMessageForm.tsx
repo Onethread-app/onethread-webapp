@@ -46,6 +46,7 @@ interface SendMessageFormProps {
   typingUsers: ITypingUsers[];
   user: User;
   roomUsers: IRoomReducer['users'];
+  uploadingFile: boolean;
 }
 
 const SendMessageFormComponent = (props: SendMessageFormProps) => {
@@ -292,7 +293,12 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
             //   borderColor: '#d4d4d4ad',
             // }}
           >
-            {mentions[0].name && <MessageInput mentions={mentions} />}
+            {mentions[0].name && (
+              <MessageInput
+                setShowFileDialog={setShowFileDialog}
+                mentions={mentions}
+              />
+            )}
             <textarea
               autoFocus={true}
               ref={inputMessageRef}
@@ -391,6 +397,7 @@ const mapStateToProps = (state: any) => {
     emojiPicker: state.roomReducer.emojiPicker,
     typingUsers: state.roomReducer.typing.users,
     pendingFiles: state.roomReducer.pendingFiles,
+    uploadingFile: state.roomReducer.uploadingFile,
     roomUsers: state.roomReducer.users,
     user: state.userReducer.user,
   };
