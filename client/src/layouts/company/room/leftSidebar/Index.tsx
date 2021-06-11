@@ -27,7 +27,10 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
   const [showDialog, setShowDialog] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState('');
   const dispatch = useDispatch();
-  const permissions = projectRules(props.projectRole, props.optionalRole);
+  const permissions = projectRules(
+    props.projectRole,
+    props.optionalRole,
+  );
 
   return (
     <>
@@ -38,30 +41,29 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       >
         <div className="flex justify-between items-center ph3-ns">
           <h3 className="tigrow-darkGray">Rooms</h3>
-          {
-          
-            props.projectRole && 
-            props.optionalRole && 
-            (permissions.grantAll || 
-            permissions.projectModerator.includes(
-            'createUpdateRoom',
-            )) &&
-          <span
-            className="bp3-icon grow pointer"
-            onClick={() => { 
-              setShowDialog(!showDialog);
-              dispatch({ type: room.CLEAR_STATUS_CODE });
-            }}
-          >
-            <img
-              src={createIcon}
-              width="30px"
-              height="30px"
-              color="#3F61C5"
-            />
-          </span>
-          }
-      </div>
+          {props.projectRole &&
+            props.optionalRole &&
+            (permissions.grantAll ||
+              permissions.projectModerator.includes(
+                'createUpdateRoom',
+              )) && (
+              <span
+                className="bp3-icon grow pointer"
+                onClick={() => {
+                  setShowDialog(!showDialog);
+                  dispatch({ type: room.CLEAR_STATUS_CODE });
+                }}
+              >
+                <img
+                  src={createIcon}
+                  width="30px"
+                  height="30px"
+                  color="#3F61C5"
+                  alt=""
+                />
+              </span>
+            )}
+        </div>
         <div className="flex items-center ph3-ns relative">
           <InputGroupField
             id="roomName"
@@ -85,10 +87,13 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
               marginLeft: '10px',
             }}
             color="#3F61C5"
+            alt=""
           />
         </div>
         <div className="flex-grow-1 overflow-y-auto">
-          {props.isOpen || isMobileOnly ? <RoomList search={searchKeyword}/> : null}
+          {props.isOpen || isMobileOnly ? (
+            <RoomList search={searchKeyword} />
+          ) : null}
         </div>
       </div>
       {showDialog && (
@@ -106,13 +111,12 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
 
 const mapStateToProps = (state: any) => {
   return {
-    companyRole: 
-      state.companyReducer.currentCompany.role,
-    projectRole: 
-      state.projectReducer.projectRole && 
-      state.projectReducer.projectRole.projects && 
+    companyRole: state.companyReducer.currentCompany.role,
+    projectRole:
+      state.projectReducer.projectRole &&
+      state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.role,
-    optionalRole: 
+    optionalRole:
       state.projectReducer.projectRole &&
       state.projectReducer.projectRole.projects &&
       state.projectReducer.projectRole.projects.project &&

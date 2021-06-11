@@ -67,6 +67,7 @@ export const ChatLayoutComponent = (
                   height="20px"
                   style={{}}
                   color="#3F61C5"
+                  alt=""
                 />
                 <span className="f5 ml2 fw7">
                   {props.users.length}
@@ -141,6 +142,7 @@ export const ChatLayoutComponent = (
                         src={settingsIcon}
                         width="30px"
                         height="30px"
+                        alt=""
                       />
                     </div>
                   }
@@ -165,6 +167,7 @@ export const ChatLayoutComponent = (
                     src={addMemberIcon}
                     width="30px"
                     height="30px"
+                    alt=""
                   />
                 </div>
               ) : null}

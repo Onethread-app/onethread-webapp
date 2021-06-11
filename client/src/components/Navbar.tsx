@@ -247,7 +247,7 @@ const NavbarTopComponent = (
               position={Position.BOTTOM}
               content={
                 <div
-                  style={{ maxHeight: '300px', width: '500px' }}
+                  style={{ maxHeight: '300px', width: '420px' }}
                   className="pt2 pb1 overflow-y-auto"
                 >
                   {props.chats && props.chats.length ? (

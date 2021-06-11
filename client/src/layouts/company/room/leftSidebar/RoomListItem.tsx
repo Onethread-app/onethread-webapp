@@ -95,11 +95,15 @@ export const RoomListItem = (props: RoomListItemProps) => {
           </div>
           <div className="flex justify-around items-center">
             <h1
-              className="f6 fw4 mv0 break-word"
+              className={`f6 mv0 break-word ${
+                props.active ? 'fw7' : 'fw4'
+              }`}
               style={{
                 color: props.room.archive
                   ? 'rgb(141, 141, 141)'
-                  : 'black',
+                  : props.active
+                  ? '#fff'
+                  : '#000',
               }}
             >
               {props.room.name}

@@ -1,0 +1,9 @@
+.my-emoji-popover {
+  position: absolute;
+  bottom: 60px;
+  right: 18px;
+
+  @media screen and (max-width: 500px) {
+    bottom: 70px;
+  }
+}

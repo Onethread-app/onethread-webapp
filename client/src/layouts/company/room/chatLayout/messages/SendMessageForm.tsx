@@ -4,6 +4,7 @@ import { connect, useDispatch } from 'react-redux';
 import { trim, isEqual, isEmpty } from 'lodash';
 import { sendRoomMessage } from 'stores/room/Actions';
 import 'emoji-mart/css/emoji-mart.css';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import {
   TOGGLE_EMOJI_PICKER,
   CLEAR_FILE_UPLOAD,
@@ -26,6 +27,10 @@ import {
 } from '../../channelSubscribe';
 import { User } from 'stores/user/Reducer';
 import { isMobileOnly } from 'react-device-detect';
+import { capitalizeFirstLetter } from 'helpers/utils';
+
+import MessageInput from './MessageInput';
+import { MentionData } from '@draft-js-plugins/mention';
 
 interface SendMessageFormProps {
   sendRoomMessage: (data: {
@@ -40,12 +45,21 @@ interface SendMessageFormProps {
   pendingFiles: IRoomPendingFile[];
   typingUsers: ITypingUsers[];
   user: User;
+  roomUsers: IRoomReducer['users'];
+  uploadingFile: boolean;
 }
 
 const SendMessageFormComponent = (props: SendMessageFormProps) => {
   const [text, setText] = useState('');
   const [showFileDialog, setShowFileDialog] = useState(false);
   const [textError, setTextError] = useState('');
+  const [mentions, setMentions] = useState<MentionData[]>([
+    {
+      name: '',
+      title: '',
+      avatar: '',
+    },
+  ]);
   const messageLimit = 3500;
 
   const inputMessageRef = useRef<HTMLTextAreaElement>(null);
@@ -57,6 +71,23 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
   const [typingTimer, setTypingTimer] = useState<any>(null);
   const [isTyping, setIsTyping] = useState(false);
   const [typingInterval] = useState(1000);
+
+  useEffect(() => {
+    if (props.roomUsers.length > 0) {
+      const m = props.roomUsers.map((user) => {
+        const cF = capitalizeFirstLetter(user.firstName);
+        const cL = capitalizeFirstLetter(user.lastName);
+        return {
+          name: `${cF} ${cL}`,
+          title: user.name,
+          avatar: user.profileImage
+            ? user.profileImage
+            : 'https://pbs.twimg.com/profile_images/517863945/mattsailing_400x400.jpg',
+        };
+      });
+      setMentions(m);
+    }
+  }, [props.roomUsers]);
 
   useEffect(() => {
     setText('');
@@ -214,33 +245,38 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
           ref={emojiRef}
         />
       ) : null}
-      <div className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`} style={{ width: isMobileOnly ? '100%' : '' }}>
+      <div
+        className={`${isMobileOnly && 'fixed bottom-0 bg-white'}`}
+        style={{ width: isMobileOnly ? '100%' : '' }}
+      >
         {/* pendingFiles */}
-        <div className="flex w-100 flex-wrap b--black-10 ba">
-          {props.pendingFiles && props.pendingFiles.length
-            ? props.pendingFiles.map((file) => (
-                <div className="bg-tigrowLightBlue flex pa3 ma1 br-pill justify-center items-center">
-                  <p className="white ma0">
-                    {file.s3Key.split('/')[1]}
-                  </p>
-                  <span
-                    className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
-                    style={{
-                      backgroundColor: 'white',
-                      color: '#3F61C5',
-                      borderRadius: '30px',
-                      paddingTop: '1px',
-                    }}
-                    onClick={() => {
-                      dispatch({
-                        type: DELETE_ONE_PENDING_FILE,
-                        payload: file._id,
-                      });
-                    }}
-                  ></span>
-                </div>
-              ))
-            : null}
+        <div className="flex w-100 flex-wrap items-center b--black-10 ba">
+          {props.uploadingFile ? (
+            <CircularProgress size={25} style={{ margin: '.5rem' }} />
+          ) : props.pendingFiles && props.pendingFiles.length ? (
+            props.pendingFiles.map((file) => (
+              <div className="bg-tigrowLightBlue flex pv2 ph3 ma1 br-pill justify-center items-center">
+                <p className="white ma0">
+                  {file.s3Key.split('/')[1]}
+                </p>
+                <span
+                  className="bp3-tag-remove bp3-icon-delete mh2 w1 h1"
+                  style={{
+                    backgroundColor: 'white',
+                    color: '#3F61C5',
+                    borderRadius: '30px',
+                    paddingTop: '1px',
+                  }}
+                  onClick={() => {
+                    dispatch({
+                      type: DELETE_ONE_PENDING_FILE,
+                      payload: file._id,
+                    });
+                  }}
+                ></span>
+              </div>
+            ))
+          ) : null}
         </div>
 
         {/* message error */}
@@ -249,14 +285,20 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
         ) : (
           ''
         )}
-        <div className="sendMessage flex w-100 justify-around">
+        <div className="sendMessage flex w-100">
           <div
-            className="w-100 mv2 mh1 br3 flex"
-            style={{
-              backgroundColor: '#d4d4d47a',
-              borderColor: '#d4d4d4ad',
-            }}
+            className="w-100"
+            // style={{
+            //   backgroundColor: '#d4d4d47a',
+            //   borderColor: '#d4d4d4ad',
+            // }}
           >
+            {mentions[0].name && (
+              <MessageInput
+                setShowFileDialog={setShowFileDialog}
+                mentions={mentions}
+              />
+            )}
             <textarea
               autoFocus={true}
               ref={inputMessageRef}
@@ -266,6 +308,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                 outline: 'none',
                 border: 'none',
                 backgroundColor: 'rgb(232, 232, 232)',
+                display: 'none',
               }}
               value={
                 isEqual(text.length, 1) && isEqual(text, '\n')
@@ -286,7 +329,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
               placeholder="Type your message and hit ENTER to send"
             ></textarea>
             <Button
-              className="bp3-minimal outline-0 toggle-emoji"
+              className="bp3-minimal outline-0 toggle-emoji dn"
               onClick={toggleEmojiPicker}
             >
               <span className="bp3-icon">
@@ -295,12 +338,13 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                   width="30px"
                   height="30px"
                   color="#3F61C5"
+                  alt=""
                 />
               </span>
             </Button>
           </div>
           <Button
-            className="bp3-minimal outline-0"
+            className="bp3-minimal outline-0 dn"
             onClick={() => setShowFileDialog(true)}
           >
             <span className="bp3-icon">
@@ -309,11 +353,12 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                 width="30px"
                 height="30px"
                 color="#3F61C5"
+                alt=""
               />
             </span>
           </Button>
           <Button
-            className="bp3-minimal outline-0"
+            className="bp3-minimal outline-0 dn"
             onClick={handleMessageSend}
           >
             <span className="bp3-icon">
@@ -322,10 +367,10 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                 width="30px"
                 height="30px"
                 color="#3F61C5"
+                alt=""
               />
             </span>
           </Button>
-          
         </div>
       </div>
       {showFileDialog && (
@@ -352,6 +397,8 @@ const mapStateToProps = (state: any) => {
     emojiPicker: state.roomReducer.emojiPicker,
     typingUsers: state.roomReducer.typing.users,
     pendingFiles: state.roomReducer.pendingFiles,
+    uploadingFile: state.roomReducer.uploadingFile,
+    roomUsers: state.roomReducer.users,
     user: state.userReducer.user,
   };
 };
