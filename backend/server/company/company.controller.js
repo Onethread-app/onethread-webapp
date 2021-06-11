@@ -690,17 +690,6 @@ const noticePostByCompany = async (req, res, next) => {
     logger.info(`new notice created`);
     const newAnnouncement = await announcement.save();
     await Announcement.populate(newAnnouncement, options);
-    // const text = ` ${req.user.name} has created a announcement in ${req.company.name} company `;
-    // createCompanyRoleNotification(
-    //   { _id: req.params.companyId },
-    //   {
-    //     _id: req.user._id,
-    //     name: req.user.name,
-    //     pusherSock: req.headers.clientid,
-    //   },
-    //   text,
-    //   'announcement',
-    // );
     const company = await Company.findById(req.params.companyId);
     const dataToSend = {
       notification: {
@@ -710,7 +699,10 @@ const noticePostByCompany = async (req, res, next) => {
         data: `company/${company.uniqueName}/dashboard`,
       },
     };
-    await triggerNotification(currentUserId, dataToSend);
+    const member = await Member.find({company:company._id, removed:false}).select('account').populate('account', '_id');
+    member.forEach(async data=>{
+      await triggerNotification( data.account._id, dataToSend);
+    });
     return sendJSONresponse(res, 201, {
       message: 'New notice added',
       newAnnouncement,
