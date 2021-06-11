@@ -22,10 +22,6 @@ const ContactUs = (props: IContactUs) => {
     message: '',
   });
 
-  const [isSubmitDisabled, setIsSubmitDisabled] = React.useState(
-    true,
-  );
-
   const handleChange = (event: any) => {
     const { value, name } = event.target;
     setValues({ ...values, [name]: value });
@@ -55,7 +51,7 @@ const ContactUs = (props: IContactUs) => {
       values.email &&
       values.message
     ) {
-      setIsSubmitDisabled(false);
+      // setIsSubmitDisabled(false);
     }
   }, [values]);
 
@@ -110,26 +106,26 @@ const ContactUs = (props: IContactUs) => {
           value={values.message}
           onChange={handleChange}
         ></textarea>
-        <div className="self-end contact-form-buttons">
+        <div className="center contact-form-buttons">
+        <Button
+            type="submit"
+            style={{
+              backgroundColor: 
+              '#3484f0',
+              color: '#fff',
+            }}
+            // disabled={isSubmitDisabled}
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
           <Button
             style={{ backgroundColor: 'salmon', color: '#fff' }}
             onClick={() => props.setShowContactUs(false)}
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            style={{
-              backgroundColor: isSubmitDisabled
-                ? 'rgba(206, 217, 224, 0.5)'
-                : '#3484f0',
-              color: '#fff',
-            }}
-            disabled={isSubmitDisabled}
-            onClick={handleSubmit}
-          >
-            Submit
-          </Button>
+          
         </div>
       </form>
     </div>

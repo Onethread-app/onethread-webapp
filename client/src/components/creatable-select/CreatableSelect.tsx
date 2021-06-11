@@ -6,7 +6,7 @@ import CreatableSelect from 'react-select/creatable';
 import { FieldInputProps } from 'react-final-form';
 import { errorMessgeHandler } from 'components/final-form/utils';
 
-import { IDepartment } from 'layouts/company/project/CreateProjectForm';
+// import { IDepartment } from 'layouts/company/project/CreateProjectForm';
 
 import { tokenConfig } from 'stores/UtilsActions';
 import { tigrowApi } from 'config';
@@ -17,7 +17,7 @@ interface ICreatableSingleProps {
 }
 interface ICreatableSingleInternalProps
   extends ICreatableSingleProps {
-  departments: IDepartment[];
+  // departments: IDepartment[];
   companyId: string;
 }
 
@@ -52,14 +52,14 @@ const CreatableSingle = (props: ICreatableSingleInternalProps) => {
     setSelectedDepartment(newValue);
   };
 
-  React.useEffect(() => {
-    if (props.departments) {
-      const deptOptions = Array.from(props.departments, (dept) => {
-        return { value: dept._id, label: dept.name };
-      });
-      setDepartmentOptions(deptOptions);
-    }
-  }, [props.departments]);
+  // React.useEffect(() => {
+  //   if (props.departments) {
+  //     const deptOptions = Array.from(props.departments, (dept) => {
+  //       return { value: dept._id, label: dept.name };
+  //     });
+  //     setDepartmentOptions(deptOptions);
+  //   }
+  // }, [props.departments]);
 
   React.useEffect(() => {
     if (departmentOptions) {

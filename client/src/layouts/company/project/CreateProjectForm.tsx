@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Icon, Tag } from '@blueprintjs/core';
+import React, { useState } from 'react';
+import { Button, Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { Form, Field } from 'react-final-form';
 
 import { InputGroupFieldWithLabel } from 'components/fields/InputGroupField';
-import CreatableSingle from 'components/creatable-select/CreatableSelect';
 import { Switch } from '@blueprintjs/core';
 
 import {
@@ -13,23 +12,16 @@ import {
   composeValidators,
   maxValue,
 } from 'components/final-form/utils';
-import {
-  DropdownFieldErrorWithLabel,
-  DropdownFieldWithError,
-} from 'components/fields/DropdownField';
-import { Color, Entity } from 'stores/UtilsActions';
-import { isEqual, isEmpty } from 'lodash';
-import { Condition } from 'components/final-form/Condition';
-import { SuggestFieldWithError } from 'components/fields/SuggestField';
+import { Color } from 'stores/UtilsActions';
+import { isEqual } from 'lodash';
+// import { SuggestFieldWithError } from 'components/fields/SuggestField';
 import { ICompany } from 'stores/company/Reducer';
-import { useLiveSearch } from 'components/useLiveSearch';
+// import { useLiveSearch } from 'components/useLiveSearch';
 import { createProjectInCompany } from '../../../stores/project/Actions';
 import { getAllDepartments } from '../../../stores/company/Actions';
-import { tigrowApi } from 'config';
-import { tokenConfig } from 'stores/UtilsActions';
+
 import { Associate } from 'stores/associate/Reducer';
 import arrayMutators from 'final-form-arrays';
-import { FieldArray } from 'react-final-form-arrays';
 import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
 
@@ -51,18 +43,7 @@ const FormComponent = (props: {
   associates: Associate[];
 }) => {
   const [labelColor, setLabelColor] = useState(null as any);
-
-  const [associates, setAssociates] = useState([]);
-  const [selectedAssociates, setSelectedAssociates] = useState(
-    [] as Entity[],
-  );
-  const [searchAssociate, setSearchAssociate] = useState('');
-
-  const [admins, setAdmins] = useState([]);
-  const [selectedAdmins, setSelectedAdmins] = useState(
-    [] as Entity[],
-  );
-  const [search, setSearch] = useState('');
+  
   const [hasDeadline, setHasDeadline] = useState(false);
 
   const onSubmit = async (values: IProject) => {
@@ -77,58 +58,6 @@ const FormComponent = (props: {
     }
     return {};
   };
-
-  const userRequestFactory = async (userName: string) => {
-    const headers = tokenConfig();
-    const response = await tigrowApi.get(
-      `projects/concern-admin-search/${
-        props.company!._id
-      }?name=${search}`,
-      headers,
-    );
-
-    return response.data.data.map((e: any) => {
-      return {
-        ...e._source.account,
-        memberId: e._source.mongo_id,
-      };
-    });
-  };
-
-  const userRequestFactoryAssociate = async (userName: string) => {
-    const headers = tokenConfig();
-    const response = await tigrowApi.get(
-      `projects/associate-company-search/${props.company._id}?name=${searchAssociate}&companyName=${props.company.name}`,
-      headers,
-    );
-
-    const asso = response.data.data.map((e: any) =>
-      isEqual(props.company._id, e._source.company_id) === true
-        ? {
-            _id: e._source.mongo_id,
-            name: e._source.associateCompanyName,
-          }
-        : {
-            _id: e._source.mongo_id,
-            name: e._source.companyName,
-          },
-    );
-    return asso;
-  };
-
-  let result: any = [];
-  let resultAssociate: any = [];
-  result = useLiveSearch(search, userRequestFactory, 0);
-  resultAssociate = useLiveSearch(
-    searchAssociate,
-    userRequestFactoryAssociate,
-    0,
-  );
-
-  useEffect(() => {
-    setAdmins(result);
-    setAssociates(resultAssociate);
-  }, [result, resultAssociate]);
 
   return (
     <>
@@ -174,247 +103,12 @@ const FormComponent = (props: {
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      label="Project Name*"
+                      label="Project Name (required)"
                     />
                   </div>
                 )}
               />
-              <div>
-                <Field<string>
-                  name="admin"
-                  validate={required}
-                  render={({ input, meta }) => (
-                    <div
-                      className={` ${
-                        checkError(meta) ? 'mb2' : 'mb3'
-                      }`}
-                    >
-                      <div className="w-100 pb2">
-                        <div className="mb1">
-                          <p
-                            className="fw5"
-                            style={{ fontSize: '.8rem' }}
-                          >
-                            Concerned Admin*
-                          </p>
-                        </div>
-                        <SuggestFieldWithError
-                          onChange={(query: string) => {
-                            setSearch(query);
-                          }}
-                          items={admins}
-                          selectedItems={selectedAdmins}
-                          setSelectedItems={(item) => {
-                            input.onChange(item);
-                            setSelectedAdmins(item);
-                          }}
-                          multipleItemSelect={false}
-                          error={
-                            checkError(meta) &&
-                            (meta.error || meta.submitError)
-                          }
-                        />
-                      </div>
-                      {selectedAdmins.length > 0 && (
-                        <div className="w-100">
-                          <div
-                            className="overflow-auto br2"
-                            style={{
-                              border: '1px solid #707070',
-                              maxHeight: '120px',
-                              background: '#707070',
-                            }}
-                          >
-                            {selectedAdmins.map((item) => (
-                              <div>
-                                <Tag
-                                  key={item._id}
-                                  className="pa1 ma1"
-                                  interactive={true}
-                                  style={{ background: '#3F61C5' }}
-                                  onRemove={(e) => {
-                                    const filteredItems = selectedAdmins.filter(
-                                      (selectedItem) =>
-                                        item.name !==
-                                        selectedItem.name,
-                                    );
-                                    setSelectedAdmins([
-                                      ...filteredItems,
-                                    ]);
-                                    input.onChange(
-                                      isEmpty(filteredItems)
-                                        ? undefined
-                                        : filteredItems.map(
-                                            (admin: Entity) =>
-                                              admin._id,
-                                          ),
-                                    );
-                                  }}
-                                  large={true}
-                                  intent="primary"
-                                >
-                                  {item.name}
-                                </Tag>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                />
-              </div>
-              <div className="flex flex-column">
-                <Field<string>
-                  name="type"
-                  validate={required}
-                  render={({ input, meta }) => (
-                    <div
-                      className={` ${
-                        checkError(meta) ? 'mb2' : 'mb3'
-                      }`}
-                    >
-                      <DropdownFieldErrorWithLabel
-                        id={input.name}
-                        selectedValue={input.value}
-                        options={[
-                          { _id: 'associates', name: 'Associates' },
-                          { _id: 'sd', name: 'Department' },
-                        ]}
-                        onChange={input.onChange}
-                        error={
-                          checkError(meta) &&
-                          (meta.error || meta.submitError)
-                        }
-                        label="Project Type*"
-                        className="bn"
-                      />
-                    </div>
-                  )}
-                />
-              </div>
-
-              <Condition
-                when="type"
-                validate={(value) => {
-                  return ['sd'].includes(value);
-                }}
-              >
-                <Field<string>
-                  name="department"
-                  validate={required}
-                  render={({ meta, input }) => (
-                    <div
-                      className={` ${
-                        checkError(meta) ? 'mb3' : 'mb4'
-                      }`}
-                    >
-                      <div className="fl w-100 pb2">
-                        <div className="mb1">
-                          <p
-                            className="fw5"
-                            style={{ fontSize: '.8rem' }}
-                          >
-                            Select Departments
-                          </p>
-                        </div>
-                        <CreatableSingle input={input} />
-                      </div>
-                    </div>
-                  )}
-                />
-              </Condition>
-
-              <Condition
-                when="type"
-                validate={(value) => {
-                  return ['associates'].includes(value);
-                }}
-              >
-                <div>
-                  <p className="fw5" style={{ fontSize: '.8rem' }}>
-                    Select Your Associate Companies
-                  </p>
-                  <SuggestFieldWithError
-                    onChange={(query: string) => {
-                      setSearchAssociate(query);
-                    }}
-                    items={associates}
-                    selectedItems={selectedAssociates}
-                    setSelectedItems={(item) => {
-                      const c = item.pop();
-                      push('associates', {
-                        _id: c._id,
-                        name: c.name,
-                      });
-                      setSelectedAssociates(item);
-                    }}
-                    multipleItemSelect={true}
-                  />
-                  <FieldArray name="associates">
-                    {({ fields }) =>
-                      fields.map((name, index) => (
-                        <div className="flex justify-between mt1">
-                          <div
-                            className="bg-blue pa2 br2 mb3"
-                            style={{ marginRight: '2px' }}
-                          >
-                            {fields.value[index].name}
-                          </div>
-                          <div className="flex items-baseline">
-                            {/* <Field<string>
-                                name={`${name}.size`}
-                                component="select"
-                                placeholder="size"
-                                validate={required}
-                              >
-                                <option>select team size</option>
-                                <option value="5">1-5</option>
-                                <option value="10">6-10</option>
-                                <option value="15">11-15</option>
-                              </Field> */}
-                            <Field<string>
-                              id={`${name}.size`}
-                              name={`${name}.size`}
-                              validate={required}
-                              render={({ input, meta }) => (
-                                <div
-                                  className={` ${
-                                    checkError(meta) ? 'mb2' : 'mb3'
-                                  }`}
-                                >
-                                  <DropdownFieldWithError
-                                    id={input.name}
-                                    selectedValue={input.value}
-                                    options={[
-                                      { _id: '5', name: '1-5' },
-                                      { _id: '10', name: '6-10' },
-                                      { _id: '15', name: '11-15' },
-                                    ]}
-                                    onChange={input.onChange}
-                                    error={
-                                      checkError(meta) &&
-                                      (meta.error || meta.submitError)
-                                    }
-                                    className="bn"
-                                  />
-                                </div>
-                              )}
-                            />
-
-                            <span
-                              onClick={() => fields.remove(index)}
-                              style={{ cursor: 'pointer' }}
-                            >
-                              ❌
-                            </span>
-                          </div>
-                        </div>
-                      ))
-                    }
-                  </FieldArray>
-                </div>
-              </Condition>
+              
               <Switch
                 checked={hasDeadline}
                 label="Add Deadline"

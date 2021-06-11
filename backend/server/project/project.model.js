@@ -10,17 +10,15 @@ const projectSchema = new Schema(
       maxlength: 50,
       required: true,
     },
-    // type: {
-    //   type: String,
-    //   enum: ['department', 'associates'], // sd = single department, md = multiple departments
-    // },
     description: {
       type: String,
       maxlength: 2500,
+      trim: true,
     },
     outline: {
       type: String,
       maxlength: 5000,
+      trim: true,
     },
     deadline: {
       type: Date,
@@ -67,19 +65,13 @@ const projectSchema = new Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Department',
-        required: true,
+        // required: true,
       },
     ],
     files: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'File',
-      },
-    ],
-    members: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Team',
       },
     ],
     rooms: [
@@ -92,7 +84,7 @@ const projectSchema = new Schema(
       // which company create the project // project owner
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Company',
-      required: true,
+      // required: true,
     },
     version: {
       type: Number,

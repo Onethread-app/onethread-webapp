@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { InputGroupField } from 'components/fields/InputGroupField';
 import { isEmpty, isEqual, pickBy } from 'lodash';
-import { HTMLSelect, Icon, Button, Spinner } from '@blueprintjs/core';
+import { Button, Spinner } from '@blueprintjs/core';
 import { withRouter, RouteComponentProps } from 'react-router';
 import { connect } from 'react-redux';
 import {
@@ -9,17 +9,17 @@ import {
   clearErrorOnCompanyCreate,
 } from 'stores/company/Actions';
 
-const Type = [
-  'Manufacturer',
-  'Trading Company',
-  'Buying Office',
-  'Agent',
-  'Distributor/Wholesaler',
-  'Government ministry/Bureau/Commission',
-  'Association',
-  'Business Service (Transportation, finance, travel, Ads, etc)',
-  'Other',
-];
+// const Type = [
+//   'Manufacturer',
+//   'Trading Company',
+//   'Buying Office',
+//   'Agent',
+//   'Distributor/Wholesaler',
+//   'Government ministry/Bureau/Commission',
+//   'Association',
+//   'Business Service (Transportation, finance, travel, Ads, etc)',
+//   'Other',
+// ];
 
 const CompanySignupFormComponent = (
   props: {
@@ -92,19 +92,11 @@ const CompanySignupFormComponent = (
 
   const emptyValueCheck = () => {
     if (
-      isEmpty(values.name) ||
-      isEmpty(values.address) ||
-      isEmpty(values.type)
+      isEmpty(values.name) 
     ) {
       let e = errors;
       if (isEmpty(values.name)) {
         e = { ...e, name: 'Required' };
-      }
-      if (isEmpty(values.address)) {
-        e = { ...e, address: 'Required' };
-      }
-      if (isEmpty(values.type)) {
-        e = { ...e, type: 'Required' };
       }
       setErrors(e);
       return true;
@@ -133,11 +125,11 @@ const CompanySignupFormComponent = (
     setValues({ ...values, [name]: value });
   };
 
-  const onChangeSelectField = (name: string) => (event: any) => {
-    const value = event.currentTarget.value;
-    setValues({ ...values, [name]: value });
-    setErrors({ ...errors, [name]: '' });
-  };
+  // const onChangeSelectField = (name: string) => (event: any) => {
+  //   const value = event.currentTarget.value;
+  //   setValues({ ...values, [name]: value });
+  //   setErrors({ ...errors, [name]: '' });
+  // };
 
   const checkLegalOwnerMail = () => {
     if (isEqual(values.email, values.legalOwnerMail)) {
@@ -215,7 +207,7 @@ const CompanySignupFormComponent = (
             id="companyAddress"
             value={values.address}
             onChange={handleChange('address')}
-            placeHolder="Company Address (Required)"
+            placeHolder="Company Address"
             leftIcon="map-marker"
             style={{
               boxShadow: 'none',
@@ -224,28 +216,28 @@ const CompanySignupFormComponent = (
               errors.address ? 'bb b--red' : 'bb b--lightBlue'
             }`}
             leftIconColor={`${errors.address ? 'red' : '#3F61C5'}`}
-            validationOnBlur={() => {
-              if (isEmpty(values.address)) {
-                const companyAddressError = {
-                  ...errors,
-                  address: 'Please enter company address',
-                };
-                setErrors(companyAddressError);
-              } else if (values.address.length > 120) {
-                const companyAddressError = {
-                  ...errors,
-                  address:
-                    'Company address must be less than 120 character.',
-                };
-                setErrors(companyAddressError);
-              } else {
-                const companyAddressError = {
-                  ...errors,
-                  address: '',
-                };
-                setErrors(companyAddressError);
-              }
-            }}
+            // validationOnBlur={() => {
+            //   if (isEmpty(values.address)) {
+            //     const companyAddressError = {
+            //       ...errors,
+            //       address: 'Please enter company address',
+            //     };
+            //     setErrors(companyAddressError);
+            //   } else if (values.address.length > 120) {
+            //     const companyAddressError = {
+            //       ...errors,
+            //       address:
+            //         'Company address must be less than 120 character.',
+            //     };
+            //     setErrors(companyAddressError);
+            //   } else {
+            //     const companyAddressError = {
+            //       ...errors,
+            //       address: '',
+            //     };
+            //     setErrors(companyAddressError);
+            //   }
+            // }}
           />
         </div>
         {errors.address ? (
@@ -255,7 +247,7 @@ const CompanySignupFormComponent = (
         )}
       </div>
 
-      <div className={` ${errors.type ? 'mb3' : 'mb4'}`}>
+      {/* <div className={` ${errors.type ? 'mb3' : 'mb4'}`}>
         <div className="flex">
           <div className=" f5 pa1 bb b--lightBlue">
             <Icon icon={'briefcase'} className="tigrow-lightBlue" />
@@ -286,7 +278,7 @@ const CompanySignupFormComponent = (
         ) : (
           ''
         )}
-      </div>
+      </div> */}
 
       <div className={` ${errors.email ? 'mb3' : 'mb4'}`}>
         <div className="flex">

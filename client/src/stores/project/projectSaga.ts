@@ -156,18 +156,12 @@ export function* createProjectInCompanyAsync({ payload }: any) {
     if ((headers as any).headers.Authorization) {
       const reqBody = {
         name: payload.name,
-        concernedAdmin: {
-          memberId: payload.admin.memberId,
-          accountId: payload.admin._id,
-        },
         color: payload.color,
-        department: payload.department,
-        associates: payload.associates,
         deadline: payload.deadline ? payload.deadline : undefined,
         companyId,
       };
       yield tigrowApi.post(
-        `projects/${companyId}/create`,
+        `projects/create`,
         reqBody,
         headers,
       );
