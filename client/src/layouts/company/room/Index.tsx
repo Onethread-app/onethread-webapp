@@ -66,7 +66,7 @@ interface RoomPageComponentProps extends RouteComponentProps {
 
 const RoomPageComponent = (props: RoomPageComponentProps) => {
   const [isOpenLeftSidebar, setIsOpenLeftSidebar] = useState(true);
-  const [isOpenRightSidebar, setIsOpenRightSidebar] = useState(false);
+  const [isOpenRightSidebar, setIsOpenRightSidebar] = useState(true);
   const [queries, setQueries] = useState<RoomQueries>({
     view: 'default',
     roomId: '',
@@ -147,7 +147,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
               className="overflow-hidden t-25-a bg-white br b--tigrowLightGray-1 h-100"
               style={{
                 borderBottomLeftRadius: '0.5rem',
-                width: isOpenLeftSidebar ? '220px' : '16px',
+                width: isOpenLeftSidebar ? '320px' : '16px',
               }}
               // TODO: mouse active
               // onMouseEnter={() => !isOpenLeftSidebar && setIsOpenLeftSidebar(true)}
@@ -190,7 +190,9 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             isEmpty(props.currentRoom._id) === false && (
               <Icon
                 className="absolute top-0 pa1 z-3 br2 bg-tigrowLightBlue c-tigrowWhite right-0 pointer"
-                icon="arrow-right"
+                icon={
+                  isOpenRightSidebar ? 'arrow-right' : 'arrow-left'
+                }
                 iconSize={17}
                 onClick={() => {
                   setIsOpenRightSidebar(!isOpenRightSidebar);

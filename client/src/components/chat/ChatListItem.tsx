@@ -10,6 +10,8 @@ import { CHANGE_ROOM } from 'stores/room/Types';
 import { Color } from 'stores/UtilsActions';
 import { RoomQueries } from 'layouts/company/room/Index';
 
+import UserIcon from 'resources/images/profilePhoto.svg';
+
 interface IChatListItem {
   chat: IChat;
 }
@@ -46,13 +48,19 @@ const ChatListItem = (props: IChatListItem) => {
   return (
     <div
       className="flex items-center pointer dim ph3 pv1 mb1 w-100"
-      style={{ background: props.chat.read ? '#f2f3f4' : '#fff' }}
+      style={{
+        background: props.chat.read ? '#f2f3f4' : '#fff',
+      }}
       onClick={handleClick}
     >
       <div className="mr2">
         <img
-          src={props.chat.message.account.profileImage}
-          alt={`${props.chat.message.account.firstName} ${props.chat.message.account.lastName}`}
+          src={
+            props.chat.message.account.profileImage
+              ? props.chat.message.account.profileImage
+              : UserIcon
+          }
+          alt=""
           style={{
             height: '32px',
             width: '32px',
@@ -70,7 +78,11 @@ const ChatListItem = (props: IChatListItem) => {
             {`${props.chat.message.account.firstName} ${props.chat.message.account.lastName}`}
           </h3>
           <p
-            className="mr2 bp3-tag modifier mb0"
+            className="bp3-tag modifier mb0"
+            style={{ background: 'rgb(63, 97, 197)' }}
+          >{`${props.chat.room.name}`}</p>
+          <p
+            className="ml2 bp3-tag modifier mb0"
             style={{
               background: `${
                 find(Color, ['code', props.chat.room.project.color])
@@ -82,7 +94,6 @@ const ChatListItem = (props: IChatListItem) => {
               }`,
             }}
           >{`${props.chat.room.project.name}`}</p>
-          <p className="bp3-tag modifier mb0">{`${props.chat.room.company.uniqueName}`}</p>
         </div>
         <div className="flex justify-between">
           <p
