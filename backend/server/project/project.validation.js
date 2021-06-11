@@ -35,11 +35,11 @@ module.exports = {
   createNewProjectForCompany: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      concernedAdmin: Joi.object().keys({
-        memberId: schema.memberId.required(),
-        accountId: idSchema.id,
-      }),
-      companyId: schema.company.required(),
+      // concernedAdmin: Joi.object().keys({
+      //   memberId: schema.memberId.required(),
+      //   accountId: idSchema.id,
+      // }),
+      companyId: schema.company,
       departments: schema.departments,
       deadline: schema.deadline,
       color: schema.color,
@@ -49,7 +49,7 @@ module.exports = {
   createProjectFromHome: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      companyId: schema.company.required(),
+      companyId: schema.company,
     }),
   }),
   addAssociate: Joi.object().keys({

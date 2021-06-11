@@ -1,19 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// validation
-function mainProductsLimit(val) {
-  if (val.length > 0 && val.length <= 5) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-function otherProductsYouSellLimit(val) {
-  return val.length <= 10;
-}
-
 function companyUrlLimit(val) {
   return val.length <= 3;
 }
@@ -93,7 +80,6 @@ const company = new Schema(
         'Business Service (Transportation, finance, travel, Ads, etc)',
         'Other',
       ],
-      required: true,
     },
     optionalRole: {
       type: [
@@ -115,7 +101,6 @@ const company = new Schema(
     address: {
       type: String,
       maxlength: 120,
-      required: true,
     },
     about: {
       type: String,

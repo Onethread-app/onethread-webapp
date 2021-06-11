@@ -50,7 +50,7 @@ const NewLanding = () => {
           among startups, agencies and NGOs.
         </h3>
         <OTButton to="/signup">
-          Create Your First Project For Free
+          Create Unlimited Projects For Free
         </OTButton>
       </section>
       <section className="second-section w-100 flex relative">
@@ -230,7 +230,7 @@ const NewLanding = () => {
             we want you to be a part of it!
           </p>
           <OTButton to="/signup" white bold>
-            Create Your First Project For Free
+            Create Unlimited Projects For Free
           </OTButton>
         </div>
         <MainFooter />

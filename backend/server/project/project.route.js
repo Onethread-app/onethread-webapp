@@ -26,7 +26,7 @@ router
   );
 // authentication
 router
-  .route('/:companyId/create')
+  .route('/create')
   .post(
     authorization,
     subCtrl.subscriptionExpireCheck(),

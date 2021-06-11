@@ -10,15 +10,15 @@ const Navbar = () => {
       </NavLink>
       <ul className="flex">
         <li>
-          <NavLink to="/pricing">Pricing</NavLink>
-        </li>
-        <li>
           <a
             href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
             target="_blank"
           >
             How It Works
           </a>
+        </li>
+        <li>
+          <NavLink to="/pricing">Pricing</NavLink>
         </li>
         <li>
           <NavLink to="/signin">Login</NavLink>

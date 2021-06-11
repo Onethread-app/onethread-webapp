@@ -114,7 +114,7 @@ const CompanyInfoFormComponent = (
           id="name"
           value={values.name}
           onChange={handleChange('name')}
-          placeHolder="Company Name"
+          placeHolder="Company Name (Required)"
           leftIcon="user"
           style={{
             boxShadow: 'none',
@@ -164,7 +164,7 @@ const CompanyInfoFormComponent = (
             }}
           >
             <option selected value={values.type}>
-              {values.type}
+              {values.type? values.type: `Select a company type (Required)`}
             </option>
             {Type.map((t) => (
               <option value={t}>{t}</option>
@@ -182,7 +182,7 @@ const CompanyInfoFormComponent = (
           id="address"
           value={values.address}
           onChange={handleChange('address')}
-          placeHolder="Company Address"
+          placeHolder="Company Address (Required)"
           leftIcon="map-marker"
           style={{
             boxShadow: 'none',

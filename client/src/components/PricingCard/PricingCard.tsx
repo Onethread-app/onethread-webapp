@@ -72,7 +72,7 @@ const PricingCard = (props: IPricingCard) => {
                 style={{ height: '49px' }}
                 onClick={() => setShowContactUs(true)}
               >
-                Contact Us for Quotation
+               <h3> Contact Us for Quotation</h3>
               </p>
             )}
           </p>
@@ -117,7 +117,7 @@ const PricingCard = (props: IPricingCard) => {
           isOpen={showContactUs}
           style={{
             background: '#fff',
-            width: isMobileOnly ? '600px' : '350px',
+            width: isMobileOnly ? '350px' : '600px',
           }}
           canOutsideClickClose={true}
         >

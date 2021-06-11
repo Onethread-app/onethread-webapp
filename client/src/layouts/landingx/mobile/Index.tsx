@@ -51,7 +51,7 @@ const MobileIndex = () => {
           among startups, agencies and NGOs.
         </h3>
         <OTButton to="/signup">
-          Create Your First Project For Free
+          Create Unlimited Projects For Free
         </OTButton>
       </section>
       <section className="second-section w-100 flex relative mb5">
@@ -143,7 +143,7 @@ const MobileIndex = () => {
           </div>
         </div>
         <OTButton to="/signup">
-          Create Your First Project For Free
+          Create Unlimited Projects For Free
         </OTButton>
       </section>
       <section className="product-details flex flex-column items-center justify-center mb5 w-100">

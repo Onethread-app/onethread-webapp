@@ -101,8 +101,8 @@ module.exports = {
   newCompany: Joi.object().keys({
     body: Joi.object().keys({
       name: schema.name.required(),
-      type: schema.type.required(),
-      address: schema.address.required(),
+      type: schema.type,
+      address: schema.address,
       email: schema.email,
       legalOwnerName: schema.legalOwnerName,
       legalOwnerMail: schema.legalOwnerMail,
