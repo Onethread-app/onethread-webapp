@@ -49,7 +49,9 @@ const NewLanding = () => {
           tool built from the ground up for multi-team collaboration
           among startups, agencies and NGOs.
         </h3>
-        <OTButton to="/signup">Create Your First Project For Free</OTButton>
+        <OTButton to="/signup">
+          Create Your First Project For Free
+        </OTButton>
       </section>
       <section className="second-section w-100 flex relative">
         <div className="unified-tool flex items-center justify-around w-100">
@@ -87,9 +89,13 @@ const NewLanding = () => {
               </div>
             </div>
             <h3 className="unified-tool-content-footer">
-              < a href="https://www.linkedin.com/pulse/onethread-here-declutter-your-workspace-onethreadapp/" target="_blank">Read: Get rid of infinite email chains and WhatsApp
-              threads</a>
-            
+              <a
+                href="https://www.linkedin.com/pulse/onethread-here-declutter-your-workspace-onethreadapp/"
+                target="_blank"
+              >
+                Read: Get rid of infinite email chains and WhatsApp
+                threads
+              </a>
             </h3>
           </div>
         </div>
@@ -228,12 +234,6 @@ const NewLanding = () => {
           </OTButton>
         </div>
         <MainFooter />
-        <div className="footer-copyright flex items-center w-100">
-          <h1 className="tc w-100">
-            Copyright 2021 Onethread. All rights reserved. Proudly
-            made in Bangladesh.
-          </h1>
-        </div>
       </section>
     </div>
   );
