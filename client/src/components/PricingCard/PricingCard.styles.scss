@@ -9,6 +9,20 @@
   transition: border 0.3s;
   border: 2px solid rgba(52, 132, 240, 0);
 
+  @media screen and (max-width: 1024px) {
+    margin: 0 25px;
+    width: 300px;
+  }
+
+  @media screen and (max-width: 768px) {
+    margin: 25px 0;
+  }
+
+  @media screen and (max-width: 500px) {
+    width: 85%;
+    margin: 25px 0;
+  }
+
   &:hover {
     border: 2px solid rgba(52, 132, 240, 1);
   }
@@ -44,5 +58,11 @@
     font-weight: 300;
     font-size: 12px;
     line-height: 14px;
+  }
+
+  .contact-us-text {
+    &:hover {
+      color: #3484f0;
+    }
   }
 }

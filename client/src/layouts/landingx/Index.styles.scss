@@ -416,4 +416,12 @@
       }
     }
   }
+
+  .pricing {
+    margin: 6rem 0;
+    @media screen and (max-width: 768px) {
+      margin: 3rem 0;
+      flex-direction: column;
+    }
+  }
 }

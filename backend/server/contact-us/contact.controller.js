@@ -1,6 +1,9 @@
 const logger = require('../../config/winston');
 
-const { sendJSONresponse } = require('../helpers/jsonResponse');
+const {
+  sendJSONresponse,
+  sendErrorResponse,
+} = require('../helpers/jsonResponse');
 
 const { contactSaleMail } = require('../services/email.services');
 
@@ -18,9 +21,11 @@ const sendMail = async (req, res, next) => {
     await contact.save();
     contactSaleMail(contact.email, contact.subject, contact.message);
     return sendJSONresponse(res, 201, {
-      message: 'send email successfully',
+      message: 'Email Sent Successfully',
     });
   } catch (error) {
+    console.log(error);
+    sendErrorResponse();
     logger.error(`${error}`);
     next(error);
   }
