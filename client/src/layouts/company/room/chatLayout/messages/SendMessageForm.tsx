@@ -18,7 +18,7 @@ import {
   IRoomReducer,
   ITypingUsers,
 } from 'stores/room/Reducer';
-import SmileIcon from './../../../../../resources/images/Emoji.svg';
+// import SmileIcon from './../../../../../resources/images/Emoji.svg';
 import SendIcon from './../../../../../resources/images/Send.svg';
 import AttachmentIcon from './../../../../../resources/images/attachment.svg';
 import {
@@ -327,8 +327,9 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                 clearTimeout(typingTimer);
               }}
               placeholder="Type your message and hit ENTER to send"
-            ></textarea>
-            <Button
+            ></textarea>            
+          </div>
+          {/* <Button
               className="bp3-minimal outline-0 toggle-emoji dn"
               onClick={toggleEmojiPicker}
             >
@@ -341,8 +342,7 @@ const SendMessageFormComponent = (props: SendMessageFormProps) => {
                   alt=""
                 />
               </span>
-            </Button>
-          </div>
+            </Button> */}
           <Button
             className="bp3-minimal outline-0 dn"
             onClick={() => setShowFileDialog(true)}

@@ -231,7 +231,7 @@ const createNewProjectForCompany = async (req, res, next) => {
         .save()
         .then(async (project) => {
           logger.info(`new project created`);
-          await teamCreate(
+          const team=await teamCreate(
             member.account,
             member._id,
             project._id,
@@ -246,57 +246,21 @@ const createNewProjectForCompany = async (req, res, next) => {
             req.user._id,
           );
           logger.info(`General Board Created`);
-          await createRoom(
-            req.body.companyId,
+          const room = await createRoom(
+            req.headers.companyid,
             project._id,
             req.user._id,
             'General',
           );
           logger.info(`General Room Created`);
-          // if (req.user._id === member.account) {
-           
-          //   await createRoomMember(
-          //     req.body.companyId,
-          //     project._id,
-          //     req.user._id,
-          //     room._id,
-          //     team._id,
-          //   );
-          //   logger.info(`Added to General Room`);
-          //   logger.info(`project creator add as a admin here`);
-          // } 
-          // else {
-          //   const team1 = await teamCreate(
-          //     member.account,
-          //     member._id,
-          //     project._id,
-          //     'admin',
-          //   );
-          //   await createRoomMember(
-          //     req.body.companyId,
-          //     project._id,
-          //     member._id,
-          //     room._id,
-          //     team1._id,
-          //   );
-          //   const team2 = await teamCreate(
-          //     concernedAdmin.accountId,
-          //     concernedAdmin.memberId,
-          //     project._id,
-          //     'admin',
-          //   );
-          //   await createRoomMember(
-          //     req.body.companyId,
-          //     project._id,
-          //     concernedAdmin.accountId,
-          //     room._id,
-          //     team2._id,
-          //   );
-          //   logger.info(`Added to General Room`);
-          //   logger.info(
-          //     `${concernedAdmin.accountId} & ${member.account} admin here`,
-          //   );
-          // }
+          await createRoomMember(
+            req.headers.companyid,
+            project._id,
+            member.account,
+            room._id,
+            team._id,
+          );
+          logger.info(`General Room Member Created`);
           return sendJSONresponse(res, 201, {
             success: true,
             message: 'New project created',

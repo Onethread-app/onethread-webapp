@@ -18,13 +18,13 @@ const DiscussionComponent = (props: DiscussionComponentProps) => {
       <div className="overflow-y-auto flex-grow-1 pr3">
         {props.discussions && props.discussions.length > 0 ? (
           props.discussions.map((d) => (
-            <p
+            <li
               key={d._id}
               className="bg-black-05 pv2 ph3"
               style={{ borderRadius: '8px' }}
             >
-              {d.text}
-            </p>
+              {`${d.text}`}
+            </li>
           ))
         ) : (
           <h4 className="mv0 gray f7 f5-ns">No discussions.</h4>

@@ -212,21 +212,21 @@ const CustomMentionEditor = (
               // get the mention object selected
             }}
           />
-          <EmojiSuggestions />
         </div>
-        <div style={{ margin: '0 .5rem' }}>
-          <EmojiSelect closeOnEmojiSelect />
-        </div>
-        <AttachFileIcon
-          className="pointer"
-          style={{ color: '#3F61C5', margin: '0 .5rem' }}
-          onClick={() => props.setShowFileDialog(true)}
-        />
-        <SendIcon
-          className="pointer"
-          style={{ color: '#3F61C5', margin: '0 .5rem' }}
-          onClick={handleSend}
-        />
+        <EmojiSuggestions />
+                
+                <EmojiSelect closeOnEmojiSelect /> 
+                <AttachFileIcon
+                  className="pointer"
+                  style={{ color: '#3F61C5', margin: '0 .5rem' }}
+                  onClick={() => props.setShowFileDialog(true)}
+                />
+                <SendIcon
+                  className="pointer"
+                  style={{ color: '#3F61C5', margin: '0 .5rem' }}
+                  onClick={handleSend}
+                />
+
       </div>
       {messageError && (
         <ErrorSnackbar
