@@ -164,7 +164,7 @@ const CompanyInfoFormComponent = (
             }}
           >
             <option selected value={values.type}>
-              {values.type? values.type: `Select a company type (Required)`}
+              {values.type ? values.type : `Select a company type (Required)`}
             </option>
             {Type.map((t) => (
               <option value={t}>{t}</option>

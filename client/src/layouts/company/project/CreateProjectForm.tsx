@@ -13,10 +13,10 @@ import {
   maxValue,
 } from 'components/final-form/utils';
 import { Color } from 'stores/UtilsActions';
-import { isEqual} from 'lodash';
-//import { SuggestFieldWithError } from 'components/fields/SuggestField';
+import { isEqual } from 'lodash';
+// import { SuggestFieldWithError } from 'components/fields/SuggestField';
 import { ICompany } from 'stores/company/Reducer';
-//import { useLiveSearch } from 'components/useLiveSearch';
+// import { useLiveSearch } from 'components/useLiveSearch';
 import { createProjectInCompany } from '../../../stores/project/Actions';
 import { getAllDepartments } from '../../../stores/company/Actions';
 
