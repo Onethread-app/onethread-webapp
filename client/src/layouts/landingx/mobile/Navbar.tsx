@@ -27,9 +27,18 @@ const Menu = ({ setOpen }) => {
           <CloseIcon />
         </span>
         <ul className="flex flex-column items-center justify-center w-100 h-100">
-        <li>
-          <a href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA" target="_blank">How It Works</a>
-        </li>
+          <li>
+            <NavLink to="/pricing">Pricing</NavLink>
+          </li>
+          <li>
+            <a
+              href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
+              target="_blank"
+              rel="noreferrer"
+            >
+              How It Works
+            </a>
+          </li>
           <li>
             <NavLink to="/signin">Login</NavLink>
           </li>

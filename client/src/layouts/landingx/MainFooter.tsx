@@ -58,6 +58,7 @@ const MainFooter = () => {
             <a
               href="https://www.facebook.com/onethread.app.2021"
               target="_blank"
+              rel="noreferrer"
             >
               {' '}
               <img src={FBIcon} alt="facebook" />
@@ -65,6 +66,7 @@ const MainFooter = () => {
             <a
               href="https://www.linkedin.com/company/72622667 "
               target="_blank"
+              rel="noreferrer"
             >
               {' '}
               <img src={LinkedInIcon} alt="linkedin" />
@@ -72,6 +74,7 @@ const MainFooter = () => {
             <a
               href="https://www.youtube.com/channel/UCuZZreI7e9VFYS1svTww6GA"
               target="_blank"
+              rel="noreferrer"
             >
               <img src={YTIcon} alt="youtube" />
             </a>
