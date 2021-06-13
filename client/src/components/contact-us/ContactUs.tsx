@@ -33,6 +33,7 @@ const ContactUs = (props: IContactUs) => {
       name: `${values.firstName} ${values.lastName}`,
       email: values.email,
       message: values.message,
+      subject: `Query from ${values.email}`,
     };
     const response = await tigrowApi.post(
       `/contact/contact-sale`,
@@ -107,11 +108,10 @@ const ContactUs = (props: IContactUs) => {
           onChange={handleChange}
         ></textarea>
         <div className="center contact-form-buttons">
-        <Button
+          <Button
             type="submit"
             style={{
-              backgroundColor: 
-              '#3484f0',
+              backgroundColor: '#3484f0',
               color: '#fff',
             }}
             // disabled={isSubmitDisabled}
@@ -125,7 +125,6 @@ const ContactUs = (props: IContactUs) => {
           >
             Cancel
           </Button>
-          
         </div>
       </form>
     </div>

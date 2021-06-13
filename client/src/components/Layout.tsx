@@ -32,6 +32,7 @@ import project from '../resources/images/ProjectsIcon.svg';
 import team from '../resources/images/sidebarTeam.svg';
 import associate from '../resources/images/sideBarAssociates.svg';
 import settings from '../resources/images/sidebarSettings.svg';
+import feedbackLight from '../resources/images/feedback-light.svg';
 import { ICompanyRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
@@ -398,11 +399,12 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                     {(props.match.params as any).cname ? (
                       props.rightSidebarOpen ? undefined : (
                         <Navbar
-                          className="flex justify-around"
+                          className="flex"
                           style={{
                             position: 'fixed',
                             bottom: '0',
                             height: '65px',
+                            overflowX: 'scroll',
                           }}
                         >
                           <NavLink
@@ -540,6 +542,28 @@ const LayoutComponent = (props: LayoutInternalProps) => {
                                 </small>
                               </NavLink>
                             )}
+                          <NavLink
+                            exact
+                            activeStyle={{
+                              background: '#3F61C5',
+                              color: 'white',
+                            }}
+                            style={{ color: '#3F61C5' }}
+                            to={`/company/${props.company.uniqueName}/feedback`}
+                            className="hover-bg-black-20 pa2 flex flex-column items-center"
+                          >
+                            <span className="">
+                              <img
+                                src={feedbackLight}
+                                className="br3"
+                                style={{ width: '1.4rem' }}
+                                alt=""
+                              />
+                            </span>
+                            <small style={{ color: 'inherit' }}>
+                              Feedback
+                            </small>
+                          </NavLink>
                         </Navbar>
                       )
                     ) : (

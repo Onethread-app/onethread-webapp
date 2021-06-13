@@ -25,6 +25,8 @@ import associates from '../resources/images/sideBarAssociates.svg';
 import associatesLight from '../resources/images/sideBarAssociates-light.svg';
 import dashboard from '../resources/images/sideBarDashboard.svg';
 import dashboardLight from '../resources/images/sideBarDashboard-light.svg';
+import feedback from '../resources/images/feedback.svg';
+import feedbackLight from '../resources/images/feedback-light.svg';
 
 import preface from '../resources/images/sideBarPreface.svg';
 import settingsProject from '../resources/images/sidebarProjectSettings.svg';
@@ -74,9 +76,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
       >
         <NavLink to={`/${props.user.name}/home`}>
           {props.leftOpen ? (
-            <img src={logo} />
+            <img src={logo} alt="" />
           ) : (
-            <img src={tigrowLogo} />
+            <img src={tigrowLogo} alt="" />
           )}
         </NavLink>
       </div>
@@ -103,6 +105,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       : sidebarProfile
                   }
                   className="w1 pt1"
+                  alt=""
                 />
               </span>
             ) : (
@@ -118,6 +121,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         : sidebarProfile
                     }
                     className="w1 pt1"
+                    alt=""
                   />
                 </span>
               </Tooltip>
@@ -154,6 +158,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           : dashboard
                       }
                       className="w1 pt1"
+                      alt=""
                     />
                   </span>
                 ) : (
@@ -169,6 +174,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                             : dashboard
                         }
                         className="w1 pt1"
+                        alt=""
                       />
                     </span>
                   </Tooltip>
@@ -200,6 +206,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         : projects
                     }
                     className="w1 pt1"
+                    alt=""
                   />
                 </span>
               ) : (
@@ -215,6 +222,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           : projects
                       }
                       className="w1 pt1"
+                      alt=""
                     />
                   </span>
                 </Tooltip>
@@ -274,7 +282,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     borderBottom: '1px groove darkgray',
                   }}
                 />
-                 <NavLink
+                <NavLink
                   exact
                   className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
                   style={{ color: 'white' }}
@@ -287,6 +295,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         src={preface}
                         className="pt1"
                         style={{ width: '25px' }}
+                        alt=""
                       />
                     </span>
                   ) : (
@@ -299,6 +308,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           src={board}
                           className="pt1"
                           style={{ width: '25px' }}
+                          alt=""
                         />
                       </span>
                     </Tooltip>
@@ -312,7 +322,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   )}
                 </NavLink>
-              
+
                 <NavLink
                   exact
                   className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
@@ -326,6 +336,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         src={preface}
                         className="pt1"
                         style={{ width: '25px' }}
+                        alt=""
                       />
                     </span>
                   ) : (
@@ -338,6 +349,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           src={preface}
                           className="pt1"
                           style={{ width: '25px' }}
+                          alt=""
                         />
                       </span>
                     </Tooltip>
@@ -364,6 +376,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         src={room}
                         className="pt1"
                         style={{ width: '25px' }}
+                        alt=""
                       />
                     </span>
                   ) : (
@@ -376,6 +389,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           src={room}
                           className="pt1"
                           style={{ width: '25px' }}
+                          alt=""
                         />
                       </span>
                     </Tooltip>
@@ -416,6 +430,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         src={board}
                         className="pt1"
                         style={{ width: '25px' }}
+                        alt=""
                       />
                     </span>
                   ) : (
@@ -428,6 +443,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           src={board}
                           className="pt1"
                           style={{ width: '25px' }}
+                          alt=""
                         />
                       </span>
                     </Tooltip>
@@ -454,6 +470,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         src={teamProject}
                         className="pt1"
                         style={{ width: '25px' }}
+                        alt=""
                       />
                     </span>
                   ) : (
@@ -466,6 +483,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           src={teamProject}
                           className="pt1"
                           style={{ width: '25px' }}
+                          alt=""
                         />
                       </span>
                     </Tooltip>
@@ -492,6 +510,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         src={settingsProject}
                         className="pt1"
                         style={{ width: '25px' }}
+                        alt=""
                       />
                     </span>
                   ) : (
@@ -506,6 +525,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           src={settingsProject}
                           className="pt1"
                           style={{ width: '25px' }}
+                          alt=""
                         />
                       </span>
                     </Tooltip>
@@ -540,6 +560,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           : sidebarProfile
                       }
                       className="w1 pt1"
+                      alt=""
                     />
                   </span>
                 ) : (
@@ -555,6 +576,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                             : sidebarProfile
                         }
                         className="w1 pt1"
+                        alt=""
                       />
                     </span>
                   </Tooltip>
@@ -588,6 +610,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           : team
                       }
                       className="w1 pt1"
+                      alt=""
                     />
                   </span>
                 ) : (
@@ -603,6 +626,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                             : team
                         }
                         className="w1 pt1"
+                        alt=""
                       />
                     </span>
                   </Tooltip>
@@ -635,6 +659,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           : associates
                       }
                       className="w1 pt1"
+                      alt=""
                     />
                   </span>
                 ) : (
@@ -650,6 +675,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                             : associates
                         }
                         className="w1 pt1"
+                        alt=""
                       />
                     </span>
                   </Tooltip>
@@ -682,6 +708,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                           : settings
                       }
                       className="w1 pt1"
+                      alt=""
                     />
                   </span>
                 ) : (
@@ -697,6 +724,7 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                             : settings
                         }
                         className="w1 pt1"
+                        alt=""
                       />
                     </span>
                   </Tooltip>
@@ -711,8 +739,56 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 )}
               </NavLink>
             )}
-
-            {/*  */}
+            {(companyPermit(props.company.role) ||
+              props.company.role === 'employee') && (
+              <NavLink
+                exact
+                className="flex items-center nowrap ma1 pa1 hover-bg-white-20 w-100"
+                style={{ color: 'white' }}
+                activeStyle={{ background: ' #3484F0' }}
+                to={`/company/${props.company.uniqueName}/feedback`}
+                onClick={() => setActiveTab('feedback')}
+              >
+                {props.leftOpen ? (
+                  <span className="ml4 pa1 bg-white">
+                    <img
+                      src={
+                        activeTab === 'feedback'
+                          ? feedback
+                          : feedbackLight
+                      }
+                      className="w1 pt1"
+                      alt=""
+                    />
+                  </span>
+                ) : (
+                  <Tooltip
+                    content={<p className="mb0">Feedback</p>}
+                    position="right"
+                  >
+                    <span className="ml3 pa1 bg-white">
+                      <img
+                        src={
+                          activeTab === 'feedback'
+                            ? feedback
+                            : feedbackLight
+                        }
+                        className="w1 pt1"
+                        alt=""
+                      />
+                    </span>
+                  </Tooltip>
+                )}
+                {props.leftOpen && (
+                  <span
+                    className="outline-0 bp3-large pl4"
+                    style={{ color: 'inherit' }}
+                  >
+                    Feedback
+                  </span>
+                )}
+              </NavLink>
+            )}
           </>
         )}
       </div>

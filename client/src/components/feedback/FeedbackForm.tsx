@@ -1,0 +1,227 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
+
+import { Button, Slider, TextArea } from '@blueprintjs/core';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
+
+import { tigrowApi } from 'config';
+import { tokenConfig } from 'stores/UtilsActions';
+
+import './FeedbackForm.styles.scss';
+
+interface IFeedbackForm {
+  uniqueCompanyName: string;
+}
+
+const FeedbackForm = (props: IFeedbackForm) => {
+  const [sliderValue, setSliderValue] = React.useState(1);
+  const [showSnackbar, setShowSnackbar] = React.useState(false);
+  const [response, setResponse] = React.useState({
+    status: 0,
+    message: '',
+  });
+  const [values, setValues] = React.useState({
+    bug: '',
+    improve: '',
+    usefulFeature: '',
+    wishFeature: '',
+  });
+
+  const history = useHistory();
+
+  const handleSliderChange = (val: number) => {
+    setSliderValue(val);
+  };
+
+  const handleChange = (e: any) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const renderLabel = (val: number) => {
+    return `${val}`;
+  };
+
+  const handleClear = () => {
+    setValues({
+      improve: '',
+      bug: '',
+      usefulFeature: '',
+      wishFeature: '',
+    });
+    setSliderValue(1);
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+    const payload = { ...values, rating: sliderValue };
+
+    const headers = tokenConfig();
+
+    if ((headers as any).headers.Authorization) {
+      const res = await tigrowApi.post('/feedback', payload, headers);
+      if (res) {
+        setResponse({
+          status: res.status,
+          message: res.data.message,
+        });
+        handleClear();
+        setShowSnackbar(true);
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    let timeout: any;
+    if (response.status === 201) {
+      timeout = setTimeout(() => {
+        setResponse({
+          status: 0,
+          message: '',
+        });
+        history.push(`/company/${props.uniqueCompanyName}/dashboard`);
+      }, 4000);
+    }
+
+    return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response]);
+
+  return (
+    <>
+      <div className="feedback-form flex flex-column items-center justify-center pa4 ma1">
+        <h2>Feedback</h2>
+        <form className="flex flex-column">
+          <div className="flex flex-column">
+            <label
+              htmlFor="recommend"
+              style={{ marginBottom: '1rem' }}
+            >
+              <span>1. </span>On a scale of 1-10, how likely are you
+              to recommend our product to a friend/colleague?
+            </label>
+            <Slider
+              min={1}
+              max={10}
+              stepSize={1}
+              onChange={handleSliderChange}
+              labelRenderer={renderLabel}
+              showTrackFill={true}
+              value={sliderValue}
+              vertical={false}
+              className="w-80 self-center"
+              intent={
+                sliderValue < 4
+                  ? 'danger'
+                  : sliderValue < 6
+                  ? 'warning'
+                  : sliderValue < 8
+                  ? 'primary'
+                  : 'success'
+              }
+            />
+          </div>
+          <div>
+            <p className="f6 fw6 mv2">
+              Please help us understand your rating by answering the
+              following questions (Optional):
+            </p>
+          </div>
+          <div className="flex flex-column">
+            <label htmlFor="improve">
+              <span>2. </span>What feature can we improve?
+            </label>
+            <TextArea
+              growVertically={true}
+              large={true}
+              onChange={handleChange}
+              name="improve"
+              value={values.improve}
+              className="w-80"
+            />
+          </div>
+          <div className="flex flex-column">
+            <label htmlFor="bug">
+              <span>3. </span>Is there any bug that you'd like to
+              report?
+            </label>
+            <TextArea
+              growVertically={true}
+              large={false}
+              onChange={handleChange}
+              name="bug"
+              value={values.bug}
+              className="w-80"
+            />
+          </div>
+          <div className="flex flex-column">
+            <label htmlFor="usefulFeature">
+              <span>4. </span>What feature was useful?
+            </label>
+            <TextArea
+              growVertically={true}
+              large={true}
+              onChange={handleChange}
+              name="usefulFeature"
+              value={values.usefulFeature}
+              className="w-80"
+            />
+          </div>
+          <div className="flex flex-column">
+            <label htmlFor="wishFeature">
+              <span>5. </span>What feature do you wish we could
+              provide?
+            </label>
+            <TextArea
+              growVertically={true}
+              large={true}
+              onChange={handleChange}
+              name="wishFeature"
+              value={values.wishFeature}
+              className="w-80"
+            />
+          </div>
+          <div
+            className="feedback-form-buttons flex self-end"
+            style={{
+              marginRight: '20%',
+            }}
+          >
+            <Button onClick={handleClear} className="grow">
+              Clear
+            </Button>
+            <Button
+              type="submit"
+              onClick={handleSubmit}
+              className="grow"
+            >
+              Submit
+            </Button>
+          </div>
+        </form>
+      </div>
+      <Snackbar
+        open={showSnackbar}
+        autoHideDuration={4000}
+        onClose={() => setShowSnackbar(false)}
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <MuiAlert
+          severity={response.status === 201 ? 'success' : 'error'}
+        >
+          {response.message}
+        </MuiAlert>
+      </Snackbar>
+    </>
+  );
+};
+
+const mapStateToProps = (state: any) => ({
+  uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
+});
+
+export default connect(mapStateToProps, {})(FeedbackForm);

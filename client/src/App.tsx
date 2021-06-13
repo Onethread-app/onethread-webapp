@@ -39,6 +39,7 @@ import { isAuthenticate } from 'stores/UtilsActions';
 import Success from './components/Success';
 import { SignUpPage } from './layouts/signup/Index';
 import PricingPage from 'layouts/landingx/Pricing';
+import Feedback from 'layouts/feedback/Feedback';
 
 const PrivateRoute = (props: {
   component: any;
@@ -235,6 +236,11 @@ const App = () => {
         path="/company/:cname/feed"
         exact={true}
         component={FeedPage}
+      />
+      <PrivateRoute
+        path="/company/:cname/feedback"
+        exact={true}
+        component={Feedback}
       />
       <PrivateRoute
         path="/company/:cname/project/:projectId/room"
