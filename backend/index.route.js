@@ -29,6 +29,7 @@ const planRoutes = require('./server/plan/plan.route');
 const subscriptionRoutes = require('./server/subscription/subscription.route');
 const paymentRoute = require('./server/payment/payment.route');
 const videoConferencesRoute = require('./server/videoConferences/videoConferences.route');
+const feedbackRoutes = require('./server/feedback/feedback.route');
 
 const router = express.Router(); // eslint-disable-line new-cap
 
@@ -65,4 +66,5 @@ router.use('/plans', planRoutes);
 router.use('/payments', paymentRoute);
 router.use('/subscriptions', subscriptionRoutes);
 router.use('/video-conferences', videoConferencesRoute);
+router.use('/feedback', feedbackRoutes);
 module.exports = router;

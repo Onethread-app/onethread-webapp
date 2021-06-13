@@ -7,6 +7,7 @@ import { getAllComments } from 'stores/comment/Actions';
 import { Loading } from 'components/Loading';
 import { Icomment } from 'stores/comment/Reducer';
 import moment from 'moment';
+import { isMobileOnly } from 'react-device-detect';
 
 interface IActivityViewInternalProps {
   commentList: Icomment[];
@@ -33,7 +34,11 @@ export const ActivityViewPageComponent = (
         <h1 className="f5 fw7 lh-title black">Activity</h1>
       </div>
 
-      <div className="flex flex-column flex-grow-1 overflow-y-auto pt2 bl b--tigrowLightGray-1 pl3">
+      <div
+        className={`flex flex-column flex-grow-1 overflow-y-auto pt2 ${
+          !isMobileOnly ? 'bl b--tigrowLightGray-1 pl3' : ''
+        } `}
+      >
         {loading === false ? (
           props.commentList.map((comment) => (
             <div className="flex justify-between">
@@ -46,6 +51,7 @@ export const ActivityViewPageComponent = (
                         : userIcon
                     }
                     className="ba b--black-10 db br-100 w2 h2"
+                    alt=""
                   />
                 </div>
                 <div className="dtc v-mid pl3">

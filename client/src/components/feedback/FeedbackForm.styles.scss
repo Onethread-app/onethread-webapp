@@ -1,0 +1,56 @@
+.feedback-form {
+  box-shadow: rgba(3, 102, 214, 0.3) 0 0 0 3px;
+  border-radius: 6px;
+
+  h2 {
+    color: #3484f0;
+  }
+
+  form {
+    > div {
+      margin: 0.5rem 0;
+    }
+
+    textarea {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      outline: none !important;
+      box-shadow: none !important;
+      min-height: 80px;
+      transition: min-height 0.3s ease-in;
+      font-size: 14px !important;
+
+      &:focus,
+      &:active {
+        outline: none !important;
+        box-shadow: none !important;
+        border: 3px solid rgba(3, 102, 214, 0.3);
+        border-radius: 6px;
+        min-height: 100px;
+      }
+    }
+
+    button {
+      border: none;
+      box-shadow: none !important;
+      padding: 10px 16px;
+      cursor: pointer;
+      background: salmon !important;
+      color: #fff !important;
+
+      &:not(:last-child) {
+        margin-right: 0.5rem;
+      }
+    }
+
+    button[type='submit'] {
+      background: #3484f0 !important;
+      color: #fff !important;
+    }
+
+    label {
+      margin: 0.5rem 0;
+      font-weight: 600;
+    }
+  }
+}

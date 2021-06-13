@@ -42,7 +42,7 @@ const TaskPageComponent = (props: TaskInternalProps) => {
           <SubTaskView />
         </div>
         <div
-          className="w-100 w-50-l ph2"
+          className="w-100 w-50-l ph2 mb5"
           style={{
             height: 'calc(100vh - 100px)',
           }}

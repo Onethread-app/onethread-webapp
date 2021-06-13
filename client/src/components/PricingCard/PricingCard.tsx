@@ -72,7 +72,7 @@ const PricingCard = (props: IPricingCard) => {
                 style={{ height: '49px' }}
                 onClick={() => setShowContactUs(true)}
               >
-               <h3> Contact Us for Quotation</h3>
+                <h3> Contact Us for Quotation</h3>
               </p>
             )}
           </p>
