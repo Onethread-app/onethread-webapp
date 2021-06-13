@@ -3,7 +3,6 @@ import { TaskDescriptionEditor } from './TaskDescriptionEditor';
 import { Icon } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { ITask } from 'stores/board/Reducer';
-import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
 import Linkify from 'react-linkify';
 import { componentDecorator } from 'helpers/LinkifyHelper';
@@ -29,7 +28,7 @@ export const TaskDescriptionViewComponent = (
           <h1 className="f6">Description</h1>
         </div>
         <div className="pr2" style={{ paddingTop: '10px' }}>
-          {props.company && projectPermit(props.company.role) ? (
+          {props.company ? (
             <Icon
               className={
                 editDescriptionDialog

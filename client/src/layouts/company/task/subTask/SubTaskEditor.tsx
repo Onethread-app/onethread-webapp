@@ -168,7 +168,7 @@ export const SubTaskDelete = (
                   setDeletePopover(false);
                 }}
               >
-                Remove
+                Yes, Delete
               </Button>
               <Button
                 className="grow h2 pointer white bp3-minimal w4"
@@ -180,7 +180,7 @@ export const SubTaskDelete = (
                 }}
                 onClick={() => setDeletePopover(false)}
               >
-                Cancel
+                No, Keep
               </Button>
             </div>
           </div>

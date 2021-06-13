@@ -13,7 +13,6 @@ import { IColumn, TaskBoard } from 'stores/board/Reducer';
 import { TaskForm } from '../task/TaskForm';
 import { connect } from 'react-redux';
 import { ColumnForm } from './ColumnForm';
-import { projectPermit } from 'stores/UtilsActions';
 import { ICompany } from 'stores/company/Reducer';
 import { Field, Form } from 'react-final-form';
 import {
@@ -103,11 +102,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                     }
                   />
                   {props.company &&
-                    (projectPermit(props.company.role) ||
-                      (props.projectRole === 'projectModerator' &&
-                        props.optionalRole!.includes(
-                          'createUpdateBoard',
-                        ))) && (
+                     
                       <Popover
                         className="w-10"
                         content={
@@ -133,14 +128,10 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                           />
                         }
                       />
-                    )}
+                    }
                 </div>
                 {props.company &&
-                  (projectPermit(props.company.role) ||
-                    (props.projectRole === 'projectModerator' &&
-                      props.optionalRole!.includes(
-                        'createUpdateBoard',
-                      ))) && (
+                  (
                     <div
                       className="overflow-hidden ph2 pt2"
                       style={{

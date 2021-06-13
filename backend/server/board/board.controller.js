@@ -147,36 +147,12 @@ const create = async (req, res, next) => {
       req.body.color,
       req.user._id,
     );
-    const project = await Project.findOne({
-      _id: req.query.pid,
-    }).select('_id name company'); //company name in header can remove that
-
-    //${associate.associateCompany.name} ata dynamic korte hobe nyle future name change korleo ai prev name thke jabe
-
-    const text = `${req.user.name} has created a board ${req.body.name} from ${project.name}`;
-    createBoardNotification(
-      {
-        project: project._id,
-        company: project.company,
-        _id: createdBoard._id,
-      },
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-    );
-    // const createdBoard = await board.save();
-
     return res.status(201).json(createdBoard);
   } catch (error) {
     logger.error(`Board create: ${error}`);
     next(error);
   }
 };
-
-const update = (req, res, next) => {};
 
 const addBoardMembers = async (req, res, next) => {
   try {
@@ -287,7 +263,6 @@ module.exports = {
   create,
   list,
   remove,
-  update,
   addBoardMembers,
   addBoardColumn,
   suggestMember,

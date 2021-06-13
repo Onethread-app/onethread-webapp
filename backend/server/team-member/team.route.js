@@ -75,7 +75,7 @@ router
   .route('/:memberId/change-role')
   .put(
     authorization,
-    projectCtrl.authorizeProjectRole('all', 'admin'),
+    projectCtrl.authorizeProjectRole('all', 'admin', 'projectModerator'),
     subCtrl.subscriptionExpireCheck(),
     SchemaValidator(teamValidation.changeRole),
     teamCtrl.changeRole,

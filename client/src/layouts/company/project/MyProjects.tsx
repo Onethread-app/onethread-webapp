@@ -703,10 +703,10 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
       )}
       <Snackbar
         open={open}
-        autoHideDuration={2000}
+        autoHideDuration={4000}
         onClose={() => setOpen(false)}
       >
-        <MuiAlert severity="warning">
+        <MuiAlert severity="error">
           You are not allowed to do this change!
         </MuiAlert>
       </Snackbar>

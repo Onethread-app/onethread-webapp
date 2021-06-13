@@ -8,10 +8,9 @@ const {
 
 const create = async (req, res, next) => {
   try {
-    const { bug, improve, usefulFeature, wishFeature, rating } =
+    const {  improve, usefulFeature, wishFeature, rating } =
       req.body;
     const feedback = new Feedback({
-      bug,
       improve,
       usefulFeature,
       wishFeature,
