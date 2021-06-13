@@ -57,16 +57,6 @@ router
     SchemaValidator(boardSchema.singleBoard),
     boardCtrl.get,
   )
-  .put(
-    authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-      'member',
-    ),
-    boardCtrl.update,
-  );
 
 router
   .route('/:boardId/members')

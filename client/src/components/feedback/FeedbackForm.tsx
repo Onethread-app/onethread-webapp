@@ -80,7 +80,7 @@ const FeedbackForm = (props: IFeedbackForm) => {
           status: 0,
           message: '',
         });
-        history.push(`/company/${props.uniqueCompanyName}/dashboard`);
+        history.push(`/company/${props.uniqueCompanyName}/feedback`);
       }, 4000);
     }
 
@@ -142,22 +142,8 @@ const FeedbackForm = (props: IFeedbackForm) => {
             />
           </div>
           <div className="flex flex-column">
-            <label htmlFor="bug">
-              <span>3. </span>Is there any bug that you'd like to
-              report?
-            </label>
-            <TextArea
-              growVertically={true}
-              large={false}
-              onChange={handleChange}
-              name="bug"
-              value={values.bug}
-              className="w-80"
-            />
-          </div>
-          <div className="flex flex-column">
             <label htmlFor="usefulFeature">
-              <span>4. </span>What feature was useful?
+              <span>3. </span>What feature was useful?
             </label>
             <TextArea
               growVertically={true}
@@ -170,7 +156,7 @@ const FeedbackForm = (props: IFeedbackForm) => {
           </div>
           <div className="flex flex-column">
             <label htmlFor="wishFeature">
-              <span>5. </span>What feature do you wish we could
+              <span>4. </span>What feature do you wish we could
               provide?
             </label>
             <TextArea

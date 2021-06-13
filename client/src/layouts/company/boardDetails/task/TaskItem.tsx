@@ -281,14 +281,14 @@ const TaskItemComponent = (
               }}
               intent="primary"
             >
-              Cancel
+              No, Keep it
             </Button>
             <Button
               icon="trash"
               intent="danger"
               onClick={handleDelete}
             >
-              Yes
+              Yes, Delete
             </Button>
           </ButtonGroup>
         </div>

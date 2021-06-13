@@ -23,7 +23,6 @@ import {
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
-import { projectPermit } from 'stores/UtilsActions';
 import SubTaskMemberIcon from './SubTaskMemberIcon';
 
 interface ISubTaskViewInternalProps {
@@ -70,7 +69,7 @@ export const SubTaskViewPageComponent = (
         <div className="fl w-100">
           <div className="mt3">
             <div className="flex">
-              <h1 className="f6 flex-auto">SubTask</h1>
+              <h1 className="f6 flex-auto">Subtask</h1>
               {props.subTaskList.length > 0 && (
                 <h1 className="f6 blue">
                   {Math.floor(
@@ -150,8 +149,7 @@ export const SubTaskViewPageComponent = (
                             )}
                         </div>
                         <div>
-                          {props.company &&
-                          projectPermit(props.company.role) ? (
+                          {props.company ? (
                             <Popover
                               isOpen={
                                 membersPopover._id === subTask._id &&

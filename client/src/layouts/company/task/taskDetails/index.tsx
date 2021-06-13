@@ -17,7 +17,6 @@ import { PriorityView } from './Priority/PriorityView';
 import { PriorityEditor } from './Priority/PriorityEditor';
 import moment from 'moment';
 import { ICompany } from 'stores/company/Reducer';
-import { projectPermit } from 'stores/UtilsActions';
 import TaskFiles from './Files/TaskFiles';
 import TaskFilesAttach from './Files/TaskFilesAttach';
 
@@ -166,7 +165,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
         <div className="fl w-100">
           <div className="fr-ns fl">
             <div>
-              {props.company && projectPermit(props.company.role) ? (
+              {props.company ? (
                 <Popover
                   isOpen={datePopover}
                   content={
@@ -220,7 +219,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               />
             </div>
             <div>
-              {props.company && projectPermit(props.company.role) ? (
+              {props.company ? (
                 <Popover
                   isOpen={membersPopover}
                   content={
@@ -254,7 +253,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               ) : undefined}
             </div>
             <div>
-              {props.company && projectPermit(props.company.role) ? (
+              {props.company ? (
                 <Popover
                   isOpen={priorityPopover}
                   content={

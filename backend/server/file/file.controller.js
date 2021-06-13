@@ -336,7 +336,7 @@ const fileInTask = async (req, res, next) => {
           }
         })
         .catch((err) => {
-          logger.error(`File: ${error}`);
+          logger.error(`File: ${err}`);
           next(err);
         });
     } else {
@@ -345,6 +345,7 @@ const fileInTask = async (req, res, next) => {
       });
     }
   } catch (error) {
+    console.log(error);
     logger.error(`File: ${error}`);
     next(error);
   }
