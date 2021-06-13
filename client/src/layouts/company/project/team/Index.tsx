@@ -89,7 +89,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
   return (
     <>
       <MobileView>
-        <NavbarCompany title="Team Members" />
+        <NavbarCompany title="Teammates" />
         <div className="flex justify-between mt5">
           <NavLink
             exact
@@ -170,7 +170,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
       <div className="ph5-ns ph3 pv4">
         <div className="flex justify-between items-center">
           {isMobileOnly ? undefined : (
-            <h1 className="f3">Team Members</h1>
+            <h1 className="f3">Teammates</h1>
           )}
           <div>
             <Button
@@ -182,7 +182,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
               }}
               onClick={() => setShowDialog(!showDialog)}
             >
-              Add Team Members
+              Add Teammates
             </Button>
             {props.projectList &&
               props.projectList.map((project) =>
@@ -201,7 +201,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
                         setShowAssociateDialog(!showAssociateDialog)
                       }
                     >
-                      Add Associates
+                      Add Partners
                     </Button>
                   ) : undefined
                 ) : undefined,
@@ -485,7 +485,7 @@ const ProjectTeamPageComponent = (props: TeamMember) => {
             )}
           </tbody>
         </HTMLTable>
-        <h1 className="f4 mv4">Project Associates</h1>
+        <h1 className="f4 mv4">External Partners</h1>
         <AssociateList />
       </div>
 

@@ -81,7 +81,7 @@ const AddProjectMemberFormComponent = (
   return (
     <div className="pa3">
       <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">Add Team Members</h1>
+        <h1 className="f5 tigrow-darkBlue">Add Teammates</h1>
         <SuggestField
           items={suggestedMembers}
           selectedItems={selectedTeamMember}
