@@ -82,7 +82,7 @@ const createNewProjectForCompany = async (req, res, next) => {
     const member = await Member.findOne({
       account: req.user._id,
       company: req.headers.companyid,
-      removed: false
+      removed: false,
     });
     if (!member) {
       return sendErrorResponse(res, 404, 'MemberNotFoundError', {
@@ -216,62 +216,63 @@ const createNewProjectForCompany = async (req, res, next) => {
     //     project,
     //   });
     // } else {
-      const project = new Project({
-        name: req.body.name,
-        concernedAdmin: member.account,
-        account: req.user._id,
-        departments: req.body.departments,
-        deadline: req.body.deadline,
-        color: req.body.color,
-        company: req.headers.companyid,
-        description: '',
-        outline: '',
-      });
-      await project
-        .save()
-        .then(async (project) => {
-          logger.info(`new project created`);
-          const team=await teamCreate(
-            member.account,
-            member._id,
-            project._id,
-            'admin',
-          );
-          logger.info(`${member.account} added into project id: ${project._id}`);
-          await createBoard(
-            'General',
-            project._id,
-            undefined,
-            undefined,
-            req.user._id,
-          );
-          logger.info(`General Board Created`);
-          const room = await createRoom(
-            req.headers.companyid,
-            project._id,
-            req.user._id,
-            'General',
-          );
-          logger.info(`General Room Created`);
-          await createRoomMember(
-            req.headers.companyid,
-            project._id,
-            member.account,
-            room._id,
-            team._id,
-          );
-          logger.info(`General Room Member Created`);
-          return sendJSONresponse(res, 201, {
-            success: true,
-            message: 'New project created',
-            project,
-          });
-        })
-        .catch((error) => {
-          logger.error(`Project: ${error}`);
-          next(error);
+    const project = new Project({
+      name: req.body.name,
+      concernedAdmin: member.account,
+      account: req.user._id,
+      departments: req.body.departments,
+      deadline: req.body.deadline,
+      color: req.body.color,
+      company: req.headers.companyid,
+      description: '',
+      outline: '',
+    });
+    await project
+      .save()
+      .then(async (project) => {
+        logger.info(`new project created`);
+        const team = await teamCreate(
+          member.account,
+          member._id,
+          project._id,
+          'admin',
+        );
+        logger.info(
+          `${member.account} added into project id: ${project._id}`,
+        );
+        await createBoard(
+          'General',
+          project._id,
+          undefined,
+          undefined,
+          req.user._id,
+        );
+        logger.info(`General Board Created`);
+        const room = await createRoom(
+          req.headers.companyid,
+          project._id,
+          req.user._id,
+          'General',
+        );
+        logger.info(`General Room Created`);
+        await createRoomMember(
+          req.headers.companyid,
+          project._id,
+          member.account,
+          room._id,
+          team._id,
+        );
+        logger.info(`General Room Member Created`);
+        return sendJSONresponse(res, 201, {
+          success: true,
+          message: 'New project created',
+          project,
         });
-    
+      })
+      .catch((error) => {
+        logger.error(`Project: ${error}`);
+        next(error);
+      });
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
@@ -621,6 +622,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
       $and: [
         {
           _id: { $in: memberExistInProject },
+          hasDeleted: false,
         },
         {
           $or: [
@@ -982,6 +984,20 @@ const suggestAssociateCompany = async (req, res, next) => {
   }
 };
 
+const deleteProject = async (req, res, next) => {
+  try {
+    await Project.findByIdAndUpdate(
+      { _id: req.query.pid },
+      { $set: { hasDeleted: true } },
+      { safe: true, upsert: true, new: true },
+    );
+    return sendJSONresponse(res, 200, { success: true });
+  } catch (err) {
+    logger.error(`Project: ${err}`);
+    next(err);
+  }
+};
+
 const archiveProjectList = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   await Project.find({
@@ -992,11 +1008,10 @@ const archiveProjectList = async (req, res, next) => {
           { associate: { $in: req.params.companyId } },
         ],
       },
-      { removed: true },
+      { removed: true, hasDeleted: false },
     ],
   })
     .populate('departments', 'name _id')
-    .select('name members')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -1230,4 +1245,5 @@ module.exports = {
   getProjectIndividual,
   projectListForMember,
   projectOverview,
+  deleteProject,
 };

@@ -1,11 +1,12 @@
+import { Tab, Tabs } from '@blueprintjs/core';
+import { NavbarCompany } from 'components/NavbarCompany';
 import React from 'react';
-import { Tabs, Tab } from '@blueprintjs/core';
-import { MyProject } from './MyProjects';
-import { PendingProjectRequest } from './request/Index';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { NavbarCompany } from 'components/NavbarCompany';
 import { setProjectAccessForUser } from 'stores/project/Actions';
+import { CompletedProjects } from './CompletedProjects';
+import { MyProject } from './MyProjects';
+import { PendingProjectRequest } from './request/Index';
 
 const _ProjectPage = (props: any) => {
   React.useEffect(() => {
@@ -33,6 +34,12 @@ const _ProjectPage = (props: any) => {
             id="MyProjects"
             title="My Projects"
             panel={<MyProject />}
+            className="outline-0 mt4-ns mt2"
+          />
+          <Tab
+            id="CompletedProjects"
+            title="Completed Projects"
+            panel={<CompletedProjects />}
             className="outline-0 mt4-ns mt2"
           />
           {props.companyRole !== 'employee' && (

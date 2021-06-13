@@ -94,6 +94,10 @@ const projectSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    hasDeleted: {
+      type: Boolean,
+      default: false,
+    },
     associate: [
       {
         type: mongoose.Schema.Types.ObjectId,
