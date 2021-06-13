@@ -6,14 +6,16 @@ Onethread is a cloud software suite for businesses. It includes an enterprise co
 
 ### Prerequisites
 
-You should install `Node`, `git`
+You should install `Node`, `git`, `Yarn`
 
 ### Installing
 
 `git clone url`
 
 `cd url`
-`npm install`
+### Backend Running
+go to backend directory using `cd backend`
+then run `npm install`
 
 For development:
 `cp .env.dev .env`
@@ -28,3 +30,11 @@ For running the test case use `npm run test`
 
 run `npm lint` to match with the coding style.
 
+### Client running
+go to backend directory using `cd client`
+then run `yarn install`
+
+For development:
+`cp .env.development .env`
+
+`yarn start`

@@ -172,7 +172,7 @@ function _InviteColleagueView(
             }}
           >
             <label className="b mt3 mb3">
-              Invite Your Team Members
+              Invite Your Teammates
             </label>
             {inputType === 'single' && (
               <div>

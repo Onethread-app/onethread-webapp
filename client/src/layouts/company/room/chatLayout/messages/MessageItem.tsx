@@ -90,22 +90,22 @@ const MessageItemComponent = (props: MessageItemProps) => {
           } ${props.group.message ? 'mb1' : 'mb3'}`}
           style={{
             marginLeft: '48px',
-            fontSize: '1.2rem',
+            fontSize: '15px',
           }}
         >
           <div
             className={`ph3 pv1 br4 mw7 ${
               currentUser ? 'message-mine mr2' : 'message-others ml2'
             }`}
-            // style={{
-            //   backgroundColor: currentUser ? '#3b5998' : '#d4d4d47a',
-            // }}
+            style={{
+              backgroundColor: currentUser ? '#3b5998' : '#d4d4d47a',
+            }}
           >
             <Linkify componentDecorator={componentDecorator}>
               <p
                 className={`mv0 tj break-word`}
                 style={{
-                  // color: currentUser ? 'white' : 'rgb(74, 73, 73)',
+                  color: currentUser ? 'white' : 'rgb(74, 73, 73)',
                   whiteSpace: 'pre-wrap',
                 }}
               >
@@ -155,16 +155,16 @@ const MessageItemComponent = (props: MessageItemProps) => {
                 className={`ph3 pv2 br3 mw7 ${
                   currentUser ? 'mr2' : 'ml2'
                 } flex justify-center items-center`}
-                // style={{
-                //   backgroundColor: currentUser
-                //     ? '#3b5998'
-                //     : '#d4d4d47a',
-                // }}
+                style={{
+                  backgroundColor: currentUser
+                    ? '#3b5998'
+                    : '#d4d4d47a',
+                }}
               >
                 <h4
                   className="mv0 flex justify-center items-center break-word"
                   style={{
-                    // color: currentUser ? 'white' : 'rgb(74, 73, 73)',
+                    color: currentUser ? 'white' : 'rgb(74, 73, 73)',
                     whiteSpace: 'pre-wrap',
                   }}
                 >
