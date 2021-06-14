@@ -117,7 +117,6 @@ export const ProjectReducer = (state = initialState, action: any) => {
     case ProjectActionTypes.PROJECT_FILE_UP_START:
     case ProjectActionTypes.PROJECT_PREFACE_OUT_UP_START:
     case ProjectActionTypes.PROJECT_PREFACE_DES_UP_START:
-
     case ProjectActionTypes.ARCHIVE_PROJECT_START:
     case ProjectActionTypes.CREATE_PROJECT_IN_COMPANY_START:
     case ProjectActionTypes.GET_ALL_PROJECTS_START:

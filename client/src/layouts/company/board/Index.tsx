@@ -104,6 +104,17 @@ const BoardCard = withRouter(
                   {board.members ? board.members.length : 0}
                 </p>
               </div>
+              <div>
+                <p
+                  className="mb0 ws-break"
+                  style={{ fontSize: '0.7rem' }}
+                >
+                  Remaining Tasks
+                </p>
+                <p className="fw8">
+                  {`${board.remainingTasks}/${board.totalTasks}`}
+                </p>
+              </div>
             </div>
           </Card>
         </div>
@@ -188,6 +199,7 @@ const TaskPageComponent = (
             display: 'inline-block',
             height: '20px',
           }}
+          alt=""
         />{' '}
         icon below
       </p>
