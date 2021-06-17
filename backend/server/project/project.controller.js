@@ -652,7 +652,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
       // .select('-type -__v  -files -version -optionalRole ')
       .sort({ createdAt: -1 })
       .skip(+skip)
-      .limit(+limit)
+     // .limit(+limit)
       .exec()
       .then((result) => {
         return sendJSONresponse(res, 200, result);
