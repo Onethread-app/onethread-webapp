@@ -1,4 +1,6 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import './ProjectStatus.scss';
 
 const fontColor = {
@@ -6,8 +8,16 @@ const fontColor = {
 };
 
 const ProjectStatus = (props) => {
+  const history = useHistory();
   return (
-    <div className="project-status-content mb2">
+    <div
+      className="project-status-content mb2 pointer"
+      onClick={() =>
+        history.push(
+          `/company/${props.uniqueCompanyName}/project/${props.projectId}/overview`,
+        )
+      }
+    >
       <div className="content-wrapper flex justify-between mb3">
         <div style={fontColor} className="f5 f6 fw6">
           {props.content}
@@ -23,4 +33,8 @@ const ProjectStatus = (props) => {
   );
 };
 
-export default ProjectStatus;
+const mapStateToProps = (state: any) => ({
+  uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
+});
+
+export default connect(mapStateToProps, {})(ProjectStatus);

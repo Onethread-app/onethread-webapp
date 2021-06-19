@@ -71,7 +71,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     currentAnnouncementPage,
     setCurrentAnnouncementPage,
   ] = useState(1);
-  const [itemsPerPage] = useState(5);
+  const [taskItemsPerPage] = useState(10);
+  const [announcementItemsPerPage] = useState(5);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -115,8 +116,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     getAPI();
   }, [props.company._id]);
 
-  const indexOfLastTask = currentTaskPage * itemsPerPage;
-  const indexOfFirstTask = indexOfLastTask - itemsPerPage;
+  const indexOfLastTask = currentTaskPage * taskItemsPerPage;
+  const indexOfFirstTask = indexOfLastTask - taskItemsPerPage;
 
   const allTasks = orderBy(
     props.completedTasks,
@@ -130,9 +131,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
   );
 
   const indexOfLastAnnouncement =
-    currentAnnouncementPage * itemsPerPage;
+    currentAnnouncementPage * announcementItemsPerPage;
   const indexOfFirstAnnouncement =
-    indexOfLastAnnouncement - itemsPerPage;
+    indexOfLastAnnouncement - announcementItemsPerPage;
   let currentAnnouncements: any;
   if (props.company.announce) {
     const allAnnouncements = orderBy(
@@ -212,147 +213,6 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
             </div>
             <div>
               <div className="mt5 pb0-ns">
-                <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
-                  Latest Completed Tasks
-                </h3>
-                <div className="flex-ns justify-between">
-                  <Card className="w-100-l w-100 pa3-ns pa2 shadow-1 br2">
-                    {props.completedTasks.length > 0 ? (
-                      currentTasks.map((task: latestTask) => (
-                        <div
-                          className="flex flex-row-ns flex-column mb2"
-                          key={task._id}
-                        >
-                          <div className="flex flex-row mb1">
-                            <img
-                              src={tick}
-                              alt="tick"
-                              className="mr2"
-                              style={{
-                                height: '18px',
-                                width: '18px',
-                              }}
-                            />
-                            <div className="w-100 flex flex-row justify-between">
-                              <span
-                                className="fw6 mr2 ba b-light-gray br2 ph2"
-                                style={{ color: '#BBBBBB' }}
-                              >
-                                {task.project.name}
-                              </span>
-                              {isMobileOnly ? (
-                                <span style={{ color: '#B4B4B4' }}>
-                                  {moment(task.updatedAt).fromNow()}
-                                </span>
-                              ) : null}
-                            </div>
-                          </div>
-                          <div>
-                            <span
-                              className="fw6 mr3"
-                              style={{ color: '#656565' }}
-                            >
-                              <span
-                                className="ttc"
-                                style={{ color: '#3484F0' }}
-                              >
-                                {task.name}
-                              </span>{' '}
-                              from {task.boardId.name} has been marked
-                              as complete.
-                            </span>
-                            {isMobileOnly ? null : (
-                              <span style={{ color: '#B4B4B4' }}>
-                                {moment(task.updatedAt).fromNow()}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <Typography>
-                        None of the tasks have been marked as done.
-                      </Typography>
-                    )}
-                    {props.completedTasks.length > 5 && (
-                      <div className="flex flex-row items-end w-100 justify-end">
-                        <div
-                          className="f6 fw5 flex flex-row items-center"
-                          style={{ color: '#BBBBBB' }}
-                        >
-                          {currentTaskPage > 1 && (
-                            <span
-                              className="mr2 pointer f4"
-                              style={{ color: '#656565' }}
-                              onClick={prevTaskPage}
-                            >
-                              &lt;
-                            </span>
-                          )}
-                          {currentTaskPage} of{' '}
-                          {Math.ceil(
-                            props.completedTasks.length /
-                              itemsPerPage,
-                          )}
-                          {currentTaskPage <
-                            Math.ceil(
-                              props.completedTasks.length /
-                                itemsPerPage,
-                            ) && (
-                            <span
-                              className="ml2 pointer f4"
-                              style={{ color: '#656565' }}
-                              onClick={nextTaskPage}
-                            >
-                              &#707;
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </Card>
-                </div>
-              </div>
-              <div className="mt5 pb0-ns">
-                <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
-                  Project Status
-                </h3>
-                <div className="flex-ns justify-between">
-                  {dashboard && (
-                    <Card className="w-100-l w-100 pa4-ns pa3 shadow-1 br2">
-                      {dashboard.projectCompilation &&
-                      dashboard.projectCompilation.length > 0 ? (
-                        dashboard.projectCompilation.map(
-                          (project) => (
-                            <div className="mb4" key={project.name}>
-                              <ProjectStatus
-                                content={project.name}
-                                remaining={
-                                  project.taskNumbers -
-                                  project.doneTask
-                                }
-                                total={project.taskNumbers}
-                              />
-                              <Progressbar
-                                width={parseInt(width.width)}
-                                percent={
-                                  project.doneTask /
-                                  project.taskNumbers
-                                }
-                              />
-                            </div>
-                          ),
-                        )
-                      ) : (
-                        <Typography>
-                          You do not have any project at this moment.
-                        </Typography>
-                      )}
-                    </Card>
-                  )}
-                </div>
-              </div>
-              <div className="mt4 mb4 pb0-ns">
                 <div className="flex justify-between items-center">
                   <h3
                     style={{ color: '#3484F0' }}
@@ -455,12 +315,12 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                           {currentAnnouncementPage} of{' '}
                           {Math.ceil(
                             props.company.announce.length /
-                              itemsPerPage,
+                              announcementItemsPerPage,
                           )}
                           {currentAnnouncementPage <
                             Math.ceil(
                               props.company.announce.length /
-                                itemsPerPage,
+                                announcementItemsPerPage,
                             ) && (
                             <span
                               className="ml2 pointer f4"
@@ -475,6 +335,168 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     )}
                   </Card>
                 )}
+              </div>
+              <div className="mt5 mb4 pb0-ns flex flex-row-ns flex-column">
+                <div className="ma3" style={{ flex: '1' }}>
+                  <h3
+                    className="f3-ns f5"
+                    style={{ color: '#3484F0' }}
+                  >
+                    Project Status
+                  </h3>
+                  <div
+                    style={{
+                      maxHeight: '380px',
+                      overflowY: 'scroll',
+                    }}
+                  >
+                    <div className="flex-ns justify-between ma2">
+                      {dashboard && (
+                        <Card className="w-100-l w-100 pa4-ns pa3 shadow-1 br2">
+                          {dashboard.projectCompilation &&
+                          dashboard.projectCompilation.length > 0 ? (
+                            dashboard.projectCompilation.map(
+                              (project) => (
+                                <div
+                                  className="mb4"
+                                  key={project.name}
+                                >
+                                  <ProjectStatus
+                                    content={project.name}
+                                    remaining={
+                                      project.taskNumbers -
+                                      project.doneTask
+                                    }
+                                    projectId={project._id}
+                                    total={project.taskNumbers}
+                                  />
+                                  <Progressbar
+                                    width={parseInt(width.width)}
+                                    percent={
+                                      project.doneTask /
+                                      project.taskNumbers
+                                    }
+                                  />
+                                </div>
+                              ),
+                            )
+                          ) : (
+                            <Typography>
+                              You do not have any project at this
+                              moment.
+                            </Typography>
+                          )}
+                        </Card>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="ma3" style={{ flex: '1' }}>
+                  <h3
+                    className="f3-ns f5"
+                    style={{ color: '#3484F0' }}
+                  >
+                    Latest Completed Tasks
+                  </h3>
+                  <div className="flex-ns justify-between">
+                    <Card className="w-100-l w-100 pa3-ns pa2 shadow-1 br2">
+                      {props.completedTasks.length > 0 ? (
+                        currentTasks.map((task: latestTask) => (
+                          <div
+                            className="flex flex-row-ns flex-column mb2"
+                            key={task._id}
+                          >
+                            <div className="flex flex-row mb1">
+                              <img
+                                src={tick}
+                                alt="tick"
+                                className="mr2"
+                                style={{
+                                  height: '18px',
+                                  width: '18px',
+                                }}
+                              />
+                              <div className="w-100 flex flex-row justify-between">
+                                <span
+                                  className="fw6 mr2 ba b-light-gray br2 ph2"
+                                  style={{ color: '#BBBBBB' }}
+                                >
+                                  {task.project.name}
+                                </span>
+                                {isMobileOnly ? (
+                                  <span style={{ color: '#B4B4B4' }}>
+                                    {moment(task.updatedAt).fromNow()}
+                                  </span>
+                                ) : null}
+                              </div>
+                            </div>
+                            <div>
+                              <span
+                                className="fw6 mr3"
+                                style={{ color: '#656565' }}
+                              >
+                                <span
+                                  className="ttc"
+                                  style={{ color: '#3484F0' }}
+                                >
+                                  {task.name}
+                                </span>{' '}
+                                from {task.boardId.name} has been
+                                marked as complete.
+                              </span>
+                              {isMobileOnly ? null : (
+                                <span style={{ color: '#B4B4B4' }}>
+                                  {moment(task.updatedAt).fromNow()}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <Typography>
+                          None of the tasks have been marked as done.
+                        </Typography>
+                      )}
+                      {props.completedTasks.length >
+                        taskItemsPerPage && (
+                        <div className="flex flex-row items-end w-100 justify-end">
+                          <div
+                            className="f6 fw5 flex flex-row items-center"
+                            style={{ color: '#BBBBBB' }}
+                          >
+                            {currentTaskPage > 1 && (
+                              <span
+                                className="mr2 pointer f4"
+                                style={{ color: '#656565' }}
+                                onClick={prevTaskPage}
+                              >
+                                &lt;
+                              </span>
+                            )}
+                            {currentTaskPage} of{' '}
+                            {Math.ceil(
+                              props.completedTasks.length /
+                                taskItemsPerPage,
+                            )}
+                            {currentTaskPage <
+                              Math.ceil(
+                                props.completedTasks.length /
+                                  taskItemsPerPage,
+                              ) && (
+                              <span
+                                className="ml2 pointer f4"
+                                style={{ color: '#656565' }}
+                                onClick={nextTaskPage}
+                              >
+                                &#707;
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </Card>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

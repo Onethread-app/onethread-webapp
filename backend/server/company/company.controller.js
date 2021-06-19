@@ -604,6 +604,7 @@ const dashBoard = async (req, res, next) => {
         ],
       }).countDocuments();
       let projectObj = {};
+      projectObj._id = projectList[i]._id;
       projectObj.name = projectName;
       projectObj.taskNumbers = taskNumbers;
       projectObj.doneTask = doneTask;
@@ -699,9 +700,14 @@ const noticePostByCompany = async (req, res, next) => {
         data: `company/${company.uniqueName}/dashboard`,
       },
     };
-    const member = await Member.find({company:company._id, removed:false}).select('account').populate('account', '_id');
-    member.forEach(async data=>{
-      await triggerNotification( data.account._id, dataToSend);
+    const member = await Member.find({
+      company: company._id,
+      removed: false,
+    })
+      .select('account')
+      .populate('account', '_id');
+    member.forEach(async (data) => {
+      await triggerNotification(data.account._id, dataToSend);
     });
     return sendJSONresponse(res, 201, {
       message: 'New notice added',
