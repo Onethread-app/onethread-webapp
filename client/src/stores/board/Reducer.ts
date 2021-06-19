@@ -20,6 +20,8 @@ export interface TaskBoard {
   color: string;
   columns?: IColumn[];
   members?: Object[];
+  totalTasks: number;
+  remainingTasks: number;
 }
 
 export interface ITask {

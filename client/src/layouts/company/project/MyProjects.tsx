@@ -100,6 +100,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
 
   useEffect(() => {
     setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
+    console.log(props.projects);
   }, [props.projects]);
 
   useEffect(() => {
@@ -275,6 +276,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
               display: 'inline-block',
               height: '20px',
             }}
+            alt=""
           />{' '}
           icon below
         </p>
@@ -457,17 +459,25 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                           className="flex flex-column items-start mt2"
                           style={{ paddingLeft: '25px' }}
                         >
-                          <span
-                            className={`bp3-tag modifier ${
-                              project.status === 'not-started'
-                                ? 'bg-blue'
-                                : project.status === 'ongoing'
-                                ? 'bg-orange'
-                                : 'bg-green'
-                            }`}
-                          >
-                            {project.status.replace(/-|\s/g, ' ')}
-                          </span>
+                          <div className="flex items-center justify-between w-100">
+                            <span
+                              className={`bp3-tag modifier ${
+                                project.status === 'not-started'
+                                  ? 'bg-blue'
+                                  : project.status === 'ongoing'
+                                  ? 'bg-orange'
+                                  : 'bg-green'
+                              }`}
+                            >
+                              {project.status.replace(/-|\s/g, ' ')}
+                            </span>
+                            {project.status !== 'not-started' && (
+                              <span className="f7 fw5 mr2">
+                                Remaining Tasks:{' '}
+                                {`${project.remainingTasks}/${project.totalTasks}`}
+                              </span>
+                            )}
+                          </div>
 
                           <p
                             className="f7 fw5"
@@ -689,6 +699,7 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                   boxShadow: '0px 6px 6px #00000029',
                   borderRadius: '50%',
                 }}
+                alt=""
               />
             </div>
           )}

@@ -13,6 +13,16 @@ const {
 } = require('../notification/notification.controller');
 const { Team } = require('../team-member/team.model');
 
+const getTasksNumbers = async (boardId) => {
+  const taskNumbers = await Task.find({
+    boardId,
+  }).countDocuments();
+  const doneTasks = await Task.find({
+    $and: [{ boardId, status: 'done' }],
+  }).countDocuments();
+  return { taskNumbers, doneTasks };
+};
+
 const createBoard = async (
   name,
   project,
@@ -75,6 +85,14 @@ const load = (req, res, next, id) => {
     .then(async (result) => {
       if (result.project.toString() === req.query.pid) {
         let board;
+        const { taskNumbers, doneTasks } = await getTasksNumbers(
+          result._id,
+        );
+        board = {
+          ...result._doc,
+          totalTasks: taskNumbers,
+          remainingTasks: taskNumbers - doneTasks,
+        };
         await BoardColumn.find({
           boardId: result._id,
           removed: false,
@@ -90,7 +108,7 @@ const load = (req, res, next, id) => {
                 };
               });
 
-              board = { ...result._doc, columns };
+              board = { ...board, columns };
             } else board = result;
             req.board = board;
           });
@@ -210,9 +228,22 @@ const list = async (req, res, next) => {
     .skip(+skip)
     .limit(+limit)
     .exec()
-    .then((result) => {
-      logger.info(`successfully board list show to board team`);
-      return sendJSONresponse(res, 200, result);
+    .then(async (result) => {
+      let modifiedResult = await Promise.all(
+        result.map(async (res) => {
+          const { taskNumbers, doneTasks } = await getTasksNumbers(
+            res._id,
+          );
+          let projectObj = {
+            ...res._doc,
+            totalTasks: taskNumbers,
+            remainingTasks: taskNumbers - doneTasks,
+          };
+          return projectObj;
+        }),
+      );
+      logger.info(`BoardList for ${req.query.pid}`);
+      return sendJSONresponse(res, 200, modifiedResult);
     })
     .catch((e) => {
       logger.error(e);
