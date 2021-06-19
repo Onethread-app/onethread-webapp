@@ -658,7 +658,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
       // .select('-type -__v  -files -version -optionalRole ')
       .sort({ createdAt: -1 })
       .skip(+skip)
-     // .limit(+limit)
+      // .limit(+limit)
       .exec()
       .then(async (result) => {
         let modifiedResult = await Promise.all(
@@ -747,11 +747,14 @@ const getProjectDetails = async (req, res, next) => {
     })
       .populate('files', 'link s3Key')
       .select('outline description color name status');
-    const memberList = await Team.find({
+    const members = await Team.find({
       $and: [{ project: req.query.pid }, { removed: false }],
     }).populate('account', 'name profileImage');
-    project.members = memberList;
-    return sendJSONresponse(res, 200, project);
+    let projectObj = {
+      ...project._doc,
+      members,
+    };
+    return sendJSONresponse(res, 200, projectObj);
   } catch (error) {
     logger.error(`Project: ${error}`);
     next(error);
