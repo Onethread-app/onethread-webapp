@@ -294,21 +294,13 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                               />
                               <div className="w-100 flex flex-row justify-between">
                                 <span
-                                  className="fw6 mr2 ba b-light-gray br2 ph2"
+                                  className="fw6 mr3 ba b-light-gray br2 ph1"
                                   style={{ color: '#BBBBBB' }}
                                 >
                                   {task.project.name}
                                 </span>
-                                {isMobileOnly ? (
-                                  <span style={{ color: '#B4B4B4' }}>
-                                    {moment(task.updatedAt).fromNow()}
-                                  </span>
-                                ) : null}
-                              </div>
-                            </div>
-                            <div>
-                              <span
-                                className="fw6 mr3"
+                                <span
+                                className="fw6"
                                 style={{ color: '#656565' }}
                               >
                                 <span
@@ -325,7 +317,15 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                   {moment(task.updatedAt).fromNow()}
                                 </span>
                               )}
+                                {isMobileOnly ? (
+                                  <span style={{ color: '#B4B4B4' }}>
+                                    {moment(task.updatedAt).fromNow()}
+                                  </span>
+                                ) : null}
+                              </div>
+                        
                             </div>
+                            
                           </div>
                         ))
                       ) : (
