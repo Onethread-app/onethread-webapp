@@ -128,7 +128,7 @@ const AddProjectAssociateFormComponent = (
   return (
     <div className="pa3">
       <div className="w-100">
-        <h1 className="f5 tigrow-darkBlue">Add Associates</h1>
+        <h1 className="f5 tigrow-darkBlue">Add Partners</h1>
         <SuggestField
           onChange={(query: string) => {
             setSearchAssociate(query);

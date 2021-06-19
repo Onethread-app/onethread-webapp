@@ -70,7 +70,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
       >
         {(provided) => (
           <div
-            className="dib h-100 w-23-l w-50-m"
+            className="dib h-100 w-50-l w-50-m"
             style={{ minWidth: '270px' }}
             {...provided.draggableProps}
             ref={provided.innerRef}
@@ -178,7 +178,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                                 name="name"
                                 validate={composeValidators(
                                   required,
-                                  maxValue(60),
+                                  maxValue(150),
                                 )}
                                 render={({ input, meta }) => (
                                   <InputGroupFieldWithError
@@ -263,7 +263,7 @@ const ColumnComponent = (props: ColumnInternalProps) => {
                           {...provided.droppableProps}
                           {...allowedProps}
                         >
-                          <div className="flex-grow-1">
+                          <div className="flex-grow-2">
                             {props.column.tasks!.map(
                               (task, index) => (
                                 <TaskItem

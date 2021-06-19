@@ -195,6 +195,7 @@ export const SignInPageComponent = (
                                 }`}
                                 value={input.value}
                                 onChange={input.onChange}
+                                autoFocus={true}
                                 leftIcon={
                                   <span className="bp3-icon">
                                     <Icon
@@ -240,6 +241,7 @@ export const SignInPageComponent = (
                                 }`}
                                 value={input.value}
                                 onChange={input.onChange}
+                                autoFocus={true}
                                 type={`${
                                   showPassword ? 'text' : 'password'
                                 }`}

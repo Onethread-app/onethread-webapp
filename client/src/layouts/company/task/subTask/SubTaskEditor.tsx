@@ -76,7 +76,7 @@ export const SubTaskCreatorComponent = (
             <div className="ph2 pt2">
               <Field<string>
                 name="subtaskTitle"
-                validate={composeValidators(required, maxValue(60))}
+                validate={composeValidators(required, maxValue(100))}
                 render={({ input, meta }) => (
                   <div
                     className={` ${checkError(meta) ? 'mb3' : 'mb2'}`}
@@ -96,16 +96,7 @@ export const SubTaskCreatorComponent = (
                 )}
               />
               <div className="flex justify-end mt2">
-                <Button
-                  className="mr2"
-                  style={{ background: 'transparent' }}
-                  icon="cross"
-                  onClick={async () => {
-                    await props.setsubtask({});
-                    props.setShowSubTaskForm(!props.showSubtaskForm);
-                  }}
-                />
-                <Button
+              <Button
                   type="submit"
                   style={{ background: '#3F61C5' }}
                   loading={submitting}
@@ -118,6 +109,16 @@ export const SubTaskCreatorComponent = (
                   }
                   disabled={submitting || pristine}
                 />
+                <Button
+                  className="ml2"
+                  style={{ background: 'transparent' }}
+                  icon="cross"
+                  onClick={async () => {
+                    await props.setsubtask({});
+                    props.setShowSubTaskForm(!props.showSubtaskForm);
+                  }}
+                />
+               
               </div>
             </div>
           </form>

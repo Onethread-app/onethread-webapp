@@ -627,6 +627,7 @@ const showAllProjectsForCompany = async (req, res, next) => {
       $and: [
         {
           _id: { $in: memberExistInProject },
+          hasDeleted: false,
         },
         {
           $or: [
@@ -1004,6 +1005,20 @@ const suggestAssociateCompany = async (req, res, next) => {
   }
 };
 
+const deleteProject = async (req, res, next) => {
+  try {
+    await Project.findByIdAndUpdate(
+      { _id: req.query.pid },
+      { $set: { hasDeleted: true } },
+      { safe: true, upsert: true, new: true },
+    );
+    return sendJSONresponse(res, 200, { success: true });
+  } catch (err) {
+    logger.error(`Project: ${err}`);
+    next(err);
+  }
+};
+
 const archiveProjectList = async (req, res, next) => {
   const { limit = 50, skip = 0 } = req.query;
   await Project.find({
@@ -1014,11 +1029,10 @@ const archiveProjectList = async (req, res, next) => {
           { associate: { $in: req.params.companyId } },
         ],
       },
-      { removed: true },
+      { removed: true, hasDeleted: false },
     ],
   })
     .populate('departments', 'name _id')
-    .select('name members')
     .sort({ createdAt: -1 })
     .skip(+skip)
     .limit(+limit)
@@ -1252,4 +1266,5 @@ module.exports = {
   getProjectIndividual,
   projectListForMember,
   projectOverview,
+  deleteProject,
 };

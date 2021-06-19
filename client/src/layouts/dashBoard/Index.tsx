@@ -212,131 +212,7 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
               </div>
             </div>
             <div>
-              <div className="mt5 pb0-ns">
-                <div className="flex justify-between items-center">
-                  <h3
-                    style={{ color: '#3484F0' }}
-                    className="justify-center f3-ns f5"
-                  >
-                    Company Announcements
-                  </h3>
-
-                  {companyPermit(props.company.role) && (
-                    <button
-                      onClick={() =>
-                        setShowAnnouncementDialog(
-                          !showAnnouncementDialog,
-                        )
-                      }
-                      className="bp3-button w5 h2 pointer fr"
-                      style={{
-                        background: '#3484F0',
-                        outline: 'none',
-                        color: '#fff',
-                      }}
-                    >
-                      <span>
-                        <img
-                          src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/mic.svg"
-                          alt="announcement"
-                        />
-                      </span>
-                      <span className="ml2-ns">
-                        Create Announcement
-                      </span>
-                    </button>
-                  )}
-                </div>
-                {props.company.announce && (
-                  <Card
-                    className="w-100-l w-100 pa4 shadow-1 br2"
-                    style={{ borderLeft: '10px solid #3484F0' }}
-                  >
-                    {props.company.announce.length > 0 ? (
-                      currentAnnouncements.map(
-                        (announcement: any) => (
-                          <CompanyAnnouncements
-                            divison={
-                              announcement.memberId &&
-                              announcement.memberId.designations
-                                .length > 0
-                                ? designationMap[
-                                    announcement.memberId
-                                      .designations[0].division
-                                  ]
-                                : announcement.memberId.role
-                            }
-                            date={moment(
-                              announcement.createdAt,
-                            ).calendar()}
-                            content={announcement.text}
-                            key={announcement._id}
-                            firstName={
-                              announcement.memberId.account
-                                ? announcement.memberId.account
-                                    .firstName
-                                : null
-                            }
-                            lastName={
-                              announcement.memberId.account
-                                ? announcement.memberId.account
-                                    .lastName
-                                : null
-                            }
-                            position={
-                              announcement.memberId &&
-                              announcement.memberId.designations
-                                .length > 0
-                                ? announcement.memberId
-                                    .designations[0].position
-                                : announcement.memberId.role
-                            }
-                          />
-                        ),
-                      )
-                    ) : (
-                      <Typography>No Announcement</Typography>
-                    )}
-                    {props.company.announce.length > 5 && (
-                      <div className="flex flex-row items-end w-100 justify-end">
-                        <div
-                          className="f6 fw5 flex flex-row items-center"
-                          style={{ color: '#BBBBBB' }}
-                        >
-                          {currentAnnouncementPage > 1 && (
-                            <span
-                              className="mr2 pointer f4"
-                              style={{ color: '#656565' }}
-                              onClick={prevAnnouncementPage}
-                            >
-                              &lt;
-                            </span>
-                          )}
-                          {currentAnnouncementPage} of{' '}
-                          {Math.ceil(
-                            props.company.announce.length /
-                              announcementItemsPerPage,
-                          )}
-                          {currentAnnouncementPage <
-                            Math.ceil(
-                              props.company.announce.length /
-                                announcementItemsPerPage,
-                            ) && (
-                            <span
-                              className="ml2 pointer f4"
-                              style={{ color: '#656565' }}
-                              onClick={nextAnnouncementPage}
-                            >
-                              &#707;
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    )}
-                  </Card>
-                )}
-              </div>
-              <div className="mt5 mb4 pb0-ns flex flex-row-ns flex-column">
+            <div className="mt5 mb4 pb0-ns flex flex-row-ns flex-column">
                 <div className="ma3" style={{ flex: '1' }}>
                   <h3
                     className="f3-ns f5"
@@ -498,6 +374,131 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                   </div>
                 </div>
               </div>
+              <div className="mt5 pb0-ns">
+                <div className="flex justify-between items-center">
+                  <h3
+                    style={{ color: '#3484F0' }}
+                    className="justify-center f3-ns f5"
+                  >
+                    Company Announcements
+                  </h3>
+
+                  {companyPermit(props.company.role) && (
+                    <button
+                      onClick={() =>
+                        setShowAnnouncementDialog(
+                          !showAnnouncementDialog,
+                        )
+                      }
+                      className="bp3-button w5 h2 pointer fr"
+                      style={{
+                        background: '#3484F0',
+                        outline: 'none',
+                        color: '#fff',
+                      }}
+                    >
+                      <span>
+                        <img
+                          src="https://tigrowresources.s3-ap-southeast-1.amazonaws.com/mic.svg"
+                          alt="announcement"
+                        />
+                      </span>
+                      <span className="ml2-ns">
+                        Create Announcement
+                      </span>
+                    </button>
+                  )}
+                </div>
+                {props.company.announce && (
+                  <Card
+                    className="w-100-l w-100 pa4 shadow-1 br2"
+                    style={{ borderLeft: '10px solid #3484F0' }}
+                  >
+                    {props.company.announce.length > 0 ? (
+                      currentAnnouncements.map(
+                        (announcement: any) => (
+                          <CompanyAnnouncements
+                            divison={
+                              announcement.memberId &&
+                              announcement.memberId.designations
+                                .length > 0
+                                ? designationMap[
+                                    announcement.memberId
+                                      .designations[0].division
+                                  ]
+                                : announcement.memberId.role
+                            }
+                            date={moment(
+                              announcement.createdAt,
+                            ).calendar()}
+                            content={announcement.text}
+                            key={announcement._id}
+                            firstName={
+                              announcement.memberId.account
+                                ? announcement.memberId.account
+                                    .firstName
+                                : null
+                            }
+                            lastName={
+                              announcement.memberId.account
+                                ? announcement.memberId.account
+                                    .lastName
+                                : null
+                            }
+                            position={
+                              announcement.memberId &&
+                              announcement.memberId.designations
+                                .length > 0
+                                ? announcement.memberId
+                                    .designations[0].position
+                                : announcement.memberId.role
+                            }
+                          />
+                        ),
+                      )
+                    ) : (
+                      <Typography>No Announcement</Typography>
+                    )}
+                    {props.company.announce.length > 5 && (
+                      <div className="flex flex-row items-end w-100 justify-end">
+                        <div
+                          className="f6 fw5 flex flex-row items-center"
+                          style={{ color: '#BBBBBB' }}
+                        >
+                          {currentAnnouncementPage > 1 && (
+                            <span
+                              className="mr2 pointer f4"
+                              style={{ color: '#656565' }}
+                              onClick={prevAnnouncementPage}
+                            >
+                              &lt;
+                            </span>
+                          )}
+                          {currentAnnouncementPage} of{' '}
+                          {Math.ceil(
+                            props.company.announce.length /
+                              announcementItemsPerPage,
+                          )}
+                          {currentAnnouncementPage <
+                            Math.ceil(
+                              props.company.announce.length /
+                                announcementItemsPerPage,
+                            ) && (
+                            <span
+                              className="ml2 pointer f4"
+                              style={{ color: '#656565' }}
+                              onClick={nextAnnouncementPage}
+                            >
+                              &#707;
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </Card>
+                )}
+              </div>
+              
             </div>
           </div>
         </>

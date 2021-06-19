@@ -115,7 +115,6 @@ const create = async (req, res, next) => {
             : false,
         room,
       });
-      console.log(memberMessage);
       await memberMessage.save();
       logger.info(`userMessage saved for user ${member.account}`);
     });

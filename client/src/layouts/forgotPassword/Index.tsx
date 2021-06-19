@@ -74,6 +74,7 @@ const ForgotPasswordComponnet = (props: ForgotPasswordProps) => {
                     placeHolder="Enter your email address"
                     value={input.value}
                     onChange={input.onChange}
+                    autoFocus={true}
                     style={{ boxShadow: 'none', height: '42px' }}
                     error={
                       checkError(meta) &&

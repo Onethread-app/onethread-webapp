@@ -54,10 +54,10 @@ export const TaskFormComponent = (props: TaskFormInternalProps) => {
           ...rest
         }) => (
           <form onSubmit={handleSubmit}>
-            <div className="pv3 justify-content w-100">
+            <div className="pv5 justify-content w-100">
               <Field<string>
                 name="name"
-                validate={composeValidators(required, maxValue(60))}
+                validate={composeValidators(required, maxValue(150))}
                 render={({ input, meta }) => (
                   <div
                     className={` ${checkError(meta) ? 'mb2' : 'mb3'}`}
