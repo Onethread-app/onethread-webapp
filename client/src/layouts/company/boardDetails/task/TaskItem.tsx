@@ -102,7 +102,7 @@ const TaskItemComponent = (
                   style={{
                     whiteSpace: 'nowrap',
                     textOverflow: 'ellipsis',
-                    width: '220px',
+                    width: '440px',
                   }}
                   onClick={handleClick}
                 >

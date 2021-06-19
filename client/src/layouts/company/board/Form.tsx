@@ -81,7 +81,8 @@ const FormComponent = (props: {
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      label="Board Name*"
+                      label="Board Name (Required)"
+                      autoFocus={true}
                     />
                   </div>
                 )}

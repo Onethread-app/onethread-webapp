@@ -9,7 +9,7 @@ const {
   authorization,
 } = require('../middlewares/authorizationMiddleware');
 const subCtrl = require('../subscription/subscription.controller');
-const { route } = require('../associate/associate.route');
+
 
 router
   .route('/change-title')
@@ -226,16 +226,21 @@ router
   .get(authorization, projectCtrl.projectListForMember);
 
 //TODOS: need to add permission, subscriptioncheck, validation
-router.route('/overview').get(
-  authorization,
-  // subCtrl.subscriptionExpireCheck(),
-  // projectCtrl.authorizeProjectRole(
-  //   'all',
-  //   'admin',
-  //   'projectModerator',
-  //   'member',
-  // ),
-  projectCtrl.projectOverview,
-);
+router
+  .route('/overview')
+  .get(authorization, projectCtrl.projectOverview);
+
+router
+  .route('/delete-project')
+  .delete(
+    authorization,
+    subCtrl.subscriptionExpireCheck(),
+    projectCtrl.authorizeProjectRole(
+      'all',
+      'admin',
+      'projectModerator',
+    ),
+    projectCtrl.deleteProject,
+  );
 
 module.exports = router;

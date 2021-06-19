@@ -96,7 +96,7 @@ const BoardDetailsViewComponent = (
                 >
                   Create New Board
                 </button>
-                <img
+                {/* <img
                   className="br2 pointer"
                   style={{ height: '1.8rem', width: '1.8rem' }}
                   src={addMemberIcon}
@@ -106,7 +106,7 @@ const BoardDetailsViewComponent = (
                       !showAddMemberFormDialog,
                     )
                   }
-                />
+                /> */}
               </>
             ) : permissions.grantAll ||
               permissions.projectModerator.includes(

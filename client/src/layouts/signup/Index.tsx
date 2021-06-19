@@ -162,6 +162,7 @@ export const SignUpPageComponent = (
                                   }`}
                                   value={input.value}
                                   onChange={input.onChange}
+                                  autoFocus={true}
                                   leftIcon={
                                     <span className="bp3-icon">
                                       <Icon
@@ -203,6 +204,7 @@ export const SignUpPageComponent = (
                                   }`}
                                   value={input.value}
                                   onChange={input.onChange}
+                                  autoFocus={true}
                                   style={{
                                     boxShadow: 'none',
                                     fontSize: '18px',
@@ -404,6 +406,7 @@ export const SignUpPageComponent = (
                                   }`}
                                   value={input.value}
                                   onChange={input.onChange}
+                                  autoFocus={true}
                                   leftIcon={
                                     <span className="bp3-icon">
                                       <Icon
@@ -455,6 +458,7 @@ export const SignUpPageComponent = (
                                   }`}
                                   value={input.value}
                                   onChange={input.onChange}
+                                  autoFocus={true}
                                   type={`${
                                     showPassword ? 'text' : 'password'
                                   }`}
@@ -576,6 +580,7 @@ export const SignUpPageComponent = (
                                   }`}
                                   value={input.value}
                                   onChange={input.onChange}
+                                  autoFocus={true}
                                   type={`${
                                     showConfirmPassword
                                       ? 'text'

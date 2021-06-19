@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const FeedbackSchema = new Schema(
   {
-    bug: {
-      type: String,
-      trim: true,
-      maxlength: 5000,
-    },
     improve: {
       type: String,
       trim: true,

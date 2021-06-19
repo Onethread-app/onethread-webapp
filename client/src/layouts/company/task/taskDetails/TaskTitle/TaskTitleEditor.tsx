@@ -50,7 +50,7 @@ const TaskTitleEditorComponent = (props: ITaskTitleFormProps) => {
             <div className="ph2 pt2 w-100">
               <Field<string>
                 name="name"
-                validate={composeValidators(required, maxValue(60))}
+                validate={composeValidators(required, maxValue(150))}
                 render={({ input, meta }) => (
                   <div
                     className={`${checkError(meta) ? 'mb3' : 'mb2'}`}
