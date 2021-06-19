@@ -323,9 +323,8 @@ export function* getSingleProjectAsync({ payload }: any) {
           put(clearCurrentBoard()),
           put(getRoleForProject(response.data._id)),
           put(getSingleProjectSuccess(response.data)),
+          put(openProjectFIle(true)),
         ]);
-        const projectId = yield select(getProjectId);
-        yield projectId !== '' && put(openProjectFIle(true));
       }
     } else {
       yield put(updateProjectLoading(false));

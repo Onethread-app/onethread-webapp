@@ -193,9 +193,14 @@ export const ProjectPrefaceViewComponent = (
                 <article className="pv2">
                   <div className="dtc v-mid">
                     <img
-                      src={user}
+                      src={
+                        member.account.profileImage
+                          ? member.account.profileImage
+                          : user
+                      }
                       className="db br-100 ba b--black-10"
                       style={{ width: '45px', height: '45px' }}
+                      alt=""
                     />
                   </div>
                   <div className="dtc v-mid pl3">

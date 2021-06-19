@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import { User } from 'stores/user/Reducer';
 import { ICompany } from 'stores/company/Reducer';
-import { useDispatch, connect } from 'react-redux';
+import { connect } from 'react-redux';
 
 import logo from 'resources/images/onethread-text.png';
 import tigrowLogo from '../resources/images/TiGrowLogoFinal.png';
@@ -39,8 +39,10 @@ import {
 } from 'stores/UtilsActions';
 // import { isEmpty } from 'lodash';
 import { ICompanyRoom } from 'stores/room/Reducer';
-import { PROJECT } from '../stores/project/Types';
-import { clearProjectReducer } from 'stores/project/Actions';
+import {
+  clearProjectReducer,
+  openProjectFIle,
+} from 'stores/project/Actions';
 // import { withRouter } from 'react-router';
 
 interface ISideBarProps {
@@ -52,11 +54,11 @@ interface ISideBarProps {
   companyRooms: ICompanyRoom[];
   projectFileOpen: boolean;
   clearProjectReducer: () => void;
+  openProjectFIle: (val: boolean) => void;
 }
 
 const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
   const [activeTab, setActiveTab] = React.useState('');
-  const dispatch = useDispatch();
 
   React.useEffect(() => {
     props.type === 'default'
@@ -261,16 +263,13 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       width: '230px',
                     }}
                     onClick={async () => {
-                      if (props.project._id) {
-                        await props.clearProjectReducer();
-                      }
-                      await dispatch({
-                        type: PROJECT.PROJECT_FILE_OPEN,
-                        payload: false,
-                      });
                       props.history.push(
                         `/company/${props.company.uniqueName}/project`,
                       );
+                      await props.openProjectFIle(false);
+                      if (props.project._id) {
+                        await props.clearProjectReducer();
+                      }
                     }}
                   >
                     {props.project.name}
@@ -804,4 +803,5 @@ const mapStateToProps = (state: any) => {
 
 export const Sidebar = connect(mapStateToProps, {
   clearProjectReducer,
+  openProjectFIle,
 })(withRouter(_Sidebar));
