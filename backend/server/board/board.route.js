@@ -56,7 +56,16 @@ router
     ),
     SchemaValidator(boardSchema.singleBoard),
     boardCtrl.get,
-  )
+  );
+
+router
+  .route('/:boardId/update-name')
+  .put(
+    authorization,
+    projectCtrl.authorizeProjectRole('admin', 'projectModerator'),
+    SchemaValidator(boardSchema.updateName),
+    boardCtrl.updateName,
+  );
 
 router
   .route('/:boardId/members')

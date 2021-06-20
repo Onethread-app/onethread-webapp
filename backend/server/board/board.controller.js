@@ -172,6 +172,20 @@ const create = async (req, res, next) => {
   }
 };
 
+const updateName = async (req, res, next) => {
+  try {
+    const board = await Board.findByIdAndUpdate(
+      { _id: req.params.boardId },
+      { $set: { name: req.body.name } },
+      { safe: true, upsert: true, new: true },
+    ).select('name');
+    return sendJSONresponse(res, 200, board);
+  } catch (error) {
+    logger.error(`Board update name: ${error}`);
+    next(error);
+  }
+};
+
 const addBoardMembers = async (req, res, next) => {
   try {
     const boardID = req.params.boardId;
@@ -299,4 +313,5 @@ module.exports = {
   suggestMember,
   createBoard,
   addToBoard,
+  updateName,
 };

@@ -46,4 +46,12 @@ module.exports = {
       boardId: schema.boardId,
     }),
   }),
+  updateName: Joi.object().keys({
+    body: Joi.object().keys({
+      name: schema.name.required(),
+    }),
+    params: Joi.object().keys({
+      boardId: schema.boardId,
+    }),
+  }),
 };

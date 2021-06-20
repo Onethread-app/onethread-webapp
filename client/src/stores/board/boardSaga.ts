@@ -39,6 +39,8 @@ import {
   getSelectedTaskDetails,
   updateBoardLoading,
   updateTaskLoading,
+  updateBoardNameFailure,
+  updateBoardNameSuccess,
 } from './Actions';
 import { getProjectId } from 'stores/project/Selector';
 import { getCompanyId } from 'stores/company/Selector';
@@ -149,6 +151,34 @@ export function* getSelectedBoard({ payload }: any) {
 
       yield put(getSelectedBoardFailure(error.message));
     }
+  }
+}
+
+export function* updateBoardNameAsync({ payload }: any) {
+  try {
+    const projectId = yield select(getProjectId);
+    const currentBoard = yield select(getCurrentBoard);
+    const headers = tokenConfig();
+    const body = {
+      name: payload,
+    };
+    if (currentBoard._id) {
+      if (
+        (headers as any).headers.Authorization &&
+        payload !== currentBoard.name
+      ) {
+        const response = yield tigrowApi.put(
+          `boards/${currentBoard._id}/update-name?pid=${projectId}`,
+          body,
+          headers,
+        );
+        yield put(updateBoardNameSuccess(response.data));
+      } else yield put(updateBoardNameFailure('Same Name'));
+    } else yield put(updateBoardNameFailure('No Name Included'));
+  } catch (error) {
+    handleError(error, async (errorMessage: any) => {
+      await updateBoardNameFailure(errorMessage);
+    });
   }
 }
 
@@ -521,6 +551,13 @@ export function* onGetSelectedBoard() {
   );
 }
 
+export function* onUpdateBoardName() {
+  yield takeLatest(
+    BoardActionTypes.UPDATE_BOARD_NAME_START,
+    updateBoardNameAsync,
+  );
+}
+
 export function* onCreateColumn() {
   yield takeEvery(BoardActionTypes.CREATE_COLUMN_START, createColumn);
 }
@@ -584,6 +621,7 @@ export default function* boardSaga() {
     call(onCreateBoard),
     call(onGetAllBoards),
     call(onGetSelectedBoard),
+    call(onUpdateBoardName),
     call(onCreateColumn),
     call(onUpdateColumn),
     call(onCreateTask),
