@@ -174,7 +174,6 @@ export const CompanyReducer = (state = InitialState, action: any) => {
     case CompanyActionTypes.CHANGE_COMPANY_OPTIONAL_ROLE_FAILURE:
     case CompanyActionTypes.CHANGE_MEMBER_ROLE_FAILURE:
     case CompanyActionTypes.CHANGE_COMPANY_LOGO_FAILURE:
-    case CompanyActionTypes.EDIT_DESIGNATION_FAILURE:
     case CompanyActionTypes.GET_ALL_COMPANY_PENDING_MEMBERS_FAILURE:
     case CompanyActionTypes.DELETE_TEAM_MEMBER_FAILURE:
     case CompanyActionTypes.ADD_TEAM_MEMBER_FAILURE:

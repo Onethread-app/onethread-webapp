@@ -229,11 +229,11 @@ const deleteMember = async (req, res, next) => {
   try {
     // check role: superAdmin/admin
     const member = await Member.findOne({
-      account: req.user._id,
+      _id: req.member._id,
       company: req.company._id,
     });
-
-    if (!['superAdmin', 'admin'].includes(member.role)) {
+    console.log(member);
+    if (['superAdmin', 'admin'].includes(member.role)) {
       return res.status(403).json({
         message: `Restricted`,
       });

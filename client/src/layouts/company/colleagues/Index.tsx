@@ -50,7 +50,7 @@ interface Colleagues {
     values: { role: string },
     memberId: string,
   ) => void;
-  deleteCompanyMember: (memberId: string) => void;
+  deleteCompanyMember: (accountId: string) => void;
   inviteColleagueInBulk: (emails: any) => void;
   companyLoading: boolean;
   inviteColleagueInBulkSuccess: () => void;
@@ -264,7 +264,7 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                     </span>
                   </td>
                   {/* <td> */}
-                    {/* <span className="mr2-ns mr1 f7 f6-ns">
+                  {/* <span className="mr2-ns mr1 f7 f6-ns">
                       {member.account ? member.account.contactNo : null}
                     </span> */}
                   {/* </td> */}
@@ -518,19 +518,20 @@ const ColleaguesPageComponent = (props: Colleagues) => {
                                     </Button>
                                   )
                               : null}
-                            {/* {companyPermit(props.company.role) ? (
-                                <Button
-                                  className='outline-0 bp3-large bp3-popover-dismiss'
-                                  onClick={async () => {
-                                    await props.changeMemberRole(
-                                      { role: 'employee' },
-                                      member._id
-                                    );
-                                  }}
-                                >
-                                  <span className='red'>Remove from Admin</span>
-                                </Button>
-                              ) : null} */}
+                            {companyPermit(props.company.role) && (
+                              <Button
+                                className="outline-0 bp3-large bp3-popover-dismiss"
+                                onClick={async () => {
+                                  await props.deleteCompanyMember(
+                                    member._id,
+                                  );
+                                }}
+                              >
+                                <span className="red">
+                                  Remove Member
+                                </span>
+                              </Button>
+                            )}
                           </ButtonGroup>
                         }
                         target={

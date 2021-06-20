@@ -1012,6 +1012,7 @@ export default function* companySaga() {
     call(onGetCompanyDetails),
     call(onGetCompanyMembers),
     call(onAddTeamMembers),
+    call(onDeleteCompanyMember),
     call(onAddDepartment),
     call(onGetAllDepartments),
     call(onEditCompanyInfo),
