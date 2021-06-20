@@ -503,17 +503,17 @@ const acceptProjectRequest = async (req, res, next) => {
         { associateCompany: { $in: { _id: req.params.companyId } } },
       ],
     }).populate('associateCompany', '_id name type');
-    const text = `${asso.company.name} has accepted request `;
-    createCompanyRoleNotification(
-      asso.company._id,
-      {
-        _id: req.user._id,
-        name: req.user.name,
-        pusherSock: req.headers.clientid,
-      },
-      text,
-      'project',
-    );
+    // const text = `${asso.company.name} has accepted request `;
+    // createCompanyRoleNotification(
+    //   asso.company._id,
+    //   {
+    //     _id: req.user._id,
+    //     name: req.user.name,
+    //     pusherSock: req.headers.clientid,
+    //   },
+    //   text,
+    //   'project',
+    // );
     await Project.updateOne(
       { _id: pid },
       {
