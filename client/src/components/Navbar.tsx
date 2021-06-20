@@ -159,6 +159,7 @@ const NavbarTopComponent = (
                     src={logo}
                     className="br2"
                     style={{ background: '#0F0C4E' }}
+                    alt=""
                   />
                 </NavLink>
               </div>
@@ -186,21 +187,31 @@ const NavbarTopComponent = (
                           }}
                         >
                           {props.notifications &&
-                          props.notifications.length === index + 1 ? (
-                            <div ref={setLastNotificationElement}>
-                              <Notification
-                                type={sNotification.notification.type}
-                                text={sNotification.notification.text}
-                                read={sNotification.read}
-                              />
-                            </div>
-                          ) : (
-                            <Notification
-                              type={sNotification.notification.type}
-                              text={sNotification.notification.text}
-                              read={sNotification.read}
-                            />
-                          )}
+                          props.notifications.length === index + 1
+                            ? sNotification.notification && (
+                                <div ref={setLastNotificationElement}>
+                                  <Notification
+                                    type={
+                                      sNotification.notification.type
+                                    }
+                                    text={
+                                      sNotification.notification.text
+                                    }
+                                    read={sNotification.read}
+                                  />
+                                </div>
+                              )
+                            : sNotification.notification && (
+                                <Notification
+                                  type={
+                                    sNotification.notification.type
+                                  }
+                                  text={
+                                    sNotification.notification.text
+                                  }
+                                  read={sNotification.read}
+                                />
+                              )}
                         </div>
                       ),
                     )
@@ -327,6 +338,7 @@ const NavbarTopComponent = (
                           ? props.user.profileImage
                           : user
                       }
+                      alt=""
                       className="db w1 w2-ns h1 h2-ns br-100 ba b--black-10 "
                     />
                   </div>
