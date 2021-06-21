@@ -141,30 +141,37 @@ const NavbarCompanyComponent = (
                               }}
                             >
                               {props.notifications &&
-                              props.notifications.length ===
-                                index + 1 ? (
-                                <div ref={setLastNotificationElement}>
-                                  <Notification
-                                    type={
-                                      sNotification.notification.type
-                                    }
-                                    text={
-                                      sNotification.notification.text
-                                    }
-                                    read={sNotification.read}
-                                  />
-                                </div>
-                              ) : (
-                                <Notification
-                                  type={
-                                    sNotification.notification.type
-                                  }
-                                  text={
-                                    sNotification.notification.text
-                                  }
-                                  read={sNotification.read}
-                                />
-                              )}
+                              props.notifications.length === index + 1
+                                ? sNotification.notification && (
+                                    <div
+                                      ref={setLastNotificationElement}
+                                    >
+                                      <Notification
+                                        type={
+                                          sNotification.notification
+                                            .type
+                                        }
+                                        text={
+                                          sNotification.notification
+                                            .text
+                                        }
+                                        read={sNotification.read}
+                                      />
+                                    </div>
+                                  )
+                                : sNotification.notification && (
+                                    <Notification
+                                      type={
+                                        sNotification.notification
+                                          .type
+                                      }
+                                      text={
+                                        sNotification.notification
+                                          .text
+                                      }
+                                      read={sNotification.read}
+                                    />
+                                  )}
                             </div>
                           ),
                         )
