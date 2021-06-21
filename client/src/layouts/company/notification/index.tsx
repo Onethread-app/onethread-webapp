@@ -18,6 +18,7 @@ export default function index(props: notification) {
             <img
               src={notificationType[props.type].img}
               className="h2"
+              alt=""
             />
           )}
         </div>
