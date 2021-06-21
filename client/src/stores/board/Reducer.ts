@@ -67,6 +67,7 @@ const InitialState = {
   fetchingTask: false,
   updatingColumn: false,
   updatingBoard: false,
+  updatingBoardName: false,
   updatingTask: false,
   deletingTask: false,
   dragAndDrop: false,
@@ -76,6 +77,7 @@ const InitialState = {
   boardColumnError: '',
   boardTaskError: '',
   taskError: '',
+  errorOnUpdatingBoardName: '',
   errorOnFetchingBoard: '',
   errorOnTaskDelete: '',
   errorOnUploadingTaskFile: '',
@@ -147,6 +149,27 @@ export const BoardReducer = (state = InitialState, action: any) => {
         ...state,
         errorOnFetchingBoard: action.payload,
         fetchingBoard: false,
+      };
+    case BoardActionTypes.UPDATE_BOARD_NAME_START:
+      return {
+        ...state,
+        updatingBoardName: true,
+        errorOnUpdatingBoardName: '',
+      };
+    case BoardActionTypes.UPDATE_BOARD_NAME_SUCCESS:
+      return {
+        ...state,
+        currentBoard: {
+          ...state.currentBoard,
+          name: action.payload.name,
+        },
+        updatingBoardName: false,
+      };
+    case BoardActionTypes.UPDATE_BOARD_NAME_FAILURE:
+      return {
+        ...state,
+        errorOnUpdatingBoardName: action.payload,
+        updatingBoardName: false,
       };
     case BoardActionTypes.ADD_TEAM_MEMBER_IN_BOARD_START:
       return {

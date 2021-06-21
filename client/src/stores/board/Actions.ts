@@ -62,6 +62,21 @@ export const getSelectedBoardFailure = (errorMessage: any) => ({
   payload: errorMessage,
 });
 
+export const updateBoardName = (name: string) => ({
+  type: BoardActionTypes.UPDATE_BOARD_NAME_START,
+  payload: name,
+});
+
+export const updateBoardNameSuccess = (response: any) => ({
+  type: BoardActionTypes.UPDATE_BOARD_NAME_SUCCESS,
+  payload: response,
+});
+
+export const updateBoardNameFailure = (errorMessage: any) => ({
+  type: BoardActionTypes.UPDATE_BOARD_NAME_FAILURE,
+  payload: errorMessage,
+});
+
 export const createColumn = (columnName: any) => ({
   type: BoardActionTypes.CREATE_COLUMN_START,
   payload: columnName,
