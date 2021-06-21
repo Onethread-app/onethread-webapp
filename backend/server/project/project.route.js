@@ -180,11 +180,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     schemaValidator(projectValidation.archiveProject),
     projectCtrl.archiveProject,
   );
@@ -193,11 +189,7 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
+    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     schemaValidator(projectValidation.unarchiveProject),
     projectCtrl.unarchiveProject,
   );
@@ -206,7 +198,6 @@ router
   .put(
     authorization,
     subCtrl.subscriptionExpireCheck(),
-    companyCtrl.authorizeUser('all', 'admin', 'superAdmin'),
     projectCtrl.authorizeProjectRole(
       'all',
       'admin',

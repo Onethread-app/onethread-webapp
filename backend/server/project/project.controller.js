@@ -94,133 +94,6 @@ const createNewProjectForCompany = async (req, res, next) => {
         message: 'You are not added in company',
       });
     }
-
-    // if (req.body.type === 'associates') {
-    //   const project = new Project({
-    //     name: req.body.name,
-    //     concernedAdmin: member.account,
-    //     account: req.user._id,
-    //     deadline: req.body.deadline,
-    //     color: req.body.color,
-    //     company: req.headers.companyid,
-    //     description: '',
-    //     outline: '',
-    //   });
-    //   await project.save();
-    //   await createBoard(
-    //     'General',
-    //     project._id,
-    //     undefined,
-    //     undefined,
-    //     req.user._id,
-    //   );
-    //   const room = await createRoom(
-    //     req.body.companyId,
-    //     project._id,
-    //     req.user._id,
-    //     'General',
-    //   );
-    //   // let projectReq = [];
-    //   // // create an id of map array
-    //   // associates.map(async (data) => {
-    //   //   let reqObject = {};
-    //   //   reqObject.company = req.params.companyId;
-    //   //   reqObject.associate = data._id;
-    //   //   reqObject.account = req.user._id;
-    //   //   reqObject.isAccepted = false;
-    //   //   reqObject.project = project._id;
-    //   //   reqObject.size = data.size;
-    //   //   projectReq.push(reqObject);
-    //   //   return reqObject;
-    //   // });
-    //   // await ProjectRequest.create(projectReq);
-    //   // let associateId = [];
-    //   // associateId = associates.map((data) => {
-    //   //   return data._id;
-    //   // });
-    //   // // // Insert project request
-    //   // associateId.forEach(async (data) => {
-    //   //   let associate = await Associate.findOne({
-    //   //     $or: [
-    //   //       {
-    //   //         company: data,
-    //   //         associateCompany: { $in: data },
-    //   //       },
-    //   //       { isAccepted: true, isRejected: false },
-    //   //     ],
-    //   //   })
-    //   //     .populate('associateCompany', '_id name type')
-    //   //     .populate('company', '_id name type')
-    //   //     .exec();
-
-    //   //   const text = `${associate.company.name} wants to create a associate project ${project.name} with your ${associate.associateCompany.name} `;
-    //   //   createCompanyRoleNotification(
-    //   //     associate.company._id,
-    //   //     {
-    //   //       _id: req.user._id,
-    //   //       name: req.user.name,
-    //   //       pusherSock: req.headers.clientid,
-    //   //     },
-    //   //     text,
-    //   //     'project',
-    //   //   );
-    //   // });
-    //   // logger.info(
-    //   //   `${req.params.companyId} company send a project request to its associate`,
-    //   // );
-
-    //   // build a team for this project
-    //   if (req.user._id === member.account) {
-    //     const team = await teamCreate(
-    //       concernedAdmin.accountId,
-    //       concernedAdmin.memberId,
-    //       project._id,
-    //       'admin',
-    //     );
-    //     await createRoomMember(
-    //       req.body.companyId,
-    //       project._id,
-    //       req.user._id,
-    //       room._id,
-    //       team._id,
-    //     );
-    //     logger.info(`project creator is the admin`);
-    //   } else {
-    //     const team1 = await teamCreate(
-    //       member.account,
-    //       member._id,
-    //       project._id,
-    //       'admin',
-    //     );
-    //     await createRoomMember(
-    //       req.body.companyId,
-    //       project._id,
-    //       req.user._id,
-    //       room._id,
-    //       team1._id,
-    //     );
-    //     logger.info(`project creator add as a member here`);
-    //     const team2 = await teamCreate(
-    //       concernedAdmin.accountId,
-    //       concernedAdmin.memberId,
-    //       project._id,
-    //       'admin',
-    //     );
-    //     await createRoomMember(
-    //       req.body.companyId,
-    //       project._id,
-    //       req.user._id,
-    //       room._id,
-    //       team2._id,
-    //     );
-    //     logger.info(`concern admin add as an admin here`);
-    //   }
-    //   return sendJSONresponse(res, 201, {
-    //     success: true,
-    //     message: 'New project created for associate',
-    //     project,
-    //   });
-    // } else {
     const project = new Project({
       name: req.body.name,
       concernedAdmin: member.account,
@@ -801,18 +674,6 @@ const archiveProject = async (req, res) => {
         { $set: { removed: true } },
         { safe: true, upsert: true, new: true },
       );
-      const text = `${req.user.name} has archived a project ${project.name}`;
-
-      createCompanyRoleNotification(
-        { _id: project.company },
-        {
-          _id: req.user._id,
-          name: req.user.name,
-          pusherSock: req.headers.clientid,
-        },
-        text,
-        'project',
-      );
 
       logger.info(`Project: Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
@@ -846,18 +707,6 @@ const unarchiveProject = async (req, res) => {
         { $set: { removed: false } },
         { safe: true, upsert: true, new: true },
       );
-      // const text = `${req.user.name} has unarchived project ${project.name}`;
-
-      // createCompanyRoleNotification(
-      //   { _id: project.company },
-      //   {
-      //     _id: req.user._id,
-      //     name: req.user.name,
-      //     pusherSock: req.headers.clientid,
-      //   },
-      //   text,
-      //   'project',
-      // );
 
       logger.info(`Project: Archive a project  ${req.query.pid}`);
       return sendJSONresponse(res, 200, {
