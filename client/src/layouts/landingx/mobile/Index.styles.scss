@@ -158,6 +158,18 @@
       }
     }
   }
+
+  .video-intro {
+    width: 100%;
+    padding-bottom: 83.25%;
+    height: 0;
+
+    iframe {
+      position: absolute;
+      width: 100%;
+    }
+  }
+
   .third-section {
     background: #fff;
     color: #000;

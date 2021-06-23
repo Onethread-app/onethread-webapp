@@ -152,6 +152,23 @@
     }
   }
 
+  .video-intro {
+    width: 100%;
+    padding-bottom: 50.25%;
+    height: 0;
+    padding-top: 100px;
+
+    @media screen and (max-width: 1366px) {
+      padding-bottom: 60.25%;
+    }
+
+    iframe {
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
   .third-section {
     background: #fff;
     color: #000;

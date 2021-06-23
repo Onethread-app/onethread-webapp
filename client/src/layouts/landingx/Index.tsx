@@ -100,6 +100,16 @@ const NewLanding = () => {
           </div>
         </div>
       </section>
+      <section className="video-intro flex">
+        <iframe
+          width="560"
+          height="315"
+          src="https://www.youtube.com/embed/tsK0rVxjq1s?rel=0&modestbranding=1&autoplay=0"
+          title="YouTube video player"
+          frameBorder="0"
+          allowFullScreen
+        ></iframe>
+      </section>
       <section className="third-section flex flex-column w-100">
         <div className="upper flex items-center justify-around">
           <div className="upper-gif flex items-center tc">
