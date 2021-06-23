@@ -6,7 +6,7 @@ import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
 import { MobileListView } from '../layouts/company/MobileListView';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { companySubscriber } from 'layouts/company/notification/subscribers';
+import { companySubscriber } from 'helpers/notification/subscribers';
 import {
   readNotification,
   seenNotification,
@@ -15,8 +15,8 @@ import {
 } from '../stores/notifications/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Badge } from '@material-ui/core';
-import { notificationType } from '../layouts/company/notification/rule';
-import Notification from 'layouts/company/notification/index';
+import { notificationType } from '../helpers/notification/rule';
+import Notification from 'components/notification/NotificationItemForPopover';
 import { IRoom } from 'stores/room/Reducer';
 import { isEqual } from 'lodash';
 import { RoomListItem } from 'layouts/company/room/leftSidebar/RoomListItem';
@@ -95,6 +95,7 @@ const NavbarCompanyComponent = (
     companySubscriber(props.companyId);
     props.fetchRooms();
     props.fetchChats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onCLickNotification = async (sNotification: any) => {

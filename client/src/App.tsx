@@ -26,6 +26,7 @@ import { SignInPage } from 'layouts/signin/Index';
 import { SignupConfirmationPage } from 'layouts/signupConfirmation/Index';
 import { UserProfilePage } from 'layouts/user/profile/Index';
 import { ProfileSettingsPage } from 'layouts/user/settings/Index';
+import NotificationPage from 'layouts/notification/Index';
 import VideoConferences from 'layouts/videoConferences/pages/index/index';
 import Meeting from 'layouts/videoConferences/pages/meeting';
 import * as React from 'react';
@@ -226,6 +227,11 @@ const App = () => {
         path="/:username/settings"
         exact={false}
         component={ProfileSettingsPage}
+      />
+      <PrivateRoute
+        path="/:username/notifications"
+        exact={true}
+        component={NotificationPage}
       />
       <PrivateRoute
         exact={true}

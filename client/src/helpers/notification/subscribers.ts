@@ -1,8 +1,8 @@
-import { NOTIFICATION } from './../../../stores/notifications/Types';
+import { NOTIFICATION } from '../../stores/notifications/Types';
 import { store } from 'Store';
 import Pusher from 'pusher-js';
 import { INotification } from 'stores/notifications/Reducer';
-import { NOTIFICATION_KEY, NOTIFICATION_CLUSTER } from '../../../config';
+import { NOTIFICATION_KEY, NOTIFICATION_CLUSTER } from '../../config';
 // import {setSocketId} from '../../../stores/notifications/Action'
 
 export const companySubscriber = async (companyId: string) => {
@@ -10,7 +10,7 @@ export const companySubscriber = async (companyId: string) => {
     cluster: NOTIFICATION_CLUSTER!,
     forceTLS: true,
   });
-  pusher.connection.bind('connected', function () {
+  pusher.connection.bind('connected', () => {
     store.dispatch({
       type: NOTIFICATION.SET_SOCKET_ID,
       payload: pusher.connection.socket_id,

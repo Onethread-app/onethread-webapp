@@ -463,7 +463,6 @@ module.exports.list = async (req, res, next) => {
 
     let notificationFound = await UserNotification.find({
       account: req.user._id,
-      read: false,
     })
       .populate(options)
       .sort({ createdAt: -1 })

@@ -1,13 +1,11 @@
-import companyProfile from '../../../resources/images/sidebarCompanyProfile.svg';
-import associates from '../../../resources/images/sideBarAssociates.svg';
-import board from '../../../resources/images/sideBarBoard.svg';
-import colleague from '../../../resources/images/sidebarTeam.svg';
-import project from '../../../resources/images/ProjectsIcon.svg';
-import preface from '../../../resources/images/sideBarPreface.svg';
-import room from '../../../resources/images/sidebarRoom.svg';
-import team from '../../../resources/images/sidebarProjectTeam.svg';
-
-// const state = store.getState();
+import companyProfile from 'resources/images/sidebarCompanyProfile.svg';
+import associates from 'resources/images/sideBarAssociates.svg';
+import board from 'resources/images/sideBarBoard.svg';
+import colleague from 'resources/images/sidebarTeam.svg';
+import project from 'resources/images/ProjectsIcon.svg';
+import preface from 'resources/images/sideBarPreface.svg';
+import room from 'resources/images/sidebarRoom.svg';
+import team from 'resources/images/sidebarProjectTeam.svg';
 
 export const notificationType = {
   associate: {
