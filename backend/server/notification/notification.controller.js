@@ -62,7 +62,6 @@ try {
   let teamMembers = await Team.find({
     project: pid,
   }).select('member').populate('member', '_id account');
-  console.log(teamMembers);
   const board = await Board.findById({_id: boardId}).select('name');
   let notifications = {
       type: 'board',
@@ -83,14 +82,16 @@ try {
     return { account: m.member.account };
   });
   teamMembers.forEach(async (member) => {
-    
-      let userNoti = await UserNotification.create({
-        notification: notifications._id,
-        account: member.account,
-      });
-      await triggerUnreadNotifications(
-        member.account,
-      );
+      if(member.account.toString() !== adminUser._id){
+        let userNoti = await UserNotification.create({
+          notification: notifications._id,
+          account: member.account,
+        });
+        await triggerUnreadNotifications(
+          member.account,
+        );
+      }
+
   });
 
 } catch (error) {

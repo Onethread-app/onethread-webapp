@@ -30,7 +30,7 @@ const NotificationItem = (props: INotificationItem) => {
     >
       <div className="flex items-center">
         <img
-          src={
+          src={     
             notification.type
               ? notificationType[notification.type].img
               : 'https://via.placeholder.com/20'
