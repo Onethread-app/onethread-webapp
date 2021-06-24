@@ -53,13 +53,13 @@ export const notificationType = {
   board: {
     img: board,
     path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}/board`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/board/${notification.board}`;
     },
   },
   room: {
     img: room,
     path: async (notification: any) => {
-      return `/company/${notification.company.uniqueName}/project/${notification.project}/room`;
+      return `/company/${notification.company.uniqueName}/project/${notification.project}/room?roomId=${notification.room}&view=default`;
     },
   },
   team: {
