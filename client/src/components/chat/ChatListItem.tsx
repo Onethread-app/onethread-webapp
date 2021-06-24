@@ -47,13 +47,13 @@ const ChatListItem = (props: IChatListItem) => {
 
   return (
     <div
-      className="flex items-center pointer dim ph3 pv1 mb1 w-100"
+      className="flex flex-auto items-center pointer dim ph3 pv1 mb1 w-100"
       style={{
         background: props.chat.read ? '#f2f3f4' : '#fff',
       }}
       onClick={handleClick}
     >
-      <div className="mr2">
+      <div className="mr2" style={{ width: '42px' }}>
         <img
           src={
             props.chat.message.account.profileImage
@@ -68,8 +68,8 @@ const ChatListItem = (props: IChatListItem) => {
           className="br4"
         />
       </div>
-      <div className="flex flex-column">
-        <div className="flex items-center">
+      <div className="flex flex-auto flex-column">
+        <div className="flex flex-auto items-center justify-between mb1">
           <h3
             className={`pa0 mv0 ml0 mr4 ttc f6 ${
               props.chat.read ? 'gray fw5 ' : 'inherit fw6 '
@@ -77,30 +77,32 @@ const ChatListItem = (props: IChatListItem) => {
           >
             {`${props.chat.message.account.firstName} ${props.chat.message.account.lastName}`}
           </h3>
-          <p
-            className="bp3-tag modifier mb0"
-            style={{ background: 'rgb(63, 97, 197)' }}
-          >{`${props.chat.room.name}`}</p>
-          <p
-            className="ml2 bp3-tag modifier mb0"
-            style={{
-              background: `${
-                find(Color, ['code', props.chat.room.project.color])
-                  ? find(Color, [
-                      'code',
-                      props.chat.room.project.color,
-                    ])!.value
-                  : 'inherit'
-              }`,
-            }}
-          >{`${props.chat.room.project.name}`}</p>
+          <div className="flex items-center">
+            <p
+              className="bp3-tag modifier mb0"
+              style={{ background: 'rgb(63, 97, 197)' }}
+            >{`${props.chat.room.name}`}</p>
+            <p
+              className="ml2 bp3-tag modifier mb0"
+              style={{
+                background: `${
+                  find(Color, ['code', props.chat.room.project.color])
+                    ? find(Color, [
+                        'code',
+                        props.chat.room.project.color,
+                      ])!.value
+                    : 'inherit'
+                }`,
+              }}
+            >{`${props.chat.room.project.name}`}</p>
+          </div>
         </div>
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between flex-auto">
           <p
             className={`truncate mr3 ${
               props.chat.read ? 'gray' : 'inherit'
             }`}
-            style={{ maxWidth: '300px' }}
+            style={{ maxWidth: '60%' }}
           >{`${props.chat.message.text}`}</p>
           <p className="gray">
             {moment(props.chat.message.createdAt).fromNow()}

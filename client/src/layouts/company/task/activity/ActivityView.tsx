@@ -59,12 +59,12 @@ export const ActivityViewPageComponent = (
                     <h1 className="f6 fw6 lh-title black mv0">
                       {comment.name}
                     </h1>
-                    <p
+                    {/* <p
                       className="f7 fw6 lh-title silver mv0 pl2 i"
                       style={{ paddingTop: '2px' }}
                     >
                       {comment.position}
-                    </p>
+                    </p> */}
                   </div>
                   <p className="pt1" style={{ fontSize: '9px' }}>
                     {moment(comment.createdAt).format('lll')}

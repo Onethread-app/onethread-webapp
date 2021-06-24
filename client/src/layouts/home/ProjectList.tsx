@@ -49,6 +49,7 @@ interface ProjectListProps {
   getAllProjects: () => void;
   project: IMember[];
   company: ICompany;
+  projectLoading: boolean;
 }
 
 export const ProjectListComponent = (
@@ -65,8 +66,13 @@ export const ProjectListComponent = (
     if (props.company.name) {
       await props.getAllProjects();
     }
-    setLoading(false);
   };
+
+  useEffect(() => {
+    if (loading && props.projectLoading === false) {
+      setLoading(false);
+    }
+  }, [props.projectLoading]);
 
   useEffect(() => {
     load();
@@ -287,6 +293,7 @@ export const ProjectListComponent = (
 const mapStateToProps = (state: any) => {
   return {
     project: state.projectReducer.allProjects,
+    projectLoading: state.projectReducer.projectLoading,
     company: state.companyReducer.currentCompany,
   };
 };
