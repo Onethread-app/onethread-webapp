@@ -31,6 +31,9 @@ interface IBoardCardComponent {
   errorOnFetchingBoard: string;
   fetchingBoard: boolean;
   singleProjectLoading: boolean;
+  setSingleBoardLoading: React.Dispatch<
+    React.SetStateAction<boolean>
+  >;
 }
 
 interface IBoardListViewInternalProps extends IBoardCardComponent {
@@ -57,6 +60,7 @@ const BoardCard = withRouter(
             onClick={async (e) => {
               e.preventDefault();
               await props.getSelectedBoard(board._id);
+              props.setSingleBoardLoading(true);
             }}
             style={{ paddingLeft: '0px', paddingBottom: '0px' }}
           >
@@ -130,9 +134,11 @@ const TaskPageComponent = (
     false,
   );
   const [loading, setLoading] = useState(true);
+  const [singleBoardLoading, setSingleBoardLoading] = useState(false);
 
   useEffect(() => {
     props.clearCurrentBoard();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -147,11 +153,13 @@ const TaskPageComponent = (
         setLoading(false);
       }
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.project._id]);
 
   useEffect(() => {
     const forwardToGeneral = async () => {
       await props.getSelectedBoard(props.boardList[0]._id);
+      setSingleBoardLoading(true);
     };
     if (
       loading === false &&
@@ -161,19 +169,23 @@ const TaskPageComponent = (
     ) {
       forwardToGeneral();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.boardList]);
 
   useEffect(() => {
     if (
+      singleBoardLoading === true &&
       props.fetchingBoard === false &&
       props.errorOnFetchingBoard === '' &&
       props.currentBoard._id
     ) {
+      setSingleBoardLoading(false);
       props.history.push(
         `/company/${props.company.uniqueName}/project/${props.project._id}/board/${props.currentBoard._id}`,
       );
     }
-  }, [props.currentBoard]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.fetchingBoard]);
 
   const [department, setDepartment] = useState('');
   const boards = props.boardList.filter(
@@ -338,6 +350,7 @@ const TaskPageComponent = (
                       singleProjectLoading={
                         props.singleProjectLoading
                       }
+                      setSingleBoardLoading={setSingleBoardLoading}
                     />
                   ) : (
                     <BoardCard
@@ -352,6 +365,7 @@ const TaskPageComponent = (
                       singleProjectLoading={
                         props.singleProjectLoading
                       }
+                      setSingleBoardLoading={setSingleBoardLoading}
                     />
                   )}
                 </div>

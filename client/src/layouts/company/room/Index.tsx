@@ -215,6 +215,13 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                   : isMobileOnly
                   ? '0px'
                   : '16px',
+                minWidth: isOpenRightSidebar
+                  ? isMobileOnly
+                    ? '0px'
+                    : '400px'
+                  : isMobileOnly
+                  ? '0px'
+                  : '16px',
               }}
             >
               {isMobileOnly ? (

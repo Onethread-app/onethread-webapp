@@ -107,7 +107,6 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
 
   useEffect(() => {
     setAllProjects(orderBy(props.projects, ['createdAt'], ['desc']));
-    console.log(props.projects);
   }, [props.projects]);
 
   useEffect(() => {
@@ -508,11 +507,14 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                             </span>
                           </div>
                           {project.status !== 'not-started' && (
-                              <span className="f7 fw5 mr2" style={{ marginTop: '1.5px' }}>
-                                Remaining Tasks:{' '}
-                                {`${project.remainingTasks}/${project.totalTasks}`}
-                              </span>
-                            )}
+                            <span
+                              className="f7 fw5 mr2"
+                              style={{ marginTop: '1.5px' }}
+                            >
+                              Remaining Tasks:{' '}
+                              {`${project.remainingTasks}/${project.totalTasks}`}
+                            </span>
+                          )}
 
                           <p
                             className="f7 fw5"

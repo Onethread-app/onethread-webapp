@@ -83,6 +83,34 @@ export const SubTaskViewPageComponent = (
                 </h1>
               )}
             </div>
+            {showSubtaskForm && (
+              <SubTaskCreator
+                showSubtaskForm={showSubtaskForm}
+                subtask={subtask}
+                setsubtask={setsubtask}
+                setShowSubTaskForm={(e) =>
+                  setShowSubTaskForm(!showSubtaskForm)
+                }
+              />
+            )}
+            <div>
+              {!showSubtaskForm && (
+                <Button
+                  type="submit"
+                  text="Add SubTask"
+                  className="grow h2 pointer dib mb3"
+                  style={{
+                    background: '#3F61C5',
+                    outline: 'none',
+                    color: 'white',
+                    borderRadius: '0px',
+                    boxShadow: 'none',
+                  }}
+                  onClick={() => setShowSubTaskForm(true)}
+                  disabled={showSubtaskForm}
+                />
+              )}
+            </div>
             {props.subTaskList.length > 0 && (
               <div>
                 <ProgressBar
@@ -212,34 +240,6 @@ export const SubTaskViewPageComponent = (
                   ))}
                 </div>
               </div>
-            )}
-          </div>
-          {showSubtaskForm && (
-            <SubTaskCreator
-              showSubtaskForm={showSubtaskForm}
-              subtask={subtask}
-              setsubtask={setsubtask}
-              setShowSubTaskForm={(e) =>
-                setShowSubTaskForm(!showSubtaskForm)
-              }
-            />
-          )}
-          <div>
-            {!showSubtaskForm && (
-              <Button
-                type="submit"
-                text="Add SubTask"
-                className="grow h2 pointer dib"
-                style={{
-                  background: '#3F61C5',
-                  outline: 'none',
-                  color: 'white',
-                  borderRadius: '0px',
-                  boxShadow: 'none',
-                }}
-                onClick={() => setShowSubTaskForm(true)}
-                disabled={showSubtaskForm}
-              />
             )}
           </div>
         </div>

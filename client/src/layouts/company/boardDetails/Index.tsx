@@ -11,10 +11,7 @@ import { FormBoard } from '../board/Form';
 import { ColumnForm } from './column/ColumnForm';
 import EditableTextComponent from 'components/EditableText/EditableTextComponent';
 
-import {
-  clearCurrentBoard,
-  updateBoardName,
-} from 'stores/board/Actions';
+import { updateBoardName } from 'stores/board/Actions';
 import { TaskBoard } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { IProject } from 'stores/project/Reducer';
@@ -28,7 +25,6 @@ interface BoardDetailsViewInternalProps {
   role: string;
   optionalRole: any;
   updateBoardName: (name: string) => void;
-  clearCurrentBoard: () => void;
 }
 
 const BoardDetailsViewComponent = (
@@ -62,9 +58,6 @@ const BoardDetailsViewComponent = (
               href: `/company/${props.company.uniqueName}/project/${
                 props.currentProject!._id
               }/board`,
-              onClick: () => {
-                props.clearCurrentBoard();
-              },
             },
             {
               text: `${props.currentBoard.name}`,
@@ -77,8 +70,11 @@ const BoardDetailsViewComponent = (
         className="flex items-center mt3 mb4"
         style={{ justifyContent: 'space-between' }}
       >
-        {permissions.grantAll ||
-        permissions.projectModerator.includes('createUpdateBoard') ? (
+        {(permissions.grantAll ||
+          permissions.projectModerator.includes(
+            'createUpdateBoard',
+          )) &&
+        props.currentBoard.name.toLowerCase() !== 'general' ? (
           <h3
             className="w-100 ma0 f3"
             title="Click to edit board name"
@@ -243,5 +239,4 @@ const mapStateToProps = (state: any) => {
 
 export const BoardDetailsView = connect(mapStateToProps, {
   updateBoardName,
-  clearCurrentBoard,
 })(BoardDetailsViewComponent);
