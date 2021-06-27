@@ -46,6 +46,15 @@ const AddMemberFormComponent = (
   );
   const [error, setError] = useState('');
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    dispatch({ type: room.CLEAR_STATUS_CODE });
+
+    return () => {
+      dispatch({ type: room.CLEAR_STATUS_CODE });
+    };
+  }, []);
+
   const getSuggestionsForRoomMembers = async () => {
     try {
       const headers = tokenConfig();
@@ -58,24 +67,22 @@ const AddMemberFormComponent = (
         setSuggestedMembers(response.data.members);
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     } catch (error) {
       if (isEqual(error.message, 'Network Error')) {
         // tslint:disable-next-line: no-console
-        
       } else {
         // tslint:disable-next-line: no-console
-        
       }
     }
   };
 
   const errorHandling: any = (status: number) => {
-    
     setError('');
     if (status === 201) {
-      props.setShowDialog(!props.showDialog);
+      props.setShowDialog(false);
+    } else if (status === 409) {
+      setError('Member already exists');
     } else if (status === 400) {
       setError('Could not add more than 10 members at time');
     } else if (status === 0) {
@@ -84,7 +91,6 @@ const AddMemberFormComponent = (
       setError('Network Error');
     }
     return;
-
   };
 
   useEffect(() => {
@@ -150,8 +156,7 @@ const AddMemberFormComponent = (
             color: '#3b5998',
           }}
           onClick={(e: any) => {
-            props.setShowDialog(!props.showDialog);
-            dispatch({ type: room.CLEAR_STATUS_CODE });
+            props.setShowDialog(false);
           }}
         >
           Cancel
@@ -175,10 +180,7 @@ const AddMemberFormComponent = (
                 };
               }),
             };
-            await props.addRoomMembers(
-              data,
-              selectedRoomMember,
-            );
+            await props.addRoomMembers(data, selectedRoomMember);
             // if (props.roomStatus === 201) {
             //   props.setShowDialog(!props.showDialog);
             // } else if (props.roomStatus === 400) {
@@ -200,7 +202,7 @@ const mapStateToProps = (state: any) => {
     currentRoom: state.roomReducer.currentRoom,
     companyId: state.companyReducer.currentCompany._id,
     projectId: state.projectReducer.projectDetails._id,
-    roomStatus: state.roomReducer.responseCode
+    roomStatus: state.roomReducer.responseCode,
   };
 };
 
