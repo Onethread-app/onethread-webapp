@@ -28,6 +28,7 @@ import eyeIcon from './../../resources/images/eye.png';
 import eyeClose from './../../resources/images/eyeClose.png';
 import backgroundImage from './../../resources/images/Bg-png.png';
 import { usePushNotifications } from '../../usePushNotifications';
+import { useTranslation } from 'react-i18next';
 
 interface SignInPageInternalProps {
   loginAction: (login: LoginModel) => any;
@@ -105,6 +106,8 @@ export const SignInPageComponent = (
     setEmail(params.get('email') ? params.get('email')! : '');
   }, [props.location.search]);
 
+  const { t } = useTranslation();
+
   return (
     <div className="cf">
       <div
@@ -125,13 +128,16 @@ export const SignInPageComponent = (
               <img src={logo} alt="onethread" />
             </Link>
             <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
+                {t('landing.login.about-one-thread-login.content-login')}
+            </h3>
+            {/* <h3 className="tj mt4" style={{ color: '#E0E0E3' }}>
               Onethread is designed keeping in mind that Ease of
               Communication is the key to success for any enterprise.
               Onethread’s architecture has the key unique element of
               containerization with its feature called Project which
               ensures privacy within it, and fluidity to collaborate
               with external and internal stakeholders.
-            </h3>
+            </h3> */}
           </div>
         </div>
       </div>
@@ -164,7 +170,8 @@ export const SignInPageComponent = (
                 ...rest
               }) => (
                 <>
-                  <h1 className="pl3">Sign In</h1>
+                  {/* <h1 className="pl3">Sign In</h1> */}
+                  <h1 className="pl3">{t('landing.login.sign-in-form.sign-in-text')}</h1>
                   <form
                     className="fl w-100 cf"
                     onSubmit={handleSubmit}
@@ -209,7 +216,8 @@ export const SignInPageComponent = (
                                   fontSize: '18px',
                                   paddingLeft: '40px',
                                 }}
-                                placeHolder="Email Address"
+                                // placeHolder="Email Address"
+                                placeHolder={t('landing.login.sign-in-form.email')}
                                 error={
                                   checkError(meta) &&
                                   (meta.error || meta.submitError)
@@ -289,7 +297,8 @@ export const SignInPageComponent = (
                                   fontSize: '18px',
                                   paddingLeft: '40px',
                                 }}
-                                placeHolder="Password"
+                                // placeHolder="Password"
+                                placeHolder={t('landing.login.sign-in-form.password')}
                                 error={
                                   checkError(meta) &&
                                   (meta.error || meta.submitError)
@@ -316,14 +325,16 @@ export const SignInPageComponent = (
                       type="submit"
                       disabled={submitting || pristine}
                     >
-                      Sign in
+                      {/* Sign in */}
+                      {t('landing.login.sign-in-form.sign-in-button')}
                     </Button>
                     <div className="tc mv4">
                       <NavLink
                         className="fw9 dt center tigrow-lightBlue"
                         to="/forgot-password"
                       >
-                        Forget Password?
+                        {/* Forget Password? */}
+                        {t('landing.login.sign-in-form.forgot-password')}
                       </NavLink>
                     </div>
                     <div className="tc mv4">
@@ -331,7 +342,8 @@ export const SignInPageComponent = (
                         className="fw9 dt center tigrow-lightBlue"
                         to="/signup"
                       >
-                        Don't have an account?
+                        {/* Don't have an account? */}
+                      {t('landing.login.sign-in-form.no-account')}
                       </NavLink>
                     </div>
                     <Link to="/signup">
@@ -346,7 +358,8 @@ export const SignInPageComponent = (
                           padding: '10px 0px',
                         }}
                       >
-                        Sign Up here
+                        {/* Sign Up here */}
+                        {t('landing.login.sign-in-form.sign-up button')}
                       </Button>
                     </Link>
                   </form>

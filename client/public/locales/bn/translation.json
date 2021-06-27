@@ -69,6 +69,7 @@
       },
 
       "sign-in-form": {
+        "sign-in-text": "সাইন ইন",
         "email": "ইমেইল অ্যাড্রেস",
         "password": "পাসওয়ার্ড",
         "sign-in-button": "সাইন ইন",

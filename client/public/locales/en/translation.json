@@ -69,6 +69,7 @@
       },
 
       "sign-in-form": {
+        "sign-in-text": "Sign in",
         "email": "Email Address",
         "password": "Password",
         "sign-in-button": "Sign in",
