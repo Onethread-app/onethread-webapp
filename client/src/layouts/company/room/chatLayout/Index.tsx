@@ -158,9 +158,7 @@ export const ChatLayoutComponent = (
                 props.currentRoom.archive === false) ? (
                 <div
                   className="pointer ml3-ns ml1"
-                  onClick={() =>
-                    setShowMemberFormDialog(!showMemberFormDialog)
-                  }
+                  onClick={() => setShowMemberFormDialog(true)}
                 >
                   <img
                     className="grow"
@@ -263,17 +261,13 @@ export const ChatLayoutComponent = (
 
       {showMemberFormDialog && (
         <Dialog
-          onClose={() =>
-            setShowMemberFormDialog(!showMemberFormDialog)
-          }
+          onClose={() => setShowMemberFormDialog(false)}
           isOpen={showMemberFormDialog}
           style={{ background: '#fff' }}
         >
           <AddMemberForm
             showDialog={showMemberFormDialog}
-            setShowDialog={() =>
-              setShowMemberFormDialog(!showMemberFormDialog)
-            }
+            setShowDialog={setShowMemberFormDialog}
           />
         </Dialog>
       )}

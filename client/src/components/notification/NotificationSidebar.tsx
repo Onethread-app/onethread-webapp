@@ -1,4 +1,5 @@
 import React from 'react';
+import { isMobileOnly } from 'react-device-detect';
 
 interface INotificationSidebar {
   activeTab: number;
@@ -7,7 +8,13 @@ interface INotificationSidebar {
 
 const NotificationSidebar = (props: INotificationSidebar) => {
   return (
-    <div className="notification-sidebar flex flex-column items-center  h-100">
+    <div
+      className={`notification-sidebar flex  ${
+        isMobileOnly
+          ? 'flex-row justify-center flex-auto truncate'
+          : 'flex-column h-100'
+      } items-center `}
+    >
       <div
         className={props.activeTab === 0 ? 'active' : ''}
         onClick={() => props.setActiveTab(0)}
