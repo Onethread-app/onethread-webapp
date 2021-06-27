@@ -1,15 +1,15 @@
 import React from 'react';
-import { notificationType } from './rule';
+import { notificationType } from 'helpers/notification/rule';
 // import { Link } from 'react-router-dom';
 // import { store } from 'Store';
 
-interface notification {
+interface INotificationItemForPopover {
   type: string;
   text: string;
   read: string;
 }
 
-export default function index(props: notification) {
+export default function index(props: INotificationItemForPopover) {
   return (
     <main className={`mw6 center pv1 ba b--near-white`}>
       <article className="flex items-center dt w-100 pl3 ">

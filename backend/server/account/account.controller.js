@@ -420,6 +420,7 @@ const logout = async (req, res, next) => {
       );
     }
   } catch (error) {
+    logger.error(`Account: ${error}`);
     next(error);
   }
 };

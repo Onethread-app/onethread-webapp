@@ -110,11 +110,6 @@ router
   .route('/:subTaskId/search')
   .get(
     authorization,
-    projectCtrl.authorizeProjectRole(
-      'all',
-      'admin',
-      'projectModerator',
-    ),
     SchemaValidator(joiSchema.searchMember),
     subTaskCtrl.searchMember,
   );

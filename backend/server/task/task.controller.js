@@ -13,6 +13,7 @@ const SubTask = require('./subtask/subtask.model');
 const File = require('../file/file.model');
 const {
   taskAssignNotificationToUsers,
+  sendNotificationToProjectTeamMates,
 } = require('../notification/notification.controller');
 
 const {
@@ -24,9 +25,6 @@ const {
   sendErrorResponse,
   sendJSONresponse,
 } = require('../helpers/jsonResponse');
-const {
-  createCompanyRoleNotification,
-} = require('../notification/notification.controller');
 const { Team } = require('../team-member/team.model');
 
 const load = (req, res, next, id) => {
@@ -49,6 +47,10 @@ const load = (req, res, next, id) => {
 
 const create = async (req, res, next) => {
   try {
+    const companyId = req.headers.companyid;
+    const pid = req.query.pid;
+    const boardId = req.body.boardId;
+    const columnId = req.body.columnId;
     const columnProject = await BoardColumn.findOne({
       boardId: req.body.boardId,
       _id: req.body.columnId,
@@ -61,9 +63,9 @@ const create = async (req, res, next) => {
         name: req.body.name,
         account: req.user._id,
         status: req.body.status,
-        columnId: req.body.columnId,
-        boardId: req.body.boardId,
-        project: req.query.pid,
+        columnId: columnId,
+        boardId: boardId,
+        project: pid,
       });
       const createdTask = await task.save();
 
@@ -98,6 +100,7 @@ const create = async (req, res, next) => {
 
       column.tasks.push(createdTask._id);
       await column.save();
+   
 
       await Project.findByIdAndUpdate(
         { _id: req.query.pid },
@@ -121,7 +124,20 @@ const create = async (req, res, next) => {
         dueDate: createdTask.dueDate,
       };
       logger.info(`Task column create`);
-      res.status(201).send(responseData);
+      await sendNotificationToProjectTeamMates(
+        req.user._id,
+        companyId,
+        pid,
+        createdTask._id,
+        columnId,
+        boardId,
+        {
+          _id: req.user._id,
+          name: req.user.name,
+          pusherSock: req.headers.clientid,
+        },
+      )
+      return sendJSONresponse(res, 201, responseData);
     } else {
       sendErrorResponse(res, 400, 'ValidationError', {
         message: 'Project ID mismatch',

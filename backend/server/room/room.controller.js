@@ -5,6 +5,10 @@ const { Message } = require('../message/message.model');
 const { UserMessage } = require('../message/userMessage.model');
 const { RoomMember } = require('./roomMember.model');
 const {
+  addTeamMateIntoRoomNotification
+} = require('../notification/notification.controller');
+
+const {
   sendJSONresponse,
   sendErrorResponse,
 } = require('../helpers/jsonResponse');
@@ -79,17 +83,28 @@ const create = async (req, res, next) => {
 
 const addMembers = async (req, res, next) => {
   try {
+    const companyId = req.headers.companyid;
+    const pid = req.query.pid;
+    const roomId = req.body.room;
+    const senderId = req.user._id;
     const roomMembers = req.body.members.map((member) => {
       return {
         account: member.account,
         team: member.team,
-        company: req.headers.companyid,
-        project: req.query.pid,
-        room: req.body.room,
+        company: companyId,
+        project: pid,
+        room: roomId,
       };
     });
 
     const result = await RoomMember.create(roomMembers);
+    await addTeamMateIntoRoomNotification(companyId, senderId, roomMembers, 
+      {
+        _id: req.user._id,
+        name: req.user.name,
+        pusherSock: req.headers.clientid,
+      },
+      roomId, pid);
 
     if (!result) {
       return sendErrorResponse(res, 404, 'RoomNotFoundError', {

@@ -1,7 +1,9 @@
 const Comment = require('./comment.model');
 const logger = require('../../config/winston');
 const { sendJSONresponse } = require('../helpers/jsonResponse');
-
+const TaskAssign = require('../task/taskAssign.model');
+const SubTaskAssign = require('../task/subtask/subtask.model');
+const {notifyToTaskMember }= require('../notification/notification.controller');
 const load = (req, res, next, id) => {
   Comment.findById(id)
     .exec()
@@ -28,10 +30,39 @@ const create = async (req, res, next) => {
 
   comment
     .save()
-    .then((result) => {
-      res.status(201).send(result);
+    .then(async result => {
+      let taskMembers = await TaskAssign.find({taskId: req.body.taskId})
+                              .select('assignedPerson')
+                              .populate('assignedPerson', '_id');
+      let taskAssignMembers=taskMembers.map(task => task.assignedPerson);
+      let memberList = taskAssignMembers.map(task=> task._id);
+      let subTaskMembers = await SubTaskAssign.findOne({taskId: req.body.taskId})
+                                .populate('assignedMember');
+      let subTaskAssignMember = (subTaskMembers.assignedMembers);
+      let totalMember =memberList.concat(subTaskAssignMember.filter((item) => memberList.indexOf(item) < 0));
+      let memberNotify=totalMember.filter((item, pos) => totalMember.indexOf(item) === pos);
+      memberNotify.map(async member=>{
+        if(member !== req.user._id){
+          await notifyToTaskMember(
+            req.user._id,
+            req.headers.companyid,
+            req.query.pid,
+            req.body.taskId,
+            {
+              _id: req.user._id,
+              name: req.user.name,
+              pusherSock: req.headers.clientid,
+            },
+            member
+          )
+        }
+      })
+      return sendJSONresponse(res, 201, result);
     })
-    .catch((error) => next(error));
+    .catch(error =>{
+      console.log(error);
+      next(error);
+    })
 };
 
 const list = async (req, res, next) => {
