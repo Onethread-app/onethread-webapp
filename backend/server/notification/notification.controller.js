@@ -4,6 +4,7 @@ const { Team } = require('../team-member/team.model');
 const { Project } = require('../project/project.model');
 const { Room } = require('../room/room.model');
 const Board = require('../board/board.model');
+const Task = require('../task/task.model');
 const TaskAssign = require('../task/taskAssign.model');
 const Subtask = require('../task/subtask/subtask.model');
 const Account = require('../account/account.model');
@@ -15,7 +16,6 @@ const {
   triggerUnreadNotifications,
 } = require('../services/webpush.services');
 const {
-  sendMultipleNotification,
   sendCompanyRoleNotification,
   sendCompanyAndProjectNotification,
   sendCompanyNotification,
@@ -45,6 +45,42 @@ module.exports.userTokenFCM = async (req, res, next) => {
     });
 };
 
+module.exports.notifyToTaskMember = async (
+  senderName,
+  company,
+  pid,
+  taskId,
+  adminUser,
+  member
+) =>{
+  try {
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    let task = await Task.findById({_id: taskId}).select('name');
+    let subtaskId = await Subtask.findOne({taskId: taskId}).select('_id');
+    let notifications = {
+      type: 'subtask',
+      text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
+        senderFullName.lastName,
+      )} sent a note in task ${task.name} `,
+      account: adminUser._id,
+      company: company,
+      project: pid,
+      task: taskId,
+      subtask: subtaskId._id,
+    };
+    notifications = await Notification.create(notifications);
+    await UserNotification.create({
+      notification: notifications._id,
+      account: member,
+    });
+    await triggerUnreadNotifications(member);
+  } catch (error) {
+    logger.error(`Notifications: ${error}`);
+  }
+}
+
 module.exports.sendNotificationToProjectTeamMates = async (
   senderName,
   company,
@@ -58,7 +94,6 @@ module.exports.sendNotificationToProjectTeamMates = async (
     let senderFullName = await Account.findById({
       _id: senderName,
     }).select('firstName lastName');
-    console.log(pid);
     let teamMembers = await Team.find({
       project: pid,
     })
@@ -80,7 +115,6 @@ module.exports.sendNotificationToProjectTeamMates = async (
       board: boardId,
     };
     notifications = await Notification.create(notifications);
-    console.log(notifications);
     teamMembers = teamMembers.map((m) => {
       return { account: m.member.account };
     });
