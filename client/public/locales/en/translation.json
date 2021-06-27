@@ -86,6 +86,7 @@
       },
 
       "sign-up-form": {
+        "sign-up-text": "Sign up",
         "first-name": "First Name",
         "last-name": "Last Name",
         "birthday": "Birth Date",
