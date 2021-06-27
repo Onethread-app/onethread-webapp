@@ -61,7 +61,6 @@
         "copyright": "কপিরাইট ২০২১ ওয়ানথ্রেড। সকল সত্ত্ব সংরক্ষিত । বাংলাদেশে তৈরী!"
       }
     },
-
     "login": {
       "about-one-thread-login": {
         "login-heading": "ওয়ান্থ্রেড",
@@ -78,7 +77,6 @@
         "sign-up button": "এখানে সাইন আপ করুন"
       }
     },
-
     "sign-up": {
       "about-one-thread-sign-up": {
         "sign-up-heading": "ওয়ান্থ্রেড",
@@ -137,7 +135,6 @@
         "Announce": "প্রতিষ্ঠানের ঘোষণাসমূহ",
         "Sender": "হতে"
       },
-
       "Projects": {
         "My-projects": "আমার প্রজেক্টসমূহ",
         "Everything": "সকল",
@@ -148,7 +145,6 @@
         "Finish": "সমাপ্ত",
         "Find": "খুঁজুন"
       },
-
       "Company-profile": {
         "Company-name": "ওয়ানথ্রেড",
         "Total-Employee": "মোট কর্মীসংখ্যা",
@@ -165,7 +161,6 @@
         "Certificates": "সার্টিফিকেটস",
         "Parent": "প্যারেন্ট প্রতিষ্ঠানের সদস্যসমূহ"
       },
-
       "Colleagues": {
         "Admins": "অ্যাডমিন",
         "Members": "সদস্যগণ",
@@ -185,19 +180,16 @@
         "Upload": "ফাইল আপলোড করুন",
         "Team": "প্রজেক্টের সদস্যবৃন্দ"
       },
-
       "Project-rooms": {
         "Rooms": "রুম্‌স",
         "Find-room": "রুম খুঁজুন",
         "Select-room": "অনুগ্রহ করে একটি রুম বাছাই করুন!"
       },
-
       "Project-boards": {
         "Board": "বোর্ড",
         "My-boards": "আমার বোর্ডসমূহ",
         "Criteria": "পর্যায়ক্রম"
       },
-
       "Project-teammates": {
         "Team-members": "সকল সদস্যবৃন্দ",
         "Admins": "অ্যাডমিন",
@@ -210,7 +202,6 @@
         "Position": "পদমর্যাদা",
         "Co-partner": "প্রজেক্টের সহযোগীসমূহ"
       },
-
       "Project-settings": {
         "Moderator": "প্রজেক্ট মডারেটর",
         "General": "সাধারণ",
@@ -243,7 +234,6 @@
         "Date-of-birth": "জন্মতারিখ",
         "Gender": "লিঙ্গ"
       },
-
       "User-job": {
         "Company-name": "প্রতিষ্ঠানের নাম",
         "Position-name": "পদবি",
@@ -252,7 +242,6 @@
         "Description": "বিবরণ",
         "Current-work": "আমি বর্তমানে এখানে কাজ করি"
       },
-
       "User-Education": {
         "Degree": "ডিগ্রী",
         "Institution": "শিক্ষা প্রতিষ্ঠানের নাম",
@@ -261,7 +250,6 @@
         "Description": "বিবরণ",
         "Currently": "আমি বর্তমানে এখানে অধ্যয়নরত আছি"
       },
-
       "User-settings": {
         "Profile": "প্রোফাইল সেটিংস",
         "Password": "পাসওয়ার্ড পরিবর্তন"
