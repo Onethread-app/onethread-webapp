@@ -26,6 +26,7 @@ import {
 import { ICompany } from 'stores/company/Reducer';
 import { getAllProjects } from 'stores/project/Actions';
 import { Loading } from 'components/Loading';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -87,10 +88,13 @@ export const ProjectListComponent = (
     );
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="flex justify-between items-center mv2">
-        <h1 className="f3-ns f5 dark-gray">Projects</h1>
+        <h1 className="f3-ns f5 dark-gray">{t('app.homepage.Projects')}</h1>
+        {/* <h1 className="f3-ns f5 dark-gray">Projects</h1> */}
         <div className="flex items-center">
           <div className="db-ns dn">
             <div className="bp3-input-group .modifier">
@@ -98,7 +102,8 @@ export const ProjectListComponent = (
               <input
                 className="bp3-input"
                 type="search"
-                placeholder="Search input"
+                placeholder={t('app.homepage.Search')}
+                // placeholder="Search input"
                 dir="auto"
                 onChange={(e) => {
                   setSearchProjects(e.target.value);
@@ -137,7 +142,8 @@ export const ProjectListComponent = (
               width: isMobileOnly ? '180px' : '285px',
             }}
           >
-            Start A New Project
+            {t('app.homepage.New-project')}
+            {/* Start A New Project */}
           </Button>
         </div>
       </div>
@@ -148,13 +154,16 @@ export const ProjectListComponent = (
           <CustomView condition={!isMobileOnly}>
             <Grid container>
               <Grid item xs>
-                <div className="b">Name</div>
+                <div className="b">{t('app.homepage.Project-name')}</div>
+                {/* <div className="b">Name</div> */}
               </Grid>
               <Grid item xs>
-                <div className="b">Type</div>
+                <div className="b">{t('app.homepage.Project-type')}</div>
+                {/* <div className="b">Type</div> */}
               </Grid>
               <Grid item xs>
-                <div className="b">Lead</div>
+                <div className="b">{t('app.homepage.Project-lead')}</div>
+                {/* <div className="b">Lead</div> */}
               </Grid>
             </Grid>
           </CustomView>

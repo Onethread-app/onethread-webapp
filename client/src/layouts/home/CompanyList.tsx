@@ -11,6 +11,7 @@ import { withRouter, RouteComponentProps } from 'react-router';
 import { History } from 'history';
 import { addSpace } from 'stores/UtilsActions';
 import company from './../../resources/images/noCompany.png';
+import { useTranslation } from 'react-i18next';
 
 interface CompanyListProps {
   currentCompany: string;
@@ -24,12 +25,15 @@ export const CompanyListComponent = (
 ) => {
   const [showDialog, setShowDialog] = useState(false);
 
+const { t } = useTranslation();
+
   return (
     <>
       <div className="pa4-ns pa2">
         {props.user.companies && props.user.companies.length > 0 ? (
           <>
-            <h1 className="f3-ns f5 white pt4">Places You Work</h1>
+            {/* <h1 className="f3-ns f5 white pt4">Places You Work</h1> */}
+            <h1 className="f3-ns f5 white pt4">{t('app.homepage.Work-place')}</h1>
             <div className="flex">
               <div
                 className="overflow-x-auto w-85 pv1 justify-start"
@@ -83,9 +87,12 @@ export const CompanyListComponent = (
                         <h1 className="f6 f5-ns lh-title white ws-break">
                           {c.company.name}{' '}
                         </h1>
-                        <h2 className="f6-ns f7 fw4 mt0 mb0 white ws-break">{`Role: ${addSpace(
+                        <h2 className="f6-ns f7 fw4 mt0 mb0 white ws-break">{`${t('app.homepage.Position')}: ${addSpace(
                           c.role,
                         )}`}</h2>
+                        {/* <h2 className="f6-ns f7 fw4 mt0 mb0 white ws-break">{`Role: ${addSpace(
+                          c.role,
+                        )}`}</h2> */}
                       </div>
                     </article>
                   ))}
@@ -107,11 +114,13 @@ export const CompanyListComponent = (
                     color="white"
                   />
                   <h1 className="f6-ns f7 white db-ns dn">
-                    Create a Company
+                    {t('app.homepage.Create-company')}
+                    {/* Create a Company */}
                   </h1>
                 </div>
                 <h1 className="ml2 f7 white db dn-ns">
-                  Create a Company
+                  {t('app.homepage.Create-company')}
+                  {/* Create a Company */}
                 </h1>
               </div>
             </div>
@@ -134,7 +143,8 @@ export const CompanyListComponent = (
                 className="pa3-ns pa2 f5-ns fw6 br2"
                 style={{ color: '#0F0C4E' }}
               >
-                Create Company
+                {t('forms.Create-company.Create')}
+                {/* Create Company */}
               </Button>
             </article>
           </div>

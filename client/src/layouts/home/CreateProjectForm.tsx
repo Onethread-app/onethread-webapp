@@ -13,6 +13,7 @@ import { User } from 'stores/user/Reducer';
 // import { isEmpty } from 'lodash';
 import { createProject } from '../../stores/project/Actions';
 import { tigrowApi } from 'config';
+import { useTranslation } from 'react-i18next';
 
 interface ProjectAddProps {
   setShowDialog: (val: boolean) => void;
@@ -81,6 +82,8 @@ export const ProjectAddComponent = (
 
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <Form
       onSubmit={onSubmit}
@@ -97,7 +100,8 @@ export const ProjectAddComponent = (
         <form className="pa4-ns pa2" onSubmit={handleSubmit}>
           <SubmitError errorMessage={submitError} />
           <div>
-            <h1 className="f5 lh-copy">Create Project</h1>
+            <h1 className="f5 lh-copy">{t('app.forms.Start-project.Create-project')}</h1>
+            {/* <h1 className="f5 lh-copy">Create Project</h1> */}
             <div className="mb4">
               <Field<string>
                 name="name"
@@ -113,7 +117,8 @@ export const ProjectAddComponent = (
                         boxShadow: 'none',
                       }}
                       leftIcon="document"
-                      placeHolder="Project Name (required)"
+                      placeHolder={t('app.forms.Start-project.Name')}
+                      // placeHolder="Project Name (required)"
                     />
                   </div>
                 )}
@@ -146,7 +151,8 @@ export const ProjectAddComponent = (
                         }}
                       >
                         <option selected value="">
-                          Please select a company
+                          {t('app.forms.Start-project.Type')} 
+                          {/* Please select a company */}
                       </option>
                         {props.user && roleCompany.map((c: any) => (
                           <option value={c.company._id}>{c.company.name}</option>

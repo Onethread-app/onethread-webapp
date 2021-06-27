@@ -42,7 +42,7 @@ const NewLanding = () => {
       <section className="main-header w-100 relative flex flex-column items-center">
         <h2 className="heading tc">
           {t('landing.homepage.main-header.heading.first-part')}<br/>
-           <span style={{ color: '#3484F0' }}>{t('landing.homepage.main-header.heading.second-part')} </span>
+           <span style={{ color: '#3484F0' }}>{t('landing.homepage.main-header.heading.second-part')}</span>
           {/* Collaborate with people on projects <br />
           <span style={{ color: '#3484F0' }}>
             with the click of a button
