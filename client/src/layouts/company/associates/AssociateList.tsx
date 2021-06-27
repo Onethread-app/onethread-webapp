@@ -15,6 +15,7 @@ import {
   MobileOnlyView,
   isMobileOnly,
 } from 'react-device-detect';
+import { useTranslation } from 'react-i18next';
 
 interface AssociatesPageComponentProps {
   company: ICompany;
@@ -38,6 +39,8 @@ export const AssociateListComponent = (
     }
     loadAssociates(props.getAllAssociates);
   }, []);
+
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -93,7 +96,8 @@ export const AssociateListComponent = (
                   </Card>
                 ))
               ) : (
-                <p> You are not partnering with anyone yet.</p>
+                <p>{t('app.company.Partners.No-Partners')}</p>
+                // <p> You are not partnering with anyone yet.</p>
               )}
             </div>
           </CustomView>
@@ -150,7 +154,8 @@ export const AssociateListComponent = (
                   </Card>
                 ))
               ) : (
-                <p>No associates available</p>
+                <p>{t('app.company.Partners.No-associates')}</p>
+                // <p>No associates available</p>
               )}
             </div>
           </MobileOnlyView>

@@ -62,7 +62,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       value="cRUDAnnouncement"
                       disabled={disabled}
                     />
-                    Create/Update/Delete Company Announcement
+                    {t('app.company.Role-Permissions.Permission-1')}
+                    {/* Create/Update/Delete Company Announcement */}
                   </label>
                 )}
               />
@@ -83,7 +84,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       value="editProfile"
                       disabled={disabled}
                     />
-                    Edit Basic/Advanced Information of Profile
+                    {t('app.company.Role-Permissions.Permission-2')}
+                    {/* Edit Basic/Advanced Information of Profile */}
                   </label>
                 )}
               />
@@ -104,7 +106,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       value="archiveProject"
                       disabled={disabled}
                     />
-                    Archive Projects
+                    {t('app.company.Role-Permissions.Permission-3')}
+                    {/* Archive Projects */}
                   </label>
                 )}
               />
@@ -125,7 +128,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       value="addRemoveModerator"
                       disabled={disabled}
                     />
-                    Add/Delete Project Moderator
+                    {t('app.company.Role-Permissions.Permission-4')}
+                    {/* Add/Delete Project Moderator */}
                   </label>
                 )}
               />
@@ -146,7 +150,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       value="messageAssociate"
                       disabled={disabled}
                     />
-                    Message Associates
+                    {t('app.company.Role-Permissions.Permission-5')}
+                    {/* Message Associates */}
                   </label>
                 )}
               />
@@ -167,8 +172,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       value="addAcceptRejectAssociate"
                       disabled={disabled}
                     />
-                    Add/Accept/Reject Requests from Companies to be
-                    Associates
+                    {t('app.company.Role-Permissions.Permission-6')}
+                    {/* Add/Accept/Reject Requests from Companies to be Associates */}
                   </label>
                 )}
               />
@@ -189,7 +194,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
                       value="acceptRejectProjectFromAssociate"
                       disabled={disabled}
                     />
-                    Accept/Reject Project Request from Associates
+                    {t('app.company.Role-Permissions.Permission-7')}
+                    {/* Accept/Reject Project Request from Associates */}
                   </label>
                 )}
               />

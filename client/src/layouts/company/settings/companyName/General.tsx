@@ -11,6 +11,7 @@ import { RouteComponentProps, withRouter } from 'react-router';
 import { isEqual, isEmpty } from 'lodash';
 import { History } from 'history';
 import { companyPermit } from 'stores/UtilsActions';
+import { useTranslation } from 'react-i18next';
 
 interface DetailsViewProps {
   company: ICompany;
@@ -28,11 +29,15 @@ const GeneralViewComponent = (
   const [errors, setErrors] = useState('');
 
   const [showDialog, setShowDialog] = useState(false);
+
+  const { t } = useTranslation();
+
   return (
     <div className="fl w-100">
       <div className="fl w-100 pr3">
         <div className="fl w-100 w-50-m w-60-l">
-          <p className="b">Company Name</p>
+          <p className="b">{t('app.company.Company-profile.Name')}</p>
+          {/* <p className="b">Company Name</p> */}
           <p className="mb0 f4-ns f6">{props.company.name}</p>
         </div>
         {companyPermit(props.company.role) &&
@@ -41,7 +46,8 @@ const GeneralViewComponent = (
               <Button
                 type="submit"
                 className="grow pointer outline-0 shadow-0 h2 changecompanybutton"
-                text="Change Company Name"
+                text={t('app.company.Settings.Change-Name')}
+                // text="Change Company Name"
                 style={{
                   background: '#3F61C5',
                   color: 'white',
@@ -62,7 +68,8 @@ const GeneralViewComponent = (
         >
           <form className="pa4">
             <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
-              Change Company Name
+              {t('app.company.Settings.Change-Name')}
+              {/* Change Company Name */}
             </h1>
             <div>
               {props.errorCompanyName ? (

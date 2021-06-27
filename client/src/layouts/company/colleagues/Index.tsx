@@ -174,11 +174,13 @@ const { t } = useTranslation();
 
   return (
     <>
-      <NavbarCompany title="My Colleagues" />
+      <NavbarCompany title={t('app.company.Colleagues.Colleagues')} />
+      {/* <NavbarCompany title="My Colleagues" /> */}
       <div className="ph5-ns ph3 pb5 pt5 pt0-ns">
         <div className="flex justify-between items-center">
           {isMobileOnly ? undefined : (
-            <h1 className="tigrow-lightGray-1">Colleagues</h1>
+            <h1 className="tigrow-lightGray-1">{t('app.company.Colleagues.Colleagues')}</h1>
+            // <h1 className="tigrow-lightGray-1">Colleagues</h1>
           )}
           {companyPermit(props.company.role) ? (
             <div>
@@ -191,7 +193,8 @@ const { t } = useTranslation();
                 }}
                 onClick={() => setShowDialog(!showDialog)}
               >
-                Add Colleagues
+                {t('app.company.Colleagues.Add-Colleagues')}
+                {/* Add Colleagues */}
               </Button>
               <Button
                 className="grow fr h2 pointer white bp3-minimal mr2"
@@ -206,7 +209,8 @@ const { t } = useTranslation();
                   )
                 }
               >
-                Invite Colleagues
+                {t('app.company.Colleagues.Invite-Colleagues')}
+                {/* Invite Colleagues */}
               </Button>
             </div>
           ) : undefined}
@@ -570,7 +574,8 @@ const { t } = useTranslation();
         {companyPermit(props.company.role) ? (
           <>
             <h1 className="f4 tigrow-lightGray-1">
-              Invited Colleagues
+              {t('app.company.Colleagues.Invited-Colleagues')}
+              {/* Invited Colleagues */}
             </h1>
             <HTMLTable className="w-100 mv3" striped={true}>
               {props.companyLoading ? (
@@ -593,7 +598,8 @@ const { t } = useTranslation();
               ) : (
                 <tbody>
                   <tr>
-                    <td colSpan={3}>No pending request</td>
+                    <td colSpan={3}>{t('app.company.Colleagues.No-pending')}</td>
+                    {/* <td colSpan={3}>No pending request</td> */}
                   </tr>
                 </tbody>
               )}

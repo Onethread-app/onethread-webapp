@@ -13,6 +13,7 @@ import { RightSidebar } from 'components/RightSidebar';
 import { find, orderBy } from 'lodash';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { getAllAssociates } from 'stores/associate/Actions';
@@ -147,9 +148,12 @@ const CompletedProjectsComponent = (
     }
   };
 
+  const { t } = useTranslation();
+
   const noProjectsFound = (
     <div className={'tc mt4 mb5'}>
-      <h1 style={{ color: '#34495E' }}>No completed projects</h1>
+      <h1 style={{ color: '#34495E' }}>{t('app.company.Projects.No-completed-projects')}</h1>
+      {/* <h1 style={{ color: '#34495E' }}>No completed projects</h1> */}
     </div>
   );
 
@@ -227,6 +231,7 @@ const CompletedProjectsComponent = (
                                   <MenuItem
                                     className="pa1"
                                     text="Update Project"
+                                    // text="Update Project"
                                     onClick={(e: any) =>
                                       checkRoleForChangeName()
                                     }
@@ -234,6 +239,7 @@ const CompletedProjectsComponent = (
                                   <MenuItem
                                     className="pa1 red"
                                     text="Archive Project"
+                                    // text="Archive Project"
                                     onClick={(e: any) =>
                                       checkRoleForArchiveProject(
                                         project._id,
@@ -295,6 +301,7 @@ const CompletedProjectsComponent = (
                             style={{ marginTop: '10px' }}
                           >
                             Deadline:{' '}
+                            {/* Deadline:{' '} */}
                             {project.deadline
                               ? moment(project.deadline).format(
                                   'DD/MM/YYYY',

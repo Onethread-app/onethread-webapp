@@ -27,7 +27,8 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Overview</small>
+            <small style={{ color: 'inherit' }}>{t('app.Projects.Overview')}</small>
+            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact

@@ -9,6 +9,7 @@ import {
 } from 'stores/project/Actions';
 import { IPendingProject } from 'stores/project/Reducer';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface IProjectRequestComponent {
   PendingProjects: IPendingProject[];
@@ -39,6 +40,8 @@ const ProjectRequestComponent = (
 
   const [acceptLoading, setAcceptLoading] = useState(false);
   const [rejectLoading, setRejectLoading] = useState(false);
+
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -114,7 +117,8 @@ const ProjectRequestComponent = (
         ))
         :
         (
-          <h1 className="f5 fw4">No pending Projects</h1>
+          <h1 className="f5 fw4">{t('app.company.Projects.No-pending-projects')}</h1>
+          // <h1 className="f5 fw4">No pending Projects</h1>
         )
       ) : (
           <Loading />

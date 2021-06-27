@@ -10,6 +10,7 @@ import {
 import { Loading } from 'components/Loading';
 import { ICompany } from 'stores/company/Reducer';
 import { Associate } from 'stores/associate/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface AssociatesPageComponentProps {
   company: ICompany;
@@ -34,6 +35,8 @@ export const PendingAssociateListComponent = (
     }
     loadAssociates(props.getAllPendingAssociates);
   }, []);
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -116,7 +119,8 @@ export const PendingAssociateListComponent = (
               </>
             ))
           ) : (
-            <p>No pending request available</p>
+            <p>{t('app.company.Partners.No-Pending')}</p>
+            // <p>No pending request available</p>
           )}
         </div>
       </div>

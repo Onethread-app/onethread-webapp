@@ -32,7 +32,8 @@ const CompanyProfilePageComponent = (props: ProfilePageProps) => {
 
   return (
     <>
-      <NavbarCompany title="Company Profile" />
+      <NavbarCompany title={t('app.company.Company-profile.Company-profile')} />
+      {/* <NavbarCompany title="Company Profile" /> */}
       <div className="w-100 pa4-ns pa2 mt5 mt0-ns">
         <CoverPhoto type="company"/>
         <Tabs id="TabsExample" className="mt6-ns mt5 ph5-ns ph3">

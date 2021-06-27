@@ -53,7 +53,8 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Overview</small>
+            <small style={{ color: 'inherit' }}>{t('app.company.Projects.Overview')}</small>
+            {/* <small style={{ color: 'inherit' }}>Overview</small> */}
           </NavLink>
           <NavLink
             exact
@@ -78,7 +79,7 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Room</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
             {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
@@ -91,7 +92,7 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Boards</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
             {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
@@ -104,7 +105,7 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Teammates</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
             {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
@@ -118,7 +119,8 @@ export const ProjectPrefaceViewComponent = (
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>
-              Project Settings
+              {t('app.company.Projects.Project-Settings')}
+              {/* Project Settings */}
             </small>
           </NavLink>
         </div>
