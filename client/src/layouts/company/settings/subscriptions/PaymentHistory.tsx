@@ -7,6 +7,7 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { getPaymentHistory } from '../../../../stores/subscriptionBilling/Actions';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 interface IHistory {
   _id: string;
@@ -28,6 +29,8 @@ const _PaymentHistory = (props: IPaymentHistory) => {
     props.getPaymentHistory();
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <div>
       {props.currentComponent === 'paymentHistory' && (
@@ -38,22 +41,28 @@ const _PaymentHistory = (props: IPaymentHistory) => {
               startIcon={<ArrowBackIosIcon />}
               onClick={() => props.changeComponentTo('base')}
             >
-              subscription and billing
+              {t('app.company.Subscription-And-Billing.Current')}
+              {/* subscription and billing */}
             </Button>
           </div>
-          <h4>Payment History</h4>
+          <h4>{t('app.company.Subscription-And-Billing.Payment-history')}</h4>
+          {/* <h4>Payment History</h4> */}
           <Grid container spacing={3}>
             <Grid item xs={6} sm={3}>
-              <div className="b">Invoice No.</div>
+              <div className="b">{t('app.company.Subscription-And-Billing.Invoice')}</div>
+              {/* <div className="b">Invoice No.</div> */}
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">Date</div>
+              <div className="b">{t('app.company.Subscription-And-Billing.Date')}</div>
+              {/* <div className="b">Date</div> */}
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">Payment Status</div>
+              <div className="b">{t('app.company.Subscription-And-Billing.Status')}</div>
+              {/* <div className="b">Payment Status</div> */}
             </Grid>
             <Grid item xs={6} sm={3}>
-              <div className="b">Amount</div>
+              <div className="b">{t('app.company.Subscription-And-Billing.Amount')}</div>
+              {/* <div className="b">Amount</div> */}
             </Grid>
           </Grid>
           {props.paymentHistory &&

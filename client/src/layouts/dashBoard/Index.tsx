@@ -186,7 +186,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     <>
       {loading === false ? (
         <>
-          <NavbarCompany title="My Dashboard" />
+          <NavbarCompany title={t('app.company.Dashboard.Headline')} />
+          {/* <NavbarCompany title="My Dashboard" /> */}
           <div className="w-90 center mh2 mt4-l mt5 pb5 pb0-l">
             <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
                {t('app.company.Dashboard.Headline')}
@@ -317,8 +318,9 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                                 >
                                   {task.name}
                                 </span>{' '}
-                                from {task.boardId.name} has been
-                                marked as complete.
+                                from {task.boardId.name} 
+                                {t('app.company.Dashboard.Complete-notification')}
+                                {/* has been marked as complete. */}
                               </span>
                               {isMobileOnly ? null : (
                                 <span style={{ color: '#B4B4B4' }}>
@@ -338,7 +340,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         ))
                       ) : (
                         <Typography>
-                          None of the tasks have been marked as done.
+                          {t('app.company.Dashboard.Not-Marked')}
+                          {/* None of the tasks have been marked as done. */}
                         </Typography>
                       )}
                       {props.completedTasks.length >
@@ -413,7 +416,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         />
                       </span>
                       <span className="ml2-ns">
-                        Create Announcement
+                        {t('app.company.Dashboard.Create-Announcement')}
+                        {/* Create Announcement */}
                       </span>
                     </button>
                   )}
@@ -466,7 +470,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                         ),
                       )
                     ) : (
-                      <Typography>No Announcement</Typography>
+                      <Typography>{t('app.company.Dashboard.No-Announcement')}</Typography>
+                      // <Typography>No Announcement</Typography>
                     )}
                     {props.company.announce.length > 5 && (
                       <div className="flex flex-row items-end w-100 justify-end">

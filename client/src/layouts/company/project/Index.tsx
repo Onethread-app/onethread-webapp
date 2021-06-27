@@ -30,7 +30,8 @@ const _ProjectPage = (props: any) => {
 
   return (
     <>
-      <NavbarCompany title="My Projects" />
+      <NavbarCompany title={t('app.company.Projects.My-projects')} />
+      {/* <NavbarCompany title="My Projects" /> */}
       <div className="ph5-ns ph4 pt5 pt0-ns">
         <Tabs id="TabsExample">
           <Tab
@@ -42,14 +43,16 @@ const _ProjectPage = (props: any) => {
           />
           <Tab
             id="CompletedProjects"
-            title="Completed Projects"
+            title={t('app.company.Projects.Completed-projects')}
+            // title="Completed Projects"
             panel={<CompletedProjects />}
             className="outline-0 mt4-ns mt2"
           />
           {props.companyRole !== 'employee' && (
             <Tab
               id="PendingProject"
-              title="Pending Projects"
+              title={t('app.company.Projects.Pending Projects')}
+              // title="Pending Projects"
               panel={<PendingProjectRequest />}
               className="outline-0 mt4-ns mt2"
             />

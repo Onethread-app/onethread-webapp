@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { User } from 'stores/user/Reducer';
 import { NavbarCompany } from 'components/NavbarCompany';
 import { ICompany } from 'stores/company/Reducer';
+import { useTranslation } from 'react-i18next';
 
 interface AssociatesPageProps {
   user: User;
@@ -25,20 +26,26 @@ const AssociatesPageComponent = (props: AssociatesPageProps) => {
           );
     }
   }, []);
+
+  const { t } = useTranslation();
+
   return (
     <>
-      <NavbarCompany title="My Associates" />
+      <NavbarCompany title={t('app.company.Partners.Partners')} />
+      {/* <NavbarCompany title="My Associates" /> */}
       <div className="ph4 w-100">
         <Tabs id="associatesTab" className="mt5 mt0-ns">
           <Tab
             id="associates"
-            title="Partners"
+            title={t('app.company.Partners.Partners')}
+            // title="Partners"
             panel={<AssociateList />}
             className="outline-0"
           />
           <Tab
             id="pending_associates"
-            title="Pending Partners"
+            title={t('app.company.Partners.Pending-partners')}
+            // title="Pending Partners"
             panel={<PendingAssociateList />}
             className="outline-0"
           />

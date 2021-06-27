@@ -9,6 +9,7 @@ import {
 import { ICompany } from 'stores/company/Reducer';
 import { Loading } from 'components/Loading';
 import { DepartmentEditor } from './Editor';
+import { useTranslation } from 'react-i18next';
 
 interface DepartmentViewProps {
   company: ICompany;
@@ -27,11 +28,14 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
     props.getAllDepartments();
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="pr6">
         <div className="flex-ns justify-between pv3">
-          <h1 className="f6 lh-copy">Departments</h1>
+          <h1 className="f6 lh-copy">{t('app.company.Departments.Departments')}</h1>
+          {/* <h1 className="f6 lh-copy">Departments</h1> */}
           <Button
             type="submit"
             className="grow pointer addDepartment h2"
@@ -42,7 +46,8 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
             }}
             onClick={() => setShowDialogDepartment(true)}
           >
-            Add Department
+            {t('app.company.Departments.Add-department')}
+            {/* Add Department */}
           </Button>
         </div>
         <div className="mt4">
@@ -54,7 +59,8 @@ const DepartmentViewComponent = (props: DepartmentViewProps) => {
               <p key={d._id}>{d.name}</p>
             ))
           ) : (
-            <p>No departments</p>
+            <p>{t('app.company.Departments.No-departments')}</p>
+            // <p>No departments</p>
           )}
         </div>
       </div>

@@ -113,7 +113,8 @@ export const ListViewComponent = (
             className="pr3"
             style={{ color: '#787e8d' }}
           />
-          Home
+          {t('app.user.User-settings.Home')}
+          {/* Home */}
         </NavLink>
         <Button
           className="bp3-minimal outline-0 bp3-popover-dismiss ma2 w-100"
@@ -121,7 +122,8 @@ export const ListViewComponent = (
           icon="log-in"
           alignText="left"
         >
-          Logout
+          {t('app.user.User-settings.Logout')}
+          {/* Logout */}
         </Button>
         <h1 className="f7 ml3">{t('app.homepage.My-Companies')}</h1>
         {/* <h1 className="f7 ml3">My Companies</h1> */}
