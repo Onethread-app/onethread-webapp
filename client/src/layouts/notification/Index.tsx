@@ -1,7 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
+import { isMobileOnly } from 'react-device-detect';
 
+import {
+  seenNotification,
+  getNotifications,
+} from 'stores/notifications/Action';
 import { User } from 'stores/user/Reducer';
 
 import NotificationSidebar from 'components/notification/NotificationSidebar';
@@ -12,6 +17,8 @@ import './Index.scss';
 interface INotificationPage {
   notifications: any;
   user: User;
+  getNotifications: any;
+  seenNotification: () => void;
 }
 
 const NotificationPage = (props: INotificationPage) => {
@@ -22,6 +29,10 @@ const NotificationPage = (props: INotificationPage) => {
   const [miliSecondsInADay] = React.useState(86400000);
   const [miliSecondsInAWeek] = React.useState(604800016);
   const [miliSecondsInAMonth] = React.useState(2629800000);
+
+  React.useEffect(() => {
+    props.getNotifications();
+  }, []);
 
   React.useEffect(() => {
     const today = moment(new Date());
@@ -72,16 +83,20 @@ const NotificationPage = (props: INotificationPage) => {
   ]);
 
   return (
-    <div className="notification-page flex h-100 w-100">
+    <div
+      className={`notification-page flex ${
+        isMobileOnly ? 'flex-column' : 'flex-row h-100'
+      } w-100`}
+    >
       <NotificationSidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
       />
-      <div className="notification-items flex flex-column flex-auto">
+      <div className="notification-items flex flex-column flex-auto h-100">
         {notificationToShow.length ? (
           notificationToShow.map(
             (notification: any) =>
-              notification && (
+              notification.notification && (
                 <NotificationItem
                   notificationData={notification}
                   key={notification._id}
@@ -109,4 +124,7 @@ const mapStateToProps = (state: any) => ({
   user: state.userReducer.user,
 });
 
-export default connect(mapStateToProps)(NotificationPage);
+export default connect(mapStateToProps, {
+  seenNotification,
+  getNotifications,
+})(NotificationPage);

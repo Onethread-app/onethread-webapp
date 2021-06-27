@@ -1,6 +1,7 @@
 import React from 'react';
 import { useHistory, NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { isMobileOnly } from 'react-device-detect';
 
 import Notification from 'components/notification/NotificationItemForPopover';
 
@@ -77,55 +78,60 @@ const NotificationPopover = (props: INotificationPopover) => {
   };
 
   return (
-    <div
-      style={{ maxHeight: '300px', width: '500px' }}
-      className="pv2 br4 overflow-y-auto"
-    >
-      {notificationToShow.length > 0 ? (
-        notificationToShow.map((sNotification: any, index) => (
-          <div
-            key={index}
-            onClick={() => {
-              onCLickNotification(sNotification);
-            }}
-          >
-            {notificationToShow &&
-            notificationToShow.length === index + 1
-              ? sNotification.notification && (
-                  <div ref={setLastNotificationElement}>
+    <>
+      <div
+        style={{
+          maxHeight: '300px',
+          width: isMobileOnly ? '' : '500px',
+        }}
+        className="pv2 br4 overflow-y-auto"
+      >
+        {notificationToShow.length > 0 ? (
+          notificationToShow.map((sNotification: any, index) => (
+            <div
+              key={index}
+              onClick={() => {
+                onCLickNotification(sNotification);
+              }}
+            >
+              {notificationToShow &&
+              notificationToShow.length === index + 1
+                ? sNotification.notification && (
+                    <div ref={setLastNotificationElement}>
+                      <Notification
+                        type={sNotification.notification.type}
+                        text={sNotification.notification.text}
+                        read={sNotification.read}
+                      />
+                    </div>
+                  )
+                : sNotification.notification && (
                     <Notification
                       type={sNotification.notification.type}
                       text={sNotification.notification.text}
                       read={sNotification.read}
                     />
-                  </div>
-                )
-              : sNotification.notification && (
-                  <Notification
-                    type={sNotification.notification.type}
-                    text={sNotification.notification.text}
-                    read={sNotification.read}
-                  />
-                )}
-          </div>
-        ))
-      ) : (
-        <h3
-          style={{
-            maxHeight: '300px',
-            textAlign: 'center',
-          }}
-          className="pa3 overflow-y-auto moon-gray"
-        >
-          No new notification
-        </h3>
-      )}
+                  )}
+            </div>
+          ))
+        ) : (
+          <h3
+            style={{
+              maxHeight: '300px',
+              textAlign: 'center',
+            }}
+            className="pa3 overflow-y-auto moon-gray"
+          >
+            No new notification
+          </h3>
+        )}
+      </div>
       <div className="tc mv1">
         <NavLink to={`/${props.user.name}/notifications`}>
           See All
         </NavLink>
       </div>
-    </div>
+    </>
   );
 };
 
