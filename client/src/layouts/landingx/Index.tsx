@@ -42,11 +42,7 @@ const NewLanding = () => {
       <section className="main-header w-100 relative flex flex-column items-center">
         <h2 className="heading tc">
           {t('landing.homepage.main-header.heading.first-part')}<br/>
-<<<<<<< HEAD
            <span style={{ color: '#3484F0' }}>{t('landing.homepage.main-header.heading.second-part')}</span>
-=======
-           <span style={{ color: '#3484F0' }}>{t('landing.homepage.main-header.heading.second-part')} </span>
->>>>>>> 581ca1ed (landingx/Index.tsx translated)
           {/* Collaborate with people on projects <br />
           <span style={{ color: '#3484F0' }}>
             with the click of a button
@@ -125,17 +121,19 @@ const NewLanding = () => {
             <img src={MailGif} alt="MailGif" />
           </div>
           <div className="upper-content">
-<<<<<<< HEAD
             <h3>{t('landing.homepage.third-section.upper-content')}</h3>
             {/* <h3>No more deadly email loops.</h3> */}
             <p>{t('landing.homepage.third-section.main-upper-content')}</p>
-=======
+
             <h3> {t('landing.homepage.third-section.upper-content')}</h3>
             {/* <h3>No more deadly email loops.</h3> */}
             <p>
                {t('landing.homepage.third-section.main-upper-content')}
             </p>
->>>>>>> 581ca1ed (landingx/Index.tsx translated)
+
+            <h3>{t('landing.homepage.third-section.upper-content')}</h3>
+            {/* <h3>No more deadly email loops.</h3> */}
+            <p>{t('landing.homepage.third-section.main-upper-content')}</p>
             {/* <p>
               Forward that very long email chain to your project’s
               private email address. We got the rest covered.
@@ -144,17 +142,18 @@ const NewLanding = () => {
         </div>
         <div className="lower flex items-center justify-around">
           <div className="lower-content">
-<<<<<<< HEAD
+
             <h3>{t('landing.homepage.third-section.lower-content')}</h3>
             {/* <h3>Real-time task overview</h3> */}
             <p>{t('landing.homepage.third-section.main-lower-content')}</p>
-=======
             <h3> {t('landing.homepage.third-section.lower-content')}</h3>
             {/* <h3>Real-time task overview</h3> */}
             <p>
             {t('landing.homepage.third-section.main-lower-content')}
             </p>
->>>>>>> 581ca1ed (landingx/Index.tsx translated)
+            <h3>{t('landing.homepage.third-section.lower-content')}</h3>
+            {/* <h3>Real-time task overview</h3> */}
+            <p>{t('landing.homepage.third-section.main-lower-content')}</p>
             {/* <p>
               Our tasks panel is built to provide real-time charts and
               tables to make sure you are aligned with everything
