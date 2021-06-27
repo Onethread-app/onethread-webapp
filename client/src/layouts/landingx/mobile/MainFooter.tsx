@@ -8,8 +8,12 @@ import LanguageSelector from 'components/LanguageSelector';
 import FBIcon from 'resources/images/icons/fb.png';
 import LinkedInIcon from 'resources/images/icons/linkedin.png';
 import YTIcon from 'resources/images/icons/youtube.png';
+import { useTranslation } from 'react-i18next';
 
 const MainFooter = () => {
+
+  const { t } = useTranslation();
+  
   return (
     <>
       <div className="main-footer flex flex-column items-center">
@@ -87,8 +91,9 @@ const MainFooter = () => {
       </div>
       <div className="footer-copyright flex items-center w-100">
         <h1 className="tc w-100">
-          Copyright 2021 Onethread. All rights reserved. Proudly made
-          in Bangladesh.
+          {t('landing.homepage.footer.copyright')}
+          {/* Copyright 2021 Onethread. All rights reserved. Proudly made
+          in Bangladesh. */}
         </h1>
       </div>
     </>

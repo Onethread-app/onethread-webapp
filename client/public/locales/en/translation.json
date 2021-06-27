@@ -4,7 +4,7 @@
       "main-header": {
         "heading": {"first-part":"Collaborate with people on projects","second-part":"with the click of a button"},
         "sub-heading": {"first-part":"Onethread" ,"second-part":"is a project management tool built from the ground up for multi-team collaboration among startups, agencies and NGOs."},
-        "Sign-Up button": "Create Your First Project."
+        "Sign-Up button": "Create Unlimited Projects For Free"
       },
 
       "second-section": {
@@ -28,7 +28,7 @@
       },
 
       "product-details": {
-        "header1": {"first-part":"Everything " ,"second-part":"a project manager dreamed of,", "third-part": "in one single package."},
+        "header1": {"first-part":"Everything " ,"second-part":"a project manager dreamed of, ", "third-part": "in one single package."},
         "header2": "Never lose track of a project again.",
         "subheader2": "Each project gets a separate space with chat threads, tasks and files, powered by an intelligent search engine.",
         "header3": "Communicate with anyone in your project",

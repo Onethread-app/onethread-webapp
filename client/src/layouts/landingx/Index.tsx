@@ -121,11 +121,9 @@ const NewLanding = () => {
             <img src={MailGif} alt="MailGif" />
           </div>
           <div className="upper-content">
-            <h3> {t('landing.homepage.third-section.upper-content')}</h3>
+            <h3>{t('landing.homepage.third-section.upper-content')}</h3>
             {/* <h3>No more deadly email loops.</h3> */}
-            <p>
-               {t('landing.homepage.third-section.main-upper-content')}
-            </p>
+            <p>{t('landing.homepage.third-section.main-upper-content')}</p>
             {/* <p>
               Forward that very long email chain to your project’s
               private email address. We got the rest covered.
@@ -134,11 +132,9 @@ const NewLanding = () => {
         </div>
         <div className="lower flex items-center justify-around">
           <div className="lower-content">
-            <h3> {t('landing.homepage.third-section.lower-content')}</h3>
+            <h3>{t('landing.homepage.third-section.lower-content')}</h3>
             {/* <h3>Real-time task overview</h3> */}
-            <p>
-            {t('landing.homepage.third-section.main-lower-content')}
-            </p>
+            <p>{t('landing.homepage.third-section.main-lower-content')}</p>
             {/* <p>
               Our tasks panel is built to provide real-time charts and
               tables to make sure you are aligned with everything
