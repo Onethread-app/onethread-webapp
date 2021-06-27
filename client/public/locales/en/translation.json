@@ -2,29 +2,33 @@
   "landing": {
     "homepage": {
       "main-header": {
-        "heading": "Collaborate with people on projects with the click of a button",
-        "sub-heading": "Onethread is project management tool built from the ground up for multi-team collaboration among startups, agencies and NGOs.",
+        "heading": {"first-part":"Collaborate with people on projects","second-part":"with the click of a button"},
+        "sub-heading": {"first-part":"Onethread" ,"second-part":"is a project management tool built from the ground up for multi-team collaboration among startups, agencies and NGOs."},
         "Sign-Up button": "Create Your First Project."
       },
+
       "second-section": {
-        "unified-text": "We spend 23% more time in external projects for lack of a unified tool",
-        "unified-heading": "Onethread lets you efficiently organize all your projects and communicate with everyone involved in a single platform",
+        "unified-text":{ "first-part":"We spend 23% more time in external projects for", "second-part":" lack of a unified tool"},
+        "unified-heading":{ "first-part":"Onethread", "second-part":"lets you efficiently organize all your projects and communicate with everyone involved in a single platform"},
         "messages": "Keep your work and personal inboxes separate",
         "project-dashboard": "Task assignment, one-click approvals and project folders",
         "reports": "No more asking “what’s done”. You already know it!",
         "unified-footer": "Read: Get rid of infinite email chains and WhatsApp threads"
       },
+
       "third-section": {
-        "upper-conent": "No more deadly email loops.",
+        "upper-content": "No more deadly email loops.",
         "main-upper-content": "Forward that very long email chain to your project’s private email address. We got the rest covered.",
         "lower-content": "Real-time task overview.",
         "main-lower-content": "Our tasks panel is built to provide real-time charts and tables to make sure you are aligned with everything"
       },
+
       "teams": {
-        "listoftheusers": "Teams large & small are using Onethread to 3x their output in half the time."
+        "listoftheusers":{"first-part": "Teams large & small are using Onethread to", "second-part": "3x their output in half the time."}
       },
+
       "product-details": {
-        "header1": "Everything a project manager dreamed of,in one single package.",
+        "header1": {"first-part":"Everything " ,"second-part":"a project manager dreamed of,", "third-part": "in one single package."},
         "header2": "Never lose track of a project again.",
         "subheader2": "Each project gets a separate space with chat threads, tasks and files, powered by an intelligent search engine.",
         "header3": "Communicate with anyone in your project",
@@ -34,8 +38,9 @@
         "header5": "Work with your favorite tools",
         "subheader5": "With 500+ integrations, onethread plays nicely with all the tools that we love and use"
       },
+
       "footer": {
-        "headline": "Change how you manage external stakeholders. Start today.",
+        "headline": {"first-part": "Change how you manage external stakeholders. ","second-part": "Start today."},
         "content": "Sign up with your email below to use Onethread for free while in beta. The private beta is just the beginning, but we want you to be a part of it!",
         "createbutton": "Create Your First Project",
         "features": "features",
@@ -56,11 +61,13 @@
         "copyright": "Copyright 2021 Onethread. All rights reserved. Proudly made in Bangladesh."
       }
     },
+
     "login": {
       "about-one-thread-login": {
         "login-heading": "Onethread",
         "content-login": "Onethread is designed keeping in mind that Ease of Communication is the key to success for any enterprise. Onethread’s architecture has the key unique element of containerization with its feature called Project which ensures privacy within it, and fluidity to collaborate with external and internal stakeholders."
       },
+
       "sign-in-form": {
         "email": "Email Address",
         "password": "Password",
@@ -70,11 +77,13 @@
         "sign-up button": "Sign Up Here"
       }
     },
+
     "sign-up": {
       "about-one-thread-sign-up": {
         "sign-up-heading": "Onethread",
         "content-sign-up": "Onethread is designed keeping in mind that Ease of Communication is the key to success for any enterprise. Onethread’s architecture has the key unique element of containerization with its feature called Project which ensures privacy within it, and fluidity to collaborate with external and internal stakeholders."
       },
+
       "sign-up-form": {
         "first-name": "First Name",
         "last-name": "Last Name",
@@ -87,9 +96,9 @@
       }
     }
   },
+
   "app": {
-    "company": {
-      "homepage": {
+     "homepage": {
         "My-Companies": "My Companies",
         "Work-place": "Places You Work",
         "Company-name": "Onethread",
@@ -106,6 +115,7 @@
         "No-video-conference": "There's no existing Video Conference to show",
         "Click-a-button": "Simply click on 'Create Video Conference' button to create a new one"
       },
+    "company": {
       "Dashboard": {
         "Headline": "Dashboard",
         "Ongoing-projects": "Running Projects",
@@ -123,6 +133,7 @@
         "Announce": "Company Announcement",
         "Sender": "From"
       },
+
       "Projects": {
         "My-projects": "My Projects",
         "Everything": "All",
@@ -149,6 +160,7 @@
         "Certificates": "Certificates",
         "Parent": "Member of Parent Organizations"
       },
+
       "Colleagues": {
         "Admins": "Admins",
         "Members": "Members",
@@ -168,16 +180,19 @@
         "Upload": "Upload Files",
         "Team": "Project Members"
       },
+
       "Project-rooms": {
         "Rooms": "Rooms",
         "Find-room": "Search for rooms",
         "Select-room": "Please, select a room !!"
       },
+
       "Project-boards": {
         "Board": "Board",
         "My-boards": "My Boards",
         "Criteria": "Filter by"
       },
+
       "Project-teammates": {
         "Team-members": "Team Members",
         "Admins": "Admins",
@@ -190,6 +205,7 @@
         "Position": "Position",
         "Co-partner": "Project Associates"
       },
+
       "Project-settings": {
         "Moderator": "Project Moderator",
         "General": "General",
@@ -222,6 +238,7 @@
         "Date-of-birth": "Birthdate",
         "Gender": "Gender"
       },
+
       "User-job": {
         "Company-name": "Company Name",
         "Position-name": "Position Name",
@@ -230,6 +247,7 @@
         "Description": "Description",
         "Current-work": "I currently work here"
       },
+
       "User-Education": {
         "Degree": "Degree",
         "Institution": "Institution Name",
@@ -238,6 +256,7 @@
         "Description": "Description",
         "Currently": "I currently study here"
       },
+
       "User-settings": {
         "Profile": "Profile Settings",
         "Password": "Change Password"
@@ -253,6 +272,7 @@
         "Legal-name": "Legal Owner's Name",
         "Legal-email": "Legal Owner's Email Address"
       },
+
       "Start-project": {
         "Name": "Project Name(Required)",
         "Type": "Please Select a company"
