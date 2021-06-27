@@ -1,5 +1,7 @@
 import React from 'react';
 
+import LanguageSelector from 'components/LanguageSelector';
+
 // import PcIcon from 'resources/images/icons/pc.png';
 // import AndroidIcon from 'resources/images/icons/android.png';
 // import MacIcon from 'resources/images/icons/mac.png';
@@ -79,6 +81,7 @@ const MainFooter = () => {
               {' '}
               <img src={YTIcon} alt="youtube" />
             </a>
+            <LanguageSelector />
           </div>
         </div>
       </div>

@@ -18,6 +18,8 @@ import App from './App';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
 import './style.css';
+import './i18n';
+import { Loading } from 'components/Loading';
 
 const PUBLIC_KEY = process.env.REACT_APP_STRIPE_PUBLIC_KEY as string;
 const stripePromise = loadStripe(PUBLIC_KEY);
@@ -27,7 +29,9 @@ ReactDOM.render(
     <PersistGate loading={null} persistor={persistor}>
       <Elements stripe={stripePromise}>
         <BrowserRouter>
-          <App />
+          <React.Suspense fallback={<Loading />}>
+            <App />
+          </React.Suspense>
         </BrowserRouter>
       </Elements>
     </PersistGate>
