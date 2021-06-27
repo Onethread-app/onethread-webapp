@@ -69,12 +69,15 @@ const NavbarTopComponent = (
     // props.getNotifications();
   };
 
+<<<<<<< HEAD
   const compareChats = (a: any, b: any) => {
     if (a.message.createdAt < b.message.createdAt) return 1;
     else if (a.message.createdAt > b.message.createdAt) return -1;
     else return 0;
   };
 
+=======
+>>>>>>> ab04cb3d (layout/home translated)
   const { t } = useTranslation();
 
   return (
@@ -219,7 +222,11 @@ const NavbarTopComponent = (
                     props.type === 'home' ? 'white' : 'dark-gray',
                 }}
                 // text="My Companies"
+<<<<<<< HEAD
                 text={t('app.homepage.My-Companies')}
+=======
+                text= {t('app.homepage.My-Companies')}
+>>>>>>> ab04cb3d (layout/home translated)
               />
             }
           />
