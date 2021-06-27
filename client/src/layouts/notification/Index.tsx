@@ -32,7 +32,13 @@ const NotificationPage = (props: INotificationPage) => {
 
   React.useEffect(() => {
     props.getNotifications();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  React.useEffect(() => {
+    props.seenNotification();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notificationToShow]);
 
   React.useEffect(() => {
     const today = moment(new Date());
@@ -85,8 +91,8 @@ const NotificationPage = (props: INotificationPage) => {
   return (
     <div
       className={`notification-page flex ${
-        isMobileOnly ? 'flex-column' : 'flex-row h-100'
-      } w-100`}
+        isMobileOnly ? 'flex-column' : 'flex-row'
+      } w-100 h-100`}
     >
       <NotificationSidebar
         activeTab={activeTab}

@@ -3,7 +3,7 @@ const { Member } = require('../company/member/member.model');
 const { Team } = require('../team-member/team.model');
 const { Project } = require('../project/project.model');
 const { Room } = require('../room/room.model');
-const  Board  = require('../board/board.model');
+const Board = require('../board/board.model');
 const TaskAssign = require('../task/taskAssign.model');
 const Subtask = require('../task/subtask/subtask.model');
 const Account = require('../account/account.model');
@@ -52,22 +52,24 @@ module.exports.sendNotificationToProjectTeamMates = async (
   taskId,
   columnId,
   boardId,
-  adminUser
+  adminUser,
 ) => {
-try {
-  let senderFullName = await Account.findById({
-    _id: senderName,
-  }).select('firstName lastName');
-  console.log(pid);
-  let teamMembers = await Team.find({
-    project: pid,
-  }).select('member').populate('member', '_id account');
-  const board = await Board.findById({_id: boardId}).select('name');
-  let notifications = {
+  try {
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    console.log(pid);
+    let teamMembers = await Team.find({
+      project: pid,
+    })
+      .select('member')
+      .populate('member', '_id account');
+    const board = await Board.findById({ _id: boardId }).select(
+      'name',
+    );
+    let notifications = {
       type: 'board',
-      text: `${_.upperFirst(
-        senderFullName.firstName,
-      )} ${_.upperFirst(
+      text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
         senderFullName.lastName,
       )} created a task in board ${board.name} `,
       account: adminUser._id,
@@ -76,28 +78,25 @@ try {
       project: pid,
       task: taskId,
       board: boardId,
-    };   
-  notifications = await Notification.create(notifications);
-  teamMembers = teamMembers.map((m) => {
-    return { account: m.member.account };
-  });
-  teamMembers.forEach(async (member) => {
-      if(member.account.toString() !== adminUser._id){
+    };
+    notifications = await Notification.create(notifications);
+    console.log(notifications);
+    teamMembers = teamMembers.map((m) => {
+      return { account: m.member.account };
+    });
+    teamMembers.forEach(async (member) => {
+      if (member.account.toString() !== adminUser._id) {
         let userNoti = await UserNotification.create({
           notification: notifications._id,
           account: member.account,
         });
-        await triggerUnreadNotifications(
-          member.account,
-        );
+        await triggerUnreadNotifications(member.account);
       }
-
-  });
-
-} catch (error) {
-  logger.error(`Notifications: ${error}`);
-}
-}
+    });
+  } catch (error) {
+    logger.error(`Notifications: ${error}`);
+  }
+};
 
 module.exports.createMemberAddNotification = async (
   company, //fromHeader
@@ -477,14 +476,14 @@ module.exports.createBoardNotification = async (
   }
 };
 
-module.exports.addTeamMateIntoRoomNotification = async(
+module.exports.addTeamMateIntoRoomNotification = async (
   company, //fromHeader
   senderName,
   newMembers,
   adminUser,
   roomId,
   pid,
-)=>{
+) => {
   try {
     let senderFullName = await Account.findById({
       _id: senderName,
@@ -503,7 +502,7 @@ module.exports.addTeamMateIntoRoomNotification = async(
         account: adminUser._id,
         company: company,
         room: roomId,
-        project: pid
+        project: pid,
       };
     });
     notifications = await Notification.create(notifications);
@@ -516,17 +515,14 @@ module.exports.addTeamMateIntoRoomNotification = async(
           notification: m._id,
           account: member.account,
         });
-        await triggerUnreadNotifications(
-          member.account,
-        );
+        await triggerUnreadNotifications(member.account);
       });
     });
   } catch (error) {
     logger.error(`Notifications: ${error}`);
     //next(error);
   }
-
-}
+};
 module.exports.list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
@@ -566,7 +562,6 @@ module.exports.list = async (req, res, next) => {
 
     let notificationFound = await UserNotification.find({
       account: req.user._id,
-      read: false,
     })
       .populate(options)
       .sort({ createdAt: -1 })

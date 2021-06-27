@@ -12,8 +12,8 @@ const NotificationSidebar = (props: INotificationSidebar) => {
       className={`notification-sidebar flex  ${
         isMobileOnly
           ? 'flex-row justify-center flex-auto truncate'
-          : 'flex-column'
-      } items-center  h-100`}
+          : 'flex-column h-100'
+      } items-center `}
     >
       <div
         className={props.activeTab === 0 ? 'active' : ''}
