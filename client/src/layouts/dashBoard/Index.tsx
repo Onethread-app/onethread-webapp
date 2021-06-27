@@ -32,6 +32,7 @@ import { NavbarCompany } from 'components/NavbarCompany';
 import tick from '../../resources/images/tick.svg';
 import { isMobileOnly } from 'react-device-detect';
 import { orderBy } from 'lodash';
+import { useTranslation } from 'react-i18next';
 
 interface DashBoardViewProps {
   user: User;
@@ -179,6 +180,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
     width: '100%',
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       {loading === false ? (
@@ -186,7 +189,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
           <NavbarCompany title="My Dashboard" />
           <div className="w-90 center mh2 mt4-l mt5 pb5 pb0-l">
             <h3 className="f3-ns f5" style={{ color: '#3484F0' }}>
-              Dashboard
+               {t('app.company.Dashboard.Headline')}
+              {/* Dashboard */}
             </h3>
             <div className="flex flex-row-ns flex-column">
               <div className="fl w-80-l w-100 mr4-ns mb-0-ns mb4">
@@ -198,14 +202,16 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                 <Card className="w-100 pa2 mb3-ns mb3 shadow-2 br3 totalInfoCard h4-ns">
                   <TotalInfo
                     type="employee"
-                    content="Total Employees"
+                    content={t('app.company.Dashboard.Number-of-employees')}
+                    // content="Total Employees"
                     count={dashboard.totalEmployee}
                   />
                 </Card>
                 <Card className="w-100 pa2 mb3-ns mb3 shadow-2 br3 totalInfoCard h4-ns">
                   <TotalInfo
                     type="associates"
-                    content="Total Partners"
+                    content={t('app.company.Dashboard.Number-of-associates')}
+                    // content="Total Partners"
                     count={dashboard.totalAssociates}
                   />
                 </Card>
@@ -218,7 +224,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     className="f3-ns f5"
                     style={{ color: '#3484F0' }}
                   >
-                    Project Status
+                    {t('app.company.Dashboard.Project-status')}
+                    {/* Project Status */}
                   </h3>
                   <div
                     style={{
@@ -272,7 +279,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     className="f3-ns f5"
                     style={{ color: '#3484F0' }}
                   >
-                    Latest Completed Tasks
+                   {t('app.company.Dashboard.Update-of-task')}
+                    {/* Latest Completed Tasks */}
                   </h3>
                   <div className="flex-ns justify-between">
                     <Card className="w-100-l w-100 pa3-ns pa2 shadow-1 br2">
@@ -380,7 +388,8 @@ const DashboardViewComponent = (props: DashBoardViewProps) => {
                     style={{ color: '#3484F0' }}
                     className="justify-center f3-ns f5"
                   >
-                    Company Announcements
+                   {t('app.company.Dashboard.Announce')}
+                    {/* Company Announcements */}
                   </h3>
 
                   {companyPermit(props.company.role) && (

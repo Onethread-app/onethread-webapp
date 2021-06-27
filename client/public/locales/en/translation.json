@@ -120,8 +120,8 @@
     "company": {
       "Dashboard": {
         "Headline": "Dashboard",
-        "Ongoing-projects": "Running Projects",
-        "Finished-projects": "Completed Projects",
+        "Ongoing-projects": {"first-part": "Running", "second-part": "Projects"},
+        "Finished-projects": {"first-part": "Completed", "second-part":"Projects"},
         "Number-of-employees": "Total Employees",
         "Number-of-associates": "Total Associates",
         "Update-of-task": "Latest Completed Task",

@@ -4,7 +4,7 @@
       "main-header": {
         "heading":{ "first-part":"সহজেই সংযুক্ত হন প্রজেক্টের বাকি সদস্যদের সাথে।", "second-part":"একটি বাটনে ক্লিকের মাধ্যমে"},
         "sub-heading": {"first-part":"ওয়ানথ্রেড", "second-part":"একটি প্রজেক্ট ব্যবস্থাপনকারী সফটওয়্যার যা বহু দল যেমন স্টার্টআপ,এজেন্সি এবং এনজিও জাতীয় প্রতিষ্ঠানসমূহকে একত্রিত করে।"},
-        "Sign-Up button": "বিনামূল্যে অগণিত প্রজেক্ট তৈরি করুন"
+        "Sign-Up button": "বিনামূল্যে অসংখ্য প্রজেক্ট তৈরি করুন"
       },
 
       "second-section": {
@@ -122,8 +122,8 @@
       
       "Dashboard": {
         "Headline": "ড্যাশবোর্ড",
-        "Ongoing-projects": "চলমান প্রজেক্টসমূহ",
-        "Finished-projects": "সমাপ্ত প্রজেক্টসমূহ",
+        "Ongoing-projects": {"first-part": "চলমান", "second-part": "প্রজেক্টসমূহ"},
+        "Finished-projects": {"first-part": "সমাপ্ত", "second-part": "প্রজেক্টসমূহ"},
         "Number-of-employees": "মোট কর্মীসংখ্যা",
         "Number-of-associates": "মোট সহযোগী",
         "Update-of-task": "সর্বশেষ সমাপ্ত প্রজেক্টসমূহ",
