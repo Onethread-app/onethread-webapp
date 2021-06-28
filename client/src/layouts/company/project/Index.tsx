@@ -1,6 +1,7 @@
 import { Tab, Tabs } from '@blueprintjs/core';
 import { NavbarCompany } from 'components/NavbarCompany';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { setProjectAccessForUser } from 'stores/project/Actions';
@@ -25,6 +26,8 @@ const _ProjectPage = (props: any) => {
     props.setProjectAccessForUser(true);
   }, []);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <NavbarCompany title="My Projects" />
@@ -32,7 +35,8 @@ const _ProjectPage = (props: any) => {
         <Tabs id="TabsExample">
           <Tab
             id="MyProjects"
-            title="My Projects"
+            title={t('app.company.Projects.My-projects')}
+            // title="My Projects"
             panel={<MyProject />}
             className="outline-0 mt4-ns mt2"
           />

@@ -118,6 +118,7 @@
         "Click-a-button": "Simply click on 'Create Video Conference' button to create a new one"
       },
     "company": {
+
       "Dashboard": {
         "Headline": "Dashboard",
         "Ongoing-projects": {"first-part": "Running", "second-part": "Projects"},
@@ -146,6 +147,7 @@
         "Finish": "End date",
         "Find": "Search"
       },
+
       "Company-profile": {
         "Company-name": "Onethread",
         "Total-Employee": "Total Employee",

@@ -49,6 +49,7 @@ import { projectRules } from './settings/projectrules';
 import './MyProjects.scss';
 import Axios from 'axios';
 import { server } from 'config';
+import { useTranslation } from 'react-i18next';
 
 const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [deleteProjectIndex, setDeleteProjectIndex] = useState(null);
@@ -79,14 +80,23 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
   const [searchValue, setSearchValue] = useState('');
   const [itemsPerPage] = useState(15);
 
+  const { t } = useTranslation();
+
   const permissions = projectRules(props.role, props.optionalRole);
   const statusOptions = [
-    { value: 'all', label: 'All' },
-    { value: 'ongoing', label: 'Ongoing' },
-    { value: 'completed', label: 'Completed' },
-    { value: 'not-started', label: 'Not Started' },
+    { value: 'all', label:  `${t('app.company.Projects.Everything')}` },
+    { value: 'ongoing', label:  `${t('app.company.Projects.Running')}` },
+    { value: 'completed', label:  `${t('app.company.Projects.Done')}` },
+    { value: 'not-started', label:  `${t('app.company.Projects.Future-work')}` },
     // { value: 'extended', label: 'Extended' },
   ];
+  // const statusOptions = [
+  //   { value: 'all', label: 'All' },
+  //   { value: 'ongoing', label: 'Ongoing' },
+  //   { value: 'completed', label: 'Completed' },
+  //   { value: 'not-started', label: 'Not Started' },
+  //   // { value: 'extended', label: 'Extended' },
+  // ];
 
   const indexOfLastProject = currentProjectPage * itemsPerPage;
   const indexOfFirstProject = indexOfLastProject - itemsPerPage;
@@ -368,7 +378,8 @@ const MyProjectPageComponent = (props: any & RouteComponentProps) => {
                 <input
                   type="text"
                   className="bp3-input"
-                  placeholder="Search"
+                  placeholder={t('app.company.Projects.Find')}
+                  // placeholder="Search"
                   onChange={(e) => handleSearch(e)}
                 />
               </div>
