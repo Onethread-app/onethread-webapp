@@ -11,6 +11,7 @@ import { withRouter } from 'react-router';
 
 import { connect } from 'react-redux';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { useTranslation } from 'react-i18next';
 
 const ProjectInfo = ({
   context,
@@ -27,7 +28,7 @@ const ProjectInfo = ({
         ...containerStyle,
       }}
     >
-      {context}
+      {context}: {' '}
       <span
         style={{ fontWeight: 'normal', ...dataStyle }}
         className={dataClassName}
@@ -88,6 +89,8 @@ const Index = (props: any) => {
         setIsLoading(false);
       });
   }, []);
+
+  const { t } = useTranslation();
 
   return (
     <div className={isMobileOnly ? 'ph2' : 'ph5'}>
@@ -184,16 +187,18 @@ const Index = (props: any) => {
             </div>
             <div>
               <ProjectInfo
-                context="Starting date: "
+                context={t('app.company.Projects.Beginning')}
+                // context="Starting date: "
                 data={startingDate}
               />
               <ProjectInfo
-                context="End date: "
+                context={t('app.company.Projects.Finish')}
+                // context="End date: "
                 data={dueDate ? dueDate : 'N/A'}
               />
-              <ProjectInfo context="Lead: " data={lead} />
+              <ProjectInfo context="Lead" data={lead} />
               <ProjectInfo
-                context="Status: "
+                context="Status"
                 data={status.replace(/-|\s/g, ' ')}
                 dataStyle={{
                   fontWeight: 'normal',

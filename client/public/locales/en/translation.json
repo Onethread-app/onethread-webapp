@@ -143,7 +143,7 @@
         "Running": "Ongoing",
         "Done": "Completed",
         "Future-work": "Not Started",
-        "Beginning": "Start date",
+        "Beginning": "Starting date",
         "Finish": "End date",
         "Find": "Search"
       },
@@ -151,7 +151,7 @@
       "Company-profile": {
         "Company-name": "Onethread",
         "Total-Employee": "Total Employee",
-        "Associates": "Total Associates",
+        "Associates": "Total Partners",
         "Basic": "Basic Information",
         "Advanced": "Advanced Information",
         "Name": "Comapny Name",
