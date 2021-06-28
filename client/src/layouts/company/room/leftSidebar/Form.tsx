@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Button } from '@blueprintjs/core';
+import React, { useState, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import { connect, useDispatch } from 'react-redux';
+import { Button } from '@blueprintjs/core';
 import { createRoom } from 'stores/room/Actions';
 import { Form, Field } from 'react-final-form';
 import {
@@ -11,6 +12,7 @@ import {
 import { InputGroupFieldWithError } from 'components/fields/InputGroupField';
 import { checkError } from 'components/final-form/utils';
 import { room } from 'stores/room/Types';
+import { IRoom } from 'stores/room/Reducer';
 
 interface ICreateFormProps {
   setShowDialog: (val: boolean) => void;
@@ -18,29 +20,46 @@ interface ICreateFormProps {
 
 interface ICreateFormInternalProps extends ICreateFormProps {
   createRoom: (val: any) => void;
-  roomStatus: number;
+  errorOnRoomCreate: string;
+  creatingRoom: boolean;
+  roomLoading: boolean;
+  uniqueCompanyName: string;
+  currentRoom: IRoom;
 }
 
 const CreateFormComponent: React.FC<any> = (
   props: ICreateFormInternalProps,
 ) => {
-  const [showDialog, setShowDialog] = useState('');
+  const [submitted, setSubmitted] = useState(false);
   const dispatch = useDispatch();
-  const onSubmit: any = async (values: any) => {
-    await props.createRoom(values);
+  const history = useHistory();
+  const location = useLocation();
+
+  const onSubmit: any = (values: any) => {
+    props.createRoom(values);
+    setSubmitted(true);
   };
 
-  const errorHandling: any = (status: number) => {
-    setShowDialog('');
-    if (status === 409) {
-      setShowDialog('Duplicate name');
-    } else if (status === 201) {
-      setShowDialog('');
+  useEffect(() => {
+    if (
+      submitted === true &&
+      props.creatingRoom === false &&
+      props.errorOnRoomCreate === '' &&
+      props.roomLoading === false
+    ) {
+      const query = new URLSearchParams(location.search);
+      const view =
+        query.get('view') && query.get('view') === 'mobile'
+          ? 'mobile'
+          : 'default';
+      history.push(
+        `/company/${props.uniqueCompanyName}/project/${props.currentRoom.project}/room?roomId=${props.currentRoom._id}&view=${view}`,
+      );
+      setSubmitted(false);
       props.setShowDialog(false);
     }
-    return;
-  };
-
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.creatingRoom]);
   return (
     <Form
       onSubmit={onSubmit}
@@ -77,10 +96,11 @@ const CreateFormComponent: React.FC<any> = (
                 />
               )}
             />
-            {errorHandling(props.roomStatus)}
-            <small className="red">{showDialog}</small>
+            {props.errorOnRoomCreate && (
+              <small className="red">{props.errorOnRoomCreate}</small>
+            )}
             <div className="flex justify-end mt4">
-            <Button
+              <Button
                 className="grow h2 pointer white bp3-minimal w4 mr3"
                 style={{
                   background: '#3F61C5',
@@ -108,7 +128,6 @@ const CreateFormComponent: React.FC<any> = (
               >
                 Cancel
               </Button>
-            
             </div>
           </form>
         </>
@@ -119,7 +138,11 @@ const CreateFormComponent: React.FC<any> = (
 
 const mapStateToProps = (state: any) => {
   return {
-    roomStatus: state.roomReducer.responseCode,
+    errorOnRoomCreate: state.roomReducer.errorOnRoomCreate,
+    creatingRoom: state.roomReducer.creatingRoom,
+    roomLoading: state.roomReducer.loading,
+    uniqueCompanyName: state.companyReducer.currentCompany.uniqueName,
+    currentRoom: state.roomReducer.currentRoom,
   };
 };
 

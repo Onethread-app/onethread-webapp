@@ -5,6 +5,7 @@ import {
   LOADING_ROOM,
   ALL_MESSAGE_RECEIVED,
   RoomActionTypes,
+  CURRENT_ROOM,
 } from './Types';
 import { tigrowApi } from 'config';
 import { tokenConfig } from 'stores/UtilsActions';
@@ -61,11 +62,14 @@ function* createRoom({ payload }) {
         },
         headers,
       );
-      yield put(createRoomSuccess(response.data.room));
-      yield put({
-        type: room.RESPONSE_STATUS_CODE,
-        payload: response.status,
-      });
+      yield all([
+        put(createRoomSuccess(response.data.room)),
+        put({
+          type: room.RESPONSE_STATUS_CODE,
+          payload: response.status,
+        }),
+        put({ type: CURRENT_ROOM, payload: response.data.room }),
+      ]);
       yield roomSubscribe(response.data.room._id);
     }
   } catch (error) {

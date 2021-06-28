@@ -1,0 +1,68 @@
+.notification-page {
+  @media screen and (max-width: 768px) {
+    margin-top: 3.5rem;
+  }
+
+  .notification-sidebar {
+    width: 200px;
+    border: 0.5px solid #bdbdbd;
+    border-left: 0;
+    border-radius: 6px;
+    border-top-left-radius: 0;
+
+    @media screen and (max-width: 768px) {
+      width: auto;
+      margin: 0 1rem 1rem;
+      border-left: 0.5px solid #bdbdbd;
+      border-top-left-radius: 6px;
+    }
+
+    > div {
+      width: 100%;
+      padding: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+
+      @media screen and (max-width: 768px) {
+        border-radius: 6px;
+      }
+
+      &:first-child {
+        @media screen and (min-width: 768px) {
+          border-top-right-radius: 6px;
+        }
+      }
+
+      &:not(:first-child) {
+        margin: 0.1rem 0;
+
+        @media screen and (max-width: 768px) {
+          margin: 0;
+        }
+      }
+
+      transition: all 0.2s ease-out;
+    }
+
+    .active {
+      background: #3f61c5;
+      color: cornsilk;
+    }
+  }
+  .notification-items {
+    border: 0.5px solid #bdbdbd;
+    border-radius: 6px;
+    margin: 0 1rem;
+
+    > div {
+      border-bottom: 0.1px solid #ccc;
+      border-right: none;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+
+      &:hover {
+        background: #97c8ff;
+      }
+    }
+  }
+}

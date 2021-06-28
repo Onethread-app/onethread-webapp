@@ -171,7 +171,7 @@ export interface IRoomReducer {
   roomNotification: {};
   totalUnread: number;
   creatingRoom: boolean;
-  gettingRoom: boolean;
+  gettingRooms: boolean;
   gettingRoomMembers: boolean;
   addingRoomMembers: boolean;
   sendingMessage: boolean;
@@ -185,7 +185,7 @@ export interface IRoomReducer {
   fetchingRooms: boolean;
   fetchingChats: boolean;
   errorOnRoomCreate: string;
-  errorOnGettingRoom: string;
+  errorOnGettingRooms: string;
   errorOnGettingRoomMembers: string;
   errorOnAddingMembers: string;
   errorOnSendingMessage: string;
@@ -235,7 +235,7 @@ const InitialState: IRoomReducer = {
   roomNotification: {},
   totalUnread: 0,
   creatingRoom: false,
-  gettingRoom: false,
+  gettingRooms: false,
   gettingRoomMembers: false,
   addingRoomMembers: false,
   sendingMessage: false,
@@ -249,7 +249,7 @@ const InitialState: IRoomReducer = {
   fetchingRooms: false,
   fetchingChats: false,
   errorOnRoomCreate: '',
-  errorOnGettingRoom: '',
+  errorOnGettingRooms: '',
   errorOnGettingRoomMembers: '',
   errorOnAddingMembers: '',
   errorOnSendingMessage: '',
@@ -464,20 +464,21 @@ export const RoomReducer = (state = InitialState, action: any) => {
     case RoomActionTypes.GET_ROOMS_START:
       return {
         ...state,
-        gettingRoom: true,
+        gettingRooms: true,
+        errorOnGettingRoom: '',
       };
     case RoomActionTypes.GET_ROOMS_SUCCESS:
       return {
         ...state,
         rooms: action.payload.rooms.sort(sortRooms),
         roomsUnreadCount: action.payload.roomsUnreadCount,
-        gettingRoom: false,
+        gettingRooms: false,
       };
     case RoomActionTypes.GET_ROOMS_FAILURE:
       return {
         ...state,
-        gettingRoom: false,
-        errorOnGettingRoom: action.payload,
+        errorOnGettingRooms: action.payload,
+        gettingRooms: false,
       };
     case RoomActionTypes.FETCH_ROOMS_START:
       return {
@@ -517,6 +518,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
       return {
         ...state,
         creatingRoom: true,
+        errorOnRoomCreate: '',
       };
     case RoomActionTypes.CREATE_ROOM_SUCCESS:
       return {
@@ -537,6 +539,12 @@ export const RoomReducer = (state = InitialState, action: any) => {
           },
         ],
         errorOnRoomCreate: '',
+        creatingRoom: false,
+      };
+    case RoomActionTypes.CREATE_ROOM_FAILURE:
+      return {
+        ...state,
+        errorOnRoomCreate: action.payload,
         creatingRoom: false,
       };
     case RoomActionTypes.GET_ROOM_SHARED_FILES_START:
@@ -670,7 +678,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
         roomNotification: {},
         totalUnread: 0,
         creatingRoom: false,
-        gettingRoom: false,
+        gettingRooms: false,
         gettingRoomMembers: false,
         addingRoomMembers: false,
         sendingMessage: false,
@@ -684,7 +692,7 @@ export const RoomReducer = (state = InitialState, action: any) => {
         fetchingRooms: false,
         fetchingChats: false,
         errorOnRoomCreate: '',
-        errorOnGettingRoom: '',
+        errorOnGettingRooms: '',
         errorOnGettingRoomMembers: '',
         errorOnAddingMembers: '',
         errorOnSendingMessage: '',

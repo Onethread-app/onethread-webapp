@@ -215,11 +215,18 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
                   : isMobileOnly
                   ? '0px'
                   : '16px',
+                minWidth: isOpenRightSidebar
+                  ? isMobileOnly
+                    ? '0px'
+                    : '400px'
+                  : isMobileOnly
+                  ? '0px'
+                  : '16px',
               }}
             >
               {isMobileOnly ? (
                 <Drawer
-                  onClose={() => setShowDialog(!showDialog)}
+                  onClose={() => setShowDialog(false)}
                   isOpen={showDialog}
                   canOutsideClickClose={false}
                   style={{ width: '100%' }}

@@ -5,7 +5,6 @@ import Linkify from 'react-linkify';
 
 import { IRoomMessage } from 'stores/room/Reducer';
 import { toggleDiscussionRoom } from 'stores/room/Actions';
-import { componentDecorator } from 'helpers/LinkifyHelper';
 
 import UserIcon from './../../../../../resources/images/profilePhoto.svg';
 import DownloadIcon from './../../../../../resources/images/Download.svg';
@@ -101,7 +100,26 @@ const MessageItemComponent = (props: MessageItemProps) => {
               backgroundColor: currentUser ? '#3b5998' : '#d4d4d47a',
             }}
           >
-            <Linkify componentDecorator={componentDecorator}>
+            <Linkify
+              componentDecorator={(
+                decoratedHref,
+                decoratedText,
+                key,
+              ) => (
+                <a
+                  target="blank"
+                  href={decoratedHref}
+                  key={key}
+                  rel="noreferrer"
+                  style={{
+                    color: currentUser ? '#fff' : '#106ba3',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  {decoratedText}
+                </a>
+              )}
+            >
               <p
                 className={`mv0 tj break-word`}
                 style={{

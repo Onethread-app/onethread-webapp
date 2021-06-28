@@ -55,7 +55,7 @@ export const SubTaskCreatorComponent = (
   };
 
   return (
-    <div>
+    <div className="mb3">
       <Form
         onSubmit={onSubmit}
         initialValues={{
@@ -73,7 +73,7 @@ export const SubTaskCreatorComponent = (
         }) => (
           <form onSubmit={handleSubmit}>
             <SubmitError errorMessage={submitError} />
-            <div className="ph2 pt2">
+            <div className="pt2">
               <Field<string>
                 name="subtaskTitle"
                 validate={composeValidators(required, maxValue(100))}
@@ -96,7 +96,7 @@ export const SubTaskCreatorComponent = (
                 )}
               />
               <div className="flex justify-end mt2">
-              <Button
+                <Button
                   type="submit"
                   style={{ background: '#3F61C5' }}
                   loading={submitting}
@@ -118,7 +118,6 @@ export const SubTaskCreatorComponent = (
                     props.setShowSubTaskForm(!props.showSubtaskForm);
                   }}
                 />
-               
               </div>
             </div>
           </form>
@@ -155,7 +154,7 @@ export const SubTaskDelete = (
           <div>
             <p>Are you sure about that ? </p>
             <div className="flex justify-end mt4">
-            <Button
+              <Button
                 className="grow h2 pointer white bp3-minimal w4 mr3"
                 style={{
                   background: '#3F61C5',

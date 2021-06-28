@@ -9,8 +9,9 @@ import { projectRules } from '../project/settings/projectrules';
 import { RightSidebar } from 'components/RightSidebar';
 import { FormBoard } from '../board/Form';
 import { ColumnForm } from './column/ColumnForm';
+import EditableTextComponent from 'components/EditableText/EditableTextComponent';
 
-import { clearCurrentBoard } from 'stores/board/Actions';
+import { updateBoardName } from 'stores/board/Actions';
 import { TaskBoard } from 'stores/board/Reducer';
 import { ICompany } from 'stores/company/Reducer';
 import { IProject } from 'stores/project/Reducer';
@@ -18,12 +19,12 @@ import { IProject } from 'stores/project/Reducer';
 import addMemberIcon from 'resources/images/addMemberIcon.png';
 
 interface BoardDetailsViewInternalProps {
-  currentBoard?: TaskBoard;
+  currentBoard: TaskBoard;
   company: ICompany;
   currentProject: IProject;
   role: string;
   optionalRole: any;
-  clearCurrentBoard: () => void;
+  updateBoardName: (name: string) => void;
 }
 
 const BoardDetailsViewComponent = (
@@ -57,15 +58,10 @@ const BoardDetailsViewComponent = (
               href: `/company/${props.company.uniqueName}/project/${
                 props.currentProject!._id
               }/board`,
-              onClick: () => {
-                props.clearCurrentBoard();
-              },
             },
             {
-              text: `${props.currentBoard!.name}`,
-              href: `/company/${props.company.uniqueName}/project/${
-                props.currentProject._id
-              }/board/${props.currentBoard!._id}`,
+              text: `${props.currentBoard.name}`,
+              href: `/company/${props.company.uniqueName}/project/${props.currentProject._id}/board/${props.currentBoard._id}`,
             },
           ]}
         />
@@ -74,9 +70,26 @@ const BoardDetailsViewComponent = (
         className="flex items-center mt3 mb4"
         style={{ justifyContent: 'space-between' }}
       >
-        <h3 className="w-100 ma0 f3">{props.currentBoard!.name}</h3>
+        {(permissions.grantAll ||
+          permissions.projectModerator.includes(
+            'createUpdateBoard',
+          )) &&
+        props.currentBoard.name.toLowerCase() !== 'general' ? (
+          <h3
+            className="w-100 ma0 f3"
+            title="Click to edit board name"
+          >
+            <EditableTextComponent
+              maxLength={150}
+              initialValue={props.currentBoard.name}
+              onConfirm={props.updateBoardName}
+            />
+          </h3>
+        ) : (
+          <h3 className="w-100 ma0 f3">{props.currentBoard.name}</h3>
+        )}
         <div className="flex mh3-ns w-100 w-auto-ns">
-          {props.currentProject!._id ? (
+          {props.currentProject._id ? (
             permissions.grantAll ||
             permissions.projectModerator.includes(
               'createUpdateBoard',
@@ -132,7 +145,7 @@ const BoardDetailsViewComponent = (
       <div className="flex-auto">
         <div className="fl h-100 w-100">
           <TaskManagementLayout
-            columns={props.currentBoard!.columns!}
+            columns={props.currentBoard.columns!}
           />
         </div>
       </div>
@@ -163,15 +176,14 @@ const BoardDetailsViewComponent = (
           <div className="pa3">
             <h1 className="f4 tigrow-lightBlue">Board members</h1>
             <div>
-              {props.currentBoard!.members!.length > 0 &&
-                props.currentBoard!.members!.map(
+              {props.currentBoard.members!.length > 0 &&
+                props.currentBoard.members!.map(
                   (member: any, i: number) => {
                     return (
                       <article
                         key={member._id}
                         className={`flex items-center w-100 pv1 ${
-                          i !==
-                          props.currentBoard!.members!.length - 1
+                          i !== props.currentBoard.members!.length - 1
                             ? 'bb'
                             : ''
                         } b--black-05`}
@@ -226,5 +238,5 @@ const mapStateToProps = (state: any) => {
 };
 
 export const BoardDetailsView = connect(mapStateToProps, {
-  clearCurrentBoard,
+  updateBoardName,
 })(BoardDetailsViewComponent);

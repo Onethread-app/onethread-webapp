@@ -107,30 +107,34 @@ export const ChatLayoutComponent = (
                         </>
                       ) : (
                         <>
-                          <h5 className="gray ma0 mb2 pointer bp3-popover-dismiss">
+                          {/* <h5 className="gray ma0 mb2 pointer bp3-popover-dismiss">
                             Mute Conversation
-                          </h5>
+                          </h5> */}
                           {projectPermit(props.companyRole) ||
-                            (props.projectRole &&
-                              props.optionalRole &&
-                              (permissions.grantAll ||
-                                permissions.projectModerator.includes(
-                                  'archiveRoom',
-                                )) && (
-                                <h5
-                                  className="red ma0 pointer bp3-popover-dismiss"
-                                  onClick={async () => {
-                                    await props.archiveRoom(
-                                      {
-                                        archive: true,
-                                      },
-                                      props.currentRoom._id,
-                                    );
-                                  }}
-                                >
-                                  Archive Room
-                                </h5>
-                              ))}
+                          (props.projectRole &&
+                            props.optionalRole &&
+                            (permissions.grantAll ||
+                              permissions.projectModerator.includes(
+                                'archiveRoom',
+                              ))) ? (
+                            <h5
+                              className="red ma0 pointer bp3-popover-dismiss"
+                              onClick={async () => {
+                                await props.archiveRoom(
+                                  {
+                                    archive: true,
+                                  },
+                                  props.currentRoom._id,
+                                );
+                              }}
+                            >
+                              Archive Room
+                            </h5>
+                          ) : (
+                            <h5 className="ma0 bp3-popover-dismiss gray">
+                              No settings
+                            </h5>
+                          )}
                         </>
                       )}
                     </div>
@@ -158,9 +162,7 @@ export const ChatLayoutComponent = (
                 props.currentRoom.archive === false) ? (
                 <div
                   className="pointer ml3-ns ml1"
-                  onClick={() =>
-                    setShowMemberFormDialog(!showMemberFormDialog)
-                  }
+                  onClick={() => setShowMemberFormDialog(true)}
                 >
                   <img
                     className="grow"
@@ -263,17 +265,13 @@ export const ChatLayoutComponent = (
 
       {showMemberFormDialog && (
         <Dialog
-          onClose={() =>
-            setShowMemberFormDialog(!showMemberFormDialog)
-          }
+          onClose={() => setShowMemberFormDialog(false)}
           isOpen={showMemberFormDialog}
           style={{ background: '#fff' }}
         >
           <AddMemberForm
             showDialog={showMemberFormDialog}
-            setShowDialog={() =>
-              setShowMemberFormDialog(!showMemberFormDialog)
-            }
+            setShowDialog={setShowMemberFormDialog}
           />
         </Dialog>
       )}

@@ -123,17 +123,6 @@ const addTeamMember = async (req, res, next) => {
           await triggerUnreadNotifications(e.account);
         });
       }
-
-      // const allTeamMembers = await Team.find({
-      //   account: { $in: accounts },
-      //   project: req.query.pid,
-      // }).populate({
-      //   path: 'account',
-      //   select: '_id name firstName lastName email',
-      // });
-
-      // createTeamAddNotification(projectOwner, allTeamMembers, );
-
       return sendJSONresponse(res, 201, {
         message: 'New Team created',
       });
@@ -185,7 +174,7 @@ const addTeamMember = async (req, res, next) => {
       }
     }
   } catch (error) {
-    logger.error(`${error}`);
+    logger.error(`Team: ${error}`);
     next(error);
   }
 };
