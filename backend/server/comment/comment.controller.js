@@ -32,16 +32,25 @@ const create = async (req, res, next) => {
     .save()
     .then(async result => {
       let taskMembers = await TaskAssign.find({taskId: req.body.taskId})
-                              .select('assignedPerson')
-                              .populate('assignedPerson', '_id');
-      let taskAssignMembers=taskMembers.map(task => task.assignedPerson);
-      let memberList = taskAssignMembers.map(task=> task._id);
-      let subTaskMembers = await SubTaskAssign.findOne({taskId: req.body.taskId})
+                              .select('assignedPerson taskId')
+                              .populate('assignedPerson taskId', '_id account');
+      let memberList =[];
+      if( taskMembers !== null){
+        let taskAssignMembers=taskMembers.map(task => task.assignedPerson);
+        memberList = taskAssignMembers.map(task=> task._id);
+      }
+      else{
+        let subTaskMembers = await SubTaskAssign.findOne({taskId: req.body.taskId})
                                 .populate('assignedMember');
-      let subTaskAssignMember = (subTaskMembers.assignedMembers);
-      let totalMember =memberList.concat(subTaskAssignMember.filter((item) => memberList.indexOf(item) < 0));
-      let memberNotify=totalMember.filter((item, pos) => totalMember.indexOf(item) === pos);
-      memberNotify.map(async member=>{
+        if( subTaskMembers !== null){
+          let subTaskAssignMember = (subTaskMembers.assignedMembers);
+          if (!memberList.includes(subTaskAssignMember)){
+            memberList.push(subTaskAssignMember);
+          }
+        }
+      }
+      console.log(memberList);
+      memberList.map(async member=>{
         if(member !== req.user._id){
           await notifyToTaskMember(
             req.user._id,

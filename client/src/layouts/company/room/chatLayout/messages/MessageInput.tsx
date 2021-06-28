@@ -168,7 +168,7 @@ const CustomMentionEditor = (
     ) {
       sendMessage(trimmedText, 'attachment');
     } else {
-      setMessageError('Cannot send empty message');
+      // setMessageError('Cannot send empty message');
     }
   };
 
