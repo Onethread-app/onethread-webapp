@@ -19,6 +19,7 @@ const esclient = new elasticsearch.Client({
     username: 'elastic',
     password: 'changeme',
   },
+  requestTimeout: 60000
 });
 
 async function checkConnection() {

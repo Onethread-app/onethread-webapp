@@ -561,24 +561,11 @@ module.exports.list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
   try {
-    let count = await UserNotification.aggregate([
-      { $match: { account: new ObjectId(req.user._id) } },
-
-      {
-        $lookup: {
-          from: 'notifications',
-          localField: 'notification',
-          foreignField: '_id',
-          as: 'notification',
-        },
-      },
-      {
-        $unwind: {
-          path: '$notification',
-        },
-      },
-      { $group: { _id: '$seen', count: { $sum: 1 } } },
-    ]);
+    let unseenCount = await UserNotification.find({
+      account: req.user._id,
+      seen: false,
+      read: false
+    }).countDocuments();
 
     const options = [
       {
@@ -602,13 +589,7 @@ module.exports.list = async (req, res, next) => {
       .skip(+skip)
       .limit(+limit)
       .exec();
-
-    let unseenCount =
-      count.length < 2
-        ? 0
-        : count[0]._id
-        ? count[1].count
-        : count[0].count;
+  
     // console.log(notificationResult);
     return sendJSONresponse(res, 200, {
       result: notificationFound,

@@ -120,7 +120,9 @@ const create = async (req, res, next) => {
       });
       await memberMessage.save();
       logger.info(`userMessage saved for user ${member.account}`);
-      await triggerUnreadMessages(member.account);
+      if(member.account.toString() !== req.user._id){
+        await triggerUnreadMessages(member.account);
+      }      
     });
 
     pusherChannel.trigger(`private-${req.body.room}`, 'new_message', {

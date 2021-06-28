@@ -127,7 +127,7 @@ module.exports.sendInviteColleague = async (
     to: emailList,
     subject: 'Invitation to join company',
     html: `
-      <h1> Join ${company.name} on TiGrow, </h1>
+      <h1> Join ${company.name} on Onethread, </h1>
       <h2> ${userEmail} has invited you to join the company ${company.name}. join now to start collaborating!  <a href="${link}"> Link </a> </h2>
   
     `,
