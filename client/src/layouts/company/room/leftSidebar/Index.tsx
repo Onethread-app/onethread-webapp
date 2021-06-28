@@ -99,7 +99,7 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
       {showDialog && (
         <RightSidebar
           onClose={() => {
-            setShowDialog(!showDialog);
+            setShowDialog(false);
           }}
         >
           <CreateForm setShowDialog={setShowDialog} />

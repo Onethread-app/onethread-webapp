@@ -3,7 +3,7 @@ import { NavbarTop } from 'components/Navbar';
 import { Sidebar } from 'components/Sidebar';
 import { useState, useEffect } from 'react';
 import { Loading } from './Loading';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { User } from 'stores/user/Reducer';
 import { isEmpty, isEqual } from 'lodash';
 import {
@@ -22,7 +22,13 @@ import {
   getSelectedTaskDetails,
 } from 'stores/board/Actions';
 import { getSingleProject } from 'stores/project/Actions';
-import { fetchRooms } from 'stores/room/Actions';
+import {
+  fetchRooms,
+  getRoomMembers,
+  getRoomMessages,
+  getRoomSharedFiles,
+  getRoomDiscussions,
+} from 'stores/room/Actions';
 
 import arrowLeft from '../resources/images/arrow left.svg';
 import arrowRight from '../resources/images/arrow right.svg';
@@ -33,7 +39,7 @@ import team from '../resources/images/sidebarTeam.svg';
 import associate from '../resources/images/sideBarAssociates.svg';
 import settings from '../resources/images/sidebarSettings.svg';
 import feedbackLight from '../resources/images/feedback-light.svg';
-import { ICompanyRoom } from 'stores/room/Reducer';
+import { ICompanyRoom, IRoom } from 'stores/room/Reducer';
 import { SecondaryLayout } from './SecondaryLayout';
 import { RoomQueries } from 'layouts/company/room/Index';
 
@@ -45,6 +51,7 @@ import {
 import { Navbar } from '@blueprintjs/core';
 import { NavbarIndividual } from './NavbarIndividual';
 import { companyPermit } from 'stores/UtilsActions';
+import { CURRENT_ROOM } from 'stores/room/Types';
 
 const load = async (
   reactRouterMatch: match,
@@ -107,6 +114,11 @@ interface LayoutInternalProps
   companyLoading: boolean;
   projectLoading: boolean;
   boardLoading: boolean;
+  rooms: IRoom[];
+  getRoomMembers: (roomId: string) => void;
+  getRoomMessages: (roomId: string) => void;
+  getRoomSharedFiles: (roomId: string) => void;
+  getRoomDiscussions: (roomId: string) => void;
 }
 
 const LayoutComponent = (props: LayoutInternalProps) => {
@@ -116,7 +128,7 @@ const LayoutComponent = (props: LayoutInternalProps) => {
     roomId: '',
   });
   const [showMenu, setShowMenu] = useState(false);
-
+  const dispatch = useDispatch();
   const location = useLocation();
 
   const updateCompanyReducer = async () => {
@@ -137,6 +149,24 @@ const LayoutComponent = (props: LayoutInternalProps) => {
       (props.match.params as any).taskId,
     );
   };
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const roomId = query.get('roomId') ? query.get('roomId')! : '';
+
+    if (props.rooms.length !== 0 && roomId !== '') {
+      const currentRoom = props.rooms.filter((room) =>
+        isEqual(room._id, roomId),
+      );
+      if (currentRoom.length > 0) {
+        dispatch({ type: CURRENT_ROOM, payload: currentRoom[0] });
+        props.getRoomMessages(roomId);
+        props.getRoomMembers(roomId);
+        props.getRoomSharedFiles(roomId);
+        props.getRoomDiscussions(roomId);
+      }
+    }
+  }, [props.rooms, location.search]);
 
   useEffect(() => {
     if (
@@ -612,6 +642,7 @@ const mapStateToProps = (state: any) => {
     boardId: state.boardIndexReducer.boardReducer.currentBoard._id,
     taskId: state.boardIndexReducer.boardReducer.currentTask._id,
     companyRooms: state.roomReducer.companyRooms,
+    rooms: state.roomReducer.rooms,
     companyLoading: state.companyReducer.loading,
     projectLoading: state.projectReducer.singleProjectLoading,
     boardLoading: state.boardIndexReducer.boardReducer.fetchingBoard,
@@ -625,4 +656,8 @@ export const Layout = connect(mapStateToProps, {
   getSelectedTaskDetails,
   getSingleProject,
   fetchRooms,
+  getRoomDiscussions,
+  getRoomMembers,
+  getRoomMessages,
+  getRoomSharedFiles,
 })(withRouter(LayoutComponent));

@@ -226,7 +226,7 @@ const RoomPageComponent = (props: RoomPageComponentProps) => {
             >
               {isMobileOnly ? (
                 <Drawer
-                  onClose={() => setShowDialog(!showDialog)}
+                  onClose={() => setShowDialog(false)}
                   isOpen={showDialog}
                   canOutsideClickClose={false}
                   style={{ width: '100%' }}
