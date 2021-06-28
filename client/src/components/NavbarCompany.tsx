@@ -14,11 +14,10 @@ import {
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Badge } from '@material-ui/core';
 import NotificationPopover from 'components/notification/NotificationPopover';
-import { IRoom } from 'stores/room/Reducer';
-import { isEqual } from 'lodash';
-import { RoomListItem } from 'layouts/company/room/leftSidebar/RoomListItem';
+import { IChat, IRoom } from 'stores/room/Reducer';
 import ChatIcon from '@material-ui/icons/Chat';
 import { fetchRooms, fetchChats } from '../stores/room/Actions';
+import ChatListItem from './chat/ChatListItem';
 
 interface NavbarProps {
   title: string;
@@ -31,18 +30,11 @@ interface NavbarProps {
   fetchRooms: () => void;
   fetchChats: () => void;
   rooms: [IRoom];
+  chats: [IChat];
   seen: number;
   totalRoomUnread: number;
   currentRoom: IRoom;
 }
-const roomBgColor = [
-  '#D8315B',
-  '#9F7DE8',
-  '#3F61C5',
-  '#456990',
-  '#CDA2AB',
-  '#FE5E41',
-];
 
 const NavbarCompanyComponent = (
   props: NavbarProps & RouteComponentProps,
@@ -109,38 +101,12 @@ const NavbarCompanyComponent = (
                       style={{ maxHeight: '300px' }}
                       className="pa3 overflow-y-auto"
                     >
-                      {props.rooms && props.rooms.length ? (
-                        props.rooms.map(
-                          (room: IRoom, i: number, arr: any) => {
-                            return (
-                              <RoomListItem
-                                key={room._id}
-                                room={room}
-                                lastChild={isEqual(
-                                  room._id,
-                                  arr[props.rooms!.length - 1].id,
-                                )}
-                                active={
-                                  props.currentRoom !== undefined &&
-                                  room._id === props.currentRoom._id
-                                }
-                                iconBgColor={
-                                  roomBgColor[i % roomBgColor.length]
-                                }
-                              />
-                            );
-                          },
-                        )
+                      {props.chats && props.chats.length ? (
+                        props.chats.map((chat: IChat, index) => (
+                          <ChatListItem chat={chat} key={index} />
+                        ))
                       ) : (
-                        <h2
-                          style={{
-                            maxHeight: '300px',
-                            textAlign: 'center',
-                          }}
-                          className="pa3 overflow-y-auto moon-gray"
-                        >
-                          No Room To Show
-                        </h2>
+                        <p className="ph2">No room To Show</p>
                       )}
                     </div>
                   }
@@ -205,6 +171,7 @@ const mapStateToProps = (state: any) => {
     notifications: state.notificationReducer.allNotifications,
     read: state.notificationReducer.read,
     rooms: state.roomReducer.roomNotification.rooms,
+    chats: state.roomReducer.chats,
     currentRoom: state.roomReducer.currentRoom,
     totalRoomUnread: state.roomReducer.totalUnread,
     seen: state.notificationReducer.seen,

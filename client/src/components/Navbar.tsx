@@ -178,12 +178,12 @@ const NavbarTopComponent = (
                       color:
                         props.type === 'home' ? 'white' : 'dark-gray',
                     }}
-                    onClick={handleSeenNotifications}
                   />
                 </Badge>
               </div>
             }
           />
+
           <Popover
             popoverClassName="bp3-popover-content-sizing bg-white"
             position={Position.BOTTOM}
