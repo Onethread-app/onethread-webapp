@@ -75,6 +75,7 @@ const triggerUnreadNotifications = async (memberId) => {
   const username = accInf.name;
   const numOfUnreadNotif = await UserNotificationModel.find({
     account: memberId,
+    read: false
   }).countDocuments();
   let message = `You have 1 unread notification`;
   if (numOfUnreadNotif > 1) {
@@ -131,6 +132,7 @@ const triggerUnreadMessages = async (memberId) => {
   const username = accInf.name;
   const numOfUnreadNotif = await UserMessage.find({
     account: memberId,
+    read: false,
   }).countDocuments();
   let message = `You have 1 unread message`;
   if (numOfUnreadNotif > 1) {

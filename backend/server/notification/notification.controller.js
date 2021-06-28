@@ -565,7 +565,7 @@ module.exports.list = async (req, res, next) => {
       account: req.user._id,
       seen: false,
       read: false
-    }).count();
+    }).countDocuments();
 
     const options = [
       {

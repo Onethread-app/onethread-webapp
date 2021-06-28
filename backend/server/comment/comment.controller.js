@@ -17,10 +17,13 @@ const load = (req, res, next, id) => {
         .json({ message: 'No valid entry found for provided ID' });
     })
     .catch((err) => {
+      logger.error(`Comment: ${err}`);
       next(err);
     });
 };
-
+const onlyUnique = (value, index, self) => {
+  return self.indexOf(value) === index;
+}
 const create = async (req, res, next) => {
   const comment = new Comment({
     text: req.body.text,
@@ -31,27 +34,29 @@ const create = async (req, res, next) => {
   comment
     .save()
     .then(async result => {
-      let taskMembers = await TaskAssign.find({taskId: req.body.taskId})
-                              .select('assignedPerson taskId')
+      let taskMembers = await TaskAssign.find({taskId: result.taskId})
+                              .select('assignedPerson')
                               .populate('assignedPerson taskId', '_id account');
       let memberList =[];
-      if( taskMembers !== null){
+      if( taskMembers !== null || taskMembers.length > 0){
         let taskAssignMembers=taskMembers.map(task => task.assignedPerson);
-        memberList = taskAssignMembers.map(task=> task._id);
+        memberList = taskAssignMembers.map(task=> task._id.toString());
       }
       else{
-        let subTaskMembers = await SubTaskAssign.findOne({taskId: req.body.taskId})
+        let subTaskMembers = await SubTaskAssign.find({taskId: result.taskId})
                                 .populate('assignedMember');
-        if( subTaskMembers !== null){
-          let subTaskAssignMember = (subTaskMembers.assignedMembers);
-          if (!memberList.includes(subTaskAssignMember)){
-            memberList.push(subTaskAssignMember);
-          }
+        if( subTaskMembers !== null || subTaskMembers.length > 0 ){
+          subTaskMembers.forEach( member=>{
+            let subTaskAssignMember = (member.assignedMembers[0]);
+            memberList.push(subTaskAssignMember.toString());            
+          })
+          
         }
       }
-      console.log(memberList);
+      memberList.push(taskMembers[0].taskId.account.toString());
+      memberList = memberList.filter(onlyUnique);
       memberList.map(async member=>{
-        if(member !== req.user._id){
+        if(member.toString() !== req.user._id){
           await notifyToTaskMember(
             req.user._id,
             req.headers.companyid,
@@ -65,11 +70,12 @@ const create = async (req, res, next) => {
             member
           )
         }
+        logger.info(`successfully notify to user`);
       })
       return sendJSONresponse(res, 201, result);
     })
     .catch(error =>{
-      console.log(error);
+      logger.error(`comment: ${error}`);
       next(error);
     })
 };
