@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-// import attachFiles from 'resources/images/attachFiles.png';
 import { ITask } from 'stores/board/Reducer';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import { connect } from 'react-redux';
 import { TaskTitleView } from './TaskTitle/TaskTitleView';
 import { TaskDescriptionView } from './TaskDescription/TaskDescriptionView';
@@ -31,6 +29,34 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
   const [membersPopover, setMembersPopover] = useState(false);
   const [priorityPopover, setPriorityPopover] = useState(false);
   const [filePopover, setFilePopover] = useState(false);
+
+  const openDatePopOver = () => {
+    setDatePopover(true);
+    setMembersPopover(false);
+    setPriorityPopover(false);
+    setFilePopover(false);
+  };
+
+  const openMembersPopOver = () => {
+    setMembersPopover(true);
+    setDatePopover(false);
+    setPriorityPopover(false);
+    setFilePopover(false);
+  };
+
+  const openPriorityPopOver = () => {
+    setPriorityPopover(true);
+    setDatePopover(false);
+    setMembersPopover(false);
+    setFilePopover(false);
+  };
+
+  const openFilePopover = () => {
+    setFilePopover(true);
+    setPriorityPopover(false);
+    setDatePopover(false);
+    setMembersPopover(false);
+  };
 
   return (
     <div className="fl w-100">
@@ -152,18 +178,11 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                 <Popover
                   isOpen={datePopover}
                   content={
-                    <ClickAwayListener
-                      onClickAway={() => {
-                        setDatePopover(false);
-                      }}
-                    >
-                      <div className="pa3 cf bg-white">
-                        {/* <h1 className="f5">Due Date</h1> */}
-                        <DueDateEditor
-                          setDatePopover={setDatePopover}
-                        />
-                      </div>
-                    </ClickAwayListener>
+                    <div className="pa3 cf bg-white">
+                      <DueDateEditor
+                        setDatePopover={setDatePopover}
+                      />
+                    </div>
                   }
                   target={
                     <div
@@ -172,7 +191,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         background: '#C1DEDE',
                         width: '130px',
                       }}
-                      onClick={() => setDatePopover(true)}
+                      onClick={openDatePopOver}
                     >
                       <img
                         style={{ height: '15px' }}
@@ -189,21 +208,11 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
               <Popover
                 isOpen={filePopover}
                 content={
-                  <ClickAwayListener
-                    onClickAway={() => {
-                      setFilePopover(false);
-                    }}
-                  >
-                    <div>
-                      <TaskFilesAttach
-                        setFilePopover={setFilePopover}
-                      />
-                    </div>
-                  </ClickAwayListener>
+                  <TaskFilesAttach setFilePopover={setFilePopover} />
                 }
                 target={
                   <div
-                    onClick={() => setFilePopover(true)}
+                    onClick={openFilePopover}
                     className="flex br2 mb2 pt2 ph3 pointer"
                     style={{ background: '#C1DEDE', width: '130px' }}
                   >
@@ -222,20 +231,11 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                 <Popover
                   isOpen={membersPopover}
                   content={
-                    <ClickAwayListener
-                      onClickAway={() => {
-                        setMembersPopover(false);
-                      }}
-                    >
-                      <div className="pa3 cf bg-white">
-                        {/* <h1 className="f5">Members</h1> */}
-                        <div>
-                          <AssignedMembersEditor
-                            setMembersPopover={setMembersPopover}
-                          />
-                        </div>
-                      </div>
-                    </ClickAwayListener>
+                    <div className="pa3 cf bg-white">
+                      <AssignedMembersEditor
+                        setMembersPopover={setMembersPopover}
+                      />
+                    </div>
                   }
                   target={
                     <div
@@ -244,7 +244,7 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                         background: '#C1DEDE',
                         width: '130px',
                       }}
-                      onClick={() => setMembersPopover(true)}
+                      onClick={openMembersPopOver}
                     >
                       <img
                         style={{ height: '15px' }}
@@ -262,25 +262,19 @@ const TaskDetailsComponent = (props: TaskDetailsInternalProps) => {
                 <Popover
                   isOpen={priorityPopover}
                   content={
-                    <ClickAwayListener
-                      onClickAway={() => {
-                        setPriorityPopover(false);
-                      }}
+                    <div
+                      className="pa4 cf bg-white"
+                      style={{ width: '300px' }}
                     >
-                      <div
-                        className="pa4 cf bg-white"
-                        style={{ width: '300px' }}
-                      >
-                        <PriorityEditor
-                          setPriorityPopover={setPriorityPopover}
-                        />
-                      </div>
-                    </ClickAwayListener>
+                      <PriorityEditor
+                        setPriorityPopover={setPriorityPopover}
+                      />
+                    </div>
                   }
                   target={
                     <div
                       className="flex br2 mb2 pt2 ph3 pointer"
-                      onClick={() => setPriorityPopover(true)}
+                      onClick={openPriorityPopOver}
                       style={{
                         background: '#C1DEDE',
                         width: '130px',
