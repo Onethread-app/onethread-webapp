@@ -2,6 +2,9 @@ const { Company } = require('../company/company.model');
 const { Member } = require('../company/member/member.model');
 const { Team } = require('../team-member/team.model');
 const { Project } = require('../project/project.model');
+const { Room } = require('../room/room.model');
+const Board = require('../board/board.model');
+const Task = require('../task/task.model');
 const TaskAssign = require('../task/taskAssign.model');
 const Subtask = require('../task/subtask/subtask.model');
 const Account = require('../account/account.model');
@@ -10,7 +13,9 @@ const ObjectId = require('mongoose').Types.ObjectId;
 const UserNotification = require('./userNotification.model');
 const _ = require('lodash');
 const {
-  sendMultipleNotification,
+  triggerUnreadNotifications,
+} = require('../services/webpush.services');
+const {
   sendCompanyRoleNotification,
   sendCompanyAndProjectNotification,
   sendCompanyNotification,
@@ -38,6 +43,93 @@ module.exports.userTokenFCM = async (req, res, next) => {
       logger.error(`${error}`);
       next(error);
     });
+};
+
+module.exports.notifyToTaskMember = async (
+  senderName,
+  company,
+  pid,
+  taskId,
+  adminUser,
+  member
+) =>{
+  try {
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    let task = await Task.findById({_id: taskId}).select('name');
+    let subtaskId = await Subtask.findOne({taskId: taskId}).select('_id');
+    let notifications = {
+      type: 'subtask',
+      text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
+        senderFullName.lastName,
+      )} sent a note in task ${task.name} `,
+      account: adminUser._id,
+      company: company,
+      project: pid,
+      task: taskId,
+      subtask: subtaskId._id,
+    };
+    notifications = await Notification.create(notifications);
+    await UserNotification.create({
+      notification: notifications._id,
+      account: member,
+    });
+    await triggerUnreadNotifications(member);
+  } catch (error) {
+    logger.error(`Notifications: ${error}`);
+  }
+}
+
+module.exports.sendNotificationToProjectTeamMates = async (
+  senderName,
+  company,
+  pid,
+  taskId,
+  columnId,
+  boardId,
+  adminUser,
+) => {
+  try {
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    let teamMembers = await Team.find({
+      project: pid,
+    })
+      .select('member')
+      .populate('member', '_id account');
+    const board = await Board.findById({ _id: boardId }).select(
+      'name',
+    );
+    let notifications = {
+      type: 'board',
+      text: `${_.upperFirst(senderFullName.firstName)} ${_.upperFirst(
+        senderFullName.lastName,
+      )} created a task in board ${board.name} `,
+      account: adminUser._id,
+      company: company,
+      fromColum: columnId,
+      project: pid,
+      task: taskId,
+      board: boardId,
+    };
+    notifications = await Notification.create(notifications);
+    teamMembers = teamMembers.map((m) => {
+      return { account: m.member.account };
+    });
+    teamMembers.forEach(async (member) => {
+      if (member.account.toString() !== adminUser._id) {
+        let userNoti = await UserNotification.create({
+          notification: notifications._id,
+          account: member.account,
+        });
+        await triggerUnreadNotifications(member.account);
+      }
+    });
+  } catch (error) {
+    logger.error(`Notifications: ${error}`);
+  }
 };
 
 module.exports.createMemberAddNotification = async (
@@ -280,7 +372,7 @@ module.exports.subTaskAssignNotificationToUsers = async (
 //   await UserNotification.create(usersNotification);
 // };
 
-module.exports.createCompanyRoleNotification = async (
+module.exports.createCompanyNotification = async (
   company,
   adminUser,
   text,
@@ -289,7 +381,6 @@ module.exports.createCompanyRoleNotification = async (
   //sendCompanyNotification(company, adminUser, usersNotification);
   try {
     let members = await Member.find({
-      $or: [{ role: 'superAdmin' }, { role: 'admin' }],
       company: company,
     });
 
@@ -419,33 +510,62 @@ module.exports.createBoardNotification = async (
   }
 };
 
+module.exports.addTeamMateIntoRoomNotification = async (
+  company, //fromHeader
+  senderName,
+  newMembers,
+  adminUser,
+  roomId,
+  pid,
+) => {
+  try {
+    let senderFullName = await Account.findById({
+      _id: senderName,
+    }).select('firstName lastName');
+    let roomName = await Room.findById({ _id: roomId }).select(
+      'name',
+    );
+    let notifications = newMembers.map((m) => {
+      return {
+        type: 'room',
+        text: `${_.upperFirst(
+          senderFullName.firstName,
+        )} ${_.upperFirst(
+          senderFullName.lastName,
+        )} added you in Room ${roomName.name} `,
+        account: adminUser._id,
+        company: company,
+        room: roomId,
+        project: pid,
+      };
+    });
+    notifications = await Notification.create(notifications);
+    newMembers = newMembers.map((m) => {
+      return { account: m.account };
+    });
+    newMembers.forEach(async (member) => {
+      notifications = notifications.map(async (m) => {
+        let userNoti = await UserNotification.create({
+          notification: m._id,
+          account: member.account,
+        });
+        await triggerUnreadNotifications(member.account);
+      });
+    });
+  } catch (error) {
+    logger.error(`Notifications: ${error}`);
+    //next(error);
+  }
+};
 module.exports.list = async (req, res, next) => {
   const { limit = 50, skip = 0, companyId } = req.query;
 
   try {
-    let count = await UserNotification.aggregate([
-      { $match: { account: new ObjectId(req.user._id) } },
-
-      {
-        $lookup: {
-          from: 'notifications',
-          localField: 'notification',
-          foreignField: '_id',
-          as: 'notification',
-        },
-      },
-      {
-        $unwind: {
-          path: '$notification',
-        },
-      },
-      // {
-      //   $match: {
-      //     'notification.company': new ObjectId(req.params.companyId),
-      //   },
-      // },
-      { $group: { _id: '$seen', count: { $sum: 1 } } },
-    ]);
+    let unseenCount = await UserNotification.find({
+      account: req.user._id,
+      seen: false,
+      read: false
+    }).countDocuments();
 
     const options = [
       {
@@ -463,82 +583,18 @@ module.exports.list = async (req, res, next) => {
 
     let notificationFound = await UserNotification.find({
       account: req.user._id,
-      read: false,
     })
       .populate(options)
       .sort({ createdAt: -1 })
       .skip(+skip)
       .limit(+limit)
       .exec();
-
-    // let notificationResult = await UserNotification.aggregate([
-    //   { $match: { account: new ObjectId(req.user._id) } },
-
-    //   {
-    //     $lookup: {
-    //       from: 'notifications',
-    //       localField: 'notification',
-    //       foreignField: '_id',
-    //       as: 'notification',
-    //     },
-    //   },
-    //   {
-    //     $unwind: {
-    //       path: '$notification',
-    //     },
-    //   },
-    //   // {
-    //   //   $match: {
-    //   //     'notification.company': new ObjectId(req.params.companyId),
-    //   //   },
-    //   // },
-    //   // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
-    //   //{ "$unwind": "$docs" },
-
-    //   { $limit: +limit },
-    //   { $skip: +skip },
-    // ]).sort({ createdAt: -1 });
-
-    let unseenCount =
-      count.length < 2
-        ? 0
-        : count[0]._id
-        ? count[1].count
-        : count[0].count;
+  
     // console.log(notificationResult);
     return sendJSONresponse(res, 200, {
       result: notificationFound,
       unseenCount: unseenCount,
     });
-
-    // let option = {
-    //   path: 'notification',
-    //   select: '_id text type company',
-    //   populate: [
-    //     {
-    //       path: 'company',
-    //       select: '_id name',
-    //     },
-    //     {
-    //       path: 'project',
-    //       select: '_id name',
-    //     },
-    //   ],
-    // };
-
-    // await UserNotification.find({
-    //   account: req.user._id,
-    //   // 'notification.company' : new ObjectId(req.params.companyId)
-    // })
-    //   .select('_id read notification account createdAt')
-    //   .populate(option)
-    //   .sort({ createdAt: -1 })
-    //   .skip(+skip)
-    //   .limit(+limit)
-    //   .exec()
-    //   .then((result) => {
-    //     return sendJSONresponse(res, 200, result);
-    //   });
   } catch (error) {
     logger.error(`${error}`);
     next(error);
@@ -567,8 +623,6 @@ module.exports.seen = async (req, res, next) => {
         'notification.company': new ObjectId(req.params.companyId),
       },
     },
-    // {'$group':{'_id': '$read', 'count':{'$sum':1},"docs": { "$push": "$$ROOT" }} },
-    //{ "$unwind": "$docs" },
   ]);
   let seenNoti = result.map((c) => {
     return c._id;

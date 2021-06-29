@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Drawer, Popover, Position } from '@blueprintjs/core';
 import { MobileView } from 'react-device-detect';
 import user from '../resources/images/profilePhoto.svg';
@@ -6,22 +6,18 @@ import { User } from 'stores/user/Reducer';
 import { connect } from 'react-redux';
 import { MobileListView } from '../layouts/company/MobileListView';
 import NotificationsIcon from '@material-ui/icons/Notifications';
-import { companySubscriber } from 'layouts/company/notification/subscribers';
+import { companySubscriber } from 'helpers/notification/subscribers';
 import {
-  readNotification,
   seenNotification,
   getNotifications,
-  incrementPageNumber,
 } from '../stores/notifications/Action';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { Badge } from '@material-ui/core';
-import { notificationType } from '../layouts/company/notification/rule';
-import Notification from 'layouts/company/notification/index';
-import { IRoom } from 'stores/room/Reducer';
-import { isEqual } from 'lodash';
-import { RoomListItem } from 'layouts/company/room/leftSidebar/RoomListItem';
+import NotificationPopover from 'components/notification/NotificationPopover';
+import { IChat, IRoom } from 'stores/room/Reducer';
 import ChatIcon from '@material-ui/icons/Chat';
 import { fetchRooms, fetchChats } from '../stores/room/Actions';
+import ChatListItem from './chat/ChatListItem';
 
 interface NavbarProps {
   title: string;
@@ -29,25 +25,16 @@ interface NavbarProps {
   notifications: any;
   read: number;
   companyId: string;
-  readNotification: any;
   getNotifications: any;
   seenNotification: () => void;
   fetchRooms: () => void;
   fetchChats: () => void;
-  incrementPageNumber: () => void;
   rooms: [IRoom];
+  chats: [IChat];
   seen: number;
   totalRoomUnread: number;
   currentRoom: IRoom;
 }
-const roomBgColor = [
-  '#D8315B',
-  '#9F7DE8',
-  '#3F61C5',
-  '#456990',
-  '#CDA2AB',
-  '#FE5E41',
-];
 
 const NavbarCompanyComponent = (
   props: NavbarProps & RouteComponentProps,
@@ -56,38 +43,6 @@ const NavbarCompanyComponent = (
   const query = new URLSearchParams(props.location.search);
   const view = query.get('view');
 
-  const observer = useRef(
-    new IntersectionObserver(
-      async (entries) => {
-        const first = entries[0];
-        if (first.isIntersecting) {
-          await props.incrementPageNumber();
-          // props.getNotifications();
-          // console.log(first);
-        }
-      },
-      { threshold: 1 },
-    ),
-  );
-  const [
-    lastNotificationElement,
-    setLastNotificationElement,
-  ] = useState<null | HTMLUnknownElement>(null);
-
-  useEffect(() => {
-    const currentElement = lastNotificationElement;
-    const currentObserver = observer.current;
-
-    if (currentElement) {
-      currentObserver.observe(currentElement);
-    }
-    return () => {
-      if (currentElement) {
-        currentObserver.unobserve(currentElement);
-      }
-    };
-  }, [lastNotificationElement]);
-
   useEffect(() => {
     if (props.match.path !== '/:username') {
       props.getNotifications();
@@ -95,16 +50,9 @@ const NavbarCompanyComponent = (
     companySubscriber(props.companyId);
     props.fetchRooms();
     props.fetchChats();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onCLickNotification = async (sNotification: any) => {
-    await props.readNotification(sNotification.notification._id);
-    const url = await notificationType[
-      sNotification.notification.type
-    ].path(sNotification.notification);
-    props.getNotifications();
-    props.history.push(url);
-  };
   const handleSeenNotifications = async () => {
     // tslint:disable-next-line: no-unused-expression
     props.seen !== 0 && (await props.seenNotification());
@@ -125,69 +73,7 @@ const NavbarCompanyComponent = (
                 <Popover
                   popoverClassName="bg-white mh3"
                   position={Position.BOTTOM}
-                  content={
-                    <div
-                      style={{ maxHeight: '300px' }}
-                      className="pa3 overflow-y-auto"
-                    >
-                      {props.notifications &&
-                      props.notifications.length > 0 ? (
-                        props.notifications.map(
-                          (sNotification: any, index) => (
-                            <div
-                              key={index}
-                              onClick={() => {
-                                onCLickNotification(sNotification);
-                              }}
-                            >
-                              {props.notifications &&
-                              props.notifications.length === index + 1
-                                ? sNotification.notification && (
-                                    <div
-                                      ref={setLastNotificationElement}
-                                    >
-                                      <Notification
-                                        type={
-                                          sNotification.notification
-                                            .type
-                                        }
-                                        text={
-                                          sNotification.notification
-                                            .text
-                                        }
-                                        read={sNotification.read}
-                                      />
-                                    </div>
-                                  )
-                                : sNotification.notification && (
-                                    <Notification
-                                      type={
-                                        sNotification.notification
-                                          .type
-                                      }
-                                      text={
-                                        sNotification.notification
-                                          .text
-                                      }
-                                      read={sNotification.read}
-                                    />
-                                  )}
-                            </div>
-                          ),
-                        )
-                      ) : (
-                        <h3
-                          style={{
-                            maxHeight: '300px',
-                            textAlign: 'center',
-                          }}
-                          className="pa3 overflow-y-auto moon-gray"
-                        >
-                          No Notification To Show
-                        </h3>
-                      )}
-                    </div>
-                  }
+                  content={<NotificationPopover />}
                   target={
                     <div className="mh4 pointer">
                       <Badge
@@ -215,38 +101,12 @@ const NavbarCompanyComponent = (
                       style={{ maxHeight: '300px' }}
                       className="pa3 overflow-y-auto"
                     >
-                      {props.rooms && props.rooms.length ? (
-                        props.rooms.map(
-                          (room: IRoom, i: number, arr: any) => {
-                            return (
-                              <RoomListItem
-                                key={room._id}
-                                room={room}
-                                lastChild={isEqual(
-                                  room._id,
-                                  arr[props.rooms!.length - 1].id,
-                                )}
-                                active={
-                                  props.currentRoom !== undefined &&
-                                  room._id === props.currentRoom._id
-                                }
-                                iconBgColor={
-                                  roomBgColor[i % roomBgColor.length]
-                                }
-                              />
-                            );
-                          },
-                        )
+                      {props.chats && props.chats.length ? (
+                        props.chats.map((chat: IChat, index) => (
+                          <ChatListItem chat={chat} key={index} />
+                        ))
                       ) : (
-                        <h2
-                          style={{
-                            maxHeight: '300px',
-                            textAlign: 'center',
-                          }}
-                          className="pa3 overflow-y-auto moon-gray"
-                        >
-                          No Room To Show
-                        </h2>
+                        <p className="ph2">No room To Show</p>
                       )}
                     </div>
                   }
@@ -311,6 +171,7 @@ const mapStateToProps = (state: any) => {
     notifications: state.notificationReducer.allNotifications,
     read: state.notificationReducer.read,
     rooms: state.roomReducer.roomNotification.rooms,
+    chats: state.roomReducer.chats,
     currentRoom: state.roomReducer.currentRoom,
     totalRoomUnread: state.roomReducer.totalUnread,
     seen: state.notificationReducer.seen,
@@ -318,10 +179,8 @@ const mapStateToProps = (state: any) => {
 };
 export const NavbarCompany = connect(mapStateToProps, {
   companySubscriber,
-  readNotification,
   getNotifications,
   seenNotification,
-  incrementPageNumber,
   fetchRooms,
   fetchChats,
 })(withRouter(NavbarCompanyComponent));

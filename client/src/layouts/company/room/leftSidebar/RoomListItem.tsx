@@ -43,6 +43,12 @@ export const RoomListItem = (props: RoomListItemProps) => {
     setQueries({ view, roomId });
   }, [location.search]);
 
+  useEffect(() => {
+    isMobileOnly && queries.roomId
+      ? setShowDialog(true)
+      : setShowDialog(false);
+  }, [queries.roomId]);
+
   return (
     <>
       <div
@@ -124,7 +130,7 @@ export const RoomListItem = (props: RoomListItemProps) => {
       </div>
       {showDialog && (
         <Drawer
-          onClose={() => setShowDialog(!showDialog)}
+          onClose={() => setShowDialog(false)}
           isOpen={showDialog}
           canOutsideClickClose={false}
           style={{ width: '100%' }}

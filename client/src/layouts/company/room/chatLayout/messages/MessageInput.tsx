@@ -168,7 +168,7 @@ const CustomMentionEditor = (
     ) {
       sendMessage(trimmedText, 'attachment');
     } else {
-      setMessageError('Cannot send empty message');
+      // setMessageError('Cannot send empty message');
     }
   };
 
@@ -188,7 +188,7 @@ const CustomMentionEditor = (
     <>
       <div className="flex w-100 items-center">
         <div
-          className={`${editorStyles.editor} flex w-100 pa2`}
+          className={`${editorStyles.editor} flex w-100 pa2 mr1`}
           onClick={() => {
             ref.current!.focus();
           }}
@@ -214,19 +214,18 @@ const CustomMentionEditor = (
           />
         </div>
         <EmojiSuggestions />
-                
-                <EmojiSelect closeOnEmojiSelect /> 
-                <AttachFileIcon
-                  className="pointer"
-                  style={{ color: '#3F61C5', margin: '0 .5rem' }}
-                  onClick={() => props.setShowFileDialog(true)}
-                />
-                <SendIcon
-                  className="pointer"
-                  style={{ color: '#3F61C5', margin: '0 .5rem' }}
-                  onClick={handleSend}
-                />
 
+        <EmojiSelect closeOnEmojiSelect />
+        <AttachFileIcon
+          className="pointer"
+          style={{ color: '#3F61C5', margin: '0 .5rem' }}
+          onClick={() => props.setShowFileDialog(true)}
+        />
+        <SendIcon
+          className="pointer"
+          style={{ color: '#3F61C5', margin: '0 .5rem' }}
+          onClick={handleSend}
+        />
       </div>
       {messageError && (
         <ErrorSnackbar

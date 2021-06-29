@@ -6,6 +6,9 @@ const { RoomMember } = require('../room/roomMember.model');
 const Account = require('./../account/account.model');
 const { pusherChannel } = require('../services/pusher.services');
 const File = require('./../file/file.model');
+const {
+  triggerUnreadMessages,
+} = require('../services/webpush.services');
 // const ElasticsearchService  = require('../../index.elasticsearch');
 // const { messageMapping , messageStructure } = require('../services/elastic.services');
 // const elasticService = new ElasticsearchService();
@@ -117,6 +120,9 @@ const create = async (req, res, next) => {
       });
       await memberMessage.save();
       logger.info(`userMessage saved for user ${member.account}`);
+      if(member.account.toString() !== req.user._id){
+        await triggerUnreadMessages(member.account);
+      }      
     });
 
     pusherChannel.trigger(`private-${req.body.room}`, 'new_message', {
