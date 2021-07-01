@@ -6,6 +6,7 @@ import { InputGroupField } from 'components/fields/InputGroupField';
 import '@blueprintjs/datetime/lib/css/blueprint-datetime.css';
 import { ICompany } from 'stores/company/Reducer';
 import { editCompanyInfoAction } from 'stores/company/Actions';
+import { useTranslation } from 'react-i18next';
 
 interface CompanyInfoProps {
   companyInfo: ICompany;
@@ -104,10 +105,13 @@ const CompanyInfoFormComponent = (
     }
   };
 
+const { t } = useTranslation();
+
   return (
     <form className="fl w-100 pa4">
       <h1 className="f5 lh-title ml2 tigrow-lightBlue mb4">
-        Basic Information
+        {t('app.company.Company-profile.Basic')}
+        {/* Basic Information */}
       </h1>
       <div className={` ${errors.name ? 'mb3' : 'mb4'}`}>
         <InputGroupField

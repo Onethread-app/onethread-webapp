@@ -5,38 +5,47 @@ import { CompanyInfoForm } from './BasicInformationEditor';
 import { companyLogoUploadAction } from 'stores/company/Actions';
 import addIcon from './../../../resources/images/addIcon.png';
 import { companyPermit } from 'stores/UtilsActions';
+import { useTranslation } from 'react-i18next';
 
 const BasicInfoDetailsViewComponent = (props: any) => {
   const [showDialog, setShowDialog] = useState(false);
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="relative">
         <div className="flex-ns justify-between w-100 mb5-ns mb6">
           <div className="w-50-ns w-100 pr4">
             <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">Company Name</h1>
+              <h1 className="f6 lh-copy">{t('app.company.Company-profile.Name')}</h1>
+              {/* <h1 className="f6 lh-copy">Company Name</h1> */}
               <p className="f5">{props.company.name}</p>
             </div>
             <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">Company Type</h1>
+              <h1 className="f6 lh-copy">{t('app.company.Company-profile.Type')}</h1>
+              {/* <h1 className="f6 lh-copy">Company Type</h1> */}
               <p className="f5">{props.company.type}</p>
             </div>
             <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">Company Address</h1>
+              <h1 className="f6 lh-copy">{t('app.company.Company-profile.Address')}</h1>
+              {/* <h1 className="f6 lh-copy">Company Address</h1> */}
               <p className="f5">{props.company.address}</p>
             </div>
           </div>
           <div className="w-50-ns w-100">
             <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">Company Mail Address</h1>
+              <h1 className="f6 lh-copy">{t('app.company.Company-profile.Mail-company')}</h1>
+              {/* <h1 className="f6 lh-copy">Company Mail Address</h1> */}
               <p className="f5">{props.company.email}</p>
             </div>
             <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">Legal Owner</h1>
+              <h1 className="f6 lh-copy">{t('app.company.Company-profile.Legal-owner')}</h1>
+              {/* <h1 className="f6 lh-copy">Legal Owner</h1> */}
               <p className="f5">{props.company.legalOwnerName}</p>
             </div>
             <div className="bg-white h-auto">
-              <h1 className="f6 lh-copy">Legal owner Mail address</h1>
+              <h1 className="f6 lh-copy">{t('app.company.Company-profile.Legal-mail')}</h1>
+              {/* <h1 className="f6 lh-copy">Legal owner Mail address</h1> */}
               <p className="f5">{props.company.legalOwnerMail}</p>
             </div>
           </div>
