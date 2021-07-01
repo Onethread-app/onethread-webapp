@@ -43,6 +43,7 @@ import {
   clearProjectReducer,
   openProjectFIle,
 } from 'stores/project/Actions';
+import { useTranslation } from 'react-i18next';
 // import { withRouter } from 'react-router';
 
 interface ISideBarProps {
@@ -65,6 +66,9 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
       ? setActiveTab('user-profile')
       : setActiveTab('company-dashboard');
   }, [props.type]);
+
+  const { t } = useTranslation();
+
   return (
     <div
       style={{
@@ -340,7 +344,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Preface</p>}
+                      content={<p className="mb0">{t('app.project.Project-preface.Intro')}</p>}
+                      // content={<p className="mb0">Preface</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -358,7 +363,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
-                      Preface
+                      {t('app.project.Project-preface.Intro')}
+                      {/* Preface */}
                     </span>
                   )}
                 </NavLink>
@@ -380,7 +386,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Rooms</p>}
+                      content={<p className="mb0">{t('app.project.Project-rooms.Rooms')}</p>}
+                      // content={<p className="mb0">Rooms</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -399,7 +406,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                         className="outline-0 bp3-large pl3"
                         style={{ color: 'inherit' }}
                       >
-                        Rooms
+                        {t('app.project.Project-rooms.Rooms')}
+                        {/* Rooms */}
                       </span>
                       {props.companyRooms &&
                       unreadMessageNotification(
@@ -434,7 +442,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Boards</p>}
+                      content={<p className="mb0">{t('app.project.Project-boards.Board')}</p>}
+                      // content={<p className="mb0">Boards</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -452,7 +461,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
-                      Boards
+                      {t('app.project.Project-boards.Board')}
+                      {/* Boards */}
                     </span>
                   )}
                 </NavLink>
@@ -474,7 +484,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     </span>
                   ) : (
                     <Tooltip
-                      content={<p className="mb0">Teammates</p>}
+                      content={<p className="mb0">{t('app.project.Project-teammates.Team-members')}</p>}
+                      // content={<p className="mb0">Teammates</p>}
                       position="right"
                     >
                       <span className="pl3">
@@ -492,7 +503,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                       className="outline-0 bp3-large pl3"
                       style={{ color: 'inherit' }}
                     >
-                      Teammates
+                      {t('app.project.Project-teammates.Team-members')}
+                      {/* Teammates */}
                     </span>
                   )}
                 </NavLink>

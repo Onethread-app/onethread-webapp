@@ -11,6 +11,7 @@ import createIcon from './../../../../resources/images/create.svg';
 import searchIcon from './../../../../resources/images/search.svg';
 import { isMobileOnly } from 'react-device-detect';
 import { room } from 'stores/room/Types';
+import { useTranslation } from 'react-i18next';
 
 interface RoomSideBarComponentProps {
   projectRole?: string;
@@ -32,6 +33,8 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
     props.optionalRole,
   );
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div
@@ -40,7 +43,8 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
         }`}
       >
         <div className="flex justify-between items-center ph3-ns">
-          <h3 className="tigrow-darkGray">Rooms</h3>
+          <h3 className="tigrow-darkGray">{t('app.project.Project-rooms.Rooms')}</h3>
+          {/* <h3 className="tigrow-darkGray">Rooms</h3> */}
           {props.projectRole &&
             props.optionalRole &&
             (permissions.grantAll ||
@@ -68,7 +72,8 @@ const RoomSideBarComponent = (props: RoomSideBarInternalProps) => {
           <InputGroupField
             id="roomName"
             value={searchKeyword}
-            placeHolder="Search for Rooms"
+            placeHolder={t('app.project.Project-rooms.Find-room')}
+            // placeHolder="Search for Rooms"
             className="pv1 ba b--light-silver br3"
             style={{
               paddingLeft: '36px',

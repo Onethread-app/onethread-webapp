@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { IRoomReducer } from 'stores/room/Reducer';
 import { SharedFileItem } from './SharedFileItem';
@@ -8,6 +9,9 @@ interface SharedFileComponentProps {
 }
 
 const SharedFileComponent = (props: SharedFileComponentProps) => {
+
+  const { t } = useTranslation();
+
   return (
     <div
       className="flex flex-column pb2"
@@ -15,7 +19,8 @@ const SharedFileComponent = (props: SharedFileComponentProps) => {
         maxHeight: '50%',
       }}
     >
-      <h3 className="mv2 f6 f5-ns">Shared Files</h3>
+      <h3 className="mv2 f6 f5-ns">{t('app.project.Project-preface.Media')}</h3>
+      {/* <h3 className="mv2 f6 f5-ns">Shared Files</h3> */}
       <div className="overflow-y-auto flex-grow-1">
         {props.sharedFileMessages &&
         props.sharedFileMessages.length > 0 ? (

@@ -7,6 +7,7 @@ import {
   ITaskFileDelete,
 } from 'stores/board/Actions';
 import { Icon, Tooltip } from '@blueprintjs/core';
+import { useTranslation } from 'react-i18next';
 
 interface ITaskFiles {
   taskFiles: IFile[];
@@ -34,9 +35,12 @@ const TaskFiles = (props: ITaskFiles) => {
     props.taskFileDelete(payload);
   };
 
+  const { t } = useTranslation();
+
   return (
     <div>
-      <h1 className="f6">Shared Files</h1>
+      <h1 className="f6">{t('app.project.Project-preface.Media')}</h1>
+      {/* <h1 className="f6">Shared Files</h1> */}
       <div style={{ maxHeight: '160px', overflowY: 'scroll' }}>
         {props.taskFiles ? (
           props.taskFiles.map((file) => (

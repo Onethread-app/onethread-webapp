@@ -123,7 +123,8 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>Preface</small>
+                <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+                {/* <small style={{ color: 'inherit' }}>Preface</small> */}
               </NavLink>
               <NavLink
                 exact
@@ -159,7 +160,8 @@ const Index = (props: any) => {
                 }}
                 style={{ color: 'darkGray' }}
               >
-                <small style={{ color: 'inherit' }}>Teammates</small>
+                <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+                {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
               </NavLink>
               <NavLink
                 exact

@@ -12,6 +12,7 @@ import { NavLink } from 'react-router-dom';
 import { MobileView } from 'react-device-detect';
 import { User } from 'stores/user/Reducer';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { useTranslation } from 'react-i18next';
 
 interface ProjectPrefaceProps {
   description: string;
@@ -34,6 +35,8 @@ export const ProjectPrefaceViewComponent = (
   };
 
   const permissions = projectRules(props.role, props.optionalRole);
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -62,7 +65,8 @@ export const ProjectPrefaceViewComponent = (
             }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Preface</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
@@ -75,6 +79,7 @@ export const ProjectPrefaceViewComponent = (
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Room</small>
+            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
@@ -87,6 +92,7 @@ export const ProjectPrefaceViewComponent = (
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Boards</small>
+            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
@@ -99,6 +105,7 @@ export const ProjectPrefaceViewComponent = (
             style={{ color: 'darkGray' }}
           >
             <small style={{ color: 'inherit' }}>Teammates</small>
+            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact
@@ -116,23 +123,27 @@ export const ProjectPrefaceViewComponent = (
           </NavLink>
         </div>
       </MobileView>
-      <h1 className="f3 ph5-ns ph4">Preface</h1>
+      <h1 className="f3 ph5-ns ph4">{t('app.project.Project-preface.Intro')}</h1>
+      {/* <h1 className="f3 ph5-ns ph4">Preface</h1> */}
       <div className="flex-ns w-100 ph4-ns">
         <div className="h-auto w-70-ns ph4">
           <div className="w-90-ns">
             <ProjectDescriptionView
-              headline={'Project Description'}
+              headline={t('app.project.Project-preface.Details')}
+              // headline={'Project Description'}
               description={props.description}
             />
             <ProjectOutlineView
               projectOutline={props.outline}
-              headline={'Project Outline'}
+              headline={t('app.project.Project-preface.Outline')}
+              // headline={'Project Outline'}
             />
           </div>
         </div>
         <div className="w-30-ns pa4 pb5">
           <div>
-            <h1 className="f6">Shared Files</h1>
+            <h1 className="f6">{t('app.project.Project-preface.Media')}</h1>
+            {/* <h1 className="f6">Shared Files</h1> */}
             {props.files.map((file: any) => (
               <div className="flex items-center justify-between">
                 <h1
@@ -178,13 +189,15 @@ export const ProjectPrefaceViewComponent = (
                 }}
                 onClick={() => setShowFileDialog(true)}
               >
-                Upload Files
+                {t('app.project.Project-preface.Upload')}
+                {/* Upload Files */}
               </Button>
             )}
           </div>
 
           <h1 className="f6 pb2">
-            Project Members (
+            {t('app.project.Project-preface.Team')} (
+            {/* Project Members ( */}
             {props.projectMembers && props.projectMembers.length})
           </h1>
           {props.projectMembers &&
@@ -209,7 +222,8 @@ export const ProjectPrefaceViewComponent = (
                     </h1>
                     <h1 className="f7 fw4 black mv1">
                       {member.role === 'projectModerator'
-                        ? 'Project Moderator'
+                        ? `${t('app.project.Project-settings.Moderator')}`
+                         /*? 'Project Moderator'*/
                         : capitalizeFirstLetter(member.role)}
                     </h1>
                   </div>

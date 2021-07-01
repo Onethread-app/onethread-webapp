@@ -192,13 +192,13 @@
       },
 
       "Project-boards": {
-        "Board": "Board",
+        "Board": "Boards",
         "My-boards": "My Boards",
         "Criteria": "Filter by"
       },
 
       "Project-teammates": {
-        "Team-members": "Team Members",
+        "Team-members": "Teammates",
         "Admins": "Admins",
         "Moderators": "Project Moderators",
         "Teammates": "Project Teammates",
@@ -209,7 +209,7 @@
         "Position": "Position",
         "Co-partner": "Project Associates"
       },
-
+            
       "Project-settings": {
         "Moderator": "Project Moderator",
         "General": "General",

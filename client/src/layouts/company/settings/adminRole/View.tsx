@@ -5,6 +5,7 @@ import { Button } from '@blueprintjs/core';
 import { connect } from 'react-redux';
 import { companyOptionalRole } from 'stores/company/Actions';
 import { isEqual } from 'lodash';
+import { useTranslation } from 'react-i18next';
 interface AdminRoleInternalProps {
   companyOptionalRole: (companyRole: any) => void;
   optionalRole: string[];
@@ -19,6 +20,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
   const onSubmit = async (values: any) => {
     await props.companyOptionalRole(values);
   };
+
+  const { t } = useTranslation();
 
   return (
     <div>
@@ -39,7 +42,8 @@ const AdminRoleViewComponent = (props: AdminRoleInternalProps) => {
             <div className="mb3">
               <SubmitError errorMessage={submitError} />
             </div>
-            <p className="b f5 mb3">Admins</p>
+            <p className="b f5 mb3">{t('app.project.Project-teammates.Admins')}</p>
+            {/* <p className="b f5 mb3">Admins</p> */}
             <div className="mb3">
               <Field<string>
                 name="optionalRole"

@@ -6,11 +6,14 @@ import { updateProjectRole } from '../../../../stores/project/Actions';
 import { MobileView, isMobileOnly } from 'react-device-detect';
 import { NavLink } from 'react-router-dom';
 import { NavbarCompany } from 'components/NavbarCompany';
+import { useTranslation } from 'react-i18next';
 
 const ProjectSettingsPageComponent = (props: any) => {
   const onSubmit = async (values: any) => {
     await props.updateProjectRole(values.optionalRole);
   };
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -33,7 +36,8 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Preface</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-preface.Intro')}</small>
+            {/* <small style={{ color: 'inherit' }}>Preface</small> */}
           </NavLink>
           <NavLink
             exact
@@ -42,7 +46,8 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Room</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-rooms.Rooms')}</small>
+            {/* <small style={{ color: 'inherit' }}>Room</small> */}
           </NavLink>
           <NavLink
             exact
@@ -51,7 +56,8 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Boards</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-boards.Board')}</small>
+            {/* <small style={{ color: 'inherit' }}>Boards</small> */}
           </NavLink>
           <NavLink
             exact
@@ -60,7 +66,8 @@ const ProjectSettingsPageComponent = (props: any) => {
             activeStyle={{ background: '#3F61C5', color: 'white' }}
             style={{ color: 'darkGray' }}
           >
-            <small style={{ color: 'inherit' }}>Teammates</small>
+            <small style={{ color: 'inherit' }}>{t('app.project.Project-teammates.Team-members')}</small>
+            {/* <small style={{ color: 'inherit' }}>Teammates</small> */}
           </NavLink>
           <NavLink
             exact
@@ -79,7 +86,8 @@ const ProjectSettingsPageComponent = (props: any) => {
         {isMobileOnly ? undefined : (
           <h3 className="f3 ma0">Project Settings</h3>
         )}
-        <h3 className="f5 mv4">Project Moderator</h3>
+        <h3 className="f5 mv4">{t('app.project.Project-settings.Moderator')}</h3>
+        {/* <h3 className="f5 mv4">Project Moderator</h3> */}
         <Tabs id="TabsExample" vertical={true}>
           <Tab
             id="general"
