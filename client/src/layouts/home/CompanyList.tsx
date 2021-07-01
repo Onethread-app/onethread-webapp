@@ -25,11 +25,7 @@ export const CompanyListComponent = (
 ) => {
   const [showDialog, setShowDialog] = useState(false);
 
-<<<<<<< HEAD
   const { t } = useTranslation();
-=======
-const { t } = useTranslation();
->>>>>>> ab04cb3d (layout/home translated)
 
   return (
     <>
@@ -147,11 +143,7 @@ const { t } = useTranslation();
                 className="pa3-ns pa2 f5-ns fw6 br2"
                 style={{ color: '#0F0C4E' }}
               >
-<<<<<<< HEAD
                 {t('app.forms.Create-company.Create')}
-=======
-                {t('forms.Create-company.Create')}
->>>>>>> ab04cb3d (layout/home translated)
                 {/* Create Company */}
               </Button>
             </article>
