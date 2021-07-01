@@ -197,7 +197,8 @@ export const ListViewComponent = (
           }}
           className="b--blue w-90 grow pointer pv2 blue outline-0 mt4 ml3 bp3-minimal bg-white "
         >
-          Create Company
+          {t('app.forms.Create-company.Create')}
+          {/* Create Company */}
         </button>
       </div>
       {showButton && (

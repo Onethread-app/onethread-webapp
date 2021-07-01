@@ -24,6 +24,7 @@ import { Associate } from 'stores/associate/Reducer';
 import arrayMutators from 'final-form-arrays';
 import { DateInput } from '@blueprintjs/datetime';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 interface IProject {
   department: string;
@@ -59,10 +60,13 @@ const FormComponent = (props: {
     return {};
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       <div className="pl3" style={{ marginTop: '6rem' }}>
-        <h3>Create Project</h3>
+        <h3>{t('app.forms.Start-project.Create-project')}</h3>
+        {/* <h3>Create Project</h3> */}
       </div>
       <Form
         onSubmit={onSubmit}
@@ -103,7 +107,8 @@ const FormComponent = (props: {
                         checkError(meta) &&
                         (meta.error || meta.submitError)
                       }
-                      label="Project Name (required)"
+                      label={t('app.forms.Start-project.Name')}
+                      // label="Project Name (required)"
                       autoFocus={true}
                     />
                   </div>

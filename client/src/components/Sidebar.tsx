@@ -169,7 +169,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                   </span>
                 ) : (
                   <Tooltip
-                    content={<p className="mb0">Dashboard</p>}
+                    content={<p className="mb0">{t('app.company.Dashboard.Headline')}</p>}
+                    // content={<p className="mb0">Dashboard</p>}
                     position="right"
                   >
                     <span className="ml3 pa1 bg-white">
@@ -190,7 +191,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Dashboard
+                    {t('app.company.Dashboard.Headline')}
+                    {/* Dashboard */}
                   </span>
                 )}
               </NavLink>
@@ -217,7 +219,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                 </span>
               ) : (
                 <Tooltip
-                  content={<p className="mb0">Projects</p>}
+                  content={<p className="mb0">{t('app.homepage.Projects')}</p>}
+                  // content={<p className="mb0">Projects</p>}
                   position="right"
                 >
                   <span className="ml3 pa1 bg-white">
@@ -239,7 +242,8 @@ const _Sidebar = (props: ISideBarProps & RouteComponentProps) => {
                     className="outline-0 bp3-large pl4"
                     style={{ color: 'inherit' }}
                   >
-                    Projects
+                    {t('app.homepage.Projects')}
+                    {/* Projects */}
                   </span>
                   {props.companyRooms &&
                   unreadMessageNotification(

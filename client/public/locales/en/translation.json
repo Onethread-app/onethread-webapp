@@ -279,7 +279,7 @@
 
       "Start-project": {
         "Create-project": "Create Project",
-        "Name": "Project Name(Required)",
+        "Name": "Project Name (Required)",
         "Type": "Please Select a company"
       }
     }

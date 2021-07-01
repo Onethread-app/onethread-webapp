@@ -105,7 +105,7 @@ const CompanyInfoFormComponent = (
     }
   };
 
-const { t } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <form className="fl w-100 pa4">
@@ -118,7 +118,8 @@ const { t } = useTranslation();
           id="name"
           value={values.name}
           onChange={handleChange('name')}
-          placeHolder="Company Name (Required)"
+          placeHolder={`${t('app.forms.Create-company.Name')} (Required)`}
+          // placeHolder="Company Name (Required)"
           leftIcon="user"
           style={{
             boxShadow: 'none',
@@ -186,7 +187,8 @@ const { t } = useTranslation();
           id="address"
           value={values.address}
           onChange={handleChange('address')}
-          placeHolder="Company Address (Required)"
+          placeHolder={`${t('app.forms.Create-company.Address')} (Required)`}
+          // placeHolder="Company Address (Required)"
           leftIcon="map-marker"
           style={{
             boxShadow: 'none',
@@ -226,7 +228,8 @@ const { t } = useTranslation();
           id="email"
           value={values.email}
           onChange={handleChange('email')}
-          placeHolder="Company email address"
+          placeHolder={t('app.forms.Create-company.Email')}
+          // placeHolder="Company email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none',
@@ -269,7 +272,8 @@ const { t } = useTranslation();
           id="legalOwnerName"
           value={values.legalOwnerName}
           onChange={handleChange('legalOwnerName')}
-          placeHolder="Legal Owner Name"
+          placeHolder={t('app.forms.Create-company.Legal-name')}
+          // placeHolder="Legal Owner Name"
           leftIcon="mugshot"
           style={{
             boxShadow: 'none',
@@ -313,7 +317,8 @@ const { t } = useTranslation();
           id="legalOwnerMail"
           value={values.legalOwnerMail}
           onChange={handleChange('legalOwnerMail')}
-          placeHolder="Legal Owner email address"
+          placeHolder={t('app.forms.Create-company.Legal-email')}
+          // placeHolder="Legal Owner email address"
           leftIcon="envelope"
           style={{
             boxShadow: 'none',
