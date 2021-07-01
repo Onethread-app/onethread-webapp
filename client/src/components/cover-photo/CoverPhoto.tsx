@@ -180,6 +180,7 @@ const CompanyCustomView = (props: ICompanyProps) => {
 };
 
 const ChangeButton = (props: IChangeButtonProps) => {
+  const { t } = useTranslation();
   if (props.company) {
     return (
       <div className="h-100 child bg-black-40 br4">
@@ -191,7 +192,8 @@ const ChangeButton = (props: IChangeButtonProps) => {
             }}
             onClick={() => props.setShowDialogPicture(true)}
           >
-            Change Cover
+            {t('app.user.Personal-profile.Cover')}
+            {/* Change Cover */}
           </Button>
         )}
       </div>
@@ -206,7 +208,8 @@ const ChangeButton = (props: IChangeButtonProps) => {
           }}
           onClick={() => props.setShowDialogPicture(true)}
         >
-          Change Cover
+          {t('app.user.Personal-profile.Cover')}
+          {/* Change Cover */}
         </Button>
       </div>
     );

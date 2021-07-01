@@ -14,6 +14,7 @@ import { CompanySignupForm } from './Form';
 import user from './../../resources/images/profilePhoto.svg';
 import { NavLink } from 'react-router-dom';
 import { logoutAction } from 'stores/auth/Actions';
+import { useTranslation } from 'react-i18next';
 
 interface CompanyListViewProps {
   showDialog: boolean;
@@ -43,6 +44,8 @@ export const ListViewComponent = (
     }
     setLoading(false);
   }, [loading]);
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -94,7 +97,8 @@ export const ListViewComponent = (
             className="pr3"
             style={{ color: '#787e8d' }}
           />
-          Profile Settings
+          {t('app.user.User-settings.Profile')}
+          {/* Profile Settings */}
         </NavLink>
         <NavLink
           exact
@@ -119,7 +123,8 @@ export const ListViewComponent = (
         >
           Logout
         </Button>
-        <h1 className="f7 ml3">My Companies</h1>
+        <h1 className="f7 ml3">{t('app.homepage.My-Companies')}</h1>
+        {/* <h1 className="f7 ml3">My Companies</h1> */}
         <div
           className="mw6 center overflow-y-auto pl2"
           style={{ maxHeight: '18rem' }}

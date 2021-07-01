@@ -18,6 +18,7 @@ import {
 } from 'components/final-form/utils';
 import { DropdownField } from 'components/fields/DropdownField';
 import { SubmitError } from 'components/final-form/SubmitError';
+import { useTranslation } from 'react-i18next';
 interface IBasicInfoProps {
   setShowDialog: (val: boolean) => void;
 }
@@ -45,6 +46,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
     }
     return { [response.fieldName]: response.message };
   };
+
+  const { t } = useTranslation();
 
   return (
     <Form
@@ -88,7 +91,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             name="email"
             render={({ input, meta }) => (
               <div className="mb4">
-                <label>Email</label>
+                <label>{t('app.user.Personal-profile.Email')}</label>
+                {/* <label>Email</label> */}
                 <InputGroupField
                   id="email"
                   className="mt1 bg-white"
@@ -107,7 +111,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             validate={values.secondaryEmail ? isEmail : undefined}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>Secondary Email</label>
+                <label>{t('app.user.Personal-profile.Secondaty')}</label>
+                {/* <label>Secondary Email</label> */}
                 <InputGroupFieldWithError
                   id="secondaryEmail"
                   className="mt1"
@@ -155,7 +160,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             validate={maxValue(120)}
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>Address</label>
+                <label>{t('app.user.Personal-profile.Address')}</label>
+                {/* <label>Address</label> */}
                 <InputGroupFieldWithError
                   id="location"
                   value={input.value}
@@ -173,7 +179,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             )}
           />
           <div className="mb4">
-            <label>Blood Group</label>
+            <label>{t('app.user.Personal-profile.Blood')}</label>
+            {/* <label>Blood Group</label> */}
             <Field<string>
               name="bloodGroup"
               render={({ input, meta }) => (
@@ -200,7 +207,7 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             name="birthDate"
             render={({ input, meta }) => (
               <div className={` ${checkError(meta) ? 'mb3' : 'mb4'}`}>
-                <label>Birth Date</label>
+                <label>{t('app.user.Personal-profile.Date-of-birth')}</label>
                 <DateInput
                   className="bg-white"
                   formatDate={(date: Date) =>
@@ -235,7 +242,8 @@ const BasicInfoFormComponent = (props: IBasicInfoInternalProps) => {
             render={({ input, meta }) => (
               <RadioGroup
                 name="gender"
-                label="Gender"
+                label={t('app.user.Personal-profile.Gender')}
+                // label="Gender"
                 onChange={input.onChange}
                 inline={true}
                 className="tigrow-lightBlue outline-0"
