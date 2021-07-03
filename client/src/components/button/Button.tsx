@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 
 interface IButtonProps {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
@@ -103,4 +104,22 @@ export const OTButton = (props: IOTButton) => {
       </Button>
     );
   }
+};
+
+export const CreateCompany = () => {
+  const Button = styled.button`
+    border: 1.5px solid #0e0c4d;
+    box-sizing: border-box;
+    border-radius: 5px;
+    padding: 14px 0;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-weight: 500;
+    font-size: 16.376px;
+    line-height: 20px;
+    background: #ffffff;
+    color: #0f0c4e;
+  `;
+  return <Button>Create Company</Button>;
 };

@@ -1,120 +1,47 @@
-import { Loading } from 'components/Loading';
-import ErrorText from 'layouts/company/settings/ErrorText';
-import React, { useEffect, useState } from 'react';
-import Modal from 'react-modal';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
-import { ICompany } from 'stores/company/Reducer';
-import { getProjectsIndividual } from 'stores/project/Actions';
-import { IMember } from 'stores/project/Reducer';
-import { setExpireMassage } from 'stores/subscriptionBilling/Actions';
-import { getAllCompaniesByUserId } from 'stores/user/Actions';
-import { User } from 'stores/user/Reducer';
-import { webPush } from '../../stores/notifications/Action';
-import { CompanyList } from './CompanyList';
-import { ProjectList } from './ProjectList';
-import { VideoConference } from './VideoList';
+import React from 'react';
+import { isMobileOnly } from 'react-device-detect';
 
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-};
+import VideoConference from 'components/home/VideoConference';
+import Tasks from 'components/home/Tasks';
+import Profile from 'components/home/Profile';
+import Weather from 'components/home/Weather';
+import ProfileProgress from 'components/home/ProfileProgress';
+import DueTasks from 'components/home/DueTasks';
 
-interface HomePageComponentProps {
-  currentCompany: ICompany;
-  getAllCompaniesByUserId: (userId: string, type: string) => void;
-  getProjectsIndividual: () => void;
-  user: User;
-  webPush: (token) => void;
-  project: IMember[];
-  subscriptiontExpired: boolean;
-  setExpireMassage: () => void;
-  massageShown: boolean;
-}
+import './Index.styles.scss';
 
-export const HomePageComponent = (
-  props: HomePageComponentProps & RouteComponentProps,
-) => {
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = React.useState(false);
-
-  function closeModal() {
-    setSuccess(false);
-  }
-
-  const load = async () => {
-    setLoading(true);
-    await props.getAllCompaniesByUserId(props.user._id, 'home');
-    // await props.getProjectsIndividual();
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    setSuccess(props.subscriptiontExpired);
-    load();
-  }, []);
-
-  return (
-    <>
-      <div className="pt5 pt0-ns" style={{ background: '#0F0C4E' }}>
-        {loading ? (
-          <Loading />
-        ) : (
-          <>
-            <CompanyList />
-            <div
-              className="pa4-ns pa2 br4"
-              style={{ background: '#F6F7FB' }}
-            >
-              <ProjectList />
-              <VideoConference />
-            </div>
-          </>
-        )}
+const index = () => {
+  return isMobileOnly ? (
+    <div className="home-container">
+      <div>
+        <Tasks />
       </div>
-      {success &&
-        props.massageShown !== true &&
-        props.currentCompany.role !== 'superAdmin' && (
-          <Modal
-            isOpen={success}
-            // onAfterOpen={afterOpenModal}
-            onRequestClose={closeModal}
-            style={customStyles}
-            contentLabel="Example Modal"
-          >
-            <ErrorText
-              setExpireMassage={props.setExpireMassage}
-              closeModal={closeModal}
-              text="Your Subscription has expired, contact with Super Admin"
-              subtext="To keep using Onethread without interruption you need to pay your
-              dues."
-            />
-          </Modal>
-        )}
-    </>
+      <div>
+        <ProfileProgress />
+      </div>
+      <div>
+        <DueTasks />
+      </div>
+      <div>
+        <VideoConference />
+      </div>
+    </div>
+  ) : (
+    <div className="home-container">
+      <div>
+        <VideoConference />
+        <DueTasks />
+      </div>
+      <div>
+        <Weather />
+        <Tasks />
+      </div>
+      <div>
+        <Profile />
+        <ProfileProgress />
+      </div>
+    </div>
   );
 };
 
-const mapStateToProps = (state: any) => {
-  return {
-    user: state.userReducer.user,
-    project: state.projectReducer.projectList,
-    currentCompany: state.companyReducer.currentCompany,
-    subscriptiontExpired:
-      state.subscriptionReducer.subscriptionExpired,
-    massageShown: state.subscriptionReducer.massageShown,
-  };
-};
-
-export const HomePageNew = connect(mapStateToProps, {
-  getAllCompaniesByUserId,
-  getProjectsIndividual,
-  webPush,
-  setExpireMassage,
-})(withRouter(HomePageComponent));
+export default index;
