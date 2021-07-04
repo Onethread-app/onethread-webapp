@@ -1,27 +1,126 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
+import { isMobileOnly } from 'react-device-detect';
+import moment from 'moment';
+
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 interface ITaskItem {
-  task: number;
+  task: any;
   index: number;
   mini?: boolean;
 }
 const TaskItem = (props: ITaskItem) => {
-  return (
-    <div className="task-item flex items-center w-100">
-      <div className={`${props.mini ? 'w-20' : 'w-10'} self-start`}>
+  const [loading, setLoading] = React.useState(true);
+  const [task, setTask] = React.useState({
+    _id: '',
+    name: '',
+    deadline: '',
+    status: '',
+    projectName: '',
+    projectId: '',
+    boardId: '',
+    companyName: '',
+  });
+  const history = useHistory();
+
+  React.useEffect(() => {
+    if (props.task.taskId) {
+      const {
+        name,
+        dueDate,
+        boardId,
+        project,
+        status,
+        _id,
+      } = props.task.taskId;
+      setTask({
+        _id,
+        name,
+        status,
+        deadline: dueDate,
+        projectName: project.name,
+        projectId: project._id,
+        boardId: boardId._id,
+        companyName: project.company.uniqueName,
+      });
+      setLoading(false);
+    }
+  }, [props.task]);
+
+  const handleClick = () => {
+    history.push(
+      `/company/${task.companyName}/project/${task.projectId}/board/${task.boardId}/task/${task._id}`,
+    );
+  };
+
+  return loading ? (
+    <div className="task-item w-100">
+      <LinearProgress />
+    </div>
+  ) : (
+    <div
+      className="task-item flex items-center w-100 pointer"
+      onClick={handleClick}
+    >
+      <div
+        className={`${
+          isMobileOnly
+            ? props.mini
+              ? 'w-20'
+              : 'w-10'
+            : props.mini
+            ? 'w-20'
+            : 'w-10'
+        } self-start`}
+      >
         {('0' + (props.index + 1)).slice(-2)}
       </div>
       <div
-        className={`${props.mini ? 'w-80' : 'w-60'} flex flex-column`}
+        className={`${
+          isMobileOnly
+            ? props.mini
+              ? 'w-80'
+              : 'w-60'
+            : props.mini
+            ? 'w-80'
+            : 'w-60'
+        } flex flex-column`}
       >
-        <h3 className="pointer">Create Brand Guideline</h3>
-        <p>Project name</p>
+        <h3>{task.name}</h3>
+        <p>{task.projectName}</p>
       </div>
-      <div className={`${props.mini ? 'dn' : 'deadline w-15 tc'}`}>
-        01/01/2056
+      <div
+        className={`${
+          isMobileOnly ? 'dn' : props.mini ? 'dn' : 'deadline w-15 tc'
+        }`}
+      >
+        {moment(task.deadline).format('DD/MM/YYYY')}
       </div>
-      <div className={`${props.mini ? 'dn' : 'status w-15 tc'}`}>
-        <span className="bp3-tag">In Progress</span>
+      <div
+        className={`${
+          isMobileOnly
+            ? props.mini
+              ? 'dn'
+              : 'w-30'
+            : props.mini
+            ? 'dn'
+            : 'status w-15 tc'
+        }`}
+      >
+        <span
+          className="bp3-tag ttc"
+          style={{
+            background:
+              task.status === 'done'
+                ? '#2EB67D'
+                : task.status === 'in-progress'
+                ? '#08A0F7'
+                : '#FFA800',
+          }}
+        >
+          {task.status.replace(/-/g, ' ')}
+        </span>
       </div>
     </div>
   );

@@ -1,30 +1,65 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
-import More from 'resources/svg/More.svg';
-import ProfilePic from 'resources/svg/ProfilePic.svg';
+import UserIcon from 'resources/images/profilePhoto.svg';
 
-const Profile = () => {
+interface IProfile {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  profileImage: string;
+  position: string;
+  complete: number;
+  teamNumber: number;
+}
+
+const Profile = (props: IProfile) => {
+  const history = useHistory();
+
   return (
     <div className="profile">
       <div className="flex justify-between w-100">
         <div>
-          <h3>My Profile</h3>
-          <p>75% Completed</p>
-        </div>
-        <div>
-          <img src={More} alt="more" className="pointer" />
+          <h3
+            className="pointer"
+            onClick={() => history.push(`/${props.userName}`)}
+          >
+            My Profile
+          </h3>
+          <p>{Math.round(props.complete)}% Completed</p>
         </div>
       </div>
       <div>
-        <img src={ProfilePic} alt="user" />
+        <img
+          src={props.profileImage ? props.profileImage : UserIcon}
+          alt={`${props.firstName} ${props.lastName}`}
+          style={{
+            height: '128px',
+            width: '128px',
+            borderRadius: '50%',
+          }}
+        />
       </div>
-      <div>
-        <h3>Saepul Rohman</h3>
-        <p>UX Designer at Toglas</p>
+      <div className="ttc tc">
+        <h3>{`${props.firstName} ${props.lastName}`}</h3>
+        <p>{props.position}</p>
       </div>
-      <div className="team">Team : 02</div>
+      <div className="team">
+        Team : {('0' + (props.teamNumber + 1)).slice(-2)}
+      </div>
     </div>
   );
 };
 
-export default Profile;
+const mapStateToProps = (state: any) => ({
+  firstName: state.userReducer.user.firstName,
+  lastName: state.userReducer.user.lastName,
+  userName: state.userReducer.user.name,
+  profileImage: state.userReducer.user.profileImage,
+  position: state.userReducer.user.position,
+  complete: state.userReducer.user.complete,
+  teamNumber: state.userReducer.user.teamNumber,
+});
+
+export default connect(mapStateToProps)(Profile);

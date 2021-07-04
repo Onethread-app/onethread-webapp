@@ -18,6 +18,7 @@ import { IChat, IRoom } from 'stores/room/Reducer';
 import ChatIcon from '@material-ui/icons/Chat';
 import { fetchRooms, fetchChats } from '../stores/room/Actions';
 import ChatListItem from './chat/ChatListItem';
+// import MobileSidebar from 'components/MobileSidebar/MobileSidebar';
 
 interface NavbarProps {
   title: string;

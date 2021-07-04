@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const Account = require('./account.model');
 const { Member } = require('../company/member/member.model');
-const {Team} = require('../team-member/team.model');
+const { Team } = require('../team-member/team.model');
 const {
   PendingMember,
 } = require('../company/member/pendingMember.model');
@@ -42,11 +42,17 @@ const TaskAssign = require('../task/taskAssign.model');
 const options = [
   {
     path: 'taskId',
-    select: '_id name boardId columnId project dueDate',
+    select: '_id name boardId columnId project dueDate status',
     populate: [
       {
         path: 'project',
         select: '_id name',
+        populate: [
+          {
+            path: 'company',
+            select: '_id uniqueName',
+          },
+        ],
       },
       {
         path: 'boardId',
@@ -63,6 +69,84 @@ const options = [
     select: '_id firstName lastName',
   },
 ];
+
+// get today's tasks for user
+const getTodaysTask = async (req) => {
+  try {
+    let startToday = new Date();
+    startToday.setHours(0, 0, 0, 0);
+    let endToday = new Date();
+    endToday.setHours(23, 59, 59, 999);
+    const taskList = await Task.find({
+      dueDate: { $gte: startToday, $lt: endToday },
+    }).sort({ createdAt: -1 });
+    let taskId = taskList.map((e) => e._id);
+    const assignToUserToday = await TaskAssign.find({
+      taskId: taskId,
+      assignedPerson: req.user._id,
+    })
+      .select('taskId')
+      .populate(options);
+    const assignByUserToday = await TaskAssign.find({
+      taskId: taskId,
+      account: req.user._id,
+      assignedPerson: { $nin: { _id: req.user._id } },
+    })
+      .sort({ createdAt: -1 })
+      .select('taskId')
+      .populate(options);
+
+    const userTask = {
+      assignToUser: [...assignToUserToday],
+      assignByUser: [...assignByUserToday],
+      totalTasks: assignToUserToday.length + assignByUserToday.length,
+    };
+    return userTask;
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
+  }
+};
+
+// get upcoming tasks for user
+const getUpcomingTasks = async (req) => {
+  try {
+    let tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate());
+    let oneWeek = new Date();
+    oneWeek.setDate(oneWeek.getDate() + 7);
+    const upcomingTask = await Task.find({
+      dueDate: { $gte: tomorrow, $lte: oneWeek },
+      status: { $ne: 'done' },
+    }).sort({ createdAt: -1 });
+    taskId = upcomingTask.map((e) => e._id);
+    const assignToUserUpcoming = await TaskAssign.find({
+      taskId: taskId,
+      assignedPerson: req.user._id,
+    })
+      .select('taskId')
+      .populate(options);
+    const assignByUserUpcoming = await TaskAssign.find({
+      taskId: taskId,
+      account: req.user._id,
+      assignedPerson: { $nin: { _id: req.user._id } },
+    })
+      .sort({ createdAt: -1 })
+      .select('taskId')
+      .populate(options);
+    const userTask = {
+      assignToUser: [...assignToUserUpcoming],
+      assignByUser: [...assignByUserUpcoming],
+      totalTasks:
+        assignToUserUpcoming.length + assignByUserUpcoming.length,
+    };
+    return userTask;
+  } catch (error) {
+    logger.error(`Account: ${error}`);
+    next(error);
+  }
+};
+
 // create a new account for individual users
 const register = async (req, res, next) => {
   const data = req.body;
@@ -236,37 +320,45 @@ const getAccount = async (req, res, next) => {
       .select('-password')
       .populate('skillArea', '_id name');
     let count = 0;
-    if(userInfo.skillArea.length=== 0 ){
-      count ++;
-    }
-    if(userInfo.education.length=== 0){
+    if (userInfo.skillArea.length === 0) {
       count++;
     }
-    if(userInfo.jobExperience.length === 0){
+    if (userInfo.education.length === 0) {
       count++;
     }
-    if( userInfo.position === '' || userInfo.position === undefined){
+    if (userInfo.jobExperience.length === 0) {
       count++;
     }
-    if( userInfo.gender === '' || userInfo.gender === undefined){
+    if (userInfo.position === '' || userInfo.position === undefined) {
       count++;
     }
-    if( userInfo.bloodGroup === '' || userInfo.bloodGroup === undefined){
+    if (userInfo.gender === '' || userInfo.gender === undefined) {
       count++;
     }
-    if( userInfo.location === '' || userInfo.location === undefined){
+    if (
+      userInfo.bloodGroup === '' ||
+      userInfo.bloodGroup === undefined
+    ) {
       count++;
     }
-    if( userInfo.about === '' || userInfo.about === undefined){
+    if (userInfo.location === '' || userInfo.location === undefined) {
       count++;
     }
-    let compilation= ((count/12)*100).toFixed(2);
-    let teamNumber = await Team.find({account: req.user._id}).countDocuments();
-    userInfo ={...userInfo._doc, "complete": compilation, "teamNumber": teamNumber};
+    if (userInfo.about === '' || userInfo.about === undefined) {
+      count++;
+    }
+    let compilation = ((count / 12) * 100).toFixed(2);
+    let teamNumber = await Team.find({
+      account: req.user._id,
+    }).countDocuments();
+    userInfo = {
+      ...userInfo._doc,
+      complete: compilation,
+      teamNumber: teamNumber,
+    };
     return sendJSONresponse(res, 200, {
       success: true,
       user: userInfo,
-
     });
   } catch (error) {
     logger.error(`Account: ${error}`);
@@ -288,33 +380,47 @@ const getAccount = async (req, res, next) => {
 //     console.log(err);
 //     next(err);
 //   });
-const userDailyProgress = async(req,res, next)=>{
+const userDailyProgress = async (req, res, next) => {
   try {
     let startToday = new Date();
-    startToday.setHours(0,0,0,0);
+    startToday.setHours(0, 0, 0, 0);
     let endToday = new Date();
-    endToday.setHours(23,59,59,999);
-    const taskList = await Task.find({"dueDate": {$gte: startToday, $lt: endToday},status:{$ne: 'done'}});
-    let taskId = taskList.map(e=>e._id);
-    const assignTaskNumber = await TaskAssign.find({taskId: taskId, assignedPerson: req.user._id}).countDocuments();
+    endToday.setHours(23, 59, 59, 999);
+    const taskList = await Task.find({
+      dueDate: { $gte: startToday, $lt: endToday },
+      status: { $ne: 'done' },
+    });
+    let taskId = taskList.map((e) => e._id);
+    const assignTaskNumber = await TaskAssign.find({
+      taskId: taskId,
+      assignedPerson: req.user._id,
+    }).countDocuments();
     console.log(assignTaskNumber);
-    const doneTaskList = await Task.find({"dueDate": {$gte: startToday, $lt: endToday},status: 'done'});
-    taskId = doneTaskList.map(e=>e._id);
-    const completeNumber = await TaskAssign.find({taskId: taskId, assignedPerson: req.user._id}).countDocuments();
+    const doneTaskList = await Task.find({
+      dueDate: { $gte: startToday, $lt: endToday },
+      status: 'done',
+    });
+    taskId = doneTaskList.map((e) => e._id);
+    const completeNumber = await TaskAssign.find({
+      taskId: taskId,
+      assignedPerson: req.user._id,
+    }).countDocuments();
     console.log(completeNumber);
-    let dailyProgress =0;
-    if(assignTaskNumber === 0){
-      dailyProgress = 100
-    }else{
-      dailyProgress = parseInt(((completeNumber/assignTaskNumber)*100).toFixed(2));
+    let dailyProgress = 0;
+    if (assignTaskNumber === 0) {
+      dailyProgress = 100;
+    } else {
+      dailyProgress = parseInt(
+        ((completeNumber / assignTaskNumber) * 100).toFixed(2),
+      );
     }
-    
+
     return sendJSONresponse(res, 200, dailyProgress);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
   }
-}
+};
 const skillArea = async (req, res, next) => {
   try {
     const user = await Account.findOne({
@@ -797,81 +903,53 @@ const inviteSignup = async (req, res, next) => {
   }
 };
 
-const userTaskList = async (req, res, next)=>{
+const userTaskList = async (req, res, next) => {
   try {
-    let startToday = new Date();
-    startToday.setHours(0,0,0,0);
-    let endToday = new Date();
-    endToday.setHours(23,59,59,999);
-    const taskList = await Task.find({"dueDate": {$gte: startToday, $lt: endToday},status:{$ne: 'done'}}).sort({createdAt: -1});
-    let taskId = taskList.map(e=>e._id);
-    const assignToUserToday = await TaskAssign.find({taskId: taskId, assignedPerson: req.user._id})
-                    .select('taskId')
-                    .populate(options);
-    const assignByUserToday = await TaskAssign.find({taskId: taskId, account: req.user._id, assignedPerson:{$nin: {_id: req.user._id}} }).sort({createdAt: -1})
-    .select('taskId')
-    .populate(options);
-
-    const userTask = {
-        assignToUser:[...assignToUserToday],
-        assignByUser:[...assignByUserToday]
-    };                
+    const todaysTasks = await getTodaysTask(req);
+    const upcomingTasks = await getUpcomingTasks(req);
+    const userTask = { todaysTasks, upcomingTasks };
     return sendJSONresponse(res, 200, userTask);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
   }
-}
+};
 
-const userUpcomingTask = async (req, res, next) =>{
-  try {
-    let tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate());
-    let oneWeek = new Date();
-    oneWeek.setDate(oneWeek.getDate()+7);
-    const upcomingTask = await Task.find({"dueDate": {$gte:tomorrow, $lte: oneWeek},status:{$ne: 'done'}}).sort({createdAt: -1});
-    taskId = upcomingTask.map(e=>e._id);
-    const assignToUserUpcoming = await TaskAssign.find({taskId: taskId, assignedPerson: req.user._id})
-                    .select('taskId')
-                    .populate(options);
-    const assignByUserUpcoming = await TaskAssign.find({taskId: taskId, account: req.user._id, assignedPerson:{$nin: {_id: req.user._id}} }).sort({createdAt: -1})
-                    .select('taskId')
-                    .populate(options);
-    const userTask = {
-          assignToUser:[...assignToUserUpcoming],
-          assignByUser:[...assignByUserUpcoming]
-    };                
-    return sendJSONresponse(res, 200, userTask);
-            
-  } catch (error) {
-    logger.error(`Account: ${error}`);
-    next(error);
-  }
-}
-const userDueTask = async(req, res, next)=>{
+const userDueTask = async (req, res, next) => {
   try {
     let yesterday = new Date();
-    yesterday.setDate(yesterday.getDate()-1);
+    yesterday.setDate(yesterday.getDate() - 1);
     let yesWeek = new Date();
-    yesWeek.setDate(yesWeek.getDate()-7);               
-    const dueTask = await Task.find({"dueDate": {$lt: yesterday, $gte: yesWeek},status:{$ne: 'done'}}).sort({createdAt: -1});
-    taskId = dueTask.map(e=>e._id);
-    const assignToUserDue = await TaskAssign.find({taskId: taskId, assignedPerson: req.user._id})
-                    .select('taskId')
-                    .populate(options);
-    const assignByUserDue = await TaskAssign.find({taskId: taskId, account: req.user._id, assignedPerson:{$nin: {_id: req.user._id}} }).sort({createdAt: -1})
-                    .select('taskId')
-                    .populate(options);
-                    const userTask = {
-                        assignToUserDue: [...assignToUserDue],
-                        assignByUserDue: [...assignByUserDue]
-                    };                
-                    return sendJSONresponse(res, 200, userTask);
+    yesWeek.setDate(yesWeek.getDate() - 7);
+    const dueTask = await Task.find({
+      dueDate: { $lt: yesterday, $gte: yesWeek },
+      status: { $ne: 'done' },
+    }).sort({ createdAt: -1 });
+    taskId = dueTask.map((e) => e._id);
+    const assignToUserDue = await TaskAssign.find({
+      taskId: taskId,
+      assignedPerson: req.user._id,
+    })
+      .select('taskId')
+      .populate(options);
+    const assignByUserDue = await TaskAssign.find({
+      taskId: taskId,
+      account: req.user._id,
+      assignedPerson: { $nin: { _id: req.user._id } },
+    })
+      .sort({ createdAt: -1 })
+      .select('taskId')
+      .populate(options);
+    const userTask = {
+      assignToUserDue: [...assignToUserDue],
+      assignByUserDue: [...assignByUserDue],
+    };
+    return sendJSONresponse(res, 200, userTask);
   } catch (error) {
     logger.error(`Account: ${error}`);
     next(error);
   }
-}
+};
 module.exports = {
   register,
   resendEmail,
@@ -889,6 +967,5 @@ module.exports = {
   inviteSignup,
   userTaskList,
   userDueTask,
-  userUpcomingTask,
-  userDailyProgress
+  userDailyProgress,
 };

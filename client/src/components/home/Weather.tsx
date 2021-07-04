@@ -20,6 +20,7 @@ const Weather = (props: IWeather) => {
   const [currentHour] = React.useState(
     new Date().getHours().toLocaleString(),
   );
+  const [today] = React.useState(String(new Date().getDate()));
 
   const getWeatherData = async () => {
     const url = `//api.openweathermap.org/data/2.5/weather?q=dhaka&units=metric&appid=668d583e0514e2243454322c367390ee`;
@@ -39,7 +40,7 @@ const Weather = (props: IWeather) => {
         country,
       });
       storeWeatherInfo(temp, main, icon, city, country);
-      storeLastSavedHour();
+      storeLastSavedTime();
     }
     return data;
   };
@@ -58,16 +59,23 @@ const Weather = (props: IWeather) => {
     localStorage.setItem('country', country);
   };
 
-  const storeLastSavedHour = () => {
-    localStorage.setItem('lastSaved', currentHour.toLocaleString());
+  const storeLastSavedTime = () => {
+    localStorage.setItem(
+      'lastSavedHour',
+      currentHour.toLocaleString(),
+    );
+    localStorage.setItem('lastSavedDate', today);
   };
 
   React.useEffect(() => {
-    const lastSaved = localStorage.getItem('lastSaved');
-    if (lastSaved) {
-      currentHour > lastSaved && getWeatherData();
+    const lastSavedHour = localStorage.getItem('lastSavedHour');
+    const lastSavedDate = localStorage.getItem('lastSavedDate');
+    if (lastSavedDate && lastSavedHour) {
+      if (today > lastSavedDate || currentHour > lastSavedHour) {
+        getWeatherData();
+      }
     } else {
-      storeLastSavedHour();
+      storeLastSavedTime();
     }
     if (currentHour < String(12)) {
       setGreeting('Good Morning');

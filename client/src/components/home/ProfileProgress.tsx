@@ -1,49 +1,53 @@
 import React from 'react';
+import { isMobileOnly } from 'react-device-detect';
 
 import { ChartDonutUtilization } from '@patternfly/react-charts';
 
+import { tigrowApi } from 'config';
+import { tokenConfig } from 'stores/UtilsActions';
+
 import '@patternfly/react-core/dist/styles/base.css';
 
-import More from 'resources/svg/More.svg';
-import Lines from 'resources/svg/Lines.svg';
-// import Progress from 'resources/svg/Progress.svg';
-
 const ProfileProgress = () => {
-  // const styles = {data: {stroke: "black"}, label: {fontSize: 10}}}
+  const [progress, setProgress] = React.useState(0);
+
+  React.useEffect(() => {
+    const getprogress = async () => {
+      const headers = tokenConfig();
+      if ((headers.headers as any).Authorization) {
+        const response = await tigrowApi.get(
+          `accounts/daily-progress`,
+          headers,
+        );
+        setProgress(response.data);
+      }
+    };
+    getprogress();
+  }, []);
+
   return (
     <div className="profile-progress">
-      <div className="flex justify-between w-100">
-        <div>
-          <h3>Progress</h3>
+      {isMobileOnly ? undefined : (
+        <div className="flex justify-between w-100">
+          <div>
+            <h3>Progress</h3>
+          </div>
         </div>
-        <div>
-          <img src={More} alt="more" className="pointer" />
-        </div>
-      </div>
-      <div className="flex items-center">
+      )}
+      <div className="profile-progress-chart flex items-center">
         <div style={{ height: '152px', width: '152px' }}>
           <ChartDonutUtilization
-            ariaDesc="User progress"
-            ariaTitle="User progress"
+            ariaDesc="Daily user progress"
+            ariaTitle="Daily progress"
             constrainToVisibleArea={true}
-            data={{ x: 'Completed', y: 75 }}
+            data={{ x: 'Completed', y: progress }}
             labels={({ datum }) =>
               datum.x ? `${datum.x}: ${datum.y}%` : null
             }
-            subTitle="in progress"
-            title="75%"
+            subTitle={progress === 100 ? 'completed' : 'in progress'}
+            title={`${progress}%`}
             // style={title: {color: "#fff"}}
           />
-        </div>
-      </div>
-      <div className="divider w-100"></div>
-      <div className="flex justify-between items-end w-100 previous-progress">
-        <div>
-          <h3>20%</h3>
-          <p>Last Week</p>
-        </div>
-        <div>
-          <img src={Lines} alt="" />
         </div>
       </div>
     </div>

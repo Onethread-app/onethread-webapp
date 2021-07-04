@@ -18,6 +18,11 @@
     margin: 0;
   }
 
+  @media screen and (max-width: 500px) {
+    margin-top: 2.5rem;
+    grid-template-columns: 1fr;
+  }
+
   > div {
     flex-grow: 1;
     display: flex;
@@ -60,18 +65,46 @@
     }
   }
 
-  .ongoing-tasks {
+  .due-tasks {
     flex-grow: 1.4;
     padding: 30px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
+
+    &-filter {
+      p {
+        color: #a4a4a4;
+        font-weight: 500;
+        font-size: 8.27242px;
+        line-height: 12px;
+        cursor: pointer;
+      }
+    }
 
     h3 {
       font-weight: 500;
       font-size: 14.329px;
       line-height: 21px;
       color: #121212;
+    }
+
+    .active {
+      transition: all 0.5s;
+      color: #000;
+      text-decoration-line: underline;
+    }
+
+    .divider {
+      color: #a4a4a4;
+      margin: 0 0.25rem;
+
+      &-small {
+        color: #a4a4a4;
+        font-size: 8.27242px;
+        line-height: 12px;
+        margin: 0 0.25rem;
+      }
     }
   }
 
@@ -150,6 +183,7 @@
         margin: 0 0.25rem;
 
         &-small {
+          color: #a4a4a4;
           font-size: 8.27242px;
           line-height: 12px;
           margin: 0 0.25rem;
@@ -172,6 +206,7 @@
       .task-item {
         box-shadow: inset 0px -0.71645px 0px rgba(0, 0, 0, 0.1);
         padding: 8px;
+        transition: all 0.5s;
 
         &:hover {
           background: #f7f7f5;
@@ -241,6 +276,13 @@
     color: #fff;
     gap: 20px;
 
+    @media screen and (max-width: 500px) {
+      flex-direction: row;
+      justify-content: center;
+      gap: 10px;
+      height: 100%;
+    }
+
     h3 {
       font-size: 14.5px;
       line-height: 21px;
@@ -249,17 +291,24 @@
 
     .divider {
       border-top: 1px solid rgba(255, 255, 255, 0.4);
+      @media screen and (max-width: 500px) {
+        border-left: 1px solid rgba(255, 255, 255, 0.4);
+        height: 100%;
+        width: auto !important;
+      }
     }
 
-    .previous-progress {
-      h3 {
-        font-size: 21px;
-        line-height: 36px;
-      }
-
-      p {
-        font-size: 14px;
-        line-height: 22px;
+    &-chart {
+      > div {
+        > div {
+          > svg {
+            > text {
+              > tspan:nth-child(1) {
+                fill: rgb(255, 255, 255) !important;
+              }
+            }
+          }
+        }
       }
     }
   }

@@ -1,10 +1,10 @@
 import React from 'react';
+import { isMobileOnly } from 'react-device-detect';
 
 import { Dialog } from '@blueprintjs/core';
 
 import LinkGeneratorPopup from 'components/conference/LinkGeneratorPopup';
 
-import More from 'resources/svg/More.svg';
 import Conference from 'resources/svg/Conference.svg';
 
 const VideoConference = () => {
@@ -15,9 +15,6 @@ const VideoConference = () => {
         <div>
           <h3>Video Conferences</h3>
           <p>Make Your Team align</p>
-        </div>
-        <div>
-          <img src={More} alt="more" className="pointer" />
         </div>
       </div>
       <div>
@@ -40,7 +37,8 @@ const VideoConference = () => {
           canEscapeKeyClose={true}
           canOutsideClickClose={true}
           style={{
-            width: '544px',
+            width: isMobileOnly ? '95%' : '544px',
+            maxWidth: '544px',
             height: '273px',
             background: '#ffffff',
             borderRadius: '20px',
